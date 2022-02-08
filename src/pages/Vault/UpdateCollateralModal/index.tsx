@@ -195,6 +195,16 @@ const UpdateCollateralModal = ({
 
   const validateCollateralTokenAmount = (value: string): string | undefined => {
     const collateralTokenAmount = newMonetaryAmount(value || '0', COLLATERAL_TOKEN, true);
+
+    // Collateral update only allowed if above required collateral
+    if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
+      const maxWithdrawal = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
+
+      return collateralTokenAmount.gt(maxWithdrawal) ?
+        t('vault.collateral_below_threshold') :
+        undefined;
+    }
+
     if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
       return t('vault.collateral_higher_than_0');
     }
@@ -209,15 +219,6 @@ const UpdateCollateralModal = ({
 
     if (!bridgeLoaded) {
       return 'Bridge must be loaded!';
-    }
-
-    // Collateral update only allowed if above required collateral
-    if (
-      requiredCollateralTokenAmount !== undefined &&
-      newCollateralTokenAmount.lt(requiredCollateralTokenAmount)
-    ) {
-      // eslint-disable-next-line max-len
-      return 'Please enter an amount that maintains the collateralization of your Vault above the Secure Collateral Threshold.';
     }
 
     return undefined;
