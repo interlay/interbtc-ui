@@ -17,7 +17,8 @@ import clsx from 'clsx';
 import {
   roundTwoDecimals,
   newMonetaryAmount,
-  CollateralUnit
+  CollateralUnit,
+  tickerToCurrencyIdLiteral
 } from '@interlay/interbtc-api';
 import {
   MonetaryAmount,
@@ -63,13 +64,15 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
+  hasLockedBTC: boolean;
 }
 
 const UpdateCollateralModal = ({
   open,
   onClose,
   collateralUpdateStatus,
-  vaultAddress
+  vaultAddress,
+  hasLockedBTC
 }: Props): JSX.Element => {
   const {
     bridgeLoaded,
@@ -145,11 +148,12 @@ const UpdateCollateralModal = ({
       'vaults',
       'getVaultCollateralization',
       vaultId,
+      tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker),
       newCollateralTokenAmount
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: bridgeLoaded && hasLockedBTC
     }
   );
   useErrorHandler(vaultCollateralizationError);
@@ -172,11 +176,12 @@ const UpdateCollateralModal = ({
       dispatch(updateCollateralAction(balanceLockedDOT));
 
       if (vaultCollateralization === undefined) {
-        throw new Error('Something went wrong!');
+        dispatch(updateCollateralizationAction('∞'));
+      } else {
+        // The vault API returns collateralization as a regular number rather than a percentage
+        const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
+        dispatch(updateCollateralizationAction(strVaultCollateralizationPercentage));
       }
-      // The vault API returns collateralization as a regular number rather than a percentage
-      const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
-      dispatch(updateCollateralizationAction(strVaultCollateralizationPercentage));
 
       toast.success(t('vault.successfully_updated_collateral'));
       setSubmitStatus(STATUSES.RESOLVED);
@@ -222,7 +227,7 @@ const UpdateCollateralModal = ({
     const initializing =
       requiredCollateralTokenAmountIdle ||
       requiredCollateralTokenAmountLoading ||
-      vaultCollateralizationIdle ||
+      (vaultCollateralizationIdle && hasLockedBTC) ||
       vaultCollateralizationLoading;
     const buttonText =
       initializing ?
@@ -244,17 +249,17 @@ const UpdateCollateralModal = ({
   };
 
   const renderNewCollateralizationLabel = () => {
-    if (vaultCollateralizationIdle || vaultCollateralizationLoading) {
+    if (vaultCollateralizationLoading) {
       // TODO: should use skeleton loaders
       return '-';
     }
 
-    if (vaultCollateralization === undefined) {
+    if (!hasLockedBTC) {
       return '∞';
     }
 
     // The vault API returns collateralization as a regular number rather than a percentage
-    const strVaultCollateralizationPercentage = vaultCollateralization.mul(100).toString();
+    const strVaultCollateralizationPercentage = vaultCollateralization?.mul(100).toString();
     if (Number(strVaultCollateralizationPercentage) > 1000) {
       return 'more than 1000%';
     } else {

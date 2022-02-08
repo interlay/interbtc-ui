@@ -32,7 +32,7 @@ import BoldParagraph from 'components/BoldParagraph';
 import
 InterlayDenimOrKintsugiMidnightContainedButton
   from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
-import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
+// import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import Panel from 'components/Panel';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
@@ -95,9 +95,9 @@ const Vault = (): JSX.Element => {
   const handleRequestReplacementModalClose = () => {
     setRequestReplacementModalOpen(false);
   };
-  const handleRequestReplacementModalOpen = () => {
-    setRequestReplacementModalOpen(true);
-  };
+  // const handleRequestReplacementModalOpen = () => {
+  //   setRequestReplacementModalOpen(true);
+  // };
 
   React.useEffect(() => {
     (async () => {
@@ -187,7 +187,9 @@ const Vault = (): JSX.Element => {
   const VAULT_ITEMS = [
     {
       title: t('collateralization'),
-      value: `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
+      value: collateralization === '∞' ?
+        collateralization :
+        `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
     },
     {
       title: t('vault.fees_earned_interbtc', {
@@ -287,12 +289,12 @@ const Vault = (): JSX.Element => {
               onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            {lockedBTC.gt(BitcoinAmount.zero) && (
+            {/* {lockedBTC.gt(BitcoinAmount.zero) && (
               <InterlayCaliforniaContainedButton
                 onClick={handleRequestReplacementModalOpen}>
                 {t('vault.replace_vault')}
               </InterlayCaliforniaContainedButton>
-            )}
+            )} */}
           </div>
         )}
         <VaultIssueRequestsTable
@@ -311,7 +313,8 @@ const Vault = (): JSX.Element => {
           }
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
-          vaultAddress={selectedVaultAddress} />
+          vaultAddress={selectedVaultAddress}
+          hasLockedBTC={lockedBTC.gt(BitcoinAmount.zero)} />
       )}
       <RequestReplacementModal
         onClose={handleRequestReplacementModalClose}
