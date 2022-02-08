@@ -155,7 +155,7 @@ const UpdateCollateralModal = ({
     ],
     genericFetcher<Big>(),
     {
-      enabled: !!bridgeLoaded && hasLockedBTC
+      enabled: bridgeLoaded && hasLockedBTC
     }
   );
   useErrorHandler(vaultCollateralizationError);
