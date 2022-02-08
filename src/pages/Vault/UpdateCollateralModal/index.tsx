@@ -254,7 +254,7 @@ const UpdateCollateralModal = ({
       return '-';
     }
 
-    if (vaultCollateralizationIdle && lockedBTC.eq(BitcoinAmount.zero)) {
+    if (lockedBTC.eq(BitcoinAmount.zero)) {
       return '∞';
     }
 
