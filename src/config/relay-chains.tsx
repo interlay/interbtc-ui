@@ -5,12 +5,10 @@ import {
   Kusama, // on Kusama
   KBtcAmount, // on Kusama
   Kintsugi, // On Kusama
-  KintsugiAmount, // On Kusama
   InterBtc, // on Polkadot
   Polkadot, // on Polkadot
   InterBtcAmount, // on Polkadot
-  Interlay, // On Polkadot
-  InterlayAmount // On Polkadot
+  Interlay // On Polkadot
 } from '@interlay/monetary-js';
 import {
   CollateralUnit,
@@ -96,10 +94,6 @@ type WrappedTokenAmount =
   InterBtcAmount |
   KBtcAmount;
 
-type GovernanceTokenAmount =
-  InterlayAmount |
-  KintsugiAmount
-
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 // Interlay
 case POLKADOT: {
@@ -172,8 +166,7 @@ export type {
   CollateralToken,
   WrappedToken,
   GovernanceToken,
-  WrappedTokenAmount,
-  GovernanceTokenAmount
+  WrappedTokenAmount
 };
 
 export {

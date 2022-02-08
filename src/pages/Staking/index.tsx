@@ -21,7 +21,8 @@ import {
 } from '@interlay/monetary-js';
 import {
   GovernanceUnit,
-  newMonetaryAmount
+  newMonetaryAmount,
+  VoteUnit
 } from '@interlay/interbtc-api';
 
 import Title from './Title';
@@ -40,7 +41,6 @@ import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN,
-  GovernanceTokenAmount,
   GOVERNANCE_TOKEN,
   STAKE_LOCK_TIME
 } from 'config/relay-chains';
@@ -76,7 +76,7 @@ type StakingFormData = {
 }
 
 interface Stake {
-  amount: GovernanceTokenAmount;
+  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   unlockHeight: number;
 }
 
@@ -124,7 +124,7 @@ const Staking = (): JSX.Element => {
     isLoading: voteGovernanceTokenLoading,
     data: voteGovernanceTokenBalance,
     error: voteGovernanceTokenError
-  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+  } = useQuery<MonetaryAmount<Currency<VoteUnit>, VoteUnit>, Error>(
     [
       GENERIC_FETCHER,
       'interBtcApi',
@@ -132,7 +132,7 @@ const Staking = (): JSX.Element => {
       'votingBalance',
       address
     ],
-    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    genericFetcher<MonetaryAmount<Currency<VoteUnit>, VoteUnit>>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -143,8 +143,7 @@ const Staking = (): JSX.Element => {
 
   const stakeMutation = useMutation<void, Error, Stake>(
     (variables: Stake) => {
-      // TODO: double-check with `any`
-      return (window.bridge.interBtcApi as any).escrow.createLock(variables.amount, variables.unlockHeight);
+      return window.bridge.interBtcApi.escrow.createLock(variables.amount, variables.unlockHeight);
     },
     {
       onSuccess: (_, variables) => {
@@ -180,7 +179,7 @@ const Staking = (): JSX.Element => {
     const unlockHeight = currentBlockNumber + (lockTime * 7 * 24 * 3600) / BLOCK_TIME;
 
     stakeMutation.mutate({
-      amount: (monetaryAmount as GovernanceTokenAmount),
+      amount: monetaryAmount,
       unlockHeight
     });
   };
