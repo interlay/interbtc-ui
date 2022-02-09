@@ -47,6 +47,8 @@ const textClassesForUnselected = clsx(
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
+console.log('TERMS_AND_CONDITIONS_LINK', TERMS_AND_CONDITIONS_LINK);
+
 const Navigation = ({
   onSmallScreen = false,
   className,
@@ -113,6 +115,7 @@ const Navigation = ({
         link: TERMS_AND_CONDITIONS_LINK,
         icon: DocumentTextIcon,
         external: true,
+        hidden: !TERMS_AND_CONDITIONS_LINK,
         rest: {
           target: '_blank',
           rel: 'noopener noreferrer'
