@@ -46,7 +46,6 @@ const RequestReplacementModal = ({
   vaultAddress
 }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
-  const { wrappedTokenBalance } = useSelector((state: StoreType) => state.general);
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
@@ -89,7 +88,7 @@ const RequestReplacementModal = ({
       return t('Amount must be greater than zero!');
     }
 
-    if (wrappedTokenAmount.gt(wrappedTokenBalance)) {
+    if (wrappedTokenAmount.gt(lockedBtc)) {
       return t(`Amount must be less than ${WRAPPED_TOKEN_SYMBOL} balance!`);
     }
 
