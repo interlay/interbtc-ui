@@ -20,7 +20,6 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
-  WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
   COLLATERAL_TOKEN
 } from 'config/relay-chains';
@@ -89,7 +88,7 @@ const RequestReplacementModal = ({
     }
 
     if (wrappedTokenAmount.gt(lockedBtc)) {
-      return t(`Amount must be less than ${WRAPPED_TOKEN_SYMBOL} balance!`);
+      return t(`Amount must be less than locked BTC balance!`);
     }
 
     return undefined;
