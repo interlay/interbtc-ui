@@ -11,14 +11,14 @@ import {
 import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import {
-  H256,
-  AccountId
+  H256
 } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 import {
   stripHexPrefix,
   ReplaceRequestExt,
-  WrappedCurrency
+  WrappedCurrency,
+  InterbtcPrimitivesVaultId
 } from '@interlay/interbtc-api';
 import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
 import {
@@ -106,9 +106,9 @@ const ReplaceTable = ({
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: AccountId; }) {
+        Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId; }) {
           return (
-            <>{shortAddress(value.toString())}</>
+            <>{shortAddress(value.accountId.toString())}</>
           );
         }
       },
@@ -118,9 +118,9 @@ const ReplaceTable = ({
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: AccountId; }) {
+        Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId; }) {
           return (
-            <>{shortAddress(value.toString())}</>
+            <>{shortAddress(value.accountId.toString())}</>
           );
         }
       },
