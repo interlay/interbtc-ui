@@ -108,7 +108,7 @@ const ReplaceTable = ({
         ],
         Cell: function FormattedCell({ value }: { value: AccountId; }) {
           return (
-            <>{shortAddress(value.toString())}</>
+            <>{shortAddress(value.accountId.toString())}</>
           );
         }
       },
@@ -120,7 +120,7 @@ const ReplaceTable = ({
         ],
         Cell: function FormattedCell({ value }: { value: AccountId; }) {
           return (
-            <>{shortAddress(value.toString())}</>
+            <>{shortAddress(value.accountId.toString())}</>
           );
         }
       },
