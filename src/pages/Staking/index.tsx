@@ -114,7 +114,8 @@ const Staking = (): JSX.Element => {
     ],
     genericFetcher<number>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: !!bridgeLoaded,
+      refetchInterval: BLOCK_TIME
     }
   );
   useErrorHandler(currentBlockNumberError);
@@ -141,7 +142,7 @@ const Staking = (): JSX.Element => {
 
   const queryClient = useQueryClient();
 
-  const stakeMutation = useMutation<void, Error, Stake>(
+  const initialStakeMutation = useMutation<void, Error, Stake>(
     (variables: Stake) => {
       return window.bridge.interBtcApi.escrow.createLock(variables.amount, variables.unlockHeight);
     },
@@ -154,7 +155,7 @@ const Staking = (): JSX.Element => {
           'votingBalance',
           address
         ]);
-        console.log('[stakeMutation] variables => ', variables);
+        console.log('[initialStakeMutation] variables => ', variables);
         reset({
           [STAKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
@@ -162,7 +163,36 @@ const Staking = (): JSX.Element => {
       },
       onError: error => {
         // TODO: should add error handling UX
-        console.log('[stakeMutation] error => ', error);
+        console.log('[initialStakeMutation] error => ', error);
+      }
+    }
+  );
+
+  const moreStakeMutation = useMutation<void, Error, Stake>(
+    (variables: Stake) => {
+      return (async () => {
+        await window.bridge.interBtcApi.escrow.increaseAmount(variables.amount);
+        await window.bridge.interBtcApi.escrow.increaseUnlockHeight(variables.unlockHeight);
+      })();
+    },
+    {
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries([
+          GENERIC_FETCHER,
+          'interBtcApi',
+          'escrow',
+          'votingBalance',
+          address
+        ]);
+        console.log('[moreStakeMutation] variables => ', variables);
+        reset({
+          [STAKING_AMOUNT]: '0.0',
+          [LOCK_TIME]: '0'
+        });
+      },
+      onError: error => {
+        // TODO: should add error handling UX
+        console.log('[moreStakeMutation] error => ', error);
       }
     }
   );
@@ -178,10 +208,17 @@ const Staking = (): JSX.Element => {
     const lockTime = parseInt(data[LOCK_TIME]); // Weeks
     const unlockHeight = currentBlockNumber + (lockTime * 7 * 24 * 3600) / BLOCK_TIME;
 
-    stakeMutation.mutate({
-      amount: monetaryAmount,
-      unlockHeight
-    });
+    if (votingBalanceGreaterThanZero) {
+      moreStakeMutation.mutate({
+        amount: monetaryAmount,
+        unlockHeight
+      });
+    } else {
+      initialStakeMutation.mutate({
+        amount: monetaryAmount,
+        unlockHeight
+      });
+    }
   };
 
   const validateStakingAmount = (value = '0'): string | undefined => {
@@ -329,21 +366,27 @@ const Staking = (): JSX.Element => {
               tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} /> */}
             <SubmitButton
               disabled={initializing}
-              pending={stakeMutation.isLoading}>
+              pending={
+                initialStakeMutation.isLoading ||
+                moreStakeMutation.isLoading
+              }>
               {submitButtonLabel}
             </SubmitButton>
           </form>
         </Panel>
       </MainContainer>
-      {stakeMutation.isError && (
+      {(initialStakeMutation.isError || moreStakeMutation.isError) && (
         <ErrorModal
-          open={stakeMutation.isError}
+          open={initialStakeMutation.isError || moreStakeMutation.isError}
           onClose={() => {
-            stakeMutation.reset();
+            initialStakeMutation.reset();
+            moreStakeMutation.reset();
           }}
           title='Error'
           description={
-            stakeMutation.error?.message || ''
+            initialStakeMutation.error?.message ||
+            moreStakeMutation.error?.message ||
+            ''
           } />
       )}
     </>

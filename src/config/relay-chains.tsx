@@ -54,7 +54,6 @@ let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
 let GOVERNANCE_TOKEN_SYMBOL: string;
-<<<<<<< HEAD
 let RelayChainLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
@@ -63,9 +62,7 @@ let BridgeParachainLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }>;
-=======
 let VOTE_GOVERNANCE_TOKEN_SYMBOL: string;
->>>>>>> 276dfed5 (feat: componentize BalancesUI)
 let WrappedTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
