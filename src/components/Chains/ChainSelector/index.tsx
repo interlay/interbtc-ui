@@ -34,10 +34,7 @@ const ChainSelector = ({
     onChange={onChange}>
     {({ open }) => (
       <>
-        <SelectBody
-          className={clsx(
-            'w-full'
-          )}>
+        <SelectBody>
           <SelectButton variant={SELECT_VARIANTS.formField}>
             <span
               className={clsx(
@@ -48,10 +45,8 @@ const ChainSelector = ({
                 'py-2'
               )}>
               {selectedChain.icon}
-              <SelectText>
-                <span className='capitalize'>
-                  {selectedChain.name}
-                </span>
+              <SelectText className='capitalize'>
+                {selectedChain.name}
               </SelectText>
             </span>
           </SelectButton>
