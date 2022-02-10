@@ -69,7 +69,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
     }
 
     const vaultRegistrations = vaults.data.vaults;
-    const graphTimestamps = getLastMidnightTimestamps(5, true);
+    const graphTimestamps = getLastMidnightTimestamps(5, true).map(date => date.getTime());
     const graphData = graphTimestamps.map(
       timestamp => vaultRegistrations.filter(
         registration => registration.timestamp <= timestamp

@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useErrorHandler,
@@ -6,7 +7,6 @@ import {
 } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import clsx from 'clsx';
-import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RedeemedChart from './RedeemedChart';
 import Stats, {
@@ -19,22 +19,25 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import graphqlFetcher, {
   GraphqlReturn,
   GRAPHQL_FETCHER
 } from 'services/fetchers/graphql-fetcher';
 import redeemCountQuery from 'services/queries/redeem-count-query';
+import cumulativeVolumesFetcher, {
+  CUMULATIVE_VOLUMES_FETCHER,
+  VolumeDataPoint,
+  VolumeType
+} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
 
 const UpperContent = (): JSX.Element => {
   const {
-    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+
+  const nowAtfirstLoad = useMemo(() => new Date(), []);
 
   const {
     isIdle: totalSuccessfulRedeemsIdle,
@@ -51,39 +54,38 @@ const UpperContent = (): JSX.Element => {
   useErrorHandler(totalSuccessfulRedeemsError);
 
   const {
-    isIdle: totalRedeemedAmountIdle,
-    isLoading: totalRedeemedAmountLoading,
-    data: totalRedeemedAmount,
-    error: totalRedeemedAmountError
-  } = useQuery<number, Error>(
+    isIdle: cumulativeRedeemsPerDayIdle,
+    isLoading: cumulativeRedeemsPerDayLoading,
+    data: cumulativeRedeemsPerDay,
+    error: cumulativeRedeemsPerDayError
+  // TODO: should type properly (`Relay`)
+  } = useQuery<VolumeDataPoint[], Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getTotalRedeemedAmount'
+      CUMULATIVE_VOLUMES_FETCHER,
+      'Redeemed' as VolumeType,
+      [nowAtfirstLoad]
     ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    cumulativeVolumesFetcher
   );
-  useErrorHandler(totalRedeemedAmountError);
+  useErrorHandler(cumulativeRedeemsPerDayError);
 
   // TODO: should use skeleton loaders
   if (
     totalSuccessfulRedeemsIdle ||
     totalSuccessfulRedeemsLoading ||
-    totalRedeemedAmountIdle ||
-    totalRedeemedAmountLoading
+    cumulativeRedeemsPerDayIdle ||
+    cumulativeRedeemsPerDayLoading
   ) {
     return <>Loading...</>;
   }
-  if (totalRedeemedAmount === undefined) {
+  if (cumulativeRedeemsPerDay === undefined) {
     throw new Error('Something went wrong!');
   }
   if (totalSuccessfulRedeems === undefined) {
     throw new Error('Something went wrong!');
   }
   const totalSuccessfulRedeemCount = totalSuccessfulRedeems.data.redeemsConnection.totalCount;
+  const totalRedeemedAmount = cumulativeRedeemsPerDay[0].amount;
 
   // TODO: add this again when the network is stable
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;
@@ -110,12 +112,12 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.redeem.total_redeemed')}
             </StatsDt>
             <StatsDd>
-              {BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC()}
+              {totalRedeemedAmount.str.BTC()}
               &nbsp;BTC
             </StatsDd>
             <StatsDd>
               {/* eslint-disable-next-line max-len */}
-              ${(prices.bitcoin.usd * Number(BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC())).toLocaleString()}
+              ${(prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
             </StatsDd>
             <StatsDt className='!text-interlayConifer'>
               {t('dashboard.redeem.total_redeems')}

@@ -1,16 +1,14 @@
-
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import LineChart from '../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { WRAPPED_TOKEN_SYMBOL, WRAPPED_TOKEN } from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
@@ -21,61 +19,79 @@ import {
   KINTSUGI_MIDNIGHT,
   KINTSUGI_PRAIRIE_SAND
 } from 'utils/constants/colors';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
-
-// TODO: duplicated
-// TODO: should be imported
-interface BTCTimeData {
-  date: Date;
-  btc: BitcoinAmount;
-}
+import { getLastMidnightTimestamps } from 'common/utils/utils';
+import { useMemo } from 'react';
+import cumulativeVolumesFetcher,
+{
+  CUMULATIVE_VOLUMES_FETCHER,
+  VolumeDataPoint,
+  VolumeType
+} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
 
 const IssuedChart = (): JSX.Element => {
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+
+  // get 6 values to be able to calculate difference between 5 days ago and 6 days ago
+  // thus issues per day 5 days ago can be displayed
+  // cumulative issues is also only displayed to 5 days
+  const cutoffTimestamps = useMemo(() => getLastMidnightTimestamps(6, true), []);
 
   const {
     isIdle: cumulativeIssuesPerDayIdle,
     isLoading: cumulativeIssuesPerDayLoading,
     data: cumulativeIssuesPerDay,
     error: cumulativeIssuesPerDayError
-  } = useQuery<Array<BTCTimeData>, Error>(
+  // TODO: should type properly (`Relay`)
+  } = useQuery<VolumeDataPoint[], Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getRecentDailyIssues',
-      { daysBack: 6 }
+      CUMULATIVE_VOLUMES_FETCHER,
+      'Issued' as VolumeType,
+      cutoffTimestamps
     ],
-    genericFetcher<Array<BTCTimeData>>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeIssuesPerDayError);
 
+  const {
+    isIdle: cumulativeRedeemsPerDayIdle,
+    isLoading: cumulativeRedeemsPerDayLoading,
+    data: cumulativeRedeemsPerDay,
+    error: cumulativeRedeemsPerDayError
+  // TODO: should type properly (`Relay`)
+  } = useQuery<VolumeDataPoint[], Error>(
+    [
+      CUMULATIVE_VOLUMES_FETCHER,
+      'Redeemed' as VolumeType,
+      cutoffTimestamps
+    ],
+    cumulativeVolumesFetcher
+  );
+  useErrorHandler(cumulativeRedeemsPerDayError);
+
   // TODO: should use skeleton loaders
-  if (cumulativeIssuesPerDayIdle || cumulativeIssuesPerDayLoading) {
+  if (cumulativeIssuesPerDayIdle || cumulativeIssuesPerDayLoading ||
+  cumulativeRedeemsPerDayIdle || cumulativeRedeemsPerDayLoading) {
     return <>Loading...</>;
   }
-  if (cumulativeIssuesPerDay === undefined) {
+  if (cumulativeIssuesPerDay === undefined || cumulativeRedeemsPerDay === undefined) {
     throw new Error('Something went wrong!');
   }
 
-  const converted = cumulativeIssuesPerDay.map(item => ({
-    date: item.date.getTime(),
-    sat: Number(item.btc.str.Satoshi())
-  }));
-
-  const pointIssuesPerDay = converted.map((dataPoint, i) => {
-    if (i === 0) {
-      return 0;
-    } else {
-      return dataPoint.sat - converted[i - 1].sat;
-    }
+  const cumulativeTvlPerDay = cumulativeIssuesPerDay.map((issuePoint, i) => {
+    const redeemPoint = cumulativeRedeemsPerDay[i];
+    return {
+      amount: issuePoint.amount.sub(redeemPoint.amount),
+      tillTimestamp: issuePoint.tillTimestamp
+    };
   });
+
+  const pointTvlPerDay = cumulativeTvlPerDay.map((dataPoint, i) => {
+    if (i === 0) {
+      return newMonetaryAmount(0, WRAPPED_TOKEN);
+    } else {
+      return dataPoint.amount.sub(cumulativeTvlPerDay[i - 1].amount);
+    }
+  }).slice(1); // cut off first 0 value
 
   let firstChartLineColor;
   let secondChartLineColor;
@@ -106,9 +122,8 @@ const IssuedChart = (): JSX.Element => {
         })
       ]}
       yLabels={
-        converted
-          .slice(1)
-          .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))
+        cutoffTimestamps.slice(1)
+          .map(timestamp => timestamp.toISOString().substring(0, 10))
       }
       yAxes={[
         {
@@ -121,15 +136,14 @@ const IssuedChart = (): JSX.Element => {
         {
           position: 'right',
           ticks: {
+            beginAtZero: true,
             maxTicksLimit: 6
           }
         }
       ]}
       datasets={[
-        converted
-          .slice(1)
-          .map(dataPoint => Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())),
-        pointIssuesPerDay.slice(1).map(sat => Number(BitcoinAmount.from.Satoshi(sat).str.BTC()))
+        cumulativeTvlPerDay.slice(1).map(dataPoint => dataPoint.amount.str.BTC()),
+        pointTvlPerDay.map(amount => amount.str.BTC())
       ]} />
   );
 };

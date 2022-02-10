@@ -10,7 +10,6 @@ import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
-  reverseEndiannessHex,
   stripHexPrefix
 } from '@interlay/interbtc-api';
 
@@ -83,20 +82,19 @@ const BlocksTable = (): JSX.Element => {
     () => [
       {
         Header: t('dashboard.relay.block_height'),
-        accessor: 'height',
+        accessor: 'backingHeight',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('dashboard.relay.block_hash'),
-        accessor: 'hash',
+        accessor: 'blockHash',
         classNames: [
           'text-right'
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
-          const payload: { content: string; } = JSON.parse(value);
-          const hash = reverseEndiannessHex(stripHexPrefix(payload.content));
+          const hash = stripHexPrefix(value);
           return (
             <ExternalLink href={`${BTC_BLOCK_API}${hash}`}>
               {hash}
@@ -105,18 +103,39 @@ const BlocksTable = (): JSX.Element => {
         }
       },
       {
-        Header: t('dashboard.relay.timestamp'),
-        accessor: 'relayTs',
+        Header: t('dashboard.relay.inclusion_timestamp'),
+        accessor: 'timestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        Cell: function FormattedCell({ value }: { value: string; }) {
           return (
             <>
               {formatDateTimePrecise(new Date(value))}
             </>
           );
         }
+      },
+      {
+        Header: t('dashboard.relay.inclusion_block'),
+        accessor: 'relayedAtHeight',
+        classNames: [
+          'text-right'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          return (
+            <>
+              {value.absolute}
+            </>
+          );
+        }
+      },
+      {
+        Header: t('dashboard.relay.relayed_by'),
+        accessor: 'relayer',
+        classNames: [
+          'text-right'
+        ]
       }
     ],
     [t]

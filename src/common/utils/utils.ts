@@ -50,15 +50,12 @@ function formatDateTimePrecise(date: Date): string {
   return date.toDateString().substring(4) + ' ' + date.toTimeString().substring(0, 8);
 }
 
-function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): Array<number> {
-  const midnights: number[] = [];
+function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): Array<Date> {
+  const midnights: Date[] = [];
   for (let index = 0; index < daysBack; index++) {
-    const dayBoundary = new Date(Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000);
-    dayBoundary.setMilliseconds(0);
-    dayBoundary.setSeconds(0);
-    dayBoundary.setMinutes(0);
-    dayBoundary.setHours(0);
-    midnights.push(dayBoundary.getTime());
+    const timestamp = Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000;
+    const partialDay = timestamp % (86400 * 1000); // modulo ms per day
+    midnights.push(new Date(timestamp - partialDay));
   }
 
   return midnights.reverse();

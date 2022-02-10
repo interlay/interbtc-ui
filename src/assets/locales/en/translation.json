@@ -235,9 +235,11 @@
     "relay": {
       "btc_relay": "BTC Relay",
       "blocks": "Blocks",
-      "block_height": "Block height",
-      "block_hash": "Block hash",
-      "timestamp": "Added to parachain",
+      "block_height": "Bitcoin height",
+      "block_hash": "Bitcoin block hash",
+      "relayed_by": "Relayed by",
+      "inclusion_timestamp": "Added to parachain",
+      "inclusion_block": "Added on parachain block",
       "block_number": "Block {{number}}",
       "relay_is": "BTC Relay is",
       "blockstream_verify_link": "Verify on blockstream.info"
