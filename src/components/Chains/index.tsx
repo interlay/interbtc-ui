@@ -22,13 +22,13 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
 
 const Chains = (): JSX.Element => {
   // Set initial value to first item in CHAIN_OPTIONS object
-  const [currentChain, setCurrentChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
+  const [selectedChain, setselectedChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
 
   return (
     <ChainSelector
       chainOptions={CHAIN_OPTIONS}
-      currentChain={currentChain}
-      onChange={setCurrentChain} />
+      selectedChain={selectedChain}
+      onChange={setselectedChain} />
   );
 };
 
