@@ -1,15 +1,15 @@
 {
   "name": "interbtc-ui",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^1.0.3",
-    "@interlay/interbtc": "1.5.8",
-    "@polkadot/api": "6.9.2",
+    "@interlay/interbtc": "1.6.0",
+    "@polkadot/api": "7.7.1",
     "@polkadot/extension-dapp": "0.41.2",
-    "@polkadot/types": "6.9.2",
+    "@polkadot/types": "7.7.1",
     "@polkadot/ui-keyring": "0.87.5",
     "@reach/tooltip": "^0.16.0",
     "@tailwindcss/forms": "^0.3.2",
@@ -56,6 +56,7 @@
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
+    "@open-wc/webpack-import-meta-loader": "^0.4.7",
     "@storybook/addon-actions": "^6.2.8",
     "@storybook/addon-essentials": "^6.2.8",
     "@storybook/addon-links": "^6.2.8",
