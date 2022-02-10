@@ -302,12 +302,10 @@ const Staking = (): JSX.Element => {
               optional={votingBalanceGreaterThanZero}
               disabled={votingBalanceGreaterThanZero === undefined} />
             {votingBalanceGreaterThanZero ? (
-              // ray test touch <<
               <InformationUI
                 label='New unlock date'
                 value='Dec 16, 2023 (hardcoded)'
                 tooltip='Your original lock date plus the extended lock time.' />
-              // ray test touch >>
             ) : (
               <InformationUI
                 label='Unlock date'
@@ -325,12 +323,10 @@ const Staking = (): JSX.Element => {
               value='12.24% (hardcoded)'
               // eslint-disable-next-line max-len
               tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
-            {/* ray test touch << */}
             {/* <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
               tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} /> */}
-            {/* ray test touch >> */}
             <SubmitButton
               disabled={initializing}
               pending={stakeMutation.isLoading}>
