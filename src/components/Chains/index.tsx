@@ -1,13 +1,13 @@
 
 import * as React from 'react';
 
+import ChainSelector, { ChainOption } from './ChainSelector';
 import {
   RelayChainLogoIcon,
   BridgeParachainLogoIcon,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME
 } from 'config/relay-chains';
-import ChainSelector, { ChainOption } from './ChainSelector';
 
 const CHAIN_OPTIONS: Array<ChainOption> = [
   {
