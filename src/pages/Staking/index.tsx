@@ -20,10 +20,12 @@ import {
   Currency
 } from '@interlay/monetary-js';
 import {
+  DefaultTransactionAPI,
   GovernanceUnit,
   newMonetaryAmount,
   VoteUnit
 } from '@interlay/interbtc-api';
+import { AddressOrPair } from '@polkadot/api/types';
 
 import Title from './Title';
 import BalancesUI from './BalancesUI';
@@ -171,8 +173,18 @@ const Staking = (): JSX.Element => {
   const moreStakeMutation = useMutation<void, Error, Stake>(
     (variables: Stake) => {
       return (async () => {
-        await window.bridge.interBtcApi.escrow.increaseAmount(variables.amount);
-        await window.bridge.interBtcApi.escrow.increaseUnlockHeight(variables.unlockHeight);
+        const txs = [
+          window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
+            variables.amount.toString(variables.amount.currency.rawBase)
+          ),
+          window.bridge.interBtcApi.api.tx.escrow.increaseUnlockHeight(variables.unlockHeight)
+        ];
+        const batch = window.bridge.interBtcApi.api.tx.utility.batchAll(txs);
+        await DefaultTransactionAPI.sendLogged(
+          window.bridge.interBtcApi.api,
+          window.bridge.interBtcApi.account as AddressOrPair,
+          batch
+        );
       })();
     },
     {
