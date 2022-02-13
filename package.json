@@ -6,18 +6,10 @@
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^1.0.3",
-<<<<<<< HEAD
     "@interlay/interbtc": "1.6.0",
     "@polkadot/api": "7.7.1",
     "@polkadot/extension-dapp": "0.42.7",
     "@polkadot/types": "7.7.1",
-=======
-    "@interlay/interbtc": "1.5.9",
-    "@polkadot/api": "6.9.2",
-    "@polkadot/extension-dapp": "0.41.2",
-    "@polkadot/types": "6.9.2",
-    "@polkadot/ui-keyring": "0.87.5",
->>>>>>> d02d7b8b (fix: make API corrections with the upgraded interbtc)
     "@reach/tooltip": "^0.16.0",
     "@tailwindcss/forms": "^0.3.2",
     "@testing-library/jest-dom": "^5.11.4",

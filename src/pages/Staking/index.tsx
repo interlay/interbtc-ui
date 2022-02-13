@@ -162,7 +162,7 @@ const Staking = (): JSX.Element => {
           'votingBalance',
           address
         ]);
-        console.log('[initialStakeMutation] variables => ', variables);
+        console.log('[initialStakeMutation onSuccess] variables => ', variables);
         reset({
           [STAKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
@@ -170,7 +170,7 @@ const Staking = (): JSX.Element => {
       },
       onError: error => {
         // TODO: should add error handling UX
-        console.log('[initialStakeMutation] error => ', error);
+        console.log('[initialStakeMutation onError] error => ', error);
       }
     }
   );
@@ -201,7 +201,7 @@ const Staking = (): JSX.Element => {
           'votingBalance',
           address
         ]);
-        console.log('[moreStakeMutation] variables => ', variables);
+        console.log('[moreStakeMutation onSuccess] variables => ', variables);
         reset({
           [STAKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
@@ -209,7 +209,7 @@ const Staking = (): JSX.Element => {
       },
       onError: error => {
         // TODO: should add error handling UX
-        console.log('[moreStakeMutation] error => ', error);
+        console.log('[moreStakeMutation onError] error => ', error);
       }
     }
   );
