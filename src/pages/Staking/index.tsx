@@ -15,6 +15,7 @@ import {
   format,
   add
 } from 'date-fns';
+import Big from 'big.js';
 import {
   MonetaryAmount,
   Currency
@@ -64,6 +65,10 @@ const getUnlockDateLabel = (weeks: number) => {
   } else {
     return '-';
   }
+};
+
+const getLockBlocks = (weeks: number) => {
+  return (weeks * 7 * 24 * 3600) / BLOCK_TIME;
 };
 
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
@@ -218,7 +223,7 @@ const Staking = (): JSX.Element => {
     const monetaryAmount = newMonetaryAmount(data[STAKING_AMOUNT], GOVERNANCE_TOKEN, true);
 
     const lockTime = parseInt(data[LOCK_TIME]); // Weeks
-    const unlockHeight = currentBlockNumber + (lockTime * 7 * 24 * 3600) / BLOCK_TIME;
+    const unlockHeight = currentBlockNumber + getLockBlocks(lockTime);
 
     if (votingBalanceGreaterThanZero) {
       moreStakeMutation.mutate({
@@ -244,11 +249,15 @@ const Staking = (): JSX.Element => {
       return 'Staking amount must be less than governance token balance!';
     }
 
-    // ray test touch <<
-    // https://discord.com/channels/745259537707040778/935115900749750302/939154203157336184
-    // https://discord.com/channels/745259537707040778/935115900749750302/940517338497843200
-    // https://discord.com/channels/745259537707040778/935115900749750302/940193456117153803
-    // ray test touch >>
+    const planckStakingAmount = monetaryStakingAmount.to.Planck();
+    const lockBlocks = getLockBlocks(parseInt(lockTime));
+    // This is related to the on-chain implementation where currency values are integers.
+    // So less tokens than the period would likely round to 0.
+    // So on the UI, as long as you require more planck to be locked than the number of blocks the user locks for,
+    // it should be good.
+    if (planckStakingAmount.lte(Big(lockBlocks))) {
+      return 'Planck to be locked must be greater than the number of blocks you lock for!';
+    }
 
     return undefined;
   };
