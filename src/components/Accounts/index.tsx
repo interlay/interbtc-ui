@@ -1,36 +1,100 @@
 
 import * as React from 'react';
+import clsx from 'clsx';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-import AccountSelector, { AccountOption } from './AccountSelector';
-import {
-  RelayChainLogoIcon,
-  BridgeParachainLogoIcon,
-  RELAY_CHAIN_NAME,
-  BRIDGE_PARACHAIN_NAME
-} from 'config/relay-chains';
+import { shortAddress } from 'common/utils/utils';
+import useGetAccounts from 'utils/hooks/use-get-accounts';
+import Select, {
+  SelectButton,
+  SelectOptions,
+  SelectOption,
+  SelectBody,
+  SelectCheck,
+  SelectText,
+  SELECT_VARIANTS
+} from 'components/Select';
 
-const ACCOUNT_OPTIONS: Array<AccountOption> = [
-  {
-    name: RELAY_CHAIN_NAME,
-    icon: <RelayChainLogoIcon height={46} />
-  },
-  {
-    name: BRIDGE_PARACHAIN_NAME,
-    icon: <BridgeParachainLogoIcon height={46} />
-  }
-];
+const AccountSelector = (): JSX.Element => {
+  const [selectedAccount, setSelectedAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
+  const accounts = useGetAccounts();
 
-const Accounts = (): JSX.Element => {
-  // Set initial value to first item in CHAIN_OPTIONS object
-  const [selectedChain, setselectedChain] = React.useState<AccountOption>(ACCOUNT_OPTIONS[0]);
+  React.useEffect(() => {
+    if (!accounts) return;
+    if (selectedAccount) return;
+
+    setSelectedAccount(accounts[0]);
+  }, [
+    accounts,
+    selectedAccount
+  ]);
 
   return (
-    <AccountSelector
-      chainOptions={ACCOUNT_OPTIONS}
-      selectedChain={selectedChain}
-      onChange={setselectedChain} />
+    <>
+      {accounts && selectedAccount ? (
+        <Select
+          variant={SELECT_VARIANTS.formField}
+          key={selectedAccount.meta.name}
+          value={selectedAccount}
+          onChange={setSelectedAccount}>
+          {({ open }) => (
+            <>
+              <SelectBody>
+                <SelectButton variant={SELECT_VARIANTS.formField}>
+                  <span
+                    className={clsx(
+                      'flex',
+                      'justify-between',
+                      'py-2'
+                    )}>
+                    <SelectText>
+                      {selectedAccount.meta.name}
+                    </SelectText>
+                    <SelectText>
+                      {shortAddress(selectedAccount.address.toString())}
+                    </SelectText>
+                  </span>
+                </SelectButton>
+                <SelectOptions open={open}>
+                  {accounts.map((account: InjectedAccountWithMeta) => {
+                    return (
+                      <SelectOption
+                        key={account.meta.name}
+                        value={account}>
+                        {({
+                          selected,
+                          active
+                        }) => (
+                          <>
+                            <span
+                              className={clsx(
+                                'flex',
+                                'justify-between',
+                                'mr-4'
+                              )}>
+                              <SelectText>
+                                {selectedAccount.meta.name}
+                              </SelectText>
+                              <SelectText>
+                                {shortAddress(selectedAccount.address.toString())}
+                              </SelectText>
+                            </span>
+                            {selected ? (
+                              <SelectCheck active={active} />
+                            ) : null}
+                          </>
+                        )}
+                      </SelectOption>
+                    );
+                  })}
+                </SelectOptions>
+              </SelectBody>
+            </>
+          )}
+        </Select>) :
+        null}
+    </>
   );
 };
 
-export type { AccountOption };
-export default Accounts;
+export default AccountSelector;

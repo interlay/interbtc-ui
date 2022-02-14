@@ -9,7 +9,7 @@ import { StoreType } from 'common/types/util.types';
 
 const useGetAccounts = (): Array<InjectedAccountWithMeta> => {
   // TODO: this only needs to be done once and should be handled
-  // with either state or context, or by using react-query.
+  // with either state or context, or by wrapping react-query.
   const [accounts, setAccounts] = React.useState<Array<InjectedAccountWithMeta>>([]);
 
   const { extensions } = useSelector((state: StoreType) => state.general);

@@ -13,6 +13,7 @@ import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
 import { Currency } from '@interlay/monetary-js';
 
 import TokenAmountField from '../TokenAmountField';
+import Accounts from 'components/Accounts';
 import Tokens, {
   TokenOption
 } from 'components/Tokens';
@@ -170,6 +171,9 @@ const TransferForm = (): JSX.Element => {
               error={!!errors[TRANSFER_AMOUNT]}
               helperText={errors[TRANSFER_AMOUNT]?.message} />
           </div>
+        </div>
+        <div>
+          <Accounts />
         </div>
         <div>
           <TextField
