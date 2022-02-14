@@ -73,10 +73,10 @@ const AccountSelector = (): JSX.Element => {
                                 'mr-4'
                               )}>
                               <SelectText>
-                                {selectedAccount.meta.name}
+                                {account.meta.name}
                               </SelectText>
                               <SelectText>
-                                {shortAddress(selectedAccount.address.toString())}
+                                {shortAddress(account.address.toString())}
                               </SelectText>
                             </span>
                             {selected ? (
