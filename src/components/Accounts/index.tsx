@@ -1,21 +1,10 @@
-
 import * as React from 'react';
-import clsx from 'clsx';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-import { shortAddress } from 'common/utils/utils';
+import AccountSelector from './AccountSelector';
 import useGetAccounts from 'utils/hooks/use-get-accounts';
-import Select, {
-  SelectButton,
-  SelectOptions,
-  SelectOption,
-  SelectBody,
-  SelectCheck,
-  SelectText,
-  SELECT_VARIANTS
-} from 'components/Select';
 
-const AccountSelector = (): JSX.Element => {
+const Accounts = (): JSX.Element => {
   const [selectedAccount, setSelectedAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const accounts = useGetAccounts();
 
@@ -23,6 +12,7 @@ const AccountSelector = (): JSX.Element => {
     if (!accounts) return;
     if (selectedAccount) return;
 
+    // Set selected account to first item
     setSelectedAccount(accounts[0]);
   }, [
     accounts,
@@ -32,69 +22,13 @@ const AccountSelector = (): JSX.Element => {
   return (
     <>
       {accounts && selectedAccount ? (
-        <Select
-          variant={SELECT_VARIANTS.formField}
-          key={selectedAccount.meta.name}
-          value={selectedAccount}
-          onChange={setSelectedAccount}>
-          {({ open }) => (
-            <>
-              <SelectBody>
-                <SelectButton variant={SELECT_VARIANTS.formField}>
-                  <span
-                    className={clsx(
-                      'flex',
-                      'justify-between',
-                      'py-2'
-                    )}>
-                    <SelectText>
-                      {selectedAccount.meta.name}
-                    </SelectText>
-                    <SelectText>
-                      {shortAddress(selectedAccount.address.toString())}
-                    </SelectText>
-                  </span>
-                </SelectButton>
-                <SelectOptions open={open}>
-                  {accounts.map((account: InjectedAccountWithMeta) => {
-                    return (
-                      <SelectOption
-                        key={account.meta.name}
-                        value={account}>
-                        {({
-                          selected,
-                          active
-                        }) => (
-                          <>
-                            <span
-                              className={clsx(
-                                'flex',
-                                'justify-between',
-                                'mr-4'
-                              )}>
-                              <SelectText>
-                                {account.meta.name}
-                              </SelectText>
-                              <SelectText>
-                                {shortAddress(account.address.toString())}
-                              </SelectText>
-                            </span>
-                            {selected ? (
-                              <SelectCheck active={active} />
-                            ) : null}
-                          </>
-                        )}
-                      </SelectOption>
-                    );
-                  })}
-                </SelectOptions>
-              </SelectBody>
-            </>
-          )}
-        </Select>) :
-        null}
+        <AccountSelector
+          accounts={accounts}
+          selectedAccount={selectedAccount}
+          onChange={setSelectedAccount} />
+      ) : null}
     </>
   );
 };
 
-export default AccountSelector;
+export default Accounts;
