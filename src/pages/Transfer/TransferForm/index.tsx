@@ -13,7 +13,6 @@ import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
 import { Currency } from '@interlay/monetary-js';
 
 import TokenAmountField from '../TokenAmountField';
-import Accounts from 'components/Accounts';
 import Tokens, {
   TokenOption
 } from 'components/Tokens';
