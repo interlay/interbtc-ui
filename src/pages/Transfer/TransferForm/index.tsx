@@ -173,9 +173,6 @@ const TransferForm = (): JSX.Element => {
           </div>
         </div>
         <div>
-          <Accounts />
-        </div>
-        <div>
           <TextField
             id={RECIPIENT_ADDRESS}
             name={RECIPIENT_ADDRESS}
