@@ -19,6 +19,7 @@
   "reimbursed": "Reimbursed",
   "online": "Online",
   "offline": "Offline",
+  "unavailable": "Unavailable",
   "ok": "OK",
   "pending": "Pending",
   "not_applicable": "N/A",
@@ -250,6 +251,7 @@
       "oracles_are": "Oracles are",
       "online": "online",
       "offline": "offline",
+      "not_available": "not available",
       "loading": "loading..."
     },
     "vault": {

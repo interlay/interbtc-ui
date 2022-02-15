@@ -5,6 +5,7 @@ import {
 } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import LineChart from '../../../../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
@@ -41,11 +42,12 @@ const RedeemedChart = (): JSX.Element => {
     data: cumulativeRedeemsPerDay,
     error: cumulativeRedeemsPerDayError
   // TODO: should type properly (`Relay`)
-  } = useQuery<VolumeDataPoint[], Error>(
+  } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
     [
       CUMULATIVE_VOLUMES_FETCHER,
       'Redeemed' as VolumeType,
-      cutoffTimestamps
+      cutoffTimestamps,
+      WRAPPED_TOKEN
     ],
     cumulativeVolumesFetcher
   );

@@ -7,6 +7,7 @@ import {
 } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import clsx from 'clsx';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import RedeemedChart from './RedeemedChart';
 import Stats, {
@@ -30,6 +31,7 @@ import cumulativeVolumesFetcher, {
   VolumeDataPoint,
   VolumeType
 } from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+import { WRAPPED_TOKEN } from 'config/relay-chains';
 
 const UpperContent = (): JSX.Element => {
   const {
@@ -59,11 +61,12 @@ const UpperContent = (): JSX.Element => {
     data: cumulativeRedeemsPerDay,
     error: cumulativeRedeemsPerDayError
   // TODO: should type properly (`Relay`)
-  } = useQuery<VolumeDataPoint[], Error>(
+  } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
     [
       CUMULATIVE_VOLUMES_FETCHER,
       'Redeemed' as VolumeType,
-      [nowAtfirstLoad]
+      [nowAtfirstLoad],
+      WRAPPED_TOKEN
     ],
     cumulativeVolumesFetcher
   );

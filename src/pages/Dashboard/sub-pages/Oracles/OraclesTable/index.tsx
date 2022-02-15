@@ -1,6 +1,5 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+// // @ts-nocheck
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -11,8 +10,13 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
-import { ExchangeRate } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
+import {
+  Currency,
+  ExchangeRate,
+  Bitcoin,
+  BitcoinUnit
+} from '@interlay/monetary-js';
 
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
@@ -25,7 +29,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import genericFetcher, {
   GENERIC_FETCHER
 } from 'services/fetchers/generic-fetcher';
@@ -33,29 +37,72 @@ import { formatDateTime } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as CheckCircleIcon } from 'assets/img/icons/check-circle.svg';
 import { ReactComponent as CancelIcon } from 'assets/img/icons/cancel.svg';
+import {
+  allLatestSubmissionsFetcher,
+  BtcToCurrencyOracleStatus,
+  ORACLE_ALL_LATEST_UPDATES_FETCHER
+} from 'services/fetchers/oracle-exchange-rates-fetcher';
 
 const OracleTable = (): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
-    isIdle: oraclesIdle,
-    isLoading: oraclesLoading,
-    data: oracles,
-    error: oraclesError
-  } = useQuery<Array<CollateralBtcOracleStatus>, Error>(
+    isIdle: namesMapIdle,
+    isLoading: namesMapLoading,
+    data: namesMap,
+    error: namesMapError
+  } = useQuery<Map<string, string>, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getLatestSubmissionForEachOracle',
-      COLLATERAL_TOKEN_SYMBOL
+      'interBtcApi',
+      'oracle',
+      'getSourcesById'
     ],
-    genericFetcher<Array<CollateralBtcOracleStatus>>(),
+    genericFetcher<Map<string, string>>(),
     {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(oraclesError);
+  useErrorHandler(namesMapError);
+
+  const {
+    isIdle: oracleTimeoutIdle,
+    isLoading: oracleTimeoutLoading,
+    data: oracleTimeout,
+    error: oracleTimeoutError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'oracle',
+      'getOnlineTimeout'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(oracleTimeoutError);
+
+  const {
+    isIdle: oracleSubmissionsIdle,
+    isLoading: oracleSubmissionsLoading,
+    data: oracleSubmissions,
+    error: oracleSubmissionsError
+  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit>[], Error >(
+    [
+      ORACLE_ALL_LATEST_UPDATES_FETCHER,
+      COLLATERAL_TOKEN,
+      oracleTimeout,
+      namesMap
+    ],
+    allLatestSubmissionsFetcher,
+    {
+      enabled: !!oracleTimeout && !!namesMap
+    }
+  );
+  useErrorHandler(oracleSubmissionsError);
 
   const columns = React.useMemo(
     () => [
@@ -91,7 +138,11 @@ const OracleTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: ExchangeRate; }) {
+        Cell: function FormattedCell({ value }: {
+          value: ExchangeRate<
+            Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit
+          >;
+        }) {
           return (
             <>1 BTC = {value.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}</>
           );
@@ -139,16 +190,23 @@ const OracleTable = (): JSX.Element => {
   } = useTable(
     {
       columns,
-      data: oracles ?? []
+      data: oracleSubmissions ?? []
     }
   );
 
-  if (oraclesIdle || oraclesLoading) {
+  if (
+    namesMapIdle ||
+    namesMapLoading ||
+    oracleTimeoutIdle ||
+    oracleTimeoutLoading ||
+    oracleSubmissionsIdle ||
+    oracleSubmissionsLoading
+  ) {
     return (
       <PrimaryColorEllipsisLoader />
     );
   }
-  if (!oracles) {
+  if (!oracleSubmissions) {
     throw new Error('Something went wrong!');
   }
 
@@ -160,14 +218,14 @@ const OracleTable = (): JSX.Element => {
         'mx-auto'
       )}>
       <SectionTitle>
-        {t('dashboard.relay.blocks')}
+        {t('dashboard.oracles.oracles')}
       </SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
-          {headerGroups.map(headerGroup => (
+          {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key
             <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column: any) => (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTh
                   {...column.getHeaderProps([
@@ -183,13 +241,13 @@ const OracleTable = (): JSX.Element => {
           ))}
         </InterlayThead>
         <InterlayTbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {rows.map((row: any) => {
             prepareRow(row);
 
             return (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...row.getRowProps()}>
-                {row.cells.map(cell => {
+                {row.cells.map((cell: any) => {
                   return (
                     // eslint-disable-next-line react/jsx-key
                     <InterlayTd

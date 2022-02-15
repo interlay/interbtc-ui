@@ -301,8 +301,8 @@ const VaultRedeemRequestsTable = ({
     });
   };
 
-  const totalSuccessfulIssueCount = redeemRequestsTotalCount.data.issuesConnection.totalCount || 0;
-  const pageCount = Math.ceil(totalSuccessfulIssueCount / TABLE_PAGE_LIMIT);
+  const totalSuccessfulRedeemCount = redeemRequestsTotalCount.data.redeemsConnection.totalCount || 0;
+  const pageCount = Math.ceil(totalSuccessfulRedeemCount / TABLE_PAGE_LIMIT);
 
   return (
     <InterlayTableContainer className='space-y-6'>

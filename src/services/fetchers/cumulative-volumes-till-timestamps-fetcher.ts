@@ -1,41 +1,48 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
 import {
-  BitcoinUnit,
   Currency,
   MonetaryAmount
 } from '@interlay/monetary-js';
-import { CollateralToken, WRAPPED_TOKEN } from 'config/relay-chains';
+import { CollateralToken, WrappedToken } from 'config/relay-chains';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 
 const CUMULATIVE_VOLUMES_FETCHER = 'cumulative-volumes-fetcher';
 
 // TODO: should type properly (`Relay`)
 type VolumeType = 'Issue' | 'Redeem';
-type VolumeDataPoint = {
-  amount: MonetaryAmount<Currency<BitcoinUnit>, BitcoinUnit>;
+type VolumeDataPoint<U extends CurrencyUnit> = {
+  amount: MonetaryAmount<Currency<U>, U>;
   tillTimestamp: Date;
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const cumulativeVolumesFetcher = async ({ queryKey }: any): Promise<Array<VolumeDataPoint>> => {
+const cumulativeVolumesFetcher = async <U extends CurrencyUnit>(
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  { queryKey }: any
+): Promise<Array<VolumeDataPoint<U>>> => {
   const [
     key,
     type,
     cutoffTimestamps,
-    collateralCurrency
-  ] = queryKey as CumulativeVolumesFetcherParams;
+    returnCurrency,
+    collateralCurrency,
+    wrappedCurrency
+  ] = queryKey as CumulativeVolumesFetcherParams<U>;
 
   if (key !== CUMULATIVE_VOLUMES_FETCHER) throw new Error('Invalid key!');
 
-  const queryFragment = (type: VolumeType, date: Date, currency?: string) => {
+  const queryFragment = (type: VolumeType, date: Date, collateralCurrency?: string, wrappedCurrency?: string) => {
     const where = `{
       tillTimestamp_lte: "${date.toISOString()}",
       type_eq: ${type},
-      ${currency ? `currency: ${currency}` : ``}
+      ${(collateralCurrency && wrappedCurrency) ? `
+        collateralCurrency_eq: ${collateralCurrency},
+        wrappedCurrency_eq: ${wrappedCurrency}
+        ` : `
+      `}
     }`;
-    const entityName = currency ? `cumulativeVolumePerCollaterals` : `cumulativeVolumes`;
+    const entityName = collateralCurrency ? `cumulativeVolumePerCurrencyPairs` : `cumulativeVolumes`;
     return `
-      ts${date.getTime()}: ${entityName} (where: ${where}, limit: 1) {
+      ts${date.getTime()}: ${entityName} (where: ${where}, orderBy: tillTimestamp_DESC, limit: 1) {
         amount
         tillTimestamp
       }
@@ -44,7 +51,7 @@ const cumulativeVolumesFetcher = async ({ queryKey }: any): Promise<Array<Volume
 
   const query = `
   {
-    ${cutoffTimestamps.map(date => queryFragment(type, date, collateralCurrency?.ticker))}
+    ${cutoffTimestamps.map(date => queryFragment(type, date, collateralCurrency?.ticker, wrappedCurrency?.ticker))}
   }
   `;
 
@@ -60,17 +67,24 @@ const cumulativeVolumesFetcher = async ({ queryKey }: any): Promise<Array<Volume
   const volumes = volumesData?.data || {};
 
   return Object.values(volumes).map(([volumeData], i) => ({
-    amount: newMonetaryAmount(volumeData?.amount || 0, WRAPPED_TOKEN),
+    amount: newMonetaryAmount<U>(volumeData?.amount || 0, returnCurrency),
     tillTimestamp: cutoffTimestamps[i]
   }));
 };
 
-type CumulativeVolumesFetcherParams = [
+type CumulativeVolumesFetcherParams<U extends CurrencyUnit> = [
   queryKey: string,
   type: VolumeType,
   cutoffTimestamps: Date[],
-  collateralCurrency?: CollateralToken,
-]
+  returnCurrency: Currency<U>,
+  collateralCurrency: CollateralToken,
+  wrappedCurrency: WrappedToken,
+] | [
+  queryKey: string,
+  type: VolumeType,
+  cutoffTimestamps: Date[],
+  returnCurrency: Currency<U>,
+];
 
 export {
   CUMULATIVE_VOLUMES_FETCHER
