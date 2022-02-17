@@ -17,6 +17,7 @@ module.exports = function override(config) {
     })
   );
 
+  // MEMO: inspired by https://github.com/webpack/changelog-v5#automatic-nodejs-polyfills-removed
   config.plugins.push(
     new NodePolyfillPlugin()
   );
