@@ -122,7 +122,9 @@ const App = (): JSX.Element => {
       setIsLoading(false);
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
+      // ray test touch <<
       console.log('[loadPolkaBTC] error.message => ', error.message);
+      // ray test touch >>
     }
 
     try {
@@ -141,7 +143,9 @@ const App = (): JSX.Element => {
       window.faucet = new FaucetClient(window.bridge.interBtcApi.api, constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
     } catch (error) {
+      // ray test touch <<
       console.log('[loadFaucet] error.message => ', error.message);
+      // ray test touch >>
     }
   }, [dispatch]);
 

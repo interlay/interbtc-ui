@@ -1,25 +1,13 @@
 
 const webpack = require('webpack');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 // MEMO: inspired by https://github.com/facebook/create-react-app/issues/11756#issuecomment-1001162736
 module.exports = function override(config) {
   config.resolve.fallback = {
     fs: false,
-    path: false,
-    vm: false,
-    stream: require.resolve('stream-browserify'),
-    buffer: require.resolve('buffer'),
-    process: require.resolve('process/browser'),
-    util: require.resolve('util'),
-    url: require.resolve('url'),
-    assert: require.resolve('assert'),
-    crypto: require.resolve('crypto-browserify'),
-    http: require.resolve('stream-http'),
-    https: require.resolve('https-browserify'),
-    os: require.resolve('os-browserify/browser'),
     net: false,
-    tls: false,
-    zlib: false
+    tls: false
   };
 
   config.plugins.push(
@@ -27,6 +15,10 @@ module.exports = function override(config) {
       Buffer: ['buffer', 'Buffer'],
       process: 'process/browser'
     })
+  );
+
+  config.plugins.push(
+    new NodePolyfillPlugin()
   );
 
   // Fixes dtrace-provider compilation bug described here:
