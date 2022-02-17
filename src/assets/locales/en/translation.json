@@ -187,7 +187,8 @@
   },
   "transfer_page": {
     "successfully_transferred": "Successfully transferred.",
-    "transfer_currency": "Transfer"
+    "transfer_currency": "Transfer",
+    "cross_chain_transfer": "Cross Chain Transfer"
   },
   "burn_page": {
     "burn_interbtc": "Burn {{wrappedTokenSymbol}} in exchange for {{collateralTokenSymbol}}",

@@ -19,8 +19,8 @@ import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
 
 const TAB_IDS = Object.freeze({
-  transfer: 'issue',
-  crossChainTransfer: 'redeem'
+  transfer: 'transfer',
+  crossChainTransfer: 'crossChainTransfer'
 });
 
 const TAB_ITEMS = [
@@ -42,7 +42,7 @@ const Transfer = (): JSX.Element | null => {
   const { t } = useTranslation();
 
   const updateQueryParametersRef = React.useRef<(newQueryParameters: QueryParameters) => void>();
-  // MEMO: inspired by https://epicreact.dev/the-latest-ref-pattern-in-react/
+
   React.useLayoutEffect(() => {
     updateQueryParametersRef.current = updateQueryParameters;
   });
