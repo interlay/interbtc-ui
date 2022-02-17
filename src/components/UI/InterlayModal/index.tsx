@@ -31,7 +31,6 @@ const InterlayModalInnerWrapper = React.forwardRef<Ref, React.ComponentPropsWith
       'text-left',
       'sm:align-middle',
       'transition-all',
-      'transform',
       'w-full',
       'my-8',
       { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },

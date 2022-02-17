@@ -188,7 +188,7 @@ const Navigation = ({
                   textClassesForSelected :
                   textClassesForUnselected,
                 onSmallScreen ? 'mr-4' : 'mr-3',
-                'flex-shrink-0',
+                'shrink-0',
                 'w-6',
                 'h-6'
               )}

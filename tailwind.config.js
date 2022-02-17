@@ -35,10 +35,10 @@ const {
   INTERLAY_TEXT_SECONDARY_IN_LIGHT_MODE,
   KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
   KINTSUGI_TEXT_SECONDARY_IN_DARK_MODE
-} = require('./utils/constants/colors');
+} = require('./src/utils/constants/colors');
 
 module.exports = {
-  purge: [
+  content: [
     './src/**/*.{js,jsx,ts,tsx}',
     './public/index.html'
   ],
@@ -381,24 +381,26 @@ module.exports = {
       }
     }
   },
-  variants: {
-    extend: {
-      borderColor: [
-        'before',
-        'after'
-      ],
-      borderRadius: [
-        'first',
-        'last'
-      ],
-      textColor: [
-        'important'
-      ],
-      display: [
-        'important'
-      ]
-    }
-  },
+  // ray test touch <<
+  // variants: {
+  //   extend: {
+  //     borderColor: [
+  //       'before',
+  //       'after'
+  //     ],
+  //     borderRadius: [
+  //       'first',
+  //       'last'
+  //     ],
+  //     textColor: [
+  //       'important'
+  //     ],
+  //     display: [
+  //       'important'
+  //     ]
+  //   }
+  // },
+  // ray test touch >>
   plugins: [
     require('@tailwindcss/forms'),
     require('tailwindcss-pseudo-elements'),

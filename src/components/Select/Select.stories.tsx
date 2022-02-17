@@ -118,7 +118,7 @@ const Template: Story<SelectProps> = args => {
                   src={value.avatar}
                   alt=''
                   className={clsx(
-                    'flex-shrink-0',
+                    'shrink-0',
                     'h-6',
                     'w-6',
                     'rounded-full'
@@ -148,7 +148,7 @@ const Template: Story<SelectProps> = args => {
                           src={person.avatar}
                           alt=''
                           className={clsx(
-                            'flex-shrink-0',
+                            'shrink-0',
                             'h-6',
                             'w-6',
                             'rounded-full'

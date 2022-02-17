@@ -91,7 +91,7 @@ const Template: Story = args => (
                     'relative',
                     'p-3',
                     'rounded-md',
-                    'hover:bg-coolGray-100'
+                    'hover:bg-gray-100'
                   )}>
                   <h3
                     className={clsx(
@@ -109,7 +109,7 @@ const Template: Story = args => (
                       'text-xs',
                       'font-normal',
                       'leading-4',
-                      'text-coolGray-500'
+                      'text-gray-500'
                     )}>
                     <li>{post.date}</li>
                     <li>&middot;</li>

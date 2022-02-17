@@ -3,7 +3,7 @@
 module.exports = {
   plugins: {
     tailwindcss: {
-      config: './src/tailwind.config.js'
+      config: './tailwind.config.js'
     },
     autoprefixer: {}
   }

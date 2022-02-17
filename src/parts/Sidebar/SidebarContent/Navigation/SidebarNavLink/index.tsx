@@ -29,7 +29,7 @@ const SidebarNavLink = ({
         {children}
         <ExternalLinkIcon
           className={clsx(
-            'flex-shrink-0',
+            'shrink-0',
             'w-4',
             'h-4',
             'ml-1'

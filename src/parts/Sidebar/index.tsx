@@ -81,16 +81,14 @@ const Sidebar = ({
             enter={clsx(
               'transition',
               'ease-in-out',
-              'duration-300',
-              'transform'
+              'duration-300'
             )}
             enterFrom='-translate-x-full'
             enterTo='translate-x-0'
             leave={clsx(
               'transition',
               'ease-in-out',
-              'duration-300',
-              'transform'
+              'duration-300'
             )}
             leaveFrom='translate-x-0'
             leaveTo='-translate-x-full'>
@@ -100,7 +98,7 @@ const Sidebar = ({
           </Transition.Child>
           <div
             className={clsx(
-              'flex-shrink-0',
+              'shrink-0',
               'w-14'
             )} />
         </Dialog>
@@ -109,7 +107,7 @@ const Sidebar = ({
         className={clsx(
           'hidden',
           'md:flex',
-          'md:flex-shrink-0'
+          'md:shrink-0'
         )}>
         <div
           className={clsx(

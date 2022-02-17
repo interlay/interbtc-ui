@@ -73,7 +73,7 @@ const Stats = ({
     <div
       className={clsx(
         'space-y-0.5',
-        'flex-shrink-0'
+        'shrink-0'
       )}>
       {leftPart}
     </div>

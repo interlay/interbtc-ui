@@ -71,7 +71,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         )}>
         <div
           className={clsx(
-            'flex-shrink-0',
+            'shrink-0',
             'flex',
             'items-start',
             'px-4'
@@ -90,7 +90,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
       </div>
       <div
         className={clsx(
-          'flex-shrink-0',
+          'shrink-0',
           'flex',
           'border-t',
           'p-4',

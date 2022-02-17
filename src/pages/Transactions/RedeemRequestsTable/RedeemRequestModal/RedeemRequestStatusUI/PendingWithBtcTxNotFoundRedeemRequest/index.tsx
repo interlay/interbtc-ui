@@ -80,7 +80,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
           <Timer
             initialLeftSeconds={initialLeftSeconds}
             className={clsx(
-              'flex-shrink-0',
+              'shrink-0',
               'flex-1',
               'text-center'
             )} />
