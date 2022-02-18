@@ -1,4 +1,3 @@
-
 const path = require('path');
 
 module.exports = {
@@ -84,5 +83,8 @@ module.exports = {
         ]
       }
     };
+  },
+  core: {
+    builder: "webpack5"
   }
-}
+};
