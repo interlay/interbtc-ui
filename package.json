@@ -6,11 +6,10 @@
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^1.0.3",
-    "@interlay/interbtc": "1.5.8",
-    "@polkadot/api": "6.9.2",
-    "@polkadot/extension-dapp": "0.41.2",
-    "@polkadot/types": "6.9.2",
-    "@polkadot/ui-keyring": "0.87.5",
+    "@interlay/interbtc": "1.6.0",
+    "@polkadot/api": "7.7.1",
+    "@polkadot/extension-dapp": "0.42.7",
+    "@polkadot/types": "7.7.1",
     "@reach/tooltip": "^0.16.0",
     "@tailwindcss/forms": "^0.3.2",
     "@testing-library/jest-dom": "^5.11.4",
@@ -56,6 +55,9 @@
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.7",
+    "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@open-wc/webpack-import-meta-loader": "^0.4.7",
     "@storybook/addon-actions": "^6.2.8",
     "@storybook/addon-essentials": "^6.2.8",
     "@storybook/addon-links": "^6.2.8",
@@ -77,8 +79,7 @@
     "tailwind-config-viewer": "^1.5.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-pseudo-elements": "^1.5.1",
-    "ts-node": "^8.6.2",
-    "webpack-bundle-analyzer": "^4.4.0"
+    "ts-node": "^8.6.2"
   },
   "scripts": {
     "start": "craco start",
@@ -114,9 +115,14 @@
       "not op_mini all"
     ],
     "development": [
+      ">0.2%",
+      "not ie <= 99",
+      "not android <= 4.4.4",
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "not dead",
+      "not op_mini all"
     ]
   },
   "husky": {
