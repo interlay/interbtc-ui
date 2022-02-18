@@ -84,6 +84,7 @@ module.exports = {
       }
     };
   },
+  // MEMO: inspired by https://storybook.js.org/blog/storybook-for-webpack-5/ & https://gist.github.com/shilman/8856ea1786dcd247139b47b270912324
   core: {
     builder: "webpack5"
   }
