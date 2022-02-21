@@ -23,7 +23,7 @@ const GovernanceTokenTransferableBalanceUI = ({
           // TODO: placeholder color
           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
-        Balance:
+        Transferable Balance:
       </span>
       <span
         className={clsx(

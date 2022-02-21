@@ -107,7 +107,7 @@ const BalancesUI = ({
         'gap-7'
       )}>
       <BalanceItem
-        label={`My ${GOVERNANCE_TOKEN_SYMBOL} Balance`}
+        label='My Free Balance'
         value={governanceTokenBalance}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
       <BalanceItem

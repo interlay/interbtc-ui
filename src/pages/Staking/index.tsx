@@ -367,18 +367,18 @@ const Staking = (): JSX.Element => {
               disabled={votingBalanceGreaterThanZero === undefined} />
             {votingBalanceGreaterThanZero ? (
               <InformationUI
-                label='New unlock date'
+                label='New unlock Date'
                 value='Dec 16, 2023 (hardcoded)'
                 tooltip='Your original lock date plus the extended lock time.' />
             ) : (
               <InformationUI
-                label='Unlock date'
+                label='Unlock Date'
                 value={unlockDateLabel}
                 tooltip='Your staked amount will be locked until this date.' />
             )}
             {votingBalanceGreaterThanZero && (
               <InformationUI
-                label='New total stake'
+                label='New total Stake'
                 value={`${newTotalStakeLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
                 tooltip='Your total stake after this transaction.' />
             )}
