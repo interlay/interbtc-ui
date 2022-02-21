@@ -1,3 +1,4 @@
+
 import { useTranslation } from 'react-i18next';
 import {
   useErrorHandler,
@@ -24,17 +25,16 @@ import cumulativeVolumesFetcher, {
   VolumeDataPoint,
   VolumeType
 } from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
-import { useMemo } from 'react';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
 import { WRAPPED_TOKEN } from 'config/relay-chains';
 
+// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
+// thus issues per day 5 days ago can be displayed
+// cumulative issues is also only displayed to 5 days
+const cutoffTimestamps = getLastMidnightTimestamps(6, true);
+
 const RedeemedChart = (): JSX.Element => {
   const { t } = useTranslation();
-
-  // get 6 values to be able to calculate difference between 5 days ago and 6 days ago
-  // thus issues per day 5 days ago can be displayed
-  // cumulative issues is also only displayed to 5 days
-  const cutoffTimestamps = useMemo(() => getLastMidnightTimestamps(6, true), []);
 
   const {
     isIdle: cumulativeRedeemsPerDayIdle,

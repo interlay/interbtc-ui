@@ -15,6 +15,19 @@ const ORACLE_ALL_LATEST_UPDATES_FETCHER = 'oracle-all-latest-updates-fetcher';
 
 type BtcToCurrencyOracleStatus<U extends CurrencyUnit> = OracleStatus<Bitcoin, BitcoinUnit, Currency<U>, U>;
 
+type LatestExchangeRateFetcherParams<U extends CurrencyUnit> = [
+  key: string,
+  currency: Currency<U>,
+  onlineTimeout: number,
+];
+
+type AllOracleLatestUpdatesFetcherParams<U extends CurrencyUnit> = [
+  key: string,
+  currency: Currency<U>,
+  onlineTimeout: number,
+  namesMap: Map<string, string>
+];
+
 function decodeOracleValues<U extends CurrencyUnit>(
   updateData: any,
   currency: Currency<U>,
@@ -98,19 +111,6 @@ const allLatestSubmissionsFetcher = async<U extends CurrencyUnit>(
     .filter(val => val.length > 0) // remove empty values (oracles with no submissions)
     .map(([update]) => decodeOracleValues(update, currency, onlineTimeout, namesMap));
 };
-
-type LatestExchangeRateFetcherParams<U extends CurrencyUnit> = [
-  key: string,
-  currency: Currency<U>,
-  onlineTimeout: number,
-];
-
-type AllOracleLatestUpdatesFetcherParams<U extends CurrencyUnit> = [
-  key: string,
-  currency: Currency<U>,
-  onlineTimeout: number,
-  namesMap: Map<string, string>
-];
 
 export {
   ORACLE_LATEST_EXCHANGE_RATE_FETCHER,

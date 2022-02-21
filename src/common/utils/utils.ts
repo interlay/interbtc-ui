@@ -51,14 +51,11 @@ function formatDateTimePrecise(date: Date): string {
 }
 
 function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): Array<Date> {
-  const midnights: Date[] = [];
-  for (let index = 0; index < daysBack; index++) {
+  return [...Array(daysBack).keys()].map(index => {
     const timestamp = Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000;
     const partialDay = timestamp % (86400 * 1000); // modulo ms per day
-    midnights.push(new Date(timestamp - partialDay));
-  }
-
-  return midnights.reverse();
+    return new Date(timestamp - partialDay);
+  }).reverse();
 }
 
 // TODO: replace these functions with internationalization functions
@@ -129,8 +126,9 @@ const btcAddressFromEventToString = (
   network: 'mainnet' | 'regtest' | 'testnet'
 ): string => {
   const parsedAddress = JSON.parse(addressObject);
+  const hexHash = Object.values<string>(parsedAddress)[0];
   const hash = Buffer.from(
-    Object.values<string>(parsedAddress)[0].substring(2),
+    hexHash.substring(2), // remove hex prefix
     'hex'
   );
   const paymentType = Object.keys(parsedAddress)[0].toUpperCase();

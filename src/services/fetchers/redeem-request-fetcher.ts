@@ -9,6 +9,14 @@ import redeemRequestQuery from 'services/queries/redeem-request-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
+type RedeemFetcherParams = [
+  key: typeof REDEEM_FETCHER,
+  offset: number,
+  limit: number,
+  stableBtcConfirmations: number,
+  where?: string,
+]
+
 const REDEEM_FETCHER = 'redeem-fetcher';
 
 // TODO: should type properly (`Relay`)
@@ -102,14 +110,6 @@ function getRedeemWithStatus(
   }
   return redeem;
 }
-
-type RedeemFetcherParams = [
-  key: typeof REDEEM_FETCHER,
-  offset: number,
-  limit: number,
-  stableBtcConfirmations: number,
-  where?: string,
-]
 
 export {
   getRedeemWithStatus,

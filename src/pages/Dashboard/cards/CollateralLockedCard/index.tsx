@@ -1,3 +1,4 @@
+
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -35,7 +36,6 @@ import {
   getLastMidnightTimestamps
 } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { useMemo } from 'react';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
@@ -46,16 +46,16 @@ interface Props {
   hasLinks?: boolean;
 }
 
+// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
+// thus issues per day 5 days ago can be displayed
+// cumulative issues is also only displayed to 5 days
+const cutoffTimestamps = getLastMidnightTimestamps(6, true);
+
 const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
   const {
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-
-  // get 6 values to be able to calculate difference between 5 days ago and 6 days ago
-  // thus issues per day 5 days ago can be displayed
-  // cumulative issues is also only displayed to 5 days
-  const cutoffTimestamps = useMemo(() => getLastMidnightTimestamps(6, true), []);
 
   const {
     isIdle: cumulativeCollateralPerDayIdle,

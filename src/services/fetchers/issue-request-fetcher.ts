@@ -1,3 +1,4 @@
+
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
 
@@ -5,6 +6,14 @@ import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import issueRequestsQuery from 'services/queries/issue-requests-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
+
+type IssueFetcherParams = [
+  queryKey: string,
+  offset: number,
+  limit: number,
+  stableBtcConfirmations: number,
+  where?: string
+]
 
 const ISSUE_FETCHER = 'issue-fetcher';
 
@@ -104,14 +113,6 @@ function getIssueWithStatus(
 
   return issue;
 }
-
-type IssueFetcherParams = [
-  queryKey: string,
-  offset: number,
-  limit: number,
-  stableBtcConfirmations: number,
-  where?: string
-]
 
 export {
   getIssueWithStatus,

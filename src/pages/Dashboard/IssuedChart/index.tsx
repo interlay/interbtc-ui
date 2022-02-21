@@ -1,3 +1,4 @@
+
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import {
@@ -21,7 +22,6 @@ import {
   KINTSUGI_PRAIRIE_SAND
 } from 'utils/constants/colors';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
-import { useMemo } from 'react';
 import cumulativeVolumesFetcher,
 {
   CUMULATIVE_VOLUMES_FETCHER,
@@ -29,13 +29,13 @@ import cumulativeVolumesFetcher,
   VolumeType
 } from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
 
+// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
+// thus issues per day 5 days ago can be displayed
+// cumulative issues is also only displayed to 5 days
+const cutoffTimestamps = getLastMidnightTimestamps(6, true);
+
 const IssuedChart = (): JSX.Element => {
   const { t } = useTranslation();
-
-  // get 6 values to be able to calculate difference between 5 days ago and 6 days ago
-  // thus issues per day 5 days ago can be displayed
-  // cumulative issues is also only displayed to 5 days
-  const cutoffTimestamps = useMemo(() => getLastMidnightTimestamps(6, true), []);
 
   const {
     isIdle: cumulativeIssuesPerDayIdle,

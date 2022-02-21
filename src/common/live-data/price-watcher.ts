@@ -16,7 +16,6 @@ const fetchPrices = async (dispatch: Dispatch, store: StoreState): Promise<void>
 
     const res = await fetch(PRICES_URL);
     const prices = await res.json();
-    prices.interlay = { usd: 23 };
     // Update the store only if the price is actually changed
     if (
       prices.bitcoin.usd !== storePrices.bitcoin.usd ||

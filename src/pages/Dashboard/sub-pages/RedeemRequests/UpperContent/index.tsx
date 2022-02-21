@@ -1,5 +1,5 @@
+
 import { useSelector } from 'react-redux';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useErrorHandler,
@@ -33,13 +33,13 @@ import cumulativeVolumesFetcher, {
 } from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
 import { WRAPPED_TOKEN } from 'config/relay-chains';
 
+const nowAtfirstLoad = new Date();
+
 const UpperContent = (): JSX.Element => {
   const {
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-
-  const nowAtfirstLoad = useMemo(() => new Date(), []);
 
   const {
     isIdle: totalSuccessfulRedeemsIdle,

@@ -1,3 +1,4 @@
+
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import {
@@ -37,6 +38,8 @@ interface VaultRegistration {
   timestamp: number;
 }
 
+const graphTimestamps = getLastMidnightTimestamps(5, true).map(date => date.getTime());
+
 const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
 
@@ -69,7 +72,6 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
     }
 
     const vaultRegistrations = vaults.data.vaults;
-    const graphTimestamps = getLastMidnightTimestamps(5, true).map(date => date.getTime());
     const graphData = graphTimestamps.map(
       timestamp => vaultRegistrations.filter(
         registration => registration.timestamp <= timestamp
