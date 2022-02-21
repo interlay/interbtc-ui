@@ -31,6 +31,7 @@ import { AddressOrPair } from '@polkadot/api/types';
 import Title from './Title';
 import BalancesUI from './BalancesUI';
 import UnstakeButton from './UnstakeButton';
+import ClaimRewardsButton from './ClaimRewardsButton';
 import GovernanceTokenTransferableBalanceUI from './GovernanceTokenTransferableBalanceUI';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
@@ -330,6 +331,7 @@ const Staking = (): JSX.Element => {
             {votingBalanceGreaterThanZero && (
               <UnstakeButton />
             )}
+            <ClaimRewardsButton />
             <div className='space-y-2'>
               <GovernanceTokenTransferableBalanceUI balance={governanceTokenTransferableBalanceLabel} />
               <TokenField
