@@ -104,10 +104,14 @@ const Staking = (): JSX.Element => {
     reset,
     formState: { errors }
   } = useForm<StakingFormData>({
-    mode: 'onChange' // 'onBlur'
+    mode: 'onChange', // 'onBlur'
+    defaultValues: {
+      [STAKING_AMOUNT]: '0',
+      [LOCK_TIME]: '0'
+    }
   });
-  const stakingAmount = watch(STAKING_AMOUNT) || '0';
-  const lockTime = watch(LOCK_TIME) || '0';
+  const stakingAmount = watch(STAKING_AMOUNT);
+  const lockTime = watch(LOCK_TIME);
 
   const {
     isIdle: currentBlockNumberIdle,
