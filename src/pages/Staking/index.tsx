@@ -31,7 +31,7 @@ import { AddressOrPair } from '@polkadot/api/types';
 import Title from './Title';
 import BalancesUI from './BalancesUI';
 import UnstakeButton from './UnstakeButton';
-import GovernanceTokenBalanceUI from './GovernanceTokenBalanceUI';
+import GovernanceTokenTransferableBalanceUI from './GovernanceTokenTransferableBalanceUI';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
 import MainContainer from 'parts/MainContainer';
@@ -90,6 +90,7 @@ interface Stake {
 const Staking = (): JSX.Element => {
   const {
     governanceTokenBalance,
+    governanceTokenTransferableBalance,
     bridgeLoaded,
     address,
     prices
@@ -281,6 +282,9 @@ const Staking = (): JSX.Element => {
     voteGovernanceTokenBalance === undefined ?
       '-' :
       displayMonetaryAmount(voteGovernanceTokenBalance);
+
+  const governanceTokenTransferableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
+
   const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
 
   const monetaryStakingAmount = newMonetaryAmount(stakingAmount, GOVERNANCE_TOKEN, true);
@@ -327,7 +331,7 @@ const Staking = (): JSX.Element => {
               <UnstakeButton />
             )}
             <div className='space-y-2'>
-              <GovernanceTokenBalanceUI balance={governanceTokenBalanceLabel} />
+              <GovernanceTokenTransferableBalanceUI balance={governanceTokenTransferableBalanceLabel} />
               <TokenField
                 id={STAKING_AMOUNT}
                 name={STAKING_AMOUNT}
