@@ -149,6 +149,28 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(voteGovernanceTokenError);
 
+  // ray test touch <<
+  const {
+    // isIdle: rewardEstimateIdle,
+    // isLoading: rewardEstimateLoading,
+    // data: rewardEstimate,
+    error: rewardEstimateError
+  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'escrow',
+      'getRewardEstimate',
+      address
+    ],
+    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(rewardEstimateError);
+  // ray test touch >>
+
   const queryClient = useQueryClient();
 
   const initialStakeMutation = useMutation<void, Error, Stake>(
