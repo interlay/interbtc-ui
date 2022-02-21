@@ -145,6 +145,7 @@
   },
   "resolutions": {
     "babel-loader": "8.1.0",
-    "bn.js": "4.12.0"
+    "bn.js": "4.12.0",
+    "react-error-overlay": "6.0.9"
   }
 }
