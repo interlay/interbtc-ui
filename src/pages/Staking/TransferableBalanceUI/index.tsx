@@ -11,7 +11,7 @@ interface Props {
   balance: string;
 }
 
-const GovernanceTokenTransferableBalanceUI = ({
+const TransferableBalanceUI = ({
   balance
 }: Props): JSX.Element => {
   return (
@@ -38,4 +38,4 @@ const GovernanceTokenTransferableBalanceUI = ({
   );
 };
 
-export default GovernanceTokenTransferableBalanceUI;
+export default TransferableBalanceUI;

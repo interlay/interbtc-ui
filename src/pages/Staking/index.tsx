@@ -32,7 +32,7 @@ import Title from './Title';
 import BalancesUI from './BalancesUI';
 import UnstakeButton from './UnstakeButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
-import GovernanceTokenTransferableBalanceUI from './GovernanceTokenTransferableBalanceUI';
+import TransferableBalanceUI from './TransferableBalanceUI';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
 import MainContainer from 'parts/MainContainer';
@@ -81,6 +81,11 @@ const LOCK_TIME = 'lock-time';
 type StakingFormData = {
   [STAKING_AMOUNT]: string;
   [LOCK_TIME]: string;
+}
+
+interface RewardEstimate {
+  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  apy: number;
 }
 
 interface Stake {
@@ -153,13 +158,13 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(voteGovernanceTokenError);
 
-  // ray test touch <<
+  // My Rewards
   const {
-    // isIdle: rewardEstimateIdle,
-    // isLoading: rewardEstimateLoading,
-    // data: rewardEstimate,
+    isIdle: rewardEstimateIdle,
+    isLoading: rewardEstimateLoading,
+    data: rewardEstimate,
     error: rewardEstimateError
-  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+  } = useQuery<RewardEstimate, Error>(
     [
       GENERIC_FETCHER,
       'interBtcApi',
@@ -167,13 +172,12 @@ const Staking = (): JSX.Element => {
       'getRewardEstimate',
       address
     ],
-    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    genericFetcher<RewardEstimate>(),
     {
       enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(rewardEstimateError);
-  // ray test touch >>
 
   const queryClient = useQueryClient();
 
@@ -304,13 +308,25 @@ const Staking = (): JSX.Element => {
     return undefined;
   };
 
-  const governanceTokenBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
-  const voteGovernanceTokenBalanceLabel =
+  const freeBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
+  const stakedAmountLabel =
     voteGovernanceTokenBalance === undefined ?
       '-' :
       displayMonetaryAmount(voteGovernanceTokenBalance);
+  const renderRewardsAmountLabel = () => {
+    if (rewardEstimateIdle || rewardEstimateLoading) {
+      return 'Loading...';
+    }
+    if (rewardEstimate === undefined) {
+      throw new Error('Something went wrong!');
+    }
 
-  const governanceTokenTransferableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
+    return rewardEstimate.amount.toHuman();
+  };
+
+  const claimRewardsButtonAvailable = rewardEstimate?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+
+  const transferableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
 
   const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
 
@@ -352,14 +368,17 @@ const Staking = (): JSX.Element => {
             onSubmit={handleSubmit(onSubmit)}>
             <Title />
             <BalancesUI
-              governanceTokenBalance={governanceTokenBalanceLabel}
-              voteGovernanceTokenBalance={voteGovernanceTokenBalanceLabel} />
+              freeBalance={freeBalanceLabel}
+              stakedAmount={stakedAmountLabel}
+              rewardsAmount={renderRewardsAmountLabel()} />
             {votingBalanceGreaterThanZero && (
               <UnstakeButton />
             )}
-            <ClaimRewardsButton />
+            {claimRewardsButtonAvailable && (
+              <ClaimRewardsButton />
+            )}
             <div className='space-y-2'>
-              <GovernanceTokenTransferableBalanceUI balance={governanceTokenTransferableBalanceLabel} />
+              <TransferableBalanceUI balance={transferableBalanceLabel} />
               <TokenField
                 id={STAKING_AMOUNT}
                 name={STAKING_AMOUNT}

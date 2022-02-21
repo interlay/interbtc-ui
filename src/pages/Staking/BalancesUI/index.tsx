@@ -84,13 +84,15 @@ const BalanceItem = ({
 );
 
 interface Props {
-  governanceTokenBalance: string;
-  voteGovernanceTokenBalance: string;
+  freeBalance: string;
+  stakedAmount: string;
+  rewardsAmount: string;
 }
 
 const BalancesUI = ({
-  governanceTokenBalance,
-  voteGovernanceTokenBalance
+  freeBalance,
+  stakedAmount,
+  rewardsAmount
 }: Props): JSX.Element => {
   return (
     <div
@@ -103,17 +105,21 @@ const BalancesUI = ({
         // TODO: placeholder color
         { 'dark:bg-kintsugiViolet': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'grid',
-        'grid-cols-2',
+        'grid-cols-3',
         'gap-7'
       )}>
       <BalanceItem
         label='My Free Balance'
-        value={governanceTokenBalance}
+        value={freeBalance}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
       <BalanceItem
         label={`My Staked ${GOVERNANCE_TOKEN_SYMBOL}`}
-        value={voteGovernanceTokenBalance}
+        value={stakedAmount}
         tokenSymbol={VOTE_GOVERNANCE_TOKEN_SYMBOL} />
+      <BalanceItem
+        label='My Rewards'
+        value={rewardsAmount}
+        tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
     </div>
   );
 };
