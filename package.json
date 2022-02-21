@@ -79,7 +79,8 @@
     "tailwind-config-viewer": "^1.5.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-pseudo-elements": "^1.5.1",
-    "ts-node": "^8.6.2"
+    "ts-node": "^8.6.2",
+    "webpack-bundle-analyzer": "^4.4.0"
   },
   "scripts": {
     "start": "craco start",
