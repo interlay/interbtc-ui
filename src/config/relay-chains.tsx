@@ -29,7 +29,7 @@ import { ReactComponent as KBTCLogoIcon } from 'assets/img/kbtc-logo-reversed.sv
 import { ReactComponent as InterBTCLogoWithTextIcon } from 'assets/img/interbtc-logo-with-text.svg';
 import { ReactComponent as KintsugiLogoWithTextIcon } from 'assets/img/kintsugi-logo-with-text.svg';
 import { ReactComponent as DOTLogoIcon } from 'assets/img/dot-logo.svg';
-import { ReactComponent as KSMLogoIcon } from 'assets/img/ksm-logo.svg';
+import { ReactComponent as KusamaLogoIcon } from 'assets/img/kusama-logo.svg';
 import { ReactComponent as InterlayLogoIcon } from 'assets/img/interlay-logo.svg';
 
 if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
@@ -51,6 +51,14 @@ let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
 let GOVERNANCE_TOKEN_SYMBOL: string;
+let RelayChainLogoIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
+    title?: string | undefined;
+  }>;
+let BridgeParachainLogoIcon:
+  React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
+    title?: string | undefined;
+  }>;
 let WrappedTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
@@ -91,6 +99,8 @@ case POLKADOT: {
   BRIDGE_PARACHAIN_NAME = 'interlay';
   // eslint-disable-next-line max-len
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
+  RelayChainLogoIcon = DOTLogoIcon;
+  BridgeParachainLogoIcon = InterlayLogoIcon;
   WrappedTokenLogoIcon = InterBTCLogoIcon;
   WrappedTokenLogoWithTextIcon = InterBTCLogoWithTextIcon;
   CollateralTokenLogoIcon = DOTLogoIcon;
@@ -114,9 +124,11 @@ case KUSAMA: {
   BRIDGE_PARACHAIN_NAME = 'kintsugi';
   // eslint-disable-next-line max-len
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
+  RelayChainLogoIcon = KusamaLogoIcon;
+  BridgeParachainLogoIcon = InterlayLogoIcon;
   WrappedTokenLogoIcon = KintsugiLogoIcon;
   WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
-  CollateralTokenLogoIcon = KSMLogoIcon;
+  CollateralTokenLogoIcon = KusamaLogoIcon;
   GovernanceTokenLogoIcon = KBTCLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
@@ -147,6 +159,8 @@ export {
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME,
   PRICES_URL,
+  RelayChainLogoIcon,
+  BridgeParachainLogoIcon,
   WrappedTokenLogoIcon,
   WrappedTokenLogoWithTextIcon,
   CollateralTokenLogoIcon,
