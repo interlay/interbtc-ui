@@ -8,10 +8,8 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
   web3Enable,
-  web3FromAddress,
-  web3Accounts
+  web3FromAddress
 } from '@polkadot/extension-dapp';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import ExternalLink from 'components/ExternalLink';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
@@ -29,12 +27,11 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
+import useGetAccounts from 'utils/hooks/use-get-accounts';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
-// FIXME: name clash for constants so had to use relative path
-import * as constants from '../../constants';
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
@@ -56,23 +53,8 @@ const AccountModal = ({
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);
 
-  const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>();
-
+  const accounts = useGetAccounts();
   const extensionWalletAvailable = extensions.length > 0;
-
-  React.useEffect(() => {
-    if (!extensionWalletAvailable) return;
-
-    (async () => {
-      try {
-        const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
-        setAccounts(theAccounts);
-      } catch (error) {
-        // TODO: should add error handling properly
-        console.log('[AccountModal] error.message => ', error.message);
-      }
-    })();
-  }, [extensionWalletAvailable]);
 
   const handleAccountSelect = (newAddress: string) => async () => {
     if (!bridgeLoaded) {
