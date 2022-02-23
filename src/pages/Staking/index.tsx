@@ -83,12 +83,17 @@ type StakingFormData = {
   [LOCK_TIME]: string;
 }
 
-interface RewardEstimate {
+interface RewardAmountAndAPY {
   amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   apy: number;
 }
 
-interface Stake {
+interface StakedAmountAndEndBlock {
+  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  endBlock: number;
+}
+
+interface StakingAmountAndUnlockHeight {
   amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   unlockHeight: number;
 }
@@ -164,7 +169,7 @@ const Staking = (): JSX.Element => {
     isLoading: rewardEstimateLoading,
     data: rewardEstimate,
     error: rewardEstimateError
-  } = useQuery<RewardEstimate, Error>(
+  } = useQuery<RewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
       'interBtcApi',
@@ -172,17 +177,41 @@ const Staking = (): JSX.Element => {
       'getRewardEstimate',
       address
     ],
-    genericFetcher<RewardEstimate>(),
+    genericFetcher<RewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(rewardEstimateError);
 
+  // ray test touch <<
+  const {
+    // isIdle: stakedBalanceIdle,
+    // isLoading: stakedBalanceLoading,
+    data: stakedBalance,
+    error: stakedBalanceError
+  } = useQuery<StakedAmountAndEndBlock, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'escrow',
+      'getStakedBalance',
+      address
+    ],
+    genericFetcher<StakedAmountAndEndBlock>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(stakedBalanceError);
+  console.log('ray : ***** stakedBalance?.amount.toHuman() => ', stakedBalance?.amount.toHuman());
+  console.log('ray : ***** stakedBalance?.endBlock => ', stakedBalance?.endBlock);
+  // ray test touch >>
+
   const queryClient = useQueryClient();
 
-  const initialStakeMutation = useMutation<void, Error, Stake>(
-    (variables: Stake) => {
+  const initialStakeMutation = useMutation<void, Error, StakingAmountAndUnlockHeight>(
+    (variables: StakingAmountAndUnlockHeight) => {
       return window.bridge.interBtcApi.escrow.createLock(variables.amount, variables.unlockHeight);
     },
     {
@@ -207,8 +236,8 @@ const Staking = (): JSX.Element => {
     }
   );
 
-  const moreStakeMutation = useMutation<void, Error, Stake>(
-    (variables: Stake) => {
+  const moreStakeMutation = useMutation<void, Error, StakingAmountAndUnlockHeight>(
+    (variables: StakingAmountAndUnlockHeight) => {
       return (async () => {
         const txs = [
           window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
@@ -309,11 +338,17 @@ const Staking = (): JSX.Element => {
   };
 
   const freeBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
-  const stakedAmountLabel =
-    voteGovernanceTokenBalance === undefined ?
-      '-' :
-      displayMonetaryAmount(voteGovernanceTokenBalance);
-  const renderRewardsAmountLabel = () => {
+  const renderStakedAmountLabel = () => {
+    if (voteGovernanceTokenIdle || voteGovernanceTokenLoading) {
+      return '-';
+    }
+    if (voteGovernanceTokenBalance === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return displayMonetaryAmount(voteGovernanceTokenBalance);
+  };
+  const renderRewardAmountLabel = () => {
     if (rewardEstimateIdle || rewardEstimateLoading) {
       return '-';
     }
@@ -335,10 +370,16 @@ const Staking = (): JSX.Element => {
 
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
-  const newTotalStakeLabel =
-    voteGovernanceTokenBalance === undefined ?
-      '-' :
-      monetaryStakingAmount.add(voteGovernanceTokenBalance).toHuman();
+  const renderNewTotalStakeLabel = () => {
+    if (voteGovernanceTokenIdle || voteGovernanceTokenLoading) {
+      return '-';
+    }
+    if (voteGovernanceTokenBalance === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return monetaryStakingAmount.add(voteGovernanceTokenBalance).toHuman();
+  };
 
   const initializing =
     (voteGovernanceTokenIdle || voteGovernanceTokenLoading) ||
@@ -369,8 +410,8 @@ const Staking = (): JSX.Element => {
             <Title />
             <BalancesUI
               freeBalance={freeBalanceLabel}
-              stakedAmount={stakedAmountLabel}
-              rewardsAmount={renderRewardsAmountLabel()} />
+              stakedAmount={renderStakedAmountLabel()}
+              rewardAmount={renderRewardAmountLabel()} />
             {votingBalanceGreaterThanZero && (
               <UnstakeButton />
             )}
@@ -424,7 +465,7 @@ const Staking = (): JSX.Element => {
             {votingBalanceGreaterThanZero && (
               <InformationUI
                 label='New total Stake'
-                value={`${newTotalStakeLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+                value={`${renderNewTotalStakeLabel()} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
                 tooltip='Your total stake after this transaction.' />
             )}
             <InformationUI
