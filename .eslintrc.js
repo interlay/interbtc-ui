@@ -108,7 +108,10 @@ module.exports = {
       'error',
       'always',
       {
-        exceptions: ['/']
+        line: {
+          markers: ['/'],
+          exceptions: ['-', '+']
+        }
       }
     ],
     'no-dupe-keys': 'error',
