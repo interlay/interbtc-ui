@@ -3,7 +3,8 @@ module.exports = {
   plugins: [
     '@typescript-eslint',
     'react',
-    'import'
+    'import',
+    'cypress'
     // "prettier"
   ],
   extends: [
@@ -15,7 +16,8 @@ module.exports = {
     // "prettier"
     'react-app',
     'react-app/jest',
-    'google'
+    'google',
+    'plugin:cypress/recommended'
   ],
   env: {
     browser: true,
