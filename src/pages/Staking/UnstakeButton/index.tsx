@@ -18,11 +18,13 @@ import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/i
 
 interface CustomProps {
   stakedAmount: string;
+  remainingBlockNumbersToUnstake: number | undefined;
 }
 
 const UnstakeButton = ({
   className,
   stakedAmount,
+  remainingBlockNumbersToUnstake,
   ...rest
 }: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
   const { address } = useSelector((state: StoreType) => state.general);
@@ -55,6 +57,11 @@ const UnstakeButton = ({
     unstakeMutation.mutate();
   };
 
+  const disabled =
+    remainingBlockNumbersToUnstake ?
+      remainingBlockNumbersToUnstake > 0 :
+      false;
+
   return (
     <>
       <InterlayDenimOrKintsugiMidnightContainedButton
@@ -83,6 +90,7 @@ const UnstakeButton = ({
         }
         onClick={handleUnstake}
         pending={unstakeMutation.isLoading}
+        disabled={disabled}
         {...rest}>
         Unstake Locked {GOVERNANCE_TOKEN_SYMBOL} 24/12/2022 (hardcoded)
       </InterlayDenimOrKintsugiMidnightContainedButton>

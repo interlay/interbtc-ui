@@ -441,11 +441,7 @@ const Staking = (): JSX.Element => {
             {votingBalanceGreaterThanZero && (
               <UnstakeButton
                 stakedAmount={renderStakedAmountLabel()}
-                disabled={
-                  remainingBlockNumbersToUnstake ?
-                    remainingBlockNumbersToUnstake > 0 :
-                    false
-                } />
+                remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
             )}
             {claimRewardsButtonAvailable && (
               <ClaimRewardsButton />
