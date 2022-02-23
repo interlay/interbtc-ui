@@ -165,10 +165,10 @@ const Staking = (): JSX.Element => {
 
   // My Rewards
   const {
-    isIdle: rewardEstimateIdle,
-    isLoading: rewardEstimateLoading,
-    data: rewardEstimate,
-    error: rewardEstimateError
+    isIdle: rewardAmountAndAPYIdle,
+    isLoading: rewardAmountAndAPYLoading,
+    data: rewardAmountAndAPY,
+    error: rewardAmountAndAPYError
   } = useQuery<RewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
@@ -182,14 +182,14 @@ const Staking = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(rewardEstimateError);
+  useErrorHandler(rewardAmountAndAPYError);
 
   // ray test touch <<
   const {
-    // isIdle: stakedBalanceIdle,
-    // isLoading: stakedBalanceLoading,
-    data: stakedBalance,
-    error: stakedBalanceError
+    // isIdle: stakedAmountAndEndBlockIdle,
+    // isLoading: stakedAmountAndEndBlockLoading,
+    data: stakedAmountAndEndBlock,
+    error: stakedAmountAndEndBlockError
   } = useQuery<StakedAmountAndEndBlock, Error>(
     [
       GENERIC_FETCHER,
@@ -203,9 +203,9 @@ const Staking = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(stakedBalanceError);
-  console.log('ray : ***** stakedBalance?.amount.toHuman() => ', stakedBalance?.amount.toHuman());
-  console.log('ray : ***** stakedBalance?.endBlock => ', stakedBalance?.endBlock);
+  useErrorHandler(stakedAmountAndEndBlockError);
+  console.log('ray : ***** stakedBalance?.amount.toHuman() => ', stakedAmountAndEndBlock?.amount.toHuman());
+  console.log('ray : ***** stakedBalance?.endBlock => ', stakedAmountAndEndBlock?.endBlock);
   // ray test touch >>
 
   const queryClient = useQueryClient();
@@ -349,17 +349,17 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(voteGovernanceTokenBalance);
   };
   const renderRewardAmountLabel = () => {
-    if (rewardEstimateIdle || rewardEstimateLoading) {
+    if (rewardAmountAndAPYIdle || rewardAmountAndAPYLoading) {
       return '-';
     }
-    if (rewardEstimate === undefined) {
+    if (rewardAmountAndAPY === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return rewardEstimate.amount.toHuman();
+    return rewardAmountAndAPY.amount.toHuman();
   };
 
-  const claimRewardsButtonAvailable = rewardEstimate?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+  const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const transferableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
 
