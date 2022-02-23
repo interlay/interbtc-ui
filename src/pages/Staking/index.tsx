@@ -338,7 +338,7 @@ const Staking = (): JSX.Element => {
   };
 
   const freeBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
-  const renderStakedAmountLabel = () => {
+  const renderVoteStakedAmountLabel = () => {
     if (voteGovernanceTokenIdle || voteGovernanceTokenLoading) {
       return '-';
     }
@@ -410,7 +410,7 @@ const Staking = (): JSX.Element => {
             <Title />
             <BalancesUI
               freeBalance={freeBalanceLabel}
-              stakedAmount={renderStakedAmountLabel()}
+              voteStakedAmount={renderVoteStakedAmountLabel()}
               rewardAmount={renderRewardAmountLabel()} />
             {votingBalanceGreaterThanZero && (
               <UnstakeButton />
