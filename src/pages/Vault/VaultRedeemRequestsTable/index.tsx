@@ -33,12 +33,12 @@ import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import {
   shortAddress,
-  formatDateTimePrecise
+  formatDateTimePrecise,
+  displayMonetaryAmount
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { BTC_ADDRESS_API } from 'config/bitcoin';
-import { WrappedTokenAmount } from 'config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import redeemCountQuery from 'services/queries/redeem-count-query';
@@ -158,25 +158,78 @@ const VaultRedeemRequestsTable = ({
         ]
       },
       {
-        Header: t('date'),
-        accessor: 'creationTimestamp',
+        Header: t('date_created'),
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return (
             <>
-              {formatDateTimePrecise(new Date(Number(value)))}
+              {formatDateTimePrecise(new Date(redeem.request.timestamp))}
             </>
           );
         }
       },
       {
         Header: t('vault.creation_block'),
-        accessor: 'creationBlock',
         classNames: [
           'text-right'
-        ]
+        ],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeem } }: any) {
+          return (
+            <>
+              {redeem.request.height.active}
+            </>
+          );
+        }
+      },
+      {
+        Header: t('last_update'),
+        classNames: [
+          'text-left'
+        ],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeem } }: any) {
+          let date;
+          if (redeem.execution) {
+            date = redeem.execution.timestamp;
+          } else if (redeem.cancellation) {
+            date = redeem.cancellation.timestamp;
+          } else {
+            date = redeem.request.timestamp;
+          }
+
+          return (
+            <>
+              {formatDateTimePrecise(new Date(date))}
+            </>
+          );
+        }
+      },
+      {
+        Header: t('last_update_block'),
+        classNames: [
+          'text-right'
+        ],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let height;
+          if (issue.execution) {
+            height = issue.execution.height.active;
+          } else if (issue.cancellation) {
+            height = issue.cancellation.height.active;
+          } else {
+            height = issue.request.height.active;
+          }
+
+          return (
+            <>
+              {height}
+            </>
+          );
+        }
       },
       {
         Header: t('user'),
@@ -198,19 +251,18 @@ const VaultRedeemRequestsTable = ({
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: {
-          value: WrappedTokenAmount;
-        }) {
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return (
             <>
-              {value.toHuman()}
+              {displayMonetaryAmount(redeem.request.amountWrapped)}
             </>
           );
         }
       },
       {
         Header: t('redeem_page.btc_destination_address'),
-        accessor: 'userBTCAddress',
+        accessor: 'userBackingAddress',
         classNames: [
           'text-left'
         ],

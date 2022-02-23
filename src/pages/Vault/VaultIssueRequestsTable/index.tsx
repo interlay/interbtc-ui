@@ -159,7 +159,6 @@ const VaultIssueRequestsTable = ({
       },
       {
         Header: t('date_created'),
-        accessor: 'request',
         classNames: [
           'text-left'
         ],
