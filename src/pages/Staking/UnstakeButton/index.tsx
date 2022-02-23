@@ -4,6 +4,10 @@ import {
   useMutation,
   useQueryClient
 } from 'react-query';
+import {
+  format,
+  add
+} from 'date-fns';
 import clsx from 'clsx';
 
 import ErrorModal from 'components/ErrorModal';
@@ -12,9 +16,19 @@ import InterlayDenimOrKintsugiMidnightContainedButton, {
 } from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
+import { BLOCK_TIME } from 'config/parachain';
+import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
+
+const getFormattedUnlockDate = (remainingBlockNumbersToUnstake: number, formatPattern: string) => {
+  const unlockDate = add(new Date(), {
+    seconds: remainingBlockNumbersToUnstake * BLOCK_TIME
+  });
+
+  return format(unlockDate, formatPattern);
+};
 
 interface CustomProps {
   stakedAmount: string;
@@ -62,6 +76,22 @@ const UnstakeButton = ({
       remainingBlockNumbersToUnstake > 0 :
       false;
 
+  const renderUnlockDateLabel = () => {
+    if (remainingBlockNumbersToUnstake === undefined) {
+      return '-';
+    }
+
+    return getFormattedUnlockDate(remainingBlockNumbersToUnstake, YEAR_MONTH_DAY_PATTERN);
+  };
+
+  const renderUnlockDateTimeLabel = () => {
+    if (remainingBlockNumbersToUnstake === undefined) {
+      return '-';
+    }
+
+    return getFormattedUnlockDate(remainingBlockNumbersToUnstake, 'PPpp');
+  };
+
   return (
     <>
       <InterlayDenimOrKintsugiMidnightContainedButton
@@ -76,7 +106,7 @@ const UnstakeButton = ({
         endIcon={
           <InterlayTooltip
             // eslint-disable-next-line max-len
-            label={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on Dec 24, 2022 at 8:34:45 (hardcoded)`}>
+            label={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on ${renderUnlockDateTimeLabel()}`}>
             <InformationCircleIcon
               onClick={event => {
                 event.stopPropagation();
@@ -92,7 +122,7 @@ const UnstakeButton = ({
         pending={unstakeMutation.isLoading}
         disabled={disabled}
         {...rest}>
-        Unstake Locked {GOVERNANCE_TOKEN_SYMBOL} 24/12/2022 (hardcoded)
+        Unstake Locked {GOVERNANCE_TOKEN_SYMBOL} {renderUnlockDateLabel()}
       </InterlayDenimOrKintsugiMidnightContainedButton>
       {unstakeMutation.isError && (
         <ErrorModal
