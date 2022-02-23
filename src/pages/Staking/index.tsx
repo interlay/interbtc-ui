@@ -137,8 +137,7 @@ const Staking = (): JSX.Element => {
     ],
     genericFetcher<number>(),
     {
-      enabled: !!bridgeLoaded,
-      refetchInterval: BLOCK_TIME
+      enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(currentBlockNumberError);
@@ -184,10 +183,9 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(rewardAmountAndAPYError);
 
-  // ray test touch <<
   const {
-    // isIdle: stakedAmountAndEndBlockIdle,
-    // isLoading: stakedAmountAndEndBlockLoading,
+    isIdle: stakedAmountAndEndBlockIdle,
+    isLoading: stakedAmountAndEndBlockLoading,
     data: stakedAmountAndEndBlock,
     error: stakedAmountAndEndBlockError
   } = useQuery<StakedAmountAndEndBlock, Error>(
@@ -204,9 +202,6 @@ const Staking = (): JSX.Element => {
     }
   );
   useErrorHandler(stakedAmountAndEndBlockError);
-  console.log('ray : ***** stakedBalance?.amount.toHuman() => ', stakedAmountAndEndBlock?.amount.toHuman());
-  console.log('ray : ***** stakedBalance?.endBlock => ', stakedAmountAndEndBlock?.endBlock);
-  // ray test touch >>
 
   const queryClient = useQueryClient();
 
@@ -359,6 +354,37 @@ const Staking = (): JSX.Element => {
     return rewardAmountAndAPY.amount.toHuman();
   };
 
+  const renderStakedAmountLabel = () => {
+    if (stakedAmountAndEndBlockIdle || stakedAmountAndEndBlockLoading) {
+      return '-';
+    }
+    if (stakedAmountAndEndBlock === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return stakedAmountAndEndBlock.amount.toHuman();
+  };
+
+  const getRemainingBlockNumbersToUnstake = () => {
+    if (
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading ||
+      currentBlockNumberIdle ||
+      currentBlockNumberLoading
+    ) {
+      return undefined;
+    }
+    if (stakedAmountAndEndBlock === undefined) {
+      throw new Error('Something went wrong!');
+    }
+    if (currentBlockNumber === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return stakedAmountAndEndBlock.endBlock - currentBlockNumber;
+  };
+  const remainingBlockNumbersToUnstake = getRemainingBlockNumbersToUnstake();
+
   const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const transferableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
@@ -413,7 +439,13 @@ const Staking = (): JSX.Element => {
               voteStakedAmount={renderVoteStakedAmountLabel()}
               rewardAmount={renderRewardAmountLabel()} />
             {votingBalanceGreaterThanZero && (
-              <UnstakeButton />
+              <UnstakeButton
+                stakedAmount={renderStakedAmountLabel()}
+                disabled={
+                  remainingBlockNumbersToUnstake ?
+                    remainingBlockNumbersToUnstake > 0 :
+                    false
+                } />
             )}
             {claimRewardsButtonAvailable && (
               <ClaimRewardsButton />

@@ -16,10 +16,15 @@ import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
+interface CustomProps {
+  stakedAmount: string;
+}
+
 const UnstakeButton = ({
   className,
+  stakedAmount,
   ...rest
-}: InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
+}: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
   const { address } = useSelector((state: StoreType) => state.general);
 
   const queryClient = useQueryClient();
@@ -63,7 +68,8 @@ const UnstakeButton = ({
         )}
         endIcon={
           <InterlayTooltip
-            label={`You can unlock your staked ${GOVERNANCE_TOKEN_SYMBOL} on Dec 24, 2022 at 8:34:45 (hardcoded)`}>
+            // eslint-disable-next-line max-len
+            label={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on Dec 24, 2022 at 8:34:45 (hardcoded)`}>
             <InformationCircleIcon
               onClick={event => {
                 event.stopPropagation();
@@ -77,7 +83,6 @@ const UnstakeButton = ({
         }
         onClick={handleUnstake}
         pending={unstakeMutation.isLoading}
-        disabled
         {...rest}>
         Unstake Locked {GOVERNANCE_TOKEN_SYMBOL} 24/12/2022 (hardcoded)
       </InterlayDenimOrKintsugiMidnightContainedButton>
