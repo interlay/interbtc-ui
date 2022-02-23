@@ -315,7 +315,7 @@ const Staking = (): JSX.Element => {
       displayMonetaryAmount(voteGovernanceTokenBalance);
   const renderRewardsAmountLabel = () => {
     if (rewardEstimateIdle || rewardEstimateLoading) {
-      return 'Loading...';
+      return '-';
     }
     if (rewardEstimate === undefined) {
       throw new Error('Something went wrong!');
