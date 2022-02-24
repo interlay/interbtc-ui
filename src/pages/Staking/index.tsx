@@ -109,8 +109,8 @@ const Staking = (): JSX.Element => {
       [LOCK_TIME]: '0'
     }
   });
-  const stakingAmount = watch(STAKING_AMOUNT);
-  const lockTime = watch(LOCK_TIME);
+  const stakingAmount = watch(STAKING_AMOUNT) || '0';
+  const lockTime = watch(LOCK_TIME) || '0';
 
   const {
     isIdle: currentBlockNumberIdle,
@@ -171,6 +171,29 @@ const Staking = (): JSX.Element => {
     }
   );
   useErrorHandler(rewardAmountAndAPYError);
+
+  // Estimated KINT Rewards & APY
+  const monetaryStakingAmount = newMonetaryAmount(stakingAmount, GOVERNANCE_TOKEN, true);
+  const {
+    isIdle: estimatedRewardAmountAndAPYIdle,
+    isLoading: estimatedRewardAmountAndAPYLoading,
+    data: estimatedRewardAmountAndAPY,
+    error: estimatedRewardAmountAndAPYError
+  } = useQuery<RewardAmountAndAPY, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcApi',
+      'escrow',
+      'getRewardEstimate',
+      address,
+      monetaryStakingAmount
+    ],
+    genericFetcher<RewardAmountAndAPY>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(estimatedRewardAmountAndAPYError);
 
   const {
     isIdle: stakedAmountAndEndBlockIdle,
@@ -314,7 +337,10 @@ const Staking = (): JSX.Element => {
       return undefined;
     }
 
-    if (numericValue < STAKE_LOCK_TIME.MIN || numericValue > STAKE_LOCK_TIME.MAX) {
+    if (
+      numericValue < STAKE_LOCK_TIME.MIN ||
+      numericValue > STAKE_LOCK_TIME.MAX
+    ) {
       return `Please enter a number between ${STAKE_LOCK_TIME.MIN}-${STAKE_LOCK_TIME.MAX}.`;
     }
 
@@ -322,8 +348,12 @@ const Staking = (): JSX.Element => {
   };
 
   const freeBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
+
   const renderVoteStakedAmountLabel = () => {
-    if (voteGovernanceTokenIdle || voteGovernanceTokenLoading) {
+    if (
+      voteGovernanceTokenIdle ||
+      voteGovernanceTokenLoading
+    ) {
       return '-';
     }
     if (voteGovernanceTokenBalance === undefined) {
@@ -332,26 +362,33 @@ const Staking = (): JSX.Element => {
 
     return displayMonetaryAmount(voteGovernanceTokenBalance);
   };
+
   const renderRewardAmountLabel = () => {
-    if (rewardAmountAndAPYIdle || rewardAmountAndAPYLoading) {
+    if (
+      rewardAmountAndAPYIdle ||
+      rewardAmountAndAPYLoading
+    ) {
       return '-';
     }
     if (rewardAmountAndAPY === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return rewardAmountAndAPY.amount.toHuman();
+    return displayMonetaryAmount(rewardAmountAndAPY.amount);
   };
 
   const renderStakedAmountLabel = () => {
-    if (stakedAmountAndEndBlockIdle || stakedAmountAndEndBlockLoading) {
+    if (
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading
+    ) {
       return '-';
     }
     if (stakedAmountAndEndBlock === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return stakedAmountAndEndBlock.amount.toHuman();
+    return displayMonetaryAmount(stakedAmountAndEndBlock.amount);
   };
 
   const getRemainingBlockNumbersToUnstake = () => {
@@ -415,25 +452,43 @@ const Staking = (): JSX.Element => {
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
   };
 
-  const monetaryStakingAmount = newMonetaryAmount(stakingAmount, GOVERNANCE_TOKEN, true);
   const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
 
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
   const renderNewTotalStakeLabel = () => {
-    if (voteGovernanceTokenIdle || voteGovernanceTokenLoading) {
+    if (
+      voteGovernanceTokenIdle ||
+      voteGovernanceTokenLoading
+    ) {
       return '-';
     }
     if (voteGovernanceTokenBalance === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return monetaryStakingAmount.add(voteGovernanceTokenBalance).toHuman();
+    return displayMonetaryAmount(monetaryStakingAmount.add(voteGovernanceTokenBalance));
+  };
+
+  const renderEstimatedRewardAmountLabel = () => {
+    if (
+      estimatedRewardAmountAndAPYIdle ||
+      estimatedRewardAmountAndAPYLoading
+    ) {
+      return '-';
+    }
+    if (estimatedRewardAmountAndAPY === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return displayMonetaryAmount(estimatedRewardAmountAndAPY.amount);
   };
 
   const initializing =
-    (voteGovernanceTokenIdle || voteGovernanceTokenLoading) ||
-    (currentBlockNumberIdle || currentBlockNumberLoading);
+    voteGovernanceTokenIdle ||
+    voteGovernanceTokenLoading ||
+    currentBlockNumberIdle ||
+    currentBlockNumberLoading;
 
   let submitButtonLabel: string;
   if (initializing) {
@@ -523,12 +578,12 @@ const Staking = (): JSX.Element => {
             <InformationUI
               label='Estimated APY'
               value='12.24% (hardcoded)'
+              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
+            <InformationUI
+              label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
+              value={`${renderEstimatedRewardAmountLabel()}  ${GOVERNANCE_TOKEN_SYMBOL}`}
               // eslint-disable-next-line max-len
               tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
-            {/* <InformationUI
-              label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
-              value={`156.43  ${GOVERNANCE_TOKEN_SYMBOL}`}
-              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} /> */}
             <SubmitButton
               disabled={initializing}
               pending={
@@ -540,9 +595,15 @@ const Staking = (): JSX.Element => {
           </form>
         </Panel>
       </MainContainer>
-      {(initialStakeMutation.isError || moreStakeMutation.isError) && (
+      {(
+        initialStakeMutation.isError ||
+        moreStakeMutation.isError
+      ) && (
         <ErrorModal
-          open={initialStakeMutation.isError || moreStakeMutation.isError}
+          open={
+            initialStakeMutation.isError ||
+            moreStakeMutation.isError
+          }
           onClose={() => {
             initialStakeMutation.reset();
             moreStakeMutation.reset();
