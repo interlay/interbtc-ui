@@ -57,6 +57,9 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@cypress/react": "^5.12.3",
+    "@cypress/webpack-dev-server": "^1.8.1",
+    "@cypress/webpack-preprocessor": "^5.11.1",
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
     "@storybook/addon-actions": "^6.2.8",
     "@storybook/addon-essentials": "^6.2.8",
@@ -108,28 +111,10 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "chromatic": "chromatic --project-token",
-    "cypress:open": "cypress open"
+    "cypress:e2e": "cypress open",
+    "cypress:ct": "cypress open-ct"
   },
   "homepage": "",
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not ie <= 99",
-      "not android <= 4.4.4",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      ">0.2%",
-      "not ie <= 99",
-      "not android <= 4.4.4",
-      "not dead",
-      "not op_mini all",
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
