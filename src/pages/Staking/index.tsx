@@ -57,17 +57,6 @@ import {
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
-const getUnlockDateLabel = (weeks: number) => {
-  if (weeks >= STAKE_LOCK_TIME.MIN) {
-    const unlockDate = add(new Date(), {
-      weeks
-    });
-    return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
-  } else {
-    return '-';
-  }
-};
-
 const getLockBlocks = (weeks: number) => {
   return (weeks * 7 * 24 * 3600) / BLOCK_TIME;
 };
@@ -389,7 +378,42 @@ const Staking = (): JSX.Element => {
 
   const transferableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
 
-  const unlockDateLabel = getUnlockDateLabel(parseInt(lockTime));
+  const renderUnlockDateLabel = () => {
+    const numericLockTime = parseInt(lockTime);
+    if (
+      numericLockTime < STAKE_LOCK_TIME.MIN ||
+      numericLockTime > STAKE_LOCK_TIME.MAX
+    ) {
+      return '-';
+    }
+
+    const unlockDate = add(new Date(), {
+      weeks: numericLockTime
+    });
+
+    return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
+  };
+
+  const renderNewUnlockDateLabel = () => {
+    if (remainingBlockNumbersToUnstake === undefined) {
+      return '-';
+    }
+
+    const numericLockTime = parseInt(lockTime);
+    if (
+      numericLockTime < STAKE_LOCK_TIME.MIN ||
+      numericLockTime > STAKE_LOCK_TIME.MAX
+    ) {
+      return '-';
+    }
+
+    const unlockDate = add(new Date(), {
+      weeks: numericLockTime,
+      seconds: (remainingBlockNumbersToUnstake > 0 ? remainingBlockNumbersToUnstake : 0) * BLOCK_TIME
+    });
+
+    return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
+  };
 
   const monetaryStakingAmount = newMonetaryAmount(stakingAmount, GOVERNANCE_TOKEN, true);
   const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
@@ -482,12 +506,12 @@ const Staking = (): JSX.Element => {
             {votingBalanceGreaterThanZero ? (
               <InformationUI
                 label='New unlock Date'
-                value='Dec 16, 2023 (hardcoded)'
+                value={renderNewUnlockDateLabel()}
                 tooltip='Your original lock date plus the extended lock time.' />
             ) : (
               <InformationUI
                 label='Unlock Date'
-                value={unlockDateLabel}
+                value={renderUnlockDateLabel()}
                 tooltip='Your staked amount will be locked until this date.' />
             )}
             {votingBalanceGreaterThanZero && (
