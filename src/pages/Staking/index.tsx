@@ -32,7 +32,7 @@ import Title from './Title';
 import BalancesUI from './BalancesUI';
 import UnstakeButton from './UnstakeButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
-import TransferableBalanceUI from './TransferableBalanceUI';
+import AvailableBalanceUI from './AvailableBalanceUI';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
 import MainContainer from 'parts/MainContainer';
@@ -411,7 +411,7 @@ const Staking = (): JSX.Element => {
 
   const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
-  const transferableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
+  const availableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
 
   const renderUnlockDateLabel = () => {
     const numericLockTime = parseInt(lockTime);
@@ -538,7 +538,7 @@ const Staking = (): JSX.Element => {
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
             )}
             <div className='space-y-2'>
-              <TransferableBalanceUI balance={transferableBalanceLabel} />
+              <AvailableBalanceUI balance={availableBalanceLabel} />
               <TokenField
                 id={STAKING_AMOUNT}
                 name={STAKING_AMOUNT}

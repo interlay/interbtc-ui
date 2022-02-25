@@ -11,7 +11,7 @@ interface Props {
   balance: string;
 }
 
-const TransferableBalanceUI = ({
+const AvailableBalanceUI = ({
   balance
 }: Props): JSX.Element => {
   return (
@@ -23,7 +23,7 @@ const TransferableBalanceUI = ({
           // TODO: placeholder color
           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
-        Transferable Balance:
+        Available Balance:
       </span>
       <span
         className={clsx(
@@ -38,4 +38,4 @@ const TransferableBalanceUI = ({
   );
 };
 
-export default TransferableBalanceUI;
+export default AvailableBalanceUI;
