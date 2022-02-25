@@ -64,11 +64,11 @@ const getLockBlocks = (weeks: number) => {
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
 
-const STAKING_AMOUNT = 'staking-amount';
+const LOCKING_AMOUNT = 'locking-amount';
 const LOCK_TIME = 'lock-time';
 
 type StakingFormData = {
-  [STAKING_AMOUNT]: string;
+  [LOCKING_AMOUNT]: string;
   [LOCK_TIME]: string;
 }
 
@@ -82,7 +82,7 @@ interface StakedAmountAndEndBlock {
   endBlock: number;
 }
 
-interface StakingAmountAndUnlockHeight {
+interface LockingAmountAndUnlockHeight {
   amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   unlockHeight: number;
 }
@@ -105,11 +105,11 @@ const Staking = (): JSX.Element => {
   } = useForm<StakingFormData>({
     mode: 'onChange', // 'onBlur'
     defaultValues: {
-      [STAKING_AMOUNT]: '0',
+      [LOCKING_AMOUNT]: '0',
       [LOCK_TIME]: '0'
     }
   });
-  const stakingAmount = watch(STAKING_AMOUNT) || '0';
+  const lockingAmount = watch(LOCKING_AMOUNT) || '0';
   const lockTime = watch(LOCK_TIME) || '0';
 
   const {
@@ -173,7 +173,7 @@ const Staking = (): JSX.Element => {
   useErrorHandler(rewardAmountAndAPYError);
 
   // Estimated KINT Rewards & APY
-  const monetaryStakingAmount = newMonetaryAmount(stakingAmount, GOVERNANCE_TOKEN, true);
+  const monetaryLockingAmount = newMonetaryAmount(lockingAmount, GOVERNANCE_TOKEN, true);
   const {
     isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
@@ -186,7 +186,7 @@ const Staking = (): JSX.Element => {
       'escrow',
       'getRewardEstimate',
       address,
-      monetaryStakingAmount
+      monetaryLockingAmount
     ],
     genericFetcher<RewardAmountAndAPY>(),
     {
@@ -217,8 +217,8 @@ const Staking = (): JSX.Element => {
 
   const queryClient = useQueryClient();
 
-  const initialStakeMutation = useMutation<void, Error, StakingAmountAndUnlockHeight>(
-    (variables: StakingAmountAndUnlockHeight) => {
+  const initialStakeMutation = useMutation<void, Error, LockingAmountAndUnlockHeight>(
+    (variables: LockingAmountAndUnlockHeight) => {
       return window.bridge.interBtcApi.escrow.createLock(variables.amount, variables.unlockHeight);
     },
     {
@@ -232,7 +232,7 @@ const Staking = (): JSX.Element => {
         ]);
         console.log('[initialStakeMutation onSuccess] variables => ', variables);
         reset({
-          [STAKING_AMOUNT]: '0.0',
+          [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
         });
       },
@@ -243,8 +243,8 @@ const Staking = (): JSX.Element => {
     }
   );
 
-  const moreStakeMutation = useMutation<void, Error, StakingAmountAndUnlockHeight>(
-    (variables: StakingAmountAndUnlockHeight) => {
+  const moreStakeMutation = useMutation<void, Error, LockingAmountAndUnlockHeight>(
+    (variables: LockingAmountAndUnlockHeight) => {
       return (async () => {
         const txs = [
           window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
@@ -271,7 +271,7 @@ const Staking = (): JSX.Element => {
         ]);
         console.log('[moreStakeMutation onSuccess] variables => ', variables);
         reset({
-          [STAKING_AMOUNT]: '0.0',
+          [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
         });
       },
@@ -288,7 +288,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    const monetaryAmount = newMonetaryAmount(data[STAKING_AMOUNT], GOVERNANCE_TOKEN, true);
+    const monetaryAmount = newMonetaryAmount(data[LOCKING_AMOUNT], GOVERNANCE_TOKEN, true);
 
     const lockTime = parseInt(data[LOCK_TIME]); // Weeks
     const unlockHeight = currentBlockNumber + getLockBlocks(lockTime);
@@ -306,24 +306,24 @@ const Staking = (): JSX.Element => {
     }
   };
 
-  const validateStakingAmount = (value = '0'): string | undefined => {
-    const monetaryStakingAmount = newMonetaryAmount(value, GOVERNANCE_TOKEN, true);
+  const validateLockingAmount = (value = '0'): string | undefined => {
+    const monetaryLockingAmount = newMonetaryAmount(value, GOVERNANCE_TOKEN, true);
 
-    if (monetaryStakingAmount.lte(ZERO_GOVERNANCE_TOKEN_AMOUNT)) {
-      return 'Staking amount must be greater than zero!';
+    if (monetaryLockingAmount.lte(ZERO_GOVERNANCE_TOKEN_AMOUNT)) {
+      return 'Locking amount must be greater than zero!';
     }
 
-    if (monetaryStakingAmount.gt(governanceTokenBalance)) {
-      return 'Staking amount must be less than governance token balance!';
+    if (monetaryLockingAmount.gt(governanceTokenBalance)) {
+      return 'Locking amount must be less than governance token balance!';
     }
 
-    const planckStakingAmount = monetaryStakingAmount.to.Planck();
+    const planckLockingAmount = monetaryLockingAmount.to.Planck();
     const lockBlocks = getLockBlocks(parseInt(lockTime));
     // This is related to the on-chain implementation where currency values are integers.
     // So less tokens than the period would likely round to 0.
     // So on the UI, as long as you require more planck to be locked than the number of blocks the user locks for,
     // it should be good.
-    if (planckStakingAmount.lte(Big(lockBlocks))) {
+    if (planckLockingAmount.lte(Big(lockBlocks))) {
       return 'Planck to be locked must be greater than the number of blocks you lock for!';
     }
 
@@ -450,7 +450,7 @@ const Staking = (): JSX.Element => {
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
   };
 
-  const usdStakingAmount = getUsdAmount(monetaryStakingAmount, prices.governanceToken.usd);
+  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
 
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
@@ -465,7 +465,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return displayMonetaryAmount(monetaryStakingAmount.add(voteGovernanceTokenBalance));
+    return displayMonetaryAmount(monetaryLockingAmount.add(voteGovernanceTokenBalance));
   };
 
   const renderEstimatedAPYLabel = () => {
@@ -540,8 +540,8 @@ const Staking = (): JSX.Element => {
             <div className='space-y-2'>
               <AvailableBalanceUI balance={availableBalanceLabel} />
               <TokenField
-                id={STAKING_AMOUNT}
-                name={STAKING_AMOUNT}
+                id={LOCKING_AMOUNT}
+                name={LOCKING_AMOUNT}
                 label={GOVERNANCE_TOKEN_SYMBOL}
                 min={0}
                 ref={register({
@@ -549,11 +549,11 @@ const Staking = (): JSX.Element => {
                     value: true,
                     message: 'This field is required!'
                   },
-                  validate: value => validateStakingAmount(value)
+                  validate: value => validateLockingAmount(value)
                 })}
-                approxUSD={`≈ $ ${usdStakingAmount}`}
-                error={!!errors[STAKING_AMOUNT]}
-                helperText={errors[STAKING_AMOUNT]?.message} />
+                approxUSD={`≈ $ ${valueInUSDOfLockingAmount}`}
+                error={!!errors[LOCKING_AMOUNT]}
+                helperText={errors[LOCKING_AMOUNT]?.message} />
             </div>
             <LockTimeField
               id={LOCK_TIME}
