@@ -528,7 +528,9 @@ const Staking = (): JSX.Element => {
             onSubmit={handleSubmit(onSubmit)}>
             <Title />
             <BalancesUI
+              // ray test touch <<
               freeBalance={freeBalanceLabel}
+              // ray test touch >>
               voteStakedAmount={renderVoteStakedAmountLabel()}
               rewardAmount={renderRewardAmountLabel()} />
             {votingBalanceGreaterThanZero && (
