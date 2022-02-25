@@ -51,6 +51,11 @@ Please make use of the `.env.*` files to set build variables. The priority of th
 
 To achieve this, create a file `.env.development.local` and fill it with the following contents for either the Interlay or Kintsugi network versions:
 
+### End-to-end testing
+
+* Run `yarn start` and make sure the application is running on port 3000
+* Run `yarn cypress:e2e`
+
 #### Interlay Network
 
 ```bash
