@@ -4,7 +4,8 @@ module.exports = {
     '@typescript-eslint',
     'react',
     'import',
-    'cypress'
+    'cypress',
+    'chai-friendly'
     // "prettier"
   ],
   extends: [
@@ -15,13 +16,16 @@ module.exports = {
     // "plugin:prettier/recommended",
     // "prettier"
     'react-app',
-    'react-app/jest',
+    // Disabled to avoid conflict with Cypress. Configuration
+    // can be changed if/when we start using Jest.
+    // 'react-app/jest',
     'google',
     'plugin:cypress/recommended'
   ],
   env: {
     browser: true,
     es2020: true,
+    // Disabled to avoid conflict with Cypress
     jest: true,
     node: true
   },
@@ -211,5 +215,14 @@ module.exports = {
       }
     ],
     'react/jsx-props-no-multi-spaces': 'error'
-  }
+  },
+  overrides: [
+    {
+      // Overrides rules for Cypress specs
+      files: ['cypress/**/*.spec.ts'],
+      rules: {
+        'no-unused-expressions': 'off',
+        '@typescript-eslint/no-unused-expressions': 0 }
+    }
+  ]
 };
