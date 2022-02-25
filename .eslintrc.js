@@ -220,7 +220,8 @@ module.exports = {
       files: ['cypress/**/*.spec.ts'],
       rules: {
         'no-unused-expressions': 'off',
-        '@typescript-eslint/no-unused-expressions': 0 }
+        '@typescript-eslint/no-unused-expressions': 0
+      }
     }
   ]
 };
