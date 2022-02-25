@@ -35,7 +35,7 @@ interface CustomProps {
   remainingBlockNumbersToUnstake: number | undefined;
 }
 
-const UnstakeButton = ({
+const WithdrawButton = ({
   className,
   stakedAmount,
   remainingBlockNumbersToUnstake,
@@ -140,4 +140,4 @@ const UnstakeButton = ({
   );
 };
 
-export default UnstakeButton;
+export default WithdrawButton;

@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import {
   useQuery,
-  useMutation,
-  useQueryClient
+  useMutation
 } from 'react-query';
 import {
   useErrorHandler,
@@ -30,7 +29,7 @@ import { AddressOrPair } from '@polkadot/api/types';
 
 import Title from './Title';
 import BalancesUI from './BalancesUI';
-import UnstakeButton from './UnstakeButton';
+import WithdrawButton from './WithdrawButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
 import AvailableBalanceUI from './AvailableBalanceUI';
 import InformationUI from './InformationUI';
@@ -132,10 +131,11 @@ const Staking = (): JSX.Element => {
   useErrorHandler(currentBlockNumberError);
 
   const {
-    isIdle: voteGovernanceTokenIdle,
-    isLoading: voteGovernanceTokenLoading,
+    isIdle: voteGovernanceTokenBalanceIdle,
+    isLoading: voteGovernanceTokenBalanceLoading,
     data: voteGovernanceTokenBalance,
-    error: voteGovernanceTokenError
+    error: voteGovernanceTokenBalanceError,
+    refetch: voteGovernanceTokenBalanceRefetch
   } = useQuery<MonetaryAmount<Currency<VoteUnit>, VoteUnit>, Error>(
     [
       GENERIC_FETCHER,
@@ -149,7 +149,7 @@ const Staking = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(voteGovernanceTokenError);
+  useErrorHandler(voteGovernanceTokenBalanceError);
 
   // My Rewards
   const {
@@ -215,21 +215,13 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(stakedAmountAndEndBlockError);
 
-  const queryClient = useQueryClient();
-
   const initialStakeMutation = useMutation<void, Error, LockingAmountAndUnlockHeight>(
     (variables: LockingAmountAndUnlockHeight) => {
       return window.bridge.interBtcApi.escrow.createLock(variables.amount, variables.unlockHeight);
     },
     {
       onSuccess: (_, variables) => {
-        queryClient.invalidateQueries([
-          GENERIC_FETCHER,
-          'interBtcApi',
-          'escrow',
-          'votingBalance',
-          address
-        ]);
+        voteGovernanceTokenBalanceRefetch();
         console.log('[initialStakeMutation onSuccess] variables => ', variables);
         reset({
           [LOCKING_AMOUNT]: '0.0',
@@ -262,13 +254,7 @@ const Staking = (): JSX.Element => {
     },
     {
       onSuccess: (_, variables) => {
-        queryClient.invalidateQueries([
-          GENERIC_FETCHER,
-          'interBtcApi',
-          'escrow',
-          'votingBalance',
-          address
-        ]);
+        voteGovernanceTokenBalanceRefetch();
         console.log('[moreStakeMutation onSuccess] variables => ', variables);
         reset({
           [LOCKING_AMOUNT]: '0.0',
@@ -349,8 +335,8 @@ const Staking = (): JSX.Element => {
 
   const renderVoteStakedAmountLabel = () => {
     if (
-      voteGovernanceTokenIdle ||
-      voteGovernanceTokenLoading
+      voteGovernanceTokenBalanceIdle ||
+      voteGovernanceTokenBalanceLoading
     ) {
       return '-';
     }
@@ -456,8 +442,8 @@ const Staking = (): JSX.Element => {
 
   const renderNewTotalStakeLabel = () => {
     if (
-      voteGovernanceTokenIdle ||
-      voteGovernanceTokenLoading
+      voteGovernanceTokenBalanceIdle ||
+      voteGovernanceTokenBalanceLoading
     ) {
       return '-';
     }
@@ -499,8 +485,8 @@ const Staking = (): JSX.Element => {
   const initializing =
     currentBlockNumberIdle ||
     currentBlockNumberLoading ||
-    voteGovernanceTokenIdle ||
-    voteGovernanceTokenLoading ||
+    voteGovernanceTokenBalanceIdle ||
+    voteGovernanceTokenBalanceLoading ||
     rewardAmountAndAPYIdle ||
     rewardAmountAndAPYLoading ||
     estimatedRewardAmountAndAPYIdle ||
@@ -539,7 +525,7 @@ const Staking = (): JSX.Element => {
               <ClaimRewardsButton />
             )}
             {votingBalanceGreaterThanZero && (
-              <UnstakeButton
+              <WithdrawButton
                 stakedAmount={renderStakedAmountLabel()}
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
             )}
