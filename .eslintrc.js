@@ -24,7 +24,6 @@ module.exports = {
   env: {
     browser: true,
     es2020: true,
-    // Disabled to avoid conflict with Cypress
     jest: true,
     node: true
   },
