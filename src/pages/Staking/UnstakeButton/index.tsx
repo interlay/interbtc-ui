@@ -122,7 +122,7 @@ const UnstakeButton = ({
         pending={unstakeMutation.isLoading}
         disabled={disabled}
         {...rest}>
-        Unstake Locked {GOVERNANCE_TOKEN_SYMBOL} {renderUnlockDateLabel()}
+        Withdraw Staked {GOVERNANCE_TOKEN_SYMBOL} {renderUnlockDateLabel()}
       </InterlayDenimOrKintsugiMidnightContainedButton>
       {unstakeMutation.isError && (
         <ErrorModal
