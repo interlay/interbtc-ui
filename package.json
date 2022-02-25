@@ -111,8 +111,7 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "chromatic": "chromatic --project-token",
-    "cypress:e2e": "cypress open",
-    "cypress:ct": "cypress open-ct"
+    "cypress:e2e": "cypress open"
   },
   "homepage": "",
   "browserslist": {
