@@ -497,10 +497,16 @@ const Staking = (): JSX.Element => {
   };
 
   const initializing =
+    currentBlockNumberIdle ||
+    currentBlockNumberLoading ||
     voteGovernanceTokenIdle ||
     voteGovernanceTokenLoading ||
-    currentBlockNumberIdle ||
-    currentBlockNumberLoading;
+    rewardAmountAndAPYIdle ||
+    rewardAmountAndAPYLoading ||
+    estimatedRewardAmountAndAPYIdle ||
+    estimatedRewardAmountAndAPYLoading ||
+    stakedAmountAndEndBlockIdle ||
+    stakedAmountAndEndBlockLoading;
 
   let submitButtonLabel: string;
   if (initializing) {
