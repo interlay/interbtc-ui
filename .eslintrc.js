@@ -4,8 +4,7 @@ module.exports = {
     '@typescript-eslint',
     'react',
     'import',
-    'cypress',
-    'chai-friendly'
+    'cypress'
     // "prettier"
   ],
   extends: [
