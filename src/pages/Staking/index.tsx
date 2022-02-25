@@ -529,13 +529,13 @@ const Staking = (): JSX.Element => {
               stakedAmount={renderStakedAmountLabel()}
               voteStakedAmount={renderVoteStakedAmountLabel()}
               rewardAmount={renderRewardAmountLabel()} />
+            {claimRewardsButtonAvailable && (
+              <ClaimRewardsButton />
+            )}
             {votingBalanceGreaterThanZero && (
               <UnstakeButton
                 stakedAmount={renderStakedAmountLabel()}
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
-            )}
-            {claimRewardsButtonAvailable && (
-              <ClaimRewardsButton />
             )}
             <div className='space-y-2'>
               <TransferableBalanceUI balance={transferableBalanceLabel} />
