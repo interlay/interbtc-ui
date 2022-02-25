@@ -10,7 +10,7 @@ import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/i
 
 interface CustomProps {
   label: string;
-  value: string;
+  value: string | number;
   tooltip: string;
 }
 

@@ -470,6 +470,20 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(monetaryStakingAmount.add(voteGovernanceTokenBalance));
   };
 
+  const renderEstimatedAPYLabel = () => {
+    if (
+      estimatedRewardAmountAndAPYIdle ||
+      estimatedRewardAmountAndAPYLoading
+    ) {
+      return '-';
+    }
+    if (estimatedRewardAmountAndAPY === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return estimatedRewardAmountAndAPY.apy;
+  };
+
   const renderEstimatedRewardAmountLabel = () => {
     if (
       estimatedRewardAmountAndAPYIdle ||
@@ -577,7 +591,7 @@ const Staking = (): JSX.Element => {
             )}
             <InformationUI
               label='Estimated APY'
-              value='12.24% (hardcoded)'
+              value={renderEstimatedAPYLabel()}
               tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
