@@ -84,17 +84,13 @@ const BalanceItem = ({
 );
 
 interface Props {
-  // ray test touch <<
-  freeBalance: string;
-  // ray test touch >>
+  stakedAmount: string;
   voteStakedAmount: string;
   rewardAmount: string;
 }
 
 const BalancesUI = ({
-  // ray test touch <<
-  freeBalance,
-  // ray test touch >>
+  stakedAmount,
   voteStakedAmount,
   rewardAmount
 }: Props): JSX.Element => {
@@ -114,9 +110,7 @@ const BalancesUI = ({
       )}>
       <BalanceItem
         label={`Staked ${GOVERNANCE_TOKEN_SYMBOL}`}
-        // ray test touch <<
-        value={freeBalance}
-        // ray test touch >>
+        value={stakedAmount}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
       <BalanceItem
         label={`${VOTE_GOVERNANCE_TOKEN_SYMBOL} Balance`}

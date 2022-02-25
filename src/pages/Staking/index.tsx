@@ -347,8 +347,6 @@ const Staking = (): JSX.Element => {
     return undefined;
   };
 
-  const freeBalanceLabel = displayMonetaryAmount(governanceTokenBalance);
-
   const renderVoteStakedAmountLabel = () => {
     if (
       voteGovernanceTokenIdle ||
@@ -528,9 +526,7 @@ const Staking = (): JSX.Element => {
             onSubmit={handleSubmit(onSubmit)}>
             <Title />
             <BalancesUI
-              // ray test touch <<
-              freeBalance={freeBalanceLabel}
-              // ray test touch >>
+              stakedAmount={renderStakedAmountLabel()}
               voteStakedAmount={renderVoteStakedAmountLabel()}
               rewardAmount={renderRewardAmountLabel()} />
             {votingBalanceGreaterThanZero && (
