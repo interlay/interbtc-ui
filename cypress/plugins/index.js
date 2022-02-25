@@ -1,5 +1,7 @@
 /// <reference types="cypress" />
 
+// We have to duplicate our craco overrides here because the craco cypress
+// plugin only works for component testing.
 const findWebpack = require('find-webpack');
 const webpackPreprocessor = require('@cypress/webpack-preprocessor');
 
@@ -8,7 +10,7 @@ module.exports = on => {
   const webpackOptions = findWebpack.getWebpackOptions();
 
   if (!webpackOptions) {
-    throw new Error('Could not find Webpack in this project 😢');
+    throw new Error('Could not find Webpack in this project');
   }
 
   // https://github.com/cypress-io/cypress-webpack-preprocessor/issues/31
