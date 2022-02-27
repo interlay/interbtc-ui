@@ -34,7 +34,8 @@ const {
   INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
   INTERLAY_TEXT_SECONDARY_IN_LIGHT_MODE,
   KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
-  KINTSUGI_TEXT_SECONDARY_IN_DARK_MODE
+  KINTSUGI_TEXT_SECONDARY_IN_DARK_MODE,
+  MINE_SHAFT
 } = require('./utils/constants/colors');
 
 module.exports = {
@@ -367,7 +368,19 @@ module.exports = {
         interlayTextPrimaryInLightMode: INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
         interlayTextSecondaryInLightMode: INTERLAY_TEXT_SECONDARY_IN_LIGHT_MODE,
         kintsugiTextPrimaryInDarkMode: KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
-        kintsugiTextSecondaryInDarkMode: KINTSUGI_TEXT_SECONDARY_IN_DARK_MODE
+        kintsugiTextSecondaryInDarkMode: KINTSUGI_TEXT_SECONDARY_IN_DARK_MODE,
+        mineShaft: {
+          50: MINE_SHAFT[50],
+          100: MINE_SHAFT[100],
+          200: MINE_SHAFT[200],
+          300: MINE_SHAFT[300],
+          400: MINE_SHAFT[400],
+          DEFAULT: MINE_SHAFT[500],
+          600: MINE_SHAFT[600],
+          700: MINE_SHAFT[700],
+          800: MINE_SHAFT[800],
+          900: MINE_SHAFT[900]
+        }
       },
       // MEMO: inspired by https://material-ui.com/customization/default-theme/
       zIndex: {
