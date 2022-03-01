@@ -1,5 +1,5 @@
 
-import clsx from 'clsx';
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import {
   useQuery,
@@ -10,11 +10,13 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
+import { AddressOrPair } from '@polkadot/api/types';
 import {
   format,
   add
 } from 'date-fns';
 import Big from 'big.js';
+import clsx from 'clsx';
 import {
   MonetaryAmount,
   Currency
@@ -25,7 +27,6 @@ import {
   newMonetaryAmount,
   VoteUnit
 } from '@interlay/interbtc-api';
-import { AddressOrPair } from '@polkadot/api/types';
 
 import Title from './Title';
 import BalancesUI from './BalancesUI';
@@ -100,7 +101,8 @@ const Staking = (): JSX.Element => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors }
+    formState: { errors },
+    trigger
   } = useForm<StakingFormData>({
     mode: 'onChange', // 'onBlur'
     defaultValues: {
@@ -268,16 +270,42 @@ const Staking = (): JSX.Element => {
     }
   );
 
+  React.useEffect(() => {
+    reset({
+      [LOCKING_AMOUNT]: '',
+      [LOCK_TIME]: ''
+    });
+  }, [
+    address,
+    reset
+  ]);
+
+  const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
+
+  const extendLockTimeSet = votingBalanceGreaterThanZero && parseInt(lockTime) > 0;
+
+  React.useEffect(() => {
+    if (extendLockTimeSet) {
+      trigger(LOCKING_AMOUNT);
+    }
+  }, [
+    lockTime,
+    extendLockTimeSet,
+    trigger
+  ]);
+
   const onSubmit = (data: StakingFormData) => {
     if (!bridgeLoaded) return;
     if (currentBlockNumber === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    const monetaryAmount = newMonetaryAmount(data[LOCKING_AMOUNT], GOVERNANCE_TOKEN, true);
+    const lockingAmountWithFallback = data[LOCKING_AMOUNT] || '0';
+    const lockTimeWithFallback = data[LOCK_TIME] || '0'; // Weeks
 
-    const lockTime = parseInt(data[LOCK_TIME]); // Weeks
-    const unlockHeight = currentBlockNumber + getLockBlocks(lockTime);
+    const monetaryAmount = newMonetaryAmount(lockingAmountWithFallback, GOVERNANCE_TOKEN, true);
+
+    const unlockHeight = currentBlockNumber + getLockBlocks(parseInt(lockTimeWithFallback));
 
     if (votingBalanceGreaterThanZero) {
       moreStakeMutation.mutate({
@@ -292,10 +320,14 @@ const Staking = (): JSX.Element => {
     }
   };
 
-  const validateLockingAmount = (value = '0'): string | undefined => {
-    const monetaryLockingAmount = newMonetaryAmount(value, GOVERNANCE_TOKEN, true);
+  const validateLockingAmount = (value: string): string | undefined => {
+    const valueWithFallback = value || '0';
+    const monetaryLockingAmount = newMonetaryAmount(valueWithFallback, GOVERNANCE_TOKEN, true);
 
-    if (monetaryLockingAmount.lte(ZERO_GOVERNANCE_TOKEN_AMOUNT)) {
+    if (
+      !extendLockTimeSet &&
+      monetaryLockingAmount.lte(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+    ) {
       return 'Locking amount must be greater than zero!';
     }
 
@@ -309,17 +341,21 @@ const Staking = (): JSX.Element => {
     // So less tokens than the period would likely round to 0.
     // So on the UI, as long as you require more planck to be locked than the number of blocks the user locks for,
     // it should be good.
-    if (planckLockingAmount.lte(Big(lockBlocks))) {
+    if (
+      !extendLockTimeSet &&
+      planckLockingAmount.lte(Big(lockBlocks))
+    ) {
       return 'Planck to be locked must be greater than the number of blocks you lock for!';
     }
 
     return undefined;
   };
 
-  const validateLockTime = (value = '0', optional: boolean): string | undefined => {
-    const numericValue = parseInt(value);
+  const validateLockTime = (value: string): string | undefined => {
+    const valueWithFallback = value || '0';
+    const numericValue = parseInt(valueWithFallback);
 
-    if (optional && numericValue === 0) {
+    if (votingBalanceGreaterThanZero && numericValue === 0) {
       return undefined;
     }
 
@@ -395,8 +431,6 @@ const Staking = (): JSX.Element => {
   };
   const remainingBlockNumbersToUnstake = getRemainingBlockNumbersToUnstake();
 
-  const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
-
   const availableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
 
   const renderUnlockDateLabel = () => {
@@ -435,10 +469,6 @@ const Staking = (): JSX.Element => {
 
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
   };
-
-  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
-
-  const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
   const renderNewTotalStakeLabel = () => {
     if (
@@ -481,6 +511,10 @@ const Staking = (): JSX.Element => {
 
     return displayMonetaryAmount(estimatedRewardAmountAndAPY.amount);
   };
+
+  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
+
+  const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const initializing =
     currentBlockNumberIdle ||
@@ -538,7 +572,7 @@ const Staking = (): JSX.Element => {
                 min={0}
                 ref={register({
                   required: {
-                    value: true,
+                    value: extendLockTimeSet ? false : true,
                     message: 'This field is required!'
                   },
                   validate: value => validateLockingAmount(value)
@@ -556,7 +590,7 @@ const Staking = (): JSX.Element => {
                   value: votingBalanceGreaterThanZero ? false : true,
                   message: 'This field is required!'
                 },
-                validate: value => validateLockTime(value, !!votingBalanceGreaterThanZero)
+                validate: value => validateLockTime(value)
               })}
               error={!!errors[LOCK_TIME]}
               helperText={errors[LOCK_TIME]?.message}
