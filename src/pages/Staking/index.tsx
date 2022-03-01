@@ -1,9 +1,7 @@
 
 import * as React from 'react';
 import {
-  // ray test touch <<
   useDispatch,
-  // ray test touch >>
   useSelector
 } from 'react-redux';
 import {
@@ -15,9 +13,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
-// ray test touch <<
 import { useTranslation } from 'react-i18next';
-// ray test touch >>
 import { AddressOrPair } from '@polkadot/api/types';
 import {
   format,
@@ -64,9 +60,7 @@ import {
 } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-// ray test touch <<
 import { showAccountModalAction } from 'common/actions/general.actions';
-// ray test touch >>
 
 const getLockBlocks = (weeks: number) => {
   return (weeks * 7 * 24 * 3600) / BLOCK_TIME;
@@ -99,10 +93,8 @@ interface LockingAmountAndUnlockHeight {
 }
 
 const Staking = (): JSX.Element => {
-  // ray test touch <<
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  // ray test touch >>
 
   const {
     governanceTokenBalance,
@@ -528,7 +520,6 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(estimatedRewardAmountAndAPY.amount);
   };
 
-  // ray test touch <<
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     // TODO: should be handled based on https://kentcdodds.com/blog/application-state-management-with-react
     if (!accountSet) {
@@ -536,15 +527,12 @@ const Staking = (): JSX.Element => {
       event.preventDefault();
     }
   };
-  // ray test touch >>
 
   const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
 
   const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
-  // ray test touch <<
   const accountSet = !!address;
-  // ray test touch >>
 
   const initializing =
     currentBlockNumberIdle ||
@@ -562,13 +550,11 @@ const Staking = (): JSX.Element => {
   if (initializing) {
     submitButtonLabel = 'Loading...';
   } else {
-    // ray test touch <<
     if (accountSet) {
       submitButtonLabel = votingBalanceGreaterThanZero ? 'Add more stake' : 'Stake';
     } else {
       submitButtonLabel = t('connect_wallet');
     }
-    // ray test touch >>
   }
 
   return (
@@ -664,9 +650,7 @@ const Staking = (): JSX.Element => {
                 initialStakeMutation.isLoading ||
                 moreStakeMutation.isLoading
               }
-              // ray test touch <<
               onClick={handleConfirmClick}>
-              {/* ray test touch >> */}
               {submitButtonLabel}
             </SubmitButton>
           </form>
