@@ -544,7 +544,7 @@ const Staking = (): JSX.Element => {
   const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const unlockFirst =
-    stakedAmount !== undefined &&
+    stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) &&
     remainingBlockNumbersToUnstake !== undefined &&
     remainingBlockNumbersToUnstake <= 0;
 
@@ -596,7 +596,7 @@ const Staking = (): JSX.Element => {
             {claimRewardsButtonAvailable && (
               <ClaimRewardsButton />
             )}
-            {stakedAmount && (
+            {stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) && (
               <WithdrawButton
                 stakedAmount={renderStakedAmountLabel()}
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
