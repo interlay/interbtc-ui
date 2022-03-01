@@ -45,6 +45,7 @@ import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -61,6 +62,7 @@ import {
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getLockBlocks = (weeks: number) => {
   return (weeks * 7 * 24 * 3600) / BLOCK_TIME;
@@ -406,17 +408,11 @@ const Staking = (): JSX.Element => {
   };
 
   const renderStakedAmountLabel = () => {
-    if (
-      stakedAmountAndEndBlockIdle ||
-      stakedAmountAndEndBlockLoading
-    ) {
+    if (stakedAmount === undefined) {
       return '-';
     }
-    if (stakedAmountAndEndBlock === undefined) {
-      throw new Error('Something went wrong!');
-    }
 
-    return displayMonetaryAmount(stakedAmountAndEndBlock.amount);
+    return displayMonetaryAmount(stakedAmount);
   };
 
   const getRemainingBlockNumbersToUnstake = () => {
@@ -438,6 +434,21 @@ const Staking = (): JSX.Element => {
     return stakedAmountAndEndBlock.endBlock - currentBlockNumber;
   };
   const remainingBlockNumbersToUnstake = getRemainingBlockNumbersToUnstake();
+
+  const getStakedAmount = () => {
+    if (
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading
+    ) {
+      return undefined;
+    }
+    if (stakedAmountAndEndBlock === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return stakedAmountAndEndBlock.amount;
+  };
+  const stakedAmount = getStakedAmount();
 
   const availableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
 
@@ -532,6 +543,11 @@ const Staking = (): JSX.Element => {
 
   const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
+  const unlockFirst =
+    stakedAmount !== undefined &&
+    remainingBlockNumbersToUnstake !== undefined &&
+    remainingBlockNumbersToUnstake <= 0;
+
   const accountSet = !!address;
 
   const initializing =
@@ -580,7 +596,7 @@ const Staking = (): JSX.Element => {
             {claimRewardsButtonAvailable && (
               <ClaimRewardsButton />
             )}
-            {votingBalanceGreaterThanZero && (
+            {stakedAmount && (
               <WithdrawButton
                 stakedAmount={renderStakedAmountLabel()}
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
@@ -645,12 +661,31 @@ const Staking = (): JSX.Element => {
               // eslint-disable-next-line max-len
               tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
             <SubmitButton
-              disabled={initializing}
+              disabled={
+                initializing ||
+                unlockFirst
+              }
               pending={
                 initialStakeMutation.isLoading ||
                 moreStakeMutation.isLoading
               }
-              onClick={handleConfirmClick}>
+              onClick={handleConfirmClick}
+              endIcon={
+                unlockFirst ? (
+                  <InterlayTooltip
+                    label='Please unstake first.'>
+                    <InformationCircleIcon
+                      onClick={event => {
+                        event.stopPropagation();
+                      }}
+                      className={clsx(
+                        'pointer-events-auto',
+                        'w-5',
+                        'h-5'
+                      )} />
+                  </InterlayTooltip>
+                ) : null
+              }>
               {submitButtonLabel}
             </SubmitButton>
           </form>
