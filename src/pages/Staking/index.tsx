@@ -300,6 +300,8 @@ const Staking = (): JSX.Element => {
     {
       onSuccess: (_, variables) => {
         voteGovernanceTokenBalanceRefetch();
+        stakedAmountAndEndBlockRefetch();
+        rewardAmountAndAPYRefetch();
         console.log('[moreStakeMutation onSuccess] variables => ', variables);
         reset({
           [LOCKING_AMOUNT]: '0.0',
