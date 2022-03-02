@@ -239,19 +239,14 @@ const Staking = (): JSX.Element => {
       return window.bridge.interBtcApi.escrow.createLock(variables.amount, unlockHeight);
     },
     {
-      onSuccess: (_, variables) => {
+      onSuccess: () => {
         voteGovernanceTokenBalanceRefetch();
         stakedAmountAndEndBlockRefetch();
         rewardAmountAndAPYRefetch();
-        console.log('[initialStakeMutation onSuccess] variables => ', variables);
         reset({
           [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
         });
-      },
-      onError: error => {
-        // TODO: should add error handling UX
-        console.log('[initialStakeMutation onError] error => ', error);
       }
     }
   );
@@ -298,19 +293,14 @@ const Staking = (): JSX.Element => {
       })();
     },
     {
-      onSuccess: (_, variables) => {
+      onSuccess: () => {
         voteGovernanceTokenBalanceRefetch();
         stakedAmountAndEndBlockRefetch();
         rewardAmountAndAPYRefetch();
-        console.log('[moreStakeMutation onSuccess] variables => ', variables);
         reset({
           [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
         });
-      },
-      onError: error => {
-        // TODO: should add error handling UX
-        console.log('[moreStakeMutation onError] error => ', error);
       }
     }
   );

@@ -34,11 +34,6 @@ const ClaimRewardsButton = ({
           'getRewardEstimate',
           address
         ]);
-        console.log('[claimRewardsMutation onSuccess]');
-      },
-      onError: error => {
-        // TODO: should add error handling UX
-        console.log('[claimRewardsMutation onError] error => ', error);
       }
     }
   );

@@ -58,11 +58,6 @@ const WithdrawButton = ({
           'getStakedBalance',
           address
         ]);
-        console.log('[withdrawMutation onSuccess]');
-      },
-      onError: error => {
-        // TODO: should add error handling UX
-        console.log('[withdrawMutation onError] error => ', error);
       }
     }
   );
