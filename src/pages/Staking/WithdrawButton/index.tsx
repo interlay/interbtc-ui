@@ -55,7 +55,7 @@ const WithdrawButton = ({
           GENERIC_FETCHER,
           'interBtcApi',
           'escrow',
-          'votingBalance',
+          'getStakedBalance',
           address
         ]);
         console.log('[withdrawMutation onSuccess]');
