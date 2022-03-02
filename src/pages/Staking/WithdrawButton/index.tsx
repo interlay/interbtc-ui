@@ -72,19 +72,19 @@ const WithdrawButton = ({
       false;
 
   const renderUnlockDateLabel = () => {
-    if (remainingBlockNumbersToUnstake === undefined) {
-      return '-';
-    }
-
-    return getFormattedUnlockDate(remainingBlockNumbersToUnstake, YEAR_MONTH_DAY_PATTERN);
+    return (
+      remainingBlockNumbersToUnstake === undefined ?
+        '-' :
+        getFormattedUnlockDate(remainingBlockNumbersToUnstake, YEAR_MONTH_DAY_PATTERN)
+    );
   };
 
   const renderUnlockDateTimeLabel = () => {
-    if (remainingBlockNumbersToUnstake === undefined) {
-      return '-';
-    }
-
-    return getFormattedUnlockDate(remainingBlockNumbersToUnstake, 'PPpp');
+    return (
+      remainingBlockNumbersToUnstake === undefined ?
+        '-' :
+        getFormattedUnlockDate(remainingBlockNumbersToUnstake, 'PPpp')
+    );
   };
 
   return (
