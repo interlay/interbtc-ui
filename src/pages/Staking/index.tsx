@@ -89,9 +89,9 @@ interface StakedAmountAndEndBlock {
   endBlock: number;
 }
 
-interface LockingAmountAndUnlockHeight {
+interface LockingAmountAndTime {
   amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
-  unlockHeight: number;
+  time: number; // Weeks
 }
 
 const Staking = (): JSX.Element => {
@@ -227,9 +227,14 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(stakedAmountAndEndBlockError);
 
-  const initialStakeMutation = useMutation<void, Error, LockingAmountAndUnlockHeight>(
-    (variables: LockingAmountAndUnlockHeight) => {
-      return window.bridge.interBtcApi.escrow.createLock(variables.amount, variables.unlockHeight);
+  const initialStakeMutation = useMutation<void, Error, LockingAmountAndTime>(
+    (variables: LockingAmountAndTime) => {
+      if (currentBlockNumber === undefined) {
+        throw new Error('Something went wrong!');
+      }
+      const unlockHeight = currentBlockNumber + getLockBlocks(variables.time);
+
+      return window.bridge.interBtcApi.escrow.createLock(variables.amount, unlockHeight);
     },
     {
       onSuccess: (_, variables) => {
@@ -247,14 +252,19 @@ const Staking = (): JSX.Element => {
     }
   );
 
-  const moreStakeMutation = useMutation<void, Error, LockingAmountAndUnlockHeight>(
-    (variables: LockingAmountAndUnlockHeight) => {
+  const moreStakeMutation = useMutation<void, Error, LockingAmountAndTime>(
+    (variables: LockingAmountAndTime) => {
       return (async () => {
+        if (currentBlockNumber === undefined) {
+          throw new Error('Something went wrong!');
+        }
+        const unlockHeight = currentBlockNumber + getLockBlocks(variables.time);
+
         const txs = [
           window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
             variables.amount.toString(variables.amount.currency.rawBase)
           ),
-          window.bridge.interBtcApi.api.tx.escrow.increaseUnlockHeight(variables.unlockHeight)
+          window.bridge.interBtcApi.api.tx.escrow.increaseUnlockHeight(unlockHeight)
         ];
         const batch = window.bridge.interBtcApi.api.tx.utility.batchAll(txs);
         await DefaultTransactionAPI.sendLogged(
@@ -314,18 +324,17 @@ const Staking = (): JSX.Element => {
     const lockTimeWithFallback = data[LOCK_TIME] || '0'; // Weeks
 
     const monetaryAmount = newMonetaryAmount(lockingAmountWithFallback, GOVERNANCE_TOKEN, true);
-
-    const unlockHeight = currentBlockNumber + getLockBlocks(parseInt(lockTimeWithFallback));
+    const numberTime = parseInt(lockTimeWithFallback);
 
     if (votingBalanceGreaterThanZero) {
       moreStakeMutation.mutate({
         amount: monetaryAmount,
-        unlockHeight
+        time: numberTime
       });
     } else {
       initialStakeMutation.mutate({
         amount: monetaryAmount,
-        unlockHeight
+        time: numberTime
       });
     }
   };
