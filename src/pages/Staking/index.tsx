@@ -258,20 +258,39 @@ const Staking = (): JSX.Element => {
         if (currentBlockNumber === undefined) {
           throw new Error('Something went wrong!');
         }
-        const unlockHeight = currentBlockNumber + getLockBlocks(variables.time);
+        if ( // Increase amount and extend lock time
+          variables.time > 0 &&
+          variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+        ) {
+          const unlockHeight = currentBlockNumber + getLockBlocks(variables.time);
 
-        const txs = [
-          window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
-            variables.amount.toString(variables.amount.currency.rawBase)
-          ),
-          window.bridge.interBtcApi.api.tx.escrow.increaseUnlockHeight(unlockHeight)
-        ];
-        const batch = window.bridge.interBtcApi.api.tx.utility.batchAll(txs);
-        await DefaultTransactionAPI.sendLogged(
-          window.bridge.interBtcApi.api,
-          window.bridge.interBtcApi.account as AddressOrPair,
-          batch
-        );
+          const txs = [
+            window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
+              variables.amount.toString(variables.amount.currency.rawBase)
+            ),
+            window.bridge.interBtcApi.api.tx.escrow.increaseUnlockHeight(unlockHeight)
+          ];
+          const batch = window.bridge.interBtcApi.api.tx.utility.batchAll(txs);
+          await DefaultTransactionAPI.sendLogged(
+            window.bridge.interBtcApi.api,
+            window.bridge.interBtcApi.account as AddressOrPair,
+            batch
+          );
+        } else if ( // Only increase amount
+          variables.time === 0 &&
+          variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+        ) {
+          return await window.bridge.interBtcApi.escrow.increaseAmount(variables.amount);
+        } else if ( // Only extend lock time
+          variables.time > 0 &&
+          variables.amount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+        ) {
+          const unlockHeight = currentBlockNumber + getLockBlocks(variables.time);
+
+          return await window.bridge.interBtcApi.escrow.increaseUnlockHeight(unlockHeight);
+        } else {
+          throw new Error('Something went wrong!');
+        }
       })();
     },
     {
