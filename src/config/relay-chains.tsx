@@ -1,3 +1,5 @@
+
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import {
   Currency,
   BitcoinUnit,
@@ -8,7 +10,8 @@ import {
   InterBtc, // on Polkadot
   Polkadot, // on Polkadot
   InterBtcAmount, // on Polkadot
-  Interlay // On Polkadot
+  Interlay, // On Polkadot
+  MonetaryAmount
 } from '@interlay/monetary-js';
 import {
   CollateralUnit,
@@ -46,6 +49,8 @@ let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: GovernanceToken;
+// TODO: This should be removed when transfer fees implemented in lib
+let NOMINAL_TRANSFER_FEE: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
@@ -95,6 +100,7 @@ case POLKADOT: {
   WRAPPED_TOKEN_SYMBOL = 'interBTC';
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
   GOVERNANCE_TOKEN_SYMBOL = 'INTR';
+  NOMINAL_TRANSFER_FEE = newMonetaryAmount('0.00001', GOVERNANCE_TOKEN, true);
   RELAY_CHAIN_NAME = 'polkadot';
   BRIDGE_PARACHAIN_NAME = 'interlay';
   // eslint-disable-next-line max-len
@@ -120,6 +126,7 @@ case KUSAMA: {
   WRAPPED_TOKEN_SYMBOL = 'kBTC';
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
   GOVERNANCE_TOKEN_SYMBOL = 'KINT';
+  NOMINAL_TRANSFER_FEE = newMonetaryAmount('0.00001', GOVERNANCE_TOKEN, true);
   RELAY_CHAIN_NAME = 'kusama';
   BRIDGE_PARACHAIN_NAME = 'kintsugi';
   // eslint-disable-next-line max-len
@@ -156,6 +163,7 @@ export {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
+  NOMINAL_TRANSFER_FEE,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME,
   PRICES_URL,

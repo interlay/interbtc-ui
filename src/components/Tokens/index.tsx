@@ -22,6 +22,7 @@ import {
   GovernanceToken,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
+  NOMINAL_TRANSFER_FEE,
   GovernanceTokenLogoIcon
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
@@ -115,7 +116,7 @@ const Tokens = ({
         token: GOVERNANCE_TOKEN,
         type: TokenType.GOVERNANCE,
         balance: displayMonetaryAmount(governanceTokenBalance),
-        transferableBalance: displayMonetaryAmount(governanceTokenTransferableBalance),
+        transferableBalance: displayMonetaryAmount(governanceTokenTransferableBalance.sub(NOMINAL_TRANSFER_FEE)),
         icon: <GovernanceTokenLogoIcon
           height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: GOVERNANCE_TOKEN_SYMBOL
