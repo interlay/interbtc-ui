@@ -168,7 +168,8 @@ const Staking = (): JSX.Element => {
     isIdle: rewardAmountAndAPYIdle,
     isLoading: rewardAmountAndAPYLoading,
     data: rewardAmountAndAPY,
-    error: rewardAmountAndAPYError
+    error: rewardAmountAndAPYError,
+    refetch: rewardAmountAndAPYRefetch
   } = useQuery<RewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
@@ -211,7 +212,8 @@ const Staking = (): JSX.Element => {
     isIdle: stakedAmountAndEndBlockIdle,
     isLoading: stakedAmountAndEndBlockLoading,
     data: stakedAmountAndEndBlock,
-    error: stakedAmountAndEndBlockError
+    error: stakedAmountAndEndBlockError,
+    refetch: stakedAmountAndEndBlockRefetch
   } = useQuery<StakedAmountAndEndBlock, Error>(
     [
       GENERIC_FETCHER,
@@ -239,6 +241,8 @@ const Staking = (): JSX.Element => {
     {
       onSuccess: (_, variables) => {
         voteGovernanceTokenBalanceRefetch();
+        stakedAmountAndEndBlockRefetch();
+        rewardAmountAndAPYRefetch();
         console.log('[initialStakeMutation onSuccess] variables => ', variables);
         reset({
           [LOCKING_AMOUNT]: '0.0',

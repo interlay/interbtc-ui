@@ -45,7 +45,7 @@ const WithdrawButton = ({
 
   const queryClient = useQueryClient();
 
-  const unstakeMutation = useMutation<void, Error, void>(
+  const withdrawMutation = useMutation<void, Error, void>(
     () => {
       return window.bridge.interBtcApi.escrow.withdraw();
     },
@@ -58,17 +58,17 @@ const WithdrawButton = ({
           'votingBalance',
           address
         ]);
-        console.log('[unstakeMutation onSuccess]');
+        console.log('[withdrawMutation onSuccess]');
       },
       onError: error => {
         // TODO: should add error handling UX
-        console.log('[unstakeMutation onError] error => ', error);
+        console.log('[withdrawMutation onError] error => ', error);
       }
     }
   );
 
   const handleUnstake = () => {
-    unstakeMutation.mutate();
+    withdrawMutation.mutate();
   };
 
   const disabled =
@@ -119,20 +119,20 @@ const WithdrawButton = ({
           </InterlayTooltip>
         }
         onClick={handleUnstake}
-        pending={unstakeMutation.isLoading}
+        pending={withdrawMutation.isLoading}
         disabled={disabled}
         {...rest}>
         Withdraw Staked {GOVERNANCE_TOKEN_SYMBOL} {renderUnlockDateLabel()}
       </InterlayDenimOrKintsugiMidnightContainedButton>
-      {unstakeMutation.isError && (
+      {withdrawMutation.isError && (
         <ErrorModal
-          open={unstakeMutation.isError}
+          open={withdrawMutation.isError}
           onClose={() => {
-            unstakeMutation.reset();
+            withdrawMutation.reset();
           }}
           title='Error'
           description={
-            unstakeMutation.error?.message ||
+            withdrawMutation.error?.message ||
             ''
           } />
       )}
