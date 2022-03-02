@@ -14,12 +14,11 @@ import {
 } from 'utils/constants/relay-chain-names';
 
 // MEMO: inspired by https://medium.com/codex/making-html-5-numeric-inputs-only-accept-integers-d3d117973d56
-const intRx = /\d/;
+const integerRegexPattern = /\d/;
 const handleLockTimeChange = (event: KeyboardEvent) => {
   if (
     (event.key.length > 1) ||
-    ((event.key === '-') && (!(event.currentTarget as HTMLInputElement)?.value?.length)) ||
-    intRx.test(event.key)
+    integerRegexPattern.test(event.key)
   ) return;
 
   event.preventDefault();
