@@ -433,11 +433,11 @@ const Staking = (): JSX.Element => {
   };
 
   const renderStakedAmountLabel = () => {
-    if (stakedAmount === undefined) {
-      return '-';
-    }
-
-    return displayMonetaryAmount(stakedAmount);
+    return (
+      stakedAmount === undefined ?
+        '-' :
+        displayMonetaryAmount(stakedAmount)
+    );
   };
 
   const getRemainingBlockNumbersToUnstake = () => {
