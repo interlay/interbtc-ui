@@ -254,14 +254,15 @@ const Staking = (): JSX.Element => {
   const moreStakeMutation = useMutation<void, Error, LockingAmountAndTime>(
     (variables: LockingAmountAndTime) => {
       return (async () => {
-        if (currentBlockNumber === undefined) {
+        if (stakedAmountAndEndBlock === undefined) {
           throw new Error('Something went wrong!');
         }
+
         if ( // Increase amount and extend lock time
           variables.time > 0 &&
           variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
-          const unlockHeight = currentBlockNumber + getLockBlocks(variables.time);
+          const unlockHeight = stakedAmountAndEndBlock.endBlock + getLockBlocks(variables.time);
 
           const txs = [
             window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
@@ -284,7 +285,7 @@ const Staking = (): JSX.Element => {
           variables.time > 0 &&
           variables.amount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
-          const unlockHeight = currentBlockNumber + getLockBlocks(variables.time);
+          const unlockHeight = stakedAmountAndEndBlock.endBlock + getLockBlocks(variables.time);
 
           return await window.bridge.interBtcApi.escrow.increaseUnlockHeight(unlockHeight);
         } else {
