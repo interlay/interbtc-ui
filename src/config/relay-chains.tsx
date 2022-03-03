@@ -149,7 +149,7 @@ case KUSAMA: {
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
   OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
   STAKE_LOCK_TIME = {
-    MIN: 2,
+    MIN: 1,
     MAX: 96
   };
   break;

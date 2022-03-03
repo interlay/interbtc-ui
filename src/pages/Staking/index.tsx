@@ -319,6 +319,9 @@ const Staking = (): JSX.Element => {
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
   const extendLockTimeSet = votingBalanceGreaterThanZero && parseInt(lockTime) > 0;
+  const increaseLockingAmountSet =
+    votingBalanceGreaterThanZero &&
+    monetaryLockingAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   React.useEffect(() => {
     if (extendLockTimeSet) {
@@ -327,6 +330,16 @@ const Staking = (): JSX.Element => {
   }, [
     lockTime,
     extendLockTimeSet,
+    trigger
+  ]);
+
+  React.useEffect(() => {
+    if (increaseLockingAmountSet) {
+      trigger(LOCK_TIME);
+    }
+  }, [
+    lockingAmount,
+    increaseLockingAmountSet,
     trigger
   ]);
 
@@ -390,7 +403,11 @@ const Staking = (): JSX.Element => {
     const valueWithFallback = value || '0';
     const numericValue = parseInt(valueWithFallback);
 
-    if (votingBalanceGreaterThanZero && numericValue === 0) {
+    if (
+      votingBalanceGreaterThanZero &&
+      numericValue === 0 &&
+      monetaryLockingAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+    ) {
       return undefined;
     }
 
@@ -517,7 +534,8 @@ const Staking = (): JSX.Element => {
   const renderNewTotalStakeLabel = () => {
     if (
       voteGovernanceTokenBalanceIdle ||
-      voteGovernanceTokenBalanceLoading
+      voteGovernanceTokenBalanceLoading ||
+      remainingBlockNumbersToUnstake === undefined
     ) {
       return '-';
     }
@@ -525,7 +543,16 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return displayMonetaryAmount(monetaryLockingAmount.add(voteGovernanceTokenBalance));
+    const currentLockTime = remainingBlockNumbersToUnstake * BLOCK_TIME / (7 * 24 * 3600); // Weeks
+    const extendingLockTime = parseInt(lockTime); // Weeks
+    const newLockTime = currentLockTime + extendingLockTime; // Weeks
+
+    const newTotalStakeAmount =
+      monetaryLockingAmount
+        .mul(newLockTime / STAKE_LOCK_TIME.MAX)
+        .add(voteGovernanceTokenBalance);
+
+    return displayMonetaryAmount(newTotalStakeAmount);
   };
 
   const renderEstimatedAPYLabel = () => {
