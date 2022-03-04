@@ -612,7 +612,7 @@ const Staking = (): JSX.Element => {
 
   const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
 
-  const claimRewardsButtonAvailable = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+  const claimRewardsButtonEnabled = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const unlockFirst =
     stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) &&
@@ -668,9 +668,9 @@ const Staking = (): JSX.Element => {
               stakedAmount={renderStakedAmountLabel()}
               voteStakedAmount={renderVoteStakedAmountLabel()}
               rewardAmount={renderRewardAmountLabel()} />
-            {claimRewardsButtonAvailable && (
-              <ClaimRewardsButton />
-            )}
+            <ClaimRewardsButton
+              disabled={claimRewardsButtonEnabled === false}
+              pending={claimRewardsButtonEnabled === undefined} />
             {stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) && (
               <WithdrawButton
                 stakedAmount={renderStakedAmountLabel()}
