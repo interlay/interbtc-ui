@@ -64,8 +64,14 @@ import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
-const getLockBlocks = (weeks: number) => {
-  return (weeks * 7 * 24 * 3600) / BLOCK_TIME;
+const ONE_WEEK_SECONDS = 7 * 24 * 3600;
+
+const convertWeeksToBlockNumbers = (weeks: number) => {
+  return (weeks * ONE_WEEK_SECONDS) / BLOCK_TIME;
+};
+
+const convertBlockNumbersToWeeks = (blockNumbers: number) => {
+  return blockNumbers * BLOCK_TIME / ONE_WEEK_SECONDS;
 };
 
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
@@ -233,7 +239,7 @@ const Staking = (): JSX.Element => {
       if (currentBlockNumber === undefined) {
         throw new Error('Something went wrong!');
       }
-      const unlockHeight = currentBlockNumber + getLockBlocks(variables.time);
+      const unlockHeight = currentBlockNumber + convertWeeksToBlockNumbers(variables.time);
 
       return window.bridge.interBtcApi.escrow.createLock(variables.amount, unlockHeight);
     },
@@ -261,7 +267,7 @@ const Staking = (): JSX.Element => {
           variables.time > 0 &&
           variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
-          const unlockHeight = stakedAmountAndEndBlock.endBlock + getLockBlocks(variables.time);
+          const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           const txs = [
             window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
@@ -284,7 +290,7 @@ const Staking = (): JSX.Element => {
           variables.time > 0 &&
           variables.amount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
-          const unlockHeight = stakedAmountAndEndBlock.endBlock + getLockBlocks(variables.time);
+          const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           return await window.bridge.interBtcApi.escrow.increaseUnlockHeight(unlockHeight);
         } else {
@@ -383,7 +389,7 @@ const Staking = (): JSX.Element => {
     }
 
     const planckLockingAmount = monetaryLockingAmount.to.Planck();
-    const lockBlocks = getLockBlocks(parseInt(lockTime));
+    const lockBlocks = convertWeeksToBlockNumbers(parseInt(lockTime));
     // This is related to the on-chain implementation where currency values are integers.
     // So less tokens than the period would likely round to 0.
     // So on the UI, as long as you require more planck to be locked than the number of blocks the user locks for,
@@ -410,11 +416,16 @@ const Staking = (): JSX.Element => {
       return undefined;
     }
 
+    if (remainingBlockNumbersToUnstake === undefined) {
+      throw new Error('Something went wrong!');
+    }
+    const remainingWeeksToUnstake = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake);
+    const availableLockTime = Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeksToUnstake);
     if (
       numericValue < STAKE_LOCK_TIME.MIN ||
-      numericValue > STAKE_LOCK_TIME.MAX
+      numericValue > availableLockTime
     ) {
-      return `Please enter a number between ${STAKE_LOCK_TIME.MIN}-${STAKE_LOCK_TIME.MAX}.`;
+      return `Please enter a number between ${STAKE_LOCK_TIME.MIN}-${availableLockTime}.`;
     }
 
     return undefined;
@@ -542,7 +553,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    const currentLockTime = remainingBlockNumbersToUnstake * BLOCK_TIME / (7 * 24 * 3600); // Weeks
+    const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
     const extendingLockTime = parseInt(lockTime); // Weeks
     const newLockTime = currentLockTime + extendingLockTime; // Weeks
 
@@ -600,6 +611,10 @@ const Staking = (): JSX.Element => {
     remainingBlockNumbersToUnstake <= 0;
 
   const accountSet = !!address;
+
+  const lockTimeFieldDisabled =
+    votingBalanceGreaterThanZero === undefined ||
+    remainingBlockNumbersToUnstake === undefined;
 
   const initializing =
     currentBlockNumberIdle ||
@@ -684,7 +699,7 @@ const Staking = (): JSX.Element => {
               error={!!errors[LOCK_TIME]}
               helperText={errors[LOCK_TIME]?.message}
               optional={votingBalanceGreaterThanZero}
-              disabled={votingBalanceGreaterThanZero === undefined} />
+              disabled={lockTimeFieldDisabled} />
             {votingBalanceGreaterThanZero ? (
               <InformationUI
                 label='New unlock Date'
