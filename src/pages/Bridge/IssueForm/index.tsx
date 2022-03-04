@@ -124,9 +124,7 @@ const IssueForm = (): JSX.Element | null => {
       GovernanceUnit
     >(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
-  const [vaults, setVaults] = React.useState<Map<AccountId, BitcoinAmount>>();
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
-  const [vaultMaxAmount, setVaultMaxAmount] = React.useState(BitcoinAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
@@ -173,23 +171,6 @@ const IssueForm = (): JSX.Element | null => {
     handleError
   ]);
 
-  const getVaults = async () => {
-    try {
-      // This data (the vaults) is strictly required to request issue
-      const theVaults = await window.bridge.interBtcApi.vaults.getVaultsWithIssuableTokens();
-
-      let theVaultMaxAmount = BitcoinAmount.zero;
-      // The first item is the vault with the largest capacity
-      theVaultMaxAmount = theVaults.values().next().value;
-
-      setVaultMaxAmount(theVaultMaxAmount);
-      setVaults(theVaults);
-    } catch (error) {
-      setStatus(STATUSES.REJECTED);
-      handleError(error);
-    }
-  };
-
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return (
       <PrimaryColorEllipsisLoader />
@@ -197,8 +178,25 @@ const IssueForm = (): JSX.Element | null => {
   }
 
   if (status === STATUSES.RESOLVED) {
-    const validateVaultCapacity = (btcAmount: BitcoinAmount): string | undefined => {
+    const fetchVaults = async (): Promise<Map<AccountId, BitcoinAmount> | undefined> => {
+      try {
+        // This data (the vaults) is strictly required to request issue
+        const vaults = await window.bridge.interBtcApi.vaults.getVaultsWithIssuableTokens();
+
+        return vaults;
+      } catch (error) {
+        setStatus(STATUSES.REJECTED);
+        handleError(error);
+      }
+    };
+
+    const validateVaultCapacity = async (btcAmount: BitcoinAmount): Promise<string | undefined> => {
+      const vaults = await fetchVaults();
       const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), btcAmount);
+
+      let vaultMaxAmount = BitcoinAmount.zero;
+      // The first item is the vault with the largest capacity
+      vaultMaxAmount = vaults?.values().next().value;
 
       if (!vaultId) {
         return t('issue_page.maximum_in_single_request', {
@@ -264,13 +262,13 @@ const IssueForm = (): JSX.Element | null => {
     const onSubmit = async (data: IssueFormData) => {
       // Set status first as there will be a delay while fetching vaults
       setSubmitStatus(STATUSES.PENDING);
+      const btcAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
 
       // Get vaults on submit to ensure data is current
-      await getVaults();
+      // Check vault capacity
+      const vaultCapacityError = await validateVaultCapacity(btcAmount);
 
       // Manually append error to input field
-      const vaultCapacityError = validateVaultCapacity(BitcoinAmount.from.BTC(data[BTC_AMOUNT]));
-
       if (vaultCapacityError) {
         setError(BTC_AMOUNT, {
           type: 'manual',
@@ -278,6 +276,7 @@ const IssueForm = (): JSX.Element | null => {
         });
 
         setSubmitStatus(STATUSES.RESOLVED);
+
         return;
       }
 
