@@ -144,6 +144,18 @@ const RedeemForm = (): JSX.Element | null => {
   ]);
 
   React.useEffect(() => {
+    const refetchPremiumRedeemVaults = async () => {
+      const premiumRedeemVaults = await window.bridge.interBtcApi.vaults.getPremiumRedeemVaults();
+
+      setPremiumRedeemVaults(premiumRedeemVaults);
+    };
+
+    if (premiumRedeemSelected) {
+      refetchPremiumRedeemVaults();
+    }
+  }, [premiumRedeemSelected]);
+
+  React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!handleError) return;
 
