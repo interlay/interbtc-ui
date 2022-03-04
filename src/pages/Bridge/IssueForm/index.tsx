@@ -185,7 +185,7 @@ const IssueForm = (): JSX.Element | null => {
 
         return vaults;
       } catch (error) {
-        // We need to reset here as this function is called while
+        // We need to reset here as this function is called
         // on form submit
         if (submitStatus === STATUSES.PENDING) {
           setSubmitStatus(STATUSES.RESOLVED);
