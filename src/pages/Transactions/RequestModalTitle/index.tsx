@@ -17,13 +17,12 @@ const RequestModalTitle = ({
   <InterlayModalTitle
     as='h3'
     className={clsx(
-      'text-lg',
       'font-medium',
       'break-words',
       'text-base',
       { 'text-interlayDenim':
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-      { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'text-center',
       'uppercase',
       className

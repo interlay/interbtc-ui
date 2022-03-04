@@ -135,7 +135,6 @@ const RequestReplacementModal = ({
           <div>
             <NumberInput
               name={AMOUNT}
-              title={AMOUNT}
               min={0}
               ref={register({
                 required: {
@@ -143,8 +142,7 @@ const RequestReplacementModal = ({
                   message: t('Amount is required!')
                 },
                 validate: value => validateAmount(value)
-              })}>
-            </NumberInput>
+              })} />
             <ErrorMessage>
               {errors[AMOUNT]?.message}
             </ErrorMessage>

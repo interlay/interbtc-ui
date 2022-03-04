@@ -1450,10 +1450,10 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.6.0.tgz#e78903e7330df5ef6d5d962277f4c50bb7d5d383"
-  integrity sha512-h9uSoqBVZhDhlJKdKVFgo0WUWUZ6YjkDmjap3upv5QMhKIux/wMMzALNS0MbTyuuu5SMmzvViPbPCDdWFyjaOA==
+"@interlay/interbtc-api@1.6.1":
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.6.1.tgz#31d1fd57204dd946f32a12d262447072b752fb58"
+  integrity sha512-x1tIwB00PCOgbfS/imviekaltcL2LFzf01fLUZKJZFnlLvpbAnthHq4rKoSOsIFKS6mzxtKLu11KJJeZkLzRyw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "1.5.10"
@@ -1463,7 +1463,7 @@
     big.js "6.1.1"
     bitcoin-core "^3.0.0"
     bitcoinjs-lib "^5.2.0"
-    bn.js "^5.2.0"
+    bn.js "4.12.0"
     cross-fetch "^3.0.6"
     isomorphic-fetch "^3.0.0"
     regtest-client "^0.2.0"
@@ -1485,12 +1485,12 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.5.10.tgz#8ff123e7886df06776e090deacca5c1b84ecf315"
   integrity sha512-7pUzNKmNeHi74uJl9WBoYzwyKh8+X18wZz9MVDvx58SgkDiEjUpyeafjhcmVhJptaB+OwPJ1V76RDbJRxr0T4w==
 
-"@interlay/interbtc@1.6.0":
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.6.0.tgz#163b89adae7bbede0dea5e5a0cfd92414ce640e0"
-  integrity sha512-W5ogc2kzuFy8N7hyBzqsSV0xpvwXGgytgq0rXALW6VGt+QBkm5yLDbDyCFlZBVWkWAnNUm8XQsUuzsu6U7iYhQ==
+"@interlay/interbtc@1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc/-/interbtc-1.6.2.tgz#cc098a461a631c2c7b7756610cef589177069000"
+  integrity sha512-GGBnjzr37kFYi+Ak1t6nBkUwJGJ6YM6y7ljYRcIaZDKR0bXt/klGz5bY7xiaTfLAW/uC5Fsi8LrfHYJefNHokw==
   dependencies:
-    "@interlay/interbtc-api" "1.6.0"
+    "@interlay/interbtc-api" "1.6.1"
     "@interlay/interbtc-index-client" "1.6.0"
     "@interlay/interbtc-types" "1.3.0"
     "@interlay/monetary-js" "0.5.3"
@@ -6865,6 +6865,11 @@ date-fns@^1.27.2:
   version "1.30.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
+
+date-fns@^2.28.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
+  integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
 
 date-format@0.0.2:
   version "0.0.2"

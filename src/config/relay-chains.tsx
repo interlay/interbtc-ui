@@ -12,7 +12,8 @@ import {
 } from '@interlay/monetary-js';
 import {
   CollateralUnit,
-  GovernanceUnit
+  GovernanceUnit,
+  VoteUnit
 } from '@interlay/interbtc-api';
 
 import {
@@ -39,6 +40,7 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
 type WrappedToken = Currency<BitcoinUnit>;
 type CollateralToken = Currency<CollateralUnit>;
 type GovernanceToken = Currency<GovernanceUnit>;
+type VoteGovernanceToken = Currency<VoteUnit>;
 
 let APP_NAME: string;
 let TERMS_AND_CONDITIONS_LINK: string;
@@ -46,6 +48,7 @@ let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: GovernanceToken;
+let VOTE_GOVERNANCE_TOKEN: VoteGovernanceToken;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
@@ -59,6 +62,7 @@ let BridgeParachainLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }>;
+let VOTE_GOVERNANCE_TOKEN_SYMBOL: string;
 let WrappedTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
@@ -78,6 +82,10 @@ let GovernanceTokenLogoIcon:
 let PUBLIC_ASSETS_FOLDER_NAME: string;
 let APP_DOMAIN: string;
 let OPEN_GRAPH_IMAGE_FILE_NAME: string;
+let STAKE_LOCK_TIME: { // Weeks
+  MIN: number;
+  MAX: number;
+};
 
 type WrappedTokenAmount =
   InterBtcAmount |
@@ -90,11 +98,12 @@ case POLKADOT: {
   TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
-  // TODO: Add GovernanceUnit type to lib following upgrade i.e. Currency<GovernanceUnit>
   GOVERNANCE_TOKEN = Interlay as Currency<GovernanceUnit>;
+  VOTE_GOVERNANCE_TOKEN = Interlay as Currency<VoteUnit>;
   WRAPPED_TOKEN_SYMBOL = 'interBTC';
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
   GOVERNANCE_TOKEN_SYMBOL = 'INTR';
+  VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vINTR';
   RELAY_CHAIN_NAME = 'polkadot';
   BRIDGE_PARACHAIN_NAME = 'interlay';
   // eslint-disable-next-line max-len
@@ -108,6 +117,10 @@ case POLKADOT: {
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
   OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
+  STAKE_LOCK_TIME = {
+    MIN: 1,
+    MAX: 208
+  };
   break;
 }
 // Kintsugi
@@ -117,9 +130,11 @@ case KUSAMA: {
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Kintsugi as Currency<GovernanceUnit>;
+  VOTE_GOVERNANCE_TOKEN = Kintsugi as Currency<VoteUnit>;
   WRAPPED_TOKEN_SYMBOL = 'kBTC';
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
   GOVERNANCE_TOKEN_SYMBOL = 'KINT';
+  VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vKINT';
   RELAY_CHAIN_NAME = 'kusama';
   BRIDGE_PARACHAIN_NAME = 'kintsugi';
   // eslint-disable-next-line max-len
@@ -133,6 +148,10 @@ case KUSAMA: {
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
   OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
+  STAKE_LOCK_TIME = {
+    MIN: 1,
+    MAX: 96
+  };
   break;
 }
 default: {
@@ -156,6 +175,8 @@ export {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
+  VOTE_GOVERNANCE_TOKEN,
+  VOTE_GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME,
   PRICES_URL,
@@ -167,5 +188,6 @@ export {
   GovernanceTokenLogoIcon,
   PUBLIC_ASSETS_FOLDER_NAME,
   APP_DOMAIN,
-  OPEN_GRAPH_IMAGE_FILE_NAME
+  OPEN_GRAPH_IMAGE_FILE_NAME,
+  STAKE_LOCK_TIME
 };
