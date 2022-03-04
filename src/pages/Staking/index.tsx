@@ -546,9 +546,7 @@ const Staking = (): JSX.Element => {
       voteGovernanceTokenBalanceIdle ||
       voteGovernanceTokenBalanceLoading ||
       remainingBlockNumbersToUnstake === undefined ||
-      // ray test touch <<
       stakedAmount === undefined
-      // ray test touch >>
     ) {
       return '-';
     }
@@ -558,18 +556,14 @@ const Staking = (): JSX.Element => {
 
     const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
     const extendingLockTime = parseInt(lockTime); // Weeks
+    // New lock-time that is applied to the entire staked governance token
     const newLockTime = currentLockTime + extendingLockTime; // Weeks
 
-    // ray test touch <<
+    // New total staked governance token
     const newLockingAmount = monetaryLockingAmount.add(stakedAmount);
-    // ray test touch >>
 
-    const newTotalStakeAmount =
-      // ray test touch <<
-      newLockingAmount
-      // ray test touch >>
-        .mul(newLockTime / STAKE_LOCK_TIME.MAX)
-        .add(voteGovernanceTokenBalance);
+    // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
+    const newTotalStakeAmount = newLockingAmount.mul(newLockTime / STAKE_LOCK_TIME.MAX);
 
     return displayMonetaryAmount(newTotalStakeAmount);
   };
