@@ -2,13 +2,13 @@
 
 <div align="center">
 	<p>
-		<h3 align="center">interBTC: Trustless and open DeFi access for your Bitcoin.</h3>
+		<h3 align="center">interBTC: Use your Bitcoin. Anywhere.</h3>
 	</p>
 </div>
 
 ## About
 
-The Interlay UI connects the Polkadot ecosystem with Bitcoin. It allows the creation of interBTC and kBTC, a fungible token that represents Bitcoin in the Polkadot and Kusama ecosystem. interBTC and kBTC are backed by Bitcoin 1:1 and allow redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party called Vaults.
+The Interlay UI connects the Polkadot and Kusama ecosystem with Bitcoin. It allows the creation of interBTC and kBTC, a fungible token that represents Bitcoin in the Polkadot and Kusama ecosystem. interBTC and kBTC are backed by Bitcoin 1:1 and allow redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party called Vaults.
 In comparison to other bridge constructions (like tBTC, wBTC, or RenVM) _anyone_ can become an intermediary by depositing collateral making interBTC and kBTC the only truly open system.
 
 The bridge itself follows the detailed specification: <a href="https://spec.interlay.io" target="_blank"><strong>Explore the specification »</strong></a>
