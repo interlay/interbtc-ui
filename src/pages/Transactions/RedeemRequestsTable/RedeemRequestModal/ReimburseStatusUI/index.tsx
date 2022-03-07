@@ -13,10 +13,7 @@ import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import {
-  Redeem,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
@@ -35,18 +32,16 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import useQueryParams from 'utils/hooks/use-query-params';
 import {
   getUsdAmount,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { USER_REDEEM_REQUESTS_FETCHER } from 'services/user-redeem-requests-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { REDEEM_FETCHER } from 'services/fetchers/redeem-request-fetcher';
 
 interface Props {
-  request: Redeem;
+  // TODO: should type properly (`Relay`)
+  request: any;
   onClose: () => void;
 }
 
@@ -55,7 +50,6 @@ const ReimburseStatusUI = ({
   onClose
 }: Props): JSX.Element => {
   const {
-    address,
     bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
@@ -85,7 +79,7 @@ const ReimburseStatusUI = ({
           window.bridge.interBtcApi.vaults.getPunishmentFee(),
           window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
-        const wrappedTokenAmount = request ? request.amountBTC : BitcoinAmount.zero;
+        const wrappedTokenAmount = request ? request.request.requestedAmountBacking : BitcoinAmount.zero;
         setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
         setPunishmentCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount).mul(new Big(punishment)));
       } catch (error) {
@@ -98,22 +92,16 @@ const ReimburseStatusUI = ({
     handleError
   ]);
 
-  const queryParams = useQueryParams();
-  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
-  const selectedPageIndex = selectedPage - 1;
-
   const queryClient = useQueryClient();
-  const retryMutation = useMutation<void, Error, Redeem>(
-    (variables: Redeem) => {
+  // TODO: should type properly (`Relay`)
+  const retryMutation = useMutation<void, Error, any>(
+    (variables: any) => {
       return window.bridge.interBtcApi.redeem.cancel(variables.id, false);
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
-          USER_REDEEM_REQUESTS_FETCHER,
-          address,
-          selectedPageIndex,
-          TABLE_PAGE_LIMIT
+          REDEEM_FETCHER
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
@@ -124,17 +112,15 @@ const ReimburseStatusUI = ({
       }
     }
   );
-  const reimburseMutation = useMutation<void, Error, Redeem>(
-    (variables: Redeem) => {
+  // TODO: should type properly (`Relay`)
+  const reimburseMutation = useMutation<void, Error, any>(
+    (variables: any) => {
       return window.bridge.interBtcApi.redeem.cancel(variables.id, true);
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
-          USER_REDEEM_REQUESTS_FETCHER,
-          address,
-          selectedPageIndex,
-          TABLE_PAGE_LIMIT
+          REDEEM_FETCHER
         ]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();

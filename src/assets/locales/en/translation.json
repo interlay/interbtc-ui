@@ -19,6 +19,7 @@
   "reimbursed": "Reimbursed",
   "online": "Online",
   "offline": "Offline",
+  "unavailable": "Unavailable",
   "ok": "OK",
   "pending": "Pending",
   "not_applicable": "N/A",
@@ -57,6 +58,7 @@
   "feed": "Feed",
   "app": "App",
   "last_update": "Last Update",
+  "last_update_block": "Last Update Block",
   "exchange_rate": "Exchange Rate",
   "best_block_hash": "Best Block Hash",
   "no_oracles": "No active oracles",
@@ -99,6 +101,7 @@
   "address": "Account",
   "recipient_account": "Enter recipient account",
   "date": "Date",
+  "date_created": "Date created",
   "enter_recipient_address": "Please enter the recipient address.",
   "blockstream": "Blockstream",
   "insufficient_funds_governance_token": "Insufficient funds to pay for {{governanceTokenSymbol}} fees.",
@@ -233,9 +236,11 @@
     "relay": {
       "btc_relay": "BTC Relay",
       "blocks": "Blocks",
-      "block_height": "Block height",
-      "block_hash": "Block hash",
-      "timestamp": "Added to parachain",
+      "block_height": "Bitcoin height",
+      "block_hash": "Bitcoin block hash",
+      "relayed_by": "Relayed by",
+      "inclusion_timestamp": "Added to parachain",
+      "inclusion_block": "Added on parachain block",
       "block_number": "Block {{number}}",
       "relay_is": "BTC Relay is",
       "blockstream_verify_link": "Verify on blockstream.info"
@@ -246,6 +251,7 @@
       "oracles_are": "Oracles are",
       "online": "online",
       "offline": "offline",
+      "not_available": "not available",
       "loading": "loading..."
     },
     "vault": {
