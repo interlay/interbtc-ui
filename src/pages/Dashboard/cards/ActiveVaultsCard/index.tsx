@@ -35,10 +35,10 @@ interface Props {
 
 interface VaultRegistration {
   id: string;
-  timestamp: number;
+  registrationTimestamp: number;
 }
 
-const graphTimestamps = getLastMidnightTimestamps(5, true).map(date => date.getTime());
+const graphTimestamps = getLastMidnightTimestamps(5, true);
 
 const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
@@ -74,7 +74,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
     const vaultRegistrations = vaults.data.vaults;
     const graphData = graphTimestamps.map(
       timestamp => vaultRegistrations.filter(
-        registration => registration.timestamp <= timestamp
+        registration => new Date(registration.registrationTimestamp) <= timestamp
       ).length
     );
 
