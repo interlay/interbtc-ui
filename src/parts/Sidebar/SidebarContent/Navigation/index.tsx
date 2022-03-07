@@ -36,7 +36,7 @@ interface CustomProps {
 }
 
 // TODO: could be reused
-const textClasses = clsx(
+const TEXT_CLASSES = clsx(
   'group',
   'flex',
   'items-center',
@@ -58,13 +58,13 @@ const TEXT_CLASSES_FOR_UNSELECTED = clsx(
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const textClassesForDisabled = clsx(
+const TEXT_CLASSES_FOR_DISABLED = clsx(
   { 'text-gray-500':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-gray-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const navigationIconClasses = clsx(
+const NAVIGATION_ICON_CLASSES = clsx(
   'flex-shrink-0',
   'w-6',
   'h-6'
@@ -184,15 +184,15 @@ const Navigation = ({
             <p
               key={navigationItem.name}
               className={clsx(
-                textClasses,
-                textClassesForDisabled,
+                TEXT_CLASSES,
+                TEXT_CLASSES_FOR_DISABLED,
                 onSmallScreen ? 'text-base' : 'text-sm',
                 'font-light'
               )}>
               <navigationItem.icon
                 className={clsx(
-                  textClassesForDisabled,
-                  navigationIconClasses,
+                  TEXT_CLASSES_FOR_DISABLED,
+                  NAVIGATION_ICON_CLASSES,
                   onSmallScreen ? 'mr-4' : 'mr-3'
                 )}
                 aria-hidden='true' />
@@ -230,7 +230,7 @@ const Navigation = ({
                   { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ),
               onSmallScreen ? 'text-base' : 'text-sm',
-              textClasses,
+              TEXT_CLASSES,
               'font-medium'
 
             )}>
@@ -240,7 +240,7 @@ const Navigation = ({
                   TEXT_CLASSES_FOR_SELECTED :
                   TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'mr-4' : 'mr-3',
-                navigationIconClasses
+                NAVIGATION_ICON_CLASSES
               )}
               aria-hidden='true' />
             {navigationItem.link === CROWDLOAN_LINK ?
