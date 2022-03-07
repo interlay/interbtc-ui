@@ -41,7 +41,8 @@ import {
   APP_NAME,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
-  GOVERNANCE_TOKEN
+  GOVERNANCE_TOKEN,
+  NOMINAL_TRANSFER_FEE
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
@@ -361,7 +362,8 @@ const App = (): JSX.Element => {
                 dispatch(updateGovernanceTokenBalanceAction(balance.free));
               }
               if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
-                dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
+                const adjustedTransferableBalance = balance.transferable.sub(NOMINAL_TRANSFER_FEE);
+                dispatch(updateGovernanceTokenTransferableBalanceAction(adjustedTransferableBalance));
               }
             }
           );
