@@ -18,7 +18,7 @@ interface CustomProps {
   error?: boolean;
   helperText?: JSX.Element | string;
   required?: boolean;
-  approxUSD: string;
+  approxUSD?: string;
 }
 
 type Ref = HTMLInputElement;
@@ -57,25 +57,28 @@ const TokenField = React.forwardRef<Ref, Props>(({
             'font-medium',
             'absolute',
             'right-4',
-            'top-2'
+            { 'top-2': approxUSD },
+            { 'top-6': !approxUSD }
           )}
           required={required}>
           {label}
         </TextFieldLabel>
-        <span
-          className={clsx(
-            'block',
-            'text-xl',
-            { 'text-interlayTextSecondaryInLightMode':
+        {approxUSD && (
+          <span
+            className={clsx(
+              'block',
+              'text-xl',
+              { 'text-interlayTextSecondaryInLightMode':
               process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-            'text-right',
-            'absolute',
-            'right-4',
-            'bottom-2'
-          )}>
-          {approxUSD}
-        </span>
+              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+              'text-right',
+              'absolute',
+              'right-4',
+              'bottom-2'
+            )}>
+            {approxUSD}
+          </span>
+        )}
       </TextFieldContainer>
       <TextFieldHelperText
         className={clsx(

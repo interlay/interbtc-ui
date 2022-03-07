@@ -27,7 +27,7 @@ interface Props {
 
 const Chains = ({ callbackFunction }: Props): JSX.Element => {
   // Set initial value to first item in CHAIN_OPTIONS object
-  const [selectedChain, setselectedChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
+  const [selectedChain, setSelectedChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
 
   React.useEffect(() => {
     if (!callbackFunction) return;
@@ -42,7 +42,7 @@ const Chains = ({ callbackFunction }: Props): JSX.Element => {
     <ChainSelector
       chainOptions={CHAIN_OPTIONS}
       selectedChain={selectedChain}
-      onChange={setselectedChain} />
+      onChange={setSelectedChain} />
   );
 };
 
