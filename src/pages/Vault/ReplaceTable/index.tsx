@@ -11,14 +11,14 @@ import {
 import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import {
-  H256,
-  AccountId
+  H256
 } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 import {
   stripHexPrefix,
   ReplaceRequestExt,
-  WrappedCurrency
+  WrappedCurrency,
+  InterbtcPrimitivesVaultId
 } from '@interlay/interbtc-api';
 import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
 import {
@@ -48,14 +48,17 @@ import {
   displayMonetaryAmount
 } from 'common/utils/utils';
 
-const ReplaceTable = (): JSX.Element => {
-  const { t } = useTranslation();
-  const {
-    bridgeLoaded,
-    address
-  } = useSelector((state: StoreType) => state.general);
+interface Props {
+  vaultAddress: string;
+}
 
-  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+const ReplaceTable = ({
+  vaultAddress
+}: Props): JSX.Element => {
+  const { t } = useTranslation();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+
+  const vaultId = window.bridge?.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
   const {
     isIdle: replaceRequestsIdle,
     isLoading: replaceRequestsLoading,
@@ -71,7 +74,8 @@ const ReplaceTable = (): JSX.Element => {
     ],
     genericFetcher<Map<H256, ReplaceRequestExt>>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: !!bridgeLoaded,
+      refetchInterval: 10000
     }
   );
   useErrorHandler(replaceRequestsError);
@@ -103,9 +107,9 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: AccountId; }) {
+        Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId; }) {
           return (
-            <>{shortAddress(value.toString())}</>
+            <>{shortAddress(value.accountId.toString())}</>
           );
         }
       },
@@ -115,9 +119,9 @@ const ReplaceTable = (): JSX.Element => {
         classNames: [
           'text-center'
         ],
-        Cell: function FormattedCell({ value }: { value: AccountId; }) {
+        Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId; }) {
           return (
-            <>{shortAddress(value.toString())}</>
+            <>{shortAddress(value.accountId.toString())}</>
           );
         }
       },

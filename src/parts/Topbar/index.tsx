@@ -34,7 +34,7 @@ import { StoreType } from 'common/types/util.types';
 import * as constants from '../../constants';
 
 // TODO: could create a specific prop
-const SMALL_SIZE_BUTTON_CLASS_NAME = clsx(
+const SMALL_SIZE_BUTTON_CLASSES = clsx(
   'leading-7',
   '!px-3'
 );
@@ -124,7 +124,7 @@ const Topbar = (): JSX.Element => {
           <>
             {address === '' ? (
               <InterlayDefaultContainedButton
-                className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                className={SMALL_SIZE_BUTTON_CLASSES}
                 onClick={handleAccountModalOpen}>
                 {accountLabel}
               </InterlayDefaultContainedButton>
@@ -138,7 +138,7 @@ const Topbar = (): JSX.Element => {
                       rel='noopener noreferrer'
                       href='https://bitcoinfaucet.uo1.net'>
                       <InterlayCaliforniaOutlinedButton
-                        className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                        className={SMALL_SIZE_BUTTON_CLASSES}
                         endIcon={
                           <ExternalLinkIcon
                             className={clsx(
@@ -151,7 +151,7 @@ const Topbar = (): JSX.Element => {
                       </InterlayCaliforniaOutlinedButton>
                     </InterlayLink>
                     <InterlayDenimOrKintsugiMidnightOutlinedButton
-                      className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                      className={SMALL_SIZE_BUTTON_CLASSES}
                       pending={isRequestPending}
                       onClick={requestFunds}>
                       {t('request_funds', {
@@ -162,7 +162,7 @@ const Topbar = (): JSX.Element => {
                 )}
                 <Tokens />
                 <InterlayDefaultContainedButton
-                  className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                  className={SMALL_SIZE_BUTTON_CLASSES}
                   onClick={handleAccountModalOpen}>
                   {accountLabel}
                 </InterlayDefaultContainedButton>

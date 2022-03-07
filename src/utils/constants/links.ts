@@ -1,4 +1,8 @@
 
+const URL_PARAMETERS = Object.freeze({
+  VAULT_ADDRESS: 'vaultAddress'
+});
+
 const PAGES = Object.freeze({
   HOME: '/',
   BRIDGE: '/bridge',
@@ -12,7 +16,7 @@ const PAGES = Object.freeze({
   DASHBOARD_ISSUE_REQUESTS: '/dashboard/issue-requests',
   DASHBOARD_REDEEM_REQUESTS: '/dashboard/redeem-requests',
   DASHBOARD_RELAY: '/dashboard/relay',
-  VAULT: '/vault',
+  VAULT: `/vault/:${URL_PARAMETERS.VAULT_ADDRESS}`,
   FEEDBACK: '/feedback'
 });
 
@@ -27,5 +31,6 @@ const QUERY_PARAMETERS = Object.freeze({
 
 export {
   PAGES,
-  QUERY_PARAMETERS
+  QUERY_PARAMETERS,
+  URL_PARAMETERS
 };

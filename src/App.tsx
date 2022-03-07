@@ -22,14 +22,15 @@ import {
 } from '@polkadot/extension-dapp';
 import { Keyring } from '@polkadot/api';
 import {
-  CollateralCurrency,
   tickerToCurrencyIdLiteral,
   SecurityStatusCode,
-  FaucetClient
+  FaucetClient,
+  ChainBalance,
+  CollateralUnit,
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 import { createInterbtc } from '@interlay/interbtc';
-import {
-} from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import InterlayHelmet from 'parts/InterlayHelmet';
 import Layout from 'parts/Layout';
@@ -81,13 +82,13 @@ const Transfer = React.lazy(() =>
 // const Transactions = React.lazy(() =>
 //   import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
 // );
-// const Staking = React.lazy(() =>
-//   import(/* webpackChunkName: 'staking' */ 'pages/Staking')
-// );
+const Staking = React.lazy(() =>
+  import(/* webpackChunkName: 'staking' */ 'pages/Staking')
+);
 // const Dashboard = React.lazy(() =>
 //   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 // );
-// const VaultDashboard = React.lazy(() =>
+// const Vault = React.lazy(() =>
 //   import(/* webpackChunkName: 'vault' */ 'pages/Vault')
 // );
 const NoMatch = React.lazy(() =>
@@ -115,8 +116,6 @@ const App = (): JSX.Element => {
     try {
       window.bridge = await createInterbtc(
         constants.PARACHAIN_URL,
-        COLLATERAL_TOKEN as CollateralCurrency,
-        WRAPPED_TOKEN,
         constants.BITCOIN_NETWORK,
         constants.STATS_URL
       );
@@ -234,7 +233,7 @@ const App = (): JSX.Element => {
     const trySetDefaultAccount = () => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
         const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
-        const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
+        const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
         window.bridge.interBtcApi.setAccount(defaultAccountKeyring);
         dispatch(changeAddressAction(defaultAccountKeyring.address));
       }
@@ -318,7 +317,7 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             COLLATERAL_TOKEN,
             address,
-            (_, balance) => {
+            (_: string, balance: ChainBalance<CollateralUnit>) => {
               if (!balance.free.eq(collateralTokenBalance)) {
                 dispatch(updateCollateralTokenBalanceAction(balance.free));
               }
@@ -338,7 +337,7 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             WRAPPED_TOKEN,
             address,
-            (_, balance) => {
+            (_: string, balance: ChainBalance<BitcoinUnit>) => {
               if (!balance.free.eq(wrappedTokenBalance)) {
                 dispatch(updateWrappedTokenBalanceAction(balance.free));
               }
@@ -358,7 +357,7 @@ const App = (): JSX.Element => {
           await window.bridge.interBtcApi.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
             address,
-            (_, balance) => {
+            (_: string, balance: ChainBalance<GovernanceUnit>) => {
               if (!balance.free.eq(governanceTokenBalance)) {
                 dispatch(updateGovernanceTokenBalanceAction(balance.free));
               }
@@ -427,15 +426,15 @@ const App = (): JSX.Element => {
               <Switch location={location}>
                 {/* {vaultClientLoaded && (
                   <Route path={PAGES.VAULT}>
-                    <VaultDashboard />
+                    <Vault />
                   </Route>
                 )} */}
                 {/* <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route> */}
-                {/* <Route path={PAGES.STAKING}>
+                <Route path={PAGES.STAKING}>
                   <Staking />
-                </Route> */}
+                </Route>
                 {/* <Route path={PAGES.TRANSACTIONS}>
                   <Transactions />
                 </Route> */}

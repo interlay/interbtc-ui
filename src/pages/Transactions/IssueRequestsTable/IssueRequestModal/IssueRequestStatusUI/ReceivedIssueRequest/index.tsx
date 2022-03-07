@@ -7,7 +7,6 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { Issue } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import ExternalLink from 'components/ExternalLink';
@@ -28,7 +27,8 @@ import genericFetcher, {
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  request: Issue;
+  // TODO: should type properly (`Relay`)
+  request: any;
 }
 
 const ReceivedIssueRequest = ({
@@ -104,7 +104,10 @@ const ReceivedIssueRequest = ({
     return <>Loading...</>;
   }
 
-  const requestConfirmations = parachainHeight - Number(request.creationBlock);
+  const requestConfirmations =
+    request.backingPayment.confirmedAtParachainActiveBlock ?
+      parachainHeight - request.backingPayment.confirmedAtParachainActiveBlock :
+      0;
 
   return (
     <RequestWrapper>
@@ -123,7 +126,7 @@ const ReceivedIssueRequest = ({
           {t('confirmations')}
         </Ring48Title>
         <Ring48Value className='text-interlayConifer'>
-          {`${request.confirmations ?? 0}/${stableBitcoinConfirmations}`}
+          {`${request.backingPayment.confirmations ?? 0}/${stableBitcoinConfirmations}`}
         </Ring48Value>
         <Ring48Value className='text-interlayConifer'>
           {`${requestConfirmations}/${stableParachainConfirmations}`}
@@ -138,11 +141,11 @@ const ReceivedIssueRequest = ({
           )}>
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
       </p>
       <ExternalLink
         className='text-sm'
-        href={`${BTC_TRANSACTION_API}${request.btcTxId}`}>
+        href={`${BTC_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
         {t('issue_page.view_on_block_explorer')}
       </ExternalLink>
     </RequestWrapper>

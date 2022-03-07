@@ -30,10 +30,11 @@ const BTC_ADDRESS_REGEX =
       BTC_REGTEST_REGEX;
 
 const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
-const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED || '//Alice';
+const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
 const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';
 
 const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || 'http://localhost:3007';
+const HYDRA_URL = process.env.REACT_APP_HYDRA_URL || 'http://localhost:4000/graphql';
 
 const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
@@ -89,6 +90,7 @@ export {
   DEFAULT_ACCOUNT_SEED,
   FAUCET_URL,
   STATS_URL,
+  HYDRA_URL,
   FEEDBACK_URL,
   SS58_FORMAT,
   VAULT_STATUS_ACTIVE,

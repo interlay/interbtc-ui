@@ -22,6 +22,13 @@ module.exports = {
         type: 'javascript/auto'
       });
 
+      // Resolve Webpack 4 compile error with polkadot.js 7.x
+      // https://polkadot.js.org/docs/usage/FAQ#on-webpack-4-i-have-a-parse-error-on-importmetaurl
+      webpackConfig.module.rules.push({
+        test: /\.js$/,
+        loader: require.resolve('@open-wc/webpack-import-meta-loader')
+      });
+
       // Fixes dtrace-provider compilation bug described here:
       // https://github.com/chrisa/node-dtrace-provider/issues/114
       webpackConfig.externals = [

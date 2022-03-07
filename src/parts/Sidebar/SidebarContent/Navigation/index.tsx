@@ -45,14 +45,14 @@ const textClasses = clsx(
   'rounded-md'
 );
 
-const textClassesForSelected = clsx(
+const TEXT_CLASSES_FOR_SELECTED = clsx(
   { 'text-interlayDenim-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiMidnight-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const textClassesForUnselected = clsx(
+const TEXT_CLASSES_FOR_UNSELECTED = clsx(
   { 'text-interlayTextPrimaryInLightMode':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
@@ -77,7 +77,9 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
+  const {
+    vaultClientLoaded
+  } = useSelector((state: StoreType) => state.general);
 
   const NAVIGATION_ITEMS = React.useMemo(() => {
     return [
@@ -85,6 +87,11 @@ const Navigation = ({
         name: 'nav_transfer',
         link: PAGES.TRANSFER,
         icon: SwitchHorizontalIcon
+      },
+      {
+        name: 'nav_staking',
+        link: PAGES.STAKING,
+        icon: CashIcon
       },
       {
         name: 'nav_bridge',
@@ -96,12 +103,6 @@ const Navigation = ({
         name: 'nav_transactions',
         link: PAGES.TRANSACTIONS,
         icon: ClipboardListIcon,
-        disabled: true
-      },
-      {
-        name: 'nav_staking',
-        link: PAGES.STAKING,
-        icon: CashIcon,
         disabled: true
       },
       {
@@ -215,14 +216,14 @@ const Navigation = ({
             className={clsx(
               match?.isExact ?
                 clsx(
-                  textClassesForSelected,
+                  TEXT_CLASSES_FOR_SELECTED,
                   { 'bg-interlayHaiti-50':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:bg-white':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ) :
                 clsx(
-                  textClassesForUnselected,
+                  TEXT_CLASSES_FOR_UNSELECTED,
                   { 'hover:bg-interlayHaiti-50':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -236,8 +237,8 @@ const Navigation = ({
             <navigationItem.icon
               className={clsx(
                 match?.isExact ?
-                  textClassesForSelected :
-                  textClassesForUnselected,
+                  TEXT_CLASSES_FOR_SELECTED :
+                  TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'mr-4' : 'mr-3',
                 navigationIconClasses
               )}
