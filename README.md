@@ -29,7 +29,7 @@ You can visit the Kintsugi application at [kintsugi.interlay.io](https://kintsug
 
 ### Testnet
 
-You can visit [bridge.interlay.io](https://bridge.interlay.io/) for the latest testnet.
+You can visit [testnet.interlay.io](https://testnet.interlay.io/) for the latest testnet.
 
 ## Quickstart
 
