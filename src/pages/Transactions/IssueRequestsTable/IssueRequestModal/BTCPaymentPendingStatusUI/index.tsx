@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import QRCode from 'qrcode.react';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { Issue } from '@interlay/interbtc-api';
 
 import Timer from 'components/Timer';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
@@ -20,27 +19,32 @@ import {
 } from 'common/utils/utils';
 
 interface Props {
-  request: Issue;
+  // TODO: should type properly (`Relay`)
+  request: any;
 }
 
+// TODO: when sorting out GraphQL typing, take into account that this component also displays a request from the lib
 const BTCPaymentPendingStatusUI = ({
   request
 }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  const amountBTCToSend = request.wrappedAmount.add(request.bridgeFee);
+  const amountBTCToSend =
+    (request.wrappedAmount || request.request.amountWrapped)
+      .add(request.bridgeFee || request.request.bridgeFeeWrapped);
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
-    // TODO: should remove `Date.now()` once the API is ready
-    const requestCreationTimestamp = request.creationTimestamp ?? Date.now();
+    // TODO: double-check `request.request?.timestamp`
+    // Date.now() is an approximation, used with the parachain response until we can get the block timestamp later
+    const requestCreationTimestamp = request.request?.timestamp ?? Date.now();
 
     const requestTimestamp = Math.floor(new Date(requestCreationTimestamp).getTime() / 1000);
     const theInitialLeftSeconds = requestTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
     setInitialLeftSeconds(theInitialLeftSeconds);
   }, [
-    request.creationTimestamp,
+    request.request,
     issuePeriod
   ]);
 
@@ -91,8 +95,8 @@ const BTCPaymentPendingStatusUI = ({
               'cursor-pointer',
               'text-center'
             )}
-            onClick={() => copyToClipboard(request.vaultWrappedAddress)}>
-            {request.vaultWrappedAddress}
+            onClick={() => copyToClipboard(request.vaultWrappedAddress || request.vaultBackingAddress)}>
+            {request.vaultWrappedAddress || request.vaultBackingAddress}
           </span>
         </InterlayTooltip>
         {initialLeftSeconds && (
@@ -132,7 +136,8 @@ const BTCPaymentPendingStatusUI = ({
       </p>
       <QRCode
         className='mx-auto'
-        value={`bitcoin:${request.vaultWrappedAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
+        // eslint-disable-next-line max-len
+        value={`bitcoin:${request.vaultWrappedAddress || request.vaultBackingAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />
       <div
         className={clsx(
           { 'text-interlayTextSecondaryInLightMode':

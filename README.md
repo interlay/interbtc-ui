@@ -118,7 +118,7 @@ Start the UI:
 yarn install && yarn start
 ```
 
-### Connecting to the Interlay Testnetwork
+### Connecting to the Interlay Test Network
 
 > Note: This environment might be unstable. It uses the Bitcoin testnet work.
 

@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import * as React from 'react';
 import { useTable } from 'react-table';
 import {
@@ -18,10 +16,7 @@ import {
 } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  Issue,
-  IssueStatus
-} from '@interlay/interbtc-api';
+import { IssueStatus } from '@interlay/interbtc-api';
 
 import IssueRequestModal from './IssueRequestModal';
 import SectionTitle from 'parts/SectionTitle';
@@ -48,12 +43,18 @@ import {
   shortTxId,
   displayMonetaryAmount
 } from 'common/utils/utils';
-import userIssueRequestsFetcher, { USER_ISSUE_REQUESTS_FETCHER } from 'services/user-issue-requests-fetcher';
-import userIssueRequestsTotalCountFetcher, {
-  USER_ISSUE_REQUESTS_TOTAL_COUNT_FETCHER
-} from 'services/user-issue-requests-total-count-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import issueCountQuery from 'services/queries/issue-count-query';
+import issueFetcher, {
+  ISSUE_FETCHER,
+  getIssueWithStatus
+} from 'services/fetchers/issue-request-fetcher';
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -70,41 +71,93 @@ const IssueRequestsTable = (): JSX.Element => {
     extensions,
     bridgeLoaded
   } = useSelector((state: StoreType) => state.general);
-  // eslint-disable-next-line max-len
-  // TODO: should be refactored via `https://www.notion.so/interlay/Include-total-count-into-paginated-API-calls-in-index-894b56f288d24aaf8fb1aec36eadf41d`
+
+  const {
+    isIdle: btcConfirmationsIdle,
+    isLoading: btcConfirmationsLoading,
+    data: btcConfirmations,
+    error: btcConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getBtcConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(btcConfirmationsError);
+
+  const {
+    isIdle: latestParachainActiveBlockIdle,
+    isLoading: latestParachainActiveBlockLoading,
+    data: latestParachainActiveBlock,
+    error: latestParachainActiveBlockError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'latestParachainActiveBlock'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(latestParachainActiveBlockError);
+
+  const {
+    isIdle: parachainConfirmationsIdle,
+    isLoading: parachainConfirmationsLoading,
+    data: parachainConfirmations,
+    error: parachainConfirmationsError
+  } = useQuery<number, Error>(
+    [
+      GENERIC_FETCHER,
+      'interBtcIndex',
+      'getParachainConfirmations'
+    ],
+    genericFetcher<number>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(parachainConfirmationsError);
+
   const {
     isIdle: issueRequestsTotalCountIdle,
     isLoading: issueRequestsTotalCountLoading,
     data: issueRequestsTotalCount,
     error: issueRequestsTotalCountError
-  } = useQuery<number, Error>(
+  // TODO: should type properly (`Relay`)
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      USER_ISSUE_REQUESTS_TOTAL_COUNT_FETCHER,
-      address
+      GRAPHQL_FETCHER,
+      issueCountQuery(`userParachainAddress_eq: "${address}"`)
     ],
-    userIssueRequestsTotalCountFetcher,
-    {
-      enabled: !!address && !!bridgeLoaded,
-      refetchInterval: 10000
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(issueRequestsTotalCountError);
+
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: issueRequests,
     error: issueRequestsError
-  } = useQuery<Array<Issue>, Error>(
+  // TODO: should type properly (`Relay`)
+  } = useQuery<any, Error>(
     [
-      USER_ISSUE_REQUESTS_FETCHER,
-      address,
-      selectedPageIndex,
-      TABLE_PAGE_LIMIT
+      ISSUE_FETCHER,
+      selectedPageIndex * TABLE_PAGE_LIMIT, // offset
+      TABLE_PAGE_LIMIT, // limit
+      btcConfirmations,
+      `userParachainAddress_eq: "${address}"` // `WHERE` condition
     ],
-    userIssueRequestsFetcher,
+    issueFetcher,
     {
-      enabled: !!address && !!bridgeLoaded,
-      refetchInterval: 10000
+      enabled: btcConfirmations !== undefined
     }
   );
   useErrorHandler(issueRequestsError);
@@ -113,56 +166,64 @@ const IssueRequestsTable = (): JSX.Element => {
     () => [
       {
         Header: t('issue_page.updated'),
-        accessor: 'creationTimestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let date;
+          if (issue.execution) {
+            date = issue.execution.timestamp;
+          } else if (issue.cancellation) {
+            date = issue.cancellation.timestamp;
+          } else {
+            date = issue.request.timestamp;
+          }
+
           return (
             <>
-              {value ? formatDateTimePrecise(new Date(Number(value))) : t('pending')}
+              {formatDateTimePrecise(new Date(date))}
             </>
           );
         }
       },
       {
         Header: `${t('issue_page.amount')} (${WRAPPED_TOKEN_SYMBOL})`,
-        accessor: 'wrappedAmount',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props: any) {
-          const issueRequest: Issue = props.row.original;
-          const issuedWrappedTokenAmount =
-            (issueRequest.executedAmountWrapped && !issueRequest.executedAmountWrapped.isZero()) ?
-              issueRequest.executedAmountWrapped :
-              issueRequest.wrappedAmount;
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          let wrappedTokenAmount;
+          if (issue.execution) {
+            wrappedTokenAmount = issue.execution.amountWrapped;
+          } else {
+            wrappedTokenAmount = issue.request.amountWrapped;
+          }
+
           return (
             <>
-              {
-                displayMonetaryAmount(issuedWrappedTokenAmount.sub(issueRequest.bridgeFee))
-              }
+              {displayMonetaryAmount(wrappedTokenAmount)}
             </>
           );
         }
       },
       {
         Header: t('issue_page.btc_transaction'),
-        accessor: 'btcTxId',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell(props: any) {
-          const issueRequest: Issue = props.row.original;
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issueRequest } }: any) {
           return (
             <>
-              {issueRequest.btcTxId ? (
+              {issueRequest.backingPayment.btcTxId ? (
                 <ExternalLink
-                  href={`${BTC_TRANSACTION_API}${issueRequest.btcTxId}`}
+                  href={`${BTC_TRANSACTION_API}${issueRequest.backingPayment.btcTxId}`}
                   onClick={event => {
                     event.stopPropagation();
                   }}>
-                  {shortTxId(issueRequest.btcTxId)}
+                  {shortTxId(issueRequest.backingPayment.btcTxId)}
                 </ExternalLink>
               ) : (
                 (
@@ -180,11 +241,12 @@ const IssueRequestsTable = (): JSX.Element => {
       },
       {
         Header: t('issue_page.confirmations'),
-        accessor: 'confirmations',
         classNames: [
           'text-right'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          const value = issue.backingPayment.confirmations;
           return (
             <>
               {value === undefined ?
@@ -248,7 +310,23 @@ const IssueRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const data = issueRequests ?? [];
+  const data =
+    (
+      issueRequests === undefined ||
+      btcConfirmations === undefined ||
+      parachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
+    ) ?
+      [] :
+      issueRequests.map(
+        // TODO: should type properly (`Relay`)
+        (issueRequest: any) => getIssueWithStatus(
+          issueRequest,
+          btcConfirmations,
+          parachainConfirmations,
+          latestParachainActiveBlock
+        )
+      );
 
   const {
     getTableProps,
@@ -264,14 +342,23 @@ const IssueRequestsTable = (): JSX.Element => {
   );
 
   if (
-    issueRequestsIdle ||
-    issueRequestsLoading ||
+    btcConfirmationsIdle ||
+    btcConfirmationsLoading ||
+    parachainConfirmationsIdle ||
+    parachainConfirmationsLoading ||
+    latestParachainActiveBlockIdle ||
+    latestParachainActiveBlockLoading ||
     issueRequestsTotalCountIdle ||
-    issueRequestsTotalCountLoading
+    issueRequestsTotalCountLoading ||
+    issueRequestsIdle ||
+    issueRequestsLoading
   ) {
     return (
       <PrimaryColorEllipsisLoader />
     );
+  }
+  if (issueRequestsTotalCount === undefined) {
+    throw new Error('Something went wrong!');
   }
 
   const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
@@ -296,8 +383,10 @@ const IssueRequestsTable = (): JSX.Element => {
     }
   };
 
-  const pageCount = Math.ceil(issueRequestsTotalCount / TABLE_PAGE_LIMIT);
-  const selectedIssueRequest = data.find(issueRequest => issueRequest.id === selectedIssueRequestId);
+  const totalSuccessfulIssueCount = issueRequestsTotalCount.data.issuesConnection.totalCount || 0;
+  const pageCount = Math.ceil(totalSuccessfulIssueCount / TABLE_PAGE_LIMIT);
+  // TODO: should type properly (`Relay`)
+  const selectedIssueRequest = data.find((issueRequest: any) => issueRequest.id === selectedIssueRequestId);
 
   return (
     <>
@@ -312,10 +401,12 @@ const IssueRequestsTable = (): JSX.Element => {
         </SectionTitle>
         <InterlayTable {...getTableProps()}>
           <InterlayThead>
-            {headerGroups.map(headerGroup => (
+            {/* TODO: should type properly */}
+            {headerGroups.map((headerGroup: any) => (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map(column => (
+                {/* TODO: should type properly */}
+                {headerGroup.headers.map((column: any) => (
                   // eslint-disable-next-line react/jsx-key
                   <InterlayTh
                     {...column.getHeaderProps([
@@ -331,7 +422,8 @@ const IssueRequestsTable = (): JSX.Element => {
             ))}
           </InterlayThead>
           <InterlayTbody {...getTableBodyProps()}>
-            {rows.map(row => {
+            {/* TODO: should type properly */}
+            {rows.map((row: any) => {
               prepareRow(row);
 
               const {
@@ -348,7 +440,8 @@ const IssueRequestsTable = (): JSX.Element => {
                   )}
                   {...restRowProps}
                   onClick={handleRowClick(row.original.id)}>
-                  {row.cells.map(cell => {
+                  {/* TODO: should type properly */}
+                  {row.cells.map((cell: any) => {
                     return (
                       // eslint-disable-next-line react/jsx-key
                       <InterlayTd

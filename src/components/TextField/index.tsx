@@ -3,6 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
+import {
+  POLKADOT,
+  KUSAMA
+} from 'utils/constants/relay-chain-names';
 
 interface CustomTextFieldProps {
   label?: JSX.Element | string;
@@ -27,7 +31,12 @@ const TextField = React.forwardRef<Ref, Props>(({
         htmlFor={id}
         required={required}
         className={clsx(
-          { 'text-interlayCinnabar': error }
+          {
+            [clsx(
+              { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )]: error
+          }
         )}>
         {label}
       </TextFieldLabel>
@@ -38,15 +47,22 @@ const TextField = React.forwardRef<Ref, Props>(({
       className={clsx(
         {
           [clsx(
-            'border-interlayCinnabar',
-            'text-interlayCinnabar'
+            { 'border-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:border-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+            { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
           )]: error
         }
       )}
       {...rest} />
     <TextFieldHelperText
       className={clsx(
-        { 'text-interlayCinnabar': error },
+        {
+          [clsx(
+            { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          )]: error
+        },
         'h-6'
       )}>
       {helperText}

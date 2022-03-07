@@ -322,7 +322,6 @@ const UpdateCollateralModal = ({
             <NumberInput
               id={COLLATERAL_TOKEN_AMOUNT}
               name={COLLATERAL_TOKEN_AMOUNT}
-              title={COLLATERAL_TOKEN_AMOUNT}
               min={0}
               ref={register({
                 required: {
@@ -330,8 +329,7 @@ const UpdateCollateralModal = ({
                   message: t('vault.collateral_is_required')
                 },
                 validate: value => validateCollateralTokenAmount(value)
-              })}>
-            </NumberInput>
+              })} />
             <ErrorMessage>
               {errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             </ErrorMessage>

@@ -74,7 +74,8 @@ const ReplaceTable = ({
     ],
     genericFetcher<Map<H256, ReplaceRequestExt>>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: !!bridgeLoaded,
+      refetchInterval: 10000
     }
   );
   useErrorHandler(replaceRequestsError);
