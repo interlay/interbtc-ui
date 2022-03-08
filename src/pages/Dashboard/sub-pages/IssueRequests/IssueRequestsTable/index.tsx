@@ -194,8 +194,8 @@ const IssueRequestsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getBtcConfirmations'
+      'btcRelay',
+      'getStableBitcoinConfirmations'
     ],
     genericFetcher<number>(),
     {
@@ -212,8 +212,8 @@ const IssueRequestsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'latestParachainActiveBlock'
+      'system',
+      'getCurrentActiveBlockNumber'
     ],
     genericFetcher<number>(),
     {
@@ -230,8 +230,8 @@ const IssueRequestsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getParachainConfirmations'
+      'btcRelay',
+      'getStableParachainConfirmations'
     ],
     genericFetcher<number>(),
     {

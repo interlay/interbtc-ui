@@ -111,7 +111,7 @@ const App = (): JSX.Element => {
   const store: StoreState = useStore();
 
   // Load the main bridge API - connection to the bridge
-  const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
+  const loadInterBtc = React.useCallback(async (): Promise<void> => {
     try {
       window.bridge = await createInterBtcApi(
         constants.PARACHAIN_URL,
@@ -121,13 +121,13 @@ const App = (): JSX.Element => {
       setIsLoading(false);
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
-      console.log('[loadPolkaBTC] error.message => ', error.message);
+      console.log('[loadInterBtc] error.message => ', error.message);
     }
 
     try {
       startFetchingLiveData(dispatch, store);
     } catch (error) {
-      console.log('[loadPolkaBTC] error.message => ', error.message);
+      console.log('[loadInterBtc] error.message => ', error.message);
     }
   }, [
     dispatch,
@@ -281,7 +281,7 @@ const App = (): JSX.Element => {
         setTimeout(() => {
           if (isLoading) setIsLoading(false);
         }, 3000);
-        await loadPolkaBTC();
+        await loadInterBtc();
         // Only load faucet on testnet
         if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
           await loadFaucet();
@@ -292,7 +292,7 @@ const App = (): JSX.Element => {
     })();
     startFetchingLiveData(dispatch, store);
   }, [
-    loadPolkaBTC,
+    loadInterBtc,
     loadFaucet,
     isLoading,
     bridgeLoaded,

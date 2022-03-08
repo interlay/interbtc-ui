@@ -45,8 +45,8 @@ const ReceivedIssueRequest = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getBtcConfirmations'
+      'btcRelay',
+      'getStableBitcoinConfirmations'
     ],
     genericFetcher<number>(),
     {
