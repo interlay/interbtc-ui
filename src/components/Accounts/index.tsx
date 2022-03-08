@@ -6,9 +6,13 @@ import useGetAccounts from 'utils/hooks/use-get-accounts';
 
 interface Props {
   callbackFunction?: (account: InjectedAccountWithMeta) => void;
+  label: string;
 }
 
-const Accounts = ({ callbackFunction }: Props): JSX.Element => {
+const Accounts = ({
+  callbackFunction,
+  label
+}: Props): JSX.Element => {
   const [selectedAccount, setSelectedAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const accounts = useGetAccounts();
 
@@ -33,6 +37,7 @@ const Accounts = ({ callbackFunction }: Props): JSX.Element => {
     <>
       {accounts && selectedAccount ? (
         <AccountSelector
+          label={label}
           accounts={accounts}
           selectedAccount={selectedAccount}
           onChange={setSelectedAccount} />

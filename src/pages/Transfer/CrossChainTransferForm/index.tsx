@@ -28,7 +28,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   return (
     <form className='space-y-8'>
       <FormTitle>
-        {t('transfer_page.cross_chain_transfer')}
+        {t('transfer_page.cross_chain_transfer_form.title')}
       </FormTitle>
       <div>
         <div>
@@ -46,13 +46,13 @@ const CrossChainTransferForm = (): JSX.Element => {
         <div>
           <TokenField label={COLLATERAL_TOKEN_SYMBOL} />
         </div>
-        <Chains />
+        <Chains label={t('transfer_page.cross_chain_transfer_form.from_chain')} />
       </div>
       <div>
-        <Chains />
+        <Chains label={t('transfer_page.cross_chain_transfer_form.to_chain')} />
       </div>
       <div>
-        <Accounts />
+        <Accounts label={t('transfer_page.cross_chain_transfer_form.target_account')} />
       </div>
       <SubmitButton>
           Submit
