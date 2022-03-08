@@ -706,9 +706,7 @@ const Staking = (): JSX.Element => {
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
             )}
             <div className='space-y-2'>
-              <AvailableBalanceUI
-                label='Available balance'
-                balance={availableBalanceLabel} />
+              <AvailableBalanceUI balance={availableBalanceLabel} />
               <TokenField
                 id={LOCKING_AMOUNT}
                 name={LOCKING_AMOUNT}
