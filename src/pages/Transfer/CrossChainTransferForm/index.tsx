@@ -1,10 +1,8 @@
 
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
@@ -14,29 +12,14 @@ import {
 import { StoreType } from 'common/types/util.types';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import Accounts from 'components/Accounts';
-import Chains, { ChainOption } from 'components/Chains';
+import Chains from 'components/Chains';
 import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
 import SubmitButton from 'components/SubmitButton';
 
 const CrossChainTransferForm = (): JSX.Element => {
-  const [fromChain, setFromChain] = React.useState<ChainOption | undefined>(undefined);
-  const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
-  const [targetAccount, setTargetAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const { t } = useTranslation();
-
-  React.useEffect(() => {
-    console.log('targetAccount', targetAccount);
-  }, [targetAccount]);
-
-  React.useEffect(() => {
-    console.log('toChain', toChain);
-  }, [toChain]);
-
-  React.useEffect(() => {
-    console.log('fromChain', fromChain);
-  }, [fromChain]);
 
   const {
     collateralTokenTransferableBalance
@@ -63,13 +46,13 @@ const CrossChainTransferForm = (): JSX.Element => {
         <div>
           <TokenField label={COLLATERAL_TOKEN_SYMBOL} />
         </div>
-        <Chains callbackFunction={setFromChain} />
+        <Chains />
       </div>
       <div>
-        <Chains callbackFunction={setToChain} />
+        <Chains />
       </div>
       <div>
-        <Accounts callbackFunction={setTargetAccount} />
+        <Accounts />
       </div>
       <SubmitButton>
           Submit
