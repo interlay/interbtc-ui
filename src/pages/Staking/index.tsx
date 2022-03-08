@@ -211,6 +211,7 @@ const Staking = (): JSX.Element => {
 
   // Estimated KINT Rewards & APY
   const monetaryLockingAmount = newMonetaryAmount(lockingAmount, GOVERNANCE_TOKEN, true);
+  const blockLockTimeExtension = convertWeeksToBlockNumbers(Number(lockTime));
   const {
     isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
@@ -222,7 +223,8 @@ const Staking = (): JSX.Element => {
       'escrow',
       'getRewardEstimate',
       address,
-      monetaryLockingAmount
+      monetaryLockingAmount,
+      blockLockTimeExtension
     ],
     genericFetcher<RewardAmountAndAPY>(),
     {
@@ -297,7 +299,9 @@ const Staking = (): JSX.Element => {
           await DefaultTransactionAPI.sendLogged(
             window.bridge.api,
             window.bridge.account as AddressOrPair,
-            batch
+            batch,
+            undefined, // don't await success event
+            true // don't wait for finalized blocks
           );
         } else if ( // Only increase amount
           variables.time === 0 &&
