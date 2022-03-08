@@ -52,7 +52,9 @@ const AccountSelector = ({
               </SelectText>
             </span>
           </SelectButton>
-          <SelectOptions open={open}>
+          <SelectOptions
+            className='h-28'
+            open={open}>
             {accounts.map((account: InjectedAccountWithMeta) => {
               return (
                 <SelectOption
