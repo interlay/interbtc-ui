@@ -61,7 +61,7 @@ const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   return await Promise.all(issues.map(async issue => {
     issue = decodeIssueValues(issue);
     issue.backingPayment = await getTxDetailsForRequest(
-      window.bridge.interBtcApi.electrsAPI,
+      window.bridge.electrsAPI,
       issue.id,
       issue.vaultBackingAddress,
       stableBtcConfirmations

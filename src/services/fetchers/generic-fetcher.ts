@@ -16,38 +16,26 @@ const GENERIC_FETCHER = 'generic-fetcher';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
-  if (queryKey[1] === 'interBtcApi') {
-    const [
-      _key,
-      arg1,
-      arg2,
-      arg3,
-      ...rest
-    ] = queryKey;
-
-    if (_key !== GENERIC_FETCHER) {
-      throw new Error('Invalid key!');
-    }
-
-    // TODO: should type properly
-    return await window.bridge[arg1][arg2][arg3](...rest);
-  }
   if (queryKey[1] === 'interBtcIndex') {
-    const [
-      _key,
-      arg1,
-      arg2,
-      ...rest
-    ] = queryKey;
+    throw new Error('Unsupported indexer!');
+  }
+  const [
+    _key,
+    arg1,
+    arg2,
+    ...rest
+  ] = queryKey;
 
-    if (_key !== GENERIC_FETCHER) {
-      throw new Error('Invalid key!');
-    }
-
-    return await window.bridge[arg1][arg2](...rest);
+  if (_key !== GENERIC_FETCHER) {
+    throw new Error('Invalid key!');
   }
 
-  throw new Error('Something went wrong!');
+  try {
+    // TODO: should type properly
+    return await window.bridge[arg1][arg2](...rest);
+  } catch (error) {
+    throw new Error(`Error fetching ${queryKey}}). ${error}`);
+  }
 };
 
 export {

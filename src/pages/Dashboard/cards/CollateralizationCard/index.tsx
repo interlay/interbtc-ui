@@ -55,7 +55,6 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getSystemCollateralization'
     ],
@@ -74,7 +73,6 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
   } = useQuery<BitcoinAmount, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getTotalIssuableAmount'
     ],
@@ -93,7 +91,6 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getSecureCollateralThreshold',
       COLLATERAL_TOKEN

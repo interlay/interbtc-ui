@@ -36,7 +36,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
     // TODO: should add loading UX
     (async () => {
       try {
-        const redeemPeriod = await window.bridge.interBtcApi.redeem.getRedeemPeriod();
+        const redeemPeriod = await window.bridge.redeem.getRedeemPeriod();
         const requestTimestamp = Math.floor(new Date(request.request.timestamp).getTime() / 1000);
         const theInitialLeftSeconds = requestTimestamp + (redeemPeriod * BLOCK_TIME) - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);

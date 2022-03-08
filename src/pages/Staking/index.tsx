@@ -57,7 +57,8 @@ import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
 import {
   displayMonetaryAmount,
-  getUsdAmount
+  getUsdAmount,
+  safeRoundTwoDecimals
 } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
@@ -87,7 +88,7 @@ type StakingFormData = {
 
 interface RewardAmountAndAPY {
   amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
-  apy: number;
+  apy: Big;
 }
 
 interface StakedAmountAndEndBlock {
@@ -136,7 +137,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'system',
       'getCurrentBlockNumber'
     ],
@@ -156,7 +156,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<MonetaryAmount<Currency<VoteUnit>, VoteUnit>, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'escrow',
       'votingBalance',
       address
@@ -168,6 +167,27 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(voteGovernanceTokenBalanceError);
 
+  // My currently claimable rewards
+  const {
+    isIdle: currentRewardAmountIdle,
+    isLoading: currentRewardAmountLoading,
+    data: currentRewardAmount,
+    error: currentRewardAmountError,
+    refetch: currentRewardAmountRefetch
+  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+    [
+      GENERIC_FETCHER,
+      'escrow',
+      'getRewards',
+      address
+    ],
+    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(currentRewardAmountError);
+
   // My Rewards
   const {
     isIdle: rewardAmountAndAPYIdle,
@@ -178,7 +198,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<RewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'escrow',
       'getRewardEstimate',
       address
@@ -200,7 +219,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<RewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'escrow',
       'getRewardEstimate',
       address,
@@ -222,7 +240,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<StakedAmountAndEndBlock, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'escrow',
       'getStakedBalance',
       address
@@ -241,12 +258,13 @@ const Staking = (): JSX.Element => {
       }
       const unlockHeight = currentBlockNumber + convertWeeksToBlockNumbers(variables.time);
 
-      return window.bridge.interBtcApi.escrow.createLock(variables.amount, unlockHeight);
+      return window.bridge.escrow.createLock(variables.amount, unlockHeight);
     },
     {
       onSuccess: () => {
         voteGovernanceTokenBalanceRefetch();
         stakedAmountAndEndBlockRefetch();
+        currentRewardAmountRefetch();
         rewardAmountAndAPYRefetch();
         reset({
           [LOCKING_AMOUNT]: '0.0',
@@ -270,29 +288,29 @@ const Staking = (): JSX.Element => {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           const txs = [
-            window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
+            window.bridge.api.tx.escrow.increaseAmount(
               variables.amount.toString(variables.amount.currency.rawBase)
             ),
-            window.bridge.interBtcApi.api.tx.escrow.increaseUnlockHeight(unlockHeight)
+            window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
           ];
-          const batch = window.bridge.interBtcApi.api.tx.utility.batchAll(txs);
+          const batch = window.bridge.api.tx.utility.batchAll(txs);
           await DefaultTransactionAPI.sendLogged(
-            window.bridge.interBtcApi.api,
-            window.bridge.interBtcApi.account as AddressOrPair,
+            window.bridge.api,
+            window.bridge.account as AddressOrPair,
             batch
           );
         } else if ( // Only increase amount
           variables.time === 0 &&
           variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
-          return await window.bridge.interBtcApi.escrow.increaseAmount(variables.amount);
+          return await window.bridge.escrow.increaseAmount(variables.amount);
         } else if ( // Only extend lock time
           variables.time > 0 &&
           variables.amount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
-          return await window.bridge.interBtcApi.escrow.increaseUnlockHeight(unlockHeight);
+          return await window.bridge.escrow.increaseUnlockHeight(unlockHeight);
         } else {
           throw new Error('Something went wrong!');
         }
@@ -302,6 +320,7 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         voteGovernanceTokenBalanceRefetch();
         stakedAmountAndEndBlockRefetch();
+        currentRewardAmountRefetch();
         rewardAmountAndAPYRefetch();
         reset({
           [LOCKING_AMOUNT]: '0.0',
@@ -579,7 +598,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return estimatedRewardAmountAndAPY.apy;
+    return `${safeRoundTwoDecimals(estimatedRewardAmountAndAPY.apy.toString())} %`;
   };
 
   const renderEstimatedRewardAmountLabel = () => {
@@ -596,6 +615,20 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(estimatedRewardAmountAndAPY.amount);
   };
 
+  const renderRewardsToClaimLabel = () => {
+    if (
+      currentRewardAmountIdle ||
+      currentRewardAmountLoading
+    ) {
+      return '-';
+    }
+    if (currentRewardAmount === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return displayMonetaryAmount(currentRewardAmount);
+  };
+
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     // TODO: should be handled based on https://kentcdodds.com/blog/application-state-management-with-react
     if (!accountSet) {
@@ -606,7 +639,7 @@ const Staking = (): JSX.Element => {
 
   const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
 
-  const claimRewardsButtonEnabled = rewardAmountAndAPY?.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+  const claimRewardsButtonEnabled = currentRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const unlockFirst =
     stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) &&
@@ -624,6 +657,8 @@ const Staking = (): JSX.Element => {
     currentBlockNumberLoading ||
     voteGovernanceTokenBalanceIdle ||
     voteGovernanceTokenBalanceLoading ||
+    currentRewardAmountIdle ||
+    currentRewardAmountLoading ||
     rewardAmountAndAPYIdle ||
     rewardAmountAndAPYLoading ||
     estimatedRewardAmountAndAPYIdle ||
@@ -663,8 +698,8 @@ const Staking = (): JSX.Element => {
               voteStakedAmount={renderVoteStakedAmountLabel()}
               rewardAmount={renderRewardAmountLabel()} />
             <ClaimRewardsButton
-              disabled={claimRewardsButtonEnabled === false}
-              pending={claimRewardsButtonEnabled === undefined} />
+              rewardsToClaim={renderRewardsToClaimLabel()}
+              disabled={claimRewardsButtonEnabled === false} />
             {stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) && (
               <WithdrawButton
                 stakedAmount={renderStakedAmountLabel()}

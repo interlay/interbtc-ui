@@ -1,5 +1,5 @@
 import { CurrencyUnit, decodeFixedPointType } from '@interlay/interbtc-api';
-import { OracleStatus } from '@interlay/interbtc/build/oracleTypes';
+import { OracleStatus } from '@interlay/interbtc-api/build/src/types/oracleTypes';
 import {
   Currency,
   ExchangeRate,

@@ -12,26 +12,37 @@ import InterlayDenimOrKintsugiMidnightContainedButton, {
 } from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
+
+interface CustomProps {
+  rewardsToClaim: string;
+}
 
 const ClaimRewardsButton = ({
   className,
+  rewardsToClaim,
   ...rest
-}: InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
+}: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
   const { address } = useSelector((state: StoreType) => state.general);
 
   const queryClient = useQueryClient();
 
   const claimRewardsMutation = useMutation<void, Error, void>(
     () => {
-      return window.bridge.interBtcApi.escrow.withdrawRewards();
+      return window.bridge.escrow.withdrawRewards();
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
           GENERIC_FETCHER,
-          'interBtcApi',
           'escrow',
           'getRewardEstimate',
+          address
+        ]);
+        queryClient.invalidateQueries([
+          GENERIC_FETCHER,
+          'escrow',
+          'getRewards',
           address
         ]);
       }
@@ -56,7 +67,7 @@ const ClaimRewardsButton = ({
         onClick={handleClaimRewards}
         pending={claimRewardsMutation.isLoading}
         {...rest}>
-        Claim Rewards
+        Claim {rewardsToClaim} {GOVERNANCE_TOKEN_SYMBOL} Rewards
       </InterlayDenimOrKintsugiMidnightContainedButton>
       {claimRewardsMutation.isError && (
         <ErrorModal

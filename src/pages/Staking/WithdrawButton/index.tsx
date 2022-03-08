@@ -47,13 +47,12 @@ const WithdrawButton = ({
 
   const withdrawMutation = useMutation<void, Error, void>(
     () => {
-      return window.bridge.interBtcApi.escrow.withdraw();
+      return window.bridge.escrow.withdraw();
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
           GENERIC_FETCHER,
-          'interBtcApi',
           'escrow',
           'getStakedBalance',
           address
