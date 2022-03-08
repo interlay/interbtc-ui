@@ -33,21 +33,8 @@ const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
     return await window.bridge[arg1][arg2][arg3](...rest);
   }
   if (queryKey[1] === 'interBtcIndex') {
-    const [
-      _key,
-      arg1,
-      arg2,
-      ...rest
-    ] = queryKey;
-
-    if (_key !== GENERIC_FETCHER) {
-      throw new Error('Invalid key!');
-    }
-
-    return await window.bridge[arg1][arg2](...rest);
+    throw new Error('Unsupported indexer!');
   }
-
-  throw new Error('Something went wrong!');
 };
 
 export {

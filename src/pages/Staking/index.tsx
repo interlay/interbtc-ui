@@ -136,7 +136,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'system',
       'getCurrentBlockNumber'
     ],
@@ -156,7 +155,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<MonetaryAmount<Currency<VoteUnit>, VoteUnit>, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'escrow',
       'votingBalance',
       address
@@ -178,7 +176,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<RewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'escrow',
       'getRewardEstimate',
       address
@@ -200,7 +197,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<RewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'escrow',
       'getRewardEstimate',
       address,
@@ -222,7 +218,6 @@ const Staking = (): JSX.Element => {
   } = useQuery<StakedAmountAndEndBlock, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'escrow',
       'getStakedBalance',
       address
@@ -241,7 +236,7 @@ const Staking = (): JSX.Element => {
       }
       const unlockHeight = currentBlockNumber + convertWeeksToBlockNumbers(variables.time);
 
-      return window.bridge.interBtcApi.escrow.createLock(variables.amount, unlockHeight);
+      return window.bridge.escrow.createLock(variables.amount, unlockHeight);
     },
     {
       onSuccess: () => {
@@ -270,29 +265,29 @@ const Staking = (): JSX.Element => {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           const txs = [
-            window.bridge.interBtcApi.api.tx.escrow.increaseAmount(
+            window.bridge.api.tx.escrow.increaseAmount(
               variables.amount.toString(variables.amount.currency.rawBase)
             ),
-            window.bridge.interBtcApi.api.tx.escrow.increaseUnlockHeight(unlockHeight)
+            window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
           ];
-          const batch = window.bridge.interBtcApi.api.tx.utility.batchAll(txs);
+          const batch = window.bridge.api.tx.utility.batchAll(txs);
           await DefaultTransactionAPI.sendLogged(
-            window.bridge.interBtcApi.api,
-            window.bridge.interBtcApi.account as AddressOrPair,
+            window.bridge.api,
+            window.bridge.account as AddressOrPair,
             batch
           );
         } else if ( // Only increase amount
           variables.time === 0 &&
           variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
-          return await window.bridge.interBtcApi.escrow.increaseAmount(variables.amount);
+          return await window.bridge.escrow.increaseAmount(variables.amount);
         } else if ( // Only extend lock time
           variables.time > 0 &&
           variables.amount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
-          return await window.bridge.interBtcApi.escrow.increaseUnlockHeight(unlockHeight);
+          return await window.bridge.escrow.increaseUnlockHeight(unlockHeight);
         } else {
           throw new Error('Something went wrong!');
         }

@@ -23,13 +23,12 @@ const ClaimRewardsButton = ({
 
   const claimRewardsMutation = useMutation<void, Error, void>(
     () => {
-      return window.bridge.interBtcApi.escrow.withdrawRewards();
+      return window.bridge.escrow.withdrawRewards();
     },
     {
       onSuccess: () => {
         queryClient.invalidateQueries([
           GENERIC_FETCHER,
-          'interBtcApi',
           'escrow',
           'getRewardEstimate',
           address

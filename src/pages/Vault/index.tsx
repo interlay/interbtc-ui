@@ -99,7 +99,7 @@ const Vault = (): JSX.Element => {
       if (!selectedVaultAddress) return;
 
       try {
-        const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, selectedVaultAddress);
+        const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedVaultAddress);
         const collateralIdLiteral = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
         const wrappedIdLiteral = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
         const [
@@ -110,16 +110,16 @@ const Vault = (): JSX.Element => {
           apyScore,
           issuableAmount
         ] = await Promise.allSettled([
-          window.bridge.interBtcApi.vaults.get(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.vaults.getWrappedReward(
-            newAccountId(window.bridge.interBtcApi.api, selectedVaultAddress),
+          window.bridge.vaults.get(vaultId, collateralIdLiteral),
+          window.bridge.vaults.getWrappedReward(
+            newAccountId(window.bridge.api, selectedVaultAddress),
             collateralIdLiteral,
             wrappedIdLiteral
           ),
-          window.bridge.interBtcApi.vaults.getIssuedAmount(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.vaults.getVaultCollateralization(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.vaults.getAPY(vaultId, collateralIdLiteral),
-          window.bridge.interBtcApi.issue.getVaultIssuableAmount(vaultId, collateralIdLiteral)
+          window.bridge.vaults.getIssuedAmount(vaultId, collateralIdLiteral),
+          window.bridge.vaults.getVaultCollateralization(vaultId, collateralIdLiteral),
+          window.bridge.vaults.getAPY(vaultId, collateralIdLiteral),
+          window.bridge.issue.getVaultIssuableAmount(vaultId, collateralIdLiteral)
         ]);
 
         if (vault.status === 'fulfilled') {

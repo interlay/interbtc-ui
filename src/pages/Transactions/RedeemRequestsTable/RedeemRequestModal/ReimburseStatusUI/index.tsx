@@ -76,8 +76,8 @@ const ReimburseStatusUI = ({
           punishment,
           btcDotRate
         ] = await Promise.all([
-          window.bridge.interBtcApi.vaults.getPunishmentFee(),
-          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
+          window.bridge.vaults.getPunishmentFee(),
+          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
         const wrappedTokenAmount = request ? request.request.requestedAmountBacking : BitcoinAmount.zero;
         setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
@@ -96,7 +96,7 @@ const ReimburseStatusUI = ({
   // TODO: should type properly (`Relay`)
   const retryMutation = useMutation<void, Error, any>(
     (variables: any) => {
-      return window.bridge.interBtcApi.redeem.cancel(variables.id, false);
+      return window.bridge.redeem.cancel(variables.id, false);
     },
     {
       onSuccess: () => {
@@ -115,7 +115,7 @@ const ReimburseStatusUI = ({
   // TODO: should type properly (`Relay`)
   const reimburseMutation = useMutation<void, Error, any>(
     (variables: any) => {
-      return window.bridge.interBtcApi.redeem.cancel(variables.id, true);
+      return window.bridge.redeem.cancel(variables.id, true);
     },
     {
       onSuccess: () => {

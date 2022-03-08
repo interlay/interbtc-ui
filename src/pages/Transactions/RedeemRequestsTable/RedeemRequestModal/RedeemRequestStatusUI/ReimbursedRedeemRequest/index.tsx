@@ -64,8 +64,8 @@ const ReimbursedRedeemRequest = ({
           punishmentFee,
           btcDotRate
         ] = await Promise.all([
-          window.bridge.interBtcApi.vaults.getPunishmentFee(),
-          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
+          window.bridge.vaults.getPunishmentFee(),
+          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
 
         const burnedBTCAmount = request.request.requestedAmountBacking.add(request.bridgeFee);

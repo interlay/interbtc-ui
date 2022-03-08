@@ -63,7 +63,6 @@ const ReceivedIssueRequest = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'btcRelay',
       'getStableParachainConfirmations'
     ],
@@ -82,7 +81,6 @@ const ReceivedIssueRequest = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'system',
       'getCurrentActiveBlockNumber'
     ],

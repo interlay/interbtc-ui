@@ -57,8 +57,8 @@ const RetriedRedeemRequest = ({
           punishmentFee,
           btcDotRate
         ] = await Promise.all([
-          window.bridge.interBtcApi.vaults.getPunishmentFee(),
-          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN)
+          window.bridge.vaults.getPunishmentFee(),
+          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
 
         const btcAmount = request.request.requestedAmountBacking;

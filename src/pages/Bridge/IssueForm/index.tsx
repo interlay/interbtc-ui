@@ -113,8 +113,8 @@ const IssueForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
-  const [feeRate, setFeeRate] = React.useState(0.005); // Set default to 0.5%
-  const [depositRate, setDepositRate] = React.useState(0.00005); // Set default to 0.005%
+  const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
+  const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<
       Bitcoin,
@@ -148,13 +148,13 @@ const IssueForm = (): JSX.Element | null => {
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
-          window.bridge.interBtcIndex.getIssueFee(),
-          window.bridge.interBtcIndex.getIssueGriefingCollateral(),
-          window.bridge.interBtcIndex.getIssuePeriod(),
-          window.bridge.interBtcIndex.getDustValue(),
-          window.bridge.interBtcApi.oracle.getExchangeRate(GOVERNANCE_TOKEN),
+          window.bridge.fee.getIssueFee(),
+          window.bridge.fee.getIssueGriefingCollateralRate(),
+          window.bridge.issue.getIssuePeriod(),
+          window.bridge.issue.getDustValue(),
+          window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
           // This data (the vaults) is strictly required to request issue
-          window.bridge.interBtcApi.vaults.getVaultsWithIssuableTokens()
+          window.bridge.vaults.getVaultsWithIssuableTokens()
         ]);
         setStatus(STATUSES.RESOLVED);
 
@@ -252,7 +252,7 @@ const IssueForm = (): JSX.Element | null => {
       try {
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
         setSubmitStatus(STATUSES.PENDING);
-        const result = await window.bridge.interBtcApi.issue.request(wrappedTokenAmount);
+        const result = await window.bridge.issue.request(wrappedTokenAmount);
         // TODO: handle issue aggregation
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);
