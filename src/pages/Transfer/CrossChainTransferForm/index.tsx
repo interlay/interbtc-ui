@@ -44,7 +44,9 @@ const CrossChainTransferForm = (): JSX.Element => {
           </p>
         </div>
         <div>
-          <TokenField label={COLLATERAL_TOKEN_SYMBOL} />
+          <TokenField
+            label={COLLATERAL_TOKEN_SYMBOL}
+            approxUSD='≈ $ 0' />
         </div>
         <Chains label={t('transfer_page.cross_chain_transfer_form.from_chain')} />
       </div>
