@@ -39,7 +39,6 @@ const BlockstreamCard = (): JSX.Element => {
   } = useQuery<string, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'electrsAPI',
       'getLatestBlock'
     ],

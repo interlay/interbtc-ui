@@ -55,7 +55,6 @@ const OracleTable = (): JSX.Element => {
   } = useQuery<Map<string, string>, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'oracle',
       'getSourcesById'
     ],
@@ -74,7 +73,6 @@ const OracleTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'oracle',
       'getOnlineTimeout'
     ],

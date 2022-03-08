@@ -8,8 +8,8 @@ export default async function fetchBtcRelayAndBitcoinHeight(dispatch: Dispatch, 
   if (!bridgeLoaded) return;
 
   try {
-    const latestBtcRelayHeight = Number(await window.bridge.interBtcApi.btcRelay.getLatestBlockHeight());
-    const latestBitcoinHeight = await window.bridge.interBtcApi.electrsAPI.getLatestBlockHeight();
+    const latestBtcRelayHeight = Number(await window.bridge.btcRelay.getLatestBlockHeight());
+    const latestBitcoinHeight = await window.bridge.electrsAPI.getLatestBlockHeight();
 
     // update store only if there is a difference between the latest heights and current heights
     if (btcRelayHeight !== latestBtcRelayHeight || bitcoinHeight !== latestBitcoinHeight) {

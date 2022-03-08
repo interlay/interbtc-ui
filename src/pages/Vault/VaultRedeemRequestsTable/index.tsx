@@ -66,8 +66,8 @@ const VaultRedeemRequestsTable = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getBtcConfirmations'
+      'btcRelay',
+      'getStableBitcoinConfirmations'
     ],
     genericFetcher<number>(),
     {
@@ -84,8 +84,8 @@ const VaultRedeemRequestsTable = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'latestParachainActiveBlock'
+      'system',
+      'getCurrentActiveBlockNumber'
     ],
     genericFetcher<number>(),
     {
@@ -102,8 +102,8 @@ const VaultRedeemRequestsTable = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getParachainConfirmations'
+      'btcRelay',
+      'getStableParachainConfirmations'
     ],
     genericFetcher<number>(),
     {

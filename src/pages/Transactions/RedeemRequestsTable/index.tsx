@@ -74,8 +74,8 @@ const RedeemRequestsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getBtcConfirmations'
+      'btcRelay',
+      'getStableBitcoinConfirmations'
     ],
     genericFetcher<number>(),
     {
@@ -92,8 +92,8 @@ const RedeemRequestsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'latestParachainActiveBlock'
+      'system',
+      'getCurrentActiveBlockNumber'
     ],
     genericFetcher<number>(),
     {
@@ -110,8 +110,8 @@ const RedeemRequestsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getParachainConfirmations'
+      'btcRelay',
+      'getStableParachainConfirmations'
     ],
     genericFetcher<number>(),
     {

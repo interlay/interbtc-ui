@@ -46,7 +46,6 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'oracle',
       'getOnlineTimeout'
     ],

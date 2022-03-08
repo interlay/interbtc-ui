@@ -64,7 +64,7 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   return await Promise.all(redeems.map(async redeem => {
     redeem = decodeRedeemValues(redeem);
     redeem.backingPayment = await getTxDetailsForRequest(
-      window.bridge.interBtcApi.electrsAPI,
+      window.bridge.electrsAPI,
       redeem.id,
       redeem.vaultBackingAddress,
       stableBtcConfirmations,
