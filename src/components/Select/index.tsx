@@ -32,7 +32,6 @@ const SelectLabel = ({
     className={clsx(
       'block',
       'text-sm',
-      'font-medium',
       'text-textSecondary',
       'mb-1',
       className
