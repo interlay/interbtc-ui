@@ -2,9 +2,9 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { withErrorBoundary } from 'react-error-boundary';
-import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
@@ -20,33 +20,30 @@ import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
 import SubmitButton from 'components/SubmitButton';
 
-const TRANSFER_AMOUNT = 'transfer-amount';
-
-type CrossChainTransferFormData = {
-  [TRANSFER_AMOUNT]: string;
-}
-
 const CrossChainTransferForm = (): JSX.Element => {
   const [fromChain, setFromChain] = React.useState<ChainOption | undefined>(undefined);
   const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
+  const [targetAccount, setTargetAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const { t } = useTranslation();
+
+  React.useEffect(() => {
+    console.log('targetAccount', targetAccount);
+  }, [targetAccount]);
+
+  React.useEffect(() => {
+    console.log('toChain', toChain);
+  }, [toChain]);
+
+  React.useEffect(() => {
+    console.log('fromChain', fromChain);
+  }, [fromChain]);
 
   const {
     collateralTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
 
-  const onSubmit = (data: CrossChainTransferFormData) => {
-    console.log('form submitted', data, fromChain, toChain);
-  };
-
-  const { handleSubmit } = useForm<CrossChainTransferFormData>({
-    mode: 'onChange'
-  });
-
   return (
-    <form
-      className='space-y-8'
-      onSubmit={handleSubmit(onSubmit)}>
+    <form className='space-y-8'>
       <FormTitle>
         {t('transfer_page.cross_chain_transfer')}
       </FormTitle>
@@ -72,7 +69,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         <Chains callbackFunction={setToChain} />
       </div>
       <div>
-        <Accounts />
+        <Accounts callbackFunction={setTargetAccount} />
       </div>
       <SubmitButton>
           Submit
