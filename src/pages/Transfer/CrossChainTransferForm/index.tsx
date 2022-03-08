@@ -2,15 +2,11 @@
 import { useTranslation } from 'react-i18next';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
-import clsx from 'clsx';
 
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
 import { StoreType } from 'common/types/util.types';
 import { displayMonetaryAmount } from 'common/utils/utils';
+import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import Accounts from 'components/Accounts';
 import Chains from 'components/Chains';
 import TokenField from 'components/TokenField';
@@ -31,18 +27,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         {t('transfer_page.cross_chain_transfer_form.title')}
       </FormTitle>
       <div>
-        <div>
-          <p
-            className={clsx(
-              'mb-2',
-              'text-right',
-              { 'text-interlayDenim':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-              { 'dark:text-kintsugiOchre':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )}>Transferable balance: {displayMonetaryAmount(collateralTokenTransferableBalance)}
-          </p>
-        </div>
+        <AvailableBalanceUI balance={displayMonetaryAmount(collateralTokenTransferableBalance)} />
         <div>
           <TokenField
             label={COLLATERAL_TOKEN_SYMBOL}
