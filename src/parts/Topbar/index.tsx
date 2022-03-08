@@ -55,7 +55,7 @@ const Topbar = (): JSX.Element => {
 
     try {
       const governanceIdLiteral = tickerToCurrencyIdLiteral(GOVERNANCE_TOKEN.ticker) as CollateralIdLiteral;
-      const receiverId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       await window.faucet.fundAccount(receiverId, governanceIdLiteral);
       toast.success('Your account has been funded.');
     } catch (error) {

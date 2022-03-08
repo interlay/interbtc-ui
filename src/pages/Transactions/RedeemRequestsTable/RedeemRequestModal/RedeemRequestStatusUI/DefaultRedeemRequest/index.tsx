@@ -37,8 +37,8 @@ const DefaultRedeemRequest = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getBtcConfirmations'
+      'btcRelay',
+      'getStableBitcoinConfirmations'
     ],
     genericFetcher<number>(),
     {
@@ -55,7 +55,6 @@ const DefaultRedeemRequest = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'btcRelay',
       'getStableParachainConfirmations'
     ],
@@ -74,7 +73,6 @@ const DefaultRedeemRequest = ({
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'system',
       'getCurrentActiveBlockNumber'
     ],

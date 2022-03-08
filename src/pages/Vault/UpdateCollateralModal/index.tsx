@@ -97,7 +97,7 @@ const UpdateCollateralModal = ({
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
+  const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
 
   const {
     isIdle: requiredCollateralTokenAmountIdle,
@@ -107,7 +107,6 @@ const UpdateCollateralModal = ({
   } = useQuery<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getRequiredCollateralForVault',
       vaultId,
@@ -144,7 +143,6 @@ const UpdateCollateralModal = ({
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getVaultCollateralization',
       vaultId,
@@ -165,14 +163,14 @@ const UpdateCollateralModal = ({
       setSubmitStatus(STATUSES.PENDING);
       const collateralTokenAmount = newMonetaryAmount(data[COLLATERAL_TOKEN_AMOUNT], COLLATERAL_TOKEN, true);
       if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
-        await window.bridge.interBtcApi.vaults.depositCollateral(collateralTokenAmount);
+        await window.bridge.vaults.depositCollateral(collateralTokenAmount);
       } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
-        await window.bridge.interBtcApi.vaults.withdrawCollateral(collateralTokenAmount);
+        await window.bridge.vaults.withdrawCollateral(collateralTokenAmount);
       } else {
         throw new Error('Something went wrong!');
       }
 
-      const balanceLockedDOT = (await window.bridge.interBtcApi.tokens.balance(COLLATERAL_TOKEN, vaultId)).reserved;
+      const balanceLockedDOT = (await window.bridge.tokens.balance(COLLATERAL_TOKEN, vaultId)).reserved;
       dispatch(updateCollateralAction(balanceLockedDOT));
 
       if (vaultCollateralization === undefined) {

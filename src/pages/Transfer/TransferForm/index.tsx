@@ -70,7 +70,7 @@ const TransferForm = (): JSX.Element => {
     try {
       setSubmitStatus(STATUSES.PENDING);
 
-      await window.bridge.interBtcApi.tokens.transfer(
+      await window.bridge.tokens.transfer(
         data[RECIPIENT_ADDRESS],
         newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token as Currency<CurrencyUnit>, true)
       );

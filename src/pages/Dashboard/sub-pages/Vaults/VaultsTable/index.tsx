@@ -122,7 +122,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'system',
       'getCurrentActiveBlockNumber'
     ],
@@ -141,7 +140,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getSecureCollateralThreshold',
       COLLATERAL_TOKEN
@@ -161,7 +159,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getLiquidationCollateralThreshold',
       COLLATERAL_TOKEN
@@ -189,7 +186,6 @@ const VaultsTable = (): JSX.Element => {
   >(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'oracle',
       'getExchangeRate',
       COLLATERAL_TOKEN
@@ -216,7 +212,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Array<VaultExt<BitcoinUnit>>, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'list'
     ],

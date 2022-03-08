@@ -112,7 +112,7 @@ const BurnForm = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.bridge.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
+        const theBurnRate = await window.bridge.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
         setBurnRate(theBurnRate);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -146,7 +146,7 @@ const BurnForm = (): JSX.Element | null => {
     const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.bridge.interBtcApi.redeem.burn(
+        await window.bridge.redeem.burn(
           BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]),
           COLLATERAL_TOKEN as CollateralCurrency
         );
