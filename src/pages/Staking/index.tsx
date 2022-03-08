@@ -102,6 +102,8 @@ interface LockingAmountAndTime {
 }
 
 const Staking = (): JSX.Element => {
+  const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -211,7 +213,6 @@ const Staking = (): JSX.Element => {
 
   // Estimated KINT Rewards & APY
   const monetaryLockingAmount = newMonetaryAmount(lockingAmount, GOVERNANCE_TOKEN, true);
-  const blockLockTimeExtension = convertWeeksToBlockNumbers(Number(lockTime));
   const {
     isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
@@ -333,6 +334,10 @@ const Staking = (): JSX.Element => {
       }
     }
   );
+
+  React.useEffect(() => {
+    setBlockLockTimeExtension(Number(lockTime));
+  }, [lockTime]);
 
   React.useEffect(() => {
     reset({
