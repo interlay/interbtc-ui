@@ -34,7 +34,7 @@ const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
     // TODO: should type properly
     return await window.bridge[arg1][arg2](...rest);
   } catch (error) {
-    throw new Error(`Error fetching ${arg1}.${arg2}(). ${error}`);
+    throw new Error(`Error fetching ${queryKey}}). ${error}`);
   }
 };
 
