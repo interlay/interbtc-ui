@@ -27,7 +27,7 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import InterlayPagination from 'components/UI/InterlayPagination';
 import useQueryParams from 'utils/hooks/use-query-params';
-import { BTC_BLOCK_API } from 'config/blockstream-explorer-links';
+import { BTC_EXPLORER_BLOCK_API } from 'config/blockstream-explorer-links';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
@@ -96,7 +96,7 @@ const BlocksTable = (): JSX.Element => {
         Cell: function FormattedCell({ value }: { value: string; }) {
           const hash = stripHexPrefix(value);
           return (
-            <ExternalLink href={`${BTC_BLOCK_API}${hash}`}>
+            <ExternalLink href={`${BTC_EXPLORER_BLOCK_API}${hash}`}>
               {hash}
             </ExternalLink>
           );

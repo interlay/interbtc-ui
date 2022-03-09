@@ -24,7 +24,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
-import { BTC_ADDRESS_API } from 'config/blockstream-explorer-links';
+import { BTC_EXPLORER_ADDRESS_API } from 'config/blockstream-explorer-links';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import {
@@ -158,7 +158,7 @@ const IssueRequestsTable = (): JSX.Element => {
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
           return (
-            <ExternalLink href={`${BTC_ADDRESS_API}${value}`}>
+            <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>
               {shortAddress(value)}
             </ExternalLink>
           );
