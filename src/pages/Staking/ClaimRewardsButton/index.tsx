@@ -15,12 +15,12 @@ import { StoreType } from 'common/types/util.types';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 
 interface CustomProps {
-  rewardsToClaim: string;
+  claimableRewardAmount: string;
 }
 
 const ClaimRewardsButton = ({
   className,
-  rewardsToClaim,
+  claimableRewardAmount,
   ...rest
 }: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
   const { address } = useSelector((state: StoreType) => state.general);
@@ -67,7 +67,7 @@ const ClaimRewardsButton = ({
         onClick={handleClaimRewards}
         pending={claimRewardsMutation.isLoading}
         {...rest}>
-        Claim {rewardsToClaim} {GOVERNANCE_TOKEN_SYMBOL} Rewards
+        Claim {claimableRewardAmount} {GOVERNANCE_TOKEN_SYMBOL} Rewards
       </InterlayDenimOrKintsugiMidnightContainedButton>
       {claimRewardsMutation.isError && (
         <ErrorModal

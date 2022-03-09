@@ -86,7 +86,7 @@ type StakingFormData = {
   [LOCK_TIME]: string;
 }
 
-interface RewardAmountAndAPY {
+interface EstimatedRewardAmountAndAPY {
   amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   apy: Big;
 }
@@ -172,11 +172,11 @@ const Staking = (): JSX.Element => {
 
   // My currently claimable rewards
   const {
-    isIdle: currentRewardAmountIdle,
-    isLoading: currentRewardAmountLoading,
-    data: currentRewardAmount,
-    error: currentRewardAmountError,
-    refetch: currentRewardAmountRefetch
+    isIdle: claimableRewardAmountIdle,
+    isLoading: claimableRewardAmountLoading,
+    data: claimableRewardAmount,
+    error: claimableRewardAmountError,
+    refetch: claimableRewardAmountRefetch
   } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
     [
       GENERIC_FETCHER,
@@ -189,37 +189,37 @@ const Staking = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(currentRewardAmountError);
+  useErrorHandler(claimableRewardAmountError);
 
-  // My Rewards
+  // Governance token Rewards
   const {
     isIdle: rewardAmountAndAPYIdle,
     isLoading: rewardAmountAndAPYLoading,
     data: rewardAmountAndAPY,
     error: rewardAmountAndAPYError,
     refetch: rewardAmountAndAPYRefetch
-  } = useQuery<RewardAmountAndAPY, Error>(
+  } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
       'escrow',
       'getRewardEstimate',
       address
     ],
-    genericFetcher<RewardAmountAndAPY>(),
+    genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(rewardAmountAndAPYError);
 
-  // Estimated KINT Rewards & APY
+  // Estimated governance token Rewards & APY
   const monetaryLockingAmount = newMonetaryAmount(lockingAmount, GOVERNANCE_TOKEN, true);
   const {
     isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
     error: estimatedRewardAmountAndAPYError
-  } = useQuery<RewardAmountAndAPY, Error>(
+  } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
       'escrow',
@@ -228,7 +228,7 @@ const Staking = (): JSX.Element => {
       monetaryLockingAmount,
       blockLockTimeExtension
     ],
-    genericFetcher<RewardAmountAndAPY>(),
+    genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -268,7 +268,7 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         voteGovernanceTokenBalanceRefetch();
         stakedAmountAndEndBlockRefetch();
-        currentRewardAmountRefetch();
+        claimableRewardAmountRefetch();
         rewardAmountAndAPYRefetch();
         reset({
           [LOCKING_AMOUNT]: '0.0',
@@ -326,7 +326,7 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         voteGovernanceTokenBalanceRefetch();
         stakedAmountAndEndBlockRefetch();
-        currentRewardAmountRefetch();
+        claimableRewardAmountRefetch();
         rewardAmountAndAPYRefetch();
         reset({
           [LOCKING_AMOUNT]: '0.0',
@@ -651,18 +651,18 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(estimatedRewardAmountAndAPY.amount);
   };
 
-  const renderRewardsToClaimLabel = () => {
+  const renderClaimableRewardAmountLabel = () => {
     if (
-      currentRewardAmountIdle ||
-      currentRewardAmountLoading
+      claimableRewardAmountIdle ||
+      claimableRewardAmountLoading
     ) {
       return '-';
     }
-    if (currentRewardAmount === undefined) {
+    if (claimableRewardAmount === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return displayMonetaryAmount(currentRewardAmount);
+    return displayMonetaryAmount(claimableRewardAmount);
   };
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -675,7 +675,7 @@ const Staking = (): JSX.Element => {
 
   const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
 
-  const claimRewardsButtonEnabled = currentRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+  const claimRewardsButtonEnabled = claimableRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const unlockFirst =
     stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) &&
@@ -693,8 +693,8 @@ const Staking = (): JSX.Element => {
     currentBlockNumberLoading ||
     voteGovernanceTokenBalanceIdle ||
     voteGovernanceTokenBalanceLoading ||
-    currentRewardAmountIdle ||
-    currentRewardAmountLoading ||
+    claimableRewardAmountIdle ||
+    claimableRewardAmountLoading ||
     rewardAmountAndAPYIdle ||
     rewardAmountAndAPYLoading ||
     estimatedRewardAmountAndAPYIdle ||
@@ -734,7 +734,7 @@ const Staking = (): JSX.Element => {
               voteStakedAmount={renderVoteStakedAmountLabel()}
               rewardAmount={renderRewardAmountLabel()} />
             <ClaimRewardsButton
-              rewardsToClaim={renderRewardsToClaimLabel()}
+              claimableRewardAmount={renderClaimableRewardAmountLabel()}
               disabled={claimRewardsButtonEnabled === false} />
             {stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) && (
               <WithdrawButton
