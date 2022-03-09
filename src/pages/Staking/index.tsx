@@ -102,6 +102,8 @@ interface LockingAmountAndTime {
 }
 
 const Staking = (): JSX.Element => {
+  const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -222,7 +224,8 @@ const Staking = (): JSX.Element => {
       'escrow',
       'getRewardEstimate',
       address,
-      monetaryLockingAmount
+      monetaryLockingAmount,
+      blockLockTimeExtension
     ],
     genericFetcher<RewardAmountAndAPY>(),
     {
@@ -297,7 +300,9 @@ const Staking = (): JSX.Element => {
           await DefaultTransactionAPI.sendLogged(
             window.bridge.api,
             window.bridge.account as AddressOrPair,
-            batch
+            batch,
+            undefined, // don't await success event
+            true // don't wait for finalized blocks
           );
         } else if ( // Only increase amount
           variables.time === 0 &&
@@ -329,6 +334,13 @@ const Staking = (): JSX.Element => {
       }
     }
   );
+
+  React.useEffect(() => {
+    if (!lockTime) return;
+
+    const lockTimeValue = Number(lockTime);
+    setBlockLockTimeExtension(convertWeeksToBlockNumbers(lockTimeValue));
+  }, [lockTime]);
 
   React.useEffect(() => {
     reset({
