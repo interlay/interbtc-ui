@@ -49,7 +49,7 @@ const ConfirmedIssueRequest = ({
       if (!variables.backingPayment.btcTxId) {
         throw new Error('Bitcoin transaction ID not identified yet.');
       }
-      return window.bridge.issue.execute('0x' + variables.id, variables.backingPayment.btcTxId);
+      return window.bridge.issue.execute(variables.id, variables.backingPayment.btcTxId);
     },
     {
       onSuccess: (_, variables) => {
