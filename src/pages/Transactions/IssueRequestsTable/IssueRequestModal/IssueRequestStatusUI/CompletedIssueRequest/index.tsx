@@ -9,7 +9,7 @@ import Ring48, {
   Ring48Value
 } from 'components/Ring48';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { BTC_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import {
   POLKADOT,
   KUSAMA

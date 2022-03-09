@@ -31,7 +31,7 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { BTC_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';

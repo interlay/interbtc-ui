@@ -16,7 +16,7 @@ import Ring64, {
   Ring64Title,
   Ring64Value
 } from 'components/Ring64';
-import { BTC_BLOCK_API } from 'config/bitcoin';
+import { BTC_BLOCK_API } from 'config/blockstream-explorer-links';
 import {
   POLKADOT,
   KUSAMA

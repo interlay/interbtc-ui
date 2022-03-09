@@ -15,7 +15,7 @@ import Ring48, {
   Ring48Title,
   Ring48Value
 } from 'components/Ring48';
-import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { BTC_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import {
   POLKADOT,
   KUSAMA

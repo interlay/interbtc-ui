@@ -28,7 +28,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
-import { BTC_ADDRESS_API } from 'config/bitcoin';
+import { BTC_ADDRESS_API } from 'config/blockstream-explorer-links';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';

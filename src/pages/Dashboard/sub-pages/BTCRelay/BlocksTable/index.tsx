@@ -27,7 +27,7 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import InterlayPagination from 'components/UI/InterlayPagination';
 import useQueryParams from 'utils/hooks/use-query-params';
-import { BTC_BLOCK_API } from 'config/bitcoin';
+import { BTC_BLOCK_API } from 'config/blockstream-explorer-links';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';

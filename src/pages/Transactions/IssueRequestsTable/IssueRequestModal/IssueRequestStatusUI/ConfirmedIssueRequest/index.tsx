@@ -15,7 +15,7 @@ import
 InterlayDenimOrKintsugiMidnightOutlinedButton from
   'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import useQueryParams from 'utils/hooks/use-query-params';
-import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { BTC_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   POLKADOT,
