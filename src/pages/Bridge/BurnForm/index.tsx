@@ -27,7 +27,7 @@ import {
 } from '@interlay/interbtc-api';
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import WrappedTokenField from '../WrappedTokenField';
+import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
@@ -112,7 +112,7 @@ const BurnForm = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.bridge.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
+        const theBurnRate = await window.bridge.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
         setBurnRate(theBurnRate);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -146,7 +146,7 @@ const BurnForm = (): JSX.Element | null => {
     const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.bridge.interBtcApi.redeem.burn(
+        await window.bridge.redeem.burn(
           BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]),
           COLLATERAL_TOKEN as CollateralCurrency
         );
@@ -216,7 +216,7 @@ const BurnForm = (): JSX.Element | null => {
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <WrappedTokenField
+          <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
             name={WRAPPED_TOKEN_AMOUNT}
             label={WRAPPED_TOKEN_SYMBOL}

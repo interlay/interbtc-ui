@@ -36,7 +36,7 @@ interface CustomProps {
 }
 
 // TODO: could be reused
-const textClasses = clsx(
+const TEXT_CLASSES = clsx(
   'group',
   'flex',
   'items-center',
@@ -45,26 +45,26 @@ const textClasses = clsx(
   'rounded-md'
 );
 
-const textClassesForSelected = clsx(
+const TEXT_CLASSES_FOR_SELECTED = clsx(
   { 'text-interlayDenim-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiMidnight-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const textClassesForUnselected = clsx(
+const TEXT_CLASSES_FOR_UNSELECTED = clsx(
   { 'text-interlayTextPrimaryInLightMode':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const textClassesForDisabled = clsx(
+const TEXT_CLASSES_FOR_DISABLED = clsx(
   { 'text-gray-500':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-gray-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const navigationIconClasses = clsx(
+const NAVIGATION_ICON_CLASSES = clsx(
   'flex-shrink-0',
   'w-6',
   'h-6'
@@ -77,7 +77,9 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
+  const {
+    vaultClientLoaded
+  } = useSelector((state: StoreType) => state.general);
 
   const NAVIGATION_ITEMS = React.useMemo(() => {
     return [
@@ -85,6 +87,11 @@ const Navigation = ({
         name: 'nav_transfer',
         link: PAGES.TRANSFER,
         icon: SwitchHorizontalIcon
+      },
+      {
+        name: 'nav_staking',
+        link: PAGES.STAKING,
+        icon: CashIcon
       },
       {
         name: 'nav_bridge',
@@ -96,12 +103,6 @@ const Navigation = ({
         name: 'nav_transactions',
         link: PAGES.TRANSACTIONS,
         icon: ClipboardListIcon,
-        disabled: true
-      },
-      {
-        name: 'nav_staking',
-        link: PAGES.STAKING,
-        icon: CashIcon,
         disabled: true
       },
       {
@@ -183,15 +184,15 @@ const Navigation = ({
             <p
               key={navigationItem.name}
               className={clsx(
-                textClasses,
-                textClassesForDisabled,
+                TEXT_CLASSES,
+                TEXT_CLASSES_FOR_DISABLED,
                 onSmallScreen ? 'text-base' : 'text-sm',
                 'font-light'
               )}>
               <navigationItem.icon
                 className={clsx(
-                  textClassesForDisabled,
-                  navigationIconClasses,
+                  TEXT_CLASSES_FOR_DISABLED,
+                  NAVIGATION_ICON_CLASSES,
                   onSmallScreen ? 'mr-4' : 'mr-3'
                 )}
                 aria-hidden='true' />
@@ -215,31 +216,31 @@ const Navigation = ({
             className={clsx(
               match?.isExact ?
                 clsx(
-                  textClassesForSelected,
+                  TEXT_CLASSES_FOR_SELECTED,
                   { 'bg-interlayHaiti-50':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:bg-white':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ) :
                 clsx(
-                  textClassesForUnselected,
+                  TEXT_CLASSES_FOR_UNSELECTED,
                   { 'hover:bg-interlayHaiti-50':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ),
               onSmallScreen ? 'text-base' : 'text-sm',
-              textClasses,
+              TEXT_CLASSES,
               'font-medium'
 
             )}>
             <navigationItem.icon
               className={clsx(
                 match?.isExact ?
-                  textClassesForSelected :
-                  textClassesForUnselected,
+                  TEXT_CLASSES_FOR_SELECTED :
+                  TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'mr-4' : 'mr-3',
-                navigationIconClasses
+                NAVIGATION_ICON_CLASSES
               )}
               aria-hidden='true' />
             {navigationItem.link === CROWDLOAN_LINK ?

@@ -29,7 +29,7 @@ import {
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
-import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
+import TokenField from 'components/TokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import Toggle from 'components/Toggle';
@@ -158,12 +158,12 @@ const RedeemForm = (): JSX.Element | null => {
           redeemFeeRateResult,
           currentInclusionFeeResult
         ] = await Promise.allSettled([
-          window.bridge.interBtcApi.redeem.getDustValue(),
-          window.bridge.interBtcApi.vaults.getPremiumRedeemVaults(),
-          window.bridge.interBtcIndex.getPremiumRedeemFee(),
-          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
-          window.bridge.interBtcApi.redeem.getFeeRate(),
-          window.bridge.interBtcApi.redeem.getCurrentInclusionFee()
+          window.bridge.redeem.getDustValue(),
+          window.bridge.vaults.getPremiumRedeemVaults(),
+          window.bridge.redeem.getPremiumRedeemFeeRate(),
+          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN),
+          window.bridge.redeem.getFeeRate(),
+          window.bridge.redeem.getCurrentInclusionFee()
         ]);
 
         if (dustValueResult.status === 'rejected') {
@@ -256,7 +256,7 @@ const RedeemForm = (): JSX.Element | null => {
             return;
           }
         } else {
-          const vaults = await window.bridge.interBtcApi.vaults.getVaultsWithRedeemableTokens();
+          const vaults = await window.bridge.vaults.getVaultsWithRedeemableTokens();
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), wrappedTokenAmount);
         }
 
@@ -264,7 +264,7 @@ const RedeemForm = (): JSX.Element | null => {
         const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(vaultId, wrappedTokenAmount.mul(2));
-        const result = await window.bridge.interBtcApi.redeem.request(
+        const result = await window.bridge.redeem.request(
           wrappedTokenAmount,
           data[BTC_ADDRESS],
           vaultId
@@ -349,7 +349,7 @@ const RedeemForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <WrappedTokenField
+          <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
             name={WRAPPED_TOKEN_AMOUNT}
             label={WRAPPED_TOKEN_SYMBOL}

@@ -8,6 +8,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import { useQuery } from 'react-query';
+import { useHistory } from 'react-router-dom';
 import Big from 'big.js';
 import clsx from 'clsx';
 import {
@@ -45,6 +46,10 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+import {
+  PAGES,
+  URL_PARAMETERS
+} from 'utils/constants/links';
 import {
   shortAddress,
   displayMonetaryAmount
@@ -107,6 +112,7 @@ interface Vault {
 const VaultsTable = (): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const history = useHistory();
 
   const {
     isIdle: parachainHeightIdle,
@@ -116,7 +122,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'system',
       'getCurrentActiveBlockNumber'
     ],
@@ -135,7 +140,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getSecureCollateralThreshold',
       COLLATERAL_TOKEN
@@ -155,7 +159,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getLiquidationCollateralThreshold',
       COLLATERAL_TOKEN
@@ -183,7 +186,6 @@ const VaultsTable = (): JSX.Element => {
   >(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'oracle',
       'getExchangeRate',
       COLLATERAL_TOKEN
@@ -210,7 +212,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Array<VaultExt<BitcoinUnit>>, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'list'
     ],
@@ -228,7 +229,12 @@ const VaultsTable = (): JSX.Element => {
         accessor: 'vaultId',
         classNames: [
           'text-left'
-        ]
+        ],
+        Cell: function FormattedCell({ value }: { value: string; }) {
+          return (
+            <>{shortAddress(value)}</>
+          );
+        }
       },
       {
         Header: t('locked_dot', {
@@ -309,15 +315,15 @@ const VaultsTable = (): JSX.Element => {
           'text-left'
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
-          let statusClassName;
+          let statusClasses;
           if (value === constants.VAULT_STATUS_ACTIVE) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayConifer',
               'font-medium'
             );
           }
           if (value === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayCalifornia',
               'font-medium'
             );
@@ -326,14 +332,14 @@ const VaultsTable = (): JSX.Element => {
             value === constants.VAULT_STATUS_THEFT ||
             value === constants.VAULT_STATUS_LIQUIDATED
           ) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayCinnabar',
               'font-medium'
             );
           }
 
           return (
-            <span className={statusClassName}>{value}</span>
+            <span className={statusClasses}>{value}</span>
           );
         }
       }
@@ -393,7 +399,7 @@ const VaultsTable = (): JSX.Element => {
       }
 
       vaults.push({
-        vaultId: shortAddress(vaultExt.id.toString()),
+        vaultId: vaultExt.id.accountId.toString(),
         // TODO: fetch collateral reserved
         lockedBTC: displayMonetaryAmount(settledTokens),
         lockedDOT: displayMonetaryAmount(vaultCollateral),
@@ -438,6 +444,10 @@ const VaultsTable = (): JSX.Element => {
       );
     }
 
+    const handleRowClick = (vaultId: string) => () => {
+      history.push(PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ADDRESS}`, vaultId));
+    };
+
     return (
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
@@ -481,9 +491,21 @@ const VaultsTable = (): JSX.Element => {
           {rows.map((row: any) => {
             prepareRow(row);
 
+            const {
+              key,
+              className: rowClassName,
+              ...restRowProps
+            } = row.getRowProps();
+
             return (
-              // eslint-disable-next-line react/jsx-key
-              <InterlayTr {...row.getRowProps()}>
+              <InterlayTr
+                key={key}
+                className={clsx(
+                  rowClassName,
+                  'cursor-pointer'
+                )}
+                {...restRowProps}
+                onClick={handleRowClick(row.original.vaultId)}>
                 {/* TODO: should type properly */}
                 {row.cells.map((cell: any) => {
                   return (

@@ -1,5 +1,5 @@
 
-const BLOCK_TIME = 6; // Seconds
+const BLOCK_TIME = 12; // Seconds
 
 // Number of blocks before we prevent issue and redeem requests
 const BLOCKS_BEHIND_LIMIT = 6;

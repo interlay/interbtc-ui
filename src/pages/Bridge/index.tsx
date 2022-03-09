@@ -81,7 +81,7 @@ const Bridge = (): JSX.Element | null => {
     if (!bridgeLoaded) return;
     (async () => {
       try {
-        const maxBurnableTokens = await window.bridge.interBtcApi.redeem.getMaxBurnableTokens(
+        const maxBurnableTokens = await window.bridge.redeem.getMaxBurnableTokens(
           COLLATERAL_TOKEN as CollateralCurrency
         );
         setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));

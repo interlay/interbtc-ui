@@ -7,7 +7,7 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 
-const focusStyling = clsx(
+const FOCUS_CLASSES = clsx(
   'focus:outline-none',
   'focus:ring',
   { 'focus:border-interlayDenim-300':
@@ -30,7 +30,7 @@ const InterlayPagination = ({
       breakLabel='...'
       onPageChange={onPageChange}
       breakLinkClassName={clsx(
-        focusStyling,
+        FOCUS_CLASSES,
         'px-4',
         'py-2'
       )}
@@ -59,7 +59,7 @@ const InterlayPagination = ({
         'select-none'
       )}
       previousLinkClassName={clsx(
-        focusStyling,
+        FOCUS_CLASSES,
         'px-4',
         'py-2'
       )}
@@ -81,7 +81,7 @@ const InterlayPagination = ({
         'font-medium'
       )}
       pageLinkClassName={clsx(
-        focusStyling,
+        FOCUS_CLASSES,
         'px-4',
         'py-2'
       )}
@@ -103,7 +103,7 @@ const InterlayPagination = ({
         'font-medium'
       )}
       nextLinkClassName={clsx(
-        focusStyling,
+        FOCUS_CLASSES,
         'px-4',
         'py-2'
       )}
@@ -125,7 +125,7 @@ const InterlayPagination = ({
         'font-medium'
       )}
       activeLinkClassName={clsx(
-        focusStyling,
+        FOCUS_CLASSES,
         'px-4',
         'py-2'
       )}

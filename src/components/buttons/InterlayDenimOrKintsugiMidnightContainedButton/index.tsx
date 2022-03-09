@@ -63,15 +63,16 @@ const InterlayDenimOrKintsugiMidnightContainedButton = React.forwardRef<Ref, Pro
           'dark:text-white',
           'dark:text-opacity-30'
         ) : clsx(
-          'text-white',
           {
             [clsx(
+              'text-white',
               'bg-interlayDenim',
               'hover:bg-interlayDenim-600'
             )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
           },
           {
             [clsx(
+              'text-mineShaft',
               'dark:bg-kintsugiSupernova',
               'dark:hover:bg-kintsugiSupernova-600'
             )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
