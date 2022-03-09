@@ -16,6 +16,7 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
+import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
 
 interface Props {
@@ -79,9 +80,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           <InterlayRouterLink to={PAGES.HOME}>
             <WrappedTokenLogoWithTextIcon width={141.6} />
           </InterlayRouterLink>
-          {/* ray test touch << */}
-          {process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' && (
-          // ray test touch >>
+          {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
             <TestNetBadge className='ml-2' />
           )}
         </div>

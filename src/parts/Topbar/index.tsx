@@ -32,6 +32,7 @@ import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
 // FIXME: name clash for constants so had to use relative path
 import * as constants from '../../constants';
+import { BitcoinNetwork } from 'types/bitcoin';
 
 // TODO: could create a specific prop
 const SMALL_SIZE_BUTTON_CLASSES = clsx(
@@ -130,9 +131,7 @@ const Topbar = (): JSX.Element => {
               </InterlayDefaultContainedButton>
             ) : (
               <>
-                {/* ray test touch << */}
-                {process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' && (
-                // ray test touch >>
+                {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
                   <>
                     <InterlayLink
                       className='hover:no-underline'

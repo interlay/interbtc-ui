@@ -1,4 +1,8 @@
-import { payments, networks } from 'bitcoinjs-lib';
+import {
+  payments,
+  networks
+} from 'bitcoinjs-lib';
+import Big from 'big.js';
 import {
   Issue,
   Redeem,
@@ -6,15 +10,16 @@ import {
   InterbtcPrimitivesVaultId
 } from '@interlay/interbtc-api';
 import {
-  NUMERIC_STRING_REGEX,
-  PARACHAIN_URL
-} from '../../constants';
-import Big from 'big.js';
-import {
   BitcoinAmount,
   Currency,
   MonetaryAmount
 } from '@interlay/monetary-js';
+
+import {
+  NUMERIC_STRING_REGEX,
+  PARACHAIN_URL
+} from '../../constants';
+import { BitcoinNetwork } from 'types/bitcoin';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
@@ -122,10 +127,7 @@ const requestsInStore = (
 
 const btcAddressFromEventToString = (
   addressObject: string,
-  // ray test touch <<
-  // TODO: hardcoded
-  network: 'mainnet' | 'regtest' | 'testnet'
-  // ray test touch >>
+  network: BitcoinNetwork
 ): string => {
   const parsedAddress = JSON.parse(addressObject);
   const hexHash = Object.values<string>(parsedAddress)[0];
@@ -153,10 +155,7 @@ const btcAddressFromEventToString = (
   return (
     payment({
       hash,
-      // ray test touch <<
-      // TODO: hardcoded
-      network: networks[network === 'mainnet' ? 'bitcoin' : network]
-      // ray test touch >>
+      network: networks[network === BitcoinNetwork.Mainnet ? 'bitcoin' : network]
     }).address || ''
   );
 };
