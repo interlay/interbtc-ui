@@ -1,26 +1,20 @@
 
-// ray test touch <<
 import { BITCOIN_NETWORK } from '../constants';
 import { BitcoinNetwork } from 'types/bitcoin';
-// ray test touch >>
 
 const BTC_EXPLORER_BLOCK_API = 'https://blockstream.info/block/';
-// ray test touch <<
 const BTC_TEST_EXPLORER_BLOCK_API = 'https://blockstream.info/testnet/block/';
-// ray test touch >>
 
 const BTC_EXPLORER_ADDRESS_API = 'https://blockstream.info/address/';
-// ray test touch <<
 const BTC_TEST_EXPLORER_ADDRESS_API = 'https://blockstream.info/testnet/address/';
-// ray test touch >>
 
 const BTC_EXPLORER_TRANSACTION_API = 'https://blockstream.info/tx/';
-// ray test touch <<
 const BTC_TEST_EXPLORER_TRANSACTION_API = 'https://blockstream.info/testnet/tx/';
-// ray test touch >>
 
-// ray test touch <<
 const BTC_MAINNET = BITCOIN_NETWORK === BitcoinNetwork.Mainnet;
+// ray test touch <<
+console.log('ray : ***** BITCOIN_NETWORK => ', BITCOIN_NETWORK);
+console.log('ray : ***** process.env.REACT_APP_BITCOIN_NETWORK => ', process.env.REACT_APP_BITCOIN_NETWORK);
 // ray test touch >>
 
 const BTC_BLOCK_API = BTC_MAINNET ? BTC_EXPLORER_BLOCK_API : BTC_TEST_EXPLORER_BLOCK_API;

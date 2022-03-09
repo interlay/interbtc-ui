@@ -17,24 +17,20 @@ const BTC_TRANSACTION_ID_REGEX = /[a-fA-F0-9]{64}/;
 // regex for validating input strings as numbers
 const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
 
-// ray test touch <<
 const BITCOIN_NETWORK = (
   process.env.REACT_APP_BITCOIN_NETWORK ||
   BitcoinNetwork.Testnet
 ) as BitcoinNetwork;
-// ray test touch >>
 const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || 'http://localhost:3002';
 
 const STORE_NAME = 'pbtc-store-2';
 
-// ray test touch <<
 const BTC_ADDRESS_REGEX =
   BITCOIN_NETWORK === BitcoinNetwork.Mainnet ?
     BTC_MAINNET_REGEX :
     BITCOIN_NETWORK === BitcoinNetwork.Testnet ?
       BTC_TESTNET_REGEX :
       BTC_REGTEST_REGEX;
-// ray test touch >>
 
 const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
 const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
