@@ -1,7 +1,7 @@
 
 // ray test touch <<
-// TODO: (https://github.com/interlay/polkabtc-ui/pull/212#discussion_r619005713)
-const BTC_MAINNET = false;
+import { BITCOIN_NETWORK } from '../constants';
+import { BitcoinNetwork } from 'types/bitcoin';
 // ray test touch >>
 
 const BTC_EXPLORER_BLOCK_API = 'https://blockstream.info/block/';
@@ -17,6 +17,10 @@ const BTC_TEST_EXPLORER_ADDRESS_API = 'https://blockstream.info/testnet/address/
 const BTC_EXPLORER_TRANSACTION_API = 'https://blockstream.info/tx/';
 // ray test touch <<
 const BTC_TEST_EXPLORER_TRANSACTION_API = 'https://blockstream.info/testnet/tx/';
+// ray test touch >>
+
+// ray test touch <<
+const BTC_MAINNET = BITCOIN_NETWORK === BitcoinNetwork.Mainnet;
 // ray test touch >>
 
 const BTC_BLOCK_API = BTC_MAINNET ? BTC_EXPLORER_BLOCK_API : BTC_TEST_EXPLORER_BLOCK_API;
