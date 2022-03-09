@@ -283,7 +283,9 @@ const App = (): JSX.Element => {
         }, 3000);
         await loadInterBtc();
         // Only load faucet on testnet
+        // ray test touch <<
         if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
+        // ray test touch >>
           await loadFaucet();
         }
       } catch (error) {

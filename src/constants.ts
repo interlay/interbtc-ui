@@ -14,20 +14,24 @@ const BTC_TRANSACTION_ID_REGEX = /[a-fA-F0-9]{64}/;
 // regex for validating input strings as numbers
 const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
 
+// ray test touch <<
 const BITCOIN_NETWORK = (process.env.REACT_APP_BITCOIN_NETWORK || 'testnet') as
   | 'mainnet'
   | 'testnet'
   | 'regtest';
+// ray test touch >>
 const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || 'http://localhost:3002';
 
 const STORE_NAME = 'pbtc-store-2';
 
+// ray test touch <<
 const BTC_ADDRESS_REGEX =
   BITCOIN_NETWORK === 'mainnet' ?
     BTC_MAINNET_REGEX :
     BITCOIN_NETWORK === 'testnet' ?
       BTC_TESTNET_REGEX :
       BTC_REGTEST_REGEX;
+// ray test touch >>
 
 const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
 const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
@@ -46,7 +50,9 @@ const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 //      const rawSs58Format = await (await api.rpc.system.properties()).ss58Format;
 //      const ss58Format = parseInt(rawSs58Format.unwrapOr('42').toString());
 let ss58Format;
+// ray test touch <<
 if (BITCOIN_NETWORK === 'mainnet') {
+// ray test touch >>
   // kintsugi
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama') {
     ss58Format = 2092;

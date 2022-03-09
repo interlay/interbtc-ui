@@ -79,7 +79,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           <InterlayRouterLink to={PAGES.HOME}>
             <WrappedTokenLogoWithTextIcon width={141.6} />
           </InterlayRouterLink>
+          {/* ray test touch << */}
           {process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' && (
+          // ray test touch >>
             <TestNetBadge className='ml-2' />
           )}
         </div>

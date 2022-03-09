@@ -130,7 +130,9 @@ const Topbar = (): JSX.Element => {
               </InterlayDefaultContainedButton>
             ) : (
               <>
+                {/* ray test touch << */}
                 {process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' && (
+                // ray test touch >>
                   <>
                     <InterlayLink
                       className='hover:no-underline'

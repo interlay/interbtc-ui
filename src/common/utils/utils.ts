@@ -122,8 +122,10 @@ const requestsInStore = (
 
 const btcAddressFromEventToString = (
   addressObject: string,
+  // ray test touch <<
   // TODO: hardcoded
   network: 'mainnet' | 'regtest' | 'testnet'
+  // ray test touch >>
 ): string => {
   const parsedAddress = JSON.parse(addressObject);
   const hexHash = Object.values<string>(parsedAddress)[0];
@@ -151,8 +153,10 @@ const btcAddressFromEventToString = (
   return (
     payment({
       hash,
+      // ray test touch <<
       // TODO: hardcoded
       network: networks[network === 'mainnet' ? 'bitcoin' : network]
+      // ray test touch >>
     }).address || ''
   );
 };
