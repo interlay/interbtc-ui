@@ -15,7 +15,7 @@ import
 InterlayDenimOrKintsugiMidnightOutlinedButton from
   'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import useQueryParams from 'utils/hooks/use-query-params';
-import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   POLKADOT,
@@ -100,7 +100,7 @@ const ConfirmedIssueRequest = ({
         </p>
         <ExternalLink
           className='text-sm'
-          href={`${BTC_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
+          href={`${BTC_EXPLORER_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
           {t('issue_page.view_on_block_explorer')}
         </ExternalLink>
         <p
