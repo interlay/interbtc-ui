@@ -9,7 +9,7 @@ import {
 const PARACHAIN_URL = 'wss://kusama-rpc.polkadot.io';
 
 // Initial function transfers KSM from kusama -> kintsugi
-// this will be extended to
+// this will be extended to handle the reverse
 const xcmTransfer = async (): Promise<void> => {
   const api = await createSubstrateAPI(PARACHAIN_URL);
   const transactionAPI = new DefaultTransactionAPI(api, window.bridge.account);
@@ -18,21 +18,28 @@ const xcmTransfer = async (): Promise<void> => {
     v1: api.createType('XcmV1MultiLocation', {
       parents: 0,
       interior: api.createType('XcmV1MultilocationJunctions', {
-        x2: [
-          api.createType('XcmV1Junction', {
-            parachain: 2092
-          }),
-          api.createType('XcmV1Junction', {
-            accountId32: {
-              network: api.createType('XcmV0JunctionNetworkId', { any: true }),
-              id: window.bridge.account
-            }
-          })]
+        x1: api.createType('XcmV1Junction', {
+          parachain: 2092
+        })
       })
     })
   });
 
-  console.log('api', api, 'transactionAPI', transactionAPI, 'dest', dest);
+  const benificiary = api.createType('XcmVersionedMultiLocation', {
+    v1: api.createType('XcmV1MultiLocation', {
+      parents: 0,
+      interior: api.createType('XcmV1MultilocationJunctions', {
+        x1: api.createType('XcmV1Junction', {
+          accountId32: {
+            network: api.createType('XcmV0JunctionNetworkId', { any: true }),
+            id: window.bridge.account
+          }
+        })
+      })
+    })
+  });
+
+  console.log('api', api, 'transactionAPI', transactionAPI, 'dest', dest, 'benificiary', benificiary);
 };
 
 export { xcmTransfer };
