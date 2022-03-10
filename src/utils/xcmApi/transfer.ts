@@ -55,9 +55,8 @@ const createAssets = (api: ApiPromise, transferAmount: XCMTransferAmount) => {
   });
 };
 
+// Originating account is passed into avoid creating a dependency on the interBTC api instance
 const xcmTransfer = async (
-  // Pass this in explicitly to avoid creating
-  // a dependency on the interBTC api instance
   originatingAccount: AddressOrPair,
   destinationAddress: string,
   transferAmount: XCMTransferAmount
