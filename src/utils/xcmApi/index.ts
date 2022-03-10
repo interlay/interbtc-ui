@@ -14,6 +14,19 @@ import {
   RELAYCHAIN_URL,
   RELAYCHAIN_ID
 } from '../../constants';
+import { ApiPromise } from '@polkadot/api';
+
+const createRelayChainApi = async (): Promise<ApiPromise | undefined> => {
+  let api;
+
+  try {
+    api = await createSubstrateAPI(RELAYCHAIN_URL);
+  } catch (error) {
+    console.log('[loadRelayChainApi] error.message => ', error.message);
+  }
+
+  return api;
+};
 
 const xcmTransfer = async (
   // Pass this in explicitly to avoid creating
@@ -22,8 +35,11 @@ const xcmTransfer = async (
   destinationAddress: string,
   transferAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
 ): Promise<void> => {
-  // Create api and transaction api instances on the relaychain
-  const api = await createSubstrateAPI(RELAYCHAIN_URL);
+  const api = await createRelayChainApi();
+
+  if (!api) return;
+
+  // Create transaction api instance on the relaychain
   const transactionApi = new DefaultTransactionAPI(api, originatingAccount);
 
   // These functions are nested to avoid having to pass the api object
