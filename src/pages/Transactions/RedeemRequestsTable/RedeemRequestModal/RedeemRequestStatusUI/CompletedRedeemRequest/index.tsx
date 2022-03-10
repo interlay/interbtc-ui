@@ -8,7 +8,7 @@ import Ring48, {
   Ring48Title,
   Ring48Value
 } from 'components/Ring48';
-import { BTC_TRANSACTION_API } from 'config/bitcoin';
+import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import {
   POLKADOT,
   KUSAMA
@@ -78,7 +78,7 @@ const CompletedRedeemRequest = ({
       </p>
       <ExternalLink
         className='text-sm'
-        href={`${BTC_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
+        href={`${BTC_EXPLORER_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
         {t('issue_page.view_on_block_explorer')}
       </ExternalLink>
     </RequestWrapper>

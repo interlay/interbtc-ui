@@ -16,7 +16,7 @@ import Ring64, {
   Ring64Title,
   Ring64Value
 } from 'components/Ring64';
-import { BTC_BLOCK_API } from 'config/bitcoin';
+import { BTC_EXPLORER_BLOCK_API } from 'config/blockstream-explorer-links';
 import {
   POLKADOT,
   KUSAMA
@@ -61,7 +61,7 @@ const BlockstreamCard = (): JSX.Element => {
           rightPart={
             <>
               <ExternalLink
-                href={`${BTC_BLOCK_API}${blockstreamTip}`}
+                href={`${BTC_EXPLORER_BLOCK_API}${blockstreamTip}`}
                 className={clsx(
                   'text-sm',
                   'font-medium'

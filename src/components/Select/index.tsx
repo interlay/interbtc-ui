@@ -30,11 +30,8 @@ const SelectLabel = ({
 }: SelectLabelProps): JSX.Element => (
   <Listbox.Label
     className={clsx(
-      'block',
-      'text-sm',
-      'font-medium',
-      'text-textSecondary',
-      'mb-1',
+      { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       className
     )}
     {...rest} />
