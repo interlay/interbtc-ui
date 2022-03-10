@@ -1,30 +1,41 @@
 import {
   createSubstrateAPI,
-  DefaultTransactionAPI,
-  newMonetaryAmount
+  CollateralUnit,
+  DefaultTransactionAPI
 } from '@interlay/interbtc-api';
-import { Kusama } from '@interlay/monetary-js';
+import {
+  Currency,
+  MonetaryAmount
+} from '@interlay/monetary-js';
 import { web3FromAddress } from '@polkadot/extension-dapp';
+import { AddressOrPair } from '@polkadot/api/types';
 
-// import { PARACHAIN_URL } from '../../constants';
+import {
+  RELAYCHAIN_URL,
+  RELAYCHAIN_ID
+} from '../../constants';
 
-// TODO: move this to config
-const PARACHAIN_URL = 'wss://kusama-rpc.polkadot.io';
+const xcmTransfer = async (
+  // Pass this in explicitly to avoid creating
+  // a dependency on the interBCT api instance
+  originatingAccount: AddressOrPair,
+  destinationAddress: string,
+  transferAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
+): Promise<void> => {
+  // Create api and transaction api instances on the parachain
+  const api = await createSubstrateAPI(RELAYCHAIN_URL);
+  const transactionApi = new DefaultTransactionAPI(api, originatingAccount);
 
-// Initial function transfers KSM from kusama -> kintsugi
-// this will be extended to handle the reverse
-const xcmTransfer = async (): Promise<void> => {
-  const api = await createSubstrateAPI(PARACHAIN_URL);
-  const destinationAddress = '14mJeAo9uZiqyVF7M9DMEYWSnJqGLsPpmxiCcJX8NHjaxcX9'; // Test2
-
-  const transactionAPI = new DefaultTransactionAPI(api, window.bridge.account);
+  // Signer needs to be set explicitly for the new api
+  const { signer } = await web3FromAddress(originatingAccount.toString());
+  api.setSigner(signer);
 
   const dest = api.createType('XcmVersionedMultiLocation', {
     v1: api.createType('XcmV1MultiLocation', {
       parents: 0,
       interior: api.createType('XcmV1MultilocationJunctions', {
         x1: api.createType('XcmV1Junction', {
-          parachain: 2092
+          parachain: RELAYCHAIN_ID
         })
       })
     })
@@ -55,19 +66,13 @@ const xcmTransfer = async (): Promise<void> => {
         })
       }),
       fun: api.createType('XcmV1MultiassetFungibility', {
-        fungible: newMonetaryAmount(0.1, Kusama)
+        fungible: transferAmount.toString(transferAmount.currency.rawBase)
       })
     }])
   });
 
-  if (window.bridge.account) {
-    // Signer needs to be explicitly set for this instance of the api
-    const { signer } = await web3FromAddress(window.bridge.account.toString());
-    api.setSigner(signer);
-
-    const xcmTransaction = api.tx.xcmPallet.reserveTransferAssets(dest, beneficiary, assets, 0);
-    await transactionAPI.sendLogged(xcmTransaction, undefined, undefined);
-  }
+  const xcmTransaction = api.tx.xcmPallet.reserveTransferAssets(dest, beneficiary, assets, 0);
+  await transactionApi.sendLogged(xcmTransaction, undefined, undefined);
 };
 
 export { xcmTransfer };
