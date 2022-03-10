@@ -1,7 +1,9 @@
 import {
   createSubstrateAPI,
-  DefaultTransactionAPI
+  DefaultTransactionAPI,
+  newMonetaryAmount
 } from '@interlay/interbtc-api';
+import { Kusama } from '@interlay/monetary-js';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 
 // import { PARACHAIN_URL } from '../../constants';
@@ -13,7 +15,7 @@ const PARACHAIN_URL = 'wss://kusama-rpc.polkadot.io';
 // this will be extended to handle the reverse
 const xcmTransfer = async (): Promise<void> => {
   const api = await createSubstrateAPI(PARACHAIN_URL);
-  const destinationAddress = '0xd43593c715fdd31c61141abd04a99fd6822c8558854ccde39a5684e7a56da27d'; // Alice
+  const destinationAddress = '14mJeAo9uZiqyVF7M9DMEYWSnJqGLsPpmxiCcJX8NHjaxcX9'; // Test2
 
   const transactionAPI = new DefaultTransactionAPI(api, window.bridge.account);
 
@@ -53,7 +55,7 @@ const xcmTransfer = async (): Promise<void> => {
         })
       }),
       fun: api.createType('XcmV1MultiassetFungibility', {
-        fungible: 0
+        fungible: newMonetaryAmount(0.1, Kusama)
       })
     }])
   });
