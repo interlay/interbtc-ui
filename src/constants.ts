@@ -33,9 +33,7 @@ const BTC_ADDRESS_REGEX =
       BTC_REGTEST_REGEX;
 
 const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
-// TODO: the fallback to an empty string is to prevent a type error when
-// calling the relaychain api. This should be handled better.
-const RELAYCHAIN_URL = process.env.REACT_APP_RELAYCHAIN_URL || '';
+const RELAYCHAIN_URL = process.env.REACT_APP_RELAYCHAIN_URL;
 const RELAYCHAIN_ID = process.env.REACT_APP_RELAYCHAIN_ID;
 const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
 const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';

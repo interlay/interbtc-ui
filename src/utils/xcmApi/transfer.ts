@@ -1,5 +1,4 @@
 import {
-  createSubstrateAPI,
   CollateralUnit,
   DefaultTransactionAPI
 } from '@interlay/interbtc-api';
@@ -10,23 +9,8 @@ import {
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { AddressOrPair } from '@polkadot/api/types';
 
-import {
-  RELAYCHAIN_URL,
-  RELAYCHAIN_ID
-} from '../../constants';
-import { ApiPromise } from '@polkadot/api';
-
-const createRelayChainApi = async (): Promise<ApiPromise | undefined> => {
-  let api;
-
-  try {
-    api = await createSubstrateAPI(RELAYCHAIN_URL);
-  } catch (error) {
-    console.log('[loadRelayChainApi] error.message => ', error.message);
-  }
-
-  return api;
-};
+import { RELAYCHAIN_ID } from '../../constants';
+import { createRelayChainApi } from './createRelayChainApi';
 
 const xcmTransfer = async (
   // Pass this in explicitly to avoid creating
