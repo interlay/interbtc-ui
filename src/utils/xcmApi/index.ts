@@ -17,7 +17,7 @@ import {
 
 const xcmTransfer = async (
   // Pass this in explicitly to avoid creating
-  // a dependency on the interBCT api instance
+  // a dependency on the interBTC api instance
   originatingAccount: AddressOrPair,
   destinationAddress: string,
   transferAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
