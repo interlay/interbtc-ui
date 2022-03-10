@@ -3,9 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 
-import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
-import { StoreType } from 'common/types/util.types';
-import { displayMonetaryAmount } from 'common/utils/utils';
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import Accounts from 'components/Accounts';
 import Chains from 'components/Chains';
@@ -13,6 +10,9 @@ import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
 import SubmitButton from 'components/SubmitButton';
+import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import { displayMonetaryAmount } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
 
 const CrossChainTransferForm = (): JSX.Element => {
   const { t } = useTranslation();
