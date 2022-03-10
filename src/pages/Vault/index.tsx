@@ -71,7 +71,7 @@ const Vault = (): JSX.Element => {
     apy
   } = useSelector((state: StoreType) => state.vault);
   const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
-  const [feesEarnedPolkaBTC, setFeesEarnedPolkaBTC] = React.useState(BitcoinAmount.zero);
+  const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -129,7 +129,7 @@ const Vault = (): JSX.Element => {
         }
 
         if (feesPolkaBTC.status === 'fulfilled') {
-          setFeesEarnedPolkaBTC(feesPolkaBTC.value);
+          setFeesEarnedInterBTC(feesPolkaBTC.value);
         }
 
         if (lockedAmountBTC.status === 'fulfilled') {
@@ -168,7 +168,7 @@ const Vault = (): JSX.Element => {
       title: t('vault.fees_earned_interbtc', {
         wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
       }),
-      value: displayMonetaryAmount(feesEarnedPolkaBTC)
+      value: displayMonetaryAmount(feesEarnedInterBTC)
     },
     {
       title: t('vault.locked_dot', {
@@ -190,12 +190,14 @@ const Vault = (): JSX.Element => {
       title: t('apy'),
       value: `≈${safeRoundTwoDecimals(apy)}%`
     },
+    // ray test touch <<
     {
       title: t('vault.rewards_earned_governance_token_symbol', {
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
       }),
       value: ''
     }
+    // ray test touch >>
   ];
 
   return (
