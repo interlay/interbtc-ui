@@ -81,9 +81,7 @@ const Transfer = (): JSX.Element | null => {
         )}>
         <InterlayTabGroup
           defaultIndex={selectedTabIndex}
-          onChange={index => {
-            handleTabSelect(index);
-          }}>
+          onChange={handleTabSelect}>
           <InterlayTabList>
             {TAB_ITEMS.map((tabItem => (
               <InterlayTab
