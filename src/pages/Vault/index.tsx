@@ -56,6 +56,15 @@ import {
   updateAPYAction
 } from 'common/actions/vault.actions';
 
+// ray test touch <<
+const COLLATERAL_ID_LITERAL = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
+const WRAPPED_ID_LITERAL = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
+
+const getAccountId = (accountAddress: string) => {
+  return window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, accountAddress);
+};
+// ray test touch >>
+
 const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
   const [requestReplacementModalOpen, setRequestReplacementModalOpen] = React.useState(false);
@@ -76,7 +85,7 @@ const Vault = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { [URL_PARAMETERS.VAULT_ADDRESS]: selectedVaultAddress } = useParams<Record<string, string>>();
+  const { [URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS]: selectedVaultAccountAddress } = useParams<Record<string, string>>();
 
   const handleUpdateCollateralModalClose = () => {
     setCollateralUpdateStatus(CollateralUpdateStatus.Close);
@@ -97,12 +106,11 @@ const Vault = (): JSX.Element => {
   React.useEffect(() => {
     (async () => {
       if (!bridgeLoaded) return;
-      if (!selectedVaultAddress) return;
+      if (!selectedVaultAccountAddress) return;
 
       try {
-        const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedVaultAddress);
-        const collateralIdLiteral = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
-        const wrappedIdLiteral = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
+        const vaultAccountId = getAccountId(selectedVaultAccountAddress);
+        // TODO: should update using `react-query`
         const [
           vault,
           feesPolkaBTC,
@@ -111,16 +119,16 @@ const Vault = (): JSX.Element => {
           apyScore,
           issuableAmount
         ] = await Promise.allSettled([
-          window.bridge.vaults.get(vaultId, collateralIdLiteral),
+          window.bridge.vaults.get(vaultAccountId, COLLATERAL_ID_LITERAL),
           window.bridge.vaults.getWrappedReward(
-            newAccountId(window.bridge.api, selectedVaultAddress),
-            collateralIdLiteral,
-            wrappedIdLiteral
+            newAccountId(window.bridge.api, selectedVaultAccountAddress),
+            COLLATERAL_ID_LITERAL,
+            WRAPPED_ID_LITERAL
           ),
-          window.bridge.vaults.getIssuedAmount(vaultId, collateralIdLiteral),
-          window.bridge.vaults.getVaultCollateralization(vaultId, collateralIdLiteral),
-          window.bridge.vaults.getAPY(vaultId, collateralIdLiteral),
-          window.bridge.issue.getVaultIssuableAmount(vaultId, collateralIdLiteral)
+          window.bridge.vaults.getIssuedAmount(vaultAccountId, COLLATERAL_ID_LITERAL),
+          window.bridge.vaults.getVaultCollateralization(vaultAccountId, COLLATERAL_ID_LITERAL),
+          window.bridge.vaults.getAPY(vaultAccountId, COLLATERAL_ID_LITERAL),
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_ID_LITERAL)
         ]);
 
         if (vault.status === 'fulfilled') {
@@ -148,13 +156,13 @@ const Vault = (): JSX.Element => {
           setCapacity(issuableAmount.value);
         }
       } catch (error) {
-        console.log('[VaultDashboard React.useEffect] error.message => ', error.message);
+        console.log('[Vault React.useEffect] error.message => ', error.message);
       }
     })();
   }, [
     bridgeLoaded,
     dispatch,
-    selectedVaultAddress
+    selectedVaultAccountAddress
   ]);
 
   const vaultItems = [
@@ -208,7 +216,7 @@ const Vault = (): JSX.Element => {
             mainTitle={t('vault.vault_dashboard')}
             subTitle={<TimerIncrement />} />
           <BoldParagraph className='text-center'>
-            {selectedVaultAddress}
+            {selectedVaultAccountAddress}
           </BoldParagraph>
         </div>
         <div className='space-y-6'>
@@ -255,7 +263,7 @@ const Vault = (): JSX.Element => {
           </div>
         </div>
         {/* Check interaction with the vault */}
-        {vaultClientLoaded && address === selectedVaultAddress && (
+        {vaultClientLoaded && address === selectedVaultAccountAddress && (
           <div
             className={clsx(
               'grid',
@@ -279,10 +287,10 @@ const Vault = (): JSX.Element => {
           </div>
         )}
         <VaultIssueRequestsTable
-          vaultAddress={selectedVaultAddress} />
+          vaultAddress={selectedVaultAccountAddress} />
         <VaultRedeemRequestsTable
-          vaultAddress={selectedVaultAddress} />
-        <ReplaceTable vaultAddress={selectedVaultAddress} />
+          vaultAddress={selectedVaultAccountAddress} />
+        <ReplaceTable vaultAddress={selectedVaultAccountAddress} />
       </MainContainer>
       {collateralUpdateStatus !== CollateralUpdateStatus.Close && (
         <UpdateCollateralModal
@@ -292,13 +300,13 @@ const Vault = (): JSX.Element => {
           }
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
-          vaultAddress={selectedVaultAddress}
+          vaultAddress={selectedVaultAccountAddress}
           hasLockedBTC={lockedBTC.gt(BitcoinAmount.zero)} />
       )}
       <RequestReplacementModal
         onClose={handleRequestReplacementModalClose}
         open={requestReplacementModalOpen}
-        vaultAddress={selectedVaultAddress} />
+        vaultAddress={selectedVaultAccountAddress} />
     </>
   );
 };
