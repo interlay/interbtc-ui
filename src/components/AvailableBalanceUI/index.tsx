@@ -8,13 +8,13 @@ import {
 } from 'utils/constants/relay-chain-names';
 
 interface Props {
-  label?: string;
+  label: string;
   balance: string;
 }
 
 const AvailableBalanceUI = ({
-  label = 'Available balance',
-  balance
+  balance,
+  label
 }: Props): JSX.Element => {
   return (
     <div className='space-x-1'>
