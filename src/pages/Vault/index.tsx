@@ -19,6 +19,7 @@ import {
 } from '@interlay/monetary-js';
 import {
   CollateralIdLiteral,
+  newAccountId,
   tickerToCurrencyIdLiteral,
   WrappedIdLiteral,
   GovernanceUnit
@@ -41,7 +42,6 @@ InterlayDenimOrKintsugiMidnightContainedButton
   from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
@@ -112,7 +112,7 @@ const Vault = (): JSX.Element => {
     // eslint-disable-next-line max-len
     // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
     bridgeLoaded ?
-      window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedVaultAccountAddress) :
+      newAccountId(window.bridge.api, selectedVaultAccountAddress) :
       undefined;
 
   React.useEffect(() => {
