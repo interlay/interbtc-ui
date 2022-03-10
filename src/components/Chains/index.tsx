@@ -8,13 +8,16 @@ import {
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME
 } from 'config/relay-chains';
+import { ChainType } from 'types/chains';
 
 const CHAIN_OPTIONS: Array<ChainOption> = [
   {
+    type: ChainType.Relaychain,
     name: RELAY_CHAIN_NAME,
     icon: <RelayChainLogoIcon height={46} />
   },
   {
+    type: ChainType.Parachain,
     name: BRIDGE_PARACHAIN_NAME,
     icon: <BridgeParachainLogoIcon height={46} />
   }
@@ -23,17 +26,21 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
 interface Props {
   label: string;
   callbackFunction?: (chain: ChainOption) => void;
+  defaultChain: ChainType;
 }
+
+const getChain = (type: ChainType) => CHAIN_OPTIONS.find(chain => chain.type === type);
 
 const Chains = ({
   callbackFunction,
-  label
+  label,
+  defaultChain
 }: Props): JSX.Element => {
-  // Set initial value to first item in CHAIN_OPTIONS object
-  const [selectedChain, setSelectedChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
+  const [selectedChain, setSelectedChain] = React.useState<ChainOption | undefined>(getChain(defaultChain));
 
   React.useEffect(() => {
     if (!callbackFunction) return;
+    if (!selectedChain) return;
 
     callbackFunction(selectedChain);
   }, [
@@ -42,11 +49,15 @@ const Chains = ({
   ]);
 
   return (
-    <ChainSelector
-      label={label}
-      chainOptions={CHAIN_OPTIONS}
-      selectedChain={selectedChain}
-      onChange={setSelectedChain} />
+    <>
+      {selectedChain && (
+        <ChainSelector
+          label={label}
+          chainOptions={CHAIN_OPTIONS}
+          selectedChain={selectedChain}
+          onChange={setSelectedChain} />
+      )}
+    </>
   );
 };
 
