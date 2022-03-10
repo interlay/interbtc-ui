@@ -1,18 +1,27 @@
 
 import * as React from 'react';
+import { useQuery } from 'react-query';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import {
   useSelector,
   useDispatch
 } from 'react-redux';
-import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import clsx from 'clsx';
+import {
+  BitcoinAmount,
+  MonetaryAmount,
+  Currency
+} from '@interlay/monetary-js';
 import {
   CollateralIdLiteral,
-  newAccountId,
   tickerToCurrencyIdLiteral,
-  WrappedIdLiteral
+  WrappedIdLiteral,
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
@@ -25,12 +34,13 @@ import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import SectionTitle from 'parts/SectionTitle';
 import BoldParagraph from 'components/BoldParagraph';
+import Panel from 'components/Panel';
+import ErrorFallback from 'components/ErrorFallback';
 import
 InterlayDenimOrKintsugiMidnightContainedButton
   from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import Panel from 'components/Panel';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   WRAPPED_TOKEN_SYMBOL,
@@ -48,6 +58,7 @@ import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
 } from 'common/utils/utils';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import {
   updateCollateralizationAction,
@@ -56,14 +67,8 @@ import {
   updateAPYAction
 } from 'common/actions/vault.actions';
 
-// ray test touch <<
 const COLLATERAL_ID_LITERAL = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
 const WRAPPED_ID_LITERAL = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
-
-const getAccountId = (accountAddress: string) => {
-  return window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, accountAddress);
-};
-// ray test touch >>
 
 const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
@@ -103,13 +108,19 @@ const Vault = (): JSX.Element => {
     setRequestReplacementModalOpen(true);
   };
 
+  const vaultAccountId =
+    // eslint-disable-next-line max-len
+    // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
+    bridgeLoaded ?
+      window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedVaultAccountAddress) :
+      undefined;
+
   React.useEffect(() => {
     (async () => {
       if (!bridgeLoaded) return;
-      if (!selectedVaultAccountAddress) return;
+      if (!vaultAccountId) return;
 
       try {
-        const vaultAccountId = getAccountId(selectedVaultAccountAddress);
         // TODO: should update using `react-query`
         const [
           vault,
@@ -121,7 +132,7 @@ const Vault = (): JSX.Element => {
         ] = await Promise.allSettled([
           window.bridge.vaults.get(vaultAccountId, COLLATERAL_ID_LITERAL),
           window.bridge.vaults.getWrappedReward(
-            newAccountId(window.bridge.api, selectedVaultAccountAddress),
+            vaultAccountId,
             COLLATERAL_ID_LITERAL,
             WRAPPED_ID_LITERAL
           ),
@@ -162,8 +173,43 @@ const Vault = (): JSX.Element => {
   }, [
     bridgeLoaded,
     dispatch,
-    selectedVaultAccountAddress
+    vaultAccountId
   ]);
+
+  const {
+    isIdle: governanceRewardIdle,
+    isLoading: governanceRewardLoading,
+    data: governanceReward,
+    error: governanceRewardError
+  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+    [
+      GENERIC_FETCHER,
+      'vaults',
+      'getGovernanceReward',
+      vaultAccountId,
+      COLLATERAL_ID_LITERAL,
+      GOVERNANCE_TOKEN_SYMBOL
+    ],
+    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(governanceRewardError);
+
+  const renderGovernanceRewardLabel = () => {
+    if (
+      governanceRewardIdle ||
+      governanceRewardLoading
+    ) {
+      return '-';
+    }
+    if (governanceReward === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return displayMonetaryAmount(governanceReward);
+  };
 
   const vaultItems = [
     {
@@ -198,14 +244,12 @@ const Vault = (): JSX.Element => {
       title: t('apy'),
       value: `≈${safeRoundTwoDecimals(apy)}%`
     },
-    // ray test touch <<
     {
       title: t('vault.rewards_earned_governance_token_symbol', {
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
       }),
-      value: ''
+      value: renderGovernanceRewardLabel()
     }
-    // ray test touch >>
   ];
 
   return (
@@ -311,4 +355,9 @@ const Vault = (): JSX.Element => {
   );
 };
 
-export default Vault;
+export default withErrorBoundary(Vault, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
