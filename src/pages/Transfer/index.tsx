@@ -3,9 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import useQueryParams from 'utils/hooks/use-query-params';
-import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
+import TransferForm from './TransferForm';
+import CrossChainTransferForm from './CrossChainTransferForm';
+import MainContainer from 'parts/MainContainer';
+import Panel from 'components/Panel';
 import Hr1 from 'components/hrs/Hr1';
 import InterlayTabGroup, {
   InterlayTabList,
@@ -13,10 +14,9 @@ import InterlayTabGroup, {
   InterlayTab,
   InterlayTabPanel
 } from 'components/UI/InterlayTabGroup';
-import TransferForm from './TransferForm';
-import CrossChainTransferForm from './CrossChainTransferForm';
-import MainContainer from 'parts/MainContainer';
-import Panel from 'components/Panel';
+import useQueryParams from 'utils/hooks/use-query-params';
+import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
+import { QUERY_PARAMETERS } from 'utils/constants/links';
 
 const TAB_IDS = Object.freeze({
   transfer: 'transfer',
