@@ -43,7 +43,6 @@ const createBeneficiary = (api: ApiPromise, id: string) => {
 
 const createAssets = (api: ApiPromise, transferAmount: XCMTransferAmount) => {
   const fungible = transferAmount.toString(transferAmount.currency.rawBase);
-
   const fun = api.createType('XcmV1MultiassetFungibility', { fungible });
   const interior = api.createType('XcmV1MultilocationJunctions', { here: true });
   const concrete = api.createType('XcmV1MultiLocation', { parents: 0, interior });
