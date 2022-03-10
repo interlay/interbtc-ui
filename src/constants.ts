@@ -33,9 +33,9 @@ const BTC_ADDRESS_REGEX =
       BTC_REGTEST_REGEX;
 
 const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
-// TODO: do we want fallbacks for the relay chain constants?
-const RELAYCHAIN_URL = process.env.REACT_APP_RELAYCHAIN_URL;
-const RELAYCHAIN_ID = process.env.REACT_APP_RELAYCHAIN_ID;
+// TODO: what are the fallbacks for the relay chain constants?
+const RELAYCHAIN_URL = process.env.REACT_APP_RELAYCHAIN_URL || '';
+const RELAYCHAIN_ID = process.env.REACT_APP_RELAYCHAIN_ID || '2121';
 const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
 const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';
 
