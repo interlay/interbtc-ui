@@ -12,7 +12,7 @@ const createRelayChainApi = async (): Promise<ApiPromise | undefined> => {
   }
 
   try {
-   return await createSubstrateAPI(RELAYCHAIN_URL);
+    return await createSubstrateAPI(RELAYCHAIN_URL);
   } catch (error) {
     console.log('[loadRelayChainApi] error.message => ', error.message);
   }
