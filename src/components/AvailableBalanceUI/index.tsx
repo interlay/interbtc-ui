@@ -8,11 +8,13 @@ import {
 } from 'utils/constants/relay-chain-names';
 
 interface Props {
+  label: string;
   balance: string;
 }
 
 const AvailableBalanceUI = ({
-  balance
+  balance,
+  label
 }: Props): JSX.Element => {
   return (
     <div className='space-x-1'>
@@ -23,7 +25,7 @@ const AvailableBalanceUI = ({
           // TODO: placeholder color
           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
-        Available Balance:
+        {label}:
       </span>
       <span
         className={clsx(

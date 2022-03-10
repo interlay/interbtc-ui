@@ -190,7 +190,14 @@
   },
   "transfer_page": {
     "successfully_transferred": "Successfully transferred.",
-    "transfer_currency": "Transfer"
+    "transfer_currency": "Transfer",
+    "cross_chain_transfer_form": {
+      "title": "Cross Chain Transfer",
+      "balance": "Transferable balance",
+      "from_chain": "From chain",
+      "to_chain": "To chain",
+      "target_account": "Destination"
+    }
   },
   "burn_page": {
     "burn_interbtc": "Burn {{wrappedTokenSymbol}} in exchange for {{collateralTokenSymbol}}",

@@ -36,11 +36,11 @@ import Title from './Title';
 import BalancesUI from './BalancesUI';
 import WithdrawButton from './WithdrawButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
-import AvailableBalanceUI from './AvailableBalanceUI';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
 import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
+import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
@@ -718,7 +718,9 @@ const Staking = (): JSX.Element => {
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
             )}
             <div className='space-y-2'>
-              <AvailableBalanceUI balance={availableBalanceLabel} />
+              <AvailableBalanceUI
+                label='Available balance'
+                balance={availableBalanceLabel} />
               <TokenField
                 id={LOCKING_AMOUNT}
                 name={LOCKING_AMOUNT}

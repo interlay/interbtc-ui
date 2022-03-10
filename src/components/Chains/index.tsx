@@ -20,15 +20,33 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
   }
 ];
 
-const Chains = (): JSX.Element => {
+interface Props {
+  label: string;
+  callbackFunction?: (chain: ChainOption) => void;
+}
+
+const Chains = ({
+  callbackFunction,
+  label
+}: Props): JSX.Element => {
   // Set initial value to first item in CHAIN_OPTIONS object
-  const [selectedChain, setselectedChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
+  const [selectedChain, setSelectedChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
+
+  React.useEffect(() => {
+    if (!callbackFunction) return;
+
+    callbackFunction(selectedChain);
+  }, [
+    selectedChain,
+    callbackFunction
+  ]);
 
   return (
     <ChainSelector
+      label={label}
       chainOptions={CHAIN_OPTIONS}
       selectedChain={selectedChain}
-      onChange={setselectedChain} />
+      onChange={setSelectedChain} />
   );
 };
 
