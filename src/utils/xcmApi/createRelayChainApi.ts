@@ -4,9 +4,14 @@ import { ApiPromise } from '@polkadot/api';
 import { RELAYCHAIN_URL } from '../../constants';
 
 const createRelayChainApi = async (): Promise<ApiPromise | undefined> => {
-  if (!RELAYCHAIN_URL) return;
+  let api = undefined;
 
-  let api;
+  // Return api as undefined if relay chain isn't set. This should never happen
+  // as XCM features should be suppressed if the relaychain is undefined.
+  if (!RELAYCHAIN_URL) {
+    console.log('Unable to create relayChain API as RELAYCHAIN_URL is undefined');
+    return api;
+  }
 
   try {
     api = await createSubstrateAPI(RELAYCHAIN_URL);
