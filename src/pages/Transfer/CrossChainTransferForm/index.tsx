@@ -29,12 +29,15 @@ const CrossChainTransferForm = (): JSX.Element => {
       <div>
         <AvailableBalanceUI
           label={t('transfer_page.cross_chain_transfer_form.balance')}
-          balance={displayMonetaryAmount(collateralTokenTransferableBalance)} />
+          balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
+          tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
         <div>
           <TokenField
             label={COLLATERAL_TOKEN_SYMBOL}
             approxUSD='≈ $ 0' />
         </div>
+      </div>
+      <div>
         <Chains label={t('transfer_page.cross_chain_transfer_form.from_chain')} />
       </div>
       <div>

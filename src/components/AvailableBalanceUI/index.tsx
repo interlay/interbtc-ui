@@ -10,6 +10,7 @@ import {
 interface Props {
   label: string;
   balance: string;
+  tokenSymbol: string;
 }
 
 const AvailableBalanceUI = ({
