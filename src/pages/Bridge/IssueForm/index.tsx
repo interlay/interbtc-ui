@@ -351,6 +351,7 @@ const IssueForm = (): JSX.Element | null => {
             unitName='BTC'
             approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
             tooltip={
+              // ray test touch <<
               <InterlayTooltip label={t('issue_page.tooltip_bridge_fee')}>
                 <InformationCircleIcon
                   className={clsx(
@@ -361,6 +362,7 @@ const IssueForm = (): JSX.Element | null => {
                     'h-5'
                   )} />
               </InterlayTooltip>
+              // ray test touch >>
             } />
           <PriceInfo
             title={
@@ -380,6 +382,7 @@ const IssueForm = (): JSX.Element | null => {
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
             tooltip={
+              // ray test touch <<
               <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
                 <InformationCircleIcon
                   className={clsx(
@@ -390,6 +393,7 @@ const IssueForm = (): JSX.Element | null => {
                     'h-5'
                   )} />
               </InterlayTooltip>
+              // ray test touch >>
             } />
           <Hr2
             className={clsx(

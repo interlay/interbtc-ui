@@ -401,6 +401,7 @@ const RedeemForm = (): JSX.Element | null => {
                   'space-x-1'
                 )}>
                 <span>{t('redeem_page.premium_redeem')}</span>
+                {/* ray test touch << */}
                 <InterlayTooltip label={t('redeem_page.premium_redeem_info')}>
                   <InformationCircleIcon
                     className={clsx(
@@ -412,6 +413,7 @@ const RedeemForm = (): JSX.Element | null => {
                       'h-5'
                     )} />
                 </InterlayTooltip>
+                {/* ray test touch >> */}
               </div>
               <Toggle
                 checked={premiumRedeemSelected}

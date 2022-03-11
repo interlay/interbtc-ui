@@ -467,6 +467,7 @@ const VaultsTable = (): JSX.Element => {
                   ])}>
                   {column.render('Header')}
                   {column.tooltip && (
+                    // ray test touch <<
                     <InterlayTooltip label={column.tooltip}>
                       <InformationCircleIcon
                         className={clsx(
@@ -480,6 +481,7 @@ const VaultsTable = (): JSX.Element => {
                           'h-5'
                         )} />
                     </InterlayTooltip>
+                    // ray test touch >>
                   )}
                 </InterlayTh>
               ))}
