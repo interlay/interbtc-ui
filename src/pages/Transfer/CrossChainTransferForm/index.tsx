@@ -25,7 +25,10 @@ import {
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { displayMonetaryAmount } from 'common/utils/utils';
+import {
+  displayMonetaryAmount,
+  getUsdAmount
+} from 'common/utils/utils';
 import {
   StoreType,
   ParachainStatus
@@ -48,6 +51,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
+  const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -64,7 +68,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   const {
     collateralTokenTransferableBalance,
     parachainStatus,
-    address
+    address,
+    prices
   } = useSelector((state: StoreType) => state.general);
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
@@ -117,6 +122,13 @@ const CrossChainTransferForm = (): JSX.Element => {
     t
   ]);
 
+  const handleValueChange = (event: any) => {
+    const value = newMonetaryAmount(event.target.value, COLLATERAL_TOKEN, true);
+    const usd = getUsdAmount(value, prices.governanceToken.usd);
+
+    setApproxUsdValue(usd);
+  };
+
   return (
     <>
       <form
@@ -134,6 +146,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           )}
           <div>
             <TokenField
+              onChange={handleValueChange}
               id={TRANSFER_AMOUNT}
               name={TRANSFER_AMOUNT}
               ref={register({
@@ -145,7 +158,7 @@ const CrossChainTransferForm = (): JSX.Element => {
               error={!!errors[TRANSFER_AMOUNT]}
               helperText={errors[TRANSFER_AMOUNT]?.message}
               label={COLLATERAL_TOKEN_SYMBOL}
-              approxUSD='≈ $ 0' />
+              approxUSD={`≈ $ ${approxUsdValue}`} />
           </div>
         </div>
         <div className='capitalize'>
