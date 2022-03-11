@@ -62,10 +62,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     address
   } = useSelector((state: StoreType) => state.general);
 
-  const handleChainChange = (chainOption: ChainOption) => {
-    setToChain(chainOption);
-  };
-
   const onSubmit = (data: CrossChainTransferFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -150,7 +146,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         <div>
           <Chains
             label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-            callbackFunction={handleChainChange}
+            callbackFunction={setToChain}
             defaultChain={ChainType.Parachain} />
         </div>
         <div>
