@@ -27,8 +27,6 @@ const createDest = (api: ApiPromise) => {
 };
 
 const createBeneficiary = (api: ApiPromise, id: string) => {
-  console.log(decodeAddress(id));
-
   const network = api.createType('XcmV0JunctionNetworkId', { any: true });
   const x1 = api.createType('XcmV1Junction', {
     accountId32: {
@@ -80,8 +78,6 @@ const xcmTransfer = async (
   const assets = createAssets(api, transferAmount);
 
   const xcmTransaction = api.tx.xcmPallet.reserveTransferAssets(dest, beneficiary, assets, 0);
-  // TODO: remove this after debugging
-  console.log(xcmTransaction.method.toHex());
 
   await transactionApi.sendLogged(xcmTransaction);
 };
