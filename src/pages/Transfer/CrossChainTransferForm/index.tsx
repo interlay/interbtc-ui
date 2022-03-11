@@ -2,7 +2,10 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { withErrorBoundary } from 'react-error-boundary';
-import { useSelector } from 'react-redux';
+import {
+  useSelector,
+  useDispatch
+} from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
@@ -14,9 +17,14 @@ import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
 import SubmitButton from 'components/SubmitButton';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import { showAccountModalAction } from 'common/actions/general.actions';
 import { displayMonetaryAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
+import {
+  StoreType,
+  ParachainStatus
+} from 'common/types/util.types';
 import { ChainType } from 'types/chains';
+import STATUSES from 'utils/constants/statuses';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
@@ -26,9 +34,12 @@ type CrossChainTransferFormData = {
 
 const CrossChainTransferForm = (): JSX.Element => {
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
-  const [fromChain, setFromChain] = React.useState<string | undefined>(undefined);
+  const [fromChain, setFromChain] = React.useState<ChainType | undefined>(undefined);
   const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
+  const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
+  const [accountSet, setAccountSet] = React.useState<boolean | undefined>(undefined);
 
+  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const {
@@ -40,7 +51,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   const {
-    collateralTokenTransferableBalance
+    collateralTokenTransferableBalance,
+    parachainStatus,
+    address
   } = useSelector((state: StoreType) => state.general);
 
   const handleChainChange = (chainOption: ChainOption) => {
@@ -48,28 +61,40 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const onSubmit = (data: CrossChainTransferFormData) => {
+    setSubmitStatus(STATUSES.PENDING);
     console.log(data);
+  };
+
+  const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (!accountSet) {
+      dispatch(showAccountModalAction(true));
+      event.preventDefault();
+    }
   };
 
   React.useEffect(() => {
     if (!toChain) return;
 
-    if (toChain.type === ChainType.Parachain) {
-      setFromChain('Kusama');
-    }
-
-    if (toChain.type === ChainType.Relaychain) {
-      setFromChain('Kintsugi');
-    }
+    setFromChain(
+      toChain.type === ChainType.Parachain ?
+        ChainType.Relaychain :
+        ChainType.Parachain
+    );
   }, [toChain]);
 
   React.useEffect(() => {
     console.log(destination);
   }, [destination]);
 
+  React.useEffect(() => {
+    setAccountSet(!!address);
+  }, [address]);
+
   return (
-    <form className='space-y-8'>
-      <FormTitle onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className='space-y-8'
+      onSubmit={handleSubmit(onSubmit)}>
+      <FormTitle>
         {t('transfer_page.cross_chain_transfer_form.title')}
       </FormTitle>
       <div>
@@ -84,7 +109,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             ref={register({
               required: {
                 value: true,
-                message: t('redeem_page.please_enter_amount')
+                message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
               }
             })}
             error={!!errors[TRANSFER_AMOUNT]}
@@ -107,8 +132,17 @@ const CrossChainTransferForm = (): JSX.Element => {
           label={t('transfer_page.cross_chain_transfer_form.target_account')}
           callbackFunction={setDestination} />
       </div>
-      <SubmitButton>
-          Submit
+      <SubmitButton
+        disabled={
+          parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)
+        }
+        pending={submitStatus === STATUSES.PENDING}
+        onClick={handleConfirmClick}>
+        {accountSet ? (
+          t('transfer')
+        ) : (
+          t('connect_wallet')
+        )}
       </SubmitButton>
     </form>
   );

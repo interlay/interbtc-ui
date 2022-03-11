@@ -196,7 +196,8 @@
       "balance": "Transferable balance",
       "from_chain": "From chain",
       "to_chain": "To chain",
-      "target_account": "Destination"
+      "target_account": "Destination",
+      "please_enter_amount": "Please enter amount"
     }
   },
   "burn_page": {
