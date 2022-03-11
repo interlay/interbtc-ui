@@ -405,10 +405,6 @@ const RedeemForm = (): JSX.Element | null => {
                 <InterlayTooltip label={t('redeem_page.premium_redeem_info')}>
                   <InformationCircleIcon
                     className={clsx(
-                      { 'text-interlayTextSecondaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                      { 'dark:text-kintsugiTextSecondaryInDarkMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                       'w-5',
                       'h-5'
                     )} />
