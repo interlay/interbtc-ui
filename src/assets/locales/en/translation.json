@@ -194,7 +194,7 @@
     "cross_chain_transfer_form": {
       "title": "Cross Chain Transfer",
       "balance": "Transferable balance",
-      "from_chain": "From chain",
+      "from_chain": "From chain {{ fromChain }}",
       "to_chain": "To chain",
       "target_account": "Destination",
       "please_enter_amount": "Please enter amount"
