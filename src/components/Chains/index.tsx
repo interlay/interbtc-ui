@@ -12,7 +12,7 @@ import { ChainType } from 'common/types/chains.types';
 
 const CHAIN_OPTIONS: Array<ChainOption> = [
   {
-    type: ChainType.Relaychain,
+    type: ChainType.RelayChain,
     name: RELAY_CHAIN_NAME,
     icon: <RelayChainLogoIcon height={46} />
   },

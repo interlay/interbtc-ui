@@ -20,7 +20,10 @@ import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
 import SubmitButton from 'components/SubmitButton';
 import ErrorModal from 'components/ErrorModal';
-import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  COLLATERAL_TOKEN,
+  COLLATERAL_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import {
@@ -29,6 +32,8 @@ import {
 } from 'common/types/util.types';
 import { ChainType } from 'common/types/chains.types';
 import STATUSES from 'utils/constants/statuses';
+import { xcmTransfer } from 'utils/relayChainApi/transfer';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
@@ -61,11 +66,19 @@ const CrossChainTransferForm = (): JSX.Element => {
     address
   } = useSelector((state: StoreType) => state.general);
 
-  const onSubmit = (data: CrossChainTransferFormData) => {
+  const onSubmit = async (data: CrossChainTransferFormData) => {
+    if (!address) return;
+    if (!destination) return;
+
     try {
       setSubmitStatus(STATUSES.PENDING);
 
-      // await api call
+      await xcmTransfer(
+        address,
+        destination.address,
+        newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN)
+      );
+
       setSubmitStatus(STATUSES.RESOLVED);
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
