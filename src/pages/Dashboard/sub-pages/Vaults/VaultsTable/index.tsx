@@ -29,9 +29,7 @@ import {
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-// ray test touch <<
 import InformationTooltip from 'components/tooltips/InformationTooltip';
-// ray test touch >>
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -464,14 +462,12 @@ const VaultsTable = (): JSX.Element => {
                   ])}>
                   {column.render('Header')}
                   {column.tooltip && (
-                    // ray test touch <<
                     <InformationTooltip
                       className={clsx(
                         'inline-block',
                         'ml-1'
                       )}
                       tooltip={column.tooltip} />
-                    // ray test touch >>
                   )}
                 </InterlayTh>
               ))}

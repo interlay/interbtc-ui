@@ -38,9 +38,7 @@ import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import Hr2 from 'components/hrs/Hr2';
-// ray test touch <<
 import InformationTooltip from 'components/tooltips/InformationTooltip';
-// ray test touch >>
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -402,9 +400,7 @@ const RedeemForm = (): JSX.Element | null => {
                   'space-x-1'
                 )}>
                 <span>{t('redeem_page.premium_redeem')}</span>
-                {/* ray test touch << */}
                 <InformationTooltip tooltip={t('redeem_page.premium_redeem_info')} />
-                {/* ray test touch >> */}
               </div>
               <Toggle
                 checked={premiumRedeemSelected}

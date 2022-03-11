@@ -36,9 +36,7 @@ import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import Hr2 from 'components/hrs/Hr2';
-// ray test touch <<
 import InformationTooltip from 'components/tooltips/InformationTooltip';
-// ray test touch >>
 import {
   GOVERNANCE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -352,7 +350,6 @@ const IssueForm = (): JSX.Element | null => {
             unitName='BTC'
             approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
             tooltip={
-              // ray test touch <<
               <InformationTooltip
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
@@ -360,7 +357,6 @@ const IssueForm = (): JSX.Element | null => {
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
                 tooltip={t('issue_page.tooltip_bridge_fee')} />
-              // ray test touch >>
             } />
           <PriceInfo
             title={
@@ -380,7 +376,6 @@ const IssueForm = (): JSX.Element | null => {
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
             tooltip={
-              // ray test touch <<
               <InformationTooltip
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode':
@@ -388,7 +383,6 @@ const IssueForm = (): JSX.Element | null => {
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
                 tooltip={t('issue_page.tooltip_security_deposit')} />
-              // ray test touch >>
             } />
           <Hr2
             className={clsx(
