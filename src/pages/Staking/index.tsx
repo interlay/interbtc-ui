@@ -55,6 +55,7 @@ import {
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
+import { ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP } from 'utils/constants/staking';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -728,7 +729,7 @@ const Staking = (): JSX.Element => {
           className={clsx(
             'mx-auto',
             'w-full',
-            'md:max-w-xl'
+            'md:max-w-2xl'
           )}>
           <form
             className={clsx(
@@ -809,9 +810,8 @@ const Staking = (): JSX.Element => {
               tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
-              value={`${renderEstimatedRewardAmountLabel()}  ${GOVERNANCE_TOKEN_SYMBOL}`}
-              // eslint-disable-next-line max-len
-              tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
+              value={`${renderEstimatedRewardAmountLabel()} ${GOVERNANCE_TOKEN_SYMBOL}`}
+              tooltip={ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP} />
             <SubmitButton
               disabled={
                 initializing ||

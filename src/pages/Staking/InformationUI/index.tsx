@@ -33,7 +33,7 @@ const InformationUI = ({
         className={clsx(
           'inline-flex',
           'items-center',
-          'space-x-3'
+          'space-x-1'
         )}>
         <span
           className={clsx(
