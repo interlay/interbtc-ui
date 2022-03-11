@@ -23,6 +23,10 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
   }
 ];
 
+// TODO: This is only required for supporting kusama -> kintsugi transfer only.
+// Remove when kintsugi -> kusama implemented.
+const RELAY_TRANSFER_OPTIONS_ONLY = CHAIN_OPTIONS.find(chain => chain.type === ChainType.Parachain);
+
 interface Props {
   label: string;
   callbackFunction?: (chain: ChainOption) => void;
@@ -53,9 +57,7 @@ const Chains = ({
       {selectedChain && (
         <ChainSelector
           label={label}
-          // TODO: This is a hack to test kusama -> kintsugi. Remove when kint -> kusama implemented.
-          // this needs to be done before merging to master.
-          chainOptions={CHAIN_OPTIONS.filter(chain => chain.type === ChainType.Parachain)}
+          chainOptions={RELAY_TRANSFER_OPTIONS_ONLY}
           selectedChain={selectedChain}
           onChange={setSelectedChain} />
       )}
