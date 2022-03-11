@@ -98,6 +98,7 @@ const WithdrawButton = ({
           className
         )}
         endIcon={
+          // ray test touch <<
           <InterlayTooltip
             // eslint-disable-next-line max-len
             label={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on ${renderUnlockDateTimeLabel()}`}>
@@ -111,6 +112,7 @@ const WithdrawButton = ({
                 'h-5'
               )} />
           </InterlayTooltip>
+          // ray test touch >>
         }
         onClick={handleUnstake}
         pending={withdrawMutation.isLoading}

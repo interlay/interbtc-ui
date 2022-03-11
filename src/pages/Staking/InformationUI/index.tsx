@@ -44,6 +44,7 @@ const InformationUI = ({
           )}>
           {label}
         </span>
+        {/* ray test touch << */}
         <InterlayTooltip label={tooltip}>
           <InformationCircleIcon
             className={clsx(
@@ -54,6 +55,7 @@ const InformationUI = ({
               'h-5'
             )} />
         </InterlayTooltip>
+        {/* ray test touch >> */}
       </div>
       <span
         className={clsx(

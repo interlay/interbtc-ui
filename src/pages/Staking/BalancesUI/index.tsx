@@ -88,6 +88,7 @@ const BalanceItem = ({
         {label}
       </Label>
       {tooltip && (
+        // ray test touch <<
         <InterlayTooltip label={tooltip}>
           <InformationCircleIcon
             className={clsx(
@@ -98,6 +99,7 @@ const BalanceItem = ({
               'h-5'
             )} />
         </InterlayTooltip>
+        // ray test touch >>
       )}
     </div>
     <Amount

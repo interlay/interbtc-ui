@@ -824,6 +824,7 @@ const Staking = (): JSX.Element => {
               onClick={handleConfirmClick}
               endIcon={
                 unlockFirst ? (
+                  // ray test touch <<
                   <InterlayTooltip
                     label='Please unstake first.'>
                     <InformationCircleIcon
@@ -836,6 +837,7 @@ const Staking = (): JSX.Element => {
                         'h-5'
                       )} />
                   </InterlayTooltip>
+                  // ray test touch >>
                 ) : null
               }>
               {submitButtonLabel}
