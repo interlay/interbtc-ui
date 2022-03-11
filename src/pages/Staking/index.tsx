@@ -108,6 +108,7 @@ const Staking = (): JSX.Element => {
   const { t } = useTranslation();
 
   const {
+    governanceTokenBalance,
     governanceTokenTransferableBalance,
     bridgeLoaded,
     address,
@@ -415,8 +416,8 @@ const Staking = (): JSX.Element => {
       return 'Locking amount must be greater than zero!';
     }
 
-    if (monetaryLockingAmount.gt(governanceTokenTransferableBalance)) {
-      return 'Locking amount must be less than available governance token balance!';
+    if (monetaryLockingAmount.gt(governanceTokenBalance)) {
+      return 'Locking amount must be less than free governance token balance!';
     }
 
     const planckLockingAmount = monetaryLockingAmount.to.Planck();
