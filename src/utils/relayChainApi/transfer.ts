@@ -77,6 +77,9 @@ const xcmTransfer = async (
   const assets = createAssets(api, transferAmount);
 
   const xcmTransaction = api.tx.xcmPallet.reserveTransferAssets(dest, beneficiary, assets, 0);
+  // TODO: remove this after debugging
+  console.log(xcmTransaction.method.toHex());
+
   await transactionApi.sendLogged(xcmTransaction);
 };
 
