@@ -99,7 +99,7 @@ const WithdrawButton = ({
         endIcon={
           <InformationTooltip
             // eslint-disable-next-line max-len
-            tooltip={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on ${renderUnlockDateTimeLabel()}`}
+            label={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on ${renderUnlockDateTimeLabel()}`}
             forDisabledAction={disabled} />
         }
         onClick={handleUnstake}

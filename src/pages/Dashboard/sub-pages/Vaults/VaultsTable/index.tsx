@@ -467,7 +467,7 @@ const VaultsTable = (): JSX.Element => {
                         'inline-block',
                         'ml-1'
                       )}
-                      tooltip={column.tooltip} />
+                      label={column.tooltip} />
                   )}
                 </InterlayTh>
               ))}

@@ -5,17 +5,17 @@ import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 interface Props {
-  tooltip: string;
+  label: string;
   forDisabledAction?: boolean;
   className?: string;
 }
 
 const InformationTooltip = ({
-  tooltip,
+  label,
   forDisabledAction,
   className
 }: Props): JSX.Element => (
-  <InterlayTooltip label={tooltip}>
+  <InterlayTooltip label={label}>
     <InformationCircleIcon
       onClick={event => {
         forDisabledAction && event.stopPropagation();

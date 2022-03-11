@@ -824,7 +824,7 @@ const Staking = (): JSX.Element => {
               endIcon={
                 unlockFirst ? (
                   <InformationTooltip
-                    tooltip='Please unstake first.'
+                    label='Please unstake first.'
                     forDisabledAction={unlockFirst} />
                 ) : null
               }>

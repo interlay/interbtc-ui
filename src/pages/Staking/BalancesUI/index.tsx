@@ -87,7 +87,7 @@ const BalanceItem = ({
         {label}
       </Label>
       {tooltip && (
-        <InformationTooltip tooltip={tooltip} />
+        <InformationTooltip label={tooltip} />
       )}
     </div>
     <Amount

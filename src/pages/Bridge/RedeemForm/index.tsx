@@ -400,7 +400,7 @@ const RedeemForm = (): JSX.Element | null => {
                   'space-x-1'
                 )}>
                 <span>{t('redeem_page.premium_redeem')}</span>
-                <InformationTooltip tooltip={t('redeem_page.premium_redeem_info')} />
+                <InformationTooltip label={t('redeem_page.premium_redeem_info')} />
               </div>
               <Toggle
                 checked={premiumRedeemSelected}

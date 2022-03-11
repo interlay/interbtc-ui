@@ -356,7 +356,7 @@ const IssueForm = (): JSX.Element | null => {
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
-                tooltip={t('issue_page.tooltip_bridge_fee')} />
+                label={t('issue_page.tooltip_bridge_fee')} />
             } />
           <PriceInfo
             title={
@@ -382,7 +382,7 @@ const IssueForm = (): JSX.Element | null => {
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
-                tooltip={t('issue_page.tooltip_security_deposit')} />
+                label={t('issue_page.tooltip_security_deposit')} />
             } />
           <Hr2
             className={clsx(

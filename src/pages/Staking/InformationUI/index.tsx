@@ -41,7 +41,7 @@ const InformationUI = ({
         <span>
           {label}
         </span>
-        <InformationTooltip tooltip={tooltip} />
+        <InformationTooltip label={tooltip} />
       </div>
       <span
         className={clsx(
