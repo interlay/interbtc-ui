@@ -84,7 +84,6 @@ const CrossChainTransferForm = (): JSX.Element => {
       setSubmitStatus(STATUSES.REJECTED);
       setSubmitError(error);
     }
-    console.log(data, destination, fromChain, toChain, address);
   };
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
