@@ -10,13 +10,13 @@ import { web3FromAddress } from '@polkadot/extension-dapp';
 import { AddressOrPair } from '@polkadot/api/types';
 import { ApiPromise } from '@polkadot/api';
 
-import { RELAY_CHAIN_ID } from '../../constants';
+import { PARACHAIN_ID } from '../../constants';
 import { createRelayChainApi } from './createRelayChainApi';
 
 type XCMTransferAmount = MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 
 const createDest = (api: ApiPromise) => {
-  const x1 = api.createType('XcmV1Junction', { parachain: RELAY_CHAIN_ID });
+  const x1 = api.createType('XcmV1Junction', { parachain: PARACHAIN_ID });
   const interior = api.createType('XcmV1MultilocationJunctions', { x1 });
   const v1 = api.createType('XcmV1MultiLocation', { parents: 0, interior });
 
