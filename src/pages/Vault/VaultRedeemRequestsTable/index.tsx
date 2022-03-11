@@ -255,7 +255,7 @@ const VaultRedeemRequestsTable = ({
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return (
             <>
-              {displayMonetaryAmount(redeem.request.amountWrapped)}
+              {displayMonetaryAmount(redeem.request.requestedAmountBacking)}
             </>
           );
         }
