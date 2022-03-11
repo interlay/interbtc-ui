@@ -7,11 +7,13 @@ import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/i
 interface Props {
   tooltip: string;
   forDisabledAction?: boolean;
+  className?: string;
 }
 
 const InformationTooltip = ({
   tooltip,
-  forDisabledAction
+  forDisabledAction,
+  className
 }: Props): JSX.Element => (
   <InterlayTooltip label={tooltip}>
     <InformationCircleIcon
@@ -21,7 +23,8 @@ const InformationTooltip = ({
       className={clsx(
         'w-5',
         'h-5',
-        { 'pointer-events-auto': forDisabledAction }
+        { 'pointer-events-auto': forDisabledAction },
+        className
       )} />
   </InterlayTooltip>
 );
