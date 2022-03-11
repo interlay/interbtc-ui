@@ -9,6 +9,7 @@ import {
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { AddressOrPair } from '@polkadot/api/types';
 import { ApiPromise } from '@polkadot/api';
+import { decodeAddress } from '@polkadot/keyring';
 
 import { PARACHAIN_ID } from '../../constants';
 import { createRelayChainApi } from './createRelayChainApi';
@@ -26,11 +27,13 @@ const createDest = (api: ApiPromise) => {
 };
 
 const createBeneficiary = (api: ApiPromise, id: string) => {
+  console.log(decodeAddress(id));
+
   const network = api.createType('XcmV0JunctionNetworkId', { any: true });
   const x1 = api.createType('XcmV1Junction', {
     accountId32: {
       network,
-      id
+      id: decodeAddress(id)
     }
   });
   const interior = api.createType('XcmV1MultilocationJunctions', { x1 });
