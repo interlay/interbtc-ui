@@ -55,7 +55,7 @@ import {
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
-import { ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP } from 'utils/constants/staking';
+import { ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP_LABEL } from 'utils/constants/staking';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -810,7 +810,7 @@ const Staking = (): JSX.Element => {
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={`${renderEstimatedRewardAmountLabel()} ${GOVERNANCE_TOKEN_SYMBOL}`}
-              tooltip={ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP} />
+              tooltip={ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP_LABEL} />
             <SubmitButton
               disabled={
                 initializing ||

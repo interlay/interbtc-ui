@@ -10,7 +10,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import { ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP } from 'utils/constants/staking';
+import { ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP_LABEL } from 'utils/constants/staking';
 
 const Label = ({
   className,
@@ -133,7 +133,7 @@ const BalancesUI = ({
         label={`Projected ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
         value={projectedRewardAmount}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
-        tooltip={ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP} />
+        tooltip={ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP_LABEL} />
     </div>
   );
 };
