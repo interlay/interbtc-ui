@@ -53,7 +53,9 @@ const Chains = ({
       {selectedChain && (
         <ChainSelector
           label={label}
-          chainOptions={CHAIN_OPTIONS}
+          // TODO: This is a hack to test kusama -> kintsugi. Remove when kint -> kusama implemented.
+          // this needs to be done before merging to master.
+          chainOptions={CHAIN_OPTIONS.filter(chain => chain.type === ChainType.Parachain)}
           selectedChain={selectedChain}
           onChange={setSelectedChain} />
       )}

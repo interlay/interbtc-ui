@@ -64,7 +64,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const onSubmit = (data: CrossChainTransferFormData) => {
     setSubmitStatus(STATUSES.PENDING);
-    console.log(data, destination);
+    console.log(data, destination, fromChain, toChain, address);
   };
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -93,10 +93,12 @@ const CrossChainTransferForm = (): JSX.Element => {
         {t('transfer_page.cross_chain_transfer_form.title')}
       </FormTitle>
       <div>
-        <AvailableBalanceUI
-          label={t('transfer_page.cross_chain_transfer_form.balance')}
-          balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
-          tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
+        {fromChain?.type === ChainType.Parachain && (
+          <AvailableBalanceUI
+            label={t('transfer_page.cross_chain_transfer_form.balance')}
+            balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
+            tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
+        )}
         <div>
           <TokenField
             id={TRANSFER_AMOUNT}
@@ -120,7 +122,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         <Chains
           label={t('transfer_page.cross_chain_transfer_form.to_chain')}
           callbackFunction={handleChainChange}
-          defaultChain={ChainType.Relaychain} />
+          defaultChain={ChainType.Parachain} />
       </div>
       <div>
         <Accounts
