@@ -4,9 +4,9 @@ import * as React from 'react';
 import ChainSelector, { ChainOption } from './ChainSelector';
 import {
   RelayChainLogoIcon,
-  // BridgeParachainLogoIcon,
-  RELAY_CHAIN_NAME
-  // BRIDGE_PARACHAIN_NAME
+  BridgeParachainLogoIcon,
+  RELAY_CHAIN_NAME,
+  BRIDGE_PARACHAIN_NAME
 } from 'config/relay-chains';
 import { ChainType } from 'types/chains';
 
@@ -15,12 +15,12 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
     type: ChainType.Relaychain,
     name: RELAY_CHAIN_NAME,
     icon: <RelayChainLogoIcon height={46} />
+  },
+  {
+    type: ChainType.Parachain,
+    name: BRIDGE_PARACHAIN_NAME,
+    icon: <BridgeParachainLogoIcon height={46} />
   }
-  // {
-  //   type: ChainType.Parachain,
-  //   name: BRIDGE_PARACHAIN_NAME,
-  //   icon: <BridgeParachainLogoIcon height={46} />
-  // }
 ];
 
 interface Props {
@@ -29,7 +29,7 @@ interface Props {
   defaultChain: ChainType;
 }
 
-const getChain = (type: ChainType) => CHAIN_OPTIONS.find(chain => chain.type === type);
+const getChain = (type: ChainType): ChainOption | undefined => CHAIN_OPTIONS.find(chain => chain.type === type);
 
 const Chains = ({
   callbackFunction,
@@ -62,4 +62,4 @@ const Chains = ({
 };
 
 export type { ChainOption };
-export default Chains;
+export { Chains as default, CHAIN_OPTIONS, getChain };

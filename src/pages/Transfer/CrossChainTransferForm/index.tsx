@@ -11,7 +11,9 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import Accounts from 'components/Accounts';
-import Chains, { ChainOption } from 'components/Chains';
+import Chains, {
+  ChainOption,
+  getChain } from 'components/Chains';
 import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
@@ -33,7 +35,7 @@ type CrossChainTransferFormData = {
 }
 
 const CrossChainTransferForm = (): JSX.Element => {
-  const [fromChain, setFromChain] = React.useState<ChainType | undefined>(undefined);
+  const [fromChain, setFromChain] = React.useState<ChainOption | undefined>(undefined);
   const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -75,11 +77,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   React.useEffect(() => {
     if (!toChain) return;
 
-    setFromChain(
-      toChain.type === ChainType.Parachain ?
-        ChainType.Relaychain :
-        ChainType.Parachain
-    );
+    const targetChain = toChain.type === ChainType.Relaychain ? ChainType.Parachain : ChainType.Relaychain;
+    setFromChain(getChain(targetChain));
   }, [toChain]);
 
   React.useEffect(() => {
@@ -94,12 +93,10 @@ const CrossChainTransferForm = (): JSX.Element => {
         {t('transfer_page.cross_chain_transfer_form.title')}
       </FormTitle>
       <div>
-        {fromChain === ChainType.Parachain && (
-          <AvailableBalanceUI
-            label={t('transfer_page.cross_chain_transfer_form.balance')}
-            balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
-            tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
-        )}
+        <AvailableBalanceUI
+          label={t('transfer_page.cross_chain_transfer_form.balance')}
+          balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
+          tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
         <div>
           <TokenField
             id={TRANSFER_AMOUNT}
@@ -116,8 +113,8 @@ const CrossChainTransferForm = (): JSX.Element => {
             approxUSD='≈ $ 0' />
         </div>
       </div>
-      <div>
-        {t('transfer_page.cross_chain_transfer_form.from_chain', { fromChain })}
+      <div className='capitalize'>
+        {t('transfer_page.cross_chain_transfer_form.from_chain', { fromChain: fromChain?.name })}
       </div>
       <div>
         <Chains
