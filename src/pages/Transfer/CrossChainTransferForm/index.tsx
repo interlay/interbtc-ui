@@ -26,6 +26,8 @@ type CrossChainTransferFormData = {
 
 const CrossChainTransferForm = (): JSX.Element => {
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
+  const [fromChain, setFromChain] = React.useState<string | undefined>(undefined);
+  const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
 
   const { t } = useTranslation();
 
@@ -42,12 +44,24 @@ const CrossChainTransferForm = (): JSX.Element => {
   } = useSelector((state: StoreType) => state.general);
 
   const handleChainChange = (chainOption: ChainOption) => {
-    console.log(chainOption);
+    setToChain(chainOption);
   };
 
   const onSubmit = (data: CrossChainTransferFormData) => {
     console.log(data);
   };
+
+  React.useEffect(() => {
+    if (!toChain) return;
+
+    if (toChain.type === ChainType.Parachain) {
+      setFromChain('Kusama');
+    }
+
+    if (toChain.type === ChainType.Relaychain) {
+      setFromChain('Kintsugi');
+    }
+  }, [toChain]);
 
   React.useEffect(() => {
     console.log(destination);
@@ -80,7 +94,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         </div>
       </div>
       <div>
-        Transferring from Kusama
+        Transferring from {fromChain}
       </div>
       <div>
         <Chains
