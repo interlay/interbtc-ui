@@ -45,7 +45,7 @@ import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -64,7 +64,6 @@ import {
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const ONE_WEEK_SECONDS = 7 * 24 * 3600;
 
@@ -824,20 +823,9 @@ const Staking = (): JSX.Element => {
               onClick={handleConfirmClick}
               endIcon={
                 unlockFirst ? (
-                  // ray test touch <<
-                  <InterlayTooltip
-                    label='Please unstake first.'>
-                    <InformationCircleIcon
-                      onClick={event => {
-                        event.stopPropagation();
-                      }}
-                      className={clsx(
-                        'pointer-events-auto',
-                        'w-5',
-                        'h-5'
-                      )} />
-                  </InterlayTooltip>
-                  // ray test touch >>
+                  <InformationTooltip
+                    tooltip='Please unstake first.'
+                    forDisabledAction={unlockFirst} />
                 ) : null
               }>
               {submitButtonLabel}

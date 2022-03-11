@@ -1,7 +1,7 @@
 
 import clsx from 'clsx';
 
-import InterlayTooltip from 'components/UI/InterlayTooltip';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN_SYMBOL
@@ -11,7 +11,6 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP } from 'utils/constants/staking';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const Label = ({
   className,
@@ -20,10 +19,6 @@ const Label = ({
   <span
     className={clsx(
       'text-sm',
-      // TODO: placeholder color
-      { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-      // TODO: placeholder color
-      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       className
     )}
     {...rest} />
@@ -82,24 +77,17 @@ const BalanceItem = ({
       className={clsx(
         'inline-flex',
         'items-center',
-        'space-x-1'
+        'space-x-1',
+        // TODO: placeholder color
+        { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        // TODO: placeholder color
+        { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
       )}>
       <Label>
         {label}
       </Label>
       {tooltip && (
-        // ray test touch <<
-        <InterlayTooltip label={tooltip}>
-          <InformationCircleIcon
-            className={clsx(
-              { 'text-interlayTextSecondaryInLightMode':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-              { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-              'w-5',
-              'h-5'
-            )} />
-        </InterlayTooltip>
-        // ray test touch >>
+        <InformationTooltip tooltip={tooltip} />
       )}
     </div>
     <Amount
