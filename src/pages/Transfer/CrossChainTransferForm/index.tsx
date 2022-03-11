@@ -41,7 +41,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
-  const [accountSet, setAccountSet] = React.useState<boolean | undefined>(undefined);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   const dispatch = useDispatch();
@@ -76,7 +75,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!accountSet) {
+    if (!address) {
       dispatch(showAccountModalAction(true));
       event.preventDefault();
     }
@@ -88,10 +87,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     const targetChain = toChain.type === ChainType.Relaychain ? ChainType.Parachain : ChainType.Relaychain;
     setFromChain(getChain(targetChain));
   }, [toChain]);
-
-  React.useEffect(() => {
-    setAccountSet(!!address);
-  }, [address]);
 
   // This ensures that triggering the notification and clearing
   // the form happen at the same time.
@@ -160,7 +155,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           }
           pending={submitStatus === STATUSES.PENDING}
           onClick={handleConfirmClick}>
-          {accountSet ? (
+          {address ? (
             t('transfer')
           ) : (
             t('connect_wallet')
