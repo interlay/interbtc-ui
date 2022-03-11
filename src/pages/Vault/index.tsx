@@ -108,12 +108,16 @@ const Vault = (): JSX.Element => {
     setRequestReplacementModalOpen(true);
   };
 
-  const vaultAccountId =
+  const vaultAccountId = React.useMemo(() => {
     // eslint-disable-next-line max-len
     // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
-    bridgeLoaded ?
-      newAccountId(window.bridge.api, selectedVaultAccountAddress) :
-      undefined;
+    if (!bridgeLoaded) return;
+
+    return newAccountId(window.bridge.api, selectedVaultAccountAddress);
+  }, [
+    bridgeLoaded,
+    selectedVaultAccountAddress
+  ]);
 
   React.useEffect(() => {
     (async () => {
@@ -177,8 +181,6 @@ const Vault = (): JSX.Element => {
   ]);
 
   const {
-    isIdle: governanceRewardIdle,
-    isLoading: governanceRewardLoading,
     data: governanceReward,
     error: governanceRewardError
   } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
@@ -197,60 +199,62 @@ const Vault = (): JSX.Element => {
   );
   useErrorHandler(governanceRewardError);
 
-  const renderGovernanceRewardLabel = () => {
-    if (
-      governanceRewardIdle ||
-      governanceRewardLoading
-    ) {
-      return '-';
-    }
-    if (governanceReward === undefined) {
-      throw new Error('Something went wrong!');
-    }
+  const vaultItems = React.useMemo(() => {
+    const governanceRewardLabel =
+      governanceReward === undefined ?
+        '-' :
+        displayMonetaryAmount(governanceReward);
 
-    return displayMonetaryAmount(governanceReward);
-  };
-
-  const vaultItems = [
-    {
-      title: t('collateralization'),
-      value: collateralization === '∞' ?
-        collateralization :
-        `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
-    },
-    {
-      title: t('vault.fees_earned_interbtc', {
-        wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-      }),
-      value: displayMonetaryAmount(feesEarnedInterBTC)
-    },
-    {
-      title: t('vault.locked_dot', {
-        collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
-      }),
-      value: displayMonetaryAmount(collateral)
-    },
-    {
-      title: t('locked_btc'),
-      value: displayMonetaryAmount(lockedBTC),
-      color: 'text-interlayCalifornia-700'
-    }, {
-      title: t('vault.remaining_capacity', {
-        wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-      }),
-      value: displayMonetaryAmount(capacity)
-    },
-    {
-      title: t('apy'),
-      value: `≈${safeRoundTwoDecimals(apy)}%`
-    },
-    {
-      title: t('vault.rewards_earned_governance_token_symbol', {
-        governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
-      }),
-      value: renderGovernanceRewardLabel()
-    }
-  ];
+    return [
+      {
+        title: t('collateralization'),
+        value: collateralization === '∞' ?
+          collateralization :
+          `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
+      },
+      {
+        title: t('vault.fees_earned_interbtc', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        }),
+        value: displayMonetaryAmount(feesEarnedInterBTC)
+      },
+      {
+        title: t('vault.locked_dot', {
+          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+        }),
+        value: displayMonetaryAmount(collateral)
+      },
+      {
+        title: t('locked_btc'),
+        value: displayMonetaryAmount(lockedBTC),
+        color: 'text-interlayCalifornia-700'
+      }, {
+        title: t('vault.remaining_capacity', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        }),
+        value: displayMonetaryAmount(capacity)
+      },
+      {
+        title: t('apy'),
+        value: `≈${safeRoundTwoDecimals(apy)}%`
+      },
+      {
+        title: t('vault.rewards_earned_governance_token_symbol', {
+          governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
+        }),
+        value: governanceRewardLabel
+      }
+    ];
+  }, [
+    apy,
+    capacity,
+    collateral,
+    collateralization,
+    feesEarnedInterBTC,
+    lockedBTC,
+    t,
+    governanceReward
+  ]);
 
   return (
     <>
