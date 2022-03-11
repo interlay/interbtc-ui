@@ -7,6 +7,7 @@ import {
   useDispatch
 } from 'react-redux';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
@@ -18,6 +19,7 @@ import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
 import SubmitButton from 'components/SubmitButton';
+import ErrorModal from 'components/ErrorModal';
 import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { displayMonetaryAmount } from 'common/utils/utils';
@@ -40,6 +42,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [accountSet, setAccountSet] = React.useState<boolean | undefined>(undefined);
+  const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -47,7 +50,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    reset
   } = useForm<CrossChainTransferFormData>({
     mode: 'onChange'
   });
@@ -63,7 +67,15 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const onSubmit = (data: CrossChainTransferFormData) => {
-    setSubmitStatus(STATUSES.PENDING);
+    try {
+      setSubmitStatus(STATUSES.PENDING);
+
+      // await api call
+      setSubmitStatus(STATUSES.RESOLVED);
+    } catch (error) {
+      setSubmitStatus(STATUSES.REJECTED);
+      setSubmitError(error);
+    }
     console.log(data, destination, fromChain, toChain, address);
   };
 
@@ -85,63 +97,95 @@ const CrossChainTransferForm = (): JSX.Element => {
     setAccountSet(!!address);
   }, [address]);
 
+  // This ensures that triggering the notification and clearing
+  // the form happen at the same time.
+  React.useEffect(() => {
+    if (submitStatus !== STATUSES.RESOLVED) return;
+
+    toast.success(t('transfer_page.successfully_transferred'));
+
+    reset({
+      [TRANSFER_AMOUNT]: ''
+    });
+  }, [
+    submitStatus,
+    reset,
+    t
+  ]);
+
   return (
-    <form
-      className='space-y-8'
-      onSubmit={handleSubmit(onSubmit)}>
-      <FormTitle>
-        {t('transfer_page.cross_chain_transfer_form.title')}
-      </FormTitle>
-      <div>
-        {fromChain?.type === ChainType.Parachain && (
-          <AvailableBalanceUI
-            label={t('transfer_page.cross_chain_transfer_form.balance')}
-            balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
-            tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
-        )}
+    <>
+      <form
+        className='space-y-8'
+        onSubmit={handleSubmit(onSubmit)}>
+        <FormTitle>
+          {t('transfer_page.cross_chain_transfer_form.title')}
+        </FormTitle>
         <div>
-          <TokenField
-            id={TRANSFER_AMOUNT}
-            name={TRANSFER_AMOUNT}
-            ref={register({
-              required: {
-                value: true,
-                message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
-              }
-            })}
-            error={!!errors[TRANSFER_AMOUNT]}
-            helperText={errors[TRANSFER_AMOUNT]?.message}
-            label={COLLATERAL_TOKEN_SYMBOL}
-            approxUSD='≈ $ 0' />
+          {fromChain?.type === ChainType.Parachain && (
+            <AvailableBalanceUI
+              label={t('transfer_page.cross_chain_transfer_form.balance')}
+              balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
+              tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
+          )}
+          <div>
+            <TokenField
+              id={TRANSFER_AMOUNT}
+              name={TRANSFER_AMOUNT}
+              ref={register({
+                required: {
+                  value: true,
+                  message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
+                }
+              })}
+              error={!!errors[TRANSFER_AMOUNT]}
+              helperText={errors[TRANSFER_AMOUNT]?.message}
+              label={COLLATERAL_TOKEN_SYMBOL}
+              approxUSD='≈ $ 0' />
+          </div>
         </div>
-      </div>
-      <div className='capitalize'>
-        {t('transfer_page.cross_chain_transfer_form.from_chain', { fromChain: fromChain?.name })}
-      </div>
-      <div>
-        <Chains
-          label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-          callbackFunction={handleChainChange}
-          defaultChain={ChainType.Parachain} />
-      </div>
-      <div>
-        <Accounts
-          label={t('transfer_page.cross_chain_transfer_form.target_account')}
-          callbackFunction={setDestination} />
-      </div>
-      <SubmitButton
-        disabled={
-          parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)
-        }
-        pending={submitStatus === STATUSES.PENDING}
-        onClick={handleConfirmClick}>
-        {accountSet ? (
-          t('transfer')
-        ) : (
-          t('connect_wallet')
-        )}
-      </SubmitButton>
-    </form>
+        <div className='capitalize'>
+          {t('transfer_page.cross_chain_transfer_form.from_chain', { fromChain: fromChain?.name })}
+        </div>
+        <div>
+          <Chains
+            label={t('transfer_page.cross_chain_transfer_form.to_chain')}
+            callbackFunction={handleChainChange}
+            defaultChain={ChainType.Parachain} />
+        </div>
+        <div>
+          <Accounts
+            label={t('transfer_page.cross_chain_transfer_form.target_account')}
+            callbackFunction={setDestination} />
+        </div>
+        <SubmitButton
+          disabled={
+            parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)
+          }
+          pending={submitStatus === STATUSES.PENDING}
+          onClick={handleConfirmClick}>
+          {accountSet ? (
+            t('transfer')
+          ) : (
+            t('connect_wallet')
+          )}
+        </SubmitButton>
+      </form>
+      {(submitStatus === STATUSES.REJECTED && submitError) && (
+        <ErrorModal
+          open={!!submitError}
+          onClose={() => {
+            setSubmitStatus(STATUSES.IDLE);
+            setSubmitError(null);
+          }}
+          title='Error'
+          description={
+            typeof submitError === 'string' ?
+              submitError :
+              submitError.message
+          } />
+      )}
+    </>
   );
 };
 
