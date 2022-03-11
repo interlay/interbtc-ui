@@ -33,9 +33,9 @@ type CrossChainTransferFormData = {
 }
 
 const CrossChainTransferForm = (): JSX.Element => {
-  const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [fromChain, setFromChain] = React.useState<ChainType | undefined>(undefined);
   const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
+  const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [accountSet, setAccountSet] = React.useState<boolean | undefined>(undefined);
 
@@ -62,7 +62,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const onSubmit = (data: CrossChainTransferFormData) => {
     setSubmitStatus(STATUSES.PENDING);
-    console.log(data);
+    console.log(data, destination);
   };
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -83,10 +83,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   }, [toChain]);
 
   React.useEffect(() => {
-    console.log(destination);
-  }, [destination]);
-
-  React.useEffect(() => {
     setAccountSet(!!address);
   }, [address]);
 
@@ -98,10 +94,12 @@ const CrossChainTransferForm = (): JSX.Element => {
         {t('transfer_page.cross_chain_transfer_form.title')}
       </FormTitle>
       <div>
-        <AvailableBalanceUI
-          label={t('transfer_page.cross_chain_transfer_form.balance')}
-          balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
-          tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
+        {fromChain === ChainType.Parachain && (
+          <AvailableBalanceUI
+            label={t('transfer_page.cross_chain_transfer_form.balance')}
+            balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
+            tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
+        )}
         <div>
           <TokenField
             id={TRANSFER_AMOUNT}
@@ -119,13 +117,13 @@ const CrossChainTransferForm = (): JSX.Element => {
         </div>
       </div>
       <div>
-        Transferring from {fromChain}
+        {t('transfer_page.cross_chain_transfer_form.from_chain', { fromChain })}
       </div>
       <div>
         <Chains
           label={t('transfer_page.cross_chain_transfer_form.to_chain')}
           callbackFunction={handleChainChange}
-          defaultChain={ChainType.Parachain} />
+          defaultChain={ChainType.Relaychain} />
       </div>
       <div>
         <Accounts

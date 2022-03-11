@@ -4,9 +4,9 @@ import * as React from 'react';
 import ChainSelector, { ChainOption } from './ChainSelector';
 import {
   RelayChainLogoIcon,
-  BridgeParachainLogoIcon,
-  RELAY_CHAIN_NAME,
-  BRIDGE_PARACHAIN_NAME
+  // BridgeParachainLogoIcon,
+  RELAY_CHAIN_NAME
+  // BRIDGE_PARACHAIN_NAME
 } from 'config/relay-chains';
 import { ChainType } from 'types/chains';
 
@@ -15,12 +15,12 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
     type: ChainType.Relaychain,
     name: RELAY_CHAIN_NAME,
     icon: <RelayChainLogoIcon height={46} />
-  },
-  {
-    type: ChainType.Parachain,
-    name: BRIDGE_PARACHAIN_NAME,
-    icon: <BridgeParachainLogoIcon height={46} />
   }
+  // {
+  //   type: ChainType.Parachain,
+  //   name: BRIDGE_PARACHAIN_NAME,
+  //   icon: <BridgeParachainLogoIcon height={46} />
+  // }
 ];
 
 interface Props {
