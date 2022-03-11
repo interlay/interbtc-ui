@@ -410,7 +410,8 @@
     "pending_table_subcell": "Pending: ",
     "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
-    "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity"
+    "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
+    "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}"
   },
   "about": {
     "research_paper": "Research Paper",
