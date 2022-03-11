@@ -30,6 +30,7 @@ import {
   StoreType,
   ParachainStatus
 } from 'common/types/util.types';
+
 import { ChainType } from 'common/types/chains.types';
 import STATUSES from 'utils/constants/statuses';
 import { xcmTransfer } from 'utils/relayChainApi/transfer';
@@ -76,7 +77,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       await xcmTransfer(
         address,
         destination.address,
-        newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN)
+        newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN, true)
       );
 
       setSubmitStatus(STATUSES.RESOLVED);
