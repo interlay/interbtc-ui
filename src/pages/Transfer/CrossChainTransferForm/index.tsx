@@ -3,6 +3,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
@@ -17,10 +18,24 @@ import { displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ChainType } from 'types/chains';
 
+const TRANSFER_AMOUNT = 'transfer-amount';
+
+type CrossChainTransferFormData = {
+  [TRANSFER_AMOUNT]: string;
+}
+
 const CrossChainTransferForm = (): JSX.Element => {
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
 
   const { t } = useTranslation();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<CrossChainTransferFormData>({
+    mode: 'onChange'
+  });
 
   const {
     collateralTokenTransferableBalance
@@ -30,13 +45,17 @@ const CrossChainTransferForm = (): JSX.Element => {
     console.log(chainOption);
   };
 
+  const onSubmit = (data: CrossChainTransferFormData) => {
+    console.log(data);
+  };
+
   React.useEffect(() => {
     console.log(destination);
   }, [destination]);
 
   return (
     <form className='space-y-8'>
-      <FormTitle>
+      <FormTitle onSubmit={handleSubmit(onSubmit)}>
         {t('transfer_page.cross_chain_transfer_form.title')}
       </FormTitle>
       <div>
@@ -46,15 +65,22 @@ const CrossChainTransferForm = (): JSX.Element => {
           tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
         <div>
           <TokenField
+            id={TRANSFER_AMOUNT}
+            name={TRANSFER_AMOUNT}
+            ref={register({
+              required: {
+                value: true,
+                message: t('redeem_page.please_enter_amount')
+              }
+            })}
+            error={!!errors[TRANSFER_AMOUNT]}
+            helperText={errors[TRANSFER_AMOUNT]?.message}
             label={COLLATERAL_TOKEN_SYMBOL}
             approxUSD='≈ $ 0' />
         </div>
       </div>
       <div>
-        <Chains
-          label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-          callbackFunction={handleChainChange}
-          defaultChain={ChainType.Relaychain} />
+        Transferring from Kusama
       </div>
       <div>
         <Chains
