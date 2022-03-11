@@ -11,7 +11,7 @@ import Select, {
   SelectLabel,
   SELECT_VARIANTS
 } from 'components/Select';
-import { ChainType } from 'types/chains';
+import { ChainType } from 'common/types/chains.types';
 
 interface ChainOption {
   type: ChainType;

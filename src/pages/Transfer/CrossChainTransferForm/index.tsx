@@ -27,7 +27,7 @@ import {
   StoreType,
   ParachainStatus
 } from 'common/types/util.types';
-import { ChainType } from 'types/chains';
+import { ChainType } from 'common/types/chains.types';
 import STATUSES from 'utils/constants/statuses';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
