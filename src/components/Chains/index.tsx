@@ -25,7 +25,7 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
 
 // TODO: This is only required for supporting kusama -> kintsugi transfer only.
 // Remove when kintsugi -> kusama implemented.
-const RELAY_TRANSFER_OPTIONS_ONLY = CHAIN_OPTIONS.find(chain => chain.type === ChainType.Parachain);
+const RELAY_TRANSFER_OPTIONS_ONLY = CHAIN_OPTIONS.filter(chain => chain.type === ChainType.Parachain);
 
 interface Props {
   label: string;
@@ -66,4 +66,9 @@ const Chains = ({
 };
 
 export type { ChainOption };
-export { Chains as default, CHAIN_OPTIONS, getChain };
+
+export {
+  CHAIN_OPTIONS,
+  getChain };
+
+export default Chains;
