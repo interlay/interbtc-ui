@@ -1,6 +1,6 @@
 enum ChainType {
    Parachain = 'parachain',
-   Relaychain = 'relaychain'
+   RelayChain = 'relayChain'
 }
 
 export {

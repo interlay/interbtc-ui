@@ -84,7 +84,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   React.useEffect(() => {
     if (!toChain) return;
 
-    const targetChain = toChain.type === ChainType.Relaychain ? ChainType.Parachain : ChainType.Relaychain;
+    const targetChain = toChain.type === ChainType.RelayChain ? ChainType.Parachain : ChainType.RelayChain;
     setFromChain(getChain(targetChain));
   }, [toChain]);
 
