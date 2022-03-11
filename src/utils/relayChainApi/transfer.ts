@@ -67,7 +67,8 @@ const xcmTransfer = async (
   // Create transaction api instance on the relaychain
   const transactionApi = new DefaultTransactionAPI(api, originatingAccount);
 
-  // Signer needs to be set explicitly for the new api
+  // TODO: why does Signer needs to be set explicitly for the new api?
+  // This should be handled automatically by signAndSend
   const { signer } = await web3FromAddress(originatingAccount.toString());
   api.setSigner(signer);
 
