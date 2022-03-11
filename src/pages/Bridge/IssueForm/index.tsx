@@ -36,7 +36,9 @@ import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import Hr2 from 'components/hrs/Hr2';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
+// ray test touch <<
+import InformationTooltip from 'components/tooltips/InformationTooltip';
+// ray test touch >>
 import {
   GOVERNANCE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -65,7 +67,6 @@ import {
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const BTC_AMOUNT = 'btc-amount';
 
@@ -352,16 +353,13 @@ const IssueForm = (): JSX.Element | null => {
             approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
             tooltip={
               // ray test touch <<
-              <InterlayTooltip label={t('issue_page.tooltip_bridge_fee')}>
-                <InformationCircleIcon
-                  className={clsx(
-                    { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                    'w-5',
-                    'h-5'
-                  )} />
-              </InterlayTooltip>
+              <InformationTooltip
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}
+                tooltip={t('issue_page.tooltip_bridge_fee')} />
               // ray test touch >>
             } />
           <PriceInfo
@@ -383,16 +381,13 @@ const IssueForm = (): JSX.Element | null => {
             approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
             tooltip={
               // ray test touch <<
-              <InterlayTooltip label={t('issue_page.tooltip_security_deposit')}>
-                <InformationCircleIcon
-                  className={clsx(
-                    { 'text-interlayTextSecondaryInLightMode':
-                      process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                    { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                    'w-5',
-                    'h-5'
-                  )} />
-              </InterlayTooltip>
+              <InformationTooltip
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}
+                tooltip={t('issue_page.tooltip_security_deposit')} />
               // ray test touch >>
             } />
           <Hr2

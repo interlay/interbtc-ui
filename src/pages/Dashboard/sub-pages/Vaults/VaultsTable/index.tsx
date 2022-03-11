@@ -29,6 +29,9 @@ import {
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+// ray test touch <<
+import InformationTooltip from 'components/tooltips/InformationTooltip';
+// ray test touch >>
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -37,7 +40,6 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL
@@ -53,7 +55,6 @@ import {
 import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
@@ -464,15 +465,12 @@ const VaultsTable = (): JSX.Element => {
                   {column.render('Header')}
                   {column.tooltip && (
                     // ray test touch <<
-                    <InterlayTooltip label={column.tooltip}>
-                      <InformationCircleIcon
-                        className={clsx(
-                          'inline-block',
-                          'ml-1',
-                          'w-5',
-                          'h-5'
-                        )} />
-                    </InterlayTooltip>
+                    <InformationTooltip
+                      className={clsx(
+                        'inline-block',
+                        'ml-1'
+                      )}
+                      tooltip={column.tooltip} />
                     // ray test touch >>
                   )}
                 </InterlayTh>
