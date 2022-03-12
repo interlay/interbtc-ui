@@ -15,7 +15,6 @@ const FormTitle = ({
     className={clsx(
       'font-medium',
       'text-center',
-      '',
       { 'text-interlayDenim':
         process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:text-kintsugiOchre':

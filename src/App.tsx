@@ -31,6 +31,7 @@ import {
   GovernanceUnit
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
+import 'react-toastify/dist/ReactToastify.css';
 
 import InterlayHelmet from 'parts/InterlayHelmet';
 import Layout from 'parts/Layout';
@@ -71,7 +72,7 @@ import {
   updateGovernanceTokenBalanceAction,
   updateGovernanceTokenTransferableBalanceAction
 } from 'common/actions/general.actions';
-import 'react-toastify/dist/ReactToastify.css';
+import { BitcoinNetwork } from 'types/bitcoin';
 
 // const Bridge = React.lazy(() =>
 //   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
@@ -284,7 +285,7 @@ const App = (): JSX.Element => {
         }, 3000);
         await loadInterBtc();
         // Only load faucet on testnet
-        if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
+        if (process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet) {
           await loadFaucet();
         }
       } catch (error) {

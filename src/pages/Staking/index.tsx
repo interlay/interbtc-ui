@@ -36,11 +36,11 @@ import Title from './Title';
 import BalancesUI from './BalancesUI';
 import WithdrawButton from './WithdrawButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
-import AvailableBalanceUI from './AvailableBalanceUI';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
 import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
+import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
@@ -103,12 +103,13 @@ interface LockingAmountAndTime {
 
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
+  const [availableBalance, setAvailableBalance] = React.useState(newMonetaryAmount(0, GOVERNANCE_TOKEN, true));
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const {
-    governanceTokenTransferableBalance,
+    governanceTokenBalance,
     bridgeLoaded,
     address,
     prices
@@ -415,8 +416,8 @@ const Staking = (): JSX.Element => {
       return 'Locking amount must be greater than zero!';
     }
 
-    if (monetaryLockingAmount.gt(governanceTokenTransferableBalance)) {
-      return 'Locking amount must be less than available governance token balance!';
+    if (monetaryLockingAmount.gt(availableBalance)) {
+      return 'Locking amount must be less than free governance token balance!';
     }
 
     const planckLockingAmount = monetaryLockingAmount.to.Planck();
@@ -533,7 +534,30 @@ const Staking = (): JSX.Element => {
   };
   const stakedAmount = getStakedAmount();
 
-  const availableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
+  React.useEffect(() => {
+    if (!governanceTokenBalance || !stakedAmount) return;
+
+    // FIXME: account for transaction fees not with a hardcoded value
+    const transactionFees = newMonetaryAmount(0.01, GOVERNANCE_TOKEN);
+    const theAvailableBalance = governanceTokenBalance.sub(stakedAmount).sub(transactionFees);
+    setAvailableBalance(theAvailableBalance);
+  }, [
+    governanceTokenBalance,
+    stakedAmount
+  ]);
+
+  const renderAvailableBalanceLabel = () => {
+    if (
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading
+    ) {
+      return '-';
+    }
+    if (stakedAmountAndEndBlock === undefined) {
+      throw new Error('Something went wrong!');
+    }
+    return displayMonetaryAmount(availableBalance);
+  };
 
   const renderUnlockDateLabel = () => {
     const numericLockTime = parseInt(lockTime);
@@ -718,7 +742,9 @@ const Staking = (): JSX.Element => {
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
             )}
             <div className='space-y-2'>
-              <AvailableBalanceUI balance={availableBalanceLabel} />
+              <AvailableBalanceUI
+                label='Available balance'
+                balance={renderAvailableBalanceLabel()} />
               <TokenField
                 id={LOCKING_AMOUNT}
                 name={LOCKING_AMOUNT}

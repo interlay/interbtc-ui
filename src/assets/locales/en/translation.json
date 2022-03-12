@@ -192,7 +192,14 @@
   },
   "transfer_page": {
     "successfully_transferred": "Successfully transferred.",
-    "transfer_currency": "Transfer"
+    "transfer_currency": "Transfer",
+    "cross_chain_transfer_form": {
+      "title": "Cross Chain Transfer",
+      "balance": "Transferable balance",
+      "from_chain": "From chain",
+      "to_chain": "To chain",
+      "target_account": "Destination"
+    }
   },
   "burn_page": {
     "burn_interbtc": "Burn {{wrappedTokenSymbol}} in exchange for {{collateralTokenSymbol}}",
@@ -404,7 +411,8 @@
     "pending_table_subcell": "Pending: ",
     "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
-    "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity"
+    "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
+    "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}"
   },
   "about": {
     "research_paper": "Research Paper",

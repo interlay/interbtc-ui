@@ -8,6 +8,7 @@ import Select, {
   SelectBody,
   SelectCheck,
   SelectText,
+  SelectLabel,
   SELECT_VARIANTS
 } from 'components/Select';
 
@@ -19,12 +20,14 @@ interface ChainOption {
 interface Props {
   chainOptions: Array<ChainOption>;
   selectedChain: ChainOption;
+  label: string;
   onChange: (chain: ChainOption) => void;
 }
 
 const ChainSelector = ({
   chainOptions,
   selectedChain,
+  label,
   onChange
 }: Props): JSX.Element => (
   <Select
@@ -34,6 +37,7 @@ const ChainSelector = ({
     onChange={onChange}>
     {({ open }) => (
       <>
+        <SelectLabel>{label}</SelectLabel>
         <SelectBody>
           <SelectButton variant={SELECT_VARIANTS.formField}>
             <span

@@ -38,7 +38,7 @@ import {
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { BTC_ADDRESS_API } from 'config/bitcoin';
+import { BTC_EXPLORER_ADDRESS_API } from 'config/blockstream-explorer-links';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import redeemCountQuery from 'services/queries/redeem-count-query';
@@ -255,7 +255,7 @@ const VaultRedeemRequestsTable = ({
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return (
             <>
-              {displayMonetaryAmount(redeem.request.amountWrapped)}
+              {displayMonetaryAmount(redeem.request.requestedAmountBacking)}
             </>
           );
         }
@@ -268,7 +268,7 @@ const VaultRedeemRequestsTable = ({
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
           return (
-            <ExternalLink href={`${BTC_ADDRESS_API}${value}`}>
+            <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>
               {shortAddress(value)}
             </ExternalLink>
           );
