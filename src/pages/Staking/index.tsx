@@ -55,6 +55,7 @@ import {
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
+import { TRANSACTION_FEE_AMOUNT } from 'utils/constants/transaction';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -103,7 +104,9 @@ interface LockingAmountAndTime {
 
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
+  // ray test touch <<
   const [availableBalance, setAvailableBalance] = React.useState(newMonetaryAmount(0, GOVERNANCE_TOKEN, true));
+  // ray test touch >>
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -416,9 +419,11 @@ const Staking = (): JSX.Element => {
       return 'Locking amount must be greater than zero!';
     }
 
+    // ray test touch <<
     if (monetaryLockingAmount.gt(availableBalance)) {
       return 'Locking amount must be less than free governance token balance!';
     }
+    // ray test touch >>
 
     const planckLockingAmount = monetaryLockingAmount.to.Planck();
     const lockBlocks = convertWeeksToBlockNumbers(parseInt(lockTime));
@@ -534,18 +539,19 @@ const Staking = (): JSX.Element => {
   };
   const stakedAmount = getStakedAmount();
 
+  // ray test touch <<
   React.useEffect(() => {
     if (!governanceTokenBalance || !stakedAmount) return;
 
-    // FIXME: account for transaction fees not with a hardcoded value
-    const transactionFees = newMonetaryAmount(0.01, GOVERNANCE_TOKEN);
-    const theAvailableBalance = governanceTokenBalance.sub(stakedAmount).sub(transactionFees);
+    const theAvailableBalance = governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
     setAvailableBalance(theAvailableBalance);
   }, [
     governanceTokenBalance,
     stakedAmount
   ]);
+  // ray test touch >>
 
+  // ray test touch <<
   const renderAvailableBalanceLabel = () => {
     if (
       stakedAmountAndEndBlockIdle ||
@@ -558,6 +564,7 @@ const Staking = (): JSX.Element => {
     }
     return displayMonetaryAmount(availableBalance);
   };
+  // ray test touch >>
 
   const renderUnlockDateLabel = () => {
     const numericLockTime = parseInt(lockTime);
