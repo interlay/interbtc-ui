@@ -103,13 +103,13 @@ interface LockingAmountAndTime {
 
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
+  const [availableBalance, setAvailableBalance] = React.useState(newMonetaryAmount(0, GOVERNANCE_TOKEN, true));
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const {
     governanceTokenBalance,
-    governanceTokenTransferableBalance,
     bridgeLoaded,
     address,
     prices
@@ -416,7 +416,7 @@ const Staking = (): JSX.Element => {
       return 'Locking amount must be greater than zero!';
     }
 
-    if (monetaryLockingAmount.gt(governanceTokenBalance)) {
+    if (monetaryLockingAmount.gt(availableBalance)) {
       return 'Locking amount must be less than free governance token balance!';
     }
 
@@ -534,7 +534,30 @@ const Staking = (): JSX.Element => {
   };
   const stakedAmount = getStakedAmount();
 
-  const availableBalanceLabel = displayMonetaryAmount(governanceTokenTransferableBalance);
+  React.useEffect(() => {
+    if (!governanceTokenBalance || !stakedAmount) return;
+
+    // FIXME: account for transaction fees not with a hardcoded value
+    const transactionFees = newMonetaryAmount(0.01, GOVERNANCE_TOKEN);
+    const theAvailableBalance = governanceTokenBalance.sub(stakedAmount).sub(transactionFees);
+    setAvailableBalance(theAvailableBalance);
+  }, [
+    governanceTokenBalance,
+    stakedAmount
+  ]);
+
+  const renderAvailableBalanceLabel = () => {
+    if (
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading
+    ) {
+      return '-';
+    }
+    if (stakedAmountAndEndBlock === undefined) {
+      throw new Error('Something went wrong!');
+    }
+    return displayMonetaryAmount(availableBalance);
+  };
 
   const renderUnlockDateLabel = () => {
     const numericLockTime = parseInt(lockTime);
@@ -721,7 +744,7 @@ const Staking = (): JSX.Element => {
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
-                balance={availableBalanceLabel} />
+                balance={renderAvailableBalanceLabel()} />
               <TokenField
                 id={LOCKING_AMOUNT}
                 name={LOCKING_AMOUNT}
