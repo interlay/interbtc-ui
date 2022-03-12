@@ -1,8 +1,8 @@
 
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
-import { matchPath } from 'react-router';
 import { useSelector } from 'react-redux';
+import { matchPath } from 'react-router';
 import {
   ClipboardListIcon,
   CashIcon,
@@ -25,9 +25,10 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 import {
-  PAGES,
-  URL_PARAMETERS
-} from 'utils/constants/links';
+  GOVERNANCE_TOKEN_SYMBOL,
+  CROWDLOAN_LINK
+} from 'config/relay-chains';
+import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
 interface CustomProps {
@@ -35,16 +36,38 @@ interface CustomProps {
 }
 
 // TODO: could be reused
+const TEXT_CLASSES = clsx(
+  'group',
+  'flex',
+  'items-center',
+  'px-2',
+  'py-2',
+  'rounded-md'
+);
+
 const TEXT_CLASSES_FOR_SELECTED = clsx(
   { 'text-interlayDenim-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiMidnight-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
+
 const TEXT_CLASSES_FOR_UNSELECTED = clsx(
   { 'text-interlayTextPrimaryInLightMode':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+const TEXT_CLASSES_FOR_DISABLED = clsx(
+  { 'text-gray-500':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-gray-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+const NAVIGATION_ICON_CLASSES = clsx(
+  'flex-shrink-0',
+  'w-6',
+  'h-6'
 );
 
 const Navigation = ({
@@ -55,30 +78,15 @@ const Navigation = ({
   const location = useLocation();
   const { t } = useTranslation();
   const {
-    vaultClientLoaded,
-    address
+    vaultClientLoaded
   } = useSelector((state: StoreType) => state.general);
 
   const NAVIGATION_ITEMS = React.useMemo(() => {
-    if (!address) return [];
-
     return [
-      {
-        name: 'nav_bridge',
-        link: PAGES.BRIDGE,
-        icon: RefreshIcon,
-        hidden: false
-      },
       {
         name: 'nav_transfer',
         link: PAGES.TRANSFER,
         icon: SwitchHorizontalIcon
-      },
-      {
-        name: 'nav_transactions',
-        link: PAGES.TRANSACTIONS,
-        icon: ClipboardListIcon,
-        hidden: false
       },
       {
         name: 'nav_staking',
@@ -86,15 +94,28 @@ const Navigation = ({
         icon: CashIcon
       },
       {
+        name: 'nav_bridge',
+        link: PAGES.BRIDGE,
+        icon: RefreshIcon,
+        disabled: true
+      },
+      {
+        name: 'nav_transactions',
+        link: PAGES.TRANSACTIONS,
+        icon: ClipboardListIcon,
+        disabled: true
+      },
+      {
         name: 'nav_dashboard',
         link: PAGES.DASHBOARD,
         icon: ChartSquareBarIcon,
-        hidden: false
+        disabled: true
       },
       {
         name: 'nav_vault',
-        link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
+        link: PAGES.VAULT,
         icon: ChipIcon,
+        disabled: true,
         hidden: !vaultClientLoaded
       },
       {
@@ -102,6 +123,18 @@ const Navigation = ({
         link: '#',
         icon: () => null,
         separator: true
+      },
+      {
+        name: 'nav_crowdloan',
+        link: CROWDLOAN_LINK,
+        icon: CashIcon,
+        external: true,
+        // This will suppress the link on testnet
+        hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet',
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
       },
       {
         name: 'nav_docs',
@@ -118,17 +151,13 @@ const Navigation = ({
         link: TERMS_AND_CONDITIONS_LINK,
         icon: DocumentTextIcon,
         external: true,
-        hidden: !TERMS_AND_CONDITIONS_LINK,
         rest: {
           target: '_blank',
           rel: 'noopener noreferrer'
         }
       }
     ];
-  }, [
-    address,
-    vaultClientLoaded
-  ]);
+  }, [vaultClientLoaded]);
 
   return (
     <nav
@@ -140,14 +169,36 @@ const Navigation = ({
       )}
       {...rest}>
       {NAVIGATION_ITEMS.map(navigationItem => {
+        if (navigationItem.hidden) {
+          return null;
+        }
+
         if (navigationItem.separator) {
           return (
             <Hr2 key={navigationItem.name} />
           );
         }
 
-        if (navigationItem.hidden) {
-          return null;
+        if (navigationItem.disabled) {
+          return (
+            <p
+              key={navigationItem.name}
+              className={clsx(
+                TEXT_CLASSES,
+                TEXT_CLASSES_FOR_DISABLED,
+                onSmallScreen ? 'text-base' : 'text-sm',
+                'font-light'
+              )}>
+              <navigationItem.icon
+                className={clsx(
+                  TEXT_CLASSES_FOR_DISABLED,
+                  NAVIGATION_ICON_CLASSES,
+                  onSmallScreen ? 'mr-4' : 'mr-3'
+                )}
+                aria-hidden='true' />
+              {t(navigationItem.name)} ({t('nav_coming_soon')})
+            </p>
+          );
         }
 
         const match = matchPath(location.pathname, {
@@ -178,14 +229,10 @@ const Navigation = ({
                   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ),
-              'group',
-              'flex',
-              'items-center',
-              'px-2',
-              'py-2',
               onSmallScreen ? 'text-base' : 'text-sm',
-              'font-medium',
-              'rounded-md'
+              TEXT_CLASSES,
+              'font-medium'
+
             )}>
             <navigationItem.icon
               className={clsx(
@@ -193,12 +240,16 @@ const Navigation = ({
                   TEXT_CLASSES_FOR_SELECTED :
                   TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'mr-4' : 'mr-3',
-                'flex-shrink-0',
-                'w-6',
-                'h-6'
+                NAVIGATION_ICON_CLASSES
               )}
               aria-hidden='true' />
-            {t(navigationItem.name)}
+            {navigationItem.link === CROWDLOAN_LINK ?
+            // TODO: not the nicest way of handling contextual navigation text, but
+            // other solutions involve substantial refactoring of the navigation
+              t(navigationItem.name,
+                { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL }
+              ) :
+              t(navigationItem.name)}
           </SidebarNavLink>
         );
       })}
