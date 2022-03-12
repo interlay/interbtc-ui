@@ -27,11 +27,11 @@ const TAB_ITEMS = [
   {
     id: TAB_IDS.transfer,
     label: 'transfer'
-  },
-  {
-    id: TAB_IDS.crossChainTransfer,
-    label: 'cross chain transfer'
   }
+  // {
+  //   id: TAB_IDS.crossChainTransfer,
+  //   label: 'cross chain transfer'
+  // }
 ];
 
 const Transfer = (): JSX.Element | null => {
@@ -55,7 +55,7 @@ const Transfer = (): JSX.Element | null => {
     case selectedTabId === null:
     case selectedTabId && !tabIdValues.includes(selectedTabId):
       updateQueryParametersRef.current({
-        [QUERY_PARAMETERS.TAB]: TAB_IDS.crossChainTransfer
+        [QUERY_PARAMETERS.TAB]: TAB_IDS.transfer
       });
     }
   }, [
