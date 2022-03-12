@@ -191,11 +191,11 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(claimableRewardAmountError);
 
-  // Governance token Rewards
+  // Projected governance token rewards
   const {
-    isIdle: rewardAmountAndAPYIdle,
-    isLoading: rewardAmountAndAPYLoading,
-    data: rewardAmountAndAPY,
+    isIdle: projectedRewardAmountAndAPYIdle,
+    isLoading: projectedRewardAmountAndAPYLoading,
+    data: projectedRewardAmountAndAPY,
     error: rewardAmountAndAPYError,
     refetch: rewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
@@ -477,18 +477,18 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(voteGovernanceTokenBalance);
   };
 
-  const renderRewardAmountLabel = () => {
+  const renderProjectedRewardAmountLabel = () => {
     if (
-      rewardAmountAndAPYIdle ||
-      rewardAmountAndAPYLoading
+      projectedRewardAmountAndAPYIdle ||
+      projectedRewardAmountAndAPYLoading
     ) {
       return '-';
     }
-    if (rewardAmountAndAPY === undefined) {
+    if (projectedRewardAmountAndAPY === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return displayMonetaryAmount(rewardAmountAndAPY.amount);
+    return displayMonetaryAmount(projectedRewardAmountAndAPY.amount);
   };
 
   const renderStakedAmountLabel = () => {
@@ -695,8 +695,8 @@ const Staking = (): JSX.Element => {
     voteGovernanceTokenBalanceLoading ||
     claimableRewardAmountIdle ||
     claimableRewardAmountLoading ||
-    rewardAmountAndAPYIdle ||
-    rewardAmountAndAPYLoading ||
+    projectedRewardAmountAndAPYIdle ||
+    projectedRewardAmountAndAPYLoading ||
     estimatedRewardAmountAndAPYIdle ||
     estimatedRewardAmountAndAPYLoading ||
     stakedAmountAndEndBlockIdle ||
@@ -732,7 +732,7 @@ const Staking = (): JSX.Element => {
             <BalancesUI
               stakedAmount={renderStakedAmountLabel()}
               voteStakedAmount={renderVoteStakedAmountLabel()}
-              rewardAmount={renderRewardAmountLabel()} />
+              projectedRewardAmount={renderProjectedRewardAmountLabel()} />
             <ClaimRewardsButton
               claimableRewardAmount={renderClaimableRewardAmountLabel()}
               disabled={claimRewardsButtonEnabled === false} />
