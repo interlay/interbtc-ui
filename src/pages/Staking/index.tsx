@@ -104,9 +104,6 @@ interface LockingAmountAndTime {
 
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
-  // ray test touch <<
-  const [availableBalance, setAvailableBalance] = React.useState(newMonetaryAmount(0, GOVERNANCE_TOKEN, true));
-  // ray test touch >>
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -419,11 +416,12 @@ const Staking = (): JSX.Element => {
       return 'Locking amount must be greater than zero!';
     }
 
-    // ray test touch <<
-    if (monetaryLockingAmount.gt(availableBalance)) {
-      return 'Locking amount must be less than free governance token balance!';
+    if (availableBalance === undefined) {
+      throw new Error('Something went wrong!');
     }
-    // ray test touch >>
+    if (monetaryLockingAmount.gt(availableBalance)) {
+      return 'Locking amount must be less than available balance!';
+    }
 
     const planckLockingAmount = monetaryLockingAmount.to.Planck();
     const lockBlocks = convertWeeksToBlockNumbers(parseInt(lockTime));
@@ -539,32 +537,31 @@ const Staking = (): JSX.Element => {
   };
   const stakedAmount = getStakedAmount();
 
-  // ray test touch <<
-  React.useEffect(() => {
-    if (!governanceTokenBalance || !stakedAmount) return;
-
-    const theAvailableBalance = governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
-    setAvailableBalance(theAvailableBalance);
-  }, [
-    governanceTokenBalance,
-    stakedAmount
-  ]);
-  // ray test touch >>
-
-  // ray test touch <<
-  const renderAvailableBalanceLabel = () => {
+  const availableBalance = React.useMemo(() => {
     if (
+      !governanceTokenBalance ||
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading
-    ) {
-      return '-';
-    }
-    if (stakedAmountAndEndBlock === undefined) {
+    ) return;
+    if (stakedAmount === undefined) {
       throw new Error('Something went wrong!');
     }
-    return displayMonetaryAmount(availableBalance);
+
+    return governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
+  }, [
+    governanceTokenBalance,
+    stakedAmountAndEndBlockIdle,
+    stakedAmountAndEndBlockLoading,
+    stakedAmount
+  ]);
+
+  const renderAvailableBalanceLabel = () => {
+    return (
+      availableBalance === undefined ?
+        '-' :
+        displayMonetaryAmount(availableBalance)
+    );
   };
-  // ray test touch >>
 
   const renderUnlockDateLabel = () => {
     const numericLockTime = parseInt(lockTime);
@@ -695,6 +692,8 @@ const Staking = (): JSX.Element => {
     votingBalanceGreaterThanZero === undefined ||
     remainingBlockNumbersToUnstake === undefined;
 
+  const lockingAmountFieldDisabled = availableBalance === undefined;
+
   const initializing =
     currentBlockNumberIdle ||
     currentBlockNumberLoading ||
@@ -766,7 +765,8 @@ const Staking = (): JSX.Element => {
                 })}
                 approxUSD={`≈ $ ${valueInUSDOfLockingAmount}`}
                 error={!!errors[LOCKING_AMOUNT]}
-                helperText={errors[LOCKING_AMOUNT]?.message} />
+                helperText={errors[LOCKING_AMOUNT]?.message}
+                disabled={lockingAmountFieldDisabled} />
             </div>
             <LockTimeField
               id={LOCK_TIME}
