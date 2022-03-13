@@ -3,11 +3,9 @@ import {
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
-import {
-  CollateralUnit,
-  GovernanceUnit
-} from '@interlay/interbtc-api';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
+import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import {
   IS_POLKA_BTC_LOADED,
   CHANGE_ADDRESS,
@@ -90,14 +88,14 @@ export const updateCollateralTokenTransferableBalanceAction = (
 });
 
 export const updateGovernanceTokenBalanceAction = (
-  governanceTokenBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>
+  governanceTokenBalance: GovernanceTokenMonetaryAmount
 ): UpdateGovernanceTokenBalance => ({
   type: UPDATE_GOVERNANCE_TOKEN_BALANCE,
   governanceTokenBalance
 });
 
 export const updateGovernanceTokenTransferableBalanceAction = (
-  governanceTokenTransferableBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>
+  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount
 ): UpdateGovernanceTokenTransferableBalance => ({
   type: UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
   governanceTokenTransferableBalance
@@ -111,7 +109,7 @@ export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
 export const initGeneralDataAction = (
   totalWrappedTokenAmount: BitcoinAmount,
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
-  totalGovernanceTokenAmount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>,
+  totalGovernanceTokenAmount: GovernanceTokenMonetaryAmount,
   btcRelayHeight: number,
   bitcoinHeight: number,
   parachainStatus: ParachainStatus

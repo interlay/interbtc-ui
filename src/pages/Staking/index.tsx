@@ -22,14 +22,8 @@ import {
 import Big from 'big.js';
 import clsx from 'clsx';
 import {
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
-import {
   DefaultTransactionAPI,
-  GovernanceUnit,
-  newMonetaryAmount,
-  VoteUnit
+  newMonetaryAmount
 } from '@interlay/interbtc-api';
 
 import Title from './Title';
@@ -51,7 +45,9 @@ import {
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN,
-  STAKE_LOCK_TIME
+  STAKE_LOCK_TIME,
+  GovernanceTokenMonetaryAmount,
+  VoteGovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
@@ -90,17 +86,17 @@ type StakingFormData = {
 }
 
 interface EstimatedRewardAmountAndAPY {
-  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  amount: GovernanceTokenMonetaryAmount;
   apy: Big;
 }
 
 interface StakedAmountAndEndBlock {
-  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  amount: GovernanceTokenMonetaryAmount;
   endBlock: number;
 }
 
 interface LockingAmountAndTime {
-  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  amount: GovernanceTokenMonetaryAmount;
   time: number; // Weeks
 }
 
@@ -158,14 +154,14 @@ const Staking = (): JSX.Element => {
     data: voteGovernanceTokenBalance,
     error: voteGovernanceTokenBalanceError,
     refetch: voteGovernanceTokenBalanceRefetch
-  } = useQuery<MonetaryAmount<Currency<VoteUnit>, VoteUnit>, Error>(
+  } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
     [
       GENERIC_FETCHER,
       'escrow',
       'votingBalance',
       address
     ],
-    genericFetcher<MonetaryAmount<Currency<VoteUnit>, VoteUnit>>(),
+    genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -179,14 +175,14 @@ const Staking = (): JSX.Element => {
     data: claimableRewardAmount,
     error: claimableRewardAmountError,
     refetch: claimableRewardAmountRefetch
-  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+  } = useQuery<GovernanceTokenMonetaryAmount, Error>(
     [
       GENERIC_FETCHER,
       'escrow',
       'getRewards',
       address
     ],
-    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -287,7 +283,8 @@ const Staking = (): JSX.Element => {
           throw new Error('Something went wrong!');
         }
 
-        if ( // Increase amount and extend lock time
+        // ray test touch <<
+        if ( // Increase lock amount and extend lock time
           variables.time > 0 &&
           variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
@@ -307,7 +304,7 @@ const Staking = (): JSX.Element => {
             undefined, // don't await success event
             true // don't wait for finalized blocks
           );
-        } else if ( // Only increase amount
+        } else if ( // Only increase lock amount
           variables.time === 0 &&
           variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
         ) {
@@ -322,6 +319,7 @@ const Staking = (): JSX.Element => {
         } else {
           throw new Error('Something went wrong!');
         }
+        // ray test touch >>
       })();
     },
     {
@@ -715,7 +713,9 @@ const Staking = (): JSX.Element => {
     submitButtonLabel = 'Loading...';
   } else {
     if (accountSet) {
+      // ray test touch <<
       submitButtonLabel = votingBalanceGreaterThanZero ? 'Add more stake' : 'Stake';
+      // ray test touch >>
     } else {
       submitButtonLabel = t('connect_wallet');
     }

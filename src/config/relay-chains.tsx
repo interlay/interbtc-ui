@@ -1,6 +1,7 @@
 import {
   Currency,
   BitcoinUnit,
+  MonetaryAmount,
   KBtc, // on Kusama
   Kusama, // on Kusama
   KBtcAmount, // on Kusama
@@ -41,6 +42,8 @@ type WrappedToken = Currency<BitcoinUnit>;
 type CollateralToken = Currency<CollateralUnit>;
 type GovernanceToken = Currency<GovernanceUnit>;
 type VoteGovernanceToken = Currency<VoteUnit>;
+type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceUnit>;
+type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VoteGovernanceToken, VoteUnit>;
 
 let APP_NAME: string;
 let TERMS_AND_CONDITIONS_LINK: string;
@@ -98,8 +101,8 @@ case POLKADOT: {
   TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
-  GOVERNANCE_TOKEN = Interlay as Currency<GovernanceUnit>;
-  VOTE_GOVERNANCE_TOKEN = Interlay as Currency<VoteUnit>;
+  GOVERNANCE_TOKEN = Interlay as GovernanceToken;
+  VOTE_GOVERNANCE_TOKEN = Interlay as VoteGovernanceToken;
   WRAPPED_TOKEN_SYMBOL = 'interBTC';
   COLLATERAL_TOKEN_SYMBOL = 'DOT';
   GOVERNANCE_TOKEN_SYMBOL = 'INTR';
@@ -129,8 +132,8 @@ case KUSAMA: {
   TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
-  GOVERNANCE_TOKEN = Kintsugi as Currency<GovernanceUnit>;
-  VOTE_GOVERNANCE_TOKEN = Kintsugi as Currency<VoteUnit>;
+  GOVERNANCE_TOKEN = Kintsugi as GovernanceToken;
+  VOTE_GOVERNANCE_TOKEN = Kintsugi as VoteGovernanceToken;
   WRAPPED_TOKEN_SYMBOL = 'kBTC';
   COLLATERAL_TOKEN_SYMBOL = 'KSM';
   GOVERNANCE_TOKEN_SYMBOL = 'KINT';
@@ -163,7 +166,9 @@ export type {
   CollateralToken,
   WrappedToken,
   GovernanceToken,
-  WrappedTokenAmount
+  WrappedTokenAmount,
+  GovernanceTokenMonetaryAmount,
+  VoteGovernanceTokenMonetaryAmount
 };
 
 export {
