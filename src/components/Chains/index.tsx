@@ -26,8 +26,21 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
 // TODO: This is a temporary workaround for supporting kusama -> kintsugi transfer only.
 // This will be handled higher up when we support transferring in both directions and this
 // code will be removed.
-const RELAY_CHAIN_ONLY = CHAIN_OPTIONS.filter(chain => chain.type === ChainType.RelayChain);
-const PARACHAIN_ONLY = CHAIN_OPTIONS.filter(chain => chain.type === ChainType.Parachain);
+const RELAY_CHAIN_ONLY = [
+  {
+    type: ChainType.RelayChain,
+    name: RELAY_CHAIN_NAME,
+    icon: <RelayChainLogoIcon height={46} />
+  }
+];
+
+const PARACHAIN_ONLY = [
+  {
+    type: ChainType.Parachain,
+    name: BRIDGE_PARACHAIN_NAME,
+    icon: <BridgeParachainLogoIcon height={46} />
+  }
+];
 
 interface Props {
   label: string;
@@ -60,6 +73,7 @@ const Chains = ({
       {selectedChain && (
         <ChainSelector
           label={label}
+          // TODO: remove this when support transferring from/to multiple chains
           chainOptions={defaultChain === ChainType.Parachain ? PARACHAIN_ONLY : RELAY_CHAIN_ONLY}
           selectedChain={selectedChain}
           onChange={setSelectedChain} />
