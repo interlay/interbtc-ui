@@ -1,3 +1,4 @@
+
 enum ChainType {
    Parachain = 'parachain',
    RelayChain = 'relayChain'
