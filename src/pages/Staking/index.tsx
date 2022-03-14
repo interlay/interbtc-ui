@@ -744,7 +744,8 @@ const Staking = (): JSX.Element => {
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
-                balance={renderAvailableBalanceLabel()} />
+                balance={renderAvailableBalanceLabel()}
+                tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
               <TokenField
                 id={LOCKING_AMOUNT}
                 name={LOCKING_AMOUNT}
