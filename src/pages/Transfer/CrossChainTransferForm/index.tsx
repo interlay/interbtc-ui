@@ -10,11 +10,8 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import Accounts from 'components/Accounts';
-import Chains, {
-  ChainOption,
-  getChain } from 'components/Chains';
+import Chains from 'components/Chains';
 import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
@@ -25,10 +22,7 @@ import {
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import {
-  displayMonetaryAmount,
-  getUsdAmount
-} from 'common/utils/utils';
+import { getUsdAmount } from 'common/utils/utils';
 import {
   StoreType,
   ParachainStatus
@@ -46,8 +40,6 @@ type CrossChainTransferFormData = {
 }
 
 const CrossChainTransferForm = (): JSX.Element => {
-  const [fromChain, setFromChain] = React.useState<ChainOption | undefined>(undefined);
-  const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -66,7 +58,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   const {
-    collateralTokenTransferableBalance,
     parachainStatus,
     address,
     prices
@@ -98,13 +89,6 @@ const CrossChainTransferForm = (): JSX.Element => {
       event.preventDefault();
     }
   };
-
-  React.useEffect(() => {
-    if (!toChain) return;
-
-    const targetChain = toChain.type === ChainType.RelayChain ? ChainType.Parachain : ChainType.RelayChain;
-    setFromChain(getChain(targetChain));
-  }, [toChain]);
 
   // This ensures that triggering the notification and clearing
   // the form happen at the same time.
@@ -138,12 +122,6 @@ const CrossChainTransferForm = (): JSX.Element => {
           {t('transfer_page.cross_chain_transfer_form.title')}
         </FormTitle>
         <div>
-          {fromChain?.type === ChainType.Parachain && (
-            <AvailableBalanceUI
-              label={t('transfer_page.cross_chain_transfer_form.balance')}
-              balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
-              tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
-          )}
           <div>
             <TokenField
               onChange={handleValueChange}
@@ -161,13 +139,14 @@ const CrossChainTransferForm = (): JSX.Element => {
               approxUSD={`≈ $ ${approxUsdValue}`} />
           </div>
         </div>
-        <div className='capitalize'>
-          {t('transfer_page.cross_chain_transfer_form.from_chain', { fromChain: fromChain?.name })}
+        <div>
+          <Chains
+            label={t('transfer_page.cross_chain_transfer_form.from_chain')}
+            defaultChain={ChainType.RelayChain} />
         </div>
         <div>
           <Chains
             label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-            callbackFunction={setToChain}
             defaultChain={ChainType.Parachain} />
         </div>
         <div>

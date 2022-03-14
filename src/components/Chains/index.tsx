@@ -24,8 +24,9 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
 ];
 
 // TODO: This is only required for supporting kusama -> kintsugi transfer only.
-// Remove when kintsugi -> kusama implemented.
-const RELAY_TRANSFER_OPTIONS_ONLY = CHAIN_OPTIONS.filter(chain => chain.type === ChainType.Parachain);
+// This will be handled in the XCM form when kintsugi -> kusama implemented.
+const RELAY_CHAIN_ONLY = CHAIN_OPTIONS.filter(chain => chain.type === ChainType.RelayChain);
+const PARACHAIN_ONLY = CHAIN_OPTIONS.filter(chain => chain.type === ChainType.Parachain);
 
 interface Props {
   label: string;
@@ -57,7 +58,7 @@ const Chains = ({
       {selectedChain && (
         <ChainSelector
           label={label}
-          chainOptions={RELAY_TRANSFER_OPTIONS_ONLY}
+          chainOptions={defaultChain === ChainType.Parachain ? PARACHAIN_ONLY : RELAY_CHAIN_ONLY}
           selectedChain={selectedChain}
           onChange={setSelectedChain} />
       )}
