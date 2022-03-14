@@ -42,7 +42,8 @@ const Chains = ({
   label,
   defaultChain
 }: Props): JSX.Element => {
-  const [selectedChain, setSelectedChain] = React.useState<ChainOption | undefined>(getChain(defaultChain));
+  // If getChain returns undefined this will set the first item in the array as a fallback
+  const [selectedChain, setSelectedChain] = React.useState<ChainOption>(getChain(defaultChain) || CHAIN_OPTIONS[0]);
 
   React.useEffect(() => {
     if (!callbackFunction) return;
