@@ -70,6 +70,7 @@ export type { ChainOption };
 
 export {
   CHAIN_OPTIONS,
-  getChain };
+  getChain
+};
 
 export default Chains;
