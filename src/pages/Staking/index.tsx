@@ -71,6 +71,14 @@ const convertBlockNumbersToWeeks = (blockNumbers: number) => {
   return blockNumbers * BLOCK_TIME / ONE_WEEK_SECONDS;
 };
 
+// ray test touch <<
+// https://kentcdodds.com/blog/inversion-of-control
+// const increaseLockAmountOrExtendLockTimeHandler = (
+//   lockAmount: GovernanceTokenMonetaryAmount,
+//   lockTime: number
+// ) => {};
+// ray test touch >>
+
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
 
