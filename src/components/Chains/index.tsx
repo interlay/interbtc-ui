@@ -23,8 +23,9 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
   }
 ];
 
-// TODO: This is only required for supporting kusama -> kintsugi transfer only.
-// This will be handled in the XCM form when kintsugi -> kusama implemented.
+// TODO: This is a temporary workaround for supporting kusama -> kintsugi transfer only.
+// This will be handled higher up when we support transferring in both directions and this
+// code will be removed.
 const RELAY_CHAIN_ONLY = CHAIN_OPTIONS.filter(chain => chain.type === ChainType.RelayChain);
 const PARACHAIN_ONLY = CHAIN_OPTIONS.filter(chain => chain.type === ChainType.Parachain);
 
