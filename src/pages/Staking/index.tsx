@@ -55,7 +55,6 @@ import {
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
-import { TRANSACTION_FEE_AMOUNT } from 'utils/constants/transaction';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -78,6 +77,9 @@ const convertBlockNumbersToWeeks = (blockNumbers: number) => {
 
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
+
+// FIXME: account for transaction fees not with a hardcoded value
+const TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN);
 
 const LOCKING_AMOUNT = 'locking-amount';
 const LOCK_TIME = 'lock-time';
