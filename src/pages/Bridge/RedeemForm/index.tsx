@@ -121,8 +121,7 @@ const RedeemForm = (): JSX.Element | null => {
       CollateralUnit
     >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
   );
-  const [premiumRedeemVaults, setPremiumRedeemVaults] =
-    React.useState<Map<InterbtcPrimitivesVaultId, BitcoinAmount>>(new Map());
+  const [hasPremiumRedeemVaults, setHasPremiumRedeemVaults] = React.useState<boolean>(false);
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
   const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -181,8 +180,10 @@ const RedeemForm = (): JSX.Element | null => {
         if (currentInclusionFeeResult.status === 'rejected') {
           throw new Error(currentInclusionFeeResult.reason);
         }
-        if (premiumRedeemVaultsResult.status === 'fulfilled') {
-          setPremiumRedeemVaults(premiumRedeemVaultsResult.value);
+        if (premiumRedeemVaultsResult.status === 'fulfilled' && premiumRedeemVaultsResult.value.size > 0) {
+          // Premium redeem vaults are refetched on submission so we only need to set
+          // true/false rather than keep them in state.
+          setHasPremiumRedeemVaults(true);
         }
 
         setDustValue(dustValueResult.value);
@@ -230,6 +231,7 @@ const RedeemForm = (): JSX.Element | null => {
         // Differentiate between premium and regular redeem
         let vaultId: InterbtcPrimitivesVaultId;
         if (premiumRedeemSelected) {
+          const premiumRedeemVaults = await window.bridge.vaults.getPremiumRedeemVaults();
           // Select a vault from the premium redeem vault list
           for (const [id, redeemableTokens] of premiumRedeemVaults) {
             if (redeemableTokens.gte(wrappedTokenAmount)) {
@@ -383,7 +385,7 @@ const RedeemForm = (): JSX.Element | null => {
             })}
             error={!!errors[BTC_ADDRESS]}
             helperText={errors[BTC_ADDRESS]?.message} />
-          {premiumRedeemVaults.size > 0 && (
+          {hasPremiumRedeemVaults && (
             <div
               className={clsx(
                 'flex',
