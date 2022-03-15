@@ -6,7 +6,7 @@
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^1.0.3",
-    "@interlay/interbtc-api": "1.7.2",
+    "@interlay/interbtc-api": "1.8.0",
     "@polkadot/api": "7.7.1",
     "@polkadot/extension-dapp": "0.42.7",
     "@polkadot/types": "7.7.1",
