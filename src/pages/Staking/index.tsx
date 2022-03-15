@@ -71,7 +71,6 @@ const convertBlockNumbersToWeeks = (blockNumbers: number) => {
   return blockNumbers * BLOCK_TIME / ONE_WEEK_SECONDS;
 };
 
-// ray test touch <<
 // When to increase lock amount and extend lock time
 const checkIncreaseLockAmountAndExtendLockTime = (
   lockTime: number,
@@ -102,7 +101,6 @@ const checkOnlyExtendLockTime = (
     lockAmount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
   );
 };
-// ray test touch >>
 
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
@@ -316,7 +314,6 @@ const Staking = (): JSX.Element => {
           throw new Error('Something went wrong!');
         }
 
-        // ray test touch <<
         if (checkIncreaseLockAmountAndExtendLockTime(variables.time, variables.amount)) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
@@ -343,7 +340,6 @@ const Staking = (): JSX.Element => {
         } else {
           throw new Error('Something went wrong!');
         }
-        // ray test touch >>
       })();
     },
     {
