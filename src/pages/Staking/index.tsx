@@ -734,12 +734,12 @@ const Staking = (): JSX.Element => {
   } else {
     if (accountSet) {
       if (votingBalanceGreaterThanZero) {
-        const intLockTime = parseInt(lockTime);
-        if (checkIncreaseLockAmountAndExtendLockTime(intLockTime, monetaryLockingAmount)) {
+        const numericLockTime = parseInt(lockTime);
+        if (checkIncreaseLockAmountAndExtendLockTime(numericLockTime, monetaryLockingAmount)) {
           submitButtonLabel = 'Add more stake and extend lock time';
-        } else if (checkOnlyIncreaseLockAmount(intLockTime, monetaryLockingAmount)) {
+        } else if (checkOnlyIncreaseLockAmount(numericLockTime, monetaryLockingAmount)) {
           submitButtonLabel = 'Add more stake';
-        } else if (checkOnlyExtendLockTime(intLockTime, monetaryLockingAmount)) {
+        } else if (checkOnlyExtendLockTime(numericLockTime, monetaryLockingAmount)) {
           submitButtonLabel = 'Extend lock time';
         } else {
           submitButtonLabel = 'Stake';
