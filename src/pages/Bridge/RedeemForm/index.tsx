@@ -182,7 +182,8 @@ const RedeemForm = (): JSX.Element | null => {
         }
         if (premiumRedeemVaultsResult.status === 'fulfilled' && premiumRedeemVaultsResult.value.size > 0) {
           // Premium redeem vaults are refetched on submission so we only need to set
-          // true/false rather than keep them in state.
+          // true/false rather than keep them in state. No need to set false as this is
+          // set as a default on render.
           setHasPremiumRedeemVaults(true);
         }
 
