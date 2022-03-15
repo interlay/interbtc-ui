@@ -86,13 +86,13 @@ const BalanceItem = ({
 interface Props {
   stakedAmount: string;
   voteStakedAmount: string;
-  rewardAmount: string;
+  projectedRewardAmount: string;
 }
 
 const BalancesUI = ({
   stakedAmount,
   voteStakedAmount,
-  rewardAmount
+  projectedRewardAmount
 }: Props): JSX.Element => {
   return (
     <div
@@ -118,7 +118,7 @@ const BalancesUI = ({
         tokenSymbol={VOTE_GOVERNANCE_TOKEN_SYMBOL} />
       <BalanceItem
         label={`${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
-        value={rewardAmount}
+        value={projectedRewardAmount}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
     </div>
   );

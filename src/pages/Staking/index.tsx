@@ -78,6 +78,9 @@ const convertBlockNumbersToWeeks = (blockNumbers: number) => {
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
 
+// FIXME: account for transaction fees not with a hardcoded value
+const TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
+
 const LOCKING_AMOUNT = 'locking-amount';
 const LOCK_TIME = 'lock-time';
 
@@ -86,7 +89,7 @@ type StakingFormData = {
   [LOCK_TIME]: string;
 }
 
-interface RewardAmountAndAPY {
+interface EstimatedRewardAmountAndAPY {
   amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
   apy: Big;
 }
@@ -103,7 +106,6 @@ interface LockingAmountAndTime {
 
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
-  const [availableBalance, setAvailableBalance] = React.useState(newMonetaryAmount(0, GOVERNANCE_TOKEN, true));
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -172,11 +174,11 @@ const Staking = (): JSX.Element => {
 
   // My currently claimable rewards
   const {
-    isIdle: currentRewardAmountIdle,
-    isLoading: currentRewardAmountLoading,
-    data: currentRewardAmount,
-    error: currentRewardAmountError,
-    refetch: currentRewardAmountRefetch
+    isIdle: claimableRewardAmountIdle,
+    isLoading: claimableRewardAmountLoading,
+    data: claimableRewardAmount,
+    error: claimableRewardAmountError,
+    refetch: claimableRewardAmountRefetch
   } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
     [
       GENERIC_FETCHER,
@@ -189,37 +191,37 @@ const Staking = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(currentRewardAmountError);
+  useErrorHandler(claimableRewardAmountError);
 
-  // My Rewards
+  // Projected governance token rewards
   const {
-    isIdle: rewardAmountAndAPYIdle,
-    isLoading: rewardAmountAndAPYLoading,
-    data: rewardAmountAndAPY,
+    isIdle: projectedRewardAmountAndAPYIdle,
+    isLoading: projectedRewardAmountAndAPYLoading,
+    data: projectedRewardAmountAndAPY,
     error: rewardAmountAndAPYError,
     refetch: rewardAmountAndAPYRefetch
-  } = useQuery<RewardAmountAndAPY, Error>(
+  } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
       'escrow',
       'getRewardEstimate',
       address
     ],
-    genericFetcher<RewardAmountAndAPY>(),
+    genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(rewardAmountAndAPYError);
 
-  // Estimated KINT Rewards & APY
+  // Estimated governance token Rewards & APY
   const monetaryLockingAmount = newMonetaryAmount(lockingAmount, GOVERNANCE_TOKEN, true);
   const {
     isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
     error: estimatedRewardAmountAndAPYError
-  } = useQuery<RewardAmountAndAPY, Error>(
+  } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
       'escrow',
@@ -228,7 +230,7 @@ const Staking = (): JSX.Element => {
       monetaryLockingAmount,
       blockLockTimeExtension
     ],
-    genericFetcher<RewardAmountAndAPY>(),
+    genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -268,7 +270,7 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         voteGovernanceTokenBalanceRefetch();
         stakedAmountAndEndBlockRefetch();
-        currentRewardAmountRefetch();
+        claimableRewardAmountRefetch();
         rewardAmountAndAPYRefetch();
         reset({
           [LOCKING_AMOUNT]: '0.0',
@@ -326,7 +328,7 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         voteGovernanceTokenBalanceRefetch();
         stakedAmountAndEndBlockRefetch();
-        currentRewardAmountRefetch();
+        claimableRewardAmountRefetch();
         rewardAmountAndAPYRefetch();
         reset({
           [LOCKING_AMOUNT]: '0.0',
@@ -416,8 +418,11 @@ const Staking = (): JSX.Element => {
       return 'Locking amount must be greater than zero!';
     }
 
+    if (availableBalance === undefined) {
+      throw new Error('Something went wrong!');
+    }
     if (monetaryLockingAmount.gt(availableBalance)) {
-      return 'Locking amount must be less than free governance token balance!';
+      return 'Locking amount must be less than available balance!';
     }
 
     const planckLockingAmount = monetaryLockingAmount.to.Planck();
@@ -477,18 +482,18 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(voteGovernanceTokenBalance);
   };
 
-  const renderRewardAmountLabel = () => {
+  const renderProjectedRewardAmountLabel = () => {
     if (
-      rewardAmountAndAPYIdle ||
-      rewardAmountAndAPYLoading
+      projectedRewardAmountAndAPYIdle ||
+      projectedRewardAmountAndAPYLoading
     ) {
       return '-';
     }
-    if (rewardAmountAndAPY === undefined) {
+    if (projectedRewardAmountAndAPY === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return displayMonetaryAmount(rewardAmountAndAPY.amount);
+    return displayMonetaryAmount(projectedRewardAmountAndAPY.amount);
   };
 
   const renderStakedAmountLabel = () => {
@@ -534,29 +539,30 @@ const Staking = (): JSX.Element => {
   };
   const stakedAmount = getStakedAmount();
 
-  React.useEffect(() => {
-    if (!governanceTokenBalance || !stakedAmount) return;
+  const availableBalance = React.useMemo(() => {
+    if (
+      !governanceTokenBalance ||
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading
+    ) return;
+    if (stakedAmount === undefined) {
+      throw new Error('Something went wrong!');
+    }
 
-    // FIXME: account for transaction fees not with a hardcoded value
-    const transactionFees = newMonetaryAmount(0.01, GOVERNANCE_TOKEN);
-    const theAvailableBalance = governanceTokenBalance.sub(stakedAmount).sub(transactionFees);
-    setAvailableBalance(theAvailableBalance);
+    return governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
   }, [
     governanceTokenBalance,
+    stakedAmountAndEndBlockIdle,
+    stakedAmountAndEndBlockLoading,
     stakedAmount
   ]);
 
   const renderAvailableBalanceLabel = () => {
-    if (
-      stakedAmountAndEndBlockIdle ||
-      stakedAmountAndEndBlockLoading
-    ) {
-      return '-';
-    }
-    if (stakedAmountAndEndBlock === undefined) {
-      throw new Error('Something went wrong!');
-    }
-    return displayMonetaryAmount(availableBalance);
+    return (
+      availableBalance === undefined ?
+        '-' :
+        displayMonetaryAmount(availableBalance)
+    );
   };
 
   const renderUnlockDateLabel = () => {
@@ -651,18 +657,18 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(estimatedRewardAmountAndAPY.amount);
   };
 
-  const renderRewardsToClaimLabel = () => {
+  const renderClaimableRewardAmountLabel = () => {
     if (
-      currentRewardAmountIdle ||
-      currentRewardAmountLoading
+      claimableRewardAmountIdle ||
+      claimableRewardAmountLoading
     ) {
       return '-';
     }
-    if (currentRewardAmount === undefined) {
+    if (claimableRewardAmount === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return displayMonetaryAmount(currentRewardAmount);
+    return displayMonetaryAmount(claimableRewardAmount);
   };
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -675,7 +681,7 @@ const Staking = (): JSX.Element => {
 
   const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
 
-  const claimRewardsButtonEnabled = currentRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+  const claimRewardsButtonEnabled = claimableRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const unlockFirst =
     stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) &&
@@ -688,15 +694,17 @@ const Staking = (): JSX.Element => {
     votingBalanceGreaterThanZero === undefined ||
     remainingBlockNumbersToUnstake === undefined;
 
+  const lockingAmountFieldDisabled = availableBalance === undefined;
+
   const initializing =
     currentBlockNumberIdle ||
     currentBlockNumberLoading ||
     voteGovernanceTokenBalanceIdle ||
     voteGovernanceTokenBalanceLoading ||
-    currentRewardAmountIdle ||
-    currentRewardAmountLoading ||
-    rewardAmountAndAPYIdle ||
-    rewardAmountAndAPYLoading ||
+    claimableRewardAmountIdle ||
+    claimableRewardAmountLoading ||
+    projectedRewardAmountAndAPYIdle ||
+    projectedRewardAmountAndAPYLoading ||
     estimatedRewardAmountAndAPYIdle ||
     estimatedRewardAmountAndAPYLoading ||
     stakedAmountAndEndBlockIdle ||
@@ -732,9 +740,9 @@ const Staking = (): JSX.Element => {
             <BalancesUI
               stakedAmount={renderStakedAmountLabel()}
               voteStakedAmount={renderVoteStakedAmountLabel()}
-              rewardAmount={renderRewardAmountLabel()} />
+              projectedRewardAmount={renderProjectedRewardAmountLabel()} />
             <ClaimRewardsButton
-              rewardsToClaim={renderRewardsToClaimLabel()}
+              claimableRewardAmount={renderClaimableRewardAmountLabel()}
               disabled={claimRewardsButtonEnabled === false} />
             {stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) && (
               <WithdrawButton
@@ -760,7 +768,8 @@ const Staking = (): JSX.Element => {
                 })}
                 approxUSD={`≈ $ ${valueInUSDOfLockingAmount}`}
                 error={!!errors[LOCKING_AMOUNT]}
-                helperText={errors[LOCKING_AMOUNT]?.message} />
+                helperText={errors[LOCKING_AMOUNT]?.message}
+                disabled={lockingAmountFieldDisabled} />
             </div>
             <LockTimeField
               id={LOCK_TIME}

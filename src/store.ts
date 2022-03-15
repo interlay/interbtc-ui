@@ -4,7 +4,10 @@ import {
   createStore
 } from 'redux';
 import { persistStore } from 'redux-persist';
-import { InterBtcApi, FaucetClient } from '@interlay/interbtc-api';
+import {
+  InterBtcApi,
+  FaucetClient
+} from '@interlay/interbtc-api';
 
 import { rootReducer } from './common/reducers/index';
 
