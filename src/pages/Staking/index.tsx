@@ -72,11 +72,36 @@ const convertBlockNumbersToWeeks = (blockNumbers: number) => {
 };
 
 // ray test touch <<
-// https://kentcdodds.com/blog/inversion-of-control
-// const increaseLockAmountOrExtendLockTimeHandler = (
-//   lockAmount: GovernanceTokenMonetaryAmount,
-//   lockTime: number
-// ) => {};
+// When to increase lock amount and extend lock time
+const checkIncreaseLockAmountAndExtendLockTime = (
+  lockTime: number,
+  lockAmount: GovernanceTokenMonetaryAmount
+) => {
+  return (
+    lockTime > 0 &&
+    lockAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+  );
+};
+// When to only increase lock amount
+const checkOnlyIncreaseLockAmount = (
+  lockTime: number,
+  lockAmount: GovernanceTokenMonetaryAmount
+) => {
+  return (
+    lockTime === 0 &&
+    lockAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+  );
+};
+// When to only extend lock time
+const checkOnlyExtendLockTime = (
+  lockTime: number,
+  lockAmount: GovernanceTokenMonetaryAmount
+) => {
+  return (
+    lockTime > 0 &&
+    lockAmount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+  );
+};
 // ray test touch >>
 
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
@@ -292,10 +317,7 @@ const Staking = (): JSX.Element => {
         }
 
         // ray test touch <<
-        if ( // Increase lock amount and extend lock time
-          variables.time > 0 &&
-          variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-        ) {
+        if (checkIncreaseLockAmountAndExtendLockTime(variables.time, variables.amount)) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           const txs = [
@@ -312,15 +334,9 @@ const Staking = (): JSX.Element => {
             undefined, // don't await success event
             true // don't wait for finalized blocks
           );
-        } else if ( // Only increase lock amount
-          variables.time === 0 &&
-          variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-        ) {
+        } else if (checkOnlyIncreaseLockAmount(variables.time, variables.amount)) {
           return await window.bridge.escrow.increaseAmount(variables.amount);
-        } else if ( // Only extend lock time
-          variables.time > 0 &&
-          variables.amount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-        ) {
+        } else if (checkOnlyExtendLockTime(variables.time, variables.amount)) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           return await window.bridge.escrow.increaseUnlockHeight(unlockHeight);
