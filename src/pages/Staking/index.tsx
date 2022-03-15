@@ -457,6 +457,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
     const remainingWeeksToUnstake = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake);
+    // ray test touch <<
     const availableLockTime = Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeksToUnstake);
     if (
       numericValue < STAKE_LOCK_TIME.MIN ||
@@ -464,6 +465,7 @@ const Staking = (): JSX.Element => {
     ) {
       return `Please enter a number between ${STAKE_LOCK_TIME.MIN}-${availableLockTime}.`;
     }
+    // ray test touch >>
 
     return undefined;
   };
