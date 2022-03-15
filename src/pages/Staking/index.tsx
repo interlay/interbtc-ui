@@ -733,7 +733,6 @@ const Staking = (): JSX.Element => {
     submitButtonLabel = 'Loading...';
   } else {
     if (accountSet) {
-      // ray test touch <<
       if (votingBalanceGreaterThanZero) {
         const intLockTime = parseInt(lockTime);
         if (checkIncreaseLockAmountAndExtendLockTime(intLockTime, monetaryLockingAmount)) {
@@ -743,13 +742,11 @@ const Staking = (): JSX.Element => {
         } else if (checkOnlyExtendLockTime(intLockTime, monetaryLockingAmount)) {
           submitButtonLabel = 'Extend lock time';
         } else {
-          // throw new Error('Something went wrong!');
-          submitButtonLabel = 'Something went wrong!';
+          submitButtonLabel = 'Stake';
         }
       } else {
         submitButtonLabel = 'Stake';
       }
-      // ray test touch >>
     } else {
       submitButtonLabel = t('connect_wallet');
     }
