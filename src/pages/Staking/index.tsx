@@ -734,7 +734,21 @@ const Staking = (): JSX.Element => {
   } else {
     if (accountSet) {
       // ray test touch <<
-      submitButtonLabel = votingBalanceGreaterThanZero ? 'Add more stake' : 'Stake';
+      if (votingBalanceGreaterThanZero) {
+        const intLockTime = parseInt(lockTime);
+        if (checkIncreaseLockAmountAndExtendLockTime(intLockTime, monetaryLockingAmount)) {
+          submitButtonLabel = 'Add more stake and extend lock time';
+        } else if (checkOnlyIncreaseLockAmount(intLockTime, monetaryLockingAmount)) {
+          submitButtonLabel = 'Add more stake';
+        } else if (checkOnlyExtendLockTime(intLockTime, monetaryLockingAmount)) {
+          submitButtonLabel = 'Extend lock time';
+        } else {
+          // throw new Error('Something went wrong!');
+          submitButtonLabel = 'Something went wrong!';
+        }
+      } else {
+        submitButtonLabel = 'Stake';
+      }
       // ray test touch >>
     } else {
       submitButtonLabel = t('connect_wallet');
