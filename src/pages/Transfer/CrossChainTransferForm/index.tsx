@@ -9,6 +9,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import Accounts from 'components/Accounts';
 import Chains from 'components/Chains';
@@ -31,7 +32,6 @@ import {
 import { ChainType } from 'common/types/chains.types';
 import STATUSES from 'utils/constants/statuses';
 import { xcmTransfer } from 'utils/relayChainApi/transfer';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
