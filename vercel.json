@@ -4,5 +4,10 @@
       "memory": 128,
       "maxDuration": 5
     }
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/supply/(.*)", "destination": "/api/supply_info"
+    }
+  ]
 }
