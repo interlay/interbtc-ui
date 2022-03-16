@@ -5,9 +5,9 @@
       "maxDuration": 5
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/supply/(.*)", "destination": "/api/supply_info"
+      "src": "/supply/(.*)", "dest": "/api/supply_info.py"
     }
   ]
 }
