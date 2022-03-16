@@ -28,7 +28,6 @@ import {
   StoreType,
   ParachainStatus
 } from 'common/types/util.types';
-
 import { ChainType } from 'common/types/chains.types';
 import STATUSES from 'utils/constants/statuses';
 import { xcmTransfer } from 'utils/relayChainApi/transfer';
@@ -185,4 +184,3 @@ export default withErrorBoundary(CrossChainTransferForm, {
     window.location.reload();
   }
 });
-
