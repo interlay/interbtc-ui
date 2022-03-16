@@ -42,6 +42,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
+  // TODO: this could be removed form state using React hook form getValue/watch
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
 
   const dispatch = useDispatch();
