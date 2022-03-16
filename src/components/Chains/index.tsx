@@ -69,7 +69,7 @@ const Chains = ({
   ]);
 
   return (
-    <>
+    <div>
       {selectedChain && (
         <ChainSelector
           label={label}
@@ -78,7 +78,7 @@ const Chains = ({
           selectedChain={selectedChain}
           onChange={setSelectedChain} />
       )}
-    </>
+    </div>
   );
 };
 

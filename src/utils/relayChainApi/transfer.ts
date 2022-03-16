@@ -12,7 +12,7 @@ import { ApiPromise } from '@polkadot/api';
 import { decodeAddress } from '@polkadot/keyring';
 
 import { PARACHAIN_ID } from '../../constants';
-import { createRelayChainApi } from './createRelayChainApi';
+import { createRelayChainApi } from './create-relay-chain-api';
 
 type XCMTransferAmount = MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 

@@ -122,33 +122,27 @@ const CrossChainTransferForm = (): JSX.Element => {
           {t('transfer_page.cross_chain_transfer_form.title')}
         </FormTitle>
         <div>
-          <div>
-            <TokenField
-              onChange={handleValueChange}
-              id={TRANSFER_AMOUNT}
-              name={TRANSFER_AMOUNT}
-              ref={register({
-                required: {
-                  value: true,
-                  message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
-                }
-              })}
-              error={!!errors[TRANSFER_AMOUNT]}
-              helperText={errors[TRANSFER_AMOUNT]?.message}
-              label={COLLATERAL_TOKEN_SYMBOL}
-              approxUSD={`≈ $ ${approxUsdValue}`} />
-          </div>
+          <TokenField
+            onChange={handleValueChange}
+            id={TRANSFER_AMOUNT}
+            name={TRANSFER_AMOUNT}
+            ref={register({
+              required: {
+                value: true,
+                message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
+              }
+            })}
+            error={!!errors[TRANSFER_AMOUNT]}
+            helperText={errors[TRANSFER_AMOUNT]?.message}
+            label={COLLATERAL_TOKEN_SYMBOL}
+            approxUSD={`≈ $ ${approxUsdValue}`} />
         </div>
-        <div>
-          <Chains
-            label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-            defaultChain={ChainType.RelayChain} />
-        </div>
-        <div>
-          <Chains
-            label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-            defaultChain={ChainType.Parachain} />
-        </div>
+        <Chains
+          label={t('transfer_page.cross_chain_transfer_form.from_chain')}
+          defaultChain={ChainType.RelayChain} />
+        <Chains
+          label={t('transfer_page.cross_chain_transfer_form.to_chain')}
+          defaultChain={ChainType.Parachain} />
         <div>
           <Accounts
             label={t('transfer_page.cross_chain_transfer_form.target_account')}

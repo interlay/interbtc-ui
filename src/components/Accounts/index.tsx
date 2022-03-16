@@ -34,7 +34,7 @@ const Accounts = ({
   ]);
 
   return (
-    <>
+    <div>
       {accounts && selectedAccount ? (
         <AccountSelector
           label={label}
@@ -42,7 +42,7 @@ const Accounts = ({
           selectedAccount={selectedAccount}
           onChange={setSelectedAccount} />
       ) : null}
-    </>
+    </div>
   );
 };
 
