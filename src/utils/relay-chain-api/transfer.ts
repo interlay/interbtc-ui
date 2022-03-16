@@ -9,9 +9,10 @@ import {
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { AddressOrPair } from '@polkadot/api/types';
 import { ApiPromise } from '@polkadot/api';
+import { decodeAddress } from '@polkadot/keyring';
 
 import { PARACHAIN_ID } from '../../constants';
-import { createRelayChainApi } from './createRelayChainApi';
+import { createRelayChainApi } from './create-relay-chain-api';
 
 type XCMTransferAmount = MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 
@@ -30,7 +31,7 @@ const createBeneficiary = (api: ApiPromise, id: string) => {
   const x1 = api.createType('XcmV1Junction', {
     accountId32: {
       network,
-      id
+      id: decodeAddress(id)
     }
   });
   const interior = api.createType('XcmV1MultilocationJunctions', { x1 });
@@ -42,7 +43,7 @@ const createBeneficiary = (api: ApiPromise, id: string) => {
 };
 
 const createAssets = (api: ApiPromise, transferAmount: XCMTransferAmount) => {
-  const fungible = transferAmount.toString(transferAmount.currency.rawBase);
+  const fungible = transferAmount.toString();
   const fun = api.createType('XcmV1MultiassetFungibility', { fungible });
   const interior = api.createType('XcmV1MultilocationJunctions', { here: true });
   const concrete = api.createType('XcmV1MultiLocation', { parents: 0, interior });
@@ -77,6 +78,7 @@ const xcmTransfer = async (
   const assets = createAssets(api, transferAmount);
 
   const xcmTransaction = api.tx.xcmPallet.reserveTransferAssets(dest, beneficiary, assets, 0);
+
   await transactionApi.sendLogged(xcmTransaction);
 };
 

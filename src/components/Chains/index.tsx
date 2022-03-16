@@ -8,13 +8,35 @@ import {
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME
 } from 'config/relay-chains';
+import { ChainType } from 'types/chains.types';
 
 const CHAIN_OPTIONS: Array<ChainOption> = [
   {
+    type: ChainType.RelayChain,
     name: RELAY_CHAIN_NAME,
     icon: <RelayChainLogoIcon height={46} />
   },
   {
+    type: ChainType.Parachain,
+    name: BRIDGE_PARACHAIN_NAME,
+    icon: <BridgeParachainLogoIcon height={46} />
+  }
+];
+
+// TODO: This is a temporary workaround for supporting kusama -> kintsugi transfer only.
+// This will be handled higher up when we support transferring in both directions and this
+// code will be removed.
+const RELAY_CHAIN_ONLY = [
+  {
+    type: ChainType.RelayChain,
+    name: RELAY_CHAIN_NAME,
+    icon: <RelayChainLogoIcon height={46} />
+  }
+];
+
+const PARACHAIN_ONLY = [
+  {
+    type: ChainType.Parachain,
     name: BRIDGE_PARACHAIN_NAME,
     icon: <BridgeParachainLogoIcon height={46} />
   }
@@ -23,17 +45,22 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
 interface Props {
   label: string;
   callbackFunction?: (chain: ChainOption) => void;
+  defaultChain: ChainType;
 }
+
+const getChain = (type: ChainType): ChainOption | undefined => CHAIN_OPTIONS.find(chain => chain.type === type);
 
 const Chains = ({
   callbackFunction,
-  label
+  label,
+  defaultChain
 }: Props): JSX.Element => {
-  // Set initial value to first item in CHAIN_OPTIONS object
-  const [selectedChain, setSelectedChain] = React.useState<ChainOption>(CHAIN_OPTIONS[0]);
+  // If getChain returns undefined this will set the first item in the array as a fallback
+  const [selectedChain, setSelectedChain] = React.useState<ChainOption>(getChain(defaultChain) || CHAIN_OPTIONS[0]);
 
   React.useEffect(() => {
     if (!callbackFunction) return;
+    if (!selectedChain) return;
 
     callbackFunction(selectedChain);
   }, [
@@ -42,13 +69,24 @@ const Chains = ({
   ]);
 
   return (
-    <ChainSelector
-      label={label}
-      chainOptions={CHAIN_OPTIONS}
-      selectedChain={selectedChain}
-      onChange={setSelectedChain} />
+    <div>
+      {selectedChain && (
+        <ChainSelector
+          label={label}
+          // TODO: remove this when support transferring from/to multiple chains
+          chainOptions={defaultChain === ChainType.Parachain ? PARACHAIN_ONLY : RELAY_CHAIN_ONLY}
+          selectedChain={selectedChain}
+          onChange={setSelectedChain} />
+      )}
+    </div>
   );
 };
 
 export type { ChainOption };
+
+export {
+  CHAIN_OPTIONS,
+  getChain
+};
+
 export default Chains;

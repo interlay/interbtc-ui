@@ -1,7 +1,6 @@
 
 import clsx from 'clsx';
 
-import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
@@ -10,11 +9,13 @@ import {
 interface Props {
   label: string;
   balance: string;
+  tokenSymbol: string;
 }
 
 const AvailableBalanceUI = ({
   balance,
-  label
+  label,
+  tokenSymbol
 }: Props): JSX.Element => {
   return (
     <div className='space-x-1'>
@@ -34,7 +35,7 @@ const AvailableBalanceUI = ({
           // TODO: placeholder color
           { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}>
-        {balance} {GOVERNANCE_TOKEN_SYMBOL}
+        {balance} {tokenSymbol}
       </span>
     </div>
   );

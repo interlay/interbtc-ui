@@ -11,8 +11,10 @@ import Select, {
   SelectLabel,
   SELECT_VARIANTS
 } from 'components/Select';
+import { ChainType } from 'types/chains.types';
 
 interface ChainOption {
+  type: ChainType;
   name: string;
   icon: JSX.Element;
 }
