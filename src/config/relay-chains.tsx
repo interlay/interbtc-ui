@@ -140,7 +140,7 @@ case KUSAMA: {
   // eslint-disable-next-line max-len
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
   RelayChainLogoIcon = KusamaLogoIcon;
-  BridgeParachainLogoIcon = InterlayLogoIcon;
+  BridgeParachainLogoIcon = KintsugiLogoIcon;
   WrappedTokenLogoIcon = KintsugiLogoIcon;
   WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
   CollateralTokenLogoIcon = KusamaLogoIcon;
