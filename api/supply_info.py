@@ -28,7 +28,7 @@ def subscan_post_request(url, json):
 app = Flask(__name__)
 
 
-@app.route("/kint-circ-supply", methods=["GET"])
+@app.route("/supply/kint-circ-supply", methods=["GET"])
 def get_kint_circ_supply():
     token_info_subscan = subscan_get_request(SUBSCAN_URL + "api/scan/token").json()["data"]["detail"]
     unvested_supply = from_10_decimals(int(token_info_subscan["KINT"]["available_balance"]))
@@ -41,12 +41,12 @@ def get_kint_circ_supply():
     return str(circulating_supply)
 
 
-@app.route("/kint-total-supply", methods=["GET"])
+@app.route("/supply/kint-total-supply", methods=["GET"])
 def get_kint_total_supply():
     return str(10_000_000)
 
 
-@app.route("/kbtc-supply", methods=["GET"])
+@app.route("/supply/kbtc-supply", methods=["GET"])
 def get_kbtc_supply():
     token_info_subscan = subscan_get_request(SUBSCAN_URL + "api/scan/token").json()["data"]["detail"]
     kBTC_supply = from_10_decimals(int(token_info_subscan["KBTC"]["available_balance"]))
