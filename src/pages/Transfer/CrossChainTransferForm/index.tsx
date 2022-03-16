@@ -30,7 +30,7 @@ import {
 } from 'common/types/util.types';
 import { ChainType } from 'types/chains.types';
 import STATUSES from 'utils/constants/statuses';
-import { xcmTransfer } from 'utils/relayChainApi/transfer';
+import { xcmTransfer } from 'utils/relay-chain-api/transfer';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
