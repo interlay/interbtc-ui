@@ -1,4 +1,4 @@
-from flask import Flask, Response
+from flask import Flask
 import requests
 import os
 
@@ -51,12 +51,6 @@ def get_kbtc_supply():
     token_info_subscan = subscan_get_request(SUBSCAN_URL + "api/scan/token").json()["data"]["detail"]
     kBTC_supply = from_10_decimals(int(token_info_subscan["KBTC"]["available_balance"]))
     return str(kBTC_supply)
-
-
-@app.route("/", defaults={"path": ""})
-@app.route("/<path:path>")
-def catch_all(path):
-    return Response("<h1>Flask</h1><p>You visited: /%s</p>" % (path), mimetype="text/html")
 
 
 if __name__ == "__main__":
