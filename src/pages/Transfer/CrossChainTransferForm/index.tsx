@@ -28,7 +28,7 @@ import {
   StoreType,
   ParachainStatus
 } from 'common/types/util.types';
-import { ChainType } from 'common/types/chains.types';
+import { ChainType } from 'types/chains.types';
 import STATUSES from 'utils/constants/statuses';
 import { xcmTransfer } from 'utils/relayChainApi/transfer';
 

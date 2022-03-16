@@ -8,7 +8,7 @@ import {
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME
 } from 'config/relay-chains';
-import { ChainType } from 'common/types/chains.types';
+import { ChainType } from 'types/chains.types';
 
 const CHAIN_OPTIONS: Array<ChainOption> = [
   {
