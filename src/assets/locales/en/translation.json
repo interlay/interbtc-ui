@@ -201,7 +201,7 @@
   },
   "burn_page": {
     "burn_interbtc": "Burn {{wrappedTokenSymbol}} in exchange for {{collateralTokenSymbol}}",
-    "dot_earned": "{{collateralTokenSymbol}} earned",
+    "available": "{{wrappedTokenSymbol}} available to burn",
     "burn": "Burn",
     "please_enter_the_amount": "Please enter the amount.",
     "successfully_burned": "Successfully burned.",
