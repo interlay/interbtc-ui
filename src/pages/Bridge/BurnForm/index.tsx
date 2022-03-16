@@ -113,14 +113,17 @@ const BurnForm = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [theBurnRate, maxBurnableTokens] = await Promise.all([
+        const [
+          theBurnRate,
+          theBurnableTokens
+        ] = await Promise.all([
           window.bridge.redeem.getBurnExchangeRate(COLLATERAL_TOKEN),
           window.bridge.redeem.getMaxBurnableTokens(
             COLLATERAL_TOKEN as CollateralCurrency
           )
         ]);
         setBurnRate(theBurnRate);
-        setBurnableTokens(maxBurnableTokens);
+        setBurnableTokens(theBurnableTokens);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
