@@ -1,10 +1,6 @@
 import { ApiPromise } from '@polkadot/api';
 import { AddressOrPair } from '@polkadot/api-base/types';
-import { CollateralUnit, newMonetaryAmount } from '@interlay/interbtc-api';
-import {
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { RelayChainMonetaryAmount } from './';
 
