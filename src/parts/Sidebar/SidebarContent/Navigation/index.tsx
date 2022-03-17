@@ -11,7 +11,8 @@ import {
   ChartSquareBarIcon,
   ChipIcon,
   SwitchHorizontalIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  ChartBarIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -19,7 +20,10 @@ import { useTranslation } from 'react-i18next';
 import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
-import { TERMS_AND_CONDITIONS_LINK } from 'config/relay-chains';
+import {
+  TERMS_AND_CONDITIONS_LINK,
+  SUBSCAN_LINK
+} from 'config/relay-chains';
 import {
   KUSAMA,
   POLKADOT
@@ -108,6 +112,17 @@ const Navigation = ({
         link: INTERLAY_DOCS_LINK,
         icon: BookOpenIcon,
         external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
+        name: 'nav_subscan',
+        link: SUBSCAN_LINK,
+        icon: ChartBarIcon,
+        external: true,
+        hidden: !SUBSCAN_LINK,
         rest: {
           target: '_blank',
           rel: 'noopener noreferrer'
