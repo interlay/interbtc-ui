@@ -32,7 +32,6 @@ import {
   VoteUnit
 } from '@interlay/interbtc-api';
 
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 import Title from './Title';
 import BalancesUI from './BalancesUI';
 import WithdrawButton from './WithdrawButton';
@@ -46,6 +45,9 @@ import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
+// ray test touch <<
+import WarningBanner from 'components/WarningBanner';
+// ray test touch >>
 import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
@@ -735,24 +737,9 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
-        <Panel
-          className={clsx(
-            'mx-auto',
-            'text-center',
-            'w-full',
-            'p-4',
-            'md:max-w-2xl',
-            'justify-between',
-            'flex',
-            'dark:bg-kintsugiThunderbird'
-          )}>
-          <InformationCircleIcon
-            className={clsx(
-              'w-5',
-              'h-5'
-            )} />
-          <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
-        </Panel>
+        {/* ray test touch << */}
+        <WarningBanner />
+        {/* ray test touch >> */}
         <Panel
           className={clsx(
             'mx-auto',
