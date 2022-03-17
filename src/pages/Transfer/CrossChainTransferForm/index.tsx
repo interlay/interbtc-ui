@@ -13,14 +13,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { ApiPromise } from '@polkadot/api';
-import {
-  CollateralUnit,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
-import {
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import Accounts from 'components/Accounts';
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
@@ -48,7 +41,8 @@ import STATUSES from 'utils/constants/statuses';
 import {
   createRelayChainApi,
   getRelayChainBalance,
-  transferToParachain
+  transferToParachain,
+  RelayChainMonetaryAmount
 } from 'utils/relay-chain-api';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
@@ -62,8 +56,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   // be scoped to this component, but long term it needs to be handled at
   // the application level.
   const [api, setApi] = React.useState<ApiPromise | undefined>(undefined);
-  const [relayChainBalance, setRelayChainBalance] =
-    React.useState<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit> | undefined>(undefined);
+  const [relayChainBalance, setRelayChainBalance] = React.useState<RelayChainMonetaryAmount | undefined>(undefined);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
