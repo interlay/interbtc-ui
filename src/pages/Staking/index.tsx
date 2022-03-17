@@ -32,6 +32,7 @@ import {
   VoteUnit
 } from '@interlay/interbtc-api';
 
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 import Title from './Title';
 import BalancesUI from './BalancesUI';
 import WithdrawButton from './WithdrawButton';
@@ -63,7 +64,6 @@ import {
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const ONE_WEEK_SECONDS = 7 * 24 * 3600;
 
@@ -716,6 +716,24 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
+        <Panel
+          className={clsx(
+            'mx-auto',
+            'text-center',
+            'w-full',
+            'p-4',
+            'md:max-w-xl',
+            'justify-between',
+            'flex',
+            'dark:bg-kintsugiThunderbird'
+          )}>
+          <InformationCircleIcon
+            className={clsx(
+              'w-5',
+              'h-5'
+            )} />
+          <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
+        </Panel>
         <Panel
           className={clsx(
             'mx-auto',
