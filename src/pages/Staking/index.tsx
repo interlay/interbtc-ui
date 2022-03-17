@@ -740,11 +740,9 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
-        {/* ray test touch << */}
         <WarningBanner
           className={SHARED_CLASSES}
           message='Block times are currently higher than expected. Lock times may be longer than expected.' />
-        {/* ray test touch >> */}
         <Panel
           className={SHARED_CLASSES}>
           <form
