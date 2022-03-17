@@ -38,11 +38,7 @@ import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import Hr2 from 'components/hrs/Hr2';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
-import {
-  BALANCE_MAX_INTEGER_LENGTH,
-  BTC_ADDRESS_REGEX
-} from '../../../constants';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -55,6 +51,10 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import STATUSES from 'utils/constants/statuses';
+import {
+  BALANCE_MAX_INTEGER_LENGTH,
+  BTC_ADDRESS_REGEX
+} from '../../../constants';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -70,7 +70,6 @@ import {
   ParachainStatus
 } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -401,17 +400,7 @@ const RedeemForm = (): JSX.Element | null => {
                   'space-x-1'
                 )}>
                 <span>{t('redeem_page.premium_redeem')}</span>
-                <InterlayTooltip label={t('redeem_page.premium_redeem_info')}>
-                  <InformationCircleIcon
-                    className={clsx(
-                      { 'text-interlayTextSecondaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                      { 'dark:text-kintsugiTextSecondaryInDarkMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                      'w-5',
-                      'h-5'
-                    )} />
-                </InterlayTooltip>
+                <InformationTooltip label={t('redeem_page.premium_redeem_info')} />
               </div>
               <Toggle
                 checked={premiumRedeemSelected}

@@ -29,6 +29,7 @@ import {
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -37,15 +38,10 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
 import {
   PAGES,
   URL_PARAMETERS
@@ -57,7 +53,6 @@ import {
 import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
@@ -467,19 +462,12 @@ const VaultsTable = (): JSX.Element => {
                   ])}>
                   {column.render('Header')}
                   {column.tooltip && (
-                    <InterlayTooltip label={column.tooltip}>
-                      <InformationCircleIcon
-                        className={clsx(
-                          // eslint-disable-next-line max-len
-                          { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                          // eslint-disable-next-line max-len
-                          { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                          'inline-block',
-                          'ml-1',
-                          'w-5',
-                          'h-5'
-                        )} />
-                    </InterlayTooltip>
+                    <InformationTooltip
+                      className={clsx(
+                        'inline-block',
+                        'ml-1'
+                      )}
+                      label={column.tooltip} />
                   )}
                 </InterlayTh>
               ))}

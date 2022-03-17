@@ -45,7 +45,7 @@ import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -63,7 +63,6 @@ import {
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const ONE_WEEK_SECONDS = 7 * 24 * 3600;
 
@@ -739,7 +738,7 @@ const Staking = (): JSX.Element => {
           className={clsx(
             'mx-auto',
             'w-full',
-            'md:max-w-xl'
+            'md:max-w-2xl'
           )}>
           <form
             className={clsx(
@@ -820,9 +819,11 @@ const Staking = (): JSX.Element => {
               tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
-              value={`${renderEstimatedRewardAmountLabel()}  ${GOVERNANCE_TOKEN_SYMBOL}`}
-              // eslint-disable-next-line max-len
-              tooltip={`The estimated amount of KINT you will receive as rewards. Depends on your proportion of the total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}.`} />
+              value={`${renderEstimatedRewardAmountLabel()} ${GOVERNANCE_TOKEN_SYMBOL}`}
+              tooltip={t('staking_page.estimated_governance_token_rewards_tooltip_label', {
+                governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
+                voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
+              })} />
             <SubmitButton
               disabled={
                 initializing ||
@@ -835,18 +836,9 @@ const Staking = (): JSX.Element => {
               onClick={handleConfirmClick}
               endIcon={
                 unlockFirst ? (
-                  <InterlayTooltip
-                    label='Please unstake first.'>
-                    <InformationCircleIcon
-                      onClick={event => {
-                        event.stopPropagation();
-                      }}
-                      className={clsx(
-                        'pointer-events-auto',
-                        'w-5',
-                        'h-5'
-                      )} />
-                  </InterlayTooltip>
+                  <InformationTooltip
+                    label='Please unstake first.'
+                    forDisabledAction={unlockFirst} />
                 ) : null
               }>
               {submitButtonLabel}

@@ -1,6 +1,8 @@
 
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN_SYMBOL
@@ -16,12 +18,7 @@ const Label = ({
 }: React.ComponentPropsWithRef<'span'>) => (
   <span
     className={clsx(
-      'block',
       'text-sm',
-      // TODO: placeholder color
-      { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-      // TODO: placeholder color
-      { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       className
     )}
     {...rest} />
@@ -65,18 +62,34 @@ interface BalanceItemCustomProps {
   label: string;
   value: string;
   tokenSymbol: string;
+  tooltip?: string;
 }
 
 const BalanceItem = ({
   label,
   value,
   tokenSymbol,
+  tooltip,
   ...rest
 }: BalanceItemCustomProps & React.ComponentPropsWithRef<'div'>) => (
   <div {...rest}>
-    <Label>
-      {label}
-    </Label>
+    <div
+      className={clsx(
+        'inline-flex',
+        'items-center',
+        'space-x-1',
+        // TODO: placeholder color
+        { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        // TODO: placeholder color
+        { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+      )}>
+      <Label>
+        {label}
+      </Label>
+      {tooltip && (
+        <InformationTooltip label={tooltip} />
+      )}
+    </div>
     <Amount
       value={value}
       tokenSymbol={tokenSymbol} />
@@ -94,6 +107,8 @@ const BalancesUI = ({
   voteStakedAmount,
   projectedRewardAmount
 }: Props): JSX.Element => {
+  const { t } = useTranslation();
+
   return (
     <div
       className={clsx(
@@ -106,7 +121,7 @@ const BalancesUI = ({
         { 'dark:bg-kintsugiViolet': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'grid',
         'grid-cols-3',
-        'gap-7'
+        'gap-2'
       )}>
       <BalanceItem
         label={`Staked ${GOVERNANCE_TOKEN_SYMBOL}`}
@@ -117,9 +132,13 @@ const BalancesUI = ({
         value={voteStakedAmount}
         tokenSymbol={VOTE_GOVERNANCE_TOKEN_SYMBOL} />
       <BalanceItem
-        label={`${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
+        label={`Projected ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
         value={projectedRewardAmount}
-        tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
+        tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
+        tooltip={t('staking_page.estimated_governance_token_rewards_tooltip_label', {
+          governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
+          voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
+        })} />
     </div>
   );
 };

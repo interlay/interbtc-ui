@@ -14,13 +14,12 @@ import ErrorModal from 'components/ErrorModal';
 import InterlayDenimOrKintsugiMidnightContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
 } from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getFormattedUnlockDate = (remainingBlockNumbersToUnstake: number, formatPattern: string) => {
   const unlockDate = add(new Date(), {
@@ -98,19 +97,10 @@ const WithdrawButton = ({
           className
         )}
         endIcon={
-          <InterlayTooltip
+          <InformationTooltip
             // eslint-disable-next-line max-len
-            label={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on ${renderUnlockDateTimeLabel()}`}>
-            <InformationCircleIcon
-              onClick={event => {
-                event.stopPropagation();
-              }}
-              className={clsx(
-                'pointer-events-auto',
-                'w-5',
-                'h-5'
-              )} />
-          </InterlayTooltip>
+            label={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on ${renderUnlockDateTimeLabel()}`}
+            forDisabledAction={disabled} />
         }
         onClick={handleUnstake}
         pending={withdrawMutation.isLoading}
