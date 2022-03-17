@@ -123,7 +123,10 @@ const CrossChainTransferForm = (): JSX.Element => {
     const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
 
     return relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
-  }, [relayChainBalance, t]);
+  }, [
+    relayChainBalance,
+    t
+  ]);
 
   React.useEffect(() => {
     if (api) return;
