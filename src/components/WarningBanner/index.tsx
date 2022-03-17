@@ -20,15 +20,21 @@ const WarningBanner = ({
         'items-center',
         'px-8',
         'py-3',
+        'space-x-3',
         'sm:rounded-lg',
         'bg-kintsugiThunderbird',
+        'text-sm',
+        'font-medium',
         className
       )}
+      style={{
+        minHeight: 64
+      }}
       {...rest}>
       <InformationCircleIcon
         className={clsx(
-          'w-5',
-          'h-5'
+          'w-6',
+          'h-6'
         )} />
       <p>{message}</p>
     </div>
