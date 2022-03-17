@@ -12,7 +12,6 @@ import {
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { ApiPromise } from '@polkadot/api';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import Accounts from 'components/Accounts';
@@ -42,6 +41,7 @@ import {
   createRelayChainApi,
   getRelayChainBalance,
   transferToParachain,
+  RelayChainApi,
   RelayChainMonetaryAmount
 } from 'utils/relay-chain-api';
 
@@ -55,7 +55,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   // TODO: review how we're handling the relay chain api - for now it can
   // be scoped to this component, but long term it needs to be handled at
   // the application level.
-  const [api, setApi] = React.useState<ApiPromise | undefined>(undefined);
+  const [api, setApi] = React.useState<RelayChainApi | undefined>(undefined);
   const [relayChainBalance, setRelayChainBalance] = React.useState<RelayChainMonetaryAmount | undefined>(undefined);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
