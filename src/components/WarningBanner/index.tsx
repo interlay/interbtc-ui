@@ -2,6 +2,7 @@
 import clsx from 'clsx';
 
 import { KUSAMA } from 'utils/constants/relay-chain-names';
+import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 interface CustomProps {
@@ -27,15 +28,7 @@ const WarningBanner = ({
         { 'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium',
-        // ray test touch <<
-        'border',
-        // TODO: could be reused
-        // MEMO: inspired by https://mui.com/components/buttons/
-        'border-black',
-        'border-opacity-25',
-        'dark:border-white',
-        'dark:border-opacity-25',
-        // ray test touch >>
+        LIGHT_DARK_BORDER_CLASSES,
         className
       )}
       style={{
