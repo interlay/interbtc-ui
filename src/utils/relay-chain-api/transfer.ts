@@ -12,7 +12,6 @@ import { ApiPromise } from '@polkadot/api';
 import { decodeAddress } from '@polkadot/keyring';
 
 import { PARACHAIN_ID } from '../../constants';
-import { createRelayChainApi } from './create-relay-chain-api';
 
 type XCMTransferAmount = MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 
@@ -57,14 +56,11 @@ const createAssets = (api: ApiPromise, transferAmount: XCMTransferAmount) => {
 
 // Originating account is passed into avoid creating a dependency on the interBTC api instance
 const xcmTransfer = async (
+  api: ApiPromise,
   originatingAccount: AddressOrPair,
   destinationAddress: string,
   transferAmount: XCMTransferAmount
 ): Promise<void> => {
-  const api = await createRelayChainApi();
-
-  if (!api) return;
-
   // Create transaction api instance on the relaychain
   const transactionApi = new DefaultTransactionAPI(api, originatingAccount);
 
