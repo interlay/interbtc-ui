@@ -382,6 +382,39 @@ const Staking = (): JSX.Element => {
     trigger
   ]);
 
+  const getStakedAmount = () => {
+    if (
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading
+    ) {
+      return undefined;
+    }
+    if (stakedAmountAndEndBlock === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return stakedAmountAndEndBlock.amount;
+  };
+  const stakedAmount = getStakedAmount();
+
+  const availableBalance = React.useMemo(() => {
+    if (
+      !governanceTokenBalance ||
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading
+    ) return;
+    if (stakedAmount === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    return governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
+  }, [
+    governanceTokenBalance,
+    stakedAmountAndEndBlockIdle,
+    stakedAmountAndEndBlockLoading,
+    stakedAmount
+  ]);
+
   const onSubmit = (data: StakingFormData) => {
     if (!bridgeLoaded) return;
     if (currentBlockNumber === undefined) {
@@ -453,11 +486,9 @@ const Staking = (): JSX.Element => {
       return undefined;
     }
 
-    if (remainingBlockNumbersToUnstake === undefined) {
+    if (availableLockTime === undefined) {
       throw new Error('Something went wrong!');
     }
-    const remainingWeeksToUnstake = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake);
-    const availableLockTime = Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeksToUnstake);
     if (
       numericValue < STAKE_LOCK_TIME.MIN ||
       numericValue > availableLockTime
@@ -524,38 +555,16 @@ const Staking = (): JSX.Element => {
   };
   const remainingBlockNumbersToUnstake = getRemainingBlockNumbersToUnstake();
 
-  const getStakedAmount = () => {
-    if (
-      stakedAmountAndEndBlockIdle ||
-      stakedAmountAndEndBlockLoading
-    ) {
+  const getAvailableLockTime = () => {
+    if (remainingBlockNumbersToUnstake === undefined) {
       return undefined;
     }
-    if (stakedAmountAndEndBlock === undefined) {
-      throw new Error('Something went wrong!');
-    }
 
-    return stakedAmountAndEndBlock.amount;
+    const remainingWeeksToUnstake = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake);
+
+    return Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeksToUnstake);
   };
-  const stakedAmount = getStakedAmount();
-
-  const availableBalance = React.useMemo(() => {
-    if (
-      !governanceTokenBalance ||
-      stakedAmountAndEndBlockIdle ||
-      stakedAmountAndEndBlockLoading
-    ) return;
-    if (stakedAmount === undefined) {
-      throw new Error('Something went wrong!');
-    }
-
-    return governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
-  }, [
-    governanceTokenBalance,
-    stakedAmountAndEndBlockIdle,
-    stakedAmountAndEndBlockLoading,
-    stakedAmount
-  ]);
+  const availableLockTime = getAvailableLockTime();
 
   const renderAvailableBalanceLabel = () => {
     return (
@@ -692,7 +701,9 @@ const Staking = (): JSX.Element => {
 
   const lockTimeFieldDisabled =
     votingBalanceGreaterThanZero === undefined ||
-    remainingBlockNumbersToUnstake === undefined;
+    remainingBlockNumbersToUnstake === undefined ||
+    availableLockTime === undefined ||
+    availableLockTime <= 0;
 
   const lockingAmountFieldDisabled = availableBalance === undefined;
 
