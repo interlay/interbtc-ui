@@ -9,11 +9,13 @@ interface CustomProps {
   message: string;
 }
 
+type Props = CustomProps & React.ComponentPropsWithRef<'div'>;
+
 const WarningBanner = ({
   message,
   className,
   ...rest
-}: CustomProps & React.ComponentPropsWithRef<'div'>): JSX.Element => {
+}: Props): JSX.Element => {
   return (
     <div
       className={clsx(
@@ -43,6 +45,10 @@ const WarningBanner = ({
       <p>{message}</p>
     </div>
   );
+};
+
+export type {
+  Props
 };
 
 export default WarningBanner;
