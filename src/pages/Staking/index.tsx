@@ -722,7 +722,7 @@ const Staking = (): JSX.Element => {
             'text-center',
             'w-full',
             'p-4',
-            'md:max-w-2xl',
+            'md:max-w-xl',
             'justify-between',
             'flex',
             'dark:bg-kintsugiThunderbird'
