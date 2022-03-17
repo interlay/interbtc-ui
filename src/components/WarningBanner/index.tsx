@@ -2,35 +2,36 @@
 // ray test touch <<
 import clsx from 'clsx';
 
-import Panel from 'components/Panel';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
-interface Props {
+interface CustomProps {
   message: string;
 }
 
 const WarningBanner = ({
-  message
-}: Props): JSX.Element => {
+  message,
+  className,
+  ...rest
+}: CustomProps & React.ComponentPropsWithRef<'div'>): JSX.Element => {
   return (
-    <Panel
+    <div
       className={clsx(
-        'mx-auto',
-        'text-center',
-        'w-full',
-        'p-4',
-        'md:max-w-2xl',
-        'justify-between',
         'flex',
-        'dark:bg-kintsugiThunderbird'
-      )}>
+        'items-center',
+        'px-8',
+        'py-3',
+        'sm:rounded-lg',
+        'bg-kintsugiThunderbird',
+        className
+      )}
+      {...rest}>
       <InformationCircleIcon
         className={clsx(
           'w-5',
           'h-5'
         )} />
       <p>{message}</p>
-    </Panel>
+    </div>
   );
 };
 

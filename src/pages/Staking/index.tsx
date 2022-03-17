@@ -65,6 +65,11 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 
+const SHARED_CLASSES = clsx(
+  'mx-auto',
+  'md:max-w-2xl'
+);
+
 const ONE_WEEK_SECONDS = 7 * 24 * 3600;
 
 const convertWeeksToBlockNumbers = (weeks: number) => {
@@ -737,14 +742,11 @@ const Staking = (): JSX.Element => {
       <MainContainer>
         {/* ray test touch << */}
         <WarningBanner
+          className={SHARED_CLASSES}
           message='Block times are currently higher than expected. Lock times may be longer than expected.' />
         {/* ray test touch >> */}
         <Panel
-          className={clsx(
-            'mx-auto',
-            'w-full',
-            'md:max-w-2xl'
-          )}>
+          className={SHARED_CLASSES}>
           <form
             className={clsx(
               'p-8',
