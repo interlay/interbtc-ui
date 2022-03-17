@@ -46,6 +46,7 @@ import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
+import WarningBanner from 'components/WarningBanner';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
@@ -64,6 +65,11 @@ import {
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
+
+const SHARED_CLASSES = clsx(
+  'mx-auto',
+  'md:max-w-2xl'
+);
 
 const ONE_WEEK_SECONDS = 7 * 24 * 3600;
 
@@ -716,30 +722,11 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
+        <WarningBanner
+          className={SHARED_CLASSES}
+          message='Block times are currently higher than expected. Lock times may be longer than expected.' />
         <Panel
-          className={clsx(
-            'mx-auto',
-            'text-center',
-            'w-full',
-            'p-4',
-            'md:max-w-xl',
-            'justify-between',
-            'flex',
-            'dark:bg-kintsugiThunderbird'
-          )}>
-          <InformationCircleIcon
-            className={clsx(
-              'w-5',
-              'h-5'
-            )} />
-          <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
-        </Panel>
-        <Panel
-          className={clsx(
-            'mx-auto',
-            'w-full',
-            'md:max-w-xl'
-          )}>
+          className={SHARED_CLASSES}>
           <form
             className={clsx(
               'p-8',
