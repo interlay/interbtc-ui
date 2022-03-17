@@ -119,14 +119,11 @@ const CrossChainTransferForm = (): JSX.Element => {
     setApproxUsdValue(usd);
   };
 
-  const validateTransferAmount = React.useCallback((value: number): string | undefined => {
+  const validateTransferAmount = (value: number): string | undefined => {
     const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
 
     return relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
-  }, [
-    relayChainBalance,
-    t
-  ]);
+  };
 
   React.useEffect(() => {
     if (api) return;
