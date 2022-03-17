@@ -1,19 +1,11 @@
-import {
-  CollateralUnit,
-  DefaultTransactionAPI
-} from '@interlay/interbtc-api';
-import {
-  Currency,
-  MonetaryAmount
-} from '@interlay/monetary-js';
+import { DefaultTransactionAPI } from '@interlay/interbtc-api';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { AddressOrPair } from '@polkadot/api/types';
 import { ApiPromise } from '@polkadot/api';
 import { decodeAddress } from '@polkadot/keyring';
 
 import { PARACHAIN_ID } from '../../constants';
-
-type XCMTransferAmount = MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+import { RelayChainMonetaryAmount } from './';
 
 const createDest = (api: ApiPromise) => {
   const x1 = api.createType('XcmV1Junction', { parachain: PARACHAIN_ID });
@@ -41,7 +33,7 @@ const createBeneficiary = (api: ApiPromise, id: string) => {
   });
 };
 
-const createAssets = (api: ApiPromise, transferAmount: XCMTransferAmount) => {
+const createAssets = (api: ApiPromise, transferAmount: RelayChainMonetaryAmount) => {
   const fungible = transferAmount.toString();
   const fun = api.createType('XcmV1MultiassetFungibility', { fungible });
   const interior = api.createType('XcmV1MultilocationJunctions', { here: true });
@@ -59,7 +51,7 @@ const transferToParachain = async (
   api: ApiPromise,
   originatingAccount: AddressOrPair,
   destinationAddress: string,
-  transferAmount: XCMTransferAmount
+  transferAmount: RelayChainMonetaryAmount
 ): Promise<void> => {
   // Create transaction api instance on the relaychain
   const transactionApi = new DefaultTransactionAPI(api, originatingAccount);
