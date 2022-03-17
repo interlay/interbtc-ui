@@ -1,7 +1,10 @@
 
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { withErrorBoundary } from 'react-error-boundary';
+import {
+  useErrorHandler,
+  withErrorBoundary
+} from 'react-error-boundary';
 import {
   useSelector,
   useDispatch
@@ -9,6 +12,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { ApiPromise } from '@polkadot/api';
 import {
   CollateralUnit,
   newMonetaryAmount
@@ -31,7 +35,10 @@ import {
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+import {
+  displayMonetaryAmount,
+  getUsdAmount
+} from 'common/utils/utils';
 import {
   StoreType,
   ParachainStatus
@@ -41,17 +48,17 @@ import STATUSES from 'utils/constants/statuses';
 import { createRelayChainApi } from 'utils/relay-chain-api/create-relay-chain-api';
 import { xcmTransfer } from 'utils/relay-chain-api/transfer';
 import { getRelayChainBalance } from 'utils/relay-chain-api/get-relay-chain-balance';
-import { ApiPromise } from '@polkadot/api';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
 type CrossChainTransferFormData = {
   [TRANSFER_AMOUNT]: string;
 }
+
 const CrossChainTransferForm = (): JSX.Element => {
-  // TODO: I want to review how we're handling the relay chain api - for now it can
-  // be scoped to this component, but long term it needs to be handled at the application
-  // level.
+  // TODO: review how we're handling the relay chain api - for now it can
+  // be scoped to this component, but long term it needs to be handled at
+  // the application level.
   const [api, setApi] = React.useState<ApiPromise | undefined>(undefined);
   const [relayChainBalance, setRelayChainBalance] =
     React.useState<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit> | undefined>(undefined);
@@ -63,6 +70,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const handleError = useErrorHandler();
 
   const {
     register,
@@ -85,6 +93,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     try {
       setSubmitStatus(STATUSES.PENDING);
+
       if (!api) return;
 
       await xcmTransfer(
@@ -123,33 +132,43 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   React.useEffect(() => {
     if (api) return;
+    if (!handleError) return;
 
     const initialiseApi = async () => {
-      const api = await createRelayChainApi();
-      setApi(api);
+      try {
+        const api = await createRelayChainApi();
+        setApi(api);
+      } catch (error) {
+        handleError(error);
+      }
     };
 
     initialiseApi();
-  }, [api]);
+  }, [
+    api,
+    handleError
+  ]);
 
   React.useEffect(() => {
     if (!api) return;
+    if (!handleError) return;
 
     const fetchRelayChainBalance = async () => {
-      const balance: any = await getRelayChainBalance(api, address);
-      setRelayChainBalance(balance);
+      try {
+        const balance: any = await getRelayChainBalance(api, address);
+        setRelayChainBalance(balance);
+      } catch (error) {
+        handleError(error);
+      }
     };
 
     fetchRelayChainBalance();
   }, [
     api,
-    relayChainBalance,
-    address
+    address,
+    handleError,
+    relayChainBalance
   ]);
-
-  React.useEffect(() => {
-    console.log('relayChainBalance', relayChainBalance);
-  }, [relayChainBalance]);
 
   // This ensures that triggering the notification and clearing
   // the form happen at the same time.
