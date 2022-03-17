@@ -1,9 +1,9 @@
 import { createSubstrateAPI } from '@interlay/interbtc-api';
-import { ApiPromise } from '@polkadot/api';
 
 import { RELAY_CHAIN_URL } from '../../constants';
+import { RelayChainApi } from './';
 
-const createRelayChainApi = async (): Promise<ApiPromise | undefined> => {
+const createRelayChainApi = async (): Promise<RelayChainApi | undefined> => {
   // Return api as undefined if relay chain isn't set. This should never happen
   // as XCM features should be suppressed if the relaychain is undefined.
   if (!RELAY_CHAIN_URL) {
