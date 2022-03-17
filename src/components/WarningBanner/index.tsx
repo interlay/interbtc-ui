@@ -5,7 +5,13 @@ import clsx from 'clsx';
 import Panel from 'components/Panel';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
-const WarningBanner = (): JSX.Element => {
+interface Props {
+  message: string;
+}
+
+const WarningBanner = ({
+  message
+}: Props): JSX.Element => {
   return (
     <Panel
       className={clsx(
@@ -23,7 +29,7 @@ const WarningBanner = (): JSX.Element => {
           'w-5',
           'h-5'
         )} />
-      <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
+      <p>{message}</p>
     </Panel>
   );
 };

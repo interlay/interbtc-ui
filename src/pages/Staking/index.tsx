@@ -45,9 +45,7 @@ import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
-// ray test touch <<
 import WarningBanner from 'components/WarningBanner';
-// ray test touch >>
 import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
@@ -738,7 +736,8 @@ const Staking = (): JSX.Element => {
     <>
       <MainContainer>
         {/* ray test touch << */}
-        <WarningBanner />
+        <WarningBanner
+          message='Block times are currently higher than expected. Lock times may be longer than expected.' />
         {/* ray test touch >> */}
         <Panel
           className={clsx(
