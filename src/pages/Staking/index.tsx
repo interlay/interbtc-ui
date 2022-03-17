@@ -32,6 +32,7 @@ import {
   VoteUnit
 } from '@interlay/interbtc-api';
 
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 import Title from './Title';
 import BalancesUI from './BalancesUI';
 import WithdrawButton from './WithdrawButton';
@@ -734,6 +735,24 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
+        <Panel
+          className={clsx(
+            'mx-auto',
+            'text-center',
+            'w-full',
+            'p-4',
+            'md:max-w-2xl',
+            'justify-between',
+            'flex',
+            'dark:bg-kintsugiThunderbird'
+          )}>
+          <InformationCircleIcon
+            className={clsx(
+              'w-5',
+              'h-5'
+            )} />
+          <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
+        </Panel>
         <Panel
           className={clsx(
             'mx-auto',
