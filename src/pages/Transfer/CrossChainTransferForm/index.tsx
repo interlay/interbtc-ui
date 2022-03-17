@@ -45,9 +45,11 @@ import {
 } from 'common/types/util.types';
 import { ChainType } from 'types/chains.types';
 import STATUSES from 'utils/constants/statuses';
-import { createRelayChainApi } from 'utils/relay-chain-api/create-relay-chain-api';
-import { xcmTransfer } from 'utils/relay-chain-api/transfer';
-import { getRelayChainBalance } from 'utils/relay-chain-api/get-relay-chain-balance';
+import {
+  createRelayChainApi,
+  getRelayChainBalance,
+  transferToParachain
+} from 'utils/relay-chain-api';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
@@ -96,7 +98,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
       if (!api) return;
 
-      await xcmTransfer(
+      await transferToParachain(
         api,
         address,
         destination.address,
