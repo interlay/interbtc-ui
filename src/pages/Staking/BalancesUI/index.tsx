@@ -1,5 +1,6 @@
 
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
@@ -10,7 +11,6 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import { ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP_LABEL } from 'utils/constants/staking';
 
 const Label = ({
   className,
@@ -107,6 +107,8 @@ const BalancesUI = ({
   voteStakedAmount,
   projectedRewardAmount
 }: Props): JSX.Element => {
+  const { t } = useTranslation();
+
   return (
     <div
       className={clsx(
@@ -133,7 +135,10 @@ const BalancesUI = ({
         label={`Projected ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
         value={projectedRewardAmount}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
-        tooltip={ESTIMATED_GOVERNANCE_TOKEN_REWARDS_TOOLTIP_LABEL} />
+        tooltip={t('staking_page.estimated_governance_token_rewards_tooltip_label', {
+          governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
+          voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
+        })} />
     </div>
   );
 };
