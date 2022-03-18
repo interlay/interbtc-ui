@@ -225,10 +225,13 @@ const IssueForm = (): JSX.Element | null => {
         });
       }
 
+      // ray test touch <<
       if (value > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT) {
         return t('issue_page.validation_max_value', {
-          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
+          maximumIssuableWrappedTokenAmount: MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT
         });
+      // ray test touch >>
       } else if (btcAmount.lt(dustValue)) {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }

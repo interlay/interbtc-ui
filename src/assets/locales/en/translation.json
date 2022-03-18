@@ -320,7 +320,7 @@
     "issue_request_for": "Issue Request for",
     "updated": "Updated",
     "error_more_than_6_blocks_behind": "You can't issue {{wrappedTokenSymbol}} at the moment because {{wrappedTokenSymbol}} parachain is more than 6 blocks behind.",
-    "validation_max_value": "The maximum amount you can issue (per request) on the testnet is 1.0 {{wrappedTokenSymbol}}. Please enter a lower amount.",
+    "validation_max_value": "The maximum amount you can issue (per request) on the testnet is {{maximumIssuableWrappedTokenAmount}} {{wrappedTokenSymbol}}. Please enter a lower amount.",
     "validation_min_value": "Please enter an amount greater than Bitcoin dust limit (",
     "enter_valid_amount": "Please enter a valid amount.",
     "proof_data": "Fetching proof data for Bitcoin transaction: {{txId}}",
