@@ -62,9 +62,7 @@ import {
   ParachainStatus,
   StoreType
 } from 'common/types/util.types';
-// ray test touch <<
 import { BitcoinNetwork } from 'types/bitcoin';
-// ray test touch >>
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
@@ -228,7 +226,6 @@ const IssueForm = (): JSX.Element | null => {
         });
       }
 
-      // ray test touch <<
       if (
         process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet &&
         value > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT
@@ -237,7 +234,6 @@ const IssueForm = (): JSX.Element | null => {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
           maximumIssuableWrappedTokenAmount: MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT
         });
-      // ray test touch >>
       } else if (btcAmount.lt(dustValue)) {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }
