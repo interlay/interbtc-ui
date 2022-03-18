@@ -733,6 +733,7 @@ const Staking = (): JSX.Element => {
     submitButtonLabel = 'Loading...';
   } else {
     if (accountSet) {
+      // TODO: should improve readability by handling nested conditions
       if (votingBalanceGreaterThanZero) {
         const numericLockTime = parseInt(lockTime);
         if (checkIncreaseLockAmountAndExtendLockTime(numericLockTime, monetaryLockingAmount)) {
