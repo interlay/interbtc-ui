@@ -283,6 +283,9 @@ const RedeemForm = (): JSX.Element | null => {
           }
 
           vaultId = getRandomVaultIdWithCapacity(Array.from(updatedVaults || new Map()), wrappedTokenAmount);
+          if (!vaultId) {
+            throw new Error('No available vaults with required issue capacity.');
+          }
         }
 
         // FIXME: workaround to make premium redeem still possible
