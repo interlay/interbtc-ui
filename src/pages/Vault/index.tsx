@@ -12,17 +12,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
-import {
-  BitcoinAmount,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import {
   CollateralIdLiteral,
   newAccountId,
   tickerToCurrencyIdLiteral,
-  WrappedIdLiteral,
-  GovernanceUnit
+  WrappedIdLiteral
 } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
@@ -47,7 +42,8 @@ import {
   COLLATERAL_TOKEN_SYMBOL,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
-  GOVERNANCE_TOKEN_SYMBOL
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import {
   POLKADOT,
@@ -183,7 +179,7 @@ const Vault = (): JSX.Element => {
   const {
     data: governanceReward,
     error: governanceRewardError
-  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+  } = useQuery<GovernanceTokenMonetaryAmount, Error>(
     [
       GENERIC_FETCHER,
       'vaults',
@@ -192,7 +188,7 @@ const Vault = (): JSX.Element => {
       COLLATERAL_ID_LITERAL,
       GOVERNANCE_TOKEN_SYMBOL
     ],
-    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
     }

@@ -22,14 +22,8 @@ import {
 import Big from 'big.js';
 import clsx from 'clsx';
 import {
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
-import {
   DefaultTransactionAPI,
-  GovernanceUnit,
-  newMonetaryAmount,
-  VoteUnit
+  newMonetaryAmount
 } from '@interlay/interbtc-api';
 
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
@@ -52,7 +46,9 @@ import {
   GOVERNANCE_TOKEN_SYMBOL,
   VOTE_GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN,
-  STAKE_LOCK_TIME
+  STAKE_LOCK_TIME,
+  GovernanceTokenMonetaryAmount,
+  VoteGovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
@@ -75,6 +71,37 @@ const convertBlockNumbersToWeeks = (blockNumbers: number) => {
   return blockNumbers * BLOCK_TIME / ONE_WEEK_SECONDS;
 };
 
+// When to increase lock amount and extend lock time
+const checkIncreaseLockAmountAndExtendLockTime = (
+  lockTime: number,
+  lockAmount: GovernanceTokenMonetaryAmount
+) => {
+  return (
+    lockTime > 0 &&
+    lockAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+  );
+};
+// When to only increase lock amount
+const checkOnlyIncreaseLockAmount = (
+  lockTime: number,
+  lockAmount: GovernanceTokenMonetaryAmount
+) => {
+  return (
+    lockTime === 0 &&
+    lockAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+  );
+};
+// When to only extend lock time
+const checkOnlyExtendLockTime = (
+  lockTime: number,
+  lockAmount: GovernanceTokenMonetaryAmount
+) => {
+  return (
+    lockTime > 0 &&
+    lockAmount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
+  );
+};
+
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
 
@@ -90,17 +117,17 @@ type StakingFormData = {
 }
 
 interface EstimatedRewardAmountAndAPY {
-  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  amount: GovernanceTokenMonetaryAmount;
   apy: Big;
 }
 
 interface StakedAmountAndEndBlock {
-  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  amount: GovernanceTokenMonetaryAmount;
   endBlock: number;
 }
 
 interface LockingAmountAndTime {
-  amount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  amount: GovernanceTokenMonetaryAmount;
   time: number; // Weeks
 }
 
@@ -158,14 +185,14 @@ const Staking = (): JSX.Element => {
     data: voteGovernanceTokenBalance,
     error: voteGovernanceTokenBalanceError,
     refetch: voteGovernanceTokenBalanceRefetch
-  } = useQuery<MonetaryAmount<Currency<VoteUnit>, VoteUnit>, Error>(
+  } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
     [
       GENERIC_FETCHER,
       'escrow',
       'votingBalance',
       address
     ],
-    genericFetcher<MonetaryAmount<Currency<VoteUnit>, VoteUnit>>(),
+    genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -179,14 +206,14 @@ const Staking = (): JSX.Element => {
     data: claimableRewardAmount,
     error: claimableRewardAmountError,
     refetch: claimableRewardAmountRefetch
-  } = useQuery<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>, Error>(
+  } = useQuery<GovernanceTokenMonetaryAmount, Error>(
     [
       GENERIC_FETCHER,
       'escrow',
       'getRewards',
       address
     ],
-    genericFetcher<MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>>(),
+    genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -287,10 +314,7 @@ const Staking = (): JSX.Element => {
           throw new Error('Something went wrong!');
         }
 
-        if ( // Increase amount and extend lock time
-          variables.time > 0 &&
-          variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-        ) {
+        if (checkIncreaseLockAmountAndExtendLockTime(variables.time, variables.amount)) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           const txs = [
@@ -307,15 +331,9 @@ const Staking = (): JSX.Element => {
             undefined, // don't await success event
             true // don't wait for finalized blocks
           );
-        } else if ( // Only increase amount
-          variables.time === 0 &&
-          variables.amount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-        ) {
+        } else if (checkOnlyIncreaseLockAmount(variables.time, variables.amount)) {
           return await window.bridge.escrow.increaseAmount(variables.amount);
-        } else if ( // Only extend lock time
-          variables.time > 0 &&
-          variables.amount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-        ) {
+        } else if (checkOnlyExtendLockTime(variables.time, variables.amount)) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           return await window.bridge.escrow.increaseUnlockHeight(unlockHeight);
@@ -726,7 +744,21 @@ const Staking = (): JSX.Element => {
     submitButtonLabel = 'Loading...';
   } else {
     if (accountSet) {
-      submitButtonLabel = votingBalanceGreaterThanZero ? 'Add more stake' : 'Stake';
+      // TODO: should improve readability by handling nested conditions
+      if (votingBalanceGreaterThanZero) {
+        const numericLockTime = parseInt(lockTime);
+        if (checkIncreaseLockAmountAndExtendLockTime(numericLockTime, monetaryLockingAmount)) {
+          submitButtonLabel = 'Add more stake and extend lock time';
+        } else if (checkOnlyIncreaseLockAmount(numericLockTime, monetaryLockingAmount)) {
+          submitButtonLabel = 'Add more stake';
+        } else if (checkOnlyExtendLockTime(numericLockTime, monetaryLockingAmount)) {
+          submitButtonLabel = 'Extend lock time';
+        } else {
+          submitButtonLabel = 'Stake';
+        }
+      } else {
+        submitButtonLabel = 'Stake';
+      }
     } else {
       submitButtonLabel = t('connect_wallet');
     }

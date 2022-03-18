@@ -1,19 +1,23 @@
 import { Store, CombinedState } from 'redux';
-import { GeneralActions, RedeemActions, IssueActions, VaultActions } from './actions.types';
-import { rootReducer } from '../reducers/index';
 import { u256 } from '@polkadot/types/primitive';
-import { IssueState } from './issue.types';
-import { RedeemState } from './redeem.types';
-import { VaultState } from './vault.types';
 import {
   BitcoinAmount,
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
+
+import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import {
-  CollateralUnit,
-  GovernanceUnit
-} from '@interlay/interbtc-api';
+  GeneralActions,
+  RedeemActions,
+  IssueActions,
+  VaultActions
+} from './actions.types';
+import { rootReducer } from '../reducers/index';
+import { IssueState } from './issue.types';
+import { RedeemState } from './redeem.types';
+import { VaultState } from './vault.types';
 
 export interface StatusUpdate {
   id: u256;
@@ -75,8 +79,8 @@ export type GeneralState = {
   wrappedTokenTransferableBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  governanceTokenBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
-  governanceTokenTransferableBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  governanceTokenBalance: GovernanceTokenMonetaryAmount;
+  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;

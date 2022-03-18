@@ -1,8 +1,7 @@
-import { StoreType, ParachainStatus, Prices } from './util.types';
+
 import {
   Issue,
-  CollateralUnit,
-  GovernanceUnit
+  CollateralUnit
 } from '@interlay/interbtc-api';
 import {
   BitcoinAmount,
@@ -10,8 +9,14 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
-// GENERAL ACTIONS
+import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
+import {
+  StoreType,
+  ParachainStatus,
+  Prices
+} from './util.types';
 
+// GENERAL ACTIONS
 export const IS_POLKA_BTC_LOADED = 'IS_POLKA_BTC_LOADED';
 export const IS_FAUCET_LOADED = 'IS_FAUCET_LOADED';
 export const IS_VAULT_CLIENT_LOADED = 'IS_VAULT_CLIENT_LOADED';
@@ -75,7 +80,7 @@ export interface InitGeneralDataAction {
   type: typeof INIT_GENERAL_DATA_ACTION;
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  totalGovernanceTokenAmount: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  totalGovernanceTokenAmount: GovernanceTokenMonetaryAmount;
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
@@ -103,12 +108,12 @@ export interface UpdateCollateralTokenTransferableBalance {
 
 export interface UpdateGovernanceTokenBalance {
   type: typeof UPDATE_GOVERNANCE_TOKEN_BALANCE;
-  governanceTokenBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  governanceTokenBalance: GovernanceTokenMonetaryAmount;
 }
 
 export interface UpdateGovernanceTokenTransferableBalance {
   type: typeof UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE;
-  governanceTokenTransferableBalance: MonetaryAmount<Currency<GovernanceUnit>, GovernanceUnit>;
+  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount;
 }
 
 export interface SetInstalledExtension {
