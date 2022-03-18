@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "api/*.py": {
+      "memory": 128,
+      "maxDuration": 5
+    }
+  },
+  "routes": [
+    {
+      "src": "/supply/(.*)", "dest": "/api/supply_info.py"
+    }
+  ]
+}
