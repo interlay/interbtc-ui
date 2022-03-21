@@ -249,7 +249,6 @@ const RedeemForm = (): JSX.Element | null => {
           }
           if (vaultId === undefined) {
             let maxAmount = BitcoinAmount.zero;
-
             for (const redeemableTokens of premiumRedeemVaults.values()) {
               if (maxAmount.lt(redeemableTokens)) {
                 maxAmount = redeemableTokens;
