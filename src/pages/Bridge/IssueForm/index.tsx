@@ -127,10 +127,12 @@ const IssueForm = (): JSX.Element | null => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
+  // ray test touch <<
   const [
     vaultsWithIssuableTokens,
     setVaultsWithIssuableTokens
   ] = React.useState<Map<AccountId, BitcoinAmount>>();
+  // ray test touch >>
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -155,7 +157,9 @@ const IssueForm = (): JSX.Element | null => {
           window.bridge.issue.getIssuePeriod(),
           window.bridge.issue.getDustValue(),
           window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
+          // ray test touch <<
           window.bridge.vaults.getVaultsWithIssuableTokens()
+          // ray test touch >>
         ]);
         setStatus(STATUSES.RESOLVED);
 
@@ -165,7 +169,9 @@ const IssueForm = (): JSX.Element | null => {
         dispatch(updateIssuePeriodAction(issuePeriod));
         setDustValue(theDustValue);
         setBTCToGovernanceTokenRate(theBtcToGovernanceToken);
+        // ray test touch <<
         setVaultsWithIssuableTokens(theVaultsWithIssuableTokens);
+        // ray test touch >>
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
@@ -177,7 +183,10 @@ const IssueForm = (): JSX.Element | null => {
     handleError
   ]);
 
-  if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
+  if (
+    status === STATUSES.IDLE ||
+    status === STATUSES.PENDING
+  ) {
     return (
       <PrimaryColorEllipsisLoader />
     );
@@ -209,6 +218,7 @@ const IssueForm = (): JSX.Element | null => {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }
 
+      // ray test touch <<
       if (vaultsWithIssuableTokens === undefined) {
         throw new Error('Something went wrong!');
       }
@@ -222,6 +232,7 @@ const IssueForm = (): JSX.Element | null => {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
       }
+      // ray test touch >>
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
         return t('issue_page.error_more_than_6_blocks_behind', {
@@ -255,6 +266,8 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const onSubmit = async (data: IssueFormData) => {
+      // ray test touch <<
+      // ray test touch >>
       try {
         setSubmitStatus(STATUSES.PENDING);
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT] || '0');
