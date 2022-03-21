@@ -164,14 +164,13 @@ const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
 
-// TODO: should type properly (especially return type should not be `any`)
 const getRandomVaultIdWithCapacity = (
-  vaults: Array<[InterbtcPrimitivesVaultId, BitcoinAmount]>,
+  vaults: [InterbtcPrimitivesVaultId, BitcoinAmount][],
   requiredCapacity: BitcoinAmount
 ): InterbtcPrimitivesVaultId => {
   const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));
   if (filteredVaults.length === 0) {
-    return null;
+    throw new Error('No available vaults with required issue capacity.');
   }
   return getRandomArrayElement(filteredVaults)[0];
 };
