@@ -141,6 +141,7 @@
     "enter_btc": "Please enter your Bitcoin address.",
     "you_have": "You have",
     "current_balance": "Please enter an amount smaller than your current balance: {{ currentBalance }}",
+    "request_exceeds_capacity": " Currently, at most {{ maxRedeemableAmount }} can be redeemed. Please enter a lower amount.",
     "amount_greater_dust_inclusion": "Please enter an amount above the combined Bridge Fee, Bitcoin Network Fee, and Bitcoin Dust limit (",
     "request_processed": "Request being processed...",
     "processed_by_vault": "Your redeem request is being processed by Vault:",
