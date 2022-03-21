@@ -18,6 +18,7 @@ import {
   newMonetaryAmount,
   GovernanceUnit
 } from '@interlay/interbtc-api';
+import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import {
   Bitcoin,
   BitcoinAmount,
@@ -135,13 +136,13 @@ const IssueForm = (): JSX.Element | null => {
     data: requestLimits,
     error: requestLimitsError,
     refetch: requestLimitsRefetch
-  } = useQuery<any, Error>(
+  } = useQuery<IssueLimits, Error>(
     [
       GENERIC_FETCHER,
       'issue',
       'getRequestLimits'
     ],
-    genericFetcher<any>(),
+    genericFetcher<IssueLimits>(),
     {
       enabled: !!bridgeLoaded
     }
