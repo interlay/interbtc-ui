@@ -121,6 +121,7 @@ const RedeemForm = (): JSX.Element | null => {
     >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
   );
   const [hasPremiumRedeemVaults, setHasPremiumRedeemVaults] = React.useState<boolean>(false);
+  const [maxRedeemableCapacity, setMaxRedeemableCapacity] = React.useState(BitcoinAmount.zero);
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
   const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -154,14 +155,16 @@ const RedeemForm = (): JSX.Element | null => {
           premiumRedeemFeeResult,
           btcToDotRateResult,
           redeemFeeRateResult,
-          currentInclusionFeeResult
+          currentInclusionFeeResult,
+          vaultsWithRedeemableTokens
         ] = await Promise.allSettled([
           window.bridge.redeem.getDustValue(),
           window.bridge.vaults.getPremiumRedeemVaults(),
           window.bridge.redeem.getPremiumRedeemFeeRate(),
           window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN),
           window.bridge.redeem.getFeeRate(),
-          window.bridge.redeem.getCurrentInclusionFee()
+          window.bridge.redeem.getCurrentInclusionFee(),
+          window.bridge.vaults.getVaultsWithRedeemableTokens()
         ]);
 
         if (dustValueResult.status === 'rejected') {
@@ -184,6 +187,11 @@ const RedeemForm = (): JSX.Element | null => {
           // true/false rather than keep them in state. No need to set false as this is
           // set as a default on render.
           setHasPremiumRedeemVaults(true);
+        }
+        if (vaultsWithRedeemableTokens.status === 'fulfilled') {
+          // Find the vault with the largest capacity
+          const maxCapacity = vaultsWithRedeemableTokens.value.values().next().value;
+          setMaxRedeemableCapacity(maxCapacity);
         }
 
         setDustValue(dustValueResult.value);
@@ -241,6 +249,7 @@ const RedeemForm = (): JSX.Element | null => {
           }
           if (vaultId === undefined) {
             let maxAmount = BitcoinAmount.zero;
+
             for (const redeemableTokens of premiumRedeemVaults.values()) {
               if (maxAmount.lt(redeemableTokens)) {
                 maxAmount = redeemableTokens;
@@ -291,6 +300,10 @@ const RedeemForm = (): JSX.Element | null => {
       const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
       if (parsedValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
+      } else if (parsedValue.gte(maxRedeemableCapacity)) {
+        return `${t('redeem_page.request_exceeds_capacity', {
+          maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC` })
+        }`;
       } else if (parsedValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
