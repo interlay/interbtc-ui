@@ -190,8 +190,8 @@ const RedeemForm = (): JSX.Element | null => {
         }
         if (vaultsWithRedeemableTokens.status === 'fulfilled') {
           // Find the vault with the largest capacity
-          const maxCapacity = vaultsWithRedeemableTokens.value.values().next().value;
-          setMaxRedeemableCapacity(maxCapacity);
+          const initialMaxCapacity = vaultsWithRedeemableTokens.value.values().next().value;
+          setMaxRedeemableCapacity(initialMaxCapacity);
         }
 
         setDustValue(dustValueResult.value);
@@ -267,8 +267,23 @@ const RedeemForm = (): JSX.Element | null => {
             return;
           }
         } else {
-          const vaults = await window.bridge.vaults.getVaultsWithRedeemableTokens();
-          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), wrappedTokenAmount);
+          const updatedVaults = await window.bridge.vaults.getVaultsWithRedeemableTokens();
+          const updatedMaxCapacity = updatedVaults.values().next().value;
+
+          if (wrappedTokenAmount.gte(updatedMaxCapacity)) {
+            setFormError(WRAPPED_TOKEN_AMOUNT, {
+              type: 'manual',
+              message:
+              t('redeem_page.request_exceeds_capacity', {
+                maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC` })
+            });
+
+            setSubmitStatus(STATUSES.RESOLVED);
+
+            return;
+          }
+
+          vaultId = getRandomVaultIdWithCapacity(Array.from(updatedVaults || new Map()), wrappedTokenAmount);
         }
 
         // FIXME: workaround to make premium redeem still possible
