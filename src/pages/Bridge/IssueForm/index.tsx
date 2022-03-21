@@ -5,14 +5,14 @@ import {
   useSelector
 } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
-import clsx from 'clsx';
+import { useQuery } from 'react-query';
 import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { AccountId } from '@polkadot/types/interfaces';
+import { useTranslation } from 'react-i18next';
+import Big from 'big.js';
+import clsx from 'clsx';
 import {
   Issue,
   newMonetaryAmount,
@@ -54,10 +54,10 @@ import {
 } from 'utils/constants/relay-chain-names';
 import {
   displayMonetaryAmount,
-  getRandomVaultIdWithCapacity,
   getUsdAmount
 } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import {
   ParachainStatus,
   StoreType
@@ -78,7 +78,10 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
 } else {
   throw new Error('Something went wrong!');
 }
-const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 1;
+// ray test touch <<
+// const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 1;
+const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 100;
+// ray test touch >>
 
 type IssueFormData = {
   [BTC_AMOUNT]: string;
@@ -127,12 +130,24 @@ const IssueForm = (): JSX.Element | null => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
-  // ray test touch <<
-  const [
-    vaultsWithIssuableTokens,
-    setVaultsWithIssuableTokens
-  ] = React.useState<Map<AccountId, BitcoinAmount>>();
-  // ray test touch >>
+
+  const {
+    isIdle: requestLimitsIdle,
+    isLoading: requestLimitsLoading,
+    data: requestLimits,
+    error: requestLimitsError
+  } = useQuery<any, Error>(
+    [
+      GENERIC_FETCHER,
+      'issue',
+      'getRequestLimits'
+    ],
+    genericFetcher<any>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(requestLimitsError);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -147,8 +162,7 @@ const IssueForm = (): JSX.Element | null => {
           theDepositRate,
           issuePeriodInBlocks,
           theDustValue,
-          theBtcToGovernanceToken,
-          theVaultsWithIssuableTokens
+          theBtcToGovernanceToken
         ] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
@@ -156,10 +170,7 @@ const IssueForm = (): JSX.Element | null => {
           window.bridge.fee.getIssueGriefingCollateralRate(),
           window.bridge.issue.getIssuePeriod(),
           window.bridge.issue.getDustValue(),
-          window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
-          // ray test touch <<
-          window.bridge.vaults.getVaultsWithIssuableTokens()
-          // ray test touch >>
+          window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN)
         ]);
         setStatus(STATUSES.RESOLVED);
 
@@ -169,9 +180,6 @@ const IssueForm = (): JSX.Element | null => {
         dispatch(updateIssuePeriodAction(issuePeriod));
         setDustValue(theDustValue);
         setBTCToGovernanceTokenRate(theBtcToGovernanceToken);
-        // ray test touch <<
-        setVaultsWithIssuableTokens(theVaultsWithIssuableTokens);
-        // ray test touch >>
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
@@ -185,11 +193,16 @@ const IssueForm = (): JSX.Element | null => {
 
   if (
     status === STATUSES.IDLE ||
-    status === STATUSES.PENDING
+    status === STATUSES.PENDING ||
+    requestLimitsIdle ||
+    requestLimitsLoading
   ) {
     return (
       <PrimaryColorEllipsisLoader />
     );
+  }
+  if (requestLimits === undefined) {
+    throw new Error('Something went wrong!');
   }
 
   if (status === STATUSES.RESOLVED) {
@@ -218,21 +231,12 @@ const IssueForm = (): JSX.Element | null => {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }
 
-      // ray test touch <<
-      if (vaultsWithIssuableTokens === undefined) {
-        throw new Error('Something went wrong!');
-      }
-      // TODO: should memoize `getRandomVaultIdWithCapacity` as it's array handling which is expensive
-      const vaultId = getRandomVaultIdWithCapacity(Array.from(vaultsWithIssuableTokens), btcAmount);
-      if (!vaultId) {
-        // The first item is the vault with the largest capacity
-        const vaultMaxAmount = vaultsWithIssuableTokens.values().next().value;
+      if (btcAmount.gt(requestLimits.singleVaultMaxIssuable)) {
         return t('issue_page.maximum_in_single_request', {
-          maxAmount: displayMonetaryAmount(vaultMaxAmount),
+          maxAmount: displayMonetaryAmount(requestLimits.singleVaultMaxIssuable),
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
       }
-      // ray test touch >>
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
         return t('issue_page.error_more_than_6_blocks_behind', {
