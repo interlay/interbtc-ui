@@ -78,10 +78,7 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
 } else {
   throw new Error('Something went wrong!');
 }
-// ray test touch <<
-// const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 1;
-const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 100;
-// ray test touch >>
+const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 1;
 
 type IssueFormData = {
   [BTC_AMOUNT]: string;
@@ -107,7 +104,8 @@ const IssueForm = (): JSX.Element | null => {
     register,
     handleSubmit,
     watch,
-    formState: { errors }
+    formState: { errors },
+    trigger
   } = useForm<IssueFormData>({
     mode: 'onChange' // 'onBlur'
   });
@@ -135,7 +133,8 @@ const IssueForm = (): JSX.Element | null => {
     isIdle: requestLimitsIdle,
     isLoading: requestLimitsLoading,
     data: requestLimits,
-    error: requestLimitsError
+    error: requestLimitsError,
+    refetch: requestLimitsRefetch
   } = useQuery<any, Error>(
     [
       GENERIC_FETCHER,
@@ -270,10 +269,10 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const onSubmit = async (data: IssueFormData) => {
-      // ray test touch <<
-      // ray test touch >>
       try {
         setSubmitStatus(STATUSES.PENDING);
+        await requestLimitsRefetch();
+        await trigger(BTC_AMOUNT);
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT] || '0');
         const result = await window.bridge.issue.request(wrappedTokenAmount);
         // TODO: handle issue aggregation
