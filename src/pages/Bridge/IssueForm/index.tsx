@@ -5,19 +5,20 @@ import {
   useSelector
 } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
-import clsx from 'clsx';
+import { useQuery } from 'react-query';
 import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { AccountId } from '@polkadot/types/interfaces';
+import { useTranslation } from 'react-i18next';
+import Big from 'big.js';
+import clsx from 'clsx';
 import {
   Issue,
   newMonetaryAmount,
   GovernanceUnit
 } from '@interlay/interbtc-api';
+import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import {
   Bitcoin,
   BitcoinAmount,
@@ -54,10 +55,10 @@ import {
 } from 'utils/constants/relay-chain-names';
 import {
   displayMonetaryAmount,
-  getRandomVaultIdWithCapacity,
   getUsdAmount
 } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import {
   ParachainStatus,
   StoreType
@@ -105,11 +106,11 @@ const IssueForm = (): JSX.Element | null => {
     handleSubmit,
     watch,
     formState: { errors },
-    setError
+    trigger
   } = useForm<IssueFormData>({
     mode: 'onChange' // 'onBlur'
   });
-  const btcAmount = watch(BTC_AMOUNT);
+  const btcAmount = watch(BTC_AMOUNT) || '0';
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   // Additional info: bridge fee, security deposit, amount BTC
@@ -128,6 +129,25 @@ const IssueForm = (): JSX.Element | null => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
+
+  const {
+    isIdle: requestLimitsIdle,
+    isLoading: requestLimitsLoading,
+    data: requestLimits,
+    error: requestLimitsError,
+    refetch: requestLimitsRefetch
+  } = useQuery<IssueLimits, Error>(
+    [
+      GENERIC_FETCHER,
+      'issue',
+      'getRequestLimits'
+    ],
+    genericFetcher<IssueLimits>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(requestLimitsError);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -171,51 +191,24 @@ const IssueForm = (): JSX.Element | null => {
     handleError
   ]);
 
-  if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
+  if (
+    status === STATUSES.IDLE ||
+    status === STATUSES.PENDING ||
+    requestLimitsIdle ||
+    requestLimitsLoading
+  ) {
     return (
       <PrimaryColorEllipsisLoader />
     );
   }
+  if (requestLimits === undefined) {
+    throw new Error('Something went wrong!');
+  }
 
   if (status === STATUSES.RESOLVED) {
-    const fetchVaults = async (): Promise<Map<AccountId, BitcoinAmount> | undefined> => {
-      try {
-        // This data (the vaults) is strictly required to request issue
-        const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
-
-        return vaults;
-      } catch (error) {
-        // We need to reset here as this function is called
-        // on form submit
-        if (submitStatus === STATUSES.PENDING) {
-          setSubmitStatus(STATUSES.RESOLVED);
-        }
-
-        setStatus(STATUSES.REJECTED);
-        handleError(error);
-      }
-    };
-
-    const validateVaultCapacity = async (btcAmount: BitcoinAmount): Promise<string | undefined> => {
-      const vaults = await fetchVaults();
-      const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), btcAmount);
-
-      let vaultMaxAmount = BitcoinAmount.zero;
-      // The first item is the vault with the largest capacity
-      vaultMaxAmount = vaults?.values().next().value;
-
-      if (!vaultId) {
-        return t('issue_page.maximum_in_single_request', {
-          maxAmount: displayMonetaryAmount(vaultMaxAmount),
-          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-        });
-      }
-
-      return undefined;
-    };
-
-    const validateForm = (value = 0): string | undefined => {
-      const btcAmount = BitcoinAmount.from.BTC(value);
+    const validateForm = (value: string): string | undefined => {
+      const numericValue = Number(value || '0');
+      const btcAmount = BitcoinAmount.from.BTC(numericValue);
 
       const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
       const minRequiredGovernanceTokenAmount =
@@ -228,7 +221,7 @@ const IssueForm = (): JSX.Element | null => {
 
       if (
         process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet &&
-        value > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT
+        numericValue > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT
       ) {
         return t('issue_page.validation_max_value', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
@@ -236,6 +229,13 @@ const IssueForm = (): JSX.Element | null => {
         });
       } else if (btcAmount.lt(dustValue)) {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
+      }
+
+      if (btcAmount.gt(requestLimits.singleVaultMaxIssuable)) {
+        return t('issue_page.maximum_in_single_request', {
+          maxAmount: displayMonetaryAmount(requestLimits.singleVaultMaxIssuable),
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+        });
       }
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
@@ -270,28 +270,11 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const onSubmit = async (data: IssueFormData) => {
-      // Set status first as there will be a delay while fetching vaults
-      setSubmitStatus(STATUSES.PENDING);
-      const btcAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
-
-      // Get vaults on submit to ensure data is current
-      // Check vault capacity
-      const vaultCapacityError = await validateVaultCapacity(btcAmount);
-
-      // Manually append error to input field
-      if (vaultCapacityError) {
-        setError(BTC_AMOUNT, {
-          type: 'manual',
-          message: vaultCapacityError
-        });
-
-        setSubmitStatus(STATUSES.RESOLVED);
-
-        return;
-      }
-
       try {
-        const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT]);
+        setSubmitStatus(STATUSES.PENDING);
+        await requestLimitsRefetch();
+        await trigger(BTC_AMOUNT);
+        const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT] || '0');
         const result = await window.bridge.issue.request(wrappedTokenAmount);
         // TODO: handle issue aggregation
         const issueRequest = result[0];
@@ -303,7 +286,7 @@ const IssueForm = (): JSX.Element | null => {
       }
     };
 
-    const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount || 0);
+    const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
     const bridgeFee = parsedBTCAmount.mul(feeRate);
     const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
