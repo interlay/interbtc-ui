@@ -40,7 +40,6 @@ import STATUSES from 'utils/constants/statuses';
 import {
   createRelayChainApi,
   getRelayChainBalance,
-  getExistentialDeposit,
   transferToParachain,
   RelayChainApi,
   RelayChainMonetaryAmount
@@ -79,21 +78,9 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const {
     parachainStatus,
-    collateralTokenTransferableBalance,
     address,
     prices
   } = useSelector((state: StoreType) => state.general);
-
-  React.useEffect(() => {
-    if (!collateralTokenTransferableBalance) return;
-    if (!api) return;
-
-    console.log(collateralTokenTransferableBalance);
-    console.log('exist', getExistentialDeposit(api));
-  }, [
-    api,
-    collateralTokenTransferableBalance
-  ]);
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!address) return;
