@@ -7,7 +7,7 @@ import { BitcoinNetwork } from 'types/bitcoin';
 
 const RELAY_CHAIN_TRANSFER_FEE =
   process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama' ?
-    '4000000000' :
+    '106666660' :
     process.env.REACT_APP_RELAY_CHAIN_NAME === 'polkadot' ?
       '320000000' :
       '';
