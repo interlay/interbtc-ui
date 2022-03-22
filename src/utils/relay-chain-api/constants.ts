@@ -2,9 +2,6 @@
 // is being kept together until we decide whether to keep it in the UI
 // or move it to the lib. If we keep it in the UI, these values will be
 // moved to the configuration and const files.
-import { BITCOIN_NETWORK } from '../../constants';
-import { BitcoinNetwork } from 'types/bitcoin';
-
 const RELAY_CHAIN_TRANSFER_FEE =
   process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama' ?
     '106666660' :
@@ -14,4 +11,7 @@ const RELAY_CHAIN_TRANSFER_FEE =
 
 const TRANSFER_WEIGHT = '4000000000';
 
-export { TRANSFER_WEIGHT };
+export {
+  TRANSFER_WEIGHT,
+  RELAY_CHAIN_TRANSFER_FEE
+};
