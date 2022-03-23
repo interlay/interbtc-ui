@@ -201,7 +201,8 @@
       "target_account": "Destination",
       "please_enter_amount": "Please enter amount",
       "relay_chain_balance": "Relay chain balance",
-      "parachain_balance": "Transferable balance"
+      "parachain_balance": "Transferable balance",
+      "insufficient_funds_to_pay_fees": "Insufficient balance to pay transfer fees of {{transferFee}}"
     }
   },
   "burn_page": {

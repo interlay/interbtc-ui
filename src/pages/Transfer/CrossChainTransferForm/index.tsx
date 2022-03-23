@@ -38,6 +38,7 @@ import {
 import { ChainType } from 'types/chains.types';
 import STATUSES from 'utils/constants/statuses';
 import {
+  RELAY_CHAIN_TRANSFER_FEE,
   createRelayChainApi,
   getRelayChainBalance,
   transferToParachain,
@@ -58,8 +59,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   // the application level.
   const [api, setApi] = React.useState<RelayChainApi | undefined>(undefined);
   const [relayChainBalance, setRelayChainBalance] = React.useState<RelayChainMonetaryAmount | undefined>(undefined);
-  const [fromChain, setFromChain] = React.useState<ChainType | undefined>(ChainType.Parachain);
-  const [toChain, setToChain] = React.useState<ChainType | undefined>(ChainType.RelayChain);
+  const [fromChain, setFromChain] = React.useState<ChainType | undefined>(ChainType.RelayChain);
+  const [toChain, setToChain] = React.useState<ChainType | undefined>(ChainType.Parachain);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -135,12 +136,28 @@ const CrossChainTransferForm = (): JSX.Element => {
     setApproxUsdValue(usd);
   };
 
-  const validateTransferAmount = (value: number): string | undefined => {
+  const validateRelayChainTransferAmount = (value: number): string | undefined => {
     const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
 
-    return fromChain === ChainType.RelayChain ?
-      relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined :
-      collateralTokenTransferableBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
+    return relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
+  };
+
+  const validateParachainTransferAmount = (value: number): string | undefined => {
+    const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
+    const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, COLLATERAL_TOKEN);
+    const totalCost = transferAmount.add(transferFee);
+
+    // TODO: we need to handle and validate transfer fees properly. Implemented here initially
+    // because it was an issue during testing.
+    if (collateralTokenTransferableBalance.lt(transferAmount)) {
+      return t('insufficient_funds');
+    } else if (collateralTokenTransferableBalance.lt(totalCost)) {
+      return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_pay_fees', {
+        transferFee: `${displayMonetaryAmount(transferFee)} ${COLLATERAL_TOKEN_SYMBOL}`
+      });
+    } else {
+      return undefined;
+    }
   };
 
   React.useEffect(() => {
@@ -247,7 +264,9 @@ const CrossChainTransferForm = (): JSX.Element => {
                     value: true,
                     message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
                   },
-                  validate: value => validateTransferAmount(value)
+                  validate: value => fromChain === ChainType.RelayChain ?
+                    validateRelayChainTransferAmount(value) :
+                    validateParachainTransferAmount(value)
                 })}
                 error={!!errors[TRANSFER_AMOUNT]}
                 helperText={errors[TRANSFER_AMOUNT]?.message}
