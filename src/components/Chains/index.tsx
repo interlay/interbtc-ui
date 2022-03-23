@@ -25,14 +25,14 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
 
 interface Props {
   label: string;
-  callbackFunction: (chain: ChainOption) => void;
+  onChange: (chain: ChainOption) => void;
   selectedChain: ChainType | undefined;
 }
 
 const getChain = (type: ChainType): ChainOption | undefined => CHAIN_OPTIONS.find(chain => chain.type === type);
 
 const Chains = ({
-  callbackFunction,
+  onChange,
   label,
   selectedChain
 }: Props): JSX.Element => {
@@ -43,7 +43,7 @@ const Chains = ({
           label={label}
           chainOptions={CHAIN_OPTIONS}
           selectedChain={getChain(selectedChain)}
-          onChange={callbackFunction} />
+          onChange={onChange} />
       )}
     </div>
   );
