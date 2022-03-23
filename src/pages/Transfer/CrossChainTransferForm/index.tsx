@@ -127,6 +127,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleUpdateUsdAmount = (event: any) => {
+    if (!event.target.value) return;
+
     const value = newMonetaryAmount(event.target.value, COLLATERAL_TOKEN, true);
     const usd = getUsdAmount(value, prices.collateralToken.usd);
 
@@ -136,7 +138,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   const validateTransferAmount = (value: number): string | undefined => {
     const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
 
-    return relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
+    return fromChain === ChainType.RelayChain ?
+      relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined :
+      collateralTokenTransferableBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
   };
 
   React.useEffect(() => {
