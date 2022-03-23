@@ -80,8 +80,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   const {
-    parachainStatus,
     address,
+    collateralTokenTransferableBalance,
+    parachainStatus,
     prices
   } = useSelector((state: StoreType) => state.general);
 
@@ -223,12 +224,16 @@ const CrossChainTransferForm = (): JSX.Element => {
               {t('transfer_page.cross_chain_transfer_form.title')}
             </FormTitle>
             <div>
-              {relayChainBalance && (
+              {fromChain === ChainType.RelayChain ? (
                 <AvailableBalanceUI
-                  label='Relay chain balance'
+                  label={t('transfer_page.cross_chain_transfer_form.relay_chain_balance')}
                   balance={displayMonetaryAmount(relayChainBalance)}
-                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
-              )}
+                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />) : (
+                <AvailableBalanceUI
+                  label={t('transfer_page.cross_chain_transfer_form.parachain_balance')}
+                  balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
+                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />)
+              }
               <TokenField
                 onChange={handleUpdateUsdAmount}
                 id={TRANSFER_AMOUNT}

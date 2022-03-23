@@ -199,7 +199,9 @@
       "from_chain": "From chain",
       "to_chain": "To chain",
       "target_account": "Destination",
-      "please_enter_amount": "Please enter amount"
+      "please_enter_amount": "Please enter amount",
+      "relay_chain_balance": "Relay chain balance",
+      "parachain_balance": "Transferable balance"
     }
   },
   "burn_page": {
