@@ -363,6 +363,7 @@ const VaultsTable = (): JSX.Element => {
 
       const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
 
+      // ray test touch <<
       // TODO: format via `FormattedCell`
       let statusText;
       if (settledCollateralization) {
@@ -390,7 +391,9 @@ const VaultsTable = (): JSX.Element => {
       // Default to active, but do not overwrite
       if (!statusText) {
         statusText = t('dashboard.vault.active');
+        console.log('ray : ***** statusText => ', statusText);
       }
+      // ray test touch >>
 
       vaults.push({
         vaultId: vaultExt.id.accountId.toString(),

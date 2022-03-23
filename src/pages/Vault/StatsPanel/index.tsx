@@ -12,7 +12,7 @@ interface Props {
   value: string;
 }
 
-const StatusPanel = ({
+const StatsPanel = ({
   label,
   value
 }: Props): JSX.Element => {
@@ -48,4 +48,4 @@ const StatusPanel = ({
   );
 };
 
-export default StatusPanel;
+export default StatsPanel;

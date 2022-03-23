@@ -25,7 +25,7 @@ import RequestReplacementModal from './RequestReplacementModal';
 import ReplaceTable from './ReplaceTable';
 import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
-import StatusPanel from './StatusPanel';
+import StatsPanel from './StatsPanel';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
@@ -139,8 +139,10 @@ const Vault = (): JSX.Element => {
         ]);
 
         if (vault.status === 'fulfilled') {
-          const collateralDot = vault.value.backingCollateral;
-          dispatch(updateCollateralAction(collateralDot));
+          // ray test touch <<
+          console.log('ray : ***** vault.value.status => ', vault.value.status);
+          // ray test touch >>
+          dispatch(updateCollateralAction(vault.value.backingCollateral));
         }
 
         if (feesPolkaBTC.status === 'fulfilled') {
@@ -270,7 +272,7 @@ const Vault = (): JSX.Element => {
               '2xl:gap-6'
             )}>
             {vaultItems.map(item => (
-              <StatusPanel
+              <StatsPanel
                 key={item.title}
                 label={item.title}
                 value={item.value} />
