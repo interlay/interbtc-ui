@@ -25,12 +25,12 @@ import RequestReplacementModal from './RequestReplacementModal';
 import ReplaceTable from './ReplaceTable';
 import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
+import StatusPanel from './StatusPanel';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import SectionTitle from 'parts/SectionTitle';
 import BoldParagraph from 'components/BoldParagraph';
-import Panel from 'components/Panel';
 import ErrorFallback from 'components/ErrorFallback';
 import
 InterlayDenimOrKintsugiMidnightContainedButton
@@ -45,10 +45,6 @@ import {
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
 import { URL_PARAMETERS } from 'utils/constants/links';
 import {
   safeRoundTwoDecimals,
@@ -274,35 +270,10 @@ const Vault = (): JSX.Element => {
               '2xl:gap-6'
             )}>
             {vaultItems.map(item => (
-              <Panel
+              <StatusPanel
                 key={item.title}
-                className={clsx(
-                  'px-4',
-                  'py-5'
-                )}>
-                <dt
-                  className={clsx(
-                    'text-sm',
-                    'font-medium',
-                    'truncate',
-                    { 'text-interlayTextPrimaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                    { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
-                  {item.title}
-                </dt>
-                <dd
-                  className={clsx(
-                    'mt-1',
-                    'text-3xl',
-                    'font-semibold',
-                    { 'text-interlayDenim':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                    { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
-                  {item.value}
-                </dd>
-              </Panel>
+                label={item.title}
+                value={item.value} />
             ))}
           </div>
         </div>
