@@ -16,7 +16,9 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import Accounts from 'components/Accounts';
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import Chains from 'components/Chains';
+import Chains, {
+  ChainOption
+} from 'components/Chains';
 import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
@@ -57,6 +59,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   // the application level.
   const [api, setApi] = React.useState<RelayChainApi | undefined>(undefined);
   const [relayChainBalance, setRelayChainBalance] = React.useState<RelayChainMonetaryAmount | undefined>(undefined);
+  const [fromChain, setFromChain] = React.useState<ChainOption | undefined>(undefined);
+  const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -124,6 +128,10 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     return relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
   };
+
+  React.useEffect(() => {
+    console.log('toChain', toChain, fromChain);
+  }, [toChain, fromChain]);
 
   React.useEffect(() => {
     if (api) return;
@@ -216,10 +224,12 @@ const CrossChainTransferForm = (): JSX.Element => {
             </div>
             <Chains
               label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-              defaultChain={ChainType.RelayChain} />
+              defaultChain={ChainType.Parachain}
+              callbackFunction={setFromChain} />
             <Chains
               label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-              defaultChain={ChainType.Parachain} />
+              defaultChain={ChainType.RelayChain}
+              callbackFunction={setToChain} />
             <Accounts
               label={t('transfer_page.cross_chain_transfer_form.target_account')}
               callbackFunction={setDestination} />
