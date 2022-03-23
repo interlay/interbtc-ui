@@ -108,7 +108,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         );
       } else {
         await transferToRelayChain(
-          api,
+          window.bridge.api,
           address,
           destination.address,
           newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN, true)
