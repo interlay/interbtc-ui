@@ -16,7 +16,9 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import Accounts from 'components/Accounts';
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import Chains, { ChainOption } from 'components/Chains';
+import Chains, {
+  ChainOption
+} from 'components/Chains';
 import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
