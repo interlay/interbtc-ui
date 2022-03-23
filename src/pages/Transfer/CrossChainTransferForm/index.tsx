@@ -96,8 +96,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
       if (!api) return;
 
-      // We can use if else here as long as we only have two chains
-      if (toChain === ChainType.Parachain) {
+      // We can use if else here as we only support two chains
+      if (fromChain === ChainType.RelayChain) {
         await transferToParachain(
           api,
           address,
