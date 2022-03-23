@@ -12,12 +12,16 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import {
+  BitcoinAmount,
+  BitcoinUnit
+} from '@interlay/monetary-js';
 import {
   CollateralIdLiteral,
   newAccountId,
   tickerToCurrencyIdLiteral,
-  WrappedIdLiteral
+  WrappedIdLiteral,
+  VaultExt
 } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
@@ -119,14 +123,12 @@ const Vault = (): JSX.Element => {
       try {
         // TODO: should update using `react-query`
         const [
-          vault,
           feesPolkaBTC,
           lockedAmountBTC,
           collateralization,
           apyScore,
           issuableAmount
         ] = await Promise.allSettled([
-          window.bridge.vaults.get(vaultAccountId, COLLATERAL_ID_LITERAL),
           window.bridge.vaults.getWrappedReward(
             vaultAccountId,
             COLLATERAL_ID_LITERAL,
@@ -137,13 +139,6 @@ const Vault = (): JSX.Element => {
           window.bridge.vaults.getAPY(vaultAccountId, COLLATERAL_ID_LITERAL),
           window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_ID_LITERAL)
         ]);
-
-        if (vault.status === 'fulfilled') {
-          // ray test touch <<
-          console.log('ray : ***** vault.value.status => ', vault.value.status);
-          // ray test touch >>
-          dispatch(updateCollateralAction(vault.value.backingCollateral));
-        }
 
         if (feesPolkaBTC.status === 'fulfilled') {
           setFeesEarnedInterBTC(feesPolkaBTC.value);
@@ -192,6 +187,36 @@ const Vault = (): JSX.Element => {
     }
   );
   useErrorHandler(governanceRewardError);
+
+  const {
+    data: vaultExt,
+    error: vaultExtError
+  } = useQuery<VaultExt<BitcoinUnit>, Error>(
+    [
+      GENERIC_FETCHER,
+      'vaults',
+      'get',
+      vaultAccountId,
+      COLLATERAL_ID_LITERAL
+    ],
+    genericFetcher<VaultExt<BitcoinUnit>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(vaultExtError);
+  React.useEffect(() => {
+    if (vaultExt === undefined) return;
+    if (!dispatch) return;
+    // ray test touch <<
+    console.log('ray : ***** vault.value.status => ', vaultExt.status);
+    // ray test touch >>
+
+    dispatch(updateCollateralAction(vaultExt.backingCollateral));
+  }, [
+    vaultExt,
+    dispatch
+  ]);
 
   const vaultItems = React.useMemo(() => {
     const governanceRewardLabel =
