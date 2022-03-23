@@ -169,10 +169,18 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const handleSetFromChain = (chain: ChainOption) => {
     setFromChain(chain.type);
+
+    if (chain.type === toChain) {
+      setToChain(chain.type === ChainType.Parachain ? ChainType.RelayChain : ChainType.Parachain);
+    }
   };
 
   const handleSetToChain = (chain: ChainOption) => {
     setToChain(chain.type);
+
+    if (chain.type === fromChain) {
+      setFromChain(chain.type === ChainType.Parachain ? ChainType.RelayChain : ChainType.Parachain);
+    }
   };
 
   // This ensures that triggering the notification and clearing
