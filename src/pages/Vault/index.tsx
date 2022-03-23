@@ -65,6 +65,8 @@ const WRAPPED_ID_LITERAL = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as Wr
 const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
   const [requestReplacementModalOpen, setRequestReplacementModalOpen] = React.useState(false);
+  const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
+  const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
   const {
     vaultClientLoaded,
     bridgeLoaded,
@@ -76,8 +78,6 @@ const Vault = (): JSX.Element => {
     lockedBTC,
     apy
   } = useSelector((state: StoreType) => state.vault);
-  const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
-  const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
