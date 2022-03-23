@@ -23,7 +23,6 @@ import {
 import { Keyring } from '@polkadot/api';
 import {
   createInterBtcApi,
-  tickerToCurrencyIdLiteral,
   SecurityStatusCode,
   FaucetClient,
   ChainBalance,
@@ -50,6 +49,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import './i18n';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
@@ -157,7 +157,7 @@ const App = (): JSX.Element => {
         dispatch(isVaultClientLoaded(false));
         const vault = await window.bridge.vaults.get(
           id,
-          tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker)
+          COLLATERAL_TOKEN_ID_LITERAL
         );
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {

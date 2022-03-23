@@ -17,10 +17,7 @@ import {
   BitcoinUnit
 } from '@interlay/monetary-js';
 import {
-  CollateralIdLiteral,
   newAccountId,
-  tickerToCurrencyIdLiteral,
-  WrappedIdLiteral,
   VaultExt
 } from '@interlay/interbtc-api';
 
@@ -44,12 +41,14 @@ import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultCo
 import {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
-  WRAPPED_TOKEN,
-  COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import { URL_PARAMETERS } from 'utils/constants/links';
+import {
+  COLLATERAL_TOKEN_ID_LITERAL,
+  WRAPPED_TOKEN_ID_LITERAL
+} from 'utils/constants/currency';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
@@ -62,9 +61,6 @@ import {
   updateLockedBTCAction,
   updateAPYAction
 } from 'common/actions/vault.actions';
-
-const COLLATERAL_ID_LITERAL = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
-const WRAPPED_ID_LITERAL = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
 
 const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
@@ -131,13 +127,13 @@ const Vault = (): JSX.Element => {
         ] = await Promise.allSettled([
           window.bridge.vaults.getWrappedReward(
             vaultAccountId,
-            COLLATERAL_ID_LITERAL,
-            WRAPPED_ID_LITERAL
+            COLLATERAL_TOKEN_ID_LITERAL,
+            WRAPPED_TOKEN_ID_LITERAL
           ),
-          window.bridge.vaults.getIssuedAmount(vaultAccountId, COLLATERAL_ID_LITERAL),
-          window.bridge.vaults.getVaultCollateralization(vaultAccountId, COLLATERAL_ID_LITERAL),
-          window.bridge.vaults.getAPY(vaultAccountId, COLLATERAL_ID_LITERAL),
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_ID_LITERAL)
+          window.bridge.vaults.getIssuedAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
+          window.bridge.vaults.getVaultCollateralization(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
+          window.bridge.vaults.getAPY(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL)
         ]);
 
         if (feesPolkaBTC.status === 'fulfilled') {
@@ -178,7 +174,7 @@ const Vault = (): JSX.Element => {
       'vaults',
       'getGovernanceReward',
       vaultAccountId,
-      COLLATERAL_ID_LITERAL,
+      COLLATERAL_TOKEN_ID_LITERAL,
       GOVERNANCE_TOKEN_SYMBOL
     ],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
@@ -197,7 +193,7 @@ const Vault = (): JSX.Element => {
       'vaults',
       'get',
       vaultAccountId,
-      COLLATERAL_ID_LITERAL
+      COLLATERAL_TOKEN_ID_LITERAL
     ],
     genericFetcher<VaultExt<BitcoinUnit>>(),
     {

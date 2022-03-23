@@ -17,8 +17,7 @@ import clsx from 'clsx';
 import {
   roundTwoDecimals,
   newMonetaryAmount,
-  CollateralUnit,
-  tickerToCurrencyIdLiteral
+  CollateralUnit
 } from '@interlay/interbtc-api';
 import {
   MonetaryAmount,
@@ -41,6 +40,7 @@ import {
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
+import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import {
   updateCollateralAction,
@@ -146,7 +146,7 @@ const UpdateCollateralModal = ({
       'vaults',
       'getVaultCollateralization',
       vaultId,
-      tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker),
+      COLLATERAL_TOKEN_ID_LITERAL,
       newCollateralTokenAmount
     ],
     genericFetcher<Big>(),
