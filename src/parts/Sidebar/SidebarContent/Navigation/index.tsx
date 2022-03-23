@@ -113,8 +113,7 @@ const Navigation = ({
         icon: CashIcon,
         external: true,
         // This will suppress the link on testnet
-        hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' ||
-          process.env.REACT_APP_RELAY_CHAIN_NAME !== 'kusama',
+        hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' || !CROWDLOAN_LINK,
         rest: {
           target: '_blank',
           rel: 'noopener noreferrer'
