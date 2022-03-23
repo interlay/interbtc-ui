@@ -29,7 +29,7 @@ import RequestReplacementModal from './RequestReplacementModal';
 import ReplaceTable from './ReplaceTable';
 import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
-import StatsPanel from './StatsPanel';
+import StatPanel from './StatPanel';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
@@ -297,7 +297,7 @@ const Vault = (): JSX.Element => {
               '2xl:gap-6'
             )}>
             {vaultItems.map(item => (
-              <StatsPanel
+              <StatPanel
                 key={item.title}
                 label={item.title}
                 value={item.value} />
