@@ -19,7 +19,10 @@ import { useTranslation } from 'react-i18next';
 import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
-import { TERMS_AND_CONDITIONS_LINK } from 'config/relay-chains';
+import {
+  CROWDLOAN_LINK,
+  TERMS_AND_CONDITIONS_LINK
+} from 'config/relay-chains';
 import {
   KUSAMA,
   POLKADOT
@@ -102,6 +105,18 @@ const Navigation = ({
         link: '#',
         icon: () => null,
         separator: true
+      },
+      {
+        name: 'nav_crowdloan',
+        link: CROWDLOAN_LINK,
+        icon: CashIcon,
+        external: true,
+        // This will suppress the link on testnet
+        hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet',
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
       },
       {
         name: 'nav_docs',
