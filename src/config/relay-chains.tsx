@@ -18,6 +18,8 @@ import {
 } from '@interlay/interbtc-api';
 
 import {
+  INTERLAY_CROWDLOAN_LINK,
+  KINTSUGI_CROWDLOAN_LINK,
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
   KINTSUGI_TERMS_AND_CONDITIONS_LINK
 } from 'config/links';
@@ -46,6 +48,7 @@ type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceU
 type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VoteGovernanceToken, VoteUnit>;
 
 let APP_NAME: string;
+let CROWDLOAN_LINK: string;
 let TERMS_AND_CONDITIONS_LINK: string;
 let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
@@ -119,6 +122,7 @@ case POLKADOT: {
   GovernanceTokenLogoIcon = InterlayLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
   APP_DOMAIN = 'https://bridge.interlay.io';
+  CROWDLOAN_LINK = INTERLAY_CROWDLOAN_LINK;
   OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
   STAKE_LOCK_TIME = {
     MIN: 1,
@@ -150,6 +154,7 @@ case KUSAMA: {
   GovernanceTokenLogoIcon = KBTCLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
+  CROWDLOAN_LINK = KINTSUGI_CROWDLOAN_LINK;
   OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
   STAKE_LOCK_TIME = {
     MIN: 1,
@@ -173,6 +178,7 @@ export type {
 
 export {
   APP_NAME,
+  CROWDLOAN_LINK,
   TERMS_AND_CONDITIONS_LINK,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,

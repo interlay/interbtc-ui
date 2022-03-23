@@ -19,7 +19,11 @@ import { useTranslation } from 'react-i18next';
 import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
-import { TERMS_AND_CONDITIONS_LINK } from 'config/relay-chains';
+import {
+  CROWDLOAN_LINK,
+  GOVERNANCE_TOKEN_SYMBOL,
+  TERMS_AND_CONDITIONS_LINK
+} from 'config/relay-chains';
 import {
   KUSAMA,
   POLKADOT
@@ -102,6 +106,18 @@ const Navigation = ({
         link: '#',
         icon: () => null,
         separator: true
+      },
+      {
+        name: 'nav_crowdloan',
+        link: CROWDLOAN_LINK,
+        icon: CashIcon,
+        external: true,
+        // This will suppress the link on testnet
+        hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' || !CROWDLOAN_LINK,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
       },
       {
         name: 'nav_docs',
@@ -198,7 +214,13 @@ const Navigation = ({
                 'h-6'
               )}
               aria-hidden='true' />
-            {t(navigationItem.name)}
+            {navigationItem.link === CROWDLOAN_LINK ?
+            // TODO: not the nicest way of handling contextual navigation text, but
+            // other solutions involve substantial refactoring of the navigation
+              t(navigationItem.name,
+                { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL }
+              ) :
+              t(navigationItem.name)}
           </SidebarNavLink>
         );
       })}
