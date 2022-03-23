@@ -1,0 +1,17 @@
+// NOTE: all code relating to the relay chain api and xcm transfers
+// is being kept together until we decide whether to keep it in the UI
+// or move it to the lib. If we keep it in the UI, these values will be
+// moved to the configuration and const files.
+const RELAY_CHAIN_TRANSFER_FEE =
+  process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama' ?
+    '106666660' :
+    process.env.REACT_APP_RELAY_CHAIN_NAME === 'polkadot' ?
+      '320000000' :
+      '';
+
+const TRANSFER_WEIGHT = '4000000000';
+
+export {
+  TRANSFER_WEIGHT,
+  RELAY_CHAIN_TRANSFER_FEE
+};
