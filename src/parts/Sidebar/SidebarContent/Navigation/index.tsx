@@ -21,6 +21,7 @@ import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
 import {
   CROWDLOAN_LINK,
+  GOVERNANCE_TOKEN_SYMBOL,
   TERMS_AND_CONDITIONS_LINK
 } from 'config/relay-chains';
 import {
@@ -213,7 +214,13 @@ const Navigation = ({
                 'h-6'
               )}
               aria-hidden='true' />
-            {t(navigationItem.name)}
+            {navigationItem.link === CROWDLOAN_LINK ?
+            // TODO: not the nicest way of handling contextual navigation text, but
+            // other solutions involve substantial refactoring of the navigation
+              t(navigationItem.name,
+                { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL }
+              ) :
+              t(navigationItem.name)}
           </SidebarNavLink>
         );
       })}
