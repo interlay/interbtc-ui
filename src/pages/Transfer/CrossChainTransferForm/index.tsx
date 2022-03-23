@@ -41,6 +41,7 @@ import {
   createRelayChainApi,
   getRelayChainBalance,
   transferToParachain,
+  transferToRelayChain,
   RelayChainApi,
   RelayChainMonetaryAmount
 } from 'utils/relay-chain-api';
@@ -93,12 +94,22 @@ const CrossChainTransferForm = (): JSX.Element => {
 
       if (!api) return;
 
-      await transferToParachain(
-        api,
-        address,
-        destination.address,
-        newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN, true)
-      );
+      // We can use if else here as long as we only have two chains
+      if (toChain === ChainType.Parachain) {
+        await transferToParachain(
+          api,
+          address,
+          destination.address,
+          newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN, true)
+        );
+      } else {
+        await transferToRelayChain(
+          api,
+          address,
+          destination.address,
+          newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN, true)
+        );
+      }
 
       setSubmitStatus(STATUSES.RESOLVED);
     } catch (error) {
@@ -170,6 +181,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleSetFromChain = (chain: ChainOption) => {
     setFromChain(chain.type);
 
+    // prevent toChain having the same value as fromChain
     if (chain.type === toChain) {
       setToChain(chain.type === ChainType.Parachain ? ChainType.RelayChain : ChainType.Parachain);
     }
@@ -178,6 +190,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleSetToChain = (chain: ChainOption) => {
     setToChain(chain.type);
 
+    // prevent fromChain having the same value as toChain
     if (chain.type === fromChain) {
       setFromChain(chain.type === ChainType.Parachain ? ChainType.RelayChain : ChainType.Parachain);
     }
