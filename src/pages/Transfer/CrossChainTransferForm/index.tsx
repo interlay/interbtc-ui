@@ -43,6 +43,7 @@ import {
   RELAY_CHAIN_TRANSFER_FEE,
   createRelayChainApi,
   getRelayChainBalance,
+  getExistentialDeposit,
   transferToParachain,
   transferToRelayChain,
   RelayChainApi,
@@ -148,11 +149,16 @@ const CrossChainTransferForm = (): JSX.Element => {
     const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
     const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, COLLATERAL_TOKEN);
     const totalCost = transferAmount.add(transferFee);
+    const existentialDeposit = api ?
+      newMonetaryAmount(getExistentialDeposit(api), COLLATERAL_TOKEN) :
+      newMonetaryAmount('0', COLLATERAL_TOKEN);
 
     // TODO: we need to handle and validate transfer fees properly. Implemented here initially
     // because it was an issue during testing.
     if (collateralTokenTransferableBalance.lt(transferAmount)) {
       return t('insufficient_funds');
+    } else if (relayChainBalance?.isZero() && transferAmount.sub(transferFee).lt(existentialDeposit)) {
+      return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_maintain_existential_depoit');
     } else if (collateralTokenTransferableBalance.lt(totalCost)) {
       return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_pay_fees', {
         transferFee: `${displayMonetaryAmount(transferFee)} ${COLLATERAL_TOKEN_SYMBOL}`

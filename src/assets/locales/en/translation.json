@@ -202,7 +202,8 @@
       "please_enter_amount": "Please enter amount",
       "relay_chain_balance": "Relay chain balance",
       "parachain_balance": "Transferable balance",
-      "insufficient_funds_to_pay_fees": "Insufficient balance to pay transfer fees of {{transferFee}}"
+      "insufficient_funds_to_pay_fees": "Insufficient balance to pay transfer fees of {{transferFee}}",
+      "insufficient_funds_to_maintain_existential_depoit": "Insufficient amount to maintain existential deposit"
     }
   },
   "burn_page": {
