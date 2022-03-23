@@ -21,7 +21,7 @@ interface ChainOption {
 
 interface Props {
   chainOptions: Array<ChainOption>;
-  selectedChain: ChainOption;
+  selectedChain: ChainOption | undefined;
   label: string;
   onChange: (chain: ChainOption) => void;
 }
@@ -34,7 +34,7 @@ const ChainSelector = ({
 }: Props): JSX.Element => (
   <Select
     variant={SELECT_VARIANTS.formField}
-    key={selectedChain.name}
+    key={selectedChain?.name}
     value={selectedChain}
     onChange={onChange}>
     {({ open }) => (
@@ -50,9 +50,9 @@ const ChainSelector = ({
                 'text-xl',
                 'py-2'
               )}>
-              {selectedChain.icon}
+              {selectedChain?.icon}
               <SelectText className='capitalize'>
-                {selectedChain.name}
+                {selectedChain?.name}
               </SelectText>
             </span>
           </SelectButton>

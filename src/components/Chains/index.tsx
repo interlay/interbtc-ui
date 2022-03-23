@@ -25,8 +25,8 @@ const CHAIN_OPTIONS: Array<ChainOption> = [
 
 interface Props {
   label: string;
-  callbackFunction?: (chain: ChainOption) => void;
-  defaultChain: ChainType;
+  callbackFunction: (chain: ChainOption) => void;
+  selectedChain: ChainType | undefined;
 }
 
 const getChain = (type: ChainType): ChainOption | undefined => CHAIN_OPTIONS.find(chain => chain.type === type);
@@ -34,29 +34,16 @@ const getChain = (type: ChainType): ChainOption | undefined => CHAIN_OPTIONS.fin
 const Chains = ({
   callbackFunction,
   label,
-  defaultChain
+  selectedChain
 }: Props): JSX.Element => {
-  // If getChain returns undefined this will set the first item in the array as a fallback
-  const [selectedChain, setSelectedChain] = React.useState<ChainOption>(getChain(defaultChain) || CHAIN_OPTIONS[0]);
-
-  React.useEffect(() => {
-    if (!callbackFunction) return;
-    if (!selectedChain) return;
-
-    callbackFunction(selectedChain);
-  }, [
-    selectedChain,
-    callbackFunction
-  ]);
-
   return (
     <div>
       {selectedChain && (
         <ChainSelector
           label={label}
           chainOptions={CHAIN_OPTIONS}
-          selectedChain={selectedChain}
-          onChange={setSelectedChain} />
+          selectedChain={getChain(selectedChain)}
+          onChange={callbackFunction} />
       )}
     </div>
   );

@@ -16,9 +16,7 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import Accounts from 'components/Accounts';
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import Chains, {
-  ChainOption
-} from 'components/Chains';
+import Chains, { ChainOption } from 'components/Chains';
 import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
@@ -59,8 +57,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   // the application level.
   const [api, setApi] = React.useState<RelayChainApi | undefined>(undefined);
   const [relayChainBalance, setRelayChainBalance] = React.useState<RelayChainMonetaryAmount | undefined>(undefined);
-  const [fromChain, setFromChain] = React.useState<ChainOption | undefined>(undefined);
-  const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
+  const [fromChain, setFromChain] = React.useState<ChainType | undefined>(ChainType.Parachain);
+  const [toChain, setToChain] = React.useState<ChainType | undefined>(ChainType.RelayChain);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -130,10 +128,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   React.useEffect(() => {
-    console.log('toChain', toChain, fromChain);
-  }, [toChain, fromChain]);
-
-  React.useEffect(() => {
     if (api) return;
     if (!handleError) return;
 
@@ -172,6 +166,14 @@ const CrossChainTransferForm = (): JSX.Element => {
     handleError,
     relayChainBalance
   ]);
+
+  const handleSetFromChain = (chain: ChainOption) => {
+    setFromChain(chain.type);
+  };
+
+  const handleSetToChain = (chain: ChainOption) => {
+    setToChain(chain.type);
+  };
 
   // This ensures that triggering the notification and clearing
   // the form happen at the same time.
@@ -224,12 +226,12 @@ const CrossChainTransferForm = (): JSX.Element => {
             </div>
             <Chains
               label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-              defaultChain={ChainType.Parachain}
-              callbackFunction={setFromChain} />
+              selectedChain={fromChain}
+              onChange={handleSetFromChain} />
             <Chains
               label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-              defaultChain={ChainType.RelayChain}
-              callbackFunction={setToChain} />
+              selectedChain={toChain}
+              onChange={handleSetToChain} />
             <Accounts
               label={t('transfer_page.cross_chain_transfer_form.target_account')}
               callbackFunction={setDestination} />
