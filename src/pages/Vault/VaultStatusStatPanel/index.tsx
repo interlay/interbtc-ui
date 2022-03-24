@@ -4,14 +4,17 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import Big from 'big.js';
 import { AccountId } from '@polkadot/types/interfaces';
 import { VaultExt } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 
+import StatPanel from '../StatPanel';
 import ErrorFallback from 'components/ErrorFallback';
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import { getVaultStatusLabel } from 'utils/helpers/vaults';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { BTCToCollateralTokenRate } from 'types/currency.d';
@@ -24,9 +27,12 @@ interface Props {
 const VaultStatusStatPanel = ({
   vaultAccountId
 }: Props): JSX.Element => {
+  const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
+    isIdle: vaultExtIdle,
+    isLoading: vaultExtLoading,
     data: vaultExt,
     error: vaultExtError
   } = useQuery<VaultExt<BitcoinUnit>, Error>(
@@ -43,15 +49,11 @@ const VaultStatusStatPanel = ({
     }
   );
   useErrorHandler(vaultExtError);
-  // ray test touch <<
-  console.log('[VaultStatusStatPanel] vaultExt => ', vaultExt);
-  // ray test touch >>
 
-  // ray test touch <<
   const {
-    // isIdle: currentActiveBlockNumberIdle,
-    // isLoading: currentActiveBlockNumberLoading,
-    // data: currentActiveBlockNumber,
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
   } = useQuery<number, Error>(
     [
@@ -67,9 +69,9 @@ const VaultStatusStatPanel = ({
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
-    // isIdle: liquidationCollateralThresholdIdle,
-    // isLoading: liquidationCollateralThresholdLoading,
-    // data: liquidationCollateralThreshold,
+    isIdle: liquidationCollateralThresholdIdle,
+    isLoading: liquidationCollateralThresholdLoading,
+    data: liquidationCollateralThreshold,
     error: liquidationCollateralThresholdError
   } = useQuery<Big, Error>(
     [
@@ -86,9 +88,9 @@ const VaultStatusStatPanel = ({
   useErrorHandler(liquidationCollateralThresholdError);
 
   const {
-    // isIdle: secureCollateralThresholdIdle,
-    // isLoading: secureCollateralThresholdLoading,
-    // data: secureCollateralThreshold,
+    isIdle: secureCollateralThresholdIdle,
+    isLoading: secureCollateralThresholdLoading,
+    data: secureCollateralThreshold,
     error: secureCollateralThresholdError
   } = useQuery<Big, Error>(
     [
@@ -105,9 +107,9 @@ const VaultStatusStatPanel = ({
   useErrorHandler(secureCollateralThresholdError);
 
   const {
-    // isIdle: btcToCollateralTokenRateIdle,
-    // isLoading: btcToCollateralTokenRateLoading,
-    // data: btcToCollateralTokenRate,
+    isIdle: btcToCollateralTokenRateIdle,
+    isLoading: btcToCollateralTokenRateLoading,
+    data: btcToCollateralTokenRate,
     error: btcToCollateralTokenRateError
   } = useQuery<
     BTCToCollateralTokenRate,
@@ -125,10 +127,46 @@ const VaultStatusStatPanel = ({
     }
   );
   useErrorHandler(btcToCollateralTokenRateError);
-  // ray test touch >>
+
+  let statusLabel: string;
+  if (
+    vaultExtIdle ||
+    vaultExtLoading ||
+    currentActiveBlockNumberIdle ||
+    currentActiveBlockNumberLoading ||
+    liquidationCollateralThresholdIdle ||
+    liquidationCollateralThresholdLoading ||
+    secureCollateralThresholdIdle ||
+    secureCollateralThresholdLoading ||
+    btcToCollateralTokenRateIdle ||
+    btcToCollateralTokenRateLoading
+  ) {
+    statusLabel = '-';
+  } else {
+    if (
+      vaultExt === undefined ||
+      currentActiveBlockNumber === undefined ||
+      liquidationCollateralThreshold === undefined ||
+      secureCollateralThreshold === undefined ||
+      btcToCollateralTokenRate === undefined
+    ) {
+      throw new Error('Something went wrong!');
+    }
+
+    statusLabel = getVaultStatusLabel(
+      vaultExt,
+      currentActiveBlockNumber,
+      liquidationCollateralThreshold,
+      secureCollateralThreshold,
+      btcToCollateralTokenRate,
+      t
+    );
+  }
 
   return (
-    <>VaultStatusStatPanel</>
+    <StatPanel
+      label={t('vault.status')}
+      value={statusLabel} />
   );
 };
 
