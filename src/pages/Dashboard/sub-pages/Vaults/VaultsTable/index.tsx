@@ -33,13 +33,11 @@ import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
-// ray test touch <<
 import {
   getCollateralization,
   getVaultStatusLabel,
   BTCToCollateralTokenRate
 } from 'utils/helpers/vaults';
-// ray test touch >>
 import {
   PAGES,
   URL_PARAMETERS
@@ -321,7 +319,6 @@ const VaultsTable = (): JSX.Element => {
     currentActiveBlockNumber
   ) {
     for (const vaultExt of vaultsExt) {
-      // ray test touch <<
       const statusLabel = getVaultStatusLabel(
         vaultExt,
         currentActiveBlockNumber,
@@ -330,7 +327,6 @@ const VaultsTable = (): JSX.Element => {
         btcToCollateralTokenRate,
         t
       );
-      // ray test touch >>
 
       const vaultCollateral = vaultExt.backingCollateral;
       const settledTokens = vaultExt.issuedTokens;

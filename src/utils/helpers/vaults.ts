@@ -23,6 +23,7 @@ type BTCToCollateralTokenRate =
     Currency<CollateralUnit>,
     CollateralUnit
   >;
+// ray test touch >>
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
@@ -85,4 +86,3 @@ export {
   getCollateralization,
   getVaultStatusLabel
 };
-// ray test touch >>

@@ -204,9 +204,6 @@ const Vault = (): JSX.Element => {
   React.useEffect(() => {
     if (vaultExt === undefined) return;
     if (!dispatch) return;
-    // ray test touch <<
-    console.log('ray : ***** vault.value.status => ', vaultExt.status);
-    // ray test touch >>
 
     dispatch(updateCollateralAction(vaultExt.backingCollateral));
   }, [
