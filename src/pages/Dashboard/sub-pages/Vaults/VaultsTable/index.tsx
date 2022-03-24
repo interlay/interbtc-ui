@@ -369,7 +369,7 @@ const VaultsTable = (): JSX.Element => {
           statusText = t('dashboard.vault.undercollateralized');
         }
       }
-      // Should only display bannedUntil status if the bannedUntil block < current parachain block
+      // Should only display bannedUntil status if the bannedUntil block < current active block number
       // Otherwise, should not show this status.
       if (vaultExt.bannedUntil && currentActiveBlockNumber < vaultExt.bannedUntil) {
         statusText = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
@@ -386,7 +386,6 @@ const VaultsTable = (): JSX.Element => {
       // Default to active, but do not overwrite
       if (!statusText) {
         statusText = t('dashboard.vault.active');
-        console.log('ray : ***** statusText => ', statusText);
       }
       // ray test touch >>
 
