@@ -68,10 +68,6 @@ const getVaultStatusLabel = (
   return statusLabel;
 };
 
-export type {
-  BTCToCollateralTokenRate
-};
-
 export {
   getCollateralization,
   getVaultStatusLabel
