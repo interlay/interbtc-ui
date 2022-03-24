@@ -7,23 +7,13 @@ import {
   CollateralUnit
 } from '@interlay/interbtc-api';
 import {
-  Bitcoin,
   BitcoinAmount,
   BitcoinUnit,
-  ExchangeRate,
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
 
-// ray test touch <<
-type BTCToCollateralTokenRate =
-  ExchangeRate<
-    Bitcoin,
-    BitcoinUnit,
-    Currency<CollateralUnit>,
-    CollateralUnit
-  >;
-// ray test touch >>
+import { BTCToCollateralTokenRate } from 'types/currency.d';
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
