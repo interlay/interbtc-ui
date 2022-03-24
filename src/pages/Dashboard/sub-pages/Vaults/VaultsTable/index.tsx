@@ -124,10 +124,10 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(secureCollateralThresholdError);
 
   const {
-    isIdle: liquidationThresholdIdle,
-    isLoading: liquidationThresholdLoading,
-    data: liquidationThreshold,
-    error: liquidationThresholdError
+    isIdle: liquidationCollateralThresholdIdle,
+    isLoading: liquidationCollateralThresholdLoading,
+    data: liquidationCollateralThreshold,
+    error: liquidationCollateralThresholdError
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
@@ -140,7 +140,7 @@ const VaultsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(liquidationThresholdError);
+  useErrorHandler(liquidationCollateralThresholdError);
 
   const {
     isIdle: btcToCollateralTokenRateIdle,
@@ -314,7 +314,7 @@ const VaultsTable = (): JSX.Element => {
   if (
     vaultsExt &&
     btcToCollateralTokenRate &&
-    liquidationThreshold &&
+    liquidationCollateralThreshold &&
     secureCollateralThreshold &&
     currentActiveBlockNumber
   ) {
@@ -322,7 +322,7 @@ const VaultsTable = (): JSX.Element => {
       const statusLabel = getVaultStatusLabel(
         vaultExt,
         currentActiveBlockNumber,
-        liquidationThreshold,
+        liquidationCollateralThreshold,
         secureCollateralThreshold,
         btcToCollateralTokenRate,
         t
@@ -369,8 +369,8 @@ const VaultsTable = (): JSX.Element => {
       currentActiveBlockNumberLoading ||
       secureCollateralThresholdIdle ||
       secureCollateralThresholdLoading ||
-      liquidationThresholdIdle ||
-      liquidationThresholdLoading ||
+      liquidationCollateralThresholdIdle ||
+      liquidationCollateralThresholdLoading ||
       btcToCollateralTokenRateIdle ||
       btcToCollateralTokenRateLoading ||
       vaultsExtIdle ||
