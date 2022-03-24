@@ -110,10 +110,10 @@ const VaultsTable = (): JSX.Element => {
   const history = useHistory();
 
   const {
-    isIdle: parachainHeightIdle,
-    isLoading: parachainHeightLoading,
-    data: parachainHeight,
-    error: parachainHeightError
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
@@ -125,7 +125,7 @@ const VaultsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(parachainHeightError);
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
     isIdle: secureCollateralThresholdIdle,
@@ -351,7 +351,7 @@ const VaultsTable = (): JSX.Element => {
     btcToDOTRate &&
     liquidationThreshold &&
     secureCollateralThreshold &&
-    parachainHeight
+    currentActiveBlockNumber
   ) {
     for (const vaultExt of vaultsExt) {
       const vaultCollateral = vaultExt.backingCollateral;
@@ -371,7 +371,7 @@ const VaultsTable = (): JSX.Element => {
       }
       // Should only display bannedUntil status if the bannedUntil block < current parachain block
       // Otherwise, should not show this status.
-      if (vaultExt.bannedUntil && parachainHeight < vaultExt.bannedUntil) {
+      if (vaultExt.bannedUntil && currentActiveBlockNumber < vaultExt.bannedUntil) {
         statusText = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
       }
       if (vaultExt.status === VaultStatusExt.Inactive) {
@@ -424,8 +424,8 @@ const VaultsTable = (): JSX.Element => {
 
   const renderTable = () => {
     if (
-      parachainHeightIdle ||
-      parachainHeightLoading ||
+      currentActiveBlockNumberIdle ||
+      currentActiveBlockNumberLoading ||
       secureCollateralThresholdIdle ||
       secureCollateralThresholdLoading ||
       liquidationThresholdIdle ||
