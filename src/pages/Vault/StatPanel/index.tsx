@@ -36,7 +36,7 @@ const StatPanel = ({
       <dd
         className={clsx(
           'mt-1',
-          'text-3xl',
+          'text-2xl',
           'font-semibold',
           { 'text-interlayDenim':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },

@@ -27,6 +27,7 @@ import ReplaceTable from './ReplaceTable';
 import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 import StatPanel from './StatPanel';
+import VaultStatusStatPanel from './VaultStatusStatPanel';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
@@ -295,6 +296,9 @@ const Vault = (): JSX.Element => {
                 label={item.title}
                 value={item.value} />
             ))}
+            {vaultAccountId && (
+              <VaultStatusStatPanel vaultAccountId={vaultAccountId} />
+            )}
           </div>
         </div>
         {/* Check interaction with the vault */}
