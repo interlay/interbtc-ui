@@ -321,10 +321,6 @@ const VaultsTable = (): JSX.Element => {
     currentActiveBlockNumber
   ) {
     for (const vaultExt of vaultsExt) {
-      const vaultCollateral = vaultExt.backingCollateral;
-      const settledTokens = vaultExt.issuedTokens;
-      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
-
       // ray test touch <<
       const statusLabel = getVaultStatusLabel(
         vaultExt,
@@ -336,6 +332,9 @@ const VaultsTable = (): JSX.Element => {
       );
       // ray test touch >>
 
+      const vaultCollateral = vaultExt.backingCollateral;
+      const settledTokens = vaultExt.issuedTokens;
+      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
       const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
       const unsettledTokens = vaultExt.toBeIssuedTokens;
       const unsettledCollateralization =
