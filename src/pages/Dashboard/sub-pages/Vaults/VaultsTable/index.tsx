@@ -13,18 +13,9 @@ import Big from 'big.js';
 import clsx from 'clsx';
 import {
   roundTwoDecimals,
-  VaultExt,
-  VaultStatusExt,
-  CollateralUnit
+  VaultExt
 } from '@interlay/interbtc-api';
-import {
-  Bitcoin,
-  BitcoinAmount,
-  BitcoinUnit,
-  ExchangeRate,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
@@ -42,6 +33,13 @@ import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
+// ray test touch <<
+import {
+  getCollateralization,
+  getVaultStatusLabel,
+  BTCToCollateralTokenRate
+} from 'utils/helpers/vaults';
+// ray test touch >>
 import {
   PAGES,
   URL_PARAMETERS
@@ -53,25 +51,6 @@ import {
 import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-
-const getCollateralization = (
-  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
-  tokens: BitcoinAmount,
-  btcToDOTRate:
-    ExchangeRate<
-      Bitcoin,
-      BitcoinUnit,
-      Currency<CollateralUnit>,
-      CollateralUnit
-    >
-) => {
-  if (tokens.gt(BitcoinAmount.zero) && btcToDOTRate.toBig().gt(0)) {
-    const tokensAsCollateral = btcToDOTRate.toCounter(tokens);
-    return collateral.toBig().div(tokensAsCollateral.toBig()).mul(100);
-  } else {
-    return undefined;
-  }
-};
 
 const getCollateralizationColor = (
   collateralization: string | undefined,
@@ -171,12 +150,7 @@ const VaultsTable = (): JSX.Element => {
     data: btcToDOTRate,
     error: btcToDOTRateError
   } = useQuery<
-    ExchangeRate<
-      Bitcoin,
-      BitcoinUnit,
-      Currency<CollateralUnit>,
-      CollateralUnit
-    >,
+    BTCToCollateralTokenRate,
     Error
   >(
     [
@@ -185,14 +159,7 @@ const VaultsTable = (): JSX.Element => {
       'getExchangeRate',
       COLLATERAL_TOKEN
     ],
-    genericFetcher<
-      ExchangeRate<
-        Bitcoin,
-        BitcoinUnit,
-        Currency<CollateralUnit>,
-        CollateralUnit
-      >
-    >(),
+    genericFetcher<BTCToCollateralTokenRate>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -359,34 +326,14 @@ const VaultsTable = (): JSX.Element => {
       const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToDOTRate);
 
       // ray test touch <<
-      // TODO: format via `FormattedCell`
-      let statusText;
-      if (settledCollateralization) {
-        if (settledCollateralization.lt(liquidationThreshold)) {
-          statusText = t('dashboard.vault.liquidation');
-        }
-        if (settledCollateralization.lt(secureCollateralThreshold)) {
-          statusText = t('dashboard.vault.undercollateralized');
-        }
-      }
-      // Should only display bannedUntil status if the bannedUntil block < current active block number
-      // Otherwise, should not show this status.
-      if (vaultExt.bannedUntil && currentActiveBlockNumber < vaultExt.bannedUntil) {
-        statusText = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
-      }
-      if (vaultExt.status === VaultStatusExt.Inactive) {
-        statusText = t('dashboard.vault.inactive');
-      }
-      if (vaultExt.status === VaultStatusExt.CommittedTheft) {
-        statusText = t('dashboard.vault.theft');
-      }
-      if (vaultExt.status === VaultStatusExt.Liquidated) {
-        statusText = t('dashboard.vault.liquidated');
-      }
-      // Default to active, but do not overwrite
-      if (!statusText) {
-        statusText = t('dashboard.vault.active');
-      }
+      const statusLabel = getVaultStatusLabel(
+        vaultExt,
+        currentActiveBlockNumber,
+        liquidationThreshold,
+        secureCollateralThreshold,
+        btcToDOTRate,
+        t
+      );
       // ray test touch >>
 
       const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
@@ -401,7 +348,7 @@ const VaultsTable = (): JSX.Element => {
         lockedDOT: displayMonetaryAmount(vaultCollateral),
         pendingBTC: displayMonetaryAmount(unsettledTokens),
         btcAddress,
-        status: statusText,
+        status: statusLabel,
         unsettledCollateralization: unsettledCollateralization?.toString(),
         settledCollateralization: settledCollateralization?.toString()
       });
