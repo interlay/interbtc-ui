@@ -355,13 +355,8 @@ const VaultsTable = (): JSX.Element => {
   ) {
     for (const vaultExt of vaultsExt) {
       const vaultCollateral = vaultExt.backingCollateral;
-      const unsettledTokens = vaultExt.toBeIssuedTokens;
       const settledTokens = vaultExt.issuedTokens;
-      const unsettledCollateralization =
-        getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToDOTRate);
       const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToDOTRate);
-
-      const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
 
       // ray test touch <<
       // TODO: format via `FormattedCell`
@@ -394,6 +389,11 @@ const VaultsTable = (): JSX.Element => {
         console.log('ray : ***** statusText => ', statusText);
       }
       // ray test touch >>
+
+      const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
+      const unsettledTokens = vaultExt.toBeIssuedTokens;
+      const unsettledCollateralization =
+        getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToDOTRate);
 
       vaults.push({
         vaultId: vaultExt.id.accountId.toString(),
