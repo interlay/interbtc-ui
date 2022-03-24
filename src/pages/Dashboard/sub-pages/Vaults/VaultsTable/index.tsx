@@ -145,10 +145,10 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(liquidationThresholdError);
 
   const {
-    isIdle: btcToDOTRateIdle,
-    isLoading: btcToDOTRateLoading,
-    data: btcToDOTRate,
-    error: btcToDOTRateError
+    isIdle: btcToCollateralTokenRateIdle,
+    isLoading: btcToCollateralTokenRateLoading,
+    data: btcToCollateralTokenRate,
+    error: btcToCollateralTokenRateError
   } = useQuery<
     BTCToCollateralTokenRate,
     Error
@@ -164,7 +164,7 @@ const VaultsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(btcToDOTRateError);
+  useErrorHandler(btcToCollateralTokenRateError);
 
   const {
     isIdle: vaultsExtIdle,
@@ -315,7 +315,7 @@ const VaultsTable = (): JSX.Element => {
   const vaults: Array<Vault> = [];
   if (
     vaultsExt &&
-    btcToDOTRate &&
+    btcToCollateralTokenRate &&
     liquidationThreshold &&
     secureCollateralThreshold &&
     currentActiveBlockNumber
@@ -323,7 +323,7 @@ const VaultsTable = (): JSX.Element => {
     for (const vaultExt of vaultsExt) {
       const vaultCollateral = vaultExt.backingCollateral;
       const settledTokens = vaultExt.issuedTokens;
-      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToDOTRate);
+      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
 
       // ray test touch <<
       const statusLabel = getVaultStatusLabel(
@@ -331,7 +331,7 @@ const VaultsTable = (): JSX.Element => {
         currentActiveBlockNumber,
         liquidationThreshold,
         secureCollateralThreshold,
-        btcToDOTRate,
+        btcToCollateralTokenRate,
         t
       );
       // ray test touch >>
@@ -339,7 +339,7 @@ const VaultsTable = (): JSX.Element => {
       const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
       const unsettledTokens = vaultExt.toBeIssuedTokens;
       const unsettledCollateralization =
-        getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToDOTRate);
+        getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToCollateralTokenRate);
 
       vaults.push({
         vaultId: vaultExt.id.accountId.toString(),
@@ -376,8 +376,8 @@ const VaultsTable = (): JSX.Element => {
       secureCollateralThresholdLoading ||
       liquidationThresholdIdle ||
       liquidationThresholdLoading ||
-      btcToDOTRateIdle ||
-      btcToDOTRateLoading ||
+      btcToCollateralTokenRateIdle ||
+      btcToCollateralTokenRateLoading ||
       vaultsExtIdle ||
       vaultsExtLoading
     ) {
