@@ -46,9 +46,8 @@ const getVaultStatusLabel = (
   btcToCollateralTokenRate: BTCToCollateralTokenRate,
   t: TFunction
 ): string => {
-  const vaultCollateral = vaultExt.backingCollateral;
-  const settledTokens = vaultExt.issuedTokens;
-  const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
+  const settledCollateralization =
+    getCollateralization(vaultExt.backingCollateral, vaultExt.issuedTokens, btcToCollateralTokenRate);
 
   // Default to active
   let statusLabel = t('dashboard.vault.active');
