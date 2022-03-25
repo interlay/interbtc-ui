@@ -21,7 +21,8 @@ import { BTCToCollateralTokenRate } from 'types/currency.d';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  vaultAccountId: AccountId;
+  // TODO: should remove `undefined` later on when the loading is properly handled
+  vaultAccountId: AccountId | undefined;
 }
 
 const VaultStatusStatPanel = ({
@@ -45,7 +46,7 @@ const VaultStatusStatPanel = ({
     ],
     genericFetcher<VaultExt<BitcoinUnit>>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: !!bridgeLoaded && !!vaultAccountId
     }
   );
   useErrorHandler(vaultExtError);

@@ -296,9 +296,7 @@ const Vault = (): JSX.Element => {
                 label={item.title}
                 value={item.value} />
             ))}
-            {vaultAccountId && (
-              <VaultStatusStatPanel vaultAccountId={vaultAccountId} />
-            )}
+            <VaultStatusStatPanel vaultAccountId={vaultAccountId} />
           </div>
         </div>
         {/* Check interaction with the vault */}
