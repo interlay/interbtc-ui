@@ -29,6 +29,7 @@ import {
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayThead,
@@ -37,15 +38,10 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
 import {
   COLLATERAL_TOKEN,
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
 import {
   PAGES,
   URL_PARAMETERS
@@ -57,7 +53,6 @@ import {
 import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
@@ -122,7 +117,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'system',
       'getCurrentActiveBlockNumber'
     ],
@@ -141,7 +135,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getSecureCollateralThreshold',
       COLLATERAL_TOKEN
@@ -161,7 +154,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'getLiquidationCollateralThreshold',
       COLLATERAL_TOKEN
@@ -189,7 +181,6 @@ const VaultsTable = (): JSX.Element => {
   >(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'oracle',
       'getExchangeRate',
       COLLATERAL_TOKEN
@@ -216,7 +207,6 @@ const VaultsTable = (): JSX.Element => {
   } = useQuery<Array<VaultExt<BitcoinUnit>>, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcApi',
       'vaults',
       'list'
     ],
@@ -320,15 +310,15 @@ const VaultsTable = (): JSX.Element => {
           'text-left'
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
-          let statusClassName;
+          let statusClasses;
           if (value === constants.VAULT_STATUS_ACTIVE) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayConifer',
               'font-medium'
             );
           }
           if (value === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayCalifornia',
               'font-medium'
             );
@@ -337,14 +327,14 @@ const VaultsTable = (): JSX.Element => {
             value === constants.VAULT_STATUS_THEFT ||
             value === constants.VAULT_STATUS_LIQUIDATED
           ) {
-            statusClassName = clsx(
+            statusClasses = clsx(
               'text-interlayCinnabar',
               'font-medium'
             );
           }
 
           return (
-            <span className={statusClassName}>{value}</span>
+            <span className={statusClasses}>{value}</span>
           );
         }
       }
@@ -450,7 +440,7 @@ const VaultsTable = (): JSX.Element => {
     }
 
     const handleRowClick = (vaultId: string) => () => {
-      history.push(PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ADDRESS}`, vaultId));
+      history.push(PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, vaultId));
     };
 
     return (
@@ -472,19 +462,12 @@ const VaultsTable = (): JSX.Element => {
                   ])}>
                   {column.render('Header')}
                   {column.tooltip && (
-                    <InterlayTooltip label={column.tooltip}>
-                      <InformationCircleIcon
-                        className={clsx(
-                          // eslint-disable-next-line max-len
-                          { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                          // eslint-disable-next-line max-len
-                          { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                          'inline-block',
-                          'ml-1',
-                          'w-5',
-                          'h-5'
-                        )} />
-                    </InterlayTooltip>
+                    <InformationTooltip
+                      className={clsx(
+                        'inline-block',
+                        'ml-1'
+                      )}
+                      label={column.tooltip} />
                   )}
                 </InterlayTh>
               ))}

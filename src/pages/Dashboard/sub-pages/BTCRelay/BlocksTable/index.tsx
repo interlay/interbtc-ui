@@ -1,8 +1,6 @@
-
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+// // @ts-nocheck
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useQuery } from 'react-query';
 import {
   useErrorHandler,
@@ -12,7 +10,6 @@ import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
-  reverseEndiannessHex,
   stripHexPrefix
 } from '@interlay/interbtc-api';
 
@@ -30,22 +27,17 @@ import InterlayTable, {
 } from 'components/UI/InterlayTable';
 import InterlayPagination from 'components/UI/InterlayPagination';
 import useQueryParams from 'utils/hooks/use-query-params';
-import { BTC_BLOCK_API } from 'config/bitcoin';
+import { BTC_EXPLORER_BLOCK_API } from 'config/blockstream-explorer-links';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
 import { formatDateTimePrecise } from 'common/utils/utils';
-import {
-  StoreType,
-  RelayedBlock
-} from 'common/types/util.types';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import btcBlocksCountQuery from 'services/queries/btc-blocks-count-query';
+import btcBlocksQuery from 'services/queries/btc-blocks-query';
 
 const BlocksTable = (): JSX.Element => {
   const { t } = useTranslation();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
@@ -53,82 +45,97 @@ const BlocksTable = (): JSX.Element => {
   const updateQueryParameters = useUpdateQueryParameters();
 
   const {
-    isIdle: blocksIdle,
-    isLoading: blocksLoading,
-    data: blocks,
-    error: blocksError
-  } = useQuery<Array<RelayedBlock>, Error>(
+    isIdle: btcBlocksIdle,
+    isLoading: btcBlocksLoading,
+    data: btcBlocks,
+    error: btcBlocksError
+  // TODO: should type properly (`Relay`)
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getBlocks',
+      GRAPHQL_FETCHER,
+      btcBlocksQuery(),
       {
-        page: selectedPageIndex,
-        perPage: TABLE_PAGE_LIMIT
+        limit: TABLE_PAGE_LIMIT,
+        offset: selectedPageIndex * TABLE_PAGE_LIMIT
       }
     ],
-    genericFetcher<Array<RelayedBlock>>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
-  useErrorHandler(blocksError);
+  useErrorHandler(btcBlocksError);
+
   const {
-    isIdle: totalRelayedBlocksCountIdle,
-    isLoading: totalRelayedBlocksCountLoading,
-    data: totalRelayedBlocksCount,
-    error: totalRelayedBlocksCountError
-  } = useQuery<number, Error>(
+    isIdle: btcBlocksCountIdle,
+    isLoading: btcBlocksCountLoading,
+    data: btcBlocksCount,
+    error: btcBlocksCountError
+  // TODO: should type properly (`Relay`)
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getTotalRelayedBlocksCount'
+      GRAPHQL_FETCHER,
+      btcBlocksCountQuery()
     ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
-  useErrorHandler(totalRelayedBlocksCountError);
+  useErrorHandler(btcBlocksCountError);
 
   const columns = React.useMemo(
     () => [
       {
         Header: t('dashboard.relay.block_height'),
-        accessor: 'height',
+        accessor: 'backingHeight',
         classNames: [
           'text-right'
         ]
       },
       {
         Header: t('dashboard.relay.block_hash'),
-        accessor: 'hash',
+        accessor: 'blockHash',
         classNames: [
           'text-right'
         ],
         Cell: function FormattedCell({ value }: { value: string; }) {
-          const payload: { content: string; } = JSON.parse(value);
-          const hash = reverseEndiannessHex(stripHexPrefix(payload.content));
+          const hash = stripHexPrefix(value);
           return (
-            <ExternalLink href={`${BTC_BLOCK_API}${hash}`}>
+            <ExternalLink href={`${BTC_EXPLORER_BLOCK_API}${hash}`}>
               {hash}
             </ExternalLink>
           );
         }
       },
       {
-        Header: t('dashboard.relay.timestamp'),
-        accessor: 'relayTs',
+        Header: t('dashboard.relay.inclusion_timestamp'),
+        accessor: 'timestamp',
         classNames: [
           'text-left'
         ],
-        Cell: function FormattedCell({ value }: { value: number; }) {
+        Cell: function FormattedCell({ value }: { value: string; }) {
           return (
             <>
               {formatDateTimePrecise(new Date(value))}
             </>
           );
         }
+      },
+      {
+        Header: t('dashboard.relay.inclusion_block'),
+        accessor: 'relayedAtHeight',
+        classNames: [
+          'text-right'
+        ],
+        Cell: function FormattedCell({ value }: { value: any; }) {
+          return (
+            <>
+              {value.absolute}
+            </>
+          );
+        }
+      },
+      {
+        Header: t('dashboard.relay.relayed_by'),
+        accessor: 'relayer',
+        classNames: [
+          'text-right'
+        ]
       }
     ],
     [t]
@@ -143,24 +150,24 @@ const BlocksTable = (): JSX.Element => {
   } = useTable(
     {
       columns,
-      data: blocks ?? []
+      data: btcBlocks?.data?.relayedBlocks ?? []
     }
   );
 
   if (
-    blocksIdle ||
-    blocksLoading ||
-    totalRelayedBlocksCountIdle ||
-    totalRelayedBlocksCountLoading
+    btcBlocksIdle ||
+    btcBlocksLoading ||
+    btcBlocksCountIdle ||
+    btcBlocksCountLoading
   ) {
     return (
       <PrimaryColorEllipsisLoader />
     );
   }
-  if (!blocks) {
+  if (!btcBlocks) {
     throw new Error('Something went wrong!');
   }
-  if (!totalRelayedBlocksCount) {
+  if (!btcBlocksCount) {
     throw new Error('Something went wrong!');
   }
 
@@ -170,7 +177,9 @@ const BlocksTable = (): JSX.Element => {
     });
   };
 
-  const pageCount = Math.ceil(totalRelayedBlocksCount / TABLE_PAGE_LIMIT);
+  const pageCount = Math.ceil(
+    (btcBlocksCount.data.relayedBlocksConnection.totalCount || 0) / TABLE_PAGE_LIMIT
+  );
 
   return (
     <InterlayTableContainer
@@ -184,10 +193,10 @@ const BlocksTable = (): JSX.Element => {
       </SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
-          {headerGroups.map(headerGroup => (
+          {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key
             <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
+              {headerGroup.headers.map((column: any) => (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTh
                   {...column.getHeaderProps([
@@ -203,13 +212,13 @@ const BlocksTable = (): JSX.Element => {
           ))}
         </InterlayThead>
         <InterlayTbody {...getTableBodyProps()}>
-          {rows.map(row => {
+          {rows.map((row: any) => {
             prepareRow(row);
 
             return (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...row.getRowProps()}>
-                {row.cells.map(cell => {
+                {row.cells.map((cell: any) => {
                   return (
                     // eslint-disable-next-line react/jsx-key
                     <InterlayTd

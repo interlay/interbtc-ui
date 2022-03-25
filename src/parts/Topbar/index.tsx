@@ -32,9 +32,10 @@ import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
 // FIXME: name clash for constants so had to use relative path
 import * as constants from '../../constants';
+import { BitcoinNetwork } from 'types/bitcoin';
 
 // TODO: could create a specific prop
-const SMALL_SIZE_BUTTON_CLASS_NAME = clsx(
+const SMALL_SIZE_BUTTON_CLASSES = clsx(
   'leading-7',
   '!px-3'
 );
@@ -55,7 +56,7 @@ const Topbar = (): JSX.Element => {
 
     try {
       const governanceIdLiteral = tickerToCurrencyIdLiteral(GOVERNANCE_TOKEN.ticker) as CollateralIdLiteral;
-      const receiverId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, address);
       await window.faucet.fundAccount(receiverId, governanceIdLiteral);
       toast.success('Your account has been funded.');
     } catch (error) {
@@ -124,13 +125,13 @@ const Topbar = (): JSX.Element => {
           <>
             {address === '' ? (
               <InterlayDefaultContainedButton
-                className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                className={SMALL_SIZE_BUTTON_CLASSES}
                 onClick={handleAccountModalOpen}>
                 {accountLabel}
               </InterlayDefaultContainedButton>
             ) : (
               <>
-                {process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' && (
+                {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
                   <>
                     <InterlayLink
                       className='hover:no-underline'
@@ -138,7 +139,7 @@ const Topbar = (): JSX.Element => {
                       rel='noopener noreferrer'
                       href='https://bitcoinfaucet.uo1.net'>
                       <InterlayCaliforniaOutlinedButton
-                        className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                        className={SMALL_SIZE_BUTTON_CLASSES}
                         endIcon={
                           <ExternalLinkIcon
                             className={clsx(
@@ -151,7 +152,7 @@ const Topbar = (): JSX.Element => {
                       </InterlayCaliforniaOutlinedButton>
                     </InterlayLink>
                     <InterlayDenimOrKintsugiMidnightOutlinedButton
-                      className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                      className={SMALL_SIZE_BUTTON_CLASSES}
                       pending={isRequestPending}
                       onClick={requestFunds}>
                       {t('request_funds', {
@@ -162,7 +163,7 @@ const Topbar = (): JSX.Element => {
                 )}
                 <Tokens />
                 <InterlayDefaultContainedButton
-                  className={SMALL_SIZE_BUTTON_CLASS_NAME}
+                  className={SMALL_SIZE_BUTTON_CLASSES}
                   onClick={handleAccountModalOpen}>
                   {accountLabel}
                 </InterlayDefaultContainedButton>

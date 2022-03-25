@@ -8,6 +8,7 @@ import Select, {
   SelectButton,
   SelectOptions,
   SelectOption,
+  SelectLabel,
   SelectBody,
   SelectCheck,
   SelectText,
@@ -17,12 +18,14 @@ import Select, {
 interface Props {
   accounts: Array<InjectedAccountWithMeta>;
   selectedAccount: InjectedAccountWithMeta;
+  label: string;
   onChange: (account: InjectedAccountWithMeta) => void;
 }
 
 const AccountSelector = ({
   accounts,
   selectedAccount,
+  label,
   onChange
 }: Props): JSX.Element => (
   <Select
@@ -32,6 +35,7 @@ const AccountSelector = ({
     onChange={onChange}>
     {({ open }) => (
       <>
+        <SelectLabel>{label}</SelectLabel>
         <SelectBody>
           <SelectButton variant={SELECT_VARIANTS.formField}>
             <span
@@ -48,7 +52,9 @@ const AccountSelector = ({
               </SelectText>
             </span>
           </SelectButton>
-          <SelectOptions open={open}>
+          <SelectOptions
+            className='h-28'
+            open={open}>
             {accounts.map((account: InjectedAccountWithMeta) => {
               return (
                 <SelectOption

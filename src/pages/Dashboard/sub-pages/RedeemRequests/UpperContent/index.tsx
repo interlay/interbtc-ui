@@ -7,7 +7,7 @@ import {
 } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import clsx from 'clsx';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import RedeemedChart from './RedeemedChart';
 import Stats, {
@@ -20,14 +20,23 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, {
+  GraphqlReturn,
+  GRAPHQL_FETCHER
+} from 'services/fetchers/graphql-fetcher';
+import redeemCountQuery from 'services/queries/redeem-count-query';
+import cumulativeVolumesFetcher, {
+  CUMULATIVE_VOLUMES_FETCHER,
+  VolumeDataPoint,
+  VolumeType
+} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+import { WRAPPED_TOKEN } from 'config/relay-chains';
+
+const nowAtfirstLoad = new Date();
 
 const UpperContent = (): JSX.Element => {
   const {
-    bridgeLoaded,
     prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
@@ -37,47 +46,49 @@ const UpperContent = (): JSX.Element => {
     isLoading: totalSuccessfulRedeemsLoading,
     data: totalSuccessfulRedeems,
     error: totalSuccessfulRedeemsError
-  } = useQuery<number, Error>(
+  } = useQuery<GraphqlReturn<any>, Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getTotalSuccessfulRedeems'
+      GRAPHQL_FETCHER,
+      redeemCountQuery('status_eq: Completed')
     ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(totalSuccessfulRedeemsError);
 
   const {
-    isIdle: totalRedeemedAmountIdle,
-    isLoading: totalRedeemedAmountLoading,
-    data: totalRedeemedAmount,
-    error: totalRedeemedAmountError
-  } = useQuery<number, Error>(
+    isIdle: cumulativeRedeemsPerDayIdle,
+    isLoading: cumulativeRedeemsPerDayLoading,
+    data: cumulativeRedeemsPerDay,
+    error: cumulativeRedeemsPerDayError
+  // TODO: should type properly (`Relay`)
+  } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getTotalRedeemedAmount'
+      CUMULATIVE_VOLUMES_FETCHER,
+      'Redeemed' as VolumeType,
+      [nowAtfirstLoad],
+      WRAPPED_TOKEN
     ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    cumulativeVolumesFetcher
   );
-  useErrorHandler(totalRedeemedAmountError);
+  useErrorHandler(cumulativeRedeemsPerDayError);
 
   // TODO: should use skeleton loaders
-  if (totalSuccessfulRedeemsIdle || totalSuccessfulRedeemsLoading) {
+  if (
+    totalSuccessfulRedeemsIdle ||
+    totalSuccessfulRedeemsLoading ||
+    cumulativeRedeemsPerDayIdle ||
+    cumulativeRedeemsPerDayLoading
+  ) {
     return <>Loading...</>;
   }
-  if (totalRedeemedAmountIdle || totalRedeemedAmountLoading) {
-    return <>Loading...</>;
-  }
-  if (totalRedeemedAmount === undefined) {
+  if (cumulativeRedeemsPerDay === undefined) {
     throw new Error('Something went wrong!');
   }
+  if (totalSuccessfulRedeems === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  const totalSuccessfulRedeemCount = totalSuccessfulRedeems.data.redeemsConnection.totalCount;
+  const totalRedeemedAmount = cumulativeRedeemsPerDay[0].amount;
 
   // TODO: add this again when the network is stable
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;
@@ -104,18 +115,18 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.redeem.total_redeemed')}
             </StatsDt>
             <StatsDd>
-              {BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC()}
+              {totalRedeemedAmount.str.BTC()}
               &nbsp;BTC
             </StatsDd>
             <StatsDd>
               {/* eslint-disable-next-line max-len */}
-              ${(prices.bitcoin.usd * Number(BitcoinAmount.from.Satoshi(totalRedeemedAmount).str.BTC())).toLocaleString()}
+              ${(prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
             </StatsDd>
             <StatsDt className='!text-interlayConifer'>
               {t('dashboard.redeem.total_redeems')}
             </StatsDt>
             <StatsDd>
-              {totalSuccessfulRedeems}
+              {totalSuccessfulRedeemCount}
             </StatsDd>
             {/* TODO: add this again when the network is stable */}
             {/* <StatsDt className='!text-interlayConifer'>

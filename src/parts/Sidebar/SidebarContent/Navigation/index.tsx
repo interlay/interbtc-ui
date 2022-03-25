@@ -5,7 +5,7 @@ import { matchPath } from 'react-router';
 import { useSelector } from 'react-redux';
 import {
   ClipboardListIcon,
-  // CashIcon,
+  CashIcon,
   BookOpenIcon,
   RefreshIcon,
   ChartSquareBarIcon,
@@ -19,7 +19,11 @@ import { useTranslation } from 'react-i18next';
 import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
-import { TERMS_AND_CONDITIONS_LINK } from 'config/relay-chains';
+import {
+  CROWDLOAN_LINK,
+  GOVERNANCE_TOKEN_SYMBOL,
+  TERMS_AND_CONDITIONS_LINK
+} from 'config/relay-chains';
 import {
   KUSAMA,
   POLKADOT
@@ -35,13 +39,13 @@ interface CustomProps {
 }
 
 // TODO: could be reused
-const textClassesForSelected = clsx(
+const TEXT_CLASSES_FOR_SELECTED = clsx(
   { 'text-interlayDenim-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiMidnight-700':
     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
-const textClassesForUnselected = clsx(
+const TEXT_CLASSES_FOR_UNSELECTED = clsx(
   { 'text-interlayTextPrimaryInLightMode':
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
@@ -81,6 +85,11 @@ const Navigation = ({
         hidden: false
       },
       {
+        name: 'nav_staking',
+        link: PAGES.STAKING,
+        icon: CashIcon
+      },
+      {
         name: 'nav_dashboard',
         link: PAGES.DASHBOARD,
         icon: ChartSquareBarIcon,
@@ -88,7 +97,7 @@ const Navigation = ({
       },
       {
         name: 'nav_vault',
-        link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ADDRESS}`, address)}`,
+        link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
         icon: ChipIcon,
         hidden: !vaultClientLoaded
       },
@@ -97,6 +106,18 @@ const Navigation = ({
         link: '#',
         icon: () => null,
         separator: true
+      },
+      {
+        name: 'nav_crowdloan',
+        link: CROWDLOAN_LINK,
+        icon: CashIcon,
+        external: true,
+        // This will suppress the link on testnet
+        hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' || !CROWDLOAN_LINK,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
       },
       {
         name: 'nav_docs',
@@ -160,14 +181,14 @@ const Navigation = ({
             className={clsx(
               match?.isExact ?
                 clsx(
-                  textClassesForSelected,
+                  TEXT_CLASSES_FOR_SELECTED,
                   { 'bg-interlayHaiti-50':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:bg-white':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 ) :
                 clsx(
-                  textClassesForUnselected,
+                  TEXT_CLASSES_FOR_UNSELECTED,
                   { 'hover:bg-interlayHaiti-50':
                     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -185,15 +206,21 @@ const Navigation = ({
             <navigationItem.icon
               className={clsx(
                 match?.isExact ?
-                  textClassesForSelected :
-                  textClassesForUnselected,
+                  TEXT_CLASSES_FOR_SELECTED :
+                  TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'mr-4' : 'mr-3',
                 'flex-shrink-0',
                 'w-6',
                 'h-6'
               )}
               aria-hidden='true' />
-            {t(navigationItem.name)}
+            {navigationItem.link === CROWDLOAN_LINK ?
+            // TODO: not the nicest way of handling contextual navigation text, but
+            // other solutions involve substantial refactoring of the navigation
+              t(navigationItem.name,
+                { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL }
+              ) :
+              t(navigationItem.name)}
           </SidebarNavLink>
         );
       })}

@@ -1,5 +1,4 @@
 
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useQuery } from 'react-query';
@@ -7,7 +6,8 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { CollateralBtcOracleStatus } from '@interlay/interbtc/build/oracleTypes';
+import { useSelector } from 'react-redux';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 import DashboardCard from '../DashboardCard';
 import Stats, {
@@ -16,16 +16,19 @@ import Stats, {
   StatsRouterLink
 } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
+import { StoreType } from 'common/types/util.types';
 import Ring64, {
   Ring64Title,
   Ring64Value
 } from 'components/Ring64';
-import { COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
+import {
+  BtcToCurrencyOracleStatus,
+  latestExchangeRateFetcher,
+  ORACLE_LATEST_EXCHANGE_RATE_FETCHER
+} from 'services/fetchers/oracle-exchange-rates-fetcher';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 
 interface Props {
   hasLinks?: boolean;
@@ -36,42 +39,68 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
-    isIdle: collateralBtcOracleStatusIdle,
-    isLoading: collateralBtcOracleStatusLoading,
-    data: collateralBtcOracleStatus,
-    error: collateralBtcOracleStatusError
-  } = useQuery<CollateralBtcOracleStatus, Error>(
+    isIdle: oracleTimeoutIdle,
+    isLoading: oracleTimeoutLoading,
+    data: oracleTimeout,
+    error: oracleTimeoutError
+  } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
-      'interBtcIndex',
-      'getLatestSubmission',
-      COLLATERAL_TOKEN_SYMBOL
+      'oracle',
+      'getOnlineTimeout'
     ],
-    genericFetcher<CollateralBtcOracleStatus>(),
+    genericFetcher<number>(),
     {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(collateralBtcOracleStatusError);
+  useErrorHandler(oracleTimeoutError);
+
+  const {
+    isIdle: oracleStatusIdle,
+    isLoading: oracleStatusLoading,
+    data: oracleStatus,
+    error: oracleStatusError
+  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit> | undefined, Error >(
+    [
+      ORACLE_LATEST_EXCHANGE_RATE_FETCHER,
+      COLLATERAL_TOKEN,
+      oracleTimeout
+    ],
+    latestExchangeRateFetcher,
+    {
+      enabled: !!oracleTimeout
+    }
+  );
+  useErrorHandler(oracleStatusError);
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (collateralBtcOracleStatusIdle || collateralBtcOracleStatusLoading) {
+    if (
+      oracleStatusIdle ||
+      oracleStatusLoading ||
+      oracleTimeoutIdle ||
+      oracleTimeoutLoading
+    ) {
       return <>Loading...</>;
     }
-    if (collateralBtcOracleStatus === undefined) {
+
+    if (oracleTimeout === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    const exchangeRate = collateralBtcOracleStatus.exchangeRate;
-    const oracleStatus = collateralBtcOracleStatus.online;
+    const exchangeRate = oracleStatus?.exchangeRate;
+    const oracleOnline = oracleStatus && oracleStatus.online;
 
     let statusText;
     let statusCircleText;
-    if (oracleStatus === true) {
+    if (exchangeRate === undefined) {
+      statusText = t('dashboard.oracles.not_available');
+      statusCircleText = t('unavailable');
+    } else if (oracleOnline === true) {
       statusText = t('dashboard.oracles.online');
       statusCircleText = t('online');
-    } else if (oracleStatus === false) {
+    } else if (oracleOnline === false) {
       statusText = t('dashboard.oracles.offline');
       statusCircleText = t('offline');
     } else {
@@ -88,8 +117,8 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
               </StatsDt>
               <StatsDd
                 className={clsx(
-                  { 'text-interlayConifer': oracleStatus === true },
-                  { 'text-interlayCinnabar': oracleStatus === false }
+                  { 'text-interlayConifer': oracleOnline === true },
+                  { 'text-interlayCinnabar': oracleOnline === false }
                 )}>
                 {statusText}
               </StatsDd>
@@ -107,19 +136,21 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
         <Ring64
           className={clsx(
             'mx-auto',
-            { 'ring-interlayConifer': oracleStatus === true },
-            { 'ring-interlayCinnabar': oracleStatus === false }
+            { 'ring-interlayConifer': oracleOnline === true },
+            { 'ring-interlayCinnabar': oracleOnline === false }
           )}>
           <Ring64Title
             className={clsx(
-              { 'text-interlayConifer': oracleStatus === true },
-              { 'text-interlayCinnabar': oracleStatus === false }
+              { 'text-interlayConifer': oracleOnline === true },
+              { 'text-interlayCinnabar': oracleOnline === false }
             )}>
             {statusCircleText}
           </Ring64Title>
-          <Ring64Value>
-            {exchangeRate.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}/BTC
-          </Ring64Value>
+          {exchangeRate &&
+            <Ring64Value>
+              {exchangeRate.toHuman(5)} BTC/{COLLATERAL_TOKEN_SYMBOL}
+            </Ring64Value>
+          }
         </Ring64>
       </>
     );

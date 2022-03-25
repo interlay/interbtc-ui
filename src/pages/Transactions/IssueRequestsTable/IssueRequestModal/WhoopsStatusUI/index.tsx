@@ -1,8 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { Issue } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import PriceInfo from 'pages/Bridge/PriceInfo';
@@ -22,7 +20,8 @@ import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 interface Props {
-  request: Issue;
+  // TODO: should type properly (`Relay`)
+  request: any;
 }
 
 const WhoopsStatusUI = ({
@@ -31,10 +30,10 @@ const WhoopsStatusUI = ({
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
 
-  if (!request.btcAmountSubmittedByUser) {
+  if (!request.backingPayment?.amount) {
     throw new Error('Something went wrong!');
   }
-  if (!request.executedAmountWrapped) {
+  if (!request.execution?.amountWrapped) {
     throw new Error('Something went wrong!');
   }
 
@@ -75,9 +74,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.wrappedAmount)}
+        value={displayMonetaryAmount(request.request.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
-        approxUSD={getUsdAmount(request.wrappedAmount, prices.bitcoin.usd)} />
+        approxUSD={getUsdAmount(request.request.amountWrapped, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -90,13 +89,9 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.btcAmountSubmittedByUser)}
+        value={displayMonetaryAmount(request.backingPayment.amount)}
         unitName='BTC'
-        approxUSD={getUsdAmount(
-          request.btcAmountSubmittedByUser ?
-            request.btcAmountSubmittedByUser :
-            BitcoinAmount.zero, prices.bitcoin.usd
-        )} />
+        approxUSD={getUsdAmount(request.backingPayment.amount, prices.bitcoin.usd)} />
       <PriceInfo
         className='w-full'
         title={
@@ -109,10 +104,10 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.executedAmountWrapped || request.wrappedAmount)}
+        value={displayMonetaryAmount(request.execution.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
         approxUSD={
-          getUsdAmount(request.executedAmountWrapped || request.wrappedAmount, prices.bitcoin.usd)
+          getUsdAmount(request.execution.amountWrapped, prices.bitcoin.usd)
         } />
       <Hr2
         className={clsx(
@@ -137,11 +132,11 @@ const WhoopsStatusUI = ({
             width={23}
             height={23} />
         }
-        value={displayMonetaryAmount(request.btcAmountSubmittedByUser.sub(request.executedAmountWrapped))}
+        value={displayMonetaryAmount(request.backingPayment.amountWrapped.sub(request.execution.amountWrapped))}
         unitName='BTC'
         approxUSD={
           getUsdAmount(
-            request.btcAmountSubmittedByUser.sub(request.executedAmountWrapped),
+            request.backingPayment.amountWrapped.sub(request.execution.amountWrapped),
             prices.bitcoin.usd
           )
         } />
@@ -154,7 +149,7 @@ const WhoopsStatusUI = ({
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
         <span className='text-interlayCinnabar'>
-          &nbsp;{displayMonetaryAmount(request.refundAmountWrapped)}
+          &nbsp;{displayMonetaryAmount(request.refund.amountPaid)}
         </span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
@@ -172,7 +167,7 @@ const WhoopsStatusUI = ({
             'w-full'
           )}
           onClick={() => copyToClipboard('1')}>
-          {request.refundBtcAddress}
+          {request.refund.btcAddress}
         </span>
       </InterlayTooltip>
     </RequestWrapper>

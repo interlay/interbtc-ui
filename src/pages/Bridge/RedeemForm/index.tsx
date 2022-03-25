@@ -29,7 +29,7 @@ import {
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
-import WrappedTokenField from 'pages/Bridge/WrappedTokenField';
+import TokenField from 'components/TokenField';
 import PriceInfo from 'pages/Bridge/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import Toggle from 'components/Toggle';
@@ -38,11 +38,7 @@ import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import ErrorModal from 'components/ErrorModal';
 import ErrorFallback from 'components/ErrorFallback';
 import Hr2 from 'components/hrs/Hr2';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
-import {
-  BALANCE_MAX_INTEGER_LENGTH,
-  BTC_ADDRESS_REGEX
-} from '../../../constants';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -55,6 +51,10 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import STATUSES from 'utils/constants/statuses';
+import {
+  BALANCE_MAX_INTEGER_LENGTH,
+  BTC_ADDRESS_REGEX
+} from '../../../constants';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -70,7 +70,6 @@ import {
   ParachainStatus
 } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -121,8 +120,8 @@ const RedeemForm = (): JSX.Element | null => {
       CollateralUnit
     >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
   );
-  const [premiumRedeemVaults, setPremiumRedeemVaults] =
-    React.useState<Map<InterbtcPrimitivesVaultId, BitcoinAmount>>(new Map());
+  const [hasPremiumRedeemVaults, setHasPremiumRedeemVaults] = React.useState<boolean>(false);
+  const [maxRedeemableCapacity, setMaxRedeemableCapacity] = React.useState(BitcoinAmount.zero);
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
   const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -156,14 +155,16 @@ const RedeemForm = (): JSX.Element | null => {
           premiumRedeemFeeResult,
           btcToDotRateResult,
           redeemFeeRateResult,
-          currentInclusionFeeResult
+          currentInclusionFeeResult,
+          vaultsWithRedeemableTokens
         ] = await Promise.allSettled([
-          window.bridge.interBtcApi.redeem.getDustValue(),
-          window.bridge.interBtcApi.vaults.getPremiumRedeemVaults(),
-          window.bridge.interBtcIndex.getPremiumRedeemFee(),
-          window.bridge.interBtcApi.oracle.getExchangeRate(COLLATERAL_TOKEN),
-          window.bridge.interBtcApi.redeem.getFeeRate(),
-          window.bridge.interBtcApi.redeem.getCurrentInclusionFee()
+          window.bridge.redeem.getDustValue(),
+          window.bridge.vaults.getPremiumRedeemVaults(),
+          window.bridge.redeem.getPremiumRedeemFeeRate(),
+          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN),
+          window.bridge.redeem.getFeeRate(),
+          window.bridge.redeem.getCurrentInclusionFee(),
+          window.bridge.vaults.getVaultsWithRedeemableTokens()
         ]);
 
         if (dustValueResult.status === 'rejected') {
@@ -181,8 +182,16 @@ const RedeemForm = (): JSX.Element | null => {
         if (currentInclusionFeeResult.status === 'rejected') {
           throw new Error(currentInclusionFeeResult.reason);
         }
-        if (premiumRedeemVaultsResult.status === 'fulfilled') {
-          setPremiumRedeemVaults(premiumRedeemVaultsResult.value);
+        if (premiumRedeemVaultsResult.status === 'fulfilled' && premiumRedeemVaultsResult.value.size > 0) {
+          // Premium redeem vaults are refetched on submission so we only need to set
+          // true/false rather than keep them in state. No need to set false as this is
+          // set as a default on render.
+          setHasPremiumRedeemVaults(true);
+        }
+        if (vaultsWithRedeemableTokens.status === 'fulfilled') {
+          // Find the vault with the largest capacity
+          const initialMaxCapacity = vaultsWithRedeemableTokens.value.values().next().value;
+          setMaxRedeemableCapacity(initialMaxCapacity);
         }
 
         setDustValue(dustValueResult.value);
@@ -230,6 +239,7 @@ const RedeemForm = (): JSX.Element | null => {
         // Differentiate between premium and regular redeem
         let vaultId: InterbtcPrimitivesVaultId;
         if (premiumRedeemSelected) {
+          const premiumRedeemVaults = await window.bridge.vaults.getPremiumRedeemVaults();
           // Select a vault from the premium redeem vault list
           for (const [id, redeemableTokens] of premiumRedeemVaults) {
             if (redeemableTokens.gte(wrappedTokenAmount)) {
@@ -256,15 +266,30 @@ const RedeemForm = (): JSX.Element | null => {
             return;
           }
         } else {
-          const vaults = await window.bridge.interBtcApi.vaults.getVaultsWithRedeemableTokens();
-          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), wrappedTokenAmount);
+          const updatedVaults = await window.bridge.vaults.getVaultsWithRedeemableTokens();
+          const updatedMaxCapacity = updatedVaults.values().next().value;
+
+          if (wrappedTokenAmount.gte(updatedMaxCapacity)) {
+            setFormError(WRAPPED_TOKEN_AMOUNT, {
+              type: 'manual',
+              message:
+              t('redeem_page.request_exceeds_capacity', {
+                maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC` })
+            });
+
+            setSubmitStatus(STATUSES.RESOLVED);
+
+            return;
+          }
+
+          vaultId = getRandomVaultIdWithCapacity(Array.from(updatedVaults || new Map()), wrappedTokenAmount);
         }
 
         // FIXME: workaround to make premium redeem still possible
         const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(vaultId, wrappedTokenAmount.mul(2));
-        const result = await window.bridge.interBtcApi.redeem.request(
+        const result = await window.bridge.redeem.request(
           wrappedTokenAmount,
           data[BTC_ADDRESS],
           vaultId
@@ -289,6 +314,10 @@ const RedeemForm = (): JSX.Element | null => {
       const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
       if (parsedValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
+      } else if (parsedValue.gte(maxRedeemableCapacity)) {
+        return `${t('redeem_page.request_exceeds_capacity', {
+          maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC` })
+        }`;
       } else if (parsedValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
@@ -349,7 +378,7 @@ const RedeemForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <WrappedTokenField
+          <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
             name={WRAPPED_TOKEN_AMOUNT}
             label={WRAPPED_TOKEN_SYMBOL}
@@ -383,7 +412,7 @@ const RedeemForm = (): JSX.Element | null => {
             })}
             error={!!errors[BTC_ADDRESS]}
             helperText={errors[BTC_ADDRESS]?.message} />
-          {premiumRedeemVaults.size > 0 && (
+          {hasPremiumRedeemVaults && (
             <div
               className={clsx(
                 'flex',
@@ -398,17 +427,7 @@ const RedeemForm = (): JSX.Element | null => {
                   'space-x-1'
                 )}>
                 <span>{t('redeem_page.premium_redeem')}</span>
-                <InterlayTooltip label={t('redeem_page.premium_redeem_info')}>
-                  <InformationCircleIcon
-                    className={clsx(
-                      { 'text-interlayTextSecondaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                      { 'dark:text-kintsugiTextSecondaryInDarkMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                      'w-5',
-                      'h-5'
-                    )} />
-                </InterlayTooltip>
+                <InformationTooltip label={t('redeem_page.premium_redeem_info')} />
               </div>
               <Toggle
                 checked={premiumRedeemSelected}

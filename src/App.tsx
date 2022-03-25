@@ -22,6 +22,7 @@ import {
 } from '@polkadot/extension-dapp';
 import { Keyring } from '@polkadot/api';
 import {
+  createInterBtcApi,
   tickerToCurrencyIdLiteral,
   SecurityStatusCode,
   FaucetClient,
@@ -29,8 +30,8 @@ import {
   CollateralUnit,
   GovernanceUnit
 } from '@interlay/interbtc-api';
-import { createInterbtc } from '@interlay/interbtc';
 import { BitcoinUnit } from '@interlay/monetary-js';
+import 'react-toastify/dist/ReactToastify.css';
 
 import InterlayHelmet from 'parts/InterlayHelmet';
 import Layout from 'parts/Layout';
@@ -71,7 +72,7 @@ import {
   updateGovernanceTokenBalanceAction,
   updateGovernanceTokenTransferableBalanceAction
 } from 'common/actions/general.actions';
-import 'react-toastify/dist/ReactToastify.css';
+import { BitcoinNetwork } from 'types/bitcoin';
 
 const Bridge = React.lazy(() =>
   import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
@@ -111,24 +112,23 @@ const App = (): JSX.Element => {
   const store: StoreState = useStore();
 
   // Load the main bridge API - connection to the bridge
-  const loadPolkaBTC = React.useCallback(async (): Promise<void> => {
+  const loadInterBtc = React.useCallback(async (): Promise<void> => {
     try {
-      window.bridge = await createInterbtc(
+      window.bridge = await createInterBtcApi(
         constants.PARACHAIN_URL,
-        constants.BITCOIN_NETWORK,
-        constants.STATS_URL
+        constants.BITCOIN_NETWORK
       );
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
-      console.log('[loadPolkaBTC] error.message => ', error.message);
+      console.log('[loadInterBtc] error.message => ', error.message);
     }
 
     try {
       startFetchingLiveData(dispatch, store);
     } catch (error) {
-      console.log('[loadPolkaBTC] error.message => ', error.message);
+      console.log('[loadInterBtc] error.message => ', error.message);
     }
   }, [
     dispatch,
@@ -138,7 +138,7 @@ const App = (): JSX.Element => {
   // Load the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
     try {
-      window.faucet = new FaucetClient(window.bridge.interBtcApi.api, constants.FAUCET_URL);
+      window.faucet = new FaucetClient(window.bridge.api, constants.FAUCET_URL);
       dispatch(isFaucetLoaded(true));
     } catch (error) {
       console.log('[loadFaucet] error.message => ', error.message);
@@ -149,13 +149,13 @@ const App = (): JSX.Element => {
     if (!bridgeLoaded) return;
     if (!address) return;
 
-    const id = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+    const id = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
     // Maybe load the vault client - only if the current address is also registered as a vault
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
-        const vault = await window.bridge.interBtcApi.vaults.get(
+        const vault = await window.bridge.vaults.get(
           id,
           tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker)
         );
@@ -185,12 +185,12 @@ const App = (): JSX.Element => {
           bitcoinHeight,
           state
         ] = await Promise.all([
-          window.bridge.interBtcApi.tokens.total(WRAPPED_TOKEN),
-          window.bridge.interBtcApi.tokens.total(COLLATERAL_TOKEN),
-          window.bridge.interBtcApi.tokens.total(GOVERNANCE_TOKEN),
-          window.bridge.interBtcApi.btcRelay.getLatestBlockHeight(),
-          window.bridge.interBtcApi.electrsAPI.getLatestBlockHeight(),
-          window.bridge.interBtcApi.system.getStatusCode()
+          window.bridge.tokens.total(WRAPPED_TOKEN),
+          window.bridge.tokens.total(COLLATERAL_TOKEN),
+          window.bridge.tokens.total(GOVERNANCE_TOKEN),
+          window.bridge.btcRelay.getLatestBlockHeight(),
+          window.bridge.electrsAPI.getLatestBlockHeight(),
+          window.bridge.system.getStatusCode()
         ]);
 
         const parachainStatus = (state: SecurityStatusCode) => {
@@ -232,8 +232,8 @@ const App = (): JSX.Element => {
     const trySetDefaultAccount = () => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
         const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
-        const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED);
-        window.bridge.interBtcApi.setAccount(defaultAccountKeyring);
+        const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
+        window.bridge.setAccount(defaultAccountKeyring);
         dispatch(changeAddressAction(defaultAccountKeyring.address));
       }
     };
@@ -259,7 +259,7 @@ const App = (): JSX.Element => {
 
         const { signer } = await web3FromAddress(newAddress);
         // TODO: could store the active address just in one place (either in `window` object or in redux)
-        window.bridge.interBtcApi.setAccount(newAddress, signer);
+        window.bridge.setAccount(newAddress, signer);
         dispatch(changeAddressAction(newAddress));
       } catch (error) {
         // TODO: should add error handling
@@ -282,9 +282,9 @@ const App = (): JSX.Element => {
         setTimeout(() => {
           if (isLoading) setIsLoading(false);
         }, 3000);
-        await loadPolkaBTC();
+        await loadInterBtc();
         // Only load faucet on testnet
-        if (process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet') {
+        if (process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet) {
           await loadFaucet();
         }
       } catch (error) {
@@ -293,7 +293,7 @@ const App = (): JSX.Element => {
     })();
     startFetchingLiveData(dispatch, store);
   }, [
-    loadPolkaBTC,
+    loadInterBtc,
     loadFaucet,
     isLoading,
     bridgeLoaded,
@@ -313,7 +313,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromCollateral =
-          await window.bridge.interBtcApi.tokens.subscribeToBalance(
+          await window.bridge.tokens.subscribeToBalance(
             COLLATERAL_TOKEN,
             address,
             (_: string, balance: ChainBalance<CollateralUnit>) => {
@@ -333,7 +333,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromWrapped =
-          await window.bridge.interBtcApi.tokens.subscribeToBalance(
+          await window.bridge.tokens.subscribeToBalance(
             WRAPPED_TOKEN,
             address,
             (_: string, balance: ChainBalance<BitcoinUnit>) => {
@@ -353,7 +353,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromGovernance =
-          await window.bridge.interBtcApi.tokens.subscribeToBalance(
+          await window.bridge.tokens.subscribeToBalance(
             GOVERNANCE_TOKEN,
             address,
             (_: string, balance: ChainBalance<GovernanceUnit>) => {

@@ -22,7 +22,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLInputElement;
-const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(({
+const TokenField = React.forwardRef<Ref, Props>(({
   id,
   label,
   error,
@@ -42,8 +42,10 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
             'pr-36',
             {
               [clsx(
-                'border-interlayCinnabar',
-                'text-interlayCinnabar'
+                { 'border-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:border-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )]: error
             }
           )}
@@ -77,7 +79,12 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
       </TextFieldContainer>
       <TextFieldHelperText
         className={clsx(
-          { 'text-interlayCinnabar': error },
+          {
+            [clsx(
+              { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )]: error
+          },
           'h-6'
         )}>
         {helperText}
@@ -85,6 +92,8 @@ const WrappedTokenField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
     </div>
   );
 });
-WrappedTokenField.displayName = 'WrappedTokenField';
+TokenField.displayName = 'TokenField';
 
-export default WrappedTokenField;
+export type Props = CustomProps & NumberInputProps;
+
+export default TokenField;

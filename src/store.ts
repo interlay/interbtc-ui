@@ -4,14 +4,16 @@ import {
   createStore
 } from 'redux';
 import { persistStore } from 'redux-persist';
-import { InterBtc } from '@interlay/interbtc';
-import { FaucetClient } from '@interlay/interbtc-api';
+import {
+  InterBtcApi,
+  FaucetClient
+} from '@interlay/interbtc-api';
 
 import { rootReducer } from './common/reducers/index';
 
 declare global {
   interface Window {
-    bridge: InterBtc;
+    bridge: InterBtcApi;
     faucet: FaucetClient;
     isFetchingActive: boolean;
   }
