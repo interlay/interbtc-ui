@@ -116,7 +116,7 @@ const IssueRequestModal = ({
                   'space-x-1',
                   'text-xl'
                 )}>
-                <span className='text-xl'>
+                <span>
                   {t('receive')}
                 </span>
                 <span
