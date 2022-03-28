@@ -66,7 +66,7 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
     redeem.backingPayment = await getTxDetailsForRequest(
       window.bridge.electrsAPI,
       redeem.id,
-      redeem.vaultBackingAddress,
+      redeem.userBackingAddress,
       stableBtcConfirmations,
       true // Use op_return
     );
