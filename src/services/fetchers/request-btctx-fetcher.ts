@@ -10,14 +10,13 @@ type TxDetails = {
   blockHeight?: number;
   confirmations?: number;
   amount?: number;
-  confirmedAtParachainActiveBlock?: number;
+  includedAtParachainActiveBlock?: number;
 };
 
 async function getTxDetailsForRequest(
   electrsAPI: ElectrsAPI,
   requestId: string,
   recipient: string,
-  stableBtcConfirmations: number,
   useOpReturn?: boolean
 ): Promise<TxDetails> {
   const txDetails: TxDetails = {};
@@ -42,8 +41,8 @@ async function getTxDetailsForRequest(
   txDetails.confirmations = confirmations;
   txDetails.blockHeight = blockHeight;
 
-  if (confirmations && confirmations >= stableBtcConfirmations) {
-    const confirmedAtParachainActiveBlock = await graphqlFetcher<any>()({
+  if (confirmations >= 1) {
+    const includedAtParachainActiveBlock = await graphqlFetcher<any>()({
       queryKey: [
         GRAPHQL_FETCHER,
         `query($height: Int!) {
@@ -58,8 +57,8 @@ async function getTxDetailsForRequest(
         }
       ]
     });
-    txDetails.confirmedAtParachainActiveBlock =
-      confirmedAtParachainActiveBlock?.data?.relayedBlocks[0]?.relayedAtHeight.active;
+    txDetails.includedAtParachainActiveBlock =
+      includedAtParachainActiveBlock?.data?.relayedBlocks[0]?.relayedAtHeight.active;
   }
 
   return txDetails;

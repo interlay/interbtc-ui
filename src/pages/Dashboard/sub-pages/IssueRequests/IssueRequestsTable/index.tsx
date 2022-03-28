@@ -252,13 +252,9 @@ const IssueRequestsTable = (): JSX.Element => {
     [
       ISSUE_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
-      TABLE_PAGE_LIMIT, // limit
-      stableBtcConfirmations
+      TABLE_PAGE_LIMIT // limit
     ],
-    issueFetcher,
-    {
-      enabled: stableBtcConfirmations !== undefined
-    }
+    issueFetcher
   );
   useErrorHandler(issuesError);
 
