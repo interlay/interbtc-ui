@@ -418,7 +418,8 @@
     "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
     "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
-    "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}"
+    "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}",
+    "status": "Status"
   },
   "staking_page": {
     "estimated_governance_token_rewards_tooltip_label": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}."

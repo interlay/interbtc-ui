@@ -10,10 +10,6 @@ import { ExternalLinkIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import {
-  CollateralIdLiteral,
-  tickerToCurrencyIdLiteral
-} from '@interlay/interbtc-api';
 
 import Tokens from 'components/Tokens';
 import AccountModal from 'parts/AccountModal';
@@ -24,10 +20,8 @@ InterlayDenimOrKintsugiMidnightOutlinedButton from
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import {
-  GOVERNANCE_TOKEN,
-  GOVERNANCE_TOKEN_SYMBOL
-} from 'config/relay-chains';
+import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
+import { GOVERNANCE_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType } from 'common/types/util.types';
 // FIXME: name clash for constants so had to use relative path
@@ -55,9 +49,8 @@ const Topbar = (): JSX.Element => {
     if (!address) return;
 
     try {
-      const governanceIdLiteral = tickerToCurrencyIdLiteral(GOVERNANCE_TOKEN.ticker) as CollateralIdLiteral;
       const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      await window.faucet.fundAccount(receiverId, governanceIdLiteral);
+      await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN_ID_LITERAL);
       toast.success('Your account has been funded.');
     } catch (error) {
       toast.error(`Funding failed. ${error.message}`);

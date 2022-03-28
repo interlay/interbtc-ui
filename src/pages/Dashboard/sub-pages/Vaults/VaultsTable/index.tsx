@@ -13,18 +13,9 @@ import Big from 'big.js';
 import clsx from 'clsx';
 import {
   roundTwoDecimals,
-  VaultExt,
-  VaultStatusExt,
-  CollateralUnit
+  VaultExt
 } from '@interlay/interbtc-api';
-import {
-  Bitcoin,
-  BitcoinAmount,
-  BitcoinUnit,
-  ExchangeRate,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
@@ -43,6 +34,10 @@ import {
   COLLATERAL_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import {
+  getCollateralization,
+  getVaultStatusLabel
+} from 'utils/helpers/vaults';
+import {
   PAGES,
   URL_PARAMETERS
 } from 'utils/constants/links';
@@ -52,26 +47,8 @@ import {
 } from 'common/utils/utils';
 import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { BTCToCollateralTokenRate } from 'types/currency.d';
 import { StoreType } from 'common/types/util.types';
-
-const getCollateralization = (
-  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
-  tokens: BitcoinAmount,
-  btcToDOTRate:
-    ExchangeRate<
-      Bitcoin,
-      BitcoinUnit,
-      Currency<CollateralUnit>,
-      CollateralUnit
-    >
-) => {
-  if (tokens.gt(BitcoinAmount.zero) && btcToDOTRate.toBig().gt(0)) {
-    const tokensAsCollateral = btcToDOTRate.toCounter(tokens);
-    return collateral.toBig().div(tokensAsCollateral.toBig()).mul(100);
-  } else {
-    return undefined;
-  }
-};
 
 const getCollateralizationColor = (
   collateralization: string | undefined,
@@ -110,10 +87,10 @@ const VaultsTable = (): JSX.Element => {
   const history = useHistory();
 
   const {
-    isIdle: parachainHeightIdle,
-    isLoading: parachainHeightLoading,
-    data: parachainHeight,
-    error: parachainHeightError
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
   } = useQuery<number, Error>(
     [
       GENERIC_FETCHER,
@@ -125,7 +102,7 @@ const VaultsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(parachainHeightError);
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
     isIdle: secureCollateralThresholdIdle,
@@ -147,10 +124,10 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(secureCollateralThresholdError);
 
   const {
-    isIdle: liquidationThresholdIdle,
-    isLoading: liquidationThresholdLoading,
-    data: liquidationThreshold,
-    error: liquidationThresholdError
+    isIdle: liquidationCollateralThresholdIdle,
+    isLoading: liquidationCollateralThresholdLoading,
+    data: liquidationCollateralThreshold,
+    error: liquidationCollateralThresholdError
   } = useQuery<Big, Error>(
     [
       GENERIC_FETCHER,
@@ -163,20 +140,15 @@ const VaultsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(liquidationThresholdError);
+  useErrorHandler(liquidationCollateralThresholdError);
 
   const {
-    isIdle: btcToDOTRateIdle,
-    isLoading: btcToDOTRateLoading,
-    data: btcToDOTRate,
-    error: btcToDOTRateError
+    isIdle: btcToCollateralTokenRateIdle,
+    isLoading: btcToCollateralTokenRateLoading,
+    data: btcToCollateralTokenRate,
+    error: btcToCollateralTokenRateError
   } = useQuery<
-    ExchangeRate<
-      Bitcoin,
-      BitcoinUnit,
-      Currency<CollateralUnit>,
-      CollateralUnit
-    >,
+    BTCToCollateralTokenRate,
     Error
   >(
     [
@@ -185,19 +157,12 @@ const VaultsTable = (): JSX.Element => {
       'getExchangeRate',
       COLLATERAL_TOKEN
     ],
-    genericFetcher<
-      ExchangeRate<
-        Bitcoin,
-        BitcoinUnit,
-        Currency<CollateralUnit>,
-        CollateralUnit
-      >
-    >(),
+    genericFetcher<BTCToCollateralTokenRate>(),
     {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(btcToDOTRateError);
+  useErrorHandler(btcToCollateralTokenRateError);
 
   const {
     isIdle: vaultsExtIdle,
@@ -348,50 +313,28 @@ const VaultsTable = (): JSX.Element => {
   const vaults: Array<Vault> = [];
   if (
     vaultsExt &&
-    btcToDOTRate &&
-    liquidationThreshold &&
+    btcToCollateralTokenRate &&
+    liquidationCollateralThreshold &&
     secureCollateralThreshold &&
-    parachainHeight
+    currentActiveBlockNumber
   ) {
     for (const vaultExt of vaultsExt) {
+      const statusLabel = getVaultStatusLabel(
+        vaultExt,
+        currentActiveBlockNumber,
+        liquidationCollateralThreshold,
+        secureCollateralThreshold,
+        btcToCollateralTokenRate,
+        t
+      );
+
       const vaultCollateral = vaultExt.backingCollateral;
-      const unsettledTokens = vaultExt.toBeIssuedTokens;
       const settledTokens = vaultExt.issuedTokens;
-      const unsettledCollateralization =
-        getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToDOTRate);
-      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToDOTRate);
-
+      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
       const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
-
-      // ray test touch <
-      // TODO: format via `FormattedCell`
-      let statusText;
-      if (settledCollateralization) {
-        if (settledCollateralization.lt(liquidationThreshold)) {
-          statusText = t('dashboard.vault.liquidation');
-        }
-        if (settledCollateralization.lt(secureCollateralThreshold)) {
-          statusText = t('dashboard.vault.undercollateralized');
-        }
-      }
-      // Should only display bannedUntil status if the bannedUntil block < current parachain block
-      // Otherwise, should not show this status.
-      if (vaultExt.bannedUntil && parachainHeight < vaultExt.bannedUntil) {
-        statusText = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
-      }
-      if (vaultExt.status === VaultStatusExt.Inactive) {
-        statusText = t('dashboard.vault.inactive');
-      }
-      if (vaultExt.status === VaultStatusExt.CommittedTheft) {
-        statusText = t('dashboard.vault.theft');
-      }
-      if (vaultExt.status === VaultStatusExt.Liquidated) {
-        statusText = t('dashboard.vault.liquidated');
-      }
-      // Default to active, but do not overwrite
-      if (!statusText) {
-        statusText = t('dashboard.vault.active');
-      }
+      const unsettledTokens = vaultExt.toBeIssuedTokens;
+      const unsettledCollateralization =
+        getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToCollateralTokenRate);
 
       vaults.push({
         vaultId: vaultExt.id.accountId.toString(),
@@ -400,11 +343,10 @@ const VaultsTable = (): JSX.Element => {
         lockedDOT: displayMonetaryAmount(vaultCollateral),
         pendingBTC: displayMonetaryAmount(unsettledTokens),
         btcAddress,
-        status: statusText,
+        status: statusLabel,
         unsettledCollateralization: unsettledCollateralization?.toString(),
         settledCollateralization: settledCollateralization?.toString()
       });
-      // ray test touch >
     }
   }
 
@@ -423,14 +365,14 @@ const VaultsTable = (): JSX.Element => {
 
   const renderTable = () => {
     if (
-      parachainHeightIdle ||
-      parachainHeightLoading ||
+      currentActiveBlockNumberIdle ||
+      currentActiveBlockNumberLoading ||
       secureCollateralThresholdIdle ||
       secureCollateralThresholdLoading ||
-      liquidationThresholdIdle ||
-      liquidationThresholdLoading ||
-      btcToDOTRateIdle ||
-      btcToDOTRateLoading ||
+      liquidationCollateralThresholdIdle ||
+      liquidationCollateralThresholdLoading ||
+      btcToCollateralTokenRateIdle ||
+      btcToCollateralTokenRateLoading ||
       vaultsExtIdle ||
       vaultsExtLoading
     ) {
