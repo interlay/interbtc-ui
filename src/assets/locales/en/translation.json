@@ -311,6 +311,7 @@
     "view_on_block_explorer": "View on Block Explorer",
     "mint_polka_by_wrapping": "Mint {{wrappedTokenSymbol}} by wrapping BTC",
     "security_deposit": "Security Deposit",
+    "transaction_fee": "Transaction Fee",
     "receive_interbtc_tokens": "You will now receive your BTC-backed {{wrappedTokenSymbol}} tokens. If this does not happen automatically within a few minutes, click the button below.",
     "issue_requests": "Issue Requests",
     "recent_requests": "Recent Requests",
@@ -383,7 +384,8 @@
     "refund_vault_to_address": "back to your address",
     "warning_mbtc_wallets": "Warning: Some Bitcoin wallets display values in mBTC. Please ensure you send the correct amount:",
     "tooltip_bridge_fee": "The bridge fee is paid to the Vaults, Relayers, and maintainers of the system.",
-    "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed."
+    "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed.",
+    "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain."
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
