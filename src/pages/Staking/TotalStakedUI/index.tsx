@@ -1,5 +1,4 @@
 
-// ray test touch <<
 const TotalStakedUI = (): JSX.Element => {
   return (
     <>TotalStakedUI</>
@@ -7,4 +6,3 @@ const TotalStakedUI = (): JSX.Element => {
 };
 
 export default TotalStakedUI;
-// ray test touch >>
