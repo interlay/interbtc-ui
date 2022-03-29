@@ -385,7 +385,7 @@
     "warning_mbtc_wallets": "Warning: Some Bitcoin wallets display values in mBTC. Please ensure you send the correct amount:",
     "tooltip_bridge_fee": "The bridge fee is paid to the Vaults, Relayers, and maintainers of the system.",
     "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed.",
-    "tooltip_transaction_fee": "Transaction Fee"
+    "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain."
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
