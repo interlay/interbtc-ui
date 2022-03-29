@@ -6,8 +6,12 @@ import {
 } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 
+import InformationUI from '../InformationUI';
 import ErrorFallback from 'components/ErrorFallback';
-import { VoteGovernanceTokenMonetaryAmount } from 'config/relay-chains';
+import {
+  VOTE_GOVERNANCE_TOKEN_SYMBOL,
+  VoteGovernanceTokenMonetaryAmount
+} from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
@@ -50,7 +54,11 @@ const TotalStakedUI = (): JSX.Element => {
   }
 
   return (
-    <>{totalStakedVoteGovernanceTokenAmountLabel}</>
+    <div>
+      <InformationUI
+        label={`Total Staked ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+        value={`${totalStakedVoteGovernanceTokenAmountLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`} />
+    </div>
   );
 };
 
