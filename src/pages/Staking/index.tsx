@@ -32,6 +32,9 @@ import WithdrawButton from './WithdrawButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
+// ray test touch <<
+import TotalStakedUI from './TotalStakedUI';
+// ray test touch >>
 import MainContainer from 'parts/MainContainer';
 import Panel from 'components/Panel';
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
@@ -796,6 +799,9 @@ const Staking = (): JSX.Element => {
                 stakedAmount={renderStakedAmountLabel()}
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
             )}
+            {/* ray test touch << */}
+            <TotalStakedUI />
+            {/* ray test touch >> */}
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
