@@ -79,6 +79,8 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
 } else {
   throw new Error('Something went wrong!');
 }
+const extraRequiredCollateralTokenAmount =
+  newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, GOVERNANCE_TOKEN, true);
 const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 1;
 
 type IssueFormData = {
@@ -211,8 +213,7 @@ const IssueForm = (): JSX.Element | null => {
       const btcAmount = BitcoinAmount.from.BTC(numericValue);
 
       const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
-      const minRequiredGovernanceTokenAmount =
-        newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, GOVERNANCE_TOKEN, true).add(securityDeposit);
+      const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
       if (governanceTokenBalance.lte(minRequiredGovernanceTokenAmount)) {
         return t('insufficient_funds_governance_token', {
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
@@ -371,6 +372,32 @@ const IssueForm = (): JSX.Element | null => {
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
                 label={t('issue_page.tooltip_security_deposit')} />
+            } />
+          <PriceInfo
+            title={
+              <h5
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
+                {t('issue_page.transaction_fee')}
+              </h5>
+            }
+            unitIcon={
+              <GovernanceTokenLogoIcon width={20} />
+            }
+            value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
+            unitName={GOVERNANCE_TOKEN_SYMBOL}
+            approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken.usd)}
+            tooltip={
+              <InformationTooltip
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}
+                label={t('issue_page.tooltip_transaction_fee')} />
             } />
           <Hr2
             className={clsx(
