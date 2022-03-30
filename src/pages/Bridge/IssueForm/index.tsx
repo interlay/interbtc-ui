@@ -63,7 +63,6 @@ import {
   ParachainStatus,
   StoreType
 } from 'common/types/util.types';
-import { BitcoinNetwork } from 'types/bitcoin';
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
@@ -79,7 +78,8 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
 } else {
   throw new Error('Something went wrong!');
 }
-const MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT = 1;
+const extraRequiredCollateralTokenAmount =
+  newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, GOVERNANCE_TOKEN, true);
 
 type IssueFormData = {
   [BTC_AMOUNT]: string;
@@ -211,23 +211,14 @@ const IssueForm = (): JSX.Element | null => {
       const btcAmount = BitcoinAmount.from.BTC(numericValue);
 
       const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
-      const minRequiredGovernanceTokenAmount =
-        newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, GOVERNANCE_TOKEN, true).add(securityDeposit);
+      const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
       if (governanceTokenBalance.lte(minRequiredGovernanceTokenAmount)) {
         return t('insufficient_funds_governance_token', {
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
         });
       }
 
-      if (
-        process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet &&
-        numericValue > MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT
-      ) {
-        return t('issue_page.validation_max_value', {
-          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
-          maximumIssuableWrappedTokenAmount: MAXIMUM_ISSUABLE_WRAPPED_TOKEN_AMOUNT
-        });
-      } else if (btcAmount.lt(dustValue)) {
+      if (btcAmount.lt(dustValue)) {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }
 
@@ -371,6 +362,32 @@ const IssueForm = (): JSX.Element | null => {
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
                 label={t('issue_page.tooltip_security_deposit')} />
+            } />
+          <PriceInfo
+            title={
+              <h5
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
+                {t('issue_page.transaction_fee')}
+              </h5>
+            }
+            unitIcon={
+              <GovernanceTokenLogoIcon width={20} />
+            }
+            value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
+            unitName={GOVERNANCE_TOKEN_SYMBOL}
+            approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken.usd)}
+            tooltip={
+              <InformationTooltip
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}
+                label={t('issue_page.tooltip_transaction_fee')} />
             } />
           <Hr2
             className={clsx(
