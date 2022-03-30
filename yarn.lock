@@ -1522,10 +1522,10 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.8.4":
-  version "1.8.4"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.8.4.tgz#062966714c9daa92bdbe32b617aa1540cb291e66"
-  integrity sha512-+gh45zhd9VOyfCH6Gtw7O7Mv+0Qntx5ZrW0mc29Jy5qcqT9+XV12F4msSJ0cltrjgI/kUwc2lwKnVxRPxMR6mw==
+"@interlay/interbtc-api@1.8.5":
+  version "1.8.5"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.8.5.tgz#178acf0c3a57c8161964bf5c31e337387c1f3812"
+  integrity sha512-icJHWgt4I85F6JG24o2AoQ7Wta1jfUSALtEjltAng8voU3bMZrL26K0b0wNq7+o/6H/NNx8VUnlGwKTkK8ioIw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "1.5.10"
