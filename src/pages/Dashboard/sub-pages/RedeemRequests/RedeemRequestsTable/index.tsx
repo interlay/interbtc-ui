@@ -248,13 +248,9 @@ const RedeemRequestsTable = (): JSX.Element => {
     [
       REDEEM_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
-      TABLE_PAGE_LIMIT, // limit
-      stableBtcConfirmations
+      TABLE_PAGE_LIMIT // limit
     ],
-    redeemFetcher,
-    {
-      enabled: stableBtcConfirmations !== undefined
-    }
+    redeemFetcher
   );
   useErrorHandler(redeemsError);
 

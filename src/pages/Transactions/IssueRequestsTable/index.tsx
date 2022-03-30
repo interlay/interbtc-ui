@@ -152,13 +152,9 @@ const IssueRequestsTable = (): JSX.Element => {
       ISSUE_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      btcConfirmations,
       `userParachainAddress_eq: "${address}"` // `WHERE` condition
     ],
-    issueFetcher,
-    {
-      enabled: btcConfirmations !== undefined
-    }
+    issueFetcher
   );
   useErrorHandler(issueRequestsError);
 
