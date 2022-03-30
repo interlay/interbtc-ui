@@ -45,7 +45,6 @@ module.exports = on => {
   on('file:preprocessor', webpackPreprocessor(options));
 
   on('task', {
-    // deconstruct the individual properties
     generateAccount() {
       return polkadotUtils.mnemonicGenerate(12);
     }
