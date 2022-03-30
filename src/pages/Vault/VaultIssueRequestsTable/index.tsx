@@ -138,13 +138,9 @@ const VaultIssueRequestsTable = ({
       ISSUE_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      btcConfirmations,
       `vault: {accountId_eq: "${vaultAddress}"}` // `WHERE` condition
     ],
-    issueFetcher,
-    {
-      enabled: btcConfirmations !== undefined
-    }
+    issueFetcher
   );
   useErrorHandler(issueRequestsError);
 

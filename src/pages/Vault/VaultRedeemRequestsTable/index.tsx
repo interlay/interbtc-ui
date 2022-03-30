@@ -138,13 +138,9 @@ const VaultRedeemRequestsTable = ({
       REDEEM_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      btcConfirmations,
       `vault: {accountId_eq: "${vaultAddress}"}` // `WHERE` condition
     ],
-    redeemFetcher,
-    {
-      enabled: btcConfirmations !== undefined
-    }
+    redeemFetcher
   );
   useErrorHandler(redeemRequestsError);
 

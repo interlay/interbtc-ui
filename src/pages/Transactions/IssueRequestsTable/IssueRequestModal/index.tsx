@@ -113,16 +113,21 @@ const IssueRequestModal = ({
               {/* TODO: could componentize */}
               <h4
                 className={clsx(
-                  'font-medium',
-                  { 'text-interlayDenim':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                  { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                  'space-x-1'
+                  'space-x-1',
+                  'text-xl'
                 )}>
-                <span className='text-5xl'>
+                <span>
+                  {t('receive')}
+                </span>
+                <span
+                  className={clsx(
+                    { 'text-interlayDenim':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )}>
                   {displayMonetaryAmount(receivedWrappedTokenAmount)}
                 </span>
-                <span className='text-2xl'>
+                <span>
                   {WRAPPED_TOKEN_SYMBOL}
                 </span>
               </h4>

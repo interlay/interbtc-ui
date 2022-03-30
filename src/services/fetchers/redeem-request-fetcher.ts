@@ -13,7 +13,6 @@ type RedeemFetcherParams = [
   key: typeof REDEEM_FETCHER,
   offset: number,
   limit: number,
-  stableBtcConfirmations: number,
   where?: string,
 ]
 
@@ -42,7 +41,6 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
     key,
     offset,
     limit,
-    stableBtcConfirmations,
     where
   ] = queryKey as RedeemFetcherParams;
 
@@ -67,7 +65,6 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
       window.bridge.electrsAPI,
       redeem.id,
       redeem.vaultBackingAddress,
-      stableBtcConfirmations,
       true // Use op_return
     );
     return redeem;
@@ -101,8 +98,8 @@ function getRedeemWithStatus(
     redeem.status = RedeemStatus.PendingWithBtcTxNotIncluded;
   } else if (
     redeem.backingPayment.confirmations < stableBtcConfirmations ||
-    redeem.backingPayment.confirmedAtParachainActiveBlock === undefined ||
-    redeem.backingPayment.confirmedAtParachainActiveBlock + stableParachainConfirmations > parachainActiveHeight
+    redeem.backingPayment.includedAtParachainActiveBlock === undefined ||
+    redeem.backingPayment.includedAtParachainActiveBlock + stableParachainConfirmations > parachainActiveHeight
   ) {
     redeem.status = RedeemStatus.PendingWithTooFewConfirmations;
   } else {

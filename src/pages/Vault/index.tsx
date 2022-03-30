@@ -12,12 +12,13 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
-import { BitcoinAmount } from '@interlay/monetary-js';
 import {
-  CollateralIdLiteral,
+  BitcoinAmount,
+  BitcoinUnit
+} from '@interlay/monetary-js';
+import {
   newAccountId,
-  tickerToCurrencyIdLiteral,
-  WrappedIdLiteral
+  VaultExt
 } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
@@ -25,12 +26,13 @@ import RequestReplacementModal from './RequestReplacementModal';
 import ReplaceTable from './ReplaceTable';
 import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
+import StatPanel from './StatPanel';
+import VaultStatusStatPanel from './VaultStatusStatPanel';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
 import SectionTitle from 'parts/SectionTitle';
 import BoldParagraph from 'components/BoldParagraph';
-import Panel from 'components/Panel';
 import ErrorFallback from 'components/ErrorFallback';
 import
 InterlayDenimOrKintsugiMidnightContainedButton
@@ -40,16 +42,14 @@ import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultCo
 import {
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
-  WRAPPED_TOKEN,
-  COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
 import { URL_PARAMETERS } from 'utils/constants/links';
+import {
+  COLLATERAL_TOKEN_ID_LITERAL,
+  WRAPPED_TOKEN_ID_LITERAL
+} from 'utils/constants/currency';
 import {
   safeRoundTwoDecimals,
   displayMonetaryAmount
@@ -63,12 +63,11 @@ import {
   updateAPYAction
 } from 'common/actions/vault.actions';
 
-const COLLATERAL_ID_LITERAL = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
-const WRAPPED_ID_LITERAL = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
-
 const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
   const [requestReplacementModalOpen, setRequestReplacementModalOpen] = React.useState(false);
+  const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
+  const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
   const {
     vaultClientLoaded,
     bridgeLoaded,
@@ -80,8 +79,6 @@ const Vault = (): JSX.Element => {
     lockedBTC,
     apy
   } = useSelector((state: StoreType) => state.vault);
-  const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
-  const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -123,29 +120,22 @@ const Vault = (): JSX.Element => {
       try {
         // TODO: should update using `react-query`
         const [
-          vault,
           feesPolkaBTC,
           lockedAmountBTC,
           collateralization,
           apyScore,
           issuableAmount
         ] = await Promise.allSettled([
-          window.bridge.vaults.get(vaultAccountId, COLLATERAL_ID_LITERAL),
           window.bridge.vaults.getWrappedReward(
             vaultAccountId,
-            COLLATERAL_ID_LITERAL,
-            WRAPPED_ID_LITERAL
+            COLLATERAL_TOKEN_ID_LITERAL,
+            WRAPPED_TOKEN_ID_LITERAL
           ),
-          window.bridge.vaults.getIssuedAmount(vaultAccountId, COLLATERAL_ID_LITERAL),
-          window.bridge.vaults.getVaultCollateralization(vaultAccountId, COLLATERAL_ID_LITERAL),
-          window.bridge.vaults.getAPY(vaultAccountId, COLLATERAL_ID_LITERAL),
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_ID_LITERAL)
+          window.bridge.vaults.getIssuedAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
+          window.bridge.vaults.getVaultCollateralization(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
+          window.bridge.vaults.getAPY(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL)
         ]);
-
-        if (vault.status === 'fulfilled') {
-          const collateralDot = vault.value.backingCollateral;
-          dispatch(updateCollateralAction(collateralDot));
-        }
 
         if (feesPolkaBTC.status === 'fulfilled') {
           setFeesEarnedInterBTC(feesPolkaBTC.value);
@@ -185,7 +175,7 @@ const Vault = (): JSX.Element => {
       'vaults',
       'getGovernanceReward',
       vaultAccountId,
-      COLLATERAL_ID_LITERAL,
+      COLLATERAL_TOKEN_ID_LITERAL,
       GOVERNANCE_TOKEN_SYMBOL
     ],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
@@ -194,6 +184,33 @@ const Vault = (): JSX.Element => {
     }
   );
   useErrorHandler(governanceRewardError);
+
+  const {
+    data: vaultExt,
+    error: vaultExtError
+  } = useQuery<VaultExt<BitcoinUnit>, Error>(
+    [
+      GENERIC_FETCHER,
+      'vaults',
+      'get',
+      vaultAccountId,
+      COLLATERAL_TOKEN_ID_LITERAL
+    ],
+    genericFetcher<VaultExt<BitcoinUnit>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(vaultExtError);
+  React.useEffect(() => {
+    if (vaultExt === undefined) return;
+    if (!dispatch) return;
+
+    dispatch(updateCollateralAction(vaultExt.backingCollateral));
+  }, [
+    vaultExt,
+    dispatch
+  ]);
 
   const vaultItems = React.useMemo(() => {
     const governanceRewardLabel =
@@ -274,36 +291,12 @@ const Vault = (): JSX.Element => {
               '2xl:gap-6'
             )}>
             {vaultItems.map(item => (
-              <Panel
+              <StatPanel
                 key={item.title}
-                className={clsx(
-                  'px-4',
-                  'py-5'
-                )}>
-                <dt
-                  className={clsx(
-                    'text-sm',
-                    'font-medium',
-                    'truncate',
-                    { 'text-interlayTextPrimaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                    { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
-                  {item.title}
-                </dt>
-                <dd
-                  className={clsx(
-                    'mt-1',
-                    'text-3xl',
-                    'font-semibold',
-                    { 'text-interlayDenim':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                    { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
-                  {item.value}
-                </dd>
-              </Panel>
+                label={item.title}
+                value={item.value} />
             ))}
+            <VaultStatusStatPanel vaultAccountId={vaultAccountId} />
           </div>
         </div>
         {/* Check interaction with the vault */}

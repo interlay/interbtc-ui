@@ -1,6 +1,6 @@
 {
   "name": "interbtc-ui",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
@@ -58,6 +58,9 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@cypress/react": "^5.12.3",
+    "@cypress/webpack-dev-server": "^1.8.1",
+    "@cypress/webpack-preprocessor": "^5.11.1",
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
     "@storybook/addon-actions": "^6.2.8",
     "@storybook/addon-essentials": "^6.2.8",
@@ -66,11 +69,14 @@
     "@storybook/preset-create-react-app": "^3.1.7",
     "@storybook/react": "^6.2.8",
     "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@testing-library/cypress": "^8.0.2",
     "autoprefixer": "9",
     "chromatic": "^5.6.2",
     "cross-env": "^7.0.3",
+    "cypress": "^9.5.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.4",
@@ -105,7 +111,8 @@
     "compose:down": "docker-compose down --remove-orphans -v",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "chromatic": "chromatic --project-token"
+    "chromatic": "chromatic --project-token",
+    "cypress:e2e": "cypress open"
   },
   "homepage": "",
   "browserslist": {

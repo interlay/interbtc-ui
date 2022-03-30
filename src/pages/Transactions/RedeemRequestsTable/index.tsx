@@ -146,13 +146,9 @@ const RedeemRequestsTable = (): JSX.Element => {
       REDEEM_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      btcConfirmations,
       `userParachainAddress_eq: "${address}"` // WHERE condition
     ],
-    redeemFetcher,
-    {
-      enabled: btcConfirmations !== undefined
-    }
+    redeemFetcher
   );
   useErrorHandler(redeemRequestsError);
 

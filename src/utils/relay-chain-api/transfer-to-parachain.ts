@@ -4,7 +4,7 @@ import { AddressOrPair } from '@polkadot/api/types';
 import { ApiPromise } from '@polkadot/api';
 import { decodeAddress } from '@polkadot/keyring';
 
-import { PARACHAIN_ID } from '../../constants';
+import { PARACHAIN_ID } from './';
 import { RelayChainMonetaryAmount } from './';
 
 const createDest = (api: ApiPromise) => {

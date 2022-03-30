@@ -11,7 +11,6 @@ type IssueFetcherParams = [
   queryKey: string,
   offset: number,
   limit: number,
-  stableBtcConfirmations: number,
   where?: string
 ]
 
@@ -37,7 +36,6 @@ const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
     key,
     offset,
     limit,
-    stableBtcConfirmations,
     where
   ] = queryKey as IssueFetcherParams;
 
@@ -63,8 +61,7 @@ const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
     issue.backingPayment = await getTxDetailsForRequest(
       window.bridge.electrsAPI,
       issue.id,
-      issue.vaultBackingAddress,
-      stableBtcConfirmations
+      issue.vaultBackingAddress
     );
     return issue;
   }));
@@ -103,8 +100,8 @@ function getIssueWithStatus(
     issue.status = IssueStatus.PendingWithBtcTxNotIncluded;
   } else if (
     issue.backingPayment.confirmations < stableBtcConfirmations ||
-    issue.backingPayment.confirmedAtParachainActiveBlock === undefined ||
-    issue.backingPayment.confirmedAtParachainActiveBlock + stableParachainConfirmations > parachainActiveHeight
+    issue.backingPayment.includedAtParachainActiveBlock === undefined ||
+    issue.backingPayment.includedAtParachainActiveBlock + stableParachainConfirmations > parachainActiveHeight
   ) {
     issue.status = IssueStatus.PendingWithTooFewConfirmations;
   } else {

@@ -2,6 +2,7 @@
   "previous": "Previous",
   "prev": "Prev",
   "send": "Send",
+  "receive": "You will receive",
   "click_to_copy": "Click to copy",
   "confirm": "Confirm",
   "connect_wallet": "Connect Wallet",
@@ -199,7 +200,11 @@
       "from_chain": "From chain",
       "to_chain": "To chain",
       "target_account": "Destination",
-      "please_enter_amount": "Please enter amount"
+      "please_enter_amount": "Please enter amount",
+      "relay_chain_balance": "Relay chain balance",
+      "parachain_balance": "Transferable balance",
+      "insufficient_funds_to_pay_fees": "Please transfer an amount greater than the transfer fee of {{transferFee}}",
+      "insufficient_funds_to_maintain_existential_depoit": "Insufficient amount to maintain existential deposit"
     }
   },
   "burn_page": {
@@ -306,6 +311,7 @@
     "view_on_block_explorer": "View on Block Explorer",
     "mint_polka_by_wrapping": "Mint {{wrappedTokenSymbol}} by wrapping BTC",
     "security_deposit": "Security Deposit",
+    "transaction_fee": "Transaction Fee",
     "receive_interbtc_tokens": "You will now receive your BTC-backed {{wrappedTokenSymbol}} tokens. If this does not happen automatically within a few minutes, click the button below.",
     "issue_requests": "Issue Requests",
     "recent_requests": "Recent Requests",
@@ -322,7 +328,6 @@
     "issue_request_for": "Issue Request for",
     "updated": "Updated",
     "error_more_than_6_blocks_behind": "You can't issue {{wrappedTokenSymbol}} at the moment because {{wrappedTokenSymbol}} parachain is more than 6 blocks behind.",
-    "validation_max_value": "The maximum amount you can issue (per request) on the testnet is {{maximumIssuableWrappedTokenAmount}} {{wrappedTokenSymbol}}. Please enter a lower amount.",
     "validation_min_value": "Please enter an amount greater than Bitcoin dust limit (",
     "enter_valid_amount": "Please enter a valid amount.",
     "proof_data": "Fetching proof data for Bitcoin transaction: {{txId}}",
@@ -378,7 +383,8 @@
     "refund_vault_to_address": "back to your address",
     "warning_mbtc_wallets": "Warning: Some Bitcoin wallets display values in mBTC. Please ensure you send the correct amount:",
     "tooltip_bridge_fee": "The bridge fee is paid to the Vaults, Relayers, and maintainers of the system.",
-    "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed."
+    "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed.",
+    "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain."
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
@@ -413,7 +419,8 @@
     "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
     "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
-    "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}"
+    "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}",
+    "status": "Status"
   },
   "staking_page": {
     "estimated_governance_token_rewards_tooltip_label": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}."

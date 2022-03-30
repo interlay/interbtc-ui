@@ -10,7 +10,7 @@ import {
 interface CustomProps {
   label: string;
   value: string | number;
-  tooltip: string;
+  tooltip?: string;
 }
 
 const InformationUI = ({
@@ -41,7 +41,7 @@ const InformationUI = ({
         <span>
           {label}
         </span>
-        <InformationTooltip label={tooltip} />
+        {tooltip && <InformationTooltip label={tooltip} />}
       </div>
       <span
         className={clsx(

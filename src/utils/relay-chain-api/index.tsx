@@ -7,13 +7,20 @@ import {
   RelayChainApi,
   RelayChainMonetaryAmount
 } from './types';
-
+import {
+  PARACHAIN_ID,
+  RELAY_CHAIN_TRANSFER_FEE,
+  TRANSFER_WEIGHT
+} from './constants';
 export type {
   RelayChainApi,
   RelayChainMonetaryAmount
 };
 
 export {
+  PARACHAIN_ID,
+  RELAY_CHAIN_TRANSFER_FEE,
+  TRANSFER_WEIGHT,
   createRelayChainApi,
   getRelayChainBalance,
   getExistentialDeposit,
