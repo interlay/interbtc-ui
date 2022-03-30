@@ -6,6 +6,8 @@ import * as polkadotExtension from '@polkadot/extension-dapp';
 // Can be deleted as soon as our first e2e test has been written.
 describe('Test spec', () => {
   beforeEach(() => {
+    cy.task('generateAccount').then(value => console.log(value));
+
     cy.intercept('GET', 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,kusama,kintsugi&vs_currencies=usd', {
       statusCode: 200,
       body: { bitcoin: { usd: 35348 }, kintsugi: { usd: 13.52 }, kusama: { usd: 106.92 } }

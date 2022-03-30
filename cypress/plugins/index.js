@@ -4,6 +4,7 @@
 // plugin only works for component testing.
 const findWebpack = require('find-webpack');
 const webpackPreprocessor = require('@cypress/webpack-preprocessor');
+const polkadotUtils = require('@polkadot/util-crypto');
 
 module.exports = on => {
   // find the Webpack config used by react-scripts
@@ -42,4 +43,11 @@ module.exports = on => {
   };
 
   on('file:preprocessor', webpackPreprocessor(options));
+
+  on('task', {
+    // deconstruct the individual properties
+    generateAccount() {
+      return polkadotUtils.mnemonicGenerate(12);
+    }
+  });
 };
