@@ -3,10 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
-import InterlayModal, {
-  InterlayModalInnerWrapper,
-  InterlayModalTitle
-} from 'components/UI/InterlayModal';
+import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 
@@ -37,15 +34,6 @@ const GetGovernanceTokenUI = (): JSX.Element => {
             'p-6',
             'max-w-lg'
           )}>
-          <InterlayModalTitle
-            as='h3'
-            className={clsx(
-              'text-lg',
-              'font-medium',
-              'mb-6'
-            )}>
-            Get {GOVERNANCE_TOKEN_SYMBOL}
-          </InterlayModalTitle>
           Modal
         </InterlayModalInnerWrapper>
       </InterlayModal>

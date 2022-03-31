@@ -8,7 +8,7 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 
-const Title = (): JSX.Element => (
+const TitleWithUnderline = (): JSX.Element => (
   <div>
     <h3
       className={clsx(
@@ -30,4 +30,4 @@ const Title = (): JSX.Element => (
   </div>
 );
 
-export default Title;
+export default TitleWithUnderline;
