@@ -273,8 +273,6 @@ const IssueForm = (): JSX.Element | null => {
         const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
         const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), wrappedTokenAmount);
 
-        // TODO: this is patching a bug in the lib. When that's fixed we should revert this to:
-        // const result = await window.bridge.issue.request(wrappedTokenAmount);
         const result = await window.bridge.issue.request(
           wrappedTokenAmount,
           vaultId.address,
