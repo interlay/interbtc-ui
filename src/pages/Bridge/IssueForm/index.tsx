@@ -55,9 +55,11 @@ import {
 } from 'utils/constants/relay-chain-names';
 import {
   displayMonetaryAmount,
-  getUsdAmount
+  getUsdAmount,
+  getRandomVaultIdWithCapacity
 } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
+import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import {
   ParachainStatus,
@@ -265,8 +267,23 @@ const IssueForm = (): JSX.Element | null => {
         setSubmitStatus(STATUSES.PENDING);
         await requestLimitsRefetch();
         await trigger(BTC_AMOUNT);
+
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT] || '0');
-        const result = await window.bridge.issue.request(wrappedTokenAmount);
+
+        const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
+        const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), wrappedTokenAmount);
+
+        // TODO: this is patching a bug in the lib. When that's fixed we should revert this to:
+        // const result = await window.bridge.issue.request(wrappedTokenAmount);
+        const result = await window.bridge.issue.request(
+          wrappedTokenAmount,
+          vaultId.address,
+          COLLATERAL_TOKEN_ID_LITERAL,
+          false, // default
+          0, // default
+          vaults
+        );
+
         // TODO: handle issue aggregation
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);
