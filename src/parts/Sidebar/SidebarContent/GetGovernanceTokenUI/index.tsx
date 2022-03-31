@@ -2,9 +2,9 @@
 import * as React from 'react';
 import clsx from 'clsx';
 
+import TitleWithUnderline from 'components/TitleWithUnderline';
 import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
 import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
-
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 
 const GetGovernanceTokenUI = (): JSX.Element => {
@@ -34,7 +34,7 @@ const GetGovernanceTokenUI = (): JSX.Element => {
             'p-6',
             'max-w-lg'
           )}>
-          Modal
+          <TitleWithUnderline text={`Get ${GOVERNANCE_TOKEN_SYMBOL}`} />
         </InterlayModalInnerWrapper>
       </InterlayModal>
     </>
