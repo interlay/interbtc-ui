@@ -2,13 +2,18 @@
 import clsx from 'clsx';
 
 import Hr1 from 'components/hrs/Hr1';
-import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 
-const TitleWithUnderline = (): JSX.Element => (
+interface Props {
+  text: string;
+}
+
+const TitleWithUnderline = ({
+  text
+}: Props): JSX.Element => (
   <div>
     <h3
       className={clsx(
@@ -20,7 +25,7 @@ const TitleWithUnderline = (): JSX.Element => (
         { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-center'
       )}>
-      Stake {GOVERNANCE_TOKEN_SYMBOL}
+      {text}
     </h3>
     <Hr1
       className={clsx(

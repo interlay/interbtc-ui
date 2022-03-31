@@ -784,7 +784,7 @@ const Staking = (): JSX.Element => {
               'space-y-8'
             )}
             onSubmit={handleSubmit(onSubmit)}>
-            <TitleWithUnderline />
+            <TitleWithUnderline text={`Stake ${GOVERNANCE_TOKEN_SYMBOL}`} />
             <BalancesUI
               stakedAmount={renderStakedAmountLabel()}
               voteStakedAmount={renderVoteStakedAmountLabel()}
