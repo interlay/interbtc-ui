@@ -436,7 +436,7 @@
     "join_discord": "Join our Discord",
     "ask_away": "and ask away!"
   },
-  "test_net": "TestNet",
+  "test_net": "Testnet",
   "test_net_warning": "All testnet assets are for testing purposes only and have no real value.",
   "maintenance": {
     "type": {
