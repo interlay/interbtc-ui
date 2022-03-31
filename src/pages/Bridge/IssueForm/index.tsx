@@ -271,7 +271,7 @@ const IssueForm = (): JSX.Element | null => {
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT] || '0');
 
         const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
-        const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults || new Map()), wrappedTokenAmount);
+        const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
 
         const result = await window.bridge.issue.request(
           wrappedTokenAmount,
