@@ -9,7 +9,9 @@ import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/Interlay
 import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
+// ray test touch <<
 import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg'; // TODO: placeholder
+// ray test touch >>
 
 const EXCHANGES = [
   {
@@ -31,19 +33,23 @@ const EXCHANGES = [
   {
     link: 'https://www.mexc.com/de-DE/exchange/KINT_USDT',
     icon: (
+      // ray test touch <<
       // TODO: placeholder
       <GateLogoIcon
         width={138}
         height={55} />
+      // ray test touch >>
     )
   },
   {
     link: 'https://dex.zenlink.pro/#/swap',
     icon: (
+      // ray test touch <<
       // TODO: placeholder
       <GateLogoIcon
         width={138}
         height={55} />
+      // ray test touch >>
     )
   }
 ];
@@ -64,12 +70,14 @@ const ExchangeLink = ({
         'grid',
         'place-items-center',
         'h-24',
+        // ray test touch <<
         // TODO: could be reused
         'border',
         'border-black',
         'border-opacity-10',
         'dark:border-white',
         'dark:border-opacity-10'
+        // ray test touch >>
       )}
       target='_blank'
       rel='noopener noreferrer'
@@ -119,7 +127,9 @@ const GetGovernanceTokenUI = (): JSX.Element => {
               'space-y-10'
             )}>
             <p className='text-center'>
+              {/* ray test touch << */}
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel sagittis magna. Integer ex orci.
+              {/* ray test touch >> */}
             </p>
             <div
               className={clsx(
