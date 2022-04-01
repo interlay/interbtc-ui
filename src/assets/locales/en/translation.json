@@ -113,6 +113,8 @@
   "interbtc_bridge_recovery_mode": "The {{wrappedTokenSymbol}} bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
   "waiting_for_confirmations": "Waiting for Confirmations",
   "built_by": "Built by",
+  "get_governance_token": "Get {{governanceTokenSymbol}}",
+  "get_governance_token_description": "Please check the individual terms and conditions of each exchange before you buy/trade {{governanceTokenSymbol}}.",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -436,7 +438,7 @@
     "join_discord": "Join our Discord",
     "ask_away": "and ask away!"
   },
-  "test_net": "TestNet",
+  "test_net": "Testnet",
   "test_net_warning": "All testnet assets are for testing purposes only and have no real value.",
   "maintenance": {
     "type": {

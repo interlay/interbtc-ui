@@ -26,7 +26,6 @@ import {
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 
-import Title from './Title';
 import BalancesUI from './BalancesUI';
 import WithdrawButton from './WithdrawButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
@@ -34,6 +33,7 @@ import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
 import TotalStakedUI from './TotalStakedUI';
 import MainContainer from 'parts/MainContainer';
+import TitleWithUnderline from 'components/TitleWithUnderline';
 import Panel from 'components/Panel';
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import TokenField from 'components/TokenField';
@@ -784,7 +784,7 @@ const Staking = (): JSX.Element => {
               'space-y-8'
             )}
             onSubmit={handleSubmit(onSubmit)}>
-            <Title />
+            <TitleWithUnderline text={`Stake ${GOVERNANCE_TOKEN_SYMBOL}`} />
             <BalancesUI
               stakedAmount={renderStakedAmountLabel()}
               voteStakedAmount={renderVoteStakedAmountLabel()}
