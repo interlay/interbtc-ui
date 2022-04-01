@@ -10,47 +10,41 @@ import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
-// ray test touch <<
-import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg'; // TODO: placeholder
-// ray test touch >>
+import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg';
+import { ReactComponent as MexcLogoIcon } from 'assets/img/exchanges/mexc-logo.svg';
+import { ReactComponent as ZenlinkLogoIcon } from 'assets/img/exchanges/zenlink-logo.svg';
 
 const EXCHANGES = [
   {
     link: 'https://www.kraken.com/en-gb/prices/kint-kintsugi-price-chart/usd-us-dollar?interval=1m',
     icon: (
       <KrakenLogoIcon
-        width={146}
-        height={23} />
+        width={122}
+        height={20} />
     )
   },
   {
     link: 'https://www.gate.io/de/trade/kint_usdt',
     icon: (
       <GateLogoIcon
-        width={138}
-        height={55} />
-    )
-  },
-  {
-    link: 'https://www.mexc.com/de-DE/exchange/KINT_USDT',
-    icon: (
-      // ray test touch <<
-      // TODO: placeholder
-      <GateLogoIcon
-        width={138}
-        height={55} />
-      // ray test touch >>
+        width={121}
+        height={37} />
     )
   },
   {
     link: 'https://dex.zenlink.pro/#/swap',
     icon: (
-      // ray test touch <<
-      // TODO: placeholder
-      <GateLogoIcon
-        width={138}
-        height={55} />
-      // ray test touch >>
+      <ZenlinkLogoIcon
+        width={119}
+        height={35} />
+    )
+  },
+  {
+    link: 'https://www.mexc.com/de-DE/exchange/KINT_USDT',
+    icon: (
+      <MexcLogoIcon
+        width={167}
+        height={20} />
     )
   }
 ];
