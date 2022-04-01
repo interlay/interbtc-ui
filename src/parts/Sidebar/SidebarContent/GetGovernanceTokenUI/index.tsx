@@ -8,7 +8,7 @@ import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOut
 import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { BORDER_CLASSES } from 'utils/constants/styles';
+import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
 // ray test touch <<
 import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg'; // TODO: placeholder
@@ -71,7 +71,7 @@ const ExchangeLink = ({
         'grid',
         'place-items-center',
         'h-24',
-        BORDER_CLASSES
+        LIGHT_DARK_BORDER_CLASSES
       )}
       target='_blank'
       rel='noopener noreferrer'
