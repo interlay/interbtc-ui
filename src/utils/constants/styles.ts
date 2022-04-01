@@ -16,7 +16,16 @@ const LIGHT_DARK_BORDER_CLASSES = clsx(
   'dark:border-opacity-25'
 );
 
+const BORDER_CLASSES = clsx(
+  'border',
+  'border-black',
+  'border-opacity-10',
+  'dark:border-white',
+  'dark:border-opacity-10'
+);
+
 export {
   CLASS_NAMES,
-  LIGHT_DARK_BORDER_CLASSES
+  LIGHT_DARK_BORDER_CLASSES,
+  BORDER_CLASSES
 };
