@@ -114,6 +114,7 @@
   "waiting_for_confirmations": "Waiting for Confirmations",
   "built_by": "Built by",
   "get_governance_token": "Get {{governanceTokenSymbol}}",
+  "get_governance_token_description": "You can find all options for trading and buying {{governanceTokenSymbol}} tokens below. Please make sure to check the individual terms and conditions on each exchange before you buy.",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",

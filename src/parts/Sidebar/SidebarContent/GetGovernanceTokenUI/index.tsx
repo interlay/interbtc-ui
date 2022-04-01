@@ -97,6 +97,10 @@ const GetGovernanceTokenUI = (): JSX.Element => {
     governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
   });
 
+  const getGovernanceTokenDescriptionLabel = t('get_governance_token_description', {
+    governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
+  });
+
   return (
     <>
       <InterlayDefaultOutlinedButton
@@ -121,9 +125,7 @@ const GetGovernanceTokenUI = (): JSX.Element => {
               'space-y-10'
             )}>
             <p className='text-center'>
-              {/* ray test touch << */}
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vel sagittis magna. Integer ex orci.
-              {/* ray test touch >> */}
+              {getGovernanceTokenDescriptionLabel}
             </p>
             <div
               className={clsx(
