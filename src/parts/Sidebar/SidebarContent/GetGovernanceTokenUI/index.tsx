@@ -27,7 +27,7 @@ const EXCHANGES = [
     link: 'https://www.gate.io/de/trade/kint_usdt',
     icon: (
       <GateLogoIcon
-        width={121}
+        width={122}
         height={37} />
     )
   },
@@ -44,7 +44,7 @@ const EXCHANGES = [
     icon: (
       <MexcLogoIcon
         width={167}
-        height={20} />
+        height={21} />
     )
   }
 ];
