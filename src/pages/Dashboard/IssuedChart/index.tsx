@@ -125,7 +125,7 @@ const IssuedChart = (): JSX.Element => {
         })
       ]}
       yLabels={
-        cutoffTimestamps.slice(1)
+        cutoffTimestamps.slice(0, -1)
           .map(timestamp => timestamp.toISOString().substring(0, 10))
       }
       yAxes={[
