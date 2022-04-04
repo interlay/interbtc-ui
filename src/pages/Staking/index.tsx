@@ -635,15 +635,10 @@ const Staking = (): JSX.Element => {
 
   const renderNewTotalStakeLabel = () => {
     if (
-      voteGovernanceTokenBalanceIdle ||
-      voteGovernanceTokenBalanceLoading ||
       remainingBlockNumbersToUnstake === undefined ||
       stakedAmount === undefined
     ) {
       return '-';
-    }
-    if (voteGovernanceTokenBalance === undefined) {
-      throw new Error('Something went wrong!');
     }
 
     const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
