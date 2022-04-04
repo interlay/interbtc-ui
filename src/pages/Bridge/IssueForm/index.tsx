@@ -275,7 +275,7 @@ const IssueForm = (): JSX.Element | null => {
 
         const result = await window.bridge.issue.request(
           wrappedTokenAmount,
-          vaultId.address,
+          vaultId.accountId,
           COLLATERAL_TOKEN_ID_LITERAL,
           false, // default
           0, // default
