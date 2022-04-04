@@ -604,11 +604,7 @@ const Staking = (): JSX.Element => {
 
   const renderUnlockDateLabel = () => {
     const numericLockTime = parseInt(lockTime);
-    if (
-      numericLockTime < STAKE_LOCK_TIME.MIN ||
-      availableLockTime === undefined ||
-      numericLockTime > availableLockTime
-    ) {
+    if (errors[LOCK_TIME]) {
       return '-';
     }
 
@@ -625,11 +621,7 @@ const Staking = (): JSX.Element => {
     }
 
     const numericLockTime = parseInt(lockTime);
-    if (
-      numericLockTime < STAKE_LOCK_TIME.MIN ||
-      availableLockTime === undefined ||
-      numericLockTime > availableLockTime
-    ) {
+    if (errors[LOCK_TIME]) {
       return '-';
     }
 
