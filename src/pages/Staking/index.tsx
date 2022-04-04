@@ -575,7 +575,11 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return stakedAmountAndEndBlock.endBlock - currentBlockNumber;
+    return (
+      stakedAmountAndEndBlock.endBlock <= 0 ?
+        0 :
+        stakedAmountAndEndBlock.endBlock - currentBlockNumber
+    );
   };
   const remainingBlockNumbersToUnstake = getRemainingBlockNumbersToUnstake();
 
@@ -727,7 +731,8 @@ const Staking = (): JSX.Element => {
     votingBalanceGreaterThanZero === undefined ||
     remainingBlockNumbersToUnstake === undefined ||
     availableLockTime === undefined ||
-    availableLockTime <= 0;
+    availableLockTime <= 0 ||
+    unlockFirst;
 
   const lockingAmountFieldDisabled = availableBalance === undefined;
 
