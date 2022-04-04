@@ -606,7 +606,8 @@ const Staking = (): JSX.Element => {
     const numericLockTime = parseInt(lockTime);
     if (
       numericLockTime < STAKE_LOCK_TIME.MIN ||
-      numericLockTime > STAKE_LOCK_TIME.MAX
+      availableLockTime === undefined ||
+      numericLockTime > availableLockTime
     ) {
       return '-';
     }
@@ -626,7 +627,8 @@ const Staking = (): JSX.Element => {
     const numericLockTime = parseInt(lockTime);
     if (
       numericLockTime < STAKE_LOCK_TIME.MIN ||
-      numericLockTime > STAKE_LOCK_TIME.MAX
+      availableLockTime === undefined ||
+      numericLockTime > availableLockTime
     ) {
       return '-';
     }
