@@ -708,7 +708,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return displayMonetaryAmount(estimatedRewardAmountAndAPY.amount);
+    return `${displayMonetaryAmount(estimatedRewardAmountAndAPY.amount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
   };
 
   const renderClaimableRewardAmountLabel = () => {
@@ -885,7 +885,7 @@ const Staking = (): JSX.Element => {
               tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
-              value={`${renderEstimatedRewardAmountLabel()} ${GOVERNANCE_TOKEN_SYMBOL}`}
+              value={renderEstimatedRewardAmountLabel()}
               tooltip={t('staking_page.estimated_governance_token_rewards_tooltip_label', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
