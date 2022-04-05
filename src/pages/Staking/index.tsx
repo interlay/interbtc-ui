@@ -579,8 +579,8 @@ const Staking = (): JSX.Element => {
 
     return (
       hasStakedAmount ?
-        null : // When the user has not staked
-        stakedAmountAndEndBlock.endBlock - currentBlockNumber // When the user has staked
+        stakedAmountAndEndBlock.endBlock - currentBlockNumber : // If the user has staked
+        null // If the user has not staked
     );
   };
   const remainingBlockNumbersToUnstake = getRemainingBlockNumbersToUnstake();
