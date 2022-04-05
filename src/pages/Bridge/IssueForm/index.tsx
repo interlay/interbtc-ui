@@ -27,6 +27,7 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
+import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
@@ -225,7 +226,7 @@ const IssueForm = (): JSX.Element | null => {
       }
 
       if (btcAmount.gt(requestLimits.singleVaultMaxIssuable)) {
-        return t('issue_page.maximum_in_single_request', {
+        return t('issue_page.maximum_in_single_request_error', {
           maxAmount: displayMonetaryAmount(requestLimits.singleVaultMaxIssuable),
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
@@ -275,7 +276,7 @@ const IssueForm = (): JSX.Element | null => {
 
         const result = await window.bridge.issue.request(
           wrappedTokenAmount,
-          vaultId.address,
+          vaultId.accountId,
           COLLATERAL_TOKEN_ID_LITERAL,
           false, // default
           0, // default
@@ -308,21 +309,31 @@ const IssueForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <TokenField
-            id={BTC_AMOUNT}
-            name={BTC_AMOUNT}
-            label='BTC'
-            min={0}
-            ref={register({
-              required: {
-                value: true,
-                message: t('issue_page.enter_valid_amount')
-              },
-              validate: value => validateForm(value)
-            })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
-            error={!!errors[BTC_AMOUNT]}
-            helperText={errors[BTC_AMOUNT]?.message} />
+          <div>
+            <TokenField
+              id={BTC_AMOUNT}
+              name={BTC_AMOUNT}
+              label='BTC'
+              min={0}
+              ref={register({
+                required: {
+                  value: true,
+                  message: t('issue_page.enter_valid_amount')
+                },
+                validate: value => validateForm(value)
+              })}
+              approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
+              error={!!errors[BTC_AMOUNT]}
+              helperText={errors[BTC_AMOUNT]?.message} />
+            <AvailableBalanceUI
+              label={t('issue_page.maximum_in_single_request')}
+              balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL} />
+            <AvailableBalanceUI
+              label={t('issue_page.maximum_total_request')}
+              balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL} />
+          </div>
           <ParachainStatusInfo status={parachainStatus} />
           <PriceInfo
             title={
