@@ -641,6 +641,7 @@ const Staking = (): JSX.Element => {
       if (remainingBlockNumbersToUnstake === null) {
         throw new Error('Something went wrong!');
       }
+
       remainingLockSeconds = remainingBlockNumbersToUnstake * BLOCK_TIME;
     } else {
       remainingLockSeconds = 0;
@@ -681,7 +682,9 @@ const Staking = (): JSX.Element => {
   const renderEstimatedAPYLabel = () => {
     if (
       estimatedRewardAmountAndAPYIdle ||
-      estimatedRewardAmountAndAPYLoading
+      estimatedRewardAmountAndAPYLoading ||
+      errors[LOCK_TIME] ||
+      errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
