@@ -614,13 +614,12 @@ const Staking = (): JSX.Element => {
   };
 
   const renderUnlockDateLabel = () => {
-    const numericLockTime = parseInt(lockTime);
     if (errors[LOCK_TIME]) {
       return '-';
     }
 
     const unlockDate = add(new Date(), {
-      weeks: numericLockTime
+      weeks: parseInt(lockTime)
     });
 
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
@@ -630,12 +629,10 @@ const Staking = (): JSX.Element => {
     if (remainingBlockNumbersToUnstake === undefined) {
       return '-';
     }
-
     if (errors[LOCK_TIME]) {
       return '-';
     }
 
-    const numericLockTime = parseInt(lockTime);
     let remainingLockSeconds;
     if (hasStakedAmount) {
       if (remainingBlockNumbersToUnstake === null) {
@@ -647,7 +644,7 @@ const Staking = (): JSX.Element => {
       remainingLockSeconds = 0;
     }
     const unlockDate = add(new Date(), {
-      weeks: numericLockTime,
+      weeks: parseInt(lockTime),
       seconds: remainingLockSeconds
     });
 
