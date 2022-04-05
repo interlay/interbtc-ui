@@ -698,7 +698,9 @@ const Staking = (): JSX.Element => {
   const renderEstimatedRewardAmountLabel = () => {
     if (
       estimatedRewardAmountAndAPYIdle ||
-      estimatedRewardAmountAndAPYLoading
+      estimatedRewardAmountAndAPYLoading ||
+      errors[LOCK_TIME] ||
+      errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
