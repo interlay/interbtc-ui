@@ -115,13 +115,7 @@ const Topbar = (): JSX.Element => {
         <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
         {address !== undefined && (
           <>
-            {address === '' ? (
-              <InterlayDefaultContainedButton
-                className={SMALL_SIZE_BUTTON_CLASSES}
-                onClick={handleAccountModalOpen}>
-                {accountLabel}
-              </InterlayDefaultContainedButton>
-            ) : (
+            {address !== '' && (
               <>
                 {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
                   <>
@@ -154,13 +148,13 @@ const Topbar = (): JSX.Element => {
                   </>
                 )}
                 <Tokens />
-                <InterlayDefaultContainedButton
-                  className={SMALL_SIZE_BUTTON_CLASSES}
-                  onClick={handleAccountModalOpen}>
-                  {accountLabel}
-                </InterlayDefaultContainedButton>
               </>
             )}
+            <InterlayDefaultContainedButton
+              className={SMALL_SIZE_BUTTON_CLASSES}
+              onClick={handleAccountModalOpen}>
+              {accountLabel}
+            </InterlayDefaultContainedButton>
           </>
         )}
       </div>
