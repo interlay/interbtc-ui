@@ -11,6 +11,7 @@ import clsx from 'clsx';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
+import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import Tokens from 'components/Tokens';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
@@ -28,7 +29,6 @@ import { StoreType } from 'common/types/util.types';
 import * as constants from '../../constants';
 import { BitcoinNetwork } from 'types/bitcoin';
 
-// TODO: could create a specific prop
 const SMALL_SIZE_BUTTON_CLASSES = clsx(
   'leading-7',
   '!px-3'
@@ -112,6 +112,7 @@ const Topbar = (): JSX.Element => {
           'justify-end',
           'space-x-2'
         )}>
+        <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
         {address !== undefined && (
           <>
             {address === '' ? (
