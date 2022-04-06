@@ -7,7 +7,6 @@ import Navigation from './Navigation';
 import CloseButton from './CloseButton';
 import SocialMediaContainer from './SocialMediaContainer';
 import TestnetBadge from './TestnetBadge';
-import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
@@ -88,7 +87,6 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         <Navigation
           onSmallScreen={onSmallScreen}
           className='mt-5' />
-        <GetGovernanceTokenUI />
         <SocialMediaContainer className='p-2' />
       </div>
       <div

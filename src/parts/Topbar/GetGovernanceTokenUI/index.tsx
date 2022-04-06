@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import TitleWithUnderline from 'components/TitleWithUnderline';
-import InterlayDefaultOutlinedButton from 'components/buttons/InterlayDefaultOutlinedButton';
+import InterlayDefaultOutlinedButton, {
+  Props as InterlayDefaultOutlinedButtonProps
+} from 'components/buttons/InterlayDefaultOutlinedButton';
 import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
@@ -75,7 +77,7 @@ const ExchangeLink = ({
   );
 };
 
-const GetGovernanceTokenUI = (): JSX.Element => {
+const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.Element => {
   const [modalOpen, setModalOpen] = React.useState(false);
   const focusRef = React.useRef(null);
   const { t } = useTranslation();
@@ -98,8 +100,8 @@ const GetGovernanceTokenUI = (): JSX.Element => {
   return (
     <>
       <InterlayDefaultOutlinedButton
-        className='m-4'
-        onClick={handleModalOpen}>
+        onClick={handleModalOpen}
+        {...props}>
         {getGovernanceTokenLabel}
       </InterlayDefaultOutlinedButton>
       <InterlayModal
