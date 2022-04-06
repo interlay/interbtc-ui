@@ -559,6 +559,8 @@ const Staking = (): JSX.Element => {
     );
   };
 
+  const hasStakedAmount = stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+
   const getRemainingBlockNumbersToUnstake = () => {
     if (
       stakedAmountAndEndBlockIdle ||
@@ -575,7 +577,11 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return stakedAmountAndEndBlock.endBlock - currentBlockNumber;
+    return (
+      hasStakedAmount ?
+        stakedAmountAndEndBlock.endBlock - currentBlockNumber : // If the user has staked
+        null // If the user has not staked
+    );
   };
   const remainingBlockNumbersToUnstake = getRemainingBlockNumbersToUnstake();
 
@@ -584,9 +590,18 @@ const Staking = (): JSX.Element => {
       return undefined;
     }
 
-    const remainingWeeksToUnstake = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake);
+    // If the user has staked
+    if (hasStakedAmount) {
+      if (remainingBlockNumbersToUnstake === null) {
+        throw new Error('Something went wrong!');
+      }
+      const remainingWeeksToUnstake = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake);
 
-    return Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeksToUnstake);
+      return Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeksToUnstake);
+    // If the user has not staked
+    } else {
+      return STAKE_LOCK_TIME.MAX;
+    }
   };
   const availableLockTime = getAvailableLockTime();
 
@@ -599,16 +614,12 @@ const Staking = (): JSX.Element => {
   };
 
   const renderUnlockDateLabel = () => {
-    const numericLockTime = parseInt(lockTime);
-    if (
-      numericLockTime < STAKE_LOCK_TIME.MIN ||
-      numericLockTime > STAKE_LOCK_TIME.MAX
-    ) {
+    if (errors[LOCK_TIME]) {
       return '-';
     }
 
     const unlockDate = add(new Date(), {
-      weeks: numericLockTime
+      weeks: parseInt(lockTime)
     });
 
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
@@ -618,18 +629,23 @@ const Staking = (): JSX.Element => {
     if (remainingBlockNumbersToUnstake === undefined) {
       return '-';
     }
-
-    const numericLockTime = parseInt(lockTime);
-    if (
-      numericLockTime < STAKE_LOCK_TIME.MIN ||
-      numericLockTime > STAKE_LOCK_TIME.MAX
-    ) {
+    if (errors[LOCK_TIME]) {
       return '-';
     }
 
+    let remainingLockSeconds;
+    if (hasStakedAmount) {
+      if (remainingBlockNumbersToUnstake === null) {
+        throw new Error('Something went wrong!');
+      }
+
+      remainingLockSeconds = remainingBlockNumbersToUnstake * BLOCK_TIME;
+    } else {
+      remainingLockSeconds = 0;
+    }
     const unlockDate = add(new Date(), {
-      weeks: numericLockTime,
-      seconds: (remainingBlockNumbersToUnstake > 0 ? remainingBlockNumbersToUnstake : 0) * BLOCK_TIME
+      weeks: parseInt(lockTime),
+      seconds: remainingLockSeconds
     });
 
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
@@ -637,14 +653,12 @@ const Staking = (): JSX.Element => {
 
   const renderNewTotalStakeLabel = () => {
     if (
-      voteGovernanceTokenBalanceIdle ||
-      voteGovernanceTokenBalanceLoading ||
       remainingBlockNumbersToUnstake === undefined ||
       stakedAmount === undefined
     ) {
       return '-';
     }
-    if (voteGovernanceTokenBalance === undefined) {
+    if (remainingBlockNumbersToUnstake === null) {
       throw new Error('Something went wrong!');
     }
 
@@ -665,7 +679,9 @@ const Staking = (): JSX.Element => {
   const renderEstimatedAPYLabel = () => {
     if (
       estimatedRewardAmountAndAPYIdle ||
-      estimatedRewardAmountAndAPYLoading
+      estimatedRewardAmountAndAPYLoading ||
+      errors[LOCK_TIME] ||
+      errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
@@ -679,7 +695,9 @@ const Staking = (): JSX.Element => {
   const renderEstimatedRewardAmountLabel = () => {
     if (
       estimatedRewardAmountAndAPYIdle ||
-      estimatedRewardAmountAndAPYLoading
+      estimatedRewardAmountAndAPYLoading ||
+      errors[LOCK_TIME] ||
+      errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
@@ -687,7 +705,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return displayMonetaryAmount(estimatedRewardAmountAndAPY.amount);
+    return `${displayMonetaryAmount(estimatedRewardAmountAndAPY.amount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
   };
 
   const renderClaimableRewardAmountLabel = () => {
@@ -717,7 +735,10 @@ const Staking = (): JSX.Element => {
   const claimRewardsButtonEnabled = claimableRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   const unlockFirst =
-    stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) &&
+    hasStakedAmount &&
+    // eslint-disable-next-line max-len
+    // `remainingBlockNumbersToUnstake !== null` is redundant because if `hasStakedAmount` is truthy `remainingBlockNumbersToUnstake` cannot be null
+    remainingBlockNumbersToUnstake !== null &&
     remainingBlockNumbersToUnstake !== undefined &&
     remainingBlockNumbersToUnstake <= 0;
 
@@ -727,7 +748,8 @@ const Staking = (): JSX.Element => {
     votingBalanceGreaterThanZero === undefined ||
     remainingBlockNumbersToUnstake === undefined ||
     availableLockTime === undefined ||
-    availableLockTime <= 0;
+    availableLockTime <= 0 ||
+    unlockFirst;
 
   const lockingAmountFieldDisabled = availableBalance === undefined;
 
@@ -792,7 +814,9 @@ const Staking = (): JSX.Element => {
             <ClaimRewardsButton
               claimableRewardAmount={renderClaimableRewardAmountLabel()}
               disabled={claimRewardsButtonEnabled === false} />
-            {stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT) && (
+            {/* eslint-disable-next-line max-len */}
+            {/* `remainingBlockNumbersToUnstake !== null` is redundant because if `hasStakedAmount` is truthy `remainingBlockNumbersToUnstake` cannot be null */}
+            {hasStakedAmount && remainingBlockNumbersToUnstake !== null && (
               <WithdrawButton
                 stakedAmount={renderStakedAmountLabel()}
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
@@ -858,7 +882,7 @@ const Staking = (): JSX.Element => {
               tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
-              value={`${renderEstimatedRewardAmountLabel()} ${GOVERNANCE_TOKEN_SYMBOL}`}
+              value={renderEstimatedRewardAmountLabel()}
               tooltip={t('staking_page.estimated_governance_token_rewards_tooltip_label', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
