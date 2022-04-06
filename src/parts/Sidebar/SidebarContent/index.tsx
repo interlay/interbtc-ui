@@ -88,7 +88,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         <Navigation
           onSmallScreen={onSmallScreen}
           className='mt-5' />
+        {/* ray test touch << */}
         <GetGovernanceTokenUI />
+        {/* ray test touch >> */}
         <SocialMediaContainer className='p-2' />
       </div>
       <div

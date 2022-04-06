@@ -35,7 +35,6 @@ const SMALL_SIZE_BUTTON_CLASSES = clsx(
 );
 
 const Topbar = (): JSX.Element => {
-  // ray test touch <
   const {
     extensions,
     address,
@@ -92,7 +91,6 @@ const Topbar = (): JSX.Element => {
   const handleAccountModalClose = () => {
     dispatch(showAccountModalAction(false));
   };
-  // ray test touch >
 
   let accountLabel;
   if (!extensions.length) {
