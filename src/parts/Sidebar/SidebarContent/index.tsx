@@ -9,6 +9,7 @@ import SocialMediaContainer from './SocialMediaContainer';
 import TestnetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
+import Advert from 'components/Advert';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
 import { WrappedTokenLogoWithTextIcon } from 'config/relay-chains';
 import {
@@ -18,6 +19,7 @@ import {
 import { PAGES } from 'utils/constants/links';
 import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
+import solarBeamAd from 'assets/img/ads/solarbeam.png';
 
 interface Props {
   onSmallScreen?: boolean;
@@ -87,6 +89,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         <Navigation
           onSmallScreen={onSmallScreen}
           className='mt-5' />
+        <Advert
+          link='https://app.solarbeam.io/farm?filter=stable'
+          image={solarBeamAd} />
         <SocialMediaContainer className='p-2' />
       </div>
       <div
