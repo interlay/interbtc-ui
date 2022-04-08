@@ -86,14 +86,21 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             <TestnetBadge className='ml-2' />
           )}
         </div>
-        <Navigation
-          onSmallScreen={onSmallScreen}
-          className='mt-5' />
-        <Advert
-          link='https://app.solarbeam.io/farm?filter=stable'
-          image={solarBeamAd} />
-        <SocialMediaContainer className='p-2' />
+        <div>
+          <Navigation
+            onSmallScreen={onSmallScreen}
+            className={clsx(
+              'mt-5',
+              'mb-5'
+            )} />
+          <Advert
+            link='https://app.solarbeam.io/farm?filter=stable'
+            image={solarBeamAd}
+            width={230}
+            altText='Provide liquidity to earn rewards in KINT and SOLAR' />
+        </div>
       </div>
+      <SocialMediaContainer className='p-2' />
       <div
         className={clsx(
           'flex-shrink-0',

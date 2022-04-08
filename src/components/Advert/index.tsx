@@ -4,26 +4,34 @@ import clsx from 'clsx';
 interface Props {
   link: string;
   image: string;
+  width: number;
+  altText: string;
 }
 
 const Advert = ({
   link,
-  image
+  image,
+  width,
+  altText
 }: Props): JSX.Element => (
   <a
+    data-dd-action-name='Solarbeam liquidity pool'
     className={clsx(
-      'flex'
+      'flex',
+      'justify-center'
     )}
     href={link}>
     <img
       className={clsx(
-        'justify-center',
-        'hover:opacity-70'
+        'border',
+        'border-transparent',
+        'hover:border-white',
+        'rounded-xl'
       )}
       src={image}
-      width='230'
-      height='412'
-      alt='' />
+      width={width}
+      alt={altText}
+      title={altText} />
   </a>
 );
 
