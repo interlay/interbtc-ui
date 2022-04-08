@@ -15,12 +15,13 @@ const Advert = ({
   description
 }: Props): JSX.Element => (
   <a
-    data-dd-action-name='Solarbeam liquidity pool'
     className={clsx(
       'flex',
       'justify-center'
     )}
-    href={link}>
+    href={link}
+    target='_blank'
+    rel='noreferrer'>
     <img
       className={clsx(
         'border',

@@ -94,6 +94,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
               'mb-5'
             )} />
           <Advert
+            data-dd-action-name='Solarbeam liquidity pool'
             link='https://app.solarbeam.io/farm?filter=stable'
             image={solarBeamAd}
             width={230}
