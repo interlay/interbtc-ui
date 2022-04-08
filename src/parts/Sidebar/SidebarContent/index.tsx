@@ -90,7 +90,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           <Navigation
             onSmallScreen={onSmallScreen}
             className='mt-5' />
-          {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
+          {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
             <Advert
               className='mt-5'
               data-dd-action-name='Solarbeam liquidity pool'
