@@ -1,27 +1,30 @@
 
 import clsx from 'clsx';
 
-interface Props {
-  link: string;
+interface CustomProps {
   image: string;
   width: number;
   description: string;
 }
 
 const Advert = ({
-  link,
+  href,
   image,
   width,
-  description
-}: Props): JSX.Element => (
+  description,
+  className,
+  ...rest
+}: CustomProps & React.ComponentPropsWithRef<'a'>): JSX.Element => (
   <a
     className={clsx(
       'flex',
-      'justify-center'
+      'justify-center',
+      className
     )}
-    href={link}
+    href={href}
     target='_blank'
-    rel='noreferrer'>
+    rel='noreferrer'
+    {...rest}>
     <img
       className={clsx(
         'border',

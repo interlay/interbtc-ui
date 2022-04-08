@@ -89,13 +89,11 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         <div>
           <Navigation
             onSmallScreen={onSmallScreen}
-            className={clsx(
-              'mt-5',
-              'mb-5'
-            )} />
+            className='mt-5' />
           <Advert
+            className='mt-5'
             data-dd-action-name='Solarbeam liquidity pool'
-            link='https://app.solarbeam.io/farm?filter=stable'
+            href='https://app.solarbeam.io/farm?filter=stable'
             image={solarBeamAd}
             width={230}
             description='Provide liquidity to earn rewards in KINT and SOLAR' />
