@@ -5,14 +5,14 @@ interface Props {
   link: string;
   image: string;
   width: number;
-  altText: string;
+  description: string;
 }
 
 const Advert = ({
   link,
   image,
   width,
-  altText
+  description
 }: Props): JSX.Element => (
   <a
     data-dd-action-name='Solarbeam liquidity pool'
@@ -30,8 +30,8 @@ const Advert = ({
       )}
       src={image}
       width={width}
-      alt={altText}
-      title={altText} />
+      alt={description}
+      title={description} />
   </a>
 );
 

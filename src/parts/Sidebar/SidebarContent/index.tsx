@@ -97,7 +97,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             link='https://app.solarbeam.io/farm?filter=stable'
             image={solarBeamAd}
             width={230}
-            altText='Provide liquidity to earn rewards in KINT and SOLAR' />
+            description='Provide liquidity to earn rewards in KINT and SOLAR' />
         </div>
       </div>
       <SocialMediaContainer className='p-2' />
