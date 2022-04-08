@@ -90,13 +90,15 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           <Navigation
             onSmallScreen={onSmallScreen}
             className='mt-5' />
-          <Advert
-            className='mt-5'
-            data-dd-action-name='Solarbeam liquidity pool'
-            href='https://app.solarbeam.io/farm?filter=stable'
-            image={solarBeamAd}
-            width={230}
-            description='Provide liquidity to earn rewards in KINT and SOLAR' />
+          {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
+            <Advert
+              className='mt-5'
+              data-dd-action-name='Solarbeam liquidity pool'
+              href='https://app.solarbeam.io/farm?filter=stable'
+              image={solarBeamAd}
+              width={230}
+              description='Provide liquidity to earn rewards in KINT and SOLAR' />
+          )}
         </div>
       </div>
       <SocialMediaContainer className='p-2' />
