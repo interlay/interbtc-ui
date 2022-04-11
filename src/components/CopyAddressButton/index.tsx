@@ -16,11 +16,16 @@ interface CustomProps {
   address: string;
 }
 
+const COPY_ADDRESS_ICON_STYLES = clsx(
+  'w-6',
+  'h-6'
+);
+
 const CopyAddressButton = ({
   address,
   className
 }: CustomProps & InterlayButtonBaseProps): JSX.Element => {
-  const [addressCopied, setAddressCopied] = React.useState<boolean>(false);
+  const [addressCopied, setAddressCopied] = React.useState<boolean>(true);
 
   const handleCopyAddress = ((address: string) => {
     copyToClipboard(address);
@@ -32,7 +37,7 @@ const CopyAddressButton = ({
 
     const resetAddressCopied = setTimeout(() => {
       setAddressCopied(false);
-    }, 1000);
+    }, 10000);
 
     return () => clearTimeout(resetAddressCopied);
   }, [addressCopied]);
@@ -50,15 +55,10 @@ const CopyAddressButton = ({
       onClick={() => handleCopyAddress(address)}>
       {addressCopied ? (
         <CheckIcon
-          className={clsx(
-            'h-6',
-            'w-6'
-          )} />) : (
+          className={COPY_ADDRESS_ICON_STYLES} />) : (
         <DocumentDuplicateIcon
-          className={clsx(
-            'h-6',
-            'w-6'
-          )} />)}
+          className={COPY_ADDRESS_ICON_STYLES} />)
+      };
     </InterlayButtonBase>);
 };
 
