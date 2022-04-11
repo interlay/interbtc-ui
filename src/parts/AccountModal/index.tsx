@@ -10,10 +10,6 @@ import {
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp';
-import {
-  DocumentDuplicateIcon,
-  CheckIcon
-} from '@heroicons/react/outline';
 
 import ExternalLink from 'components/ExternalLink';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
@@ -23,6 +19,7 @@ import InterlayModal, {
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
+import CopyAddressButton from 'components/CopyAddressButton';
 import {
   APP_NAME,
   TERMS_AND_CONDITIONS_LINK
@@ -32,10 +29,7 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 import useGetAccounts from 'utils/hooks/use-get-accounts';
-import {
-  copyToClipboard,
-  shortAddress
-} from 'common/utils/utils';
+import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
@@ -46,57 +40,6 @@ interface Props {
   open: boolean;
   onClose: () => void;
 }
-
-const CopyAddressButton = ({ address }: { address: string;}): JSX.Element => {
-  const [addressCopied, setAddressCopied] = React.useState<boolean>(false);
-
-  const handleCopyAddress = ((address: string) => {
-    copyToClipboard(address);
-    setAddressCopied(true);
-  });
-
-  React.useEffect(() => {
-    if (!addressCopied) return;
-
-    const timer = setTimeout(() => {
-      setAddressCopied(false);
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, [addressCopied]);
-
-  return (
-    <InterlayButtonBase
-      className={clsx(
-        'px-5',
-        'py-3',
-        'ml-2',
-        'rounded',
-        'border',
-        'border-solid',
-        'shadow-sm',
-        { 'text-interlayTextPrimaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        // eslint-disable-next-line max-len
-        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'hover:bg-interlayHaiti-50':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-      )}
-      onClick={() => handleCopyAddress(address)}>
-      {addressCopied ? (
-        <CheckIcon
-          className={clsx(
-            'h-6',
-            'w-6'
-          )} />) : (
-        <DocumentDuplicateIcon
-          className={clsx(
-            'h-6',
-            'w-6'
-          )} />)}
-    </InterlayButtonBase>);
-};
 
 const AccountModal = ({
   open,
