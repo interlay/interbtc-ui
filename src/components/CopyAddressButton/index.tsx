@@ -6,10 +6,6 @@ import {
 } from '@heroicons/react/outline';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import {
-  KUSAMA,
-  POLKADOT
-} from 'utils/constants/relay-chain-names';
 import { copyToClipboard } from 'common/utils/utils';
 
 interface CustomProps {
@@ -46,10 +42,6 @@ const CopyAddressButton = ({
     <InterlayButtonBase
       className={clsx(
         'ml-2',
-        { 'hover:bg-interlayHaiti-50':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         className
       )}
       onClick={() => handleCopyAddress(address)}>
