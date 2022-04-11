@@ -10,6 +10,7 @@ import {
   web3Enable,
   web3FromAddress
 } from '@polkadot/extension-dapp';
+import { DocumentDuplicateIcon } from '@heroicons/react/outline';
 
 import ExternalLink from 'components/ExternalLink';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
@@ -28,7 +29,10 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 import useGetAccounts from 'utils/hooks/use-get-accounts';
-import { shortAddress } from 'common/utils/utils';
+import {
+  copyToClipboard,
+  shortAddress
+} from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
@@ -84,37 +88,37 @@ const AccountModal = ({
                   <li
                     key={account.address}
                     className={clsx(
-                      'rounded',
-                      'border',
-                      'border-solid',
-                      'shadow-sm',
-                      // TODO: could be reused
-                      selected ? clsx(
-                        { 'text-interlayDenim-700':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:text-kintsugiMidnight-700':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'bg-interlayHaiti-50':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:bg-white':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                      ) : clsx(
-                        { 'text-interlayTextPrimaryInLightMode':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        // eslint-disable-next-line max-len
-                        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'hover:bg-interlayHaiti-50':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                      )
-                    )}>
+                      'flex')}>
                     <InterlayButtonBase
                       className={clsx(
                         'px-5',
                         'py-3',
                         'space-x-1.5',
-                        'w-full'
+                        'w-full',
+                        'rounded',
+                        'border',
+                        'border-solid',
+                        'shadow-sm',
+                        // TODO: could be reused
+                        selected ? clsx(
+                          { 'text-interlayDenim-700':
+                            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                          { 'dark:text-kintsugiMidnight-700':
+                            process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                          { 'bg-interlayHaiti-50':
+                            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                          { 'dark:bg-white':
+                            process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                        ) : clsx(
+                          { 'text-interlayTextPrimaryInLightMode':
+                            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                          // eslint-disable-next-line max-len
+                          { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                          { 'hover:bg-interlayHaiti-50':
+                            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                          { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                          { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                        )
                       )}
                       onClick={handleAccountSelect(account.address)}>
                       <span className='font-medium'>
@@ -123,6 +127,31 @@ const AccountModal = ({
                       <span>
                         {`(${shortAddress(account.address)})`}
                       </span>
+                    </InterlayButtonBase>
+                    <InterlayButtonBase
+                      className={clsx(
+                        'px-5',
+                        'py-3',
+                        'ml-2',
+                        'rounded',
+                        'border',
+                        'border-solid',
+                        'shadow-sm',
+                        { 'text-interlayTextPrimaryInLightMode':
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                        // eslint-disable-next-line max-len
+                        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'hover:bg-interlayHaiti-50':
+                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      )}
+                      onClick={() => copyToClipboard(account.address)}>
+                      <DocumentDuplicateIcon
+                        className={clsx(
+                          'h-6',
+                          'w-6'
+                        )} />
                     </InterlayButtonBase>
                   </li>
                 );
