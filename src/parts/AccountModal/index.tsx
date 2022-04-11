@@ -41,14 +41,31 @@ interface Props {
   onClose: () => void;
 }
 
-const ACCOUNT_MODAL_BUTTON_STYLES = clsx(
+const ACCOUNT_MODAL_BUTTON_CLASSES = clsx(
   'px-5',
   'py-3',
   'space-x-1.5',
   'rounded',
   'border',
   'border-solid',
-  'shadow-sm'
+  'shadow-sm',
+  { 'hover:bg-interlayHaiti-50':
+  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
+  { 'text-interlayDenim-700':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-kintsugiMidnight-700':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'bg-interlayHaiti-50':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:bg-white':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'dark:hover:bg-opacity-100':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
 const AccountModal = ({
@@ -98,27 +115,9 @@ const AccountModal = ({
                       'flex')}>
                     <InterlayButtonBase
                       className={clsx(
-                        ACCOUNT_MODAL_BUTTON_STYLES,
+                        ACCOUNT_MODAL_BUTTON_CLASSES,
                         'w-full',
-                        selected ? clsx(
-                          { 'text-interlayDenim-700':
-                            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                          { 'dark:text-kintsugiMidnight-700':
-                            process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                          { 'bg-interlayHaiti-50':
-                            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                          { 'dark:bg-white':
-                            process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                        ) : clsx(
-                          { 'text-interlayTextPrimaryInLightMode':
-                            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                          { 'dark:text-kintsugiTextPrimaryInDarkMode':
-                            process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                          { 'hover:bg-interlayHaiti-50':
-                            process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                          { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                          { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                        )
+                        selected && ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES
                       )}
                       onClick={handleAccountSelect(account.address)}>
                       <span className='font-medium'>
@@ -129,7 +128,7 @@ const AccountModal = ({
                       </span>
                     </InterlayButtonBase>
                     <CopyAddressButton
-                      className={ACCOUNT_MODAL_BUTTON_STYLES}
+                      className={ACCOUNT_MODAL_BUTTON_CLASSES}
                       address={account.address} />
                   </li>
                 );
