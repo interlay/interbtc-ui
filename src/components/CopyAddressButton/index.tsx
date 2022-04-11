@@ -25,7 +25,7 @@ const CopyAddressButton = ({
   address,
   className
 }: CustomProps & InterlayButtonBaseProps): JSX.Element => {
-  const [addressCopied, setAddressCopied] = React.useState<boolean>(true);
+  const [addressCopied, setAddressCopied] = React.useState<boolean>(false);
 
   const handleCopyAddress = ((address: string) => {
     copyToClipboard(address);
@@ -37,7 +37,7 @@ const CopyAddressButton = ({
 
     const resetAddressCopied = setTimeout(() => {
       setAddressCopied(false);
-    }, 10000);
+    }, 1000);
 
     return () => clearTimeout(resetAddressCopied);
   }, [addressCopied]);
