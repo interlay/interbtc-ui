@@ -58,7 +58,7 @@ const CopyAddressButton = ({
           className={COPY_ADDRESS_ICON_STYLES} />) : (
         <DocumentDuplicateIcon
           className={COPY_ADDRESS_ICON_STYLES} />)
-      };
+      }
     </InterlayButtonBase>);
 };
 
