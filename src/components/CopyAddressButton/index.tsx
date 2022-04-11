@@ -5,14 +5,21 @@ import {
   CheckIcon
 } from '@heroicons/react/outline';
 
-import InterlayButtonBase from 'components/UI/InterlayButtonBase';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 import { copyToClipboard } from 'common/utils/utils';
 
-const CopyAddressButton = ({ address }: { address: string;}): JSX.Element => {
+interface CustomProps {
+  address: string;
+}
+
+const CopyAddressButton = ({
+  address,
+  className
+}: CustomProps & InterlayButtonBaseProps): JSX.Element => {
   const [addressCopied, setAddressCopied] = React.useState<boolean>(false);
 
   const handleCopyAddress = ((address: string) => {
@@ -33,22 +40,12 @@ const CopyAddressButton = ({ address }: { address: string;}): JSX.Element => {
   return (
     <InterlayButtonBase
       className={clsx(
-        'px-5',
-        'py-3',
         'ml-2',
-        'rounded',
-        'border',
-        'border-solid',
-        'shadow-sm',
-        { 'text-interlayTextPrimaryInLightMode':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        // eslint-disable-next-line max-len
-        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'hover:bg-interlayHaiti-50':
-                        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'dark:hover:bg-opacity-10': addressCopied }
+        className
       )}
       onClick={() => handleCopyAddress(address)}>
       {addressCopied ? (

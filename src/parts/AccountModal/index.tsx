@@ -41,6 +41,16 @@ interface Props {
   onClose: () => void;
 }
 
+const ACCOUNT_MODAL_BUTTON_STYLES = clsx(
+  'px-5',
+  'py-3',
+  'space-x-1.5',
+  'rounded',
+  'border',
+  'border-solid',
+  'shadow-sm'
+);
+
 const AccountModal = ({
   open,
   onClose
@@ -88,15 +98,8 @@ const AccountModal = ({
                       'flex')}>
                     <InterlayButtonBase
                       className={clsx(
-                        'px-5',
-                        'py-3',
-                        'space-x-1.5',
+                        ACCOUNT_MODAL_BUTTON_STYLES,
                         'w-full',
-                        'rounded',
-                        'border',
-                        'border-solid',
-                        'shadow-sm',
-                        // TODO: could be reused
                         selected ? clsx(
                           { 'text-interlayDenim-700':
                             process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -109,8 +112,8 @@ const AccountModal = ({
                         ) : clsx(
                           { 'text-interlayTextPrimaryInLightMode':
                             process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                          // eslint-disable-next-line max-len
-                          { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                          { 'dark:text-kintsugiTextPrimaryInDarkMode':
+                            process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                           { 'hover:bg-interlayHaiti-50':
                             process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                           { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
@@ -125,7 +128,9 @@ const AccountModal = ({
                         {`(${shortAddress(account.address)})`}
                       </span>
                     </InterlayButtonBase>
-                    <CopyAddressButton address={account.address} />
+                    <CopyAddressButton
+                      className={ACCOUNT_MODAL_BUTTON_STYLES}
+                      address={account.address} />
                   </li>
                 );
               })}
