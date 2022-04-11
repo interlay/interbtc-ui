@@ -12,7 +12,7 @@ interface CustomProps {
   address: string;
 }
 
-const COPY_ADDRESS_ICON_STYLES = clsx(
+const COPY_ADDRESS_ICON_CLASSES = clsx(
   'w-6',
   'h-6'
 );
@@ -47,9 +47,9 @@ const CopyAddressButton = ({
       onClick={() => handleCopyAddress(address)}>
       {addressCopied ? (
         <CheckIcon
-          className={COPY_ADDRESS_ICON_STYLES} />) : (
+          className={COPY_ADDRESS_ICON_CLASSES} />) : (
         <DocumentDuplicateIcon
-          className={COPY_ADDRESS_ICON_STYLES} />)
+          className={COPY_ADDRESS_ICON_CLASSES} />)
       }
     </InterlayButtonBase>);
 };
