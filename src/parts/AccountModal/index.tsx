@@ -111,8 +111,7 @@ const AccountModal = ({
                 return (
                   <li
                     key={account.address}
-                    className={clsx(
-                      'flex')}>
+                    className='flex'>
                     <InterlayButtonBase
                       className={clsx(
                         ACCOUNT_MODAL_BUTTON_CLASSES,
