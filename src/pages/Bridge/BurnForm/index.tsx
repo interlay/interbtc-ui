@@ -201,14 +201,12 @@ const BurnForm = (): JSX.Element | null => {
         });
       }
 
-      // ray test touch <
       // TODO: double-check if we need
       // - (https://discord.com/channels/745259537707040778/894390868964933692/894863394149109771)
       const wrappedTokenAmountInteger = value.toString().split('.')[0];
       if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!'; // TODO: should translate
       }
-      // ray test touch >
 
       return undefined;
     };

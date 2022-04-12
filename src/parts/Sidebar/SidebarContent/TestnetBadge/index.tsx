@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import InterlayCinnabarBadge, { Props as InterlayCinnabarBadgeProps } from 'components/badges/InterlayCinnabarBadge';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 
-const TestNetBadge = ({
+const TestnetBadge = ({
   className,
   ...rest
 }: InterlayCinnabarBadgeProps): JSX.Element => {
@@ -25,4 +25,4 @@ const TestNetBadge = ({
   );
 };
 
-export default TestNetBadge;
+export default TestnetBadge;

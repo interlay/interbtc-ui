@@ -19,6 +19,7 @@ import InterlayModal, {
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
+import CopyAddressButton from 'components/CopyAddressButton';
 import {
   APP_NAME,
   TERMS_AND_CONDITIONS_LINK
@@ -39,6 +40,33 @@ interface Props {
   open: boolean;
   onClose: () => void;
 }
+
+const ACCOUNT_MODAL_BUTTON_CLASSES = clsx(
+  'px-5',
+  'py-3',
+  'space-x-1.5',
+  'rounded',
+  'border',
+  'border-solid',
+  'shadow-sm',
+  { 'hover:bg-interlayHaiti-50':
+  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
+  { 'text-interlayDenim-700':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-kintsugiMidnight-700':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'bg-interlayHaiti-50':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:bg-white':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'dark:hover:bg-opacity-100':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
 
 const AccountModal = ({
   open,
@@ -84,37 +112,14 @@ const AccountModal = ({
                   <li
                     key={account.address}
                     className={clsx(
-                      'rounded',
-                      'border',
-                      'border-solid',
-                      'shadow-sm',
-                      // TODO: could be reused
-                      selected ? clsx(
-                        { 'text-interlayDenim-700':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:text-kintsugiMidnight-700':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'bg-interlayHaiti-50':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:bg-white':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                      ) : clsx(
-                        { 'text-interlayTextPrimaryInLightMode':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        // eslint-disable-next-line max-len
-                        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'hover:bg-interlayHaiti-50':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                      )
+                      'flex',
+                      'space-x-2'
                     )}>
                     <InterlayButtonBase
                       className={clsx(
-                        'px-5',
-                        'py-3',
-                        'space-x-1.5',
-                        'w-full'
+                        ACCOUNT_MODAL_BUTTON_CLASSES,
+                        'w-full',
+                        { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected }
                       )}
                       onClick={handleAccountSelect(account.address)}>
                       <span className='font-medium'>
@@ -124,6 +129,9 @@ const AccountModal = ({
                         {`(${shortAddress(account.address)})`}
                       </span>
                     </InterlayButtonBase>
+                    <CopyAddressButton
+                      className={ACCOUNT_MODAL_BUTTON_CLASSES}
+                      address={account.address} />
                   </li>
                 );
               })}

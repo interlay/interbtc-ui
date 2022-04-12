@@ -93,7 +93,7 @@ const RedeemedChart = (): JSX.Element => {
         t('dashboard.redeem.per_day_redeemed_chart')
       ]}
       yLabels={
-        cutoffTimestamps.slice(1)
+        cutoffTimestamps.slice(0, -1)
           .map(timestamp => timestamp.toLocaleDateString())
       }
       yAxes={[

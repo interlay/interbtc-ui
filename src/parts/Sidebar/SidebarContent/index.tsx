@@ -6,9 +6,10 @@ import clsx from 'clsx';
 import Navigation from './Navigation';
 import CloseButton from './CloseButton';
 import SocialMediaContainer from './SocialMediaContainer';
-import TestNetBadge from './TestnetBadge';
+import TestnetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
+import Advert from 'components/Advert';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
 import { WrappedTokenLogoWithTextIcon } from 'config/relay-chains';
 import {
@@ -18,6 +19,7 @@ import {
 import { PAGES } from 'utils/constants/links';
 import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
+import solarBeamAd from 'assets/img/ads/solarbeam.png';
 
 interface Props {
   onSmallScreen?: boolean;
@@ -81,14 +83,25 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             <WrappedTokenLogoWithTextIcon width={141.6} />
           </InterlayRouterLink>
           {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
-            <TestNetBadge className='ml-2' />
+            <TestnetBadge className='ml-2' />
           )}
         </div>
-        <Navigation
-          onSmallScreen={onSmallScreen}
-          className='mt-5' />
-        <SocialMediaContainer className='p-2' />
+        <div>
+          <Navigation
+            onSmallScreen={onSmallScreen}
+            className='mt-5' />
+          {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
+            <Advert
+              className='mt-5'
+              data-dd-action-name='Solarbeam liquidity pool'
+              href='https://app.solarbeam.io/farm?filter=stable'
+              image={solarBeamAd}
+              width={230}
+              description='Provide liquidity to earn rewards in KINT and SOLAR' />
+          )}
+        </div>
       </div>
+      <SocialMediaContainer className='p-2' />
       <div
         className={clsx(
           'flex-shrink-0',

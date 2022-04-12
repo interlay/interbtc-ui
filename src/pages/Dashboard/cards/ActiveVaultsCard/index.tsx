@@ -38,7 +38,7 @@ interface VaultRegistration {
   registrationTimestamp: number;
 }
 
-const graphTimestamps = getLastMidnightTimestamps(5, true);
+const graphTimestamps = getLastMidnightTimestamps(6, true);
 
 const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
@@ -72,7 +72,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
     }
 
     const vaultRegistrations = vaults.data.vaults;
-    const graphData = graphTimestamps.map(
+    const graphData = graphTimestamps.slice(1).map(
       timestamp => vaultRegistrations.filter(
         registration => new Date(registration.registrationTimestamp) <= timestamp
       ).length
@@ -114,7 +114,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
           wrapperClassName='h-full'
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_vaults_chart')]}
-          yLabels={graphTimestamps.map(date => new Date(date).toISOString().substring(0, 10))}
+          yLabels={graphTimestamps.slice(0, -1).map(date => new Date(date).toISOString().substring(0, 10))}
           yAxes={[
             {
               ticks: {

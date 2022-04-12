@@ -126,7 +126,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_collateral_locked')]}
           yLabels={cumulativeCollateralPerDay
-            .slice(1)
+            .slice(0, -1)
             .map(dataPoint => dataPoint.tillTimestamp.toISOString().substring(0, 10))}
           yAxes={[
             {

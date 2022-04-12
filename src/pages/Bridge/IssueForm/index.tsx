@@ -27,6 +27,7 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
+import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
@@ -55,9 +56,11 @@ import {
 } from 'utils/constants/relay-chain-names';
 import {
   displayMonetaryAmount,
-  getUsdAmount
+  getUsdAmount,
+  getRandomVaultIdWithCapacity
 } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
+import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import {
   ParachainStatus,
@@ -223,7 +226,7 @@ const IssueForm = (): JSX.Element | null => {
       }
 
       if (btcAmount.gt(requestLimits.singleVaultMaxIssuable)) {
-        return t('issue_page.maximum_in_single_request', {
+        return t('issue_page.maximum_in_single_request_error', {
           maxAmount: displayMonetaryAmount(requestLimits.singleVaultMaxIssuable),
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
@@ -265,8 +268,21 @@ const IssueForm = (): JSX.Element | null => {
         setSubmitStatus(STATUSES.PENDING);
         await requestLimitsRefetch();
         await trigger(BTC_AMOUNT);
+
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT] || '0');
-        const result = await window.bridge.issue.request(wrappedTokenAmount);
+
+        const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
+        const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
+
+        const result = await window.bridge.issue.request(
+          wrappedTokenAmount,
+          vaultId.accountId,
+          COLLATERAL_TOKEN_ID_LITERAL,
+          false, // default
+          0, // default
+          vaults
+        );
+
         // TODO: handle issue aggregation
         const issueRequest = result[0];
         handleSubmittedRequestModalOpen(issueRequest);
@@ -293,21 +309,31 @@ const IssueForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <TokenField
-            id={BTC_AMOUNT}
-            name={BTC_AMOUNT}
-            label='BTC'
-            min={0}
-            ref={register({
-              required: {
-                value: true,
-                message: t('issue_page.enter_valid_amount')
-              },
-              validate: value => validateForm(value)
-            })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
-            error={!!errors[BTC_AMOUNT]}
-            helperText={errors[BTC_AMOUNT]?.message} />
+          <div>
+            <TokenField
+              id={BTC_AMOUNT}
+              name={BTC_AMOUNT}
+              label='BTC'
+              min={0}
+              ref={register({
+                required: {
+                  value: true,
+                  message: t('issue_page.enter_valid_amount')
+                },
+                validate: value => validateForm(value)
+              })}
+              approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
+              error={!!errors[BTC_AMOUNT]}
+              helperText={errors[BTC_AMOUNT]?.message} />
+            <AvailableBalanceUI
+              label={t('issue_page.maximum_in_single_request')}
+              balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL} />
+            <AvailableBalanceUI
+              label={t('issue_page.maximum_total_request')}
+              balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL} />
+          </div>
           <ParachainStatusInfo status={parachainStatus} />
           <PriceInfo
             title={

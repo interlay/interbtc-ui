@@ -64,7 +64,7 @@ const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
     redeem.backingPayment = await getTxDetailsForRequest(
       window.bridge.electrsAPI,
       redeem.id,
-      redeem.vaultBackingAddress,
+      redeem.userBackingAddress,
       true // Use op_return
     );
     return redeem;
