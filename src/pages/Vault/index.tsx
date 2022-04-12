@@ -28,9 +28,7 @@ import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 import StatPanel from './StatPanel';
 import VaultStatusStatPanel from './VaultStatusStatPanel';
-// ray test touch <
 import ClaimRewardsButton from './ClaimRewardsButton';
-// ray test touch >
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
@@ -272,9 +270,7 @@ const Vault = (): JSX.Element => {
     governanceReward
   ]);
 
-  // ray test touch <
   const hasLockedBTC = lockedBTC.gt(BitcoinAmount.zero);
-  // ray test touch >
 
   return (
     <>
@@ -311,11 +307,9 @@ const Vault = (): JSX.Element => {
           <div
             className={clsx(
               'grid',
-              // ray test touch <
               hasLockedBTC ?
                 'grid-cols-4' :
                 'grid-cols-3',
-              // ray test touch >
               'gap-5'
             )}>
             <InterlayDenimOrKintsugiMidnightContainedButton
@@ -326,9 +320,7 @@ const Vault = (): JSX.Element => {
               onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            {/* ray test touch < */}
             <ClaimRewardsButton />
-            {/* ray test touch > */}
             {hasLockedBTC && (
               <InterlayCaliforniaContainedButton
                 onClick={handleRequestReplacementModalOpen}>

@@ -1,5 +1,4 @@
 
-// ray test touch <
 const ClaimRewardsButton = (): JSX.Element => {
   return (
     <>ClaimRewardsButton</>
@@ -7,4 +6,3 @@ const ClaimRewardsButton = (): JSX.Element => {
 };
 
 export default ClaimRewardsButton;
-// ray test touch >
