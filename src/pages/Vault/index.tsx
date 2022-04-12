@@ -168,8 +168,8 @@ const Vault = (): JSX.Element => {
   ]);
 
   const {
-    data: governanceReward,
-    error: governanceRewardError
+    data: governanceTokenReward,
+    error: governanceTokenRewardError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
     [
       GENERIC_FETCHER,
@@ -184,7 +184,7 @@ const Vault = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(governanceRewardError);
+  useErrorHandler(governanceTokenRewardError);
 
   const {
     data: vaultExt,
@@ -215,9 +215,9 @@ const Vault = (): JSX.Element => {
 
   const vaultItems = React.useMemo(() => {
     const governanceRewardLabel =
-      governanceReward === undefined ?
+      governanceTokenReward === undefined ?
         '-' :
-        displayMonetaryAmount(governanceReward);
+        displayMonetaryAmount(governanceTokenReward);
 
     return [
       {
@@ -267,7 +267,7 @@ const Vault = (): JSX.Element => {
     feesEarnedInterBTC,
     lockedBTC,
     t,
-    governanceReward
+    governanceTokenReward
   ]);
 
   const hasLockedBTC = lockedBTC.gt(BitcoinAmount.zero);
