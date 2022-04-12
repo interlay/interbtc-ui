@@ -116,7 +116,7 @@ const AccountModal = ({
                       className={clsx(
                         ACCOUNT_MODAL_BUTTON_CLASSES,
                         'w-full',
-                        selected && ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES
+                        { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected }
                       )}
                       onClick={handleAccountSelect(account.address)}>
                       <span className='font-medium'>
