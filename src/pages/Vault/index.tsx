@@ -320,7 +320,7 @@ const Vault = (): JSX.Element => {
               onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            <ClaimRewardsButton />
+            <ClaimRewardsButton vaultAccountId={vaultAccountId} />
             {hasLockedBTC && (
               <InterlayCaliforniaContainedButton
                 onClick={handleRequestReplacementModalOpen}>
