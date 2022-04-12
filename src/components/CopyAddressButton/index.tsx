@@ -48,10 +48,11 @@ const CopyAddressButton = ({
       onClick={() => handleCopyAddress(address)}>
       {addressCopied ? (
         <CheckIcon
-          className={COPY_ADDRESS_ICON_CLASSES} />) : (
-        <DocumentDuplicateIcon
-          className={COPY_ADDRESS_ICON_CLASSES} />)
-      }
+          className={COPY_ADDRESS_ICON_CLASSES} />
+       ) : (
+         <DocumentDuplicateIcon
+           className={COPY_ADDRESS_ICON_CLASSES} />
+       )}
     </InterlayButtonBase>);
 };
 
