@@ -13,9 +13,9 @@ import { AccountId } from '@polkadot/types/interfaces';
 
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
-import
-InterlayDenimOrKintsugiSupernovaContainedButton
-  from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
+import InterlayDenimOrKintsugiSupernovaContainedButton, {
+  Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
+} from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import {
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenMonetaryAmount
@@ -25,14 +25,14 @@ import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
-interface Props {
+interface CustomProps {
   // TODO: should remove `undefined` later on when the loading is properly handled
   vaultAccountId: AccountId | undefined;
 }
 
 const ClaimRewardsButton = ({
   vaultAccountId
-}: Props): JSX.Element => {
+}: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
