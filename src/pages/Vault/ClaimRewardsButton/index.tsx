@@ -33,6 +33,8 @@ const ClaimRewardsButton = ({
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
+    isIdle: governanceTokenRewardIdle,
+    isLoading: governanceTokenRewardLoading,
     data: governanceTokenReward,
     error: governanceTokenRewardError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
@@ -51,10 +53,26 @@ const ClaimRewardsButton = ({
   );
   useErrorHandler(governanceTokenRewardError);
 
+  const pending = (
+    governanceTokenRewardIdle ||
+    governanceTokenRewardLoading
+  );
+  let governanceTokenAmountLabel;
+  if (pending) {
+    governanceTokenAmountLabel = '-';
+  } else {
+    if (governanceTokenReward === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    governanceTokenAmountLabel = displayMonetaryAmount(governanceTokenReward);
+  }
+
   return (
-    <InterlayDenimOrKintsugiSupernovaContainedButton>
+    <InterlayDenimOrKintsugiSupernovaContainedButton
+      pending={pending}>
       {t('vault.claim_governance_token_rewards', {
-        governanceTokenAmount: displayMonetaryAmount(governanceTokenReward),
+        governanceTokenAmount: governanceTokenAmountLabel,
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
       })}
     </InterlayDenimOrKintsugiSupernovaContainedButton>
