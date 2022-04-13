@@ -10,6 +10,11 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { AccountId } from '@polkadot/types/interfaces';
+import {
+  newVaultId,
+  CollateralCurrency,
+  WrappedCurrency
+} from '@interlay/interbtc-api';
 
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
@@ -18,7 +23,9 @@ import InterlayDenimOrKintsugiSupernovaContainedButton, {
 } from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import {
   GOVERNANCE_TOKEN_SYMBOL,
-  GovernanceTokenMonetaryAmount
+  GovernanceTokenMonetaryAmount,
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN
 } from 'config/relay-chains';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import { displayMonetaryAmount } from 'common/utils/utils';
@@ -31,7 +38,8 @@ interface CustomProps {
 }
 
 const ClaimRewardsButton = ({
-  vaultAccountId
+  vaultAccountId,
+  ...rest
 }: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -60,7 +68,19 @@ const ClaimRewardsButton = ({
 
   const claimRewardsMutation = useMutation<void, Error, void>(
     () => {
-      return window.bridge.rewards.withdrawRewards(vaultAccountId);
+      if (vaultAccountId === undefined) {
+        throw new Error('Something went wrong!');
+      }
+
+      const vaultId =
+        newVaultId(
+          window.bridge.api,
+          vaultAccountId.toString(),
+          COLLATERAL_TOKEN as CollateralCurrency,
+          WRAPPED_TOKEN as WrappedCurrency
+        );
+
+      return window.bridge.rewards.withdrawRewards(vaultId);
     },
     {
       onSuccess: () => {
@@ -75,7 +95,8 @@ const ClaimRewardsButton = ({
 
   const initializing = (
     governanceTokenRewardIdle ||
-    governanceTokenRewardLoading
+    governanceTokenRewardLoading ||
+    !vaultAccountId
   );
   let governanceTokenAmountLabel;
   if (initializing) {
@@ -93,7 +114,8 @@ const ClaimRewardsButton = ({
       <InterlayDenimOrKintsugiSupernovaContainedButton
         disabled={initializing}
         onClick={handleClaimRewards}
-        pending={claimRewardsMutation.isLoading}>
+        pending={claimRewardsMutation.isLoading}
+        {...rest}>
         {t('vault.claim_governance_token_rewards', {
           governanceTokenAmount: governanceTokenAmountLabel,
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
