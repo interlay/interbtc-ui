@@ -17,6 +17,7 @@ import {
   GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
+import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -49,13 +50,11 @@ const ClaimRewardsButton = ({
     }
   );
   useErrorHandler(governanceTokenRewardError);
-  // ray test touch <
-  console.log('ray : ***** governanceTokenReward => ', governanceTokenReward);
-  // ray test touch >
 
   return (
     <InterlayDenimOrKintsugiSupernovaContainedButton>
       {t('vault.claim_governance_token_rewards', {
+        governanceTokenAmount: displayMonetaryAmount(governanceTokenReward),
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
       })}
     </InterlayDenimOrKintsugiSupernovaContainedButton>
