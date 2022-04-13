@@ -1,5 +1,8 @@
 
-import { useQuery } from 'react-query';
+import {
+  useQuery,
+  useMutation
+} from 'react-query';
 import {
   useErrorHandler,
   withErrorBoundary
@@ -9,6 +12,7 @@ import { useSelector } from 'react-redux';
 import { AccountId } from '@polkadot/types/interfaces';
 
 import ErrorFallback from 'components/ErrorFallback';
+import ErrorModal from 'components/ErrorModal';
 import
 InterlayDenimOrKintsugiSupernovaContainedButton
   from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
@@ -36,7 +40,8 @@ const ClaimRewardsButton = ({
     isIdle: governanceTokenRewardIdle,
     isLoading: governanceTokenRewardLoading,
     data: governanceTokenReward,
-    error: governanceTokenRewardError
+    error: governanceTokenRewardError,
+    refetch: governanceTokenRewardRefetch
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
     [
       GENERIC_FETCHER,
@@ -53,12 +58,27 @@ const ClaimRewardsButton = ({
   );
   useErrorHandler(governanceTokenRewardError);
 
-  const pending = (
+  const claimRewardsMutation = useMutation<void, Error, void>(
+    () => {
+      return window.bridge.rewards.withdrawRewards(vaultAccountId);
+    },
+    {
+      onSuccess: () => {
+        governanceTokenRewardRefetch();
+      }
+    }
+  );
+
+  const handleClaimRewards = () => {
+    claimRewardsMutation.mutate();
+  };
+
+  const initializing = (
     governanceTokenRewardIdle ||
     governanceTokenRewardLoading
   );
   let governanceTokenAmountLabel;
-  if (pending) {
+  if (initializing) {
     governanceTokenAmountLabel = '-';
   } else {
     if (governanceTokenReward === undefined) {
@@ -69,13 +89,29 @@ const ClaimRewardsButton = ({
   }
 
   return (
-    <InterlayDenimOrKintsugiSupernovaContainedButton
-      pending={pending}>
-      {t('vault.claim_governance_token_rewards', {
-        governanceTokenAmount: governanceTokenAmountLabel,
-        governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
-      })}
-    </InterlayDenimOrKintsugiSupernovaContainedButton>
+    <>
+      <InterlayDenimOrKintsugiSupernovaContainedButton
+        disabled={initializing}
+        onClick={handleClaimRewards}
+        pending={claimRewardsMutation.isLoading}>
+        {t('vault.claim_governance_token_rewards', {
+          governanceTokenAmount: governanceTokenAmountLabel,
+          governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
+        })}
+      </InterlayDenimOrKintsugiSupernovaContainedButton>
+      {claimRewardsMutation.isError && (
+        <ErrorModal
+          open={claimRewardsMutation.isError}
+          onClose={() => {
+            claimRewardsMutation.reset();
+          }}
+          title='Error'
+          description={
+            claimRewardsMutation.error?.message ||
+            ''
+          } />
+      )}
+    </>
   );
 };
 
