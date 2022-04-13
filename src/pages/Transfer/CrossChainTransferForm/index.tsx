@@ -52,6 +52,8 @@ import {
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
+const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, COLLATERAL_TOKEN);
+
 type CrossChainTransferFormData = {
   [TRANSFER_AMOUNT]: string;
 }
@@ -147,7 +149,6 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const validateParachainTransferAmount = (value: number): string | undefined => {
     const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
-    const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, COLLATERAL_TOKEN);
 
     // TODO: this api check won't be necessary when the api call is moved out of
     // the component
@@ -195,11 +196,12 @@ const CrossChainTransferForm = (): JSX.Element => {
   React.useEffect(() => {
     if (!api) return;
     if (!handleError) return;
+    if (relayChainBalance) return;
 
     const fetchRelayChainBalance = async () => {
       try {
         const balance: any = await getRelayChainBalance(api, address);
-        setRelayChainBalance(balance);
+        setRelayChainBalance(balance.sub(transferFee));
       } catch (error) {
         handleError(error);
       }

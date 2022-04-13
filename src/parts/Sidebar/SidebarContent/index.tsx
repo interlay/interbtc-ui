@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import Navigation from './Navigation';
 import CloseButton from './CloseButton';
 import SocialMediaContainer from './SocialMediaContainer';
-import TestNetBadge from './TestnetBadge';
+import TestnetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import Advert from 'components/Advert';
@@ -83,7 +83,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             <WrappedTokenLogoWithTextIcon width={141.6} />
           </InterlayRouterLink>
           {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
-            <TestNetBadge className='ml-2' />
+            <TestnetBadge className='ml-2' />
           )}
         </div>
         <div>
