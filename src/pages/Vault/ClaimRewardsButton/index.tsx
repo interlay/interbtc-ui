@@ -27,7 +27,10 @@ import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN
 } from 'config/relay-chains';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
+import {
+  COLLATERAL_TOKEN_ID_LITERAL,
+  ZERO_GOVERNANCE_TOKEN_AMOUNT
+} from 'utils/constants/currency';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
@@ -109,10 +112,12 @@ const ClaimRewardsButton = ({
     governanceTokenAmountLabel = displayMonetaryAmount(governanceTokenReward);
   }
 
+  const buttonDisabled = governanceTokenReward?.lte(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+
   return (
     <>
       <InterlayDenimOrKintsugiSupernovaContainedButton
-        disabled={initializing}
+        disabled={initializing || buttonDisabled}
         onClick={handleClaimRewards}
         pending={claimRewardsMutation.isLoading}
         {...rest}>
