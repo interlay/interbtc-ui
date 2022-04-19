@@ -6,7 +6,11 @@ const findWebpack = require('find-webpack');
 const webpackPreprocessor = require('@cypress/webpack-preprocessor');
 const polkadotUtils = require('@polkadot/util-crypto');
 
-module.exports = on => {
+require('dotenv').config();
+
+module.exports = (on, config) => {
+  const seed = polkadotUtils.mnemonicGenerate(12);
+  config.env.seed = seed;
   // find the Webpack config used by react-scripts
   const webpackOptions = findWebpack.getWebpackOptions();
 
@@ -49,4 +53,6 @@ module.exports = on => {
       return polkadotUtils.mnemonicGenerate(12);
     }
   });
+
+  return config;
 };

@@ -90,7 +90,7 @@
     "webpack-bundle-analyzer": "^4.4.0"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "NODE_ENV=test craco start",
     "start-regtest": "cross-env REACT_APP_BITCOIN_NETWORK=regtest yarn start",
     "start-testnet": "cross-env REACT_APP_BITCOIN_NETWORK=testnet yarn start",
     "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces",
@@ -112,7 +112,7 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "chromatic": "chromatic --project-token",
-    "cypress:e2e": "cypress open"
+    "cypress:e2e": "NODE_ENV=test cypress open"
   },
   "homepage": "",
   "browserslist": {

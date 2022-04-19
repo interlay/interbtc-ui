@@ -1,9 +1,6 @@
 /// <reference types="cypress" />
+import testFund from '../../test';
 
-import * as polkadotExtension from '@polkadot/extension-dapp';
-
-// Note: this is a test spec to confirm the test runner is working.
-// Can be deleted as soon as our first e2e test has been written.
 describe('Test spec', () => {
   beforeEach(() => {
     cy.task('generateAccount').then(value => console.log(value));
@@ -17,8 +14,20 @@ describe('Test spec', () => {
   });
 
   it('checks for extension', () => {
-    const web3Enable = cy.stub(polkadotExtension, 'web3Enable').as('web3Enable').returns(['polkadot-js']);
+    const bool = true;
+    expect(bool).to.be.true;
+  });
 
-    expect(web3Enable).to.be.called;
+  it('has an account seed', () => {
+    console.log('seed', Cypress.env('seed'));
+    console.log('env', process.env);
+    expect(Cypress.env('seed')).to.be.a('string');
+  });
+
+  it('funds the account', () => {
+    testFund();
+    console.log('seed', Cypress.env('seed'));
+    console.log('env', process.env);
+    expect(Cypress.env('seed')).to.be.a('string');
   });
 });

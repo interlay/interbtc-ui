@@ -231,6 +231,7 @@ const App = (): JSX.Element => {
 
     const trySetDefaultAccount = () => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
+        console.log('trting to set default accoubt');
         const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
         const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
         window.bridge.setAccount(defaultAccountKeyring);
