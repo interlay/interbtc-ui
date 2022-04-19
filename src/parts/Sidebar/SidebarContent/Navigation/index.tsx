@@ -4,12 +4,12 @@ import { useLocation } from 'react-router-dom';
 import { matchPath } from 'react-router';
 import { useSelector } from 'react-redux';
 import {
-  ClipboardListIcon,
+  // ClipboardListIcon,
   CashIcon,
   BookOpenIcon,
-  RefreshIcon,
-  ChartSquareBarIcon,
-  ChipIcon,
+  // RefreshIcon,
+  // ChartSquareBarIcon,
+  // ChipIcon,
   SwitchHorizontalIcon,
   DocumentTextIcon
 } from '@heroicons/react/outline';
@@ -29,8 +29,8 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 import {
-  PAGES,
-  URL_PARAMETERS
+  PAGES
+  // URL_PARAMETERS
 } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
@@ -59,7 +59,7 @@ const Navigation = ({
   const location = useLocation();
   const { t } = useTranslation();
   const {
-    vaultClientLoaded,
+    // vaultClientLoaded,
     address
   } = useSelector((state: StoreType) => state.general);
 
@@ -67,40 +67,40 @@ const Navigation = ({
     if (!address) return [];
 
     return [
-      {
-        name: 'nav_bridge',
-        link: PAGES.BRIDGE,
-        icon: RefreshIcon,
-        hidden: false
-      },
+      // {
+      //   name: 'nav_bridge',
+      //   link: PAGES.BRIDGE,
+      //   icon: RefreshIcon,
+      //   hidden: false
+      // },
       {
         name: 'nav_transfer',
         link: PAGES.TRANSFER,
         icon: SwitchHorizontalIcon
       },
-      {
-        name: 'nav_transactions',
-        link: PAGES.TRANSACTIONS,
-        icon: ClipboardListIcon,
-        hidden: false
-      },
-      {
-        name: 'nav_staking',
-        link: PAGES.STAKING,
-        icon: CashIcon
-      },
-      {
-        name: 'nav_dashboard',
-        link: PAGES.DASHBOARD,
-        icon: ChartSquareBarIcon,
-        hidden: false
-      },
-      {
-        name: 'nav_vault',
-        link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
-        icon: ChipIcon,
-        hidden: !vaultClientLoaded
-      },
+      // {
+      //   name: 'nav_transactions',
+      //   link: PAGES.TRANSACTIONS,
+      //   icon: ClipboardListIcon,
+      //   hidden: false
+      // },
+      // {
+      //   name: 'nav_staking',
+      //   link: PAGES.STAKING,
+      //   icon: CashIcon
+      // },
+      // {
+      //   name: 'nav_dashboard',
+      //   link: PAGES.DASHBOARD,
+      //   icon: ChartSquareBarIcon,
+      //   hidden: false
+      // },
+      // {
+      //   name: 'nav_vault',
+      //   link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
+      //   icon: ChipIcon,
+      //   hidden: !vaultClientLoaded
+      // },
       {
         name: 'separator',
         link: '#',
@@ -141,10 +141,7 @@ const Navigation = ({
         }
       }
     ];
-  }, [
-    address,
-    vaultClientLoaded
-  ]);
+  }, [address]);
 
   return (
     <nav
