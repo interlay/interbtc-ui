@@ -11,9 +11,9 @@ import {
 import clsx from 'clsx';
 
 import ErrorModal from 'components/ErrorModal';
-import InterlayDenimOrKintsugiMidnightContainedButton, {
+import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
-} from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
+} from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import InformationTooltip from 'components/tooltips/InformationTooltip';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
@@ -87,7 +87,7 @@ const WithdrawButton = ({
 
   return (
     <>
-      <InterlayDenimOrKintsugiMidnightContainedButton
+      <InterlayDenimOrKintsugiSupernovaContainedButton
         className={clsx(
           'w-full',
           'px-6',
@@ -107,7 +107,7 @@ const WithdrawButton = ({
         disabled={disabled}
         {...rest}>
         Withdraw Staked {GOVERNANCE_TOKEN_SYMBOL} {renderUnlockDateLabel()}
-      </InterlayDenimOrKintsugiMidnightContainedButton>
+      </InterlayDenimOrKintsugiSupernovaContainedButton>
       {withdrawMutation.isError && (
         <ErrorModal
           open={withdrawMutation.isError}
