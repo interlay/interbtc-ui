@@ -8,10 +8,8 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import {
   web3Enable,
-  web3FromAddress,
-  web3Accounts
+  web3FromAddress
 } from '@polkadot/extension-dapp';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import ExternalLink from 'components/ExternalLink';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
@@ -21,6 +19,7 @@ import InterlayModal, {
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import InterlayButtonBase from 'components/UI/InterlayButtonBase';
+import CopyAddressButton from 'components/CopyAddressButton';
 import {
   APP_NAME,
   TERMS_AND_CONDITIONS_LINK
@@ -29,6 +28,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
+import useGetAccounts from 'utils/hooks/use-get-accounts';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
@@ -40,6 +40,33 @@ interface Props {
   open: boolean;
   onClose: () => void;
 }
+
+const ACCOUNT_MODAL_BUTTON_CLASSES = clsx(
+  'px-5',
+  'py-3',
+  'space-x-1.5',
+  'rounded',
+  'border',
+  'border-solid',
+  'shadow-sm',
+  { 'hover:bg-interlayHaiti-50':
+  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
+  { 'text-interlayDenim-700':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-kintsugiMidnight-700':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'bg-interlayHaiti-50':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:bg-white':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'dark:hover:bg-opacity-100':
+    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
 
 const AccountModal = ({
   open,
@@ -54,23 +81,8 @@ const AccountModal = ({
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);
 
-  const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>();
-
+  const accounts = useGetAccounts();
   const extensionWalletAvailable = extensions.length > 0;
-
-  React.useEffect(() => {
-    if (!extensionWalletAvailable) return;
-
-    (async () => {
-      try {
-        const theAccounts = await web3Accounts();
-        setAccounts(theAccounts);
-      } catch (error) {
-        // TODO: should add error handling properly
-        console.log('[AccountModal] error.message => ', error.message);
-      }
-    })();
-  }, [extensionWalletAvailable]);
 
   const handleAccountSelect = (newAddress: string) => async () => {
     if (!bridgeLoaded) {
@@ -80,7 +92,7 @@ const AccountModal = ({
     // TODO: should check when the app being initialized (not check everywhere)
     await web3Enable(APP_NAME);
     const { signer } = await web3FromAddress(newAddress);
-    window.bridge.interBtcApi.setAccount(newAddress, signer);
+    window.bridge.setAccount(newAddress, signer);
     dispatch(changeAddressAction(newAddress));
 
     onClose();
@@ -100,37 +112,14 @@ const AccountModal = ({
                   <li
                     key={account.address}
                     className={clsx(
-                      'rounded',
-                      'border',
-                      'border-solid',
-                      'shadow-sm',
-                      // TODO: could be reused
-                      selected ? clsx(
-                        { 'text-interlayDenim-700':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:text-kintsugiMidnight-700':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'bg-interlayHaiti-50':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:bg-white':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                      ) : clsx(
-                        { 'text-interlayTextPrimaryInLightMode':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        // eslint-disable-next-line max-len
-                        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'hover:bg-interlayHaiti-50':
-                          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                      )
+                      'flex',
+                      'space-x-2'
                     )}>
                     <InterlayButtonBase
                       className={clsx(
-                        'px-5',
-                        'py-3',
-                        'space-x-1.5',
-                        'w-full'
+                        ACCOUNT_MODAL_BUTTON_CLASSES,
+                        'w-full',
+                        { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected }
                       )}
                       onClick={handleAccountSelect(account.address)}>
                       <span className='font-medium'>
@@ -140,6 +129,9 @@ const AccountModal = ({
                         {`(${shortAddress(account.address)})`}
                       </span>
                     </InterlayButtonBase>
+                    <CopyAddressButton
+                      className={ACCOUNT_MODAL_BUTTON_CLASSES}
+                      address={account.address} />
                   </li>
                 );
               })}

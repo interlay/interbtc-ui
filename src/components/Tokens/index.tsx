@@ -1,8 +1,6 @@
 
 import * as React from 'react';
-import {
-  useSelector
-} from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import TokenSelector from './TokenSelector';
 import {
@@ -34,6 +32,7 @@ interface TokenOption {
   token: WrappedToken | CollateralToken | GovernanceToken;
   type: TokenType;
   balance: string;
+  transferableBalance: string;
   symbol: string;
   icon: JSX.Element;
 }
@@ -73,8 +72,11 @@ const Tokens = ({
 
   const {
     collateralTokenBalance,
+    collateralTokenTransferableBalance,
     wrappedTokenBalance,
-    governanceTokenBalance
+    wrappedTokenTransferableBalance,
+    governanceTokenBalance,
+    governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
 
   const handleUpdateToken = (tokenType: TokenType) => {
@@ -92,6 +94,7 @@ const Tokens = ({
         token: COLLATERAL_TOKEN,
         type: TokenType.COLLATERAL,
         balance: displayMonetaryAmount(collateralTokenBalance),
+        transferableBalance: displayMonetaryAmount(collateralTokenTransferableBalance),
         icon:
         <CollateralTokenLogoIcon
           height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
@@ -101,6 +104,7 @@ const Tokens = ({
         token: WRAPPED_TOKEN,
         type: TokenType.WRAPPED,
         balance: displayMonetaryAmount(wrappedTokenBalance),
+        transferableBalance: displayMonetaryAmount(wrappedTokenTransferableBalance),
         icon: <WrappedTokenLogoIcon
           height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
@@ -109,6 +113,7 @@ const Tokens = ({
         token: GOVERNANCE_TOKEN,
         type: TokenType.GOVERNANCE,
         balance: displayMonetaryAmount(governanceTokenBalance),
+        transferableBalance: displayMonetaryAmount(governanceTokenTransferableBalance),
         icon: <GovernanceTokenLogoIcon
           height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: GOVERNANCE_TOKEN_SYMBOL
@@ -119,8 +124,11 @@ const Tokens = ({
   },
   [
     collateralTokenBalance,
+    collateralTokenTransferableBalance,
     wrappedTokenBalance,
+    wrappedTokenTransferableBalance,
     governanceTokenBalance,
+    governanceTokenTransferableBalance,
     variant
   ]);
 

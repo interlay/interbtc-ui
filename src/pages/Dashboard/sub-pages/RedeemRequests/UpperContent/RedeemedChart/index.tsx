@@ -1,12 +1,12 @@
 
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
 import { useQuery } from 'react-query';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import LineChart from '../../../../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
@@ -20,20 +20,20 @@ import {
   KINTSUGI_MIDNIGHT,
   KINTSUGI_PRAIRIE_SAND
 } from 'utils/constants/colors';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
+import cumulativeVolumesFetcher, {
+  CUMULATIVE_VOLUMES_FETCHER,
+  VolumeDataPoint,
+  VolumeType
+} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+import { getLastMidnightTimestamps } from 'common/utils/utils';
+import { WRAPPED_TOKEN } from 'config/relay-chains';
 
-// TODO: duplicated
-// TODO: should be imported
-interface BTCTimeData {
-  date: Date;
-  btc: BitcoinAmount;
-}
+// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
+// thus issues per day 5 days ago can be displayed
+// cumulative issues is also only displayed to 5 days
+const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
 const RedeemedChart = (): JSX.Element => {
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
   const {
@@ -41,17 +41,15 @@ const RedeemedChart = (): JSX.Element => {
     isLoading: cumulativeRedeemsPerDayLoading,
     data: cumulativeRedeemsPerDay,
     error: cumulativeRedeemsPerDayError
-  } = useQuery<Array<BTCTimeData>, Error>(
+  // TODO: should type properly (`Relay`)
+  } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getRecentDailyRedeems',
-      { daysBack: 6 }
+      CUMULATIVE_VOLUMES_FETCHER,
+      'Redeemed' as VolumeType,
+      cutoffTimestamps,
+      WRAPPED_TOKEN
     ],
-    genericFetcher<Array<BTCTimeData>>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);
 
@@ -62,18 +60,13 @@ const RedeemedChart = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  const converted = cumulativeRedeemsPerDay.map(item => ({
-    date: item.date.getTime(),
-    sat: Number(item.btc.str.Satoshi())
-  }));
-
-  const pointRedeemsPerDay = converted.map((dataPoint, i) => {
+  const pointRedeemsPerDay = cumulativeRedeemsPerDay.map((dataPoint, i) => {
     if (i === 0) {
-      return 0;
+      return newMonetaryAmount(0, WRAPPED_TOKEN);
     } else {
-      return dataPoint.sat - converted[i - 1].sat;
+      return dataPoint.amount.sub(cumulativeRedeemsPerDay[i - 1].amount);
     }
-  });
+  }).slice(1); // cut off first 0 value
 
   let firstChartLineColor;
   let secondChartLineColor;
@@ -82,8 +75,8 @@ const RedeemedChart = (): JSX.Element => {
     secondChartLineColor = INTERLAY_MULBERRY[500];
   // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
-    firstChartLineColor = KINTSUGI_MIDNIGHT[500];
-    secondChartLineColor = KINTSUGI_PRAIRIE_SAND[500];
+    firstChartLineColor = KINTSUGI_MIDNIGHT[200];
+    secondChartLineColor = KINTSUGI_PRAIRIE_SAND[400];
   } else {
     throw new Error('Something went wrong!');
   }
@@ -100,8 +93,8 @@ const RedeemedChart = (): JSX.Element => {
         t('dashboard.redeem.per_day_redeemed_chart')
       ]}
       yLabels={
-        converted
-          .map(dataPoint => new Date(dataPoint.date).toLocaleDateString())
+        cutoffTimestamps.slice(0, -1)
+          .map(timestamp => timestamp.toLocaleDateString())
       }
       yAxes={[
         {
@@ -114,19 +107,14 @@ const RedeemedChart = (): JSX.Element => {
         {
           position: 'right',
           ticks: {
+            beginAtZero: true,
             maxTicksLimit: 6
           }
         }
       ]}
       datasets={[
-        converted
-          .map(dataPoint =>
-            Number(BitcoinAmount.from.Satoshi(dataPoint.sat).str.BTC())
-          ),
-        pointRedeemsPerDay
-          .map(
-            amount => Number(BitcoinAmount.from.Satoshi(amount).str.BTC())
-          )
+        cumulativeRedeemsPerDay.slice(1).map(dataPoint => dataPoint.amount.str.BTC()),
+        pointRedeemsPerDay.map(amount => amount.str.BTC())
       ]} />
   );
 };

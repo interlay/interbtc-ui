@@ -1,3 +1,4 @@
+
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -5,8 +6,7 @@ import {
   useErrorHandler,
   withErrorBoundary
 } from 'react-error-boundary';
-import { CollateralTimeData } from '@interlay/interbtc-index-client';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralUnit } from '@interlay/interbtc-api';
 
 import LineChart from '../../LineChart';
 import DashboardCard from '../DashboardCard';
@@ -18,7 +18,8 @@ import Stats, {
 import ErrorFallback from 'components/ErrorFallback';
 import {
   COLLATERAL_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN
 } from 'config/relay-chains';
 import {
   POLKADOT,
@@ -31,21 +32,28 @@ import {
 import { PAGES } from 'utils/constants/links';
 import {
   getUsdAmount,
-  displayMonetaryAmount
+  displayMonetaryAmount,
+  getLastMidnightTimestamps
 } from 'common/utils/utils';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import cumulativeVolumesFetcher, {
+  CUMULATIVE_VOLUMES_FETCHER,
+  VolumeDataPoint,
+  VolumeType
+} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
 
 interface Props {
   hasLinks?: boolean;
 }
 
+// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
+// thus issues per day 5 days ago can be displayed
+// cumulative issues is also only displayed to 5 days
+const cutoffTimestamps = getLastMidnightTimestamps(6, true);
+
 const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
   const {
-    prices,
-    bridgeLoaded
+    prices
   } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
@@ -54,17 +62,17 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     isLoading: cumulativeCollateralPerDayLoading,
     data: cumulativeCollateralPerDay,
     error: cumulativeCollateralPerDayError
-  } = useQuery<Array<CollateralTimeData>, Error>(
+  // TODO: should type properly (`Relay`)
+  } = useQuery<VolumeDataPoint<CollateralUnit>[], Error>(
     [
-      GENERIC_FETCHER,
-      'interBtcIndex',
-      'getRecentDailyCollateralLocked',
-      { daysBack: 6 }
+      CUMULATIVE_VOLUMES_FETCHER,
+      'Collateral' as VolumeType,
+      cutoffTimestamps,
+      COLLATERAL_TOKEN, // returned amounts
+      COLLATERAL_TOKEN, // filter by this collateral...
+      WRAPPED_TOKEN //     and this backing currency
     ],
-    genericFetcher<Array<CollateralTimeData>>(),
-    {
-      enabled: !!bridgeLoaded
-    }
+    cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeCollateralPerDayError);
 
@@ -76,10 +84,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     if (cumulativeCollateralPerDay === undefined) {
       throw new Error('Something went wrong!');
     }
-    const totalLockedCollateralTokenAmount = newMonetaryAmount(
-      cumulativeCollateralPerDay.slice(-1)[0].amount,
-      COLLATERAL_TOKEN
-    );
+    const totalLockedCollateralTokenAmount = cumulativeCollateralPerDay.slice(-1)[0].amount;
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -121,8 +126,8 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_collateral_locked')]}
           yLabels={cumulativeCollateralPerDay
-            .slice(1)
-            .map(dataPoint => new Date(dataPoint.date).toISOString().substring(0, 10))}
+            .slice(0, -1)
+            .map(dataPoint => dataPoint.tillTimestamp.toISOString().substring(0, 10))}
           yAxes={[
             {
               ticks: {
@@ -132,9 +137,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
             }
           ]}
           datasets={[
-            cumulativeCollateralPerDay.slice(1).map(
-              dataPoint => displayMonetaryAmount(newMonetaryAmount(dataPoint.amount, COLLATERAL_TOKEN))
-            )
+            cumulativeCollateralPerDay.slice(1).map(dataPoint => displayMonetaryAmount(dataPoint.amount))
           ]} />
       </>
     );

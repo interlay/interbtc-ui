@@ -1,19 +1,23 @@
 import { Store, CombinedState } from 'redux';
-import { GeneralActions, RedeemActions, IssueActions, VaultActions } from './actions.types';
-import { rootReducer } from '../reducers/index';
 import { u256 } from '@polkadot/types/primitive';
-import { IssueState } from './issue.types';
-import { RedeemState } from './redeem.types';
-import { VaultState } from './vault.types';
 import {
   BitcoinAmount,
   MonetaryAmount,
   Currency
 } from '@interlay/monetary-js';
+import { CollateralUnit } from '@interlay/interbtc-api';
+
+import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import {
-  CollateralUnit,
-  CurrencyUnit
-} from '@interlay/interbtc-api';
+  GeneralActions,
+  RedeemActions,
+  IssueActions,
+  VaultActions
+} from './actions.types';
+import { rootReducer } from '../reducers/index';
+import { IssueState } from './issue.types';
+import { RedeemState } from './redeem.types';
+import { VaultState } from './vault.types';
 
 export interface StatusUpdate {
   id: u256;
@@ -37,7 +41,6 @@ export interface DashboardStatusUpdateInfo {
   proposedStatus: string;
   addError: string;
   removeError: string;
-  // eslint-disable-next-line camelcase
   btcBlockHash: string;
   yeas: number;
   nays: number;
@@ -60,6 +63,9 @@ export type Prices = {
   collateralToken: {
     usd: number;
   };
+  governanceToken: {
+    usd: number;
+  };
 };
 
 export type GeneralState = {
@@ -70,8 +76,11 @@ export type GeneralState = {
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   wrappedTokenBalance: BitcoinAmount;
+  wrappedTokenTransferableBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  governanceTokenBalance: MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+  collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  governanceTokenBalance: GovernanceTokenMonetaryAmount;
+  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
@@ -104,7 +113,6 @@ export type TimeDataPoint = {
 export type RelayedBlock = {
   height: string;
   hash: string;
-  // eslint-disable-next-line camelcase
   relayTs: string;
 };
 

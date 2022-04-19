@@ -2,19 +2,18 @@
 
 <div align="center">
 	<p>
-		<h3 align="center">interBTC: Trustless and open DeFi access for your Bitcoin.</h3>
+		<h3 align="center">interBTC: Use your Bitcoin. Anywhere.</h3>
 	</p>
 </div>
 
 ## About
 
-The Interlay UI connects the Polkadot ecosystem with Bitcoin. It allows the creation of interBTC, a fungible token that represents Bitcoin in the Polkadot ecosystem. interBTC is backed by Bitcoin 1:1 and allows redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party.
-Similarly, the Kintsugi UI connects Kusama to Bitcoin using the kBTC token.
-In comparison to other bridge constructions (like tBTC, wBTC, or RenVM) _anyone_ can become an intermediary by depositing collateral making interBTC the only truly open system.
+The Interlay UI connects the Polkadot and Kusama ecosystem with Bitcoin. It allows the creation of interBTC and kBTC, a fungible token that represents Bitcoin in the Polkadot and Kusama ecosystem. interBTC and kBTC are backed by Bitcoin 1:1 and allow redeeming of the equivalent amount of Bitcoins by relying on a collateralized third-party called Vaults.
+In comparison to other bridge constructions (like tBTC, wBTC, or RenVM) _anyone_ can become an intermediary by depositing collateral making interBTC and kBTC the only truly open system.
 
-The bridge itself follows the detailed specification: <a href="https://interlay.gitlab.io/polkabtc-spec/" target="_blank"><strong>Explore the specification »</strong></a>
+The bridge itself follows the detailed specification: <a href="https://spec.interlay.io" target="_blank"><strong>Explore the specification »</strong></a>
 
-It is implemented as a collection of open-source Substrate modules using Rust: <a href="https://gitlab.com/interlay/btc-parachain" target="_blank"><strong>Explore the implementation »</strong></a>
+It is implemented as a collection of open-source Substrate modules using Rust: <a href="https://gitlab.com/interlay/interbtc" target="_blank"><strong>Explore the implementation »</strong></a>
 
 ### Built with
 
@@ -24,13 +23,19 @@ It is implemented as a collection of open-source Substrate modules using Rust: <
 - [yarn](https://github.com/yarnpkg/yarn)
 - [docker-compose](https://docs.docker.com/compose/)
 
-You can visit [bridge.interlay.io](https://bridge.interlay.io/) for the latest stable version of the website.
+### Kintsugi
+
+You can visit the Kintsugi application at [kintsugi.interlay.io](https://kintsugi.interlay.io).
+
+### Testnet
+
+You can visit [testnet.interlay.io](https://testnet.interlay.io/) for the latest testnet.
 
 ## Quickstart
 
 Make sure you have [docker-compose](https://docs.docker.com/compose/install/) installed locally.
 
-You can run the UI with a local instance of the BTC-Parachain and in combination with [Bitcoin regtest](https://developer.bitcoin.org/examples/testing.html#regtest-mode) or [Bitcoin testnet](https://developer.bitcoin.org/examples/testing.html#testnet) as follows:
+You can run the UI with a local instance of the Interlay or Kintsugi parachain and in combination with [Bitcoin regtest](https://developer.bitcoin.org/examples/testing.html#regtest-mode) or [Bitcoin testnet](https://developer.bitcoin.org/examples/testing.html#testnet) as follows:
 
 Clone this repository and enter into the root folder.
 
@@ -39,13 +44,17 @@ git@gitlab.com:interlay/interbtc-ui.git
 cd interbtc-ui
 ```
 
-You can configure the application to use certain networks like the official test network, staging network, as well as a local environment.
+You can configure the application to use certain networks like the official test network as well as a local environment.
 Please make use of the `.env.*` files to set build variables. The priority of these are [defined here](https://create-react-app.dev/docs/adding-custom-environment-variables/#what-other-env-files-can-be-used).
 
 ### Local Development
 
-
 To achieve this, create a file `.env.development.local` and fill it with the following contents for either the Interlay or Kintsugi network versions:
+
+### End-to-end testing
+
+* Run `yarn start` and make sure the application is running on port 3000
+* Run `yarn cypress:e2e`
 
 #### Interlay Network
 
@@ -78,7 +87,9 @@ yarn install && yarn start
 ```
 
 ### Alternative Local Development Setup
+
 From this repo, run:
+
 ```
 rm -rf node_modules
 docker-compose down -v
@@ -89,6 +100,7 @@ docker-compose --env-file .env.regtest up
 In another terminal, with the docker-compose services running, in the latest master branch from the lib (https://github.com/interlay/interbtc-api/) run: `yarn install && USER_1_URI="//Charlie" yarn initialize`
 
 Then start the UI in another terminal:
+
 ```
 set -a
 source .env.regtest
@@ -111,7 +123,7 @@ Start the UI:
 yarn install && yarn start
 ```
 
-### Connecting to the Interlay Testnetwork
+### Connecting to the Interlay Test Network
 
 > Note: This environment might be unstable. It uses the Bitcoin testnet work.
 
@@ -208,9 +220,9 @@ If you are searching for a place to start or would like to discuss features, rea
 
 ## License
 
-(C) Copyright 2021 [Interlay](https://www.interlay.io) Ltd
+(C) Copyright 2022 [Interlay](https://www.interlay.io) Ltd
 
-interBTC-ui is licensed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE).
+interbtc-ui is licensed under the terms of the Apache License (Version 2.0). See [LICENSE](LICENSE).
 
 ## Contact
 

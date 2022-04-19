@@ -20,7 +20,6 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
-  WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
   COLLATERAL_TOKEN
 } from 'config/relay-chains';
@@ -37,17 +36,15 @@ type RequestReplacementFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
+  vaultAddress: string;
 }
 
 const RequestReplacementModal = ({
   onClose,
-  open
+  open,
+  vaultAddress
 }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
-  const {
-    address,
-    wrappedTokenBalance
-  } = useSelector((state: StoreType) => state.general);
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
@@ -61,18 +58,16 @@ const RequestReplacementModal = ({
       if (BitcoinAmount.from.BTC(data[AMOUNT]).to.Satoshi() === undefined) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
-      const dustValue = await window.bridge.interBtcApi.redeem.getDustValue();
+      const dustValue = await window.bridge.redeem.getDustValue();
       const amountPolkaBtc = BitcoinAmount.from.BTC(data[AMOUNT]);
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
-      await window.bridge.interBtcApi.replace.request(amountPolkaBtc, COLLATERAL_TOKEN as CollateralCurrency);
+      await window.bridge.replace.request(amountPolkaBtc, COLLATERAL_TOKEN as CollateralCurrency);
 
-      const vaultId = window.bridge.polkadotApi.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([
         GENERIC_FETCHER,
-        'interBtcApi',
-        'replace',
         'mapReplaceRequests',
         vaultId
       ]);
@@ -90,8 +85,8 @@ const RequestReplacementModal = ({
       return t('Amount must be greater than zero!');
     }
 
-    if (wrappedTokenAmount.gt(wrappedTokenBalance)) {
-      return t(`Amount must be less than ${WRAPPED_TOKEN_SYMBOL} balance!`);
+    if (wrappedTokenAmount.gt(lockedBtc)) {
+      return t(`Amount must be less than locked BTC balance!`);
     }
 
     return undefined;
@@ -138,7 +133,6 @@ const RequestReplacementModal = ({
           <div>
             <NumberInput
               name={AMOUNT}
-              title={AMOUNT}
               min={0}
               ref={register({
                 required: {
@@ -146,8 +140,7 @@ const RequestReplacementModal = ({
                   message: t('Amount is required!')
                 },
                 validate: value => validateAmount(value)
-              })}>
-            </NumberInput>
+              })} />
             <ErrorMessage>
               {errors[AMOUNT]?.message}
             </ErrorMessage>

@@ -2,6 +2,7 @@
   "previous": "Previous",
   "prev": "Prev",
   "send": "Send",
+  "receive": "You will receive",
   "click_to_copy": "Click to copy",
   "confirm": "Confirm",
   "connect_wallet": "Connect Wallet",
@@ -19,6 +20,7 @@
   "reimbursed": "Reimbursed",
   "online": "Online",
   "offline": "Offline",
+  "unavailable": "Unavailable",
   "ok": "OK",
   "pending": "Pending",
   "not_applicable": "N/A",
@@ -41,7 +43,6 @@
   "locked": "Locked: ",
   "request": "Request",
   "no_registered_vaults": "No registered vaults",
-  "no_registered_relayers": "No registered relayers",
   "update": "Update",
   "collateralization": "Collateralization",
   "fees_earned": "Fees earned",
@@ -58,6 +59,7 @@
   "feed": "Feed",
   "app": "App",
   "last_update": "Last Update",
+  "last_update_block": "Last Update Block",
   "exchange_rate": "Exchange Rate",
   "best_block_hash": "Best Block Hash",
   "no_oracles": "No active oracles",
@@ -77,11 +79,12 @@
   "nav_staking": "Staking",
   "nav_dashboard": "Dashboard",
   "nav_vault": "Vault",
+  "nav_crowdloan": "Claim {{governanceTokenSymbol}}",
   "nav_feedback": "Feedback",
   "nav_docs": "Docs",
   "nav_terms_and_conditions": "Terms and Conditions",
   "report_bug": "Report a bug:",
-  "request_dot": "{{collateralTokenSymbol}} Faucet",
+  "request_funds": "{{tokenSymbol}} Faucet",
   "request_btc": "BTC Faucet",
   "no_pending_status": "No pending status updates",
   "bridge_fee": "Bridge Fee",
@@ -100,15 +103,18 @@
   "address": "Account",
   "recipient_account": "Enter recipient account",
   "date": "Date",
+  "date_created": "Date created",
   "enter_recipient_address": "Please enter the recipient address.",
   "blockstream": "Blockstream",
-  "insufficient_funds_dot": "Insufficient funds to pay for {{collateralTokenSymbol}} fees.",
+  "insufficient_funds_governance_token": "Insufficient funds to pay for {{governanceTokenSymbol}} fees.",
   "insufficient_funds": "Insufficient balance to transfer.",
   "interbtc_bridge_loading": "The {{wrappedTokenSymbol}} bridge is loading. Please wait a few seconds.",
   "issue_redeem_disabled": "Issue and Redeem is currently disabled.",
   "interbtc_bridge_recovery_mode": "The {{wrappedTokenSymbol}} bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
   "waiting_for_confirmations": "Waiting for Confirmations",
   "built_by": "Built by",
+  "get_governance_token": "Get {{governanceTokenSymbol}}",
+  "get_governance_token_description": "Please check the individual terms and conditions of each exchange before you buy/trade {{governanceTokenSymbol}}.",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -139,6 +145,7 @@
     "enter_btc": "Please enter your Bitcoin address.",
     "you_have": "You have",
     "current_balance": "Please enter an amount smaller than your current balance: {{ currentBalance }}",
+    "request_exceeds_capacity": " Currently, at most {{ maxRedeemableAmount }} can be redeemed. Please enter a lower amount.",
     "amount_greater_dust_inclusion": "Please enter an amount above the combined Bridge Fee, Bitcoin Network Fee, and Bitcoin Dust limit (",
     "request_processed": "Request being processed...",
     "processed_by_vault": "Your redeem request is being processed by Vault:",
@@ -188,11 +195,23 @@
   },
   "transfer_page": {
     "successfully_transferred": "Successfully transferred.",
-    "transfer_currency": "Transfer"
+    "transfer_currency": "Transfer",
+    "cross_chain_transfer_form": {
+      "title": "Cross Chain Transfer",
+      "balance": "Transferable balance",
+      "from_chain": "From chain",
+      "to_chain": "To chain",
+      "target_account": "Destination",
+      "please_enter_amount": "Please enter amount",
+      "relay_chain_balance": "Transferable relay chain balance",
+      "parachain_balance": "Transferable balance",
+      "insufficient_funds_to_pay_fees": "Please transfer an amount greater than the transfer fee of {{transferFee}}",
+      "insufficient_funds_to_maintain_existential_depoit": "Insufficient amount to maintain existential deposit"
+    }
   },
   "burn_page": {
     "burn_interbtc": "Burn {{wrappedTokenSymbol}} in exchange for {{collateralTokenSymbol}}",
-    "dot_earned": "{{collateralTokenSymbol}} earned",
+    "available": "{{wrappedTokenSymbol}} available to burn",
     "burn": "Burn",
     "please_enter_the_amount": "Please enter the amount.",
     "successfully_burned": "Successfully burned.",
@@ -201,7 +220,6 @@
   "dashboard": {
     "premium_redeem": "Premium Redeem",
     "error_unable_to_compute_collateral": "Unable to compute collateralization rate.",
-    "no-registered": "No registered staked relayers",
     "dashboard": "Dashboard",
     "issues": "Issue Requests",
     "total_locked": "Total locked",
@@ -235,9 +253,11 @@
     "relay": {
       "btc_relay": "BTC Relay",
       "blocks": "Blocks",
-      "block_height": "Block height",
-      "block_hash": "Block hash",
-      "timestamp": "Added to parachain",
+      "block_height": "Bitcoin height",
+      "block_hash": "Bitcoin block hash",
+      "relayed_by": "Relayed by",
+      "inclusion_timestamp": "Added to parachain",
+      "inclusion_block": "Added on parachain block",
       "block_number": "Block {{number}}",
       "relay_is": "BTC Relay is",
       "blockstream_verify_link": "Verify on blockstream.info"
@@ -248,6 +268,7 @@
       "oracles_are": "Oracles are",
       "online": "online",
       "offline": "offline",
+      "not_available": "not available",
       "loading": "loading..."
     },
     "vault": {
@@ -280,7 +301,9 @@
     }
   },
   "issue_page": {
-    "maximum_in_single_request": "We have reached maximum capacity ({{maxAmount}} {{wrappedTokenSymbol}}) of the bridge. Please enter a lower amount.",
+    "maximum_in_single_request": "Max issuable in single request",
+    "maximum_total_request": "Max issuable in total",
+    "maximum_in_single_request_error": "Please enter less than {{maxAmount}} {{wrappedTokenSymbol}}.",
     "request": "Request id  #{{id}}",
     "you_received": "You have received",
     "contact_team": "Contact the team for debugging if you think this is an error.",
@@ -292,6 +315,7 @@
     "view_on_block_explorer": "View on Block Explorer",
     "mint_polka_by_wrapping": "Mint {{wrappedTokenSymbol}} by wrapping BTC",
     "security_deposit": "Security Deposit",
+    "transaction_fee": "Transaction Fee",
     "receive_interbtc_tokens": "You will now receive your BTC-backed {{wrappedTokenSymbol}} tokens. If this does not happen automatically within a few minutes, click the button below.",
     "issue_requests": "Issue Requests",
     "recent_requests": "Recent Requests",
@@ -308,7 +332,6 @@
     "issue_request_for": "Issue Request for",
     "updated": "Updated",
     "error_more_than_6_blocks_behind": "You can't issue {{wrappedTokenSymbol}} at the moment because {{wrappedTokenSymbol}} parachain is more than 6 blocks behind.",
-    "validation_max_value": "The maximum amount you can issue (per request) on the testnet is 1.0 {{wrappedTokenSymbol}}. Please enter a lower amount.",
     "validation_min_value": "Please enter an amount greater than Bitcoin dust limit (",
     "enter_valid_amount": "Please enter a valid amount.",
     "proof_data": "Fetching proof data for Bitcoin transaction: {{txId}}",
@@ -364,7 +387,8 @@
     "refund_vault_to_address": "back to your address",
     "warning_mbtc_wallets": "Warning: Some Bitcoin wallets display values in mBTC. Please ensure you send the correct amount:",
     "tooltip_bridge_fee": "The bridge fee is paid to the Vaults, Relayers, and maintainers of the system.",
-    "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed."
+    "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed.",
+    "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain."
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
@@ -372,16 +396,6 @@
     "no_feedback": "Don't give feedback",
     "give_feedback": "Give feedback",
     "feedback": "Feedback"
-  },
-  "relayer": {
-    "registration": "Registration",
-    "please_note": "Please note there is a default waiting period before bonding.",
-    "stake": "Stake",
-    "warning_relayer_not_registered": "Local relayer client running, but relayer is not yet registered with the parachain. The client is already submitting blocks, but voting and reporting features are disabled until registered.",
-    "staked_relayer_dashboard": "Relayer Dashboard",
-    "stake_locked": "Stake locked",
-    "deregister": "Deregister",
-    "note_you_can_deregister": "Note: You can only deregister if you are not participating in a vote."
   },
   "vault": {
     "creation_block": "Creation Block",
@@ -399,6 +413,7 @@
     "current_total_collateral": "Current Total Collateral {{currentCollateral}} {{collateralTokenSymbol}} ",
     "new_total_collateral": "New Total Collateral",
     "collateral_higher_than_0": "Collateral must be higher than 0",
+    "collateral_below_threshold": "Please enter an amount that maintains the collateralization of your Vault above the Secure Collateral Threshold.",
     "new_collateralization": "New Collateralization:",
     "withdraw_collateral": "Withdraw Collateral",
     "vault_dashboard": "Vault Dashboard",
@@ -407,7 +422,13 @@
     "pending_table_subcell": "Pending: ",
     "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
-    "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity"
+    "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
+    "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}",
+    "status": "Status",
+    "claim_governance_token_rewards": "Claim {{governanceTokenAmount}} {{governanceTokenSymbol}} Rewards"
+  },
+  "staking_page": {
+    "estimated_governance_token_rewards_tooltip_label": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}."
   },
   "about": {
     "research_paper": "Research Paper",
@@ -420,7 +441,7 @@
     "join_discord": "Join our Discord",
     "ask_away": "and ask away!"
   },
-  "test_net": "TestNet",
+  "test_net": "Testnet",
   "test_net_warning": "All testnet assets are for testing purposes only and have no real value.",
   "maintenance": {
     "type": {

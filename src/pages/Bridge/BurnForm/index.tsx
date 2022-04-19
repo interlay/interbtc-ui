@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
-import { toast } from 'react-toastify';
 import {
   useErrorHandler,
   withErrorBoundary
@@ -27,7 +26,7 @@ import {
 } from '@interlay/interbtc-api';
 
 import PriceInfo from 'pages/Bridge/PriceInfo';
-import WrappedTokenField from '../WrappedTokenField';
+import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
@@ -38,7 +37,8 @@ import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon
+  CollateralTokenLogoIcon,
+  WrappedTokenLogoIcon
 } from 'config/relay-chains';
 import {
   POLKADOT,
@@ -101,6 +101,7 @@ const BurnForm = (): JSX.Element | null => {
       CollateralUnit
     >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
   );
+  const [burnableTokens, setBurnableTokens] = React.useState(BitcoinAmount.zero);
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -112,8 +113,17 @@ const BurnForm = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const theBurnRate = await window.bridge.interBtcApi.redeem.getBurnExchangeRate(COLLATERAL_TOKEN);
+        const [
+          theBurnRate,
+          theBurnableTokens
+        ] = await Promise.all([
+          window.bridge.redeem.getBurnExchangeRate(COLLATERAL_TOKEN),
+          window.bridge.redeem.getMaxBurnableTokens(
+            COLLATERAL_TOKEN as CollateralCurrency
+          )
+        ]);
         setBurnRate(theBurnRate);
+        setBurnableTokens(theBurnableTokens);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
@@ -146,7 +156,7 @@ const BurnForm = (): JSX.Element | null => {
     const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.bridge.interBtcApi.redeem.burn(
+        await window.bridge.redeem.burn(
           BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]),
           COLLATERAL_TOKEN as CollateralCurrency
         );
@@ -158,7 +168,6 @@ const BurnForm = (): JSX.Element | null => {
         const earnedCollateralTokenAmount =
           burnRate.toCounter(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero);
         dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedCollateralTokenAmount)));
-        toast.success(t('burn_page.successfully_burned'));
         reset({
           [WRAPPED_TOKEN_AMOUNT]: ''
         });
@@ -172,6 +181,11 @@ const BurnForm = (): JSX.Element | null => {
     const validateForm = (value: number): string | undefined => {
       // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
       const bitcoinAmountValue = BitcoinAmount.from.BTC(value);
+
+      if (bitcoinAmountValue.gt(burnableTokens)) {
+        return `Only ${displayMonetaryAmount(burnableTokens)} ${WRAPPED_TOKEN_SYMBOL} available to burn.
+        Please enter a smaller amount.`;
+      }
 
       if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
@@ -187,14 +201,12 @@ const BurnForm = (): JSX.Element | null => {
         });
       }
 
-      // ray test touch <
       // TODO: double-check if we need
       // - (https://discord.com/channels/745259537707040778/894390868964933692/894863394149109771)
       const wrappedTokenAmountInteger = value.toString().split('.')[0];
       if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!'; // TODO: should translate
       }
-      // ray test touch >
 
       return undefined;
     };
@@ -216,7 +228,26 @@ const BurnForm = (): JSX.Element | null => {
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <WrappedTokenField
+          <PriceInfo
+            title={
+              <h5
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode':
+                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}>
+                {t('burn_page.available', {
+                  wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+                })}
+              </h5>
+            }
+            unitIcon={
+              <WrappedTokenLogoIcon width={20} />
+            }
+            value={displayMonetaryAmount(burnableTokens)}
+            unitName={WRAPPED_TOKEN_SYMBOL}
+            approxUSD={getUsdAmount(burnableTokens, prices.bitcoin.usd)} />
+          <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
             name={WRAPPED_TOKEN_AMOUNT}
             label={WRAPPED_TOKEN_SYMBOL}
@@ -230,25 +261,6 @@ const BurnForm = (): JSX.Element | null => {
             approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
-          <PriceInfo
-            title={
-              <h5
-                className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
-                {t('burn_page.dot_earned', {
-                  collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
-                })}
-              </h5>
-            }
-            unitIcon={
-              <CollateralTokenLogoIcon width={20} />
-            }
-            value={displayMonetaryAmount(earnedCollateralTokenAmount)}
-            unitName={COLLATERAL_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)} />
           <Hr2
             className={clsx(
               'border-t-2',
