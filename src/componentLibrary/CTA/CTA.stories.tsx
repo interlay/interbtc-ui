@@ -8,13 +8,13 @@ import { CTA, CTAProps } from '.';
 
 const Template: Story<CTAProps> = args => <CTA {...args} />;
 
-const Default = Template.bind({});
-Default.args = {
+const Primary = Template.bind({});
+Primary.args = {
   children: 'cta text'
 };
 
 export {
-  Default
+  Primary
 };
 
 export default {

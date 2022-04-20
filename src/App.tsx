@@ -394,8 +394,6 @@ const App = (): JSX.Element => {
   ]);
 
   React.useEffect(() => {
-    document.body.dataset.themeBase = '';
-
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
       document.documentElement.classList.add(CLASS_NAMES.LIGHT);
       document.documentElement.classList.remove(CLASS_NAMES.DARK);

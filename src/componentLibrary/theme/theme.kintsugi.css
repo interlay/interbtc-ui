@@ -1,5 +1,9 @@
+:root {
+   --colors-yellow: #FECA2F;
+   --colors-black: #000000;
+}
+
 body[data-theme='kintsugi'] {
-  /* colors */
-  --colors-primary: deeppink;
-  --colors-background: white;
+  --colors-cta-primary: var(--colors-yellow);
+  --colors-text-primary: var(--colors-black);
 }
