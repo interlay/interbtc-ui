@@ -17,7 +17,12 @@ import {
   persistor
 } from './store';
 import reportWebVitals from './reportWebVitals';
+import 'normalize.css';
 import './index.css';
+import 'componentLibrary/theme/theme.base.css';
+// TODO: only import single theme
+import 'componentLibrary/theme/theme.interlay.css';
+import 'componentLibrary/theme/theme.kintsugi.css';
 
 window.isFetchingActive = false;
 

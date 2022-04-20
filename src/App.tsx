@@ -394,12 +394,14 @@ const App = (): JSX.Element => {
   ]);
 
   React.useEffect(() => {
+    document.body.dataset.themeBase = '';
+
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
       document.documentElement.classList.add(CLASS_NAMES.LIGHT);
       document.documentElement.classList.remove(CLASS_NAMES.DARK);
       document.body.classList.add('text-interlayTextPrimaryInLightMode');
       document.body.classList.add('bg-interlayHaiti-50');
-      document.body.dataset.theme = 'kintsugi';
+      document.body.dataset.theme = 'interlay';
     }
 
     // MEMO: should check dark mode as well
@@ -409,6 +411,7 @@ const App = (): JSX.Element => {
       document.documentElement.classList.remove(CLASS_NAMES.LIGHT);
       document.body.classList.add('dark:text-kintsugiTextPrimaryInDarkMode');
       document.body.classList.add('dark:bg-kintsugiMidnight-900');
+      document.body.dataset.theme = 'kintsugi';
     }
   }, []);
 

@@ -1,0 +1,5 @@
+body[data-theme='interlay'] {
+  /* colors */
+  --colors-primary: red;
+  --colors-background: blue;
+}

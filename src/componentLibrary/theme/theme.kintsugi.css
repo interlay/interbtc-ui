@@ -3,10 +3,3 @@ body[data-theme='kintsugi'] {
   --colors-primary: deeppink;
   --colors-background: white;
 }
-
-
-body[data-theme='interlay'] {
-  /* colors */
-  --colors-primary: red;
-  --colors-background: blue;
-}
