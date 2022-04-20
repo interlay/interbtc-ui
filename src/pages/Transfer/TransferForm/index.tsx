@@ -33,6 +33,8 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 
+import { CTA } from 'componentLibrary';
+
 const TRANSFER_AMOUNT = 'transfer-amount';
 const RECIPIENT_ADDRESS = 'recipient-address';
 
@@ -130,6 +132,10 @@ const TransferForm = (): JSX.Element => {
 
   return (
     <>
+      <CTA
+        variant='primary'
+        fullWidth={true}>CTA
+      </CTA>
       <form
         className='space-y-8'
         onSubmit={handleSubmit(onSubmit)}>

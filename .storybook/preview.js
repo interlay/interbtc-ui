@@ -9,7 +9,7 @@ import {
 } from '../src/utils/constants/relay-chain-names';
 import '../src/index.css';
 import '../src/componentLibrary/theme/theme.base.css';
-// TODO: import the correct theme based on environment
+import '../src/componentLibrary/theme/theme.interlay.css';
 import '../src/componentLibrary/theme/theme.kintsugi.css';
 
 const parameters = {
@@ -18,6 +18,13 @@ const parameters = {
     matchers: {
       date: /Date$/
     }
+  },
+  themes: {
+    default: 'kintsugi',
+    list: [
+      { name: 'kintsugi', class: 'theme-kintsugi' },
+      { name: 'interlay', class: 'theme-interlay' },
+    ],
   },
   darkMode: {
     stylePreview: true,

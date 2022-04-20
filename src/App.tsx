@@ -399,7 +399,7 @@ const App = (): JSX.Element => {
       document.documentElement.classList.remove(CLASS_NAMES.DARK);
       document.body.classList.add('text-interlayTextPrimaryInLightMode');
       document.body.classList.add('bg-interlayHaiti-50');
-      document.body.dataset.theme = 'interlay';
+      document.body.classList.add('theme-interlay');
     }
 
     // MEMO: should check dark mode as well
@@ -409,7 +409,7 @@ const App = (): JSX.Element => {
       document.documentElement.classList.remove(CLASS_NAMES.LIGHT);
       document.body.classList.add('dark:text-kintsugiTextPrimaryInDarkMode');
       document.body.classList.add('dark:bg-kintsugiMidnight-900');
-      document.body.dataset.theme = 'kintsugi';
+      document.body.classList.add('theme-kintsugi');
     }
   }, []);
 
