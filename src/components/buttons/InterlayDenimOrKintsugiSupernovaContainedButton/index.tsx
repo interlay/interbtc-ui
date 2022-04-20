@@ -16,7 +16,7 @@ interface CustomProps {
 }
 
 type Ref = HTMLButtonElement;
-const InterlayDenimOrKintsugiMidnightContainedButton = React.forwardRef<Ref, Props>(({
+const InterlayDenimOrKintsugiSupernovaContainedButton = React.forwardRef<Ref, Props>(({
   className,
   children,
   startIcon,
@@ -106,8 +106,8 @@ const InterlayDenimOrKintsugiMidnightContainedButton = React.forwardRef<Ref, Pro
     </InterlayButtonBase>
   );
 });
-InterlayDenimOrKintsugiMidnightContainedButton.displayName = 'InterlayDenimOrKintsugiMidnightContainedButton';
+InterlayDenimOrKintsugiSupernovaContainedButton.displayName = 'InterlayDenimOrKintsugiSupernovaContainedButton';
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 
-export default InterlayDenimOrKintsugiMidnightContainedButton;
+export default InterlayDenimOrKintsugiSupernovaContainedButton;

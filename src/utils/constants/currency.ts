@@ -2,13 +2,15 @@
 import {
   CollateralIdLiteral,
   WrappedIdLiteral,
-  tickerToCurrencyIdLiteral
+  tickerToCurrencyIdLiteral,
+  newMonetaryAmount
 } from '@interlay/interbtc-api';
 
 import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN,
-  GOVERNANCE_TOKEN
+  GOVERNANCE_TOKEN,
+  VOTE_GOVERNANCE_TOKEN
 } from 'config/relay-chains';
 
 const COLLATERAL_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
@@ -17,8 +19,13 @@ const WRAPPED_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker)
 
 const GOVERNANCE_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(GOVERNANCE_TOKEN.ticker) as CollateralIdLiteral;
 
+const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
+const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
+
 export {
   COLLATERAL_TOKEN_ID_LITERAL,
   WRAPPED_TOKEN_ID_LITERAL,
-  GOVERNANCE_TOKEN_ID_LITERAL
+  GOVERNANCE_TOKEN_ID_LITERAL,
+  ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT,
+  ZERO_GOVERNANCE_TOKEN_AMOUNT
 };

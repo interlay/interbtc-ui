@@ -4,9 +4,9 @@ import {
   Meta
 } from '@storybook/react';
 
-import InterlayDenimOrKintsugiMidnightContainedButton, { Props } from '.';
+import InterlayDenimOrKintsugiSupernovaContainedButton, { Props } from '.';
 
-const Template: Story<Props> = args => <InterlayDenimOrKintsugiMidnightContainedButton {...args} />;
+const Template: Story<Props> = args => <InterlayDenimOrKintsugiSupernovaContainedButton {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
@@ -19,5 +19,5 @@ export {
 
 export default {
   title: 'buttons/InterlayDenimOrKintsugiMidnightContainedButton',
-  component: InterlayDenimOrKintsugiMidnightContainedButton
+  component: InterlayDenimOrKintsugiSupernovaContainedButton
 } as Meta;

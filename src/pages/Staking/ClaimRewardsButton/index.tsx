@@ -7,9 +7,9 @@ import {
 import clsx from 'clsx';
 
 import ErrorModal from 'components/ErrorModal';
-import InterlayDenimOrKintsugiMidnightContainedButton, {
+import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
-} from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
+} from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
@@ -55,7 +55,7 @@ const ClaimRewardsButton = ({
 
   return (
     <>
-      <InterlayDenimOrKintsugiMidnightContainedButton
+      <InterlayDenimOrKintsugiSupernovaContainedButton
         className={clsx(
           'w-full',
           'px-6',
@@ -68,7 +68,7 @@ const ClaimRewardsButton = ({
         pending={claimRewardsMutation.isLoading}
         {...rest}>
         Claim {claimableRewardAmount} {GOVERNANCE_TOKEN_SYMBOL} Rewards
-      </InterlayDenimOrKintsugiMidnightContainedButton>
+      </InterlayDenimOrKintsugiSupernovaContainedButton>
       {claimRewardsMutation.isError && (
         <ErrorModal
           open={claimRewardsMutation.isError}

@@ -45,7 +45,6 @@ import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
-  VOTE_GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN,
   STAKE_LOCK_TIME,
   GovernanceTokenMonetaryAmount,
@@ -53,6 +52,10 @@ import {
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
+import {
+  ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT,
+  ZERO_GOVERNANCE_TOKEN_AMOUNT
+} from 'utils/constants/currency';
 import {
   displayMonetaryAmount,
   getUsdAmount,
@@ -107,9 +110,6 @@ const checkOnlyExtendLockTime = (
     lockAmount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
   );
 };
-
-const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
-const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
 
 // FIXME: account for transaction fees not with a hardcoded value
 const TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);

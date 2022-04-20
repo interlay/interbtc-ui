@@ -28,6 +28,7 @@ import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 import StatPanel from './StatPanel';
 import VaultStatusStatPanel from './VaultStatusStatPanel';
+import ClaimRewardsButton from './ClaimRewardsButton';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
@@ -35,8 +36,8 @@ import SectionTitle from 'parts/SectionTitle';
 import BoldParagraph from 'components/BoldParagraph';
 import ErrorFallback from 'components/ErrorFallback';
 import
-InterlayDenimOrKintsugiMidnightContainedButton
-  from 'components/buttons/InterlayDenimOrKintsugiMidnightContainedButton';
+InterlayDenimOrKintsugiSupernovaContainedButton
+  from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import {
@@ -167,8 +168,8 @@ const Vault = (): JSX.Element => {
   ]);
 
   const {
-    data: governanceReward,
-    error: governanceRewardError
+    data: governanceTokenReward,
+    error: governanceTokenRewardError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
     [
       GENERIC_FETCHER,
@@ -183,7 +184,7 @@ const Vault = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(governanceRewardError);
+  useErrorHandler(governanceTokenRewardError);
 
   const {
     data: vaultExt,
@@ -214,9 +215,9 @@ const Vault = (): JSX.Element => {
 
   const vaultItems = React.useMemo(() => {
     const governanceRewardLabel =
-      governanceReward === undefined ?
+      governanceTokenReward === undefined ?
         '-' :
-        displayMonetaryAmount(governanceReward);
+        displayMonetaryAmount(governanceTokenReward);
 
     return [
       {
@@ -266,8 +267,10 @@ const Vault = (): JSX.Element => {
     feesEarnedInterBTC,
     lockedBTC,
     t,
-    governanceReward
+    governanceTokenReward
   ]);
+
+  const hasLockedBTC = lockedBTC.gt(BitcoinAmount.zero);
 
   return (
     <>
@@ -304,18 +307,21 @@ const Vault = (): JSX.Element => {
           <div
             className={clsx(
               'grid',
-              'grid-cols-3',
-              'gap-10'
+              hasLockedBTC ?
+                'grid-cols-4' :
+                'grid-cols-3',
+              'gap-5'
             )}>
-            <InterlayDenimOrKintsugiMidnightContainedButton
+            <InterlayDenimOrKintsugiSupernovaContainedButton
               onClick={handleDepositCollateralModalOpen}>
               {t('vault.deposit_collateral')}
-            </InterlayDenimOrKintsugiMidnightContainedButton>
+            </InterlayDenimOrKintsugiSupernovaContainedButton>
             <InterlayDefaultContainedButton
               onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            {lockedBTC.gt(BitcoinAmount.zero) && (
+            <ClaimRewardsButton vaultAccountId={vaultAccountId} />
+            {hasLockedBTC && (
               <InterlayCaliforniaContainedButton
                 onClick={handleRequestReplacementModalOpen}>
                 {t('vault.replace_vault')}
@@ -338,7 +344,7 @@ const Vault = (): JSX.Element => {
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
           vaultAddress={selectedVaultAccountAddress}
-          hasLockedBTC={lockedBTC.gt(BitcoinAmount.zero)} />
+          hasLockedBTC={hasLockedBTC} />
       )}
       <RequestReplacementModal
         onClose={handleRequestReplacementModalClose}
