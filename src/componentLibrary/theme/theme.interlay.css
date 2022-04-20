@@ -1,9 +1,5 @@
-:root {
-  --colors-pink: hotpink;
-}
-
 .theme-interlay {
-  --colors-cta-primary: var(--colors-pink);
+  --colors-cta-primary: var(--colors-neutral-white);
   --colors-cta-secondary: var(--colors-neutral-white);
   --colors-text-primary: var(--colors-neutral-black);
 }
