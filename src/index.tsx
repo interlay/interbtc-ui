@@ -19,8 +19,7 @@ import {
 import reportWebVitals from './reportWebVitals';
 import 'normalize.css';
 import './index.css';
-import 'componentLibrary/theme/theme.base.css';
-// TODO: only import single theme
+// TODO: import one theme only theme
 import 'componentLibrary/theme/theme.interlay.css';
 import 'componentLibrary/theme/theme.kintsugi.css';
 

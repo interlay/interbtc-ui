@@ -6,6 +6,7 @@ interface CTAProps {
 }
 
 const BaseCTA = styled.button<CTAProps>`
+  color: ${theme.colors.textPrimary};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.base};
   line-height: ${theme.lineHeight.base};
@@ -14,11 +15,9 @@ const BaseCTA = styled.button<CTAProps>`
 `;
 
 export const PrimaryCTA = styled(BaseCTA)`
-  background-color: ${theme.colors.ctaPrimary};
   color: ${theme.colors.textPrimary};
 `;
 
 export const SecondaryCTA = styled(BaseCTA)`
   background-color: ${theme.colors.ctaSecondary};
-  color: ${theme.colors.textPrimary};
 `;
