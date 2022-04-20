@@ -3,6 +3,18 @@ const theme = {
     ctaPrimary: 'var(--colors-cta-primary)',
     textPrimary: 'var(--colors-text-primary)'
   },
+  text: {
+    xs: `var(--text-xs)`,
+    s: `var(--text-s)`,
+    base: `var(--text-base)`,
+    lg: `var(--text-lg)`,
+    xl: `var(--text-xl)`,
+    xl2: `var(--text-2xl)`,
+    xl3: `var(--text-3xl)`,
+    xl4: `var(--text-4xl)`,
+    xl5: `var(--text-5xl)`,
+    xl6: `var(--text-6xl)`
+  },
   spacing: {
     spacing1: 'var(--spacing-1)',
     spacing2: 'var(--spacing-2)',
@@ -11,13 +23,17 @@ const theme = {
     spacing5: 'var(--spacing-5)',
     spacing6: 'var(--spacing-6)'
   },
-  rounded: {
-    sm: 'var(--rounded-sm)',
-    rg: 'var(--rounded-rg)',
-    md: 'var(--rounded-md)',
-    lg: 'var(--rounded-lg)',
-    xl: 'var(--rounded-xl)'
-  }
+  rounded:
+    {
+      sm: 'var(--rounded-sm)',
+      rg: 'var(--rounded-rg)',
+      md: 'var(--rounded-md)',
+      lg: 'var(--rounded-lg)',
+      xl: 'var(--rounded-xl)'
+    }
 };
 
+type ComponentLibraryTheme = typeof theme;
+
 export { theme };
+export type { ComponentLibraryTheme };
