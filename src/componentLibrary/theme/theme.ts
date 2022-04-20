@@ -11,13 +11,12 @@ const theme = {
     spacing5: 'var(--spacing-5)',
     spacing6: 'var(--spacing-6)'
   },
-  radius: {
-    radius1: 'var(--radius-1)',
-    radius2: 'var(--radius-2)',
-    radius3: 'var(--radius-3)',
-    radius4: 'var(--radius-4)',
-    radius5: 'var(--radius-5)',
-    radius6: 'var(--radius-6)'
+  rounded: {
+    sm: 'var(--rounded-sm)',
+    rg: 'var(--rounded-rg)',
+    md: 'var(--rounded-md)',
+    lg: 'var(--rounded-lg)',
+    xl: 'var(--rounded-xl)'
   }
 };
 

@@ -1,9 +1,8 @@
 :root {
    --colors-yellow: #FECA2F;
-   --colors-black: #000000;
 }
 
 body[data-theme='kintsugi'] {
   --colors-cta-primary: var(--colors-yellow);
-  --colors-text-primary: var(--colors-black);
+  --colors-text-primary: var(--colors-neutral-black);
 }
