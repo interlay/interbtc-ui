@@ -16,6 +16,9 @@ const theme = {
     xl5: `var(--text-5xl)`,
     xl6: `var(--text-6xl)`
   },
+  lineHeight: {
+    base: `var(--line-height-base)`
+  },
   spacing: {
     spacing1: 'var(--spacing-1)',
     spacing2: 'var(--spacing-2)',

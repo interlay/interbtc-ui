@@ -4,17 +4,20 @@ import { PrimaryCTA, SecondaryCTA } from './CTA.style';
 interface CTAProps extends React.ComponentPropsWithRef<'button'> {
   disabled?: boolean;
   variant: 'primary' | 'secondary';
+  fullWidth?: boolean;
 }
 
 const CTA = forwardRef<HTMLButtonElement, CTAProps>(({
   disabled = false,
   variant,
+  fullWidth = false,
   onClick,
   className,
   children,
   ...rest
 }, ref): JSX.Element => variant === 'primary' ? (
   <PrimaryCTA
+    fullWidth={fullWidth}
     disabled={disabled}
     ref={ref}
     onClick={onClick}
@@ -24,6 +27,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(({
   </PrimaryCTA>
 ) : (
   <SecondaryCTA
+    fullWidth={fullWidth}
     disabled={disabled}
     ref={ref}
     onClick={onClick}
