@@ -4,5 +4,6 @@
 
 body[data-theme='kintsugi'] {
   --colors-cta-primary: var(--colors-yellow);
+  --colors-cta-secondary: var(--colors-neutral-white);
   --colors-text-primary: var(--colors-neutral-black);
 }

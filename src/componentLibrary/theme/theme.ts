@@ -1,6 +1,7 @@
 const theme = {
   colors: {
     ctaPrimary: 'var(--colors-cta-primary)',
+    ctaSecondary: `var(--colors-cta-secondary)`,
     textPrimary: 'var(--colors-text-primary)'
   },
   text: {

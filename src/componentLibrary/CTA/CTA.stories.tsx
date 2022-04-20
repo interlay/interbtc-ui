@@ -10,11 +10,19 @@ const Template: Story<CTAProps> = args => <CTA {...args} />;
 
 const Primary = Template.bind({});
 Primary.args = {
+  variant: 'primary',
+  children: 'cta text'
+};
+
+const Secondary = Template.bind({});
+Secondary.args = {
+  variant: 'secondary',
   children: 'cta text'
 };
 
 export {
-  Primary
+  Primary,
+  Secondary
 };
 
 export default {
