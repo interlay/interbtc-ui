@@ -1,7 +1,4 @@
-import {
-  Story,
-  Meta
-} from '@storybook/react';
+import { Story, Meta } from '@storybook/react';
 
 import { CTA, CTAProps } from '.';
 
