@@ -8,7 +8,7 @@ import {
   withErrorBoundary
 } from 'react-error-boundary';
 import Big from 'big.js';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 
 import DashboardCard from '../DashboardCard';
 import Stats, {
@@ -66,22 +66,22 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
   useErrorHandler(systemCollateralizationError);
 
   const {
-    isIdle: issuableWrappedTokenIdle,
-    isLoading: issuableWrappedTokenLoading,
-    data: issuableWrappedToken,
-    error: issuableWrappedTokenError
-  } = useQuery<BitcoinAmount, Error>(
+    isIdle: requestLimitsIdle,
+    isLoading: requestLimitsLoading,
+    data: requestLimits,
+    error: requestLimitsError
+  } = useQuery<IssueLimits, Error>(
     [
       GENERIC_FETCHER,
-      'vaults',
-      'getTotalIssuableAmount'
+      'issue',
+      'getRequestLimits'
     ],
-    genericFetcher<BitcoinAmount>(),
+    genericFetcher<IssueLimits>(),
     {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(issuableWrappedTokenError);
+  useErrorHandler(requestLimitsError);
 
   const {
     isIdle: secureCollateralThresholdIdle,
@@ -110,7 +110,7 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
     ) {
       return <>Loading...</>;
     }
-    if (issuableWrappedTokenIdle || issuableWrappedTokenLoading) {
+    if (requestLimitsIdle || requestLimitsLoading) {
       return <>Loading...</>;
     }
     if (
@@ -119,7 +119,7 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
     ) {
       return <>Loading...</>;
     }
-    if (issuableWrappedToken === undefined) {
+    if (requestLimits === undefined) {
       throw new Error('Something went wrong!');
     }
 
@@ -175,7 +175,7 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
             {t('dashboard.vault.capacity')}
           </Ring64Title>
           <Ring64Value>
-            {`${displayMonetaryAmount(issuableWrappedToken)} ${WRAPPED_TOKEN_SYMBOL}`}
+            {`${displayMonetaryAmount(requestLimits.totalMaxIssuable)} ${WRAPPED_TOKEN_SYMBOL}`}
           </Ring64Value>
         </Ring64>
       </>
