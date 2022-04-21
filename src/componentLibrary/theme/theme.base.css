@@ -1,4 +1,11 @@
 :root {
+  --fonts-primary: "airbnb-cereal";
+
+  --font-weights-light: 300;
+  --font-weights-book: 400;
+  --font-weights-medium: 500;
+  --font-weights-bold: 700;
+
   --colors-neutral-white: #ffffff;
   --colors-neutral-black: #000000;
 

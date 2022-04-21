@@ -4,6 +4,15 @@ const theme = {
     ctaSecondary: `var(--colors-cta-secondary)`,
     textPrimary: 'var(--colors-text-primary)'
   },
+  font: {
+    primary: `var(--fonts-primary)`
+  },
+  fontWeight: {
+    light: `var(--font-weights-light)`,
+    book: `var(--font-weights-book)`,
+    medium: `var(--font-weights-medium)`,
+    bold: `var(--font-weights-bold)`
+  },
   text: {
     xs: `var(--text-xs)`,
     s: `var(--text-s)`,
