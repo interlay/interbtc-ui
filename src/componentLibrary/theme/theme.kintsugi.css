@@ -1,4 +1,11 @@
 @import url('theme.base.css');
 
-/* Placeholder until UX supply theme definitions */
-.theme-kintsugi {}
+:root {
+  --colors-yellow: #FECA2F;
+}
+
+.theme-kintsugi {
+  --colors-cta-primary: var(--colors-yellow);
+  --colors-cta-secondary: var(--colors-neutral-white);
+  --colors-text-primary: var(--colors-neutral-black);
+}

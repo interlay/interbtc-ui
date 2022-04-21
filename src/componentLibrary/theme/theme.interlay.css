@@ -1,7 +1,3 @@
 @import url('theme.base.css');
 
-.theme-interlay {
-  --colors-cta-primary: var(--colors-neutral-white);
-  --colors-cta-secondary: var(--colors-neutral-white);
-  --colors-text-primary: var(--colors-neutral-black);
-}
+.theme-interlay {}
