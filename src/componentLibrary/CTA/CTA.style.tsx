@@ -15,7 +15,7 @@ const BaseCTA = styled.button<CTAProps>`
 `;
 
 export const PrimaryCTA = styled(BaseCTA)`
-  color: ${theme.colors.textPrimary};
+  background-color: ${theme.colors.ctaPrimary};
 `;
 
 export const SecondaryCTA = styled(BaseCTA)`
