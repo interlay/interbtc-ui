@@ -2,7 +2,7 @@ import { CoinIcon } from 'componentLibrary';
 import { CoinPairWrapper, CoinPairWrapperProps } from './CoinPair.style';
 import { Coins } from '../types';
 
-interface CoinPairProps extends CoinPairWrapperProps{
+interface CoinPairProps extends CoinPairWrapperProps {
   coinOne: Coins;
   coinTwo: Coins;
 }
