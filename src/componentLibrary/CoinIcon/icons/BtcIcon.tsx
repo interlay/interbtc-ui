@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const BtcIcon = (): JSX.Element => (
   <svg
     role='img'

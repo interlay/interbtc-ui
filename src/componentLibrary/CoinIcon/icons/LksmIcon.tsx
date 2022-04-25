@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const LksmIcon = (): JSX.Element => (
   <svg
     role='img'
