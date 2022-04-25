@@ -1,0 +1,37 @@
+:root {
+  --fonts-primary: "airbnb-cereal";
+
+  --font-weights-light: 300;
+  --font-weights-book: 400;
+  --font-weights-medium: 500;
+  --font-weights-bold: 700;
+
+  --colors-neutral-white: #ffffff;
+  --colors-neutral-black: #000000;
+
+  --text-xs: .75rem;
+  --text-s: .875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 4rem;
+
+  --line-height-base: 1.3125rem;
+
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+
+  --rounded-sm: 2px;
+  --rounded-rg: 4px;
+  --rounded-md: 6px;
+  --rounded-lg: 8px;
+  --rounded-xl: 12px;
+}

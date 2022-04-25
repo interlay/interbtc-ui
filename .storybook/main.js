@@ -10,7 +10,8 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/preset-create-react-app',
-    'storybook-dark-mode'
+    'storybook-dark-mode',
+    'storybook-addon-themes'
   ],
   webpackFinal: config => {
     // MEMO: inspired by https://github.com/storybookjs/storybook/issues/3916

@@ -8,6 +8,8 @@ import {
   KUSAMA
 } from '../src/utils/constants/relay-chain-names';
 import '../src/index.css';
+import '../src/componentLibrary/theme/theme.interlay.css';
+import '../src/componentLibrary/theme/theme.kintsugi.css';
 
 const parameters = {
   actions: { argTypesRegex: "^on[A-Z].*" },
@@ -15,6 +17,13 @@ const parameters = {
     matchers: {
       date: /Date$/
     }
+  },
+  themes: {
+    default: 'kintsugi',
+    list: [
+      { name: 'kintsugi', class: 'theme-kintsugi' },
+      { name: 'interlay', class: 'theme-interlay' },
+    ],
   },
   darkMode: {
     stylePreview: true,
