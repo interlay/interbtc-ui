@@ -1,1 +1,1 @@
-export type Coins = 'BTC' | 'LKSM' | 'KSM';
+export type Coins = 'btc' | 'lksm' | 'ksm';

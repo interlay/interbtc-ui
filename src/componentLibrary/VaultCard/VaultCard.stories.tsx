@@ -9,8 +9,8 @@ const Template: Story<VaultCardProps> = args => <VaultCard {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  collateral: 'LKSM',
-  wrappedAsset: 'KSM',
+  collateral: 'btc',
+  wrappedAsset: 'lksm',
   pendingRequests: 3,
   apy: 16.23,
   collateralScore: 115.45

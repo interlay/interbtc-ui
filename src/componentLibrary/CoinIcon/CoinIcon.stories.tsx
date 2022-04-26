@@ -6,7 +6,7 @@ const Template: Story<CoinIconProps> = args => <CoinIcon {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  coin: 'BTC',
+  coin: 'btc',
   size: 'small'
 };
 
