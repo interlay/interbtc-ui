@@ -7,6 +7,7 @@ interface CTAProps extends React.ComponentPropsWithRef<'button'> {
   fullWidth?: boolean;
 }
 
+// TODO: variant which renders an anchor, not a button
 const CTA = forwardRef<HTMLButtonElement, CTAProps>(({
   disabled = false,
   variant,
@@ -17,6 +18,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(({
   ...rest
 }, ref): JSX.Element => variant === 'primary' ? (
   <PrimaryCTA
+    as='button'
     fullWidth={fullWidth}
     disabled={disabled}
     ref={ref}
@@ -27,6 +29,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(({
   </PrimaryCTA>
 ) : (
   <SecondaryCTA
+    as='button'
     fullWidth={fullWidth}
     disabled={disabled}
     ref={ref}

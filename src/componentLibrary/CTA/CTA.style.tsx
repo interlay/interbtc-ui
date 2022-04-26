@@ -5,7 +5,7 @@ interface CTAProps {
   fullWidth: boolean;
 }
 
-const BaseCTA = styled.button<CTAProps>`
+const BaseCTA = styled.div<CTAProps>`
   color: ${theme.colors.textPrimary};
   border: none;
   border-radius: ${theme.rounded.md};
