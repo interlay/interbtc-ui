@@ -14,6 +14,7 @@ const BaseCTA = styled.div<CTAProps>`
   font-weight: ${theme.fontWeight.medium};
   line-height: ${theme.lineHeight.base};
   padding: ${theme.spacing.spacing3} ${theme.spacing.spacing10};
+  text-decoration: none;
   width: ${props => props.fullWidth ? '100%' : 'auto'};
 `;
 

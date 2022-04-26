@@ -1,45 +1,42 @@
 import { forwardRef } from 'react';
 import { PrimaryCTA, SecondaryCTA } from './CTA.style';
 
-interface CTAProps extends React.ComponentPropsWithRef<'button'> {
-  disabled?: boolean;
-  variant: 'primary' | 'secondary';
+interface CTALinkProps extends React.ComponentPropsWithRef<'a'> {
   fullWidth?: boolean;
+  variant: 'primary' | 'secondary';
 }
 
-const CTA = forwardRef<HTMLButtonElement, CTAProps>(({
-  disabled = false,
+// TODO: Does this need to be changed to a React Router link component?
+const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(({
   variant,
   fullWidth = false,
-  onClick,
   className,
+  href,
   children,
   ...rest
 }, ref): JSX.Element => variant === 'primary' ? (
   <PrimaryCTA
-    as='button'
+    as='a'
     fullWidth={fullWidth}
-    disabled={disabled}
     ref={ref}
-    onClick={onClick}
+    href={href}
     className={className}
     {...rest}>
     {children}
   </PrimaryCTA>
 ) : (
   <SecondaryCTA
-    as='button'
+    as='a'
     fullWidth={fullWidth}
-    disabled={disabled}
     ref={ref}
-    onClick={onClick}
+    href={href}
     className={className}
     {...rest}>
     {children}
   </SecondaryCTA>
 ));
 
-CTA.displayName = 'CTA';
+CTALink.displayName = 'CTALink';
 
-export { CTA };
-export type { CTAProps };
+export { CTALink };
+export type { CTALinkProps };

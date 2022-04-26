@@ -1,4 +1,4 @@
-import { CoinPair, CTA } from 'componentLibrary';
+import { CoinPair, CTALink } from 'componentLibrary';
 import { Coins } from 'componentLibrary/types';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
@@ -47,11 +47,12 @@ const VaultCard = ({
         </DlItem>
       </StyledDl>
       <CTAWrapper>
-        <CTA
+        <CTALink
+          href='#'
           variant='primary'
           fullWidth={false}>
           Manage
-        </CTA>
+        </CTALink>
       </CTAWrapper>
     </CardBody>
   </Card>
