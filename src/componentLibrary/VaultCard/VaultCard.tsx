@@ -24,12 +24,14 @@ const VaultCard = ({
         coinTwo={wrappedAsset}
         size='large' />
       <CardTitle>
-        {collateral} - {wrappedAsset}
+        {/* TODO: string transforms are temporary until we have a dictionary solution at the component level */}
+        {collateral.toUpperCase()} - {wrappedAsset.toUpperCase()}
       </CardTitle>
     </CardHeader>
     <CardBody>
       <StyledDl>
         <DlItem>
+          {/* TODO: these headings will also be moved to the dictionary */}
           <dt>Pending requests</dt>
           <dd>{pendingRequests}</dd>
         </DlItem>
