@@ -17,7 +17,6 @@ import {
   persistor
 } from './store';
 import reportWebVitals from './reportWebVitals';
-import 'normalize.css';
 import './index.css';
 // TODO: import only one theme
 import 'componentLibrary/theme/theme.interlay.css';

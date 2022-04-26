@@ -7,9 +7,9 @@ interface CoinPairWrapperProps {
 const CoinPairWrapper = styled.div<CoinPairWrapperProps>`
   display: flex;
 
-  & :nth-child(2) {
-    margin-left: ${props => props.size === 'small' ? '-5px' : '-10px'};
-    z-index: -1;
+  & :first-child {
+    margin-right: ${props => props.size === 'small' ? '-5px' : '-10px'};
+    z-index: 1;
   }
 }
 `;

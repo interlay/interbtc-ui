@@ -9,9 +9,9 @@ interface CoinIconProps extends IconWrapperProps {
 const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
   return (
     <IconWrapper size={size}>
-      {coin === 'btc' ? (
+      {coin === 'BTC' ? (
         <BtcIcon />
-      ) : coin === 'ksm' ? (
+      ) : coin === 'KSM' ? (
         <KsmIcon />
       ) : (
         <LksmIcon />

@@ -1,11 +1,14 @@
 @import url('theme.base.css');
 
 :root {
+  --colors-dark-blue: #091133;
   --colors-yellow: #FECA2F;
 }
 
 .theme-kintsugi {
+  --colors-card-bg: var(--colors-dark-blue);
   --colors-cta-primary: var(--colors-yellow);
   --colors-cta-secondary: var(--colors-neutral-white);
   --colors-text-primary: var(--colors-neutral-black);
+  --colors-text-secondary: var(--colors-neutral-light-grey);
 }

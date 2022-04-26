@@ -7,12 +7,13 @@ interface CTAProps {
 
 const BaseCTA = styled.button<CTAProps>`
   color: ${theme.colors.textPrimary};
+  border: none;
   border-radius: ${theme.rounded.md};
   font-family: ${theme.font.primary};
   font-size: ${theme.text.base};
   font-weight: ${theme.fontWeight.medium};
   line-height: ${theme.lineHeight.base};
-  padding: ${theme.spacing.spacing3};
+  padding: ${theme.spacing.spacing3} ${theme.spacing.spacing10};
   width: ${props => props.fullWidth ? '100%' : 'auto'};
 `;
 

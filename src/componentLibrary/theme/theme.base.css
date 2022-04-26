@@ -1,3 +1,30 @@
+@import url('reset.css');
+
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("../../assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf") format("truetype");
+  font-weight: 300; /* light */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("../../assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf") format("truetype");
+  font-weight: 400; /* book */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("../../assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf") format("truetype");
+  font-weight: 500; /* medium */
+  font-style: normal;
+}
+@font-face {
+  font-family: "airbnb-cereal";
+  src: url("../../assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf") format("truetype");
+  font-weight: 700; /* bold */
+  font-style: normal;
+}
+
 :root {
   --fonts-primary: "airbnb-cereal";
 
@@ -7,6 +34,7 @@
   --font-weights-bold: 700;
 
   --colors-neutral-white: #ffffff;
+  --colors-neutral-light-grey: #999999;
   --colors-neutral-black: #000000;
 
   --text-xs: .75rem;
@@ -21,6 +49,7 @@
   --text-6xl: 4rem;
 
   --line-height-base: 1.3125rem;
+  --line-height-lg: 1.4375rem;
 
   --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;
@@ -28,6 +57,9 @@
   --spacing-4: 1rem;
   --spacing-5: 1.25rem;
   --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
 
   --rounded-sm: 2px;
   --rounded-rg: 4px;

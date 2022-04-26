@@ -9,15 +9,15 @@ const Template: Story<CoinPairProps> = args => <CoinPair {...args} />;
 
 const Small = Template.bind({});
 Small.args = {
-  coinOne: 'btc',
-  coinTwo: 'ksm',
+  coinOne: 'BTC',
+  coinTwo: 'KSM',
   size: 'small'
 };
 
 const Large = Template.bind({});
 Large.args = {
-  coinOne: 'btc',
-  coinTwo: 'ksm',
+  coinOne: 'BTC',
+  coinTwo: 'KSM',
   size: 'large'
 };
 
