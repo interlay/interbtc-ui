@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { theme } from 'componentLibrary/theme';
 
 export const Card = styled.div`
-  color: #ffffff;
+  color: ${theme.colors.textSecondary};
   display: flex;
   background-color: ${theme.colors.cardBg};
   border-radius: ${theme.rounded.xl};
@@ -48,7 +48,7 @@ export const DlItem = styled.div`
   margin-bottom: 10px;
 
   dt {
-    color: ${theme.colors.textSecondary};
+    color: ${theme.colors.textTertiary};
   }
 
   &:last-of-type {

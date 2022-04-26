@@ -10,5 +10,6 @@
   --colors-cta-primary: var(--colors-yellow);
   --colors-cta-secondary: var(--colors-neutral-white);
   --colors-text-primary: var(--colors-neutral-black);
-  --colors-text-secondary: var(--colors-neutral-light-grey);
+  --colors-text-secondary: var(--colors-neutral-white);
+  --colors-text-tertiary: var(--colors-neutral-light-grey);
 }

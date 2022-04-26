@@ -4,7 +4,8 @@ const theme = {
     ctaPrimary: 'var(--colors-cta-primary)',
     ctaSecondary: `var(--colors-cta-secondary)`,
     textPrimary: 'var(--colors-text-primary)',
-    textSecondary: `var(--colors-text-secondary)`
+    textSecondary: `var(--colors-text-secondary)`,
+    textTertiary: `var(--colors-text-tertiary)`
   },
   font: {
     primary: `var(--fonts-primary)`
@@ -42,14 +43,13 @@ const theme = {
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)'
   },
-  rounded:
-    {
-      sm: 'var(--rounded-sm)',
-      rg: 'var(--rounded-rg)',
-      md: 'var(--rounded-md)',
-      lg: 'var(--rounded-lg)',
-      xl: 'var(--rounded-xl)'
-    }
+  rounded: {
+    sm: 'var(--rounded-sm)',
+    rg: 'var(--rounded-rg)',
+    md: 'var(--rounded-md)',
+    lg: 'var(--rounded-lg)',
+    xl: 'var(--rounded-xl)'
+  }
 };
 
 type ComponentLibraryTheme = typeof theme;
