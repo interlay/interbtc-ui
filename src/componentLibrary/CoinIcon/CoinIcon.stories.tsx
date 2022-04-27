@@ -15,6 +15,6 @@ export {
 };
 
 export default {
-  title: 'Component Library/CoinIcon',
+  title: 'Elements/CoinIcon',
   component: CoinIcon
 } as Meta;

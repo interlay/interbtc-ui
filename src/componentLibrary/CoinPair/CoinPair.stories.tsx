@@ -27,6 +27,6 @@ export {
 };
 
 export default {
-  title: 'Component Library/CoinPair',
+  title: 'Elements/CoinPair',
   component: CoinPair
 } as Meta;

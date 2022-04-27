@@ -21,6 +21,6 @@ export {
 };
 
 export default {
-  title: 'Component Library/VaultCard',
+  title: 'Components/VaultCard',
   component: VaultCard
 } as Meta;

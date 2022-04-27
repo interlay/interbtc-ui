@@ -30,6 +30,6 @@ export {
 };
 
 export default {
-  title: 'Component Library/CTA',
+  title: 'Elements/CTA',
   component: CTA
 } as Meta;

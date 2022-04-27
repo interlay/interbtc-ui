@@ -85,7 +85,6 @@
     "postcss": "7",
     "prettier": "2.2.1",
     "storybook-addon-themes": "^6.1.0",
-    "storybook-dark-mode": "^1.0.9",
     "tailwind-config-viewer": "^1.5.1",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-pseudo-elements": "^1.5.1",
