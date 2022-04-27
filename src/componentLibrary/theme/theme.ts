@@ -1,8 +1,8 @@
 const theme = {
   colors: {
-    ctaPrimary: 'var(--colors-cta-primary)',
-    ctaSecondary: `var(--colors-cta-secondary)`,
-    textPrimary: 'var(--colors-text-primary)'
+    textPrimary: 'var(--colors-text-primary)',
+    textSecondary: `var(--colors-text-secondary)`,
+    textTertiary: `var(--colors-text-tertiary)`
   },
   font: {
     primary: `var(--fonts-primary)`
@@ -26,7 +26,8 @@ const theme = {
     xl6: `var(--text-6xl)`
   },
   lineHeight: {
-    base: `var(--line-height-base)`
+    base: `var(--line-height-base)`,
+    lg: `var(--line-height-lg)`
   },
   spacing: {
     spacing1: 'var(--spacing-1)',
@@ -34,16 +35,30 @@ const theme = {
     spacing3: 'var(--spacing-3)',
     spacing4: 'var(--spacing-4)',
     spacing5: 'var(--spacing-5)',
-    spacing6: 'var(--spacing-6)'
+    spacing6: 'var(--spacing-6)',
+    spacing8: 'var(--spacing-8)',
+    spacing10: 'var(--spacing-10)',
+    spacing12: 'var(--spacing-12)'
   },
-  rounded:
-    {
-      sm: 'var(--rounded-sm)',
-      rg: 'var(--rounded-rg)',
-      md: 'var(--rounded-md)',
-      lg: 'var(--rounded-lg)',
-      xl: 'var(--rounded-xl)'
+  rounded: {
+    sm: 'var(--rounded-sm)',
+    rg: 'var(--rounded-rg)',
+    md: 'var(--rounded-md)',
+    lg: 'var(--rounded-lg)',
+    xl: 'var(--rounded-xl)'
+  },
+  // Components
+  card: {
+    bg: 'var(--colors-card-bg)'
+  },
+  cta: {
+    primary: {
+      bg: 'var(--colors-cta-primary)'
+    },
+    secondary: {
+      bg: 'var(--colors-cta-secondary)'
     }
+  }
 };
 
 type ComponentLibraryTheme = typeof theme;
