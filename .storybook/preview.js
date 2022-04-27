@@ -16,9 +16,10 @@ const parameters = {
   },
   themes: {
     default: 'kintsugi',
+    clearable: false,
     list: [
-      { name: 'kintsugi', class: ['theme-kintsugi', 'sb-preview', 'sb-kintsugi'] },
-      { name: 'interlay', class: ['theme-interlay', 'sb-preview', 'sb-interlay'] }
+      { name: 'kintsugi', class: ['theme-kintsugi', 'sb-preview', 'sb-kintsugi'], color: '#020919' },
+      { name: 'interlay', class: ['theme-interlay', 'sb-preview', 'sb-interlay'], color: '#f4f3f5' }
     ],
   },
 };
