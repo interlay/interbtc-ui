@@ -4,7 +4,7 @@ import { theme } from 'componentLibrary/theme';
 export const Card = styled.div`
   color: ${theme.colors.textSecondary};
   display: flex;
-  background-color: ${theme.colors.cardBg};
+  background-color: ${theme.card.bg};
   border-radius: ${theme.rounded.xl};
   flex-direction: column;
   font-family: ${theme.font.primary};

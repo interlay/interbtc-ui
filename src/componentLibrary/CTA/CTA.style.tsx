@@ -19,9 +19,9 @@ const BaseCTA = styled.div<CTAProps>`
 `;
 
 export const PrimaryCTA = styled(BaseCTA)`
-  background-color: ${theme.colors.ctaPrimary};
+  background-color: ${theme.cta.primary.bg};
 `;
 
 export const SecondaryCTA = styled(BaseCTA)`
-  background-color: ${theme.colors.ctaSecondary};
+  background-color: ${theme.cta.secondary.bg};
 `;

@@ -1,8 +1,5 @@
 const theme = {
   colors: {
-    cardBg: 'var(--colors-card-bg)',
-    ctaPrimary: 'var(--colors-cta-primary)',
-    ctaSecondary: `var(--colors-cta-secondary)`,
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: `var(--colors-text-secondary)`,
     textTertiary: `var(--colors-text-tertiary)`
@@ -49,6 +46,18 @@ const theme = {
     md: 'var(--rounded-md)',
     lg: 'var(--rounded-lg)',
     xl: 'var(--rounded-xl)'
+  },
+  // Components
+  card: {
+    bg: 'var(--colors-card-bg)'
+  },
+  cta: {
+    primary: {
+      bg: 'var(--colors-cta-primary)'
+    },
+    secondary: {
+      bg: 'var(--colors-cta-secondary)'
+    }
   }
 };
 
