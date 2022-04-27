@@ -1,4 +1,5 @@
 const theme = {
+  // generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: `var(--colors-text-secondary)`,
