@@ -23,6 +23,7 @@ import {
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
 import RequestReplacementModal from './RequestReplacementModal';
+import RequestRedeemModal from './RequestRedeemModal';
 import ReplaceTable from './ReplaceTable';
 import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
@@ -66,7 +67,8 @@ import {
 
 const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
-  const [requestReplacementModalOpen, setRequestReplacementModalOpen] = React.useState(false);
+  const [requestReplaceModalOpen, setRequestReplaceModalOpen] = React.useState(false);
+  const [requestRedeemModalOpen, setRequestRedeemModalOpen] = React.useState(false);
   const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
   const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
   const {
@@ -95,11 +97,17 @@ const Vault = (): JSX.Element => {
   const handleWithdrawCollateralModalOpen = () => {
     setCollateralUpdateStatus(CollateralUpdateStatus.Withdraw);
   };
-  const handleRequestReplacementModalClose = () => {
-    setRequestReplacementModalOpen(false);
+  const handleRequestReplaceModalClose = () => {
+    setRequestReplaceModalOpen(false);
   };
-  const handleRequestReplacementModalOpen = () => {
-    setRequestReplacementModalOpen(true);
+  const handleRequestReplaceModalOpen = () => {
+    setRequestReplaceModalOpen(true);
+  };
+  const handleRequestRedeemModalClose = () => {
+    setRequestRedeemModalOpen(false);
+  };
+  const handleRequestRedeemModalOpen = () => {
+    setRequestRedeemModalOpen(true);
   };
 
   const vaultAccountId = React.useMemo(() => {
@@ -308,7 +316,7 @@ const Vault = (): JSX.Element => {
             className={clsx(
               'grid',
               hasLockedBTC ?
-                'grid-cols-4' :
+                'grid-cols-5' :
                 'grid-cols-3',
               'gap-5'
             )}>
@@ -323,8 +331,14 @@ const Vault = (): JSX.Element => {
             <ClaimRewardsButton vaultAccountId={vaultAccountId} />
             {hasLockedBTC && (
               <InterlayCaliforniaContainedButton
-                onClick={handleRequestReplacementModalOpen}>
+                onClick={handleRequestReplaceModalOpen}>
                 {t('vault.replace_vault')}
+              </InterlayCaliforniaContainedButton>
+            )}
+            {hasLockedBTC && (
+              <InterlayCaliforniaContainedButton
+                onClick={handleRequestRedeemModalOpen}>
+                {t('vault.redeem_vault')}
               </InterlayCaliforniaContainedButton>
             )}
           </div>
@@ -347,8 +361,12 @@ const Vault = (): JSX.Element => {
           hasLockedBTC={hasLockedBTC} />
       )}
       <RequestReplacementModal
-        onClose={handleRequestReplacementModalClose}
-        open={requestReplacementModalOpen}
+        onClose={handleRequestReplaceModalClose}
+        open={requestReplaceModalOpen}
+        vaultAddress={selectedVaultAccountAddress} />
+      <RequestRedeemModal
+        onClose={handleRequestRedeemModalClose}
+        open={requestRedeemModalOpen}
         vaultAddress={selectedVaultAccountAddress} />
     </>
   );
