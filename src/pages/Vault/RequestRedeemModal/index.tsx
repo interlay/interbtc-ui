@@ -4,13 +4,15 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { useQueryClient } from 'react-query';
 import clsx from 'clsx';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import { CollateralCurrency } from '@interlay/interbtc-api';
-
+import {
+  COLLATERAL_TOKEN,
+  WRAPPED_TOKEN
+} from 'config/relay-chains';
 import ErrorMessage from 'components/ErrorMessage';
 import NumberInput from 'components/NumberInput';
+import TextField from 'components/TextField';
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import CloseIconButton from 'components/buttons/CloseIconButton';
@@ -18,20 +20,22 @@ import InterlayModal, {
   InterlayModalInnerWrapper,
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import {
-  COLLATERAL_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN
-} from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
-import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { BTC_ADDRESS_REGEX } from '../../../constants';
+import {
+  newVaultId,
+  CollateralCurrency,
+  WrappedCurrency
+} from '@interlay/interbtc-api';
 
-const AMOUNT = 'amount';
+const WRAPPED_TOKEN_AMOUNT = 'amount';
+const BTC_ADDRESS = 'btc-address';
 
-type RequestReplacementFormData = {
-  [AMOUNT]: number;
-};
+type RequestRedeemFormData = {
+  [WRAPPED_TOKEN_AMOUNT]: string;
+  [BTC_ADDRESS]: string;
+}
 
 interface Props {
   onClose: () => void;
@@ -39,39 +43,40 @@ interface Props {
   vaultAddress: string;
 }
 
-const RequestReplacementModal = ({
+// TODO: share form with bridge page
+const RequestRedeemModal = ({
   onClose,
   open,
   vaultAddress
 }: Props): JSX.Element => {
-  const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
-  const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
+  const { register, handleSubmit, errors } = useForm<RequestRedeemFormData>();
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const focusRef = React.useRef(null);
 
   const onSubmit = handleSubmit(async data => {
     setRequestPending(true);
     try {
-      if (BitcoinAmount.from.BTC(data[AMOUNT]).to.Satoshi() === undefined) {
+      if (BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]).to.Satoshi() === undefined) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
       const dustValue = await window.bridge.redeem.getDustValue();
-      const amountPolkaBtc = BitcoinAmount.from.BTC(data[AMOUNT]);
+      const amountPolkaBtc = BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]);
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
-      await window.bridge.replace.request(amountPolkaBtc, COLLATERAL_TOKEN as CollateralCurrency);
 
-      const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
-      queryClient.invalidateQueries([
-        GENERIC_FETCHER,
-        'mapReplaceRequests',
-        vaultId
-      ]);
-      toast.success('Replacement request is submitted');
+      const vaultId =
+        newVaultId(
+          window.bridge.api,
+          vaultAddress,
+          COLLATERAL_TOKEN as CollateralCurrency,
+          WRAPPED_TOKEN as WrappedCurrency
+        );
+      await window.bridge.redeem.request(amountPolkaBtc, data[BTC_ADDRESS], vaultId);
+
+      toast.success('Redeem request submitted');
       onClose();
     } catch (error) {
       toast.error(error.toString());
@@ -109,7 +114,7 @@ const RequestReplacementModal = ({
             'font-medium',
             'mb-6'
           )}>
-          {t('vault.request_replacement')}
+          {t('vault.request_redeem')}
         </InterlayModalTitle>
         <CloseIconButton
           ref={focusRef}
@@ -118,21 +123,17 @@ const RequestReplacementModal = ({
           className='space-y-4'
           onSubmit={onSubmit}>
           <p>
-            {t('vault.withdraw_your_collateral')}
-          </p>
-          <p>{t('vault.you_have')}</p>
-          <p>
-            {displayMonetaryAmount(lockedDot)} {COLLATERAL_TOKEN_SYMBOL}
+            {t('vault.redeem_description')}
           </p>
           <p>
             {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
           </p>
           <p>
-            {t('vault.replace_amount')}
+            {t('vault.redeem_amount')}
           </p>
           <div>
             <NumberInput
-              name={AMOUNT}
+              name={WRAPPED_TOKEN_AMOUNT}
               min={0}
               ref={register({
                 required: {
@@ -142,9 +143,32 @@ const RequestReplacementModal = ({
                 validate: value => validateAmount(value)
               })} />
             <ErrorMessage>
-              {errors[AMOUNT]?.message}
+              {errors[WRAPPED_TOKEN_AMOUNT]?.message}
             </ErrorMessage>
           </div>
+          <p>
+            {t('vault.btc_address')}
+          </p>
+          <div>
+            <TextField
+              id={BTC_ADDRESS}
+              name={BTC_ADDRESS}
+              type='text'
+              placeholder={t('enter_btc_address')}
+              ref={register({
+                required: {
+                  value: true,
+                  message: t('redeem_page.enter_btc')
+                },
+                pattern: {
+                  value: BTC_ADDRESS_REGEX,
+                  message: t('redeem_page.valid_btc_address')
+                }
+              })}
+              error={!!errors[BTC_ADDRESS]}
+              helperText={errors[BTC_ADDRESS]?.message} />
+          </div>
+
           <div
             className={clsx(
               'flex',
@@ -166,4 +190,4 @@ const RequestReplacementModal = ({
   );
 };
 
-export default RequestReplacementModal;
+export default RequestRedeemModal;
