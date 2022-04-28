@@ -63,85 +63,82 @@ const Navigation = ({
     address
   } = useSelector((state: StoreType) => state.general);
 
-  const NAVIGATION_ITEMS = React.useMemo(() => {
-    if (!address) return [];
-
-    return [
-      {
-        name: 'nav_bridge',
-        link: PAGES.BRIDGE,
-        icon: RefreshIcon,
-        hidden: false
-      },
-      {
-        name: 'nav_transfer',
-        link: PAGES.TRANSFER,
-        icon: SwitchHorizontalIcon
-      },
-      {
-        name: 'nav_transactions',
-        link: PAGES.TRANSACTIONS,
-        icon: ClipboardListIcon,
-        hidden: false
-      },
-      {
-        name: 'nav_staking',
-        link: PAGES.STAKING,
-        icon: CashIcon
-      },
-      {
-        name: 'nav_dashboard',
-        link: PAGES.DASHBOARD,
-        icon: ChartSquareBarIcon,
-        hidden: false
-      },
-      {
-        name: 'nav_vault',
-        link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
-        icon: ChipIcon,
-        hidden: !vaultClientLoaded
-      },
-      {
-        name: 'separator',
-        link: '#',
-        icon: () => null,
-        separator: true
-      },
-      {
-        name: 'nav_crowdloan',
-        link: CROWDLOAN_LINK,
-        icon: CashIcon,
-        external: true,
-        // This will suppress the link on testnet
-        hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' || !CROWDLOAN_LINK,
-        rest: {
-          target: '_blank',
-          rel: 'noopener noreferrer'
-        }
-      },
-      {
-        name: 'nav_docs',
-        link: INTERLAY_DOCS_LINK,
-        icon: BookOpenIcon,
-        external: true,
-        rest: {
-          target: '_blank',
-          rel: 'noopener noreferrer'
-        }
-      },
-      {
-        name: 'nav_terms_and_conditions',
-        link: TERMS_AND_CONDITIONS_LINK,
-        icon: DocumentTextIcon,
-        external: true,
-        hidden: !TERMS_AND_CONDITIONS_LINK,
-        rest: {
-          target: '_blank',
-          rel: 'noopener noreferrer'
-        }
+  const NAVIGATION_ITEMS = React.useMemo(() => [
+    {
+      name: 'nav_bridge',
+      link: PAGES.BRIDGE,
+      icon: RefreshIcon,
+      hidden: false
+    },
+    {
+      name: 'nav_transfer',
+      link: PAGES.TRANSFER,
+      icon: SwitchHorizontalIcon
+    },
+    {
+      name: 'nav_transactions',
+      link: PAGES.TRANSACTIONS,
+      icon: ClipboardListIcon,
+      hidden: false
+    },
+    {
+      name: 'nav_staking',
+      link: PAGES.STAKING,
+      icon: CashIcon
+    },
+    {
+      name: 'nav_dashboard',
+      link: PAGES.DASHBOARD,
+      icon: ChartSquareBarIcon,
+      hidden: false
+    },
+    {
+      name: 'nav_vault',
+      link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
+      icon: ChipIcon,
+      hidden: !vaultClientLoaded
+    },
+    {
+      name: 'separator',
+      link: '#',
+      icon: () => null,
+      separator: true
+    },
+    {
+      name: 'nav_crowdloan',
+      link: CROWDLOAN_LINK,
+      icon: CashIcon,
+      external: true,
+      // This will suppress the link on testnet
+      hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' || !CROWDLOAN_LINK,
+      rest: {
+        target: '_blank',
+        rel: 'noopener noreferrer'
       }
-    ];
-  }, [
+    },
+    {
+      name: 'nav_docs',
+      link: INTERLAY_DOCS_LINK,
+      icon: BookOpenIcon,
+      external: true,
+      rest: {
+        target: '_blank',
+        rel: 'noopener noreferrer'
+      }
+    },
+    {
+      name: 'nav_terms_and_conditions',
+      link: TERMS_AND_CONDITIONS_LINK,
+      icon: DocumentTextIcon,
+      external: true,
+      hidden: !TERMS_AND_CONDITIONS_LINK,
+      rest: {
+        target: '_blank',
+        rel: 'noopener noreferrer'
+      }
+    }
+  ]
+  , [
     address,
     vaultClientLoaded
   ]);
