@@ -27,8 +27,10 @@ interface CustomProps {
   pending?: boolean;
 }
 
+// ray test touch <
 // TODO: not used for now
 // MEMO: inspired by https://material-ui.com/components/buttons/
+// ray test touch >
 const InterlayButton = ({
   variant = VARIANTS.text,
   color = COLORS.default,

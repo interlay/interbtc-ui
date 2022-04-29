@@ -53,6 +53,7 @@ const InterlayDenimOrKintsugiSupernovaContainedButton = React.forwardRef<Ref, Pr
         'font-medium',
 
         disabledOrPending ? clsx(
+          // ray test touch <
           // TODO: could be reused
           'bg-black',
           'bg-opacity-10',
@@ -62,6 +63,7 @@ const InterlayDenimOrKintsugiSupernovaContainedButton = React.forwardRef<Ref, Pr
           'text-opacity-25',
           'dark:text-white',
           'dark:text-opacity-30'
+          // ray test touch >
         ) : clsx(
           {
             [clsx(

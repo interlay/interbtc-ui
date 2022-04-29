@@ -17,6 +17,7 @@ const Panel = ({
       'sm:rounded-lg',
       { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      // ray test touch <
       'border',
       // TODO: could be reused
       // MEMO: inspired by https://mui.com/components/buttons/
@@ -24,6 +25,7 @@ const Panel = ({
       'border-opacity-25',
       'dark:border-white',
       'dark:border-opacity-25',
+      // ray test touch >
       className
     )}
     {...rest} />

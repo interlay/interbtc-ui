@@ -45,12 +45,14 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'h-0',
           'border-r',
 
+          // ray test touch <
           // TODO: could be reused
           // MEMO: inspired by https://mui.com/components/buttons/
           'border-black',
           'border-opacity-25',
           'dark:border-white',
           'dark:border-opacity-25'
+          // ray test touch >
         ),
         'flex-1',
         'flex',
@@ -109,12 +111,14 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'border-t',
           'p-4',
 
+          // ray test touch <
           // TODO: could be reused
           // MEMO: inspired by https://mui.com/components/buttons/
           'border-black',
           'border-opacity-25',
           'dark:border-white',
           'dark:border-opacity-25'
+          // ray test touch >
         )}>
         <InterlayLink
           className={clsx(

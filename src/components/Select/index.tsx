@@ -57,6 +57,7 @@ const SelectButton = ({
 
       'relative',
       'w-full',
+      // ray test touch <
       'border',
 
       // TODO: could be reused
@@ -65,6 +66,7 @@ const SelectButton = ({
       'border-opacity-25',
       'dark:border-white',
       'dark:border-opacity-25',
+      // ray test touch >
 
       'rounded-md',
       'pl-3',

@@ -38,15 +38,19 @@ const InterlayMulberryOutlinedButton = React.forwardRef<Ref, Props>(({
         'font-medium',
 
         disabledOrPending ? clsx(
+          // ray test touch <
           // TODO: could be reused
           'border-black',
           'border-opacity-10',
           'dark:border-white',
           'dark:border-opacity-10',
+          // ray test touch >
+          // ray test touch <
           'text-black',
           'text-opacity-25',
           'dark:text-white',
           'dark:text-opacity-30'
+          // ray test touch >
         ) : clsx(
           'text-interlayMulberry',
           'border-interlayMulberry',

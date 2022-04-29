@@ -28,6 +28,7 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
         { 'text-interlayTextPrimaryInLightMode':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        // ray test touch <
         'border',
 
         // TODO: could be reused
@@ -36,6 +37,7 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
         'border-opacity-25',
         'dark:border-white',
         'dark:border-opacity-25',
+        // ray test touch >
 
         'whitespace-normal',
         'z-interlayTooltip',

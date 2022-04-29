@@ -35,12 +35,14 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       'w-full',
       'text-base',
 
+      // ray test touch <
       // TODO: could be reused
       // MEMO: inspired by https://mui.com/components/buttons/
       'border-black',
       'border-opacity-25',
       'dark:border-white',
       'dark:border-opacity-25',
+      // ray test touch >
 
       'shadow-sm',
       'rounded-md',

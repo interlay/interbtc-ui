@@ -39,6 +39,7 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(({
         'font-medium',
 
         disabledOrPending ? clsx(
+          // ray test touch <
           // TODO: could be reused
           'bg-black',
           'bg-opacity-10',
@@ -48,6 +49,7 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(({
           'text-opacity-25',
           'dark:text-white',
           'dark:text-opacity-30'
+          // ray test touch >
         ) : clsx(
           'text-black',
           'text-opacity-90',

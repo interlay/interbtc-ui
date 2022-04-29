@@ -38,16 +38,21 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
         'font-medium',
 
         disabledOrPending ? clsx(
+          // ray test touch <
           // TODO: could be reused
           'border-black',
           'border-opacity-10',
           'dark:border-white',
           'dark:border-opacity-10',
+          // ray test touch >
+          // ray test touch <
           'text-black',
           'text-opacity-25',
           'dark:text-white',
           'dark:text-opacity-30'
+          // ray test touch >
         ) : clsx(
+          // ray test touch <
           'text-black',
           'text-opacity-90',
           'dark:text-white',
@@ -55,13 +60,16 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
           'hover:bg-opacity-5',
           'dark:hover:bg-white',
           'dark:hover:bg-opacity-10',
+          // ray test touch >
 
+          // ray test touch <
           // TODO: could be reused
           // MEMO: inspired by https://mui.com/components/buttons/
           'border-black',
           'border-opacity-25',
           'dark:border-white',
           'dark:border-opacity-25'
+          // ray test touch >
         ),
 
         'rounded',

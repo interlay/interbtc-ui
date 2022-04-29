@@ -38,6 +38,7 @@ interface CustomProps {
   onSmallScreen?: boolean;
 }
 
+// ray test touch <
 // TODO: could be reused
 const TEXT_CLASSES_FOR_SELECTED = clsx(
   { 'text-interlayDenim-700':
@@ -50,6 +51,7 @@ const TEXT_CLASSES_FOR_UNSELECTED = clsx(
     process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
+// ray test touch >
 
 const Navigation = ({
   onSmallScreen = false,
