@@ -29,9 +29,7 @@ const WarningBanner = ({
         'space-x-3',
         'sm:rounded-lg',
         'text-white',
-        // TODO: placeholder color
         { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        // TODO: placeholder color
         { 'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium',
