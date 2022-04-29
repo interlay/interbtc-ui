@@ -28,11 +28,9 @@ const WarningBanner = ({
         'py-3',
         'space-x-3',
         'sm:rounded-lg',
-        // ray test touch <
         'text-white',
         // TODO: placeholder color
         { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        // ray test touch >
         // TODO: placeholder color
         { 'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',

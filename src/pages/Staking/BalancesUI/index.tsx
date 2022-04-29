@@ -115,9 +115,7 @@ const BalancesUI = ({
         'rounded-xl',
         'p-4',
         // TODO: placeholder color
-        // ray test touch <
         { 'bg-gray-100': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        // ray test touch >
         // TODO: placeholder color
         { 'dark:bg-kintsugiViolet': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'grid',
