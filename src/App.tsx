@@ -90,7 +90,7 @@ const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 );
 const Vault = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/Vault')
+  import(/* webpackChunkName: 'vault' */ 'pages/Vault/Overview')
 );
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
