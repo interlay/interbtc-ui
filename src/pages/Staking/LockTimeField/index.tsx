@@ -25,9 +25,7 @@ const handleLockTimeChange = (event: KeyboardEvent) => {
 };
 
 const LABEL_TEXT_COLOR_CLASSES = clsx(
-  // TODO: placeholder color
   { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-  // TODO: placeholder color
   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
