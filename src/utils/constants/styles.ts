@@ -14,7 +14,6 @@ const BORDER_CLASSES = clsx(
   'dark:border-white',
   'dark:border-opacity-25'
 );
-
 const DISABLED_BORDER_CLASSES = clsx(
   'border',
   'border-black',
@@ -30,10 +29,17 @@ const DISABLED_BACKGROUND_CLASSES = clsx(
   'dark:bg-white',
   'dark:bg-opacity-10'
 );
+const DISABLED_TEXT_CLASSES = clsx(
+  'text-black',
+  'text-opacity-25',
+  'dark:text-white',
+  'dark:text-opacity-30'
+);
 
 export {
   CLASS_NAMES,
   BORDER_CLASSES,
   DISABLED_BORDER_CLASSES,
-  DISABLED_BACKGROUND_CLASSES
+  DISABLED_BACKGROUND_CLASSES,
+  DISABLED_TEXT_CLASSES
 };

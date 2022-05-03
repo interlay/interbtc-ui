@@ -3,7 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import { DISABLED_BACKGROUND_CLASSES } from 'utils/constants/styles';
+import {
+  DISABLED_BACKGROUND_CLASSES,
+  DISABLED_TEXT_CLASSES
+} from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -40,14 +43,8 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(({
         'font-medium',
 
         disabledOrPending ? clsx(
-          // ray test touch <<
           DISABLED_BACKGROUND_CLASSES,
-          // TODO: could be reused
-          'text-black',
-          'text-opacity-25',
-          'dark:text-white',
-          'dark:text-opacity-30'
-          // ray test touch >>
+          DISABLED_TEXT_CLASSES
         ) : clsx(
           'text-black',
           'text-opacity-90',
