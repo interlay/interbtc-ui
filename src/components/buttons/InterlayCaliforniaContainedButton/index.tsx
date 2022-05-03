@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import { DISABLED_BACKGROUND_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -42,10 +43,7 @@ const InterlayCaliforniaContainedButton = React.forwardRef<Ref, Props>(({
           // ray test touch <<
           // TODO: could be reused
           // MEMO: inspired by https://mui.com/customization/dark-mode/#dark-mode-with-custom-palette
-          'bg-black',
-          'bg-opacity-10',
-          'dark:bg-white',
-          'dark:bg-opacity-10',
+          DISABLED_BACKGROUND_CLASSES,
           'text-black',
           'text-opacity-25',
           'dark:text-white',

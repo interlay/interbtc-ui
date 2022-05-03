@@ -7,6 +7,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+import { DISABLED_BACKGROUND_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -53,17 +54,14 @@ const InterlayDenimOrKintsugiSupernovaContainedButton = React.forwardRef<Ref, Pr
         'font-medium',
 
         disabledOrPending ? clsx(
-          // ray test touch <
+          // ray test touch <<
           // TODO: could be reused
-          'bg-black',
-          'bg-opacity-10',
-          'dark:bg-white',
-          'dark:bg-opacity-10',
+          DISABLED_BACKGROUND_CLASSES,
           'text-black',
           'text-opacity-25',
           'dark:text-white',
           'dark:text-opacity-30'
-          // ray test touch >
+          // ray test touch >>
         ) : clsx(
           {
             [clsx(
