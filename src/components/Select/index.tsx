@@ -59,7 +59,6 @@ const SelectButton = ({
       'relative',
       'w-full',
       // ray test touch <<
-      'border',
       LIGHT_DARK_BORDER_CLASSES,
       // ray test touch >>
 

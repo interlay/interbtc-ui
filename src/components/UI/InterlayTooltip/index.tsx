@@ -30,7 +30,6 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         // ray test touch <<
-        'border',
         LIGHT_DARK_BORDER_CLASSES,
         // ray test touch >>
 
