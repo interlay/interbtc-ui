@@ -3,6 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import { DISABLED_BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -34,17 +35,10 @@ const InterlayMulberryOutlinedButton = React.forwardRef<Ref, Props>(({
         'focus:ring-interlayMulberry-200',
         'focus:ring-opacity-50',
 
-        'border',
         'font-medium',
 
         disabledOrPending ? clsx(
-          // ray test touch <
-          // TODO: could be reused
-          'border-black',
-          'border-opacity-10',
-          'dark:border-white',
-          'dark:border-opacity-10',
-          // ray test touch >
+          DISABLED_BORDER_CLASSES,
           // ray test touch <
           'text-black',
           'text-opacity-25',
@@ -53,6 +47,7 @@ const InterlayMulberryOutlinedButton = React.forwardRef<Ref, Props>(({
           // ray test touch >
         ) : clsx(
           'text-interlayMulberry',
+          'border',
           'border-interlayMulberry',
           'hover:bg-interlayMulberry',
           'hover:bg-opacity-5'

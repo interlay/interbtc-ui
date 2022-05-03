@@ -7,6 +7,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+import { DISABLED_BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -48,17 +49,10 @@ const InterlayDenimOrKintsugiMidnightOutlinedButton = React.forwardRef<Ref, Prop
         },
         'focus:ring-opacity-50',
 
-        'border',
         'font-medium',
 
         disabledOrPending ? clsx(
-          // ray test touch <
-          // TODO: could be reused
-          'border-black',
-          'border-opacity-10',
-          'dark:border-white',
-          'dark:border-opacity-10',
-          // ray test touch >
+          DISABLED_BORDER_CLASSES,
           // ray test touch <
           'text-black',
           'text-opacity-25',
@@ -66,6 +60,7 @@ const InterlayDenimOrKintsugiMidnightOutlinedButton = React.forwardRef<Ref, Prop
           'dark:text-opacity-30'
           // ray test touch >
         ) : clsx(
+          'border',
           {
             [clsx(
               'text-interlayDenim',

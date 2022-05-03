@@ -3,7 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import { BORDER_CLASSES } from 'utils/constants/styles';
+import {
+  BORDER_CLASSES,
+  DISABLED_BORDER_CLASSES
+} from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -36,14 +39,7 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
         'focus:ring-opacity-50',
 
         disabledOrPending ? clsx(
-          // ray test touch <<
-          // TODO: could be reused
-          'border',
-          'border-black',
-          'border-opacity-10',
-          'dark:border-white',
-          'dark:border-opacity-10',
-          // ray test touch >>
+          DISABLED_BORDER_CLASSES,
           // ray test touch <
           'text-black',
           'text-opacity-25',
