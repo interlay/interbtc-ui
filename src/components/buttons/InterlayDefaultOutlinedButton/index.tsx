@@ -45,12 +45,10 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
           DISABLED_TEXT_CLASSES
         ) : clsx(
           TEXT_CLASSES,
-          // ray test touch <
           'hover:bg-black',
           'hover:bg-opacity-5',
           'dark:hover:bg-white',
           'dark:hover:bg-opacity-10',
-          // ray test touch >
 
           BORDER_CLASSES
         ),
