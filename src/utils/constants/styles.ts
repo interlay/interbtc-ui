@@ -36,10 +36,17 @@ const DISABLED_TEXT_CLASSES = clsx(
   'dark:text-opacity-30'
 );
 
+const TEXT_CLASSES = clsx(
+  'text-black',
+  'text-opacity-90',
+  'dark:text-white'
+);
+
 export {
   CLASS_NAMES,
   BORDER_CLASSES,
   DISABLED_BORDER_CLASSES,
   DISABLED_BACKGROUND_CLASSES,
-  DISABLED_TEXT_CLASSES
+  DISABLED_TEXT_CLASSES,
+  TEXT_CLASSES
 };

@@ -6,7 +6,10 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import { BORDER_CLASSES } from 'utils/constants/styles';
+import {
+  BORDER_CLASSES,
+  TEXT_CLASSES
+} from 'utils/constants/styles';
 import styles from './interlay-input.module.css';
 
 type Ref = HTMLInputElement;
@@ -27,9 +30,7 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       { 'dark:focus:border-kintsugiMidnight-300': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       { 'dark:focus:ring-kintsugiMidnight-200': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'focus:ring-opacity-50',
-      'text-black',
-      'text-opacity-90',
-      'dark:text-white',
+      TEXT_CLASSES,
       'bg-white',
       { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'block',

@@ -5,7 +5,8 @@ import clsx from 'clsx';
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 import {
   DISABLED_BACKGROUND_CLASSES,
-  DISABLED_TEXT_CLASSES
+  DISABLED_TEXT_CLASSES,
+  TEXT_CLASSES
 } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
@@ -46,8 +47,8 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(({
           DISABLED_BACKGROUND_CLASSES,
           DISABLED_TEXT_CLASSES
         ) : clsx(
-          'text-black',
-          'text-opacity-90',
+          TEXT_CLASSES,
+          'dark:!text-black', // Suppressing white text color in this specific edge case
           'bg-interlayPaleSky-100',
           'hover:bg-interlayPaleSky-200'
         ),
