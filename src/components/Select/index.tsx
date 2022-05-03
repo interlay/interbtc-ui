@@ -14,7 +14,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 
 const SELECT_VARIANTS = Object.freeze({
   optionSelector: 'optionSelector',
@@ -58,7 +58,7 @@ const SelectButton = ({
 
       'relative',
       'w-full',
-      LIGHT_DARK_BORDER_CLASSES,
+      BORDER_CLASSES,
 
       'rounded-md',
       'pl-3',

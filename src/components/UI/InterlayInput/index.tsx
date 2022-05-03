@@ -6,7 +6,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 import styles from './interlay-input.module.css';
 
 type Ref = HTMLInputElement;
@@ -36,7 +36,7 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       'w-full',
       'text-base',
 
-      LIGHT_DARK_BORDER_CLASSES,
+      BORDER_CLASSES,
 
       'shadow-sm',
       'rounded-md',

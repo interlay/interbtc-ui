@@ -8,7 +8,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 
 type Ref = HTMLDivElement;
 const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element => {
@@ -29,7 +29,7 @@ const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element =
         { 'text-interlayTextPrimaryInLightMode':
           process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        LIGHT_DARK_BORDER_CLASSES,
+        BORDER_CLASSES,
 
         'whitespace-normal',
         'z-interlayTooltip',

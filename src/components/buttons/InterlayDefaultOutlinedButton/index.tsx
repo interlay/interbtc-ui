@@ -3,7 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -61,7 +61,7 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
           'dark:hover:bg-opacity-10',
           // ray test touch >
 
-          LIGHT_DARK_BORDER_CLASSES
+          BORDER_CLASSES
         ),
 
         'font-medium',

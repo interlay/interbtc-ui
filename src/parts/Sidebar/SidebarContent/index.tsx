@@ -17,7 +17,7 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
 import solarBeamAd from 'assets/img/ads/solarbeam.png';
@@ -44,7 +44,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'w-full'
         ) : clsx(
           'h-0',
-          LIGHT_DARK_BORDER_CLASSES,
+          BORDER_CLASSES,
           'border-r'
         ),
         'flex-1',
@@ -102,7 +102,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'flex-shrink-0',
           'flex',
           'p-4',
-          LIGHT_DARK_BORDER_CLASSES,
+          BORDER_CLASSES,
           'border-t'
         )}>
         <InterlayLink

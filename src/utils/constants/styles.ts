@@ -6,7 +6,7 @@ const CLASS_NAMES = Object.freeze({
   DARK: 'dark'
 });
 
-const LIGHT_DARK_BORDER_CLASSES = clsx(
+const BORDER_CLASSES = clsx(
   'border',
   // MEMO: inspired by https://mui.com/components/buttons/
   'border-black',
@@ -17,5 +17,5 @@ const LIGHT_DARK_BORDER_CLASSES = clsx(
 
 export {
   CLASS_NAMES,
-  LIGHT_DARK_BORDER_CLASSES
+  BORDER_CLASSES
 };

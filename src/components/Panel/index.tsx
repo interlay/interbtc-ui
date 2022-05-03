@@ -5,7 +5,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 
 const Panel = ({
   className,
@@ -18,7 +18,7 @@ const Panel = ({
       'sm:rounded-lg',
       { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-      LIGHT_DARK_BORDER_CLASSES,
+      BORDER_CLASSES,
       className
     )}
     {...rest} />
