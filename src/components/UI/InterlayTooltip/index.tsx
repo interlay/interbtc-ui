@@ -8,9 +8,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
-// ray test touch <<
 import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
-// ray test touch >>
 
 type Ref = HTMLDivElement;
 const InterlayTooltip = React.forwardRef<Ref, Props>((props, ref): JSX.Element => {

@@ -17,9 +17,7 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
-// ray test touch <<
 import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
-// ray test touch >>
 import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
 import solarBeamAd from 'assets/img/ads/solarbeam.png';

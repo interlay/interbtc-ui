@@ -3,9 +3,7 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-// ray test touch <<
 import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
-// ray test touch >>
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {

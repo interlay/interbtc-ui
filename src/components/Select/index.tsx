@@ -14,9 +14,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
-// ray test touch <<
 import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
-// ray test touch >>
 
 const SELECT_VARIANTS = Object.freeze({
   optionSelector: 'optionSelector',
