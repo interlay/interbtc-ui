@@ -36,9 +36,7 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       'w-full',
       'text-base',
 
-      // ray test touch <<
       LIGHT_DARK_BORDER_CLASSES,
-      // ray test touch >>
 
       'shadow-sm',
       'rounded-md',

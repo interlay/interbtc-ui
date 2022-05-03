@@ -61,9 +61,7 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
           'dark:hover:bg-opacity-10',
           // ray test touch >
 
-          // ray test touch <<
           LIGHT_DARK_BORDER_CLASSES
-          // ray test touch >>
         ),
 
         'font-medium',

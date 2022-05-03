@@ -44,10 +44,8 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'w-full'
         ) : clsx(
           'h-0',
-          // ray test touch <<
           LIGHT_DARK_BORDER_CLASSES,
           'border-r'
-          // ray test touch >>
         ),
         'flex-1',
         'flex',
@@ -104,10 +102,8 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'flex-shrink-0',
           'flex',
           'p-4',
-          // ray test touch <<
           LIGHT_DARK_BORDER_CLASSES,
           'border-t'
-          // ray test touch >>
         )}>
         <InterlayLink
           className={clsx(

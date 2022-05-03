@@ -18,9 +18,7 @@ const Panel = ({
       'sm:rounded-lg',
       { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-      // ray test touch <<
       LIGHT_DARK_BORDER_CLASSES,
-      // ray test touch >>
       className
     )}
     {...rest} />
