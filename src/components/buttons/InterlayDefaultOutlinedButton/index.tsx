@@ -5,7 +5,8 @@ import clsx from 'clsx';
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 import {
   BORDER_CLASSES,
-  DISABLED_BORDER_CLASSES
+  DISABLED_BORDER_CLASSES,
+  DISABLED_TEXT_CLASSES
 } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
@@ -40,12 +41,7 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
 
         disabledOrPending ? clsx(
           DISABLED_BORDER_CLASSES,
-          // ray test touch <
-          'text-black',
-          'text-opacity-25',
-          'dark:text-white',
-          'dark:text-opacity-30'
-          // ray test touch >
+          DISABLED_TEXT_CLASSES
         ) : clsx(
           // ray test touch <
           'text-black',
