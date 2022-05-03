@@ -36,14 +36,14 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
         'focus:ring-opacity-50',
 
         disabledOrPending ? clsx(
-          // ray test touch <
+          // ray test touch <<
           // TODO: could be reused
           'border',
           'border-black',
           'border-opacity-10',
           'dark:border-white',
           'dark:border-opacity-10',
-          // ray test touch >
+          // ray test touch >>
           // ray test touch <
           'text-black',
           'text-opacity-25',
