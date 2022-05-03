@@ -14,6 +14,9 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
+// ray test touch <<
+import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+// ray test touch >>
 
 const SELECT_VARIANTS = Object.freeze({
   optionSelector: 'optionSelector',
@@ -57,16 +60,10 @@ const SelectButton = ({
 
       'relative',
       'w-full',
-      // ray test touch <
+      // ray test touch <<
       'border',
-
-      // TODO: could be reused
-      // MEMO: inspired by https://mui.com/components/buttons/
-      'border-black',
-      'border-opacity-25',
-      'dark:border-white',
-      'dark:border-opacity-25',
-      // ray test touch >
+      LIGHT_DARK_BORDER_CLASSES,
+      // ray test touch >>
 
       'rounded-md',
       'pl-3',

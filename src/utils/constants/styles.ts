@@ -7,15 +7,14 @@ const CLASS_NAMES = Object.freeze({
 });
 
 const LIGHT_DARK_BORDER_CLASSES = clsx(
-  // ray test touch <
-  // TODO: could be reused
+  // ray test touch <<
   'border',
   // MEMO: inspired by https://mui.com/components/buttons/
   'border-black',
   'border-opacity-25',
   'dark:border-white',
   'dark:border-opacity-25'
-  // ray test touch >
+  // ray test touch >>
 );
 
 export {

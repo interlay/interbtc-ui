@@ -39,7 +39,7 @@ const InterlayCaliforniaContainedButton = React.forwardRef<Ref, Props>(({
         'font-medium',
 
         disabledOrPending ? clsx(
-          // ray test touch <
+          // ray test touch <<
           // TODO: could be reused
           // MEMO: inspired by https://mui.com/customization/dark-mode/#dark-mode-with-custom-palette
           'bg-black',
@@ -50,7 +50,7 @@ const InterlayCaliforniaContainedButton = React.forwardRef<Ref, Props>(({
           'text-opacity-25',
           'dark:text-white',
           'dark:text-opacity-30'
-          // ray test touch >
+          // ray test touch >>
         ) : clsx(
           'text-white',
           'bg-interlayCalifornia',

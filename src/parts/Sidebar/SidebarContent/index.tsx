@@ -17,6 +17,9 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
+// ray test touch <<
+import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+// ray test touch >>
 import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
 import solarBeamAd from 'assets/img/ads/solarbeam.png';
@@ -43,16 +46,10 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'w-full'
         ) : clsx(
           'h-0',
+          // ray test touch <<
           'border-r',
-
-          // ray test touch <
-          // TODO: could be reused
-          // MEMO: inspired by https://mui.com/components/buttons/
-          'border-black',
-          'border-opacity-25',
-          'dark:border-white',
-          'dark:border-opacity-25'
-          // ray test touch >
+          LIGHT_DARK_BORDER_CLASSES
+          // ray test touch >>
         ),
         'flex-1',
         'flex',
@@ -108,17 +105,11 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         className={clsx(
           'flex-shrink-0',
           'flex',
-          'border-t',
           'p-4',
-
-          // ray test touch <
-          // TODO: could be reused
-          // MEMO: inspired by https://mui.com/components/buttons/
-          'border-black',
-          'border-opacity-25',
-          'dark:border-white',
-          'dark:border-opacity-25'
-          // ray test touch >
+          // ray test touch <<
+          'border-t',
+          LIGHT_DARK_BORDER_CLASSES
+          // ray test touch >>
         )}>
         <InterlayLink
           className={clsx(

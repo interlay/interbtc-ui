@@ -6,6 +6,9 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+// ray test touch <<
+import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+// ray test touch >>
 import styles from './interlay-input.module.css';
 
 type Ref = HTMLInputElement;
@@ -35,14 +38,9 @@ const InterlayInput = React.forwardRef<Ref, Props>(({
       'w-full',
       'text-base',
 
-      // ray test touch <
-      // TODO: could be reused
-      // MEMO: inspired by https://mui.com/components/buttons/
-      'border-black',
-      'border-opacity-25',
-      'dark:border-white',
-      'dark:border-opacity-25',
-      // ray test touch >
+      // ray test touch <<
+      LIGHT_DARK_BORDER_CLASSES,
+      // ray test touch >>
 
       'shadow-sm',
       'rounded-md',

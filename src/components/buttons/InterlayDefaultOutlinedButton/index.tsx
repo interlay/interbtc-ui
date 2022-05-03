@@ -3,6 +3,9 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+// ray test touch <<
+import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+// ray test touch >>
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -34,7 +37,9 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
         'focus:ring-interlayPaleSky-200',
         'focus:ring-opacity-50',
 
+        // ray test touch <<
         'border',
+        // ray test touch >>
         'font-medium',
 
         disabledOrPending ? clsx(
@@ -62,14 +67,9 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
           'dark:hover:bg-opacity-10',
           // ray test touch >
 
-          // ray test touch <
-          // TODO: could be reused
-          // MEMO: inspired by https://mui.com/components/buttons/
-          'border-black',
-          'border-opacity-25',
-          'dark:border-white',
-          'dark:border-opacity-25'
-          // ray test touch >
+          // ray test touch <<
+          LIGHT_DARK_BORDER_CLASSES
+          // ray test touch >>
         ),
 
         'rounded',
