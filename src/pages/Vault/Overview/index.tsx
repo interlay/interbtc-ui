@@ -1,13 +1,19 @@
+import { useEffect } from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
+import { useSelector } from 'react-redux';
 
 import MainContainer from 'parts/MainContainer';
 import { VaultCard } from 'componentLibrary';
 import ErrorFallback from 'components/ErrorFallback';
-import useGetVaults from 'utils/hooks/api/use-get-vaults';
-import { useEffect } from 'react';
+import { StoreType } from 'common/types/util.types';
+import { useGetVaultStatus } from 'utils/hooks/api/use-get-vault-status';
 
 const VaultOverview = (): JSX.Element => {
-  const vaults = useGetVaults();
+  const {
+    address
+  } = useSelector((state: StoreType) => state.general);
+
+  const vaults = useGetVaultStatus({ address });
 
   useEffect(() => {
     console.log(vaults);
