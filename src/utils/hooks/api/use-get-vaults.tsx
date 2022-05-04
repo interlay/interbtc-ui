@@ -1,5 +1,6 @@
-import { useQueries } from 'react-query';
-import { CollateralIdLiteral, GovernanceIdLiteral, newAccountId } from '@interlay/interbtc-api';
+import { useQueries, UseQueryResult } from 'react-query';
+import { AccountId } from '@polkadot/types/interfaces';
+import { CollateralIdLiteral, GovernanceIdLiteral } from '@interlay/interbtc-api';
 
 // TODO: these shouldn't be used, and should be replaced with a single
 // vault collateral array
@@ -11,24 +12,26 @@ import {
 const vaultCollateralTokens = [COLLATERAL_TOKEN_ID_LITERAL, GOVERNANCE_TOKEN_ID_LITERAL];
 
 const getVaults = async (
-  token: CollateralIdLiteral | GovernanceIdLiteral,
-  address: string
-) => await window.bridge.vaults.get(
-  newAccountId(window.bridge.api, address),
-  token
-);
+  accountId: AccountId,
+  token: CollateralIdLiteral | GovernanceIdLiteral
+) => await window.bridge.vaults.get(accountId, token);
 
-const useGetVaults = ({ address }: { address: string; }): any => {
+// TODO: do we need to parse data after all queries returned, rather than
+// in parallel?
+const parseVaults = (vaults: Array<UseQueryResult<unknown, unknown>>) =>
+  vaults.filter(vault => !vault.isLoading && vault.isSuccess).map(vault => vault.data);
+
+const useGetVaults = ({ accountId }: { accountId: AccountId; }): any => {
   const vaults = useQueries<Array<any>>(
     vaultCollateralTokens.map(token => {
       return {
-        queryKey: ['vaultCollateral', address, token],
-        queryFn: () => getVaults(token, address)
+        queryKey: ['vaultCollateral', accountId, token],
+        queryFn: () => getVaults(accountId, token)
       };
     })
   );
 
-  return vaults;
+  return parseVaults(vaults);
 };
 
 export { useGetVaults };

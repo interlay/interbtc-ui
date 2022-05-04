@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
+import { newAccountId } from '@interlay/interbtc-api';
 
 import MainContainer from 'parts/MainContainer';
 import { VaultCard } from 'componentLibrary';
@@ -13,11 +14,7 @@ const VaultOverview = (): JSX.Element => {
     address
   } = useSelector((state: StoreType) => state.general);
 
-  const vaults = useGetVaultStatus({ address });
-
-  useEffect(() => {
-    console.log(vaults);
-  }, [vaults]);
+  useGetVaultStatus({ accountId: newAccountId(window.bridge.api, address) });
 
   return (
     <MainContainer>
