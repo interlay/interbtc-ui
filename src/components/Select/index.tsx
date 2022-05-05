@@ -14,6 +14,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 
 const SELECT_VARIANTS = Object.freeze({
   optionSelector: 'optionSelector',
@@ -57,14 +58,7 @@ const SelectButton = ({
 
       'relative',
       'w-full',
-      'border',
-
-      // TODO: could be reused
-      // MEMO: inspired by https://mui.com/components/buttons/
-      'border-black',
-      'border-opacity-25',
-      'dark:border-white',
-      'dark:border-opacity-25',
+      BORDER_CLASSES,
 
       'rounded-md',
       'pl-3',
