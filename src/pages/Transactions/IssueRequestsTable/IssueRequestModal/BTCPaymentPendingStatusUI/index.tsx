@@ -135,6 +135,7 @@ const BTCPaymentPendingStatusUI = ({
         </span>
       </p>
       <QRCode
+        includeMargin
         className='mx-auto'
         // eslint-disable-next-line max-len
         value={`bitcoin:${request.vaultWrappedAddress || request.vaultBackingAddress}?amount=${displayMonetaryAmount(amountBTCToSend)}`} />

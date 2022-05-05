@@ -19,9 +19,7 @@ const TitleWithUnderline = ({
       className={clsx(
         'font-medium',
         'text-base',
-        // TODO: placeholder color
         { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        // TODO: placeholder color
         { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-center'
       )}>

@@ -11,12 +11,6 @@ import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { CollateralUnit } from '@interlay/interbtc-api';
-import {
-  Currency,
-  ExchangeRate,
-  Bitcoin,
-  BitcoinUnit
-} from '@interlay/monetary-js';
 
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
@@ -35,6 +29,7 @@ import genericFetcher, {
 } from 'services/fetchers/generic-fetcher';
 import { formatDateTime } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
+import { BTCToCollateralTokenRate } from 'types/currency.d';
 import { ReactComponent as CheckCircleIcon } from 'assets/img/icons/check-circle.svg';
 import { ReactComponent as CancelIcon } from 'assets/img/icons/cancel.svg';
 import {
@@ -137,9 +132,7 @@ const OracleTable = (): JSX.Element => {
           'text-center'
         ],
         Cell: function FormattedCell({ value }: {
-          value: ExchangeRate<
-            Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit
-          >;
+          value: BTCToCollateralTokenRate;
         }) {
           return (
             <>1 BTC = {value.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}</>
