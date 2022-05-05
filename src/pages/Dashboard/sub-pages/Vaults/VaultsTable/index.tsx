@@ -75,7 +75,6 @@ interface Vault {
   lockedBTC: string;
   lockedDOT: string;
   pendingBTC: string;
-  btcAddress: string;
   status: string;
   unsettledCollateralization: string | undefined;
   settledCollateralization: string | undefined;
@@ -331,7 +330,6 @@ const VaultsTable = (): JSX.Element => {
       const vaultCollateral = vaultExt.backingCollateral;
       const settledTokens = vaultExt.issuedTokens;
       const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
-      const btcAddress = vaultExt.wallet.publicKey; // TODO: get address(es)?
       const unsettledTokens = vaultExt.toBeIssuedTokens;
       const unsettledCollateralization =
         getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToCollateralTokenRate);
@@ -342,7 +340,6 @@ const VaultsTable = (): JSX.Element => {
         lockedBTC: displayMonetaryAmount(settledTokens),
         lockedDOT: displayMonetaryAmount(vaultCollateral),
         pendingBTC: displayMonetaryAmount(unsettledTokens),
-        btcAddress,
         status: statusLabel,
         unsettledCollateralization: unsettledCollateralization?.toString(),
         settledCollateralization: settledCollateralization?.toString()

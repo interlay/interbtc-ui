@@ -1,0 +1,12 @@
+@import url('theme.base.css');
+
+/* This is a placeholder until UX supply updated Interlay theme */
+:root {
+  --colors-blue: blue;
+}
+
+.theme-kintsugi {
+  --colors-cta-primary: var(--colors-blue);
+  --colors-cta-secondary: var(--colors-neutral-white);
+  --colors-text-primary: var(--colors-neutral-black);
+}
