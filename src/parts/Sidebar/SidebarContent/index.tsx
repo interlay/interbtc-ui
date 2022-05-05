@@ -17,6 +17,7 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
 import solarBeamAd from 'assets/img/ads/solarbeam.png';
@@ -43,14 +44,8 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'w-full'
         ) : clsx(
           'h-0',
-          'border-r',
-
-          // TODO: could be reused
-          // MEMO: inspired by https://mui.com/components/buttons/
-          'border-black',
-          'border-opacity-25',
-          'dark:border-white',
-          'dark:border-opacity-25'
+          BORDER_CLASSES,
+          'border-r'
         ),
         'flex-1',
         'flex',
@@ -106,15 +101,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
         className={clsx(
           'flex-shrink-0',
           'flex',
-          'border-t',
           'p-4',
-
-          // TODO: could be reused
-          // MEMO: inspired by https://mui.com/components/buttons/
-          'border-black',
-          'border-opacity-25',
-          'dark:border-white',
-          'dark:border-opacity-25'
+          BORDER_CLASSES,
+          'border-t'
         )}>
         <InterlayLink
           className={clsx(

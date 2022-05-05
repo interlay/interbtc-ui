@@ -3,6 +3,12 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import {
+  BORDER_CLASSES,
+  DISABLED_BORDER_CLASSES,
+  DISABLED_TEXT_CLASSES,
+  TEXT_CLASSES
+} from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -34,36 +40,20 @@ const InterlayDefaultOutlinedButton = React.forwardRef<Ref, Props>(({
         'focus:ring-interlayPaleSky-200',
         'focus:ring-opacity-50',
 
-        'border',
-        'font-medium',
-
         disabledOrPending ? clsx(
-          // TODO: could be reused
-          'border-black',
-          'border-opacity-10',
-          'dark:border-white',
-          'dark:border-opacity-10',
-          'text-black',
-          'text-opacity-25',
-          'dark:text-white',
-          'dark:text-opacity-30'
+          DISABLED_BORDER_CLASSES,
+          DISABLED_TEXT_CLASSES
         ) : clsx(
-          'text-black',
-          'text-opacity-90',
-          'dark:text-white',
+          TEXT_CLASSES,
           'hover:bg-black',
           'hover:bg-opacity-5',
           'dark:hover:bg-white',
           'dark:hover:bg-opacity-10',
 
-          // TODO: could be reused
-          // MEMO: inspired by https://mui.com/components/buttons/
-          'border-black',
-          'border-opacity-25',
-          'dark:border-white',
-          'dark:border-opacity-25'
+          BORDER_CLASSES
         ),
 
+        'font-medium',
         'rounded',
         'px-4',
         'py-2',
