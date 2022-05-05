@@ -24,7 +24,13 @@ const getVaultData = async (
     })
   });
 
-  return { apy, issues, collateralization };
+  const issuesCount: any = await issues.json();
+
+  return {
+    apy: apy.toString(),
+    collateralization: collateralization?.toString(),
+    issues: issuesCount.data.issuesConnection.totalCount
+  };
 };
 
 const useGetVaultStatus = ({ accountId }: { accountId: AccountId; }): Array<any> => {
@@ -40,7 +46,6 @@ const useGetVaultStatus = ({ accountId }: { accountId: AccountId; }): Array<any>
     })
   );
 
-  // TODO: parse data here
   return vaultData.map((data: any) => data.data);
 };
 

@@ -12,8 +12,8 @@ Default.args = {
   collateral: 'btc',
   wrappedAsset: 'lksm',
   pendingRequests: 3,
-  apy: 16.23,
-  collateralScore: 115.45
+  apy: '16.23',
+  collateralScore: '115.45'
 };
 
 export {

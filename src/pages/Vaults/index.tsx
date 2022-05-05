@@ -7,6 +7,7 @@ import MainContainer from 'parts/MainContainer';
 import { VaultCard } from 'componentLibrary';
 import ErrorFallback from 'components/ErrorFallback';
 import { StoreType } from 'common/types/util.types';
+import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { useGetVaultStatus } from 'utils/hooks/api/use-get-vault-status';
 
 const VaultOverview = (): JSX.Element => {
@@ -19,12 +20,17 @@ const VaultOverview = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <VaultCard
-        collateral='lksm'
-        wrappedAsset='btc'
-        pendingRequests={3}
-        apy={15}
-        collateralScore={84} />
+      {/* TODO: render loading spinner */}
+      {vaultStatus.length ? vaultStatus.filter(vault => vault !== undefined).map(vault =>
+        <VaultCard
+          key={vault.apy}
+          // TODO: make these values dynamic when we support KINT
+          collateral='ksm'
+          wrappedAsset='btc'
+          pendingRequests={vault?.issues}
+          apy={safeRoundTwoDecimals(vault?.apy)}
+          collateralScore={safeRoundTwoDecimals(vault?.collateralScore?.toString(), '∞')} />
+      ) : null}
     </MainContainer>);
 };
 

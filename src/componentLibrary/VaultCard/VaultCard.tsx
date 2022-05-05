@@ -6,8 +6,8 @@ interface VaultCardProps {
   collateral: Coins;
   wrappedAsset: Coins;
   pendingRequests: number;
-  apy: number;
-  collateralScore: number;
+  apy: string;
+  collateralScore: string;
 }
 
 const VaultCard = ({
@@ -39,11 +39,11 @@ const VaultCard = ({
       <StyledDl>
         <DlItem>
           <dt>Current APY</dt>
-          <dd>{apy}%</dd>
+          <dd>≈{apy}%</dd>
         </DlItem>
         <DlItem>
           <dt>Collateral score</dt>
-          <dd>{collateralScore}%</dd>
+          <dd>{collateralScore === '∞' ? collateralScore : `${collateralScore}%`}</dd>
         </DlItem>
       </StyledDl>
       <CTAWrapper>

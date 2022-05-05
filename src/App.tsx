@@ -89,8 +89,8 @@ const Staking = React.lazy(() =>
 const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 );
-const Vault = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/Vault/Overview')
+const Vaults = React.lazy(() =>
+  import(/* webpackChunkName: 'vault' */ 'pages/Vaults')
 );
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
@@ -425,8 +425,8 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                <Route path={PAGES.VAULT}>
-                  <Vault />
+                <Route path={PAGES.VAULTS}>
+                  <Vaults />
                 </Route>
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />

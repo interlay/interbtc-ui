@@ -1,20 +1,21 @@
 import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral, tickerToCurrencyIdLiteral } from '@interlay/interbtc-api';
-// import { Kusama, Kintsugi } from '@interlay/monetary-js';
-import { Kusama } from '@interlay/monetary-js';
+import { CollateralIdLiteral } from '@interlay/interbtc-api';
 
-// TODO: these need to be moved to config (not chain config) and specified at the chain level
-const vaultCollateralTokens = [
-  tickerToCurrencyIdLiteral(Kusama.ticker) as CollateralIdLiteral
-  // tickerToCurrencyIdLiteral(Kintsugi.ticker) as CollateralIdLiteral
-];
+import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
+
+// TODO: this needs to be moved to config (not relay chain config) when we
+// introduce support for KINT.
+const vaultCollateralTokens = [COLLATERAL_TOKEN_ID_LITERAL];
 
 const getVaults = async (
   accountId: AccountId,
   token: CollateralIdLiteral
 ) => await window.bridge.vaults.get(accountId, token);
 
+// TODO: when introducing KINT support we should consider whether
+// to parse the data from parallel queries immediately, or when all
+// queries have completed.
 const parseVaults = (vaults: Array<UseQueryResult<unknown, unknown>>) =>
   vaults.filter(vault => !vault.isLoading && vault.isSuccess).map(vault => vault.data);
 

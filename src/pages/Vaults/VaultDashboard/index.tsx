@@ -21,15 +21,15 @@ import {
   VaultExt
 } from '@interlay/interbtc-api';
 
-import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
-import RequestReplacementModal from './RequestReplacementModal';
-import RequestRedeemModal from './RequestRedeemModal';
-import ReplaceTable from './ReplaceTable';
-import VaultIssueRequestsTable from './VaultIssueRequestsTable';
-import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
-import StatPanel from './StatPanel';
-import VaultStatusStatPanel from './VaultStatusStatPanel';
-import ClaimRewardsButton from './ClaimRewardsButton';
+import UpdateCollateralModal, { CollateralUpdateStatus } from '../UpdateCollateralModal';
+import RequestReplacementModal from '../RequestReplacementModal';
+import RequestRedeemModal from '../RequestRedeemModal';
+import ReplaceTable from '../ReplaceTable';
+import VaultIssueRequestsTable from '../VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from '../VaultRedeemRequestsTable';
+import StatPanel from '../StatPanel';
+import VaultStatusStatPanel from '../VaultStatusStatPanel';
+import ClaimRewardsButton from '../ClaimRewardsButton';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';

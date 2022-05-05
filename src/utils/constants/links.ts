@@ -16,7 +16,7 @@ const PAGES = Object.freeze({
   DASHBOARD_ISSUE_REQUESTS: '/dashboard/issue-requests',
   DASHBOARD_REDEEM_REQUESTS: '/dashboard/redeem-requests',
   DASHBOARD_RELAY: '/dashboard/relay',
-  VAULT: `/vault/:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`,
+  VAULTS: `/vault`,
   FEEDBACK: '/feedback'
 });
 
