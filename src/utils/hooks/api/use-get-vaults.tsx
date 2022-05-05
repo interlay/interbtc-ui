@@ -1,23 +1,20 @@
 import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral, GovernanceIdLiteral } from '@interlay/interbtc-api';
+import { CollateralIdLiteral, tickerToCurrencyIdLiteral } from '@interlay/interbtc-api';
+// import { Kusama, Kintsugi } from '@interlay/monetary-js';
+import { Kusama } from '@interlay/monetary-js';
 
-// TODO: these shouldn't be used, and should be replaced with a single
-// vault collateral array
-import {
-  COLLATERAL_TOKEN_ID_LITERAL,
-  GOVERNANCE_TOKEN_ID_LITERAL
-} from 'utils/constants/currency';
-
-const vaultCollateralTokens = [COLLATERAL_TOKEN_ID_LITERAL, GOVERNANCE_TOKEN_ID_LITERAL];
+// TODO: these need to be moved to config (not chain config) and specified at the chain level
+const vaultCollateralTokens = [
+  tickerToCurrencyIdLiteral(Kusama.ticker) as CollateralIdLiteral
+  // tickerToCurrencyIdLiteral(Kintsugi.ticker) as CollateralIdLiteral
+];
 
 const getVaults = async (
   accountId: AccountId,
-  token: CollateralIdLiteral | GovernanceIdLiteral
+  token: CollateralIdLiteral
 ) => await window.bridge.vaults.get(accountId, token);
 
-// TODO: do we need to parse data after all queries returned, rather than
-// in parallel?
 const parseVaults = (vaults: Array<UseQueryResult<unknown, unknown>>) =>
   vaults.filter(vault => !vault.isLoading && vault.isSuccess).map(vault => vault.data);
 

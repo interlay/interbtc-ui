@@ -14,7 +14,8 @@ const VaultOverview = (): JSX.Element => {
     address
   } = useSelector((state: StoreType) => state.general);
 
-  useGetVaultStatus({ accountId: newAccountId(window.bridge.api, address) });
+  const vaultStatus = useGetVaultStatus({ accountId: newAccountId(window.bridge.api, address) });
+  console.log(vaultStatus);
 
   return (
     <MainContainer>
