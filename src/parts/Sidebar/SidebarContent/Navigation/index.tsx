@@ -12,9 +12,7 @@ import {
   ChipIcon,
   SwitchHorizontalIcon,
   DocumentTextIcon,
-  // ray test touch <
   CurrencyDollarIcon
-  // ray test touch >
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -26,9 +24,7 @@ import {
   CROWDLOAN_LINK,
   GOVERNANCE_TOKEN_SYMBOL,
   TERMS_AND_CONDITIONS_LINK,
-  // ray test touch <
   EARN_LINK
-  // ray test touch >
 } from 'config/relay-chains';
 import {
   KUSAMA,
@@ -143,7 +139,6 @@ const Navigation = ({
         rel: 'noopener noreferrer'
       }
     },
-    // ray test touch <
     {
       name: 'nav_earn',
       link: EARN_LINK,
@@ -155,7 +150,6 @@ const Navigation = ({
         rel: 'noopener noreferrer'
       }
     }
-    // ray test touch >
   ]
   , [
     address,
