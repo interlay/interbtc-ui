@@ -129,22 +129,22 @@ const Navigation = ({
       }
     },
     {
-      name: 'nav_terms_and_conditions',
-      link: TERMS_AND_CONDITIONS_LINK,
-      icon: DocumentTextIcon,
+      name: 'nav_earn',
+      link: EARN_LINK,
+      icon: CurrencyDollarIcon,
+      hidden: false,
       external: true,
-      hidden: !TERMS_AND_CONDITIONS_LINK,
       rest: {
         target: '_blank',
         rel: 'noopener noreferrer'
       }
     },
     {
-      name: 'nav_earn',
-      link: EARN_LINK,
-      icon: CurrencyDollarIcon,
-      hidden: false,
+      name: 'nav_terms_and_conditions',
+      link: TERMS_AND_CONDITIONS_LINK,
+      icon: DocumentTextIcon,
       external: true,
+      hidden: !TERMS_AND_CONDITIONS_LINK,
       rest: {
         target: '_blank',
         rel: 'noopener noreferrer'
