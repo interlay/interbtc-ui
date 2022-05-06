@@ -12,7 +12,7 @@ const KINTSUGI_TERMS_AND_CONDITIONS_LINK =
   'https://drive.google.com/file/d/1TuTu49EoTdEoZX8LrysdgbDmuHS0uAvr/view?usp=sharing ';
 // TODO: add proper Notion page links
 const INTERLAY_EARN_LINK = '';
-const KINTSUGI_EARN_LINK = '';
+const KINTSUGI_EARN_LINK = 'https://docs.interlay.io/#/kintsugi/Earn-With-kBTC';
 
 export {
   INTERLAY_COMPANY_LINK,
