@@ -10,8 +10,7 @@ const KINTSUGI_CROWDLOAN_LINK = 'https://claim-kint.interlay.io';
 const INTERLAY_TERMS_AND_CONDITIONS_LINK = '';
 const KINTSUGI_TERMS_AND_CONDITIONS_LINK =
   'https://drive.google.com/file/d/1TuTu49EoTdEoZX8LrysdgbDmuHS0uAvr/view?usp=sharing ';
-// TODO: add proper Notion page links
-const INTERLAY_EARN_LINK = '';
+const INTERLAY_EARN_LINK = ''; // TODO: add proper Notion page link
 const KINTSUGI_EARN_LINK = 'https://docs.interlay.io/#/kintsugi/Earn-With-kBTC';
 
 export {
