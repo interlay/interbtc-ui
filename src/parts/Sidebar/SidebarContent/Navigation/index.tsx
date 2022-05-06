@@ -101,6 +101,17 @@ const Navigation = ({
       hidden: !vaultClientLoaded
     },
     {
+      name: 'nav_earn',
+      link: EARN_LINK,
+      icon: CurrencyDollarIcon,
+      hidden: false,
+      external: true,
+      rest: {
+        target: '_blank',
+        rel: 'noopener noreferrer'
+      }
+    },
+    {
       name: 'separator',
       link: '#',
       icon: () => null,
@@ -122,17 +133,6 @@ const Navigation = ({
       name: 'nav_docs',
       link: INTERLAY_DOCS_LINK,
       icon: BookOpenIcon,
-      external: true,
-      rest: {
-        target: '_blank',
-        rel: 'noopener noreferrer'
-      }
-    },
-    {
-      name: 'nav_earn',
-      link: EARN_LINK,
-      icon: CurrencyDollarIcon,
-      hidden: false,
       external: true,
       rest: {
         target: '_blank',
