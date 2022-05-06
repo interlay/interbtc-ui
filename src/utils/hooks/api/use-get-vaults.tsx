@@ -29,6 +29,8 @@ const useGetVaults = ({ accountId }: { accountId: AccountId; }): any => {
     })
   );
 
+  console.log('vaults api response', vaults);
+
   return parseVaults(vaults);
 };
 

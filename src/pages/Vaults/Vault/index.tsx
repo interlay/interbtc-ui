@@ -18,18 +18,20 @@ import {
 } from '@interlay/monetary-js';
 import {
   newAccountId,
-  VaultExt
+  VaultExt,
+  tickerToCurrencyIdLiteral,
+  CollateralIdLiteral
 } from '@interlay/interbtc-api';
 
-import UpdateCollateralModal, { CollateralUpdateStatus } from '../UpdateCollateralModal';
-import RequestReplacementModal from '../RequestReplacementModal';
-import RequestRedeemModal from '../RequestRedeemModal';
-import ReplaceTable from '../ReplaceTable';
-import VaultIssueRequestsTable from '../VaultIssueRequestsTable';
-import VaultRedeemRequestsTable from '../VaultRedeemRequestsTable';
-import StatPanel from '../StatPanel';
-import VaultStatusStatPanel from '../VaultStatusStatPanel';
-import ClaimRewardsButton from '../ClaimRewardsButton';
+import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
+import RequestReplacementModal from './RequestReplacementModal';
+import RequestRedeemModal from './RequestRedeemModal';
+import ReplaceTable from './ReplaceTable';
+import VaultIssueRequestsTable from './VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
+import StatPanel from './StatPanel';
+import VaultStatusStatPanel from './VaultStatusStatPanel';
+import ClaimRewardsButton from './ClaimRewardsButton';
 import MainContainer from 'parts/MainContainer';
 import PageTitle from 'parts/PageTitle';
 import TimerIncrement from 'parts/TimerIncrement';
@@ -43,13 +45,11 @@ import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCalifo
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import {
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import { URL_PARAMETERS } from 'utils/constants/links';
 import {
-  COLLATERAL_TOKEN_ID_LITERAL,
   WRAPPED_TOKEN_ID_LITERAL
 } from 'utils/constants/currency';
 import {
@@ -86,7 +86,12 @@ const Vault = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { [URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS]: selectedVaultAccountAddress } = useParams<Record<string, string>>();
+  const {
+    [URL_PARAMETERS.VAULT.ACCOUNT]: selectedVaultAccountAddress,
+    [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateral
+  } = useParams<Record<string, string>>();
+
+  const COLLATERAL_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(vaultCollateral) as CollateralIdLiteral;
 
   const handleUpdateCollateralModalClose = () => {
     setCollateralUpdateStatus(CollateralUpdateStatus.Close);
@@ -170,6 +175,7 @@ const Vault = (): JSX.Element => {
       }
     })();
   }, [
+    COLLATERAL_TOKEN_ID_LITERAL,
     bridgeLoaded,
     dispatch,
     vaultAccountId
@@ -242,7 +248,7 @@ const Vault = (): JSX.Element => {
       },
       {
         title: t('vault.locked_dot', {
-          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+          collateralTokenSymbol: COLLATERAL_TOKEN_ID_LITERAL
         }),
         value: displayMonetaryAmount(collateral)
       },
@@ -268,14 +274,15 @@ const Vault = (): JSX.Element => {
       }
     ];
   }, [
-    apy,
-    capacity,
-    collateral,
+    governanceTokenReward,
+    t,
     collateralization,
     feesEarnedInterBTC,
+    COLLATERAL_TOKEN_ID_LITERAL,
+    collateral,
     lockedBTC,
-    t,
-    governanceTokenReward
+    capacity,
+    apy
   ]);
 
   const hasLockedBTC = lockedBTC.gt(BitcoinAmount.zero);

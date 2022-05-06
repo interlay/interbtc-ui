@@ -1,22 +1,18 @@
-// import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { withErrorBoundary } from 'react-error-boundary';
-import { useSelector } from 'react-redux';
 import { newAccountId } from '@interlay/interbtc-api';
 
 import MainContainer from 'parts/MainContainer';
 import { VaultCard } from 'componentLibrary';
 import ErrorFallback from 'components/ErrorFallback';
-import { StoreType } from 'common/types/util.types';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
+import { URL_PARAMETERS } from 'utils/constants/links';
 import { useGetVaultStatus } from 'utils/hooks/api/use-get-vault-status';
 
 const VaultOverview = (): JSX.Element => {
-  const {
-    address
-  } = useSelector((state: StoreType) => state.general);
-
-  const vaultStatus = useGetVaultStatus({ accountId: newAccountId(window.bridge.api, address) });
-  console.log(vaultStatus);
+  // TODO: this way of deconstructing url params needs to be simplified
+  const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
+  const vaultStatus = useGetVaultStatus({ accountId: newAccountId(window.bridge.api, accountAddress) });
 
   return (
     <MainContainer>

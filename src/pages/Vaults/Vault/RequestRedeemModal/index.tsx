@@ -22,7 +22,7 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { BTC_ADDRESS_REGEX } from '../../../constants';
+import { BTC_ADDRESS_REGEX } from '../../../../constants';
 import {
   newVaultId,
   CollateralCurrency,

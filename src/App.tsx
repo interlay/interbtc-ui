@@ -90,7 +90,10 @@ const Dashboard = React.lazy(() =>
   import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
 );
 const Vaults = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/Vaults')
+  import(/* webpackChunkName: 'vaults' */ 'pages/Vaults')
+);
+const Vault = React.lazy(() =>
+  import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault')
 );
 const NoMatch = React.lazy(() =>
   import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
@@ -425,7 +428,17 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                <Route path={PAGES.VAULTS}>
+                <Route
+                  exact
+                  path={PAGES.VAULTS}>
+                  <Vaults />
+                </Route>
+                <Route
+                  exact
+                  path={PAGES.VAULT}>
+                  <Vault />
+                </Route>
+                <Route path={PAGES.VAULT}>
                   <Vaults />
                 </Route>
                 <Route path={PAGES.DASHBOARD}>

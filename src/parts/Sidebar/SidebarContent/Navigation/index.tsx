@@ -29,7 +29,8 @@ import {
   POLKADOT
 } from 'utils/constants/relay-chain-names';
 import {
-  PAGES
+  PAGES,
+  URL_PARAMETERS
 } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
@@ -58,7 +59,8 @@ const Navigation = ({
   const location = useLocation();
   const { t } = useTranslation();
   const {
-    vaultClientLoaded
+    vaultClientLoaded,
+    address
   } = useSelector((state: StoreType) => state.general);
 
   const NAVIGATION_ITEMS = React.useMemo(() => [
@@ -92,7 +94,7 @@ const Navigation = ({
     },
     {
       name: 'nav_vaults',
-      link: PAGES.VAULTS,
+      link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
       icon: ChipIcon,
       hidden: !vaultClientLoaded
     },
@@ -137,6 +139,7 @@ const Navigation = ({
     }
   ]
   , [
+    address,
     vaultClientLoaded
   ]);
 
