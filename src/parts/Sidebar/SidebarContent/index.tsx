@@ -9,7 +9,6 @@ import SocialMediaContainer from './SocialMediaContainer';
 import TestnetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
-import Advert from 'components/Advert';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
 import { WrappedTokenLogoWithTextIcon } from 'config/relay-chains';
 import {
@@ -20,7 +19,6 @@ import { PAGES } from 'utils/constants/links';
 import { BORDER_CLASSES } from 'utils/constants/styles';
 import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
-import solarBeamAd from 'assets/img/ads/solarbeam.png';
 
 interface Props {
   onSmallScreen?: boolean;
@@ -81,20 +79,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             <TestnetBadge className='ml-2' />
           )}
         </div>
-        <div>
-          <Navigation
-            onSmallScreen={onSmallScreen}
-            className='mt-5' />
-          {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
-            <Advert
-              className='mt-5'
-              data-dd-action-name='Solarbeam liquidity pool'
-              href='https://app.solarbeam.io/farm?filter=stable'
-              image={solarBeamAd}
-              width={230}
-              description='Provide liquidity to earn rewards in KINT and SOLAR' />
-          )}
-        </div>
+        <Navigation
+          onSmallScreen={onSmallScreen}
+          className='mt-5' />
       </div>
       <SocialMediaContainer className='p-2' />
       <div
