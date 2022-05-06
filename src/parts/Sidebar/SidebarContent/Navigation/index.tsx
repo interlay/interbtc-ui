@@ -11,7 +11,10 @@ import {
   ChartSquareBarIcon,
   ChipIcon,
   SwitchHorizontalIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  // ray test touch <
+  CurrencyDollarIcon
+  // ray test touch >
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +25,10 @@ import { INTERLAY_DOCS_LINK } from 'config/links';
 import {
   CROWDLOAN_LINK,
   GOVERNANCE_TOKEN_SYMBOL,
-  TERMS_AND_CONDITIONS_LINK
+  TERMS_AND_CONDITIONS_LINK,
+  // ray test touch <
+  EARN_LINK
+  // ray test touch >
 } from 'config/relay-chains';
 import {
   KUSAMA,
@@ -136,7 +142,20 @@ const Navigation = ({
         target: '_blank',
         rel: 'noopener noreferrer'
       }
+    },
+    // ray test touch <
+    {
+      name: 'nav_earn',
+      link: EARN_LINK,
+      icon: CurrencyDollarIcon,
+      hidden: false,
+      external: true,
+      rest: {
+        target: '_blank',
+        rel: 'noopener noreferrer'
+      }
     }
+    // ray test touch >
   ]
   , [
     address,
