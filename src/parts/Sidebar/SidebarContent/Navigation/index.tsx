@@ -13,9 +13,7 @@ import {
   SwitchHorizontalIcon,
   DocumentTextIcon,
   CurrencyDollarIcon,
-  // ray test touch <
   ScaleIcon
-  // ray test touch >
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -28,9 +26,7 @@ import {
   CROWDLOAN_LINK,
   TERMS_AND_CONDITIONS_LINK,
   EARN_LINK,
-  // ray test touch <
   GOVERNANCE_LINK
-  // ray test touch >
 } from 'config/relay-chains';
 import {
   KUSAMA,
@@ -145,7 +141,6 @@ const Navigation = ({
         rel: 'noopener noreferrer'
       }
     },
-    // ray test touch <
     {
       name: 'nav_governance',
       link: GOVERNANCE_LINK,
@@ -157,7 +152,6 @@ const Navigation = ({
         rel: 'noopener noreferrer'
       }
     },
-    // ray test touch >
     {
       name: 'nav_terms_and_conditions',
       link: TERMS_AND_CONDITIONS_LINK,
