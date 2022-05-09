@@ -12,7 +12,8 @@ import {
   ChipIcon,
   SwitchHorizontalIcon,
   DocumentTextIcon,
-  CurrencyDollarIcon
+  CurrencyDollarIcon,
+  ScaleIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -21,10 +22,11 @@ import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
 import {
-  CROWDLOAN_LINK,
   GOVERNANCE_TOKEN_SYMBOL,
+  CROWDLOAN_LINK,
   TERMS_AND_CONDITIONS_LINK,
-  EARN_LINK
+  EARN_LINK,
+  GOVERNANCE_LINK
 } from 'config/relay-chains';
 import {
   KUSAMA,
@@ -104,7 +106,7 @@ const Navigation = ({
       name: 'nav_earn',
       link: EARN_LINK,
       icon: CurrencyDollarIcon,
-      hidden: false,
+      hidden: !EARN_LINK,
       external: true,
       rest: {
         target: '_blank',
@@ -134,6 +136,17 @@ const Navigation = ({
       link: INTERLAY_DOCS_LINK,
       icon: BookOpenIcon,
       external: true,
+      rest: {
+        target: '_blank',
+        rel: 'noopener noreferrer'
+      }
+    },
+    {
+      name: 'nav_governance',
+      link: GOVERNANCE_LINK,
+      icon: ScaleIcon,
+      external: true,
+      hidden: !GOVERNANCE_LINK,
       rest: {
         target: '_blank',
         rel: 'noopener noreferrer'
