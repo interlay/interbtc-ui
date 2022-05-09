@@ -23,7 +23,11 @@ import {
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
   KINTSUGI_TERMS_AND_CONDITIONS_LINK,
   INTERLAY_EARN_LINK,
-  KINTSUGI_EARN_LINK
+  KINTSUGI_EARN_LINK,
+  // ray test touch <
+  INTERLAY_GOVERNANCE_LINK,
+  KINTSUGI_GOVERNANCE_LINK
+  // ray test touch >
 } from 'config/links';
 import {
   POLKADOT,
@@ -53,7 +57,9 @@ let APP_NAME: string;
 let CROWDLOAN_LINK: string;
 let TERMS_AND_CONDITIONS_LINK: string;
 let EARN_LINK: string;
-let WRAPPED_TOKEN_SYMBOL: string;
+// ray test touch <
+let GOVERNANCE_LINK: string;
+// ray test touch >
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: GovernanceToken;
@@ -61,6 +67,7 @@ let VOTE_GOVERNANCE_TOKEN: VoteGovernanceToken;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
+let WRAPPED_TOKEN_SYMBOL: string;
 let GOVERNANCE_TOKEN_SYMBOL: string;
 let COLLATERAL_TOKEN_SYMBOL: string;
 let VOTE_GOVERNANCE_TOKEN_SYMBOL: string;
@@ -106,6 +113,9 @@ case POLKADOT: {
   APP_NAME = 'Interlay';
   TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   EARN_LINK = INTERLAY_EARN_LINK;
+  // ray test touch <
+  GOVERNANCE_LINK = INTERLAY_GOVERNANCE_LINK;
+  // ray test touch >
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Interlay as GovernanceToken;
@@ -139,6 +149,9 @@ case KUSAMA: {
   APP_NAME = 'Kintsugi';
   TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
   EARN_LINK = KINTSUGI_EARN_LINK;
+  // ray test touch <
+  GOVERNANCE_LINK = KINTSUGI_GOVERNANCE_LINK;
+  // ray test touch >
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Kintsugi as GovernanceToken;
@@ -186,13 +199,16 @@ export {
   CROWDLOAN_LINK,
   TERMS_AND_CONDITIONS_LINK,
   EARN_LINK,
+  // ray test touch <
+  GOVERNANCE_LINK,
+  // ray test touch >
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN,
+  VOTE_GOVERNANCE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   COLLATERAL_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
-  VOTE_GOVERNANCE_TOKEN,
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME,
