@@ -21,7 +21,9 @@ import {
   INTERLAY_CROWDLOAN_LINK,
   KINTSUGI_CROWDLOAN_LINK,
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
-  KINTSUGI_TERMS_AND_CONDITIONS_LINK
+  KINTSUGI_TERMS_AND_CONDITIONS_LINK,
+  INTERLAY_EARN_LINK,
+  KINTSUGI_EARN_LINK
 } from 'config/links';
 import {
   POLKADOT,
@@ -50,6 +52,7 @@ type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VoteGovernanceToken, Vot
 let APP_NAME: string;
 let CROWDLOAN_LINK: string;
 let TERMS_AND_CONDITIONS_LINK: string;
+let EARN_LINK: string;
 let WRAPPED_TOKEN_SYMBOL: string;
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
@@ -102,6 +105,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 case POLKADOT: {
   APP_NAME = 'Interlay';
   TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
+  EARN_LINK = INTERLAY_EARN_LINK;
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Interlay as GovernanceToken;
@@ -134,6 +138,7 @@ case POLKADOT: {
 case KUSAMA: {
   APP_NAME = 'Kintsugi';
   TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
+  EARN_LINK = KINTSUGI_EARN_LINK;
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Kintsugi as GovernanceToken;
@@ -180,6 +185,7 @@ export {
   APP_NAME,
   CROWDLOAN_LINK,
   TERMS_AND_CONDITIONS_LINK,
+  EARN_LINK,
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN,

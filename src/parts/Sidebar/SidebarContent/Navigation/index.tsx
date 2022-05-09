@@ -11,7 +11,8 @@ import {
   ChartSquareBarIcon,
   ChipIcon,
   SwitchHorizontalIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  CurrencyDollarIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +23,8 @@ import { INTERLAY_DOCS_LINK } from 'config/links';
 import {
   CROWDLOAN_LINK,
   GOVERNANCE_TOKEN_SYMBOL,
-  TERMS_AND_CONDITIONS_LINK
+  TERMS_AND_CONDITIONS_LINK,
+  EARN_LINK
 } from 'config/relay-chains';
 import {
   KUSAMA,
@@ -97,6 +99,17 @@ const Navigation = ({
       link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
       icon: ChipIcon,
       hidden: !vaultClientLoaded
+    },
+    {
+      name: 'nav_earn',
+      link: EARN_LINK,
+      icon: CurrencyDollarIcon,
+      hidden: false,
+      external: true,
+      rest: {
+        target: '_blank',
+        rel: 'noopener noreferrer'
+      }
     },
     {
       name: 'separator',
