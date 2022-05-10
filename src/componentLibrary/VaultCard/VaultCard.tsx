@@ -8,6 +8,7 @@ interface VaultCardProps {
   pendingRequests: number;
   apy: string;
   collateralScore: string;
+  link: string;
 }
 
 const VaultCard = ({
@@ -15,7 +16,8 @@ const VaultCard = ({
   wrappedAsset,
   pendingRequests,
   apy,
-  collateralScore
+  collateralScore,
+  link
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
@@ -48,7 +50,7 @@ const VaultCard = ({
       </StyledDl>
       <CTAWrapper>
         <CTALink
-          href='#'
+          href={link}
           variant='primary'
           fullWidth={false}>
           Manage

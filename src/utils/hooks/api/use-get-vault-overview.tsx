@@ -7,7 +7,7 @@ import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
 import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
 
-const getVaultData = async (
+const getVaultOverview = async (
   accountId: AccountId,
   token: CollateralIdLiteral
 ) => {
@@ -29,11 +29,12 @@ const getVaultData = async (
   return {
     apy: apy.toString(),
     collateralization: collateralization?.toString(),
-    issues: issuesCount.data.issuesConnection.totalCount
+    issues: issuesCount.data.issuesConnection.totalCount,
+    collateralToken: token
   };
 };
 
-const useGetVaultStatus = ({ accountId }: { accountId: AccountId; }): Array<any> => {
+const useGetVaultOverview = ({ accountId }: { accountId: AccountId; }): Array<any> => {
   const vaults: Array<VaultExt<BitcoinUnit>> = useGetVaults({ accountId });
 
   const vaultData: Array<any> = useQueries<Array<any>>(
@@ -41,7 +42,7 @@ const useGetVaultStatus = ({ accountId }: { accountId: AccountId; }): Array<any>
       const token = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
       return {
         queryKey: ['vaultData', accountId, token],
-        queryFn: () => getVaultData(accountId, token)
+        queryFn: () => getVaultOverview(accountId, token)
       };
     })
   );
@@ -49,4 +50,4 @@ const useGetVaultStatus = ({ accountId }: { accountId: AccountId; }): Array<any>
   return vaultData.map((data: any) => data.data);
 };
 
-export { useGetVaultStatus };
+export { useGetVaultOverview };

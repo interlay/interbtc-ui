@@ -7,25 +7,25 @@ import { VaultCard } from 'componentLibrary';
 import ErrorFallback from 'components/ErrorFallback';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { URL_PARAMETERS } from 'utils/constants/links';
-import { useGetVaultStatus } from 'utils/hooks/api/use-get-vault-status';
+import { useGetVaultOverview } from 'utils/hooks/api/use-get-vault-overview';
 
 const VaultOverview = (): JSX.Element => {
   // TODO: this way of deconstructing url params needs to be simplified
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
-  const vaultStatus = useGetVaultStatus({ accountId: newAccountId(window.bridge.api, accountAddress) });
+  const vaults = useGetVaultOverview({ accountId: newAccountId(window.bridge.api, accountAddress) });
 
   return (
     <MainContainer>
-      {/* TODO: render loading spinner */}
-      {vaultStatus.length ? vaultStatus.filter(vault => vault !== undefined).map(vault =>
+      {vaults.length ? vaults.filter(vault => vault !== undefined).map(vault =>
         <VaultCard
           key={vault.apy}
           // TODO: make these values dynamic when we support KINT
-          collateral='ksm'
+          collateral={vault.collateralToken}
           wrappedAsset='btc'
           pendingRequests={vault?.issues}
           apy={safeRoundTwoDecimals(vault?.apy)}
-          collateralScore={safeRoundTwoDecimals(vault?.collateralScore?.toString(), '∞')} />
+          collateralScore={safeRoundTwoDecimals(vault?.collateralScore?.toString(), '∞')}
+          link={`${accountAddress}/${vault.collateralToken}`} />
       ) : null}
     </MainContainer>);
 };
