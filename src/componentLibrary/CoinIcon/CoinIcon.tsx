@@ -1,4 +1,4 @@
-import { BtcIcon, KsmIcon, LksmIcon } from './icons';
+import { BtcIcon, KbtcIcon, KsmIcon, LksmIcon } from './icons';
 import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
 import { Coins } from '../types';
 
@@ -11,7 +11,9 @@ const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
     <IconWrapper size={size}>
       {coin === 'btc' ? (
         <BtcIcon />
-      ) : coin === 'ksm' ? (
+      ) : coin === 'kbtc' ? (
+        <KbtcIcon />
+      ) : coin === 'KSM' ? (
         <KsmIcon />
       ) : (
         <LksmIcon />

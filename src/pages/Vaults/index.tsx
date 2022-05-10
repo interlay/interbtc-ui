@@ -19,9 +19,9 @@ const VaultOverview = (): JSX.Element => {
       {vaults.length ? vaults.filter(vault => vault !== undefined).map(vault =>
         <VaultCard
           key={vault.apy}
-          // TODO: make these values dynamic when we support KINT
           collateral={vault.collateralToken}
-          wrappedAsset='btc'
+          // Wrapped asset is always kbtc
+          wrappedAsset='kbtc'
           pendingRequests={vault?.issues}
           apy={safeRoundTwoDecimals(vault?.apy)}
           collateralScore={safeRoundTwoDecimals(vault?.collateralScore?.toString(), '∞')}
