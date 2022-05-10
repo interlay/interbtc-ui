@@ -83,6 +83,8 @@
   "nav_feedback": "Feedback",
   "nav_docs": "Docs",
   "nav_terms_and_conditions": "Terms and Conditions",
+  "nav_earn": "Earn",
+  "nav_governance": "Governance",
   "report_bug": "Report a bug:",
   "request_funds": "{{tokenSymbol}} Faucet",
   "request_btc": "BTC Faucet",
@@ -115,6 +117,7 @@
   "built_by": "Built by",
   "get_governance_token": "Get {{governanceTokenSymbol}}",
   "get_governance_token_description": "Please check the individual terms and conditions of each exchange before you buy/trade {{governanceTokenSymbol}}.",
+  "view_all_transactions_on_subscan": "View all transactions on Subscan",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
