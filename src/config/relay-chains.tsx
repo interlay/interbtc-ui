@@ -26,10 +26,8 @@ import {
   KINTSUGI_EARN_LINK,
   INTERLAY_GOVERNANCE_LINK,
   KINTSUGI_GOVERNANCE_LINK,
-  // ray test touch <
   INTERLAY_SUBSCAN_LINK,
   KINTSUGI_SUBSCAN_LINK
-  // ray test touch >
 } from 'config/links';
 import {
   POLKADOT,
@@ -60,9 +58,7 @@ let CROWDLOAN_LINK: string;
 let TERMS_AND_CONDITIONS_LINK: string;
 let EARN_LINK: string;
 let GOVERNANCE_LINK: string;
-// ray test touch <
 let SUBSCAN_LINK: string;
-// ray test touch >
 let WRAPPED_TOKEN: WrappedToken;
 let COLLATERAL_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: GovernanceToken;
@@ -117,9 +113,7 @@ case POLKADOT: {
   TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
   EARN_LINK = INTERLAY_EARN_LINK;
   GOVERNANCE_LINK = INTERLAY_GOVERNANCE_LINK;
-  // ray test touch <
   SUBSCAN_LINK = INTERLAY_SUBSCAN_LINK;
-  // ray test touch >
   WRAPPED_TOKEN = InterBtc;
   COLLATERAL_TOKEN = Polkadot as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Interlay as GovernanceToken;
@@ -154,9 +148,7 @@ case KUSAMA: {
   TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
   EARN_LINK = KINTSUGI_EARN_LINK;
   GOVERNANCE_LINK = KINTSUGI_GOVERNANCE_LINK;
-  // ray test touch <
   SUBSCAN_LINK = KINTSUGI_SUBSCAN_LINK;
-  // ray test touch >
   WRAPPED_TOKEN = KBtc;
   COLLATERAL_TOKEN = Kusama as Currency<CollateralUnit>;
   GOVERNANCE_TOKEN = Kintsugi as GovernanceToken;
@@ -205,9 +197,7 @@ export {
   TERMS_AND_CONDITIONS_LINK,
   EARN_LINK,
   GOVERNANCE_LINK,
-  // ray test touch <
   SUBSCAN_LINK,
-  // ray test touch >
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN,
