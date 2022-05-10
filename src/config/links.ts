@@ -13,7 +13,11 @@ const KINTSUGI_TERMS_AND_CONDITIONS_LINK =
 const INTERLAY_EARN_LINK = ''; // TODO: add a proper link
 const KINTSUGI_EARN_LINK = 'https://docs.interlay.io/#/kintsugi/Earn-With-kBTC';
 const INTERLAY_GOVERNANCE_LINK = ''; // TODO: add a proper link
-const KINTSUGI_GOVERNANCE_LINK = 'https://kintsugi.subsquare.io/';
+const KINTSUGI_GOVERNANCE_LINK = 'https://kintsugi.subsquare.io';
+// ray test touch <
+const INTERLAY_SUBSCAN_LINK = ''; // TODO: add a proper link
+const KINTSUGI_SUBSCAN_LINK = 'https://kintsugi.subscan.io';
+// ray test touch >
 
 export {
   INTERLAY_COMPANY_LINK,
@@ -29,5 +33,9 @@ export {
   INTERLAY_EARN_LINK,
   KINTSUGI_EARN_LINK,
   INTERLAY_GOVERNANCE_LINK,
-  KINTSUGI_GOVERNANCE_LINK
+  KINTSUGI_GOVERNANCE_LINK,
+  // ray test touch <
+  INTERLAY_SUBSCAN_LINK,
+  KINTSUGI_SUBSCAN_LINK
+  // ray test touch >
 };
