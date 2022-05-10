@@ -1,3 +1,4 @@
+import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 import {
   Story,
   Meta
@@ -9,8 +10,8 @@ const Template: Story<VaultCardProps> = args => <VaultCard {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  collateral: 'btc',
-  wrappedAsset: 'lksm',
+  collateral: CurrencyIdLiteral.KSM,
+  wrappedAsset: CurrencyIdLiteral.KBTC,
   pendingRequests: 3,
   apy: '16.23',
   collateralScore: '115.45'

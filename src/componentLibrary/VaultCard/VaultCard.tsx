@@ -1,10 +1,10 @@
+import { CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { CoinPair, CTALink } from 'componentLibrary';
-import { Coins } from 'componentLibrary/types';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateral: Coins;
-  wrappedAsset: Coins;
+  collateral: CollateralIdLiteral;
+  wrappedAsset: CurrencyIdLiteral;
   pendingRequests: number;
   apy: string;
   collateralScore: string;

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { withErrorBoundary } from 'react-error-boundary';
-import { newAccountId } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, newAccountId } from '@interlay/interbtc-api';
 
 import MainContainer from 'parts/MainContainer';
 import { VaultCard } from 'componentLibrary';
@@ -20,11 +20,10 @@ const VaultOverview = (): JSX.Element => {
         <VaultCard
           key={vault.apy}
           collateral={vault.collateralToken}
-          // Wrapped asset is always kbtc
-          wrappedAsset='kbtc'
+          wrappedAsset={CurrencyIdLiteral.KBTC}
           pendingRequests={vault?.issues}
           apy={safeRoundTwoDecimals(vault?.apy)}
-          collateralScore={safeRoundTwoDecimals(vault?.collateralScore?.toString(), '∞')}
+          collateralScore={safeRoundTwoDecimals(vault?.collateralization?.toString(), '∞')}
           link={`${accountAddress}/${vault.collateralToken}`} />
       ) : null}
     </MainContainer>);

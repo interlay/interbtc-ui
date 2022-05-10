@@ -7,10 +7,17 @@ import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
 import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
 
+interface VaultOverview {
+  apy: string;
+  collateralization: string | undefined;
+  issues: number;
+  collateralToken: CollateralIdLiteral;
+}
+
 const getVaultOverview = async (
   accountId: AccountId,
   token: CollateralIdLiteral
-) => {
+): Promise<VaultOverview> => {
   const apy = await window.bridge.vaults.getAPY(accountId, token);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, token);
 
@@ -24,7 +31,7 @@ const getVaultOverview = async (
     })
   });
 
-  const issuesCount: any = await issues.json();
+  const issuesCount = await issues.json();
 
   return {
     apy: apy.toString(),
@@ -34,7 +41,7 @@ const getVaultOverview = async (
   };
 };
 
-const useGetVaultOverview = ({ accountId }: { accountId: AccountId; }): Array<any> => {
+const useGetVaultOverview = ({ accountId }: { accountId: AccountId; }): Array<VaultOverview> => {
   const vaults: Array<VaultExt<BitcoinUnit>> = useGetVaults({ accountId });
 
   const vaultData: Array<any> = useQueries<Array<any>>(
