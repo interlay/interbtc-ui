@@ -1,11 +1,13 @@
 import { useQueries } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral, VaultExt, tickerToCurrencyIdLiteral } from '@interlay/interbtc-api';
+import { CollateralIdLiteral, VaultExt, tickerToCurrencyIdLiteral, newAccountId } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 
 import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
 import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
+import { StoreType } from 'common/types/util.types';
+import { useSelector } from 'react-redux';
 
 interface VaultOverview {
   apy: string;
@@ -41,15 +43,19 @@ const getVaultOverview = async (
   };
 };
 
-const useGetVaultOverview = ({ accountId }: { accountId: AccountId; }): Array<VaultOverview> => {
-  const vaults: Array<VaultExt<BitcoinUnit>> = useGetVaults({ accountId });
+const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOverview> => {
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const vaults: Array<VaultExt<BitcoinUnit>> = useGetVaults({ address });
 
   const vaultData: Array<any> = useQueries<Array<any>>(
     vaults.map(vault => {
       const token = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
       return {
-        queryKey: ['vaultData', accountId, token],
-        queryFn: () => getVaultOverview(accountId, token)
+        queryKey: ['vaultData', address, token],
+        queryFn: () => getVaultOverview(newAccountId(window.bridge.api, address), token),
+        options: {
+          enabled: !!bridgeLoaded
+        }
       };
     })
   );

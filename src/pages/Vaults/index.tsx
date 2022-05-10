@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { withErrorBoundary } from 'react-error-boundary';
-import { CurrencyIdLiteral, newAccountId } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 
 import MainContainer from 'parts/MainContainer';
 import { VaultCard } from 'componentLibrary';
@@ -12,7 +12,7 @@ import { useGetVaultOverview } from 'utils/hooks/api/use-get-vault-overview';
 const VaultOverview = (): JSX.Element => {
   // TODO: this way of deconstructing url params needs to be simplified
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
-  const vaults = useGetVaultOverview({ accountId: newAccountId(window.bridge.api, accountAddress) });
+  const vaults = useGetVaultOverview({ address: accountAddress });
 
   return (
     <MainContainer>
@@ -21,9 +21,9 @@ const VaultOverview = (): JSX.Element => {
           key={vault.apy}
           collateral={vault.collateralToken}
           wrappedAsset={CurrencyIdLiteral.KBTC}
-          pendingRequests={vault?.issues}
-          apy={safeRoundTwoDecimals(vault?.apy)}
-          collateralScore={safeRoundTwoDecimals(vault?.collateralization?.toString(), '∞')}
+          pendingRequests={vault.issues}
+          apy={safeRoundTwoDecimals(vault.apy)}
+          collateralScore={safeRoundTwoDecimals(vault.collateralization?.toString(), '∞')}
           link={`${accountAddress}/${vault.collateralToken}`} />
       ) : null}
     </MainContainer>);

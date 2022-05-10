@@ -1,8 +1,10 @@
 import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral } from '@interlay/interbtc-api';
+import { CollateralIdLiteral, newAccountId } from '@interlay/interbtc-api';
 
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
+import { StoreType } from 'common/types/util.types';
+import { useSelector } from 'react-redux';
 
 // TODO: this needs to be moved to config (not relay chain config) when we
 // introduce support for KINT.
@@ -19,12 +21,17 @@ const getVaults = async (
 const parseVaults = (vaults: Array<UseQueryResult<unknown, unknown>>) =>
   vaults.filter(vault => !vault.isLoading && vault.isSuccess).map(vault => vault.data);
 
-const useGetVaults = ({ accountId }: { accountId: AccountId; }): any => {
+const useGetVaults = ({ address }: { address: string; }): any => {
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+
   const vaults = useQueries<Array<any>>(
     vaultCollateralTokens.map(token => {
       return {
-        queryKey: ['vaultCollateral', accountId, token],
-        queryFn: () => getVaults(accountId, token)
+        queryKey: ['vaultCollateral', address, token],
+        queryFn: () => getVaults(newAccountId(window.bridge.api, address), token),
+        options: {
+          enabled: !!bridgeLoaded
+        }
       };
     })
   );
