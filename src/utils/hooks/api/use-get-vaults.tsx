@@ -19,13 +19,14 @@ const getVaults = async (
 // TODO: when introducing KINT support we should consider whether
 // to parse the data from parallel queries immediately, or when all
 // queries have completed.
-const parseVaults = (vaults: Array<UseQueryResult<unknown, unknown>>) =>
-  vaults.filter(vault => !vault.isLoading && vault.isSuccess).map(vault => vault.data);
+const parseVaults = (vaults: Array<UseQueryResult<unknown, unknown>>): Array<VaultExt<BitcoinUnit>> =>
+  vaults.filter(vault => !vault.isLoading && vault.isSuccess).map(vault => vault.data as VaultExt<BitcoinUnit>);
 
-const useGetVaults = ({ address }: { address: string; }): any => {
+const useGetVaults = ({ address }: { address: string; }): Array<VaultExt<BitcoinUnit>> => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const vaults = useQueries<Array<UseQueryResult<VaultExt<BitcoinUnit>, Error>>>(
+  // TODO: updating react-query to > 3.28.0 will allow us to type this properly
+  const vaults = useQueries<Array<UseQueryResult<unknown, unknown>>>(
     vaultCollateralTokens.map(token => {
       return {
         queryKey: ['vaultCollateral', address, token],

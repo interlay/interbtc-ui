@@ -1,7 +1,6 @@
-import { useQueries } from 'react-query';
+import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral, VaultExt, tickerToCurrencyIdLiteral, newAccountId } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { CollateralIdLiteral, tickerToCurrencyIdLiteral, newAccountId } from '@interlay/interbtc-api';
 
 import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
@@ -45,9 +44,10 @@ const getVaultOverview = async (
 
 const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOverview> => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  const vaults: Array<VaultExt<BitcoinUnit>> = useGetVaults({ address });
+  const vaults = useGetVaults({ address });
 
-  const vaultData: Array<any> = useQueries<Array<any>>(
+  // TODO: updating react-query to > 3.28.0 will allow us to type this properly
+  const vaultData: Array<any> = useQueries<Array<UseQueryResult<unknown, unknown>>>(
     vaults.map(vault => {
       const token = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
       return {
