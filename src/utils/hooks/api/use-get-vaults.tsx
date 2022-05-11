@@ -1,6 +1,7 @@
 import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral, newAccountId } from '@interlay/interbtc-api';
+import { CollateralIdLiteral, newAccountId, VaultExt } from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import { StoreType } from 'common/types/util.types';
@@ -24,7 +25,7 @@ const parseVaults = (vaults: Array<UseQueryResult<unknown, unknown>>) =>
 const useGetVaults = ({ address }: { address: string; }): any => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const vaults = useQueries<Array<any>>(
+  const vaults = useQueries<Array<UseQueryResult<VaultExt<BitcoinUnit>, Error>>>(
     vaultCollateralTokens.map(token => {
       return {
         queryKey: ['vaultCollateral', address, token],
@@ -35,8 +36,6 @@ const useGetVaults = ({ address }: { address: string; }): any => {
       };
     })
   );
-
-  console.log('vaults api response', vaults);
 
   return parseVaults(vaults);
 };

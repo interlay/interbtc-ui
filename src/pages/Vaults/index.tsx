@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { withErrorBoundary } from 'react-error-boundary';
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 
+import FullLoadingSpinner from 'components/FullLoadingSpinner';
 import MainContainer from 'parts/MainContainer';
 import { VaultCard } from 'componentLibrary';
 import ErrorFallback from 'components/ErrorFallback';
@@ -25,7 +26,7 @@ const VaultOverview = (): JSX.Element => {
           apy={safeRoundTwoDecimals(vault.apy)}
           collateralScore={safeRoundTwoDecimals(vault.collateralization?.toString(), '∞')}
           link={`${accountAddress}/${vault.collateralToken}`} />
-      ) : null}
+      ) : <FullLoadingSpinner />}
     </MainContainer>);
 };
 

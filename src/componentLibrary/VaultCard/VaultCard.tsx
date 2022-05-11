@@ -26,8 +26,7 @@ const VaultCard = ({
         coinTwo={wrappedAsset}
         size='large' />
       <CardTitle>
-        {/* TODO: string transforms are temporary until we have a dictionary solution at the component level */}
-        {collateral.toUpperCase()} - {wrappedAsset.toUpperCase()}
+        {collateral} - {wrappedAsset}
       </CardTitle>
     </CardHeader>
     <CardBody>

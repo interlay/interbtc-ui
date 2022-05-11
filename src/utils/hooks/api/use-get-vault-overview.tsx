@@ -60,7 +60,7 @@ const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOver
     })
   );
 
-  return vaultData.map((data: any) => data.data);
+  return vaultData.map((data: any) => data.data).filter(data => data !== undefined);
 };
 
 export { useGetVaultOverview };
