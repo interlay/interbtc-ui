@@ -5,7 +5,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 interface CustomProps {
@@ -33,7 +33,7 @@ const WarningBanner = ({
         { 'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium',
-        LIGHT_DARK_BORDER_CLASSES,
+        BORDER_CLASSES,
         className
       )}
       style={{
