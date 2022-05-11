@@ -217,13 +217,18 @@ const IssueForm = (): JSX.Element | null => {
   }, [btcAmount, feeRate, requestLimits]);
 
   React.useEffect(() => {
-    // adds validation that a vault is selected if this option is chosen
-    if (selectVaultManually && vault === undefined) {
+    // vault selection validation
+    const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
+    const wrappedTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
+
+    if (vault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
+    } else if (vault?.[1].lt(wrappedTokenAmount)) {
+      setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
     } else {
       clearErrors(VAULT_SELECTION);
     }
-  }, [selectVaultManually, vault, setError, clearErrors, t]);
+  }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
 
   if (
     status === STATUSES.IDLE ||
@@ -398,18 +403,8 @@ const IssueForm = (): JSX.Element | null => {
               label={t('select_vault')}
               requiredCapacity={wrappedTokenAmount.toString()}
               isShown={selectVaultManually}
-              onSelectionCallback={setVault} />
-            {
-              !!errors[VAULT_SELECTION] &&
-                <span
-                  className={clsx(
-                    'text-sm',
-                    { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                    { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
-                  {errors[VAULT_SELECTION]?.message}
-                </span>
-            }
+              onSelectionCallback={setVault}
+              error={errors[VAULT_SELECTION]} />
           </div>
           <PriceInfo
             title={

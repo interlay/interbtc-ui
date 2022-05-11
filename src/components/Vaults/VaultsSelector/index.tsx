@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckCircleIcon } from '@heroicons/react/solid';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/solid';
 import { VaultApiType } from '../../../common/types/vault.types';
 import { shortAddress } from '../../../common/utils/utils';
 import Select, {
@@ -14,6 +14,7 @@ import Select, {
   SelectText,
   SELECT_VARIANTS
 } from '../../Select';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
 interface Props {
   vaults: VaultApiType[];
@@ -21,12 +22,14 @@ interface Props {
   onChange: (vault: VaultApiType) => void;
   selectedVault: VaultApiType | undefined;
   loading: boolean;
+  error?: boolean;
 }
 
 interface VaultOptionProps {
   vault: VaultApiType | undefined;
+  error?: boolean;
 }
-const VaultOption = ({ vault }: VaultOptionProps): JSX.Element => {
+const VaultOption = ({ vault, error }: VaultOptionProps): JSX.Element => {
   const { t } = useTranslation();
   return (
     vault ?
@@ -35,28 +38,40 @@ const VaultOption = ({ vault }: VaultOptionProps): JSX.Element => {
           'flex',
           'items-center'
         )}>
-        <CheckCircleIcon
-          className={clsx(
-            'flex-shrink-0',
-            'w-4',
-            'h-4',
-            'mr-2',
-            'text-interlayConifer-600'
-          )} />
+        {error ?
+          <XCircleIcon
+            className={clsx(
+              'flex-shrink-0',
+              'w-4',
+              'h-4',
+              'mr-2',
+              { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA })} /> :
+          <CheckCircleIcon
+            className={clsx(
+              'flex-shrink-0',
+              'w-4',
+              'h-4',
+              'mr-2',
+              'text-interlayConifer-600'
+            )} />}
         <SelectText className='w-44 tracking-normal'>
           <strong>
             {shortAddress(vault[0].accountId.toString())}
           </strong>
         </SelectText>
-        <SelectText>
+        <SelectText className='w-16'>
           {vault[0].currencies.collateral.asToken.toString()}
+        </SelectText>
+        <SelectText>
+          <strong>{vault[1].toHuman()}</strong> BTC
         </SelectText>
       </span> : t('select_vault')
 
   );
 };
 
-const VaultSelector = ({ label, vaults, onChange, selectedVault, loading }: Props): JSX.Element => {
+const VaultSelector = ({ label, vaults, onChange, selectedVault, loading, error }: Props): JSX.Element => {
   const { t } = useTranslation();
   return (
     <Select
@@ -67,12 +82,16 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, loading }: Prop
         <>
           <SelectLabel className='sr-only'>{label}</SelectLabel>
           <SelectBody>
-            <SelectButton variant={SELECT_VARIANTS.formField}>
+            <SelectButton
+              variant={SELECT_VARIANTS.formField}
+              error={!!error}>
               <span className={clsx('flex', 'justify-between', 'py-2')}>
                 {loading ?
                   t('loading_ellipsis') :
                   vaults.length > 0 ?
-                    <VaultOption vault={selectedVault} /> :
+                    <VaultOption
+                      vault={selectedVault}
+                      error={error} /> :
                     t('not_enough_vault_capacity')
                 }
               </span>
