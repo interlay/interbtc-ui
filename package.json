@@ -59,6 +59,8 @@
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.16.7",
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
+    "@commitlint/cli": "^16.2.4",
+    "@commitlint/config-conventional": "^16.2.4",
     "@cypress/react": "^5.12.3",
     "@cypress/webpack-dev-server": "^1.8.1",
     "@cypress/webpack-preprocessor": "^5.11.1",
