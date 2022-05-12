@@ -1,6 +1,11 @@
 import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral, tickerToCurrencyIdLiteral, newAccountId } from '@interlay/interbtc-api';
+import {
+  CollateralIdLiteral,
+  CurrencyIdLiteral,
+  tickerToCurrencyIdLiteral,
+  newAccountId
+} from '@interlay/interbtc-api';
 
 import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
@@ -13,6 +18,7 @@ interface VaultOverview {
   collateralization: string | undefined;
   issues: number;
   collateralToken: CollateralIdLiteral;
+  wrappedToken: CurrencyIdLiteral;
 }
 
 const getVaultOverview = async (
@@ -38,7 +44,8 @@ const getVaultOverview = async (
     apy: apy.toString(),
     collateralization: collateralization?.toString(),
     issues: issuesCount.data.issuesConnection.totalCount,
-    collateralToken: token
+    collateralToken: token,
+    wrappedToken: CurrencyIdLiteral.KBTC
   };
 };
 

@@ -25,7 +25,7 @@ const VaultOverview = (): JSX.Element => {
           pendingRequests={vault.issues}
           apy={safeRoundTwoDecimals(vault.apy)}
           collateralScore={safeRoundTwoDecimals(vault.collateralization?.toString(), '∞')}
-          link={`${accountAddress}/${vault.collateralToken}`} />
+          link={`${accountAddress}/${vault.collateralToken}/${vault.wrappedToken}`} />
       ) : <FullLoadingSpinner />}
     </MainContainer>);
 };
