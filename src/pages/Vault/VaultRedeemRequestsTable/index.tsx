@@ -39,7 +39,10 @@ import {
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
+import {
+  BTC_EXPLORER_ADDRESS_API,
+  BTC_EXPLORER_TRANSACTION_API
+} from 'config/blockstream-explorer-links';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import redeemCountQuery from 'services/queries/redeem-count-query';
