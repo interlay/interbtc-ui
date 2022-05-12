@@ -424,6 +424,7 @@
     "collateral_below_threshold": "Please enter an amount that maintains the collateralization of your Vault above the Secure Collateral Threshold.",
     "new_collateralization": "New Collateralization:",
     "withdraw_collateral": "Withdraw Collateral",
+    "vault_overview": "Vault Overview",
     "vault_dashboard": "Vault Dashboard",
     "tip_pending_btc": "BTC volume of in-progress issue requests.",
     "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",

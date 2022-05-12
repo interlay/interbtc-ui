@@ -13,8 +13,7 @@ const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
         <KbtcIcon />
       ) : coin === CurrencyIdLiteral.KSM ? (
         <KsmIcon />
-      ) : null
-      }
+      ) : null}
     </IconWrapper>
   );
 };

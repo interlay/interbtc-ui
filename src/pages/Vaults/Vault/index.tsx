@@ -24,6 +24,7 @@ import {
 } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
+import { VaultsHeader } from '../VaultsHeader';
 import RequestReplacementModal from './RequestReplacementModal';
 import RequestRedeemModal from './RequestRedeemModal';
 import ReplaceTable from './ReplaceTable';
@@ -33,10 +34,7 @@ import StatPanel from './StatPanel';
 import VaultStatusStatPanel from './VaultStatusStatPanel';
 import ClaimRewardsButton from './ClaimRewardsButton';
 import MainContainer from 'parts/MainContainer';
-import PageTitle from 'parts/PageTitle';
-import TimerIncrement from 'parts/TimerIncrement';
 import SectionTitle from 'parts/SectionTitle';
-import BoldParagraph from 'components/BoldParagraph';
 import ErrorFallback from 'components/ErrorFallback';
 import
 InterlayDenimOrKintsugiSupernovaContainedButton
@@ -296,14 +294,9 @@ const Vault = (): JSX.Element => {
   return (
     <>
       <MainContainer className='fade-in-animation'>
-        <div>
-          <PageTitle
-            mainTitle={t('vault.vault_dashboard')}
-            subTitle={<TimerIncrement />} />
-          <BoldParagraph className='text-center'>
-            {selectedVaultAccountAddress}
-          </BoldParagraph>
-        </div>
+        <VaultsHeader
+          title={t('vault.vault_dashboard')}
+          accountAddress={address} />
         <div className='space-y-6'>
           <SectionTitle>Vault Stats</SectionTitle>
           <div
