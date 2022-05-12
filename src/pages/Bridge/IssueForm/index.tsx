@@ -71,9 +71,9 @@ import {
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import Vaults from '../../../components/Vaults';
-import { VaultApiType } from '../../../common/types/vault.types';
-import Checkbox from '../../../components/Checkbox';
+import Vaults from 'components/Vaults';
+import { VaultApiType } from 'common/types/vault.types';
+import Checkbox, { CheckboxLabelSide } from 'components/Checkbox';
 
 const BTC_AMOUNT = 'btc-amount';
 const VAULT_SELECTION = 'vault-selection';
@@ -214,7 +214,11 @@ const IssueForm = (): JSX.Element | null => {
         setSelectVaultManually(false);
       }
     }
-  }, [btcAmount, feeRate, requestLimits]);
+  }, [
+    btcAmount,
+    feeRate,
+    requestLimits
+  ]);
 
   React.useEffect(() => {
     // vault selection validation
@@ -228,7 +232,15 @@ const IssueForm = (): JSX.Element | null => {
     } else {
       clearErrors(VAULT_SELECTION);
     }
-  }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
+  }, [
+    selectVaultManually,
+    vault,
+    setError,
+    clearErrors,
+    t,
+    btcAmount,
+    feeRate
+  ]);
 
   if (
     status === STATUSES.IDLE ||
@@ -390,15 +402,18 @@ const IssueForm = (): JSX.Element | null => {
               tokenSymbol={WRAPPED_TOKEN_SYMBOL} />
           </div>
           <ParachainStatusInfo status={parachainStatus} />
-          <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
+          <div
+            className={clsx('flex',
+              'flex-col',
+              'items-end',
+              'gap-2')}>
             <Checkbox
               label={t('issue_page.manually_select_vault')}
-              labelSide='left'
+              labelSide={CheckboxLabelSide.LEFT}
               disabled={isSelectVaultCheckboxDisabled}
               type='checkbox'
               checked={selectVaultManually}
               onChange={handleSelectVaultCheckboxChange} />
-
             <Vaults
               label={t('select_vault')}
               requiredCapacity={wrappedTokenAmount.toString()}

@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/solid';
-import { VaultApiType } from '../../../common/types/vault.types';
-import { shortAddress } from '../../../common/utils/utils';
+
+import { VaultApiType } from 'common/types/vault.types';
+import { shortAddress } from 'common/utils/utils';
 import Select, {
   SelectBody,
   SelectButton,
@@ -21,7 +21,7 @@ interface Props {
   label: string;
   onChange: (vault: VaultApiType) => void;
   selectedVault: VaultApiType | undefined;
-  loading: boolean;
+  isPending: boolean;
   error?: boolean;
 }
 
@@ -33,7 +33,7 @@ const VaultOption = ({ vault, error }: VaultOptionProps): JSX.Element => {
   const { t } = useTranslation();
   return (
     vault ?
-      <span
+      <div
         className={clsx(
           'flex',
           'items-center'
@@ -55,10 +55,11 @@ const VaultOption = ({ vault, error }: VaultOptionProps): JSX.Element => {
               'mr-2',
               'text-interlayConifer-600'
             )} />}
-        <SelectText className='w-44 tracking-normal'>
-          <strong>
-            {shortAddress(vault[0].accountId.toString())}
-          </strong>
+        <SelectText
+          className={clsx(
+            'w-44',
+            'font-bold')}>
+          {shortAddress(vault[0].accountId.toString())}
         </SelectText>
         <SelectText className='w-16'>
           {vault[0].currencies.collateral.asToken.toString()}
@@ -66,12 +67,17 @@ const VaultOption = ({ vault, error }: VaultOptionProps): JSX.Element => {
         <SelectText>
           <strong>{vault[1].toHuman()}</strong> BTC
         </SelectText>
-      </span> : t('select_vault')
+      </div> : t('select_vault')
 
   );
 };
 
-const VaultSelector = ({ label, vaults, onChange, selectedVault, loading, error }: Props): JSX.Element => {
+const VaultSelector = ({ label,
+  vaults,
+  onChange,
+  selectedVault,
+  isPending,
+  error }: Props): JSX.Element => {
   const { t } = useTranslation();
   return (
     <Select
@@ -85,8 +91,12 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, loading, error 
             <SelectButton
               variant={SELECT_VARIANTS.formField}
               error={!!error}>
-              <span className={clsx('flex', 'justify-between', 'py-2')}>
-                {loading ?
+              <span
+                className={clsx(
+                  'flex',
+                  'justify-between',
+                  'py-2')}>
+                {isPending ?
                   t('loading_ellipsis') :
                   vaults.length > 0 ?
                     <VaultOption

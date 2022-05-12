@@ -5,6 +5,7 @@ import { VaultApiType } from 'common/types/vault.types';
 import { FieldError } from 'react-hook-form';
 import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 import clsx from 'clsx';
+import STATUSES from 'utils/constants/statuses';
 
 interface Props {
   label: string;
@@ -17,26 +18,11 @@ interface Props {
 const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }: Props): JSX.Element => {
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>(undefined);
   const [allVaults, setAllVaults] = React.useState<VaultApiType[]>([]);
-  const [availableVaults, setAvailableVaults] = React.useState<VaultApiType[]>([]);
-  const [loadingVaults, setLoadingVaults] = React.useState<boolean>(false);
+  const [vaultsStatus, setVaultsStatus] = React.useState(STATUSES.IDLE);
 
-  const handleVaultSelection = React.useCallback((vault: VaultApiType | undefined) => {
-    setSelectedVault(vault);
-    onSelectionCallback(vault);
-  }, [onSelectionCallback]);
-
-  React.useEffect(() => {
-    (async () => {
-      setLoadingVaults(true);
-      const availableVaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
-      setAllVaults(Array.from(availableVaults));
-      setLoadingVaults(false);
-    })();
-  }, []);
-
-  React.useEffect(() => {
-    // filters out vaults with lower than required capacity and sorts by accountId
-    // to have vaults with same accountId grouped together
+  const availableVaults = React.useMemo(() => {
+    // Filters out vaults with lower than required capacity and sorts by accountId
+    // to have vaults with same accountId grouped together.
     const vaultsWithEnoughCapacity = allVaults
       .filter(vault => vault[1].gt(BitcoinAmount.from.Satoshi(0)))
       .filter(vault => vault[1].gte(BitcoinAmount.from.Satoshi(requiredCapacity)))
@@ -46,16 +32,30 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
         return (vaultAId < vaultBId ? -1 : (vaultAId > vaultBId ? 1 : 0));
       });
 
-    setAvailableVaults(vaultsWithEnoughCapacity);
+    return vaultsWithEnoughCapacity;
   }, [allVaults, requiredCapacity]);
 
+  const handleVaultSelection = React.useCallback((vault: VaultApiType | undefined) => {
+    setSelectedVault(vault);
+    onSelectionCallback(vault);
+  }, [onSelectionCallback]);
+
+  React.useEffect(() => {
+    (async () => {
+      setVaultsStatus(STATUSES.PENDING);
+      const availableVaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
+      setAllVaults(Array.from(availableVaults));
+      setVaultsStatus(STATUSES.RESOLVED);
+    })();
+  }, []);
+
   return (
-    <div className={clsx('w-full', 'h-full')}>
+    <div className='w-full'>
       {/* Keeping the component mounted at all times to prevent refetching of the vaults */}
       {isShown &&
         <>
           <VaultSelector
-            loading={loadingVaults}
+            isPending={vaultsStatus === STATUSES.PENDING}
             label={label}
             selectedVault={selectedVault}
             vaults={availableVaults}

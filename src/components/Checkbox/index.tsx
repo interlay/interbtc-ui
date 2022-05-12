@@ -7,10 +7,14 @@ import {
 } from 'utils/constants/relay-chain-names';
 import styles from './checkbox-input.module.css';
 
-interface CustomCheckboxProps {
+enum CheckboxLabelSide {
+  RIGHT = 'right',
+  LEFT = 'left'
+}
+interface CheckboxCustomProps {
   label?: JSX.Element | string;
   error?: boolean;
-  labelSide?: 'right' | 'left';
+  labelSide?: CheckboxLabelSide;
   required?: boolean;
 }
 
@@ -19,16 +23,16 @@ type Ref = HTMLInputElement;
 const Checkbox = React.forwardRef<Ref, Props>(({
   id,
   label,
-  labelSide = 'right',
+  labelSide = CheckboxLabelSide.RIGHT,
   error,
   required,
   ...rest
 }, ref): JSX.Element => (
-  <CheckboxContainer
+  <div
     className={clsx(
       'flex',
-      'space-x-0.5',
       'items-center',
+      'space-x-2',
       { 'flex-row-reverse': labelSide === 'right' })}>
     {label && (
       <CheckboxLabel
@@ -37,7 +41,6 @@ const Checkbox = React.forwardRef<Ref, Props>(({
         className={clsx(
           'text-base',
           'opacity-90',
-          labelSide === 'right' ? 'ml-2' : 'mr-2',
           { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
           { [clsx(
@@ -64,15 +67,11 @@ const Checkbox = React.forwardRef<Ref, Props>(({
         }
       )}
       {...rest} />
-  </CheckboxContainer>
+  </div>
 ));
 Checkbox.displayName = 'Checkbox';
 
-const CheckboxContainer = (props: React.ComponentPropsWithRef<'div'>): JSX.Element => (
-  <div {...props} />
-);
-
-interface CustomTextFieldLabelProps {
+interface CheckboxLabelCustomProps {
   required?: boolean;
 }
 
@@ -81,7 +80,7 @@ const CheckboxLabel = ({
   required,
   className,
   ...rest
-}: CustomTextFieldLabelProps & React.ComponentPropsWithRef<'label'>): JSX.Element => (
+}: CheckboxLabelCustomProps & React.ComponentPropsWithRef<'label'>): JSX.Element => (
   <label
     className={clsx(
       'text-sm',
@@ -127,9 +126,9 @@ type CheckboxInputProps = React.ComponentPropsWithRef<'input'>;
 export {
   CheckboxInput,
   CheckboxLabel,
-  CheckboxContainer
+  CheckboxLabelSide
 };
 
-export type Props = CustomCheckboxProps & CheckboxInputProps;
+export type Props = CheckboxCustomProps & CheckboxInputProps;
 
 export default Checkbox;
