@@ -7,11 +7,11 @@ const PARACHAIN_ID = process.env.REACT_APP_PARACHAIN_ID;
 const RELAY_CHAIN_TRANSFER_FEE =
   // First condition sets fee for both environments in testnet
   BITCOIN_NETWORK === BitcoinNetwork.Testnet ?
-    '32000000000' :
+    '1291039733' :
     process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama' ?
-      '106666660' :
+      '165940672' :
       process.env.REACT_APP_RELAY_CHAIN_NAME === 'polkadot' ?
-        '320000000' :
+        '482771107' :
         '';
 
 const TRANSFER_WEIGHT = '4000000000';
