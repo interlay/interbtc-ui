@@ -42,7 +42,7 @@ const getVaultOverview = async (
 
   return {
     apy: apy.toString(),
-    collateralization: collateralization?.toString(),
+    collateralization: collateralization?.mul(100).toString(),
     issues: issuesCount.data.issuesConnection.totalCount,
     collateralToken: token,
     wrappedToken: CurrencyIdLiteral.KBTC

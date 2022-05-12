@@ -71,6 +71,7 @@ const Vault = (): JSX.Element => {
   const [requestRedeemModalOpen, setRequestRedeemModalOpen] = React.useState(false);
   const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
   const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
+
   const {
     vaultClientLoaded,
     bridgeLoaded,
@@ -90,8 +91,6 @@ const Vault = (): JSX.Element => {
     [URL_PARAMETERS.VAULT.ACCOUNT]: selectedVaultAccountAddress,
     [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateral
   } = useParams<Record<string, string>>();
-
-  const COLLATERAL_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(vaultCollateral) as CollateralIdLiteral;
 
   const handleUpdateCollateralModalClose = () => {
     setCollateralUpdateStatus(CollateralUpdateStatus.Close);
@@ -126,10 +125,15 @@ const Vault = (): JSX.Element => {
     selectedVaultAccountAddress
   ]);
 
+  const vaultCollateralIdLiteral = React.useMemo(() => (
+    tickerToCurrencyIdLiteral(vaultCollateral) as CollateralIdLiteral
+  ), [vaultCollateral]);
+
   React.useEffect(() => {
     (async () => {
       if (!bridgeLoaded) return;
       if (!vaultAccountId) return;
+      if (!vaultCollateralIdLiteral) return;
 
       try {
         // TODO: should update using `react-query`
@@ -142,13 +146,13 @@ const Vault = (): JSX.Element => {
         ] = await Promise.allSettled([
           window.bridge.vaults.getWrappedReward(
             vaultAccountId,
-            COLLATERAL_TOKEN_ID_LITERAL,
+            vaultCollateralIdLiteral,
             WRAPPED_TOKEN_ID_LITERAL
           ),
-          window.bridge.vaults.getIssuedAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
-          window.bridge.vaults.getVaultCollateralization(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
-          window.bridge.vaults.getAPY(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL),
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL)
+          window.bridge.vaults.getIssuedAmount(vaultAccountId, vaultCollateralIdLiteral),
+          window.bridge.vaults.getVaultCollateralization(vaultAccountId, vaultCollateralIdLiteral),
+          window.bridge.vaults.getAPY(vaultAccountId, vaultCollateralIdLiteral),
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, vaultCollateralIdLiteral)
         ]);
 
         if (feesPolkaBTC.status === 'fulfilled') {
@@ -175,7 +179,7 @@ const Vault = (): JSX.Element => {
       }
     })();
   }, [
-    COLLATERAL_TOKEN_ID_LITERAL,
+    vaultCollateralIdLiteral,
     bridgeLoaded,
     dispatch,
     vaultAccountId
@@ -190,7 +194,7 @@ const Vault = (): JSX.Element => {
       'vaults',
       'getGovernanceReward',
       vaultAccountId,
-      COLLATERAL_TOKEN_ID_LITERAL,
+      vaultCollateralIdLiteral,
       GOVERNANCE_TOKEN_SYMBOL
     ],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
@@ -209,7 +213,7 @@ const Vault = (): JSX.Element => {
       'vaults',
       'get',
       vaultAccountId,
-      COLLATERAL_TOKEN_ID_LITERAL
+      vaultCollateralIdLiteral
     ],
     genericFetcher<VaultExt<BitcoinUnit>>(),
     {
@@ -248,7 +252,7 @@ const Vault = (): JSX.Element => {
       },
       {
         title: t('vault.locked_dot', {
-          collateralTokenSymbol: COLLATERAL_TOKEN_ID_LITERAL
+          collateralTokenSymbol: vaultCollateralIdLiteral
         }),
         value: displayMonetaryAmount(collateral)
       },
@@ -278,7 +282,7 @@ const Vault = (): JSX.Element => {
     t,
     collateralization,
     feesEarnedInterBTC,
-    COLLATERAL_TOKEN_ID_LITERAL,
+    vaultCollateralIdLiteral,
     collateral,
     lockedBTC,
     capacity,

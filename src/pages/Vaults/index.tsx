@@ -17,14 +17,14 @@ const VaultOverview = (): JSX.Element => {
 
   return (
     <MainContainer>
-      {vaults.length ? vaults.filter(vault => vault !== undefined).map(vault =>
+      {vaults.length ? vaults.map(vault =>
         <VaultCard
           key={vault.apy}
           collateral={vault.collateralToken}
           wrappedAsset={CurrencyIdLiteral.KBTC}
           pendingRequests={vault.issues}
           apy={safeRoundTwoDecimals(vault.apy)}
-          collateralScore={safeRoundTwoDecimals(vault.collateralization?.toString(), '∞')}
+          collateralScore={safeRoundTwoDecimals(vault.collateralization, '∞')}
           link={`${accountAddress}/${vault.collateralToken}/${vault.wrappedToken}`} />
       ) : <FullLoadingSpinner />}
     </MainContainer>);

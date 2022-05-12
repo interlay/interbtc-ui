@@ -2,8 +2,8 @@
 const URL_PARAMETERS = Object.freeze({
   VAULT: {
     ACCOUNT: 'vaultAccount',
-    WRAPPED: 'vaultWrapped',
-    COLLATERAL: 'vaultCollateral'
+    COLLATERAL: 'vaultCollateral',
+    WRAPPED: 'vaultWrapped'
   }
 });
 
@@ -22,7 +22,7 @@ const PAGES = Object.freeze({
   DASHBOARD_RELAY: '/dashboard/relay',
   VAULTS: `/vaults/:${URL_PARAMETERS.VAULT.ACCOUNT}`,
   // eslint-disable-next-line max-len
-  VAULT: `/vaults/:${URL_PARAMETERS.VAULT.ACCOUNT}/:${URL_PARAMETERS.VAULT.COLLATERAL}`,
+  VAULT: `/vaults/:${URL_PARAMETERS.VAULT.ACCOUNT}/:${URL_PARAMETERS.VAULT.COLLATERAL}/:${URL_PARAMETERS.VAULT.WRAPPED}`,
   FEEDBACK: '/feedback'
 });
 
