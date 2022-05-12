@@ -34,11 +34,12 @@ import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetcher
 import {
   shortAddress,
   formatDateTimePrecise,
-  displayMonetaryAmount
+  displayMonetaryAmount,
+  shortTxId
 } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { BTC_EXPLORER_ADDRESS_API } from 'config/blockstream-explorer-links';
+import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import redeemCountQuery from 'services/queries/redeem-count-query';
@@ -267,6 +268,58 @@ const VaultRedeemRequestsTable = ({
             <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>
               {shortAddress(value)}
             </ExternalLink>
+          );
+        }
+      },
+      {
+        Header: t('issue_page.btc_transaction'),
+        classNames: [
+          'text-right'
+        ],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeemRequest } }: any) {
+          return (
+            <>
+              {
+                (
+                  redeemRequest.status === RedeemStatus.Expired ||
+                  redeemRequest.status === RedeemStatus.Retried ||
+                  redeemRequest.status === RedeemStatus.Reimbursed
+                ) ? (
+                    t('redeem_page.failed')
+                  ) : (
+                    <>
+                      {redeemRequest.backingPayment.btcTxId ? (
+                        <ExternalLink
+                          href={`${BTC_EXPLORER_TRANSACTION_API}${redeemRequest.backingPayment.btcTxId}`}
+                          onClick={event => {
+                            event.stopPropagation();
+                          }}>
+                          {shortTxId(redeemRequest.backingPayment.btcTxId)}
+                        </ExternalLink>
+                      ) : (
+                        `${t('pending')}...`
+                      )}
+                    </>
+                  )}
+            </>
+          );
+        }
+      },
+      {
+        Header: t('issue_page.confirmations'),
+        classNames: [
+          'text-right'
+        ],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeem } }: any) {
+          const value = redeem.backingPayment.confirmations;
+          return (
+            <>
+              {value === undefined ?
+                t('not_applicable') :
+                Math.max(value, 0)}
+            </>
           );
         }
       },
