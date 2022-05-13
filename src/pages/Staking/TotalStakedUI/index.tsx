@@ -53,7 +53,7 @@ const TotalStakedUI = (): JSX.Element => {
   return (
     <div>
       <InformationUI
-        label={`Total Staked ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+        label={`Total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
         value={`${totalStakedVoteGovernanceTokenAmountLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`} />
     </div>
   );
