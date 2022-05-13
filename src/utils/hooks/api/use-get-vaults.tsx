@@ -30,7 +30,7 @@ const useGetVaults = ({ address }: { address: string; }): Array<VaultExt<Bitcoin
   const vaults = useQueries<Array<UseQueryResult<unknown, unknown>>>(
     vaultCollateralTokens.map(token => {
       return {
-        queryKey: ['vaultCollateral', address, token],
+        queryKey: ['vaults', address, token],
         queryFn: () => getVaults(newAccountId(window.bridge.api, address), token),
         options: {
           enabled: !!bridgeLoaded

@@ -60,7 +60,7 @@ const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOver
     vaults.map(vault => {
       const token = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
       return {
-        queryKey: ['vaultData', address, token],
+        queryKey: ['vaultsOverview', address, token],
         queryFn: () => getVaultOverview(newAccountId(window.bridge.api, address), token),
         options: {
           enabled: !!bridgeLoaded
