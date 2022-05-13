@@ -7,8 +7,7 @@ import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import { StoreType } from 'common/types/util.types';
 import { useSelector } from 'react-redux';
 
-// TODO: this needs to be moved to config (not relay chain config) when we
-// introduce support for KINT:
+// TODO: this needs to be moved to config (not relay chain config) when we introduce support for KINT:
 // https://www.notion.so/interlay/UI-configuration-for-multi-collateral-vaults-f1089976bfd847fcac8467b9ba1d3d90
 const vaultCollateralTokens = [COLLATERAL_TOKEN_ID_LITERAL];
 
