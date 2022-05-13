@@ -40,6 +40,7 @@ const SelectLabel = ({
 
 interface SelectButtonCustomProps {
   variant?: SelectVariants;
+  error?: boolean;
 }
 
 type SelectButtonProps = SelectButtonCustomProps & Props<typeof Listbox.Button>;
@@ -48,6 +49,7 @@ const SelectButton = ({
   className,
   children,
   variant = 'optionSelector',
+  error,
   ...rest
 }: SelectButtonProps): JSX.Element => (
   <Listbox.Button
@@ -85,6 +87,12 @@ const SelectButton = ({
         [clsx(
           'dark:bg-kintsugiMidnight'
         )]: variant === SELECT_VARIANTS.formField
+      },
+      {
+        [clsx(
+          { 'border-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:border-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+        )]: error
       },
       className
     )}
