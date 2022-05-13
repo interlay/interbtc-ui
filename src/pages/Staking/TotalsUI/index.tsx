@@ -16,7 +16,7 @@ import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
-const TotalStakedUI = (): JSX.Element => {
+const TotalsUI = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -59,7 +59,7 @@ const TotalStakedUI = (): JSX.Element => {
   );
 };
 
-export default withErrorBoundary(TotalStakedUI, {
+export default withErrorBoundary(TotalsUI, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();
