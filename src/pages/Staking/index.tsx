@@ -523,6 +523,7 @@ const Staking = (): JSX.Element => {
     return undefined;
   };
 
+  // ray test touch <
   const renderVoteStakedAmountLabel = () => {
     if (
       voteGovernanceTokenBalanceIdle ||
@@ -536,6 +537,7 @@ const Staking = (): JSX.Element => {
 
     return displayMonetaryAmount(voteGovernanceTokenBalance);
   };
+  // ray test touch >
 
   const renderProjectedRewardAmountLabel = () => {
     if (
@@ -652,12 +654,12 @@ const Staking = (): JSX.Element => {
   };
 
   // ray test touch <
-  const renderNewTotalStakeLabel = () => {
+  const getNewTotalStakeAmount = () => {
     if (
       remainingBlockNumbersToUnstake === undefined ||
       stakedAmount === undefined
     ) {
-      return '-';
+      return undefined;
     }
     if (remainingBlockNumbersToUnstake === null) {
       throw new Error('Something went wrong!');
@@ -672,7 +674,14 @@ const Staking = (): JSX.Element => {
     const newLockingAmount = monetaryLockingAmount.add(stakedAmount);
 
     // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
-    const newTotalStakeAmount = newLockingAmount.mul(newLockTime / STAKE_LOCK_TIME.MAX);
+    return newLockingAmount.mul(newLockTime / STAKE_LOCK_TIME.MAX);
+  };
+
+  const renderNewTotalStakeLabel = () => {
+    const newTotalStakeAmount = getNewTotalStakeAmount();
+    if (newTotalStakeAmount === undefined) {
+      return '-';
+    }
 
     return displayMonetaryAmount(newTotalStakeAmount);
   };
@@ -872,16 +881,26 @@ const Staking = (): JSX.Element => {
                 value={renderUnlockDateLabel()}
                 tooltip='Your staked amount will be locked until this date.' />
             )}
+            {/* ray test touch < */}
+            <InformationUI
+              label={t('staking_page.new_vote_governance_token_gained', {
+                voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
+              })}
+              value={`TEST ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+              tooltip={t('staking_page.the_increase_in_your_vote_governance_token_balance', {
+                voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
+              })} />
+            {/* ray test touch > */}
             {votingBalanceGreaterThanZero && (
               <InformationUI
                 label='New total Stake'
                 value={`${renderNewTotalStakeLabel()} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-                tooltip='Your total stake after this transaction.' />
+                tooltip='Your total stake after this transaction' />
             )}
             <InformationUI
               label='Estimated APY'
               value={renderEstimatedAPYLabel()}
-              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
+              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`} />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={renderEstimatedRewardAmountLabel()}
