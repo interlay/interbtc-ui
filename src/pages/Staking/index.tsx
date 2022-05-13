@@ -651,6 +651,7 @@ const Staking = (): JSX.Element => {
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
   };
 
+  // ray test touch <
   const renderNewTotalStakeLabel = () => {
     if (
       remainingBlockNumbersToUnstake === undefined ||
@@ -675,6 +676,7 @@ const Staking = (): JSX.Element => {
 
     return displayMonetaryAmount(newTotalStakeAmount);
   };
+  // ray test touch >
 
   const renderEstimatedAPYLabel = () => {
     if (
