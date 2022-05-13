@@ -523,7 +523,6 @@ const Staking = (): JSX.Element => {
     return undefined;
   };
 
-  // ray test touch <
   const renderVoteStakedAmountLabel = () => {
     if (
       voteGovernanceTokenBalanceIdle ||
@@ -537,7 +536,6 @@ const Staking = (): JSX.Element => {
 
     return displayMonetaryAmount(voteGovernanceTokenBalance);
   };
-  // ray test touch >
 
   const renderProjectedRewardAmountLabel = () => {
     if (
@@ -653,7 +651,6 @@ const Staking = (): JSX.Element => {
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
   };
 
-  // ray test touch <
   const renderNewVoteGovernanceTokenGainedLabel = () => {
     const newTotalStakeAmount = getNewTotalStake();
     if (
@@ -698,7 +695,6 @@ const Staking = (): JSX.Element => {
 
     return `${displayMonetaryAmount(newTotalStakeAmount)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
   };
-  // ray test touch >
 
   const renderEstimatedAPYLabel = () => {
     if (
