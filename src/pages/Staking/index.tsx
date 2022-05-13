@@ -654,7 +654,26 @@ const Staking = (): JSX.Element => {
   };
 
   // ray test touch <
-  const getNewTotalStakeAmount = () => {
+  const renderNewVoteGovernanceTokenGainedLabel = () => {
+    const newTotalStakeAmount = getNewTotalStake();
+    if (
+      voteGovernanceTokenBalance === undefined ||
+      newTotalStakeAmount === undefined
+    ) {
+      return '-';
+    }
+    // ray test touch <
+    console.log('ray : ***** newTotalStakeAmount.toString()', newTotalStakeAmount.toString());
+    console.log('ray : ***** voteGovernanceTokenBalance.toString()', voteGovernanceTokenBalance.toString());
+    const test = newTotalStakeAmount.sub(voteGovernanceTokenBalance);
+    console.log('ray : ***** test.toString()', test.toString());
+    // ray test touch >
+
+    // eslint-disable-next-line max-len
+    return `${displayMonetaryAmount(newTotalStakeAmount.sub(voteGovernanceTokenBalance))} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
+  };
+
+  const getNewTotalStake = () => {
     if (
       remainingBlockNumbersToUnstake === undefined ||
       stakedAmount === undefined
@@ -673,17 +692,27 @@ const Staking = (): JSX.Element => {
     // New total staked governance token
     const newLockingAmount = monetaryLockingAmount.add(stakedAmount);
 
+    // ray test touch <
+    console.log('ray : ***** monetaryLockingAmount.toString()', monetaryLockingAmount.toString());
+    console.log('ray : ***** newLockingAmount.toString()', newLockingAmount.toString());
+    console.log('ray : ***** extendingLockTime', extendingLockTime);
+    console.log('ray : ***** currentLockTime', currentLockTime);
+    // ray test touch >
+
     // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
-    return newLockingAmount.mul(newLockTime / STAKE_LOCK_TIME.MAX);
+    // ray test touch <
+    // return newLockingAmount.mul(newLockTime / STAKE_LOCK_TIME.MAX);
+    return newLockingAmount.mul(newLockTime).div(STAKE_LOCK_TIME.MAX);
+    // ray test touch >
   };
 
   const renderNewTotalStakeLabel = () => {
-    const newTotalStakeAmount = getNewTotalStakeAmount();
+    const newTotalStakeAmount = getNewTotalStake();
     if (newTotalStakeAmount === undefined) {
       return '-';
     }
 
-    return displayMonetaryAmount(newTotalStakeAmount);
+    return `${displayMonetaryAmount(newTotalStakeAmount)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
   };
   // ray test touch >
 
@@ -886,7 +915,7 @@ const Staking = (): JSX.Element => {
               label={t('staking_page.new_vote_governance_token_gained', {
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
               })}
-              value={`TEST ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+              value={renderNewVoteGovernanceTokenGainedLabel()}
               tooltip={t('staking_page.the_increase_in_your_vote_governance_token_balance', {
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
               })} />
@@ -894,7 +923,7 @@ const Staking = (): JSX.Element => {
             {votingBalanceGreaterThanZero && (
               <InformationUI
                 label='New total Stake'
-                value={`${renderNewTotalStakeLabel()} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+                value={`${renderNewTotalStakeLabel()}`}
                 tooltip='Your total stake after this transaction' />
             )}
             <InformationUI
