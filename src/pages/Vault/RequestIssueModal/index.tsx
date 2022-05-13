@@ -168,9 +168,6 @@ const RequestIssueModal = ({
         if (issuableAmount.status === 'fulfilled') {
           setVaultCapacity(issuableAmount.value);
         }
-        // TODO: remove??
-        // const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
-        // dispatch(updateIssuePeriodAction(issuePeriod));
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
@@ -299,7 +296,7 @@ const RequestIssueModal = ({
               {t('vault.issue_description')}
             </p>
             <p>
-              {t('vault.max_capacity')} {displayMonetaryAmount(vaultCapacity)} BTC
+              {t('vault.max_capacity')} <strong>{displayMonetaryAmount(vaultCapacity)} BTC</strong>
             </p>
             <p>
               {t('vault.issue_amount')}

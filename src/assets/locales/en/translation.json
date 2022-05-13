@@ -433,7 +433,14 @@
     "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
     "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}",
     "status": "Status",
-    "claim_governance_token_rewards": "Claim {{governanceTokenAmount}} {{governanceTokenSymbol}} Rewards"
+    "claim_governance_token_rewards": "Claim {{governanceTokenAmount}} {{governanceTokenSymbol}} Rewards",
+    "issue_vault": "Issue With Vault",
+    "issue_amount": "Issue amount",
+    "request_issue": "Request Issue",
+    "max_capacity": "Maximum vault capacity:",
+    "issue_description": "You are requesting to issue with this vault.",
+    "tooltip_issuing_deactivated": "Issuing is deactivated for this vault.",
+    "tooltip_issue_capacity_zero": "Vault issue capacity is 0."
   },
   "staking_page": {
     "estimated_governance_token_rewards_tooltip_label": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}."

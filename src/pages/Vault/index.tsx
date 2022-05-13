@@ -18,7 +18,8 @@ import {
 } from '@interlay/monetary-js';
 import {
   newAccountId,
-  VaultExt
+  VaultExt,
+  VaultStatusExt
 } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
@@ -64,11 +65,14 @@ import {
   updateLockedBTCAction,
   updateAPYAction
 } from 'common/actions/vault.actions';
+import RequestIssueModal from './RequestIssueModal';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
 
 const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
   const [requestReplaceModalOpen, setRequestReplaceModalOpen] = React.useState(false);
   const [requestRedeemModalOpen, setRequestRedeemModalOpen] = React.useState(false);
+  const [requestIssueModalOpen, setRequestIssueModalOpen] = React.useState(false);
   const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
   const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
   const {
@@ -108,6 +112,12 @@ const Vault = (): JSX.Element => {
   };
   const handleRequestRedeemModalOpen = () => {
     setRequestRedeemModalOpen(true);
+  };
+  const handleRequestIssueModalClose = () => {
+    setRequestIssueModalOpen(false);
+  };
+  const handleRequestIssueModalOpen = () => {
+    setRequestIssueModalOpen(true);
   };
 
   const vaultAccountId = React.useMemo(() => {
@@ -280,6 +290,18 @@ const Vault = (): JSX.Element => {
 
   const hasLockedBTC = lockedBTC.gt(BitcoinAmount.zero);
 
+  const isIssuingDisabled = vaultExt?.status !== VaultStatusExt.Active || capacity.lte(BitcoinAmount.zero);
+
+  const issueButtonTooltip = (() => {
+    if (vaultExt?.status !== VaultStatusExt.Active) {
+      return t('vault.tooltip_issuing_deactivated');
+    }
+    if (capacity.lte(BitcoinAmount.zero)) {
+      return t('vault.tooltip_issue_capacity_zero');
+    }
+    return t('vault.issue_vault');
+  })();
+
   return (
     <>
       <MainContainer className='fade-in-animation'>
@@ -316,8 +338,8 @@ const Vault = (): JSX.Element => {
             className={clsx(
               'grid',
               hasLockedBTC ?
-                'grid-cols-5' :
-                'grid-cols-3',
+                'grid-cols-6' :
+                'grid-cols-4',
               'gap-5'
             )}>
             <InterlayDenimOrKintsugiSupernovaContainedButton
@@ -329,6 +351,16 @@ const Vault = (): JSX.Element => {
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
             <ClaimRewardsButton vaultAccountId={vaultAccountId} />
+            <InterlayTooltip label={issueButtonTooltip}>
+              {/* Button wrapped in div to enable tooltip on disabled button. */}
+              <div className='grid'>
+                <InterlayCaliforniaContainedButton
+                  onClick={handleRequestIssueModalOpen}
+                  disabled={isIssuingDisabled}>
+                  {t('vault.issue_vault')}
+                </InterlayCaliforniaContainedButton>
+              </div>
+            </InterlayTooltip>
             {hasLockedBTC && (
               <InterlayCaliforniaContainedButton
                 onClick={handleRequestReplaceModalOpen}>
@@ -367,6 +399,10 @@ const Vault = (): JSX.Element => {
       <RequestRedeemModal
         onClose={handleRequestRedeemModalClose}
         open={requestRedeemModalOpen}
+        vaultAddress={selectedVaultAccountAddress} />
+      <RequestIssueModal
+        onClose={handleRequestIssueModalClose}
+        open={requestIssueModalOpen}
         vaultAddress={selectedVaultAccountAddress} />
     </>
   );
