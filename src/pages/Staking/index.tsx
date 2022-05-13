@@ -48,7 +48,10 @@ import {
   GOVERNANCE_TOKEN,
   STAKE_LOCK_TIME,
   GovernanceTokenMonetaryAmount,
-  VoteGovernanceTokenMonetaryAmount
+  VoteGovernanceTokenMonetaryAmount,
+  // ray test touch <
+  VOTE_GOVERNANCE_TOKEN
+  // ray test touch >
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
@@ -660,8 +663,10 @@ const Staking = (): JSX.Element => {
       return '-';
     }
 
+    // ray test touch <
     // eslint-disable-next-line max-len
-    return `${displayMonetaryAmount(newTotalStakeAmount.sub(voteGovernanceTokenBalance))} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
+    return `${displayMonetaryAmount(newMonetaryAmount(newTotalStakeAmount.sub(voteGovernanceTokenBalance).toBig().round(), VOTE_GOVERNANCE_TOKEN))} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
+    // ray test touch >
   };
 
   const getNewTotalStake = () => {
