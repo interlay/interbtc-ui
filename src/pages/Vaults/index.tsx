@@ -14,7 +14,7 @@ import { VaultsHeader } from './VaultsHeader';
 import { Vaults } from './vaults.style';
 
 const VaultOverview = (): JSX.Element => {
-  // TODO: this way of deconstructing url params needs to be simplified
+  // TODO: can this way of deconstructing url params needs be simplified?
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
   const vaults = useGetVaultOverview({ address: accountAddress });
   const { t } = useTranslation();
