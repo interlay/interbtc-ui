@@ -662,12 +662,6 @@ const Staking = (): JSX.Element => {
     ) {
       return '-';
     }
-    // ray test touch <
-    console.log('ray : ***** newTotalStakeAmount.toString()', newTotalStakeAmount.toString());
-    console.log('ray : ***** voteGovernanceTokenBalance.toString()', voteGovernanceTokenBalance.toString());
-    const test = newTotalStakeAmount.sub(voteGovernanceTokenBalance);
-    console.log('ray : ***** test.toString()', test.toString());
-    // ray test touch >
 
     // eslint-disable-next-line max-len
     return `${displayMonetaryAmount(newTotalStakeAmount.sub(voteGovernanceTokenBalance))} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
@@ -692,18 +686,8 @@ const Staking = (): JSX.Element => {
     // New total staked governance token
     const newLockingAmount = monetaryLockingAmount.add(stakedAmount);
 
-    // ray test touch <
-    console.log('ray : ***** monetaryLockingAmount.toString()', monetaryLockingAmount.toString());
-    console.log('ray : ***** newLockingAmount.toString()', newLockingAmount.toString());
-    console.log('ray : ***** extendingLockTime', extendingLockTime);
-    console.log('ray : ***** currentLockTime', currentLockTime);
-    // ray test touch >
-
     // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
-    // ray test touch <
-    // return newLockingAmount.mul(newLockTime / STAKE_LOCK_TIME.MAX);
     return newLockingAmount.mul(newLockTime).div(STAKE_LOCK_TIME.MAX);
-    // ray test touch >
   };
 
   const renderNewTotalStakeLabel = () => {
