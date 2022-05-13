@@ -50,6 +50,8 @@ const getVaultOverview = async (
 };
 
 const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOverview> => {
+  // TODO: can we handle this check at the application level rather than in components and utilties?
+  // https://www.notion.so/interlay/Handle-api-loaded-check-at-application-level-38fe5d146c8143a88cef2dde7b0e19d8
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const vaults = useGetVaults({ address });
 
