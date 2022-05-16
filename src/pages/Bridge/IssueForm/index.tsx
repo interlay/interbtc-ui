@@ -225,9 +225,9 @@ const IssueForm = (): JSX.Element | null => {
     const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
     const wrappedTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
 
-    if (vault === undefined) {
+    if (selectVaultManually && vault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
-    } else if (vault?.[1].lt(wrappedTokenAmount)) {
+    } else if (selectVaultManually && vault?.[1].lt(wrappedTokenAmount)) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
     } else {
       clearErrors(VAULT_SELECTION);
