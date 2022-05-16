@@ -34,7 +34,7 @@ const getVaultOverview = async (
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: issueCountQuery(`userParachainAddress_eq: "${accountId}"`)
+      query: issueCountQuery(`vault: {accountId_eq: "${accountId.toString()}"}, status_eq: Pending`)
     })
   });
 

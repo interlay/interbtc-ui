@@ -43,7 +43,7 @@ const VaultCard = ({
           <dd>≈{apy}%</dd>
         </DlItem>
         <DlItem>
-          <dt>Collateral score</dt>
+          <dt>Collateralization</dt>
           <dd>{collateralScore === '∞' ? collateralScore : `${collateralScore}%`}</dd>
         </DlItem>
       </StyledDl>
@@ -52,7 +52,7 @@ const VaultCard = ({
           href={link}
           variant='primary'
           fullWidth={false}>
-          Manage
+          View
         </CTALink>
       </CTAWrapper>
     </CardBody>
