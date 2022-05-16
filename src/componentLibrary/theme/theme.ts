@@ -54,7 +54,8 @@ const theme = {
   },
   cta: {
     primary: {
-      bg: 'var(--colors-cta-primary)'
+      bg: 'var(--colors-cta-primary)',
+      bgHover: 'var(--colors-cta-primary-hover)'
     },
     secondary: {
       bg: 'var(--colors-cta-secondary)'
