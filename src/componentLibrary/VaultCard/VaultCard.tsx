@@ -52,7 +52,7 @@ const VaultCard = ({
           href={link}
           variant='primary'
           fullWidth={false}>
-          Manage
+          View
         </CTALink>
       </CTAWrapper>
     </CardBody>
