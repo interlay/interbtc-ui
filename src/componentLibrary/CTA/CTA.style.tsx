@@ -20,6 +20,10 @@ const BaseCTA = styled.div<CTAProps>`
 
 export const PrimaryCTA = styled(BaseCTA)`
   background-color: ${theme.cta.primary.bg};
+
+  &:hover {
+    background-color: ${theme.cta.primary.bgHover};
+  }
 `;
 
 export const SecondaryCTA = styled(BaseCTA)`

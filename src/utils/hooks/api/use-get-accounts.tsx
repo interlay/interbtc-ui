@@ -5,7 +5,7 @@ import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 // FIXME: name clash for constants so had to use relative path
-import * as constants from '../../constants';
+import * as constants from '../../../constants';
 import { StoreType } from 'common/types/util.types';
 
 const useGetAccounts = (): Array<InjectedAccountWithMeta> => {
