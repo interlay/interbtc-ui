@@ -90,7 +90,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({
           {t('redeem_page.waiting_for')}
         </Ring48Title>
         <Ring48Value>
-          {t('nav_vault')}
+          {t('nav_vaults')}
         </Ring48Value>
       </Ring48>
     </RequestWrapper>

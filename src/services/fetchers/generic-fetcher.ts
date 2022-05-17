@@ -1,7 +1,4 @@
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 const GENERIC_FETCHER = 'generic-fetcher';
 
 // TODO: should type properly
@@ -32,9 +29,11 @@ const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
 
   try {
     // TODO: should type properly
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     return await window.bridge[arg1][arg2](...rest);
   } catch (error) {
-    throw new Error(`Error fetching ${queryKey}}). ${error}`);
+    throw new Error(`Error fetching ${queryKey}). ${error}`);
   }
 };
 

@@ -9,7 +9,6 @@ import SocialMediaContainer from './SocialMediaContainer';
 import TestnetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
-import Advert from 'components/Advert';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
 import { WrappedTokenLogoWithTextIcon } from 'config/relay-chains';
 import {
@@ -17,9 +16,9 @@ import {
   KUSAMA
 } from 'utils/constants/relay-chain-names';
 import { PAGES } from 'utils/constants/links';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 import { BitcoinNetwork } from 'types/bitcoin';
 import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
-import solarBeamAd from 'assets/img/ads/solarbeam.png';
 
 interface Props {
   onSmallScreen?: boolean;
@@ -43,14 +42,8 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
           'w-full'
         ) : clsx(
           'h-0',
-          'border-r',
-
-          // TODO: could be reused
-          // MEMO: inspired by https://mui.com/components/buttons/
-          'border-black',
-          'border-opacity-25',
-          'dark:border-white',
-          'dark:border-opacity-25'
+          BORDER_CLASSES,
+          'border-r'
         ),
         'flex-1',
         'flex',
@@ -86,35 +79,18 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             <TestnetBadge className='ml-2' />
           )}
         </div>
-        <div>
-          <Navigation
-            onSmallScreen={onSmallScreen}
-            className='mt-5' />
-          {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
-            <Advert
-              className='mt-5'
-              data-dd-action-name='Solarbeam liquidity pool'
-              href='https://app.solarbeam.io/farm?filter=stable'
-              image={solarBeamAd}
-              width={230}
-              description='Provide liquidity to earn rewards in KINT and SOLAR' />
-          )}
-        </div>
+        <Navigation
+          onSmallScreen={onSmallScreen}
+          className='mt-5' />
       </div>
       <SocialMediaContainer className='p-2' />
       <div
         className={clsx(
           'flex-shrink-0',
           'flex',
-          'border-t',
           'p-4',
-
-          // TODO: could be reused
-          // MEMO: inspired by https://mui.com/components/buttons/
-          'border-black',
-          'border-opacity-25',
-          'dark:border-white',
-          'dark:border-opacity-25'
+          BORDER_CLASSES,
+          'border-t'
         )}>
         <InterlayLink
           className={clsx(

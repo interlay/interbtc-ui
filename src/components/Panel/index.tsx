@@ -5,6 +5,7 @@ import {
   POLKADOT,
   KUSAMA
 } from 'utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 
 const Panel = ({
   className,
@@ -17,13 +18,7 @@ const Panel = ({
       'sm:rounded-lg',
       { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-      'border',
-      // TODO: could be reused
-      // MEMO: inspired by https://mui.com/components/buttons/
-      'border-black',
-      'border-opacity-25',
-      'dark:border-white',
-      'dark:border-opacity-25',
+      BORDER_CLASSES,
       className
     )}
     {...rest} />
