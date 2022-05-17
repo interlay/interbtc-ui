@@ -482,7 +482,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
     if (monetaryLockingAmount.gt(availableBalance)) {
-      return 'Locking amount must be less than available balance!';
+      return 'Locking amount must not be greater than available balance!';
     }
 
     const planckLockingAmount = monetaryLockingAmount.to.Planck();
