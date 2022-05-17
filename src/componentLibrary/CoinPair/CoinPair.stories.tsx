@@ -1,4 +1,3 @@
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 import {
   Story,
   Meta
@@ -10,15 +9,15 @@ const Template: Story<CoinPairProps> = args => <CoinPair {...args} />;
 
 const Small = Template.bind({});
 Small.args = {
-  coinOne: CurrencyIdLiteral.KSM,
-  coinTwo: CurrencyIdLiteral.KBTC,
+  coinOne: 'KSM',
+  coinTwo: 'KBTC',
   size: 'small'
 };
 
 const Large = Template.bind({});
 Large.args = {
-  coinOne: CurrencyIdLiteral.KSM,
-  coinTwo: CurrencyIdLiteral.KBTC,
+  coinOne: 'KSM',
+  coinTwo: 'KBTC',
   size: 'large'
 };
 

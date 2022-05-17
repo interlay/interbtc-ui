@@ -2,7 +2,6 @@ import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
 import {
   CollateralIdLiteral,
-  CurrencyIdLiteral,
   tickerToCurrencyIdLiteral,
   newAccountId
 } from '@interlay/interbtc-api';
@@ -14,14 +13,16 @@ import { StoreType } from 'common/types/util.types';
 import { useSelector } from 'react-redux';
 
 interface VaultOverview {
+  name: string;
   apy: string;
   collateralization: string | undefined;
   issues: number;
   collateralToken: CollateralIdLiteral;
-  wrappedToken: CurrencyIdLiteral;
+  wrappedToken: string;
 }
 
 const getVaultOverview = async (
+  name: string,
   accountId: AccountId,
   token: CollateralIdLiteral
 ): Promise<VaultOverview> => {
@@ -41,11 +42,12 @@ const getVaultOverview = async (
   const issuesCount = await issues.json();
 
   return {
+    name: name,
     apy: apy.toString(),
     collateralization: collateralization?.mul(100).toString(),
     issues: issuesCount.data.issuesConnection.totalCount,
     collateralToken: token,
-    wrappedToken: CurrencyIdLiteral.KBTC
+    wrappedToken: 'KBTC'
   };
 };
 
@@ -59,9 +61,14 @@ const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOver
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<unknown, unknown>>>(
     vaults.map(vault => {
       const token = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
+
       return {
         queryKey: ['vaultsOverview', address, token],
-        queryFn: () => getVaultOverview(newAccountId(window.bridge.api, address), token),
+        queryFn: () => getVaultOverview(
+          vault.backingCollateral.currency.name,
+          newAccountId(window.bridge.api, address),
+          token
+        ),
         options: {
           enabled: !!bridgeLoaded
         }

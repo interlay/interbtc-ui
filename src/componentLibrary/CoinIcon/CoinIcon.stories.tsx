@@ -1,4 +1,3 @@
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { Story, Meta } from '@storybook/react';
 
 import { CoinIcon, CoinIconProps } from '.';
@@ -7,7 +6,7 @@ const Template: Story<CoinIconProps> = args => <CoinIcon {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  coin: CurrencyIdLiteral.KBTC,
+  coin: 'KBTC',
   size: 'small'
 };
 

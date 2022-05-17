@@ -1,6 +1,10 @@
 import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral, newAccountId, VaultExt } from '@interlay/interbtc-api';
+import {
+  CollateralIdLiteral,
+  newAccountId,
+  VaultExt
+} from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';

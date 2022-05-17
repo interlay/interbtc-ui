@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { withErrorBoundary } from 'react-error-boundary';
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 
 import FullLoadingSpinner from 'components/FullLoadingSpinner';
@@ -29,7 +28,7 @@ const VaultOverview = (): JSX.Element => {
           <VaultCard
             key={vault.apy}
             collateral={vault.collateralToken}
-            wrappedAsset={CurrencyIdLiteral.KBTC}
+            wrappedAsset={vault.wrappedToken}
             pendingRequests={vault.issues}
             apy={safeRoundTwoDecimals(vault.apy)}
             collateralScore={safeRoundTwoDecimals(vault.collateralization, '∞')}

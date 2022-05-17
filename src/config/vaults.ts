@@ -1,0 +1,3 @@
+const VAULT_COLLATERAL = ['KSM'];
+
+export { VAULT_COLLATERAL };
