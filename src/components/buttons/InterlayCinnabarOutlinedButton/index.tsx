@@ -3,6 +3,10 @@ import * as React from 'react';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import {
+  DISABLED_BORDER_CLASSES,
+  DISABLED_TEXT_CLASSES
+} from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 interface CustomProps {
@@ -34,21 +38,14 @@ const InterlayCinnabarOutlinedButton = React.forwardRef<Ref, Props>(({
         'focus:ring-interlayCinnabar-200',
         'focus:ring-opacity-50',
 
-        'border',
         'font-medium',
 
         disabledOrPending ? clsx(
-          // TODO: could be reused
-          'border-black',
-          'border-opacity-10',
-          'dark:border-white',
-          'dark:border-opacity-10',
-          'text-black',
-          'text-opacity-25',
-          'dark:text-white',
-          'dark:text-opacity-30'
+          DISABLED_BORDER_CLASSES,
+          DISABLED_TEXT_CLASSES
         ) : clsx(
           'text-interlayCinnabar',
+          'border',
           'border-interlayCinnabar',
           'hover:bg-interlayCinnabar',
           'hover:bg-opacity-5'

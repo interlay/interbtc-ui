@@ -1,10 +1,10 @@
 import { CoinIcon } from 'componentLibrary';
 import { CoinPairWrapper, CoinPairWrapperProps } from './CoinPair.style';
-import { Coins } from '../types';
+import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 
 interface CoinPairProps extends CoinPairWrapperProps {
-  coinOne: Coins;
-  coinTwo: Coins;
+  coinOne: CurrencyIdLiteral;
+  coinTwo: CurrencyIdLiteral;
 }
 
 const CoinPair = ({ coinOne, coinTwo, size }: CoinPairProps): JSX.Element => (

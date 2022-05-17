@@ -10,7 +10,7 @@ import InterlayDefaultOutlinedButton, {
 import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg';
 import { ReactComponent as MexcLogoIcon } from 'assets/img/exchanges/mexc-logo.svg';
@@ -67,7 +67,7 @@ const ExchangeLink = ({
         'grid',
         'place-items-center',
         'h-24',
-        LIGHT_DARK_BORDER_CLASSES
+        BORDER_CLASSES
       )}
       target='_blank'
       rel='noopener noreferrer'

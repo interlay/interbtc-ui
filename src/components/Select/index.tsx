@@ -14,6 +14,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 
 const SELECT_VARIANTS = Object.freeze({
   optionSelector: 'optionSelector',
@@ -39,6 +40,7 @@ const SelectLabel = ({
 
 interface SelectButtonCustomProps {
   variant?: SelectVariants;
+  error?: boolean;
 }
 
 type SelectButtonProps = SelectButtonCustomProps & Props<typeof Listbox.Button>;
@@ -47,6 +49,7 @@ const SelectButton = ({
   className,
   children,
   variant = 'optionSelector',
+  error,
   ...rest
 }: SelectButtonProps): JSX.Element => (
   <Listbox.Button
@@ -57,14 +60,7 @@ const SelectButton = ({
 
       'relative',
       'w-full',
-      'border',
-
-      // TODO: could be reused
-      // MEMO: inspired by https://mui.com/components/buttons/
-      'border-black',
-      'border-opacity-25',
-      'dark:border-white',
-      'dark:border-opacity-25',
+      BORDER_CLASSES,
 
       'rounded-md',
       'pl-3',
@@ -91,6 +87,12 @@ const SelectButton = ({
         [clsx(
           'dark:bg-kintsugiMidnight'
         )]: variant === SELECT_VARIANTS.formField
+      },
+      {
+        [clsx(
+          { 'border-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:border-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+        )]: error
       },
       className
     )}

@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react';
 
-import { CTALink, CTALinkProps } from '.';
+import { CTALink, CTALinkProps } from './';
 
 const Template: Story<CTALinkProps> = args => <CTALink {...args} />;
 

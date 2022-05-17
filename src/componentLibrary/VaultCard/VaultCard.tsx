@@ -1,13 +1,14 @@
+import { CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { CoinPair, CTALink } from 'componentLibrary';
-import { Coins } from 'componentLibrary/types';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateral: Coins;
-  wrappedAsset: Coins;
+  collateral: CollateralIdLiteral;
+  wrappedAsset: CurrencyIdLiteral;
   pendingRequests: number;
-  apy: number;
-  collateralScore: number;
+  apy: string;
+  collateralScore: string;
+  link: string;
 }
 
 const VaultCard = ({
@@ -15,7 +16,8 @@ const VaultCard = ({
   wrappedAsset,
   pendingRequests,
   apy,
-  collateralScore
+  collateralScore,
+  link
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
@@ -24,8 +26,7 @@ const VaultCard = ({
         coinTwo={wrappedAsset}
         size='large' />
       <CardTitle>
-        {/* TODO: string transforms are temporary until we have a dictionary solution at the component level */}
-        {collateral.toUpperCase()} - {wrappedAsset.toUpperCase()}
+        {collateral} - {wrappedAsset}
       </CardTitle>
     </CardHeader>
     <CardBody>
@@ -39,19 +40,19 @@ const VaultCard = ({
       <StyledDl>
         <DlItem>
           <dt>Current APY</dt>
-          <dd>{apy}%</dd>
+          <dd>≈{apy}%</dd>
         </DlItem>
         <DlItem>
-          <dt>Collateral score</dt>
-          <dd>{collateralScore}%</dd>
+          <dt>Collateralization</dt>
+          <dd>{collateralScore === '∞' ? collateralScore : `${collateralScore}%`}</dd>
         </DlItem>
       </StyledDl>
       <CTAWrapper>
         <CTALink
-          href='#'
+          href={link}
           variant='primary'
           fullWidth={false}>
-          Manage
+          View
         </CTALink>
       </CTAWrapper>
     </CardBody>
