@@ -79,7 +79,10 @@ const UpdateCollateralModal = ({
     collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
   // Denoted in collateral token
-  const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
+  // ray test touch <
+  // const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
+  const currentTotalCollateralTokenAmount = newMonetaryAmount(15.999996389639, COLLATERAL_TOKEN, true);
+  // ray test touch >
 
   const {
     register,
@@ -198,9 +201,13 @@ const UpdateCollateralModal = ({
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
       const maxWithdrawal = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
 
-      return collateralTokenAmount.gt(maxWithdrawal) ?
-        t('vault.collateral_below_threshold') :
-        undefined;
+      // ray test touch <
+      return (
+        collateralTokenAmount.gt(maxWithdrawal) ?
+          t('vault.collateral_below_threshold') :
+          undefined
+      );
+      // ray test touch >
     }
 
     if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
@@ -304,14 +311,16 @@ const UpdateCollateralModal = ({
           className='space-y-4'>
           <p>
             {t('vault.current_total_collateral', {
+              // ray test touch <
               currentCollateral: displayMonetaryAmount(currentTotalCollateralTokenAmount),
+              // ray test touch >
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </p>
           <p>
             Minimum Required Collateral {renderRequiredCollateralTokenAmount()}
           </p>
-          <div>
+          <div className='space-y-0.5'>
             <label
               htmlFor={COLLATERAL_TOKEN_AMOUNT}
               className='text-sm'>
@@ -328,7 +337,7 @@ const UpdateCollateralModal = ({
                 },
                 validate: value => validateCollateralTokenAmount(value)
               })} />
-            <ErrorMessage>
+            <ErrorMessage className='h-9'>
               {errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             </ErrorMessage>
           </div>
