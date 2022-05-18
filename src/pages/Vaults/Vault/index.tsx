@@ -318,7 +318,7 @@ const Vault = (): JSX.Element => {
       <MainContainer className='fade-in-animation'>
         <VaultsHeader
           title={t('vault.vault_dashboard')}
-          accountAddress={address} />
+          accountAddress={selectedVaultAccountAddress} />
         <div className='space-y-6'>
           <SectionTitle>Vault Stats</SectionTitle>
           <div
