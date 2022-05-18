@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import {
   useDispatch,
@@ -33,6 +32,7 @@ import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
 import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
+import { InjectedWalletSourceName } from 'utils/constants/wallets';
 
 const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
 
@@ -68,6 +68,13 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
     process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
+enum AccountModalState {
+  NO_WALLET_FOUND,
+  SELECT_WALLET,
+  NO_ACCOUNT_FOUND,
+  SELECT_ACCOUNT,
+}
+
 const AccountModal = ({
   open,
   onClose
@@ -80,6 +87,8 @@ const AccountModal = ({
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);
+  const [selectedWallet, setSelectedWallet] = React.useState<InjectedWalletSourceName | undefined>();
+  const [contentState, setContentState] = React.useState<AccountModalState>(AccountModalState.SELECT_WALLET);
 
   const accounts = useGetAccounts();
   const extensionWalletAvailable = extensions.length > 0;
@@ -98,57 +107,43 @@ const AccountModal = ({
     onClose();
   };
 
-  const renderContent = () => {
-    if (extensionWalletAvailable) {
-      return (
-        <>
-          {accounts !== undefined && accounts.length > 0 ? (
-            // List all available accounts
-            <ul className='space-y-4'>
-              {accounts.map(account => {
-                const selected = address === account.address;
+  const handleAccountDisconnect = () => {
+    dispatch(changeAddressAction(''));
+    // TODO: how to handle window.bridge.setAccount('');
+    console.log('disconnecting...');
+  };
 
-                return (
-                  <li
-                    key={account.address}
-                    className={clsx(
-                      'flex',
-                      'space-x-2'
-                    )}>
-                    <InterlayButtonBase
-                      className={clsx(
-                        ACCOUNT_MODAL_BUTTON_CLASSES,
-                        'w-full',
-                        { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected }
-                      )}
-                      onClick={handleAccountSelect(account.address)}>
-                      <span className='font-medium'>
-                        {account.meta.name}
-                      </span>
-                      <span>
-                        {`(${shortAddress(account.address)})`}
-                      </span>
-                    </InterlayButtonBase>
-                    <CopyAddressButton
-                      className={ACCOUNT_MODAL_BUTTON_CLASSES}
-                      address={account.address} />
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            // Create a new account when no accounts are available
-            <p>
-              {t('no_account')}
-              <ExternalLink href={POLKADOT_EXTENSION}>
-                &nbsp;{t('here')}
-              </ExternalLink>
-              .
-            </p>
-          )}
-        </>
-      );
+  React.useEffect(() => {
+    // Sets initial value of the selected wallet from address.
+    if (address && selectedWallet === undefined) {
+      const selectedAccount = accounts.find(({ address: accountAddress }) => address === accountAddress);
+      if (selectedAccount) {
+        setSelectedWallet(selectedAccount.meta.source as InjectedWalletSourceName);
+      }
+    }
+  }, [address, accounts, selectedWallet]);
+
+  // Manages state of the modal content.
+  React.useEffect(() => {
+    // TODO: check against supported wallets not all injected extensions found
+    if (extensionWalletAvailable) {
+      if (selectedWallet === undefined) {
+        setContentState(AccountModalState.SELECT_WALLET);
+      } else {
+        if (accounts !== undefined && accounts.length > 0) {
+          setContentState(AccountModalState.SELECT_ACCOUNT);
+        } else {
+          setContentState(AccountModalState.NO_ACCOUNT_FOUND);
+        }
+      }
     } else {
+      setContentState(AccountModalState.NO_WALLET_FOUND);
+    }
+  }, [extensionWalletAvailable, selectedWallet, accounts]);
+
+  const renderContent = () => {
+    switch (contentState) {
+    case AccountModalState.NO_WALLET_FOUND:
       return (
         <>
           <p>
@@ -170,6 +165,63 @@ const AccountModal = ({
             </span>
           </ExternalLink>
         </>
+      );
+    case AccountModalState.SELECT_WALLET:
+      // TODO: Implement list of wallets.
+      return 'todo: list of wallets';
+    case AccountModalState.NO_ACCOUNT_FOUND:
+      return (
+      // Create a new account when no accounts are available
+        <p>
+          {t('no_account')}
+          <ExternalLink href={POLKADOT_EXTENSION}>
+              &nbsp;{t('here')}
+          </ExternalLink>
+            .
+        </p>
+      );
+    case AccountModalState.SELECT_ACCOUNT:
+      return (
+      // List all available accounts
+        <ul className='space-y-4'>
+          {accounts.map(account => {
+            const selected = address === account.address;
+
+            return (
+              <li
+                key={account.address}
+                className={clsx(
+                  'flex',
+                  'space-x-2'
+                )}>
+                <InterlayButtonBase
+                  className={clsx(
+                    ACCOUNT_MODAL_BUTTON_CLASSES,
+                    'w-full',
+                    { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected }
+                  )}
+                  onClick={handleAccountSelect(account.address)}>
+                  <span className='font-medium'>
+                    {account.meta.name}
+                  </span>
+                  <span>
+                    {`(${shortAddress(account.address)})`}
+                  </span>
+                </InterlayButtonBase>
+                <CopyAddressButton
+                  className={ACCOUNT_MODAL_BUTTON_CLASSES}
+                  address={account.address} />
+                {selected &&
+                    <InterlayButtonBase
+                      className={ACCOUNT_MODAL_BUTTON_CLASSES}
+                      onClick={handleAccountDisconnect}>
+                      {t('disconnect')}
+                    </InterlayButtonBase>
+                }
+              </li>
+            );
+          })}
+        </ul>
       );
     }
   };
