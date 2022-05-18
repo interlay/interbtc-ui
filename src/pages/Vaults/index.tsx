@@ -26,13 +26,13 @@ const VaultOverview = (): JSX.Element => {
       <Vaults>
         {vaults.length ? vaults.map(vault =>
           <VaultCard
-            key={vault.apy}
-            collateral={vault.collateralToken}
-            wrappedAsset={vault.wrappedToken}
+            key={vault.collateral?.id}
+            collateralSymbol={vault.collateral?.symbol}
+            wrappedSymbol={vault.collateral?.symbol}
             pendingRequests={vault.issues}
             apy={safeRoundTwoDecimals(vault.apy)}
             collateralScore={safeRoundTwoDecimals(vault.collateralization, '∞')}
-            link={`${accountAddress}/${vault.collateralToken}/${vault.wrappedToken}`} />
+            link={`${accountAddress}/${vault.collateral?.id}/${vault.wrapped?.id}`} />
         ) : <FullLoadingSpinner />}
       </Vaults>
     </MainContainer>);

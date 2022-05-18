@@ -1,9 +1,9 @@
-import { CoinPair, CTALink } from 'componentLibrary';
+import { CoinPair, CTALink, CurrencySymbols } from '../';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateral: string;
-  wrappedAsset: string;
+  collateralSymbol: CurrencySymbols;
+  wrappedSymbol: CurrencySymbols;
   pendingRequests: number;
   apy: string;
   collateralScore: string;
@@ -11,8 +11,8 @@ interface VaultCardProps {
 }
 
 const VaultCard = ({
-  collateral,
-  wrappedAsset,
+  collateralSymbol,
+  wrappedSymbol,
   pendingRequests,
   apy,
   collateralScore,
@@ -21,11 +21,11 @@ const VaultCard = ({
   <Card>
     <CardHeader>
       <CoinPair
-        coinOne={collateral}
-        coinTwo={wrappedAsset}
+        coinOne={collateralSymbol}
+        coinTwo={wrappedSymbol}
         size='large' />
       <CardTitle>
-        {collateral} - {wrappedAsset}
+        {collateralSymbol} - {wrappedSymbol}
       </CardTitle>
     </CardHeader>
     <CardBody>
