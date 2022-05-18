@@ -1,12 +1,9 @@
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
+
 import { CurrencySymbols } from 'componentLibrary';
+import { CurrencyPair, CurrencyPairs } from 'types/currency';
 
-type CurrencyPair = {
-  id: CurrencyIdLiteral;
-  symbol: CurrencySymbols;
-}
-
-const CURRENCY_PAIRS: Array<CurrencyPair> = [
+const CURRENCY_PAIRS: CurrencyPairs = [
   {
     id: CurrencyIdLiteral.DOT,
     symbol: CurrencySymbols.DOT
@@ -36,6 +33,9 @@ const CURRENCY_PAIRS: Array<CurrencyPair> = [
 const currencyIdToCurrencyPair = (idLiteral: CurrencyIdLiteral): CurrencyPair | undefined =>
   CURRENCY_PAIRS.find(pair => pair.id === idLiteral);
 
-export { currencyIdToCurrencyPair };
+const getCurrencySymbol = (idLiteral: CurrencyIdLiteral): CurrencySymbols | undefined =>
+  currencyIdToCurrencyPair(idLiteral)?.symbol;
+
+export { currencyIdToCurrencyPair, getCurrencySymbol };
 
 export type { CurrencyPair, CurrencySymbols };

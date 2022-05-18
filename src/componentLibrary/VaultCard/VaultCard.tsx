@@ -2,8 +2,8 @@ import { CoinPair, CTALink, CurrencySymbols } from '../';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateralSymbol: CurrencySymbols | undefined;
-  wrappedSymbol: CurrencySymbols | undefined;
+  collateralSymbol?: CurrencySymbols;
+  wrappedSymbol?: CurrencySymbols;
   pendingRequests: number;
   apy: string;
   collateralScore: string;
@@ -20,10 +20,12 @@ const VaultCard = ({
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
-      <CoinPair
-        coinOne={collateralSymbol}
-        coinTwo={wrappedSymbol}
-        size='large' />
+      {collateralSymbol && wrappedSymbol && (
+        <CoinPair
+          coinOne={collateralSymbol}
+          coinTwo={wrappedSymbol}
+          size='large' />
+      )}
       <CardTitle>
         {collateralSymbol} - {wrappedSymbol}
       </CardTitle>

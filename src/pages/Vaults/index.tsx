@@ -8,6 +8,7 @@ import { VaultCard } from 'componentLibrary';
 import ErrorFallback from 'components/ErrorFallback';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { URL_PARAMETERS } from 'utils/constants/links';
+import { getCurrencySymbol } from 'utils/helpers/currency-pairs';
 import { useGetVaultOverview } from 'utils/hooks/api/use-get-vault-overview';
 import { VaultsHeader } from './VaultsHeader';
 import { Vaults } from './vaults.style';
@@ -23,18 +24,22 @@ const VaultOverview = (): JSX.Element => {
       <VaultsHeader
         title={t('vault.vault_overview')}
         accountAddress={accountAddress} />
-      <Vaults>
-        {vaults.length ? vaults.map(vault =>
-          <VaultCard
-            key={vault.collateral?.id}
-            collateralSymbol={vault.collateral?.symbol}
-            wrappedSymbol={vault.wrapped?.symbol}
-            pendingRequests={vault.issues}
-            apy={safeRoundTwoDecimals(vault.apy)}
-            collateralScore={safeRoundTwoDecimals(vault.collateralization, '∞')}
-            link={`${accountAddress}/${vault.collateral?.id}/${vault.wrapped?.id}`} />
-        ) : <FullLoadingSpinner />}
-      </Vaults>
+      {vaults && vaults.length ?
+        <Vaults>
+
+          {vaults.map(vault => (
+            <VaultCard
+              key={vault.collateralId}
+              collateralSymbol={getCurrencySymbol(vault.collateralId)}
+              wrappedSymbol={getCurrencySymbol(vault.wrappedId)}
+              pendingRequests={vault.issues}
+              apy={safeRoundTwoDecimals(vault.apy.toString())}
+              collateralScore={safeRoundTwoDecimals(vault.collateralization?.mul(100).toString(), '∞')}
+              link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`} />
+          ))}
+        </Vaults> : (
+          <FullLoadingSpinner />
+        )}
     </MainContainer>);
 };
 

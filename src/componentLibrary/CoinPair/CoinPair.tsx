@@ -2,8 +2,8 @@ import { CoinIcon, CurrencySymbols } from '../';
 import { CoinPairWrapper, CoinPairWrapperProps } from './CoinPair.style';
 
 interface CoinPairProps extends CoinPairWrapperProps {
-  coinOne: CurrencySymbols | undefined;
-  coinTwo: CurrencySymbols | undefined;
+  coinOne: CurrencySymbols;
+  coinTwo: CurrencySymbols;
 }
 
 const CoinPair = ({ coinOne, coinTwo, size }: CoinPairProps): JSX.Element => (
