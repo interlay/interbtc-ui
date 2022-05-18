@@ -9,3 +9,6 @@ export type { CoinPairProps } from './CoinPair';
 
 export { CoinIcon } from './CoinIcon';
 export type { CoinIconProps } from './CoinIcon';
+
+export { VaultCard } from './VaultCard';
+export type { VaultCardProps } from './VaultCard';

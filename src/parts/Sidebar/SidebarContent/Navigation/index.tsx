@@ -97,8 +97,8 @@ const Navigation = ({
       hidden: false
     },
     {
-      name: 'nav_vault',
-      link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
+      name: 'nav_vaults',
+      link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
       icon: ChipIcon,
       hidden: !vaultClientLoaded
     },
