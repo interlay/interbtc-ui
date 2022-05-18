@@ -26,7 +26,6 @@ const VaultOverview = (): JSX.Element => {
         accountAddress={accountAddress} />
       {vaults && vaults.length ?
         <Vaults>
-
           {vaults.map(vault => (
             <VaultCard
               key={vault.collateralId}
