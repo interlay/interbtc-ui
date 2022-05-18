@@ -28,7 +28,7 @@ const VaultOverview = (): JSX.Element => {
           <VaultCard
             key={vault.collateral?.id}
             collateralSymbol={vault.collateral?.symbol}
-            wrappedSymbol={vault.collateral?.symbol}
+            wrappedSymbol={vault.wrapped?.symbol}
             pendingRequests={vault.issues}
             apy={safeRoundTwoDecimals(vault.apy)}
             collateralScore={safeRoundTwoDecimals(vault.collateralization, '∞')}

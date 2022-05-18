@@ -13,7 +13,8 @@ Default.args = {
   wrappedSymbol: 'kBTC',
   pendingRequests: 3,
   apy: '16.23',
-  collateralScore: '115.45'
+  collateralScore: '115.45',
+  link: '#'
 };
 
 export {
