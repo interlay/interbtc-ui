@@ -320,7 +320,7 @@ const UpdateCollateralModal = ({
           <p>
             Minimum Required Collateral {renderRequiredCollateralTokenAmount()}
           </p>
-          <div className='space-y-0.5'>
+          <div className='space-y-1'>
             <label
               htmlFor={COLLATERAL_TOKEN_AMOUNT}
               className='text-sm'>
