@@ -20,6 +20,8 @@ const VaultCard = ({
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
+      {/* TODO: handle the undefined response from `Array.find` in the app (TS always
+      expects `undefined` to be a valid response from `Array.find`) */}
       {collateralSymbol && wrappedSymbol && (
         <CoinPair
           coinOne={collateralSymbol}
