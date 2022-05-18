@@ -665,7 +665,7 @@ const Staking = (): JSX.Element => {
 
     // ray test touch <
     // eslint-disable-next-line max-len
-    return `${displayMonetaryAmount(newMonetaryAmount(newTotalStakeAmount.sub(voteGovernanceTokenBalance).toBig().round(), VOTE_GOVERNANCE_TOKEN))} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
+    return `${displayMonetaryAmount(newMonetaryAmount(newTotalStakeAmount.sub(voteGovernanceTokenBalance).toBig(VOTE_GOVERNANCE_TOKEN.base).round(5), VOTE_GOVERNANCE_TOKEN, true))} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
     // ray test touch >
   };
 
@@ -676,9 +676,11 @@ const Staking = (): JSX.Element => {
     ) {
       return undefined;
     }
+    // ray test touch <
     if (remainingBlockNumbersToUnstake === null) {
       throw new Error('Something went wrong!');
     }
+    // ray test touch >
 
     const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
     const extendingLockTime = parseInt(lockTime); // Weeks
