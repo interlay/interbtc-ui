@@ -1,3 +1,10 @@
-type CurrencySymbols = 'DOT' | 'interBTC' | 'INTR' | 'kBTC' | 'KINT' | 'KSM' | undefined;
+enum CurrencySymbols {
+  DOT = 'DOT',
+  INTERBTC = 'interBTC',
+  INTR = 'INTR',
+  KBTC = 'KBTC',
+  KINT = 'KINT',
+  KSM = 'KSM',
+}
 
-export type { CurrencySymbols };
+export { CurrencySymbols };

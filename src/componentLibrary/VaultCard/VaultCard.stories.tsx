@@ -3,14 +3,15 @@ import {
   Meta
 } from '@storybook/react';
 
+import { CurrencySymbols } from '../';
 import { VaultCard, VaultCardProps } from './';
 
 const Template: Story<VaultCardProps> = args => <VaultCard {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  collateralSymbol: 'KSM',
-  wrappedSymbol: 'kBTC',
+  collateralSymbol: CurrencySymbols.KSM,
+  wrappedSymbol: CurrencySymbols.KBTC,
   pendingRequests: 3,
   apy: '16.23',
   collateralScore: '115.45',

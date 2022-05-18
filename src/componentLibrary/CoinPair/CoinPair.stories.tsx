@@ -3,21 +3,22 @@ import {
   Meta
 } from '@storybook/react';
 
+import { CurrencySymbols } from '../';
 import { CoinPair, CoinPairProps } from './';
 
 const Template: Story<CoinPairProps> = args => <CoinPair {...args} />;
 
 const Small = Template.bind({});
 Small.args = {
-  coinOne: 'KSM',
-  coinTwo: 'kBTC',
+  coinOne: CurrencySymbols.KSM,
+  coinTwo: CurrencySymbols.KBTC,
   size: 'small'
 };
 
 const Large = Template.bind({});
 Large.args = {
-  coinOne: 'KSM',
-  coinTwo: 'kBTC',
+  coinOne: CurrencySymbols.KSM,
+  coinTwo: CurrencySymbols.KBTC,
   size: 'large'
 };
 

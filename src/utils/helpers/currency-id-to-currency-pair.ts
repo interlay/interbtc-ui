@@ -9,27 +9,27 @@ type CurrencyPair = {
 const CURRENCY_PAIRS: Array<CurrencyPair> = [
   {
     id: CurrencyIdLiteral.DOT,
-    symbol: 'DOT'
+    symbol: CurrencySymbols.DOT
   },
   {
     id: CurrencyIdLiteral.INTERBTC,
-    symbol: 'interBTC'
+    symbol: CurrencySymbols.INTERBTC
   },
   {
     id: CurrencyIdLiteral.INTR,
-    symbol: 'INTR'
+    symbol: CurrencySymbols.INTR
   },
   {
     id: CurrencyIdLiteral.KBTC,
-    symbol: 'kBTC'
+    symbol: CurrencySymbols.KBTC
   },
   {
     id: CurrencyIdLiteral.KINT,
-    symbol: 'KINT'
+    symbol: CurrencySymbols.KINT
   },
   {
     id: CurrencyIdLiteral.KSM,
-    symbol: 'KSM'
+    symbol: CurrencySymbols.KSM
   }
 ];
 

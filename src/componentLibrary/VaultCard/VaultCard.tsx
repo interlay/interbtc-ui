@@ -2,8 +2,8 @@ import { CoinPair, CTALink, CurrencySymbols } from '../';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateralSymbol: CurrencySymbols;
-  wrappedSymbol: CurrencySymbols;
+  collateralSymbol: CurrencySymbols | undefined;
+  wrappedSymbol: CurrencySymbols | undefined;
   pendingRequests: number;
   apy: string;
   collateralScore: string;
