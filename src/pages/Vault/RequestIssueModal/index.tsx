@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
+import Big from 'big.js';
+import { useErrorHandler } from 'react-error-boundary';
 import {
   Bitcoin,
   BitcoinAmount,
@@ -11,6 +13,12 @@ import {
   ExchangeRate,
   Currency
 } from '@interlay/monetary-js';
+import {
+  newMonetaryAmount,
+  GovernanceUnit,
+  newAccountId,
+  Issue
+} from '@interlay/interbtc-api';
 
 import {
   GovernanceTokenLogoIcon,
@@ -26,19 +34,11 @@ import InterlayModal, {
 } from 'components/UI/InterlayModal';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { ParachainStatus, StoreType } from 'common/types/util.types';
-import {
-  newMonetaryAmount,
-  GovernanceUnit,
-  newAccountId,
-  Issue
-} from '@interlay/interbtc-api';
 import TokenField from 'components/TokenField';
-import Big from 'big.js';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { useErrorHandler } from 'react-error-boundary';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import SubmittedIssueRequestModal from 'pages/Bridge/IssueForm/SubmittedIssueRequestModal';
@@ -424,7 +424,7 @@ const RequestIssueModal = ({
               disabled={
               // TODO: `parachainStatus` and `address` should be checked at upper levels
                 parachainStatus !== ParachainStatus.Running ||
-              !address
+                !address
               }
               pending={submitStatus === STATUSES.PENDING}>
               {t('confirm')}
