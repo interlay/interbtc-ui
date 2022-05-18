@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import FullLoadingSpinner from 'components/FullLoadingSpinner';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import MainContainer from 'parts/MainContainer';
 import { VaultCard } from 'componentLibrary';
 import ErrorFallback from 'components/ErrorFallback';
@@ -38,7 +38,7 @@ const VaultOverview = (): JSX.Element => {
               link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`} />
           ))}
         </Vaults> : (
-          <FullLoadingSpinner />
+          <PrimaryColorEllipsisLoader />
         )}
     </MainContainer>);
 };
