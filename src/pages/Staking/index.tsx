@@ -676,19 +676,25 @@ const Staking = (): JSX.Element => {
     ) {
       return undefined;
     }
+
     // ray test touch <
-    if (remainingBlockNumbersToUnstake === null) {
-      throw new Error('Something went wrong!');
+    const extendingLockTime = parseInt(lockTime); // Weeks
+
+    let newLockTime: number;
+    let newLockingAmount: GovernanceTokenMonetaryAmount;
+    if (remainingBlockNumbersToUnstake === null) { // If the user has not staked
+      newLockTime = extendingLockTime;
+      newLockingAmount = monetaryLockingAmount;
+    } else { // If the user has staked
+      const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
+
+      // New lock-time that is applied to the entire staked governance token
+      newLockTime = currentLockTime + extendingLockTime; // Weeks
+
+      // New total staked governance token
+      newLockingAmount = monetaryLockingAmount.add(stakedAmount);
     }
     // ray test touch >
-
-    const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
-    const extendingLockTime = parseInt(lockTime); // Weeks
-    // New lock-time that is applied to the entire staked governance token
-    const newLockTime = currentLockTime + extendingLockTime; // Weeks
-
-    // New total staked governance token
-    const newLockingAmount = monetaryLockingAmount.add(stakedAmount);
 
     // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
     return newLockingAmount.mul(newLockTime).div(STAKE_LOCK_TIME.MAX);
