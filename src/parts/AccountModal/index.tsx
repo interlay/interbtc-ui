@@ -31,10 +31,8 @@ import useGetAccounts from 'utils/hooks/api/use-get-accounts';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
-import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
-import { InjectedWalletSourceName } from 'utils/constants/wallets';
 
-const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
+import { InjectedWalletSourceName, WALLETS_DATA } from 'utils/constants/wallets';
 
 interface Props {
   open: boolean;
@@ -88,10 +86,20 @@ const AccountModal = ({
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);
   const [selectedWallet, setSelectedWallet] = React.useState<InjectedWalletSourceName | undefined>();
-  const [contentState, setContentState] = React.useState<AccountModalState>(AccountModalState.SELECT_WALLET);
 
   const accounts = useGetAccounts();
+  const accountsFromSelectedWallet = React.useMemo(() =>
+    accounts.filter(({ meta: { source } }) => source === selectedWallet)
+  , [
+    accounts,
+    selectedWallet
+  ]);
+
   const extensionWalletAvailable = extensions.length > 0;
+
+  const handleWalletSelect = (walletName: InjectedWalletSourceName) => () => {
+    setSelectedWallet(walletName);
+  };
 
   const handleAccountSelect = (newAddress: string) => async () => {
     if (!bridgeLoaded) {
@@ -108,38 +116,39 @@ const AccountModal = ({
   };
 
   const handleAccountDisconnect = () => {
+    setSelectedWallet(undefined);
     dispatch(changeAddressAction(''));
     // TODO: how to handle window.bridge.setAccount('');
     console.log('disconnecting...');
   };
 
   React.useEffect(() => {
-    // Sets initial value of the selected wallet from address.
-    if (address && selectedWallet === undefined) {
-      const selectedAccount = accounts.find(({ address: accountAddress }) => address === accountAddress);
-      if (selectedAccount) {
-        setSelectedWallet(selectedAccount.meta.source as InjectedWalletSourceName);
-      }
+    // Sets selected wallet on modal open.
+    const selectedAccount = accounts.find(({ address: accountAddress }) => address === accountAddress);
+    if (selectedAccount) {
+      setSelectedWallet(selectedAccount.meta.source as InjectedWalletSourceName);
+    } else {
+      setSelectedWallet(undefined);
     }
-  }, [address, accounts, selectedWallet]);
+  }, [address, accounts, open]);
 
-  // Manages state of the modal content.
-  React.useEffect(() => {
+  // State of the modal content.
+  const contentState = (() => {
     // TODO: check against supported wallets not all injected extensions found
     if (extensionWalletAvailable) {
       if (selectedWallet === undefined) {
-        setContentState(AccountModalState.SELECT_WALLET);
+        return AccountModalState.SELECT_WALLET;
       } else {
         if (accounts !== undefined && accounts.length > 0) {
-          setContentState(AccountModalState.SELECT_ACCOUNT);
+          return AccountModalState.SELECT_ACCOUNT;
         } else {
-          setContentState(AccountModalState.NO_ACCOUNT_FOUND);
+          return AccountModalState.NO_ACCOUNT_FOUND;
         }
       }
     } else {
-      setContentState(AccountModalState.NO_WALLET_FOUND);
+      return AccountModalState.NO_WALLET_FOUND;
     }
-  }, [extensionWalletAvailable, selectedWallet, accounts]);
+  })();
 
   const renderContent = () => {
     switch (contentState) {
@@ -151,30 +160,65 @@ const AccountModal = ({
             <ExternalLink href={TERMS_AND_CONDITIONS_LINK}>terms and conditions</ExternalLink>
             .
           </p>
-          <ExternalLink href={POLKADOT_EXTENSION}>
-            <span
-              className={clsx(
-                'inline-flex',
-                'items-center',
-                'space-x-1.5'
-              )}>
-              <PolkadotExtensionLogoIcon
-                width={30}
-                height={30} />
-              <span>Polkadot.js</span>
-            </span>
-          </ExternalLink>
+          {/* Lists all supported wallets. */
+            Object.values(WALLETS_DATA).map(({ name, LogoIcon, URL }) =>
+              (
+                <ExternalLink
+                  href={URL}
+                  key={name}>
+                  <span
+                    className={clsx(
+                      'inline-flex',
+                      'items-center',
+                      'space-x-1.5'
+                    )}>
+                    <LogoIcon
+                      width={30}
+                      height={30} />
+                    <span>{name}</span>
+                  </span>
+                </ExternalLink>)
+            )
+          }
         </>
       );
     case AccountModalState.SELECT_WALLET:
       // TODO: Implement list of wallets.
-      return 'todo: list of wallets';
+      return (
+        <ul
+          className={clsx(
+            'space-y-4'
+          )}>
+          {extensions.map(extensionName => {
+            const { LogoIcon, name } = WALLETS_DATA[extensionName as InjectedWalletSourceName];
+            return (
+              <li
+                key={extensionName}>
+                <InterlayButtonBase
+                  className={clsx(
+                    ACCOUNT_MODAL_BUTTON_CLASSES,
+                    'w-full'
+                  )}
+                  onClick={handleWalletSelect(extensionName as InjectedWalletSourceName)}>
+                  <LogoIcon
+                    width={30}
+                    height={30} />
+                  <span className='pl-2'>
+                    {name}
+                  </span>
+                </InterlayButtonBase>
+              </li>
+            );
+          }
+          )}
+        </ul>
+      );
     case AccountModalState.NO_ACCOUNT_FOUND:
       return (
       // Create a new account when no accounts are available
         <p>
           {t('no_account')}
-          <ExternalLink href={POLKADOT_EXTENSION}>
+          <ExternalLink href={selectedWallet && WALLETS_DATA[selectedWallet].URL}>
               &nbsp;{t('here')}
           </ExternalLink>
             .
@@ -182,9 +226,9 @@ const AccountModal = ({
       );
     case AccountModalState.SELECT_ACCOUNT:
       return (
-      // List all available accounts
+      // Lists all available accounts for selected wallet.
         <ul className='space-y-4'>
-          {accounts.map(account => {
+          {accountsFromSelectedWallet.map(account => {
             const selected = address === account.address;
 
             return (
@@ -226,6 +270,19 @@ const AccountModal = ({
     }
   };
 
+  const modalTitle = (() => {
+    switch (contentState) {
+    case AccountModalState.NO_WALLET_FOUND:
+      return t('account_modal.install_wallet');
+    case AccountModalState.SELECT_WALLET:
+      return t('account_modal.select_wallet');
+    case AccountModalState.NO_ACCOUNT_FOUND:
+      return t('account_modal.create_account');
+    case AccountModalState.SELECT_ACCOUNT:
+      return t('account_modal.select_account');
+    }
+  })();
+
   return (
     <InterlayModal
       initialFocus={focusRef}
@@ -243,10 +300,7 @@ const AccountModal = ({
             'font-medium',
             'mb-6'
           )}>
-          {extensionWalletAvailable ?
-            'Select account' :
-            'Pick a wallet'
-          }
+          {modalTitle}
         </InterlayModalTitle>
         <CloseIconButton
           ref={focusRef}
