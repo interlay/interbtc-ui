@@ -49,9 +49,7 @@ import {
   STAKE_LOCK_TIME,
   GovernanceTokenMonetaryAmount,
   VoteGovernanceTokenMonetaryAmount,
-  // ray test touch <
   VOTE_GOVERNANCE_TOKEN
-  // ray test touch >
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
@@ -663,13 +661,11 @@ const Staking = (): JSX.Element => {
       return '-';
     }
 
-    // ray test touch <
     const newVoteGovernanceTokenAmountGained = newTotalStakeAmount.sub(voteGovernanceTokenBalance);
     const rounded = newVoteGovernanceTokenAmountGained.toBig(VOTE_GOVERNANCE_TOKEN.base).round(5);
     const typed = newMonetaryAmount(rounded, VOTE_GOVERNANCE_TOKEN, true);
 
     return `${displayMonetaryAmount(typed)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
-    // ray test touch >
   };
 
   const getNewTotalStake = () => {
@@ -680,7 +676,6 @@ const Staking = (): JSX.Element => {
       return undefined;
     }
 
-    // ray test touch <
     const extendingLockTime = parseInt(lockTime); // Weeks
 
     let newLockTime: number;
@@ -697,7 +692,6 @@ const Staking = (): JSX.Element => {
       // New total staked governance token
       newLockingAmount = monetaryLockingAmount.add(stakedAmount);
     }
-    // ray test touch >
 
     // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
     return newLockingAmount.mul(newLockTime).div(STAKE_LOCK_TIME.MAX);
@@ -906,7 +900,6 @@ const Staking = (): JSX.Element => {
                 value={renderUnlockDateLabel()}
                 tooltip='Your staked amount will be locked until this date.' />
             )}
-            {/* ray test touch < */}
             <InformationUI
               label={t('staking_page.new_vote_governance_token_gained', {
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
@@ -915,7 +908,6 @@ const Staking = (): JSX.Element => {
               tooltip={t('staking_page.the_increase_in_your_vote_governance_token_balance', {
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
               })} />
-            {/* ray test touch > */}
             {votingBalanceGreaterThanZero && (
               <InformationUI
                 label='New total Stake'
