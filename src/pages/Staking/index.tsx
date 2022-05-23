@@ -664,8 +664,11 @@ const Staking = (): JSX.Element => {
     }
 
     // ray test touch <
-    // eslint-disable-next-line max-len
-    return `${displayMonetaryAmount(newMonetaryAmount(newTotalStakeAmount.sub(voteGovernanceTokenBalance).toBig(VOTE_GOVERNANCE_TOKEN.base).round(5), VOTE_GOVERNANCE_TOKEN, true))} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
+    const newVoteGovernanceTokenAmountGained = newTotalStakeAmount.sub(voteGovernanceTokenBalance);
+    const rounded = newVoteGovernanceTokenAmountGained.toBig(VOTE_GOVERNANCE_TOKEN.base).round(5);
+    const typed = newMonetaryAmount(rounded, VOTE_GOVERNANCE_TOKEN, true);
+
+    return `${displayMonetaryAmount(typed)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
     // ray test touch >
   };
 
