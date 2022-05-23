@@ -5,7 +5,8 @@ import {
 } from '@interlay/monetary-js';
 import {
   ReplaceRequestExt,
-  CollateralUnit
+  CollateralUnit,
+  InterbtcPrimitivesVaultId
 } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 
@@ -16,3 +17,5 @@ export interface VaultState {
   lockedBTC: BitcoinAmount;
   apy: string;
 }
+
+export type VaultApiType = [InterbtcPrimitivesVaultId, BitcoinAmount];

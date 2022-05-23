@@ -27,7 +27,7 @@ import {
   KUSAMA,
   POLKADOT
 } from 'utils/constants/relay-chain-names';
-import useGetAccounts from 'utils/hooks/use-get-accounts';
+import useGetAccounts from 'utils/hooks/api/use-get-accounts';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';

@@ -16,7 +16,9 @@ import clsx from 'clsx';
 import {
   Issue,
   newMonetaryAmount,
-  GovernanceUnit
+  GovernanceUnit,
+  InterbtcPrimitivesVaultId,
+  CurrencyIdLiteral
 } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import {
@@ -69,8 +71,12 @@ import {
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import Vaults from 'components/Vaults';
+import { VaultApiType } from 'common/types/vault.types';
+import Checkbox, { CheckboxLabelSide } from 'components/Checkbox';
 
 const BTC_AMOUNT = 'btc-amount';
+const VAULT_SELECTION = 'vault-selection';
 
 // TODO: should handle correctly later
 let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
@@ -86,6 +92,7 @@ const extraRequiredCollateralTokenAmount =
 
 type IssueFormData = {
   [BTC_AMOUNT]: string;
+  [VAULT_SELECTION]: string;
 }
 
 const IssueForm = (): JSX.Element | null => {
@@ -109,7 +116,9 @@ const IssueForm = (): JSX.Element | null => {
     handleSubmit,
     watch,
     formState: { errors },
-    trigger
+    trigger,
+    setError,
+    clearErrors
   } = useForm<IssueFormData>({
     mode: 'onChange' // 'onBlur'
   });
@@ -132,6 +141,8 @@ const IssueForm = (): JSX.Element | null => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
+  const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
+  const [vault, setVault] = React.useState<VaultApiType | undefined>();
 
   const {
     isIdle: requestLimitsIdle,
@@ -192,6 +203,43 @@ const IssueForm = (): JSX.Element | null => {
     bridgeLoaded,
     dispatch,
     handleError
+  ]);
+
+  React.useEffect(() => {
+    // deselect checkbox when required btcAmount exceeds capacity
+    if (requestLimits) {
+      const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
+      const requiredTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
+      if (requiredTokenAmount.gt(requestLimits.singleVaultMaxIssuable)) {
+        setSelectVaultManually(false);
+      }
+    }
+  }, [
+    btcAmount,
+    feeRate,
+    requestLimits
+  ]);
+
+  React.useEffect(() => {
+    // vault selection validation
+    const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
+    const wrappedTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
+
+    if (selectVaultManually && vault === undefined) {
+      setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
+    } else if (selectVaultManually && vault?.[1].lt(wrappedTokenAmount)) {
+      setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
+    } else {
+      clearErrors(VAULT_SELECTION);
+    }
+  }, [
+    selectVaultManually,
+    vault,
+    setError,
+    clearErrors,
+    t,
+    btcAmount,
+    feeRate
   ]);
 
   if (
@@ -263,6 +311,12 @@ const IssueForm = (): JSX.Element | null => {
       }
     };
 
+    const handleSelectVaultCheckboxChange = () => {
+      if (!isSelectVaultCheckboxDisabled) {
+        setSelectVaultManually(currentState => !currentState);
+      }
+    };
+
     const onSubmit = async (data: IssueFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
@@ -270,14 +324,26 @@ const IssueForm = (): JSX.Element | null => {
         await trigger(BTC_AMOUNT);
 
         const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT] || '0');
-
         const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
-        const vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
+
+        let vaultId: InterbtcPrimitivesVaultId;
+        let collateralTokenIdLiteral: CurrencyIdLiteral;
+
+        if (selectVaultManually) {
+          if (!vault) {
+            throw new Error('Specific vault is not selected!');
+          }
+          vaultId = vault[0];
+          collateralTokenIdLiteral = vault[0].currencies.collateral.asToken.toString();
+        } else {
+          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
+          collateralTokenIdLiteral = COLLATERAL_TOKEN_ID_LITERAL;
+        }
 
         const result = await window.bridge.issue.request(
           wrappedTokenAmount,
           vaultId.accountId,
-          COLLATERAL_TOKEN_ID_LITERAL,
+          collateralTokenIdLiteral,
           false, // default
           0, // default
           vaults
@@ -298,6 +364,7 @@ const IssueForm = (): JSX.Element | null => {
     const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
     const accountSet = !!address;
+    const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
 
     return (
       <>
@@ -335,6 +402,25 @@ const IssueForm = (): JSX.Element | null => {
               tokenSymbol={WRAPPED_TOKEN_SYMBOL} />
           </div>
           <ParachainStatusInfo status={parachainStatus} />
+          <div
+            className={clsx('flex',
+              'flex-col',
+              'items-end',
+              'gap-2')}>
+            <Checkbox
+              label={t('issue_page.manually_select_vault')}
+              labelSide={CheckboxLabelSide.LEFT}
+              disabled={isSelectVaultCheckboxDisabled}
+              type='checkbox'
+              checked={selectVaultManually}
+              onChange={handleSelectVaultCheckboxChange} />
+            <Vaults
+              label={t('select_vault')}
+              requiredCapacity={wrappedTokenAmount.toString()}
+              isShown={selectVaultManually}
+              onSelectionCallback={setVault}
+              error={errors[VAULT_SELECTION]} />
+          </div>
           <PriceInfo
             title={
               <h5
