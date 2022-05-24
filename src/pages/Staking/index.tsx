@@ -31,7 +31,7 @@ import WithdrawButton from './WithdrawButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
-import TotalStakedUI from './TotalStakedUI';
+import TotalsUI from './TotalsUI';
 import MainContainer from 'parts/MainContainer';
 import TitleWithUnderline from 'components/TitleWithUnderline';
 import Panel from 'components/Panel';
@@ -48,7 +48,8 @@ import {
   GOVERNANCE_TOKEN,
   STAKE_LOCK_TIME,
   GovernanceTokenMonetaryAmount,
-  VoteGovernanceTokenMonetaryAmount
+  VoteGovernanceTokenMonetaryAmount,
+  VOTE_GOVERNANCE_TOKEN
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
@@ -479,7 +480,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
     if (monetaryLockingAmount.gt(availableBalance)) {
-      return 'Locking amount must be less than available balance!';
+      return 'Locking amount must not be greater than available balance!';
     }
 
     const planckLockingAmount = monetaryLockingAmount.to.Planck();
@@ -651,29 +652,58 @@ const Staking = (): JSX.Element => {
     return format(unlockDate, YEAR_MONTH_DAY_PATTERN);
   };
 
-  const renderNewTotalStakeLabel = () => {
+  const renderNewVoteGovernanceTokenGainedLabel = () => {
+    const newTotalStakeAmount = getNewTotalStake();
+    if (
+      voteGovernanceTokenBalance === undefined ||
+      newTotalStakeAmount === undefined
+    ) {
+      return '-';
+    }
+
+    const newVoteGovernanceTokenAmountGained = newTotalStakeAmount.sub(voteGovernanceTokenBalance);
+    const rounded = newVoteGovernanceTokenAmountGained.toBig(VOTE_GOVERNANCE_TOKEN.base).round(5);
+    const typed = newMonetaryAmount(rounded, VOTE_GOVERNANCE_TOKEN, true);
+
+    return `${displayMonetaryAmount(typed)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
+  };
+
+  const getNewTotalStake = () => {
     if (
       remainingBlockNumbersToUnstake === undefined ||
       stakedAmount === undefined
     ) {
-      return '-';
-    }
-    if (remainingBlockNumbersToUnstake === null) {
-      throw new Error('Something went wrong!');
+      return undefined;
     }
 
-    const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
     const extendingLockTime = parseInt(lockTime); // Weeks
-    // New lock-time that is applied to the entire staked governance token
-    const newLockTime = currentLockTime + extendingLockTime; // Weeks
 
-    // New total staked governance token
-    const newLockingAmount = monetaryLockingAmount.add(stakedAmount);
+    let newLockTime: number;
+    let newLockingAmount: GovernanceTokenMonetaryAmount;
+    if (remainingBlockNumbersToUnstake === null) { // If the user has not staked
+      newLockTime = extendingLockTime;
+      newLockingAmount = monetaryLockingAmount;
+    } else { // If the user has staked
+      const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
+
+      // New lock-time that is applied to the entire staked governance token
+      newLockTime = currentLockTime + extendingLockTime; // Weeks
+
+      // New total staked governance token
+      newLockingAmount = monetaryLockingAmount.add(stakedAmount);
+    }
 
     // Multiplying the new total staked governance token with the staking time divided by the maximum lock time
-    const newTotalStakeAmount = newLockingAmount.mul(newLockTime / STAKE_LOCK_TIME.MAX);
+    return newLockingAmount.mul(newLockTime).div(STAKE_LOCK_TIME.MAX);
+  };
 
-    return displayMonetaryAmount(newTotalStakeAmount);
+  const renderNewTotalStakeLabel = () => {
+    const newTotalStakeAmount = getNewTotalStake();
+    if (newTotalStakeAmount === undefined) {
+      return '-';
+    }
+
+    return `${displayMonetaryAmount(newTotalStakeAmount)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
   };
 
   const renderEstimatedAPYLabel = () => {
@@ -821,7 +851,7 @@ const Staking = (): JSX.Element => {
                 stakedAmount={renderStakedAmountLabel()}
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
             )}
-            <TotalStakedUI />
+            <TotalsUI />
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
@@ -870,20 +900,28 @@ const Staking = (): JSX.Element => {
                 value={renderUnlockDateLabel()}
                 tooltip='Your staked amount will be locked until this date.' />
             )}
+            <InformationUI
+              label={t('staking_page.new_vote_governance_token_gained', {
+                voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
+              })}
+              value={renderNewVoteGovernanceTokenGainedLabel()}
+              tooltip={t('staking_page.the_increase_in_your_vote_governance_token_balance', {
+                voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
+              })} />
             {votingBalanceGreaterThanZero && (
               <InformationUI
                 label='New total Stake'
-                value={`${renderNewTotalStakeLabel()} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-                tooltip='Your total stake after this transaction.' />
+                value={`${renderNewTotalStakeLabel()}`}
+                tooltip='Your total stake after this transaction' />
             )}
             <InformationUI
               label='Estimated APY'
               value={renderEstimatedAPYLabel()}
-              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes`} />
+              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`} />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={renderEstimatedRewardAmountLabel()}
-              tooltip={t('staking_page.estimated_governance_token_rewards_tooltip_label', {
+              tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
               })} />
