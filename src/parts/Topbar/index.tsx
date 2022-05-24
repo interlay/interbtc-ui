@@ -99,7 +99,7 @@ const Topbar = (): JSX.Element => {
     const matchedAccount = accounts.find(account => account.address === address);
     accountLabel = matchedAccount?.meta.name || address;
   } else {
-    accountLabel = 'Select Account';
+    accountLabel = 'Select Wallet';
   }
 
   return (

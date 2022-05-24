@@ -3,7 +3,7 @@ import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot
 import { ReactComponent as TalismanWalletLogoIcon } from 'assets/img/talisman-wallet-logo.svg';
 import { ReactComponent as SubWalletLogoIcon } from 'assets/img/subwallet-logo.svg';
 
-enum InjectedWalletSourceName {
+enum WalletSourceName {
     POLKADOT_EXTENSION = 'polkadot-js',
     TALISMAN = 'talisman',
     SUBWALLET = 'subwallet-js'
@@ -15,19 +15,19 @@ interface WalletData {
     URL: string;
 }
 
-const WALLETS_DATA: {[wallet in InjectedWalletSourceName]: WalletData} =
+const WALLETS: {[wallet in WalletSourceName]: WalletData} =
     {
-      [InjectedWalletSourceName.POLKADOT_EXTENSION]: {
-        name: 'Polkadot.js',
+      [WalletSourceName.POLKADOT_EXTENSION]: {
+        name: 'Polkadot{.js}',
         LogoIcon: PolkadotExtensionLogoIcon,
         URL: 'https://polkadot.js.org/extension/'
       },
-      [InjectedWalletSourceName.TALISMAN]: {
+      [WalletSourceName.TALISMAN]: {
         name: 'Talisman',
         LogoIcon: TalismanWalletLogoIcon,
         URL: 'https://talisman.xyz/'
       },
-      [InjectedWalletSourceName.SUBWALLET]: {
+      [WalletSourceName.SUBWALLET]: {
         name: 'SubWallet',
         LogoIcon: SubWalletLogoIcon,
         URL: 'https://subwallet.app/'
@@ -35,6 +35,6 @@ const WALLETS_DATA: {[wallet in InjectedWalletSourceName]: WalletData} =
     };
 
 export {
-  InjectedWalletSourceName,
-  WALLETS_DATA
+  WalletSourceName,
+  WALLETS
 };
