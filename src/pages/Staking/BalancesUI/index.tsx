@@ -128,7 +128,7 @@ const BalancesUI = ({
         label={`Projected ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
         value={projectedRewardAmount}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
-        tooltip={t('staking_page.estimated_governance_token_rewards_tooltip_label', {
+        tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
           voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
         })} />
