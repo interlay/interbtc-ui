@@ -921,7 +921,7 @@ const Staking = (): JSX.Element => {
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={renderEstimatedRewardAmountLabel()}
-              tooltip={t('staking_page.estimated_governance_token_rewards_tooltip_label', {
+              tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
               })} />

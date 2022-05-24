@@ -449,7 +449,7 @@
     "tooltip_issue_capacity_zero": "Vault issue capacity is 0."
   },
   "staking_page": {
-    "estimated_governance_token_rewards_tooltip_label": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
+    "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
     "new_vote_governance_token_gained": "New {{voteGovernanceTokenSymbol}} Gained",
     "the_increase_in_your_vote_governance_token_balance": "The increase in your {{voteGovernanceTokenSymbol}} balance"
   },
