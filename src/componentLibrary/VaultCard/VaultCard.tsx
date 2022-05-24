@@ -1,9 +1,10 @@
-import { CoinPair, CTALink, CurrencySymbols } from '../';
+import { CurrencySymbols } from 'types/currency';
+import { CoinPair, CTALink } from '../';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateralSymbol?: CurrencySymbols;
-  wrappedSymbol?: CurrencySymbols;
+  collateralSymbol: CurrencySymbols;
+  wrappedSymbol: CurrencySymbols;
   pendingRequests: number;
   apy: string;
   collateralScore: string;
@@ -20,14 +21,10 @@ const VaultCard = ({
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
-      {/* TODO: handle the undefined response from `Array.find` in the app (TS always
-      expects `undefined` to be a valid response from `Array.find`) */}
-      {collateralSymbol && wrappedSymbol && (
-        <CoinPair
-          coinOne={collateralSymbol}
-          coinTwo={wrappedSymbol}
-          size='large' />
-      )}
+      <CoinPair
+        coinOne={collateralSymbol}
+        coinTwo={wrappedSymbol}
+        size='large' />
       <CardTitle>
         {collateralSymbol} - {wrappedSymbol}
       </CardTitle>

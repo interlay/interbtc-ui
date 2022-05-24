@@ -1,4 +1,4 @@
-import { CurrencySymbols } from '../';
+import { CurrencySymbols } from 'types/currency';
 import { KbtcIcon, KsmIcon } from './icons';
 import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
 

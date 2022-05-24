@@ -7,7 +7,14 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
-import { CurrencySymbols } from 'componentLibrary';
+enum CurrencySymbols {
+  DOT = 'DOT',
+  INTERBTC = 'interBTC',
+  INTR = 'INTR',
+  KBTC = 'KBTC',
+  KINT = 'KINT',
+  KSM = 'KSM',
+}
 
 type BTCToCollateralTokenRate =
   ExchangeRate<
@@ -23,6 +30,8 @@ type CurrencyPair = {
 }
 
 type CurrencyPairs = Array<CurrencyPair>;
+
+export { CurrencySymbols };
 
 export type {
   CurrencyPair,
