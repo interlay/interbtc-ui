@@ -14,6 +14,8 @@ enum CurrencySymbols {
   KBTC = 'KBTC',
   KINT = 'KINT',
   KSM = 'KSM',
+  // This allows us to avoid returning undefined from Array.find
+  UNDEFINED = 'UNDEFINED'
 }
 
 type BTCToCollateralTokenRate =

@@ -29,12 +29,15 @@ const CURRENCY_PAIRS: CurrencyPairs = [
   }
 ];
 
-const currencyIdToCurrencyPair = (idLiteral: CurrencyIdLiteral): CurrencyPair | undefined =>
+const getCurrencyPair = (idLiteral: CurrencyIdLiteral): CurrencyPair | undefined =>
   CURRENCY_PAIRS.find(pair => pair.id === idLiteral);
 
-const getCurrencySymbol = (idLiteral: CurrencyIdLiteral): CurrencySymbols | undefined =>
-  currencyIdToCurrencyPair(idLiteral)?.symbol;
+const getCurrencySymbol = (idLiteral: CurrencyIdLiteral): CurrencySymbols => {
+  const currencyPair = getCurrencyPair(idLiteral);
 
-export { currencyIdToCurrencyPair, getCurrencySymbol };
+  return currencyPair ? currencyPair.symbol : CurrencySymbols.UNDEFINED;
+};
+
+export { getCurrencyPair, getCurrencySymbol };
 
 export type { CurrencyPair, CurrencySymbols };
