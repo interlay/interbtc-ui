@@ -13,6 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Install dependencies
+        run: rm rf node_modules
         run: yarn
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish to Chromatic
