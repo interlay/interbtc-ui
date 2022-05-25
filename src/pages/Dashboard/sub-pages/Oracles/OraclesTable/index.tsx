@@ -29,7 +29,7 @@ import genericFetcher, {
 } from 'services/fetchers/generic-fetcher';
 import { formatDateTime } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { BTCToCollateralTokenRate } from 'types/currency.d';
+import { BTCToCollateralTokenRate } from 'types/currency';
 import { ReactComponent as CheckCircleIcon } from 'assets/img/icons/check-circle.svg';
 import { ReactComponent as CancelIcon } from 'assets/img/icons/cancel.svg';
 import {
