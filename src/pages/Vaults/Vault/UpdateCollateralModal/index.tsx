@@ -273,16 +273,37 @@ const UpdateCollateralModal = ({
     }
   };
 
-  const renderRequiredCollateralTokenAmount = () => {
-    if (requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading) {
+  // ray test touch <
+  const renderMinRequiredCollateralTokenAmount = () => {
+    if (
+      requiredCollateralTokenAmountIdle ||
+      requiredCollateralTokenAmountLoading
+    ) {
       return '-';
     }
 
     if (requiredCollateralTokenAmount === undefined) {
       throw new Error('Something went wrong');
     }
-    return `${displayMonetaryAmount(requiredCollateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`;
+    return displayMonetaryAmount(requiredCollateralTokenAmount);
   };
+
+  const renderMaxWithdrawableCollateralTokenAmount = () => {
+    if (
+      requiredCollateralTokenAmountIdle ||
+      requiredCollateralTokenAmountLoading
+    ) {
+      return '-';
+    }
+
+    if (requiredCollateralTokenAmount === undefined) {
+      throw new Error('Something went wrong');
+    }
+
+    const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
+    return displayMonetaryAmount(maxWithdrawableCollateralTokenAmount);
+  };
+  // ray test touch >
 
   return (
     <InterlayModal
@@ -317,9 +338,20 @@ const UpdateCollateralModal = ({
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </p>
+          {/* ray test touch < */}
           <p>
-            Minimum Required Collateral {renderRequiredCollateralTokenAmount()}
+            {t('vault.minimum_required_collateral', {
+              currentCollateral: renderMinRequiredCollateralTokenAmount(),
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+            })}
           </p>
+          <p>
+            {t('vault.maximum_withdrawable_collateral', {
+              currentCollateral: renderMaxWithdrawableCollateralTokenAmount(),
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+            })}
+          </p>
+          {/* ray test touch > */}
           <div className='space-y-1'>
             <label
               htmlFor={COLLATERAL_TOKEN_AMOUNT}
