@@ -1,19 +1,15 @@
 import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
-import { CollateralIdLiteral, newAccountId, VaultExt } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, newAccountId, VaultExt } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import { StoreType } from 'common/types/util.types';
+import { VAULT_COLLATERAL } from 'config/vaults';
 import { useSelector } from 'react-redux';
-
-// TODO: this needs to be moved to config (not relay chain config) when we introduce support for KINT:
-// https://www.notion.so/interlay/UI-configuration-for-multi-collateral-vaults-f1089976bfd847fcac8467b9ba1d3d90
-const vaultCollateralTokens = [COLLATERAL_TOKEN_ID_LITERAL];
 
 const getVaults = async (
   accountId: AccountId,
-  token: CollateralIdLiteral
+  token: CurrencyIdLiteral
 ) => await window.bridge.vaults.get(accountId, token);
 
 // TODO: when introducing KINT support we should consider whether to parse the data from parallel
@@ -28,7 +24,7 @@ const useGetVaults = ({ address }: { address: string; }): Array<VaultExt<Bitcoin
 
   // TODO: updating react-query to > 3.28.0 will allow us to type this properly
   const vaults = useQueries<Array<UseQueryResult<unknown, unknown>>>(
-    vaultCollateralTokens.map(token => {
+    VAULT_COLLATERAL.map(token => {
       return {
         queryKey: ['vaults', address, token],
         queryFn: () => getVaults(newAccountId(window.bridge.api, address), token),

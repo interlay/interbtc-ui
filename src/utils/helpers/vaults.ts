@@ -13,7 +13,7 @@ import {
   Currency
 } from '@interlay/monetary-js';
 
-import { BTCToCollateralTokenRate } from 'types/currency.d';
+import { BTCToCollateralTokenRate } from 'types/currency';
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,

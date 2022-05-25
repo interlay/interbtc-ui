@@ -47,7 +47,7 @@ import {
 } from 'common/utils/utils';
 import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { BTCToCollateralTokenRate } from 'types/currency.d';
+import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
 const getCollateralizationColor = (
