@@ -79,10 +79,7 @@ const UpdateCollateralModal = ({
     collateralTokenBalance
   } = useSelector((state: StoreType) => state.general);
   // Denoted in collateral token
-  // ray test touch <
-  // const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
-  const currentTotalCollateralTokenAmount = newMonetaryAmount(15.999996389639, COLLATERAL_TOKEN, true);
-  // ray test touch >
+  const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
 
   const {
     register,
@@ -199,15 +196,13 @@ const UpdateCollateralModal = ({
 
     // Collateral update only allowed if above required collateral
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
-      const maxWithdrawal = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
+      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
 
-      // ray test touch <
       return (
-        collateralTokenAmount.gt(maxWithdrawal) ?
+        collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount) ?
           t('vault.collateral_below_threshold') :
           undefined
       );
-      // ray test touch >
     }
 
     if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
@@ -273,7 +268,6 @@ const UpdateCollateralModal = ({
     }
   };
 
-  // ray test touch <
   const renderMinRequiredCollateralTokenAmount = () => {
     if (
       requiredCollateralTokenAmountIdle ||
@@ -303,7 +297,6 @@ const UpdateCollateralModal = ({
     const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
     return displayMonetaryAmount(maxWithdrawableCollateralTokenAmount);
   };
-  // ray test touch >
 
   return (
     <InterlayModal
@@ -332,13 +325,10 @@ const UpdateCollateralModal = ({
           className='space-y-4'>
           <p>
             {t('vault.current_total_collateral', {
-              // ray test touch <
               currentCollateral: displayMonetaryAmount(currentTotalCollateralTokenAmount),
-              // ray test touch >
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </p>
-          {/* ray test touch < */}
           <p>
             {t('vault.minimum_required_collateral', {
               currentCollateral: renderMinRequiredCollateralTokenAmount(),
@@ -351,7 +341,6 @@ const UpdateCollateralModal = ({
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </p>
-          {/* ray test touch > */}
           <div className='space-y-1'>
             <label
               htmlFor={COLLATERAL_TOKEN_AMOUNT}
