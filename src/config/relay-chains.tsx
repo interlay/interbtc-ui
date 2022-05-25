@@ -36,7 +36,7 @@ import {
 import { ReactComponent as InterBTCLogoIcon } from 'assets/img/interbtc-logo.svg';
 import { ReactComponent as KintsugiLogoIcon } from 'assets/img/kintsugi-logo-reversed.svg';
 import { ReactComponent as KBTCLogoIcon } from 'assets/img/kbtc-logo-reversed.svg';
-import { ReactComponent as InterBTCLogoWithTextIcon } from 'assets/img/interbtc-logo-with-text.svg';
+import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
 import { ReactComponent as KintsugiLogoWithTextIcon } from 'assets/img/kintsugi-logo-with-text.svg';
 import { ReactComponent as DOTLogoIcon } from 'assets/img/dot-logo.svg';
 import { ReactComponent as KusamaLogoIcon } from 'assets/img/kusama-logo.svg';
@@ -82,7 +82,7 @@ let WrappedTokenLogoIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }>;
-let WrappedTokenLogoWithTextIcon:
+let GovernanceTokenLogoWithTextIcon:
   React.FunctionComponent<React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }>;
@@ -129,7 +129,7 @@ case POLKADOT: {
   RelayChainLogoIcon = DOTLogoIcon;
   BridgeParachainLogoIcon = InterlayLogoIcon;
   WrappedTokenLogoIcon = InterBTCLogoIcon;
-  WrappedTokenLogoWithTextIcon = InterBTCLogoWithTextIcon;
+  GovernanceTokenLogoWithTextIcon = InterlayLogoWithTextIcon;
   CollateralTokenLogoIcon = DOTLogoIcon;
   GovernanceTokenLogoIcon = InterlayLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
@@ -163,10 +163,10 @@ case KUSAMA: {
   PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
   RelayChainLogoIcon = KusamaLogoIcon;
   BridgeParachainLogoIcon = KintsugiLogoIcon;
-  WrappedTokenLogoIcon = KintsugiLogoIcon;
-  WrappedTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
+  WrappedTokenLogoIcon = KBTCLogoIcon;
+  GovernanceTokenLogoWithTextIcon = KintsugiLogoWithTextIcon;
   CollateralTokenLogoIcon = KusamaLogoIcon;
-  GovernanceTokenLogoIcon = KBTCLogoIcon;
+  GovernanceTokenLogoIcon = KintsugiLogoIcon;
   PUBLIC_ASSETS_FOLDER_NAME = 'kintsugi';
   APP_DOMAIN = ''; // TODO: should add the Kintsugi app domain once it's set up
   CROWDLOAN_LINK = KINTSUGI_CROWDLOAN_LINK;
@@ -212,7 +212,7 @@ export {
   RelayChainLogoIcon,
   BridgeParachainLogoIcon,
   WrappedTokenLogoIcon,
-  WrappedTokenLogoWithTextIcon,
+  GovernanceTokenLogoWithTextIcon,
   CollateralTokenLogoIcon,
   GovernanceTokenLogoIcon,
   PUBLIC_ASSETS_FOLDER_NAME,
