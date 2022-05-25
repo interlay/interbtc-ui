@@ -10,7 +10,7 @@ case POLKADOT: {
   break;
 }
 case KUSAMA: {
-  VAULT_COLLATERAL = [CurrencyIdLiteral.KSM];
+  VAULT_COLLATERAL = [CurrencyIdLiteral.KSM, CurrencyIdLiteral.KINT];
   break;
 }
 default: {
