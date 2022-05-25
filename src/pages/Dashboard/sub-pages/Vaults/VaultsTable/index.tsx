@@ -309,7 +309,6 @@ const VaultsTable = (): JSX.Element => {
     ]
   );
 
-  // ray test touch <
   const vaults: Array<Vault> | undefined = React.useMemo(() => {
     if (
       vaultsExt &&
@@ -363,7 +362,6 @@ const VaultsTable = (): JSX.Element => {
     t,
     vaultsExt
   ]);
-  // ray test touch >
 
   const {
     getTableProps,
@@ -374,9 +372,7 @@ const VaultsTable = (): JSX.Element => {
   } = useTable(
     {
       columns,
-      // ray test touch <
       data: vaults ?? []
-      // ray test touch >
     }
   );
 
