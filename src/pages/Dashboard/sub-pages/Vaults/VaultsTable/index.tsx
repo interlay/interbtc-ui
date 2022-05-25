@@ -309,43 +309,59 @@ const VaultsTable = (): JSX.Element => {
     ]
   );
 
-  const vaults: Array<Vault> = [];
-  if (
-    vaultsExt &&
-    btcToCollateralTokenRate &&
-    liquidationCollateralThreshold &&
-    secureCollateralThreshold &&
-    currentActiveBlockNumber
-  ) {
-    for (const vaultExt of vaultsExt) {
-      const statusLabel = getVaultStatusLabel(
-        vaultExt,
-        currentActiveBlockNumber,
-        liquidationCollateralThreshold,
-        secureCollateralThreshold,
-        btcToCollateralTokenRate,
-        t
-      );
+  const vaults: Array<Vault> | undefined = React.useMemo(() => {
+    if (
+      vaultsExt &&
+      btcToCollateralTokenRate &&
+      liquidationCollateralThreshold &&
+      secureCollateralThreshold &&
+      currentActiveBlockNumber
+    ) {
+      const rawVaults = vaultsExt.map(vaultExt => {
+        const statusLabel = getVaultStatusLabel(
+          vaultExt,
+          currentActiveBlockNumber,
+          liquidationCollateralThreshold,
+          secureCollateralThreshold,
+          btcToCollateralTokenRate,
+          t
+        );
 
-      const vaultCollateral = vaultExt.backingCollateral;
-      const settledTokens = vaultExt.issuedTokens;
-      const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
-      const unsettledTokens = vaultExt.toBeIssuedTokens;
-      const unsettledCollateralization =
-        getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToCollateralTokenRate);
+        const vaultCollateral = vaultExt.backingCollateral;
+        const settledTokens = vaultExt.issuedTokens;
+        const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
+        const unsettledTokens = vaultExt.toBeIssuedTokens;
+        const unsettledCollateralization =
+          getCollateralization(vaultCollateral, unsettledTokens.add(settledTokens), btcToCollateralTokenRate);
 
-      vaults.push({
-        vaultId: vaultExt.id.accountId.toString(),
-        // TODO: fetch collateral reserved
-        lockedBTC: displayMonetaryAmount(settledTokens),
-        lockedDOT: displayMonetaryAmount(vaultCollateral),
-        pendingBTC: displayMonetaryAmount(unsettledTokens),
-        status: statusLabel,
-        unsettledCollateralization: unsettledCollateralization?.toString(),
-        settledCollateralization: settledCollateralization?.toString()
+        return {
+          vaultId: vaultExt.id.accountId.toString(),
+          // TODO: fetch collateral reserved
+          lockedBTC: displayMonetaryAmount(settledTokens),
+          lockedDOT: displayMonetaryAmount(vaultCollateral),
+          pendingBTC: displayMonetaryAmount(unsettledTokens),
+          status: statusLabel,
+          unsettledCollateralization: unsettledCollateralization?.toString(),
+          settledCollateralization: settledCollateralization?.toString()
+        };
       });
+
+      const sortedVaults = rawVaults.sort((vaultA, vaultB) => {
+        const vaultALockedBTC = vaultA.lockedBTC;
+        const vaultBLockedBTC = vaultB.lockedBTC;
+        return (vaultALockedBTC < vaultBLockedBTC ? 1 : (vaultALockedBTC > vaultBLockedBTC ? -1 : 0));
+      });
+
+      return sortedVaults;
     }
-  }
+  }, [
+    btcToCollateralTokenRate,
+    currentActiveBlockNumber,
+    liquidationCollateralThreshold,
+    secureCollateralThreshold,
+    t,
+    vaultsExt
+  ]);
 
   const {
     getTableProps,
@@ -356,7 +372,7 @@ const VaultsTable = (): JSX.Element => {
   } = useTable(
     {
       columns,
-      data: vaults
+      data: vaults ?? []
     }
   );
 
