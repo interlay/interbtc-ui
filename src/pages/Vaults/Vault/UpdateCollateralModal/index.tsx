@@ -268,7 +268,7 @@ const UpdateCollateralModal = ({
     }
   };
 
-  const renderMinRequiredCollateralTokenAmount = () => {
+  const getMinRequiredCollateralTokenAmount = () => {
     if (
       requiredCollateralTokenAmountIdle ||
       requiredCollateralTokenAmountLoading
@@ -282,7 +282,7 @@ const UpdateCollateralModal = ({
     return displayMonetaryAmount(requiredCollateralTokenAmount);
   };
 
-  const renderMaxWithdrawableCollateralTokenAmount = () => {
+  const getMaxWithdrawableCollateralTokenAmount = () => {
     if (
       requiredCollateralTokenAmountIdle ||
       requiredCollateralTokenAmountLoading
@@ -331,13 +331,13 @@ const UpdateCollateralModal = ({
           </p>
           <p>
             {t('vault.minimum_required_collateral', {
-              currentCollateral: renderMinRequiredCollateralTokenAmount(),
+              currentCollateral: getMinRequiredCollateralTokenAmount(),
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </p>
           <p>
             {t('vault.maximum_withdrawable_collateral', {
-              currentCollateral: renderMaxWithdrawableCollateralTokenAmount(),
+              currentCollateral: getMaxWithdrawableCollateralTokenAmount(),
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </p>
