@@ -30,7 +30,7 @@ import useGetAccounts from 'utils/hooks/api/use-get-accounts';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
-import { WalletSourceName, WALLETS } from 'utils/constants/wallets';
+import { WalletSourceName, WALLETS } from 'config/wallets';
 
 interface Props {
   open: boolean;
@@ -65,10 +65,10 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 );
 
 enum AccountModalState {
-  NO_WALLET_FOUND,
-  SELECT_WALLET,
-  NO_ACCOUNT_FOUND,
-  SELECT_ACCOUNT,
+  NoWalletFound,
+  SelectWallet,
+  NoAccountFound,
+  SelectAccount,
 }
 
 const AccountModal = ({
@@ -139,182 +139,188 @@ const AccountModal = ({
   const contentState = (() => {
     if (supportedWalletInstalled) {
       if (selectedWallet === undefined) {
-        return AccountModalState.SELECT_WALLET;
+        return AccountModalState.SelectWallet;
       } else {
         if (accounts !== undefined && accounts.length > 0) {
-          return AccountModalState.SELECT_ACCOUNT;
+          return AccountModalState.SelectAccount;
         } else {
-          return AccountModalState.NO_ACCOUNT_FOUND;
+          return AccountModalState.NoAccountFound;
         }
       }
     } else {
-      return AccountModalState.NO_WALLET_FOUND;
+      return AccountModalState.NoWalletFound;
     }
   })();
 
-  const renderContent = () => {
-    switch (contentState) {
-    case AccountModalState.NO_WALLET_FOUND:
-      return (
-        <>
-          <p>
-            {t('account_modal.install_supported_wallets')}
-            <ExternalLink href={TERMS_AND_CONDITIONS_LINK}>terms and conditions</ExternalLink>
-            .
-          </p>
-          <ul className={clsx('flex', 'flex-col', 'space-y-4')}>
-            {/* Lists all supported wallets. */
-              Object.values(WALLETS).map(({ name, LogoIcon, URL }) =>
-                (
-                  <li key={name}>
-                    <ExternalLink
-                      href={URL}>
-                      <span
-                        className={clsx(
-                          'inline-flex',
-                          'items-center',
-                          'space-x-1.5'
-                        )}>
-                        <LogoIcon
-                          width={30}
-                          height={30} />
-                        <span>{name}</span>
-                      </span>
-                    </ExternalLink>
-                  </li>
-                )
-              )
-            }
-          </ul>
-        </>
-      );
-    case AccountModalState.SELECT_WALLET:
-      return (
-        <ul
-          className={clsx(
-            'space-y-4'
-          )}>
-          {extensions.map(extensionName => {
-            const { LogoIcon, name } = WALLETS[extensionName as WalletSourceName];
-            return (
-              <li
-                key={extensionName}>
-                <InterlayButtonBase
-                  className={clsx(
-                    ACCOUNT_MODAL_BUTTON_CLASSES,
-                    'w-full'
-                  )}
-                  onClick={handleWalletSelect(extensionName as WalletSourceName)}>
-                  <LogoIcon
-                    width={30}
-                    height={30} />
-                  <span className='pl-2'>
-                    {name}
-                  </span>
-                </InterlayButtonBase>
-              </li>
-            );
-          }
-          )}
-        </ul>
-      );
-    case AccountModalState.NO_ACCOUNT_FOUND:
-      return (
-      // Create a new account when no accounts are available
-        <p>
-          {t('account_modal.no_account')}
-          <ExternalLink href={selectedWallet && WALLETS[selectedWallet].URL}>
-              &nbsp;{t('here')}
-          </ExternalLink>
-            .
-        </p>
-      );
-    case AccountModalState.SELECT_ACCOUNT:
-      return (
-      // Lists all available accounts for selected wallet.
-        <>
-          <ul className='space-y-4'>
-            {accountsFromSelectedWallet.map(account => {
-              const selected = address === account.address;
-
-              return (
-                <li
-                  key={account.address}
-                  className={clsx(
-                    'flex',
-                    'space-x-2'
-                  )}>
-                  <InterlayButtonBase
+  const renderNoWalletFoundContent = () => (
+    <>
+      <p>
+        {t('account_modal.install_supported_wallets')}
+        <ExternalLink href={TERMS_AND_CONDITIONS_LINK}>terms and conditions</ExternalLink>
+        .
+      </p>
+      <ul className={clsx('flex', 'flex-col', 'space-y-4')}>
+        {/* Lists all supported wallets. */
+          Object.values(WALLETS).map(({ name, LogoIcon, URL }) =>
+            (
+              <li key={name}>
+                <ExternalLink
+                  href={URL}>
+                  <span
                     className={clsx(
-                      ACCOUNT_MODAL_BUTTON_CLASSES,
-                      { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected },
-                      'w-full'
-                    )}
-                    onClick={handleAccountSelect(account.address)}>
-                    <div
-                      className={clsx(
-                        'flex',
-                        'flex-col',
-                        'items-start'
-                      )}>
-                      <div className='font-medium'>
-                        {account.meta.name}
-                      </div>
-                      <div>
-                        {`(${shortAddress(account.address)})`}
-                      </div>
-                    </div>
-                  </InterlayButtonBase>
-                  <CopyAddressButton
-                    className={ACCOUNT_MODAL_BUTTON_CLASSES}
-                    address={account.address} />
-                </li>
-              );
-            })}
-          </ul>
-          <div className={clsx('flex', 'justify-between', 'items-center')}>
-            <span>
-              {t('account_modal.connected_with')}
-              <span
-                className={clsx(
-                  'font-bold',
-                  { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                  { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
-                {selectedWallet ? WALLETS[selectedWallet].name : '-'}
-              </span>
-            </span>
-            <InterlayButtonBase
-              className={ACCOUNT_MODAL_BUTTON_CLASSES}
-              onClick={handleWalletSelect(undefined)}>
-              {t('account_modal.change_wallet')}
-            </InterlayButtonBase>
-          </div>
-          {address &&
+                      'inline-flex',
+                      'items-center',
+                      'space-x-1.5'
+                    )}>
+                    <LogoIcon
+                      width={30}
+                      height={30} />
+                    <span>{name}</span>
+                  </span>
+                </ExternalLink>
+              </li>
+            )
+          )
+        }
+      </ul>
+    </>
+  );
+
+  const renderSelectWalletContent = () => (
+    <ul
+      className='space-y-4'>
+      {extensions.map(extensionName => {
+        const { LogoIcon, name } = WALLETS[extensionName as WalletSourceName];
+        return (
+          <li
+            key={extensionName}>
             <InterlayButtonBase
               className={clsx(
-                'w-full',
                 ACCOUNT_MODAL_BUTTON_CLASSES,
-                'justify-center'
+                'w-full'
               )}
-              onClick={handleAccountDisconnect}>
-              {t('account_modal.disconnect')}
+              onClick={handleWalletSelect(extensionName as WalletSourceName)}>
+              <LogoIcon
+                width={30}
+                height={30} />
+              <span className='pl-2'>
+                {name}
+              </span>
             </InterlayButtonBase>
-          }
-        </>
-      );
+          </li>
+        );
+      }
+      )}
+    </ul>
+  );
+
+  const renderNoAccountFoundContent = () => (
+    // Create a new account when no accounts are available
+    <p>
+      {t('account_modal.no_account')}
+      <ExternalLink href={selectedWallet && WALLETS[selectedWallet].URL}>
+            &nbsp;{t('here')}
+      </ExternalLink>
+          .
+    </p>
+  );
+
+  const renderSelectAccountContent = () => (
+    // Lists all available accounts for selected wallet.
+    <>
+      <ul className='space-y-4'>
+        {accountsFromSelectedWallet.map(account => {
+          const selected = address === account.address;
+
+          return (
+            <li
+              key={account.address}
+              className={clsx(
+                'flex',
+                'space-x-2'
+              )}>
+              <InterlayButtonBase
+                className={clsx(
+                  ACCOUNT_MODAL_BUTTON_CLASSES,
+                  { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected },
+                  'w-full'
+                )}
+                onClick={handleAccountSelect(account.address)}>
+                <div
+                  className={clsx(
+                    'flex',
+                    'flex-col',
+                    'items-start'
+                  )}>
+                  <div className='font-medium'>
+                    {account.meta.name}
+                  </div>
+                  <div>
+                    {`(${shortAddress(account.address)})`}
+                  </div>
+                </div>
+              </InterlayButtonBase>
+              <CopyAddressButton
+                className={ACCOUNT_MODAL_BUTTON_CLASSES}
+                address={account.address} />
+            </li>
+          );
+        })}
+      </ul>
+      <div className={clsx('flex', 'justify-between', 'items-center')}>
+        <span>
+          {t('account_modal.connected_with')}
+          <span
+            className={clsx(
+              'font-bold',
+              { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}>
+            {selectedWallet ? WALLETS[selectedWallet].name : '-'}
+          </span>
+        </span>
+        <InterlayButtonBase
+          className={ACCOUNT_MODAL_BUTTON_CLASSES}
+          onClick={handleWalletSelect(undefined)}>
+          {t('account_modal.change_wallet')}
+        </InterlayButtonBase>
+      </div>
+      {address &&
+          <InterlayButtonBase
+            className={clsx(
+              'w-full',
+              ACCOUNT_MODAL_BUTTON_CLASSES,
+              'justify-center'
+            )}
+            onClick={handleAccountDisconnect}>
+            {t('account_modal.disconnect')}
+          </InterlayButtonBase>
+      }
+    </>
+  );
+
+  const renderContent = () => {
+    switch (contentState) {
+    case AccountModalState.NoWalletFound:
+      return renderNoWalletFoundContent();
+    case AccountModalState.SelectWallet:
+      return renderSelectWalletContent();
+    case AccountModalState.NoAccountFound:
+      return renderNoAccountFoundContent();
+    case AccountModalState.SelectAccount:
+      return renderSelectAccountContent();
     }
   };
 
   const modalTitle = (() => {
     switch (contentState) {
-    case AccountModalState.NO_WALLET_FOUND:
+    case AccountModalState.NoWalletFound:
       return t('account_modal.install_wallet');
-    case AccountModalState.SELECT_WALLET:
+    case AccountModalState.SelectWallet:
       return t('account_modal.select_wallet');
-    case AccountModalState.NO_ACCOUNT_FOUND:
+    case AccountModalState.NoAccountFound:
       return t('account_modal.create_account');
-    case AccountModalState.SELECT_ACCOUNT:
+    case AccountModalState.SelectAccount:
       return t('account_modal.select_account');
     }
   })();
