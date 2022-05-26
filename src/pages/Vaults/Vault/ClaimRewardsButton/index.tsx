@@ -24,24 +24,25 @@ import InterlayDenimOrKintsugiSupernovaContainedButton, {
 import {
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenMonetaryAmount,
-  COLLATERAL_TOKEN,
   WRAPPED_TOKEN
 } from 'config/relay-chains';
 import {
-  COLLATERAL_TOKEN_ID_LITERAL,
   ZERO_GOVERNANCE_TOKEN_AMOUNT
 } from 'utils/constants/currency';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { CurrencyValues } from 'types/currency';
 
 interface CustomProps {
   // TODO: should remove `undefined` later on when the loading is properly handled
   vaultAccountId: AccountId | undefined;
+  collateralToken: CurrencyValues | undefined;
 }
 
 const ClaimRewardsButton = ({
   vaultAccountId,
+  collateralToken,
   ...rest
 }: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
   const { t } = useTranslation();
@@ -59,7 +60,7 @@ const ClaimRewardsButton = ({
       'vaults',
       'getGovernanceReward',
       vaultAccountId,
-      COLLATERAL_TOKEN_ID_LITERAL,
+      collateralToken?.id,
       GOVERNANCE_TOKEN_SYMBOL
     ],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
@@ -79,7 +80,7 @@ const ClaimRewardsButton = ({
         newVaultId(
           window.bridge.api,
           vaultAccountId.toString(),
-          COLLATERAL_TOKEN as CollateralCurrency,
+          collateralToken?.currency as CollateralCurrency,
           WRAPPED_TOKEN as WrappedCurrency
         );
 
