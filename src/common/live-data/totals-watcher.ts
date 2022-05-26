@@ -1,27 +1,16 @@
-
 import { Dispatch } from 'redux';
 
-import {
-  COLLATERAL_TOKEN,
-  WRAPPED_TOKEN
-} from 'config/relay-chains';
+import { COLLATERAL_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
 import { updateTotalsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 
 export default async function fetchTotals(dispatch: Dispatch, store: StoreState): Promise<void> {
   const state = store.getState();
-  const {
-    totalLockedCollateralTokenAmount,
-    totalWrappedTokenAmount,
-    bridgeLoaded
-  } = state.general;
+  const { totalLockedCollateralTokenAmount, totalWrappedTokenAmount, bridgeLoaded } = state.general;
   if (!bridgeLoaded) return;
 
   try {
-    const [
-      latestTotalWrappedTokenAmount,
-      latestTotalLockedCollateralTokenAmount
-    ] = await Promise.all([
+    const [latestTotalWrappedTokenAmount, latestTotalLockedCollateralTokenAmount] = await Promise.all([
       window.bridge.tokens.total(WRAPPED_TOKEN),
       window.bridge.tokens.total(COLLATERAL_TOKEN)
     ]);
@@ -31,10 +20,7 @@ export default async function fetchTotals(dispatch: Dispatch, store: StoreState)
       !totalWrappedTokenAmount.eq(latestTotalWrappedTokenAmount) ||
       !totalLockedCollateralTokenAmount.eq(latestTotalLockedCollateralTokenAmount)
     ) {
-      dispatch(updateTotalsAction(
-        latestTotalLockedCollateralTokenAmount,
-        latestTotalWrappedTokenAmount
-      ));
+      dispatch(updateTotalsAction(latestTotalLockedCollateralTokenAmount, latestTotalWrappedTokenAmount));
     }
   } catch (error) {
     console.log(error);

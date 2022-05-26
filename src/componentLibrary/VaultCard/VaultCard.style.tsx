@@ -27,7 +27,7 @@ export const CardTitle = styled.h2`
   text-align: center;
 `;
 
-export const CardBody = styled.div `
+export const CardBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing.spacing8};

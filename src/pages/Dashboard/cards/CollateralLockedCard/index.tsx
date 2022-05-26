@@ -1,40 +1,18 @@
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
 import LineChart from '../../LineChart';
 import DashboardCard from '../DashboardCard';
-import Stats, {
-  StatsDt,
-  StatsDd,
-  StatsRouterLink
-} from '../../Stats';
+import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import {
-  COLLATERAL_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN,
-  WRAPPED_TOKEN
-} from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
-import {
-  INTERLAY_DENIM,
-  KINTSUGI_SUPERNOVA
-} from 'utils/constants/colors';
+import { COLLATERAL_TOKEN_SYMBOL, COLLATERAL_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
-import {
-  getUsdAmount,
-  displayMonetaryAmount,
-  getLastMidnightTimestamps
-} from 'common/utils/utils';
+import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
@@ -52,9 +30,7 @@ interface Props {
 const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
 const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
-  const {
-    prices
-  } = useSelector((state: StoreType) => state.general);
+  const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
   const {
@@ -62,7 +38,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     isLoading: cumulativeCollateralPerDayLoading,
     data: cumulativeCollateralPerDay,
     error: cumulativeCollateralPerDayError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<CollateralUnit>[], Error>(
     [
       CUMULATIVE_VOLUMES_FETCHER,
@@ -89,7 +65,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
       chartLineColor = INTERLAY_DENIM[500];
-    // MEMO: should check dark mode as well
+      // MEMO: should check dark mode as well
     } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
       chartLineColor = KINTSUGI_SUPERNOVA[500];
     } else {
@@ -101,33 +77,22 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
         <Stats
           leftPart={
             <>
-              <StatsDt>
-                {t('dashboard.vault.locked_collateral')}
-              </StatsDt>
+              <StatsDt>{t('dashboard.vault.locked_collateral')}</StatsDt>
               <StatsDd>
                 {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </StatsDd>
-              <StatsDd>
-                ${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken.usd)}
-              </StatsDd>
+              <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken.usd)}</StatsDd>
             </>
           }
-          rightPart={
-            <>
-              {hasLinks && (
-                <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>
-                  View vaults
-                </StatsRouterLink>
-              )}
-            </>
-          } />
+          rightPart={<>{hasLinks && <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}</>}
+        />
         <LineChart
           wrapperClassName='h-full'
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_collateral_locked')]}
           yLabels={cumulativeCollateralPerDay
             .slice(0, -1)
-            .map(dataPoint => dataPoint.tillTimestamp.toISOString().substring(0, 10))}
+            .map((dataPoint) => dataPoint.tillTimestamp.toISOString().substring(0, 10))}
           yAxes={[
             {
               ticks: {
@@ -136,18 +101,13 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
               }
             }
           ]}
-          datasets={[
-            cumulativeCollateralPerDay.slice(1).map(dataPoint => displayMonetaryAmount(dataPoint.amount))
-          ]} />
+          datasets={[cumulativeCollateralPerDay.slice(1).map((dataPoint) => displayMonetaryAmount(dataPoint.amount))]}
+        />
       </>
     );
   };
 
-  return (
-    <DashboardCard>
-      {renderContent()}
-    </DashboardCard>
-  );
+  return <DashboardCard>{renderContent()}</DashboardCard>;
 };
 
 export default withErrorBoundary(CollateralLockedCard, {

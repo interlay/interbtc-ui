@@ -1,4 +1,3 @@
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 
@@ -15,9 +14,7 @@ const Transactions = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <ExternalLink
-        href={`${SUBSCAN_LINK}/account/${address}`}
-        className='font-medium'>
+      <ExternalLink href={`${SUBSCAN_LINK}/account/${address}`} className='font-medium'>
         {t('view_all_transactions_on_subscan')}
       </ExternalLink>
       <IssueRequestsTable />

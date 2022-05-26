@@ -1,8 +1,4 @@
-import {
-  BitcoinAmount,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
 import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
@@ -67,11 +63,12 @@ export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmou
   wrappedTokenBalance
 });
 
-export const updateWrappedTokenTransferableBalanceAction =
-  (wrappedTokenTransferableBalance: BitcoinAmount): UpdateWrappedTokenTransferableBalance => ({
-    type: UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
-    wrappedTokenTransferableBalance
-  });
+export const updateWrappedTokenTransferableBalanceAction = (
+  wrappedTokenTransferableBalance: BitcoinAmount
+): UpdateWrappedTokenTransferableBalance => ({
+  type: UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
+  wrappedTokenTransferableBalance
+});
 
 export const updateCollateralTokenBalanceAction = (
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>

@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 
 import Select, {
@@ -26,63 +25,29 @@ interface Props {
   onChange: (chain: ChainOption) => void;
 }
 
-const ChainSelector = ({
-  chainOptions,
-  selectedChain,
-  label,
-  onChange
-}: Props): JSX.Element => (
-  <Select
-    variant={SELECT_VARIANTS.formField}
-    key={selectedChain?.name}
-    value={selectedChain}
-    onChange={onChange}>
+const ChainSelector = ({ chainOptions, selectedChain, label, onChange }: Props): JSX.Element => (
+  <Select variant={SELECT_VARIANTS.formField} key={selectedChain?.name} value={selectedChain} onChange={onChange}>
     {({ open }) => (
       <>
         <SelectLabel>{label}</SelectLabel>
         <SelectBody>
           <SelectButton variant={SELECT_VARIANTS.formField}>
-            <span
-              className={clsx(
-                'flex',
-                'items-center',
-                'space-x-3',
-                'text-xl',
-                'py-2'
-              )}>
+            <span className={clsx('flex', 'items-center', 'space-x-3', 'text-xl', 'py-2')}>
               {selectedChain?.icon}
-              <SelectText className='capitalize'>
-                {selectedChain?.name}
-              </SelectText>
+              <SelectText className='capitalize'>{selectedChain?.name}</SelectText>
             </span>
           </SelectButton>
           <SelectOptions open={open}>
             {chainOptions.map((chainOption: ChainOption) => {
               return (
-                <SelectOption
-                  key={chainOption.name}
-                  value={chainOption}>
-                  {({
-                    selected,
-                    active
-                  }) => (
+                <SelectOption key={chainOption.name} value={chainOption}>
+                  {({ selected, active }) => (
                     <>
-                      <div
-                        className={clsx(
-                          'flex',
-                          'items-center',
-                          'space-x-3',
-                          'text-xl'
-                        )}>
+                      <div className={clsx('flex', 'items-center', 'space-x-3', 'text-xl')}>
                         {chainOption.icon}
-                        <SelectText className='capitalize'>
-                          {chainOption.name}
-                        </SelectText>
+                        <SelectText className='capitalize'>{chainOption.name}</SelectText>
                       </div>
-                      {selected ? (
-                        <SelectCheck
-                          active={active} />
-                      ) : null}
+                      {selected ? <SelectCheck active={active} /> : null}
                     </>
                   )}
                 </SelectOption>

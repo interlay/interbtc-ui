@@ -9,10 +9,7 @@ interface Props {
   label: string;
 }
 
-const Accounts = ({
-  callbackFunction,
-  label
-}: Props): JSX.Element => {
+const Accounts = ({ callbackFunction, label }: Props): JSX.Element => {
   const [selectedAccount, setSelectedAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const accounts = useGetAccounts();
 
@@ -20,18 +17,14 @@ const Accounts = ({
     if (!accounts) return;
 
     if (!selectedAccount) {
-    // Set selected account to first item
+      // Set selected account to first item
       setSelectedAccount(accounts[0]);
     }
 
     if (callbackFunction && selectedAccount) {
       callbackFunction(selectedAccount);
     }
-  }, [
-    accounts,
-    callbackFunction,
-    selectedAccount
-  ]);
+  }, [accounts, callbackFunction, selectedAccount]);
 
   return (
     <div>
@@ -40,7 +33,8 @@ const Accounts = ({
           label={label}
           accounts={accounts}
           selectedAccount={selectedAccount}
-          onChange={setSelectedAccount} />
+          onChange={setSelectedAccount}
+        />
       ) : null}
     </div>
   );

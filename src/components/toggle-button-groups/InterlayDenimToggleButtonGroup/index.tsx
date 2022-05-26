@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 import { RadioGroup } from '@headlessui/react';
 import { PropsOf } from '@headlessui/react/dist/types';
@@ -6,19 +5,8 @@ import { PropsOf } from '@headlessui/react/dist/types';
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 
 // TODO: not used for now
-const InterlayDenimToggleButtonGroup = ({
-  className,
-  ...rest
-}: PropsOf<typeof RadioGroup>): JSX.Element => (
-  <RadioGroup
-    className={clsx(
-      'z-0',
-      'inline-flex',
-      'shadow-sm',
-      'rounded-md',
-      className
-    )}
-    {...rest} />
+const InterlayDenimToggleButtonGroup = ({ className, ...rest }: PropsOf<typeof RadioGroup>): JSX.Element => (
+  <RadioGroup className={clsx('z-0', 'inline-flex', 'shadow-sm', 'rounded-md', className)} {...rest} />
 );
 
 interface CustomInterlayDenimButtonGroupItemProps {
@@ -37,10 +25,7 @@ const InterlayDenimToggleButtonGroupItem = ({
       as={InterlayButtonBase}
       value={value}
       type='button'
-      className={({
-        active,
-        checked
-      }) =>
+      className={({ active, checked }) =>
         clsx(
           {
             [clsx(
@@ -57,11 +42,7 @@ const InterlayDenimToggleButtonGroupItem = ({
           'font-medium',
           'shadow-sm',
           {
-            [clsx(
-              'text-white',
-              'bg-interlayDenim-600',
-              'hover:bg-interlayDenim-700'
-            )]: checked
+            [clsx('text-white', 'bg-interlayDenim-600', 'hover:bg-interlayDenim-700')]: checked
           },
 
           'first:rounded-l',
@@ -74,15 +55,14 @@ const InterlayDenimToggleButtonGroupItem = ({
         )
       }
       disabled={disabled}
-      {...rest}>
+      {...rest}
+    >
       {children}
     </RadioGroup.Option>
   );
 };
 
-export {
-  InterlayDenimToggleButtonGroupItem
-};
+export { InterlayDenimToggleButtonGroupItem };
 
 export type InterlayDenimToggleButtonGroupProps = PropsOf<typeof RadioGroup>;
 export type InterlayDenimToggleButtonGroupItemProps = CustomInterlayDenimButtonGroupItemProps & InterlayButtonBaseProps;

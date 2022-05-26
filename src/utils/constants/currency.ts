@@ -1,4 +1,3 @@
-
 import {
   CollateralIdLiteral,
   WrappedIdLiteral,
@@ -6,12 +5,7 @@ import {
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 
-import {
-  COLLATERAL_TOKEN,
-  WRAPPED_TOKEN,
-  GOVERNANCE_TOKEN,
-  VOTE_GOVERNANCE_TOKEN
-} from 'config/relay-chains';
+import { COLLATERAL_TOKEN, WRAPPED_TOKEN, GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from 'config/relay-chains';
 
 const COLLATERAL_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
 
