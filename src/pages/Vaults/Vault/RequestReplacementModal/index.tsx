@@ -19,13 +19,10 @@ import InterlayModal, {
   InterlayModalTitle
 } from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import {
-  COLLATERAL_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN
-} from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { CurrencyValues } from 'types/currency';
 
 const AMOUNT = 'amount';
 
@@ -36,12 +33,14 @@ type RequestReplacementFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
+  collateralCurrency: CurrencyValues | undefined;
   vaultAddress: string;
 }
 
 const RequestReplacementModal = ({
   onClose,
   open,
+  collateralCurrency,
   vaultAddress
 }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
@@ -63,7 +62,7 @@ const RequestReplacementModal = ({
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
-      await window.bridge.replace.request(amountPolkaBtc, COLLATERAL_TOKEN as CollateralCurrency);
+      await window.bridge.replace.request(amountPolkaBtc, collateralCurrency?.currency as CollateralCurrency);
 
       const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([
@@ -122,7 +121,7 @@ const RequestReplacementModal = ({
           </p>
           <p>{t('vault.you_have')}</p>
           <p>
-            {displayMonetaryAmount(lockedDot)} {COLLATERAL_TOKEN_SYMBOL}
+            {displayMonetaryAmount(lockedDot)} {collateralCurrency?.symbol}
           </p>
           <p>
             {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC

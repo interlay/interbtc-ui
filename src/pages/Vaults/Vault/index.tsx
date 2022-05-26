@@ -21,7 +21,8 @@ import {
   VaultExt,
   VaultStatusExt,
   CollateralIdLiteral,
-  CurrencyIdLiteral
+  CurrencyIdLiteral,
+  CollateralCurrency
 } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
@@ -48,7 +49,7 @@ import {
   GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import { URL_PARAMETERS } from 'utils/constants/links';
-import { getCurrencyPair } from 'utils/helpers/currency-pairs';
+import { getCurrencyPair } from 'utils/helpers/currencies';
 import {
   WRAPPED_TOKEN_ID_LITERAL
 } from 'utils/constants/currency';
@@ -407,9 +408,11 @@ const Vault = (): JSX.Element => {
       <RequestReplacementModal
         onClose={handleRequestReplaceModalClose}
         open={requestReplaceModalOpen}
+        collateralCurrency={collateralCurrencyValues}
         vaultAddress={selectedVaultAccountAddress} />
       <RequestRedeemModal
         onClose={handleRequestRedeemModalClose}
+        collateralCurrency={collateralCurrencyValues?.currency as CollateralCurrency}
         open={requestRedeemModalOpen}
         vaultAddress={selectedVaultAccountAddress} />
       <RequestIssueModal

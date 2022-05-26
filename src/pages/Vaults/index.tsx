@@ -8,7 +8,7 @@ import { VaultCard } from 'componentLibrary';
 import ErrorFallback from 'components/ErrorFallback';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { URL_PARAMETERS } from 'utils/constants/links';
-import { getCurrencySymbol } from 'utils/helpers/currency-pairs';
+import { getCurrencySymbol } from 'utils/helpers/currencies';
 import { useGetVaultOverview } from 'utils/hooks/api/use-get-vault-overview';
 import { VaultsHeader } from './VaultsHeader';
 import { Vaults } from './vaults.style';

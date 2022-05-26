@@ -5,11 +5,13 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
-import { BitcoinAmount } from '@interlay/monetary-js';
 import {
-  COLLATERAL_TOKEN,
-  WRAPPED_TOKEN
-} from 'config/relay-chains';
+  CollateralCurrency,
+  newVaultId,
+  WrappedCurrency
+} from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import { WRAPPED_TOKEN } from 'config/relay-chains';
 import ErrorMessage from 'components/ErrorMessage';
 import NumberInput from 'components/NumberInput';
 import TextField from 'components/TextField';
@@ -23,11 +25,6 @@ import InterlayModal, {
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { BTC_ADDRESS_REGEX } from '../../../../constants';
-import {
-  newVaultId,
-  CollateralCurrency,
-  WrappedCurrency
-} from '@interlay/interbtc-api';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -40,6 +37,7 @@ type RequestRedeemFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
+  collateralCurrency: CollateralCurrency | undefined;
   vaultAddress: string;
 }
 
@@ -47,6 +45,7 @@ interface Props {
 const RequestRedeemModal = ({
   onClose,
   open,
+  collateralCurrency,
   vaultAddress
 }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestRedeemFormData>();
@@ -71,7 +70,7 @@ const RequestRedeemModal = ({
         newVaultId(
           window.bridge.api,
           vaultAddress,
-          COLLATERAL_TOKEN as CollateralCurrency,
+          collateralCurrency as CollateralCurrency,
           WRAPPED_TOKEN as WrappedCurrency
         );
       await window.bridge.redeem.request(amountPolkaBtc, data[BTC_ADDRESS], vaultId);

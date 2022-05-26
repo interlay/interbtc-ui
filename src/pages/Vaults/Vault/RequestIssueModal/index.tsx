@@ -59,8 +59,8 @@ type RequestIssueFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
-  vaultAddress: string;
   collateralIdLiteral: CurrencyIdLiteral | undefined;
+  vaultAddress: string;
 }
 
 let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
@@ -78,8 +78,8 @@ const extraRequiredCollateralTokenAmount =
 const RequestIssueModal = ({
   onClose,
   open,
-  vaultAddress,
-  collateralIdLiteral
+  collateralIdLiteral,
+  vaultAddress
 }: Props): JSX.Element => {
   const {
     register,
