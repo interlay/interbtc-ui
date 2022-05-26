@@ -135,7 +135,6 @@ const Vault = (): JSX.Element => {
     selectedVaultAccountAddress
   ]);
 
-  // TODO: only one memo needed here
   const collateralCurrencyValues = React.useMemo(() =>
     getCurrencyPair(vaultCollateral as CurrencyIdLiteral), [vaultCollateral]);
 
