@@ -20,8 +20,8 @@ import {
   newAccountId,
   VaultExt,
   VaultStatusExt,
-  tickerToCurrencyIdLiteral,
-  CollateralIdLiteral
+  CollateralIdLiteral,
+  CurrencyIdLiteral
 } from '@interlay/interbtc-api';
 
 import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
@@ -48,6 +48,7 @@ import {
   GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import { URL_PARAMETERS } from 'utils/constants/links';
+import { getCurrencyPair } from 'utils/helpers/currency-pairs';
 import {
   WRAPPED_TOKEN_ID_LITERAL
 } from 'utils/constants/currency';
@@ -133,15 +134,15 @@ const Vault = (): JSX.Element => {
     selectedVaultAccountAddress
   ]);
 
-  const vaultCollateralIdLiteral = React.useMemo(() => (
-    tickerToCurrencyIdLiteral(vaultCollateral) as CollateralIdLiteral
-  ), [vaultCollateral]);
+  // TODO: only one memo needed here
+  const collateralCurrencyPair = React.useMemo(() =>
+    getCurrencyPair(vaultCollateral as CurrencyIdLiteral), [vaultCollateral]);
 
   React.useEffect(() => {
     (async () => {
       if (!bridgeLoaded) return;
       if (!vaultAccountId) return;
-      if (!vaultCollateralIdLiteral) return;
+      if (!collateralCurrencyPair) return;
 
       try {
         // TODO: should update using `react-query`
@@ -154,13 +155,16 @@ const Vault = (): JSX.Element => {
         ] = await Promise.allSettled([
           window.bridge.vaults.getWrappedReward(
             vaultAccountId,
-            vaultCollateralIdLiteral,
+            collateralCurrencyPair.id as CollateralIdLiteral,
             WRAPPED_TOKEN_ID_LITERAL
           ),
-          window.bridge.vaults.getIssuedAmount(vaultAccountId, vaultCollateralIdLiteral),
-          window.bridge.vaults.getVaultCollateralization(vaultAccountId, vaultCollateralIdLiteral),
-          window.bridge.vaults.getAPY(vaultAccountId, vaultCollateralIdLiteral),
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, vaultCollateralIdLiteral)
+          window.bridge.vaults.getIssuedAmount(vaultAccountId, collateralCurrencyPair.id),
+          window.bridge.vaults.getVaultCollateralization(
+            vaultAccountId,
+            collateralCurrencyPair.id as CollateralIdLiteral
+          ),
+          window.bridge.vaults.getAPY(vaultAccountId, collateralCurrencyPair.id),
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralCurrencyPair.id)
         ]);
 
         if (feesPolkaBTC.status === 'fulfilled') {
@@ -187,7 +191,7 @@ const Vault = (): JSX.Element => {
       }
     })();
   }, [
-    vaultCollateralIdLiteral,
+    collateralCurrencyPair,
     bridgeLoaded,
     dispatch,
     vaultAccountId
@@ -202,7 +206,7 @@ const Vault = (): JSX.Element => {
       'vaults',
       'getGovernanceReward',
       vaultAccountId,
-      vaultCollateralIdLiteral,
+      collateralCurrencyPair?.id,
       GOVERNANCE_TOKEN_SYMBOL
     ],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
@@ -221,7 +225,7 @@ const Vault = (): JSX.Element => {
       'vaults',
       'get',
       vaultAccountId,
-      vaultCollateralIdLiteral
+      collateralCurrencyPair?.id
     ],
     genericFetcher<VaultExt<BitcoinUnit>>(),
     {
@@ -262,7 +266,7 @@ const Vault = (): JSX.Element => {
         title: t('vault.locked_dot', {
           // TODO: when updating kint and adding the vault collateral as config,
           // this will need to be changed to use the symbol not the id literal.
-          collateralTokenSymbol: vaultCollateralIdLiteral
+          collateralTokenSymbol: collateralCurrencyPair?.symbol
         }),
         value: displayMonetaryAmount(collateral)
       },
@@ -292,7 +296,7 @@ const Vault = (): JSX.Element => {
     t,
     collateralization,
     feesEarnedInterBTC,
-    vaultCollateralIdLiteral,
+    collateralCurrencyPair,
     collateral,
     lockedBTC,
     capacity,
@@ -356,7 +360,9 @@ const Vault = (): JSX.Element => {
               onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            <ClaimRewardsButton vaultAccountId={vaultAccountId} />
+            <ClaimRewardsButton
+              vaultAccountId={vaultAccountId}
+              collateralToken={collateralCurrencyPair} />
             <InterlayTooltip label={issueButtonTooltip}>
               {/* Button wrapped in div to enable tooltip on disabled button. */}
               <div className='grid'>

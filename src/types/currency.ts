@@ -1,5 +1,5 @@
 
-import { CollateralUnit, CurrencyIdLiteral } from '@interlay/interbtc-api';
+import { CollateralUnit, CurrencyIdLiteral, CurrencyUnit } from '@interlay/interbtc-api';
 import {
   Bitcoin,
   BitcoinUnit,
@@ -26,17 +26,18 @@ type BTCToCollateralTokenRate =
     CollateralUnit
   >;
 
-type CurrencyPair = {
+type CurrencyValues = {
+  currency: Currency<CurrencyUnit>;
   id: CurrencyIdLiteral;
   symbol: CurrencySymbols;
 }
 
-type CurrencyPairs = Array<CurrencyPair>;
+type Currencies = Array<CurrencyValues>;
 
 export { CurrencySymbols };
 
 export type {
-  CurrencyPair,
-  CurrencyPairs,
+  CurrencyValues,
+  Currencies,
   BTCToCollateralTokenRate
 };
