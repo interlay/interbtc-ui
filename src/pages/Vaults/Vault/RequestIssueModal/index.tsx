@@ -17,7 +17,8 @@ import {
   newMonetaryAmount,
   GovernanceUnit,
   newAccountId,
-  Issue
+  Issue,
+  CurrencyIdLiteral
 } from '@interlay/interbtc-api';
 
 import {
@@ -39,7 +40,6 @@ import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import SubmittedIssueRequestModal from 'pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import ErrorModal from 'components/ErrorModal';
@@ -60,6 +60,7 @@ interface Props {
   onClose: () => void;
   open: boolean;
   vaultAddress: string;
+  collateralIdLiteral: CurrencyIdLiteral | undefined;
 }
 
 let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
@@ -77,7 +78,8 @@ const extraRequiredCollateralTokenAmount =
 const RequestIssueModal = ({
   onClose,
   open,
-  vaultAddress
+  vaultAddress,
+  collateralIdLiteral
 }: Props): JSX.Element => {
   const {
     register,
@@ -132,6 +134,7 @@ const RequestIssueModal = ({
     if (!bridgeLoaded) return;
     if (!handleError) return;
     if (!vaultAccountId) return;
+    if (!collateralIdLiteral) return;
 
     (async () => {
       try {
@@ -150,7 +153,7 @@ const RequestIssueModal = ({
           window.bridge.issue.getDustValue(),
           window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
           // MEMO: this always uses KSM as collateral token
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL)
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralIdLiteral)
         ]);
         setStatus(STATUSES.RESOLVED);
         if (theFeeRate.status === 'fulfilled') {
@@ -174,6 +177,7 @@ const RequestIssueModal = ({
       }
     })();
   }, [
+    collateralIdLiteral,
     bridgeLoaded,
     handleError,
     vaultAccountId
@@ -200,7 +204,7 @@ const RequestIssueModal = ({
       const result = await window.bridge.issue.request(
         wrappedTokenAmount,
         vaultAccountId,
-        COLLATERAL_TOKEN_ID_LITERAL,
+        collateralIdLiteral,
         false, // default
         0, // default
         vaults
