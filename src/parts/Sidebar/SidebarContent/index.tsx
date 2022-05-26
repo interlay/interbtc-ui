@@ -10,7 +10,7 @@ import TestnetBadge from './TestnetBadge';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import InterlayLink from 'components/UI/InterlayLink';
 import { INTERLAY_COMPANY_LINK } from 'config/links';
-import { WrappedTokenLogoWithTextIcon } from 'config/relay-chains';
+import { GovernanceTokenLogoWithTextIcon } from 'config/relay-chains';
 import {
   POLKADOT,
   KUSAMA
@@ -73,7 +73,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(({
             'px-4'
           )}>
           <InterlayRouterLink to={PAGES.HOME}>
-            <WrappedTokenLogoWithTextIcon width={141.6} />
+            <GovernanceTokenLogoWithTextIcon width={141.6} />
           </InterlayRouterLink>
           {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
             <TestnetBadge className='ml-2' />

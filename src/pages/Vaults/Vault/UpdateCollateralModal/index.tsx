@@ -196,11 +196,13 @@ const UpdateCollateralModal = ({
 
     // Collateral update only allowed if above required collateral
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
-      const maxWithdrawal = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
+      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
 
-      return collateralTokenAmount.gt(maxWithdrawal) ?
-        t('vault.collateral_below_threshold') :
-        undefined;
+      return (
+        collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount) ?
+          t('vault.collateral_below_threshold') :
+          undefined
+      );
     }
 
     if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
@@ -266,15 +268,34 @@ const UpdateCollateralModal = ({
     }
   };
 
-  const renderRequiredCollateralTokenAmount = () => {
-    if (requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading) {
+  const getMinRequiredCollateralTokenAmount = () => {
+    if (
+      requiredCollateralTokenAmountIdle ||
+      requiredCollateralTokenAmountLoading
+    ) {
       return '-';
     }
 
     if (requiredCollateralTokenAmount === undefined) {
       throw new Error('Something went wrong');
     }
-    return `${displayMonetaryAmount(requiredCollateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`;
+    return displayMonetaryAmount(requiredCollateralTokenAmount);
+  };
+
+  const getMaxWithdrawableCollateralTokenAmount = () => {
+    if (
+      requiredCollateralTokenAmountIdle ||
+      requiredCollateralTokenAmountLoading
+    ) {
+      return '-';
+    }
+
+    if (requiredCollateralTokenAmount === undefined) {
+      throw new Error('Something went wrong');
+    }
+
+    const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
+    return displayMonetaryAmount(maxWithdrawableCollateralTokenAmount);
   };
 
   return (
@@ -309,9 +330,18 @@ const UpdateCollateralModal = ({
             })}
           </p>
           <p>
-            Minimum Required Collateral {renderRequiredCollateralTokenAmount()}
+            {t('vault.minimum_required_collateral', {
+              currentCollateral: getMinRequiredCollateralTokenAmount(),
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+            })}
           </p>
-          <div>
+          <p>
+            {t('vault.maximum_withdrawable_collateral', {
+              currentCollateral: getMaxWithdrawableCollateralTokenAmount(),
+              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+            })}
+          </p>
+          <div className='space-y-1'>
             <label
               htmlFor={COLLATERAL_TOKEN_AMOUNT}
               className='text-sm'>
@@ -328,7 +358,7 @@ const UpdateCollateralModal = ({
                 },
                 validate: value => validateCollateralTokenAmount(value)
               })} />
-            <ErrorMessage>
+            <ErrorMessage className='h-9'>
               {errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             </ErrorMessage>
           </div>

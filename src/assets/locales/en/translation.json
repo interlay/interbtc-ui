@@ -420,7 +420,9 @@
     "btc_address": "BTC Address",
     "successfully_updated_collateral": "Successfully updated collateral",
     "deposit_collateral": "Deposit Collateral",
-    "current_total_collateral": "Current Total Collateral {{currentCollateral}} {{collateralTokenSymbol}} ",
+    "current_total_collateral": "Current Total Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
+    "minimum_required_collateral": "Minimum Required Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
+    "maximum_withdrawable_collateral": "Maximum Withdrawable Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
     "new_total_collateral": "New Total Collateral",
     "collateral_higher_than_0": "Collateral must be higher than 0",
     "collateral_below_threshold": "Please enter an amount that maintains the collateralization of your Vault above the Secure Collateral Threshold.",
@@ -446,7 +448,9 @@
     "tooltip_issue_capacity_zero": "Vault issue capacity is 0."
   },
   "staking_page": {
-    "estimated_governance_token_rewards_tooltip_label": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}."
+    "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
+    "new_vote_governance_token_gained": "New {{voteGovernanceTokenSymbol}} Gained",
+    "the_increase_in_your_vote_governance_token_balance": "The increase in your {{voteGovernanceTokenSymbol}} balance"
   },
   "about": {
     "research_paper": "Research Paper",

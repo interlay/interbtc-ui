@@ -17,7 +17,7 @@ import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import { getVaultStatusLabel } from 'utils/helpers/vaults';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { BTCToCollateralTokenRate } from 'types/currency.d';
+import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
