@@ -44,15 +44,15 @@ const CURRENCIES: Currencies = [
   }
 ];
 
-const getCurrencyPair = (idLiteral: CurrencyIdLiteral): CurrencyValues | undefined =>
+const getCurrencies = (idLiteral: CurrencyIdLiteral): CurrencyValues | undefined =>
   CURRENCIES.find(currency => currency.id === idLiteral);
 
 const getCurrencySymbol = (idLiteral: CurrencyIdLiteral): CurrencySymbols => {
-  const currencyPair = getCurrencyPair(idLiteral);
+  const currencyPair = getCurrencies(idLiteral);
 
   return currencyPair ? currencyPair.symbol : CurrencySymbols.UNDEFINED;
 };
 
-export { getCurrencyPair, getCurrencySymbol };
+export { getCurrencies, getCurrencySymbol };
 
 export type { CurrencySymbols };

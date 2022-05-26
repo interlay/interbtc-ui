@@ -49,7 +49,7 @@ import {
   GovernanceTokenMonetaryAmount
 } from 'config/relay-chains';
 import { URL_PARAMETERS } from 'utils/constants/links';
-import { getCurrencyPair } from 'utils/helpers/currencies';
+import { getCurrencies } from 'utils/helpers/currencies';
 import {
   WRAPPED_TOKEN_ID_LITERAL
 } from 'utils/constants/currency';
@@ -136,7 +136,7 @@ const Vault = (): JSX.Element => {
   ]);
 
   const collateralCurrencyValues = React.useMemo(() =>
-    getCurrencyPair(vaultCollateral as CurrencyIdLiteral), [vaultCollateral]);
+    getCurrencies(vaultCollateral as CurrencyIdLiteral), [vaultCollateral]);
 
   React.useEffect(() => {
     (async () => {
