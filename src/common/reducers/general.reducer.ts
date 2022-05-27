@@ -3,7 +3,7 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import { COLLATERAL_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
 import {
-  IS_POLKA_BTC_LOADED,
+  IS_BRIDGE_LOADED,
   IS_VAULT_CLIENT_LOADED,
   INIT_GENERAL_DATA_ACTION,
   CHANGE_ADDRESS,
@@ -59,7 +59,7 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
     case UPDATE_OF_PRICES:
       return { ...state, prices: action.prices };
-    case IS_POLKA_BTC_LOADED:
+    case IS_BRIDGE_LOADED:
       return { ...state, bridgeLoaded: action.isLoaded };
     case CHANGE_ADDRESS:
       return { ...state, address: action.address };
