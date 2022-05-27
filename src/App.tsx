@@ -129,9 +129,7 @@ const App = (): JSX.Element => {
   ]);
   // ray test touch >>
 
-  // ray test touch <<
   // Maybe load the vault client - only if the current address is also registered as a vault
-  // ray test touch >>
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!address) return;
@@ -145,20 +143,14 @@ const App = (): JSX.Element => {
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        // ray test touch <<
         console.log('[App React.useEffect 1] error.message => ', error.message);
-        // ray test touch >>
       }
     })();
   }, [bridgeLoaded, address, dispatch]);
 
-  // ray test touch <<
   // Initialize data on app bootstrap
-  // ray test touch >>
   React.useEffect(() => {
-    // ray test touch <<
     if (!dispatch) return;
-    // ray test touch >>
     if (!bridgeLoaded) return;
 
     (async () => {
@@ -208,13 +200,9 @@ const App = (): JSX.Element => {
     })();
   }, [dispatch, bridgeLoaded]);
 
-  // ray test touch <<
   // Loads the address for the currently selected account
-  // ray test touch >>
   React.useEffect(() => {
-    // ray test touch <<
     if (!dispatch) return;
-    // ray test touch >>
     if (!bridgeLoaded) return;
 
     const trySetDefaultAccount = () => {
@@ -288,9 +276,7 @@ const App = (): JSX.Element => {
   // ]);
   // ray test touch >>
 
-  // ray test touch <<
   // Subscribes to balances
-  // ray test touch >>
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
@@ -380,9 +366,7 @@ const App = (): JSX.Element => {
     governanceTokenTransferableBalance
   ]);
 
-  // ray test touch <<
   // Color schemes according to Interlay vs. Kintsugi
-  // ray test touch >>
   React.useEffect(() => {
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
       document.documentElement.classList.add(CLASS_NAMES.LIGHT);
