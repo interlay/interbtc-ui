@@ -339,7 +339,6 @@ const App = (): JSX.Element => {
     governanceTokenTransferableBalance
   ]);
 
-  // ray test touch <<
   // Keeps fetching live data
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -356,7 +355,6 @@ const App = (): JSX.Element => {
     dispatch,
     store
   ]);
-  // ray test touch >>
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
