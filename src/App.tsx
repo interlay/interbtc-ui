@@ -1,27 +1,10 @@
 import * as React from 'react';
-import {
-  Switch,
-  Route,
-  Redirect
-} from 'react-router-dom';
-import {
-  toast,
-  ToastContainer
-} from 'react-toastify';
-import {
-  useSelector,
-  useDispatch
-} from 'react-redux';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress
-} from '@polkadot/extension-dapp';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { Keyring } from '@polkadot/api';
 import {
   createInterBtcApi,
@@ -55,10 +38,7 @@ import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import STATUSES from 'utils/constants/statuses';
 import './i18n';
 import * as constants from './constants';
-import {
-  StoreType,
-  ParachainStatus
-} from 'common/types/util.types';
+import { StoreType, ParachainStatus } from 'common/types/util.types';
 import {
   isBridgeLoaded,
   changeAddressAction,
@@ -105,10 +85,7 @@ const App = (): JSX.Element => {
   const loadBridge = React.useCallback(async (): Promise<void> => {
     try {
       setBridgeStatus(STATUSES.PENDING);
-      window.bridge = await createInterBtcApi(
-        constants.PARACHAIN_URL,
-        constants.BITCOIN_NETWORK
-      );
+      window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
       dispatch(isBridgeLoaded(true));
       setBridgeStatus(STATUSES.RESOLVED);
     } catch (error) {
@@ -140,11 +117,7 @@ const App = (): JSX.Element => {
         console.log('[App React.useEffect 7] error.message => ', error.message);
       }
     })();
-  }, [
-    loadBridge,
-    bridgeLoaded,
-    bridgeStatus
-  ]);
+  }, [loadBridge, bridgeLoaded, bridgeStatus]);
 
   // Loads the faucet
   React.useEffect(() => {
@@ -158,10 +131,7 @@ const App = (): JSX.Element => {
         console.log('[App React.useEffect 8] error.message => ', error.message);
       }
     })();
-  }, [
-    bridgeLoaded,
-    loadFaucet
-  ]);
+  }, [bridgeLoaded, loadFaucet]);
 
   // Maybe loads the vault client - only if the current address is also registered as a vault
   React.useEffect(() => {
@@ -275,11 +245,7 @@ const App = (): JSX.Element => {
         console.log('[App React.useEffect 3] error.message => ', error.message);
       }
     })();
-  }, [
-    address,
-    bridgeLoaded,
-    dispatch
-  ]);
+  }, [address, bridgeLoaded, dispatch]);
 
   // Subscribes to balances
   React.useEffect(() => {
@@ -408,11 +374,13 @@ const App = (): JSX.Element => {
         newPrices[RELAY_CHAIN_NAME].usd !== prices.collateralToken.usd ||
         newPrices[BRIDGE_PARACHAIN_NAME].usd !== prices.governanceToken.usd
       ) {
-        dispatch(updateOfPricesAction({
-          bitcoin: newPrices.bitcoin,
-          collateralToken: newPrices[RELAY_CHAIN_NAME],
-          governanceToken: newPrices[BRIDGE_PARACHAIN_NAME]
-        }));
+        dispatch(
+          updateOfPricesAction({
+            bitcoin: newPrices.bitcoin,
+            collateralToken: newPrices[RELAY_CHAIN_NAME],
+            governanceToken: newPrices[BRIDGE_PARACHAIN_NAME]
+          })
+        );
       }
     },
     { refetchInterval: 60000 }
