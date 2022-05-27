@@ -67,32 +67,25 @@ const App = (): JSX.Element => {
     governanceTokenBalance,
     governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
-  // ray test touch <<
-  const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE);
-  // ray test touch >>
+  // eslint-disable-next-line max-len
+  const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
   const dispatch = useDispatch();
   const store: StoreState = useStore();
 
   // Load the main bridge API - connection to the bridge
   const loadBridge = React.useCallback(async (): Promise<void> => {
     try {
-      // ray test touch <<
       setBridgeStatus(STATUSES.PENDING);
-      // ray test touch >>
       window.bridge = await createInterBtcApi(
         constants.PARACHAIN_URL,
         constants.BITCOIN_NETWORK
       );
       dispatch(isBridgeLoaded(true));
-      // ray test touch <<
       setBridgeStatus(STATUSES.RESOLVED);
-      // ray test touch >>
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadBridge 1] error.message => ', error.message);
-      // ray test touch <<
       setBridgeStatus(STATUSES.REJECTED);
-      // ray test touch >>
     }
 
     try {
@@ -117,10 +110,8 @@ const App = (): JSX.Element => {
   // ray test touch <<
   // Loads the bridge and the faucet
   React.useEffect(() => {
-    // ray test touch <<
-    // if (bridgeLoaded) return;
+    if (bridgeLoaded) return; // Not necessary but for more clarity
     if (bridgeStatus !== STATUSES.IDLE) return;
-    // ray test touch >>
 
     (async () => {
       try {
@@ -136,9 +127,7 @@ const App = (): JSX.Element => {
     loadBridge,
     loadFaucet,
     bridgeLoaded,
-    // ray test touch <<
     bridgeStatus
-    // ray test touch >>
   ]);
   // ray test touch >>
 
