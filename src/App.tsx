@@ -72,7 +72,7 @@ const App = (): JSX.Element => {
   const dispatch = useDispatch();
   const store: StoreState = useStore();
 
-  // Load the main bridge API - connection to the bridge
+  // Loads the main bridge API - connection to the bridge
   const loadBridge = React.useCallback(async (): Promise<void> => {
     try {
       setBridgeStatus(STATUSES.PENDING);
@@ -97,7 +97,7 @@ const App = (): JSX.Element => {
     }
   }, [dispatch, store]);
 
-  // Load the connection to the faucet - only for testnet purposes
+  // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
     try {
       window.faucet = new FaucetClient(window.bridge.api, constants.FAUCET_URL);
@@ -107,8 +107,7 @@ const App = (): JSX.Element => {
     }
   }, [dispatch]);
 
-  // ray test touch <<
-  // Loads the bridge and the faucet
+  // Loads the bridge
   React.useEffect(() => {
     if (bridgeLoaded) return; // Not necessary but for more clarity
     if (bridgeStatus !== STATUSES.IDLE) return;
@@ -116,22 +115,34 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         await loadBridge();
-        if (process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet) {
-          await loadFaucet();
-        }
       } catch (error) {
-        console.log('[App React.useEffect 6] error.message => ', error.message);
+        console.log('[App React.useEffect 7] error.message => ', error.message);
       }
     })();
   }, [
     loadBridge,
-    loadFaucet,
     bridgeLoaded,
     bridgeStatus
   ]);
-  // ray test touch >>
 
-  // Maybe load the vault client - only if the current address is also registered as a vault
+  // Loads the faucet
+  React.useEffect(() => {
+    if (!bridgeLoaded) return;
+    if (process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Mainnet) return;
+
+    (async () => {
+      try {
+        await loadFaucet();
+      } catch (error) {
+        console.log('[App React.useEffect 8] error.message => ', error.message);
+      }
+    })();
+  }, [
+    bridgeLoaded,
+    loadFaucet
+  ]);
+
+  // Maybe loads the vault client - only if the current address is also registered as a vault
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!address) return;
@@ -150,7 +161,7 @@ const App = (): JSX.Element => {
     })();
   }, [bridgeLoaded, address, dispatch]);
 
-  // Initialize data on app bootstrap
+  // Initializes data on app bootstrap
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
@@ -309,7 +320,7 @@ const App = (): JSX.Element => {
           }
         );
       } catch (error) {
-        console.log('[App React.useEffect 4] error.message => ', error.message);
+        console.log('[App React.useEffect 6] error.message => ', error.message);
       }
     })();
 
