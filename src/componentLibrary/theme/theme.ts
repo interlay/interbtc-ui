@@ -60,6 +60,9 @@ const theme = {
     secondary: {
       bg: 'var(--colors-cta-secondary)'
     }
+  },
+  modal: {
+    bg: 'var(--colors-modal-bg)'
   }
 };
 
