@@ -84,18 +84,10 @@ const App = (): JSX.Element => {
       setBridgeStatus(STATUSES.RESOLVED);
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
-      console.log('[loadBridge 1] error.message => ', error.message);
+      console.log('[loadBridge] error.message => ', error.message);
       setBridgeStatus(STATUSES.REJECTED);
     }
-
-    try {
-      // ray test touch <
-      startFetchingLiveData(dispatch, store);
-      // ray test touch >
-    } catch (error) {
-      console.log('[loadBridge 2] error.message => ', error.message);
-    }
-  }, [dispatch, store]);
+  }, [dispatch]);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -346,6 +338,25 @@ const App = (): JSX.Element => {
     governanceTokenBalance,
     governanceTokenTransferableBalance
   ]);
+
+  // ray test touch <<
+  // Keeps fetching live data
+  React.useEffect(() => {
+    if (!bridgeLoaded) return;
+
+    try {
+      // ray test touch <
+      startFetchingLiveData(dispatch, store);
+      // ray test touch >
+    } catch (error) {
+      console.log('[App React.useEffect 9] error.message => ', error.message);
+    }
+  }, [
+    bridgeLoaded,
+    dispatch,
+    store
+  ]);
+  // ray test touch >>
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
