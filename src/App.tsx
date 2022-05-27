@@ -1,9 +1,34 @@
 import * as React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import { useSelector, useDispatch, useStore } from 'react-redux';
-import { withErrorBoundary } from 'react-error-boundary';
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import {
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
+import {
+  toast,
+  ToastContainer
+} from 'react-toastify';
+import {
+  useSelector,
+  useDispatch
+  // ray test touch <<
+  // useStore
+  // ray test touch >>
+} from 'react-redux';
+// ray test touch <<
+import { useQuery } from 'react-query';
+// ray test touch >>
+import {
+  // ray test touch <<
+  useErrorHandler,
+  // ray test touch >>
+  withErrorBoundary
+} from 'react-error-boundary';
+import {
+  web3Accounts,
+  web3Enable,
+  web3FromAddress
+} from '@polkadot/extension-dapp';
 import { Keyring } from '@polkadot/api';
 import {
   createInterBtcApi,
@@ -21,7 +46,17 @@ import Layout from 'parts/Layout';
 import FullLoadingSpinner from 'components/FullLoadingSpinner';
 import ErrorFallback from 'components/ErrorFallback';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { APP_NAME, WRAPPED_TOKEN, COLLATERAL_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
+import {
+  APP_NAME,
+  WRAPPED_TOKEN,
+  COLLATERAL_TOKEN,
+  GOVERNANCE_TOKEN,
+  // ray test touch <<
+  PRICES_URL,
+  RELAY_CHAIN_NAME,
+  BRIDGE_PARACHAIN_NAME
+  // ray test touch >>
+} from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
@@ -29,8 +64,16 @@ import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import STATUSES from 'utils/constants/statuses';
 import './i18n';
 import * as constants from './constants';
-import startFetchingLiveData from 'common/live-data/live-data';
-import { StoreType, ParachainStatus, StoreState } from 'common/types/util.types';
+// ray test touch <<
+// import startFetchingLiveData from 'common/live-data/live-data';
+// ray test touch >>
+import {
+  StoreType,
+  ParachainStatus
+  // ray test touch <<
+  // StoreState
+  // ray test touch >>
+} from 'common/types/util.types';
 import {
   isBridgeLoaded,
   changeAddressAction,
@@ -43,7 +86,10 @@ import {
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
   updateGovernanceTokenBalanceAction,
-  updateGovernanceTokenTransferableBalanceAction
+  updateGovernanceTokenTransferableBalanceAction,
+  // ray test touch <<
+  updateOfPricesAction
+  // ray test touch >>
 } from 'common/actions/general.actions';
 import { BitcoinNetwork } from 'types/bitcoin';
 
@@ -65,12 +111,17 @@ const App = (): JSX.Element => {
     collateralTokenBalance,
     collateralTokenTransferableBalance,
     governanceTokenBalance,
-    governanceTokenTransferableBalance
+    governanceTokenTransferableBalance,
+    // ray test touch <<
+    prices
+    // ray test touch >>
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
   const dispatch = useDispatch();
-  const store: StoreState = useStore();
+  // ray test touch <<
+  // const store: StoreState = useStore();
+  // ray test touch >>
 
   // Loads the main bridge API - connection to the bridge
   const loadBridge = React.useCallback(async (): Promise<void> => {
@@ -339,22 +390,22 @@ const App = (): JSX.Element => {
     governanceTokenTransferableBalance
   ]);
 
+  // ray test touch <<
   // Keeps fetching live data
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
-
-    try {
-      // ray test touch <
-      startFetchingLiveData(dispatch, store);
-      // ray test touch >
-    } catch (error) {
-      console.log('[App React.useEffect 9] error.message => ', error.message);
-    }
-  }, [
-    bridgeLoaded,
-    dispatch,
-    store
-  ]);
+  // React.useEffect(() => {
+  //   if (!bridgeLoaded) return;
+  //   try {
+  //     startFetchingLiveData(dispatch, store);
+  //     // ray test touch >>
+  //   } catch (error) {
+  //     console.log('[App React.useEffect 9] error.message => ', error.message);
+  //   }
+  // }, [
+  //   bridgeLoaded,
+  //   dispatch,
+  //   store
+  // ]);
+  // ray test touch >>
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
@@ -376,6 +427,35 @@ const App = (): JSX.Element => {
       document.body.classList.add('theme-kintsugi');
     }
   }, []);
+
+  // ray test touch <<
+  // Keeps fetching live data prices
+  const { error: pricesError } = useQuery(
+    PRICES_URL,
+    async () => {
+      const response = await fetch(PRICES_URL);
+      if (!response.ok) {
+        throw new Error('Network response for prices was not ok.');
+      }
+
+      const newPrices = await response.json();
+      // Update the store only if the price is actually changed
+      if (
+        newPrices.bitcoin.usd !== prices.bitcoin.usd ||
+        newPrices[RELAY_CHAIN_NAME].usd !== prices.collateralToken.usd ||
+        newPrices[BRIDGE_PARACHAIN_NAME].usd !== prices.governanceToken.usd
+      ) {
+        dispatch(updateOfPricesAction({
+          bitcoin: newPrices.bitcoin,
+          collateralToken: newPrices[RELAY_CHAIN_NAME],
+          governanceToken: newPrices[BRIDGE_PARACHAIN_NAME]
+        }));
+      }
+    },
+    { refetchInterval: 60000 }
+  );
+  useErrorHandler(pricesError);
+  // ray test touch >>
 
   return (
     <>

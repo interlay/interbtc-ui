@@ -1,6 +1,8 @@
 import { Dispatch } from 'redux';
 
-import fetchPrices from './price-watcher';
+// ray test touch <<
+// import fetchPrices from './price-watcher';
+// ray test touch >>
 import fetchBtcRelayAndBitcoinHeight from './block-height-watcher';
 import fetchTotals from './totals-watcher';
 import { StoreState } from 'common/types/util.types';
@@ -10,11 +12,11 @@ function startFetchingLiveData(dispatch: Dispatch, store: StoreState): void {
   if (window.isFetchingActive) return;
   window.isFetchingActive = true;
 
-  // ray test touch <
+  // ray test touch <<
   // Fetch live data prices
-  fetchPrices(dispatch, store);
-  window.setInterval(() => fetchPrices(dispatch, store), 60000);
-  // ray test touch >
+  // fetchPrices(dispatch, store);
+  // window.setInterval(() => fetchPrices(dispatch, store), 60000);
+  // ray test touch >>
 
   // Fetch btc-relay height and bitcoin height
   fetchBtcRelayAndBitcoinHeight(dispatch, store);
