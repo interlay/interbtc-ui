@@ -12,7 +12,7 @@ enum WalletSourceName {
 interface WalletData {
   name: string;
   LogoIcon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  URL: string;
+  url: string;
 }
 
 const WALLETS: {[wallet in WalletSourceName]: WalletData} =
@@ -20,17 +20,17 @@ const WALLETS: {[wallet in WalletSourceName]: WalletData} =
     [WalletSourceName.PolkadotExtensionLogoIcon]: {
       name: 'Polkadot{.js}',
       LogoIcon: PolkadotExtensionLogoIcon,
-      URL: 'https://polkadot.js.org/extension/'
+      url: 'https://polkadot.js.org/extension/'
     },
     [WalletSourceName.Talisman]: {
       name: 'Talisman',
       LogoIcon: TalismanWalletLogoIcon,
-      URL: 'https://talisman.xyz/'
+      url: 'https://talisman.xyz/'
     },
     [WalletSourceName.SubWallet]: {
       name: 'SubWallet',
       LogoIcon: SubWalletLogoIcon,
-      URL: 'https://subwallet.app/'
+      url: 'https://subwallet.app/'
     }
   };
 
