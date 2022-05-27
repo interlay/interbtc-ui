@@ -191,19 +191,19 @@ const App = (): JSX.Element => {
 
         dispatch(setInstalledExtensionAction(theExtensions.map((extension) => extension.name)));
 
+        // TODO: load accounts just once
         const accounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
-        if (accounts.length === 0) {
-          dispatch(changeAddressAction(''));
-          return;
-        }
-
         const matchedAccount = accounts.find((account) => account.address === address);
-        const newAddress = matchedAccount ? address : accounts[0].address;
 
-        const { signer } = await web3FromAddress(newAddress);
-        // TODO: could store the active address just in one place (either in `window` object or in redux)
-        window.bridge.setAccount(newAddress, signer);
-        dispatch(changeAddressAction(newAddress));
+        if (matchedAccount) {
+          const { signer } = await web3FromAddress(address);
+          // TODO: could store the active address just in one place (either in `window` object or in redux)
+          window.bridge.setAccount(address, signer);
+          dispatch(changeAddressAction(address));
+        } else {
+          dispatch(changeAddressAction(''));
+          window.bridge.removeAccount();
+        }
       } catch (error) {
         // TODO: should add error handling
         console.log('[App React.useEffect 3] error.message => ', error.message);
