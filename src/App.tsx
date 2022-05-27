@@ -31,7 +31,7 @@ import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
 import { StoreType, ParachainStatus, StoreState } from 'common/types/util.types';
 import {
-  isPolkaBtcLoaded,
+  isBridgeLoaded,
   changeAddressAction,
   initGeneralDataAction,
   setInstalledExtensionAction,
@@ -66,19 +66,26 @@ const App = (): JSX.Element => {
     governanceTokenBalance,
     governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
-  const [isLoading, setIsLoading] = React.useState(true);
+  // ray test touch <<
+  // const [isLoading, setIsLoading] = React.useState(true);
+  // ray test touch >>
   const dispatch = useDispatch();
   const store: StoreState = useStore();
 
   // Load the main bridge API - connection to the bridge
-  const loadInterBtc = React.useCallback(async (): Promise<void> => {
+  const loadBridge = React.useCallback(async (): Promise<void> => {
     try {
-      window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
-      dispatch(isPolkaBtcLoaded(true));
-      setIsLoading(false);
+      window.bridge = await createInterBtcApi(
+        constants.PARACHAIN_URL,
+        constants.BITCOIN_NETWORK
+      );
+      dispatch(isBridgeLoaded(true));
+      // ray test touch <<
+      // setIsLoading(false);
+      // ray test touch >>
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
-      console.log('[loadInterBtc] error.message => ', error.message);
+      console.log('[loadBridge 1] error.message => ', error.message);
     }
 
     try {
@@ -86,7 +93,7 @@ const App = (): JSX.Element => {
       startFetchingLiveData(dispatch, store);
       // ray test touch >
     } catch (error) {
-      console.log('[loadInterBtc] error.message => ', error.message);
+      console.log('[loadBridge 2] error.message => ', error.message);
     }
   }, [dispatch, store]);
 
@@ -100,13 +107,37 @@ const App = (): JSX.Element => {
     }
   }, [dispatch]);
 
+  // ray test touch <<
+  // Loads the bridge and the faucet
+  React.useEffect(() => {
+    if (bridgeLoaded) return;
+
+    (async () => {
+      try {
+        await loadBridge();
+        if (process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet) {
+          await loadFaucet();
+        }
+      } catch (error) {
+        console.log('[App React.useEffect 6] error.message => ', error.message);
+      }
+    })();
+  }, [
+    loadBridge,
+    loadFaucet,
+    bridgeLoaded
+  ]);
+  // ray test touch >>
+
+  // ray test touch <<
+  // Maybe load the vault client - only if the current address is also registered as a vault
+  // ray test touch >>
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!address) return;
 
     const id = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
-    // Maybe load the vault client - only if the current address is also registered as a vault
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
@@ -114,15 +145,22 @@ const App = (): JSX.Element => {
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
-        console.log('[App React.useEffect 1] error => ', error);
+        // ray test touch <<
+        console.log('[App React.useEffect 1] error.message => ', error.message);
+        // ray test touch >>
       }
     })();
   }, [bridgeLoaded, address, dispatch]);
 
+  // ray test touch <<
+  // Initialize data on app bootstrap
+  // ray test touch >>
   React.useEffect(() => {
+    // ray test touch <<
+    if (!dispatch) return;
+    // ray test touch >>
     if (!bridgeLoaded) return;
 
-    // Initialize data on app bootstrap
     (async () => {
       try {
         const [
@@ -170,8 +208,13 @@ const App = (): JSX.Element => {
     })();
   }, [dispatch, bridgeLoaded]);
 
-  // Loads the address for the currently select account and maybe loads the vault dashboard
+  // ray test touch <<
+  // Loads the address for the currently selected account
+  // ray test touch >>
   React.useEffect(() => {
+    // ray test touch <<
+    if (!dispatch) return;
+    // ray test touch >>
     if (!bridgeLoaded) return;
 
     const trySetDefaultAccount = () => {
@@ -213,37 +256,41 @@ const App = (): JSX.Element => {
     })();
   }, [address, bridgeLoaded, dispatch]);
 
+  // ray test touch <<
   // Loads the bridge and the faucet
-  React.useEffect(() => {
-    if (bridgeLoaded) return;
+  // React.useEffect(() => {
+  //   if (bridgeLoaded) return;
+  //   (async () => {
+  //     try {
+  //       // TODO: should avoid any race condition
+  //       setTimeout(() => {
+  //         if (isLoading) setIsLoading(false);
+  //       }, 3000);
+  //       await loadBridge();
+  //       // Only load faucet on testnet
+  //       if (process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet) {
+  //         await loadFaucet();
+  //       }
+  //     } catch (error) {
+  //       console.log(error.message);
+  //     }
+  //   })();
+  //   // ray test touch <
+  //   startFetchingLiveData(dispatch, store);
+  //   // ray test touch >
+  // }, [
+  //   loadBridge,
+  //   loadFaucet,
+  //   isLoading,
+  //   bridgeLoaded,
+  //   dispatch,
+  //   store
+  // ]);
+  // ray test touch >>
 
-    (async () => {
-      try {
-        // TODO: should avoid any race condition
-        setTimeout(() => {
-          if (isLoading) setIsLoading(false);
-        }, 3000);
-        await loadInterBtc();
-        // Only load faucet on testnet
-        if (process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet) {
-          await loadFaucet();
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
-    })();
-    // ray test touch <
-    startFetchingLiveData(dispatch, store);
-    // ray test touch >
-  }, [
-    loadInterBtc,
-    loadFaucet,
-    isLoading,
-    bridgeLoaded,
-    dispatch,
-    store
-  ]);
-
+  // ray test touch <<
+  // Subscribes to balances
+  // ray test touch >>
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
@@ -333,6 +380,9 @@ const App = (): JSX.Element => {
     governanceTokenTransferableBalance
   ]);
 
+  // ray test touch <<
+  // Color schemes according to Interlay vs. Kintsugi
+  // ray test touch >>
   React.useEffect(() => {
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
       document.documentElement.classList.add(CLASS_NAMES.LIGHT);

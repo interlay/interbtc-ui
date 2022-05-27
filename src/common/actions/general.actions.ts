@@ -38,7 +38,7 @@ import {
 } from '../types/actions.types';
 import { ParachainStatus, Prices } from '../types/util.types';
 
-export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
+export const isBridgeLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
   type: IS_POLKA_BTC_LOADED,
   isLoaded
 });
