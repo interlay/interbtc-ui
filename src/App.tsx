@@ -264,7 +264,6 @@ const App = (): JSX.Element => {
 
         if (matchedAccount) {
           const { signer } = await web3FromAddress(address);
-          // TODO: could store the active address just in one place (either in `window` object or in redux)
           window.bridge.setAccount(address, signer);
           dispatch(changeAddressAction(address));
         } else {
@@ -276,7 +275,11 @@ const App = (): JSX.Element => {
         console.log('[App React.useEffect 3] error.message => ', error.message);
       }
     })();
-  }, [address, bridgeLoaded, dispatch]);
+  }, [
+    address,
+    bridgeLoaded,
+    dispatch
+  ]);
 
   // Subscribes to balances
   React.useEffect(() => {
