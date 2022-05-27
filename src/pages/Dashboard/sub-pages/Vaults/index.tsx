@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -16,17 +15,10 @@ const Vaults = (): JSX.Element => {
   return (
     <>
       <div>
-        <PageTitle
-          mainTitle={t('dashboard.vault.vaults')}
-          subTitle={<TimerIncrement />} />
+        <PageTitle mainTitle={t('dashboard.vault.vaults')} subTitle={<TimerIncrement />} />
         <Hr1 className='mt-2' />
       </div>
-      <div
-        className={clsx(
-          'grid',
-          'grid-cols-3',
-          'gap-7'
-        )}>
+      <div className={clsx('grid', 'grid-cols-3', 'gap-7')}>
         <ActiveVaultsCard />
         <CollateralLockedCard />
         <CollateralizationCard />

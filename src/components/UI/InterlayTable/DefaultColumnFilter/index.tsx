@@ -4,26 +4,20 @@
 // @ts-nocheck
 
 // TODO: not used for now
-const DefaultColumnFilter = ({
-  column: {
-    filterValue,
-    preFilteredRows,
-    setFilter
-  },
-  placeholder
-}): JSX.Element => {
+const DefaultColumnFilter = ({ column: { filterValue, preFilteredRows, setFilter }, placeholder }): JSX.Element => {
   const count = preFilteredRows.length;
 
   return (
     <input
       value={filterValue || ''}
-      onChange={event => {
+      onChange={(event) => {
         setFilter(event.currentTarget.value || undefined); // Set undefined to remove the filter entirely
       }}
-      onClick={event => {
+      onClick={(event) => {
         event.stopPropagation();
       }}
-      placeholder={placeholder || `Search ${count} records...`} />
+      placeholder={placeholder || `Search ${count} records...`}
+    />
   );
 };
 

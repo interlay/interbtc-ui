@@ -1,10 +1,6 @@
-
 import clsx from 'clsx';
 
-import {
-  KUSAMA,
-  POLKADOT
-} from 'utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 import { BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
@@ -14,11 +10,7 @@ interface CustomProps {
 
 type Props = CustomProps & React.ComponentPropsWithRef<'div'>;
 
-const WarningBanner = ({
-  message,
-  className,
-  ...rest
-}: Props): JSX.Element => {
+const WarningBanner = ({ message, className, ...rest }: Props): JSX.Element => {
   return (
     <div
       className={clsx(
@@ -39,19 +31,14 @@ const WarningBanner = ({
       style={{
         minHeight: 64
       }}
-      {...rest}>
-      <InformationCircleIcon
-        className={clsx(
-          'w-6',
-          'h-6'
-        )} />
+      {...rest}
+    >
+      <InformationCircleIcon className={clsx('w-6', 'h-6')} />
       <p>{message}</p>
     </div>
   );
 };
 
-export type {
-  Props
-};
+export type { Props };
 
 export default WarningBanner;

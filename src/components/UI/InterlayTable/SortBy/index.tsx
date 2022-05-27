@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 import styles from './sort-by.module.css';
 
@@ -7,31 +6,20 @@ interface Props {
   isSortedDesc?: boolean;
 }
 
-const SortByContainer = ({
-  className,
-  ...rest
-}: React.ComponentPropsWithRef<'div'>): JSX.Element => (
-  <div
-    className={clsx(
-      'flex',
-      'items-center',
-      className
-    )}
-    {...rest} />
+const SortByContainer = ({ className, ...rest }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
+  <div className={clsx('flex', 'items-center', className)} {...rest} />
 );
 
 // TODO: not used for now
-const SortBy = ({
-  isSorted,
-  isSortedDesc
-}: Props): JSX.Element => (
+const SortBy = ({ isSorted, isSortedDesc }: Props): JSX.Element => (
   <span
     // TODO: could extend `before` & `after` variants in the tailwindcss theme
     className={clsx(
       styles['sort-by'],
       { 'before:border-black': isSorted && !isSortedDesc },
       { 'after:border-black': isSorted && isSortedDesc }
-    )} />
+    )}
+  />
   // <span
   //   className={clsx(
   //     'relative',
@@ -58,8 +46,6 @@ const SortBy = ({
   //   )} />
 );
 
-export {
-  SortByContainer
-};
+export { SortByContainer };
 
 export default SortBy;

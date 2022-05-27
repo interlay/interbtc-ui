@@ -7,17 +7,10 @@ interface VaultsHeaderProps {
   accountAddress: string;
 }
 
-const VaultsHeader = ({
-  title,
-  accountAddress
-}: VaultsHeaderProps): JSX.Element => (
+const VaultsHeader = ({ title, accountAddress }: VaultsHeaderProps): JSX.Element => (
   <div>
-    <PageTitle
-      mainTitle={title}
-      subTitle={<TimerIncrement />} />
-    <BoldParagraph className='text-center'>
-      {accountAddress}
-    </BoldParagraph>
+    <PageTitle mainTitle={title} subTitle={<TimerIncrement />} />
+    <BoldParagraph className='text-center'>{accountAddress}</BoldParagraph>
   </div>
 );
 

@@ -1,30 +1,17 @@
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import clsx from 'clsx';
 import { BitcoinUnit } from '@interlay/monetary-js';
 
 import RedeemedChart from './RedeemedChart';
-import Stats, {
-  StatsDt,
-  StatsDd
-} from '../../../Stats';
+import Stats, { StatsDt, StatsDd } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
 import Panel from 'components/Panel';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { StoreType } from 'common/types/util.types';
-import graphqlFetcher, {
-  GraphqlReturn,
-  GRAPHQL_FETCHER
-} from 'services/fetchers/graphql-fetcher';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
@@ -36,9 +23,7 @@ import { WRAPPED_TOKEN } from 'config/relay-chains';
 const nowAtfirstLoad = new Date();
 
 const UpperContent = (): JSX.Element => {
-  const {
-    prices
-  } = useSelector((state: StoreType) => state.general);
+  const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
   const {
@@ -47,10 +32,7 @@ const UpperContent = (): JSX.Element => {
     data: totalSuccessfulRedeems,
     error: totalSuccessfulRedeemsError
   } = useQuery<GraphqlReturn<any>, Error>(
-    [
-      GRAPHQL_FETCHER,
-      redeemCountQuery('status_eq: Completed')
-    ],
+    [GRAPHQL_FETCHER, redeemCountQuery('status_eq: Completed')],
     graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(totalSuccessfulRedeemsError);
@@ -60,14 +42,9 @@ const UpperContent = (): JSX.Element => {
     isLoading: cumulativeRedeemsPerDayLoading,
     data: cumulativeRedeemsPerDay,
     error: cumulativeRedeemsPerDayError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [
-      CUMULATIVE_VOLUMES_FETCHER,
-      'Redeemed' as VolumeType,
-      [nowAtfirstLoad],
-      WRAPPED_TOKEN
-    ],
+    [CUMULATIVE_VOLUMES_FETCHER, 'Redeemed' as VolumeType, [nowAtfirstLoad], WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);
@@ -94,24 +71,16 @@ const UpperContent = (): JSX.Element => {
   // const redeemSuccessRate = totalSuccessfulRedeems / totalRedeemRequests;
 
   return (
-    <Panel
-      className={clsx(
-        'grid',
-        'sm:grid-cols-2',
-        'gap-5',
-        'px-4',
-        'py-5'
-      )}>
+    <Panel className={clsx('grid', 'sm:grid-cols-2', 'gap-5', 'px-4', 'py-5')}>
       <Stats
         leftPart={
           <>
             <StatsDt
               className={clsx(
-                { '!text-interlayDenim':
-                  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                { 'dark:!text-kintsugiSupernova':
-                  process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-              )}>
+                { '!text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:!text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}
+            >
               {t('dashboard.redeem.total_redeemed')}
             </StatsDt>
             <StatsDd>
@@ -119,15 +88,11 @@ const UpperContent = (): JSX.Element => {
               &nbsp;BTC
             </StatsDd>
             <StatsDd>
-              {/* eslint-disable-next-line max-len */}
-              ${(prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
+              {/* eslint-disable-next-line max-len */}$
+              {(prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
             </StatsDd>
-            <StatsDt className='!text-interlayConifer'>
-              {t('dashboard.redeem.total_redeems')}
-            </StatsDt>
-            <StatsDd>
-              {totalSuccessfulRedeemCount}
-            </StatsDd>
+            <StatsDt className='!text-interlayConifer'>{t('dashboard.redeem.total_redeems')}</StatsDt>
+            <StatsDd>{totalSuccessfulRedeemCount}</StatsDd>
             {/* TODO: add this again when the network is stable */}
             {/* <StatsDt className='!text-interlayConifer'>
               {t('dashboard.redeem.success_rate')}
@@ -136,7 +101,8 @@ const UpperContent = (): JSX.Element => {
               {totalRedeemRequests ? (redeemSuccessRate * 100).toFixed(2) + '%' : t('no_data')}
             </StatsDd> */}
           </>
-        } />
+        }
+      />
       <RedeemedChart />
     </Panel>
   );

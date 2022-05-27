@@ -8,7 +8,7 @@ const CoinPairWrapper = styled.div<CoinPairWrapperProps>`
   display: flex;
 
   & :first-child {
-    margin-right: ${props => props.size === 'small' ? '-5px' : '-10px'};
+    margin-right: ${(props) => (props.size === 'small' ? '-5px' : '-10px')};
     z-index: 1;
   }
 }

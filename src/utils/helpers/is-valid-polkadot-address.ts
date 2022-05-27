@@ -3,11 +3,7 @@ import { hexToU8a, isHex } from '@polkadot/util';
 
 const isValidPolkadotAddress = (address: string): boolean => {
   try {
-    encodeAddress(
-      isHex(address) ?
-        hexToU8a(address) :
-        decodeAddress(address)
-    );
+    encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
 
     return true;
   } catch {

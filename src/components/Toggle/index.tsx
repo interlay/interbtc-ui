@@ -1,30 +1,21 @@
-
 import { Switch } from '@headlessui/react';
 import { Props as HeadlessUIProps } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
 
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
-const Toggle = ({
-  checked,
-  className,
-  onChange,
-  ...rest
-}: Props): JSX.Element => {
+const Toggle = ({ checked, className, onChange, ...rest }: Props): JSX.Element => {
   return (
     <Switch
       checked={checked}
       onChange={onChange}
       className={clsx(
-        checked ?
-          clsx(
-            { 'bg-interlayDenim-600':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-            { 'dark:bg-kintsugiMidnight-600': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-          ) : 'bg-gray-200',
+        checked
+          ? clsx(
+              { 'bg-interlayDenim-600': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:bg-kintsugiMidnight-600': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )
+          : 'bg-gray-200',
         'relative',
         'inline-flex',
         'flex-shrink-0',
@@ -40,13 +31,12 @@ const Toggle = ({
         'focus:outline-none',
         'focus:ring-2',
         'focus:ring-offset-2',
-        { 'focus:ring-interlayDenim':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:focus:ring-kintsugiSupernova':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'focus:ring-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'dark:focus:ring-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         className
       )}
-      {...rest}>
+      {...rest}
+    >
       <span className='sr-only'>Use setting</span>
       <span
         aria-hidden='true'
@@ -64,7 +54,8 @@ const Toggle = ({
           'transition',
           'ease-in-out',
           'duration-200'
-        )} />
+        )}
+      />
     </Switch>
   );
 };

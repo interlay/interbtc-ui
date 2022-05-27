@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 import { ExternalLinkIcon } from '@heroicons/react/outline';
 
@@ -19,27 +18,12 @@ const SidebarNavLink = ({
 }: (CustomProps & InterlayRouterNavLinkProps) | (CustomProps & InterlayLinkProps)): JSX.Element => (
   <>
     {external ? (
-      <InterlayLink
-        className={clsx(
-          'hover:no-underline',
-          className
-        )}
-        href={href}
-        {...rest}>
+      <InterlayLink className={clsx('hover:no-underline', className)} href={href} {...rest}>
         {children}
-        <ExternalLinkIcon
-          className={clsx(
-            'flex-shrink-0',
-            'w-4',
-            'h-4',
-            'ml-1'
-          )} />
+        <ExternalLinkIcon className={clsx('flex-shrink-0', 'w-4', 'h-4', 'ml-1')} />
       </InterlayLink>
     ) : (
-      <InterlayRouterNavLink
-        className={className}
-        to={href}
-        {...rest}>
+      <InterlayRouterNavLink className={className} to={href} {...rest}>
         {children}
       </InterlayRouterNavLink>
     )}

@@ -1,9 +1,8 @@
-
 import { useHistory } from 'react-router-dom';
 
 const queryString = require('query-string');
 
-const useUpdateQueryParameters = (): (newQueryParameters: QueryParameters) => void => {
+const useUpdateQueryParameters = (): ((newQueryParameters: QueryParameters) => void) => {
   const history = useHistory();
 
   const updateQueryParameters = (newQueryParameters: QueryParameters) => {

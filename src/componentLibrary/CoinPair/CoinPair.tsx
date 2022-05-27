@@ -9,12 +9,8 @@ interface CoinPairProps extends CoinPairWrapperProps {
 
 const CoinPair = ({ coinOne, coinTwo, size }: CoinPairProps): JSX.Element => (
   <CoinPairWrapper size={size}>
-    <CoinIcon
-      size={size}
-      coin={coinOne} />
-    <CoinIcon
-      size={size}
-      coin={coinTwo} />
+    <CoinIcon size={size} coin={coinOne} />
+    <CoinIcon size={size} coin={coinTwo} />
   </CoinPairWrapper>
 );
 
