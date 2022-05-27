@@ -11,17 +11,10 @@ import {
 import {
   useSelector,
   useDispatch
-  // ray test touch <<
-  // useStore
-  // ray test touch >>
 } from 'react-redux';
-// ray test touch <<
 import { useQuery } from 'react-query';
-// ray test touch >>
 import {
-  // ray test touch <<
   useErrorHandler,
-  // ray test touch >>
   withErrorBoundary
 } from 'react-error-boundary';
 import {
@@ -51,11 +44,9 @@ import {
   WRAPPED_TOKEN,
   COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN,
-  // ray test touch <<
   PRICES_URL,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME
-  // ray test touch >>
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
@@ -64,15 +55,9 @@ import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import STATUSES from 'utils/constants/statuses';
 import './i18n';
 import * as constants from './constants';
-// ray test touch <<
-// import startFetchingLiveData from 'common/live-data/live-data';
-// ray test touch >>
 import {
   StoreType,
   ParachainStatus
-  // ray test touch <<
-  // StoreState
-  // ray test touch >>
 } from 'common/types/util.types';
 import {
   isBridgeLoaded,
@@ -87,9 +72,7 @@ import {
   updateCollateralTokenTransferableBalanceAction,
   updateGovernanceTokenBalanceAction,
   updateGovernanceTokenTransferableBalanceAction,
-  // ray test touch <<
   updateOfPricesAction
-  // ray test touch >>
 } from 'common/actions/general.actions';
 import { BitcoinNetwork } from 'types/bitcoin';
 
@@ -112,16 +95,11 @@ const App = (): JSX.Element => {
     collateralTokenTransferableBalance,
     governanceTokenBalance,
     governanceTokenTransferableBalance,
-    // ray test touch <<
     prices
-    // ray test touch >>
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
   const dispatch = useDispatch();
-  // ray test touch <<
-  // const store: StoreState = useStore();
-  // ray test touch >>
 
   // Loads the main bridge API - connection to the bridge
   const loadBridge = React.useCallback(async (): Promise<void> => {
@@ -390,23 +368,6 @@ const App = (): JSX.Element => {
     governanceTokenTransferableBalance
   ]);
 
-  // ray test touch <<
-  // Keeps fetching live data
-  // React.useEffect(() => {
-  //   if (!bridgeLoaded) return;
-  //   try {
-  //     startFetchingLiveData(dispatch, store);
-  //     // ray test touch >>
-  //   } catch (error) {
-  //     console.log('[App React.useEffect 9] error.message => ', error.message);
-  //   }
-  // }, [
-  //   bridgeLoaded,
-  //   dispatch,
-  //   store
-  // ]);
-  // ray test touch >>
-
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -428,7 +389,6 @@ const App = (): JSX.Element => {
     }
   }, []);
 
-  // ray test touch <<
   // Keeps fetching live data prices
   const { error: pricesError } = useQuery(
     PRICES_URL,
@@ -455,7 +415,6 @@ const App = (): JSX.Element => {
     { refetchInterval: 60000 }
   );
   useErrorHandler(pricesError);
-  // ray test touch >>
 
   return (
     <>
