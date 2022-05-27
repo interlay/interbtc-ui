@@ -1,9 +1,5 @@
-
 import * as React from 'react';
-import {
-  useSelector,
-  useDispatch
-} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { ExternalLinkIcon } from '@heroicons/react/outline';
@@ -15,9 +11,7 @@ import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import Tokens from 'components/Tokens';
 import AccountModal from 'parts/AccountModal';
 import InterlayLink from 'components/UI/InterlayLink';
-import
-InterlayDenimOrKintsugiMidnightOutlinedButton from
-  'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
@@ -29,18 +23,10 @@ import { StoreType } from 'common/types/util.types';
 import * as constants from '../../constants';
 import { BitcoinNetwork } from 'types/bitcoin';
 
-const SMALL_SIZE_BUTTON_CLASSES = clsx(
-  'leading-7',
-  '!px-3'
-);
+const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
 const Topbar = (): JSX.Element => {
-  const {
-    extensions,
-    address,
-    bridgeLoaded,
-    showAccountModal
-  } = useSelector((state: StoreType) => state.general);
+  const { extensions, address, bridgeLoaded, showAccountModal } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -96,7 +82,7 @@ const Topbar = (): JSX.Element => {
   if (!extensions.length) {
     accountLabel = t('connect_wallet');
   } else if (address) {
-    const matchedAccount = accounts.find(account => account.address === address);
+    const matchedAccount = accounts.find((account) => account.address === address);
     accountLabel = matchedAccount?.meta.name || address;
   } else {
     accountLabel = 'Select Wallet';
@@ -104,14 +90,7 @@ const Topbar = (): JSX.Element => {
 
   return (
     <>
-      <div
-        className={clsx(
-          'p-4',
-          'flex',
-          'items-center',
-          'justify-end',
-          'space-x-2'
-        )}>
+      <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
         {address !== undefined && (
           <>
@@ -123,24 +102,20 @@ const Topbar = (): JSX.Element => {
                       className='hover:no-underline'
                       target='_blank'
                       rel='noopener noreferrer'
-                      href='https://bitcoinfaucet.uo1.net'>
+                      href='https://bitcoinfaucet.uo1.net'
+                    >
                       <InterlayCaliforniaOutlinedButton
                         className={SMALL_SIZE_BUTTON_CLASSES}
-                        endIcon={
-                          <ExternalLinkIcon
-                            className={clsx(
-                              'w-4',
-                              'h-4',
-                              'ml-1'
-                            )} />
-                        }>
+                        endIcon={<ExternalLinkIcon className={clsx('w-4', 'h-4', 'ml-1')} />}
+                      >
                         {t('request_btc')}
                       </InterlayCaliforniaOutlinedButton>
                     </InterlayLink>
                     <InterlayDenimOrKintsugiMidnightOutlinedButton
                       className={SMALL_SIZE_BUTTON_CLASSES}
                       pending={isRequestPending}
-                      onClick={requestFunds}>
+                      onClick={requestFunds}
+                    >
                       {t('request_funds', {
                         tokenSymbol: GOVERNANCE_TOKEN_SYMBOL
                       })}
@@ -150,17 +125,13 @@ const Topbar = (): JSX.Element => {
                 <Tokens />
               </>
             )}
-            <InterlayDefaultContainedButton
-              className={SMALL_SIZE_BUTTON_CLASSES}
-              onClick={handleAccountModalOpen}>
+            <InterlayDefaultContainedButton className={SMALL_SIZE_BUTTON_CLASSES} onClick={handleAccountModalOpen}>
               {accountLabel}
             </InterlayDefaultContainedButton>
           </>
         )}
       </div>
-      <AccountModal
-        open={showAccountModal}
-        onClose={handleAccountModalClose} />
+      <AccountModal open={showAccountModal} onClose={handleAccountModalClose} />
     </>
   );
 };

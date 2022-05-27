@@ -9,34 +9,22 @@ interface ModalContentSelectWalletProps {
   handleWalletSelect: (wallet: WalletSourceName | undefined) => void;
 }
 
-const ModalContentSelectWallet = ({
-  extensions,
-  handleWalletSelect
-}: ModalContentSelectWalletProps): JSX.Element => (
-  <ul
-    className='space-y-4'>
-    {extensions.map(extensionName => {
+const ModalContentSelectWallet = ({ extensions, handleWalletSelect }: ModalContentSelectWalletProps): JSX.Element => (
+  <ul className='space-y-4'>
+    {extensions.map((extensionName) => {
       const { LogoIcon, name } = WALLETS[extensionName as WalletSourceName];
       return (
-        <li
-          key={extensionName}>
+        <li key={extensionName}>
           <InterlayButtonBase
-            className={clsx(
-              ACCOUNT_MODAL_BUTTON_CLASSES,
-              'w-full'
-            )}
-            onClick={() => handleWalletSelect(extensionName as WalletSourceName)}>
-            <LogoIcon
-              width={30}
-              height={30} />
-            <span className='pl-2'>
-              {name}
-            </span>
+            className={clsx(ACCOUNT_MODAL_BUTTON_CLASSES, 'w-full')}
+            onClick={() => handleWalletSelect(extensionName as WalletSourceName)}
+          >
+            <LogoIcon width={30} height={30} />
+            <span className='pl-2'>{name}</span>
           </InterlayButtonBase>
         </li>
       );
-    }
-    )}
+    })}
   </ul>
 );
 

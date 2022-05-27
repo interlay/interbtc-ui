@@ -1,4 +1,3 @@
-
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
 
@@ -7,12 +6,7 @@ import issueRequestsQuery from 'services/queries/issue-requests-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
-type IssueFetcherParams = [
-  queryKey: string,
-  offset: number,
-  limit: number,
-  where?: string
-]
+type IssueFetcherParams = [queryKey: string, offset: number, limit: number, where?: string];
 
 const ISSUE_FETCHER = 'issue-fetcher';
 
@@ -32,12 +26,7 @@ function decodeIssueValues(issue: any): any {
 // TODO: should type properly (`Relay`)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
-  const [
-    key,
-    offset,
-    limit,
-    where
-  ] = queryKey as IssueFetcherParams;
+  const [key, offset, limit, where] = queryKey as IssueFetcherParams;
 
   if (key !== ISSUE_FETCHER) throw new Error('Invalid key!');
 
@@ -56,15 +45,17 @@ const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   // TODO: should type properly (`Relay`)
   const issues = issuesData?.data?.issues || [];
 
-  return await Promise.all(issues.map(async issue => {
-    issue = decodeIssueValues(issue);
-    issue.backingPayment = await getTxDetailsForRequest(
-      window.bridge.electrsAPI,
-      issue.id,
-      issue.vaultBackingAddress
-    );
-    return issue;
-  }));
+  return await Promise.all(
+    issues.map(async (issue) => {
+      issue = decodeIssueValues(issue);
+      issue.backingPayment = await getTxDetailsForRequest(
+        window.bridge.electrsAPI,
+        issue.id,
+        issue.vaultBackingAddress
+      );
+      return issue;
+    })
+  );
 };
 
 // TODO: should type properly (`Relay`)
@@ -111,13 +102,8 @@ function getIssueWithStatus(
   return issue;
 }
 
-export {
-  getIssueWithStatus,
-  ISSUE_FETCHER
-};
+export { getIssueWithStatus, ISSUE_FETCHER };
 
-export type {
-  IssueFetcherParams
-};
+export type { IssueFetcherParams };
 
 export default issueFetcher;

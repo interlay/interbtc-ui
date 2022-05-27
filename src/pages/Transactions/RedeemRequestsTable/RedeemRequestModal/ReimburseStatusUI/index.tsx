@@ -1,14 +1,8 @@
 import * as React from 'react';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
-import {
-  useMutation,
-  useQueryClient
-} from 'react-query';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useMutation, useQueryClient } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -17,25 +11,13 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import
-InterlayDenimOrKintsugiMidnightOutlinedButton from
-  'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';
-import {
-  COLLATERAL_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL
-} from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
-import {
-  getUsdAmount,
-  displayMonetaryAmount
-} from 'common/utils/utils';
+import { COLLATERAL_TOKEN, WRAPPED_TOKEN_SYMBOL, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { REDEEM_FETCHER } from 'services/fetchers/redeem-request-fetcher';
 
@@ -45,22 +27,12 @@ interface Props {
   onClose: () => void;
 }
 
-const ReimburseStatusUI = ({
-  request,
-  onClose
-}: Props): JSX.Element => {
-  const {
-    bridgeLoaded,
-    prices
-  } = useSelector((state: StoreType) => state.general);
-  const [
-    punishmentCollateralTokenAmount,
-    setPunishmentCollateralTokenAmount
-  ] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
-  const [
-    collateralTokenAmount,
-    setCollateralTokenAmount
-  ] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
+  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
+    newMonetaryAmount(0, COLLATERAL_TOKEN)
+  );
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 
@@ -72,10 +44,7 @@ const ReimburseStatusUI = ({
     // TODO: should add loading UX
     (async () => {
       try {
-        const [
-          punishment,
-          btcDotRate
-        ] = await Promise.all([
+        const [punishment, btcDotRate] = await Promise.all([
           window.bridge.vaults.getPunishmentFee(),
           window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN)
         ]);
@@ -86,11 +55,7 @@ const ReimburseStatusUI = ({
         handleError(error);
       }
     })();
-  }, [
-    request,
-    bridgeLoaded,
-    handleError
-  ]);
+  }, [request, bridgeLoaded, handleError]);
 
   const queryClient = useQueryClient();
   // TODO: should type properly (`Relay`)
@@ -100,13 +65,11 @@ const ReimburseStatusUI = ({
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([
-          REDEEM_FETCHER
-        ]);
+        queryClient.invalidateQueries([REDEEM_FETCHER]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },
-      onError: error => {
+      onError: (error) => {
         // TODO: should add error handling UX
         console.log('[useMutation] error => ', error);
       }
@@ -119,13 +82,11 @@ const ReimburseStatusUI = ({
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([
-          REDEEM_FETCHER
-        ]);
+        queryClient.invalidateQueries([REDEEM_FETCHER]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },
-      onError: error => {
+      onError: (error) => {
         // TODO: should add error handling UX
         console.log('[useMutation] error => ', error);
       }
@@ -160,30 +121,26 @@ const ReimburseStatusUI = ({
             'justify-center',
             'items-center',
             'space-x-1'
-          )}>
+          )}
+        >
           <FaExclamationCircle />
-          <span>
-            {t('redeem_page.sorry_redeem_failed')}
-          </span>
+          <span>{t('redeem_page.sorry_redeem_failed')}</span>
         </h2>
         <p
           className={clsx(
-            { 'text-interlayTextSecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
             'text-justify'
-          )}>
-          <span>
-            {t('redeem_page.vault_did_not_send')}
-          </span>
+          )}
+        >
+          <span>{t('redeem_page.vault_did_not_send')}</span>
           <PrimaryColorSpan>
             &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
           </PrimaryColorSpan>
+          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}</span>
           <span>
-            &nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)})`}
-          </span>
-          <span>
-            &nbsp;{t('redeem_page.compensation', {
+            &nbsp;
+            {t('redeem_page.compensation', {
               collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
             })}
           </span>
@@ -200,15 +157,13 @@ const ReimburseStatusUI = ({
           className={clsx(
             'space-y-3',
             'ml-6',
-            { 'text-interlayTextSecondaryInLightMode':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
             { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-          )}>
+          )}
+        >
           <li className='list-decimal'>
             <p className='text-justify'>
-              <span>
-                {t('redeem_page.receive_compensation')}
-              </span>
+              <span>{t('redeem_page.receive_compensation')}</span>
               <PrimaryColorSpan>
                 &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </PrimaryColorSpan>
@@ -224,7 +179,8 @@ const ReimburseStatusUI = ({
               className='w-full'
               disabled={reimburseMutation.isLoading}
               pending={retryMutation.isLoading}
-              onClick={handleRetry}>
+              onClick={handleRetry}
+            >
               {t('retry')}
             </InterlayConiferOutlinedButton>
           </li>
@@ -258,7 +214,8 @@ const ReimburseStatusUI = ({
               className='w-full'
               disabled={retryMutation.isLoading}
               pending={reimburseMutation.isLoading}
-              onClick={handleReimburse}>
+              onClick={handleReimburse}
+            >
               {t('redeem_page.reimburse')}
             </InterlayDenimOrKintsugiMidnightOutlinedButton>
           </li>

@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
@@ -55,68 +54,41 @@ const InterlayButton = ({
         'focus:ring-primary-200',
         'focus:ring-opacity-50',
         {
-          [clsx(
-            'bg-gray-300',
-            'hover:bg-gray-400',
-            'text-interlayTextPrimaryInLightMode'
-          )]: variant === VARIANTS.contained && color === COLORS.default && !disabledOrPending
+          [clsx('bg-gray-300', 'hover:bg-gray-400', 'text-interlayTextPrimaryInLightMode')]:
+            variant === VARIANTS.contained && color === COLORS.default && !disabledOrPending
         },
         {
-          [clsx(
-            'bg-primary',
-            'hover:bg-primary-600',
-            'text-white'
-          )]: variant === VARIANTS.contained && color === COLORS.primary && !disabledOrPending
+          [clsx('bg-primary', 'hover:bg-primary-600', 'text-white')]:
+            variant === VARIANTS.contained && color === COLORS.primary && !disabledOrPending
         },
         {
-          [clsx(
-            'bg-secondary',
-            'hover:bg-secondary-600',
-            'text-interlayTextPrimaryInLightMode'
-          )]: variant === VARIANTS.contained && color === COLORS.secondary && !disabledOrPending
+          [clsx('bg-secondary', 'hover:bg-secondary-600', 'text-interlayTextPrimaryInLightMode')]:
+            variant === VARIANTS.contained && color === COLORS.secondary && !disabledOrPending
         },
         {
-          [clsx(
-            'bg-black',
-            'bg-opacity-10'
-          )]: variant === VARIANTS.contained && disabledOrPending
+          [clsx('bg-black', 'bg-opacity-10')]: variant === VARIANTS.contained && disabledOrPending
         },
         {
-          [clsx(
-            'text-black',
-            'text-opacity-25'
-          )]: disabledOrPending
+          [clsx('text-black', 'text-opacity-25')]: disabledOrPending
         },
         { 'shadow-sm': variant === VARIANTS.contained && !disabledOrPending },
 
         { 'bg-transparent': variant === VARIANTS.text },
         {
-          [clsx(
-            'text-interlayTextPrimaryInLightMode',
-            'hover:bg-black',
-            'hover:bg-opacity-5'
-          )]: variant === VARIANTS.text && color === COLORS.default && !disabledOrPending
+          [clsx('text-interlayTextPrimaryInLightMode', 'hover:bg-black', 'hover:bg-opacity-5')]:
+            variant === VARIANTS.text && color === COLORS.default && !disabledOrPending
         },
         {
-          [clsx(
-            'text-primary',
-            'hover:bg-primary',
-            'hover:bg-opacity-5'
-          )]: variant === VARIANTS.text && color === COLORS.primary && !disabledOrPending
+          [clsx('text-primary', 'hover:bg-primary', 'hover:bg-opacity-5')]:
+            variant === VARIANTS.text && color === COLORS.primary && !disabledOrPending
         },
         {
-          [clsx(
-            'text-secondary',
-            'hover:bg-secondary',
-            'hover:bg-opacity-5'
-          )]: variant === VARIANTS.text && color === COLORS.secondary && !disabledOrPending
+          [clsx('text-secondary', 'hover:bg-secondary', 'hover:bg-opacity-5')]:
+            variant === VARIANTS.text && color === COLORS.secondary && !disabledOrPending
         },
 
         {
-          [clsx(
-            'border',
-            'border-solid'
-          )]: variant === VARIANTS.outlined
+          [clsx('border', 'border-solid')]: variant === VARIANTS.outlined
         },
         {
           [clsx(
@@ -125,7 +97,8 @@ const InterlayButton = ({
             'border-opacity-25',
             'hover:bg-black',
             'hover:bg-opacity-5'
-          )]: variant === VARIANTS.outlined && color === COLORS.default && !disabledOrPending },
+          )]: variant === VARIANTS.outlined && color === COLORS.default && !disabledOrPending
+        },
         {
           [clsx(
             'text-primary',
@@ -134,7 +107,8 @@ const InterlayButton = ({
             'hover:border-opacity-100',
             'hover:bg-primary',
             'hover:bg-opacity-5'
-          )]: variant === VARIANTS.outlined && color === COLORS.primary && !disabledOrPending },
+          )]: variant === VARIANTS.outlined && color === COLORS.primary && !disabledOrPending
+        },
         {
           [clsx(
             'text-secondary',
@@ -143,7 +117,8 @@ const InterlayButton = ({
             'hover:border-opacity-100',
             'hover:bg-secondary',
             'hover:bg-opacity-5'
-          )]: variant === VARIANTS.outlined && color === COLORS.secondary && !disabledOrPending },
+          )]: variant === VARIANTS.outlined && color === COLORS.secondary && !disabledOrPending
+        },
         { 'border-opacity-25': variant === VARIANTS.outlined && disabledOrPending },
 
         'rounded',
@@ -155,20 +130,11 @@ const InterlayButton = ({
         className
       )}
       disabled={disabledOrPending}
-      {...rest}>
-      {pending && (
-        <SpinIcon
-          className={clsx(
-            'animate-spin',
-            'w-5',
-            'h-5',
-            'mr-3'
-          )} />
-      )}
+      {...rest}
+    >
+      {pending && <SpinIcon className={clsx('animate-spin', 'w-5', 'h-5', 'mr-3')} />}
       {startIcon}
-      <span className='font-medium'>
-        {children}
-      </span>
+      <span className='font-medium'>{children}</span>
       {endIcon}
     </InterlayButtonBase>
   );
@@ -176,9 +142,6 @@ const InterlayButton = ({
 
 export type Props = CustomProps & InterlayButtonBaseProps;
 
-export {
-  COLOR_VALUES,
-  VARIANT_VALUES
-};
+export { COLOR_VALUES, VARIANT_VALUES };
 
 export default InterlayButton;

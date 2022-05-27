@@ -30,40 +30,25 @@ const ModalContentSelectAccount = ({
   return (
     <>
       <ul className='space-y-4'>
-        {accountsFromSelectedWallet.map(account => {
+        {accountsFromSelectedWallet.map((account) => {
           const selected = address === account.address;
 
           return (
-            <li
-              key={account.address}
-              className={clsx(
-                'flex',
-                'space-x-2'
-              )}>
+            <li key={account.address} className={clsx('flex', 'space-x-2')}>
               <InterlayButtonBase
                 className={clsx(
                   ACCOUNT_MODAL_BUTTON_CLASSES,
                   { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected },
                   'w-full'
                 )}
-                onClick={() => handleAccountSelect(account.address)}>
-                <div
-                  className={clsx(
-                    'flex',
-                    'flex-col',
-                    'items-start'
-                  )}>
-                  <div className='font-medium'>
-                    {account.meta.name}
-                  </div>
-                  <div>
-                    {`(${shortAddress(account.address)})`}
-                  </div>
+                onClick={() => handleAccountSelect(account.address)}
+              >
+                <div className={clsx('flex', 'flex-col', 'items-start')}>
+                  <div className='font-medium'>{account.meta.name}</div>
+                  <div>{`(${shortAddress(account.address)})`}</div>
                 </div>
               </InterlayButtonBase>
-              <CopyAddressButton
-                className={ACCOUNT_MODAL_BUTTON_CLASSES}
-                address={account.address} />
+              <CopyAddressButton className={ACCOUNT_MODAL_BUTTON_CLASSES} address={account.address} />
             </li>
           );
         })}
@@ -76,28 +61,25 @@ const ModalContentSelectAccount = ({
               'font-bold',
               { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
               { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )}>
+            )}
+          >
             {selectedWallet ? WALLETS[selectedWallet].name : '-'}
           </span>
         </span>
-        <InterlayButtonBase
-          className={ACCOUNT_MODAL_BUTTON_CLASSES}
-          onClick={() => handleWalletSelect(undefined)}>
+        <InterlayButtonBase className={ACCOUNT_MODAL_BUTTON_CLASSES} onClick={() => handleWalletSelect(undefined)}>
           {t('account_modal.change_wallet')}
         </InterlayButtonBase>
       </div>
-      {address &&
-    <InterlayButtonBase
-      className={clsx(
-        'w-full',
-        ACCOUNT_MODAL_BUTTON_CLASSES,
-        'justify-center'
+      {address && (
+        <InterlayButtonBase
+          className={clsx('w-full', ACCOUNT_MODAL_BUTTON_CLASSES, 'justify-center')}
+          onClick={handleAccountDisconnect}
+        >
+          {t('account_modal.disconnect')}
+        </InterlayButtonBase>
       )}
-      onClick={handleAccountDisconnect}>
-      {t('account_modal.disconnect')}
-    </InterlayButtonBase>
-      }
-    </>);
+    </>
+  );
 };
 
 export default ModalContentSelectAccount;

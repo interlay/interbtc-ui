@@ -2,16 +2,11 @@
 // // @ts-nocheck
 import * as React from 'react';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  stripHexPrefix
-} from '@interlay/interbtc-api';
+import { stripHexPrefix } from '@interlay/interbtc-api';
 
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
@@ -49,7 +44,7 @@ const BlocksTable = (): JSX.Element => {
     isLoading: btcBlocksLoading,
     data: btcBlocks,
     error: btcBlocksError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
@@ -68,12 +63,9 @@ const BlocksTable = (): JSX.Element => {
     isLoading: btcBlocksCountLoading,
     data: btcBlocksCount,
     error: btcBlocksCountError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [
-      GRAPHQL_FETCHER,
-      btcBlocksCountQuery()
-    ],
+    [GRAPHQL_FETCHER, btcBlocksCountQuery()],
     graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(btcBlocksCountError);
@@ -83,86 +75,49 @@ const BlocksTable = (): JSX.Element => {
       {
         Header: t('dashboard.relay.block_height'),
         accessor: 'backingHeight',
-        classNames: [
-          'text-right'
-        ]
+        classNames: ['text-right']
       },
       {
         Header: t('dashboard.relay.block_hash'),
         accessor: 'blockHash',
-        classNames: [
-          'text-right'
-        ],
-        Cell: function FormattedCell({ value }: { value: string; }) {
+        classNames: ['text-right'],
+        Cell: function FormattedCell({ value }: { value: string }) {
           const hash = stripHexPrefix(value);
-          return (
-            <ExternalLink href={`${BTC_EXPLORER_BLOCK_API}${hash}`}>
-              {hash}
-            </ExternalLink>
-          );
+          return <ExternalLink href={`${BTC_EXPLORER_BLOCK_API}${hash}`}>{hash}</ExternalLink>;
         }
       },
       {
         Header: t('dashboard.relay.inclusion_timestamp'),
         accessor: 'timestamp',
-        classNames: [
-          'text-left'
-        ],
-        Cell: function FormattedCell({ value }: { value: string; }) {
-          return (
-            <>
-              {formatDateTimePrecise(new Date(value))}
-            </>
-          );
+        classNames: ['text-left'],
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <>{formatDateTimePrecise(new Date(value))}</>;
         }
       },
       {
         Header: t('dashboard.relay.inclusion_block'),
         accessor: 'relayedAtHeight',
-        classNames: [
-          'text-right'
-        ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
-          return (
-            <>
-              {value.absolute}
-            </>
-          );
+        classNames: ['text-right'],
+        Cell: function FormattedCell({ value }: { value: any }) {
+          return <>{value.absolute}</>;
         }
       },
       {
         Header: t('dashboard.relay.relayed_by'),
         accessor: 'relayer',
-        classNames: [
-          'text-right'
-        ]
+        classNames: ['text-right']
       }
     ],
     [t]
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable(
-    {
-      columns,
-      data: btcBlocks?.data?.relayedBlocks ?? []
-    }
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+    columns,
+    data: btcBlocks?.data?.relayedBlocks ?? []
+  });
 
-  if (
-    btcBlocksIdle ||
-    btcBlocksLoading ||
-    btcBlocksCountIdle ||
-    btcBlocksCountLoading
-  ) {
-    return (
-      <PrimaryColorEllipsisLoader />
-    );
+  if (btcBlocksIdle || btcBlocksLoading || btcBlocksCountIdle || btcBlocksCountLoading) {
+    return <PrimaryColorEllipsisLoader />;
   }
   if (!btcBlocks) {
     throw new Error('Something went wrong!');
@@ -171,26 +126,17 @@ const BlocksTable = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
+  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
     });
   };
 
-  const pageCount = Math.ceil(
-    (btcBlocksCount.data.relayedBlocksConnection.totalCount || 0) / TABLE_PAGE_LIMIT
-  );
+  const pageCount = Math.ceil((btcBlocksCount.data.relayedBlocksConnection.totalCount || 0) / TABLE_PAGE_LIMIT);
 
   return (
-    <InterlayTableContainer
-      className={clsx(
-        'space-y-6',
-        'container',
-        'mx-auto'
-      )}>
-      <SectionTitle>
-        {t('dashboard.relay.blocks')}
-      </SectionTitle>
+    <InterlayTableContainer className={clsx('space-y-6', 'container', 'mx-auto')}>
+      <SectionTitle>{t('dashboard.relay.blocks')}</SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map((headerGroup: any) => (
@@ -204,7 +150,8 @@ const BlocksTable = (): JSX.Element => {
                       className: clsx(column.classNames),
                       style: column.style
                     }
-                  ])}>
+                  ])}
+                >
                   {column.render('Header')}
                 </InterlayTh>
               ))}
@@ -227,7 +174,8 @@ const BlocksTable = (): JSX.Element => {
                           className: clsx(cell.column.classNames),
                           style: cell.column.style
                         }
-                      ])}>
+                      ])}
+                    >
                       {cell.render('Cell')}
                     </InterlayTd>
                   );
@@ -238,17 +186,14 @@ const BlocksTable = (): JSX.Element => {
         </InterlayTbody>
       </InterlayTable>
       {pageCount > 0 && (
-        <div
-          className={clsx(
-            'flex',
-            'justify-end'
-          )}>
+        <div className={clsx('flex', 'justify-end')}>
           <InterlayPagination
             pageCount={pageCount}
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
             onPageChange={handlePageChange}
-            forcePage={selectedPageIndex} />
+            forcePage={selectedPageIndex}
+          />
         </div>
       )}
     </InterlayTableContainer>

@@ -1,32 +1,32 @@
 @import url('reset.css');
 
 @font-face {
-  font-family: "airbnb-cereal";
-  src: url("../../assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf") format("truetype");
+  font-family: 'airbnb-cereal';
+  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf') format('truetype');
   font-weight: 300; /* light */
   font-style: normal;
 }
 @font-face {
-  font-family: "airbnb-cereal";
-  src: url("../../assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf") format("truetype");
+  font-family: 'airbnb-cereal';
+  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf') format('truetype');
   font-weight: 400; /* book */
   font-style: normal;
 }
 @font-face {
-  font-family: "airbnb-cereal";
-  src: url("../../assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf") format("truetype");
+  font-family: 'airbnb-cereal';
+  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf') format('truetype');
   font-weight: 500; /* medium */
   font-style: normal;
 }
 @font-face {
-  font-family: "airbnb-cereal";
-  src: url("../../assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf") format("truetype");
+  font-family: 'airbnb-cereal';
+  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf') format('truetype');
   font-weight: 700; /* bold */
   font-style: normal;
 }
 
 :root {
-  --fonts-primary: "airbnb-cereal";
+  --fonts-primary: 'airbnb-cereal';
 
   --font-weights-light: 300;
   --font-weights-book: 400;
@@ -37,8 +37,8 @@
   --colors-neutral-light-grey: #999999;
   --colors-neutral-black: #000000;
 
-  --text-xs: .75rem;
-  --text-s: .875rem;
+  --text-xs: 0.75rem;
+  --text-s: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
   --text-xl: 1.25rem;

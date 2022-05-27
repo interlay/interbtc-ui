@@ -1,21 +1,11 @@
-
 import * as React from 'react';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
-import {
-  useSelector,
-  useDispatch
-} from 'react-redux';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import clsx from 'clsx';
-import {
-  BitcoinAmount,
-  BitcoinUnit
-} from '@interlay/monetary-js';
+import { BitcoinAmount, BitcoinUnit } from '@interlay/monetary-js';
 import {
   newAccountId,
   VaultExt,
@@ -37,24 +27,13 @@ import ClaimRewardsButton from './ClaimRewardsButton';
 import MainContainer from 'parts/MainContainer';
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
-import
-InterlayDenimOrKintsugiSupernovaContainedButton
-  from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
+import InterlayDenimOrKintsugiSupernovaContainedButton from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import {
-  WRAPPED_TOKEN_SYMBOL,
-  GOVERNANCE_TOKEN_SYMBOL,
-  GovernanceTokenMonetaryAmount
-} from 'config/relay-chains';
+import { WRAPPED_TOKEN_SYMBOL, GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import { URL_PARAMETERS } from 'utils/constants/links';
-import {
-  WRAPPED_TOKEN_ID_LITERAL
-} from 'utils/constants/currency';
-import {
-  safeRoundTwoDecimals,
-  displayMonetaryAmount
-} from 'common/utils/utils';
+import { WRAPPED_TOKEN_ID_LITERAL } from 'utils/constants/currency';
+import { safeRoundTwoDecimals, displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import {
@@ -74,17 +53,8 @@ const Vault = (): JSX.Element => {
   const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
   const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
 
-  const {
-    vaultClientLoaded,
-    bridgeLoaded,
-    address
-  } = useSelector((state: StoreType) => state.general);
-  const {
-    collateralization,
-    collateral,
-    lockedBTC,
-    apy
-  } = useSelector((state: StoreType) => state.vault);
+  const { vaultClientLoaded, bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { collateralization, collateral, lockedBTC, apy } = useSelector((state: StoreType) => state.vault);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -128,14 +98,12 @@ const Vault = (): JSX.Element => {
     if (!bridgeLoaded) return;
 
     return newAccountId(window.bridge.api, selectedVaultAccountAddress);
-  }, [
-    bridgeLoaded,
-    selectedVaultAccountAddress
-  ]);
+  }, [bridgeLoaded, selectedVaultAccountAddress]);
 
-  const vaultCollateralIdLiteral = React.useMemo(() => (
-    tickerToCurrencyIdLiteral(vaultCollateral) as CollateralIdLiteral
-  ), [vaultCollateral]);
+  const vaultCollateralIdLiteral = React.useMemo(
+    () => tickerToCurrencyIdLiteral(vaultCollateral) as CollateralIdLiteral,
+    [vaultCollateral]
+  );
 
   React.useEffect(() => {
     (async () => {
@@ -145,18 +113,8 @@ const Vault = (): JSX.Element => {
 
       try {
         // TODO: should update using `react-query`
-        const [
-          feesPolkaBTC,
-          lockedAmountBTC,
-          collateralization,
-          apyScore,
-          issuableAmount
-        ] = await Promise.allSettled([
-          window.bridge.vaults.getWrappedReward(
-            vaultAccountId,
-            vaultCollateralIdLiteral,
-            WRAPPED_TOKEN_ID_LITERAL
-          ),
+        const [feesPolkaBTC, lockedAmountBTC, collateralization, apyScore, issuableAmount] = await Promise.allSettled([
+          window.bridge.vaults.getWrappedReward(vaultAccountId, vaultCollateralIdLiteral, WRAPPED_TOKEN_ID_LITERAL),
           window.bridge.vaults.getIssuedAmount(vaultAccountId, vaultCollateralIdLiteral),
           window.bridge.vaults.getVaultCollateralization(vaultAccountId, vaultCollateralIdLiteral),
           window.bridge.vaults.getAPY(vaultAccountId, vaultCollateralIdLiteral),
@@ -186,17 +144,12 @@ const Vault = (): JSX.Element => {
         console.log('[Vault React.useEffect] error.message => ', error.message);
       }
     })();
-  }, [
-    vaultCollateralIdLiteral,
-    bridgeLoaded,
-    dispatch,
-    vaultAccountId
-  ]);
+  }, [vaultCollateralIdLiteral, bridgeLoaded, dispatch, vaultAccountId]);
 
-  const {
-    data: governanceTokenReward,
-    error: governanceTokenRewardError
-  } = useQuery<GovernanceTokenMonetaryAmount, Error>(
+  const { data: governanceTokenReward, error: governanceTokenRewardError } = useQuery<
+    GovernanceTokenMonetaryAmount,
+    Error
+  >(
     [
       GENERIC_FETCHER,
       'vaults',
@@ -212,17 +165,8 @@ const Vault = (): JSX.Element => {
   );
   useErrorHandler(governanceTokenRewardError);
 
-  const {
-    data: vaultExt,
-    error: vaultExtError
-  } = useQuery<VaultExt<BitcoinUnit>, Error>(
-    [
-      GENERIC_FETCHER,
-      'vaults',
-      'get',
-      vaultAccountId,
-      vaultCollateralIdLiteral
-    ],
+  const { data: vaultExt, error: vaultExtError } = useQuery<VaultExt<BitcoinUnit>, Error>(
+    [GENERIC_FETCHER, 'vaults', 'get', vaultAccountId, vaultCollateralIdLiteral],
     genericFetcher<VaultExt<BitcoinUnit>>(),
     {
       enabled: !!bridgeLoaded
@@ -234,23 +178,17 @@ const Vault = (): JSX.Element => {
     if (!dispatch) return;
 
     dispatch(updateCollateralAction(vaultExt.backingCollateral));
-  }, [
-    vaultExt,
-    dispatch
-  ]);
+  }, [vaultExt, dispatch]);
 
   const vaultItems = React.useMemo(() => {
     const governanceRewardLabel =
-      governanceTokenReward === undefined ?
-        '-' :
-        displayMonetaryAmount(governanceTokenReward);
+      governanceTokenReward === undefined ? '-' : displayMonetaryAmount(governanceTokenReward);
 
     return [
       {
         title: t('collateralization'),
-        value: collateralization === '∞' ?
-          collateralization :
-          `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
+        value:
+          collateralization === '∞' ? collateralization : `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
       },
       {
         title: t('vault.fees_earned_interbtc', {
@@ -270,7 +208,8 @@ const Vault = (): JSX.Element => {
         title: t('locked_btc'),
         value: displayMonetaryAmount(lockedBTC),
         color: 'text-interlayCalifornia-700'
-      }, {
+      },
+      {
         title: t('vault.remaining_capacity', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         }),
@@ -316,75 +255,48 @@ const Vault = (): JSX.Element => {
   return (
     <>
       <MainContainer className='fade-in-animation'>
-        <VaultsHeader
-          title={t('vault.vault_dashboard')}
-          accountAddress={selectedVaultAccountAddress} />
+        <VaultsHeader title={t('vault.vault_dashboard')} accountAddress={selectedVaultAccountAddress} />
         <div className='space-y-6'>
           <SectionTitle>Vault Stats</SectionTitle>
-          <div
-            className={clsx(
-              'grid',
-              'md:grid-cols-3',
-              'lg:grid-cols-4',
-              'gap-5',
-              '2xl:gap-6'
-            )}>
-            {vaultItems.map(item => (
-              <StatPanel
-                key={item.title}
-                label={item.title}
-                value={item.value} />
+          <div className={clsx('grid', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-5', '2xl:gap-6')}>
+            {vaultItems.map((item) => (
+              <StatPanel key={item.title} label={item.title} value={item.value} />
             ))}
             <VaultStatusStatPanel vaultAccountId={vaultAccountId} />
           </div>
         </div>
         {/* Check interaction with the vault */}
         {vaultClientLoaded && address === selectedVaultAccountAddress && (
-          <div
-            className={clsx(
-              'grid',
-              hasLockedBTC ?
-                'grid-cols-6' :
-                'grid-cols-4',
-              'gap-5'
-            )}>
-            <InterlayDenimOrKintsugiSupernovaContainedButton
-              onClick={handleDepositCollateralModalOpen}>
+          <div className={clsx('grid', hasLockedBTC ? 'grid-cols-6' : 'grid-cols-4', 'gap-5')}>
+            <InterlayDenimOrKintsugiSupernovaContainedButton onClick={handleDepositCollateralModalOpen}>
               {t('vault.deposit_collateral')}
             </InterlayDenimOrKintsugiSupernovaContainedButton>
-            <InterlayDefaultContainedButton
-              onClick={handleWithdrawCollateralModalOpen}>
+            <InterlayDefaultContainedButton onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
             <ClaimRewardsButton vaultAccountId={vaultAccountId} />
             <InterlayTooltip label={issueButtonTooltip}>
               {/* Button wrapped in div to enable tooltip on disabled button. */}
               <div className='grid'>
-                <InterlayCaliforniaContainedButton
-                  onClick={handleRequestIssueModalOpen}
-                  disabled={isIssuingDisabled}>
+                <InterlayCaliforniaContainedButton onClick={handleRequestIssueModalOpen} disabled={isIssuingDisabled}>
                   {t('vault.issue_vault')}
                 </InterlayCaliforniaContainedButton>
               </div>
             </InterlayTooltip>
             {hasLockedBTC && (
-              <InterlayCaliforniaContainedButton
-                onClick={handleRequestReplaceModalOpen}>
+              <InterlayCaliforniaContainedButton onClick={handleRequestReplaceModalOpen}>
                 {t('vault.replace_vault')}
               </InterlayCaliforniaContainedButton>
             )}
             {hasLockedBTC && (
-              <InterlayCaliforniaContainedButton
-                onClick={handleRequestRedeemModalOpen}>
+              <InterlayCaliforniaContainedButton onClick={handleRequestRedeemModalOpen}>
                 {t('vault.redeem_vault')}
               </InterlayCaliforniaContainedButton>
             )}
           </div>
         )}
-        <VaultIssueRequestsTable
-          vaultAddress={selectedVaultAccountAddress} />
-        <VaultRedeemRequestsTable
-          vaultAddress={selectedVaultAccountAddress} />
+        <VaultIssueRequestsTable vaultAddress={selectedVaultAccountAddress} />
+        <VaultRedeemRequestsTable vaultAddress={selectedVaultAccountAddress} />
         <ReplaceTable vaultAddress={selectedVaultAccountAddress} />
       </MainContainer>
       {collateralUpdateStatus !== CollateralUpdateStatus.Close && (
@@ -396,20 +308,24 @@ const Vault = (): JSX.Element => {
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
           vaultAddress={selectedVaultAccountAddress}
-          hasLockedBTC={hasLockedBTC} />
+          hasLockedBTC={hasLockedBTC}
+        />
       )}
       <RequestReplacementModal
         onClose={handleRequestReplaceModalClose}
         open={requestReplaceModalOpen}
-        vaultAddress={selectedVaultAccountAddress} />
+        vaultAddress={selectedVaultAccountAddress}
+      />
       <RequestRedeemModal
         onClose={handleRequestRedeemModalClose}
         open={requestRedeemModalOpen}
-        vaultAddress={selectedVaultAccountAddress} />
+        vaultAddress={selectedVaultAccountAddress}
+      />
       <RequestIssueModal
         onClose={handleRequestIssueModalClose}
         open={requestIssueModalOpen}
-        vaultAddress={selectedVaultAccountAddress} />
+        vaultAddress={selectedVaultAccountAddress}
+      />
     </>
   );
 };

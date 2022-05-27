@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -52,17 +51,15 @@ const Transfer = (): JSX.Element | null => {
 
     const tabIdValues = Object.values(TAB_IDS);
     switch (true) {
-    case selectedTabId === null:
-    case selectedTabId && !tabIdValues.includes(selectedTabId):
-      updateQueryParametersRef.current({
-        [QUERY_PARAMETERS.TAB]: TAB_IDS.crossChainTransfer
-      });
+      case selectedTabId === null:
+      case selectedTabId && !tabIdValues.includes(selectedTabId):
+        updateQueryParametersRef.current({
+          [QUERY_PARAMETERS.TAB]: TAB_IDS.crossChainTransfer
+        });
     }
-  }, [
-    selectedTabId
-  ]);
+  }, [selectedTabId]);
 
-  const selectedTabIndex = TAB_ITEMS.findIndex(tabItem => tabItem.id === selectedTabId);
+  const selectedTabIndex = TAB_ITEMS.findIndex((tabItem) => tabItem.id === selectedTabId);
 
   const handleTabSelect = (index: number) => {
     updateQueryParameters({
@@ -72,30 +69,16 @@ const Transfer = (): JSX.Element | null => {
 
   return (
     <MainContainer>
-      <Panel
-        className={clsx(
-          'mx-auto',
-          'w-full',
-          'md:max-w-xl',
-          'p-10'
-        )}>
-        <InterlayTabGroup
-          defaultIndex={selectedTabIndex}
-          onChange={handleTabSelect}>
+      <Panel className={clsx('mx-auto', 'w-full', 'md:max-w-xl', 'p-10')}>
+        <InterlayTabGroup defaultIndex={selectedTabIndex} onChange={handleTabSelect}>
           <InterlayTabList>
-            {TAB_ITEMS.map((tabItem => (
-              <InterlayTab
-                key={tabItem.id}
-                className='uppercase'>
+            {TAB_ITEMS.map((tabItem) => (
+              <InterlayTab key={tabItem.id} className='uppercase'>
                 {t(tabItem.label)}
               </InterlayTab>
-            )))}
+            ))}
           </InterlayTabList>
-          <Hr1
-            className={clsx(
-              'border-t-2',
-              'my-2'
-            )} />
+          <Hr1 className={clsx('border-t-2', 'my-2')} />
           <InterlayTabPanels className='mt-2'>
             <InterlayTabPanel>
               <TransferForm />

@@ -1,4 +1,3 @@
-
 import useDarkMode from 'use-dark-mode';
 
 import Toggle from 'components/Toggle';
@@ -13,11 +12,7 @@ const DarkModeToggle = (): JSX.Element => {
     element: document.documentElement
   });
 
-  return (
-    <Toggle
-      checked={darkMode.value}
-      onChange={darkMode.toggle} />
-  );
+  return <Toggle checked={darkMode.value} onChange={darkMode.toggle} />;
 };
 
 export default DarkModeToggle;

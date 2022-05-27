@@ -15,26 +15,22 @@ interface WalletData {
   url: string;
 }
 
-const WALLETS: {[wallet in WalletSourceName]: WalletData} =
-  {
-    [WalletSourceName.PolkadotExtensionLogoIcon]: {
-      name: 'Polkadot{.js}',
-      LogoIcon: PolkadotExtensionLogoIcon,
-      url: 'https://polkadot.js.org/extension/'
-    },
-    [WalletSourceName.Talisman]: {
-      name: 'Talisman',
-      LogoIcon: TalismanWalletLogoIcon,
-      url: 'https://talisman.xyz/'
-    },
-    [WalletSourceName.SubWallet]: {
-      name: 'SubWallet',
-      LogoIcon: SubWalletLogoIcon,
-      url: 'https://subwallet.app/'
-    }
-  };
-
-export {
-  WalletSourceName,
-  WALLETS
+const WALLETS: { [wallet in WalletSourceName]: WalletData } = {
+  [WalletSourceName.PolkadotExtensionLogoIcon]: {
+    name: 'Polkadot{.js}',
+    LogoIcon: PolkadotExtensionLogoIcon,
+    url: 'https://polkadot.js.org/extension/'
+  },
+  [WalletSourceName.Talisman]: {
+    name: 'Talisman',
+    LogoIcon: TalismanWalletLogoIcon,
+    url: 'https://talisman.xyz/'
+  },
+  [WalletSourceName.SubWallet]: {
+    name: 'SubWallet',
+    LogoIcon: SubWalletLogoIcon,
+    url: 'https://subwallet.app/'
+  }
 };
+
+export { WalletSourceName, WALLETS };

@@ -21,10 +21,7 @@ const VaultCard = ({
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
-      <CoinPair
-        coinOne={collateralSymbol}
-        coinTwo={wrappedSymbol}
-        size='large' />
+      <CoinPair coinOne={collateralSymbol} coinTwo={wrappedSymbol} size='large' />
       <CardTitle>
         {collateralSymbol} - {wrappedSymbol}
       </CardTitle>
@@ -48,10 +45,7 @@ const VaultCard = ({
         </DlItem>
       </StyledDl>
       <CTAWrapper>
-        <CTALink
-          href={link}
-          variant='primary'
-          fullWidth={false}>
+        <CTALink href={link} variant='primary' fullWidth={false}>
           View
         </CTALink>
       </CTAWrapper>

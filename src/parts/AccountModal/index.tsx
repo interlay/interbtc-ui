@@ -1,23 +1,12 @@
 import * as React from 'react';
-import {
-  useDispatch,
-  useSelector
-} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  web3Enable,
-  web3FromAddress
-} from '@polkadot/extension-dapp';
+import { web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 
-import InterlayModal, {
-  InterlayModalInnerWrapper
-} from 'components/UI/InterlayModal';
+import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 import { APP_NAME } from 'config/relay-chains';
-import {
-  KUSAMA,
-  POLKADOT
-} from 'utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 import useGetAccounts from 'utils/hooks/api/use-get-accounts';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
@@ -41,46 +30,31 @@ const ACCOUNT_MODAL_BUTTON_CLASSES = clsx(
   'border',
   'border-solid',
   'shadow-sm',
-  { 'hover:bg-interlayHaiti-50':
-  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'hover:bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
   { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
 const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
-  { 'text-interlayDenim-700':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-  { 'dark:text-kintsugiMidnight-700':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-  { 'bg-interlayHaiti-50':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-  { 'dark:bg-white':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-  { 'dark:hover:bg-opacity-100':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+  { 'text-interlayDenim-700': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-kintsugiMidnight-700': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'dark:hover:bg-opacity-100': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const AccountModal = ({
-  open,
-  onClose
-}: Props): JSX.Element => {
-  const {
-    bridgeLoaded,
-    address,
-    extensions
-  } = useSelector((state: StoreType) => state.general);
+const AccountModal = ({ open, onClose }: Props): JSX.Element => {
+  const { bridgeLoaded, address, extensions } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);
   const [selectedWallet, setSelectedWallet] = React.useState<WalletSourceName | undefined>();
 
   const accounts = useGetAccounts();
-  const accountsFromSelectedWallet = React.useMemo(() =>
-    accounts.filter(({ meta: { source } }) => source === selectedWallet)
-  , [
-    accounts,
-    selectedWallet
-  ]);
+  const accountsFromSelectedWallet = React.useMemo(
+    () => accounts.filter(({ meta: { source } }) => source === selectedWallet),
+    [accounts, selectedWallet]
+  );
 
   React.useEffect(() => {
     // Sets selected wallet on modal open.
@@ -96,12 +70,10 @@ const AccountModal = ({
 
   // State of the modal content.
   const modalContent = React.useMemo(() => {
-    const supportedWalletInstalled = extensions
-      .reduce(
-        (result, extensionName) => result || Object.values(WalletSourceName)
-          .includes(extensionName as WalletSourceName),
-        false
-      );
+    const supportedWalletInstalled = extensions.reduce(
+      (result, extensionName) => result || Object.values(WalletSourceName).includes(extensionName as WalletSourceName),
+      false
+    );
 
     const handleWalletSelect = (walletName: WalletSourceName | undefined) => {
       setSelectedWallet(walletName);
@@ -130,85 +102,48 @@ const AccountModal = ({
     if (supportedWalletInstalled) {
       if (selectedWallet === undefined) {
         return (
-          <AccountModalContentWrapper
-            title={t('account_modal.select_wallet')}
-            focusRef={focusRef}
-            onClose={onClose}>
-            <ModalContentSelectWallet
-              extensions={extensions}
-              handleWalletSelect={handleWalletSelect} />
+          <AccountModalContentWrapper title={t('account_modal.select_wallet')} focusRef={focusRef} onClose={onClose}>
+            <ModalContentSelectWallet extensions={extensions} handleWalletSelect={handleWalletSelect} />
           </AccountModalContentWrapper>
         );
       } else {
         if (accounts !== undefined && accounts.length > 0) {
           return (
-            <AccountModalContentWrapper
-              title={t('account_modal.select_account')}
-              focusRef={focusRef}
-              onClose={onClose}>
+            <AccountModalContentWrapper title={t('account_modal.select_account')} focusRef={focusRef} onClose={onClose}>
               <ModalContentSelectAccount
                 accountsFromSelectedWallet={accountsFromSelectedWallet}
                 address={address}
                 selectedWallet={selectedWallet}
                 handleAccountSelect={handleAccountSelect}
                 handleAccountDisconnect={handleAccountDisconnect}
-                handleWalletSelect={handleWalletSelect} />
+                handleWalletSelect={handleWalletSelect}
+              />
             </AccountModalContentWrapper>
           );
         } else {
           return (
-            <AccountModalContentWrapper
-              title={t('account_modal.create_account')}
-              focusRef={focusRef}
-              onClose={onClose}>
-              <ModalContentNoAccountFound
-                selectedWallet={selectedWallet} />
+            <AccountModalContentWrapper title={t('account_modal.create_account')} focusRef={focusRef} onClose={onClose}>
+              <ModalContentNoAccountFound selectedWallet={selectedWallet} />
             </AccountModalContentWrapper>
           );
         }
       }
     } else {
       return (
-        <AccountModalContentWrapper
-          title={t('account_modal.install_wallet')}
-          focusRef={focusRef}
-          onClose={onClose}>
+        <AccountModalContentWrapper title={t('account_modal.install_wallet')} focusRef={focusRef} onClose={onClose}>
           <ModalContentNoWalletFound />
         </AccountModalContentWrapper>
       );
     }
-  }, [
-    accounts,
-    accountsFromSelectedWallet,
-    address,
-    bridgeLoaded,
-    dispatch,
-    extensions,
-    onClose,
-    selectedWallet,
-    t
-  ]);
+  }, [accounts, accountsFromSelectedWallet, address, bridgeLoaded, dispatch, extensions, onClose, selectedWallet, t]);
 
   return (
-    <InterlayModal
-      initialFocus={focusRef}
-      open={open}
-      onClose={onClose}>
-      <InterlayModalInnerWrapper
-        className={clsx(
-          'p-6',
-          'max-w-lg'
-        )}>
-        {modalContent}
-      </InterlayModalInnerWrapper>
+    <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
+      <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>{modalContent}</InterlayModalInnerWrapper>
     </InterlayModal>
   );
 };
 
 export default AccountModal;
 
-export {
-  ACCOUNT_MODAL_BUTTON_CLASSES,
-  ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES
-};
-
+export { ACCOUNT_MODAL_BUTTON_CLASSES, ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES };

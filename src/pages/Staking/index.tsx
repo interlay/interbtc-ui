@@ -1,30 +1,14 @@
-
 import * as React from 'react';
-import {
-  useDispatch,
-  useSelector
-} from 'react-redux';
-import {
-  useQuery,
-  useMutation
-} from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useDispatch, useSelector } from 'react-redux';
+import { useQuery, useMutation } from 'react-query';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { AddressOrPair } from '@polkadot/api/types';
-import {
-  format,
-  add
-} from 'date-fns';
+import { format, add } from 'date-fns';
 import Big from 'big.js';
 import clsx from 'clsx';
-import {
-  DefaultTransactionAPI,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
 
 import BalancesUI from './BalancesUI';
 import WithdrawButton from './WithdrawButton';
@@ -53,23 +37,13 @@ import {
 } from 'config/relay-chains';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
-import {
-  ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT,
-  ZERO_GOVERNANCE_TOKEN_AMOUNT
-} from 'utils/constants/currency';
-import {
-  displayMonetaryAmount,
-  getUsdAmount,
-  safeRoundTwoDecimals
-} from 'common/utils/utils';
+import { ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT, ZERO_GOVERNANCE_TOKEN_AMOUNT } from 'utils/constants/currency';
+import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 
-const SHARED_CLASSES = clsx(
-  'mx-auto',
-  'md:max-w-2xl'
-);
+const SHARED_CLASSES = clsx('mx-auto', 'md:max-w-2xl');
 
 const ONE_WEEK_SECONDS = 7 * 24 * 3600;
 
@@ -78,38 +52,20 @@ const convertWeeksToBlockNumbers = (weeks: number) => {
 };
 
 const convertBlockNumbersToWeeks = (blockNumbers: number) => {
-  return blockNumbers * BLOCK_TIME / ONE_WEEK_SECONDS;
+  return (blockNumbers * BLOCK_TIME) / ONE_WEEK_SECONDS;
 };
 
 // When to increase lock amount and extend lock time
-const checkIncreaseLockAmountAndExtendLockTime = (
-  lockTime: number,
-  lockAmount: GovernanceTokenMonetaryAmount
-) => {
-  return (
-    lockTime > 0 &&
-    lockAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-  );
+const checkIncreaseLockAmountAndExtendLockTime = (lockTime: number, lockAmount: GovernanceTokenMonetaryAmount) => {
+  return lockTime > 0 && lockAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 };
 // When to only increase lock amount
-const checkOnlyIncreaseLockAmount = (
-  lockTime: number,
-  lockAmount: GovernanceTokenMonetaryAmount
-) => {
-  return (
-    lockTime === 0 &&
-    lockAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-  );
+const checkOnlyIncreaseLockAmount = (lockTime: number, lockAmount: GovernanceTokenMonetaryAmount) => {
+  return lockTime === 0 && lockAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 };
 // When to only extend lock time
-const checkOnlyExtendLockTime = (
-  lockTime: number,
-  lockAmount: GovernanceTokenMonetaryAmount
-) => {
-  return (
-    lockTime > 0 &&
-    lockAmount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-  );
+const checkOnlyExtendLockTime = (lockTime: number, lockAmount: GovernanceTokenMonetaryAmount) => {
+  return lockTime > 0 && lockAmount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 };
 
 // FIXME: account for transaction fees not with a hardcoded value
@@ -121,7 +77,7 @@ const LOCK_TIME = 'lock-time';
 type StakingFormData = {
   [LOCKING_AMOUNT]: string;
   [LOCK_TIME]: string;
-}
+};
 
 interface EstimatedRewardAmountAndAPY {
   amount: GovernanceTokenMonetaryAmount;
@@ -144,12 +100,7 @@ const Staking = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const {
-    governanceTokenBalance,
-    bridgeLoaded,
-    address,
-    prices
-  } = useSelector((state: StoreType) => state.general);
+  const { governanceTokenBalance, bridgeLoaded, address, prices } = useSelector((state: StoreType) => state.general);
 
   const {
     register,
@@ -173,17 +124,9 @@ const Staking = (): JSX.Element => {
     isLoading: currentBlockNumberLoading,
     data: currentBlockNumber,
     error: currentBlockNumberError
-  } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'system',
-      'getCurrentBlockNumber'
-    ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentBlockNumber'], genericFetcher<number>(), {
+    enabled: !!bridgeLoaded
+  });
   useErrorHandler(currentBlockNumberError);
 
   const {
@@ -193,12 +136,7 @@ const Staking = (): JSX.Element => {
     error: voteGovernanceTokenBalanceError,
     refetch: voteGovernanceTokenBalanceRefetch
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
-    [
-      GENERIC_FETCHER,
-      'escrow',
-      'votingBalance',
-      address
-    ],
+    [GENERIC_FETCHER, 'escrow', 'votingBalance', address],
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -214,12 +152,7 @@ const Staking = (): JSX.Element => {
     error: claimableRewardAmountError,
     refetch: claimableRewardAmountRefetch
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [
-      GENERIC_FETCHER,
-      'escrow',
-      'getRewards',
-      address
-    ],
+    [GENERIC_FETCHER, 'escrow', 'getRewards', address],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -235,12 +168,7 @@ const Staking = (): JSX.Element => {
     error: rewardAmountAndAPYError,
     refetch: rewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
-    [
-      GENERIC_FETCHER,
-      'escrow',
-      'getRewardEstimate',
-      address
-    ],
+    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', address],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
@@ -256,14 +184,7 @@ const Staking = (): JSX.Element => {
     data: estimatedRewardAmountAndAPY,
     error: estimatedRewardAmountAndAPYError
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
-    [
-      GENERIC_FETCHER,
-      'escrow',
-      'getRewardEstimate',
-      address,
-      monetaryLockingAmount,
-      blockLockTimeExtension
-    ],
+    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', address, monetaryLockingAmount, blockLockTimeExtension],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
@@ -278,12 +199,7 @@ const Staking = (): JSX.Element => {
     error: stakedAmountAndEndBlockError,
     refetch: stakedAmountAndEndBlockRefetch
   } = useQuery<StakedAmountAndEndBlock, Error>(
-    [
-      GENERIC_FETCHER,
-      'escrow',
-      'getStakedBalance',
-      address
-    ],
+    [GENERIC_FETCHER, 'escrow', 'getStakedBalance', address],
     genericFetcher<StakedAmountAndEndBlock>(),
     {
       enabled: !!bridgeLoaded
@@ -325,9 +241,7 @@ const Staking = (): JSX.Element => {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           const txs = [
-            window.bridge.api.tx.escrow.increaseAmount(
-              variables.amount.toString(variables.amount.currency.rawBase)
-            ),
+            window.bridge.api.tx.escrow.increaseAmount(variables.amount.toString(variables.amount.currency.rawBase)),
             window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
           ];
           const batch = window.bridge.api.tx.utility.batchAll(txs);
@@ -375,43 +289,28 @@ const Staking = (): JSX.Element => {
       [LOCKING_AMOUNT]: '',
       [LOCK_TIME]: ''
     });
-  }, [
-    address,
-    reset
-  ]);
+  }, [address, reset]);
 
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
   const extendLockTimeSet = votingBalanceGreaterThanZero && parseInt(lockTime) > 0;
   const increaseLockingAmountSet =
-    votingBalanceGreaterThanZero &&
-    monetaryLockingAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
+    votingBalanceGreaterThanZero && monetaryLockingAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
   React.useEffect(() => {
     if (extendLockTimeSet) {
       trigger(LOCKING_AMOUNT);
     }
-  }, [
-    lockTime,
-    extendLockTimeSet,
-    trigger
-  ]);
+  }, [lockTime, extendLockTimeSet, trigger]);
 
   React.useEffect(() => {
     if (increaseLockingAmountSet) {
       trigger(LOCK_TIME);
     }
-  }, [
-    lockingAmount,
-    increaseLockingAmountSet,
-    trigger
-  ]);
+  }, [lockingAmount, increaseLockingAmountSet, trigger]);
 
   const getStakedAmount = () => {
-    if (
-      stakedAmountAndEndBlockIdle ||
-      stakedAmountAndEndBlockLoading
-    ) {
+    if (stakedAmountAndEndBlockIdle || stakedAmountAndEndBlockLoading) {
       return undefined;
     }
     if (stakedAmountAndEndBlock === undefined) {
@@ -423,22 +322,13 @@ const Staking = (): JSX.Element => {
   const stakedAmount = getStakedAmount();
 
   const availableBalance = React.useMemo(() => {
-    if (
-      !governanceTokenBalance ||
-      stakedAmountAndEndBlockIdle ||
-      stakedAmountAndEndBlockLoading
-    ) return;
+    if (!governanceTokenBalance || stakedAmountAndEndBlockIdle || stakedAmountAndEndBlockLoading) return;
     if (stakedAmount === undefined) {
       throw new Error('Something went wrong!');
     }
 
     return governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
-  }, [
-    governanceTokenBalance,
-    stakedAmountAndEndBlockIdle,
-    stakedAmountAndEndBlockLoading,
-    stakedAmount
-  ]);
+  }, [governanceTokenBalance, stakedAmountAndEndBlockIdle, stakedAmountAndEndBlockLoading, stakedAmount]);
 
   const onSubmit = (data: StakingFormData) => {
     if (!bridgeLoaded) return;
@@ -469,10 +359,7 @@ const Staking = (): JSX.Element => {
     const valueWithFallback = value || '0';
     const monetaryLockingAmount = newMonetaryAmount(valueWithFallback, GOVERNANCE_TOKEN, true);
 
-    if (
-      !extendLockTimeSet &&
-      monetaryLockingAmount.lte(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-    ) {
+    if (!extendLockTimeSet && monetaryLockingAmount.lte(ZERO_GOVERNANCE_TOKEN_AMOUNT)) {
       return 'Locking amount must be greater than zero!';
     }
 
@@ -489,10 +376,7 @@ const Staking = (): JSX.Element => {
     // So less tokens than the period would likely round to 0.
     // So on the UI, as long as you require more planck to be locked than the number of blocks the user locks for,
     // it should be good.
-    if (
-      !extendLockTimeSet &&
-      planckLockingAmount.lte(Big(lockBlocks))
-    ) {
+    if (!extendLockTimeSet && planckLockingAmount.lte(Big(lockBlocks))) {
       return 'Planck to be locked must be greater than the number of blocks you lock for!';
     }
 
@@ -503,21 +387,14 @@ const Staking = (): JSX.Element => {
     const valueWithFallback = value || '0';
     const numericValue = parseInt(valueWithFallback);
 
-    if (
-      votingBalanceGreaterThanZero &&
-      numericValue === 0 &&
-      monetaryLockingAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)
-    ) {
+    if (votingBalanceGreaterThanZero && numericValue === 0 && monetaryLockingAmount.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT)) {
       return undefined;
     }
 
     if (availableLockTime === undefined) {
       throw new Error('Something went wrong!');
     }
-    if (
-      numericValue < STAKE_LOCK_TIME.MIN ||
-      numericValue > availableLockTime
-    ) {
+    if (numericValue < STAKE_LOCK_TIME.MIN || numericValue > availableLockTime) {
       return `Please enter a number between ${STAKE_LOCK_TIME.MIN}-${availableLockTime}.`;
     }
 
@@ -525,10 +402,7 @@ const Staking = (): JSX.Element => {
   };
 
   const renderVoteStakedAmountLabel = () => {
-    if (
-      voteGovernanceTokenBalanceIdle ||
-      voteGovernanceTokenBalanceLoading
-    ) {
+    if (voteGovernanceTokenBalanceIdle || voteGovernanceTokenBalanceLoading) {
       return '-';
     }
     if (voteGovernanceTokenBalance === undefined) {
@@ -539,10 +413,7 @@ const Staking = (): JSX.Element => {
   };
 
   const renderProjectedRewardAmountLabel = () => {
-    if (
-      projectedRewardAmountAndAPYIdle ||
-      projectedRewardAmountAndAPYLoading
-    ) {
+    if (projectedRewardAmountAndAPYIdle || projectedRewardAmountAndAPYLoading) {
       return '-';
     }
     if (projectedRewardAmountAndAPY === undefined) {
@@ -553,11 +424,7 @@ const Staking = (): JSX.Element => {
   };
 
   const renderStakedAmountLabel = () => {
-    return (
-      stakedAmount === undefined ?
-        '-' :
-        displayMonetaryAmount(stakedAmount)
-    );
+    return stakedAmount === undefined ? '-' : displayMonetaryAmount(stakedAmount);
   };
 
   const hasStakedAmount = stakedAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
@@ -578,11 +445,9 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return (
-      hasStakedAmount ?
-        stakedAmountAndEndBlock.endBlock - currentBlockNumber : // If the user has staked
-        null // If the user has not staked
-    );
+    return hasStakedAmount
+      ? stakedAmountAndEndBlock.endBlock - currentBlockNumber // If the user has staked
+      : null; // If the user has not staked
   };
   const remainingBlockNumbersToUnstake = getRemainingBlockNumbersToUnstake();
 
@@ -599,7 +464,7 @@ const Staking = (): JSX.Element => {
       const remainingWeeksToUnstake = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake);
 
       return Math.floor(STAKE_LOCK_TIME.MAX - remainingWeeksToUnstake);
-    // If the user has not staked
+      // If the user has not staked
     } else {
       return STAKE_LOCK_TIME.MAX;
     }
@@ -607,11 +472,7 @@ const Staking = (): JSX.Element => {
   const availableLockTime = getAvailableLockTime();
 
   const renderAvailableBalanceLabel = () => {
-    return (
-      availableBalance === undefined ?
-        '-' :
-        displayMonetaryAmount(availableBalance)
-    );
+    return availableBalance === undefined ? '-' : displayMonetaryAmount(availableBalance);
   };
 
   const renderUnlockDateLabel = () => {
@@ -654,10 +515,7 @@ const Staking = (): JSX.Element => {
 
   const renderNewVoteGovernanceTokenGainedLabel = () => {
     const newTotalStakeAmount = getNewTotalStake();
-    if (
-      voteGovernanceTokenBalance === undefined ||
-      newTotalStakeAmount === undefined
-    ) {
+    if (voteGovernanceTokenBalance === undefined || newTotalStakeAmount === undefined) {
       return '-';
     }
 
@@ -669,10 +527,7 @@ const Staking = (): JSX.Element => {
   };
 
   const getNewTotalStake = () => {
-    if (
-      remainingBlockNumbersToUnstake === undefined ||
-      stakedAmount === undefined
-    ) {
+    if (remainingBlockNumbersToUnstake === undefined || stakedAmount === undefined) {
       return undefined;
     }
 
@@ -680,10 +535,12 @@ const Staking = (): JSX.Element => {
 
     let newLockTime: number;
     let newLockingAmount: GovernanceTokenMonetaryAmount;
-    if (remainingBlockNumbersToUnstake === null) { // If the user has not staked
+    if (remainingBlockNumbersToUnstake === null) {
+      // If the user has not staked
       newLockTime = extendingLockTime;
       newLockingAmount = monetaryLockingAmount;
-    } else { // If the user has staked
+    } else {
+      // If the user has staked
       const currentLockTime = convertBlockNumbersToWeeks(remainingBlockNumbersToUnstake); // Weeks
 
       // New lock-time that is applied to the entire staked governance token
@@ -739,10 +596,7 @@ const Staking = (): JSX.Element => {
   };
 
   const renderClaimableRewardAmountLabel = () => {
-    if (
-      claimableRewardAmountIdle ||
-      claimableRewardAmountLoading
-    ) {
+    if (claimableRewardAmountIdle || claimableRewardAmountLoading) {
       return '-';
     }
     if (claimableRewardAmount === undefined) {
@@ -827,36 +681,35 @@ const Staking = (): JSX.Element => {
       <MainContainer>
         <WarningBanner
           className={SHARED_CLASSES}
-          message='Block times are currently higher than expected. Lock times may be longer than expected.' />
-        <Panel
-          className={SHARED_CLASSES}>
-          <form
-            className={clsx(
-              'p-8',
-              'space-y-8'
-            )}
-            onSubmit={handleSubmit(onSubmit)}>
+          message='Block times are currently higher than expected. Lock times may be longer than expected.'
+        />
+        <Panel className={SHARED_CLASSES}>
+          <form className={clsx('p-8', 'space-y-8')} onSubmit={handleSubmit(onSubmit)}>
             <TitleWithUnderline text={`Stake ${GOVERNANCE_TOKEN_SYMBOL}`} />
             <BalancesUI
               stakedAmount={renderStakedAmountLabel()}
               voteStakedAmount={renderVoteStakedAmountLabel()}
-              projectedRewardAmount={renderProjectedRewardAmountLabel()} />
+              projectedRewardAmount={renderProjectedRewardAmountLabel()}
+            />
             <ClaimRewardsButton
               claimableRewardAmount={renderClaimableRewardAmountLabel()}
-              disabled={claimRewardsButtonEnabled === false} />
+              disabled={claimRewardsButtonEnabled === false}
+            />
             {/* eslint-disable-next-line max-len */}
             {/* `remainingBlockNumbersToUnstake !== null` is redundant because if `hasStakedAmount` is truthy `remainingBlockNumbersToUnstake` cannot be null */}
             {hasStakedAmount && remainingBlockNumbersToUnstake !== null && (
               <WithdrawButton
                 stakedAmount={renderStakedAmountLabel()}
-                remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake} />
+                remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake}
+              />
             )}
             <TotalsUI />
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
                 balance={renderAvailableBalanceLabel()}
-                tokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
+                tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
+              />
               <TokenField
                 id={LOCKING_AMOUNT}
                 name={LOCKING_AMOUNT}
@@ -867,12 +720,13 @@ const Staking = (): JSX.Element => {
                     value: extendLockTimeSet ? false : true,
                     message: 'This field is required!'
                   },
-                  validate: value => validateLockingAmount(value)
+                  validate: (value) => validateLockingAmount(value)
                 })}
                 approxUSD={`≈ $ ${valueInUSDOfLockingAmount}`}
                 error={!!errors[LOCKING_AMOUNT]}
                 helperText={errors[LOCKING_AMOUNT]?.message}
-                disabled={lockingAmountFieldDisabled} />
+                disabled={lockingAmountFieldDisabled}
+              />
             </div>
             <LockTimeField
               id={LOCK_TIME}
@@ -883,22 +737,25 @@ const Staking = (): JSX.Element => {
                   value: votingBalanceGreaterThanZero ? false : true,
                   message: 'This field is required!'
                 },
-                validate: value => validateLockTime(value)
+                validate: (value) => validateLockTime(value)
               })}
               error={!!errors[LOCK_TIME]}
               helperText={errors[LOCK_TIME]?.message}
               optional={votingBalanceGreaterThanZero}
-              disabled={lockTimeFieldDisabled} />
+              disabled={lockTimeFieldDisabled}
+            />
             {votingBalanceGreaterThanZero ? (
               <InformationUI
                 label='New unlock Date'
                 value={renderNewUnlockDateLabel()}
-                tooltip='Your original lock date plus the extended lock time.' />
+                tooltip='Your original lock date plus the extended lock time.'
+              />
             ) : (
               <InformationUI
                 label='Unlock Date'
                 value={renderUnlockDateLabel()}
-                tooltip='Your staked amount will be locked until this date.' />
+                tooltip='Your staked amount will be locked until this date.'
+              />
             )}
             <InformationUI
               label={t('staking_page.new_vote_governance_token_gained', {
@@ -907,65 +764,53 @@ const Staking = (): JSX.Element => {
               value={renderNewVoteGovernanceTokenGainedLabel()}
               tooltip={t('staking_page.the_increase_in_your_vote_governance_token_balance', {
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
-              })} />
+              })}
+            />
             {votingBalanceGreaterThanZero && (
               <InformationUI
                 label='New total Stake'
                 value={`${renderNewTotalStakeLabel()}`}
-                tooltip='Your total stake after this transaction' />
+                tooltip='Your total stake after this transaction'
+              />
             )}
             <InformationUI
               label='Estimated APY'
               value={renderEstimatedAPYLabel()}
-              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`} />
+              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`}
+            />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={renderEstimatedRewardAmountLabel()}
               tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
-              })} />
+              })}
+            />
             <SubmitButton
-              disabled={
-                initializing ||
-                unlockFirst
-              }
-              pending={
-                initialStakeMutation.isLoading ||
-                moreStakeMutation.isLoading
-              }
+              disabled={initializing || unlockFirst}
+              pending={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
               onClick={handleConfirmClick}
               endIcon={
                 unlockFirst ? (
-                  <InformationTooltip
-                    label='Please unstake first.'
-                    forDisabledAction={unlockFirst} />
+                  <InformationTooltip label='Please unstake first.' forDisabledAction={unlockFirst} />
                 ) : null
-              }>
+              }
+            >
               {submitButtonLabel}
             </SubmitButton>
           </form>
         </Panel>
       </MainContainer>
-      {(
-        initialStakeMutation.isError ||
-        moreStakeMutation.isError
-      ) && (
+      {(initialStakeMutation.isError || moreStakeMutation.isError) && (
         <ErrorModal
-          open={
-            initialStakeMutation.isError ||
-            moreStakeMutation.isError
-          }
+          open={initialStakeMutation.isError || moreStakeMutation.isError}
           onClose={() => {
             initialStakeMutation.reset();
             moreStakeMutation.reset();
           }}
           title='Error'
-          description={
-            initialStakeMutation.error?.message ||
-            moreStakeMutation.error?.message ||
-            ''
-          } />
+          description={initialStakeMutation.error?.message || moreStakeMutation.error?.message || ''}
+        />
       )}
     </>
   );

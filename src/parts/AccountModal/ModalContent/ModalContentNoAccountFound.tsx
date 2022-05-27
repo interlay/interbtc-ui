@@ -7,18 +7,13 @@ interface ModalContentNoAccountFoundProps {
   selectedWallet: WalletSourceName;
 }
 
-const ModalContentNoAccountFound = ({
-  selectedWallet
-}: ModalContentNoAccountFoundProps): JSX.Element => {
+const ModalContentNoAccountFound = ({ selectedWallet }: ModalContentNoAccountFoundProps): JSX.Element => {
   const { t } = useTranslation();
   return (
     // Create a new account when no accounts are available
     <p>
       {t('account_modal.no_account')}
-      <ExternalLink href={selectedWallet && WALLETS[selectedWallet].url}>
-            &nbsp;{t('here')}
-      </ExternalLink>
-          .
+      <ExternalLink href={selectedWallet && WALLETS[selectedWallet].url}>&nbsp;{t('here')}</ExternalLink>.
     </p>
   );
 };

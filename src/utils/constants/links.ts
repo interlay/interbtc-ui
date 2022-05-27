@@ -1,4 +1,3 @@
-
 const URL_PARAMETERS = Object.freeze({
   VAULT: {
     ACCOUNT: 'vaultAccount',
@@ -35,8 +34,4 @@ const QUERY_PARAMETERS = Object.freeze({
   REDEEM_REQUEST_ID: 'redeemRequestId'
 });
 
-export {
-  PAGES,
-  QUERY_PARAMETERS,
-  URL_PARAMETERS
-};
+export { PAGES, QUERY_PARAMETERS, URL_PARAMETERS };

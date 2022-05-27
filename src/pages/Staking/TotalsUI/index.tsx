@@ -1,17 +1,10 @@
-
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 
 import InformationUI from '../InformationUI';
 import ErrorFallback from 'components/ErrorFallback';
-import {
-  VOTE_GOVERNANCE_TOKEN_SYMBOL,
-  VoteGovernanceTokenMonetaryAmount
-} from 'config/relay-chains';
+import { VOTE_GOVERNANCE_TOKEN_SYMBOL, VoteGovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
@@ -25,11 +18,7 @@ const TotalsUI = (): JSX.Element => {
     data: totalVotingSupply,
     error: totalVotingSupplyError
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
-    [
-      GENERIC_FETCHER,
-      'escrow',
-      'totalVotingSupply'
-    ],
+    [GENERIC_FETCHER, 'escrow', 'totalVotingSupply'],
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -38,10 +27,7 @@ const TotalsUI = (): JSX.Element => {
   useErrorHandler(totalVotingSupplyError);
 
   let totalStakedVoteGovernanceTokenAmountLabel;
-  if (
-    totalVotingSupplyIdle ||
-    totalVotingSupplyLoading
-  ) {
+  if (totalVotingSupplyIdle || totalVotingSupplyLoading) {
     totalStakedVoteGovernanceTokenAmountLabel = '-';
   } else {
     if (totalVotingSupply === undefined) {
@@ -54,7 +40,8 @@ const TotalsUI = (): JSX.Element => {
     <div>
       <InformationUI
         label={`Total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-        value={`${totalStakedVoteGovernanceTokenAmountLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`} />
+        value={`${totalStakedVoteGovernanceTokenAmountLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+      />
     </div>
   );
 };
