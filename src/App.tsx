@@ -82,7 +82,9 @@ const App = (): JSX.Element => {
     }
 
     try {
+      // ray test touch <
       startFetchingLiveData(dispatch, store);
+      // ray test touch >
     } catch (error) {
       console.log('[loadInterBtc] error.message => ', error.message);
     }
@@ -230,8 +232,17 @@ const App = (): JSX.Element => {
         console.log(error.message);
       }
     })();
+    // ray test touch <
     startFetchingLiveData(dispatch, store);
-  }, [loadInterBtc, loadFaucet, isLoading, bridgeLoaded, dispatch, store]);
+    // ray test touch >
+  }, [
+    loadInterBtc,
+    loadFaucet,
+    isLoading,
+    bridgeLoaded,
+    dispatch,
+    store
+  ]);
 
   React.useEffect(() => {
     if (!dispatch) return;

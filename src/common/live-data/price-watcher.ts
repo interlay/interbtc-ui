@@ -4,6 +4,7 @@ import { PRICES_URL, RELAY_CHAIN_NAME, BRIDGE_PARACHAIN_NAME } from 'config/rela
 import { updateOfPricesAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 
+// ray test touch <
 const fetchPrices = async (dispatch: Dispatch, store: StoreState): Promise<void> => {
   try {
     const state = store.getState();
@@ -29,5 +30,6 @@ const fetchPrices = async (dispatch: Dispatch, store: StoreState): Promise<void>
     console.log('[fetchPrices] error.message => ', error.message);
   }
 };
+// ray test touch >
 
 export default fetchPrices;

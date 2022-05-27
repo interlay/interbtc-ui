@@ -10,9 +10,11 @@ function startFetchingLiveData(dispatch: Dispatch, store: StoreState): void {
   if (window.isFetchingActive) return;
   window.isFetchingActive = true;
 
+  // ray test touch <
   // Fetch live data prices
   fetchPrices(dispatch, store);
   window.setInterval(() => fetchPrices(dispatch, store), 60000);
+  // ray test touch >
 
   // Fetch btc-relay height and bitcoin height
   fetchBtcRelayAndBitcoinHeight(dispatch, store);
