@@ -1,9 +1,5 @@
-
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import Big from 'big.js';
@@ -25,25 +21,15 @@ interface Props {
   vaultAccountId: AccountId | undefined;
 }
 
-const VaultStatusStatPanel = ({
-  vaultAccountId
-}: Props): JSX.Element => {
+const VaultStatusStatPanel = ({ vaultAccountId }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const {
-    isIdle: vaultExtIdle,
-    isLoading: vaultExtLoading,
-    data: vaultExt,
-    error: vaultExtError
-  } = useQuery<VaultExt<BitcoinUnit>, Error>(
-    [
-      GENERIC_FETCHER,
-      'vaults',
-      'get',
-      vaultAccountId,
-      COLLATERAL_TOKEN_ID_LITERAL
-    ],
+  const { isIdle: vaultExtIdle, isLoading: vaultExtLoading, data: vaultExt, error: vaultExtError } = useQuery<
+    VaultExt<BitcoinUnit>,
+    Error
+  >(
+    [GENERIC_FETCHER, 'vaults', 'get', vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL],
     genericFetcher<VaultExt<BitcoinUnit>>(),
     {
       enabled: !!bridgeLoaded && !!vaultAccountId
@@ -56,17 +42,9 @@ const VaultStatusStatPanel = ({
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'system',
-      'getCurrentActiveBlockNumber'
-    ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
+    enabled: !!bridgeLoaded
+  });
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
@@ -75,12 +53,7 @@ const VaultStatusStatPanel = ({
     data: liquidationCollateralThreshold,
     error: liquidationCollateralThresholdError
   } = useQuery<Big, Error>(
-    [
-      GENERIC_FETCHER,
-      'vaults',
-      'getLiquidationCollateralThreshold',
-      COLLATERAL_TOKEN
-    ],
+    [GENERIC_FETCHER, 'vaults', 'getLiquidationCollateralThreshold', COLLATERAL_TOKEN],
     genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded
@@ -94,12 +67,7 @@ const VaultStatusStatPanel = ({
     data: secureCollateralThreshold,
     error: secureCollateralThresholdError
   } = useQuery<Big, Error>(
-    [
-      GENERIC_FETCHER,
-      'vaults',
-      'getSecureCollateralThreshold',
-      COLLATERAL_TOKEN
-    ],
+    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', COLLATERAL_TOKEN],
     genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded
@@ -112,16 +80,8 @@ const VaultStatusStatPanel = ({
     isLoading: btcToCollateralTokenRateLoading,
     data: btcToCollateralTokenRate,
     error: btcToCollateralTokenRateError
-  } = useQuery<
-    BTCToCollateralTokenRate,
-    Error
-  >(
-    [
-      GENERIC_FETCHER,
-      'oracle',
-      'getExchangeRate',
-      COLLATERAL_TOKEN
-    ],
+  } = useQuery<BTCToCollateralTokenRate, Error>(
+    [GENERIC_FETCHER, 'oracle', 'getExchangeRate', COLLATERAL_TOKEN],
     genericFetcher<BTCToCollateralTokenRate>(),
     {
       enabled: !!bridgeLoaded
@@ -164,11 +124,7 @@ const VaultStatusStatPanel = ({
     );
   }
 
-  return (
-    <StatPanel
-      label={t('vault.status')}
-      value={statusLabel} />
-  );
+  return <StatPanel label={t('vault.status')} value={statusLabel} />;
 };
 
 export default withErrorBoundary(VaultStatusStatPanel, {

@@ -1,51 +1,28 @@
-
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import {
-  useDispatch,
-  useSelector
-} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import Big from 'big.js';
 import clsx from 'clsx';
-import {
-  roundTwoDecimals,
-  newMonetaryAmount,
-  CollateralUnit
-} from '@interlay/interbtc-api';
-import {
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { roundTwoDecimals, newMonetaryAmount, CollateralUnit } from '@interlay/interbtc-api';
+import { MonetaryAmount, Currency } from '@interlay/monetary-js';
 
 import ErrorMessage from 'components/ErrorMessage';
 import NumberInput from 'components/NumberInput';
 import ErrorFallback from 'components/ErrorFallback';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, {
-  InterlayModalInnerWrapper,
-  InterlayModalTitle
-} from 'components/UI/InterlayModal';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import {
-  COLLATERAL_TOKEN,
-  COLLATERAL_TOKEN_SYMBOL
-} from 'config/relay-chains';
+import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import {
-  updateCollateralAction,
-  updateCollateralizationAction
-} from 'common/actions/vault.actions';
+import { updateCollateralAction, updateCollateralizationAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 
 enum CollateralUpdateStatus {
@@ -74,10 +51,7 @@ const UpdateCollateralModal = ({
   vaultAddress,
   hasLockedBTC
 }: Props): JSX.Element => {
-  const {
-    bridgeLoaded,
-    collateralTokenBalance
-  } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, collateralTokenBalance } = useSelector((state: StoreType) => state.general);
   // Denoted in collateral token
   const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
 
@@ -105,13 +79,7 @@ const UpdateCollateralModal = ({
     data: requiredCollateralTokenAmount,
     error: requiredCollateralTokenAmountError
   } = useQuery<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>, Error>(
-    [
-      GENERIC_FETCHER,
-      'vaults',
-      'getRequiredCollateralForVault',
-      vaultId,
-      COLLATERAL_TOKEN
-    ],
+    [GENERIC_FETCHER, 'vaults', 'getRequiredCollateralForVault', vaultId, COLLATERAL_TOKEN],
     genericFetcher<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>>(),
     {
       enabled: !!bridgeLoaded
@@ -198,11 +166,9 @@ const UpdateCollateralModal = ({
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
       const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
 
-      return (
-        collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount) ?
-          t('vault.collateral_below_threshold') :
-          undefined
-      );
+      return collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount)
+        ? t('vault.collateral_below_threshold')
+        : undefined;
     }
 
     if (collateralTokenAmount.lte(newMonetaryAmount(0, COLLATERAL_TOKEN, true))) {
@@ -230,20 +196,15 @@ const UpdateCollateralModal = ({
       requiredCollateralTokenAmountLoading ||
       (vaultCollateralizationIdle && hasLockedBTC) ||
       vaultCollateralizationLoading;
-    const buttonText =
-      initializing ?
-        'Loading...' :
-        collateralUpdateStatusText;
+    const buttonText = initializing ? 'Loading...' : collateralUpdateStatusText;
 
     return (
       <InterlayDefaultContainedButton
         type='submit'
-        className={clsx(
-          '!flex',
-          'mx-auto'
-        )}
+        className={clsx('!flex', 'mx-auto')}
         disabled={initializing}
-        pending={submitStatus === STATUSES.PENDING}>
+        pending={submitStatus === STATUSES.PENDING}
+      >
         {buttonText}
       </InterlayDefaultContainedButton>
     );
@@ -269,10 +230,7 @@ const UpdateCollateralModal = ({
   };
 
   const getMinRequiredCollateralTokenAmount = () => {
-    if (
-      requiredCollateralTokenAmountIdle ||
-      requiredCollateralTokenAmountLoading
-    ) {
+    if (requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading) {
       return '-';
     }
 
@@ -283,10 +241,7 @@ const UpdateCollateralModal = ({
   };
 
   const getMaxWithdrawableCollateralTokenAmount = () => {
-    if (
-      requiredCollateralTokenAmountIdle ||
-      requiredCollateralTokenAmountLoading
-    ) {
+    if (requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading) {
       return '-';
     }
 
@@ -299,30 +254,13 @@ const UpdateCollateralModal = ({
   };
 
   return (
-    <InterlayModal
-      initialFocus={focusRef}
-      open={open}
-      onClose={onClose}>
-      <InterlayModalInnerWrapper
-        className={clsx(
-          'p-6',
-          'max-w-lg'
-        )}>
-        <InterlayModalTitle
-          as='h3'
-          className={clsx(
-            'text-lg',
-            'font-medium',
-            'mb-6'
-          )}>
+    <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
+      <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
+        <InterlayModalTitle as='h3' className={clsx('text-lg', 'font-medium', 'mb-6')}>
           {collateralUpdateStatusText}
         </InterlayModalTitle>
-        <CloseIconButton
-          ref={focusRef}
-          onClick={onClose} />
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className='space-y-4'>
+        <CloseIconButton ref={focusRef} onClick={onClose} />
+        <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
           <p>
             {t('vault.current_total_collateral', {
               currentCollateral: displayMonetaryAmount(currentTotalCollateralTokenAmount),
@@ -342,9 +280,7 @@ const UpdateCollateralModal = ({
             })}
           </p>
           <div className='space-y-1'>
-            <label
-              htmlFor={COLLATERAL_TOKEN_AMOUNT}
-              className='text-sm'>
+            <label htmlFor={COLLATERAL_TOKEN_AMOUNT} className='text-sm'>
               {labelText}
             </label>
             <NumberInput
@@ -356,11 +292,10 @@ const UpdateCollateralModal = ({
                   value: true,
                   message: t('vault.collateral_is_required')
                 },
-                validate: value => validateCollateralTokenAmount(value)
-              })} />
-            <ErrorMessage className='h-9'>
-              {errors[COLLATERAL_TOKEN_AMOUNT]?.message}
-            </ErrorMessage>
+                validate: (value) => validateCollateralTokenAmount(value)
+              })}
+            />
+            <ErrorMessage className='h-9'>{errors[COLLATERAL_TOKEN_AMOUNT]?.message}</ErrorMessage>
           </div>
           <p>
             {t('vault.new_collateralization')}
@@ -374,9 +309,7 @@ const UpdateCollateralModal = ({
   );
 };
 
-export {
-  CollateralUpdateStatus
-};
+export { CollateralUpdateStatus };
 
 // TODO: not working on modals
 export default withErrorBoundary(UpdateCollateralModal, {

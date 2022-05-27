@@ -2,10 +2,7 @@
 // // @ts-nocheck
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
@@ -24,9 +21,7 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { formatDateTime } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { BTCToCollateralTokenRate } from 'types/currency';
@@ -42,22 +37,12 @@ const OracleTable = (): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const {
-    isIdle: namesMapIdle,
-    isLoading: namesMapLoading,
-    data: namesMap,
-    error: namesMapError
-  } = useQuery<Map<string, string>, Error>(
-    [
-      GENERIC_FETCHER,
-      'oracle',
-      'getSourcesById'
-    ],
-    genericFetcher<Map<string, string>>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  const { isIdle: namesMapIdle, isLoading: namesMapLoading, data: namesMap, error: namesMapError } = useQuery<
+    Map<string, string>,
+    Error
+  >([GENERIC_FETCHER, 'oracle', 'getSourcesById'], genericFetcher<Map<string, string>>(), {
+    enabled: !!bridgeLoaded
+  });
   useErrorHandler(namesMapError);
 
   const {
@@ -65,17 +50,9 @@ const OracleTable = (): JSX.Element => {
     isLoading: oracleTimeoutLoading,
     data: oracleTimeout,
     error: oracleTimeoutError
-  } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'oracle',
-      'getOnlineTimeout'
-    ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useQuery<number, Error>([GENERIC_FETCHER, 'oracle', 'getOnlineTimeout'], genericFetcher<number>(), {
+    enabled: !!bridgeLoaded
+  });
   useErrorHandler(oracleTimeoutError);
 
   const {
@@ -83,13 +60,8 @@ const OracleTable = (): JSX.Element => {
     isLoading: oracleSubmissionsLoading,
     data: oracleSubmissions,
     error: oracleSubmissionsError
-  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit>[], Error >(
-    [
-      ORACLE_ALL_LATEST_UPDATES_FETCHER,
-      COLLATERAL_TOKEN,
-      oracleTimeout,
-      namesMap
-    ],
+  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit>[], Error>(
+    [ORACLE_ALL_LATEST_UPDATES_FETCHER, COLLATERAL_TOKEN, oracleTimeout, namesMap],
     allLatestSubmissionsFetcher,
     {
       enabled: !!oracleTimeout && !!namesMap
@@ -102,57 +74,40 @@ const OracleTable = (): JSX.Element => {
       {
         Header: t('source'),
         accessor: 'source',
-        classNames: [
-          'text-center'
-        ]
+        classNames: ['text-center']
       },
       {
         Header: t('feed'),
         accessor: 'feed',
-        classNames: [
-          'text-center'
-        ]
+        classNames: ['text-center']
       },
       {
         Header: t('last_update'),
         accessor: 'lastUpdate',
-        classNames: [
-          'text-center'
-        ],
-        Cell: function FormattedCell({ value }: { value: Date; }) {
-          return (
-            <>{formatDateTime(value)}</>
-          );
+        classNames: ['text-center'],
+        Cell: function FormattedCell({ value }: { value: Date }) {
+          return <>{formatDateTime(value)}</>;
         }
       },
       {
         Header: t('exchange_rate'),
         accessor: 'exchangeRate',
-        classNames: [
-          'text-center'
-        ],
-        Cell: function FormattedCell({ value }: {
-          value: BTCToCollateralTokenRate;
-        }) {
+        classNames: ['text-center'],
+        Cell: function FormattedCell({ value }: { value: BTCToCollateralTokenRate }) {
           return (
-            <>1 BTC = {value.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}</>
+            <>
+              1 BTC = {value.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}
+            </>
           );
         }
       },
       {
         Header: t('status'),
         accessor: 'online',
-        classNames: [
-          'text-center'
-        ],
-        Cell: function FormattedCell({ value }: { value: boolean; }) {
+        classNames: ['text-center'],
+        Cell: function FormattedCell({ value }: { value: boolean }) {
           return (
-            <div
-              className={clsx(
-                'inline-flex',
-                'items-center',
-                'space-x-1'
-              )}>
+            <div className={clsx('inline-flex', 'items-center', 'space-x-1')}>
               {value ? (
                 <>
                   <CheckCircleIcon className='text-interlayConifer' />
@@ -172,18 +127,10 @@ const OracleTable = (): JSX.Element => {
     [t]
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable(
-    {
-      columns,
-      data: oracleSubmissions ?? []
-    }
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+    columns,
+    data: oracleSubmissions ?? []
+  });
 
   if (
     namesMapIdle ||
@@ -193,24 +140,15 @@ const OracleTable = (): JSX.Element => {
     oracleSubmissionsIdle ||
     oracleSubmissionsLoading
   ) {
-    return (
-      <PrimaryColorEllipsisLoader />
-    );
+    return <PrimaryColorEllipsisLoader />;
   }
   if (!oracleSubmissions) {
     throw new Error('Something went wrong!');
   }
 
   return (
-    <InterlayTableContainer
-      className={clsx(
-        'space-y-6',
-        'container',
-        'mx-auto'
-      )}>
-      <SectionTitle>
-        {t('dashboard.oracles.oracles')}
-      </SectionTitle>
+    <InterlayTableContainer className={clsx('space-y-6', 'container', 'mx-auto')}>
+      <SectionTitle>{t('dashboard.oracles.oracles')}</SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map((headerGroup: any) => (
@@ -224,7 +162,8 @@ const OracleTable = (): JSX.Element => {
                       className: clsx(column.classNames),
                       style: column.style
                     }
-                  ])}>
+                  ])}
+                >
                   {column.render('Header')}
                 </InterlayTh>
               ))}
@@ -247,7 +186,8 @@ const OracleTable = (): JSX.Element => {
                           className: clsx(cell.column.classNames),
                           style: cell.column.style
                         }
-                      ])}>
+                      ])}
+                    >
                       {cell.render('Cell')}
                     </InterlayTd>
                   );

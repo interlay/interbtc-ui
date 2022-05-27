@@ -1,17 +1,7 @@
-
 import Big from 'big.js';
 import { TFunction } from 'react-i18next';
-import {
-  VaultExt,
-  VaultStatusExt,
-  CollateralUnit
-} from '@interlay/interbtc-api';
-import {
-  BitcoinAmount,
-  BitcoinUnit,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { VaultExt, VaultStatusExt, CollateralUnit } from '@interlay/interbtc-api';
+import { BitcoinAmount, BitcoinUnit, MonetaryAmount, Currency } from '@interlay/monetary-js';
 
 import { BTCToCollateralTokenRate } from 'types/currency';
 
@@ -37,8 +27,11 @@ const getVaultStatusLabel = (
   btcToCollateralTokenRate: BTCToCollateralTokenRate,
   t: TFunction
 ): string => {
-  const settledCollateralization =
-    getCollateralization(vaultExt.backingCollateral, vaultExt.issuedTokens, btcToCollateralTokenRate);
+  const settledCollateralization = getCollateralization(
+    vaultExt.backingCollateral,
+    vaultExt.issuedTokens,
+    btcToCollateralTokenRate
+  );
 
   // Default to active
   let statusLabel = t('dashboard.vault.active');
@@ -68,7 +61,4 @@ const getVaultStatusLabel = (
   return statusLabel;
 };
 
-export {
-  getCollateralization,
-  getVaultStatusLabel
-};
+export { getCollateralization, getVaultStatusLabel };

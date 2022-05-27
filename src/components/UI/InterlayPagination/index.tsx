@@ -1,39 +1,26 @@
-
 import ReactPaginate, { ReactPaginateProps } from 'react-paginate';
 import clsx from 'clsx';
 
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
 const FOCUS_CLASSES = clsx(
   'focus:outline-none',
   'focus:ring',
-  { 'focus:border-interlayDenim-300':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-  { 'focus:ring-interlayDenim-200':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'focus:border-interlayDenim-300': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'focus:ring-interlayDenim-200': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:focus:border-kintsugiMidnight-300': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
   { 'dark:focus:ring-kintsugiMidnight-200': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
   'focus:ring-opacity-50'
 );
 
-const InterlayPagination = ({
-  onPageChange,
-  ...rest
-}: Props): JSX.Element => {
+const InterlayPagination = ({ onPageChange, ...rest }: Props): JSX.Element => {
   return (
     <ReactPaginate
       previousLabel='Previous'
       nextLabel='Next'
       breakLabel='...'
       onPageChange={onPageChange}
-      breakLinkClassName={clsx(
-        FOCUS_CLASSES,
-        'px-4',
-        'py-2'
-      )}
+      breakLinkClassName={clsx(FOCUS_CLASSES, 'px-4', 'py-2')}
       breakClassName={clsx(
         'relative',
         'inline-flex',
@@ -43,8 +30,7 @@ const InterlayPagination = ({
         { 'dark:border-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'bg-white',
         { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'text-interlayTextPrimaryInLightMode':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
@@ -58,11 +44,7 @@ const InterlayPagination = ({
         '-space-x-px',
         'select-none'
       )}
-      previousLinkClassName={clsx(
-        FOCUS_CLASSES,
-        'px-4',
-        'py-2'
-      )}
+      previousLinkClassName={clsx(FOCUS_CLASSES, 'px-4', 'py-2')}
       previousClassName={clsx(
         'relative',
         'inline-flex',
@@ -74,17 +56,12 @@ const InterlayPagination = ({
         'bg-white',
         'hover:bg-gray-50',
         { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'text-interlayTextPrimaryInLightMode':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
-      pageLinkClassName={clsx(
-        FOCUS_CLASSES,
-        'px-4',
-        'py-2'
-      )}
+      pageLinkClassName={clsx(FOCUS_CLASSES, 'px-4', 'py-2')}
       pageClassName={clsx(
         'relative',
         'md:inline-flex',
@@ -96,17 +73,12 @@ const InterlayPagination = ({
         'bg-white',
         'hover:bg-gray-50',
         { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'text-interlayTextPrimaryInLightMode':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
-      nextLinkClassName={clsx(
-        FOCUS_CLASSES,
-        'px-4',
-        'py-2'
-      )}
+      nextLinkClassName={clsx(FOCUS_CLASSES, 'px-4', 'py-2')}
       nextClassName={clsx(
         'relative',
         'inline-flex',
@@ -118,36 +90,29 @@ const InterlayPagination = ({
         'bg-white',
         'hover:bg-gray-50',
         { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'text-interlayTextPrimaryInLightMode':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
-      activeLinkClassName={clsx(
-        FOCUS_CLASSES,
-        'px-4',
-        'py-2'
-      )}
+      activeLinkClassName={clsx(FOCUS_CLASSES, 'px-4', 'py-2')}
       activeClassName={clsx(
         'z-interlaySpeedDial',
         'relative',
         'inline-flex',
         'items-center',
         'border',
-        { 'border-interlayDenim':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'border-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:border-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'bg-interlayDenim-50':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'bg-interlayDenim-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:bg-kintsugiMidnight-50': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'text-interlayDenim-600':
-          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+        { 'text-interlayDenim-600': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
         { 'dark:text-kintsugiMidnight-600': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
         'text-sm',
         'font-medium'
       )}
-      {...rest} />
+      {...rest}
+    />
   );
 };
 

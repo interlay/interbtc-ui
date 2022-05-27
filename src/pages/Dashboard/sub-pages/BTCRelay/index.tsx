@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -15,17 +14,10 @@ const BTCRelay = (): JSX.Element => {
   return (
     <>
       <div>
-        <PageTitle
-          mainTitle={t('dashboard.relay.btc_relay')}
-          subTitle={<TimerIncrement />} />
+        <PageTitle mainTitle={t('dashboard.relay.btc_relay')} subTitle={<TimerIncrement />} />
         <Hr1 className='mt-2' />
       </div>
-      <div
-        className={clsx(
-          'grid',
-          'grid-cols-2',
-          'gap-7'
-        )}>
+      <div className={clsx('grid', 'grid-cols-2', 'gap-7')}>
         <BTCRelayCard />
         <BlockstreamCard />
       </div>

@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -6,20 +5,8 @@ import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 import Big from 'big.js';
 import { useErrorHandler } from 'react-error-boundary';
-import {
-  Bitcoin,
-  BitcoinAmount,
-  BitcoinUnit,
-  ExchangeRate,
-  Currency
-} from '@interlay/monetary-js';
-import {
-  newMonetaryAmount,
-  GovernanceUnit,
-  newAccountId,
-  Issue,
-  CurrencyIdLiteral
-} from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
+import { newMonetaryAmount, GovernanceUnit, newAccountId, Issue, CurrencyIdLiteral } from '@interlay/interbtc-api';
 
 import {
   GovernanceTokenLogoIcon,
@@ -29,10 +16,7 @@ import {
   WRAPPED_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, {
-  InterlayModalInnerWrapper,
-  InterlayModalTitle
-} from 'components/UI/InterlayModal';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { ParachainStatus, StoreType } from 'common/types/util.types';
 import TokenField from 'components/TokenField';
@@ -54,7 +38,7 @@ const BTC_ADDRESS = 'btc-address';
 type RequestIssueFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
   [BTC_ADDRESS]: string;
-}
+};
 
 interface Props {
   onClose: () => void;
@@ -71,23 +55,15 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
 } else {
   throw new Error('Something went wrong!');
 }
-const extraRequiredCollateralTokenAmount =
-  newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, GOVERNANCE_TOKEN, true);
+const extraRequiredCollateralTokenAmount = newMonetaryAmount(
+  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT,
+  GOVERNANCE_TOKEN,
+  true
+);
 
 // TODO: share form with bridge page
-const RequestIssueModal = ({
-  onClose,
-  open,
-  collateralIdLiteral,
-  vaultAddress
-}: Props): JSX.Element => {
-  const {
-    register,
-    handleSubmit,
-    errors,
-    watch,
-    trigger
-  } = useForm<RequestIssueFormData>({ mode: 'onChange' });
+const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }: Props): JSX.Element => {
+  const { register, handleSubmit, errors, watch, trigger } = useForm<RequestIssueFormData>({ mode: 'onChange' });
   const btcAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
@@ -95,12 +71,11 @@ const RequestIssueModal = ({
   const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
-    new ExchangeRate<
+    new ExchangeRate<Bitcoin, BitcoinUnit, Currency<GovernanceUnit>, GovernanceUnit>(
       Bitcoin,
-      BitcoinUnit,
-      Currency<GovernanceUnit>,
-      GovernanceUnit
-    >(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
+      GOVERNANCE_TOKEN,
+      new Big(0)
+    )
   );
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -125,10 +100,7 @@ const RequestIssueModal = ({
   const vaultAccountId = React.useMemo(() => {
     if (!bridgeLoaded) return;
     return newAccountId(window.bridge.api, vaultAddress);
-  }, [
-    bridgeLoaded,
-    vaultAddress
-  ]);
+  }, [bridgeLoaded, vaultAddress]);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -176,21 +148,10 @@ const RequestIssueModal = ({
         handleError(error);
       }
     })();
-  }, [
-    collateralIdLiteral,
-    bridgeLoaded,
-    handleError,
-    vaultAccountId
-  ]);
+  }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId]);
 
-  if (
-    status === STATUSES.IDLE ||
-    status === STATUSES.PENDING ||
-    vaultAccountId === undefined
-  ) {
-    return (
-      <PrimaryColorEllipsisLoader />
-    );
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING || vaultAccountId === undefined) {
+    return <PrimaryColorEllipsisLoader />;
   }
   const onSubmit = async (data: RequestIssueFormData) => {
     try {
@@ -272,39 +233,18 @@ const RequestIssueModal = ({
 
   return (
     <>
-      <InterlayModal
-        initialFocus={focusRef}
-        open={open}
-        onClose={onClose}>
-        <InterlayModalInnerWrapper
-          className={clsx(
-            'p-6',
-            'max-w-lg'
-          )}>
-          <InterlayModalTitle
-            as='h3'
-            className={clsx(
-              'text-lg',
-              'font-medium',
-              'mb-6'
-            )}>
+      <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
+        <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
+          <InterlayModalTitle as='h3' className={clsx('text-lg', 'font-medium', 'mb-6')}>
             {t('vault.request_issue')}
           </InterlayModalTitle>
-          <CloseIconButton
-            ref={focusRef}
-            onClick={onClose} />
-          <form
-            className='space-y-4'
-            onSubmit={handleSubmit(onSubmit)}>
-            <p>
-              {t('vault.issue_description')}
-            </p>
+          <CloseIconButton ref={focusRef} onClick={onClose} />
+          <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
+            <p>{t('vault.issue_description')}</p>
             <p>
               {t('vault.max_capacity')} <strong>{displayMonetaryAmount(vaultCapacity)} BTC</strong>
             </p>
-            <p>
-              {t('vault.issue_amount')}
-            </p>
+            <p>{t('vault.issue_amount')}</p>
             <div>
               <TokenField
                 id={WRAPPED_TOKEN_AMOUNT}
@@ -316,127 +256,118 @@ const RequestIssueModal = ({
                     value: true,
                     message: t('issue_page.enter_valid_amount')
                   },
-                  validate: value => validateForm(value)
+                  validate: (value) => validateForm(value)
                 })}
                 approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
                 error={!!errors[WRAPPED_TOKEN_AMOUNT]}
-                helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
+                helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
+              />
             </div>
             <PriceInfo
               title={
                 <h5
                   className={clsx(
-                    { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
+                  )}
+                >
                   {t('bridge_fee')}
                 </h5>
               }
-              unitIcon={
-                <BitcoinLogoIcon
-                  width={23}
-                  height={23} />
-              }
+              unitIcon={<BitcoinLogoIcon width={23} height={23} />}
               value={displayMonetaryAmount(bridgeFee)}
               unitName='BTC'
               approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
-                    { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}
-                  label={t('issue_page.tooltip_bridge_fee')} />
-              } />
+                  label={t('issue_page.tooltip_bridge_fee')}
+                />
+              }
+            />
             <PriceInfo
               title={
                 <h5
                   className={clsx(
-                    { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
+                  )}
+                >
                   {t('issue_page.security_deposit')}
                 </h5>
               }
-              unitIcon={
-                <GovernanceTokenLogoIcon width={20} />
-              }
+              unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(securityDeposit)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
               approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
-                    { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}
-                  label={t('issue_page.tooltip_security_deposit')} />
-              } />
+                  label={t('issue_page.tooltip_security_deposit')}
+                />
+              }
+            />
             <PriceInfo
               title={
                 <h5
                   className={clsx(
-                    { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
+                  )}
+                >
                   {t('issue_page.transaction_fee')}
                 </h5>
               }
-              unitIcon={
-                <GovernanceTokenLogoIcon width={20} />
-              }
+              unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
               approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
-                    { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )}
-                  label={t('issue_page.tooltip_transaction_fee')} />
-              } />
-            <Hr2
-              className={clsx(
-                'border-t-2',
-                'my-2.5'
-              )} />
+                  label={t('issue_page.tooltip_transaction_fee')}
+                />
+              }
+            />
+            <Hr2 className={clsx('border-t-2', 'my-2.5')} />
             <PriceInfo
               title={
                 <h5
                   className={clsx(
-                    { 'text-interlayTextPrimaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                  )}>
+                  )}
+                >
                   {t('you_will_receive')}
                 </h5>
               }
-              unitIcon={
-                <WrappedTokenLogoIcon width={20} />
-              }
+              unitIcon={<WrappedTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(wrappedTokenAmount)}
               unitName={WRAPPED_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)} />
+              approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)}
+            />
             <SubmitButton
               disabled={
-              // TODO: `parachainStatus` and `address` should be checked at upper levels
-                parachainStatus !== ParachainStatus.Running ||
-                !address
+                // TODO: `parachainStatus` and `address` should be checked at upper levels
+                parachainStatus !== ParachainStatus.Running || !address
               }
-              pending={submitStatus === STATUSES.PENDING}>
+              pending={submitStatus === STATUSES.PENDING}
+            >
               {t('confirm')}
             </SubmitButton>
           </form>
         </InterlayModalInnerWrapper>
       </InterlayModal>
-      {(submitStatus === STATUSES.REJECTED && submitError) && (
+      {submitStatus === STATUSES.REJECTED && submitError && (
         <ErrorModal
           open={!!submitError}
           onClose={() => {
@@ -444,17 +375,15 @@ const RequestIssueModal = ({
             setSubmitError(null);
           }}
           title='Error'
-          description={
-            typeof submitError === 'string' ?
-              submitError :
-              submitError.message
-          } />
+          description={typeof submitError === 'string' ? submitError : submitError.message}
+        />
       )}
       {submittedRequest && (
         <SubmittedIssueRequestModal
           open={!!submittedRequest}
           onClose={handleSubmittedRequestModalClose}
-          request={submittedRequest} />
+          request={submittedRequest}
+        />
       )}
     </>
   );

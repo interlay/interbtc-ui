@@ -1,14 +1,7 @@
-
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
-import {
-  useSelector,
-  useDispatch
-} from 'react-redux';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
@@ -16,27 +9,16 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import Accounts from 'components/Accounts';
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import Chains, {
-  ChainOption
-} from 'components/Chains';
+import Chains, { ChainOption } from 'components/Chains';
 import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
 import SubmitButton from 'components/SubmitButton';
 import ErrorModal from 'components/ErrorModal';
-import {
-  COLLATERAL_TOKEN,
-  COLLATERAL_TOKEN_SYMBOL
-} from 'config/relay-chains';
+import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import {
-  displayMonetaryAmount,
-  getUsdAmount
-} from 'common/utils/utils';
-import {
-  StoreType,
-  ParachainStatus
-} from 'common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+import { StoreType, ParachainStatus } from 'common/types/util.types';
 import { ChainType } from 'types/chains.types';
 import STATUSES from 'utils/constants/statuses';
 import {
@@ -56,7 +38,7 @@ const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, COLLATERAL_TOKEN
 
 type CrossChainTransferFormData = {
   [TRANSFER_AMOUNT]: string;
-}
+};
 
 const CrossChainTransferForm = (): JSX.Element => {
   // TODO: review how we're handling the relay chain api - for now it can
@@ -85,12 +67,9 @@ const CrossChainTransferForm = (): JSX.Element => {
     mode: 'onChange'
   });
 
-  const {
-    address,
-    collateralTokenTransferableBalance,
-    parachainStatus,
-    prices
-  } = useSelector((state: StoreType) => state.general);
+  const { address, collateralTokenTransferableBalance, parachainStatus, prices } = useSelector(
+    (state: StoreType) => state.general
+  );
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!address) return;
@@ -152,9 +131,9 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     // TODO: this api check won't be necessary when the api call is moved out of
     // the component
-    const existentialDeposit = api ?
-      newMonetaryAmount(getExistentialDeposit(api), COLLATERAL_TOKEN) :
-      newMonetaryAmount('0', COLLATERAL_TOKEN);
+    const existentialDeposit = api
+      ? newMonetaryAmount(getExistentialDeposit(api), COLLATERAL_TOKEN)
+      : newMonetaryAmount('0', COLLATERAL_TOKEN);
 
     // TODO: we need to handle and validate transfer fees properly. Implemented here initially
     // because it was an issue during testing.
@@ -188,10 +167,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     };
 
     initialiseApi();
-  }, [
-    api,
-    handleError
-  ]);
+  }, [api, handleError]);
 
   React.useEffect(() => {
     if (!api) return;
@@ -208,12 +184,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     };
 
     fetchRelayChainBalance();
-  }, [
-    api,
-    address,
-    handleError,
-    relayChainBalance
-  ]);
+  }, [api, address, handleError, relayChainBalance]);
 
   const handleSetFromChain = (chain: ChainOption) => {
     setFromChain(chain.type);
@@ -243,33 +214,28 @@ const CrossChainTransferForm = (): JSX.Element => {
     reset({
       [TRANSFER_AMOUNT]: ''
     });
-  }, [
-    submitStatus,
-    reset,
-    t
-  ]);
+  }, [submitStatus, reset, t]);
 
   return (
     <>
       {api && (
         <>
-          <form
-            className='space-y-8'
-            onSubmit={handleSubmit(onSubmit)}>
-            <FormTitle>
-              {t('transfer_page.cross_chain_transfer_form.title')}
-            </FormTitle>
+          <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
+            <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
             <div>
               {fromChain === ChainType.RelayChain ? (
                 <AvailableBalanceUI
                   label={t('transfer_page.cross_chain_transfer_form.relay_chain_balance')}
                   balance={displayMonetaryAmount(relayChainBalance)}
-                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />) : (
+                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL}
+                />
+              ) : (
                 <AvailableBalanceUI
                   label={t('transfer_page.cross_chain_transfer_form.parachain_balance')}
                   balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
-                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL} />)
-              }
+                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL}
+                />
+              )}
               <TokenField
                 onChange={handleUpdateUsdAmount}
                 id={TRANSFER_AMOUNT}
@@ -279,40 +245,40 @@ const CrossChainTransferForm = (): JSX.Element => {
                     value: true,
                     message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
                   },
-                  validate: value => fromChain === ChainType.RelayChain ?
-                    validateRelayChainTransferAmount(value) :
-                    validateParachainTransferAmount(value)
+                  validate: (value) =>
+                    fromChain === ChainType.RelayChain
+                      ? validateRelayChainTransferAmount(value)
+                      : validateParachainTransferAmount(value)
                 })}
                 error={!!errors[TRANSFER_AMOUNT]}
                 helperText={errors[TRANSFER_AMOUNT]?.message}
                 label={COLLATERAL_TOKEN_SYMBOL}
-                approxUSD={`≈ $ ${approxUsdValue}`} />
+                approxUSD={`≈ $ ${approxUsdValue}`}
+              />
             </div>
             <Chains
               label={t('transfer_page.cross_chain_transfer_form.from_chain')}
               selectedChain={fromChain}
-              onChange={handleSetFromChain} />
+              onChange={handleSetFromChain}
+            />
             <Chains
               label={t('transfer_page.cross_chain_transfer_form.to_chain')}
               selectedChain={toChain}
-              onChange={handleSetToChain} />
+              onChange={handleSetToChain}
+            />
             <Accounts
               label={t('transfer_page.cross_chain_transfer_form.target_account')}
-              callbackFunction={setDestination} />
+              callbackFunction={setDestination}
+            />
             <SubmitButton
-              disabled={
-                parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)
-              }
+              disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
               pending={submitStatus === STATUSES.PENDING}
-              onClick={handleConfirmClick}>
-              {address ? (
-                t('transfer')
-              ) : (
-                t('connect_wallet')
-              )}
+              onClick={handleConfirmClick}
+            >
+              {address ? t('transfer') : t('connect_wallet')}
             </SubmitButton>
           </form>
-          {(submitStatus === STATUSES.REJECTED && submitError) && (
+          {submitStatus === STATUSES.REJECTED && submitError && (
             <ErrorModal
               open={!!submitError}
               onClose={() => {
@@ -320,11 +286,8 @@ const CrossChainTransferForm = (): JSX.Element => {
                 setSubmitError(null);
               }}
               title='Error'
-              description={
-                typeof submitError === 'string' ?
-                  submitError :
-                  submitError.message
-              } />
+              description={typeof submitError === 'string' ? submitError : submitError.message}
+            />
           )}
         </>
       )}

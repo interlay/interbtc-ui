@@ -1,24 +1,9 @@
-import {
-  payments,
-  networks
-} from 'bitcoinjs-lib';
+import { payments, networks } from 'bitcoinjs-lib';
 import Big from 'big.js';
-import {
-  Issue,
-  Redeem,
-  CurrencyUnit,
-  InterbtcPrimitivesVaultId
-} from '@interlay/interbtc-api';
-import {
-  BitcoinAmount,
-  Currency,
-  MonetaryAmount
-} from '@interlay/monetary-js';
+import { Issue, Redeem, CurrencyUnit, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
 
-import {
-  NUMERIC_STRING_REGEX,
-  PARACHAIN_URL
-} from '../../constants';
+import { NUMERIC_STRING_REGEX, PARACHAIN_URL } from '../../constants';
 import { BitcoinNetwork } from 'types/bitcoin';
 
 // TODO: should be one module
@@ -56,19 +41,18 @@ function formatDateTimePrecise(date: Date): string {
 }
 
 function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): Array<Date> {
-  return [...Array(daysBack).keys()].map(index => {
-    const timestamp = Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000;
-    const partialDay = timestamp % (86400 * 1000); // modulo ms per day
-    return new Date(timestamp - partialDay);
-  }).reverse();
+  return [...Array(daysBack).keys()]
+    .map((index) => {
+      const timestamp = Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000;
+      const partialDay = timestamp % (86400 * 1000); // modulo ms per day
+      return new Date(timestamp - partialDay);
+    })
+    .reverse();
 }
 
 // TODO: replace these functions with internationalization functions
 // always round USD amounts to two decimals
-function getUsdAmount<C extends CurrencyUnit>(
-  amount: MonetaryAmount<Currency<C>, C>,
-  rate: number
-): string {
+function getUsdAmount<C extends CurrencyUnit>(amount: MonetaryAmount<Currency<C>, C>, rate: number): string {
   return amount.toBig(amount.currency.base).mul(new Big(rate)).toFixed(2).toString();
 }
 
@@ -79,10 +63,7 @@ function displayMonetaryAmount<C extends CurrencyUnit>(
   if (amount === undefined) return defaultValue;
 
   // TODO: refactor once Monetary.js exposes an `isGreaterThanZero()` method
-  const zero = new MonetaryAmount<Currency<C>, C>(
-    amount.currency,
-    0
-  );
+  const zero = new MonetaryAmount<Currency<C>, C>(amount.currency, 0);
   if (amount.gte(zero)) {
     return amount.toHuman();
   }
@@ -104,10 +85,7 @@ function range(start: number, end: number): number[] {
   return Array.from({ length: end - start }, (_, k) => k + start);
 }
 
-const requestsInStore = (
-  storeRequests: Issue[] | Redeem[],
-  parachainRequests: Issue[] | Redeem[]
-): boolean => {
+const requestsInStore = (storeRequests: Issue[] | Redeem[], parachainRequests: Issue[] | Redeem[]): boolean => {
   if (storeRequests.length !== parachainRequests.length) return false;
   let inStore = true;
 
@@ -125,10 +103,7 @@ const requestsInStore = (
   return inStore;
 };
 
-const btcAddressFromEventToString = (
-  addressObject: string,
-  network: BitcoinNetwork
-): string => {
+const btcAddressFromEventToString = (addressObject: string, network: BitcoinNetwork): string => {
   const parsedAddress = JSON.parse(addressObject);
   const hexHash = Object.values<string>(parsedAddress)[0];
   const hash = Buffer.from(
@@ -139,17 +114,17 @@ const btcAddressFromEventToString = (
 
   let payment;
   switch (paymentType) {
-  case 'P2WPKHV0':
-    payment = payments.p2wpkh;
-    break;
-  case 'P2PKH':
-    payment = payments.p2pkh;
-    break;
-  case 'P2SH':
-    payment = payments.p2sh;
-    break;
-  default:
-    throw new Error('Something went wrong!');
+    case 'P2WPKHV0':
+      payment = payments.p2wpkh;
+      break;
+    case 'P2PKH':
+      payment = payments.p2pkh;
+      break;
+    case 'P2SH':
+      payment = payments.p2sh;
+      break;
+    default:
+      throw new Error('Something went wrong!');
   }
 
   return (
@@ -168,7 +143,7 @@ const getRandomVaultIdWithCapacity = (
   vaults: [InterbtcPrimitivesVaultId, BitcoinAmount][],
   requiredCapacity: BitcoinAmount
 ): InterbtcPrimitivesVaultId => {
-  const filteredVaults = vaults.filter(vault => vault[1].gte(requiredCapacity));
+  const filteredVaults = vaults.filter((vault) => vault[1].gte(requiredCapacity));
   if (filteredVaults.length === 0) {
     throw new Error('No available vaults with required issue capacity.');
   }

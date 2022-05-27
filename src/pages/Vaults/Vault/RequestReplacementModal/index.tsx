@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -14,10 +13,7 @@ import NumberInput from 'components/NumberInput';
 import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
 import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, {
-  InterlayModalInnerWrapper,
-  InterlayModalTitle
-} from 'components/UI/InterlayModal';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
@@ -37,12 +33,7 @@ interface Props {
   vaultAddress: string;
 }
 
-const RequestReplacementModal = ({
-  onClose,
-  open,
-  collateralCurrency,
-  vaultAddress
-}: Props): JSX.Element => {
+const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
   const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
@@ -51,7 +42,7 @@ const RequestReplacementModal = ({
   const queryClient = useQueryClient();
   const focusRef = React.useRef(null);
 
-  const onSubmit = handleSubmit(async data => {
+  const onSubmit = handleSubmit(async (data) => {
     setRequestPending(true);
     try {
       if (BitcoinAmount.from.BTC(data[AMOUNT]).to.Satoshi() === undefined) {
@@ -65,11 +56,7 @@ const RequestReplacementModal = ({
       await window.bridge.replace.request(amountPolkaBtc, collateralCurrency?.currency as CollateralCurrency);
 
       const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
-      queryClient.invalidateQueries([
-        GENERIC_FETCHER,
-        'mapReplaceRequests',
-        vaultId
-      ]);
+      queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);
       toast.success('Replacement request is submitted');
       onClose();
     } catch (error) {
@@ -92,33 +79,14 @@ const RequestReplacementModal = ({
   };
 
   return (
-    <InterlayModal
-      initialFocus={focusRef}
-      open={open}
-      onClose={onClose}>
-      <InterlayModalInnerWrapper
-        className={clsx(
-          'p-6',
-          'max-w-lg'
-        )}>
-        <InterlayModalTitle
-          as='h3'
-          className={clsx(
-            'text-lg',
-            'font-medium',
-            'mb-6'
-          )}>
+    <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
+      <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
+        <InterlayModalTitle as='h3' className={clsx('text-lg', 'font-medium', 'mb-6')}>
           {t('vault.request_replacement')}
         </InterlayModalTitle>
-        <CloseIconButton
-          ref={focusRef}
-          onClick={onClose} />
-        <form
-          className='space-y-4'
-          onSubmit={onSubmit}>
-          <p>
-            {t('vault.withdraw_your_collateral')}
-          </p>
+        <CloseIconButton ref={focusRef} onClick={onClose} />
+        <form className='space-y-4' onSubmit={onSubmit}>
+          <p>{t('vault.withdraw_your_collateral')}</p>
           <p>{t('vault.you_have')}</p>
           <p>
             {displayMonetaryAmount(lockedDot)} {collateralCurrency?.symbol}
@@ -126,9 +94,7 @@ const RequestReplacementModal = ({
           <p>
             {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
           </p>
-          <p>
-            {t('vault.replace_amount')}
-          </p>
+          <p>{t('vault.replace_amount')}</p>
           <div>
             <NumberInput
               name={AMOUNT}
@@ -138,24 +104,14 @@ const RequestReplacementModal = ({
                   value: true,
                   message: t('Amount is required!')
                 },
-                validate: value => validateAmount(value)
-              })} />
-            <ErrorMessage>
-              {errors[AMOUNT]?.message}
-            </ErrorMessage>
+                validate: (value) => validateAmount(value)
+              })}
+            />
+            <ErrorMessage>{errors[AMOUNT]?.message}</ErrorMessage>
           </div>
-          <div
-            className={clsx(
-              'flex',
-              'justify-end',
-              'space-x-2'
-            )}>
-            <InterlayMulberryOutlinedButton onClick={onClose}>
-              {t('cancel')}
-            </InterlayMulberryOutlinedButton>
-            <InterlayCinnabarOutlinedButton
-              type='submit'
-              pending={isRequestPending}>
+          <div className={clsx('flex', 'justify-end', 'space-x-2')}>
+            <InterlayMulberryOutlinedButton onClick={onClose}>{t('cancel')}</InterlayMulberryOutlinedButton>
+            <InterlayCinnabarOutlinedButton type='submit' pending={isRequestPending}>
               {t('request')}
             </InterlayCinnabarOutlinedButton>
           </div>

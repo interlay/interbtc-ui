@@ -1,21 +1,14 @@
-
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import {
-  QueryClientProvider,
-  QueryClient
-} from 'react-query';
+import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { HelmetProvider } from 'react-helmet-async';
 
 import App from './App';
-import {
-  store,
-  persistor
-} from './store';
+import { store, persistor } from './store';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 // TODO: import only one theme
@@ -32,9 +25,7 @@ ReactDOM.render(
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <Provider store={store}>
-            <PersistGate
-              loading={null}
-              persistor={persistor}>
+            <PersistGate loading={null} persistor={persistor}>
               <App />
             </PersistGate>
           </Provider>

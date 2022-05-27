@@ -1,13 +1,6 @@
-
 import { useSelector } from 'react-redux';
-import {
-  useMutation,
-  useQueryClient
-} from 'react-query';
-import {
-  format,
-  add
-} from 'date-fns';
+import { useMutation, useQueryClient } from 'react-query';
+import { format, add } from 'date-fns';
 import clsx from 'clsx';
 
 import ErrorModal from 'components/ErrorModal';
@@ -50,12 +43,7 @@ const WithdrawButton = ({
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([
-          GENERIC_FETCHER,
-          'escrow',
-          'getStakedBalance',
-          address
-        ]);
+        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getStakedBalance', address]);
       }
     }
   );
@@ -64,48 +52,36 @@ const WithdrawButton = ({
     withdrawMutation.mutate();
   };
 
-  const disabled =
-    remainingBlockNumbersToUnstake ?
-      remainingBlockNumbersToUnstake > 0 :
-      false;
+  const disabled = remainingBlockNumbersToUnstake ? remainingBlockNumbersToUnstake > 0 : false;
 
   const renderUnlockDateLabel = () => {
-    return (
-      remainingBlockNumbersToUnstake === undefined ?
-        '-' :
-        getFormattedUnlockDate(remainingBlockNumbersToUnstake, YEAR_MONTH_DAY_PATTERN)
-    );
+    return remainingBlockNumbersToUnstake === undefined
+      ? '-'
+      : getFormattedUnlockDate(remainingBlockNumbersToUnstake, YEAR_MONTH_DAY_PATTERN);
   };
 
   const renderUnlockDateTimeLabel = () => {
-    return (
-      remainingBlockNumbersToUnstake === undefined ?
-        '-' :
-        getFormattedUnlockDate(remainingBlockNumbersToUnstake, 'PPpp')
-    );
+    return remainingBlockNumbersToUnstake === undefined
+      ? '-'
+      : getFormattedUnlockDate(remainingBlockNumbersToUnstake, 'PPpp');
   };
 
   return (
     <>
       <InterlayDenimOrKintsugiSupernovaContainedButton
-        className={clsx(
-          'w-full',
-          'px-6',
-          'py-3',
-          'text-base',
-          'rounded-md',
-          className
-        )}
+        className={clsx('w-full', 'px-6', 'py-3', 'text-base', 'rounded-md', className)}
         endIcon={
           <InformationTooltip
             // eslint-disable-next-line max-len
             label={`You can unlock your staked ${stakedAmount} ${GOVERNANCE_TOKEN_SYMBOL} on ${renderUnlockDateTimeLabel()}`}
-            forDisabledAction={disabled} />
+            forDisabledAction={disabled}
+          />
         }
         onClick={handleUnstake}
         pending={withdrawMutation.isLoading}
         disabled={disabled}
-        {...rest}>
+        {...rest}
+      >
         Withdraw Staked {GOVERNANCE_TOKEN_SYMBOL} {renderUnlockDateLabel()}
       </InterlayDenimOrKintsugiSupernovaContainedButton>
       {withdrawMutation.isError && (
@@ -115,10 +91,8 @@ const WithdrawButton = ({
             withdrawMutation.reset();
           }}
           title='Error'
-          description={
-            withdrawMutation.error?.message ||
-            ''
-          } />
+          description={withdrawMutation.error?.message || ''}
+        />
       )}
     </>
   );

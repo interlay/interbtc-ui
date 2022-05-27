@@ -1,4 +1,3 @@
-
 import { RedeemStatus } from '@interlay/interbtc-api';
 
 import CompletedRedeemRequest from './CompletedRedeemRequest';
@@ -12,20 +11,18 @@ interface Props {
   request: any;
 }
 
-const RedeemRequestStatusUI = ({
-  request
-}: Props): JSX.Element => {
+const RedeemRequestStatusUI = ({ request }: Props): JSX.Element => {
   switch (request.status) {
-  case RedeemStatus.Completed:
-    return <CompletedRedeemRequest request={request} />;
-  case RedeemStatus.PendingWithBtcTxNotFound:
-    return <PendingWithBtcTxNotFoundRedeemRequest request={request} />;
-  case RedeemStatus.Reimbursed:
-    return <ReimbursedRedeemRequest request={request} />;
-  case RedeemStatus.Retried:
-    return <RetriedRedeemRequest request={request} />;
-  default:
-    return <DefaultRedeemRequest request={request} />;
+    case RedeemStatus.Completed:
+      return <CompletedRedeemRequest request={request} />;
+    case RedeemStatus.PendingWithBtcTxNotFound:
+      return <PendingWithBtcTxNotFoundRedeemRequest request={request} />;
+    case RedeemStatus.Reimbursed:
+      return <ReimbursedRedeemRequest request={request} />;
+    case RedeemStatus.Retried:
+      return <RetriedRedeemRequest request={request} />;
+    default:
+      return <DefaultRedeemRequest request={request} />;
   }
 };
 

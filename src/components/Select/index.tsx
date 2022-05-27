@@ -1,19 +1,10 @@
 import * as React from 'react';
-import {
-  Listbox,
-  Transition
-} from '@headlessui/react';
+import { Listbox, Transition } from '@headlessui/react';
 import { Props } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
-import {
-  CheckIcon,
-  SelectorIcon
-} from '@heroicons/react/solid';
+import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
 
-import {
-  KUSAMA,
-  POLKADOT
-} from 'utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 import { BORDER_CLASSES } from 'utils/constants/styles';
 
 const SELECT_VARIANTS = Object.freeze({
@@ -25,17 +16,15 @@ const SELECT_VARIANT_VALUES = Object.values(SELECT_VARIANTS);
 
 type SelectLabelProps = Props<typeof Listbox.Label>;
 
-const SelectLabel = ({
-  className,
-  ...rest
-}: SelectLabelProps): JSX.Element => (
+const SelectLabel = ({ className, ...rest }: SelectLabelProps): JSX.Element => (
   <Listbox.Label
     className={clsx(
       { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       className
     )}
-    {...rest} />
+    {...rest}
+  />
 );
 
 interface SelectButtonCustomProps {
@@ -70,11 +59,8 @@ const SelectButton = ({
       'cursor-default',
       'leading-7',
       {
-        [clsx(
-          'bg-white',
-          'focus:border-interlayDenim-300',
-          'focus:ring-interlayDenim-200'
-        )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
+        [clsx('bg-white', 'focus:border-interlayDenim-300', 'focus:ring-interlayDenim-200')]:
+          process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
       },
       {
         [clsx(
@@ -84,9 +70,7 @@ const SelectButton = ({
         )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
       },
       {
-        [clsx(
-          'dark:bg-kintsugiMidnight'
-        )]: variant === SELECT_VARIANTS.formField
+        [clsx('dark:bg-kintsugiMidnight')]: variant === SELECT_VARIANTS.formField
       },
       {
         [clsx(
@@ -96,7 +80,8 @@ const SelectButton = ({
       },
       className
     )}
-    {...rest}>
+    {...rest}
+  >
     {children}
     <span
       className={clsx(
@@ -108,14 +93,9 @@ const SelectButton = ({
         'items-center',
         'pr-2',
         'pointer-events-none'
-      )}>
-      <SelectorIcon
-        className={clsx(
-          'h-5',
-          'w-5',
-          'text-textSecondary'
-        )}
-        aria-hidden='true' />
+      )}
+    >
+      <SelectorIcon className={clsx('h-5', 'w-5', 'text-textSecondary')} aria-hidden='true' />
     </span>
   </Listbox.Button>
 );
@@ -136,13 +116,10 @@ const SelectOptions = ({
   <Transition
     show={open}
     as={React.Fragment}
-    leave={clsx(
-      'transition',
-      'ease-in',
-      'duration-100'
-    )}
+    leave={clsx('transition', 'ease-in', 'duration-100')}
     leaveFrom='opacity-100'
-    leaveTo='opacity-0'>
+    leaveTo='opacity-0'
+  >
     <Listbox.Options
       static
       className={clsx(
@@ -166,42 +143,29 @@ const SelectOptions = ({
         'focus:outline-none',
         'sm:text-sm',
         {
-          [clsx(
-            'bg-white'
-          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
+          [clsx('bg-white')]: process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
         },
         {
-          [clsx(
-            'dark:bg-kintsugiMidnight'
-          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
+          [clsx('dark:bg-kintsugiMidnight')]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
         },
         {
-          [clsx(
-            'dark:bg-kintsugiMidnight-900'
-          )]: process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && variant === SELECT_VARIANTS.formField
+          [clsx('dark:bg-kintsugiMidnight-900')]:
+            process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && variant === SELECT_VARIANTS.formField
         },
         className
       )}
-      {...rest} />
+      {...rest}
+    />
   </Transition>
 );
 
 type SelectOptionProps = Props<typeof Listbox.Option>;
 
-const SelectOption = ({
-  value,
-  className,
-  ...rest
-}: SelectOptionProps): JSX.Element => (
+const SelectOption = ({ value, className, ...rest }: SelectOptionProps): JSX.Element => (
   <Listbox.Option
     className={({ active }) =>
       clsx(
-        active ?
-          clsx(
-            'text-white',
-            'bg-interlayDenim'
-          ) :
-          'text-textPrimary',
+        active ? clsx('text-white', 'bg-interlayDenim') : 'text-textPrimary',
         'cursor-default',
         'select-none',
         'relative',
@@ -212,19 +176,12 @@ const SelectOption = ({
       )
     }
     value={value}
-    {...rest} />
+    {...rest}
+  />
 );
 
-const SelectBody = ({
-  className,
-  ...rest
-}: React.ComponentPropsWithRef<'div'>): JSX.Element => (
-  <div
-    className={clsx(
-      'relative',
-      className
-    )}
-    {...rest} />
+const SelectBody = ({ className, ...rest }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
+  <div className={clsx('relative', className)} {...rest} />
 );
 
 interface CustomSelectCheckProps {
@@ -238,9 +195,7 @@ const SelectCheck = ({
 }: CustomSelectCheckProps & React.ComponentPropsWithRef<'span'>): JSX.Element => (
   <span
     className={clsx(
-      active ?
-        'text-white' :
-        'text-interlayDenim',
+      active ? 'text-white' : 'text-interlayDenim',
       'absolute',
       'inset-y-0',
       'right-0',
@@ -249,13 +204,9 @@ const SelectCheck = ({
       'pr-4',
       className
     )}
-    {...rest}>
-    <CheckIcon
-      className={clsx(
-        'h-5',
-        'w-5'
-      )}
-      aria-hidden='true' />
+    {...rest}
+  >
+    <CheckIcon className={clsx('h-5', 'w-5')} aria-hidden='true' />
   </span>
 );
 
@@ -268,27 +219,12 @@ const SelectText = ({
   className,
   ...rest
 }: SelectTextCustomProps & React.ComponentPropsWithRef<'span'>): JSX.Element => (
-  <span
-    className={clsx(
-      selected ?
-        'font-semibold' :
-        'font-normal',
-      'block',
-      'truncate',
-      className
-    )}
-    {...rest} />
+  <span className={clsx(selected ? 'font-semibold' : 'font-normal', 'block', 'truncate', className)} {...rest} />
 );
 
-const Select = ({
-  value,
-  onChange,
-  children
-}: SelectProps): JSX.Element => {
+const Select = ({ value, onChange, children }: SelectProps): JSX.Element => {
   return (
-    <Listbox
-      value={value}
-      onChange={onChange}>
+    <Listbox value={value} onChange={onChange}>
       {children}
     </Listbox>
   );

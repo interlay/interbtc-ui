@@ -45,7 +45,7 @@ const CURRENCIES: Currencies = [
 ];
 
 const getCurrencies = (idLiteral: CurrencyIdLiteral): CurrencyValues | undefined =>
-  CURRENCIES.find(currency => currency.id === idLiteral);
+  CURRENCIES.find((currency) => currency.id === idLiteral);
 
 const getCurrencySymbol = (idLiteral: CurrencyIdLiteral): CurrencySymbols => {
   const currencyPair = getCurrencies(idLiteral);

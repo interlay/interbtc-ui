@@ -20,8 +20,6 @@ const oracleExchangeRatesQuery = (where?: string): string => `
   }
 `;
 
-export {
-  composableExchangeRateSubquery
-};
+export { composableExchangeRateSubquery };
 
 export default oracleExchangeRatesQuery;

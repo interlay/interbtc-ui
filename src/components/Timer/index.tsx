@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import clsx from 'clsx';
 
@@ -30,19 +29,14 @@ const Timer = ({
     // TODO: should avoid unnecessary rendering (if `initialLeftSeconds` is not greater than zero)
     // TODO: should use `useInterval`
     const timerId = setInterval(() => {
-      setLeftSeconds(prev => prev - 1);
+      setLeftSeconds((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(timerId);
   }, []);
 
   return (
-    <span
-      className={clsx(
-        'whitespace-nowrap',
-        className
-      )}
-      {...rest}>
+    <span className={clsx('whitespace-nowrap', className)} {...rest}>
       {formatTime(leftSeconds)}
     </span>
   );

@@ -21,12 +21,10 @@ const VaultOverview = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <VaultsHeader
-        title={t('vault.vault_overview')}
-        accountAddress={accountAddress} />
-      {vaults && vaults.length ?
+      <VaultsHeader title={t('vault.vault_overview')} accountAddress={accountAddress} />
+      {vaults && vaults.length ? (
         <Vaults>
-          {vaults.map(vault => (
+          {vaults.map((vault) => (
             <VaultCard
               key={vault.collateralId}
               collateralSymbol={getCurrencySymbol(vault.collateralId)}
@@ -34,12 +32,15 @@ const VaultOverview = (): JSX.Element => {
               pendingRequests={vault.issues}
               apy={safeRoundTwoDecimals(vault.apy.toString())}
               collateralScore={safeRoundTwoDecimals(vault.collateralization?.mul(100).toString(), '∞')}
-              link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`} />
+              link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`}
+            />
           ))}
-        </Vaults> : (
-          <PrimaryColorEllipsisLoader />
-        )}
-    </MainContainer>);
+        </Vaults>
+      ) : (
+        <PrimaryColorEllipsisLoader />
+      )}
+    </MainContainer>
+  );
 };
 
 export default withErrorBoundary(VaultOverview, {
