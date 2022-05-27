@@ -30,7 +30,7 @@ const CURRENCY_PAIRS: CurrencyPairs = [
 ];
 
 const getCurrencyPair = (idLiteral: CurrencyIdLiteral): CurrencyPair | undefined =>
-  CURRENCY_PAIRS.find(pair => pair.id === idLiteral);
+  CURRENCY_PAIRS.find((pair) => pair.id === idLiteral);
 
 const getCurrencySymbol = (idLiteral: CurrencyIdLiteral): CurrencySymbols => {
   const currencyPair = getCurrencyPair(idLiteral);

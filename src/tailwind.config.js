@@ -39,17 +39,11 @@ const {
 } = require('./utils/constants/colors');
 
 module.exports = {
-  purge: [
-    './src/**/*.{js,jsx,ts,tsx}',
-    './public/index.html'
-  ],
+  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: 'class',
   theme: {
     fontFamily: {
-      airbnbCereal: [
-        'airbnb-cereal',
-        'ui-sans-serif'
-      ]
+      airbnbCereal: ['airbnb-cereal', 'ui-sans-serif']
     },
     extend: {
       colors: {
@@ -396,47 +390,25 @@ module.exports = {
   },
   variants: {
     extend: {
-      borderColor: [
-        'before',
-        'after'
-      ],
-      borderRadius: [
-        'first',
-        'last'
-      ],
-      textColor: [
-        'important'
-      ],
-      fontSize: [
-        'important'
-      ],
-      display: [
-        'important'
-      ],
-      width: [
-        'important'
-      ]
+      borderColor: ['before', 'after'],
+      borderRadius: ['first', 'last'],
+      textColor: ['important'],
+      fontSize: ['important'],
+      display: ['important'],
+      width: ['important']
     }
   },
   plugins: [
     require('@tailwindcss/forms'),
     require('tailwindcss-pseudo-elements'),
-    plugin(function ({
-      addBase,
-      theme,
-      addVariant,
-      addUtilities
-    }) {
+    plugin(function ({ addBase, theme, addVariant, addUtilities }) {
       addUtilities(
         {
           '.empty-content': {
             content: '""'
           }
         },
-        [
-          'before',
-          'after'
-        ]
+        ['before', 'after']
       );
 
       // MEMO: inspired by https://tailwindcss.com/docs/adding-base-styles#using-a-plugin
@@ -448,9 +420,9 @@ module.exports = {
 
       // MEMO: inspired by https://github.com/tailwindlabs/tailwindcss/issues/493#issuecomment-610907147
       addVariant('important', ({ container }) => {
-        container.walkRules(rule => {
+        container.walkRules((rule) => {
           rule.selector = `.\\!${rule.selector.slice(1)}`;
-          rule.walkDecls(decl => {
+          rule.walkDecls((decl) => {
             decl.important = true;
           });
         });

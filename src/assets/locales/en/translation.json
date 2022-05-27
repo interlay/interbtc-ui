@@ -47,11 +47,8 @@
   "collateralization": "Collateralization",
   "fees_earned": "Fees earned",
   "apy": "APY",
-  "no_account": "You don't have an account. Create one",
   "here": "here",
   "refresh_page.": "Once you create a new account please refresh the page.",
-  "select_an_account": "Please select an account",
-  "install_supported_wallets": "Please install one of the currently supported wallets. By connecting the wallet you accept the ",
   "btc_relay_status": "BTC Relay Status:",
   "no_data": "Unable to fetch data.",
   "empty_data": "No transactions found.",
@@ -480,5 +477,16 @@
   },
   "validation": {
     "invalid_polkadot_address": "Enter a valid Polkadot address"
+  },
+  "account_modal": {
+    "no_account": "You don't have an account. Create one",
+    "install_supported_wallets": "Please install one of the currently supported wallets. By connecting the wallet you accept the ",
+    "select_account": "Please select an account",
+    "install_wallet": "Please install supported wallet",
+    "select_wallet": "Please select a wallet",
+    "create_account": "Please create an account",
+    "connected_with": "Connected with ",
+    "change_wallet": "Change Wallet",
+    "disconnect": "Disconnect"
   }
 }

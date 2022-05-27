@@ -1,12 +1,9 @@
-import {
-  Story,
-  Meta
-} from '@storybook/react';
+import { Story, Meta } from '@storybook/react';
 
 import { CurrencySymbols } from 'types/currency';
 import { VaultCard, VaultCardProps } from './';
 
-const Template: Story<VaultCardProps> = args => <VaultCard {...args} />;
+const Template: Story<VaultCardProps> = (args) => <VaultCard {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
@@ -18,9 +15,7 @@ Default.args = {
   link: '#'
 };
 
-export {
-  Default
-};
+export { Default };
 
 export default {
   title: 'Components/VaultCard',

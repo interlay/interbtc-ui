@@ -1,15 +1,8 @@
-
 import * as React from 'react';
-import {
-  useDispatch,
-  useSelector
-} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -21,13 +14,7 @@ import {
   CurrencyIdLiteral
 } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
-import {
-  Bitcoin,
-  BitcoinAmount,
-  BitcoinUnit,
-  ExchangeRate,
-  Currency
-} from '@interlay/monetary-js';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
 
 import AvailableBalanceUI from 'components/AvailableBalanceUI';
 import SubmitButton from 'components/SubmitButton';
@@ -48,26 +35,13 @@ import {
   WrappedTokenLogoIcon,
   GovernanceTokenLogoIcon
 } from 'config/relay-chains';
-import {
-  BLOCK_TIME,
-  BLOCKS_BEHIND_LIMIT
-} from 'config/parachain';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
-import {
-  displayMonetaryAmount,
-  getUsdAmount,
-  getRandomVaultIdWithCapacity
-} from 'common/utils/utils';
+import { BLOCK_TIME, BLOCKS_BEHIND_LIMIT } from 'config/parachain';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { displayMonetaryAmount, getUsdAmount, getRandomVaultIdWithCapacity } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import {
-  ParachainStatus,
-  StoreType
-} from 'common/types/util.types';
+import { ParachainStatus, StoreType } from 'common/types/util.types';
 import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
@@ -87,13 +61,16 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
 } else {
   throw new Error('Something went wrong!');
 }
-const extraRequiredCollateralTokenAmount =
-  newMonetaryAmount(EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT, GOVERNANCE_TOKEN, true);
+const extraRequiredCollateralTokenAmount = newMonetaryAmount(
+  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT,
+  GOVERNANCE_TOKEN,
+  true
+);
 
 type IssueFormData = {
   [BTC_AMOUNT]: string;
   [VAULT_SELECTION]: string;
-}
+};
 
 const IssueForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
@@ -130,12 +107,11 @@ const IssueForm = (): JSX.Element | null => {
   const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
-    new ExchangeRate<
+    new ExchangeRate<Bitcoin, BitcoinUnit, Currency<GovernanceUnit>, GovernanceUnit>(
       Bitcoin,
-      BitcoinUnit,
-      Currency<GovernanceUnit>,
-      GovernanceUnit
-    >(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
+      GOVERNANCE_TOKEN,
+      new Big(0)
+    )
   );
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -150,17 +126,9 @@ const IssueForm = (): JSX.Element | null => {
     data: requestLimits,
     error: requestLimitsError,
     refetch: requestLimitsRefetch
-  } = useQuery<IssueLimits, Error>(
-    [
-      GENERIC_FETCHER,
-      'issue',
-      'getRequestLimits'
-    ],
-    genericFetcher<IssueLimits>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useQuery<IssueLimits, Error>([GENERIC_FETCHER, 'issue', 'getRequestLimits'], genericFetcher<IssueLimits>(), {
+    enabled: !!bridgeLoaded
+  });
   useErrorHandler(requestLimitsError);
 
   React.useEffect(() => {
@@ -199,11 +167,7 @@ const IssueForm = (): JSX.Element | null => {
         handleError(error);
       }
     })();
-  }, [
-    bridgeLoaded,
-    dispatch,
-    handleError
-  ]);
+  }, [bridgeLoaded, dispatch, handleError]);
 
   React.useEffect(() => {
     // deselect checkbox when required btcAmount exceeds capacity
@@ -214,11 +178,7 @@ const IssueForm = (): JSX.Element | null => {
         setSelectVaultManually(false);
       }
     }
-  }, [
-    btcAmount,
-    feeRate,
-    requestLimits
-  ]);
+  }, [btcAmount, feeRate, requestLimits]);
 
   React.useEffect(() => {
     // vault selection validation
@@ -232,25 +192,10 @@ const IssueForm = (): JSX.Element | null => {
     } else {
       clearErrors(VAULT_SELECTION);
     }
-  }, [
-    selectVaultManually,
-    vault,
-    setError,
-    clearErrors,
-    t,
-    btcAmount,
-    feeRate
-  ]);
+  }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
 
-  if (
-    status === STATUSES.IDLE ||
-    status === STATUSES.PENDING ||
-    requestLimitsIdle ||
-    requestLimitsLoading
-  ) {
-    return (
-      <PrimaryColorEllipsisLoader />
-    );
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING || requestLimitsIdle || requestLimitsLoading) {
+    return <PrimaryColorEllipsisLoader />;
   }
   if (requestLimits === undefined) {
     throw new Error('Something went wrong!');
@@ -313,7 +258,7 @@ const IssueForm = (): JSX.Element | null => {
 
     const handleSelectVaultCheckboxChange = () => {
       if (!isSelectVaultCheckboxDisabled) {
-        setSelectVaultManually(currentState => !currentState);
+        setSelectVaultManually((currentState) => !currentState);
       }
     };
 
@@ -368,9 +313,7 @@ const IssueForm = (): JSX.Element | null => {
 
     return (
       <>
-        <form
-          className='space-y-8'
-          onSubmit={handleSubmit(onSubmit)}>
+        <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
           <FormTitle>
             {t('issue_page.mint_polka_by_wrapping', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
@@ -387,154 +330,145 @@ const IssueForm = (): JSX.Element | null => {
                   value: true,
                   message: t('issue_page.enter_valid_amount')
                 },
-                validate: value => validateForm(value)
+                validate: (value) => validateForm(value)
               })}
               approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
               error={!!errors[BTC_AMOUNT]}
-              helperText={errors[BTC_AMOUNT]?.message} />
+              helperText={errors[BTC_AMOUNT]?.message}
+            />
             <AvailableBalanceUI
               label={t('issue_page.maximum_in_single_request')}
               balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
-              tokenSymbol={WRAPPED_TOKEN_SYMBOL} />
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
+            />
             <AvailableBalanceUI
               label={t('issue_page.maximum_total_request')}
               balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
-              tokenSymbol={WRAPPED_TOKEN_SYMBOL} />
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
+            />
           </div>
           <ParachainStatusInfo status={parachainStatus} />
-          <div
-            className={clsx('flex',
-              'flex-col',
-              'items-end',
-              'gap-2')}>
+          <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
             <Checkbox
               label={t('issue_page.manually_select_vault')}
               labelSide={CheckboxLabelSide.LEFT}
               disabled={isSelectVaultCheckboxDisabled}
               type='checkbox'
               checked={selectVaultManually}
-              onChange={handleSelectVaultCheckboxChange} />
+              onChange={handleSelectVaultCheckboxChange}
+            />
             <Vaults
               label={t('select_vault')}
               requiredCapacity={wrappedTokenAmount.toString()}
               isShown={selectVaultManually}
               onSelectionCallback={setVault}
-              error={errors[VAULT_SELECTION]} />
+              error={errors[VAULT_SELECTION]}
+            />
           </div>
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('bridge_fee')}
               </h5>
             }
-            unitIcon={
-              <BitcoinLogoIcon
-                width={23}
-                height={23} />
-            }
+            unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(bridgeFee)}
             unitName='BTC'
             approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
             tooltip={
               <InformationTooltip
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
-                label={t('issue_page.tooltip_bridge_fee')} />
-            } />
+                label={t('issue_page.tooltip_bridge_fee')}
+              />
+            }
+          />
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('issue_page.security_deposit')}
               </h5>
             }
-            unitIcon={
-              <GovernanceTokenLogoIcon width={20} />
-            }
+            unitIcon={<GovernanceTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(securityDeposit)}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
             tooltip={
               <InformationTooltip
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
-                label={t('issue_page.tooltip_security_deposit')} />
-            } />
+                label={t('issue_page.tooltip_security_deposit')}
+              />
+            }
+          />
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('issue_page.transaction_fee')}
               </h5>
             }
-            unitIcon={
-              <GovernanceTokenLogoIcon width={20} />
-            }
+            unitIcon={<GovernanceTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken.usd)}
             tooltip={
               <InformationTooltip
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
-                label={t('issue_page.tooltip_transaction_fee')} />
-            } />
-          <Hr2
-            className={clsx(
-              'border-t-2',
-              'my-2.5'
-            )} />
+                label={t('issue_page.tooltip_transaction_fee')}
+              />
+            }
+          />
+          <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayTextPrimaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('you_will_receive')}
               </h5>
             }
-            unitIcon={
-              <WrappedTokenLogoIcon width={20} />
-            }
+            unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(wrappedTokenAmount)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)} />
+            approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)}
+          />
           <SubmitButton
             disabled={
               // TODO: `parachainStatus` and `address` should be checked at upper levels
-              parachainStatus !== ParachainStatus.Running ||
-              !address
+              parachainStatus !== ParachainStatus.Running || !address
             }
             pending={submitStatus === STATUSES.PENDING}
-            onClick={handleConfirmClick}>
+            onClick={handleConfirmClick}
+          >
             {accountSet ? t('confirm') : t('connect_wallet')}
           </SubmitButton>
         </form>
-        {(submitStatus === STATUSES.REJECTED && submitError) && (
+        {submitStatus === STATUSES.REJECTED && submitError && (
           <ErrorModal
             open={!!submitError}
             onClose={() => {
@@ -542,17 +476,15 @@ const IssueForm = (): JSX.Element | null => {
               setSubmitError(null);
             }}
             title='Error'
-            description={
-              typeof submitError === 'string' ?
-                submitError :
-                submitError.message
-            } />
+            description={typeof submitError === 'string' ? submitError : submitError.message}
+          />
         )}
         {submittedRequest && (
           <SubmittedIssueRequestModal
             open={!!submittedRequest}
             onClose={handleSubmittedRequestModalClose}
-            request={submittedRequest} />
+            request={submittedRequest}
+          />
         )}
       </>
     );

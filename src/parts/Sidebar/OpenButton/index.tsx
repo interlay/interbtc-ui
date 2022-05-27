@@ -1,28 +1,18 @@
-
 import clsx from 'clsx';
 import { MenuIcon } from '@heroicons/react/outline';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
-const OpenButton = ({
-  onClick
-}: InterlayButtonBaseProps): JSX.Element => (
+const OpenButton = ({ onClick }: InterlayButtonBaseProps): JSX.Element => (
   <InterlayButtonBase
     className={clsx(
       'focus:outline-none',
       'focus:ring',
-      { 'focus:border-interlayDenim-300':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-      { 'focus:ring-interlayDenim-200':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-      { 'dark:focus:border-kintsugiMidnight-300':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-      { 'dark:focus:ring-kintsugiMidnight-200':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'focus:border-interlayDenim-300': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      { 'focus:ring-interlayDenim-200': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      { 'dark:focus:border-kintsugiMidnight-300': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+      { 'dark:focus:ring-kintsugiMidnight-200': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       'focus:ring-opacity-50',
 
       '-ml-0.5',
@@ -31,21 +21,15 @@ const OpenButton = ({
       'w-12',
       'justify-center',
       'rounded-md',
-      { 'text-interlayTextPrimaryInLightMode':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-      { 'hover:text-interlayTextSecondaryInLightMode':
-        process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+      { 'hover:text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
       { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
       { 'dark:hover:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
     )}
-    onClick={onClick}>
+    onClick={onClick}
+  >
     <span className='sr-only'>Open sidebar</span>
-    <MenuIcon
-      className={clsx(
-        'h-6',
-        'w-6'
-      )}
-      aria-hidden='true' />
+    <MenuIcon className={clsx('h-6', 'w-6')} aria-hidden='true' />
   </InterlayButtonBase>
 );
 

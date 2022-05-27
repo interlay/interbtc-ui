@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -65,17 +64,14 @@ const Bridge = (): JSX.Element | null => {
 
     const tabIdValues = Object.values(TAB_IDS);
     switch (true) {
-    case selectedTabId === null:
-    case selectedTabId === TAB_IDS.burn && !burnable:
-    case selectedTabId && !tabIdValues.includes(selectedTabId):
-      updateQueryParametersRef.current({
-        [QUERY_PARAMETERS.TAB]: TAB_IDS.issue
-      });
+      case selectedTabId === null:
+      case selectedTabId === TAB_IDS.burn && !burnable:
+      case selectedTabId && !tabIdValues.includes(selectedTabId):
+        updateQueryParametersRef.current({
+          [QUERY_PARAMETERS.TAB]: TAB_IDS.issue
+        });
     }
-  }, [
-    selectedTabId,
-    burnable
-  ]);
+  }, [selectedTabId, burnable]);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -98,7 +94,7 @@ const Bridge = (): JSX.Element | null => {
 
   const TAB_ITEMS = burnable ? TAB_ITEMS_WITH_BURN : TAB_ITEMS_WITHOUT_BURN;
 
-  const selectedTabIndex = TAB_ITEMS.findIndex(tabItem => tabItem.id === selectedTabId);
+  const selectedTabIndex = TAB_ITEMS.findIndex((tabItem) => tabItem.id === selectedTabId);
 
   const handleTabSelect = (index: number) => {
     updateQueryParameters({
@@ -108,32 +104,21 @@ const Bridge = (): JSX.Element | null => {
 
   return (
     <MainContainer>
-      <Panel
-        className={clsx(
-          'mx-auto',
-          'w-full',
-          'md:max-w-xl',
-          'p-10'
-        )}>
+      <Panel className={clsx('mx-auto', 'w-full', 'md:max-w-xl', 'p-10')}>
         <InterlayTabGroup
           defaultIndex={selectedTabIndex}
-          onChange={index => {
+          onChange={(index) => {
             handleTabSelect(index);
-          }}>
+          }}
+        >
           <InterlayTabList>
-            {TAB_ITEMS.map((tabItem => (
-              <InterlayTab
-                key={tabItem.id}
-                className='uppercase'>
+            {TAB_ITEMS.map((tabItem) => (
+              <InterlayTab key={tabItem.id} className='uppercase'>
                 {t(tabItem.label)}
               </InterlayTab>
-            )))}
+            ))}
           </InterlayTabList>
-          <Hr1
-            className={clsx(
-              'border-t-2',
-              'my-2'
-            )} />
+          <Hr1 className={clsx('border-t-2', 'my-2')} />
           <InterlayTabPanels className='mt-2'>
             <InterlayTabPanel>
               <IssueForm />

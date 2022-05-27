@@ -1,25 +1,9 @@
-
 import * as React from 'react';
-import {
-  Switch,
-  Route,
-  Redirect
-} from 'react-router-dom';
-import {
-  toast,
-  ToastContainer
-} from 'react-toastify';
-import {
-  useSelector,
-  useDispatch,
-  useStore
-} from 'react-redux';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { useSelector, useDispatch, useStore } from 'react-redux';
 import { withErrorBoundary } from 'react-error-boundary';
-import {
-  web3Accounts,
-  web3Enable,
-  web3FromAddress
-} from '@polkadot/extension-dapp';
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { Keyring } from '@polkadot/api';
 import {
   createInterBtcApi,
@@ -37,27 +21,15 @@ import Layout from 'parts/Layout';
 import FullLoadingSpinner from 'components/FullLoadingSpinner';
 import ErrorFallback from 'components/ErrorFallback';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import {
-  APP_NAME,
-  WRAPPED_TOKEN,
-  COLLATERAL_TOKEN,
-  GOVERNANCE_TOKEN
-} from 'config/relay-chains';
+import { APP_NAME, WRAPPED_TOKEN, COLLATERAL_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import './i18n';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
-import {
-  StoreType,
-  ParachainStatus,
-  StoreState
-} from 'common/types/util.types';
+import { StoreType, ParachainStatus, StoreState } from 'common/types/util.types';
 import {
   isPolkaBtcLoaded,
   changeAddressAction,
@@ -74,30 +46,14 @@ import {
 } from 'common/actions/general.actions';
 import { BitcoinNetwork } from 'types/bitcoin';
 
-const Bridge = React.lazy(() =>
-  import(/* webpackChunkName: 'bridge' */ 'pages/Bridge')
-);
-const Transfer = React.lazy(() =>
-  import(/* webpackChunkName: 'transfer' */ 'pages/Transfer')
-);
-const Transactions = React.lazy(() =>
-  import(/* webpackChunkName: 'transactions' */ 'pages/Transactions')
-);
-const Staking = React.lazy(() =>
-  import(/* webpackChunkName: 'staking' */ 'pages/Staking')
-);
-const Dashboard = React.lazy(() =>
-  import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard')
-);
-const Vaults = React.lazy(() =>
-  import(/* webpackChunkName: 'vaults' */ 'pages/Vaults')
-);
-const Vault = React.lazy(() =>
-  import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault')
-);
-const NoMatch = React.lazy(() =>
-  import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch')
-);
+const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ 'pages/Bridge'));
+const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ 'pages/Transfer'));
+const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ 'pages/Transactions'));
+const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ 'pages/Staking'));
+const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard'));
+const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ 'pages/Vaults'));
+const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault'));
+const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch'));
 
 const App = (): JSX.Element => {
   const {
@@ -117,10 +73,7 @@ const App = (): JSX.Element => {
   // Load the main bridge API - connection to the bridge
   const loadInterBtc = React.useCallback(async (): Promise<void> => {
     try {
-      window.bridge = await createInterBtcApi(
-        constants.PARACHAIN_URL,
-        constants.BITCOIN_NETWORK
-      );
+      window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
       dispatch(isPolkaBtcLoaded(true));
       setIsLoading(false);
     } catch (error) {
@@ -133,10 +86,7 @@ const App = (): JSX.Element => {
     } catch (error) {
       console.log('[loadInterBtc] error.message => ', error.message);
     }
-  }, [
-    dispatch,
-    store
-  ]);
+  }, [dispatch, store]);
 
   // Load the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -158,21 +108,14 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
-        const vault = await window.bridge.vaults.get(
-          id,
-          COLLATERAL_TOKEN_ID_LITERAL
-        );
+        const vault = await window.bridge.vaults.get(id, COLLATERAL_TOKEN_ID_LITERAL);
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
         console.log('[App React.useEffect 1] error => ', error);
       }
     })();
-  }, [
-    bridgeLoaded,
-    address,
-    dispatch
-  ]);
+  }, [bridgeLoaded, address, dispatch]);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -223,10 +166,7 @@ const App = (): JSX.Element => {
         console.log('[App React.useEffect 2] error.message => ', error.message);
       }
     })();
-  }, [
-    dispatch,
-    bridgeLoaded
-  ]);
+  }, [dispatch, bridgeLoaded]);
 
   // Loads the address for the currently select account and maybe loads the vault dashboard
   React.useEffect(() => {
@@ -249,31 +189,27 @@ const App = (): JSX.Element => {
           return;
         }
 
-        dispatch(setInstalledExtensionAction(theExtensions.map(extension => extension.name)));
+        dispatch(setInstalledExtensionAction(theExtensions.map((extension) => extension.name)));
 
+        // TODO: load accounts just once
         const accounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
-        if (accounts.length === 0) {
+        const matchedAccount = accounts.find((account) => account.address === address);
+
+        if (matchedAccount) {
+          const { signer } = await web3FromAddress(address);
+          // TODO: could store the active address just in one place (either in `window` object or in redux)
+          window.bridge.setAccount(address, signer);
+          dispatch(changeAddressAction(address));
+        } else {
           dispatch(changeAddressAction(''));
-          return;
+          window.bridge.removeAccount();
         }
-
-        const matchedAccount = accounts.find(account => account.address === address);
-        const newAddress = matchedAccount ? address : accounts[0].address;
-
-        const { signer } = await web3FromAddress(newAddress);
-        // TODO: could store the active address just in one place (either in `window` object or in redux)
-        window.bridge.setAccount(newAddress, signer);
-        dispatch(changeAddressAction(newAddress));
       } catch (error) {
         // TODO: should add error handling
         console.log('[App React.useEffect 3] error.message => ', error.message);
       }
     })();
-  }, [
-    address,
-    bridgeLoaded,
-    dispatch
-  ]);
+  }, [address, bridgeLoaded, dispatch]);
 
   // Loads the bridge and the faucet
   React.useEffect(() => {
@@ -295,14 +231,7 @@ const App = (): JSX.Element => {
       }
     })();
     startFetchingLiveData(dispatch, store);
-  }, [
-    loadInterBtc,
-    loadFaucet,
-    isLoading,
-    bridgeLoaded,
-    dispatch,
-    store
-  ]);
+  }, [loadInterBtc, loadFaucet, isLoading, bridgeLoaded, dispatch, store]);
 
   React.useEffect(() => {
     if (!dispatch) return;
@@ -315,19 +244,18 @@ const App = (): JSX.Element => {
 
     (async () => {
       try {
-        unsubscribeFromCollateral =
-          await window.bridge.tokens.subscribeToBalance(
-            COLLATERAL_TOKEN,
-            address,
-            (_: string, balance: ChainBalance<CollateralUnit>) => {
-              if (!balance.free.eq(collateralTokenBalance)) {
-                dispatch(updateCollateralTokenBalanceAction(balance.free));
-              }
-              if (!balance.transferable.eq(collateralTokenTransferableBalance)) {
-                dispatch(updateCollateralTokenTransferableBalanceAction(balance.transferable));
-              }
+        unsubscribeFromCollateral = await window.bridge.tokens.subscribeToBalance(
+          COLLATERAL_TOKEN,
+          address,
+          (_: string, balance: ChainBalance<CollateralUnit>) => {
+            if (!balance.free.eq(collateralTokenBalance)) {
+              dispatch(updateCollateralTokenBalanceAction(balance.free));
             }
-          );
+            if (!balance.transferable.eq(collateralTokenTransferableBalance)) {
+              dispatch(updateCollateralTokenTransferableBalanceAction(balance.transferable));
+            }
+          }
+        );
       } catch (error) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
       }
@@ -335,19 +263,18 @@ const App = (): JSX.Element => {
 
     (async () => {
       try {
-        unsubscribeFromWrapped =
-          await window.bridge.tokens.subscribeToBalance(
-            WRAPPED_TOKEN,
-            address,
-            (_: string, balance: ChainBalance<BitcoinUnit>) => {
-              if (!balance.free.eq(wrappedTokenBalance)) {
-                dispatch(updateWrappedTokenBalanceAction(balance.free));
-              }
-              if (!balance.transferable.eq(wrappedTokenTransferableBalance)) {
-                dispatch(updateWrappedTokenTransferableBalanceAction(balance.transferable));
-              }
+        unsubscribeFromWrapped = await window.bridge.tokens.subscribeToBalance(
+          WRAPPED_TOKEN,
+          address,
+          (_: string, balance: ChainBalance<BitcoinUnit>) => {
+            if (!balance.free.eq(wrappedTokenBalance)) {
+              dispatch(updateWrappedTokenBalanceAction(balance.free));
             }
-          );
+            if (!balance.transferable.eq(wrappedTokenTransferableBalance)) {
+              dispatch(updateWrappedTokenTransferableBalanceAction(balance.transferable));
+            }
+          }
+        );
       } catch (error) {
         console.log('[App React.useEffect 5] error.message => ', error.message);
       }
@@ -355,19 +282,18 @@ const App = (): JSX.Element => {
 
     (async () => {
       try {
-        unsubscribeFromGovernance =
-          await window.bridge.tokens.subscribeToBalance(
-            GOVERNANCE_TOKEN,
-            address,
-            (_: string, balance: ChainBalance<GovernanceUnit>) => {
-              if (!balance.free.eq(governanceTokenBalance)) {
-                dispatch(updateGovernanceTokenBalanceAction(balance.free));
-              }
-              if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
-                dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
-              }
+        unsubscribeFromGovernance = await window.bridge.tokens.subscribeToBalance(
+          GOVERNANCE_TOKEN,
+          address,
+          (_: string, balance: ChainBalance<GovernanceUnit>) => {
+            if (!balance.free.eq(governanceTokenBalance)) {
+              dispatch(updateGovernanceTokenBalanceAction(balance.free));
             }
-          );
+            if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
+              dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
+            }
+          }
+        );
       } catch (error) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
       }
@@ -419,23 +345,16 @@ const App = (): JSX.Element => {
   return (
     <>
       <InterlayHelmet />
-      <ToastContainer
-        position='top-right'
-        autoClose={5000}
-        hideProgressBar={false} />
+      <ToastContainer position='top-right' autoClose={5000} hideProgressBar={false} />
       <Layout>
         <Route
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                <Route
-                  exact
-                  path={PAGES.VAULTS}>
+                <Route exact path={PAGES.VAULTS}>
                   <Vaults />
                 </Route>
-                <Route
-                  exact
-                  path={PAGES.VAULT}>
+                <Route exact path={PAGES.VAULT}>
                   <Vault />
                 </Route>
                 <Route path={PAGES.VAULT}>
@@ -456,16 +375,14 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.TRANSFER}>
                   <Transfer />
                 </Route>
-                <Redirect
-                  exact
-                  from={PAGES.HOME}
-                  to={PAGES.BRIDGE} />
+                <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
                 <Route path='*'>
                   <NoMatch />
                 </Route>
               </Switch>
             </React.Suspense>
-          )} />
+          )}
+        />
       </Layout>
     </>
   );

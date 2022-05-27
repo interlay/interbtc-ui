@@ -1,20 +1,9 @@
-
-import {
-  useQuery,
-  useMutation
-} from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useQuery, useMutation } from 'react-query';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { AccountId } from '@polkadot/types/interfaces';
-import {
-  newVaultId,
-  CollateralCurrency,
-  WrappedCurrency
-} from '@interlay/interbtc-api';
+import { newVaultId, CollateralCurrency, WrappedCurrency } from '@interlay/interbtc-api';
 
 import ErrorFallback from 'components/ErrorFallback';
 import ErrorModal from 'components/ErrorModal';
@@ -27,10 +16,7 @@ import {
   COLLATERAL_TOKEN,
   WRAPPED_TOKEN
 } from 'config/relay-chains';
-import {
-  COLLATERAL_TOKEN_ID_LITERAL,
-  ZERO_GOVERNANCE_TOKEN_AMOUNT
-} from 'utils/constants/currency';
+import { COLLATERAL_TOKEN_ID_LITERAL, ZERO_GOVERNANCE_TOKEN_AMOUNT } from 'utils/constants/currency';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
@@ -75,13 +61,12 @@ const ClaimRewardsButton = ({
         throw new Error('Something went wrong!');
       }
 
-      const vaultId =
-        newVaultId(
-          window.bridge.api,
-          vaultAccountId.toString(),
-          COLLATERAL_TOKEN as CollateralCurrency,
-          WRAPPED_TOKEN as WrappedCurrency
-        );
+      const vaultId = newVaultId(
+        window.bridge.api,
+        vaultAccountId.toString(),
+        COLLATERAL_TOKEN as CollateralCurrency,
+        WRAPPED_TOKEN as WrappedCurrency
+      );
 
       return window.bridge.rewards.withdrawRewards(vaultId);
     },
@@ -96,11 +81,7 @@ const ClaimRewardsButton = ({
     claimRewardsMutation.mutate();
   };
 
-  const initializing = (
-    governanceTokenRewardIdle ||
-    governanceTokenRewardLoading ||
-    !vaultAccountId
-  );
+  const initializing = governanceTokenRewardIdle || governanceTokenRewardLoading || !vaultAccountId;
   let governanceTokenAmountLabel;
   if (initializing) {
     governanceTokenAmountLabel = '-';
@@ -120,7 +101,8 @@ const ClaimRewardsButton = ({
         disabled={initializing || buttonDisabled}
         onClick={handleClaimRewards}
         pending={claimRewardsMutation.isLoading}
-        {...rest}>
+        {...rest}
+      >
         {t('vault.claim_governance_token_rewards', {
           governanceTokenAmount: governanceTokenAmountLabel,
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
@@ -133,10 +115,8 @@ const ClaimRewardsButton = ({
             claimRewardsMutation.reset();
           }}
           title='Error'
-          description={
-            claimRewardsMutation.error?.message ||
-            ''
-          } />
+          description={claimRewardsMutation.error?.message || ''}
+        />
       )}
     </>
   );

@@ -1,11 +1,7 @@
-
 // TODO: should refactor by using a better package (https://github.com/recharts/recharts)
 import { Line } from 'react-chartjs-2';
 
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import {
   INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
   KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
@@ -33,14 +29,7 @@ interface Props {
   wrapperClassName?: string;
 }
 
-const LineChart = ({
-  colors,
-  labels,
-  yLabels,
-  yAxes,
-  datasets,
-  wrapperClassName
-}: Props): JSX.Element => {
+const LineChart = ({ colors, labels, yLabels, yAxes, datasets, wrapperClassName }: Props): JSX.Element => {
   const data = {
     labels: yLabels,
     datasets: datasets.map((dataset: number[] | string[], index: number) => ({
@@ -62,7 +51,7 @@ const LineChart = ({
     textPrimaryColor = INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE;
     gridLineColor = INTERLAY_GRID_LINE_COLOR;
     zeroLineColor = INTERLAY_ZERO_LINE_COLOR;
-  // MEMO: should check dark mode as well
+    // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     textPrimaryColor = KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE;
     gridLineColor = KINTSUGI_GRID_LINE_COLOR;
@@ -91,10 +80,7 @@ const LineChart = ({
           }
         }
       ],
-      yAxes: yAxes.map(({
-        ticks,
-        ...rest
-      }, index) => ({
+      yAxes: yAxes.map(({ ticks, ...rest }, index) => ({
         id: index.toString(),
         type: 'linear',
         display: true,
@@ -113,9 +99,7 @@ const LineChart = ({
 
   return (
     <div className={wrapperClassName}>
-      <Line
-        data={data}
-        options={options} />
+      <Line data={data} options={options} />
     </div>
   );
 };
