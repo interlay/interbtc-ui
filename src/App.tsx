@@ -26,6 +26,7 @@ import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
+import STATUSES from 'utils/constants/statuses';
 import './i18n';
 import * as constants from './constants';
 import startFetchingLiveData from 'common/live-data/live-data';
@@ -67,7 +68,7 @@ const App = (): JSX.Element => {
     governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
   // ray test touch <<
-  // const [isLoading, setIsLoading] = React.useState(true);
+  const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE);
   // ray test touch >>
   const dispatch = useDispatch();
   const store: StoreState = useStore();
@@ -75,17 +76,23 @@ const App = (): JSX.Element => {
   // Load the main bridge API - connection to the bridge
   const loadBridge = React.useCallback(async (): Promise<void> => {
     try {
+      // ray test touch <<
+      setBridgeStatus(STATUSES.PENDING);
+      // ray test touch >>
       window.bridge = await createInterBtcApi(
         constants.PARACHAIN_URL,
         constants.BITCOIN_NETWORK
       );
       dispatch(isBridgeLoaded(true));
       // ray test touch <<
-      // setIsLoading(false);
+      setBridgeStatus(STATUSES.RESOLVED);
       // ray test touch >>
     } catch (error) {
       toast.warn('Unable to connect to the BTC-Parachain.');
       console.log('[loadBridge 1] error.message => ', error.message);
+      // ray test touch <<
+      setBridgeStatus(STATUSES.REJECTED);
+      // ray test touch >>
     }
 
     try {
@@ -110,7 +117,10 @@ const App = (): JSX.Element => {
   // ray test touch <<
   // Loads the bridge and the faucet
   React.useEffect(() => {
-    if (bridgeLoaded) return;
+    // ray test touch <<
+    // if (bridgeLoaded) return;
+    if (bridgeStatus !== STATUSES.IDLE) return;
+    // ray test touch >>
 
     (async () => {
       try {
@@ -125,7 +135,10 @@ const App = (): JSX.Element => {
   }, [
     loadBridge,
     loadFaucet,
-    bridgeLoaded
+    bridgeLoaded,
+    // ray test touch <<
+    bridgeStatus
+    // ray test touch >>
   ]);
   // ray test touch >>
 
@@ -243,38 +256,6 @@ const App = (): JSX.Element => {
       }
     })();
   }, [address, bridgeLoaded, dispatch]);
-
-  // ray test touch <<
-  // Loads the bridge and the faucet
-  // React.useEffect(() => {
-  //   if (bridgeLoaded) return;
-  //   (async () => {
-  //     try {
-  //       // TODO: should avoid any race condition
-  //       setTimeout(() => {
-  //         if (isLoading) setIsLoading(false);
-  //       }, 3000);
-  //       await loadBridge();
-  //       // Only load faucet on testnet
-  //       if (process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet) {
-  //         await loadFaucet();
-  //       }
-  //     } catch (error) {
-  //       console.log(error.message);
-  //     }
-  //   })();
-  //   // ray test touch <
-  //   startFetchingLiveData(dispatch, store);
-  //   // ray test touch >
-  // }, [
-  //   loadBridge,
-  //   loadFaucet,
-  //   isLoading,
-  //   bridgeLoaded,
-  //   dispatch,
-  //   store
-  // ]);
-  // ray test touch >>
 
   // Subscribes to balances
   React.useEffect(() => {
