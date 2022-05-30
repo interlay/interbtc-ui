@@ -4,7 +4,7 @@ import { Grid, GridItem } from './';
 
 export const OneItem: ComponentStory<typeof Grid> = (args) => (
   <Grid {...args}>
-    <GridItem mobile={{ span: 4 }} desktop={{ span: 8 }} />
+    <GridItem mobile={{ span: 1, start: 2 }} desktop={{ span: 1, start: 3 }} />
   </Grid>
 );
 
