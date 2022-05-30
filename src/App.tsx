@@ -420,7 +420,7 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.TRANSFER}>
                   <Transfer />
                 </Route>
-                <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
+                <Redirect exact from={PAGES.HOME} to={PAGES.TRANSFER} />
                 <Route path='*'>
                   <NoMatch />
                 </Route>
