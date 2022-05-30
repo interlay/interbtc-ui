@@ -1,51 +1,29 @@
+import '../src/componentLibrary/theme/theme.interlay.css';
+import '../src/componentLibrary/theme/theme.kintsugi.css';
+import './sb-preview.css';
+import { addDecorator } from '@storybook/react';
+import { withThemes } from 'storybook-addon-themes/react';
 
-import { themes } from '@storybook/theming';
-import clsx from 'clsx';
-
-import { CLASS_NAMES } from '../src/utils/constants/styles';
-import {
-  POLKADOT,
-  KUSAMA
-} from '../src/utils/constants/relay-chain-names';
-import '../src/index.css';
+addDecorator(withThemes);
 
 const parameters = {
+  backgrounds: { disable: true },
   actions: { argTypesRegex: "^on[A-Z].*" },
   controls: {
     matchers: {
       date: /Date$/
     }
   },
-  darkMode: {
-    stylePreview: true,
-    current: CLASS_NAMES.LIGHT,
-    // Override the default dark theme
-    dark: { ...themes.dark },
-    // Override the default light theme
-    light: { ...themes.normal },
-    darkClass: CLASS_NAMES.DARK,
-    lightClass: CLASS_NAMES.LIGHT,
-    classTarget: 'html'
-  }
+  themes: {
+    default: 'kintsugi',
+    clearable: false,
+    list: [
+      { name: 'kintsugi', class: ['theme-kintsugi', 'sb-preview', 'sb-kintsugi'], color: '#020919' },
+      { name: 'interlay', class: ['theme-interlay', 'sb-preview', 'sb-interlay'], color: '#f4f3f5' }
+    ],
+  },
 };
 
-const decorators = [
-  Story => (
-    <div
-      className={clsx(
-        { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-        'h-screen',
-        'p-4'
-      )}>
-      <Story />
-    </div>
-  )
-];
-
 export {
-  parameters,
-  decorators
+  parameters
 };

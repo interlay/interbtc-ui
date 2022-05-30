@@ -1,30 +1,12 @@
-
 import * as React from 'react';
-import {
-  useSelector,
-  useDispatch
-} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import Big from 'big.js';
 import clsx from 'clsx';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
-import {
-  Redeem,
-  CollateralUnit,
-  newMonetaryAmount,
-  InterbtcPrimitivesVaultId
-} from '@interlay/interbtc-api';
-import {
-  Bitcoin,
-  BitcoinAmount,
-  BitcoinUnit,
-  ExchangeRate,
-  Currency
-} from '@interlay/monetary-js';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { Redeem, CollateralUnit, newMonetaryAmount, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
 
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
@@ -46,29 +28,13 @@ import {
   CollateralTokenLogoIcon
 } from 'config/relay-chains';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import STATUSES from 'utils/constants/statuses';
-import {
-  BALANCE_MAX_INTEGER_LENGTH,
-  BTC_ADDRESS_REGEX
-} from '../../../constants';
-import {
-  displayMonetaryAmount,
-  getUsdAmount,
-  getRandomVaultIdWithCapacity
-} from 'common/utils/utils';
+import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '../../../constants';
+import { displayMonetaryAmount, getUsdAmount, getRandomVaultIdWithCapacity } from 'common/utils/utils';
 import { togglePremiumRedeemAction } from 'common/actions/redeem.actions';
-import {
-  updateWrappedTokenBalanceAction,
-  showAccountModalAction
-} from 'common/actions/general.actions';
-import {
-  StoreType,
-  ParachainStatus
-} from 'common/types/util.types';
+import { updateWrappedTokenBalanceAction, showAccountModalAction } from 'common/actions/general.actions';
+import { StoreType, ParachainStatus } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
@@ -77,7 +43,7 @@ const BTC_ADDRESS = 'btc-address';
 type RedeemFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
   [BTC_ADDRESS]: string;
-}
+};
 
 const RedeemForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
@@ -113,12 +79,11 @@ const RedeemForm = (): JSX.Element | null => {
   const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero);
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
   const [btcToDotRate, setBtcToDotRate] = React.useState(
-    new ExchangeRate<
+    new ExchangeRate<Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit>(
       Bitcoin,
-      BitcoinUnit,
-      Currency<CollateralUnit>,
-      CollateralUnit
-    >(Bitcoin, COLLATERAL_TOKEN, new Big(0))
+      COLLATERAL_TOKEN,
+      new Big(0)
+    )
   );
   const [hasPremiumRedeemVaults, setHasPremiumRedeemVaults] = React.useState<boolean>(false);
   const [maxRedeemableCapacity, setMaxRedeemableCapacity] = React.useState(BitcoinAmount.zero);
@@ -136,11 +101,7 @@ const RedeemForm = (): JSX.Element | null => {
     const parsedWrappedTokenAmount = BitcoinAmount.from.BTC(wrappedTokenAmount);
     const theRedeemFee = parsedWrappedTokenAmount.mul(redeemFeeRate);
     setRedeemFee(theRedeemFee);
-  }, [
-    bridgeLoaded,
-    wrappedTokenAmount,
-    redeemFeeRate
-  ]);
+  }, [bridgeLoaded, wrappedTokenAmount, redeemFeeRate]);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -205,15 +166,10 @@ const RedeemForm = (): JSX.Element | null => {
         handleError(error);
       }
     })();
-  }, [
-    bridgeLoaded,
-    handleError
-  ]);
+  }, [bridgeLoaded, handleError]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
-    return (
-      <PrimaryColorEllipsisLoader />
-    );
+    return <PrimaryColorEllipsisLoader />;
   }
 
   if (status === STATUSES.RESOLVED) {
@@ -256,11 +212,10 @@ const RedeemForm = (): JSX.Element | null => {
             }
             setFormError(WRAPPED_TOKEN_AMOUNT, {
               type: 'manual',
-              message:
-                t('redeem_page.error_max_premium_redeem', {
-                  maxPremiumRedeem: displayMonetaryAmount(maxAmount),
-                  wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-                })
+              message: t('redeem_page.error_max_premium_redeem', {
+                maxPremiumRedeem: displayMonetaryAmount(maxAmount),
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              })
             });
 
             return;
@@ -272,9 +227,9 @@ const RedeemForm = (): JSX.Element | null => {
           if (wrappedTokenAmount.gte(updatedMaxCapacity)) {
             setFormError(WRAPPED_TOKEN_AMOUNT, {
               type: 'manual',
-              message:
-              t('redeem_page.request_exceeds_capacity', {
-                maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC` })
+              message: t('redeem_page.request_exceeds_capacity', {
+                maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC`
+              })
             });
 
             setSubmitStatus(STATUSES.RESOLVED);
@@ -289,11 +244,7 @@ const RedeemForm = (): JSX.Element | null => {
         const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(vaultId, wrappedTokenAmount.mul(2));
-        const result = await window.bridge.redeem.request(
-          wrappedTokenAmount,
-          data[BTC_ADDRESS],
-          vaultId
-        );
+        const result = await window.bridge.redeem.request(wrappedTokenAmount, data[BTC_ADDRESS], vaultId);
 
         // TODO: handle redeem aggregator
         const redeemRequest = result[0];
@@ -316,8 +267,8 @@ const RedeemForm = (): JSX.Element | null => {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
       } else if (parsedValue.gte(maxRedeemableCapacity)) {
         return `${t('redeem_page.request_exceeds_capacity', {
-          maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC` })
-        }`;
+          maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC`
+        })}`;
       } else if (parsedValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
@@ -352,16 +303,14 @@ const RedeemForm = (): JSX.Element | null => {
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
     const redeemFeeInUSD = getUsdAmount(redeemFee, prices.bitcoin.usd);
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
-    const totalBTC =
-        wrappedTokenAmount ?
-          parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee) :
-          BitcoinAmount.zero;
+    const totalBTC = wrappedTokenAmount
+      ? parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee)
+      : BitcoinAmount.zero;
     const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin.usd);
 
-    const totalDOT =
-      wrappedTokenAmount ?
-        btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee) :
-        newMonetaryAmount(0, COLLATERAL_TOKEN);
+    const totalDOT = wrappedTokenAmount
+      ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
+      : newMonetaryAmount(0, COLLATERAL_TOKEN);
     const totalDOTInUSD = getUsdAmount(totalDOT, prices.collateralToken.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
@@ -370,9 +319,7 @@ const RedeemForm = (): JSX.Element | null => {
 
     return (
       <>
-        <form
-          className='space-y-8'
-          onSubmit={handleSubmit(onSubmit)}>
+        <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
           <FormTitle>
             {t('redeem_page.you_will_receive', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
@@ -388,11 +335,12 @@ const RedeemForm = (): JSX.Element | null => {
                 value: true,
                 message: t('redeem_page.please_enter_amount')
               },
-              validate: value => validateForm(value)
+              validate: (value) => validateForm(value)
             })}
             approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, usdPrice)}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
-            helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message} />
+            helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
+          />
           <ParachainStatusInfo status={parachainStatus} />
           <TextField
             id={BTC_ADDRESS}
@@ -411,113 +359,84 @@ const RedeemForm = (): JSX.Element | null => {
               }
             })}
             error={!!errors[BTC_ADDRESS]}
-            helperText={errors[BTC_ADDRESS]?.message} />
+            helperText={errors[BTC_ADDRESS]?.message}
+          />
           {hasPremiumRedeemVaults && (
-            <div
-              className={clsx(
-                'flex',
-                'justify-center',
-                'items-center',
-                'space-x-4'
-              )}>
-              <div
-                className={clsx(
-                  'flex',
-                  'items-center',
-                  'space-x-1'
-                )}>
+            <div className={clsx('flex', 'justify-center', 'items-center', 'space-x-4')}>
+              <div className={clsx('flex', 'items-center', 'space-x-1')}>
                 <span>{t('redeem_page.premium_redeem')}</span>
                 <InformationTooltip label={t('redeem_page.premium_redeem_info')} />
               </div>
-              <Toggle
-                checked={premiumRedeemSelected}
-                onChange={handlePremiumRedeemToggle} />
+              <Toggle checked={premiumRedeemSelected} onChange={handlePremiumRedeemToggle} />
             </div>
           )}
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('bridge_fee')}
               </h5>
             }
-            unitIcon={
-              <BitcoinLogoIcon
-                width={23}
-                height={23} />
-            }
+            unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={redeemFeeInBTC}
             unitName='BTC'
-            approxUSD={redeemFeeInUSD} />
+            approxUSD={redeemFeeInUSD}
+          />
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('bitcoin_network_fee')}
               </h5>
             }
-            unitIcon={
-              <BitcoinLogoIcon
-                width={23}
-                height={23} />
-            }
+            unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={bitcoinNetworkFeeInBTC}
             unitName='BTC'
-            approxUSD={bitcoinNetworkFeeInUSD} />
-          <Hr2
-            className={clsx(
-              'border-t-2',
-              'my-2.5'
-            )} />
+            approxUSD={bitcoinNetworkFeeInUSD}
+          />
+          <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
             title={
               <h5
                 className={clsx(
-                  { 'text-interlayTextPrimaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('you_will_receive')}
               </h5>
             }
-            unitIcon={
-              <BitcoinLogoIcon
-                width={23}
-                height={23} />
-            }
+            unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(totalBTC)}
             unitName='BTC'
-            approxUSD={totalBTCInUSD} />
+            approxUSD={totalBTCInUSD}
+          />
           {premiumRedeemSelected && (
             <PriceInfo
-              title={
-                <h5 className='text-interlayConifer'>
-                  {t('redeem_page.earned_premium')}
-                </h5>
-              }
-              unitIcon={
-                <CollateralTokenLogoIcon width={20} />
-              }
+              title={<h5 className='text-interlayConifer'>{t('redeem_page.earned_premium')}</h5>}
+              unitIcon={<CollateralTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(totalDOT)}
               unitName={COLLATERAL_TOKEN_SYMBOL}
-              approxUSD={totalDOTInUSD} />
+              approxUSD={totalDOTInUSD}
+            />
           )}
           <SubmitButton
             disabled={parachainStatus !== ParachainStatus.Running}
             pending={submitStatus === STATUSES.PENDING}
-            onClick={handleConfirmClick}>
+            onClick={handleConfirmClick}
+          >
             {accountSet ? t('confirm') : t('connect_wallet')}
           </SubmitButton>
         </form>
-        {(submitStatus === STATUSES.REJECTED && submitError) && (
+        {submitStatus === STATUSES.REJECTED && submitError && (
           <ErrorModal
             open={!!submitError}
             onClose={() => {
@@ -525,17 +444,15 @@ const RedeemForm = (): JSX.Element | null => {
               setSubmitError(null);
             }}
             title='Error'
-            description={
-              typeof submitError === 'string' ?
-                submitError :
-                submitError.message
-            } />
+            description={typeof submitError === 'string' ? submitError : submitError.message}
+          />
         )}
         {submittedRequest && (
           <SubmittedRedeemRequestModal
             open={!!submittedRequest}
             onClose={handleSubmittedRequestModalClose}
-            request={submittedRequest} />
+            request={submittedRequest}
+          />
         )}
       </>
     );

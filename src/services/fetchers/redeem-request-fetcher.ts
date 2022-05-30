@@ -1,20 +1,12 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
-import {
-  newMonetaryAmount,
-  RedeemStatus
-} from '@interlay/interbtc-api';
+import { newMonetaryAmount, RedeemStatus } from '@interlay/interbtc-api';
 
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
 import redeemRequestQuery from 'services/queries/redeem-request-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
-type RedeemFetcherParams = [
-  key: typeof REDEEM_FETCHER,
-  offset: number,
-  limit: number,
-  where?: string,
-]
+type RedeemFetcherParams = [key: typeof REDEEM_FETCHER, offset: number, limit: number, where?: string];
 
 const REDEEM_FETCHER = 'redeem-fetcher';
 
@@ -27,8 +19,7 @@ function decodeRedeemValues(redeem: any): any {
   // TODO: get actual vault collateral when it's added to events
   redeem.collateralPremium = newMonetaryAmount(redeem.collateralPremium, COLLATERAL_TOKEN);
   if (redeem.cancellation) {
-    redeem.cancellation.slashedCollateral =
-      newMonetaryAmount(redeem.cancellation.slashedCollateral, COLLATERAL_TOKEN);
+    redeem.cancellation.slashedCollateral = newMonetaryAmount(redeem.cancellation.slashedCollateral, COLLATERAL_TOKEN);
   }
 
   return redeem;
@@ -37,38 +28,37 @@ function decodeRedeemValues(redeem: any): any {
 // TODO: should type properly (`Relay`)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
-  const [
-    key,
-    offset,
-    limit,
-    where
-  ] = queryKey as RedeemFetcherParams;
+  const [key, offset, limit, where] = queryKey as RedeemFetcherParams;
 
   if (key !== REDEEM_FETCHER) throw new Error('Invalid key!');
 
   // TODO: should type properly (`Relay`)
-  const redeemsData = await graphqlFetcher<Array<any>>()({ queryKey: [
-    GRAPHQL_FETCHER,
-    redeemRequestQuery(where),
-    {
-      limit,
-      offset
-    }
-  ] });
+  const redeemsData = await graphqlFetcher<Array<any>>()({
+    queryKey: [
+      GRAPHQL_FETCHER,
+      redeemRequestQuery(where),
+      {
+        limit,
+        offset
+      }
+    ]
+  });
 
   // TODO: should type properly (`Relay`)
   const redeems = redeemsData?.data?.redeems || [];
 
-  return await Promise.all(redeems.map(async redeem => {
-    redeem = decodeRedeemValues(redeem);
-    redeem.backingPayment = await getTxDetailsForRequest(
-      window.bridge.electrsAPI,
-      redeem.id,
-      redeem.userBackingAddress,
-      true // Use op_return
-    );
-    return redeem;
-  }));
+  return await Promise.all(
+    redeems.map(async (redeem) => {
+      redeem = decodeRedeemValues(redeem);
+      redeem.backingPayment = await getTxDetailsForRequest(
+        window.bridge.electrsAPI,
+        redeem.id,
+        redeem.userBackingAddress,
+        true // Use op_return
+      );
+      return redeem;
+    })
+  );
 };
 
 // TODO: should type properly (`Relay`)
@@ -108,13 +98,8 @@ function getRedeemWithStatus(
   return redeem;
 }
 
-export {
-  getRedeemWithStatus,
-  REDEEM_FETCHER
-};
+export { getRedeemWithStatus, REDEEM_FETCHER };
 
-export type {
-  RedeemFetcherParams
-};
+export type { RedeemFetcherParams };
 
 export default redeemFetcher;
