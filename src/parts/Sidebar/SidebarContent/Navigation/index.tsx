@@ -185,10 +185,10 @@ const Navigation = ({
             <p
               key={navigationItem.name}
               className={clsx(
+                TEXT_CLASSES,
                 TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'text-base' : 'text-sm',
-                'font-light',
-                TEXT_CLASSES
+                'font-light'
               )}
             >
               <navigationItem.icon
@@ -213,6 +213,7 @@ const Navigation = ({
             {...navigationItem.rest}
             href={navigationItem.link}
             className={clsx(
+              TEXT_CLASSES,
               match?.isExact
                 ? clsx(
                     TEXT_CLASSES_FOR_SELECTED,
@@ -227,8 +228,7 @@ const Navigation = ({
                   ),
               onSmallScreen ? 'text-base' : 'text-sm',
               'font-medium',
-              'rounded-md',
-              TEXT_CLASSES
+              'rounded-md'
             )}
           >
             <navigationItem.icon
