@@ -8,14 +8,10 @@ import { useAsyncDebounce } from 'react-table';
 import clsx from 'clsx';
 
 // TODO: not used for now
-function GlobalFilter({
-  preGlobalFilteredRows,
-  globalFilter,
-  setGlobalFilter
-}) {
+function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter }) {
   const count = preGlobalFilteredRows.length;
   const [value, setValue] = React.useState(globalFilter);
-  const onChange = useAsyncDebounce(value => {
+  const onChange = useAsyncDebounce((value) => {
     setGlobalFilter(value || undefined);
   }, 200);
 
@@ -23,16 +19,14 @@ function GlobalFilter({
     <span>
       Search:&nbsp;
       <input
-        className={clsx(
-          'text-lg',
-          'border-0'
-        )}
+        className={clsx('text-lg', 'border-0')}
         value={value || ''}
-        onChange={event => {
+        onChange={(event) => {
           setValue(event.target.value);
           onChange(event.target.value);
         }}
-        placeholder={`${count} records...`} />
+        placeholder={`${count} records...`}
+      />
     </span>
   );
 }

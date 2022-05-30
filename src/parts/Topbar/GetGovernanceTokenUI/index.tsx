@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -10,7 +9,7 @@ import InterlayDefaultOutlinedButton, {
 import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { LIGHT_DARK_BORDER_CLASSES } from 'utils/constants/styles';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg';
 import { ReactComponent as MexcLogoIcon } from 'assets/img/exchanges/mexc-logo.svg';
@@ -19,35 +18,19 @@ import { ReactComponent as ZenlinkLogoIcon } from 'assets/img/exchanges/zenlink-
 const EXCHANGES = [
   {
     link: 'https://www.kraken.com/en-gb/prices/kint-kintsugi-price-chart/usd-us-dollar?interval=1m',
-    icon: (
-      <KrakenLogoIcon
-        width={122}
-        height={20} />
-    )
+    icon: <KrakenLogoIcon width={122} height={20} />
   },
   {
     link: 'https://www.gate.io/de/trade/kint_usdt',
-    icon: (
-      <GateLogoIcon
-        width={122}
-        height={37} />
-    )
+    icon: <GateLogoIcon width={122} height={37} />
   },
   {
     link: 'https://dex.zenlink.pro/#/swap',
-    icon: (
-      <ZenlinkLogoIcon
-        width={119}
-        height={35} />
-    )
+    icon: <ZenlinkLogoIcon width={119} height={35} />
   },
   {
     link: 'https://www.mexc.com/de-DE/exchange/KINT_USDT',
-    icon: (
-      <MexcLogoIcon
-        width={167}
-        height={21} />
-    )
+    icon: <MexcLogoIcon width={167} height={21} />
   }
 ];
 
@@ -56,22 +39,14 @@ interface ExchangeLinkProps {
   icon: React.ReactNode;
 }
 
-const ExchangeLink = ({
-  href,
-  icon
-}: ExchangeLinkProps) => {
+const ExchangeLink = ({ href, icon }: ExchangeLinkProps) => {
   return (
     <InterlayLink
-      className={clsx(
-        'rounded-xl',
-        'grid',
-        'place-items-center',
-        'h-24',
-        LIGHT_DARK_BORDER_CLASSES
-      )}
+      className={clsx('rounded-xl', 'grid', 'place-items-center', 'h-24', BORDER_CLASSES)}
       target='_blank'
       rel='noopener noreferrer'
-      href={href}>
+      href={href}
+    >
       {icon}
     </InterlayLink>
   );
@@ -99,42 +74,17 @@ const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.El
 
   return (
     <>
-      <InterlayDefaultOutlinedButton
-        onClick={handleModalOpen}
-        {...props}>
+      <InterlayDefaultOutlinedButton onClick={handleModalOpen} {...props}>
         {getGovernanceTokenLabel}
       </InterlayDefaultOutlinedButton>
-      <InterlayModal
-        initialFocus={focusRef}
-        open={modalOpen}
-        onClose={handleModalClose}>
-        <InterlayModalInnerWrapper
-          className={clsx(
-            'p-6',
-            'max-w-lg'
-          )}>
+      <InterlayModal initialFocus={focusRef} open={modalOpen} onClose={handleModalClose}>
+        <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
           <TitleWithUnderline text={getGovernanceTokenLabel} />
-          <div
-            className={clsx(
-              'px-4',
-              'py-2',
-              'space-y-10'
-            )}>
-            <p className='text-center'>
-              {getGovernanceTokenDescriptionLabel}
-            </p>
-            <div
-              className={clsx(
-                'grid',
-                'grid-cols-2',
-                'gap-x-3',
-                'gap-y-2'
-              )}>
-              {EXCHANGES.map(item => (
-                <ExchangeLink
-                  key={item.link}
-                  href={item.link}
-                  icon={item.icon} />
+          <div className={clsx('px-4', 'py-2', 'space-y-10')}>
+            <p className='text-center'>{getGovernanceTokenDescriptionLabel}</p>
+            <div className={clsx('grid', 'grid-cols-2', 'gap-x-3', 'gap-y-2')}>
+              {EXCHANGES.map((item) => (
+                <ExchangeLink key={item.link} href={item.link} icon={item.icon} />
               ))}
             </div>
           </div>

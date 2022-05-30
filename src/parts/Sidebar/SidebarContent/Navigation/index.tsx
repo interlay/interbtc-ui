@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import { matchPath } from 'react-router';
@@ -11,7 +10,9 @@ import {
   ChartSquareBarIcon,
   ChipIcon,
   SwitchHorizontalIcon,
-  DocumentTextIcon
+  DocumentTextIcon,
+  CurrencyDollarIcon,
+  ScaleIcon
 } from '@heroicons/react/outline';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -20,18 +21,14 @@ import SidebarNavLink from './SidebarNavLink';
 import Hr2 from 'components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from 'config/links';
 import {
-  CROWDLOAN_LINK,
   GOVERNANCE_TOKEN_SYMBOL,
-  TERMS_AND_CONDITIONS_LINK
+  CROWDLOAN_LINK,
+  TERMS_AND_CONDITIONS_LINK,
+  EARN_LINK,
+  GOVERNANCE_LINK
 } from 'config/relay-chains';
-import {
-  KUSAMA,
-  POLKADOT
-} from 'utils/constants/relay-chain-names';
-import {
-  PAGES,
-  URL_PARAMETERS
-} from 'utils/constants/links';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
+import { PAGES, URL_PARAMETERS } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
 
 interface CustomProps {
@@ -40,14 +37,11 @@ interface CustomProps {
 
 // TODO: could be reused
 const TEXT_CLASSES_FOR_SELECTED = clsx(
-  { 'text-interlayDenim-700':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-  { 'dark:text-kintsugiMidnight-700':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+  { 'text-interlayDenim-700': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-kintsugiMidnight-700': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 const TEXT_CLASSES_FOR_UNSELECTED = clsx(
-  { 'text-interlayTextPrimaryInLightMode':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
@@ -58,15 +52,10 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  const {
-    vaultClientLoaded,
-    address
-  } = useSelector((state: StoreType) => state.general);
+  const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
 
-  const NAVIGATION_ITEMS = React.useMemo(() => {
-    if (!address) return [];
-
-    return [
+  const NAVIGATION_ITEMS = React.useMemo(
+    () => [
       {
         name: 'nav_bridge',
         link: PAGES.BRIDGE,
@@ -96,10 +85,21 @@ const Navigation = ({
         hidden: false
       },
       {
-        name: 'nav_vault',
-        link: `${PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT_ACCOUNT_ADDRESS}`, address)}`,
+        name: 'nav_vaults',
+        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
         icon: ChipIcon,
         hidden: !vaultClientLoaded
+      },
+      {
+        name: 'nav_earn',
+        link: EARN_LINK,
+        icon: CurrencyDollarIcon,
+        hidden: !EARN_LINK,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
       },
       {
         name: 'separator',
@@ -130,6 +130,17 @@ const Navigation = ({
         }
       },
       {
+        name: 'nav_governance',
+        link: GOVERNANCE_LINK,
+        icon: ScaleIcon,
+        external: true,
+        hidden: !GOVERNANCE_LINK,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
         name: 'nav_terms_and_conditions',
         link: TERMS_AND_CONDITIONS_LINK,
         icon: DocumentTextIcon,
@@ -140,26 +151,15 @@ const Navigation = ({
           rel: 'noopener noreferrer'
         }
       }
-    ];
-  }, [
-    address,
-    vaultClientLoaded
-  ]);
+    ],
+    [address, vaultClientLoaded]
+  );
 
   return (
-    <nav
-      className={clsx(
-        'px-2',
-        'space-y-1',
-        { 'flex-1': !onSmallScreen },
-        className
-      )}
-      {...rest}>
-      {NAVIGATION_ITEMS.map(navigationItem => {
+    <nav className={clsx('px-2', 'space-y-1', { 'flex-1': !onSmallScreen }, className)} {...rest}>
+      {NAVIGATION_ITEMS.map((navigationItem) => {
         if (navigationItem.separator) {
-          return (
-            <Hr2 key={navigationItem.name} />
-          );
+          return <Hr2 key={navigationItem.name} />;
         }
 
         if (navigationItem.hidden) {
@@ -179,21 +179,18 @@ const Navigation = ({
             {...navigationItem.rest}
             href={navigationItem.link}
             className={clsx(
-              match?.isExact ?
-                clsx(
-                  TEXT_CLASSES_FOR_SELECTED,
-                  { 'bg-interlayHaiti-50':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                  { 'dark:bg-white':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                ) :
-                clsx(
-                  TEXT_CLASSES_FOR_UNSELECTED,
-                  { 'hover:bg-interlayHaiti-50':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                  { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-                  { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                ),
+              match?.isExact
+                ? clsx(
+                    TEXT_CLASSES_FOR_SELECTED,
+                    { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  )
+                : clsx(
+                    TEXT_CLASSES_FOR_UNSELECTED,
+                    { 'hover:bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                    { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                  ),
               'group',
               'flex',
               'items-center',
@@ -202,25 +199,23 @@ const Navigation = ({
               onSmallScreen ? 'text-base' : 'text-sm',
               'font-medium',
               'rounded-md'
-            )}>
+            )}
+          >
             <navigationItem.icon
               className={clsx(
-                match?.isExact ?
-                  TEXT_CLASSES_FOR_SELECTED :
-                  TEXT_CLASSES_FOR_UNSELECTED,
+                match?.isExact ? TEXT_CLASSES_FOR_SELECTED : TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'mr-4' : 'mr-3',
                 'flex-shrink-0',
                 'w-6',
                 'h-6'
               )}
-              aria-hidden='true' />
-            {navigationItem.link === CROWDLOAN_LINK ?
-            // TODO: not the nicest way of handling contextual navigation text, but
-            // other solutions involve substantial refactoring of the navigation
-              t(navigationItem.name,
-                { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL }
-              ) :
-              t(navigationItem.name)}
+              aria-hidden='true'
+            />
+            {navigationItem.link === CROWDLOAN_LINK
+              ? // TODO: not the nicest way of handling contextual navigation text, but
+                // other solutions involve substantial refactoring of the navigation
+                t(navigationItem.name, { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL })
+              : t(navigationItem.name)}
           </SidebarNavLink>
         );
       })}

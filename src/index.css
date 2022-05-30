@@ -1,4 +1,3 @@
-
 @tailwind base;
 
 /* MEMO: inspired by https://web.dev/prefers-color-scheme */
@@ -10,9 +9,7 @@ html {
   --timing: ease;
 
   /* MEMO: inspired by https://web.dev/prefers-color-scheme/#smooth-transitions-between-modes */
-  transition:
-    color var(--duration) var(--timing),
-    background-color var(--duration) var(--timing);
+  transition: color var(--duration) var(--timing), background-color var(--duration) var(--timing);
 }
 /* MEMO: `light` and `dark` are hardcoded */
 /* https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually */
@@ -28,60 +25,18 @@ html.dark {
   --icon-filter: invert(100%);
   --icon-filter_hover: invert(40%);
 }
-html.dark img:not([src*=".svg"]) {
+html.dark img:not([src*='.svg']) {
   filter: var(--image-filter);
 }
-html.dark img[src*=".svg"] {
+html.dark img[src*='.svg'] {
   filter: var(--icon-filter);
 }
-img[src*=".svg"]:hover {
+img[src*='.svg']:hover {
   filter: var(--icon-filter_hover);
 }
 
 @tailwind components;
 @tailwind utilities;
-
-/* MEMO: https://drafts.csswg.org/css-fonts/#font-weight-numeric-values */
-/* TODO: could optimize font loading more for less FOUT & FOIT */
-/* MEMO: inspired by https://css-tricks.com/snippets/css/using-font-face/ */
-@font-face {
-  font-family: "airbnb-cereal";
-  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf") format("truetype");
-  font-weight: 300; /* light */
-  font-style: normal;
-}
-@font-face {
-  font-family: "airbnb-cereal";
-  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf") format("truetype");
-  font-weight: 400; /* book */
-  font-style: normal;
-}
-@font-face {
-  font-family: "airbnb-cereal";
-  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf") format("truetype");
-  font-weight: 500; /* medium */
-  font-style: normal;
-}
-@font-face {
-  font-family: "airbnb-cereal";
-  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf") format("truetype");
-  font-weight: 700; /* bold */
-  font-style: normal;
-}
-/* TODO: not used for now */
-/* @font-face {
-  font-family: "airbnb-cereal";
-  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealExtraBold.ttf") format("truetype");
-  font-weight: 800; extra bold
-  font-style: normal;
-} */
-/* TODO: not used for now */
-/* @font-face {
-  font-family: "airbnb-cereal";
-  src: url("./assets/fonts/airbnb-cereal/AirbnbCerealExtraBold.ttf") format("truetype");
-  font-weight: 900; black
-  font-style: normal;
-} */
 
 /* TODO: should scope it into components */
 .fade-in-animation {

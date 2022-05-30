@@ -1,39 +1,19 @@
-
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import Big from 'big.js';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 
 import DashboardCard from '../DashboardCard';
-import Stats, {
-  StatsDt,
-  StatsDd,
-  StatsRouterLink
-} from '../../Stats';
+import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import Ring64, {
-  Ring64Title,
-  Ring64Value
-} from 'components/Ring64';
-import {
-  COLLATERAL_TOKEN,
-  WRAPPED_TOKEN_SYMBOL
-} from 'config/relay-chains';
+import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
+import { COLLATERAL_TOKEN, WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
-import {
-  displayMonetaryAmount,
-  safeRoundTwoDecimals
-} from 'common/utils/utils';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { displayMonetaryAmount, safeRoundTwoDecimals } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -52,36 +32,20 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
     isLoading: systemCollateralizationLoading,
     data: systemCollateralization,
     error: systemCollateralizationError
-  } = useQuery<Big, Error>(
-    [
-      GENERIC_FETCHER,
-      'vaults',
-      'getSystemCollateralization'
-    ],
-    genericFetcher<Big>(),
-    {
-      enabled: !!bridgeLoaded && !TEMP_COLLATERALIZATION_DISPLAY_DISABLED
-    }
-  );
+  } = useQuery<Big, Error>([GENERIC_FETCHER, 'vaults', 'getSystemCollateralization'], genericFetcher<Big>(), {
+    enabled: !!bridgeLoaded && !TEMP_COLLATERALIZATION_DISPLAY_DISABLED
+  });
   useErrorHandler(systemCollateralizationError);
 
   const {
-    isIdle: issuableWrappedTokenIdle,
-    isLoading: issuableWrappedTokenLoading,
-    data: issuableWrappedToken,
-    error: issuableWrappedTokenError
-  } = useQuery<BitcoinAmount, Error>(
-    [
-      GENERIC_FETCHER,
-      'vaults',
-      'getTotalIssuableAmount'
-    ],
-    genericFetcher<BitcoinAmount>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
-  useErrorHandler(issuableWrappedTokenError);
+    isIdle: requestLimitsIdle,
+    isLoading: requestLimitsLoading,
+    data: requestLimits,
+    error: requestLimitsError
+  } = useQuery<IssueLimits, Error>([GENERIC_FETCHER, 'issue', 'getRequestLimits'], genericFetcher<IssueLimits>(), {
+    enabled: !!bridgeLoaded
+  });
+  useErrorHandler(requestLimitsError);
 
   const {
     isIdle: secureCollateralThresholdIdle,
@@ -89,12 +53,7 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
     data: secureCollateralThreshold,
     error: secureCollateralThresholdError
   } = useQuery<Big, Error>(
-    [
-      GENERIC_FETCHER,
-      'vaults',
-      'getSecureCollateralThreshold',
-      COLLATERAL_TOKEN
-    ],
+    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', COLLATERAL_TOKEN],
     genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded && !TEMP_COLLATERALIZATION_DISPLAY_DISABLED
@@ -104,13 +63,10 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (
-      !TEMP_COLLATERALIZATION_DISPLAY_DISABLED &&
-      (systemCollateralizationIdle || systemCollateralizationLoading)
-    ) {
+    if (!TEMP_COLLATERALIZATION_DISPLAY_DISABLED && (systemCollateralizationIdle || systemCollateralizationLoading)) {
       return <>Loading...</>;
     }
-    if (issuableWrappedTokenIdle || issuableWrappedTokenLoading) {
+    if (requestLimitsIdle || requestLimitsLoading) {
       return <>Loading...</>;
     }
     if (
@@ -119,7 +75,7 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
     ) {
       return <>Loading...</>;
     }
-    if (issuableWrappedToken === undefined) {
+    if (requestLimits === undefined) {
       throw new Error('Something went wrong!');
     }
 
@@ -133,12 +89,8 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
             <>
               {!TEMP_COLLATERALIZATION_DISPLAY_DISABLED && (
                 <>
-                  <StatsDt>
-                    {t('dashboard.vault.collateralization')}
-                  </StatsDt>
-                  <StatsDd>
-                    {safeRoundTwoDecimals(systemCollateralizationLabel)}%
-                  </StatsDd>
+                  <StatsDt>{t('dashboard.vault.collateralization')}</StatsDt>
+                  <StatsDd>{safeRoundTwoDecimals(systemCollateralizationLabel)}%</StatsDd>
                   <StatsDd>
                     {t('dashboard.vault.secure_threshold', {
                       threshold: safeRoundTwoDecimals(secureCollateralThresholdLabel)
@@ -148,45 +100,32 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
               )}
             </>
           }
-          rightPart={
-            <>
-              {hasLinks && (
-                <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>
-                  View vaults
-                </StatsRouterLink>
-              )}
-            </>
-          } />
+          rightPart={<>{hasLinks && <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}</>}
+        />
         <Ring64
           className={clsx(
             'mx-auto',
-            { 'ring-interlayDenim':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-            { 'dark:ring-kintsugiOchre':
-              process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-          )}>
+            { 'ring-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:ring-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          )}
+        >
           <Ring64Title
             className={clsx(
-              { 'text-interlayDenim':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-              { 'dark:text-kintsugiOchre':
-                process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )}>
+              { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+              { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+            )}
+          >
             {t('dashboard.vault.capacity')}
           </Ring64Title>
           <Ring64Value>
-            {`${displayMonetaryAmount(issuableWrappedToken)} ${WRAPPED_TOKEN_SYMBOL}`}
+            {`${displayMonetaryAmount(requestLimits.totalMaxIssuable)} ${WRAPPED_TOKEN_SYMBOL}`}
           </Ring64Value>
         </Ring64>
       </>
     );
   };
 
-  return (
-    <DashboardCard>
-      {renderContent()}
-    </DashboardCard>
-  );
+  return <DashboardCard>{renderContent()}</DashboardCard>;
 };
 
 export default withErrorBoundary(CollateralizationCard, {

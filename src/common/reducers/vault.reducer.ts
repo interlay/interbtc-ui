@@ -1,8 +1,5 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
-import {
-  ReplaceRequestExt,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { ReplaceRequestExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 
 import { COLLATERAL_TOKEN } from 'config/relay-chains';
@@ -25,15 +22,15 @@ const initialState = {
 
 export const vaultReducer = (state: VaultState = initialState, action: VaultActions): VaultState => {
   switch (action.type) {
-  case UPDATE_COLLATERALIZATION:
-    return { ...state, collateralization: action.collateralization };
-  case UPDATE_COLLATERAL:
-    return { ...state, collateral: action.collateral };
-  case UPDATE_LOCKED_BTC:
-    return { ...state, lockedBTC: action.lockedBTC };
-  case UPDATE_APY:
-    return { ...state, apy: action.apy };
-  default:
-    return state;
+    case UPDATE_COLLATERALIZATION:
+      return { ...state, collateralization: action.collateralization };
+    case UPDATE_COLLATERAL:
+      return { ...state, collateral: action.collateral };
+    case UPDATE_LOCKED_BTC:
+      return { ...state, lockedBTC: action.lockedBTC };
+    case UPDATE_APY:
+      return { ...state, apy: action.apy };
+    default:
+      return state;
   }
 };

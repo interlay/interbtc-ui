@@ -13,6 +13,4 @@ i18n.use(initReactI18next).init({
   resources
 });
 
-export {
-  resources
-};
+export { resources };

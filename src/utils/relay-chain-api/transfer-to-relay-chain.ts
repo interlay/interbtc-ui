@@ -1,8 +1,4 @@
-import {
-  DefaultTransactionAPI,
-  newCurrencyId,
-  tickerToCurrencyIdLiteral
-} from '@interlay/interbtc-api';
+import { DefaultTransactionAPI, newCurrencyId, tickerToCurrencyIdLiteral } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { decodeAddress } from '@polkadot/keyring';
 import { AddressOrPair } from '@polkadot/api/types';

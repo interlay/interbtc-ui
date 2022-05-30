@@ -1,13 +1,9 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import clsx from 'clsx';
 import { RedeemStatus } from '@interlay/interbtc-api';
 
@@ -28,24 +24,12 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import { BTC_EXPLORER_ADDRESS_API } from 'config/blockstream-explorer-links';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import {
-  shortAddress,
-  formatDateTimePrecise,
-  displayMonetaryAmount
-} from 'common/utils/utils';
+import { shortAddress, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import genericFetcher, {
-  GENERIC_FETCHER
-} from 'services/fetchers/generic-fetcher';
-import graphqlFetcher, {
-  GraphqlReturn,
-  GRAPHQL_FETCHER
-} from 'services/fetchers/graphql-fetcher';
-import redeemFetcher, {
-  REDEEM_FETCHER,
-  getRedeemWithStatus
-} from 'services/fetchers/redeem-request-fetcher';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import redeemFetcher, { REDEEM_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeem-request-fetcher';
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import { StoreType } from 'common/types/util.types';
 
@@ -60,23 +44,15 @@ const RedeemRequestsTable = (): JSX.Element => {
     () => [
       {
         Header: t('date_created'),
-        classNames: [
-          'text-left'
-        ],
+        classNames: ['text-left'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
-          return (
-            <>
-              {formatDateTimePrecise(new Date(redeem.request.timestamp))}
-            </>
-          );
+          return <>{formatDateTimePrecise(new Date(redeem.request.timestamp))}</>;
         }
       },
       {
         Header: t('last_update'),
-        classNames: [
-          'text-left'
-        ],
+        classNames: ['text-left'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           let date;
@@ -88,18 +64,12 @@ const RedeemRequestsTable = (): JSX.Element => {
             date = redeem.request.timestamp;
           }
 
-          return (
-            <>
-              {formatDateTimePrecise(new Date(date))}
-            </>
-          );
+          return <>{formatDateTimePrecise(new Date(date))}</>;
         }
       },
       {
         Header: t('parachain_block'),
-        classNames: [
-          'text-right'
-        ],
+        classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           let height;
@@ -111,62 +81,38 @@ const RedeemRequestsTable = (): JSX.Element => {
             height = redeem.request.height.active;
           }
 
-          return (
-            <>
-              {height}
-            </>
-          );
+          return <>{height}</>;
         }
       },
       {
         Header: t('redeem_page.amount'),
-        classNames: [
-          'text-right'
-        ],
+        classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
-          return (
-            <>
-              {displayMonetaryAmount(redeem.request.requestedAmountBacking)}
-            </>
-          );
+          return <>{displayMonetaryAmount(redeem.request.requestedAmountBacking)}</>;
         }
       },
       {
         Header: t('issue_page.vault_dot_address'),
         accessor: 'vault',
-        classNames: [
-          'text-left'
-        ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
-          return (
-            <>
-              {shortAddress(value.accountId)}
-            </>
-          );
+        classNames: ['text-left'],
+        Cell: function FormattedCell({ value }: { value: any }) {
+          return <>{shortAddress(value.accountId)}</>;
         }
       },
       {
         Header: t('redeem_page.output_BTC_address'),
         accessor: 'userBackingAddress',
-        classNames: [
-          'text-left'
-        ],
-        Cell: function FormattedCell({ value }: { value: string; }) {
-          return (
-            <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>
-              {shortAddress(value)}
-            </ExternalLink>
-          );
+        classNames: ['text-left'],
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>{shortAddress(value)}</ExternalLink>;
         }
       },
       {
         Header: t('status'),
         accessor: 'status',
-        classNames: [
-          'text-left'
-        ],
-        Cell: function FormattedCell({ value }: { value: RedeemStatus; }) {
+        classNames: ['text-left'],
+        Cell: function FormattedCell({ value }: { value: RedeemStatus }) {
           return (
             <StatusCell
               status={{
@@ -174,7 +120,8 @@ const RedeemRequestsTable = (): JSX.Element => {
                 cancelled: value === RedeemStatus.Retried,
                 isExpired: value === RedeemStatus.Expired,
                 reimbursed: value === RedeemStatus.Reimbursed
-              }} />
+              }}
+            />
           );
         }
       }
@@ -188,11 +135,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     data: stableBtcConfirmations,
     error: stableBtcConfirmationsError
   } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'btcRelay',
-      'getStableBitcoinConfirmations'
-    ],
+    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
     genericFetcher<number>(),
     {
       enabled: !!bridgeLoaded
@@ -205,17 +148,9 @@ const RedeemRequestsTable = (): JSX.Element => {
     isLoading: latestParachainActiveBlockLoading,
     data: latestParachainActiveBlock,
     error: latestParachainActiveBlockError
-  } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'system',
-      'getCurrentActiveBlockNumber'
-    ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
+    enabled: !!bridgeLoaded
+  });
   useErrorHandler(latestParachainActiveBlockError);
 
   const {
@@ -224,11 +159,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     data: stableParachainConfirmations,
     error: stableParachainConfirmationsError
   } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'btcRelay',
-      'getStableParachainConfirmations'
-    ],
+    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
     genericFetcher<number>(),
     {
       enabled: !!bridgeLoaded
@@ -243,7 +174,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     isLoading: redeemsLoading,
     data: redeems,
     error: redeemsError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
       REDEEM_FETCHER,
@@ -259,46 +190,31 @@ const RedeemRequestsTable = (): JSX.Element => {
     isLoading: redeemsCountLoading,
     data: redeemsCount,
     error: redeemsCountError
-  // TODO: should type properly (`Relay`)
-  } = useQuery<GraphqlReturn<any>, Error>(
-    [
-      GRAPHQL_FETCHER,
-      redeemCountQuery()
-    ],
-    graphqlFetcher<GraphqlReturn<any>>()
-  );
+    // TODO: should type properly (`Relay`)
+  } = useQuery<GraphqlReturn<any>, Error>([GRAPHQL_FETCHER, redeemCountQuery()], graphqlFetcher<GraphqlReturn<any>>());
   useErrorHandler(redeemsCountError);
 
   const data =
-    (
-      redeems === undefined ||
-      stableBtcConfirmations === undefined ||
-      stableParachainConfirmations === undefined ||
-      latestParachainActiveBlock === undefined
-    ) ?
-      [] :
-      redeems.map(
-        // TODO: should type properly (`Relay`)
-        (redeem: any) => getRedeemWithStatus(
-          redeem,
-          stableBtcConfirmations,
-          stableParachainConfirmations,
-          latestParachainActiveBlock
-        )
-      );
+    redeems === undefined ||
+    stableBtcConfirmations === undefined ||
+    stableParachainConfirmations === undefined ||
+    latestParachainActiveBlock === undefined
+      ? []
+      : redeems.map(
+          // TODO: should type properly (`Relay`)
+          (redeem: any) =>
+            getRedeemWithStatus(
+              redeem,
+              stableBtcConfirmations,
+              stableParachainConfirmations,
+              latestParachainActiveBlock
+            )
+        );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable(
-    {
-      columns,
-      data
-    }
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+    columns,
+    data
+  });
 
   const renderContent = () => {
     if (
@@ -319,7 +235,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
+    const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
       updateQueryParameters({
         [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
       });
@@ -345,7 +261,8 @@ const RedeemRequestsTable = (): JSX.Element => {
                         className: clsx(column.classNames),
                         style: column.style
                       }
-                    ])}>
+                    ])}
+                  >
                     {column.render('Header')}
                   </InterlayTh>
                 ))}
@@ -370,7 +287,8 @@ const RedeemRequestsTable = (): JSX.Element => {
                             className: clsx(cell.column.classNames),
                             style: cell.column.style
                           }
-                        ])}>
+                        ])}
+                      >
                         {cell.render('Cell')}
                       </InterlayTd>
                     );
@@ -381,17 +299,14 @@ const RedeemRequestsTable = (): JSX.Element => {
           </InterlayTbody>
         </InterlayTable>
         {pageCount > 0 && (
-          <div
-            className={clsx(
-              'flex',
-              'justify-end'
-            )}>
+          <div className={clsx('flex', 'justify-end')}>
             <InterlayPagination
               pageCount={pageCount}
               marginPagesDisplayed={2}
               pageRangeDisplayed={5}
               onPageChange={handlePageChange}
-              forcePage={selectedPageIndex} />
+              forcePage={selectedPageIndex}
+            />
           </div>
         )}
       </>
@@ -400,9 +315,7 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   return (
     <InterlayTableContainer className='space-y-6'>
-      <SectionTitle>
-        {t('issue_page.recent_requests')}
-      </SectionTitle>
+      <SectionTitle>{t('issue_page.recent_requests')}</SectionTitle>
       {renderContent()}
     </InterlayTableContainer>
   );

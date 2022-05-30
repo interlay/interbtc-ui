@@ -1,40 +1,21 @@
-
 import * as React from 'react';
-import {
-  useDispatch,
-  useSelector
-} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import {
-  web3Enable,
-  web3FromAddress
-} from '@polkadot/extension-dapp';
+import { web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 
-import ExternalLink from 'components/ExternalLink';
-import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, {
-  InterlayModalInnerWrapper,
-  InterlayModalTitle
-} from 'components/UI/InterlayModal';
-import InterlayButtonBase from 'components/UI/InterlayButtonBase';
-import CopyAddressButton from 'components/CopyAddressButton';
-import {
-  APP_NAME,
-  TERMS_AND_CONDITIONS_LINK
-} from 'config/relay-chains';
-import {
-  KUSAMA,
-  POLKADOT
-} from 'utils/constants/relay-chain-names';
-import useGetAccounts from 'utils/hooks/use-get-accounts';
-import { shortAddress } from 'common/utils/utils';
+import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
+import { APP_NAME } from 'config/relay-chains';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
+import useGetAccounts from 'utils/hooks/api/use-get-accounts';
 import { StoreType } from 'common/types/util.types';
 import { changeAddressAction } from 'common/actions/general.actions';
-import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
-
-const POLKADOT_EXTENSION = 'https://polkadot.js.org/extension/';
+import { WalletSourceName } from 'config/wallets';
+import ModalContentSelectWallet from './ModalContent/ModalContentSelectWallet';
+import ModalContentSelectAccount from './ModalContent/ModalContentSelectAccount';
+import ModalContentNoAccountFound from './ModalContent/ModalContentNoAccountFound';
+import ModalContentNoWalletFound from './ModalContent/ModalContentNoWalletFound';
+import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';
 
 interface Props {
   open: boolean;
@@ -49,171 +30,120 @@ const ACCOUNT_MODAL_BUTTON_CLASSES = clsx(
   'border',
   'border-solid',
   'shadow-sm',
-  { 'hover:bg-interlayHaiti-50':
-  process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'hover:bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
   { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
 const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
-  { 'text-interlayDenim-700':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-  { 'dark:text-kintsugiMidnight-700':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-  { 'bg-interlayHaiti-50':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-  { 'dark:bg-white':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
-  { 'dark:hover:bg-opacity-100':
-    process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+  { 'text-interlayDenim-700': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-kintsugiMidnight-700': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+  { 'dark:hover:bg-opacity-100': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const AccountModal = ({
-  open,
-  onClose
-}: Props): JSX.Element => {
-  const {
-    bridgeLoaded,
-    address,
-    extensions
-  } = useSelector((state: StoreType) => state.general);
+const AccountModal = ({ open, onClose }: Props): JSX.Element => {
+  const { bridgeLoaded, address, extensions } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);
+  const [selectedWallet, setSelectedWallet] = React.useState<WalletSourceName | undefined>();
 
   const accounts = useGetAccounts();
-  const extensionWalletAvailable = extensions.length > 0;
+  const accountsFromSelectedWallet = React.useMemo(
+    () => accounts.filter(({ meta: { source } }) => source === selectedWallet),
+    [accounts, selectedWallet]
+  );
 
-  const handleAccountSelect = (newAddress: string) => async () => {
-    if (!bridgeLoaded) {
-      return;
+  React.useEffect(() => {
+    // Sets selected wallet on modal open.
+    if (open) {
+      const selectedAccount = accounts.find(({ address: accountAddress }) => address === accountAddress);
+      if (selectedAccount) {
+        setSelectedWallet(selectedAccount.meta.source as WalletSourceName);
+      } else {
+        setSelectedWallet(undefined);
+      }
     }
+  }, [address, accounts, open]);
 
-    // TODO: should check when the app being initialized (not check everywhere)
-    await web3Enable(APP_NAME);
-    const { signer } = await web3FromAddress(newAddress);
-    window.bridge.setAccount(newAddress, signer);
-    dispatch(changeAddressAction(newAddress));
+  // State of the modal content.
+  const modalContent = React.useMemo(() => {
+    const supportedWalletInstalled = extensions.reduce(
+      (result, extensionName) => result || Object.values(WalletSourceName).includes(extensionName as WalletSourceName),
+      false
+    );
 
-    onClose();
-  };
+    const handleWalletSelect = (walletName: WalletSourceName | undefined) => {
+      setSelectedWallet(walletName);
+    };
 
-  const renderContent = () => {
-    if (extensionWalletAvailable) {
-      return (
-        <>
-          {accounts !== undefined && accounts.length > 0 ? (
-            // List all available accounts
-            <ul className='space-y-4'>
-              {accounts.map(account => {
-                const selected = address === account.address;
+    const handleAccountSelect = async (newAddress: string) => {
+      if (!bridgeLoaded) {
+        return;
+      }
 
-                return (
-                  <li
-                    key={account.address}
-                    className={clsx(
-                      'flex',
-                      'space-x-2'
-                    )}>
-                    <InterlayButtonBase
-                      className={clsx(
-                        ACCOUNT_MODAL_BUTTON_CLASSES,
-                        'w-full',
-                        { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected }
-                      )}
-                      onClick={handleAccountSelect(account.address)}>
-                      <span className='font-medium'>
-                        {account.meta.name}
-                      </span>
-                      <span>
-                        {`(${shortAddress(account.address)})`}
-                      </span>
-                    </InterlayButtonBase>
-                    <CopyAddressButton
-                      className={ACCOUNT_MODAL_BUTTON_CLASSES}
-                      address={account.address} />
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            // Create a new account when no accounts are available
-            <p>
-              {t('no_account')}
-              <ExternalLink href={POLKADOT_EXTENSION}>
-                &nbsp;{t('here')}
-              </ExternalLink>
-              .
-            </p>
-          )}
-        </>
-      );
+      // TODO: should check when the app being initialized (not check everywhere)
+      await web3Enable(APP_NAME);
+      const { signer } = await web3FromAddress(newAddress);
+      window.bridge.setAccount(newAddress, signer);
+      dispatch(changeAddressAction(newAddress));
+
+      onClose();
+    };
+
+    const handleAccountDisconnect = () => {
+      dispatch(changeAddressAction(''));
+      window.bridge.removeAccount();
+      onClose();
+    };
+
+    if (supportedWalletInstalled) {
+      if (selectedWallet === undefined) {
+        return (
+          <AccountModalContentWrapper title={t('account_modal.select_wallet')} focusRef={focusRef} onClose={onClose}>
+            <ModalContentSelectWallet extensions={extensions} handleWalletSelect={handleWalletSelect} />
+          </AccountModalContentWrapper>
+        );
+      } else {
+        if (accounts !== undefined && accounts.length > 0) {
+          return (
+            <AccountModalContentWrapper title={t('account_modal.select_account')} focusRef={focusRef} onClose={onClose}>
+              <ModalContentSelectAccount
+                accountsFromSelectedWallet={accountsFromSelectedWallet}
+                address={address}
+                selectedWallet={selectedWallet}
+                handleAccountSelect={handleAccountSelect}
+                handleAccountDisconnect={handleAccountDisconnect}
+                handleWalletSelect={handleWalletSelect}
+              />
+            </AccountModalContentWrapper>
+          );
+        } else {
+          return (
+            <AccountModalContentWrapper title={t('account_modal.create_account')} focusRef={focusRef} onClose={onClose}>
+              <ModalContentNoAccountFound selectedWallet={selectedWallet} />
+            </AccountModalContentWrapper>
+          );
+        }
+      }
     } else {
       return (
-        <>
-          <p>
-            {t('install_supported_wallets')}
-            <ExternalLink href={TERMS_AND_CONDITIONS_LINK}>terms and conditions</ExternalLink>
-            .
-          </p>
-          <ExternalLink href={POLKADOT_EXTENSION}>
-            <span
-              className={clsx(
-                'inline-flex',
-                'items-center',
-                'space-x-1.5'
-              )}>
-              <PolkadotExtensionLogoIcon
-                width={30}
-                height={30} />
-              <span>Polkadot.js</span>
-            </span>
-          </ExternalLink>
-        </>
+        <AccountModalContentWrapper title={t('account_modal.install_wallet')} focusRef={focusRef} onClose={onClose}>
+          <ModalContentNoWalletFound />
+        </AccountModalContentWrapper>
       );
     }
-  };
+  }, [accounts, accountsFromSelectedWallet, address, bridgeLoaded, dispatch, extensions, onClose, selectedWallet, t]);
 
   return (
-    <InterlayModal
-      initialFocus={focusRef}
-      open={open}
-      onClose={onClose}>
-      <InterlayModalInnerWrapper
-        className={clsx(
-          'p-6',
-          'max-w-lg'
-        )}>
-        <InterlayModalTitle
-          as='h3'
-          className={clsx(
-            'text-lg',
-            'font-medium',
-            'mb-6'
-          )}>
-          {extensionWalletAvailable ?
-            'Select account' :
-            'Pick a wallet'
-          }
-        </InterlayModalTitle>
-        <CloseIconButton
-          ref={focusRef}
-          onClick={onClose} />
-        <div className='space-y-4'>
-          {renderContent()}
-          <div
-            className={clsx(
-              'flex',
-              'justify-end'
-            )}>
-            <InterlayMulberryOutlinedButton onClick={onClose}>
-              Close
-            </InterlayMulberryOutlinedButton>
-          </div>
-        </div>
-      </InterlayModalInnerWrapper>
+    <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
+      <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>{modalContent}</InterlayModalInnerWrapper>
     </InterlayModal>
   );
 };
 
 export default AccountModal;
+
+export { ACCOUNT_MODAL_BUTTON_CLASSES, ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES };
