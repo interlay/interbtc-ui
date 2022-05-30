@@ -87,7 +87,7 @@ const IssueRequestModal = ({
                   'block'
                 )}
               >
-                {`≈ $ ${getUsdAmount(receivedWrappedTokenAmount, prices.bitcoin.usd)}`}
+                {`≈ $ ${getUsdAmount(receivedWrappedTokenAmount, prices.bitcoin?.usd)}`}
               </span>
             </div>
             <div>
@@ -105,7 +105,7 @@ const IssueRequestModal = ({
                 unitIcon={<BitcoinLogoIcon width={23} height={23} />}
                 value={displayMonetaryAmount(bridgeFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
+                approxUSD={getUsdAmount(bridgeFee, prices.bitcoin?.usd)}
               />
               <Hr2 className={clsx('border-t-2', 'my-2.5')} />
               <PriceInfo
@@ -122,7 +122,7 @@ const IssueRequestModal = ({
                 unitIcon={<BitcoinLogoIcon width={23} height={23} />}
                 value={displayMonetaryAmount(sentBackingTokenAmount)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(sentBackingTokenAmount, prices.bitcoin.usd)}
+                approxUSD={getUsdAmount(sentBackingTokenAmount, prices.bitcoin?.usd)}
               />
             </div>
             <div className='space-y-4'>
