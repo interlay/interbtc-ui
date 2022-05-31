@@ -73,7 +73,7 @@ const RedeemRequestModal = ({
                   'block'
                 )}
               >
-                {`≈ $ ${getUsdAmount(redeemedWrappedTokenAmount, prices.bitcoin.usd)}`}
+                {`≈ $ ${getUsdAmount(redeemedWrappedTokenAmount, prices.bitcoin?.usd)}`}
               </span>
             </div>
             <div>
@@ -91,7 +91,7 @@ const RedeemRequestModal = ({
                 unitIcon={<BitcoinLogoIcon width={23} height={23} />}
                 value={displayMonetaryAmount(request.bridgeFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin.usd)}
+                approxUSD={getUsdAmount(request.bridgeFee, prices.bitcoin?.usd)}
               />
               <PriceInfo
                 title={
@@ -107,7 +107,7 @@ const RedeemRequestModal = ({
                 unitIcon={<BitcoinLogoIcon width={23} height={23} />}
                 value={displayMonetaryAmount(request.btcTransferFee)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.btcTransferFee, prices.bitcoin.usd)}
+                approxUSD={getUsdAmount(request.btcTransferFee, prices.bitcoin?.usd)}
               />
               <Hr2 className={clsx('border-t-2', 'my-2.5')} />
               <PriceInfo
@@ -124,7 +124,7 @@ const RedeemRequestModal = ({
                 unitIcon={<BitcoinLogoIcon width={23} height={23} />}
                 value={displayMonetaryAmount(request.request.requestedAmountBacking)}
                 unitName='BTC'
-                approxUSD={getUsdAmount(request.request.requestedAmountBacking, prices.bitcoin.usd)}
+                approxUSD={getUsdAmount(request.request.requestedAmountBacking, prices.bitcoin?.usd)}
               />
             </div>
             <div className='space-y-4'>

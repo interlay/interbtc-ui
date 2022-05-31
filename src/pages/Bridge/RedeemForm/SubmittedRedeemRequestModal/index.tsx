@@ -69,7 +69,7 @@ const SubmittedRedeemRequestModal = ({
                   'text-center'
                 )}
               >
-                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin.usd)}`}
+                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin?.usd)}`}
               </span>
             </div>
             <div>

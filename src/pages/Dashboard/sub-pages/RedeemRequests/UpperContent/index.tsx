@@ -89,7 +89,9 @@ const UpperContent = (): JSX.Element => {
             </StatsDd>
             <StatsDd>
               {/* eslint-disable-next-line max-len */}$
-              {(prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
+              {prices.bitcoin === undefined
+                ? '—'
+                : (prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
             </StatsDd>
             <StatsDt className='!text-interlayConifer'>{t('dashboard.redeem.total_redeems')}</StatsDt>
             <StatsDd>{totalSuccessfulRedeemCount}</StatsDd>

@@ -59,7 +59,7 @@ const UpperContent = (): JSX.Element => {
                 wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
               })}
             </StatsDd>
-            <StatsDd>${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd).toLocaleString()}</StatsDd>
+            <StatsDd>${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin?.usd).toLocaleString()}</StatsDd>
             <StatsDt className='!text-interlayConifer'>{t('dashboard.issue.issue_requests')}</StatsDt>
             <StatsDd>{totalSuccessfulIssueCount}</StatsDd>
           </>
