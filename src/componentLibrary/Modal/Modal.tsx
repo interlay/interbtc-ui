@@ -1,4 +1,5 @@
 import { MutableRefObject, ReactNode, useEffect } from 'react';
+import Portal from 'parts/Portal';
 import { ModalContainer, ModalContent, ModalOverlay, CloseIcon } from './Modal.style';
 
 interface ModalProps {
@@ -27,15 +28,17 @@ const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.El
   }, [onClose]);
 
   return open ? (
-    <ModalContainer>
-      <ModalOverlay onClick={onClose} />
-      <ModalContent>
-        <CloseIcon onClick={onClose} as='button'>
-          x
-        </CloseIcon>
-        {children}
-      </ModalContent>
-    </ModalContainer>
+    <Portal>
+      <ModalContainer>
+        <ModalOverlay onClick={onClose} />
+        <ModalContent>
+          <CloseIcon onClick={onClose} as='button'>
+            x
+          </CloseIcon>
+          {children}
+        </ModalContent>
+      </ModalContainer>
+    </Portal>
   ) : (
     <></>
   );
