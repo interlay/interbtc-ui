@@ -62,7 +62,8 @@ const theme = {
     }
   },
   modal: {
-    bg: 'var(--colors-modal-bg)'
+    bg: 'var(--colors-modal-bg)',
+    transitionDuration: 100
   }
 };
 

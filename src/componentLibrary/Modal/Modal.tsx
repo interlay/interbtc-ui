@@ -1,7 +1,8 @@
-import { MutableRefObject, ReactNode, useEffect } from 'react';
+import { MutableRefObject, ReactNode, useEffect, useRef } from 'react';
 import Portal from 'parts/Portal';
 import { ModalContainer, ModalContent, ModalOverlay, CloseIcon } from './Modal.style';
-
+import { theme } from '../theme';
+import { useMountTransition } from 'utils/hooks/use-mount-transition';
 interface ModalProps {
   open: boolean;
   onClose: () => void;
@@ -9,12 +10,18 @@ interface ModalProps {
   initialFocusRef?: MutableRefObject<HTMLElement | null>;
 }
 
-const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.Element => {
+const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.Element | null => {
+  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.modal.transitionDuration);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
+    // If initial element to be focused is not specified, close button is focused.
     if (initialFocusRef?.current) {
       initialFocusRef.current.focus();
+    } else if (closeButtonRef?.current) {
+      closeButtonRef.current.focus();
     }
-  }, [initialFocusRef]);
+  }, [initialFocusRef, closeButtonRef, shouldRender]);
 
   // Closes modal on escape key.
   useEffect(() => {
@@ -27,21 +34,19 @@ const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.El
     return () => document.removeEventListener('keydown', handleKeydown);
   }, [onClose]);
 
-  return open ? (
+  return open || shouldRender ? (
     <Portal>
       <ModalContainer>
         <ModalOverlay onClick={onClose} />
-        <ModalContent>
-          <CloseIcon onClick={onClose} as='button'>
-            x
+        <ModalContent transitionTrigger={transitionTrigger}>
+          <CloseIcon onClick={onClose} ref={closeButtonRef}>
+            {/* TODO: To be replaced with Icon component. */} X
           </CloseIcon>
           {children}
         </ModalContent>
       </ModalContainer>
     </Portal>
-  ) : (
-    <></>
-  );
+  ) : null;
 };
 
 Modal.displayName = 'Modal';

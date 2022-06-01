@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
 import { theme } from 'componentLibrary/theme';
+import { TransitionTrigger } from 'utils/hooks/use-mount-transition';
+
+interface ModalContentProps {
+  transitionTrigger: TransitionTrigger;
+}
 
 const ModalContainer = styled.div`
   position: fixed;
@@ -19,7 +24,7 @@ const ModalOverlay = styled.div`
   height: 100vh;
 `;
 
-const ModalContent = styled.div`
+const ModalContent = styled.div<ModalContentProps>`
   position: relative;
   width: 100%;
   z-index: 2;
@@ -29,12 +34,23 @@ const ModalContent = styled.div`
   padding: ${theme.spacing.spacing4};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textSecondary};
+  transition: opacity ${theme.modal.transitionDuration}ms ease-out;
+  transition-property: opacity, transform;
+  ${({ transitionTrigger }) =>
+    transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
 `;
 
-const CloseIcon = styled.div`
+const CloseIcon = styled.button`
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 0.5em;
+  right: 0.5em;
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
 `;
 
 export { ModalContainer, ModalOverlay, ModalContent, CloseIcon };
