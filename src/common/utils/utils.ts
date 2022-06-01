@@ -52,7 +52,10 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
 
 // TODO: replace these functions with internationalization functions
 // always round USD amounts to two decimals
-function getUsdAmount<C extends CurrencyUnit>(amount: MonetaryAmount<Currency<C>, C>, rate: number | undefined): string {
+function getUsdAmount<C extends CurrencyUnit>(
+  amount: MonetaryAmount<Currency<C>, C>,
+  rate: number | undefined
+): string {
   // If price data is unavailable dash is shown.
   if (rate === undefined) {
     return '—';
