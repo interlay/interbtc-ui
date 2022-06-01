@@ -51,7 +51,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
             'block'
           )}
         >
-          {`≈ $ ${getUsdAmount(amountBTCToSend, prices.bitcoin.usd)}`}
+          {`≈ $ ${getUsdAmount(amountBTCToSend, prices.bitcoin?.usd)}`}
         </span>
       </div>
       <div>

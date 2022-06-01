@@ -201,7 +201,7 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(burnableTokens)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(burnableTokens, prices.bitcoin.usd)}
+            approxUSD={getUsdAmount(burnableTokens, prices.bitcoin?.usd)}
           />
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
@@ -214,7 +214,7 @@ const BurnForm = (): JSX.Element | null => {
               },
               validate: (value) => validateForm(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />
@@ -233,7 +233,7 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<CollateralTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={COLLATERAL_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken.usd)}
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken?.usd)}
           />
           <SubmitButton
             // TODO: should not check everywhere like this

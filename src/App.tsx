@@ -370,9 +370,9 @@ const App = (): JSX.Element => {
       const newPrices = await response.json();
       // Update the store only if the price is actually changed
       if (
-        newPrices.bitcoin.usd !== prices.bitcoin.usd ||
-        newPrices[RELAY_CHAIN_NAME].usd !== prices.collateralToken.usd ||
-        newPrices[BRIDGE_PARACHAIN_NAME].usd !== prices.governanceToken.usd
+        newPrices.bitcoin?.usd !== prices.bitcoin?.usd ||
+        newPrices[RELAY_CHAIN_NAME]?.usd !== prices.collateralToken?.usd ||
+        newPrices[BRIDGE_PARACHAIN_NAME]?.usd !== prices.governanceToken?.usd
       ) {
         dispatch(
           updateOfPricesAction({

@@ -51,7 +51,7 @@ const RedeemForm = (): JSX.Element | null => {
 
   const handleError = useErrorHandler();
 
-  const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin.usd);
+  const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin?.usd);
   const {
     wrappedTokenBalance,
     bridgeLoaded,
@@ -301,20 +301,20 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
-    const redeemFeeInUSD = getUsdAmount(redeemFee, prices.bitcoin.usd);
+    const redeemFeeInUSD = getUsdAmount(redeemFee, prices.bitcoin?.usd);
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const totalBTC = wrappedTokenAmount
       ? parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero;
-    const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin.usd);
+    const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin?.usd);
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, COLLATERAL_TOKEN);
-    const totalDOTInUSD = getUsdAmount(totalDOT, prices.collateralToken.usd);
+    const totalDOTInUSD = getUsdAmount(totalDOT, prices.collateralToken?.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
-    const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin.usd);
+    const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin?.usd);
     const accountSet = !!address;
 
     return (

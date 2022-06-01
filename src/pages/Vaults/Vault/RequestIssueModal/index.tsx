@@ -257,7 +257,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
                   },
                   validate: (value) => validateForm(value)
                 })}
-                approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
+                approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
                 error={!!errors[WRAPPED_TOKEN_AMOUNT]}
                 helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
               />
@@ -276,7 +276,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
               unitIcon={<BitcoinLogoIcon width={23} height={23} />}
               value={displayMonetaryAmount(bridgeFee)}
               unitName='BTC'
-              approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
+              approxUSD={getUsdAmount(bridgeFee, prices.bitcoin?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -301,7 +301,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(securityDeposit)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
+              approxUSD={getUsdAmount(securityDeposit, prices.governanceToken?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -326,7 +326,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken.usd)}
+              approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -352,7 +352,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
               unitIcon={<WrappedTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(wrappedTokenAmount)}
               unitName={WRAPPED_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)}
+              approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin?.usd)}
             />
             <SubmitButton
               disabled={

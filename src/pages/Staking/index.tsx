@@ -614,7 +614,7 @@ const Staking = (): JSX.Element => {
     }
   };
 
-  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
+  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken?.usd);
 
   const claimRewardsButtonEnabled = claimableRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 

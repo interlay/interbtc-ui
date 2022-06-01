@@ -81,7 +81,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
               <StatsDd>
                 {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </StatsDd>
-              <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken.usd)}</StatsDd>
+              <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken?.usd)}</StatsDd>
             </>
           }
           rightPart={<>{hasLinks && <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}</>}
