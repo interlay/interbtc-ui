@@ -9,7 +9,7 @@ import LineChart from 'pages/Dashboard/LineChart';
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
 import Stats, { StatsDt, StatsDd } from 'pages/Dashboard/Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN_SYMBOL, COLLATERAL_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
+import { WRAPPED_TOKEN, CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from 'common/utils/utils';
@@ -25,7 +25,17 @@ import cumulativeVolumesFetcher, {
 // cumulative issues is also only displayed to 5 days
 const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
-const RelayChainNativeTokenCollateralCard = (): JSX.Element => {
+// ray test touch <
+interface Props {
+  collateralToken: CollateralToken;
+  collateralTokenSymbol: string;
+}
+// ray test touch >
+
+const LockedCollateralCard = ({
+  collateralToken,
+  collateralTokenSymbol
+}: Props): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
@@ -40,8 +50,8 @@ const RelayChainNativeTokenCollateralCard = (): JSX.Element => {
       CUMULATIVE_VOLUMES_FETCHER,
       'Collateral' as VolumeType,
       cutoffTimestamps,
-      COLLATERAL_TOKEN, // returned amounts
-      COLLATERAL_TOKEN, // filter by this collateral...
+      collateralToken, // returned amounts
+      collateralToken, // filter by this collateral...
       WRAPPED_TOKEN // and this backing currency
     ],
     cumulativeVolumesFetcher
@@ -73,9 +83,9 @@ const RelayChainNativeTokenCollateralCard = (): JSX.Element => {
         <Stats
           leftPart={
             <>
-              <StatsDt>{t('dashboard.vault.locked_collateral')} ({COLLATERAL_TOKEN_SYMBOL})</StatsDt>
+              <StatsDt>{t('dashboard.vault.locked_collateral')}</StatsDt>
               <StatsDd>
-                {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+                {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {collateralTokenSymbol}
               </StatsDd>
               <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken?.usd)}</StatsDd>
             </>
@@ -105,7 +115,7 @@ const RelayChainNativeTokenCollateralCard = (): JSX.Element => {
   return <DashboardCard>{renderContent()}</DashboardCard>;
 };
 
-export default withErrorBoundary(RelayChainNativeTokenCollateralCard, {
+export default withErrorBoundary(LockedCollateralCard, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

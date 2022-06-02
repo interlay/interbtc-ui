@@ -2,12 +2,15 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import VaultsTable from './VaultsTable';
-import RelayChainNativeTokenCollateralCard from './RelayChainNativeTokenCollateralCard';
+import LockedCollateralCard from './LockedCollateralCard';
 import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
 import CollateralizationCard from '../../cards/CollateralizationCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
+// ray test touch <
+import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+// ray test touch >
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
@@ -22,7 +25,7 @@ const Vaults = (): JSX.Element => {
         <ActiveVaultsCard />
         <CollateralizationCard />
         {/* ray test touch < */}
-        <RelayChainNativeTokenCollateralCard />
+        <LockedCollateralCard collateralToken={COLLATERAL_TOKEN} collateralTokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
         {/* ray test touch > */}
       </div>
       <VaultsTable />

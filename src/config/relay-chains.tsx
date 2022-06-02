@@ -40,7 +40,9 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
 }
 
 type WrappedToken = Currency<BitcoinUnit>;
+// ray test touch <
 type CollateralToken = Currency<CollateralUnit>;
+// ray test touch >
 type GovernanceToken = Currency<GovernanceUnit>;
 type VoteGovernanceToken = Currency<VoteUnit>;
 type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceUnit>;
@@ -181,7 +183,9 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 }
 
 export type {
+  // ray test touch <
   CollateralToken,
+  // ray test touch >
   WrappedToken,
   GovernanceToken,
   WrappedTokenAmount,
