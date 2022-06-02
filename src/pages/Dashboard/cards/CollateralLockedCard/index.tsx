@@ -1,3 +1,4 @@
+// ray test touch <
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -116,3 +117,4 @@ export default withErrorBoundary(CollateralLockedCard, {
     window.location.reload();
   }
 });
+// ray test touch >

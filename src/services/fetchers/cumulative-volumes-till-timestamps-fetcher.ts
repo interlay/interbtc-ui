@@ -1,3 +1,4 @@
+// ray test touch <
 import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { CollateralToken, WrappedToken } from 'config/relay-chains';
@@ -61,7 +62,6 @@ const cumulativeVolumesFetcher = async <U extends CurrencyUnit>(
     queryKey: [GRAPHQL_FETCHER, query]
   });
 
-  // TODO: should type properly (`Relay`)
   const volumes = volumesData?.data || {};
 
   return Object.values(volumes).map(([volumeData], i) => ({
@@ -86,3 +86,4 @@ export { CUMULATIVE_VOLUMES_FETCHER };
 export type { CumulativeVolumesFetcherParams, VolumeType, VolumeDataPoint };
 
 export default cumulativeVolumesFetcher;
+// ray test touch >
