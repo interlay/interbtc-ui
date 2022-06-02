@@ -46,7 +46,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
       cutoffTimestamps,
       RELAY_CHAIN_NATIVE_TOKEN, // returned amounts
       RELAY_CHAIN_NATIVE_TOKEN, // filter by this collateral...
-      WRAPPED_TOKEN //     and this backing currency
+      WRAPPED_TOKEN // and this backing currency
     ],
     cumulativeVolumesFetcher
   );
