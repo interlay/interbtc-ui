@@ -5,9 +5,9 @@ import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
-import LineChart from '../../LineChart';
-import DashboardCard from '../DashboardCard';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
+import LineChart from '../../../LineChart';
+import DashboardCard from '../../../cards/DashboardCard';
+import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
 import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
@@ -21,16 +21,12 @@ import cumulativeVolumesFetcher, {
   VolumeType
 } from 'services/fetchers/cumulative-volumes-fetcher';
 
-interface Props {
-  hasLinks?: boolean;
-}
-
 // get 6 values to be able to calculate difference between 5 days ago and 6 days ago
 // thus issues per day 5 days ago can be displayed
 // cumulative issues is also only displayed to 5 days
 const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
-const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
+const LockedCollateralsCard = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
@@ -85,7 +81,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
               <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken?.usd)}</StatsDd>
             </>
           }
-          rightPart={<>{hasLinks && <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}</>}
+          rightPart={<StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}
         />
         <LineChart
           wrapperClassName='h-full'
@@ -111,7 +107,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
   return <DashboardCard>{renderContent()}</DashboardCard>;
 };
 
-export default withErrorBoundary(CollateralLockedCard, {
+export default withErrorBoundary(LockedCollateralsCard, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

@@ -1,4 +1,3 @@
-// ray test touch <
 import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { CollateralToken, WrappedToken } from 'config/relay-chains';
@@ -86,4 +85,3 @@ export { CUMULATIVE_VOLUMES_FETCHER };
 export type { CumulativeVolumesFetcherParams, VolumeType, VolumeDataPoint };
 
 export default cumulativeVolumesFetcher;
-// ray test touch >

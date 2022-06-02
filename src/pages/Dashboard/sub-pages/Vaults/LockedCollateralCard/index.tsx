@@ -1,4 +1,3 @@
-// ray test touch <
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -25,12 +24,10 @@ import cumulativeVolumesFetcher, {
 // cumulative issues is also only displayed to 5 days
 const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
-// ray test touch <
 interface Props {
   collateralToken: CollateralToken;
   collateralTokenSymbol: string;
 }
-// ray test touch >
 
 const LockedCollateralCard = ({
   collateralToken,
@@ -121,4 +118,3 @@ export default withErrorBoundary(LockedCollateralCard, {
     window.location.reload();
   }
 });
-// ray test touch >

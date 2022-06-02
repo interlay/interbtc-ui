@@ -8,9 +8,7 @@ import CollateralizationCard from '../../cards/CollateralizationCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
-// ray test touch <
 import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
-// ray test touch >
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
