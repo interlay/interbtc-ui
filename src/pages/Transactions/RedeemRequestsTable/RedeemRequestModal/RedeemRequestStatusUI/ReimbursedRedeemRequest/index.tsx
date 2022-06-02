@@ -12,10 +12,10 @@ import ExternalLink from 'components/ExternalLink';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';
 import Hr2 from 'components/hrs/Hr2';
 import {
-  COLLATERAL_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeTokenLogoIcon
 } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
@@ -31,12 +31,12 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
   const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
   const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
-    newMonetaryAmount(0, COLLATERAL_TOKEN)
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
   const [burnCollateralTokenAmount, setBurnCollateralTokenAmount] = React.useState(
-    newMonetaryAmount(0, COLLATERAL_TOKEN)
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
-  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN));
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -47,7 +47,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
       try {
         const [punishmentFee, btcDotRate] = await Promise.all([
           window.bridge.vaults.getPunishmentFee(),
-          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN)
+          window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
         ]);
 
         const burnedBTCAmount = request.request.requestedAmountBacking.add(request.bridgeFee);
@@ -72,7 +72,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
       <p className='w-full'>
         {t('redeem_page.burn_notice', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
-          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+          collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
         })}
       </p>
       <p className='font-medium'>
@@ -85,7 +85,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
       <p className='font-medium'>
         <PrimaryColorSpan>{t('redeem_page.recover_receive_dot')}</PrimaryColorSpan>
         <PrimaryColorSpan>
-          &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`}
+          &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`}
         </PrimaryColorSpan>
         <span>&nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.collateralToken?.usd)})`}</span>
         <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}</PrimaryColorSpan>.
@@ -105,9 +105,9 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
               })}
             </h5>
           }
-          unitIcon={<CollateralTokenLogoIcon width={20} />}
+          unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(burnCollateralTokenAmount)}
-          unitName={COLLATERAL_TOKEN_SYMBOL}
+          unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.collateralToken?.usd)}
         />
         <PriceInfo
@@ -122,9 +122,9 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
               {t('redeem_page.compensation_payment')}
             </h5>
           }
-          unitIcon={<CollateralTokenLogoIcon width={20} />}
+          unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
-          unitName={COLLATERAL_TOKEN_SYMBOL}
+          unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)}
         />
         <Hr2 className={clsx('border-t-2', 'my-2.5')} />
@@ -140,9 +140,9 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
               {t('you_received')}
             </h5>
           }
-          unitIcon={<CollateralTokenLogoIcon width={20} />}
+          unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(collateralTokenAmount)}
-          unitName={COLLATERAL_TOKEN_SYMBOL}
+          unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
           approxUSD={getUsdAmount(collateralTokenAmount, prices.collateralToken?.usd)}
         />
       </div>

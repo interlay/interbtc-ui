@@ -1,7 +1,7 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
-import { COLLATERAL_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
 import {
   IS_BRIDGE_LOADED,
   IS_VAULT_CLIENT_LOADED,
@@ -29,11 +29,11 @@ const initialState = {
   showAccountModal: false,
   address: '',
   totalWrappedTokenAmount: BitcoinAmount.zero,
-  totalLockedCollateralTokenAmount: newMonetaryAmount(0, COLLATERAL_TOKEN),
+  totalLockedCollateralTokenAmount: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   wrappedTokenBalance: BitcoinAmount.zero,
   wrappedTokenTransferableBalance: BitcoinAmount.zero,
-  collateralTokenBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
-  collateralTokenTransferableBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
+  collateralTokenBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
+  collateralTokenTransferableBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   governanceTokenBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
   governanceTokenTransferableBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
   extensions: [],
