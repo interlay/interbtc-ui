@@ -7,15 +7,15 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_APPLE } from 'utils/constants/colors';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
 
+// TODO: this function should be removed once real data is pulled in
+const graphTimestamps = getLastMidnightTimestamps(5, false);
+
+// TODO: hardcoded
+const data = [3, 3, 3, 3, 3];
+const dates = graphTimestamps.map((date) => date.toISOString().substring(0, 10));
+
 const ActiveCollatorsCard = (): JSX.Element => {
   const { t } = useTranslation();
-
-  // TODO: this function should be removed once real data is pulled in
-  const graphTimestamps = getLastMidnightTimestamps(5, false);
-
-  // TODO: hardcoded
-  const data = [3, 3, 3, 3, 3];
-  const dates = graphTimestamps.map((date) => date.toISOString().substring(0, 10));
 
   let chartLineColor;
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
