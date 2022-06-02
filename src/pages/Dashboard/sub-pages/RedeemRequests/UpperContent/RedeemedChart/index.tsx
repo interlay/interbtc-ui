@@ -12,7 +12,7 @@ import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+} from 'services/fetchers/cumulative-volumes-fetcher';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
 import { WRAPPED_TOKEN } from 'config/relay-chains';
 

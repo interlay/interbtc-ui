@@ -20,10 +20,12 @@ const Vaults = (): JSX.Element => {
       </div>
       <div className={clsx('grid', 'grid-cols-3', 'gap-7')}>
         <ActiveVaultsCard />
+        <CollateralizationCard />
         {/* ray test touch < */}
         <CollateralLockedCard />
+        <CollateralLockedCard />
+        <CollateralLockedCard />
         {/* ray test touch > */}
-        <CollateralizationCard />
       </div>
       <VaultsTable />
     </>

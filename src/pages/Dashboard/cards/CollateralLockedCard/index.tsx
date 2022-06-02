@@ -19,7 +19,7 @@ import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+} from 'services/fetchers/cumulative-volumes-fetcher';
 
 interface Props {
   hasLinks?: boolean;
