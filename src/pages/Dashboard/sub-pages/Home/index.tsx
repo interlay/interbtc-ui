@@ -20,7 +20,9 @@ const Home = (): JSX.Element => {
       <PageTitle mainTitle={t('dashboard.dashboard')} subTitle={<TimerIncrement />} />
       <div className={clsx('grid', 'gap-5', 'grid-cols-1', 'md:grid-cols-2', 'lg:gap-10', 'xl:grid-cols-3')}>
         <WrappedTokenCard />
+        {/* ray test touch < */}
         <CollateralLockedCard hasLinks />
+        {/* ray test touch > */}
         <CollateralizationCard hasLinks />
         <ParachainSecurityCard hasLinks />
         <BTCRelayCard hasLinks />
