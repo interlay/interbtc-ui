@@ -24,9 +24,9 @@ interface Props {
   hasLinks?: boolean;
 }
 
-// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
-// thus issues per day 5 days ago can be displayed
-// cumulative issues is also only displayed to 5 days
+// Get 6 values to be able to calculate difference between 5 days ago and 6 days ago,
+// thus issues per day 5 days ago can be displayed,
+// cumulative issues are also only displayed to 5 days.
 const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
 const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
