@@ -7,12 +7,11 @@ import { CollateralUnit } from '@interlay/interbtc-api';
 
 import LineChart from 'pages/Dashboard/LineChart';
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from 'pages/Dashboard/Stats';
+import Stats, { StatsDt, StatsDd } from 'pages/Dashboard/Stats';
 import ErrorFallback from 'components/ErrorFallback';
 import { COLLATERAL_TOKEN_SYMBOL, COLLATERAL_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
-import { PAGES } from 'utils/constants/links';
 import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import cumulativeVolumesFetcher, {
@@ -21,16 +20,12 @@ import cumulativeVolumesFetcher, {
   VolumeType
 } from 'services/fetchers/cumulative-volumes-fetcher';
 
-interface Props {
-  hasLinks?: boolean;
-}
-
 // get 6 values to be able to calculate difference between 5 days ago and 6 days ago
 // thus issues per day 5 days ago can be displayed
 // cumulative issues is also only displayed to 5 days
 const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
-const RelayChainNativeTokenCollateralCard = ({ hasLinks }: Props): JSX.Element => {
+const RelayChainNativeTokenCollateralCard = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
@@ -78,14 +73,13 @@ const RelayChainNativeTokenCollateralCard = ({ hasLinks }: Props): JSX.Element =
         <Stats
           leftPart={
             <>
-              <StatsDt>{t('dashboard.vault.locked_collateral')}</StatsDt>
+              <StatsDt>{t('dashboard.vault.locked_collateral')} ({COLLATERAL_TOKEN_SYMBOL})</StatsDt>
               <StatsDd>
                 {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
               </StatsDd>
               <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken?.usd)}</StatsDd>
             </>
           }
-          rightPart={<>{hasLinks && <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}</>}
         />
         <LineChart
           wrapperClassName='h-full'
