@@ -40,9 +40,7 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
 }
 
 type WrappedToken = Currency<BitcoinUnit>;
-// ray test touch <
 type CollateralToken = Currency<CollateralUnit>;
-// ray test touch >
 type GovernanceToken = Currency<GovernanceUnit>;
 type VoteGovernanceToken = Currency<VoteUnit>;
 type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceUnit>;
@@ -55,9 +53,7 @@ let EARN_LINK: string;
 let GOVERNANCE_LINK: string;
 let SUBSCAN_LINK: string;
 let WRAPPED_TOKEN: WrappedToken;
-// ray test touch <
 let RELAY_CHAIN_NATIVE_TOKEN: CollateralToken;
-// ray test touch >
 let GOVERNANCE_TOKEN: GovernanceToken;
 let VOTE_GOVERNANCE_TOKEN: VoteGovernanceToken;
 let PRICES_URL: string;
@@ -65,9 +61,7 @@ let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
 let WRAPPED_TOKEN_SYMBOL: string;
 let GOVERNANCE_TOKEN_SYMBOL: string;
-// ray test touch <
 let RELAY_CHAIN_NATIVE_TOKEN_SYMBOL: string;
-// ray test touch >
 let VOTE_GOVERNANCE_TOKEN_SYMBOL: string;
 let RelayChainLogoIcon: React.FunctionComponent<
   React.SVGProps<SVGSVGElement> & {
@@ -89,13 +83,11 @@ let GovernanceTokenLogoWithTextIcon: React.FunctionComponent<
     title?: string | undefined;
   }
 >;
-// ray test touch <
 let RelayChainNativeTokenLogoIcon: React.FunctionComponent<
   React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
   }
 >;
-// ray test touch >
 let GovernanceTokenLogoIcon: React.FunctionComponent<
   React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
@@ -121,15 +113,11 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     GOVERNANCE_LINK = INTERLAY_GOVERNANCE_LINK;
     SUBSCAN_LINK = INTERLAY_SUBSCAN_LINK;
     WRAPPED_TOKEN = InterBtc;
-    // ray test touch <
     RELAY_CHAIN_NATIVE_TOKEN = Polkadot as Currency<CollateralUnit>;
-    // ray test touch >
     GOVERNANCE_TOKEN = Interlay as GovernanceToken;
     VOTE_GOVERNANCE_TOKEN = Interlay as VoteGovernanceToken;
     WRAPPED_TOKEN_SYMBOL = 'interBTC';
-    // ray test touch <
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = 'DOT';
-    // ray test touch >
     GOVERNANCE_TOKEN_SYMBOL = 'INTR';
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vINTR';
     RELAY_CHAIN_NAME = 'polkadot';
@@ -140,9 +128,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     BridgeParachainLogoIcon = InterlayLogoIcon;
     WrappedTokenLogoIcon = InterBTCLogoIcon;
     GovernanceTokenLogoWithTextIcon = InterlayLogoWithTextIcon;
-    // ray test touch <
     RelayChainNativeTokenLogoIcon = DOTLogoIcon;
-    // ray test touch >
     GovernanceTokenLogoIcon = InterlayLogoIcon;
     PUBLIC_ASSETS_FOLDER_NAME = 'interlay';
     APP_DOMAIN = 'https://bridge.interlay.io';
@@ -162,15 +148,11 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     GOVERNANCE_LINK = KINTSUGI_GOVERNANCE_LINK;
     SUBSCAN_LINK = KINTSUGI_SUBSCAN_LINK;
     WRAPPED_TOKEN = KBtc;
-    // ray test touch <
     RELAY_CHAIN_NATIVE_TOKEN = Kusama as Currency<CollateralUnit>;
-    // ray test touch >
     GOVERNANCE_TOKEN = Kintsugi as GovernanceToken;
     VOTE_GOVERNANCE_TOKEN = Kintsugi as VoteGovernanceToken;
     WRAPPED_TOKEN_SYMBOL = 'kBTC';
-    // ray test touch <
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = 'KSM';
-    // ray test touch >
     GOVERNANCE_TOKEN_SYMBOL = 'KINT';
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vKINT';
     RELAY_CHAIN_NAME = 'kusama';
@@ -199,9 +181,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 }
 
 export type {
-  // ray test touch <
   CollateralToken,
-  // ray test touch >
   WrappedToken,
   GovernanceToken,
   WrappedTokenAmount,
