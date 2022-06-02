@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
 import VaultsTable from './VaultsTable';
+import RelayChainNativeTokenCollateralCard from './RelayChainNativeTokenCollateralCard';
 import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
-import CollateralLockedCard from '../../cards/CollateralLockedCard';
 import CollateralizationCard from '../../cards/CollateralizationCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
@@ -22,9 +22,7 @@ const Vaults = (): JSX.Element => {
         <ActiveVaultsCard />
         <CollateralizationCard />
         {/* ray test touch < */}
-        <CollateralLockedCard />
-        <CollateralLockedCard />
-        <CollateralLockedCard />
+        <RelayChainNativeTokenCollateralCard />
         {/* ray test touch > */}
       </div>
       <VaultsTable />
