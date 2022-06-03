@@ -31,7 +31,9 @@ const RedeemedChart = (): JSX.Element => {
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [CUMULATIVE_VOLUMES_FETCHER, 'Redeemed' as VolumeType, cutoffTimestamps, WRAPPED_TOKEN],
+    // ray test touch <<
+    [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, cutoffTimestamps, WRAPPED_TOKEN],
+    // ray test touch >>
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);

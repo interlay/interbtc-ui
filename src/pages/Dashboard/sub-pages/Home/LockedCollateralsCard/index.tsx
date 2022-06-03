@@ -39,7 +39,9 @@ const LockedCollateralsCard = (): JSX.Element => {
   } = useQuery<VolumeDataPoint<CollateralUnit>[], Error>(
     [
       CUMULATIVE_VOLUMES_FETCHER,
-      'Collateral' as VolumeType,
+      // ray test touch <<
+      VolumeType.Collateral,
+      // ray test touch >>
       cutoffTimestamps,
       RELAY_CHAIN_NATIVE_TOKEN, // returned amounts
       RELAY_CHAIN_NATIVE_TOKEN, // filter by this collateral...
