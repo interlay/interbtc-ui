@@ -44,9 +44,7 @@ const UpperContent = (): JSX.Element => {
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    // ray test touch <<
     [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, [nowAtFirstLoad], WRAPPED_TOKEN],
-    // ray test touch >>
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);

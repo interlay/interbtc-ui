@@ -31,9 +31,7 @@ const IssuedChart = (): JSX.Element => {
     error: cumulativeIssuesPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    // ray test touch <<
     [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Issued, cutoffTimestamps, WRAPPED_TOKEN],
-    // ray test touch >>
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeIssuesPerDayError);
@@ -45,9 +43,7 @@ const IssuedChart = (): JSX.Element => {
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    // ray test touch <<
     [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, cutoffTimestamps, WRAPPED_TOKEN],
-    // ray test touch >>
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);
