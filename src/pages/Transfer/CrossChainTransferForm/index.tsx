@@ -115,7 +115,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!event.target.value) return;
 
     const value = newMonetaryAmount(event.target.value, COLLATERAL_TOKEN, true);
-    const usd = getUsdAmount(value, prices.collateralToken.usd);
+    const usd = getUsdAmount(value, prices.collateralToken?.usd);
 
     setApproxUsdValue(usd);
   };

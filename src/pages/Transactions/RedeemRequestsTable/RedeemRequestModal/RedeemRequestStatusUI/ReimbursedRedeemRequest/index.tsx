@@ -79,7 +79,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
         <span className='text-interlayCinnabar'>
           {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
         </span>
-        <span>&nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin.usd)})`}</span>
+        <span>&nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin?.usd)})`}</span>
         <span className='text-interlayCinnabar'>&nbsp;{t('redeem_page.reimbursed').toLowerCase()}</span>.
       </p>
       <p className='font-medium'>
@@ -87,7 +87,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
         <PrimaryColorSpan>
           &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} ${COLLATERAL_TOKEN_SYMBOL}`}
         </PrimaryColorSpan>
-        <span>&nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)})`}</span>
+        <span>&nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.collateralToken?.usd)})`}</span>
         <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}</PrimaryColorSpan>.
       </p>
       <div className='w-full'>
@@ -108,7 +108,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
           unitIcon={<CollateralTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(burnCollateralTokenAmount)}
           unitName={COLLATERAL_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.collateralToken.usd)}
+          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.collateralToken?.usd)}
         />
         <PriceInfo
           className='w-full'
@@ -125,7 +125,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
           unitIcon={<CollateralTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={COLLATERAL_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken.usd)}
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)}
         />
         <Hr2 className={clsx('border-t-2', 'my-2.5')} />
         <PriceInfo
@@ -143,7 +143,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
           unitIcon={<CollateralTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(collateralTokenAmount)}
           unitName={COLLATERAL_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(collateralTokenAmount, prices.collateralToken.usd)}
+          approxUSD={getUsdAmount(collateralTokenAmount, prices.collateralToken?.usd)}
         />
       </div>
       <ExternalLink className='text-sm' href={getPolkadotLink(request.request.height.absolute)}>

@@ -26,7 +26,7 @@ const WrappedTokenCard = (): JSX.Element => {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                 })}
               </StatsDd>
-              <StatsDd>${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin.usd)}</StatsDd>
+              <StatsDd>${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin?.usd)}</StatsDd>
             </>
           }
           rightPart={

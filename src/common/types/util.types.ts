@@ -48,15 +48,21 @@ export enum ParachainStatus {
 }
 
 export type Prices = {
-  bitcoin: {
-    usd: number;
-  };
-  collateralToken: {
-    usd: number;
-  };
-  governanceToken: {
-    usd: number;
-  };
+  bitcoin:
+    | {
+        usd: number;
+      }
+    | undefined;
+  collateralToken:
+    | {
+        usd: number;
+      }
+    | undefined;
+  governanceToken:
+    | {
+        usd: number;
+      }
+    | undefined;
 };
 
 export type GeneralState = {
