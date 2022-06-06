@@ -36,6 +36,9 @@ interface CustomProps {
 }
 
 // TODO: could be reused
+
+const TEXT_CLASSES = clsx('group', 'flex', 'items-center', 'px-2', 'py-2');
+
 const TEXT_CLASSES_FOR_SELECTED = clsx(
   { 'text-interlayDenim-700': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiMidnight-700': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
@@ -44,6 +47,13 @@ const TEXT_CLASSES_FOR_UNSELECTED = clsx(
   { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
+
+const TEXT_CLASSES_FOR_DISABLED = clsx(
+  { 'text-gray-500': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-gray-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
+
+const NAVIGATION_ICON_CLASSES = clsx('flex-shrink-0', 'w-6', 'h-6');
 
 const Navigation = ({
   onSmallScreen = false,
@@ -57,21 +67,9 @@ const Navigation = ({
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
       {
-        name: 'nav_bridge',
-        link: PAGES.BRIDGE,
-        icon: RefreshIcon,
-        hidden: false
-      },
-      {
         name: 'nav_transfer',
         link: PAGES.TRANSFER,
         icon: SwitchHorizontalIcon
-      },
-      {
-        name: 'nav_transactions',
-        link: PAGES.TRANSACTIONS,
-        icon: ClipboardListIcon,
-        hidden: false
       },
       {
         name: 'nav_staking',
@@ -79,16 +77,32 @@ const Navigation = ({
         icon: CashIcon
       },
       {
+        name: 'nav_bridge',
+        link: PAGES.BRIDGE,
+        icon: RefreshIcon,
+        hidden: false,
+        disabled: true
+      },
+      {
+        name: 'nav_transactions',
+        link: PAGES.TRANSACTIONS,
+        icon: ClipboardListIcon,
+        hidden: false,
+        disabled: true
+      },
+      {
         name: 'nav_dashboard',
         link: PAGES.DASHBOARD,
         icon: ChartSquareBarIcon,
-        hidden: false
+        hidden: false,
+        disabled: true
       },
       {
         name: 'nav_vaults',
         link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
         icon: ChipIcon,
-        hidden: !vaultClientLoaded
+        hidden: !vaultClientLoaded,
+        disabled: true
       },
       {
         name: 'nav_earn',
@@ -166,6 +180,26 @@ const Navigation = ({
           return null;
         }
 
+        if (navigationItem.disabled) {
+          return (
+            <p
+              key={navigationItem.name}
+              className={clsx(
+                TEXT_CLASSES,
+                TEXT_CLASSES_FOR_UNSELECTED,
+                onSmallScreen ? 'text-base' : 'text-sm',
+                'font-light'
+              )}
+            >
+              <navigationItem.icon
+                className={clsx(TEXT_CLASSES_FOR_DISABLED, onSmallScreen ? 'mr-4' : 'mr-3', NAVIGATION_ICON_CLASSES)}
+                aria-hidden='true'
+              />
+              {t(navigationItem.name)} ({t('nav_coming_soon')})
+            </p>
+          );
+        }
+
         const match = matchPath(location.pathname, {
           path: navigationItem.link,
           exact: true,
@@ -179,6 +213,7 @@ const Navigation = ({
             {...navigationItem.rest}
             href={navigationItem.link}
             className={clsx(
+              TEXT_CLASSES,
               match?.isExact
                 ? clsx(
                     TEXT_CLASSES_FOR_SELECTED,
@@ -191,11 +226,6 @@ const Navigation = ({
                     { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   ),
-              'group',
-              'flex',
-              'items-center',
-              'px-2',
-              'py-2',
               onSmallScreen ? 'text-base' : 'text-sm',
               'font-medium',
               'rounded-md'
@@ -205,9 +235,7 @@ const Navigation = ({
               className={clsx(
                 match?.isExact ? TEXT_CLASSES_FOR_SELECTED : TEXT_CLASSES_FOR_UNSELECTED,
                 onSmallScreen ? 'mr-4' : 'mr-3',
-                'flex-shrink-0',
-                'w-6',
-                'h-6'
+                NAVIGATION_ICON_CLASSES
               )}
               aria-hidden='true'
             />

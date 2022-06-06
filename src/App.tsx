@@ -56,13 +56,13 @@ import {
 } from 'common/actions/general.actions';
 import { BitcoinNetwork } from 'types/bitcoin';
 
-const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ 'pages/Bridge'));
+// const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ 'pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ 'pages/Transfer'));
-const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ 'pages/Transactions'));
+// const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ 'pages/Transactions'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ 'pages/Staking'));
-const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard'));
-const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ 'pages/Vaults'));
-const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault'));
+// const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard'));
+// const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ 'pages/Vaults'));
+// const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch'));
 
 const App = (): JSX.Element => {
@@ -396,31 +396,31 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                <Route exact path={PAGES.VAULTS}>
+                {/* <Route exact path={PAGES.VAULTS}>
                   <Vaults />
-                </Route>
-                <Route exact path={PAGES.VAULT}>
+                </Route> */}
+                {/* <Route exact path={PAGES.VAULT}>
                   <Vault />
-                </Route>
-                <Route path={PAGES.VAULT}>
+                </Route> */}
+                {/* <Route path={PAGES.VAULT}>
                   <Vaults />
-                </Route>
-                <Route path={PAGES.DASHBOARD}>
+                </Route> */}
+                {/* <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
-                </Route>
+                </Route> */}
                 <Route path={PAGES.STAKING}>
                   <Staking />
                 </Route>
-                <Route path={PAGES.TRANSACTIONS}>
+                {/* <Route path={PAGES.TRANSACTIONS}>
                   <Transactions />
-                </Route>
-                <Route path={PAGES.BRIDGE}>
+                </Route> */}
+                {/* <Route path={PAGES.BRIDGE}>
                   <Bridge />
-                </Route>
+                </Route> */}
                 <Route path={PAGES.TRANSFER}>
                   <Transfer />
                 </Route>
-                <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
+                <Redirect exact from={PAGES.HOME} to={PAGES.TRANSFER} />
                 <Route path='*'>
                   <NoMatch />
                 </Route>
