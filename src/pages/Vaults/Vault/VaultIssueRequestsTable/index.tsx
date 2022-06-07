@@ -240,15 +240,15 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
 
   const data =
     issueRequests === undefined ||
-      btcConfirmations === undefined ||
-      parachainConfirmations === undefined ||
-      latestParachainActiveBlock === undefined
+    btcConfirmations === undefined ||
+    parachainConfirmations === undefined ||
+    latestParachainActiveBlock === undefined
       ? []
       : issueRequests.map(
-        // TODO: should type properly (`Relay`)
-        (issueRequest: any) =>
-          getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
-      );
+          // TODO: should type properly (`Relay`)
+          (issueRequest: any) =>
+            getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+        );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,

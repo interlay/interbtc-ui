@@ -6,7 +6,9 @@ import { URL_PARAMETERS } from 'utils/constants/links';
 
 const IssueTransaction = React.lazy(() => import(/* webpackChunkName: 'issue-transaction' */ './IssueTransaction'));
 const RedeemTransaction = React.lazy(() => import(/* webpackChunkName: 'redeem-transaction' */ './RedeemTransaction'));
-const ReplaceTransaction = React.lazy(() => import(/* webpackChunkName: 'replace-transaction' */ './ReplaceTransaction'));
+const ReplaceTransaction = React.lazy(
+  () => import(/* webpackChunkName: 'replace-transaction' */ './ReplaceTransaction')
+);
 
 enum TransactionType {
   Issue = 'issue',

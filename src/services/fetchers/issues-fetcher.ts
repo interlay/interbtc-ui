@@ -1,8 +1,8 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
 
+import issuesQuery from 'services/queries/issues-query';
 import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
-import issueRequestsQuery from 'services/queries/issue-requests-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
@@ -34,7 +34,7 @@ const issuesFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   const issuesData = await graphqlFetcher<Array<any>>()({
     queryKey: [
       GRAPHQL_FETCHER,
-      issueRequestsQuery(where),
+      issuesQuery(where),
       {
         limit,
         offset

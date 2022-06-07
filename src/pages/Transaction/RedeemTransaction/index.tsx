@@ -1,7 +1,5 @@
 const RedeemTransaction = (): JSX.Element => {
-  return (
-    <>RedeemTransaction</>
-  );
+  return <>RedeemTransaction</>;
 };
 
 export default RedeemTransaction;

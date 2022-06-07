@@ -203,15 +203,15 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const data =
     issues === undefined ||
-      stableBtcConfirmations === undefined ||
-      stableParachainConfirmations === undefined ||
-      latestParachainActiveBlock === undefined
+    stableBtcConfirmations === undefined ||
+    stableParachainConfirmations === undefined ||
+    latestParachainActiveBlock === undefined
       ? []
       : issues.map(
-        // TODO: should type properly (`Relay`)
-        (issue: any) =>
-          getIssueWithStatus(issue, stableBtcConfirmations, stableParachainConfirmations, latestParachainActiveBlock)
-      );
+          // TODO: should type properly (`Relay`)
+          (issue: any) =>
+            getIssueWithStatus(issue, stableBtcConfirmations, stableParachainConfirmations, latestParachainActiveBlock)
+        );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,

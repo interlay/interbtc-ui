@@ -1,7 +1,5 @@
 const ReplaceTransaction = (): JSX.Element => {
-  return (
-    <>ReplaceTransaction</>
-  );
+  return <>ReplaceTransaction</>;
 };
 
 export default ReplaceTransaction;

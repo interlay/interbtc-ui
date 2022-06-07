@@ -1,4 +1,4 @@
-const issueRequestsQuery = (where?: string): string => `
+const issuesQuery = (where?: string): string => `
   query ($limit: Int!, $offset: Int) {
     issues(orderBy: request_timestamp_DESC, limit: $limit, offset: $offset, where:{${where ? `, ${where}` : ''}}) {
       id
@@ -57,4 +57,4 @@ const issueRequestsQuery = (where?: string): string => `
   }
 `;
 
-export default issueRequestsQuery;
+export default issuesQuery;

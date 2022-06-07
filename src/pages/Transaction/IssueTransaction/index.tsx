@@ -27,18 +27,13 @@ const IssueTransaction = (): JSX.Element => {
   );
   useErrorHandler(issueError);
 
-  if (
-    issueIdle ||
-    issueLoading
-  ) {
+  if (issueIdle || issueLoading) {
     return <PrimaryColorEllipsisLoader />;
   }
 
   console.log('[IssueTransaction] issue => ', issue);
 
-  return (
-    <>IssueTransaction {transactionHash}</>
-  );
+  return <>IssueTransaction {transactionHash}</>;
 };
 
 export default withErrorBoundary(IssueTransaction, {
