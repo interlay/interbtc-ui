@@ -6,9 +6,9 @@ import issueRequestsQuery from 'services/queries/issue-requests-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
-type IssueFetcherParams = [queryKey: string, offset: number, limit: number, where?: string];
+type IssuesFetcherParams = [queryKey: string, offset: number, limit: number, where?: string];
 
-const ISSUE_FETCHER = 'issue-fetcher';
+const ISSUES_FETCHER = 'issue-fetcher';
 
 // TODO: should type properly (`Relay`)
 function decodeIssueValues(issue: any): any {
@@ -26,10 +26,10 @@ function decodeIssueValues(issue: any): any {
 // ray test touch <
 // TODO: should type properly (`Relay`)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
-  const [key, offset, limit, where] = queryKey as IssueFetcherParams;
+const issuesFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
+  const [key, offset, limit, where] = queryKey as IssuesFetcherParams;
 
-  if (key !== ISSUE_FETCHER) throw new Error('Invalid key!');
+  if (key !== ISSUES_FETCHER) throw new Error('Invalid key!');
 
   // TODO: should type properly (`Relay`)
   const issuesData = await graphqlFetcher<Array<any>>()({
@@ -104,8 +104,8 @@ function getIssueWithStatus(
   return issue;
 }
 
-export { getIssueWithStatus, ISSUE_FETCHER };
+export { getIssueWithStatus, ISSUES_FETCHER };
 
-export type { IssueFetcherParams };
+export type { IssuesFetcherParams as IssueFetcherParams };
 
-export default issueFetcher;
+export default issuesFetcher;

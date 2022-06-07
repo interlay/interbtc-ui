@@ -31,7 +31,7 @@ import issueCountQuery from 'services/queries/issue-count-query';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { shortAddress, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
-import issueFetcher, { getIssueWithStatus, ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
+import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from 'services/fetchers/issues-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
@@ -109,12 +109,12 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      ISSUE_FETCHER,
+      ISSUES_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
       `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
     ],
-    issueFetcher,
+    issuesFetcher,
     {
       enabled: !!collateralId
     }
@@ -240,15 +240,15 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
 
   const data =
     issueRequests === undefined ||
-    btcConfirmations === undefined ||
-    parachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+      btcConfirmations === undefined ||
+      parachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
       ? []
       : issueRequests.map(
-          // TODO: should type properly (`Relay`)
-          (issueRequest: any) =>
-            getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
-        );
+        // TODO: should type properly (`Relay`)
+        (issueRequest: any) =>
+          getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+      );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,

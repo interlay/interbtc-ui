@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { URL_PARAMETERS } from 'utils/constants/links';
-import issueFetcher, { ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
+import issuesFetcher, { ISSUES_FETCHER } from 'services/fetchers/issues-fetcher';
 
 const IssueTransaction = (): JSX.Element => {
   const { [URL_PARAMETERS.TRANSACTION_HASH]: transactionHash } = useParams<Record<string, string>>();
@@ -19,12 +19,12 @@ const IssueTransaction = (): JSX.Element => {
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      ISSUE_FETCHER,
+      ISSUES_FETCHER,
       0, // offset
       1, // limit
       `id_eq: "${transactionHash}"` // `WHERE` condition
     ],
-    issueFetcher
+    issuesFetcher
   );
   useErrorHandler(issueError);
 
