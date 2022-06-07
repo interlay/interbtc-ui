@@ -1,4 +1,3 @@
-// ray test touch <
 const Transaction = (): JSX.Element => {
   return (
     <>Transaction</>
@@ -6,4 +5,3 @@ const Transaction = (): JSX.Element => {
 };
 
 export default Transaction;
-// ray test touch >

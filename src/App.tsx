@@ -59,9 +59,7 @@ import { BitcoinNetwork } from 'types/bitcoin';
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ 'pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ 'pages/Transfer'));
 const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ 'pages/Transactions'));
-// ray test touch <
 const Transaction = React.lazy(() => import(/* webpackChunkName: 'transaction' */ 'pages/Transaction'));
-// ray test touch >
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ 'pages/Staking'));
 const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard'));
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ 'pages/Vaults'));
@@ -417,11 +415,9 @@ const App = (): JSX.Element => {
                 <Route path={PAGES.TRANSACTIONS}>
                   <Transactions />
                 </Route>
-                {/* ray test touch < */}
                 <Route path={PAGES.TRANSACTION}>
                   <Transaction />
                 </Route>
-                {/* ray test touch > */}
                 <Route path={PAGES.BRIDGE}>
                   <Bridge />
                 </Route>
