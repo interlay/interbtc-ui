@@ -10,12 +10,13 @@ import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/Interlay
 import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { BORDER_CLASSES } from 'utils/constants/styles';
+import { POLKADOT } from 'utils/constants/relay-chain-names';
 import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg';
 import { ReactComponent as MexcLogoIcon } from 'assets/img/exchanges/mexc-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from 'assets/img/exchanges/zenlink-logo.svg';
 
-const COMING_SOON = true;
+const COMING_SOON = process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT;
 
 const EXCHANGES = [
   {
