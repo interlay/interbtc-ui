@@ -15,9 +15,7 @@ import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-lo
 import { ReactComponent as MexcLogoIcon } from 'assets/img/exchanges/mexc-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from 'assets/img/exchanges/zenlink-logo.svg';
 
-// ray test touch <
 const COMING_SOON = true;
-// ray test touch >
 
 const EXCHANGES = [
   {
@@ -84,7 +82,6 @@ const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.El
       <InterlayModal initialFocus={focusRef} open={modalOpen} onClose={handleModalClose}>
         <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
           <TitleWithUnderline text={getGovernanceTokenLabel} />
-          {/* ray test touch < */}
           <div className={clsx('px-4', 'py-2', 'space-y-10')}>
             {COMING_SOON ? (
               <p className='text-center'>{t('coming_soon')}</p>
@@ -99,7 +96,6 @@ const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.El
               </>
             )}
           </div>
-          {/* ray test touch > */}
         </InterlayModalInnerWrapper>
       </InterlayModal>
     </>
