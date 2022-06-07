@@ -11,6 +11,9 @@ const PAGES = Object.freeze({
   BRIDGE: '/bridge',
   TRANSFER: '/transfer',
   TRANSACTIONS: '/transactions',
+  // ray test touch <
+  TRANSACTION: '/transaction',
+  // ray test touch >
   STAKING: '/staking',
   DASHBOARD: '/dashboard',
   DASHBOARD_VAULTS: '/dashboard/vaults',
