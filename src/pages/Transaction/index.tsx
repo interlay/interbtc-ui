@@ -1,6 +1,8 @@
+import MainContainer from 'parts/MainContainer';
+
 const Transaction = (): JSX.Element => {
   return (
-    <>Transaction</>
+    <MainContainer>Transaction</MainContainer>
   );
 };
 
