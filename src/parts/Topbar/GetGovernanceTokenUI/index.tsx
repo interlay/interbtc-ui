@@ -15,6 +15,10 @@ import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-lo
 import { ReactComponent as MexcLogoIcon } from 'assets/img/exchanges/mexc-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from 'assets/img/exchanges/zenlink-logo.svg';
 
+// ray test touch <
+const COMING_SOON = true;
+// ray test touch >
+
 const EXCHANGES = [
   {
     link: 'https://www.kraken.com/en-gb/prices/kint-kintsugi-price-chart/usd-us-dollar?interval=1m',
@@ -80,14 +84,22 @@ const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.El
       <InterlayModal initialFocus={focusRef} open={modalOpen} onClose={handleModalClose}>
         <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
           <TitleWithUnderline text={getGovernanceTokenLabel} />
+          {/* ray test touch < */}
           <div className={clsx('px-4', 'py-2', 'space-y-10')}>
-            <p className='text-center'>{getGovernanceTokenDescriptionLabel}</p>
-            <div className={clsx('grid', 'grid-cols-2', 'gap-x-3', 'gap-y-2')}>
-              {EXCHANGES.map((item) => (
-                <ExchangeLink key={item.link} href={item.link} icon={item.icon} />
-              ))}
-            </div>
+            {COMING_SOON ? (
+              <p className='text-center'>{t('coming_soon')}</p>
+            ) : (
+              <>
+                <p className='text-center'>{getGovernanceTokenDescriptionLabel}</p>
+                <div className={clsx('grid', 'grid-cols-2', 'gap-x-3', 'gap-y-2')}>
+                  {EXCHANGES.map((item) => (
+                    <ExchangeLink key={item.link} href={item.link} icon={item.icon} />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
+          {/* ray test touch > */}
         </InterlayModalInnerWrapper>
       </InterlayModal>
     </>
