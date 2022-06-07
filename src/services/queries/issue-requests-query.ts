@@ -1,4 +1,3 @@
-// ray test touch <
 const issueRequestsQuery = (where?: string): string => `
   query ($limit: Int!, $offset: Int) {
     issues(orderBy: request_timestamp_DESC, limit: $limit, offset: $offset, where:{${where ? `, ${where}` : ''}}) {
@@ -59,4 +58,3 @@ const issueRequestsQuery = (where?: string): string => `
 `;
 
 export default issueRequestsQuery;
-// ray test touch >

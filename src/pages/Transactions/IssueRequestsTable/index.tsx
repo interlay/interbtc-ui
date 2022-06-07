@@ -98,7 +98,6 @@ const IssueRequestsTable = (): JSX.Element => {
   );
   useErrorHandler(issueRequestsTotalCountError);
 
-  // ray test touch <
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
@@ -115,7 +114,6 @@ const IssueRequestsTable = (): JSX.Element => {
     issuesFetcher
   );
   useErrorHandler(issueRequestsError);
-  // ray test touch >
 
   const columns = React.useMemo(
     () => [

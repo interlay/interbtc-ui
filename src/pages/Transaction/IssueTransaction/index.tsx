@@ -10,7 +10,6 @@ import issuesFetcher, { ISSUES_FETCHER } from 'services/fetchers/issues-fetcher'
 const IssueTransaction = (): JSX.Element => {
   const { [URL_PARAMETERS.TRANSACTION_HASH]: transactionHash } = useParams<Record<string, string>>();
 
-  // ray test touch <
   const {
     isIdle: issueIdle,
     isLoading: issueLoading,
@@ -35,8 +34,7 @@ const IssueTransaction = (): JSX.Element => {
     return <PrimaryColorEllipsisLoader />;
   }
 
-  console.log('ray : ***** issue => ', issue);
-  // ray test touch >
+  console.log('[IssueTransaction] issue => ', issue);
 
   return (
     <>IssueTransaction {transactionHash}</>
