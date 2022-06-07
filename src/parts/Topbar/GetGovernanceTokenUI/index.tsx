@@ -10,10 +10,13 @@ import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/Interlay
 import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { BORDER_CLASSES } from 'utils/constants/styles';
+import { POLKADOT } from 'utils/constants/relay-chain-names';
 import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg';
 import { ReactComponent as MexcLogoIcon } from 'assets/img/exchanges/mexc-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from 'assets/img/exchanges/zenlink-logo.svg';
+
+const COMING_SOON = process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT;
 
 const EXCHANGES = [
   {
@@ -81,12 +84,18 @@ const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.El
         <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
           <TitleWithUnderline text={getGovernanceTokenLabel} />
           <div className={clsx('px-4', 'py-2', 'space-y-10')}>
-            <p className='text-center'>{getGovernanceTokenDescriptionLabel}</p>
-            <div className={clsx('grid', 'grid-cols-2', 'gap-x-3', 'gap-y-2')}>
-              {EXCHANGES.map((item) => (
-                <ExchangeLink key={item.link} href={item.link} icon={item.icon} />
-              ))}
-            </div>
+            {COMING_SOON ? (
+              <p className='text-center'>{t('coming_soon')}</p>
+            ) : (
+              <>
+                <p className='text-center'>{getGovernanceTokenDescriptionLabel}</p>
+                <div className={clsx('grid', 'grid-cols-2', 'gap-x-3', 'gap-y-2')}>
+                  {EXCHANGES.map((item) => (
+                    <ExchangeLink key={item.link} href={item.link} icon={item.icon} />
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         </InterlayModalInnerWrapper>
       </InterlayModal>
