@@ -1,13 +1,51 @@
 import { useParams } from 'react-router-dom';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useQuery } from 'react-query';
 
+import ErrorFallback from 'components/ErrorFallback';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { URL_PARAMETERS } from 'utils/constants/links';
+import issueFetcher, { ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
 
 const IssueTransaction = (): JSX.Element => {
-  const { [URL_PARAMETERS.TRANSACTION_TYPE]: transactionType } = useParams<Record<string, string>>();
+  const { [URL_PARAMETERS.TRANSACTION_HASH]: transactionHash } = useParams<Record<string, string>>();
+
+  // ray test touch <
+  const {
+    isIdle: issueIdle,
+    isLoading: issueLoading,
+    data: issue,
+    error: issueError
+    // TODO: should type properly (`Relay`)
+  } = useQuery<any, Error>(
+    [
+      ISSUE_FETCHER,
+      0, // offset
+      1, // limit
+      `id_eq: "${transactionHash}"` // `WHERE` condition
+    ],
+    issueFetcher
+  );
+  useErrorHandler(issueError);
+
+  if (
+    issueIdle ||
+    issueLoading
+  ) {
+    return <PrimaryColorEllipsisLoader />;
+  }
+
+  console.log('ray : ***** issue => ', issue);
+  // ray test touch >
 
   return (
-    <>IssueTransaction {transactionType}</>
+    <>IssueTransaction {transactionHash}</>
   );
 };
 
-export default IssueTransaction;
+export default withErrorBoundary(IssueTransaction, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

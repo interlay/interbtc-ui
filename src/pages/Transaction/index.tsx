@@ -20,13 +20,13 @@ const Transaction = (): JSX.Element => {
   return (
     <MainContainer>
       <Switch>
-        <Route path={`${path}/${TransactionType.Issue}/:${URL_PARAMETERS.TRANSACTION_TYPE}`}>
+        <Route path={`${path}/${TransactionType.Issue}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
           <IssueTransaction />
         </Route>
-        <Route path={`${path}/${TransactionType.Redeem}/:${URL_PARAMETERS.TRANSACTION_TYPE}`}>
+        <Route path={`${path}/${TransactionType.Redeem}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
           <RedeemTransaction />
         </Route>
-        <Route path={`${path}/${TransactionType.Replace}/:${URL_PARAMETERS.TRANSACTION_TYPE}`}>
+        <Route path={`${path}/${TransactionType.Replace}/:${URL_PARAMETERS.TRANSACTION_HASH}`}>
           <ReplaceTransaction />
         </Route>
       </Switch>

@@ -4,7 +4,7 @@ const URL_PARAMETERS = Object.freeze({
     COLLATERAL: 'vaultCollateral',
     WRAPPED: 'vaultWrapped'
   },
-  TRANSACTION_TYPE: 'transactionType'
+  TRANSACTION_HASH: 'transactionHash'
 });
 
 const PAGES = Object.freeze({
