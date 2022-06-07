@@ -3,7 +3,10 @@ const URL_PARAMETERS = Object.freeze({
     ACCOUNT: 'vaultAccount',
     COLLATERAL: 'vaultCollateral',
     WRAPPED: 'vaultWrapped'
-  }
+  },
+  // ray test touch <
+  TRANSACTION_TYPE: 'transactionType'
+  // ray test touch >
 });
 
 const PAGES = Object.freeze({

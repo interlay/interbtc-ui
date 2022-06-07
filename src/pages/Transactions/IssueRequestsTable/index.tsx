@@ -98,6 +98,7 @@ const IssueRequestsTable = (): JSX.Element => {
   );
   useErrorHandler(issueRequestsTotalCountError);
 
+  // ray test touch <
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
@@ -114,6 +115,7 @@ const IssueRequestsTable = (): JSX.Element => {
     issueFetcher
   );
   useErrorHandler(issueRequestsError);
+  // ray test touch >
 
   const columns = React.useMemo(
     () => [
@@ -229,15 +231,15 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const data =
     issueRequests === undefined ||
-    btcConfirmations === undefined ||
-    parachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+      btcConfirmations === undefined ||
+      parachainConfirmations === undefined ||
+      latestParachainActiveBlock === undefined
       ? []
       : issueRequests.map(
-          // TODO: should type properly (`Relay`)
-          (issueRequest: any) =>
-            getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
-        );
+        // TODO: should type properly (`Relay`)
+        (issueRequest: any) =>
+          getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+      );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
