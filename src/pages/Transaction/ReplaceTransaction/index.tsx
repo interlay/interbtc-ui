@@ -1,4 +1,3 @@
-// ray test touch <
 const ReplaceTransaction = (): JSX.Element => {
   return (
     <>ReplaceTransaction</>
@@ -6,4 +5,3 @@ const ReplaceTransaction = (): JSX.Element => {
 };
 
 export default ReplaceTransaction;
-// ray test touch >

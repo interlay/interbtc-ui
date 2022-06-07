@@ -4,7 +4,6 @@ import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import MainContainer from 'parts/MainContainer';
 import { URL_PARAMETERS } from 'utils/constants/links';
 
-// ray test touch <
 const IssueTransaction = React.lazy(() => import(/* webpackChunkName: 'issue-transaction' */ './IssueTransaction'));
 const RedeemTransaction = React.lazy(() => import(/* webpackChunkName: 'redeem-transaction' */ './RedeemTransaction'));
 const ReplaceTransaction = React.lazy(() => import(/* webpackChunkName: 'replace-transaction' */ './ReplaceTransaction'));
@@ -34,6 +33,5 @@ const Transaction = (): JSX.Element => {
     </MainContainer>
   );
 };
-// ray test touch >
 
 export default Transaction;

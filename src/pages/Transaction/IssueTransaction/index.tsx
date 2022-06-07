@@ -1,4 +1,3 @@
-// ray test touch <
 import { useParams } from 'react-router-dom';
 
 import { URL_PARAMETERS } from 'utils/constants/links';
@@ -12,4 +11,3 @@ const IssueTransaction = (): JSX.Element => {
 };
 
 export default IssueTransaction;
-// ray test touch >
