@@ -7,7 +7,7 @@ import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import Big from 'big.js';
 import clsx from 'clsx';
-import { roundTwoDecimals, newMonetaryAmount, CollateralUnit } from '@interlay/interbtc-api';
+import { roundTwoDecimals, newMonetaryAmount, CollateralUnit, CurrencyUnit } from '@interlay/interbtc-api';
 import { MonetaryAmount, Currency } from '@interlay/monetary-js';
 
 import ErrorMessage from 'components/ErrorMessage';
@@ -157,7 +157,9 @@ const UpdateCollateralModal = ({
       const balanceLockedCollateral = (await window.bridge.tokens.balance(collateralCurrency.currency, vaultId))
         .reserved;
       console.log('balanceLockedCollateral', balanceLockedCollateral);
-      dispatch(updateCollateralAction(balanceLockedCollateral as any));
+      dispatch(
+        updateCollateralAction(balanceLockedCollateral as MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>)
+      );
 
       if (vaultCollateralization === undefined) {
         dispatch(updateCollateralizationAction('∞'));
@@ -184,7 +186,7 @@ const UpdateCollateralModal = ({
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
       const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(
         requiredCollateralTokenAmount
-      ) as any;
+      ) as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
 
       return collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount)
         ? t('vault.collateral_below_threshold')
@@ -199,7 +201,7 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    if (collateralTokenAmount.gt(collateralBalance as any)) {
+    if (collateralTokenAmount.gt(collateralBalance as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>)) {
       return t(`Must be less than ${collateralCurrency.symbol} balance!`);
     }
 
