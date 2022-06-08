@@ -303,9 +303,15 @@ const Vault = (): JSX.Element => {
             )}
           </div>
         )}
-        <VaultIssueRequestsTable vaultAddress={selectedVaultAccountAddress} />
-        <VaultRedeemRequestsTable vaultAddress={selectedVaultAccountAddress} />
-        <ReplaceTable vaultAddress={selectedVaultAccountAddress} />
+        <VaultIssueRequestsTable
+          vaultAddress={selectedVaultAccountAddress}
+          collateralId={collateralCurrencyValues?.id}
+        />
+        <VaultRedeemRequestsTable
+          vaultAddress={selectedVaultAccountAddress}
+          collateralId={collateralCurrencyValues?.id}
+        />
+        <ReplaceTable vaultAddress={selectedVaultAccountAddress} collateralId={collateralCurrencyValues?.id} />
       </MainContainer>
       {collateralCurrencyValues && collateralUpdateStatus !== CollateralUpdateStatus.Close && (
         <UpdateCollateralModal
