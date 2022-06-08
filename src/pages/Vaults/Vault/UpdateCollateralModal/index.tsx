@@ -141,7 +141,7 @@ const UpdateCollateralModal = ({
       }
 
       const balanceLockedDOT = (await window.bridge.tokens.balance(collateralCurrency.currency, vaultId)).reserved;
-      dispatch(updateCollateralAction(balanceLockedDOT));
+      dispatch(updateCollateralAction(balanceLockedDOT as any));
 
       if (vaultCollateralization === undefined) {
         dispatch(updateCollateralizationAction('∞'));
@@ -166,7 +166,9 @@ const UpdateCollateralModal = ({
 
     // Collateral update only allowed if above required collateral
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
-      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
+      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(
+        requiredCollateralTokenAmount
+      ) as any;
 
       return collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount)
         ? t('vault.collateral_below_threshold')
@@ -181,7 +183,7 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    if (collateralTokenAmount.gt(collateralTokenBalance)) {
+    if (collateralTokenAmount.gt(collateralTokenBalance as any)) {
       return t(`Must be less than ${collateralCurrency.symbol} balance!`);
     }
 
