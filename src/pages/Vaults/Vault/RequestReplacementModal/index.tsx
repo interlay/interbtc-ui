@@ -35,7 +35,7 @@ interface Props {
 
 const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
-  const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
+  const lockedCollateral = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
@@ -89,7 +89,7 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
           <p>{t('vault.withdraw_your_collateral')}</p>
           <p>{t('vault.you_have')}</p>
           <p>
-            {displayMonetaryAmount(lockedDot)} {collateralCurrency?.symbol}
+            {displayMonetaryAmount(lockedCollateral)} {collateralCurrency?.symbol}
           </p>
           <p>
             {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC

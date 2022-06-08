@@ -52,8 +52,8 @@ const UpdateCollateralModal = ({
   hasLockedBTC,
   collateralCurrency
 }: Props): JSX.Element => {
-  const { bridgeLoaded, collateralTokenBalance } = useSelector((state: StoreType) => state.general);
-  // Denoted in collateral token
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+
   const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
 
   const {
@@ -87,6 +87,20 @@ const UpdateCollateralModal = ({
     }
   );
   useErrorHandler(requiredCollateralTokenAmountError);
+
+  const {
+    isIdle: collateralBalanceIdle,
+    isLoading: collateralBalanceLoading,
+    data: collateralBalance,
+    error: collateralBalanceError
+  } = useQuery<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>, Error>(
+    [GENERIC_FETCHER, 'tokens', 'total', collateralCurrency.currency],
+    genericFetcher<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(collateralBalanceError);
 
   const collateralTokenAmount = newMonetaryAmount(
     strCollateralTokenAmount || '0',
@@ -140,8 +154,10 @@ const UpdateCollateralModal = ({
         throw new Error('Something went wrong!');
       }
 
-      const balanceLockedDOT = (await window.bridge.tokens.balance(collateralCurrency.currency, vaultId)).reserved;
-      dispatch(updateCollateralAction(balanceLockedDOT as any));
+      const balanceLockedCollateral = (await window.bridge.tokens.balance(collateralCurrency.currency, vaultId))
+        .reserved;
+      console.log('balanceLockedCollateral', balanceLockedCollateral);
+      dispatch(updateCollateralAction(balanceLockedCollateral as any));
 
       if (vaultCollateralization === undefined) {
         dispatch(updateCollateralizationAction('∞'));
@@ -183,7 +199,7 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    if (collateralTokenAmount.gt(collateralTokenBalance as any)) {
+    if (collateralTokenAmount.gt(collateralBalance as any)) {
       return t(`Must be less than ${collateralCurrency.symbol} balance!`);
     }
 
@@ -198,6 +214,8 @@ const UpdateCollateralModal = ({
     const initializing =
       requiredCollateralTokenAmountIdle ||
       requiredCollateralTokenAmountLoading ||
+      collateralBalanceIdle ||
+      collateralBalanceLoading ||
       (vaultCollateralizationIdle && hasLockedBTC) ||
       vaultCollateralizationLoading;
     const buttonText = initializing ? 'Loading...' : collateralUpdateStatusText;
