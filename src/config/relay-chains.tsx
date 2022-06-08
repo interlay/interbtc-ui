@@ -136,7 +136,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
     STAKE_LOCK_TIME = {
       MIN: 1,
-      MAX: 208
+      MAX: 192
     };
     break;
   }
