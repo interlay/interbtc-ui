@@ -307,7 +307,7 @@ const Vault = (): JSX.Element => {
         <VaultRedeemRequestsTable vaultAddress={selectedVaultAccountAddress} />
         <ReplaceTable vaultAddress={selectedVaultAccountAddress} />
       </MainContainer>
-      {collateralUpdateStatus !== CollateralUpdateStatus.Close && (
+      {collateralCurrencyValues && collateralUpdateStatus !== CollateralUpdateStatus.Close && (
         <UpdateCollateralModal
           open={
             collateralUpdateStatus === CollateralUpdateStatus.Deposit ||
@@ -317,6 +317,7 @@ const Vault = (): JSX.Element => {
           collateralUpdateStatus={collateralUpdateStatus}
           vaultAddress={selectedVaultAccountAddress}
           hasLockedBTC={hasLockedBTC}
+          collateralCurrency={collateralCurrencyValues}
         />
       )}
       <RequestReplacementModal
