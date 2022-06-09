@@ -104,6 +104,6 @@ function getIssueWithStatus(
 
 export { getIssueWithStatus, ISSUES_FETCHER };
 
-export type { IssuesFetcherParams as IssueFetcherParams };
+export type { IssuesFetcherParams };
 
 export default issuesFetcher;
