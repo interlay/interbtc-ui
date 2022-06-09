@@ -75,13 +75,13 @@ const TotalsUI = (): JSX.Element => {
   return (
     <div>
       <InformationUI
-        label={t('staking_page.total_vote_governance_token', {
+        label={t('staking_page.total_vote_governance_token_in_the_network', {
           voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
         })}
         value={totalVoteGovernanceTokenAmountLabel}
       />
       <InformationUI
-        label={t('staking_page.total_staked_governance_token', {
+        label={t('staking_page.total_staked_governance_token_in_the_network', {
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
         })}
         value={totalStakedGovernanceTokenAmountLabel}
