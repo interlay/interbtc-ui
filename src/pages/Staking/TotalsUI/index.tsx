@@ -66,12 +66,10 @@ const TotalsUI = (): JSX.Element => {
         label={`Total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
         value={`${totalVoteGovernanceTokenAmountLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
       />
-      {/* ray test touch < */}
       <InformationUI
         label={`Total Staked ${GOVERNANCE_TOKEN_SYMBOL}`}
         value={`${totalStakedGovernanceTokenAmountLabel} ${GOVERNANCE_TOKEN_SYMBOL}`}
       />
-      {/* ray test touch > */}
     </div>
   );
 };
