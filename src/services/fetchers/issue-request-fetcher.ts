@@ -1,7 +1,7 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
 
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
 import issueRequestsQuery from 'services/queries/issue-requests-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
@@ -14,7 +14,7 @@ const ISSUE_FETCHER = 'issue-fetcher';
 function decodeIssueValues(issue: any): any {
   issue.request.amountWrapped = BitcoinAmount.from.Satoshi(issue.request.amountWrapped);
   issue.request.bridgeFeeWrapped = BitcoinAmount.from.Satoshi(issue.request.bridgeFeeWrapped);
-  issue.griefingCollateral = newMonetaryAmount(issue.griefingCollateral, COLLATERAL_TOKEN);
+  issue.griefingCollateral = newMonetaryAmount(issue.griefingCollateral, RELAY_CHAIN_NATIVE_TOKEN);
   if (issue.execution) {
     issue.execution.amountWrapped = BitcoinAmount.from.Satoshi(issue.execution.amountWrapped);
     issue.execution.bridgeFeeWrapped = BitcoinAmount.from.Satoshi(issue.execution.bridgeFeeWrapped);

@@ -25,7 +25,7 @@ import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
   APP_NAME,
   WRAPPED_TOKEN,
-  COLLATERAL_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN,
   GOVERNANCE_TOKEN,
   PRICES_URL,
   RELAY_CHAIN_NAME,
@@ -168,7 +168,7 @@ const App = (): JSX.Element => {
           state
         ] = await Promise.all([
           window.bridge.tokens.total(WRAPPED_TOKEN),
-          window.bridge.tokens.total(COLLATERAL_TOKEN),
+          window.bridge.tokens.total(RELAY_CHAIN_NATIVE_TOKEN),
           window.bridge.tokens.total(GOVERNANCE_TOKEN),
           window.bridge.btcRelay.getLatestBlockHeight(),
           window.bridge.electrsAPI.getLatestBlockHeight(),
@@ -260,7 +260,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromCollateral = await window.bridge.tokens.subscribeToBalance(
-          COLLATERAL_TOKEN,
+          RELAY_CHAIN_NATIVE_TOKEN,
           address,
           (_: string, balance: ChainBalance<CollateralUnit>) => {
             if (!balance.free.eq(collateralTokenBalance)) {
