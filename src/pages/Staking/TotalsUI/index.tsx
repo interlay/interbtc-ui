@@ -55,7 +55,9 @@ const TotalsUI = (): JSX.Element => {
     if (totalVoteGovernanceTokenAmount === undefined) {
       throw new Error('Something went wrong!');
     }
-    totalVoteGovernanceTokenAmountLabel = `${displayMonetaryAmount(totalVoteGovernanceTokenAmount)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
+    totalVoteGovernanceTokenAmountLabel = `${displayMonetaryAmount(
+      totalVoteGovernanceTokenAmount
+    )} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
   }
 
   let totalStakedGovernanceTokenAmountLabel;
@@ -65,7 +67,9 @@ const TotalsUI = (): JSX.Element => {
     if (totalStakedGovernanceTokenAmount === undefined) {
       throw new Error('Something went wrong!');
     }
-    totalStakedGovernanceTokenAmountLabel = `${displayMonetaryAmount(totalStakedGovernanceTokenAmount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
+    totalStakedGovernanceTokenAmountLabel = `${displayMonetaryAmount(
+      totalStakedGovernanceTokenAmount
+    )} ${GOVERNANCE_TOKEN_SYMBOL}`;
   }
 
   return (
