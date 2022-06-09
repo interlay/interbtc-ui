@@ -32,7 +32,7 @@ import { shortTxId, formatDateTimePrecise, displayMonetaryAmount } from 'common/
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemsFetcher, { REDEEM_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
+import redeemsFetcher, { REDEEMS_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 const RedeemRequestsTable = (): JSX.Element => {
@@ -104,7 +104,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      REDEEM_FETCHER,
+      REDEEMS_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
       `userParachainAddress_eq: "${address}"` // WHERE condition

@@ -8,7 +8,7 @@ import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
 type IssuesFetcherParams = [queryKey: string, offset: number, limit: number, where?: string];
 
-const ISSUES_FETCHER = 'issue-fetcher';
+const ISSUES_FETCHER = 'issues-fetcher';
 
 // TODO: should type properly (`Relay`)
 function decodeIssueValues(issue: any): any {

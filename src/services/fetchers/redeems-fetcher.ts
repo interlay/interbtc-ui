@@ -6,9 +6,9 @@ import redeemRequestQuery from 'services/queries/redeem-request-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
-type RedeemFetcherParams = [key: typeof REDEEM_FETCHER, offset: number, limit: number, where?: string];
+type RedeemFetcherParams = [key: typeof REDEEMS_FETCHER, offset: number, limit: number, where?: string];
 
-const REDEEM_FETCHER = 'redeem-fetcher';
+const REDEEMS_FETCHER = 'redeems-fetcher';
 
 // TODO: should type properly (`Relay`)
 function decodeRedeemValues(redeem: any): any {
@@ -30,7 +30,7 @@ function decodeRedeemValues(redeem: any): any {
 const redeemsFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   const [key, offset, limit, where] = queryKey as RedeemFetcherParams;
 
-  if (key !== REDEEM_FETCHER) throw new Error('Invalid key!');
+  if (key !== REDEEMS_FETCHER) throw new Error('Invalid key!');
 
   // TODO: should type properly (`Relay`)
   const redeemsData = await graphqlFetcher<Array<any>>()({
@@ -98,7 +98,7 @@ function getRedeemWithStatus(
   return redeem;
 }
 
-export { getRedeemWithStatus, REDEEM_FETCHER };
+export { getRedeemWithStatus, REDEEMS_FETCHER };
 
 export type { RedeemFetcherParams };
 
