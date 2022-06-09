@@ -5,7 +5,7 @@ import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import { StoreType, ParachainStatus, Prices } from './util.types';
 
 // GENERAL ACTIONS
-export const IS_POLKA_BTC_LOADED = 'IS_POLKA_BTC_LOADED';
+export const IS_BRIDGE_LOADED = 'IS_BRIDGE_LOADED';
 export const IS_FAUCET_LOADED = 'IS_FAUCET_LOADED';
 export const IS_VAULT_CLIENT_LOADED = 'IS_VAULT_CLIENT_LOADED';
 export const INIT_STATE = 'INIT_STATE';
@@ -39,8 +39,8 @@ export interface UpdateOfPrices {
   type: typeof UPDATE_OF_PRICES;
   prices: Prices;
 }
-export interface IsPolkaBtcLoaded {
-  type: typeof IS_POLKA_BTC_LOADED;
+export interface IsBridgeLoaded {
+  type: typeof IS_BRIDGE_LOADED;
   isLoaded: boolean;
 }
 
@@ -115,7 +115,7 @@ export interface ShowAccountModal {
 }
 
 export type GeneralActions =
-  | IsPolkaBtcLoaded
+  | IsBridgeLoaded
   | ChangeAddress
   | InitGeneralDataAction
   | IsVaultClientLoaded

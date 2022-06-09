@@ -7,7 +7,7 @@ import { useTable } from 'react-table';
 import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
-import { RedeemStatus } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, RedeemStatus } from '@interlay/interbtc-api';
 
 import SectionTitle from 'parts/SectionTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
@@ -37,9 +37,10 @@ import redeemFetcher, { getRedeemWithStatus, REDEEM_FETCHER } from 'services/fet
 
 interface Props {
   vaultAddress: string;
+  collateralId: CurrencyIdLiteral | undefined;
 }
 
-const VaultRedeemRequestsTable = ({ vaultAddress }: Props): JSX.Element | null => {
+const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
@@ -92,8 +93,14 @@ const VaultRedeemRequestsTable = ({ vaultAddress }: Props): JSX.Element | null =
     error: redeemRequestsTotalCountError
     // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [GRAPHQL_FETCHER, redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}"}`)],
-    graphqlFetcher<GraphqlReturn<any>>()
+    [
+      GRAPHQL_FETCHER,
+      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}`)
+    ],
+    graphqlFetcher<GraphqlReturn<any>>(),
+    {
+      enabled: !!collateralId
+    }
   );
   useErrorHandler(redeemRequestsTotalCountError);
 
@@ -108,9 +115,12 @@ const VaultRedeemRequestsTable = ({ vaultAddress }: Props): JSX.Element | null =
       REDEEM_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}"}` // `WHERE` condition
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
     ],
-    redeemFetcher
+    redeemFetcher,
+    {
+      enabled: !!collateralId
+    }
   );
   useErrorHandler(redeemRequestsError);
 
