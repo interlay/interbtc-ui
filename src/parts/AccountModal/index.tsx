@@ -44,7 +44,7 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 );
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
-  const { bridgeLoaded, address, extensions } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, address, extensions: injectedExtensions } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);
@@ -54,6 +54,14 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
   const accountsFromSelectedWallet = React.useMemo(
     () => accounts.filter(({ meta: { source } }) => source === selectedWallet),
     [accounts, selectedWallet]
+  );
+
+  const supportedExtensions = React.useMemo(
+    () =>
+      injectedExtensions.filter((extensionName) =>
+        Object.values(WalletSourceName).includes(extensionName as WalletSourceName)
+      ),
+    [injectedExtensions]
   );
 
   React.useEffect(() => {
@@ -70,11 +78,6 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
 
   // State of the modal content.
   const modalContent = React.useMemo(() => {
-    const supportedWalletInstalled = extensions.reduce(
-      (result, extensionName) => result || Object.values(WalletSourceName).includes(extensionName as WalletSourceName),
-      false
-    );
-
     const handleWalletSelect = (walletName: WalletSourceName | undefined) => {
       setSelectedWallet(walletName);
     };
@@ -99,11 +102,11 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
       onClose();
     };
 
-    if (supportedWalletInstalled) {
+    if (supportedExtensions.length > 0) {
       if (selectedWallet === undefined) {
         return (
           <AccountModalContentWrapper title={t('account_modal.select_wallet')} focusRef={focusRef} onClose={onClose}>
-            <ModalContentSelectWallet extensions={extensions} handleWalletSelect={handleWalletSelect} />
+            <ModalContentSelectWallet extensions={supportedExtensions} handleWalletSelect={handleWalletSelect} />
           </AccountModalContentWrapper>
         );
       } else {
@@ -135,7 +138,17 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
         </AccountModalContentWrapper>
       );
     }
-  }, [accounts, accountsFromSelectedWallet, address, bridgeLoaded, dispatch, extensions, onClose, selectedWallet, t]);
+  }, [
+    accounts,
+    accountsFromSelectedWallet,
+    address,
+    bridgeLoaded,
+    dispatch,
+    supportedExtensions,
+    onClose,
+    selectedWallet,
+    t
+  ]);
 
   return (
     <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
