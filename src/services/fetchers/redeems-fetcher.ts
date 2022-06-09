@@ -27,7 +27,7 @@ function decodeRedeemValues(redeem: any): any {
 
 // TODO: should type properly (`Relay`)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const redeemFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
+const redeemsFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   const [key, offset, limit, where] = queryKey as RedeemFetcherParams;
 
   if (key !== REDEEM_FETCHER) throw new Error('Invalid key!');
@@ -102,4 +102,4 @@ export { getRedeemWithStatus, REDEEM_FETCHER };
 
 export type { RedeemFetcherParams };
 
-export default redeemFetcher;
+export default redeemsFetcher;

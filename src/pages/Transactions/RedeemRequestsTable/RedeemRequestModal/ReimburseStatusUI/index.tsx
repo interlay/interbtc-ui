@@ -19,7 +19,7 @@ import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKE
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { REDEEM_FETCHER } from 'services/fetchers/redeem-request-fetcher';
+import { REDEEM_FETCHER } from 'services/fetchers/redeems-fetcher';
 
 interface Props {
   // TODO: should type properly (`Relay`)

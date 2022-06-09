@@ -33,7 +33,7 @@ import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from 'config/b
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import redeemCountQuery from 'services/queries/redeem-count-query';
-import redeemFetcher, { getRedeemWithStatus, REDEEM_FETCHER } from 'services/fetchers/redeem-request-fetcher';
+import redeemsFetcher, { getRedeemWithStatus, REDEEM_FETCHER } from 'services/fetchers/redeems-fetcher';
 
 interface Props {
   vaultAddress: string;
@@ -117,7 +117,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
       TABLE_PAGE_LIMIT, // limit
       `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
     ],
-    redeemFetcher,
+    redeemsFetcher,
     {
       enabled: !!collateralId
     }

@@ -29,7 +29,7 @@ import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemFetcher, { REDEEM_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeem-request-fetcher';
+import redeemsFetcher, { REDEEM_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import { StoreType } from 'common/types/util.types';
 
@@ -181,7 +181,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT // limit
     ],
-    redeemFetcher
+    redeemsFetcher
   );
   useErrorHandler(redeemsError);
 
