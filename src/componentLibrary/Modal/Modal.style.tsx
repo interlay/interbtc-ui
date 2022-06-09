@@ -51,6 +51,7 @@ const CloseIcon = styled.button`
   font: inherit;
   cursor: pointer;
   outline: inherit;
+  fill: ${theme.colors.textSecondary};
 `;
 
 export { ModalContainer, ModalOverlay, ModalContent, CloseIcon };

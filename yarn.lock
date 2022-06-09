@@ -2024,6 +2024,11 @@
     methods "^1.1.2"
     path-to-regexp "^6.1.0"
 
+"@material-icons/svg@^1.0.28":
+  version "1.0.28"
+  resolved "https://registry.yarnpkg.com/@material-icons/svg/-/svg-1.0.28.tgz#ac111059a7e597c7b53e27b8be22e17839ba5ecc"
+  integrity sha512-qil+dMa6oN2fxrmmBPH0oKBheIehOrlu6rIrcE5wvceo6cong6x7qWN/7fOUaDOVDoAxSnUKFy9Q3xXXJuPYkQ==
+
 "@mdx-js/mdx@^1.6.22":
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/@mdx-js/mdx/-/mdx-1.6.22.tgz#8a723157bf90e78f17dc0f27995398e6c731f1ba"
