@@ -1,8 +1,8 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, RedeemStatus } from '@interlay/interbtc-api';
 
+import redeemsQuery from 'services/queries/redeems-query';
 import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
-import redeemRequestQuery from 'services/queries/redeem-request-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
@@ -36,7 +36,7 @@ const redeemsFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
   const redeemsData = await graphqlFetcher<Array<any>>()({
     queryKey: [
       GRAPHQL_FETCHER,
-      redeemRequestQuery(where),
+      redeemsQuery(where),
       {
         limit,
         offset
