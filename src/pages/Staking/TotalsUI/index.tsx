@@ -1,6 +1,7 @@
 import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 import InformationUI from '../InformationUI';
 import ErrorFallback from 'components/ErrorFallback';
@@ -16,6 +17,8 @@ import { StoreType } from 'common/types/util.types';
 
 const TotalsUI = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+
+  const { t } = useTranslation();
 
   const {
     isIdle: totalVoteGovernanceTokenAmountIdle,
@@ -52,7 +55,7 @@ const TotalsUI = (): JSX.Element => {
     if (totalVoteGovernanceTokenAmount === undefined) {
       throw new Error('Something went wrong!');
     }
-    totalVoteGovernanceTokenAmountLabel = displayMonetaryAmount(totalVoteGovernanceTokenAmount);
+    totalVoteGovernanceTokenAmountLabel = `${displayMonetaryAmount(totalVoteGovernanceTokenAmount)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;
   }
 
   let totalStakedGovernanceTokenAmountLabel;
@@ -62,18 +65,22 @@ const TotalsUI = (): JSX.Element => {
     if (totalStakedGovernanceTokenAmount === undefined) {
       throw new Error('Something went wrong!');
     }
-    totalStakedGovernanceTokenAmountLabel = displayMonetaryAmount(totalStakedGovernanceTokenAmount);
+    totalStakedGovernanceTokenAmountLabel = `${displayMonetaryAmount(totalStakedGovernanceTokenAmount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
   }
 
   return (
     <div>
       <InformationUI
-        label={`Total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-        value={`${totalVoteGovernanceTokenAmountLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+        label={t('staking_page.total_vote_governance_token', {
+          voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
+        })}
+        value={totalVoteGovernanceTokenAmountLabel}
       />
       <InformationUI
-        label={`Total Staked ${GOVERNANCE_TOKEN_SYMBOL}`}
-        value={`${totalStakedGovernanceTokenAmountLabel} ${GOVERNANCE_TOKEN_SYMBOL}`}
+        label={t('staking_page.total_staked_governance_token', {
+          governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
+        })}
+        value={totalStakedGovernanceTokenAmountLabel}
       />
     </div>
   );
