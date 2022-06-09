@@ -1,14 +1,14 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
 
+import issuesQuery from 'services/queries/issues-query';
 import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
-import issueRequestsQuery from 'services/queries/issue-requests-query';
 import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
 
-type IssueFetcherParams = [queryKey: string, offset: number, limit: number, where?: string];
+type IssuesFetcherParams = [queryKey: string, offset: number, limit: number, where?: string];
 
-const ISSUE_FETCHER = 'issue-fetcher';
+const ISSUES_FETCHER = 'issues-fetcher';
 
 // TODO: should type properly (`Relay`)
 function decodeIssueValues(issue: any): any {
@@ -25,16 +25,16 @@ function decodeIssueValues(issue: any): any {
 
 // TODO: should type properly (`Relay`)
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const issueFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
-  const [key, offset, limit, where] = queryKey as IssueFetcherParams;
+const issuesFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
+  const [key, offset, limit, where] = queryKey as IssuesFetcherParams;
 
-  if (key !== ISSUE_FETCHER) throw new Error('Invalid key!');
+  if (key !== ISSUES_FETCHER) throw new Error('Invalid key!');
 
   // TODO: should type properly (`Relay`)
   const issuesData = await graphqlFetcher<Array<any>>()({
     queryKey: [
       GRAPHQL_FETCHER,
-      issueRequestsQuery(where),
+      issuesQuery(where),
       {
         limit,
         offset
@@ -102,8 +102,8 @@ function getIssueWithStatus(
   return issue;
 }
 
-export { getIssueWithStatus, ISSUE_FETCHER };
+export { getIssueWithStatus, ISSUES_FETCHER };
 
-export type { IssueFetcherParams };
+export type { IssuesFetcherParams };
 
-export default issueFetcher;
+export default issuesFetcher;

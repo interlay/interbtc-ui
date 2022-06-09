@@ -19,7 +19,7 @@ import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKE
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { REDEEM_FETCHER } from 'services/fetchers/redeem-request-fetcher';
+import { REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -65,7 +65,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([REDEEM_FETCHER]);
+        queryClient.invalidateQueries([REDEEMS_FETCHER]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },
@@ -82,7 +82,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([REDEEM_FETCHER]);
+        queryClient.invalidateQueries([REDEEMS_FETCHER]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },
