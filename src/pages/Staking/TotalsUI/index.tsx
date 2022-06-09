@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import InformationUI from '../InformationUI';
 import ErrorFallback from 'components/ErrorFallback';
-import { VOTE_GOVERNANCE_TOKEN_SYMBOL, VoteGovernanceTokenMonetaryAmount } from 'config/relay-chains';
+import { VOTE_GOVERNANCE_TOKEN_SYMBOL, VoteGovernanceTokenMonetaryAmount, GovernanceTokenMonetaryAmount, GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
@@ -13,10 +13,10 @@ const TotalsUI = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
-    isIdle: totalVotingSupplyIdle,
-    isLoading: totalVotingSupplyLoading,
-    data: totalVotingSupply,
-    error: totalVotingSupplyError
+    isIdle: totalVoteGovernanceTokenAmountIdle,
+    isLoading: totalVoteGovernanceTokenAmountLoading,
+    data: totalVoteGovernanceTokenAmount,
+    error: totalVoteGovernanceTokenAmountError
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
     [GENERIC_FETCHER, 'escrow', 'totalVotingSupply'],
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
@@ -24,24 +24,54 @@ const TotalsUI = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(totalVotingSupplyError);
+  useErrorHandler(totalVoteGovernanceTokenAmountError);
 
-  let totalStakedVoteGovernanceTokenAmountLabel;
-  if (totalVotingSupplyIdle || totalVotingSupplyLoading) {
-    totalStakedVoteGovernanceTokenAmountLabel = '-';
+  const {
+    isIdle: totalStakedGovernanceTokenAmountIdle,
+    isLoading: totalStakedGovernanceTokenAmountLoading,
+    data: totalStakedGovernanceTokenAmount,
+    error: totalStakedGovernanceTokenAmountError
+  } = useQuery<GovernanceTokenMonetaryAmount, Error>(
+    [GENERIC_FETCHER, 'escrow', 'getTotalStakedBalance'],
+    genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(totalStakedGovernanceTokenAmountError);
+
+  let totalVoteGovernanceTokenAmountLabel;
+  if (totalVoteGovernanceTokenAmountIdle || totalVoteGovernanceTokenAmountLoading) {
+    totalVoteGovernanceTokenAmountLabel = '-';
   } else {
-    if (totalVotingSupply === undefined) {
+    if (totalVoteGovernanceTokenAmount === undefined) {
       throw new Error('Something went wrong!');
     }
-    totalStakedVoteGovernanceTokenAmountLabel = displayMonetaryAmount(totalVotingSupply);
+    totalVoteGovernanceTokenAmountLabel = displayMonetaryAmount(totalVoteGovernanceTokenAmount);
+  }
+
+  let totalStakedGovernanceTokenAmountLabel;
+  if (totalStakedGovernanceTokenAmountIdle || totalStakedGovernanceTokenAmountLoading) {
+    totalStakedGovernanceTokenAmountLabel = '-';
+  } else {
+    if (totalStakedGovernanceTokenAmount === undefined) {
+      throw new Error('Something went wrong!');
+    }
+    totalStakedGovernanceTokenAmountLabel = displayMonetaryAmount(totalStakedGovernanceTokenAmount);
   }
 
   return (
     <div>
       <InformationUI
         label={`Total ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
-        value={`${totalStakedVoteGovernanceTokenAmountLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
+        value={`${totalVoteGovernanceTokenAmountLabel} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`}
       />
+      {/* ray test touch < */}
+      <InformationUI
+        label={`Total Staked ${GOVERNANCE_TOKEN_SYMBOL}`}
+        value={`${totalStakedGovernanceTokenAmountLabel} ${GOVERNANCE_TOKEN_SYMBOL}`}
+      />
+      {/* ray test touch > */}
     </div>
   );
 };
