@@ -8,7 +8,13 @@ import { useTable } from 'react-table';
 import { useTranslation } from 'react-i18next';
 import { H256 } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
-import { stripHexPrefix, ReplaceRequestExt, WrappedCurrency, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import {
+  stripHexPrefix,
+  ReplaceRequestExt,
+  WrappedCurrency,
+  InterbtcPrimitivesVaultId,
+  CurrencyIdLiteral
+} from '@interlay/interbtc-api';
 import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
 import { MonetaryAmount, Currency, BitcoinUnit, CollateralUnit } from '@interlay/monetary-js';
 
@@ -31,9 +37,10 @@ import { shortAddress, displayMonetaryAmount } from 'common/utils/utils';
 
 interface Props {
   vaultAddress: string;
+  collateralId: CurrencyIdLiteral | undefined;
 }
 
-const ReplaceTable = ({ vaultAddress }: Props): JSX.Element => {
+const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -47,7 +54,7 @@ const ReplaceTable = ({ vaultAddress }: Props): JSX.Element => {
     [GENERIC_FETCHER, 'replace', 'mapReplaceRequests', vaultId],
     genericFetcher<Map<H256, ReplaceRequestExt>>(),
     {
-      enabled: !!bridgeLoaded,
+      enabled: !!bridgeLoaded && !!collateralId,
       refetchInterval: 10000
     }
   );
@@ -131,10 +138,12 @@ const ReplaceTable = ({ vaultAddress }: Props): JSX.Element => {
   );
 
   const data = replaceRequests
-    ? [...replaceRequests.entries()].map(([key, value]) => ({
-        id: key,
-        ...value
-      }))
+    ? [...replaceRequests.filter((request) => request?.collateral?.currency?.ticker === collateralId).entries()].map(
+        ([key, value]) => ({
+          id: key,
+          ...value
+        })
+      )
     : [];
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,

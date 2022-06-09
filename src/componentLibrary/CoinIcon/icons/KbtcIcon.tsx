@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const KbtcIcon = (): JSX.Element => (
   <svg role='img' width='100%' viewBox='0 0 64 62' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <title>kBTC</title>

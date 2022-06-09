@@ -15,10 +15,10 @@ import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryO
 import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { COLLATERAL_TOKEN_SYMBOL, COLLATERAL_TOKEN } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { CurrencyValues } from 'types/currency';
 
 const AMOUNT = 'amount';
 
@@ -29,12 +29,13 @@ type RequestReplacementFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
+  collateralCurrency: CurrencyValues | undefined;
   vaultAddress: string;
 }
 
-const RequestReplacementModal = ({ onClose, open, vaultAddress }: Props): JSX.Element => {
+const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
-  const lockedDot = useSelector((state: StoreType) => state.vault.collateral);
+  const lockedCollateral = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ const RequestReplacementModal = ({ onClose, open, vaultAddress }: Props): JSX.El
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
-      await window.bridge.replace.request(amountPolkaBtc, COLLATERAL_TOKEN as CollateralCurrency);
+      await window.bridge.replace.request(amountPolkaBtc, collateralCurrency?.currency as CollateralCurrency);
 
       const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);
@@ -88,7 +89,7 @@ const RequestReplacementModal = ({ onClose, open, vaultAddress }: Props): JSX.El
           <p>{t('vault.withdraw_your_collateral')}</p>
           <p>{t('vault.you_have')}</p>
           <p>
-            {displayMonetaryAmount(lockedDot)} {COLLATERAL_TOKEN_SYMBOL}
+            {displayMonetaryAmount(lockedCollateral)} {collateralCurrency?.symbol}
           </p>
           <p>
             {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
