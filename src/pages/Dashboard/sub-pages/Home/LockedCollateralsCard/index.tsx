@@ -18,6 +18,7 @@ const LockedCollateralsCard = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
+  // ray test touch <
   const {
     isIdle: cumulativeVolumesIdle,
     isLoading: cumulativeVolumesLoading,
@@ -25,6 +26,7 @@ const LockedCollateralsCard = (): JSX.Element => {
     error: cumulativeVolumesError
   } = useCumulativeCollateralVolumes(RELAY_CHAIN_NATIVE_TOKEN);
   useErrorHandler(cumulativeVolumesError);
+  // ray test touch >
 
   const renderContent = () => {
     // TODO: should use skeleton loaders

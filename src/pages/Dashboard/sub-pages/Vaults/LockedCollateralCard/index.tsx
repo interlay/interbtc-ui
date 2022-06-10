@@ -1,28 +1,19 @@
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { CollateralUnit } from '@interlay/interbtc-api';
 
 import LineChart from 'pages/Dashboard/LineChart';
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
 import Stats, { StatsDt, StatsDd } from 'pages/Dashboard/Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { WRAPPED_TOKEN, CollateralToken } from 'config/relay-chains';
+import { CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
-import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from 'common/utils/utils';
+import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import cumulativeVolumesFetcher, {
-  CUMULATIVE_VOLUMES_FETCHER,
-  VolumeDataPoint,
-  VolumeType
-} from 'services/fetchers/cumulative-volumes-fetcher';
-
-// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
-// thus issues per day 5 days ago can be displayed
-// cumulative issues is also only displayed to 5 days
-const cutoffTimestamps = getLastMidnightTimestamps(6, true);
+// ray test touch <
+import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
+// ray test touch >
 
 interface Props {
   collateralToken: CollateralToken;
@@ -36,24 +27,15 @@ const LockedCollateralCard = ({
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
+  // ray test touch <
   const {
     isIdle: cumulativeVolumesIdle,
     isLoading: cumulativeVolumesLoading,
     data: cumulativeVolumes,
     error: cumulativeVolumesError
-    // TODO: should type properly (`Relay`)
-  } = useQuery<VolumeDataPoint<CollateralUnit>[], Error>(
-    [
-      CUMULATIVE_VOLUMES_FETCHER,
-      VolumeType.Collateral,
-      cutoffTimestamps,
-      collateralToken, // returned amounts
-      collateralToken, // filter by this collateral...
-      WRAPPED_TOKEN // and this backing currency
-    ],
-    cumulativeVolumesFetcher
-  );
+  } = useCumulativeCollateralVolumes(collateralToken);
   useErrorHandler(cumulativeVolumesError);
+  // ray test touch >
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
