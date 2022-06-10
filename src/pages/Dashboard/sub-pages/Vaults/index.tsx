@@ -23,9 +23,7 @@ const Vaults = (): JSX.Element => {
         <ActiveVaultsCard />
         <CollateralizationCard />
         <LockedCollateralCard collateralToken={RELAY_CHAIN_NATIVE_TOKEN} collateralTokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL} />
-        {/* ray test touch < */}
         <LockedCollateralCard collateralToken={GOVERNANCE_TOKEN} collateralTokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
-        {/* ray test touch > */}
       </div>
       <VaultsTable />
     </>

@@ -28,6 +28,7 @@ const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
 interface Props {
   // ray test touch <
+  // TODO: `CollateralToken` should be able to contain `GovernanceToken`
   collateralToken: CollateralToken | GovernanceToken;
   // ray test touch >
   collateralTokenSymbol: string;
@@ -41,10 +42,10 @@ const LockedCollateralCard = ({
   const { t } = useTranslation();
 
   const {
-    isIdle: cumulativeCollateralPerDayIdle,
-    isLoading: cumulativeCollateralPerDayLoading,
-    data: cumulativeCollateralPerDay,
-    error: cumulativeCollateralPerDayError
+    isIdle: cumulativeVolumesIdle,
+    isLoading: cumulativeVolumesLoading,
+    data: cumulativeVolumes,
+    error: cumulativeVolumesError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<CollateralUnit>[], Error>(
     [
@@ -57,17 +58,17 @@ const LockedCollateralCard = ({
     ],
     cumulativeVolumesFetcher
   );
-  useErrorHandler(cumulativeCollateralPerDayError);
+  useErrorHandler(cumulativeVolumesError);
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (cumulativeCollateralPerDayIdle || cumulativeCollateralPerDayLoading) {
+    if (cumulativeVolumesIdle || cumulativeVolumesLoading) {
       return <>Loading...</>;
     }
-    if (cumulativeCollateralPerDay === undefined) {
+    if (cumulativeVolumes === undefined) {
       throw new Error('Something went wrong!');
     }
-    const totalLockedCollateralTokenAmount = cumulativeCollateralPerDay.slice(-1)[0].amount;
+    const totalLockedCollateralTokenAmount = cumulativeVolumes.slice(-1)[0].amount;
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -96,7 +97,7 @@ const LockedCollateralCard = ({
           wrapperClassName='h-full'
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_collateral_locked')]}
-          yLabels={cumulativeCollateralPerDay
+          yLabels={cumulativeVolumes
             .slice(0, -1)
             .map((dataPoint) => dataPoint.tillTimestamp.toISOString().substring(0, 10))}
           yAxes={[
@@ -107,7 +108,7 @@ const LockedCollateralCard = ({
               }
             }
           ]}
-          datasets={[cumulativeCollateralPerDay.slice(1).map((dataPoint) => displayMonetaryAmount(dataPoint.amount))]}
+          datasets={[cumulativeVolumes.slice(1).map((dataPoint) => displayMonetaryAmount(dataPoint.amount))]}
         />
       </>
     );
