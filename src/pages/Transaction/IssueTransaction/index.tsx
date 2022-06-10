@@ -1,11 +1,11 @@
-import { useParams } from 'react-router-dom';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
 
-import ErrorFallback from 'components/ErrorFallback';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import { URL_PARAMETERS } from 'utils/constants/links';
-import issuesFetcher, { ISSUES_FETCHER } from 'services/fetchers/issues-fetcher';
+import ErrorFallback from '@/components/ErrorFallback';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import issuesFetcher, { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
+import { URL_PARAMETERS } from '@/utils/constants/links';
 
 // http://localhost:3000/transaction/issue/0xfd6d53d8df584d675fe2322ccb126754d6c6d249878f0a2c9526607458714f76
 const IssueTransaction = (): JSX.Element => {

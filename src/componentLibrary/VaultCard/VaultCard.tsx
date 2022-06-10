@@ -1,6 +1,7 @@
-import { CurrencySymbols } from 'types/currency';
+import { CurrencySymbols } from '@/types/currency';
+
 import { CoinPair, CTALink } from '../';
-import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
+import { Card, CardBody, CardHeader, CardTitle, CTAWrapper,DlItem, StyledDl } from './VaultCard.style';
 
 interface VaultCardProps {
   collateralSymbol: CurrencySymbols;

@@ -1,6 +1,6 @@
-import PageTitle from 'parts/PageTitle';
-import TimerIncrement from 'parts/TimerIncrement';
-import BoldParagraph from 'components/BoldParagraph';
+import BoldParagraph from '@/components/BoldParagraph';
+import PageTitle from '@/parts/PageTitle';
+import TimerIncrement from '@/parts/TimerIncrement';
 
 interface VaultsHeaderProps {
   title: string;

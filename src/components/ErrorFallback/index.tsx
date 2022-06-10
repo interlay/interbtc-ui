@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import InterlayLink from 'components/UI/InterlayLink';
+import InterlayLink from '@/components/UI/InterlayLink';
 
 interface Props {
   error: Error | string;

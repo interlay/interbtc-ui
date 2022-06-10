@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import MainContainer from 'parts/MainContainer';
-import { URL_PARAMETERS } from 'utils/constants/links';
+import MainContainer from '@/parts/MainContainer';
+import { URL_PARAMETERS } from '@/utils/constants/links';
 
 const IssueTransaction = React.lazy(() => import(/* webpackChunkName: 'issue-transaction' */ './IssueTransaction'));
 const RedeemTransaction = React.lazy(() => import(/* webpackChunkName: 'redeem-transaction' */ './RedeemTransaction'));

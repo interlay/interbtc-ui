@@ -1,10 +1,10 @@
 import { RedeemStatus } from '@interlay/interbtc-api';
 
 import CompletedRedeemRequest from './CompletedRedeemRequest';
+import DefaultRedeemRequest from './DefaultRedeemRequest';
+import PendingWithBtcTxNotFoundRedeemRequest from './PendingWithBtcTxNotFoundRedeemRequest';
 import ReimbursedRedeemRequest from './ReimbursedRedeemRequest';
 import RetriedRedeemRequest from './RetriedRedeemRequest';
-import PendingWithBtcTxNotFoundRedeemRequest from './PendingWithBtcTxNotFoundRedeemRequest';
-import DefaultRedeemRequest from './DefaultRedeemRequest';
 
 interface Props {
   // TODO: should type properly (`Relay`)

@@ -1,16 +1,16 @@
+import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import clsx from 'clsx';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import PriceInfo from 'pages/Bridge/PriceInfo';
-import Hr2 from 'components/hrs/Hr2';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { copyToClipboard, getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { StoreType } from '@/common/types/util.types';
+import { copyToClipboard, displayMonetaryAmount,getUsdAmount } from '@/common/utils/utils';
+import Hr2 from '@/components/hrs/Hr2';
+import InterlayTooltip from '@/components/UI/InterlayTooltip';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import PriceInfo from '@/pages/Bridge/PriceInfo';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   // TODO: should type properly (`Relay`)

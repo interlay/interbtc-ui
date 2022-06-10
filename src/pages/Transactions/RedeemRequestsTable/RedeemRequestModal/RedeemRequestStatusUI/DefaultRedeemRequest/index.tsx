@@ -1,15 +1,15 @@
-import { useQuery } from 'react-query';
-import { useErrorHandler } from 'react-error-boundary';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useErrorHandler } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { shortAddress } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { StoreType } from '@/common/types/util.types';
+import { shortAddress } from '@/common/utils/utils';
+import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   // TODO: should type properly (`Relay`)

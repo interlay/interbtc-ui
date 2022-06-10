@@ -1,6 +1,8 @@
-import * as React from 'react';
 import clsx from 'clsx';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import * as React from 'react';
+
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+
 import styles from './checkbox-input.module.css';
 
 enum CheckboxLabelSide {

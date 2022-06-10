@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import QRCode from 'qrcode.react';
 import clsx from 'clsx';
+import QRCode from 'qrcode.react';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
-import Timer from 'components/Timer';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { StoreType } from 'common/types/util.types';
-import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+import { StoreType } from '@/common/types/util.types';
+import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import Timer from '@/components/Timer';
+import InterlayTooltip from '@/components/UI/InterlayTooltip';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   // TODO: should type properly (`Relay`)

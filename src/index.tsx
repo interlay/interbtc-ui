@@ -1,19 +1,20 @@
-import * as React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { QueryClientProvider, QueryClient } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { HelmetProvider } from 'react-helmet-async';
-
-import App from './App';
-import { store, persistor } from './store';
-import reportWebVitals from './reportWebVitals';
 import './index.css';
 // TODO: import only one theme
-import 'componentLibrary/theme/theme.interlay.css';
-import 'componentLibrary/theme/theme.kintsugi.css';
+import '@/componentLibrary/theme/theme.interlay.css';
+import '@/componentLibrary/theme/theme.kintsugi.css';
+
+import * as React from 'react';
+import ReactDOM from 'react-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import { QueryClient,QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { PersistGate } from 'redux-persist/integration/react';
+
+import App from './App';
+import reportWebVitals from './reportWebVitals';
+import { persistor,store } from './store';
 
 window.isFetchingActive = false;
 

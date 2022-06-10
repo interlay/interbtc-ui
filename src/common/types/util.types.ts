@@ -1,11 +1,12 @@
-import { Store, CombinedState } from 'redux';
-import { u256 } from '@polkadot/types/primitive';
-import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
+import { BitcoinAmount, Currency,MonetaryAmount } from '@interlay/monetary-js';
+import { u256 } from '@polkadot/types/primitive';
+import { CombinedState,Store } from 'redux';
 
-import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import { GeneralActions, RedeemActions, IssueActions, VaultActions } from './actions.types';
+import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
+
 import { rootReducer } from '../reducers/index';
+import { GeneralActions, IssueActions, RedeemActions, VaultActions } from './actions.types';
 import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';

@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
-import InterlayCinnabarBadge, { Props as InterlayCinnabarBadgeProps } from 'components/badges/InterlayCinnabarBadge';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
+import InterlayCinnabarBadge, { Props as InterlayCinnabarBadgeProps } from '@/components/badges/InterlayCinnabarBadge';
+import InterlayTooltip from '@/components/UI/InterlayTooltip';
 
 const TestnetBadge = ({ className, ...rest }: InterlayCinnabarBadgeProps): JSX.Element => {
   const { t } = useTranslation();

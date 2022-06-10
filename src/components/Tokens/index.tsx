@@ -1,25 +1,25 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 
-import TokenSelector from './TokenSelector';
-import { SelectVariants, SELECT_VARIANTS } from 'components/Select';
-
+import { StoreType, TokenType } from '@/common/types/util.types';
+import { displayMonetaryAmount } from '@/common/utils/utils';
+import { SELECT_VARIANTS, SelectVariants } from '@/components/Select';
 import {
-  WrappedToken,
-  WRAPPED_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon,
   CollateralToken,
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceToken,
+  GovernanceTokenLogoIcon,
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainNativeTokenLogoIcon,
-  GovernanceToken,
-  GOVERNANCE_TOKEN,
-  GOVERNANCE_TOKEN_SYMBOL,
-  GovernanceTokenLogoIcon
-} from 'config/relay-chains';
-import { displayMonetaryAmount } from 'common/utils/utils';
-import { TokenType, StoreType } from 'common/types/util.types';
+  WRAPPED_TOKEN,
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedToken,
+  WrappedTokenLogoIcon
+} from '@/config/relay-chains';
+
+import TokenSelector from './TokenSelector';
 
 interface TokenOption {
   token: WrappedToken | CollateralToken | GovernanceToken;

@@ -1,10 +1,10 @@
-import { payments, networks } from 'bitcoinjs-lib';
-import Big from 'big.js';
-import { Issue, Redeem, CurrencyUnit, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { CurrencyUnit, InterbtcPrimitivesVaultId, Issue, Redeem } from '@interlay/interbtc-api';
 import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
+import { networks, payments } from 'bitcoinjs-lib';
 
-import { NUMERIC_STRING_REGEX, PARACHAIN_URL } from '../../constants';
-import { BitcoinNetwork } from 'types/bitcoin';
+import { NUMERIC_STRING_REGEX, PARACHAIN_URL } from '@/constants';
+import { BitcoinNetwork } from '@/types/bitcoin';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
@@ -166,20 +166,20 @@ function getPolkadotLink(blockHeight: number): string {
 }
 
 export {
-  safeRoundTwoDecimals,
-  shortAddress,
-  shortTxId,
+  btcAddressFromEventToString,
+  copyToClipboard,
+  displayMonetaryAmount,
   formatDateTime,
   formatDateTimePrecise,
   getLastMidnightTimestamps,
+  getPolkadotLink,
+  getRandomArrayElement,
+  getRandomVaultIdWithCapacity,
   getUsdAmount,
-  displayMonetaryAmount,
   isPositiveNumeric,
   range,
-  btcAddressFromEventToString,
   requestsInStore,
-  copyToClipboard,
-  getRandomVaultIdWithCapacity,
-  getRandomArrayElement,
-  getPolkadotLink
+  safeRoundTwoDecimals,
+  shortAddress,
+  shortTxId
 };

@@ -1,14 +1,14 @@
-import * as React from 'react';
-import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 import { Issue } from '@interlay/interbtc-api';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import BTCPaymentPendingStatusUI from 'pages/Transactions/IssueRequestsTable/IssueRequestModal/BTCPaymentPendingStatusUI';
-import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import { PAGES, QUERY_PARAMETERS } from 'utils/constants/links';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
+import InterlayModal, { InterlayModalInnerWrapper,Props as ModalProps } from '@/components/UI/InterlayModal';
+import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
+import BTCPaymentPendingStatusUI from '@/pages/Transactions/IssueRequestsTable/IssueRequestModal/BTCPaymentPendingStatusUI';
+import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
 const queryString = require('query-string');
 

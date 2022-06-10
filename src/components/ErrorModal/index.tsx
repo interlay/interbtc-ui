@@ -1,12 +1,11 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import CloseIconButton from 'components/buttons/CloseIconButton';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayModal, {
-  Props as ModalProps,
   InterlayModalInnerWrapper,
-  InterlayModalTitle
-} from 'components/UI/InterlayModal';
+  InterlayModalTitle,
+  Props as ModalProps} from '@/components/UI/InterlayModal';
 
 interface CustomProps {
   title: string;

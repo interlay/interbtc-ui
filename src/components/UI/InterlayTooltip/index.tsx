@@ -1,10 +1,11 @@
-import * as React from 'react';
-import Tooltip, { TooltipProps } from '@reach/tooltip';
-import clsx from 'clsx';
 import '@reach/tooltip/styles.css';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { BORDER_CLASSES } from 'utils/constants/styles';
+import Tooltip, { TooltipProps } from '@reach/tooltip';
+import clsx from 'clsx';
+import * as React from 'react';
+
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from '@/utils/constants/styles';
 
 type Ref = HTMLDivElement;
 const InterlayTooltip = React.forwardRef<Ref, Props>(

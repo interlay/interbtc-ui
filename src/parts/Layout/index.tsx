@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import MaintenanceBanner from 'parts/MaintenanceBanner';
-import Sidebar from 'parts/Sidebar';
-import Topbar from 'parts/Topbar';
+import MaintenanceBanner from '@/parts/MaintenanceBanner';
+import Sidebar from '@/parts/Sidebar';
+import Topbar from '@/parts/Topbar';
 
 interface Props {
   className?: string;

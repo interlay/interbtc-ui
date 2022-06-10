@@ -1,8 +1,8 @@
-import clsx from 'clsx';
 import { MenuIcon } from '@heroicons/react/outline';
+import clsx from 'clsx';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const OpenButton = ({ onClick }: InterlayButtonBaseProps): JSX.Element => (
   <InterlayButtonBase

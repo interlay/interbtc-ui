@@ -1,16 +1,17 @@
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
-import PageTitle from 'parts/PageTitle';
-import TimerIncrement from 'parts/TimerIncrement';
-import WrappedTokenCard from './WrappedTokenCard';
-import CollateralLockedCard from '../../cards/CollateralLockedCard';
-import CollateralizationCard from '../../cards/CollateralizationCard';
-import ParachainSecurityCard from '../../cards/ParachainSecurityCard';
-import BTCRelayCard from '../../cards/BTCRelayCard';
-import OracleStatusCard from '../../cards/OracleStatusCard';
+import PageTitle from '@/parts/PageTitle';
+import TimerIncrement from '@/parts/TimerIncrement';
+
 import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
+import BTCRelayCard from '../../cards/BTCRelayCard';
+import CollateralizationCard from '../../cards/CollateralizationCard';
+import CollateralLockedCard from '../../cards/CollateralLockedCard';
+import OracleStatusCard from '../../cards/OracleStatusCard';
+import ParachainSecurityCard from '../../cards/ParachainSecurityCard';
 import ActiveCollatorsCard from './ActiveCollatorsCard';
+import WrappedTokenCard from './WrappedTokenCard';
 
 const Home = (): JSX.Element => {
   const { t } = useTranslation();

@@ -1,36 +1,36 @@
-import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useSelector, useDispatch } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import Accounts from 'components/Accounts';
-import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import Chains, { ChainOption } from 'components/Chains';
-import TokenField from 'components/TokenField';
-import ErrorFallback from 'components/ErrorFallback';
-import FormTitle from 'components/FormTitle';
-import SubmitButton from 'components/SubmitButton';
-import ErrorModal from 'components/ErrorModal';
-import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
-import { ChainType } from 'types/chains.types';
-import STATUSES from 'utils/constants/statuses';
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import Accounts from '@/components/Accounts';
+import AvailableBalanceUI from '@/components/AvailableBalanceUI';
+import Chains, { ChainOption } from '@/components/Chains';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import SubmitButton from '@/components/SubmitButton';
+import TokenField from '@/components/TokenField';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { ChainType } from '@/types/chains.types';
+import STATUSES from '@/utils/constants/statuses';
 import {
-  RELAY_CHAIN_TRANSFER_FEE,
   createRelayChainApi,
-  getRelayChainBalance,
   getExistentialDeposit,
-  transferToParachain,
-  transferToRelayChain,
+  getRelayChainBalance,
+  RELAY_CHAIN_TRANSFER_FEE,
   RelayChainApi,
-  RelayChainMonetaryAmount
-} from 'utils/relay-chain-api';
+  RelayChainMonetaryAmount,
+  transferToParachain,
+  transferToRelayChain
+} from '@/utils/relay-chain-api';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 

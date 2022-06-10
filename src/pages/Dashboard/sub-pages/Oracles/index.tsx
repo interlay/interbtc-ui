@@ -1,10 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
+import Hr1 from '@/components/hrs/Hr1';
+import PageTitle from '@/parts/PageTitle';
+import TimerIncrement from '@/parts/TimerIncrement';
+
 import OracleStatusCard from '../../cards/OracleStatusCard';
 import OraclesTable from './OraclesTable';
-import TimerIncrement from 'parts/TimerIncrement';
-import PageTitle from 'parts/PageTitle';
-import Hr1 from 'components/hrs/Hr1';
 
 const Oracles = (): JSX.Element => {
   const { t } = useTranslation();

@@ -1,25 +1,25 @@
-import * as React from 'react';
-import { toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useMutation, useQueryClient } from 'react-query';
-import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
-import clsx from 'clsx';
-import { FaExclamationCircle } from 'react-icons/fa';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { FaExclamationCircle } from 'react-icons/fa';
+import { useMutation, useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
-import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
-import ErrorFallback from 'components/ErrorFallback';
-import PrimaryColorSpan from 'components/PrimaryColorSpan';
-import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import InterlayConiferOutlinedButton from '@/components/buttons/InterlayConiferOutlinedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import ErrorFallback from '@/components/ErrorFallback';
+import PrimaryColorSpan from '@/components/PrimaryColorSpan';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -32,7 +32,9 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
-  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN));
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
+  );
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 
