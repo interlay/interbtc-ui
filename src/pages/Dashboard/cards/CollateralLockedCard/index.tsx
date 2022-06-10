@@ -8,7 +8,7 @@ import LineChart from '../../LineChart';
 import DashboardCard from '../DashboardCard';
 import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { COLLATERAL_TOKEN_SYMBOL, COLLATERAL_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
@@ -44,8 +44,8 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
       CUMULATIVE_VOLUMES_FETCHER,
       'Collateral' as VolumeType,
       cutoffTimestamps,
-      COLLATERAL_TOKEN, // returned amounts
-      COLLATERAL_TOKEN, // filter by this collateral...
+      RELAY_CHAIN_NATIVE_TOKEN, // returned amounts
+      RELAY_CHAIN_NATIVE_TOKEN, // filter by this collateral...
       WRAPPED_TOKEN //     and this backing currency
     ],
     cumulativeVolumesFetcher
@@ -79,7 +79,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
             <>
               <StatsDt>{t('dashboard.vault.locked_collateral')}</StatsDt>
               <StatsDd>
-                {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+                {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
               </StatsDd>
               <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken?.usd)}</StatsDd>
             </>

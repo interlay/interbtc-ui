@@ -3,7 +3,8 @@ const URL_PARAMETERS = Object.freeze({
     ACCOUNT: 'vaultAccount',
     COLLATERAL: 'vaultCollateral',
     WRAPPED: 'vaultWrapped'
-  }
+  },
+  TRANSACTION_HASH: 'transactionHash'
 });
 
 const PAGES = Object.freeze({
@@ -11,6 +12,7 @@ const PAGES = Object.freeze({
   BRIDGE: '/bridge',
   TRANSFER: '/transfer',
   TRANSACTIONS: '/transactions',
+  TRANSACTION: '/transaction',
   STAKING: '/staking',
   DASHBOARD: '/dashboard',
   DASHBOARD_VAULTS: '/dashboard/vaults',

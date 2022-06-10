@@ -7,7 +7,7 @@ import { useTable } from 'react-table';
 import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
-import { IssueStatus } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, IssueStatus } from '@interlay/interbtc-api';
 
 import SectionTitle from 'parts/SectionTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
@@ -31,15 +31,16 @@ import issueCountQuery from 'services/queries/issue-count-query';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { shortAddress, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
-import issueFetcher, { getIssueWithStatus, ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
+import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from 'services/fetchers/issues-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
   vaultAddress: string;
+  collateralId: CurrencyIdLiteral | undefined;
 }
 
-const VaultIssueRequestsTable = ({ vaultAddress }: Props): JSX.Element | null => {
+const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
@@ -92,8 +93,11 @@ const VaultIssueRequestsTable = ({ vaultAddress }: Props): JSX.Element | null =>
     error: issueRequestsTotalCountError
     // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [GRAPHQL_FETCHER, issueCountQuery(`vault: {accountId_eq: "${vaultAddress}"}`)],
-    graphqlFetcher<GraphqlReturn<any>>()
+    [GRAPHQL_FETCHER, issueCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}`)],
+    graphqlFetcher<GraphqlReturn<any>>(),
+    {
+      enabled: !!collateralId
+    }
   );
   useErrorHandler(issueRequestsTotalCountError);
 
@@ -105,12 +109,15 @@ const VaultIssueRequestsTable = ({ vaultAddress }: Props): JSX.Element | null =>
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      ISSUE_FETCHER,
+      ISSUES_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}"}` // `WHERE` condition
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
     ],
-    issueFetcher
+    issuesFetcher,
+    {
+      enabled: !!collateralId
+    }
   );
   useErrorHandler(issueRequestsError);
 

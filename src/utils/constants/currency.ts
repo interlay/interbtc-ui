@@ -5,9 +5,9 @@ import {
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 
-import { COLLATERAL_TOKEN, WRAPPED_TOKEN, GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN, GOVERNANCE_TOKEN, VOTE_GOVERNANCE_TOKEN } from 'config/relay-chains';
 
-const COLLATERAL_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker) as CollateralIdLiteral;
+const COLLATERAL_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(RELAY_CHAIN_NATIVE_TOKEN.ticker) as CollateralIdLiteral;
 
 const WRAPPED_TOKEN_ID_LITERAL = tickerToCurrencyIdLiteral(WRAPPED_TOKEN.ticker) as WrappedIdLiteral;
 
