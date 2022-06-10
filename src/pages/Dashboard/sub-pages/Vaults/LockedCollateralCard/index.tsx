@@ -11,9 +11,7 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-// ray test touch <
 import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
-// ray test touch >
 
 interface Props {
   collateralToken: CollateralToken;
@@ -27,7 +25,6 @@ const LockedCollateralCard = ({
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
-  // ray test touch <
   const {
     isIdle: cumulativeVolumesIdle,
     isLoading: cumulativeVolumesLoading,
@@ -35,7 +32,6 @@ const LockedCollateralCard = ({
     error: cumulativeVolumesError
   } = useCumulativeCollateralVolumes(collateralToken);
   useErrorHandler(cumulativeVolumesError);
-  // ray test touch >
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
