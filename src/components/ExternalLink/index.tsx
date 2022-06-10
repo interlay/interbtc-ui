@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { FaExternalLinkAlt } from 'react-icons/fa';
 
-import InterlayLink, { Props as InterlayLinkProps } from 'components/UI/InterlayLink';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import InterlayLink, { Props as InterlayLinkProps } from '@/components/UI/InterlayLink';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const ExternalLink = ({ className, children, ...rest }: InterlayLinkProps): JSX.Element => {
   return (

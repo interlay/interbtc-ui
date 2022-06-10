@@ -1,20 +1,19 @@
-import { useQueries, UseQueryResult } from 'react-query';
-import { AccountId } from '@polkadot/types/interfaces';
-import Big from 'big.js';
 import {
   CollateralIdLiteral,
-  tickerToCurrencyIdLiteral,
+  CurrencyIdLiteral,
   newAccountId,
-  VaultExt,
-  CurrencyIdLiteral
-} from '@interlay/interbtc-api';
+  tickerToCurrencyIdLiteral,
+  VaultExt} from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
-
-import { HYDRA_URL } from '../../../constants';
-import issueCountQuery from 'services/queries/issue-count-query';
-import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
-import { StoreType } from 'common/types/util.types';
+import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
+import { useQueries, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
+
+import { StoreType } from '@/common/types/util.types';
+import { HYDRA_URL } from '@/constants';
+import issueCountQuery from '@/services/queries/issue-count-query';
+import { useGetVaults } from '@/utils/hooks/api/use-get-vaults';
 
 interface VaultOverview {
   apy: Big;

@@ -1,7 +1,7 @@
-import ReactPaginate, { ReactPaginateProps } from 'react-paginate';
 import clsx from 'clsx';
+import ReactPaginate, { ReactPaginateProps } from 'react-paginate';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const FOCUS_CLASSES = clsx(
   'focus:outline-none',

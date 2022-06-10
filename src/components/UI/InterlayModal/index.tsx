@@ -1,9 +1,9 @@
-import * as React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { PropsOf } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 type InterlayModalTitleProps = PropsOf<typeof Dialog.Title>;
 const InterlayModalTitle = (props: InterlayModalTitleProps): JSX.Element => <Dialog.Title {...props} />;
@@ -78,7 +78,7 @@ const InterlayModal = ({ open = false, onClose, children, initialFocus }: Props)
   );
 };
 
-export { InterlayModalTitle, InterlayModalInnerWrapper };
+export { InterlayModalInnerWrapper,InterlayModalTitle };
 
 // TODO: should use types from @headlessui/react
 export interface Props {

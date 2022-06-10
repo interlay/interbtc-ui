@@ -1,10 +1,10 @@
-import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, RedeemStatus } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import redeemRequestQuery from 'services/queries/redeem-request-query';
-import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
+import { COLLATERAL_TOKEN } from '@/config/relay-chains';
+import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
+import getTxDetailsForRequest from '@/services/fetchers/request-btctx-fetcher';
+import redeemRequestQuery from '@/services/queries/redeem-request-query';
 
 type RedeemFetcherParams = [key: typeof REDEEM_FETCHER, offset: number, limit: number, where?: string];
 

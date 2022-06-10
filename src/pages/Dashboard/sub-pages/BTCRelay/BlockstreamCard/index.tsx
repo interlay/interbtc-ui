@@ -1,18 +1,19 @@
-import { useSelector } from 'react-redux';
+import clsx from 'clsx';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import clsx from 'clsx';
+import { useSelector } from 'react-redux';
+
+import { StoreType } from '@/common/types/util.types';
+import ErrorFallback from '@/components/ErrorFallback';
+import ExternalLink from '@/components/ExternalLink';
+import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
+import { BTC_EXPLORER_BLOCK_API } from '@/config/blockstream-explorer-links';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import DashboardCard from '../../../cards/DashboardCard';
 import Stats from '../../../Stats';
-import ExternalLink from 'components/ExternalLink';
-import ErrorFallback from 'components/ErrorFallback';
-import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
-import { BTC_EXPLORER_BLOCK_API } from 'config/blockstream-explorer-links';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
 
 const BlockstreamCard = (): JSX.Element => {
   const { t } = useTranslation();

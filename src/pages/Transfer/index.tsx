@@ -1,21 +1,21 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import TransferForm from './TransferForm';
-import CrossChainTransferForm from './CrossChainTransferForm';
-import MainContainer from 'parts/MainContainer';
-import Panel from 'components/Panel';
-import Hr1 from 'components/hrs/Hr1';
+import Hr1 from '@/components/hrs/Hr1';
+import Panel from '@/components/Panel';
 import InterlayTabGroup, {
-  InterlayTabList,
-  InterlayTabPanels,
   InterlayTab,
-  InterlayTabPanel
-} from 'components/UI/InterlayTabGroup';
-import useQueryParams from 'utils/hooks/use-query-params';
-import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
+  InterlayTabList,
+  InterlayTabPanel,
+  InterlayTabPanels} from '@/components/UI/InterlayTabGroup';
+import MainContainer from '@/parts/MainContainer';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import useQueryParams from '@/utils/hooks/use-query-params';
+import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
+
+import CrossChainTransferForm from './CrossChainTransferForm';
+import TransferForm from './TransferForm';
 
 const TAB_IDS = Object.freeze({
   transfer: 'transfer',

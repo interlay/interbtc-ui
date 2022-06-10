@@ -1,7 +1,9 @@
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { AddressOrPair } from '@polkadot/api-base/types';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+
+import { COLLATERAL_TOKEN } from '@/config/relay-chains';
+
 import { RelayChainMonetaryAmount } from './';
 
 const getRelayChainBalance = async (api: ApiPromise, address: AddressOrPair): Promise<RelayChainMonetaryAmount> => {

@@ -1,37 +1,36 @@
+import { GovernanceUnit, Issue,newAccountId, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency,ExchangeRate } from '@interlay/monetary-js';
+import Big from 'big.js';
+import clsx from 'clsx';
 import * as React from 'react';
+import { useErrorHandler } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import clsx from 'clsx';
-import Big from 'big.js';
-import { useErrorHandler } from 'react-error-boundary';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
-import { newMonetaryAmount, GovernanceUnit, newAccountId, Issue } from '@interlay/interbtc-api';
 
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import ErrorModal from '@/components/ErrorModal';
+import Hr2 from '@/components/hrs/Hr2';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/components/SubmitButton';
+import TokenField from '@/components/TokenField';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
-  GovernanceTokenLogoIcon,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon,
-  WRAPPED_TOKEN_SYMBOL
-} from 'config/relay-chains';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { ParachainStatus, StoreType } from 'common/types/util.types';
-import TokenField from 'components/TokenField';
-import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import STATUSES from 'utils/constants/statuses';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import SubmittedIssueRequestModal from 'pages/Bridge/IssueForm/SubmittedIssueRequestModal';
-import ErrorModal from 'components/ErrorModal';
-import Hr2 from 'components/hrs/Hr2';
-import SubmitButton from 'components/SubmitButton';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
-import PriceInfo from 'pages/Bridge/PriceInfo';
+  GovernanceTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon} from '@/config/relay-chains';
+import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
+import PriceInfo from '@/pages/Bridge/PriceInfo';
+import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';

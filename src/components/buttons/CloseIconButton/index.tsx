@@ -1,9 +1,9 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import IconButton, { Props as IconButtonProps } from 'components/buttons/IconButton';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { ReactComponent as CloseIcon } from 'assets/img/icons/close.svg';
+import { ReactComponent as CloseIcon } from '@/assets/img/icons/close.svg';
+import IconButton, { Props as IconButtonProps } from '@/components/buttons/IconButton';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 type Ref = HTMLButtonElement;
 const CloseIconButton = React.forwardRef<Ref, IconButtonProps>(({ className, ...rest }, ref) => (

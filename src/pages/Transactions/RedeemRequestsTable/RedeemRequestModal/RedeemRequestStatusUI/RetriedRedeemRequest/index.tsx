@@ -1,20 +1,20 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import Big from 'big.js';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import { FaExclamationCircle } from 'react-icons/fa';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import Big from 'big.js';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { FaExclamationCircle } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import PriceInfo from 'pages/Bridge/PriceInfo';
-import ExternalLink from 'components/ExternalLink';
-import PrimaryColorSpan from 'components/PrimaryColorSpan';
-import Hr2 from 'components/hrs/Hr2';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL, CollateralTokenLogoIcon } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { getUsdAmount, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getPolkadotLink,getUsdAmount } from '@/common/utils/utils';
+import ExternalLink from '@/components/ExternalLink';
+import Hr2 from '@/components/hrs/Hr2';
+import PrimaryColorSpan from '@/components/PrimaryColorSpan';
+import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL, CollateralTokenLogoIcon } from '@/config/relay-chains';
+import PriceInfo from '@/pages/Bridge/PriceInfo';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   // TODO: should type properly (`Relay`)

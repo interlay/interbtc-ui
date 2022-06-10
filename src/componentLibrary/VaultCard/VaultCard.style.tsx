@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { theme } from 'componentLibrary/theme';
+
+import { theme } from '@/componentLibrary/theme';
 
 export const Card = styled.div`
   color: ${theme.colors.textSecondary};

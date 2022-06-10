@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const ErrorMessage = ({ className, ...rest }: React.ComponentPropsWithRef<'p'>): JSX.Element => (
   <p

@@ -1,25 +1,25 @@
-import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
-import { COLLATERAL_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
+import { COLLATERAL_TOKEN, GOVERNANCE_TOKEN } from '@/config/relay-chains';
+
 import {
+  CHANGE_ADDRESS,
+  GeneralActions,
+  INIT_GENERAL_DATA_ACTION,
   IS_BRIDGE_LOADED,
   IS_VAULT_CLIENT_LOADED,
-  INIT_GENERAL_DATA_ACTION,
-  CHANGE_ADDRESS,
+  SET_INSTALLED_EXTENSION,
+  SHOW_ACCOUNT_MODAL,
+  UPDATE_BALANCE_POLKA_BTC,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
   UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_GOVERNANCE_TOKEN_BALANCE,
   UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
-  UPDATE_BALANCE_POLKA_BTC,
-  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
-  GeneralActions,
-  SET_INSTALLED_EXTENSION,
-  SHOW_ACCOUNT_MODAL,
-  UPDATE_OF_PRICES,
   UPDATE_HEIGHTS,
-  UPDATE_TOTALS
-} from '../types/actions.types';
+  UPDATE_OF_PRICES,
+  UPDATE_TOTALS,
+  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE} from '../types/actions.types';
 import { GeneralState, ParachainStatus } from '../types/util.types';
 
 const initialState = {

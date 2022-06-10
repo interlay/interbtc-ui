@@ -1,37 +1,36 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // // @ts-nocheck
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useQuery } from 'react-query';
-import { useTable } from 'react-table';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 import { CollateralUnit } from '@interlay/interbtc-api';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useTable } from 'react-table';
 
-import SectionTitle from 'parts/SectionTitle';
-import ErrorFallback from 'components/ErrorFallback';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+import { ReactComponent as CancelIcon } from '@/assets/img/icons/cancel.svg';
+import { ReactComponent as CheckCircleIcon } from '@/assets/img/icons/check-circle.svg';
+import { StoreType } from '@/common/types/util.types';
+import { formatDateTime } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
   InterlayTableContainer,
-  InterlayThead,
   InterlayTbody,
-  InterlayTr,
+  InterlayTd,
   InterlayTh,
-  InterlayTd
-} from 'components/UI/InterlayTable';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { formatDateTime } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { BTCToCollateralTokenRate } from 'types/currency';
-import { ReactComponent as CheckCircleIcon } from 'assets/img/icons/check-circle.svg';
-import { ReactComponent as CancelIcon } from 'assets/img/icons/cancel.svg';
+  InterlayThead,
+  InterlayTr} from '@/components/UI/InterlayTable';
+import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from '@/config/relay-chains';
+import SectionTitle from '@/parts/SectionTitle';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
   allLatestSubmissionsFetcher,
   BtcToCurrencyOracleStatus,
   ORACLE_ALL_LATEST_UPDATES_FETCHER
-} from 'services/fetchers/oracle-exchange-rates-fetcher';
+} from '@/services/fetchers/oracle-exchange-rates-fetcher';
+import { BTCToCollateralTokenRate } from '@/types/currency';
 
 const OracleTable = (): JSX.Element => {
   const { t } = useTranslation();

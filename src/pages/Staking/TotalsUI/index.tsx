@@ -1,13 +1,14 @@
-import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import { VOTE_GOVERNANCE_TOKEN_SYMBOL, VoteGovernanceTokenMonetaryAmount } from '@/config/relay-chains';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+
 import InformationUI from '../InformationUI';
-import ErrorFallback from 'components/ErrorFallback';
-import { VOTE_GOVERNANCE_TOKEN_SYMBOL, VoteGovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import { displayMonetaryAmount } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
 
 const TotalsUI = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);

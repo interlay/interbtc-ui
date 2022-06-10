@@ -1,14 +1,14 @@
-import { useSelector } from 'react-redux';
-import { useMutation, useQueryClient } from 'react-query';
 import clsx from 'clsx';
+import { useMutation, useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
 
-import ErrorModal from 'components/ErrorModal';
+import { StoreType } from '@/common/types/util.types';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
-} from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
-import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
-import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
+} from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
+import ErrorModal from '@/components/ErrorModal';
+import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 
 interface CustomProps {
   claimableRewardAmount: string;

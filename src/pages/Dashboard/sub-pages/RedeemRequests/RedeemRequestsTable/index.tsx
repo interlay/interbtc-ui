@@ -1,37 +1,36 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useTable } from 'react-table';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import clsx from 'clsx';
 import { RedeemStatus } from '@interlay/interbtc-api';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useTable } from 'react-table';
 
-import SectionTitle from 'parts/SectionTitle';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorFallback from 'components/ErrorFallback';
-import ExternalLink from 'components/ExternalLink';
-import InterlayPagination from 'components/UI/InterlayPagination';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount,formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import ExternalLink from '@/components/ExternalLink';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import InterlayPagination from '@/components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
-  InterlayThead,
   InterlayTbody,
-  InterlayTr,
+  InterlayTd,
   InterlayTh,
-  InterlayTd
-} from 'components/UI/InterlayTable';
-import StatusCell from 'components/UI/InterlayTable/StatusCell';
-import { BTC_EXPLORER_ADDRESS_API } from 'config/blockstream-explorer-links';
-import useQueryParams from 'utils/hooks/use-query-params';
-import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import { shortAddress, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemFetcher, { REDEEM_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeem-request-fetcher';
-import redeemCountQuery from 'services/queries/redeem-count-query';
-import { StoreType } from 'common/types/util.types';
+  InterlayThead,
+  InterlayTr} from '@/components/UI/InterlayTable';
+import StatusCell from '@/components/UI/InterlayTable/StatusCell';
+import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
+import SectionTitle from '@/parts/SectionTitle';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import graphqlFetcher, { GRAPHQL_FETCHER,GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import redeemFetcher, { getRedeemWithStatus,REDEEM_FETCHER } from '@/services/fetchers/redeem-request-fetcher';
+import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import useQueryParams from '@/utils/hooks/use-query-params';
+import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
 const RedeemRequestsTable = (): JSX.Element => {
   const queryParams = useQueryParams();

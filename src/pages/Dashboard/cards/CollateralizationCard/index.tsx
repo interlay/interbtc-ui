@@ -1,21 +1,22 @@
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import Big from 'big.js';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
+import Big from 'big.js';
+import clsx from 'clsx';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, safeRoundTwoDecimals } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
+import { COLLATERAL_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { PAGES } from '@/utils/constants/links';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+
+import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
-import ErrorFallback from 'components/ErrorFallback';
-import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
-import { COLLATERAL_TOKEN, WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { PAGES } from 'utils/constants/links';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { displayMonetaryAmount, safeRoundTwoDecimals } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
 
 const TEMP_COLLATERALIZATION_DISPLAY_DISABLED = true; // TODO: remove once lib reimplements collateralization
 

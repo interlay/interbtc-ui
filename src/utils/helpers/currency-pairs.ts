@@ -1,6 +1,6 @@
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 
-import { CurrencyPair, CurrencyPairs, CurrencySymbols } from 'types/currency';
+import { CurrencyPair, CurrencyPairs, CurrencySymbols } from '@/types/currency';
 
 const CURRENCY_PAIRS: CurrencyPairs = [
   {

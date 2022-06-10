@@ -1,6 +1,7 @@
 import { Dispatch } from 'redux';
 
-import { COLLATERAL_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
+import { COLLATERAL_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+
 import { updateTotalsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 
