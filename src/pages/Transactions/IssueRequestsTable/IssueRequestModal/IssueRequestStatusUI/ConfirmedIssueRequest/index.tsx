@@ -13,10 +13,10 @@ import ExternalLink from '@/components/ExternalLink';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
-import { ISSUE_FETCHER } from '@/services/fetchers/issue-request-fetcher';
+import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
 interface Props {
@@ -43,7 +43,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
     },
     {
       onSuccess: (_, variables) => {
-        queryClient.invalidateQueries([ISSUE_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
+        queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
       }
     }

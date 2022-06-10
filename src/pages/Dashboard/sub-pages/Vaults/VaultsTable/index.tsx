@@ -23,7 +23,7 @@ import InterlayTable, {
   InterlayThead,
   InterlayTr
 } from '@/components/UI/InterlayTable';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import * as constants from '@/constants';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
@@ -76,7 +76,7 @@ const VaultsTable = (): JSX.Element => {
     data: secureCollateralThreshold,
     error: secureCollateralThresholdError
   } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', COLLATERAL_TOKEN],
+    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded
@@ -90,7 +90,7 @@ const VaultsTable = (): JSX.Element => {
     data: liquidationCollateralThreshold,
     error: liquidationCollateralThresholdError
   } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getLiquidationCollateralThreshold', COLLATERAL_TOKEN],
+    [GENERIC_FETCHER, 'vaults', 'getLiquidationCollateralThreshold', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded
@@ -104,7 +104,7 @@ const VaultsTable = (): JSX.Element => {
     data: btcToCollateralTokenRate,
     error: btcToCollateralTokenRateError
   } = useQuery<BTCToCollateralTokenRate, Error>(
-    [GENERIC_FETCHER, 'oracle', 'getExchangeRate', COLLATERAL_TOKEN],
+    [GENERIC_FETCHER, 'oracle', 'getExchangeRate', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<BTCToCollateralTokenRate>(),
     {
       enabled: !!bridgeLoaded
@@ -132,7 +132,7 @@ const VaultsTable = (): JSX.Element => {
       },
       {
         Header: t('locked_dot', {
-          collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+          collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
         }),
         accessor: 'lockedDOT',
         classNames: ['text-right']

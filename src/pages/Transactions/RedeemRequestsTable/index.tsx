@@ -3,13 +3,13 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
-import { FaCheck, FaRegClock,FaRegTimesCircle } from 'react-icons/fa';
+import { FaCheck, FaRegClock, FaRegTimesCircle } from 'react-icons/fa';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount,formatDateTimePrecise, shortTxId } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatDateTimePrecise, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -20,13 +20,14 @@ import InterlayTable, {
   InterlayTd,
   InterlayTh,
   InterlayThead,
-  InterlayTr} from '@/components/UI/InterlayTable';
+  InterlayTr
+} from '@/components/UI/InterlayTable';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import graphqlFetcher, { GRAPHQL_FETCHER,GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import redeemFetcher, { getRedeemWithStatus,REDEEM_FETCHER } from '@/services/fetchers/redeem-request-fetcher';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -104,12 +105,12 @@ const RedeemRequestsTable = (): JSX.Element => {
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      REDEEM_FETCHER,
+      REDEEMS_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
       `userParachainAddress_eq: "${address}"` // WHERE condition
     ],
-    redeemFetcher
+    redeemsFetcher
   );
   useErrorHandler(redeemRequestsError);
 

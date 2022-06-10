@@ -21,8 +21,9 @@ import InterlayTable, {
   InterlayTd,
   InterlayTh,
   InterlayThead,
-  InterlayTr} from '@/components/UI/InterlayTable';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from '@/config/relay-chains';
+  InterlayTr
+} from '@/components/UI/InterlayTable';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
@@ -60,7 +61,7 @@ const OracleTable = (): JSX.Element => {
     data: oracleSubmissions,
     error: oracleSubmissionsError
   } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit>[], Error>(
-    [ORACLE_ALL_LATEST_UPDATES_FETCHER, COLLATERAL_TOKEN, oracleTimeout, namesMap],
+    [ORACLE_ALL_LATEST_UPDATES_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout, namesMap],
     allLatestSubmissionsFetcher,
     {
       enabled: !!oracleTimeout && !!namesMap
@@ -95,7 +96,7 @@ const OracleTable = (): JSX.Element => {
         Cell: function FormattedCell({ value }: { value: BTCToCollateralTokenRate }) {
           return (
             <>
-              1 BTC = {value.toHuman(5)} {COLLATERAL_TOKEN_SYMBOL}
+              1 BTC = {value.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </>
           );
         }

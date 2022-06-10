@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
 import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
   BtcToCurrencyOracleStatus,
@@ -44,7 +44,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
     data: oracleStatus,
     error: oracleStatusError
   } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit> | undefined, Error>(
-    [ORACLE_LATEST_EXCHANGE_RATE_FETCHER, COLLATERAL_TOKEN, oracleTimeout],
+    [ORACLE_LATEST_EXCHANGE_RATE_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout],
     latestExchangeRateFetcher,
     {
       enabled: !!oracleTimeout
@@ -115,7 +115,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           </Ring64Title>
           {exchangeRate && (
             <Ring64Value>
-              {exchangeRate.toHuman(5)} BTC/{COLLATERAL_TOKEN_SYMBOL}
+              {exchangeRate.toHuman(5)} BTC/{RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
           )}
         </Ring64>

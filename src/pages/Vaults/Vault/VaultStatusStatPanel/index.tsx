@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
-import { COLLATERAL_TOKEN } from '@/config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { BTCToCollateralTokenRate } from '@/types/currency';
 import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
@@ -54,7 +54,7 @@ const VaultStatusStatPanel = ({ vaultAccountId }: Props): JSX.Element => {
     data: liquidationCollateralThreshold,
     error: liquidationCollateralThresholdError
   } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getLiquidationCollateralThreshold', COLLATERAL_TOKEN],
+    [GENERIC_FETCHER, 'vaults', 'getLiquidationCollateralThreshold', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded
@@ -68,7 +68,7 @@ const VaultStatusStatPanel = ({ vaultAccountId }: Props): JSX.Element => {
     data: secureCollateralThreshold,
     error: secureCollateralThresholdError
   } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', COLLATERAL_TOKEN],
+    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded
@@ -82,7 +82,7 @@ const VaultStatusStatPanel = ({ vaultAccountId }: Props): JSX.Element => {
     data: btcToCollateralTokenRate,
     error: btcToCollateralTokenRateError
   } = useQuery<BTCToCollateralTokenRate, Error>(
-    [GENERIC_FETCHER, 'oracle', 'getExchangeRate', COLLATERAL_TOKEN],
+    [GENERIC_FETCHER, 'oracle', 'getExchangeRate', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<BTCToCollateralTokenRate>(),
     {
       enabled: !!bridgeLoaded

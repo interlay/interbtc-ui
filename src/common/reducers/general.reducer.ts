@@ -1,7 +1,7 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import { COLLATERAL_TOKEN, GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 
 import {
   CHANGE_ADDRESS,
@@ -19,7 +19,8 @@ import {
   UPDATE_HEIGHTS,
   UPDATE_OF_PRICES,
   UPDATE_TOTALS,
-  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE} from '../types/actions.types';
+  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE
+} from '../types/actions.types';
 import { GeneralState, ParachainStatus } from '../types/util.types';
 
 const initialState = {
@@ -29,11 +30,11 @@ const initialState = {
   showAccountModal: false,
   address: '',
   totalWrappedTokenAmount: BitcoinAmount.zero,
-  totalLockedCollateralTokenAmount: newMonetaryAmount(0, COLLATERAL_TOKEN),
+  totalLockedCollateralTokenAmount: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   wrappedTokenBalance: BitcoinAmount.zero,
   wrappedTokenTransferableBalance: BitcoinAmount.zero,
-  collateralTokenBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
-  collateralTokenTransferableBalance: newMonetaryAmount(0, COLLATERAL_TOKEN),
+  collateralTokenBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
+  collateralTokenTransferableBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   governanceTokenBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
   governanceTokenTransferableBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
   extensions: [],

@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount,formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -19,13 +19,14 @@ import InterlayTable, {
   InterlayTd,
   InterlayTh,
   InterlayThead,
-  InterlayTr} from '@/components/UI/InterlayTable';
+  InterlayTr
+} from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
 import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import graphqlFetcher, { GRAPHQL_FETCHER,GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import issueFetcher, { getIssueWithStatus,ISSUE_FETCHER } from '@/services/fetchers/issue-request-fetcher';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -183,11 +184,11 @@ const IssueRequestsTable = (): JSX.Element => {
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      ISSUE_FETCHER,
+      ISSUES_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT // limit
     ],
-    issueFetcher
+    issuesFetcher
   );
   useErrorHandler(issuesError);
 

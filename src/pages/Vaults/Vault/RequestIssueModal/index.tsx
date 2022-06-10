@@ -1,5 +1,5 @@
-import { GovernanceUnit, Issue,newAccountId, newMonetaryAmount } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency,ExchangeRate } from '@interlay/monetary-js';
+import { CurrencyIdLiteral, GovernanceUnit, Issue, newAccountId, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -25,11 +25,11 @@ import {
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenLogoIcon,
   WRAPPED_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon} from '@/config/relay-chains';
+  WrappedTokenLogoIcon
+} from '@/config/relay-chains';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import PriceInfo from '@/pages/Bridge/PriceInfo';
-import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
@@ -43,6 +43,7 @@ type RequestIssueFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
+  collateralIdLiteral: CurrencyIdLiteral | undefined;
   vaultAddress: string;
 }
 
@@ -61,7 +62,7 @@ const extraRequiredCollateralTokenAmount = newMonetaryAmount(
 );
 
 // TODO: share form with bridge page
-const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element => {
+const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }: Props): JSX.Element => {
   const { register, handleSubmit, errors, watch, trigger } = useForm<RequestIssueFormData>({ mode: 'onChange' });
   const btcAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
 
@@ -105,6 +106,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
     if (!bridgeLoaded) return;
     if (!handleError) return;
     if (!vaultAccountId) return;
+    if (!collateralIdLiteral) return;
 
     (async () => {
       try {
@@ -123,7 +125,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
           window.bridge.issue.getDustValue(),
           window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
           // MEMO: this always uses KSM as collateral token
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL)
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralIdLiteral)
         ]);
         setStatus(STATUSES.RESOLVED);
         if (theFeeRate.status === 'fulfilled') {
@@ -146,7 +148,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
         handleError(error);
       }
     })();
-  }, [bridgeLoaded, handleError, vaultAccountId]);
+  }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING || vaultAccountId === undefined) {
     return <PrimaryColorEllipsisLoader />;
@@ -163,7 +165,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
       const result = await window.bridge.issue.request(
         wrappedTokenAmount,
         vaultAccountId,
-        COLLATERAL_TOKEN_ID_LITERAL,
+        collateralIdLiteral,
         false, // default
         0, // default
         vaults

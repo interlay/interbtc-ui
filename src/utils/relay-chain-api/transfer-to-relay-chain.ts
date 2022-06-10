@@ -3,7 +3,7 @@ import { ApiPromise } from '@polkadot/api';
 import { AddressOrPair } from '@polkadot/api/types';
 import { decodeAddress } from '@polkadot/keyring';
 
-import { COLLATERAL_TOKEN } from '@/config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 
 import { RelayChainMonetaryAmount } from './';
 import { TRANSFER_WEIGHT } from './constants';
@@ -27,7 +27,7 @@ const transferToRelayChain = async (
 
   const dest = createDest(api, id);
   // TODO: does this need to be done here, or can it be imported from the lib?
-  const currencyId = newCurrencyId(api, tickerToCurrencyIdLiteral(COLLATERAL_TOKEN.ticker));
+  const currencyId = newCurrencyId(api, tickerToCurrencyIdLiteral(RELAY_CHAIN_NATIVE_TOKEN.ticker));
 
   const xcmTransaction = api.tx.xTokens.transfer(currencyId, transferAmount.toString(), dest, TRANSFER_WEIGHT);
 

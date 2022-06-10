@@ -41,10 +41,10 @@ import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import {
   APP_NAME,
   BRIDGE_PARACHAIN_NAME,
-  COLLATERAL_TOKEN,
   GOVERNANCE_TOKEN,
   PRICES_URL,
   RELAY_CHAIN_NAME,
+  RELAY_CHAIN_NATIVE_TOKEN,
   WRAPPED_TOKEN
 } from '@/config/relay-chains';
 import * as constants from '@/constants';
@@ -60,6 +60,7 @@ import { CLASS_NAMES } from '@/utils/constants/styles';
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
 const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ '@/pages/Transactions'));
+const Transaction = React.lazy(() => import(/* webpackChunkName: 'transaction' */ '@/pages/Transaction'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
 const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
@@ -169,7 +170,7 @@ const App = (): JSX.Element => {
           state
         ] = await Promise.all([
           window.bridge.tokens.total(WRAPPED_TOKEN),
-          window.bridge.tokens.total(COLLATERAL_TOKEN),
+          window.bridge.tokens.total(RELAY_CHAIN_NATIVE_TOKEN),
           window.bridge.tokens.total(GOVERNANCE_TOKEN),
           window.bridge.btcRelay.getLatestBlockHeight(),
           window.bridge.electrsAPI.getLatestBlockHeight(),
@@ -261,7 +262,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromCollateral = await window.bridge.tokens.subscribeToBalance(
-          COLLATERAL_TOKEN,
+          RELAY_CHAIN_NATIVE_TOKEN,
           address,
           (_: string, balance: ChainBalance<CollateralUnit>) => {
             if (!balance.free.eq(collateralTokenBalance)) {
@@ -414,6 +415,9 @@ const App = (): JSX.Element => {
                 </Route>
                 <Route path={PAGES.TRANSACTIONS}>
                   <Transactions />
+                </Route>
+                <Route path={PAGES.TRANSACTION}>
+                  <Transaction />
                 </Route>
                 <Route path={PAGES.BRIDGE}>
                   <Bridge />

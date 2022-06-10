@@ -1,22 +1,23 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 
-import { StoreType,TokenType } from '@/common/types/util.types';
+import { StoreType, TokenType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
-import { SELECT_VARIANTS,SelectVariants } from '@/components/Select';
+import { SELECT_VARIANTS, SelectVariants } from '@/components/Select';
 import {
-  COLLATERAL_TOKEN,
-  COLLATERAL_TOKEN_SYMBOL,
   CollateralToken,
-  CollateralTokenLogoIcon,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceToken,
   GovernanceTokenLogoIcon,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeTokenLogoIcon,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedToken,
-  WrappedTokenLogoIcon} from '@/config/relay-chains';
+  WrappedTokenLogoIcon
+} from '@/config/relay-chains';
 
 import TokenSelector from './TokenSelector';
 
@@ -77,12 +78,12 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   React.useEffect(() => {
     const tokenOptions: Array<TokenOption> = [
       {
-        token: COLLATERAL_TOKEN,
+        token: RELAY_CHAIN_NATIVE_TOKEN,
         type: TokenType.COLLATERAL,
         balance: displayMonetaryAmount(collateralTokenBalance),
         transferableBalance: displayMonetaryAmount(collateralTokenTransferableBalance),
-        icon: <CollateralTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
-        symbol: COLLATERAL_TOKEN_SYMBOL
+        icon: <RelayChainNativeTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
+        symbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
       },
       {
         token: WRAPPED_TOKEN,

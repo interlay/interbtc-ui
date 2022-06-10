@@ -5,9 +5,9 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getLastMidnightTimestamps,getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, getLastMidnightTimestamps, getUsdAmount } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
@@ -15,7 +15,7 @@ import cumulativeVolumesFetcher, {
 } from '@/services/fetchers/cumulative-volumes-till-timestamps-fetcher';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
 import { PAGES } from '@/utils/constants/links';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import LineChart from '../../LineChart';
 import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
@@ -45,8 +45,8 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
       CUMULATIVE_VOLUMES_FETCHER,
       'Collateral' as VolumeType,
       cutoffTimestamps,
-      COLLATERAL_TOKEN, // returned amounts
-      COLLATERAL_TOKEN, // filter by this collateral...
+      RELAY_CHAIN_NATIVE_TOKEN, // returned amounts
+      RELAY_CHAIN_NATIVE_TOKEN, // filter by this collateral...
       WRAPPED_TOKEN //     and this backing currency
     ],
     cumulativeVolumesFetcher
@@ -80,7 +80,7 @@ const CollateralLockedCard = ({ hasLinks }: Props): JSX.Element => {
             <>
               <StatsDt>{t('dashboard.vault.locked_collateral')}</StatsDt>
               <StatsDd>
-                {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+                {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
               </StatsDd>
               <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken?.usd)}</StatsDd>
             </>

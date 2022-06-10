@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { InterbtcPrimitivesVaultId,ReplaceRequestExt, stripHexPrefix, WrappedCurrency } from '@interlay/interbtc-api';
+import { InterbtcPrimitivesVaultId, ReplaceRequestExt, stripHexPrefix, WrappedCurrency } from '@interlay/interbtc-api';
 import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
-import { BitcoinUnit, CollateralUnit,Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { BitcoinUnit, CollateralUnit, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { H256 } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount,shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -22,7 +22,8 @@ import InterlayTable, {
   InterlayTd,
   InterlayTh,
   InterlayThead,
-  InterlayTr} from '@/components/UI/InterlayTable';
+  InterlayTr
+} from '@/components/UI/InterlayTable';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import SectionTitle from '@/parts/SectionTitle';
@@ -30,9 +31,10 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 
 interface Props {
   vaultAddress: string;
+  collateralId: CurrencyIdLiteral | undefined;
 }
 
-const ReplaceTable = ({ vaultAddress }: Props): JSX.Element => {
+const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -46,7 +48,7 @@ const ReplaceTable = ({ vaultAddress }: Props): JSX.Element => {
     [GENERIC_FETCHER, 'replace', 'mapReplaceRequests', vaultId],
     genericFetcher<Map<H256, ReplaceRequestExt>>(),
     {
-      enabled: !!bridgeLoaded,
+      enabled: !!bridgeLoaded && !!collateralId,
       refetchInterval: 10000
     }
   );
@@ -130,10 +132,12 @@ const ReplaceTable = ({ vaultAddress }: Props): JSX.Element => {
   );
 
   const data = replaceRequests
-    ? [...replaceRequests.entries()].map(([key, value]) => ({
-        id: key,
-        ...value
-      }))
+    ? [...replaceRequests.filter((request) => request?.collateral?.currency?.ticker === collateralId).entries()].map(
+        ([key, value]) => ({
+          id: key,
+          ...value
+        })
+      )
     : [];
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,

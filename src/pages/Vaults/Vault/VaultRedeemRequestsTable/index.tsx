@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // // @ts-nocheck
-import { RedeemStatus } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, RedeemStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -21,13 +21,14 @@ import InterlayTable, {
   InterlayTd,
   InterlayTh,
   InterlayThead,
-  InterlayTr} from '@/components/UI/InterlayTable';
+  InterlayTr
+} from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
 import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import graphqlFetcher, { GRAPHQL_FETCHER,GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import redeemFetcher, { getRedeemWithStatus, REDEEM_FETCHER } from '@/services/fetchers/redeem-request-fetcher';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -36,9 +37,10 @@ import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters'
 
 interface Props {
   vaultAddress: string;
+  collateralId: CurrencyIdLiteral | undefined;
 }
 
-const VaultRedeemRequestsTable = ({ vaultAddress }: Props): JSX.Element | null => {
+const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
@@ -91,8 +93,14 @@ const VaultRedeemRequestsTable = ({ vaultAddress }: Props): JSX.Element | null =
     error: redeemRequestsTotalCountError
     // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [GRAPHQL_FETCHER, redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}"}`)],
-    graphqlFetcher<GraphqlReturn<any>>()
+    [
+      GRAPHQL_FETCHER,
+      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}`)
+    ],
+    graphqlFetcher<GraphqlReturn<any>>(),
+    {
+      enabled: !!collateralId
+    }
   );
   useErrorHandler(redeemRequestsTotalCountError);
 
@@ -104,12 +112,15 @@ const VaultRedeemRequestsTable = ({ vaultAddress }: Props): JSX.Element | null =
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      REDEEM_FETCHER,
+      REDEEMS_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}"}` // `WHERE` condition
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
     ],
-    redeemFetcher
+    redeemsFetcher,
+    {
+      enabled: !!collateralId
+    }
   );
   useErrorHandler(redeemRequestsError);
 

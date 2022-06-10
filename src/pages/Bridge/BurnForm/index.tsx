@@ -23,9 +23,9 @@ import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader'
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import {
-  COLLATERAL_TOKEN,
-  COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeTokenLogoIcon,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
@@ -65,7 +65,7 @@ const BurnForm = (): JSX.Element | null => {
   const [burnRate, setBurnRate] = React.useState(
     new ExchangeRate<Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit>(
       Bitcoin,
-      COLLATERAL_TOKEN,
+      RELAY_CHAIN_NATIVE_TOKEN,
       new Big(0)
     )
   );
@@ -82,8 +82,8 @@ const BurnForm = (): JSX.Element | null => {
       try {
         setStatus(STATUSES.PENDING);
         const [theBurnRate, theBurnableTokens] = await Promise.all([
-          window.bridge.redeem.getBurnExchangeRate(COLLATERAL_TOKEN),
-          window.bridge.redeem.getMaxBurnableTokens(COLLATERAL_TOKEN as CollateralCurrency)
+          window.bridge.redeem.getBurnExchangeRate(RELAY_CHAIN_NATIVE_TOKEN),
+          window.bridge.redeem.getMaxBurnableTokens(RELAY_CHAIN_NATIVE_TOKEN as CollateralCurrency)
         ]);
         setBurnRate(theBurnRate);
         setBurnableTokens(theBurnableTokens);
@@ -116,7 +116,7 @@ const BurnForm = (): JSX.Element | null => {
         setSubmitStatus(STATUSES.PENDING);
         await window.bridge.redeem.burn(
           BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]),
-          COLLATERAL_TOKEN as CollateralCurrency
+          RELAY_CHAIN_NATIVE_TOKEN as CollateralCurrency
         );
         // TODO: should not manually update the balances everywhere
         // - Should be able to watch the balances in one place and update the context accordingly.
@@ -172,7 +172,7 @@ const BurnForm = (): JSX.Element | null => {
 
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const earnedCollateralTokenAmount = burnRate.rate.eq(0)
-      ? newMonetaryAmount(0, COLLATERAL_TOKEN)
+      ? newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
       : burnRate.toCounter(parsedInterBTCAmount || BitcoinAmount.zero);
     const accountSet = !!address;
 
@@ -182,7 +182,7 @@ const BurnForm = (): JSX.Element | null => {
           <FormTitle>
             {t('burn_page.burn_interbtc', {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
-              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+              collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
             })}
           </FormTitle>
           <PriceInfo
@@ -230,9 +230,9 @@ const BurnForm = (): JSX.Element | null => {
                 {t('you_will_receive')}
               </h5>
             }
-            unitIcon={<CollateralTokenLogoIcon width={20} />}
+            unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
-            unitName={COLLATERAL_TOKEN_SYMBOL}
+            unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken?.usd)}
           />
           <SubmitButton
