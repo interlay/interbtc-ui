@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from 'react-query';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
-import { WRAPPED_TOKEN, CollateralToken, GovernanceToken } from 'config/relay-chains';
+import { WRAPPED_TOKEN, CollateralToken } from 'config/relay-chains';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
@@ -12,8 +12,7 @@ import cumulativeVolumesFetcher, {
 const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
 const useCumulativeCollateralVolumes = (
-  // TODO: `CollateralToken` should be able to contain `GovernanceToken`
-  collateralToken: CollateralToken | GovernanceToken
+  collateralToken: CollateralToken
 ): UseQueryResult<VolumeDataPoint<CollateralUnit>[], Error> => {
   return useQuery<VolumeDataPoint<CollateralUnit>[], Error>(
     [

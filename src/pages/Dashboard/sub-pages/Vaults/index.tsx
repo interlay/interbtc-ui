@@ -8,7 +8,7 @@ import CollateralizationCard from '../../cards/CollateralizationCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
-import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, CollateralToken } from 'config/relay-chains';
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
@@ -23,7 +23,7 @@ const Vaults = (): JSX.Element => {
         <ActiveVaultsCard />
         <CollateralizationCard />
         <LockedCollateralCard collateralToken={RELAY_CHAIN_NATIVE_TOKEN} collateralTokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL} />
-        <LockedCollateralCard collateralToken={GOVERNANCE_TOKEN} collateralTokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
+        <LockedCollateralCard collateralToken={GOVERNANCE_TOKEN as CollateralToken} collateralTokenSymbol={GOVERNANCE_TOKEN_SYMBOL} />
       </div>
       <VaultsTable />
     </>

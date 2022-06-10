@@ -8,9 +8,7 @@ import LineChart from 'pages/Dashboard/LineChart';
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
 import Stats, { StatsDt, StatsDd } from 'pages/Dashboard/Stats';
 import ErrorFallback from 'components/ErrorFallback';
-// ray test touch <
-import { WRAPPED_TOKEN, CollateralToken, GovernanceToken } from 'config/relay-chains';
-// ray test touch >
+import { WRAPPED_TOKEN, CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from 'common/utils/utils';
@@ -27,10 +25,7 @@ import cumulativeVolumesFetcher, {
 const cutoffTimestamps = getLastMidnightTimestamps(6, true);
 
 interface Props {
-  // ray test touch <
-  // TODO: `CollateralToken` should be able to contain `GovernanceToken`
-  collateralToken: CollateralToken | GovernanceToken;
-  // ray test touch >
+  collateralToken: CollateralToken;
   collateralTokenSymbol: string;
 }
 
