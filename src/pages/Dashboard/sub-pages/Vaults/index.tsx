@@ -8,7 +8,7 @@ import CollateralizationCard from '../../cards/CollateralizationCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
@@ -23,10 +23,10 @@ const Vaults = (): JSX.Element => {
         <ActiveVaultsCard />
         <CollateralizationCard />
         {/* ray test touch < */}
-        <LockedCollateralCard collateralToken={COLLATERAL_TOKEN} collateralTokenSymbol={COLLATERAL_TOKEN_SYMBOL} />
+        <LockedCollateralCard collateralToken={RELAY_CHAIN_NATIVE_TOKEN} collateralTokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL} />
         {/* TODO: placeholders for now */}
-        <LockedCollateralCard collateralToken={COLLATERAL_TOKEN} collateralTokenSymbol='KINT' />
-        <LockedCollateralCard collateralToken={COLLATERAL_TOKEN} collateralTokenSymbol='USDC' />
+        <LockedCollateralCard collateralToken={RELAY_CHAIN_NATIVE_TOKEN} collateralTokenSymbol='KINT' />
+        <LockedCollateralCard collateralToken={RELAY_CHAIN_NATIVE_TOKEN} collateralTokenSymbol='USDC' />
         {/* ray test touch > */}
       </div>
       <VaultsTable />
