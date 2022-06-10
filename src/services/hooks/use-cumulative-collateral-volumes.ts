@@ -1,4 +1,3 @@
-// ray test touch <
 import { useQuery, UseQueryResult } from 'react-query';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
@@ -30,4 +29,3 @@ const useCumulativeCollateralVolumes = (
 };
 
 export default useCumulativeCollateralVolumes;
-// ray test touch >

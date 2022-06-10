@@ -12,15 +12,12 @@ import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
 import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-// ray test touch <
 import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
-// ray test touch >
 
 const LockedCollateralsCard = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
-  // ray test touch <
   const {
     isIdle: cumulativeVolumesIdle,
     isLoading: cumulativeVolumesLoading,
@@ -28,7 +25,6 @@ const LockedCollateralsCard = (): JSX.Element => {
     error: cumulativeVolumesError
   } = useCumulativeCollateralVolumes(RELAY_CHAIN_NATIVE_TOKEN);
   useErrorHandler(cumulativeVolumesError);
-  // ray test touch >
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
