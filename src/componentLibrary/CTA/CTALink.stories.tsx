@@ -1,4 +1,4 @@
-import { Meta,Story } from '@storybook/react';
+import { Story, Meta } from '@storybook/react';
 
 import { CTALink, CTALinkProps } from './';
 
@@ -23,7 +23,7 @@ FullWidth.args = {
   fullWidth: true
 };
 
-export { FullWidth,Primary, Secondary };
+export { Primary, Secondary, FullWidth };
 
 export default {
   title: 'Elements/CTALink',

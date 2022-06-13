@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import { GOVERNANCE_TOKEN_SYMBOL, VOTE_GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
+import { GOVERNANCE_TOKEN_SYMBOL, VOTE_GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
 const Label = ({ className, ...rest }: React.ComponentPropsWithRef<'span'>) => (
   <span className={clsx('text-sm', className)} {...rest} />

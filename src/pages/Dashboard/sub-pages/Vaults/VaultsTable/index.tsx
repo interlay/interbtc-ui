@@ -1,35 +1,35 @@
-import { roundTwoDecimals, VaultExt } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import * as React from 'react';
+import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useTable } from 'react-table';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useQuery } from 'react-query';
+import { useHistory } from 'react-router-dom';
 import Big from 'big.js';
 import clsx from 'clsx';
-import * as React from 'react';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { useTable } from 'react-table';
+import { roundTwoDecimals, VaultExt } from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
-import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import SectionTitle from 'parts/SectionTitle';
+import ErrorFallback from 'components/ErrorFallback';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+import InformationTooltip from 'components/tooltips/InformationTooltip';
 import InterlayTable, {
   InterlayTableContainer,
-  InterlayTbody,
-  InterlayTd,
-  InterlayTh,
   InterlayThead,
-  InterlayTr
-} from '@/components/UI/InterlayTable';
-import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import * as constants from '@/constants';
-import SectionTitle from '@/parts/SectionTitle';
-import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { BTCToCollateralTokenRate } from '@/types/currency';
-import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
-import { getCollateralization, getVaultStatusLabel } from '@/utils/helpers/vaults';
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
+} from 'components/UI/InterlayTable';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
+import { getCollateralization, getVaultStatusLabel } from 'utils/helpers/vaults';
+import { PAGES, URL_PARAMETERS } from 'utils/constants/links';
+import { shortAddress, displayMonetaryAmount } from 'common/utils/utils';
+import * as constants from '../../../../../constants';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { BTCToCollateralTokenRate } from 'types/currency';
+import { StoreType } from 'common/types/util.types';
 
 const getCollateralizationColor = (
   collateralization: string | undefined,

@@ -1,17 +1,18 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import clsx from 'clsx';
 import * as React from 'react';
+import clsx from 'clsx';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-import { shortAddress } from '@/common/utils/utils';
+import { shortAddress } from 'common/utils/utils';
 import Select, {
-  SELECT_VARIANTS,
-  SelectBody,
   SelectButton,
-  SelectCheck,
-  SelectLabel,
-  SelectOption,
   SelectOptions,
-  SelectText} from '@/components/Select';
+  SelectOption,
+  SelectLabel,
+  SelectBody,
+  SelectCheck,
+  SelectText,
+  SELECT_VARIANTS
+} from 'components/Select';
 
 interface Props {
   accounts: Array<InjectedAccountWithMeta>;

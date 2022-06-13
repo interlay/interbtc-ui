@@ -1,4 +1,3 @@
-const path = require('path');
 
 module.exports = {
   // TODO: only for app
@@ -16,7 +15,7 @@ module.exports = {
   },
 
   webpack: {
-    configure: (webpackConfig) => {
+    configure: webpackConfig => {
       webpackConfig.module.rules.push({
         test: /\.mjs$/,
         include: /node_modules/,
@@ -32,12 +31,11 @@ module.exports = {
 
       // Fixes dtrace-provider compilation bug described here:
       // https://github.com/chrisa/node-dtrace-provider/issues/114
-      webpackConfig.externals = ['dtrace-provider'];
+      webpackConfig.externals = [
+        'dtrace-provider'
+      ];
 
       return webpackConfig;
-    },
-    alias: {
-      '@': path.resolve(__dirname, 'src/')
     }
   }
 };

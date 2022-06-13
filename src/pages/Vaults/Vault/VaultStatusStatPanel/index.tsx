@@ -1,21 +1,20 @@
-import { VaultExt } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
-import Big from 'big.js';
+import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-
-import { StoreType } from '@/common/types/util.types';
-import ErrorFallback from '@/components/ErrorFallback';
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
-import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { BTCToCollateralTokenRate } from '@/types/currency';
-import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
-import { getVaultStatusLabel } from '@/utils/helpers/vaults';
+import Big from 'big.js';
+import { AccountId } from '@polkadot/types/interfaces';
+import { VaultExt } from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import StatPanel from '../StatPanel';
+import ErrorFallback from 'components/ErrorFallback';
+import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
+import { getVaultStatusLabel } from 'utils/helpers/vaults';
+import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { BTCToCollateralTokenRate } from 'types/currency';
+import { StoreType } from 'common/types/util.types';
 
 interface Props {
   // TODO: should remove `undefined` later on when the loading is properly handled

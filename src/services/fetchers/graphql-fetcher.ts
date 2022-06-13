@@ -1,4 +1,4 @@
-import { HYDRA_URL } from '@/constants';
+import { HYDRA_URL } from '../../constants';
 
 const GRAPHQL_FETCHER = 'graphql-fetcher';
 

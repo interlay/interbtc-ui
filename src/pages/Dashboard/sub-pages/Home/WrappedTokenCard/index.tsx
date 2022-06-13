@@ -1,14 +1,13 @@
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
-import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import IssuedChart from '@/pages/Dashboard/IssuedChart';
-import { PAGES } from '@/utils/constants/links';
-
+import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../../Stats';
 import DashboardCard from '../../../cards/DashboardCard';
-import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../../Stats';
+import IssuedChart from 'pages/Dashboard/IssuedChart';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+import { PAGES } from 'utils/constants/links';
+import { StoreType } from 'common/types/util.types';
 
 const WrappedTokenCard = (): JSX.Element => {
   const { prices, totalWrappedTokenAmount } = useSelector((state: StoreType) => state.general);

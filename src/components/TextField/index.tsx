@@ -1,8 +1,8 @@
-import clsx from 'clsx';
 import * as React from 'react';
+import clsx from 'clsx';
 
-import InterlayInput, { Props as InterlayInputProps } from '@/components/UI/InterlayInput';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
 interface CustomTextFieldProps {
   label?: JSX.Element | string;
@@ -83,7 +83,7 @@ const TextFieldHelperText = ({ className, ...rest }: React.ComponentPropsWithRef
   <p className={clsx('text-sm', className)} {...rest} />
 );
 
-export { TextFieldContainer,TextFieldHelperText, TextFieldLabel };
+export { TextFieldLabel, TextFieldHelperText, TextFieldContainer };
 
 export type Props = CustomTextFieldProps & InterlayInputProps;
 

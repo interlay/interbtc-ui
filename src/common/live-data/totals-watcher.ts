@@ -1,7 +1,6 @@
 import { Dispatch } from 'redux';
 
-import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
-
+import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
 import { updateTotalsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 

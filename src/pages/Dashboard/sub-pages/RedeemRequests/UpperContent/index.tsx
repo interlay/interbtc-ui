@@ -1,25 +1,24 @@
-import { BitcoinUnit } from '@interlay/monetary-js';
-import clsx from 'clsx';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useQuery } from 'react-query';
+import clsx from 'clsx';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
-import { StoreType } from '@/common/types/util.types';
-import ErrorFallback from '@/components/ErrorFallback';
-import Panel from '@/components/Panel';
-import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import RedeemedChart from './RedeemedChart';
+import Stats, { StatsDt, StatsDd } from '../../../Stats';
+import ErrorFallback from 'components/ErrorFallback';
+import Panel from 'components/Panel';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import redeemCountQuery from 'services/queries/redeem-count-query';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from '@/services/fetchers/cumulative-volumes-till-timestamps-fetcher';
-import graphqlFetcher, { GRAPHQL_FETCHER,GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import redeemCountQuery from '@/services/queries/redeem-count-query';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
-
-import Stats, { StatsDd,StatsDt } from '../../../Stats';
-import RedeemedChart from './RedeemedChart';
+} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+import { WRAPPED_TOKEN } from 'config/relay-chains';
 
 const nowAtfirstLoad = new Date();
 

@@ -1,71 +1,70 @@
-import 'react-toastify/dist/ReactToastify.css';
-import './i18n';
-
+import * as React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
+import { useQuery } from 'react-query';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import { Keyring } from '@polkadot/api';
 import {
+  createInterBtcApi,
+  SecurityStatusCode,
+  FaucetClient,
   ChainBalance,
   CollateralUnit,
-  createInterBtcApi,
-  FaucetClient,
-  GovernanceUnit,
-  SecurityStatusCode
+  GovernanceUnit
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
-import { Keyring } from '@polkadot/api';
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
-import * as React from 'react';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect, Route, Switch } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+import InterlayHelmet from 'parts/InterlayHelmet';
+import Layout from 'parts/Layout';
+import FullLoadingSpinner from 'components/FullLoadingSpinner';
+import ErrorFallback from 'components/ErrorFallback';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
+  APP_NAME,
+  WRAPPED_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  GOVERNANCE_TOKEN,
+  PRICES_URL,
+  RELAY_CHAIN_NAME,
+  BRIDGE_PARACHAIN_NAME
+} from 'config/relay-chains';
+import { PAGES } from 'utils/constants/links';
+import { CLASS_NAMES } from 'utils/constants/styles';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
+import STATUSES from 'utils/constants/statuses';
+import './i18n';
+import * as constants from './constants';
+import { StoreType, ParachainStatus } from 'common/types/util.types';
+import {
+  isBridgeLoaded,
   changeAddressAction,
   initGeneralDataAction,
-  isBridgeLoaded,
+  setInstalledExtensionAction,
   isFaucetLoaded,
   isVaultClientLoaded,
-  setInstalledExtensionAction,
+  updateWrappedTokenBalanceAction,
+  updateWrappedTokenTransferableBalanceAction,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
   updateGovernanceTokenBalanceAction,
   updateGovernanceTokenTransferableBalanceAction,
-  updateOfPricesAction,
-  updateWrappedTokenBalanceAction,
-  updateWrappedTokenTransferableBalanceAction
-} from '@/common/actions/general.actions';
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import ErrorFallback from '@/components/ErrorFallback';
-import FullLoadingSpinner from '@/components/FullLoadingSpinner';
-import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import {
-  APP_NAME,
-  BRIDGE_PARACHAIN_NAME,
-  GOVERNANCE_TOKEN,
-  PRICES_URL,
-  RELAY_CHAIN_NAME,
-  RELAY_CHAIN_NATIVE_TOKEN,
-  WRAPPED_TOKEN
-} from '@/config/relay-chains';
-import * as constants from '@/constants';
-import InterlayHelmet from '@/parts/InterlayHelmet';
-import Layout from '@/parts/Layout';
-import { BitcoinNetwork } from '@/types/bitcoin';
-import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
-import { PAGES } from '@/utils/constants/links';
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import STATUSES from '@/utils/constants/statuses';
-import { CLASS_NAMES } from '@/utils/constants/styles';
+  updateOfPricesAction
+} from 'common/actions/general.actions';
+import { BitcoinNetwork } from 'types/bitcoin';
 
-const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
-const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
-const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ '@/pages/Transactions'));
-const Transaction = React.lazy(() => import(/* webpackChunkName: 'transaction' */ '@/pages/Transaction'));
-const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
-const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
-const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
-const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
-const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
+const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ 'pages/Bridge'));
+const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ 'pages/Transfer'));
+const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ 'pages/Transactions'));
+const Transaction = React.lazy(() => import(/* webpackChunkName: 'transaction' */ 'pages/Transaction'));
+const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ 'pages/Staking'));
+const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard'));
+const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ 'pages/Vaults'));
+const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault'));
+const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch'));
 
 const App = (): JSX.Element => {
   const {

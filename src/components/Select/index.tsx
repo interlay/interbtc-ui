@@ -1,11 +1,11 @@
+import * as React from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { Props } from '@headlessui/react/dist/types';
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
-import * as React from 'react';
+import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
 
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import { BORDER_CLASSES } from '@/utils/constants/styles';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from 'utils/constants/styles';
 
 const SELECT_VARIANTS = Object.freeze({
   optionSelector: 'optionSelector',
@@ -234,14 +234,14 @@ export type SelectProps = Props<typeof Listbox>;
 export type SelectVariants = typeof SELECT_VARIANT_VALUES[number];
 
 export {
-  SELECT_VARIANT_VALUES,
   SELECT_VARIANTS,
-  SelectBody,
-  SelectButton,
-  SelectCheck,
+  SELECT_VARIANT_VALUES,
   SelectLabel,
-  SelectOption,
+  SelectButton,
   SelectOptions,
+  SelectOption,
+  SelectBody,
+  SelectCheck,
   SelectText
 };
 

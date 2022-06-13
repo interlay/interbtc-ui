@@ -1,6 +1,6 @@
+import * as React from 'react';
 import { RadioGroup } from '@headlessui/react';
 import clsx from 'clsx';
-import * as React from 'react';
 
 const PLANS = [
   {

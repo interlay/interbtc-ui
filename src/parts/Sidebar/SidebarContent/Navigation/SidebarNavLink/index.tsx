@@ -1,8 +1,8 @@
-import { ExternalLinkIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
+import { ExternalLinkIcon } from '@heroicons/react/outline';
 
-import InterlayLink, { Props as InterlayLinkProps } from '@/components/UI/InterlayLink';
-import InterlayRouterNavLink, { Props as InterlayRouterNavLinkProps } from '@/components/UI/InterlayRouterNavLink';
+import InterlayRouterNavLink, { Props as InterlayRouterNavLinkProps } from 'components/UI/InterlayRouterNavLink';
+import InterlayLink, { Props as InterlayLinkProps } from 'components/UI/InterlayLink';
 
 interface CustomProps {
   external: boolean;

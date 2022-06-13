@@ -1,2 +1,2 @@
-export type { CoinIconProps } from './CoinIcon';
 export { CoinIcon } from './CoinIcon';
+export type { CoinIconProps } from './CoinIcon';

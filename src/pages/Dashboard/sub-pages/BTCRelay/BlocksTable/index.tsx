@@ -1,34 +1,35 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // // @ts-nocheck
-import { stripHexPrefix } from '@interlay/interbtc-api';
-import clsx from 'clsx';
 import * as React from 'react';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTable } from 'react-table';
+import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
+import { stripHexPrefix } from '@interlay/interbtc-api';
 
-import { formatDateTimePrecise } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
-import ExternalLink from '@/components/ExternalLink';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InterlayPagination from '@/components/UI/InterlayPagination';
+import SectionTitle from 'parts/SectionTitle';
+import ErrorFallback from 'components/ErrorFallback';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+import ExternalLink from 'components/ExternalLink';
 import InterlayTable, {
   InterlayTableContainer,
-  InterlayTbody,
-  InterlayTd,
-  InterlayTh,
   InterlayThead,
-  InterlayTr} from '@/components/UI/InterlayTable';
-import { BTC_EXPLORER_BLOCK_API } from '@/config/blockstream-explorer-links';
-import SectionTitle from '@/parts/SectionTitle';
-import graphqlFetcher, { GRAPHQL_FETCHER,GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import btcBlocksCountQuery from '@/services/queries/btc-blocks-count-query';
-import btcBlocksQuery from '@/services/queries/btc-blocks-query';
-import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { QUERY_PARAMETERS } from '@/utils/constants/links';
-import useQueryParams from '@/utils/hooks/use-query-params';
-import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
+} from 'components/UI/InterlayTable';
+import InterlayPagination from 'components/UI/InterlayPagination';
+import useQueryParams from 'utils/hooks/use-query-params';
+import { BTC_EXPLORER_BLOCK_API } from 'config/blockstream-explorer-links';
+import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
+import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { formatDateTimePrecise } from 'common/utils/utils';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import btcBlocksCountQuery from 'services/queries/btc-blocks-count-query';
+import btcBlocksQuery from 'services/queries/btc-blocks-query';
 
 const BlocksTable = (): JSX.Element => {
   const { t } = useTranslation();
