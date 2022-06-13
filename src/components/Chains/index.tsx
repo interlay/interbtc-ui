@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 
 import ChainSelector, { ChainOption } from './ChainSelector';
@@ -29,13 +28,9 @@ interface Props {
   selectedChain: ChainType | undefined;
 }
 
-const getChain = (type: ChainType): ChainOption | undefined => CHAIN_OPTIONS.find(chain => chain.type === type);
+const getChain = (type: ChainType): ChainOption | undefined => CHAIN_OPTIONS.find((chain) => chain.type === type);
 
-const Chains = ({
-  onChange,
-  label,
-  selectedChain
-}: Props): JSX.Element => {
+const Chains = ({ onChange, label, selectedChain }: Props): JSX.Element => {
   return (
     <div>
       {selectedChain && (
@@ -43,7 +38,8 @@ const Chains = ({
           label={label}
           chainOptions={CHAIN_OPTIONS}
           selectedChain={getChain(selectedChain)}
-          onChange={onChange} />
+          onChange={onChange}
+        />
       )}
     </div>
   );
@@ -51,9 +47,6 @@ const Chains = ({
 
 export type { ChainOption };
 
-export {
-  CHAIN_OPTIONS,
-  getChain
-};
+export { CHAIN_OPTIONS, getChain };
 
 export default Chains;

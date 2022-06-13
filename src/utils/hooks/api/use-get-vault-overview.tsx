@@ -1,11 +1,14 @@
 import { useQueries, UseQueryResult } from 'react-query';
 import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
 import {
   CollateralIdLiteral,
-  CurrencyIdLiteral,
   tickerToCurrencyIdLiteral,
-  newAccountId
+  newAccountId,
+  VaultExt,
+  CurrencyIdLiteral
 } from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
@@ -14,19 +17,21 @@ import { StoreType } from 'common/types/util.types';
 import { useSelector } from 'react-redux';
 
 interface VaultOverview {
-  apy: string;
-  collateralization: string | undefined;
+  apy: Big;
+  collateralization: Big | undefined;
   issues: number;
-  collateralToken: CollateralIdLiteral;
-  wrappedToken: CurrencyIdLiteral;
+  collateralId: CurrencyIdLiteral;
+  wrappedId: CurrencyIdLiteral;
 }
 
 const getVaultOverview = async (
-  accountId: AccountId,
-  token: CollateralIdLiteral
+  vault: VaultExt<BitcoinUnit>,
+  accountId: AccountId
 ): Promise<VaultOverview> => {
-  const apy = await window.bridge.vaults.getAPY(accountId, token);
-  const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, token);
+  const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
+
+  const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
+  const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
@@ -41,11 +46,11 @@ const getVaultOverview = async (
   const issuesCount = await issues.json();
 
   return {
-    apy: apy.toString(),
-    collateralization: collateralization?.mul(100).toString(),
+    apy,
+    collateralization,
     issues: issuesCount.data.issuesConnection.totalCount,
-    collateralToken: token,
-    wrappedToken: CurrencyIdLiteral.KBTC
+    collateralId: tokenIdLiteral,
+    wrappedId: CurrencyIdLiteral.KBTC
   };
 };
 
@@ -58,10 +63,9 @@ const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOver
   // TODO: updating react-query to > 3.28.0 will allow us to type this properly
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<unknown, unknown>>>(
     vaults.map(vault => {
-      const token = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
       return {
-        queryKey: ['vaultsOverview', address, token],
-        queryFn: () => getVaultOverview(newAccountId(window.bridge.api, address), token),
+        queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
+        queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address)),
         options: {
           enabled: !!bridgeLoaded
         }

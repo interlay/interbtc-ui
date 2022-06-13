@@ -5,14 +5,9 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import clsx from 'clsx';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
-import {
-  IssueStatus
-} from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, IssueStatus } from '@interlay/interbtc-api';
 
 import SectionTitle from 'parts/SectionTitle';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
@@ -35,22 +30,17 @@ import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetcher
 import issueCountQuery from 'services/queries/issue-count-query';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import {
-  shortAddress,
-  formatDateTimePrecise,
-  displayMonetaryAmount
-} from 'common/utils/utils';
-import issueFetcher, { getIssueWithStatus, ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
+import { shortAddress, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
+import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from 'services/fetchers/issues-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
   vaultAddress: string;
+  collateralId: CurrencyIdLiteral | undefined;
 }
 
-const VaultIssueRequestsTable = ({
-  vaultAddress
-}: Props): JSX.Element | null => {
+const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
@@ -64,11 +54,7 @@ const VaultIssueRequestsTable = ({
     data: btcConfirmations,
     error: btcConfirmationsError
   } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'btcRelay',
-      'getStableBitcoinConfirmations'
-    ],
+    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
     genericFetcher<number>(),
     {
       enabled: !!bridgeLoaded
@@ -81,17 +67,9 @@ const VaultIssueRequestsTable = ({
     isLoading: latestParachainActiveBlockLoading,
     data: latestParachainActiveBlock,
     error: latestParachainActiveBlockError
-  } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'system',
-      'getCurrentActiveBlockNumber'
-    ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
+    enabled: !!bridgeLoaded
+  });
   useErrorHandler(latestParachainActiveBlockError);
 
   const {
@@ -100,11 +78,7 @@ const VaultIssueRequestsTable = ({
     data: parachainConfirmations,
     error: parachainConfirmationsError
   } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'btcRelay',
-      'getStableParachainConfirmations'
-    ],
+    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
     genericFetcher<number>(),
     {
       enabled: !!bridgeLoaded
@@ -117,13 +91,13 @@ const VaultIssueRequestsTable = ({
     isLoading: issueRequestsTotalCountLoading,
     data: issueRequestsTotalCount,
     error: issueRequestsTotalCountError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [
-      GRAPHQL_FETCHER,
-      issueCountQuery(`vault: {accountId_eq: "${vaultAddress}"}`)
-    ],
-    graphqlFetcher<GraphqlReturn<any>>()
+    [GRAPHQL_FETCHER, issueCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}`)],
+    graphqlFetcher<GraphqlReturn<any>>(),
+    {
+      enabled: !!collateralId
+    }
   );
   useErrorHandler(issueRequestsTotalCountError);
 
@@ -132,15 +106,18 @@ const VaultIssueRequestsTable = ({
     isLoading: issueRequestsLoading,
     data: issueRequests,
     error: issueRequestsError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      ISSUE_FETCHER,
+      ISSUES_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}"}` // `WHERE` condition
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
     ],
-    issueFetcher
+    issuesFetcher,
+    {
+      enabled: !!collateralId
+    }
   );
   useErrorHandler(issueRequestsError);
 
@@ -149,43 +126,27 @@ const VaultIssueRequestsTable = ({
       {
         Header: t('id'),
         accessor: 'id',
-        classNames: [
-          'text-center'
-        ]
+        classNames: ['text-center']
       },
       {
         Header: t('date_created'),
-        classNames: [
-          'text-left'
-        ],
+        classNames: ['text-left'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
-          return (
-            <>
-              {formatDateTimePrecise(new Date(issue.request.timestamp))}
-            </>
-          );
+          return <>{formatDateTimePrecise(new Date(issue.request.timestamp))}</>;
         }
       },
       {
         Header: t('vault.creation_block'),
-        classNames: [
-          'text-right'
-        ],
+        classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
-          return (
-            <>
-              {issue.request.height.active}
-            </>
-          );
+          return <>{issue.request.height.active}</>;
         }
       },
       {
         Header: t('last_update'),
-        classNames: [
-          'text-left'
-        ],
+        classNames: ['text-left'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           let date;
@@ -197,18 +158,12 @@ const VaultIssueRequestsTable = ({
             date = issue.request.timestamp;
           }
 
-          return (
-            <>
-              {formatDateTimePrecise(new Date(date))}
-            </>
-          );
+          return <>{formatDateTimePrecise(new Date(date))}</>;
         }
       },
       {
         Header: t('last_update_block'),
-        classNames: [
-          'text-right'
-        ],
+        classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           let height;
@@ -220,32 +175,20 @@ const VaultIssueRequestsTable = ({
             height = issue.request.height.active;
           }
 
-          return (
-            <>
-              {height}
-            </>
-          );
+          return <>{height}</>;
         }
       },
       {
         Header: t('user'),
         accessor: 'userParachainAddress',
-        classNames: [
-          'text-center'
-        ],
-        Cell: function FormattedCell({ value }: { value: string; }) {
-          return (
-            <>
-              {shortAddress(value)}
-            </>
-          );
+        classNames: ['text-center'],
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <>{shortAddress(value)}</>;
         }
       },
       {
         Header: t('issue_page.amount'),
-        classNames: [
-          'text-right'
-        ],
+        classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           let wrappedTokenAmount;
@@ -255,48 +198,30 @@ const VaultIssueRequestsTable = ({
             wrappedTokenAmount = issue.request.amountWrapped;
           }
 
-          return (
-            <>
-              {displayMonetaryAmount(wrappedTokenAmount)}
-            </>
-          );
+          return <>{displayMonetaryAmount(wrappedTokenAmount)}</>;
         }
       },
       {
         Header: t('griefing_collateral'),
         accessor: 'griefingCollateral',
-        classNames: [
-          'text-right'
-        ],
-        Cell: function FormattedCell({ value }: { value: any; }) {
-          return (
-            <>
-              {displayMonetaryAmount(value)}
-            </>
-          );
+        classNames: ['text-right'],
+        Cell: function FormattedCell({ value }: { value: any }) {
+          return <>{displayMonetaryAmount(value)}</>;
         }
       },
       {
         Header: t('issue_page.vault_btc_address'),
         accessor: 'vaultBackingAddress',
-        classNames: [
-          'text-left'
-        ],
-        Cell: function FormattedCell({ value }: { value: string; }) {
-          return (
-            <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>
-              {shortAddress(value)}
-            </ExternalLink>
-          );
+        classNames: ['text-left'],
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>{shortAddress(value)}</ExternalLink>;
         }
       },
       {
         Header: t('status'),
         accessor: 'status',
-        classNames: [
-          'text-left'
-        ],
-        Cell: function FormattedCell({ value }: { value: IssueStatus; }) {
+        classNames: ['text-left'],
+        Cell: function FormattedCell({ value }: { value: IssueStatus }) {
           return (
             <StatusCell
               status={{
@@ -304,7 +229,8 @@ const VaultIssueRequestsTable = ({
                 cancelled: value === IssueStatus.Cancelled,
                 isExpired: value === IssueStatus.Expired,
                 reimbursed: false
-              }} />
+              }}
+            />
           );
         }
       }
@@ -313,35 +239,21 @@ const VaultIssueRequestsTable = ({
   );
 
   const data =
-    (
-      issueRequests === undefined ||
-      btcConfirmations === undefined ||
-      parachainConfirmations === undefined ||
-      latestParachainActiveBlock === undefined
-    ) ?
-      [] :
-      issueRequests.map(
-        // TODO: should type properly (`Relay`)
-        (issueRequest: any) => getIssueWithStatus(
-          issueRequest,
-          btcConfirmations,
-          parachainConfirmations,
-          latestParachainActiveBlock
-        )
-      );
+    issueRequests === undefined ||
+    btcConfirmations === undefined ||
+    parachainConfirmations === undefined ||
+    latestParachainActiveBlock === undefined
+      ? []
+      : issueRequests.map(
+          // TODO: should type properly (`Relay`)
+          (issueRequest: any) =>
+            getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+        );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow
-  } = useTable(
-    {
-      columns,
-      data
-    }
-  );
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
+    columns,
+    data
+  });
 
   if (
     btcConfirmationsIdle ||
@@ -355,15 +267,13 @@ const VaultIssueRequestsTable = ({
     issueRequestsIdle ||
     issueRequestsLoading
   ) {
-    return (
-      <PrimaryColorEllipsisLoader />
-    );
+    return <PrimaryColorEllipsisLoader />;
   }
   if (issueRequestsTotalCount === undefined) {
     throw new Error('Something went wrong!');
   }
 
-  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number; }) => {
+  const handlePageChange = ({ selected: newSelectedPageIndex }: { selected: number }) => {
     updateQueryParameters({
       [QUERY_PARAMETERS.PAGE]: (newSelectedPageIndex + 1).toString()
     });
@@ -374,9 +284,7 @@ const VaultIssueRequestsTable = ({
 
   return (
     <InterlayTableContainer className='space-y-6'>
-      <SectionTitle>
-        {t('issue_requests')}
-      </SectionTitle>
+      <SectionTitle>{t('issue_requests')}</SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map((headerGroup: any) => (
@@ -390,7 +298,8 @@ const VaultIssueRequestsTable = ({
                       className: clsx(column.classNames),
                       style: column.style
                     }
-                  ])}>
+                  ])}
+                >
                   {column.render('Header')}
                 </InterlayTh>
               ))}
@@ -413,7 +322,8 @@ const VaultIssueRequestsTable = ({
                           className: clsx(cell.column.classNames),
                           style: cell.column.style
                         }
-                      ])}>
+                      ])}
+                    >
                       {cell.render('Cell')}
                     </InterlayTd>
                   );
@@ -424,17 +334,14 @@ const VaultIssueRequestsTable = ({
         </InterlayTbody>
       </InterlayTable>
       {pageCount > 0 && (
-        <div
-          className={clsx(
-            'flex',
-            'justify-end'
-          )}>
+        <div className={clsx('flex', 'justify-end')}>
           <InterlayPagination
             pageCount={pageCount}
             marginPagesDisplayed={2}
             pageRangeDisplayed={5}
             onPageChange={handlePageChange}
-            forcePage={selectedPageIndex} />
+            forcePage={selectedPageIndex}
+          />
         </div>
       )}
     </InterlayTableContainer>

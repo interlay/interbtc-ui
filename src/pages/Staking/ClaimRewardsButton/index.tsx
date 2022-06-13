@@ -1,9 +1,5 @@
-
 import { useSelector } from 'react-redux';
-import {
-  useMutation,
-  useQueryClient
-} from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import clsx from 'clsx';
 
 import ErrorModal from 'components/ErrorModal';
@@ -33,18 +29,8 @@ const ClaimRewardsButton = ({
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([
-          GENERIC_FETCHER,
-          'escrow',
-          'getRewardEstimate',
-          address
-        ]);
-        queryClient.invalidateQueries([
-          GENERIC_FETCHER,
-          'escrow',
-          'getRewards',
-          address
-        ]);
+        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewardEstimate', address]);
+        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewards', address]);
       }
     }
   );
@@ -56,17 +42,11 @@ const ClaimRewardsButton = ({
   return (
     <>
       <InterlayDenimOrKintsugiSupernovaContainedButton
-        className={clsx(
-          'w-full',
-          'px-6',
-          'py-3',
-          'text-base',
-          'rounded-md',
-          className
-        )}
+        className={clsx('w-full', 'px-6', 'py-3', 'text-base', 'rounded-md', className)}
         onClick={handleClaimRewards}
         pending={claimRewardsMutation.isLoading}
-        {...rest}>
+        {...rest}
+      >
         Claim {claimableRewardAmount} {GOVERNANCE_TOKEN_SYMBOL} Rewards
       </InterlayDenimOrKintsugiSupernovaContainedButton>
       {claimRewardsMutation.isError && (
@@ -76,10 +56,8 @@ const ClaimRewardsButton = ({
             claimRewardsMutation.reset();
           }}
           title='Error'
-          description={
-            claimRewardsMutation.error?.message ||
-            ''
-          } />
+          description={claimRewardsMutation.error?.message || ''}
+        />
       )}
     </>
   );

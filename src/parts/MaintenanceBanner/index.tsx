@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -30,21 +29,15 @@ const MaintenanceBanner = (): JSX.Element | null => {
     }
   ];
 
-  const validItems = maintenanceWindows.filter(
-    maintenanceWindow => now < maintenanceWindow.endTime.getTime()
-  );
+  const validItems = maintenanceWindows.filter((maintenanceWindow) => now < maintenanceWindow.endTime.getTime());
 
   if (validItems.length <= 0) {
     return null;
   }
 
   return (
-    <ul
-      className={clsx(
-        'my-4',
-        'space-y-4'
-      )}>
-      {validItems.map(item => (
+    <ul className={clsx('my-4', 'space-y-4')}>
+      {validItems.map((item) => (
         <li
           key={item.id}
           className={clsx(
@@ -57,14 +50,12 @@ const MaintenanceBanner = (): JSX.Element | null => {
             'border-interlayPaleSky',
             'rounded',
             'text-center'
-          )}>
+          )}
+        >
           <strong className='text-interlayPaleSky'>
             {`${item.type} ${formatDateTime(item.startTime)}: ${item.reason}`}
             &nbsp;
-            <InterlayLink
-              href={item.link}
-              target='_blank'
-              rel='noopener noreferrer'>
+            <InterlayLink href={item.link} target='_blank' rel='noopener noreferrer'>
               {t('maintenance.info')}
             </InterlayLink>
           </strong>

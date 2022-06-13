@@ -1,4 +1,3 @@
-
 // TODO: could use TypeScript enum
 const STATUSES = Object.freeze({
   IDLE: 'idle',

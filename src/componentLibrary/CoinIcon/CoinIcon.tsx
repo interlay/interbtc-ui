@@ -1,18 +1,20 @@
-import { KbtcIcon, KsmIcon } from './icons';
+import { CurrencySymbols } from 'types/currency';
+import { KbtcIcon, KintIcon, KsmIcon } from './icons';
 import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 
 interface CoinIconProps extends IconWrapperProps {
-  coin: CurrencyIdLiteral;
+  coin: CurrencySymbols;
 }
 
 const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
   return (
     <IconWrapper size={size}>
-      {coin === CurrencyIdLiteral.KBTC ? (
+      {coin === CurrencySymbols.KBTC ? (
         <KbtcIcon />
-      ) : coin === CurrencyIdLiteral.KSM ? (
+      ) : coin === CurrencySymbols.KSM ? (
         <KsmIcon />
+      ) : coin === CurrencySymbols.KINT ? (
+        <KintIcon />
       ) : null}
     </IconWrapper>
   );

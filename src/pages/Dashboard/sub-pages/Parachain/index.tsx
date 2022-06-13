@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 
 import ParachainSecurityCard from '../../cards/ParachainSecurityCard';
@@ -12,9 +11,7 @@ const Parachain = (): JSX.Element => {
   return (
     <>
       <div>
-        <PageTitle
-          mainTitle={t('dashboard.parachain.parachain')}
-          subTitle={<TimerIncrement />} />
+        <PageTitle mainTitle={t('dashboard.parachain.parachain')} subTitle={<TimerIncrement />} />
         <Hr1 className='mt-2' />
       </div>
       <ParachainSecurityCard />

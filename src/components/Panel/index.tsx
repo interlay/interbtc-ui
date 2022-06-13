@@ -1,16 +1,9 @@
-
 import clsx from 'clsx';
 
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { BORDER_CLASSES } from 'utils/constants/styles';
 
-const Panel = ({
-  className,
-  ...rest
-}: Props): JSX.Element => (
+const Panel = ({ className, ...rest }: Props): JSX.Element => (
   <div
     className={clsx(
       'shadow',
@@ -21,7 +14,8 @@ const Panel = ({
       BORDER_CLASSES,
       className
     )}
-    {...rest} />
+    {...rest}
+  />
 );
 
 export type Props = React.ComponentPropsWithRef<'div'>;

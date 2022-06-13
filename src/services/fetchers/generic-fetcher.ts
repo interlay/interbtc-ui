@@ -1,4 +1,3 @@
-
 const GENERIC_FETCHER = 'generic-fetcher';
 
 // TODO: should type properly
@@ -16,12 +15,7 @@ const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
   if (queryKey[1] === 'interBtcIndex') {
     throw new Error('Unsupported indexer!');
   }
-  const [
-    _key,
-    arg1,
-    arg2,
-    ...rest
-  ] = queryKey;
+  const [_key, arg1, arg2, ...rest] = queryKey;
 
   if (_key !== GENERIC_FETCHER) {
     throw new Error('Invalid key!');
@@ -37,8 +31,6 @@ const genericFetcher = <T>() => async ({ queryKey }: any): Promise<T> => {
   }
 };
 
-export {
-  GENERIC_FETCHER
-};
+export { GENERIC_FETCHER };
 
 export default genericFetcher;

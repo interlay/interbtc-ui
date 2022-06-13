@@ -24,21 +24,24 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
     // Filters out vaults with lower than required capacity and sorts by accountId
     // to have vaults with same accountId grouped together.
     const vaultsWithEnoughCapacity = allVaults
-      .filter(vault => vault[1].gt(BitcoinAmount.from.Satoshi(0)))
-      .filter(vault => vault[1].gte(BitcoinAmount.from.Satoshi(requiredCapacity)))
+      .filter((vault) => vault[1].gt(BitcoinAmount.from.Satoshi(0)))
+      .filter((vault) => vault[1].gte(BitcoinAmount.from.Satoshi(requiredCapacity)))
       .sort((vaultA, vaultB) => {
         const vaultAId = vaultA[0].accountId.toString();
         const vaultBId = vaultB[0].accountId.toString();
-        return (vaultAId < vaultBId ? -1 : (vaultAId > vaultBId ? 1 : 0));
+        return vaultAId < vaultBId ? -1 : vaultAId > vaultBId ? 1 : 0;
       });
 
     return vaultsWithEnoughCapacity;
   }, [allVaults, requiredCapacity]);
 
-  const handleVaultSelection = React.useCallback((vault: VaultApiType | undefined) => {
-    setSelectedVault(vault);
-    onSelectionCallback(vault);
-  }, [onSelectionCallback]);
+  const handleVaultSelection = React.useCallback(
+    (vault: VaultApiType | undefined) => {
+      setSelectedVault(vault);
+      onSelectionCallback(vault);
+    },
+    [onSelectionCallback]
+  );
 
   React.useEffect(() => {
     (async () => {
@@ -52,7 +55,7 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
   return (
     <div className='w-full'>
       {/* Keeping the component mounted at all times to prevent refetching of the vaults */}
-      {isShown &&
+      {isShown && (
         <>
           <VaultSelector
             isPending={vaultsStatus === STATUSES.PENDING}
@@ -60,7 +63,8 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
             selectedVault={selectedVault}
             vaults={availableVaults}
             onChange={handleVaultSelection}
-            error={!!error} />
+            error={!!error}
+          />
           <p
             className={clsx(
               'pt-1',
@@ -68,13 +72,13 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
               'text-sm',
               { 'text-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
               { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-            )}>
+            )}
+          >
             {error?.message}
           </p>
         </>
-      }
+      )}
     </div>
-
   );
 };
 

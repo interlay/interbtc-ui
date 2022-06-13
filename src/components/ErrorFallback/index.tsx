@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 
 import InterlayLink from 'components/UI/InterlayLink';
@@ -12,10 +11,7 @@ const handleRefresh = () => {
   window.location.reload();
 };
 
-const ErrorFallback = ({
-  error,
-  resetErrorBoundary
-}: Props): JSX.Element => {
+const ErrorFallback = ({ error, resetErrorBoundary }: Props): JSX.Element => {
   let message;
 
   // TODO: should remove later as it's a workaround
@@ -26,20 +22,11 @@ const ErrorFallback = ({
   }
 
   return (
-    <p
-      className={clsx(
-        'text-interlayCinnabar',
-        'space-x-1'
-      )}>
+    <p className={clsx('text-interlayCinnabar', 'space-x-1')}>
       <span>Error: {message}.</span>
       <span>
         Please&nbsp;
-        <InterlayLink
-          onClick={resetErrorBoundary ?? handleRefresh}
-          className={clsx(
-            'underline',
-            'cursor-pointer'
-          )}>
+        <InterlayLink onClick={resetErrorBoundary ?? handleRefresh} className={clsx('underline', 'cursor-pointer')}>
           refresh
         </InterlayLink>
         .

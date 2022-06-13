@@ -1,31 +1,25 @@
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
-import {
-  Story,
-  Meta
-} from '@storybook/react';
+import { Story, Meta } from '@storybook/react';
 
+import { CurrencySymbols } from 'types/currency';
 import { CoinPair, CoinPairProps } from './';
 
-const Template: Story<CoinPairProps> = args => <CoinPair {...args} />;
+const Template: Story<CoinPairProps> = (args) => <CoinPair {...args} />;
 
 const Small = Template.bind({});
 Small.args = {
-  coinOne: CurrencyIdLiteral.KSM,
-  coinTwo: CurrencyIdLiteral.KBTC,
+  coinOne: CurrencySymbols.KSM,
+  coinTwo: CurrencySymbols.KBTC,
   size: 'small'
 };
 
 const Large = Template.bind({});
 Large.args = {
-  coinOne: CurrencyIdLiteral.KSM,
-  coinTwo: CurrencyIdLiteral.KBTC,
+  coinOne: CurrencySymbols.KSM,
+  coinTwo: CurrencySymbols.KBTC,
   size: 'large'
 };
 
-export {
-  Small,
-  Large
-};
+export { Small, Large };
 
 export default {
   title: 'Elements/CoinPair',

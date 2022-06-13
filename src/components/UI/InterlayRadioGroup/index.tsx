@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { RadioGroup } from '@headlessui/react';
 import clsx from 'clsx';
@@ -39,25 +38,17 @@ const InterlayRadioGroup = (): JSX.Element => {
   const [selected, setSelected] = React.useState(PLANS[0]);
 
   return (
-    <RadioGroup
-      value={selected}
-      onChange={setSelected}>
-      <RadioGroup.Label className='sr-only'>
-        Server size
-      </RadioGroup.Label>
+    <RadioGroup value={selected} onChange={setSelected}>
+      <RadioGroup.Label className='sr-only'>Server size</RadioGroup.Label>
       <div className='space-y-4'>
-        {PLANS.map(item => (
+        {PLANS.map((item) => (
           <RadioGroup.Option
             key={item.name}
             value={item}
             className={({ active }) =>
               clsx(
                 {
-                  [clsx(
-                    'ring-1',
-                    'ring-offset-2',
-                    'ring-indigo-500'
-                  )]: active
+                  [clsx('ring-1', 'ring-offset-2', 'ring-indigo-500')]: active
                 },
                 'relative',
                 'block',
@@ -74,68 +65,32 @@ const InterlayRadioGroup = (): JSX.Element => {
                 'sm:justify-between',
                 'focus:outline-none'
               )
-            }>
+            }
+          >
             {({ checked }) => (
               <>
-                <div
-                  className={clsx(
-                    'flex',
-                    'items-center'
-                  )}>
+                <div className={clsx('flex', 'items-center')}>
                   <div className='text-sm'>
-                    <RadioGroup.Label
-                      as='p'
-                      className={clsx(
-                        'font-medium',
-                        'text-gray-900'
-                      )}>
+                    <RadioGroup.Label as='p' className={clsx('font-medium', 'text-gray-900')}>
                       {item.name}
                     </RadioGroup.Label>
-                    <RadioGroup.Description
-                      as='div'
-                      className='text-gray-500'>
+                    <RadioGroup.Description as='div' className='text-gray-500'>
                       <p className='sm:inline'>
                         {item.ram} / {item.cpus}
-                      </p>
-                      {' '}
-                      <span
-                        className='hidden sm:inline sm:mx-1'
-                        aria-hidden='true'>
+                      </p>{' '}
+                      <span className='hidden sm:inline sm:mx-1' aria-hidden='true'>
                         &middot;
-                      </span>
-                      {' '}
-                      <p className='sm:inline'>
-                        {item.disk}
-                      </p>
+                      </span>{' '}
+                      <p className='sm:inline'>{item.disk}</p>
                     </RadioGroup.Description>
                   </div>
                 </div>
                 <RadioGroup.Description
                   as='div'
-                  className={clsx(
-                    'mt-2',
-                    'flex',
-                    'text-sm',
-                    'sm:mt-0',
-                    'sm:block',
-                    'sm:ml-4',
-                    'sm:text-right'
-                  )}>
-                  <div
-                    className={clsx(
-                      'font-medium',
-                      'text-gray-900'
-                    )}>
-                    {item.price}
-                  </div>
-                  <div
-                    className={clsx(
-                      'ml-1',
-                      'text-gray-500',
-                      'sm:ml-0'
-                    )}>
-                    /mo
-                  </div>
+                  className={clsx('mt-2', 'flex', 'text-sm', 'sm:mt-0', 'sm:block', 'sm:ml-4', 'sm:text-right')}
+                >
+                  <div className={clsx('font-medium', 'text-gray-900')}>{item.price}</div>
+                  <div className={clsx('ml-1', 'text-gray-500', 'sm:ml-0')}>/mo</div>
                 </RadioGroup.Description>
                 <div
                   className={clsx(
@@ -146,7 +101,8 @@ const InterlayRadioGroup = (): JSX.Element => {
                     'border-2',
                     'pointer-events-none'
                   )}
-                  aria-hidden='true' />
+                  aria-hidden='true'
+                />
               </>
             )}
           </RadioGroup.Option>
