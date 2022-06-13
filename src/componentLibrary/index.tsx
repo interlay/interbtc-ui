@@ -15,3 +15,6 @@ export type { GridItemProps } from './Grid';
 
 export { VaultCard } from './VaultCard';
 export type { VaultCardProps } from './VaultCard';
+
+export { Stack } from './Stack';
+export type { StackProps } from './Stack';
