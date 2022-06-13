@@ -3,10 +3,10 @@ import { StackContainer } from './Stack.style';
 interface StackProps {
   children: React.ReactNode;
   className?: string;
-  spacing?: 'x1' | 'x2';
+  spacing?: 'single' | 'double';
 }
 
-const Stack = ({ children, className, spacing = 'x1' }: StackProps): JSX.Element => {
+const Stack = ({ children, className, spacing = 'single' }: StackProps): JSX.Element => {
   return (
     <StackContainer className={className} spacing={spacing}>
       {children}

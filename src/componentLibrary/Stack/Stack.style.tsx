@@ -5,6 +5,6 @@ import { StackProps } from './';
 
 export const StackContainer = styled.div<StackProps>`
   > *:not(:last-child) {
-    margin-bottom: ${(props) => (props.spacing === 'x1' ? theme.spacing.spacing4 : theme.spacing.spacing8)};
+    margin-bottom: ${(props) => (props.spacing === 'single' ? theme.spacing.spacing4 : theme.spacing.spacing8)};
   }
 `;
