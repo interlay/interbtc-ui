@@ -1,14 +1,13 @@
-import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
-import Hr1 from '@/components/hrs/Hr1';
-import PageTitle from '@/parts/PageTitle';
-import TimerIncrement from '@/parts/TimerIncrement';
-
-import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
-import CollateralizationCard from '../../cards/CollateralizationCard';
-import CollateralLockedCard from '../../cards/CollateralLockedCard';
 import VaultsTable from './VaultsTable';
+import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
+import CollateralLockedCard from '../../cards/CollateralLockedCard';
+import CollateralizationCard from '../../cards/CollateralizationCard';
+import TimerIncrement from 'parts/TimerIncrement';
+import PageTitle from 'parts/PageTitle';
+import Hr1 from 'components/hrs/Hr1';
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();

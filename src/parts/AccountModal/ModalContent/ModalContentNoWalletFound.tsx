@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import ExternalLink from '@/components/ExternalLink';
-import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
-import { WALLETS } from '@/config/wallets';
+import { WALLETS } from 'config/wallets';
+import ExternalLink from 'components/ExternalLink';
+import { TERMS_AND_CONDITIONS_LINK } from 'config/relay-chains';
 
 const ModalContentNoWalletFound = (): JSX.Element => {
   const { t } = useTranslation();

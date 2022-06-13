@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { ReactComponent as SpinIcon } from '@/assets/img/icons/spin.svg';
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 const VARIANTS = Object.freeze({
   contained: 'contained',

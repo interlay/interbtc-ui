@@ -1,12 +1,11 @@
 import { DefaultTransactionAPI, newCurrencyId, tickerToCurrencyIdLiteral } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
-import { AddressOrPair } from '@polkadot/api/types';
 import { decodeAddress } from '@polkadot/keyring';
+import { AddressOrPair } from '@polkadot/api/types';
 
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
-
-import { RelayChainMonetaryAmount } from './';
+import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
 import { TRANSFER_WEIGHT } from './constants';
+import { RelayChainMonetaryAmount } from './';
 
 const createDest = (api: ApiPromise, id: string) => {
   const network = api.createType('XcmV0JunctionNetworkId', { any: true });

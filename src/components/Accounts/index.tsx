@@ -1,9 +1,8 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import * as React from 'react';
-
-import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
 import AccountSelector from './AccountSelector';
+import useGetAccounts from 'utils/hooks/api/use-get-accounts';
 
 interface Props {
   callbackFunction?: (account: InjectedAccountWithMeta) => void;

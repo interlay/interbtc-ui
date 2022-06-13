@@ -1,34 +1,35 @@
+import * as React from 'react';
+import { useLocation } from 'react-router-dom';
+import { matchPath } from 'react-router';
+import { useSelector } from 'react-redux';
 import {
-  BookOpenIcon,
+  ClipboardListIcon,
   CashIcon,
+  BookOpenIcon,
+  RefreshIcon,
   ChartSquareBarIcon,
   ChipIcon,
-  ClipboardListIcon,
-  CurrencyDollarIcon,
+  SwitchHorizontalIcon,
   DocumentTextIcon,
-  RefreshIcon,
-  ScaleIcon,
-  SwitchHorizontalIcon} from '@heroicons/react/outline';
+  CurrencyDollarIcon,
+  ScaleIcon
+} from '@heroicons/react/outline';
 import clsx from 'clsx';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { matchPath } from 'react-router';
-import { useLocation } from 'react-router-dom';
-
-import { StoreType } from '@/common/types/util.types';
-import Hr2 from '@/components/hrs/Hr2';
-import { INTERLAY_DOCS_LINK } from '@/config/links';
-import {
-  CROWDLOAN_LINK,
-  EARN_LINK,
-  GOVERNANCE_LINK,
-  GOVERNANCE_TOKEN_SYMBOL,
-  TERMS_AND_CONDITIONS_LINK} from '@/config/relay-chains';
-import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import SidebarNavLink from './SidebarNavLink';
+import Hr2 from 'components/hrs/Hr2';
+import { INTERLAY_DOCS_LINK } from 'config/links';
+import {
+  GOVERNANCE_TOKEN_SYMBOL,
+  CROWDLOAN_LINK,
+  TERMS_AND_CONDITIONS_LINK,
+  EARN_LINK,
+  GOVERNANCE_LINK
+} from 'config/relay-chains';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
+import { PAGES, URL_PARAMETERS } from 'utils/constants/links';
+import { StoreType } from 'common/types/util.types';
 
 interface CustomProps {
   onSmallScreen?: boolean;

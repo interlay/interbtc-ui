@@ -1,41 +1,40 @@
-import { IssueStatus } from '@interlay/interbtc-api';
-import clsx from 'clsx';
 import * as React from 'react';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useTranslation } from 'react-i18next';
-import { FaCheck, FaRegClock, FaRegTimesCircle } from 'react-icons/fa';
-import { useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
 import { useTable } from 'react-table';
-
-import { showAccountModalAction } from '@/common/actions/general.actions';
-import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, formatDateTimePrecise, shortTxId } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
-import ExternalLink from '@/components/ExternalLink';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InterlayPagination from '@/components/UI/InterlayPagination';
-import InterlayTable, {
-  InterlayTableContainer,
-  InterlayTbody,
-  InterlayTd,
-  InterlayTh,
-  InterlayThead,
-  InterlayTr
-} from '@/components/UI/InterlayTable';
-import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import SectionTitle from '@/parts/SectionTitle';
-import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
-import issueCountQuery from '@/services/queries/issue-count-query';
-import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { QUERY_PARAMETERS } from '@/utils/constants/links';
-import useQueryParams from '@/utils/hooks/use-query-params';
-import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useQuery } from 'react-query';
+import { FaCheck, FaRegTimesCircle, FaRegClock } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
+import { IssueStatus } from '@interlay/interbtc-api';
 
 import IssueRequestModal from './IssueRequestModal';
+import SectionTitle from 'parts/SectionTitle';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+import ErrorFallback from 'components/ErrorFallback';
+import ExternalLink from 'components/ExternalLink';
+import InterlayPagination from 'components/UI/InterlayPagination';
+import InterlayTable, {
+  InterlayTableContainer,
+  InterlayThead,
+  InterlayTbody,
+  InterlayTr,
+  InterlayTh,
+  InterlayTd
+} from 'components/UI/InterlayTable';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import useQueryParams from 'utils/hooks/use-query-params';
+import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
+import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
+import { QUERY_PARAMETERS } from 'utils/constants/links';
+import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
+import { formatDateTimePrecise, shortTxId, displayMonetaryAmount } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
+import { showAccountModalAction } from 'common/actions/general.actions';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import issueCountQuery from 'services/queries/issue-count-query';
+import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();

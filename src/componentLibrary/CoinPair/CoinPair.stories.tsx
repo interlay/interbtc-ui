@@ -1,7 +1,6 @@
-import { Meta,Story } from '@storybook/react';
+import { Story, Meta } from '@storybook/react';
 
-import { CurrencySymbols } from '@/types/currency';
-
+import { CurrencySymbols } from 'types/currency';
 import { CoinPair, CoinPairProps } from './';
 
 const Template: Story<CoinPairProps> = (args) => <CoinPair {...args} />;
@@ -20,7 +19,7 @@ Large.args = {
   size: 'large'
 };
 
-export { Large,Small };
+export { Small, Large };
 
 export default {
   title: 'Elements/CoinPair',

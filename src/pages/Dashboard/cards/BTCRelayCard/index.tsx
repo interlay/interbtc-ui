@@ -1,13 +1,12 @@
-import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
-import { StoreType } from '@/common/types/util.types';
-import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
-import { PAGES } from '@/utils/constants/links';
-
-import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
+import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
+import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
+import { PAGES } from 'utils/constants/links';
+import { StoreType } from 'common/types/util.types';
 
 enum Status {
   Loading,

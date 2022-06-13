@@ -1,7 +1,6 @@
-import { CurrencySymbols } from '@/types/currency';
-
-import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
+import { CurrencySymbols } from 'types/currency';
 import { KbtcIcon, KintIcon, KsmIcon } from './icons';
+import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
 
 interface CoinIconProps extends IconWrapperProps {
   coin: CurrencySymbols;

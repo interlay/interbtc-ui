@@ -1,4 +1,4 @@
 const POLKADOT = 'polkadot';
 const KUSAMA = 'kusama';
 
-export { KUSAMA,POLKADOT };
+export { POLKADOT, KUSAMA };

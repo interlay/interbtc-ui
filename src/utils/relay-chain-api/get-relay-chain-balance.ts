@@ -1,9 +1,7 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { AddressOrPair } from '@polkadot/api-base/types';
-
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
-
+import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
 import { RelayChainMonetaryAmount } from './';
 
 const getRelayChainBalance = async (api: ApiPromise, address: AddressOrPair): Promise<RelayChainMonetaryAmount> => {

@@ -1,8 +1,8 @@
-import { ArrowSmRightIcon } from '@heroicons/react/outline';
-import clsx from 'clsx';
 import { Link, LinkProps } from 'react-router-dom';
+import clsx from 'clsx';
+import { ArrowSmRightIcon } from '@heroicons/react/outline';
 
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
 interface CustomProps {
   withArrow?: boolean;

@@ -1,18 +1,18 @@
-import { Redeem } from '@interlay/interbtc-api';
-import clsx from 'clsx';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import clsx from 'clsx';
+import { Redeem } from '@interlay/interbtc-api';
 
-import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
-import InterlayModal, { InterlayModalInnerWrapper,Props as ModalProps } from '@/components/UI/InterlayModal';
-import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
-import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import CloseIconButton from 'components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
+import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
+import InterlayRouterLink from 'components/UI/InterlayRouterLink';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { PAGES, QUERY_PARAMETERS } from 'utils/constants/links';
+import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
 
 const queryString = require('query-string');
 

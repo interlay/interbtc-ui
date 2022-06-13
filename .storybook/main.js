@@ -13,9 +13,12 @@ module.exports = {
     'storybook-addon-themes'
   ],
   webpackFinal: config => {
-    config.resolve.alias = {
-      '@': path.resolve(__dirname, '../src/')
-    };
+    // MEMO: inspired by https://github.com/storybookjs/storybook/issues/3916
+    config.resolve.modules = [
+      ...(config.resolve.modules || []),
+      path.resolve(__dirname, '../src'),
+      'node_modules'
+    ];
 
     // MEMO: inspired by https://github.com/storybookjs/storybook/issues/4038
     return {

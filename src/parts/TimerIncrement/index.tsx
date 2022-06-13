@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import useInterval from '@/utils/hooks/use-interval';
+import useInterval from 'utils/hooks/use-interval';
 
 const formatTime = (seconds: number): string => {
   return `Last updated ${seconds} seconds ago`;

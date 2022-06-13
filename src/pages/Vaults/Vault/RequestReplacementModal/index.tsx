@@ -1,24 +1,24 @@
-import { CollateralCurrency } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
-import clsx from 'clsx';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { useQueryClient } from 'react-query';
+import clsx from 'clsx';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import { CollateralCurrency } from '@interlay/interbtc-api';
 
-import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
-import InterlayMulberryOutlinedButton from '@/components/buttons/InterlayMulberryOutlinedButton';
-import ErrorMessage from '@/components/ErrorMessage';
-import NumberInput from '@/components/NumberInput';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
-import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { CurrencyValues } from '@/types/currency';
+import ErrorMessage from 'components/ErrorMessage';
+import NumberInput from 'components/NumberInput';
+import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
+import CloseIconButton from 'components/buttons/CloseIconButton';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
+import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
+import { displayMonetaryAmount } from 'common/utils/utils';
+import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { StoreType } from 'common/types/util.types';
+import { CurrencyValues } from 'types/currency';
 
 const AMOUNT = 'amount';
 
