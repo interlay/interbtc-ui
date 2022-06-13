@@ -2,6 +2,7 @@ const theme = {
   // layout
   layout: {
     // Note: media queries can't be used with CSS variables
+    // TODO: this is a placeholder - will review BPs with UX
     breakpoints: {
       lg: '48em'
     }
