@@ -6,7 +6,11 @@ const Template: Story<StackProps> = (args) => <Stack {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  children: 'Stack children'
+  children: (
+    <>
+      <p>Stack children</p> <p>Stack children</p>
+    </>
+  )
 };
 
 export { Default };
