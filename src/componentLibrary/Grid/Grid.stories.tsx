@@ -2,8 +2,8 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import { Grid, GridItem } from './';
 
-export const Default: ComponentStory<typeof Grid> = (args) => (
-  <Grid {...args}>
+export const Default: ComponentStory<typeof Grid> = () => (
+  <Grid>
     <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 4, start: 4 }}>
       <h2>Grid content</h2>
       <p>

@@ -1,7 +1,13 @@
 import { GridContainer } from './Grid.style';
 
-const Grid = ({ className, children }: React.HTMLAttributes<HTMLDivElement>): JSX.Element => (
+interface GridProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+const Grid = ({ className, children }: GridProps): JSX.Element => (
   <GridContainer className={className}>{children}</GridContainer>
 );
 
 export { Grid };
+export type { GridProps };
