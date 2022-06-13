@@ -6,7 +6,6 @@ const theme = {
       lg: '48em'
     }
   },
-  test: 'var(--spacing-12)',
   // generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
