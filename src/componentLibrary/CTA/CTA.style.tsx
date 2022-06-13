@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from '@/componentLibrary';
+import { theme } from '../theme';
 
 interface CTAProps {
   fullWidth: boolean;
