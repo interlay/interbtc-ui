@@ -35,6 +35,7 @@ import {
   VoteGovernanceTokenMonetaryAmount,
   VOTE_GOVERNANCE_TOKEN
 } from 'config/relay-chains';
+import { KUSAMA } from 'utils/constants/relay-chain-names';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
 import { ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT, ZERO_GOVERNANCE_TOKEN_AMOUNT } from 'utils/constants/currency';
@@ -614,7 +615,7 @@ const Staking = (): JSX.Element => {
     }
   };
 
-  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken.usd);
+  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken?.usd);
 
   const claimRewardsButtonEnabled = claimableRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
@@ -679,10 +680,12 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
-        <WarningBanner
-          className={SHARED_CLASSES}
-          message='Block times are currently higher than expected. Lock times may be longer than expected.'
-        />
+        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
+          <WarningBanner
+            className={SHARED_CLASSES}
+            message='Block times are currently higher than expected. Lock times may be longer than expected.'
+          />
+        )}
         <Panel className={SHARED_CLASSES}>
           <form className={clsx('p-8', 'space-y-8')} onSubmit={handleSubmit(onSubmit)}>
             <TitleWithUnderline text={`Stake ${GOVERNANCE_TOKEN_SYMBOL}`} />

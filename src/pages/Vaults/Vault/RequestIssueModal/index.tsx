@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import Big from 'big.js';
 import { useErrorHandler } from 'react-error-boundary';
 import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
-import { newMonetaryAmount, GovernanceUnit, newAccountId, Issue } from '@interlay/interbtc-api';
+import { newMonetaryAmount, GovernanceUnit, newAccountId, Issue, CurrencyIdLiteral } from '@interlay/interbtc-api';
 
 import {
   GovernanceTokenLogoIcon,
@@ -24,7 +24,6 @@ import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import STATUSES from 'utils/constants/statuses';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import SubmittedIssueRequestModal from 'pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import ErrorModal from 'components/ErrorModal';
@@ -44,6 +43,7 @@ type RequestIssueFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
+  collateralIdLiteral: CurrencyIdLiteral | undefined;
   vaultAddress: string;
 }
 
@@ -62,7 +62,7 @@ const extraRequiredCollateralTokenAmount = newMonetaryAmount(
 );
 
 // TODO: share form with bridge page
-const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element => {
+const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }: Props): JSX.Element => {
   const { register, handleSubmit, errors, watch, trigger } = useForm<RequestIssueFormData>({ mode: 'onChange' });
   const btcAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
 
@@ -106,6 +106,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
     if (!bridgeLoaded) return;
     if (!handleError) return;
     if (!vaultAccountId) return;
+    if (!collateralIdLiteral) return;
 
     (async () => {
       try {
@@ -124,7 +125,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
           window.bridge.issue.getDustValue(),
           window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
           // MEMO: this always uses KSM as collateral token
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL)
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralIdLiteral)
         ]);
         setStatus(STATUSES.RESOLVED);
         if (theFeeRate.status === 'fulfilled') {
@@ -147,7 +148,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
         handleError(error);
       }
     })();
-  }, [bridgeLoaded, handleError, vaultAccountId]);
+  }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING || vaultAccountId === undefined) {
     return <PrimaryColorEllipsisLoader />;
@@ -164,7 +165,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
       const result = await window.bridge.issue.request(
         wrappedTokenAmount,
         vaultAccountId,
-        COLLATERAL_TOKEN_ID_LITERAL,
+        collateralIdLiteral,
         false, // default
         0, // default
         vaults
@@ -257,7 +258,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
                   },
                   validate: (value) => validateForm(value)
                 })}
-                approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin.usd)}`}
+                approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
                 error={!!errors[WRAPPED_TOKEN_AMOUNT]}
                 helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
               />
@@ -276,7 +277,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
               unitIcon={<BitcoinLogoIcon width={23} height={23} />}
               value={displayMonetaryAmount(bridgeFee)}
               unitName='BTC'
-              approxUSD={getUsdAmount(bridgeFee, prices.bitcoin.usd)}
+              approxUSD={getUsdAmount(bridgeFee, prices.bitcoin?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -301,7 +302,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(securityDeposit)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(securityDeposit, prices.governanceToken.usd)}
+              approxUSD={getUsdAmount(securityDeposit, prices.governanceToken?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -326,7 +327,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken.usd)}
+              approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -352,7 +353,7 @@ const RequestIssueModal = ({ onClose, open, vaultAddress }: Props): JSX.Element 
               unitIcon={<WrappedTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(wrappedTokenAmount)}
               unitName={WRAPPED_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin.usd)}
+              approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin?.usd)}
             />
             <SubmitButton
               disabled={

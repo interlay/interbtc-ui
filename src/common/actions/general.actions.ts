@@ -3,7 +3,7 @@ import { CollateralUnit } from '@interlay/interbtc-api';
 
 import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import {
-  IS_POLKA_BTC_LOADED,
+  IS_BRIDGE_LOADED,
   CHANGE_ADDRESS,
   INIT_GENERAL_DATA_ACTION,
   IS_VAULT_CLIENT_LOADED,
@@ -19,7 +19,7 @@ import {
   IS_FAUCET_LOADED,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
-  IsPolkaBtcLoaded,
+  IsBridgeLoaded,
   ChangeAddress,
   InitGeneralDataAction,
   IsVaultClientLoaded,
@@ -38,8 +38,8 @@ import {
 } from '../types/actions.types';
 import { ParachainStatus, Prices } from '../types/util.types';
 
-export const isPolkaBtcLoaded = (isLoaded = false): IsPolkaBtcLoaded => ({
-  type: IS_POLKA_BTC_LOADED,
+export const isBridgeLoaded = (isLoaded = false): IsBridgeLoaded => ({
+  type: IS_BRIDGE_LOADED,
   isLoaded
 });
 
