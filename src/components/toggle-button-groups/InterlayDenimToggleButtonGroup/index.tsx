@@ -1,8 +1,8 @@
+import clsx from 'clsx';
 import { RadioGroup } from '@headlessui/react';
 import { PropsOf } from '@headlessui/react/dist/types';
-import clsx from 'clsx';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 
 // TODO: not used for now
 const InterlayDenimToggleButtonGroup = ({ className, ...rest }: PropsOf<typeof RadioGroup>): JSX.Element => (

@@ -1,12 +1,12 @@
 
-import { web3Accounts } from '@polkadot/extension-dapp';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
+import { web3Accounts } from '@polkadot/extension-dapp';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 
-import { StoreType } from '@/common/types/util.types';
 // FIXME: name clash for constants so had to use relative path
-import * as constants from '@/constants';
+import * as constants from '../../../constants';
+import { StoreType } from 'common/types/util.types';
 
 const useGetAccounts = (): Array<InjectedAccountWithMeta> => {
   // TODO: this only needs to be done once and should be handled

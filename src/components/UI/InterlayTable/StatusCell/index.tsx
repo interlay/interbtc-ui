@@ -1,6 +1,6 @@
-import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { FaClipboardCheck,FaRegCheckCircle, FaRegClock, FaRegTimesCircle, FaUserClock } from 'react-icons/fa';
+import { FaRegCheckCircle, FaRegClock, FaRegTimesCircle, FaUserClock, FaClipboardCheck } from 'react-icons/fa';
+import clsx from 'clsx';
 
 interface Props {
   status: {

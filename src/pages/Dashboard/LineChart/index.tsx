@@ -1,15 +1,15 @@
 // TODO: should refactor by using a better package (https://github.com/recharts/recharts)
 import { Line } from 'react-chartjs-2';
 
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import {
-  INTERLAY_GRID_LINE_COLOR,
   INTERLAY_TEXT_PRIMARY_IN_LIGHT_MODE,
+  KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
+  INTERLAY_GRID_LINE_COLOR,
   INTERLAY_ZERO_LINE_COLOR,
   KINTSUGI_GRID_LINE_COLOR,
-  KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
   KINTSUGI_ZERO_LINE_COLOR
-} from '@/utils/constants/colors';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+} from 'utils/constants/colors';
 
 interface YAxis {
   position?: string;

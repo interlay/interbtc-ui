@@ -1,8 +1,7 @@
-import { CurrencyUnit,newMonetaryAmount } from '@interlay/interbtc-api';
+import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
-
-import { CollateralToken, WrappedToken } from '@/config/relay-chains';
-import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
+import { CollateralToken, WrappedToken } from 'config/relay-chains';
+import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 
 const CUMULATIVE_VOLUMES_FETCHER = 'cumulative-volumes-fetcher';
 
@@ -84,6 +83,6 @@ type CumulativeVolumesFetcherParams<U extends CurrencyUnit> =
 
 export { CUMULATIVE_VOLUMES_FETCHER };
 
-export type { CumulativeVolumesFetcherParams, VolumeDataPoint,VolumeType };
+export type { CumulativeVolumesFetcherParams, VolumeType, VolumeDataPoint };
 
 export default cumulativeVolumesFetcher;

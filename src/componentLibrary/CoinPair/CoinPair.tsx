@@ -1,5 +1,4 @@
-import { CurrencySymbols } from '@/types/currency';
-
+import { CurrencySymbols } from 'types/currency';
 import { CoinIcon } from '../';
 import { CoinPairWrapper, CoinPairWrapperProps } from './CoinPair.style';
 

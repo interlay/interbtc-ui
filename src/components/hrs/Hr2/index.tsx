@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 
 const Hr2 = ({ className, ...rest }: React.ComponentPropsWithRef<'hr'>): JSX.Element => (
   <hr

@@ -1,9 +1,9 @@
+import * as React from 'react';
 import { Transition } from '@headlessui/react';
 import { XIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
-import * as React from 'react';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 
 type Ref = HTMLButtonElement;
 const CloseButton = React.forwardRef<Ref, InterlayButtonBaseProps>(

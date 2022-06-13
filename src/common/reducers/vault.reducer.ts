@@ -1,14 +1,13 @@
-import { newMonetaryAmount, ReplaceRequestExt } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
+import { ReplaceRequestExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
-
+import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
 import {
-  UPDATE_APY,
-  UPDATE_COLLATERAL,
   UPDATE_COLLATERALIZATION,
+  UPDATE_COLLATERAL,
   UPDATE_LOCKED_BTC,
+  UPDATE_APY,
   VaultActions
 } from '../types/actions.types';
 import { VaultState } from '../types/vault.types';

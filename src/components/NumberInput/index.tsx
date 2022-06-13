@@ -1,6 +1,5 @@
 import * as React from 'react';
-
-import InterlayInput, { Props as InterlayInputProps } from '@/components/UI/InterlayInput';
+import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
 
 // `onWheel` prop can't be used with `preventDefault` because
 // React implements passive event listeners.

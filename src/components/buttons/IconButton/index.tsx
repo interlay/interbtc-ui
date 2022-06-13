@@ -1,9 +1,9 @@
-import clsx from 'clsx';
 import * as React from 'react';
+import clsx from 'clsx';
 
-import { ReactComponent as SpinIcon } from '@/assets/img/icons/spin.svg';
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
 
 type CustomProps = {
   pending?: boolean;

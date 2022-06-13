@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 
-import { ReactComponent as InformationCircleIcon } from '@/assets/img/hero-icons/information-circle.svg';
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import { BORDER_CLASSES } from '@/utils/constants/styles';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from 'utils/constants/styles';
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 interface CustomProps {
   message: string;

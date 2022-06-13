@@ -1,7 +1,7 @@
-import { FaucetClient,InterBtcApi } from '@interlay/interbtc-api';
-import { applyMiddleware, createStore } from 'redux';
 import { createLogger } from 'redux-logger';
+import { applyMiddleware, createStore } from 'redux';
 import { persistStore } from 'redux-persist';
+import { InterBtcApi, FaucetClient } from '@interlay/interbtc-api';
 
 import { rootReducer } from './common/reducers/index';
 
@@ -17,4 +17,4 @@ const storeLogger = createLogger();
 const store = createStore(rootReducer, undefined, applyMiddleware(storeLogger));
 const persistor = persistStore(store);
 
-export { persistor,store };
+export { store, persistor };

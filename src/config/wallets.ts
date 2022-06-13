@@ -1,8 +1,7 @@
 import * as React from 'react';
-
-import { ReactComponent as PolkadotExtensionLogoIcon } from '@/assets/img/polkadot-extension-logo.svg';
-import { ReactComponent as SubWalletLogoIcon } from '@/assets/img/subwallet-logo.svg';
-import { ReactComponent as TalismanWalletLogoIcon } from '@/assets/img/talisman-wallet-logo.svg';
+import { ReactComponent as PolkadotExtensionLogoIcon } from 'assets/img/polkadot-extension-logo.svg';
+import { ReactComponent as TalismanWalletLogoIcon } from 'assets/img/talisman-wallet-logo.svg';
+import { ReactComponent as SubWalletLogoIcon } from 'assets/img/subwallet-logo.svg';
 
 enum WalletSourceName {
   PolkadotExtensionLogoIcon = 'polkadot-js',
@@ -34,4 +33,4 @@ const WALLETS: { [wallet in WalletSourceName]: WalletData } = {
   }
 };
 
-export { WALLETS,WalletSourceName };
+export { WalletSourceName, WALLETS };

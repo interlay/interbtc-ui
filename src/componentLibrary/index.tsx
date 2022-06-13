@@ -1,10 +1,14 @@
-export type { CoinIconProps } from './CoinIcon';
-export { CoinIcon } from './CoinIcon';
-export type { CoinPairProps } from './CoinPair';
-export { CoinPair } from './CoinPair';
-export type { CTALinkProps,CTAProps } from './CTA';
-export { CTA, CTALink } from './CTA';
-export type { ComponentLibraryTheme } from './theme';
 export { theme } from './theme';
-export type { VaultCardProps } from './VaultCard';
+export type { ComponentLibraryTheme } from './theme';
+
+export { CTA, CTALink } from './CTA';
+export type { CTAProps, CTALinkProps } from './CTA';
+
+export { CoinPair } from './CoinPair';
+export type { CoinPairProps } from './CoinPair';
+
+export { CoinIcon } from './CoinIcon';
+export type { CoinIconProps } from './CoinIcon';
+
 export { VaultCard } from './VaultCard';
+export type { VaultCardProps } from './VaultCard';

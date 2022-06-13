@@ -1,7 +1,6 @@
 import { createSubstrateAPI } from '@interlay/interbtc-api';
 
-import { RELAY_CHAIN_URL } from '@/constants';
-
+import { RELAY_CHAIN_URL } from '../../constants';
 import { RelayChainApi } from './';
 
 const createRelayChainApi = async (): Promise<RelayChainApi | undefined> => {

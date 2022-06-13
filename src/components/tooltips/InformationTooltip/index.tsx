@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { ReactComponent as InformationCircleIcon } from '@/assets/img/hero-icons/information-circle.svg';
-import InterlayTooltip from '@/components/UI/InterlayTooltip';
+import InterlayTooltip from 'components/UI/InterlayTooltip';
+import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
 
 interface Props {
   label: string;

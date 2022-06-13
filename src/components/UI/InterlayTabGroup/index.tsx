@@ -2,7 +2,7 @@ import { Tab } from '@headlessui/react';
 import { Props } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
 
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 
 const InterlayTabGroup = Tab.Group;
 const InterlayTabPanels = Tab.Panels;
@@ -81,6 +81,6 @@ const InterlayTabPanel = ({ className, ...rest }: InterlayTabPanelProps): JSX.El
   />
 );
 
-export { InterlayTab, InterlayTabList, InterlayTabPanel,InterlayTabPanels };
+export { InterlayTabList, InterlayTabPanels, InterlayTab, InterlayTabPanel };
 
 export default InterlayTabGroup;

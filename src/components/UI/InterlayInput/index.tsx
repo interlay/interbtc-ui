@@ -1,9 +1,8 @@
-import clsx from 'clsx';
 import * as React from 'react';
+import clsx from 'clsx';
 
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
-import { BORDER_CLASSES, TEXT_CLASSES } from '@/utils/constants/styles';
-
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { BORDER_CLASSES, TEXT_CLASSES } from 'utils/constants/styles';
 import styles from './interlay-input.module.css';
 
 type Ref = HTMLInputElement;

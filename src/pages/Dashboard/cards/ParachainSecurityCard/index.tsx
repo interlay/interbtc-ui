@@ -1,14 +1,13 @@
-import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
 
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { PAGES } from '@/utils/constants/links';
-
-import Stats, { StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
+import Stats, { StatsRouterLink } from '../../Stats';
+import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { PAGES } from 'utils/constants/links';
+import { ParachainStatus, StoreType } from 'common/types/util.types';
 
 interface Props {
   hasLinks?: boolean;

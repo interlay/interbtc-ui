@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 
 const FormTitle = ({ className, children, ...rest }: React.ComponentPropsWithRef<'h4'>): JSX.Element => (
   <h4

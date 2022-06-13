@@ -1,24 +1,23 @@
-import { RedeemStatus } from '@interlay/interbtc-api';
-import clsx from 'clsx';
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import clsx from 'clsx';
+import { RedeemStatus } from '@interlay/interbtc-api';
 
-import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount, shortAddress } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import Hr1 from '@/components/hrs/Hr1';
-import Hr2 from '@/components/hrs/Hr2';
-import PrimaryColorSpan from '@/components/PrimaryColorSpan';
-import InterlayModal, { InterlayModalInnerWrapper,Props as ModalProps } from '@/components/UI/InterlayModal';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import PriceInfo from '@/pages/Bridge/PriceInfo';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
-
-import RequestModalTitle from '../../RequestModalTitle';
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
+import RequestModalTitle from '../../RequestModalTitle';
+import PriceInfo from 'pages/Bridge/PriceInfo';
+import PrimaryColorSpan from 'components/PrimaryColorSpan';
+import CloseIconButton from 'components/buttons/CloseIconButton';
+import Hr1 from 'components/hrs/Hr1';
+import Hr2 from 'components/hrs/Hr2';
+import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
+import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { displayMonetaryAmount, getUsdAmount, shortAddress } from 'common/utils/utils';
+import { StoreType } from 'common/types/util.types';
+import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 interface CustomProps {
   // TODO: should type properly (`Relay`)

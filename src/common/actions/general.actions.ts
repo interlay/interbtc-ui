@@ -1,41 +1,41 @@
+import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency,MonetaryAmount } from '@interlay/monetary-js';
 
-import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
-
+import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import {
-  CHANGE_ADDRESS,
-  ChangeAddress,
-  INIT_GENERAL_DATA_ACTION,
-  InitGeneralDataAction,
   IS_BRIDGE_LOADED,
-  IS_FAUCET_LOADED,
+  CHANGE_ADDRESS,
+  INIT_GENERAL_DATA_ACTION,
   IS_VAULT_CLIENT_LOADED,
-  IsBridgeLoaded,
-  IsFaucetLoaded,
-  IsVaultClientLoaded,
-  SET_INSTALLED_EXTENSION,
-  SetInstalledExtension,
-  SHOW_ACCOUNT_MODAL,
-  ShowAccountModal,
   UPDATE_BALANCE_POLKA_BTC,
+  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
   UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_GOVERNANCE_TOKEN_BALANCE,
   UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
-  UPDATE_HEIGHTS,
+  SET_INSTALLED_EXTENSION,
+  SHOW_ACCOUNT_MODAL,
   UPDATE_OF_PRICES,
+  IS_FAUCET_LOADED,
+  UPDATE_HEIGHTS,
   UPDATE_TOTALS,
-  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
+  IsBridgeLoaded,
+  ChangeAddress,
+  InitGeneralDataAction,
+  IsVaultClientLoaded,
   UpdateBalancePolkaBTC,
+  UpdateWrappedTokenTransferableBalance,
   UpdateCollateralTokenBalance,
   UpdateCollateralTokenTransferableBalance,
   UpdateGovernanceTokenBalance,
   UpdateGovernanceTokenTransferableBalance,
-  UpdateHeights,
+  SetInstalledExtension,
+  ShowAccountModal,
+  IsFaucetLoaded,
   UpdateOfPrices,
-  UpdateTotals,
-  UpdateWrappedTokenTransferableBalance} from '../types/actions.types';
+  UpdateHeights,
+  UpdateTotals
+} from '../types/actions.types';
 import { ParachainStatus, Prices } from '../types/util.types';
 
 export const isBridgeLoaded = (isLoaded = false): IsBridgeLoaded => ({

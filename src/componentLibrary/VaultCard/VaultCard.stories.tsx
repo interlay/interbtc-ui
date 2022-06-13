@@ -1,7 +1,6 @@
-import { Meta,Story } from '@storybook/react';
+import { Story, Meta } from '@storybook/react';
 
-import { CurrencySymbols } from '@/types/currency';
-
+import { CurrencySymbols } from 'types/currency';
 import { VaultCard, VaultCardProps } from './';
 
 const Template: Story<VaultCardProps> = (args) => <VaultCard {...args} />;

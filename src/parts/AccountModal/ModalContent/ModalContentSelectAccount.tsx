@@ -1,13 +1,12 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useTranslation } from 'react-i18next';
 
-import { shortAddress } from '@/common/utils/utils';
-import CopyAddressButton from '@/components/CopyAddressButton';
-import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
-import { WALLETS, WalletSourceName } from '@/config/wallets';
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
-
+import { shortAddress } from 'common/utils/utils';
+import CopyAddressButton from 'components/CopyAddressButton';
+import { WALLETS, WalletSourceName } from 'config/wallets';
+import InterlayButtonBase from 'components/UI/InterlayButtonBase';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { ACCOUNT_MODAL_BUTTON_CLASSES, ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES } from '..';
 
 interface ModalContentSelectAccountProps {

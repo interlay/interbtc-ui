@@ -1,9 +1,8 @@
 import { Dispatch } from 'redux';
 
-import { StoreState } from '@/common/types/util.types';
-
 import fetchBtcRelayAndBitcoinHeight from './block-height-watcher';
 import fetchTotals from './totals-watcher';
+import { StoreState } from 'common/types/util.types';
 
 // TODO: should use web sockets instead of infinite times of fetch
 function startFetchingLiveData(dispatch: Dispatch, store: StoreState): void {

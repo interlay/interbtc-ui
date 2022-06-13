@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
 const PrimaryColorSpan = ({ className, ...rest }: React.ComponentPropsWithRef<'span'>): JSX.Element => (
   <span

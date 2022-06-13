@@ -1,9 +1,8 @@
 import { CurrencyUnit, decodeFixedPointType } from '@interlay/interbtc-api';
 import { OracleStatus } from '@interlay/interbtc-api/build/src/types/oracleTypes';
-import { Bitcoin, BitcoinUnit,Currency, ExchangeRate } from '@interlay/monetary-js';
+import { Currency, ExchangeRate, Bitcoin, BitcoinUnit } from '@interlay/monetary-js';
 
-import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
-
+import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import oracleExchangeRatesQuery, { composableExchangeRateSubquery } from '../queries/oracle-exchange-rates-query';
 
 const ORACLE_LATEST_EXCHANGE_RATE_FETCHER = 'oracle-exchange-rate-fetcher';
@@ -103,9 +102,10 @@ const allLatestSubmissionsFetcher = async <U extends CurrencyUnit>(
 };
 
 export {
-  allLatestSubmissionsFetcher,
-  latestExchangeRateFetcher,
+  ORACLE_LATEST_EXCHANGE_RATE_FETCHER,
   ORACLE_ALL_LATEST_UPDATES_FETCHER,
-  ORACLE_LATEST_EXCHANGE_RATE_FETCHER};
+  latestExchangeRateFetcher,
+  allLatestSubmissionsFetcher
+};
 
-export type { AllOracleLatestUpdatesFetcherParams, BtcToCurrencyOracleStatus,LatestExchangeRateFetcherParams };
+export type { LatestExchangeRateFetcherParams, AllOracleLatestUpdatesFetcherParams, BtcToCurrencyOracleStatus };

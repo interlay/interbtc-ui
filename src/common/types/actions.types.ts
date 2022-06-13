@@ -1,9 +1,8 @@
-import { CollateralUnit,Issue } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency,MonetaryAmount } from '@interlay/monetary-js';
+import { Issue, CollateralUnit } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 
-import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
-
-import { ParachainStatus, Prices,StoreType } from './util.types';
+import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
+import { StoreType, ParachainStatus, Prices } from './util.types';
 
 // GENERAL ACTIONS
 export const IS_BRIDGE_LOADED = 'IS_BRIDGE_LOADED';
