@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const KsmIcon = (): JSX.Element => (
   <svg
     role='img'

@@ -10,7 +10,7 @@ import DashboardCard from '../DashboardCard';
 import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
 import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
-import { COLLATERAL_TOKEN, WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { displayMonetaryAmount, safeRoundTwoDecimals } from 'common/utils/utils';
@@ -53,7 +53,7 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
     data: secureCollateralThreshold,
     error: secureCollateralThresholdError
   } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', COLLATERAL_TOKEN],
+    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded && !TEMP_COLLATERALIZATION_DISPLAY_DISABLED

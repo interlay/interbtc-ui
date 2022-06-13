@@ -17,7 +17,7 @@ import InterlayTabGroup, {
   InterlayTab,
   InterlayTabPanel
 } from 'components/UI/InterlayTabGroup';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
 import TAB_IDS from 'utils/constants/tab-ids';
@@ -78,7 +78,7 @@ const Bridge = (): JSX.Element | null => {
     (async () => {
       try {
         const maxBurnableTokens = await window.bridge.redeem.getMaxBurnableTokens(
-          COLLATERAL_TOKEN as CollateralCurrency
+          RELAY_CHAIN_NATIVE_TOKEN as CollateralCurrency
         );
         setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
       } catch (error) {

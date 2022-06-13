@@ -22,10 +22,10 @@ import ErrorFallback from 'components/ErrorFallback';
 import Hr2 from 'components/hrs/Hr2';
 import InformationTooltip from 'components/tooltips/InformationTooltip';
 import {
-  COLLATERAL_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeTokenLogoIcon
 } from 'config/relay-chains';
 import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
@@ -81,7 +81,7 @@ const RedeemForm = (): JSX.Element | null => {
   const [btcToDotRate, setBtcToDotRate] = React.useState(
     new ExchangeRate<Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit>(
       Bitcoin,
-      COLLATERAL_TOKEN,
+      RELAY_CHAIN_NATIVE_TOKEN,
       new Big(0)
     )
   );
@@ -122,7 +122,7 @@ const RedeemForm = (): JSX.Element | null => {
           window.bridge.redeem.getDustValue(),
           window.bridge.vaults.getPremiumRedeemVaults(),
           window.bridge.redeem.getPremiumRedeemFeeRate(),
-          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN),
+          window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN),
           window.bridge.redeem.getFeeRate(),
           window.bridge.redeem.getCurrentInclusionFee(),
           window.bridge.vaults.getVaultsWithRedeemableTokens()
@@ -310,7 +310,7 @@ const RedeemForm = (): JSX.Element | null => {
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
-      : newMonetaryAmount(0, COLLATERAL_TOKEN);
+      : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
     const totalDOTInUSD = getUsdAmount(totalDOT, prices.collateralToken?.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
@@ -422,9 +422,9 @@ const RedeemForm = (): JSX.Element | null => {
           {premiumRedeemSelected && (
             <PriceInfo
               title={<h5 className='text-interlayConifer'>{t('redeem_page.earned_premium')}</h5>}
-              unitIcon={<CollateralTokenLogoIcon width={20} />}
+              unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(totalDOT)}
-              unitName={COLLATERAL_TOKEN_SYMBOL}
+              unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
               approxUSD={totalDOTInUSD}
             />
           )}

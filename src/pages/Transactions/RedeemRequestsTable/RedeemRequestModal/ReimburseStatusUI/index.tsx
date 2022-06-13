@@ -15,11 +15,11 @@ import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/In
 import InterlayConiferOutlinedButton from 'components/buttons/InterlayConiferOutlinedButton';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';
-import { COLLATERAL_TOKEN, WRAPPED_TOKEN_SYMBOL, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
-import { REDEEM_FETCHER } from 'services/fetchers/redeem-request-fetcher';
+import { REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -30,9 +30,9 @@ interface Props {
 const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
   const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
-    newMonetaryAmount(0, COLLATERAL_TOKEN)
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
-  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, COLLATERAL_TOKEN));
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN));
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 
@@ -46,7 +46,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
       try {
         const [punishment, btcDotRate] = await Promise.all([
           window.bridge.vaults.getPunishmentFee(),
-          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN)
+          window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
         ]);
         const wrappedTokenAmount = request ? request.request.requestedAmountBacking : BitcoinAmount.zero;
         setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
@@ -65,7 +65,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([REDEEM_FETCHER]);
+        queryClient.invalidateQueries([REDEEMS_FETCHER]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },
@@ -82,7 +82,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([REDEEM_FETCHER]);
+        queryClient.invalidateQueries([REDEEMS_FETCHER]);
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },
@@ -135,13 +135,13 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
         >
           <span>{t('redeem_page.vault_did_not_send')}</span>
           <PrimaryColorSpan>
-            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+            &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
           </PrimaryColorSpan>
           <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)})`}</span>
           <span>
             &nbsp;
             {t('redeem_page.compensation', {
-              collateralTokenSymbol: COLLATERAL_TOKEN_SYMBOL
+              collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
             })}
           </span>
           .
@@ -165,7 +165,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
             <p className='text-justify'>
               <span>{t('redeem_page.receive_compensation')}</span>
               <PrimaryColorSpan>
-                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
               </PrimaryColorSpan>
               <span>
                 &nbsp;
@@ -192,7 +192,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
                 })}
               </span>
               <PrimaryColorSpan>
-                &nbsp;{displayMonetaryAmount(collateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+                &nbsp;{displayMonetaryAmount(collateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
               </PrimaryColorSpan>
               <span>
                 &nbsp;
@@ -201,7 +201,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
                 })}
               </span>
               <PrimaryColorSpan>
-                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {COLLATERAL_TOKEN_SYMBOL}
+                &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
               </PrimaryColorSpan>
               <span>
                 &nbsp;

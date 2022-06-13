@@ -10,7 +10,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     break;
   }
   case KUSAMA: {
-    VAULT_COLLATERAL = [CurrencyIdLiteral.KSM];
+    VAULT_COLLATERAL = [CurrencyIdLiteral.KSM, CurrencyIdLiteral.KINT];
     break;
   }
   default: {

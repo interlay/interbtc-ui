@@ -451,7 +451,9 @@
   "staking_page": {
     "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
     "new_vote_governance_token_gained": "New {{voteGovernanceTokenSymbol}} Gained",
-    "the_increase_in_your_vote_governance_token_balance": "The increase in your {{voteGovernanceTokenSymbol}} balance"
+    "the_increase_in_your_vote_governance_token_balance": "The increase in your {{voteGovernanceTokenSymbol}} balance",
+    "total_vote_governance_token_in_the_network": "Total {{voteGovernanceTokenSymbol}} in the network",
+    "total_staked_governance_token_in_the_network": "Total Staked {{governanceTokenSymbol}} in the network"
   },
   "about": {
     "research_paper": "Research Paper",

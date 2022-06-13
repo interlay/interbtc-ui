@@ -34,7 +34,7 @@ import { showAccountModalAction } from 'common/actions/general.actions';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
-import issueFetcher, { ISSUE_FETCHER, getIssueWithStatus } from 'services/fetchers/issue-request-fetcher';
+import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -106,12 +106,12 @@ const IssueRequestsTable = (): JSX.Element => {
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      ISSUE_FETCHER,
+      ISSUES_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
       `userParachainAddress_eq: "${address}"` // `WHERE` condition
     ],
-    issueFetcher
+    issuesFetcher
   );
   useErrorHandler(issueRequestsError);
 

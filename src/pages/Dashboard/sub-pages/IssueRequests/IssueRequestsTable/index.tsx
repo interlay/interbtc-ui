@@ -29,7 +29,7 @@ import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import issueFetcher, { ISSUE_FETCHER, getIssueWithStatus } from 'services/fetchers/issue-request-fetcher';
+import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
 import { StoreType } from 'common/types/util.types';
 
@@ -184,11 +184,11 @@ const IssueRequestsTable = (): JSX.Element => {
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
     [
-      ISSUE_FETCHER,
+      ISSUES_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT // limit
     ],
-    issueFetcher
+    issuesFetcher
   );
   useErrorHandler(issuesError);
 
