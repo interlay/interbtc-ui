@@ -6,7 +6,7 @@ import LineChart from '../../../LineChart';
 import DashboardCard from '../../../cards/DashboardCard';
 import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
@@ -20,23 +20,43 @@ const LockedCollateralsCard = (): JSX.Element => {
 
   // ray test touch <
   const {
-    isIdle: cumulativeVolumesIdle,
-    isLoading: cumulativeVolumesLoading,
-    data: cumulativeVolumes,
-    error: cumulativeVolumesError
+    isIdle: cumulativeRelayChainNativeTokenVolumesIdle,
+    isLoading: cumulativeRelayChainNativeTokenVolumesLoading,
+    data: cumulativeRelayChainNativeTokenVolumes,
+    error: cumulativeRelayChainNativeTokenVolumesError
   } = useCumulativeCollateralVolumes(RELAY_CHAIN_NATIVE_TOKEN);
-  useErrorHandler(cumulativeVolumesError);
+  useErrorHandler(cumulativeRelayChainNativeTokenVolumesError);
+
+  const {
+    isIdle: cumulativeGovernanceTokenVolumesIdle,
+    isLoading: cumulativeGovernanceTokenVolumesLoading,
+    data: cumulativeGovernanceTokenVolumes,
+    error: cumulativeGovernanceTokenVolumesError
+  } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN as CollateralToken);
+  useErrorHandler(cumulativeGovernanceTokenVolumesError);
   // ray test touch >
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (cumulativeVolumesIdle || cumulativeVolumesLoading) {
+    if (
+      cumulativeRelayChainNativeTokenVolumesIdle ||
+      cumulativeRelayChainNativeTokenVolumesLoading ||
+      // ray test touch <
+      cumulativeGovernanceTokenVolumesIdle ||
+      cumulativeGovernanceTokenVolumesLoading
+      // ray test touch >
+    ) {
       return <>Loading...</>;
     }
-    if (cumulativeVolumes === undefined) {
+    if (
+      cumulativeRelayChainNativeTokenVolumes === undefined ||
+      // ray test touch <
+      cumulativeGovernanceTokenVolumes === undefined
+      // ray test touch >
+    ) {
       throw new Error('Something went wrong!');
     }
-    const totalLockedCollateralTokenAmount = cumulativeVolumes.slice(-1)[0].amount;
+    const totalLockedCollateralTokenAmount = cumulativeRelayChainNativeTokenVolumes.slice(-1)[0].amount;
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -66,7 +86,7 @@ const LockedCollateralsCard = (): JSX.Element => {
           wrapperClassName='h-full'
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_collateral_locked')]}
-          yLabels={cumulativeVolumes
+          yLabels={cumulativeRelayChainNativeTokenVolumes
             .slice(0, -1)
             .map((dataPoint) => dataPoint.tillTimestamp.toISOString().substring(0, 10))}
           yAxes={[
@@ -77,7 +97,7 @@ const LockedCollateralsCard = (): JSX.Element => {
               }
             }
           ]}
-          datasets={[cumulativeVolumes.slice(1).map((dataPoint) => displayMonetaryAmount(dataPoint.amount))]}
+          datasets={[cumulativeRelayChainNativeTokenVolumes.slice(1).map((dataPoint) => displayMonetaryAmount(dataPoint.amount))]}
         />
       </>
     );
