@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 import { theme } from '../';
+import { StackProps } from './';
 
-export const StyledDiv = styled.div`
+export const StackContainer = styled.div<StackProps>`
   > *:not(:last-child) {
-    margin-bottom: ${theme.spacing.spacing5}};
+    margin-bottom: ${(props) => (props.spacing === 'x1' ? theme.spacing.spacing4 : theme.spacing.spacing5)};
   }
 `;

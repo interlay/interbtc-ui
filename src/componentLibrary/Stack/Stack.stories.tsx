@@ -1,10 +1,13 @@
 import { Story, Meta } from '@storybook/react';
 
-import { Stack } from './';
+import { Stack, StackProps } from './';
 
-const Template: Story = () => <Stack />;
+const Template: Story<StackProps> = (args) => <Stack {...args} />;
 
 const Default = Template.bind({});
+Default.args = {
+  children: 'Stack children'
+};
 
 export { Default };
 
