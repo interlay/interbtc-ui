@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { ReactComponent as PolkadotExtensionLogoIcon } from '@/assets/img/polkadot-extension-logo.svg';
-import { ReactComponent as SubWalletLogoIcon } from '@/assets/img/subwallet-logo.svg';
+import { ReactComponent as SubWalletLogoIcon } from '@/assets/img/sub-wallet-logo.svg';
 import { ReactComponent as TalismanWalletLogoIcon } from '@/assets/img/talisman-wallet-logo.svg';
 
 enum WalletSourceName {
