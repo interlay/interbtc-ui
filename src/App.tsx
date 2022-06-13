@@ -1,69 +1,71 @@
-import * as React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import { useSelector, useDispatch } from 'react-redux';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
-import { Keyring } from '@polkadot/api';
+import 'react-toastify/dist/ReactToastify.css';
+import './i18n';
+
 import {
-  createInterBtcApi,
-  SecurityStatusCode,
-  FaucetClient,
   ChainBalance,
   CollateralUnit,
-  GovernanceUnit
+  createInterBtcApi,
+  FaucetClient,
+  GovernanceUnit,
+  SecurityStatusCode
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
-import 'react-toastify/dist/ReactToastify.css';
+import { Keyring } from '@polkadot/api';
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
-import InterlayHelmet from 'parts/InterlayHelmet';
-import Layout from 'parts/Layout';
-import FullLoadingSpinner from 'components/FullLoadingSpinner';
-import ErrorFallback from 'components/ErrorFallback';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
-  APP_NAME,
-  WRAPPED_TOKEN,
-  COLLATERAL_TOKEN,
-  GOVERNANCE_TOKEN,
-  PRICES_URL,
-  RELAY_CHAIN_NAME,
-  BRIDGE_PARACHAIN_NAME
-} from 'config/relay-chains';
-import { PAGES } from 'utils/constants/links';
-import { CLASS_NAMES } from 'utils/constants/styles';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
-import STATUSES from 'utils/constants/statuses';
-import './i18n';
-import * as constants from './constants';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
-import {
-  isBridgeLoaded,
   changeAddressAction,
   initGeneralDataAction,
-  setInstalledExtensionAction,
+  isBridgeLoaded,
   isFaucetLoaded,
   isVaultClientLoaded,
-  updateWrappedTokenBalanceAction,
-  updateWrappedTokenTransferableBalanceAction,
+  setInstalledExtensionAction,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
   updateGovernanceTokenBalanceAction,
   updateGovernanceTokenTransferableBalanceAction,
-  updateOfPricesAction
-} from 'common/actions/general.actions';
-import { BitcoinNetwork } from 'types/bitcoin';
+  updateOfPricesAction,
+  updateWrappedTokenBalanceAction,
+  updateWrappedTokenTransferableBalanceAction
+} from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import ErrorFallback from '@/components/ErrorFallback';
+import FullLoadingSpinner from '@/components/FullLoadingSpinner';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import {
+  APP_NAME,
+  BRIDGE_PARACHAIN_NAME,
+  GOVERNANCE_TOKEN,
+  PRICES_URL,
+  RELAY_CHAIN_NAME,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  WRAPPED_TOKEN
+} from '@/config/relay-chains';
+import * as constants from '@/constants';
+import InterlayHelmet from '@/parts/InterlayHelmet';
+import Layout from '@/parts/Layout';
+import { BitcoinNetwork } from '@/types/bitcoin';
+import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
+import { PAGES } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import { CLASS_NAMES } from '@/utils/constants/styles';
 
-const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ 'pages/Bridge'));
-const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ 'pages/Transfer'));
-const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ 'pages/Transactions'));
-const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ 'pages/Staking'));
-const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard'));
-const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ 'pages/Vaults'));
-const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault'));
-const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch'));
+const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
+const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
+const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ '@/pages/Transactions'));
+const Transaction = React.lazy(() => import(/* webpackChunkName: 'transaction' */ '@/pages/Transaction'));
+const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
+const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
+const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
+const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
+const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
 const App = (): JSX.Element => {
   const {
@@ -168,7 +170,7 @@ const App = (): JSX.Element => {
           state
         ] = await Promise.all([
           window.bridge.tokens.total(WRAPPED_TOKEN),
-          window.bridge.tokens.total(COLLATERAL_TOKEN),
+          window.bridge.tokens.total(RELAY_CHAIN_NATIVE_TOKEN),
           window.bridge.tokens.total(GOVERNANCE_TOKEN),
           window.bridge.btcRelay.getLatestBlockHeight(),
           window.bridge.electrsAPI.getLatestBlockHeight(),
@@ -260,7 +262,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         unsubscribeFromCollateral = await window.bridge.tokens.subscribeToBalance(
-          COLLATERAL_TOKEN,
+          RELAY_CHAIN_NATIVE_TOKEN,
           address,
           (_: string, balance: ChainBalance<CollateralUnit>) => {
             if (!balance.free.eq(collateralTokenBalance)) {
@@ -413,6 +415,9 @@ const App = (): JSX.Element => {
                 </Route>
                 <Route path={PAGES.TRANSACTIONS}>
                   <Transactions />
+                </Route>
+                <Route path={PAGES.TRANSACTION}>
+                  <Transaction />
                 </Route>
                 <Route path={PAGES.BRIDGE}>
                   <Bridge />

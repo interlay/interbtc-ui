@@ -1,23 +1,24 @@
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useSelector } from 'react-redux';
 import { CollateralUnit } from '@interlay/interbtc-api';
+import clsx from 'clsx';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
-import DashboardCard from '../DashboardCard';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
-import ErrorFallback from 'components/ErrorFallback';
-import { StoreType } from 'common/types/util.types';
-import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
-import { PAGES } from 'utils/constants/links';
+import { StoreType } from '@/common/types/util.types';
+import ErrorFallback from '@/components/ErrorFallback';
+import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
   BtcToCurrencyOracleStatus,
   latestExchangeRateFetcher,
   ORACLE_LATEST_EXCHANGE_RATE_FETCHER
-} from 'services/fetchers/oracle-exchange-rates-fetcher';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+} from '@/services/fetchers/oracle-exchange-rates-fetcher';
+import { PAGES } from '@/utils/constants/links';
+
+import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
+import DashboardCard from '../DashboardCard';
 
 interface Props {
   hasLinks?: boolean;
@@ -43,7 +44,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
     data: oracleStatus,
     error: oracleStatusError
   } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit> | undefined, Error>(
-    [ORACLE_LATEST_EXCHANGE_RATE_FETCHER, COLLATERAL_TOKEN, oracleTimeout],
+    [ORACLE_LATEST_EXCHANGE_RATE_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout],
     latestExchangeRateFetcher,
     {
       enabled: !!oracleTimeout
@@ -114,7 +115,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           </Ring64Title>
           {exchangeRate && (
             <Ring64Value>
-              {exchangeRate.toHuman(5)} BTC/{COLLATERAL_TOKEN_SYMBOL}
+              {exchangeRate.toHuman(5)} BTC/{RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
           )}
         </Ring64>

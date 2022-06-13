@@ -1,15 +1,15 @@
 import { CurrencyIdLiteral, CurrencyUnit } from '@interlay/interbtc-api';
 import {
   Currency,
-  KBtc, // on Kusama
-  Kusama, // on Kusama
-  Kintsugi, // On Kusama
   InterBtc, // on Polkadot
-  Polkadot, // on Polkadot
-  Interlay // On Polkadot
+  Interlay, // On Polkadot
+  KBtc, // on Kusama
+  Kintsugi, // On Kusama
+  Kusama, // on Kusama
+  Polkadot// on Polkadot
 } from '@interlay/monetary-js';
 
-import { CurrencyValues, Currencies, CurrencySymbols } from 'types/currency';
+import { Currencies, CurrencySymbols, CurrencyValues } from '@/types/currency';
 
 const CURRENCIES: Currencies = [
   {

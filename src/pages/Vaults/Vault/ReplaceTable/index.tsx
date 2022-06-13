@@ -1,39 +1,33 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useTable } from 'react-table';
-import { useTranslation } from 'react-i18next';
+import { InterbtcPrimitivesVaultId, ReplaceRequestExt, stripHexPrefix, WrappedCurrency } from '@interlay/interbtc-api';
+import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
+import { BitcoinUnit, CollateralUnit, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { H256 } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
-import {
-  stripHexPrefix,
-  ReplaceRequestExt,
-  WrappedCurrency,
-  InterbtcPrimitivesVaultId,
-  CurrencyIdLiteral
-} from '@interlay/interbtc-api';
-import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
-import { MonetaryAmount, Currency, BitcoinUnit, CollateralUnit } from '@interlay/monetary-js';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useTable } from 'react-table';
 
-import SectionTitle from 'parts/SectionTitle';
-import ErrorFallback from 'components/ErrorFallback';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
   InterlayTableContainer,
-  InterlayThead,
   InterlayTbody,
-  InterlayTr,
+  InterlayTd,
   InterlayTh,
-  InterlayTd
-} from 'components/UI/InterlayTable';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
-import { shortAddress, displayMonetaryAmount } from 'common/utils/utils';
+  InterlayThead,
+  InterlayTr
+} from '@/components/UI/InterlayTable';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import SectionTitle from '@/parts/SectionTitle';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 
 interface Props {
   vaultAddress: string;

@@ -1,6 +1,6 @@
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 let VAULT_COLLATERAL: Array<CurrencyIdLiteral> = [];
 

@@ -1,11 +1,11 @@
-import { useQueries, UseQueryResult } from 'react-query';
-import { AccountId } from '@polkadot/types/interfaces';
 import { CurrencyIdLiteral, newAccountId, VaultExt } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
-
-import { StoreType } from 'common/types/util.types';
-import { VAULT_COLLATERAL } from 'config/vaults';
+import { AccountId } from '@polkadot/types/interfaces';
+import { useQueries, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
+
+import { StoreType } from '@/common/types/util.types';
+import { VAULT_COLLATERAL } from '@/config/vaults';
 
 const getVaults = async (
   accountId: AccountId,

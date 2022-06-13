@@ -1,40 +1,40 @@
-import * as React from 'react';
-import { useTranslation } from 'react-i18next';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useSelector, useDispatch } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import Accounts from 'components/Accounts';
-import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import Chains, { ChainOption } from 'components/Chains';
-import TokenField from 'components/TokenField';
-import ErrorFallback from 'components/ErrorFallback';
-import FormTitle from 'components/FormTitle';
-import SubmitButton from 'components/SubmitButton';
-import ErrorModal from 'components/ErrorModal';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
-import { ChainType } from 'types/chains.types';
-import STATUSES from 'utils/constants/statuses';
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import Accounts from '@/components/Accounts';
+import AvailableBalanceUI from '@/components/AvailableBalanceUI';
+import Chains, { ChainOption } from '@/components/Chains';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import SubmitButton from '@/components/SubmitButton';
+import TokenField from '@/components/TokenField';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { ChainType } from '@/types/chains.types';
+import STATUSES from '@/utils/constants/statuses';
 import {
-  RELAY_CHAIN_TRANSFER_FEE,
   createRelayChainApi,
-  getRelayChainBalance,
   getExistentialDeposit,
-  transferToParachain,
-  transferToRelayChain,
+  getRelayChainBalance,
+  RELAY_CHAIN_TRANSFER_FEE,
   RelayChainApi,
-  RelayChainMonetaryAmount
-} from 'utils/relay-chain-api';
+  RelayChainMonetaryAmount,
+  transferToParachain,
+  transferToRelayChain
+} from '@/utils/relay-chain-api';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
-const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, COLLATERAL_TOKEN);
+const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, RELAY_CHAIN_NATIVE_TOKEN);
 
 type CrossChainTransferFormData = {
   [TRANSFER_AMOUNT]: string;
@@ -86,14 +86,14 @@ const CrossChainTransferForm = (): JSX.Element => {
           api,
           address,
           destination.address,
-          newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN, true)
+          newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true)
         );
       } else {
         await transferToRelayChain(
           window.bridge.api,
           address,
           destination.address,
-          newMonetaryAmount(data[TRANSFER_AMOUNT], COLLATERAL_TOKEN, true)
+          newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true)
         );
       }
 
@@ -114,26 +114,26 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleUpdateUsdAmount = (event: any) => {
     if (!event.target.value) return;
 
-    const value = newMonetaryAmount(event.target.value, COLLATERAL_TOKEN, true);
+    const value = newMonetaryAmount(event.target.value, RELAY_CHAIN_NATIVE_TOKEN, true);
     const usd = getUsdAmount(value, prices.collateralToken?.usd);
 
     setApproxUsdValue(usd);
   };
 
   const validateRelayChainTransferAmount = (value: number): string | undefined => {
-    const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
+    const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
 
     return relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
   };
 
   const validateParachainTransferAmount = (value: number): string | undefined => {
-    const transferAmount = newMonetaryAmount(value, COLLATERAL_TOKEN, true);
+    const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
 
     // TODO: this api check won't be necessary when the api call is moved out of
     // the component
     const existentialDeposit = api
-      ? newMonetaryAmount(getExistentialDeposit(api), COLLATERAL_TOKEN)
-      : newMonetaryAmount('0', COLLATERAL_TOKEN);
+      ? newMonetaryAmount(getExistentialDeposit(api), RELAY_CHAIN_NATIVE_TOKEN)
+      : newMonetaryAmount('0', RELAY_CHAIN_NATIVE_TOKEN);
 
     // TODO: we need to handle and validate transfer fees properly. Implemented here initially
     // because it was an issue during testing.
@@ -146,7 +146,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       // Check the transfer amount is more than the fee
     } else if (transferAmount.lte(transferFee)) {
       return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_pay_fees', {
-        transferFee: `${displayMonetaryAmount(transferFee)} ${COLLATERAL_TOKEN_SYMBOL}`
+        transferFee: `${displayMonetaryAmount(transferFee)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`
       });
     } else {
       return undefined;
@@ -227,13 +227,13 @@ const CrossChainTransferForm = (): JSX.Element => {
                 <AvailableBalanceUI
                   label={t('transfer_page.cross_chain_transfer_form.relay_chain_balance')}
                   balance={displayMonetaryAmount(relayChainBalance)}
-                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL}
+                  tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
                 />
               ) : (
                 <AvailableBalanceUI
                   label={t('transfer_page.cross_chain_transfer_form.parachain_balance')}
                   balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
-                  tokenSymbol={COLLATERAL_TOKEN_SYMBOL}
+                  tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
                 />
               )}
               <TokenField
@@ -252,7 +252,7 @@ const CrossChainTransferForm = (): JSX.Element => {
                 })}
                 error={!!errors[TRANSFER_AMOUNT]}
                 helperText={errors[TRANSFER_AMOUNT]?.message}
-                label={COLLATERAL_TOKEN_SYMBOL}
+                label={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
                 approxUSD={`≈ $ ${approxUsdValue}`}
               />
             </div>

@@ -1,8 +1,8 @@
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
-import InterlayLink from 'components/UI/InterlayLink';
-import { formatDateTime } from 'common/utils/utils';
+import { formatDateTime } from '@/common/utils/utils';
+import InterlayLink from '@/components/UI/InterlayLink';
 
 interface Message {
   id: number;

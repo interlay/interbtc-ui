@@ -1,23 +1,23 @@
+import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
+import { FaCheckCircle } from 'react-icons/fa';
+import { useMutation, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useMutation, useQueryClient } from 'react-query';
-import { FaCheckCircle } from 'react-icons/fa';
-import clsx from 'clsx';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import ErrorModal from 'components/ErrorModal';
-import ExternalLink from 'components/ExternalLink';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
-import useQueryParams from 'utils/hooks/use-query-params';
-import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { shortAddress } from 'common/utils/utils';
-import { ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
-import { StoreType } from 'common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
+import { shortAddress } from '@/common/utils/utils';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import ErrorModal from '@/components/ErrorModal';
+import ExternalLink from '@/components/ExternalLink';
+import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
+import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import useQueryParams from '@/utils/hooks/use-query-params';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -43,7 +43,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
     },
     {
       onSuccess: (_, variables) => {
-        queryClient.invalidateQueries([ISSUE_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
+        queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
       }
     }

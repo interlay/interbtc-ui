@@ -1,15 +1,14 @@
 import clsx from 'clsx';
 
+import { TokenType } from '@/common/types/util.types';
 import Select, {
-  SelectButton,
-  SelectOptions,
-  SelectOption,
+  SELECT_VARIANTS,
   SelectBody,
+  SelectButton,
   SelectCheck,
-  SelectText,
-  SELECT_VARIANTS
-} from 'components/Select';
-import { TokenType } from 'common/types/util.types';
+  SelectOption,
+  SelectOptions,
+  SelectText} from '@/components/Select';
 
 interface TokenOption {
   type: TokenType;

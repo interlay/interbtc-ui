@@ -1,6 +1,6 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'import', 'cypress'],
+  plugins: ['@typescript-eslint', 'react', 'import', 'cypress', 'simple-import-sort'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -59,7 +59,9 @@ module.exports = {
     // React ESLinting rules
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
-    'react/prop-types': 'off'
+    'react/prop-types': 'off',
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error'
   },
   overrides: [
     {

@@ -1,28 +1,29 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import { BitcoinAmount } from '@interlay/monetary-js';
 import { CollateralCurrency } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
+import { StoreType } from '@/common/types/util.types';
+import Hr1 from '@/components/hrs/Hr1';
+import Panel from '@/components/Panel';
+import InterlayTabGroup, {
+  InterlayTab,
+  InterlayTabList,
+  InterlayTabPanel,
+  InterlayTabPanels
+} from '@/components/UI/InterlayTabGroup';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import MainContainer from '@/parts/MainContainer';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import TAB_IDS from '@/utils/constants/tab-ids';
+import useQueryParams from '@/utils/hooks/use-query-params';
+import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
+
+import BurnForm from './BurnForm';
 import IssueForm from './IssueForm';
 import RedeemForm from './RedeemForm';
-import BurnForm from './BurnForm';
-import MainContainer from 'parts/MainContainer';
-import Panel from 'components/Panel';
-import Hr1 from 'components/hrs/Hr1';
-import InterlayTabGroup, {
-  InterlayTabList,
-  InterlayTabPanels,
-  InterlayTab,
-  InterlayTabPanel
-} from 'components/UI/InterlayTabGroup';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
-import useQueryParams from 'utils/hooks/use-query-params';
-import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
-import TAB_IDS from 'utils/constants/tab-ids';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { StoreType } from 'common/types/util.types';
 
 const TAB_ITEMS_WITHOUT_BURN = [
   {
@@ -78,7 +79,7 @@ const Bridge = (): JSX.Element | null => {
     (async () => {
       try {
         const maxBurnableTokens = await window.bridge.redeem.getMaxBurnableTokens(
-          COLLATERAL_TOKEN as CollateralCurrency
+          RELAY_CHAIN_NATIVE_TOKEN as CollateralCurrency
         );
         setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
       } catch (error) {

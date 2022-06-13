@@ -3,8 +3,8 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
 import { generalReducer } from './general.reducer';
-import { redeemReducer as redeem } from './redeem.reducer';
 import { issueReducer as issue } from './issue.reducer';
+import { redeemReducer as redeem } from './redeem.reducer';
 import { vaultReducer as vault } from './vault.reducer';
 
 const generalPersistConfig = {

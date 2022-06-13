@@ -1,41 +1,42 @@
-import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { CollateralUnit, InterbtcPrimitivesVaultId, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
+import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { Redeem, CollateralUnit, newMonetaryAmount, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
-import SubmitButton from 'components/SubmitButton';
-import FormTitle from 'components/FormTitle';
-import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
-import TokenField from 'components/TokenField';
-import PriceInfo from 'pages/Bridge/PriceInfo';
-import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
-import Toggle from 'components/Toggle';
-import TextField from 'components/TextField';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorModal from 'components/ErrorModal';
-import ErrorFallback from 'components/ErrorFallback';
-import Hr2 from 'components/hrs/Hr2';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { showAccountModalAction, updateWrappedTokenBalanceAction } from '@/common/actions/general.actions';
+import { togglePremiumRedeemAction } from '@/common/actions/redeem.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getRandomVaultIdWithCapacity, getUsdAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import Hr2 from '@/components/hrs/Hr2';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/components/SubmitButton';
+import TextField from '@/components/TextField';
+import Toggle from '@/components/Toggle';
+import TokenField from '@/components/TokenField';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
-  COLLATERAL_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
-  COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon
-} from 'config/relay-chains';
-import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import STATUSES from 'utils/constants/statuses';
-import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '../../../constants';
-import { displayMonetaryAmount, getUsdAmount, getRandomVaultIdWithCapacity } from 'common/utils/utils';
-import { togglePremiumRedeemAction } from 'common/actions/redeem.actions';
-import { updateWrappedTokenBalanceAction, showAccountModalAction } from 'common/actions/general.actions';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL
+} from '@/config/relay-chains';
+import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '@/constants';
+import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
+import PriceInfo from '@/pages/Bridge/PriceInfo';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+
+import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -81,7 +82,7 @@ const RedeemForm = (): JSX.Element | null => {
   const [btcToDotRate, setBtcToDotRate] = React.useState(
     new ExchangeRate<Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit>(
       Bitcoin,
-      COLLATERAL_TOKEN,
+      RELAY_CHAIN_NATIVE_TOKEN,
       new Big(0)
     )
   );
@@ -122,7 +123,7 @@ const RedeemForm = (): JSX.Element | null => {
           window.bridge.redeem.getDustValue(),
           window.bridge.vaults.getPremiumRedeemVaults(),
           window.bridge.redeem.getPremiumRedeemFeeRate(),
-          window.bridge.oracle.getExchangeRate(COLLATERAL_TOKEN),
+          window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN),
           window.bridge.redeem.getFeeRate(),
           window.bridge.redeem.getCurrentInclusionFee(),
           window.bridge.vaults.getVaultsWithRedeemableTokens()
@@ -310,7 +311,7 @@ const RedeemForm = (): JSX.Element | null => {
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
-      : newMonetaryAmount(0, COLLATERAL_TOKEN);
+      : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
     const totalDOTInUSD = getUsdAmount(totalDOT, prices.collateralToken?.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
@@ -422,9 +423,9 @@ const RedeemForm = (): JSX.Element | null => {
           {premiumRedeemSelected && (
             <PriceInfo
               title={<h5 className='text-interlayConifer'>{t('redeem_page.earned_premium')}</h5>}
-              unitIcon={<CollateralTokenLogoIcon width={20} />}
+              unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(totalDOT)}
-              unitName={COLLATERAL_TOKEN_SYMBOL}
+              unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
               approxUSD={totalDOTInUSD}
             />
           )}

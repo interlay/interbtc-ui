@@ -1,13 +1,14 @@
+import { newMonetaryAmount, ReplaceRequestExt } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import { ReplaceRequestExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+
 import {
-  UPDATE_COLLATERALIZATION,
-  UPDATE_COLLATERAL,
-  UPDATE_LOCKED_BTC,
   UPDATE_APY,
+  UPDATE_COLLATERAL,
+  UPDATE_COLLATERALIZATION,
+  UPDATE_LOCKED_BTC,
   VaultActions
 } from '../types/actions.types';
 import { VaultState } from '../types/vault.types';
@@ -15,7 +16,7 @@ import { VaultState } from '../types/vault.types';
 const initialState = {
   requests: new Map<H256, ReplaceRequestExt>(),
   collateralization: '0',
-  collateral: newMonetaryAmount(0, COLLATERAL_TOKEN),
+  collateral: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   lockedBTC: BitcoinAmount.zero,
   apy: '0'
 };

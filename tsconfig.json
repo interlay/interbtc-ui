@@ -19,7 +19,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src",
+    "baseUrl": ".",
     "types": [
       "cypress",
       "@testing-library/cypress"
@@ -32,5 +32,6 @@
     {
       "loader": "raw-loader"
     }
-  ]
+  ],
+  "extends": "./tsconfig.paths.json"
 }

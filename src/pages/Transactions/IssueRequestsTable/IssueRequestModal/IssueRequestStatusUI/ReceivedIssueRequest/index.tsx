@@ -1,18 +1,18 @@
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { useSelector } from 'react-redux';
-import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import ExternalLink from 'components/ExternalLink';
-import ErrorFallback from 'components/ErrorFallback';
-import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
-import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { shortAddress } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
+import { shortAddress } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import ExternalLink from '@/components/ExternalLink';
+import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
+import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   // TODO: should type properly (`Relay`)

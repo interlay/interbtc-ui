@@ -1,7 +1,7 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA,POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const InterlayTableContainer = ({ className, ...rest }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <div className={clsx('overflow-x-auto', 'overflow-y-hidden', className)} {...rest} />
@@ -48,6 +48,6 @@ const InterlayTd = ({ className, ...rest }: React.ComponentPropsWithRef<'td'>): 
   <td className={clsx('h-12', 'p-2', className)} {...rest} />
 );
 
-export { InterlayTableContainer, InterlayThead, InterlayTbody, InterlayTr, InterlayTh, InterlayTd };
+export { InterlayTableContainer, InterlayTbody, InterlayTd,InterlayTh, InterlayThead, InterlayTr };
 
 export default InterlayTable;

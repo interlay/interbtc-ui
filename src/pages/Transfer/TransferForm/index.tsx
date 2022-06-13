@@ -1,25 +1,26 @@
+import { CurrencyUnit,newMonetaryAmount } from '@interlay/interbtc-api';
+import { Currency } from '@interlay/monetary-js';
+import clsx from 'clsx';
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import { withErrorBoundary } from 'react-error-boundary';
+import { useDispatch,useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
-import { Currency } from '@interlay/monetary-js';
+
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import SubmitButton from '@/components/SubmitButton';
+import TextField from '@/components/TextField';
+import Tokens, { TokenOption } from '@/components/Tokens';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import isValidPolkadotAddress from '@/utils/helpers/is-valid-polkadot-address';
 
 import TokenAmountField from '../TokenAmountField';
-import Tokens, { TokenOption } from 'components/Tokens';
-import ErrorFallback from 'components/ErrorFallback';
-import SubmitButton from 'components/SubmitButton';
-import FormTitle from 'components/FormTitle';
-import TextField from 'components/TextField';
-import ErrorModal from 'components/ErrorModal';
-import { ParachainStatus, StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import isValidPolkadotAddress from 'utils/helpers/is-valid-polkadot-address';
-import STATUSES from 'utils/constants/statuses';
-import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 const RECIPIENT_ADDRESS = 'recipient-address';
