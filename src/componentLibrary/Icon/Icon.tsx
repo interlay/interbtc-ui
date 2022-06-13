@@ -1,23 +1,24 @@
 import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
 import { ReactComponent as CheckmarkIcon } from '@material-icons/svg/svg/check/baseline.svg';
-import { SVGProps } from 'react';
+import { IconWrapper } from './Icon.style';
 
 type IconVariant = 'close' | 'checkmark';
 
-interface IconProps extends SVGProps<SVGSVGElement> {
+interface IconProps {
   variant: IconVariant;
+  color?: string;
 }
 
-const Icon = ({ variant, ...props }: IconProps): JSX.Element | null => {
-  const IconVariant = (() => {
-    switch (variant) {
-      case 'close':
-        return CloseIcon;
-      case 'checkmark':
-        return CheckmarkIcon;
-    }
-  })();
-  return <IconVariant {...props} />;
+const Icon = ({ variant, color }: IconProps): JSX.Element | null => {
+  return (
+    <IconWrapper color={color}>
+      {
+        variant === 'close' ? <CloseIcon /> : 
+        variant === 'checkmark' ? <CheckmarkIcon /> : 
+        null
+      }
+    </IconWrapper>
+  )
 };
 
 Icon.displayName = 'Icon';

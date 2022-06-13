@@ -62,8 +62,10 @@ const theme = {
     }
   },
   modal: {
-    bg: 'var(--colors-modal-bg)',
-    transitionDuration: 100
+    bg: 'var(--colors-modal-bg)'
+  },
+  transition: {
+    duration: 100
   }
 };
 

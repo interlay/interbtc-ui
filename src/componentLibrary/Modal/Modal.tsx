@@ -19,7 +19,7 @@ const Modal = ({
   initialFocusRef,
   closeIconVariant = 'close'
 }: ModalProps): JSX.Element | null => {
-  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.modal.transitionDuration);
+  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

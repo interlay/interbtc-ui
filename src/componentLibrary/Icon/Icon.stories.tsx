@@ -6,16 +6,12 @@ const Template: Story<IconProps> = (args) => <Icon {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  variant: 'close'
-};
-
-const WithFillProp = Template.bind({});
-WithFillProp.args = {
   variant: 'close',
-  fill: '#a51a51'
+  color: 'white'
 };
 
-export { Default, WithFillProp };
+
+export { Default };
 
 export default {
   title: 'Elements/Icon',

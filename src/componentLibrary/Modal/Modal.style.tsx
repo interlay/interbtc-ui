@@ -34,7 +34,7 @@ const ModalContent = styled.div<ModalContentProps>`
   padding: ${theme.spacing.spacing4};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textSecondary};
-  transition: opacity ${theme.modal.transitionDuration}ms ease-out;
+  transition: opacity ${theme.transition.duration}ms ease-out;
   transition-property: opacity, transform;
   ${({ transitionTrigger }) =>
     transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
