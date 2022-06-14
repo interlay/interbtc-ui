@@ -20,7 +20,9 @@ interface Props {
 const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
+  // ray test touch <
   const { issuePeriod } = useSelector((state: StoreType) => state.issue);
+  // ray test touch >
   const amountBTCToSend = (request.wrappedAmount || request.request.amountWrapped).add(
     request.bridgeFee || request.request.bridgeFeeWrapped
   );
