@@ -8,7 +8,9 @@ import { useHistory } from 'react-router-dom';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { roundTwoDecimals, VaultExt } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+// ray test touch <
+import { BitcoinUnit, BitcoinAmount } from '@interlay/monetary-js';
+// ray test touch >
 
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
@@ -47,7 +49,9 @@ const getCollateralizationColor = (
 
 interface Vault {
   vaultId: string;
-  lockedBTC: string;
+  // ray test touch <
+  lockedBTC: BitcoinAmount;
+  // ray test touch >
   lockedDOT: string;
   pendingBTC: string;
   status: string;
@@ -139,8 +143,15 @@ const VaultsTable = (): JSX.Element => {
       },
       {
         Header: t('locked_btc'),
+        // ray test touch <
         accessor: 'lockedBTC',
-        classNames: ['text-right']
+        // ray test touch >
+        classNames: ['text-right'],
+        // ray test touch <
+        Cell: function FormattedCell({ value }: { value: BitcoinAmount }) {
+          return <>{displayMonetaryAmount(value)}</>;
+        }
+        // ray test touch >
       },
       {
         Header: t('pending_btc'),
@@ -244,8 +255,11 @@ const VaultsTable = (): JSX.Element => {
 
         return {
           vaultId: vaultExt.id.accountId.toString(),
+          // ray test touch <
           // TODO: fetch collateral reserved
-          lockedBTC: displayMonetaryAmount(settledTokens),
+          // lockedBTC: displayMonetaryAmount(settledTokens),
+          lockedBTC: settledTokens,
+          // ray test touch >
           lockedDOT: displayMonetaryAmount(vaultCollateral),
           pendingBTC: displayMonetaryAmount(unsettledTokens),
           status: statusLabel,
@@ -254,11 +268,13 @@ const VaultsTable = (): JSX.Element => {
         };
       });
 
+      // ray test touch <
       const sortedVaults = rawVaults.sort((vaultA, vaultB) => {
         const vaultALockedBTC = vaultA.lockedBTC;
         const vaultBLockedBTC = vaultB.lockedBTC;
-        return vaultALockedBTC < vaultBLockedBTC ? 1 : vaultALockedBTC > vaultBLockedBTC ? -1 : 0;
+        return vaultBLockedBTC.gt(vaultALockedBTC) ? 1 : vaultALockedBTC > vaultBLockedBTC ? -1 : 0;
       });
+      // ray test touch >
 
       return sortedVaults;
     }
