@@ -36,6 +36,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({ request }: Props): JSX.Element 
           window.bridge.redeem.getRedeemPeriod(),
           window.bridge.redeem.getRequestById(request.id)
         ]);
+
         const maxRedeemPeriodInBlocks = Math.max(redeemPeriodInBlocks, requestById.period);
         const requestTimestamp = Math.floor(new Date(request.request.timestamp).getTime() / 1000);
         const theInitialLeftSeconds = requestTimestamp + maxRedeemPeriodInBlocks * BLOCK_TIME - Math.floor(Date.now() / 1000);
