@@ -12,6 +12,7 @@ const theme = {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
     textTertiary: 'var(--colors-text-tertiary)',
+    textAccent: 'var(--colors-text-accent)',
     iconDefault: `var(--colors-icon-default)`
   },
   font: {
@@ -37,7 +38,9 @@ const theme = {
   },
   lineHeight: {
     base: 'var(--line-height-base)',
-    lg: 'var(--line-height-lg)'
+    s: 'var(--line-height-s)',
+    lg: 'var(--line-height-lg)',
+    xl: 'var(--line-height-xl)'
   },
   spacing: {
     spacing1: 'var(--spacing-1)',
@@ -56,6 +59,9 @@ const theme = {
     md: 'var(--rounded-md)',
     lg: 'var(--rounded-lg)',
     xl: 'var(--rounded-xl)'
+  },
+  border: {
+    default: `1px solid var(--colors-border)`
   },
   // Components
   card: {

@@ -1,4 +1,4 @@
-import { InfoBoxHeader, InfoBoxText } from './InfoBox.style';
+import { InfoBoxWrapper, InfoBoxHeader, InfoBoxText } from './InfoBox.style';
 
 interface InfoBoxProps {
   title: string;
@@ -8,11 +8,11 @@ interface InfoBoxProps {
 
 const InfoBox = ({ title, text, onSubmit }: InfoBoxProps): JSX.Element => {
   return (
-    <div>
+    <InfoBoxWrapper>
       <InfoBoxHeader>{title}</InfoBoxHeader>
       <InfoBoxText>{text}</InfoBoxText>
       {onSubmit && <p>Click handler here</p>}
-    </div>
+    </InfoBoxWrapper>
   );
 };
 

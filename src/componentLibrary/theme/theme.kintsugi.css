@@ -2,11 +2,14 @@
 
 :root {
   --colors-dark-blue: #091133;
+  --colors-mid-blue: #434e66;
   --colors-yellow: #feca2f;
-  --colors-dark-yellow: #e6b800;
+  --colors-dark-yellow: hsl(48, 100%, 45%);
 }
 
 .theme-kintsugi {
+  --colors-border: var(--colors-mid-blue);
+
   --colors-card-bg: var(--colors-dark-blue);
   --colors-cta-primary: var(--colors-yellow);
   --colors-cta-primary-hover: var(--colors-dark-yellow);
@@ -14,6 +17,7 @@
   --colors-text-primary: var(--colors-neutral-black);
   --colors-text-secondary: var(--colors-neutral-white);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
+  --colors-text-accent: var(--colors-yellow);
   --colors-modal-bg: var(--colors-dark-blue);
   --colors-icon-default: var(--colors-neutral-white);
 }

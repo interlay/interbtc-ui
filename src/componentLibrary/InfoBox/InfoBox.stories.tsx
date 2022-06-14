@@ -6,8 +6,8 @@ const Template: Story<InfoBoxProps> = (args) => <InfoBox {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  title: 'Info box',
-  text: 'Info box content'
+  title: 'My vaults at risk',
+  text: '0'
 };
 
 export { Default };
