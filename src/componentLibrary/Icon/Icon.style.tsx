@@ -1,12 +1,11 @@
 import styled from 'styled-components';
+
 import { theme } from 'componentLibrary';
 
-interface IconWrapperProps {
-  color?: string
-}
-
-export const IconWrapper = styled.div<IconWrapperProps>`
+const IconWrapper = styled.div`
   fill: ${theme.colors.iconDefault};
 `;
 
-export type { IconWrapperProps };
+export {
+  IconWrapper
+}
