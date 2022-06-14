@@ -30,15 +30,15 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({ request }: Props): JSX.Element 
       try {
         // ray test touch <
         const [
-          redeemPeriod,
+          redeemPeriodInBlocks,
           requestById
         ] = await Promise.all([
           window.bridge.redeem.getRedeemPeriod(),
           window.bridge.redeem.getRequestById(request.id)
         ]);
-        const maxRedeemPeriod = Math.max(redeemPeriod, requestById.period);
+        const maxRedeemPeriodInBlocks = Math.max(redeemPeriodInBlocks, requestById.period);
         const requestTimestamp = Math.floor(new Date(request.request.timestamp).getTime() / 1000);
-        const theInitialLeftSeconds = requestTimestamp + maxRedeemPeriod * BLOCK_TIME - Math.floor(Date.now() / 1000);
+        const theInitialLeftSeconds = requestTimestamp + maxRedeemPeriodInBlocks * BLOCK_TIME - Math.floor(Date.now() / 1000);
         // ray test touch >
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
