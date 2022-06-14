@@ -140,9 +140,7 @@ export interface TogglePremiumRedeem {
   premiumRedeem: boolean;
 }
 
-// ray test touch <
-export type RedeemActions = ChangeAddress | InitState | TogglePremiumRedeem;
-// ray test touch >
+export type RedeemActions = TogglePremiumRedeem;
 
 // VAULT
 
