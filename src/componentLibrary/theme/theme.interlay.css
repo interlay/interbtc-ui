@@ -9,4 +9,6 @@
   --colors-cta-primary: var(--colors-blue);
   --colors-cta-secondary: var(--colors-neutral-white);
   --colors-text-primary: var(--colors-neutral-black);
+  --colors-modal-bg: var(--colors-neutral-white);
+  --colors-icon-default: var(--colors-neutral-black);
 }

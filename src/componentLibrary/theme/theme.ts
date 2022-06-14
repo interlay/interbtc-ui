@@ -11,7 +11,8 @@ const theme = {
   colors: {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
-    textTertiary: 'var(--colors-text-tertiary)'
+    textTertiary: 'var(--colors-text-tertiary)',
+    iconDefault: `var(--colors-icon-default)`
   },
   font: {
     primary: 'var(--fonts-primary)'
@@ -68,6 +69,12 @@ const theme = {
     secondary: {
       bg: 'var(--colors-cta-secondary)'
     }
+  },
+  modal: {
+    bg: 'var(--colors-modal-bg)'
+  },
+  transition: {
+    duration: 100
   }
 };
 
