@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { roundTwoDecimals, VaultExt } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { BitcoinUnit, BitcoinAmount } from '@interlay/monetary-js';
 
 import SectionTitle from 'parts/SectionTitle';
 import ErrorFallback from 'components/ErrorFallback';
@@ -47,7 +47,7 @@ const getCollateralizationColor = (
 
 interface Vault {
   vaultId: string;
-  lockedBTC: string;
+  lockedBTC: BitcoinAmount;
   lockedDOT: string;
   pendingBTC: string;
   status: string;
@@ -140,7 +140,10 @@ const VaultsTable = (): JSX.Element => {
       {
         Header: t('locked_btc'),
         accessor: 'lockedBTC',
-        classNames: ['text-right']
+        classNames: ['text-right'],
+        Cell: function FormattedCell({ value }: { value: BitcoinAmount }) {
+          return displayMonetaryAmount(value);
+        }
       },
       {
         Header: t('pending_btc'),
@@ -245,7 +248,7 @@ const VaultsTable = (): JSX.Element => {
         return {
           vaultId: vaultExt.id.accountId.toString(),
           // TODO: fetch collateral reserved
-          lockedBTC: displayMonetaryAmount(settledTokens),
+          lockedBTC: settledTokens,
           lockedDOT: displayMonetaryAmount(vaultCollateral),
           pendingBTC: displayMonetaryAmount(unsettledTokens),
           status: statusLabel,
@@ -257,7 +260,7 @@ const VaultsTable = (): JSX.Element => {
       const sortedVaults = rawVaults.sort((vaultA, vaultB) => {
         const vaultALockedBTC = vaultA.lockedBTC;
         const vaultBLockedBTC = vaultB.lockedBTC;
-        return vaultALockedBTC < vaultBLockedBTC ? 1 : vaultALockedBTC > vaultBLockedBTC ? -1 : 0;
+        return vaultBLockedBTC.gt(vaultALockedBTC) ? 1 : vaultALockedBTC.gt(vaultBLockedBTC) ? -1 : 0;
       });
 
       return sortedVaults;
