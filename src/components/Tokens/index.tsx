@@ -10,9 +10,9 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
   CollateralToken,
-  COLLATERAL_TOKEN,
-  COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeTokenLogoIcon,
   GovernanceToken,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -78,12 +78,12 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   React.useEffect(() => {
     const tokenOptions: Array<TokenOption> = [
       {
-        token: COLLATERAL_TOKEN,
+        token: RELAY_CHAIN_NATIVE_TOKEN,
         type: TokenType.COLLATERAL,
         balance: displayMonetaryAmount(collateralTokenBalance),
         transferableBalance: displayMonetaryAmount(collateralTokenTransferableBalance),
-        icon: <CollateralTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
-        symbol: COLLATERAL_TOKEN_SYMBOL
+        icon: <RelayChainNativeTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
+        symbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
       },
       {
         token: WRAPPED_TOKEN,

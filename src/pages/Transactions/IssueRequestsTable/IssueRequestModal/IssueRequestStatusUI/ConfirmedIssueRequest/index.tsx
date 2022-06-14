@@ -16,7 +16,7 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { shortAddress } from 'common/utils/utils';
-import { ISSUE_FETCHER } from 'services/fetchers/issue-request-fetcher';
+import { ISSUES_FETCHER } from 'services/fetchers/issues-fetcher';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
@@ -43,7 +43,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
     },
     {
       onSuccess: (_, variables) => {
-        queryClient.invalidateQueries([ISSUE_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
+        queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
       }
     }

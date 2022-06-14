@@ -4,8 +4,9 @@ import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import clsx from 'clsx';
+import { CollateralCurrency, newVaultId, WrappedCurrency } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import { COLLATERAL_TOKEN, WRAPPED_TOKEN } from 'config/relay-chains';
+import { WRAPPED_TOKEN } from 'config/relay-chains';
 import ErrorMessage from 'components/ErrorMessage';
 import NumberInput from 'components/NumberInput';
 import TextField from 'components/TextField';
@@ -16,7 +17,6 @@ import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'co
 import { displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { BTC_ADDRESS_REGEX } from '../../../../constants';
-import { newVaultId, CollateralCurrency, WrappedCurrency } from '@interlay/interbtc-api';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -29,11 +29,12 @@ type RequestRedeemFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
+  collateralCurrency: CollateralCurrency | undefined;
   vaultAddress: string;
 }
 
 // TODO: share form with bridge page
-const RequestRedeemModal = ({ onClose, open, vaultAddress }: Props): JSX.Element => {
+const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
   const { register, handleSubmit, errors } = useForm<RequestRedeemFormData>();
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
@@ -55,7 +56,7 @@ const RequestRedeemModal = ({ onClose, open, vaultAddress }: Props): JSX.Element
       const vaultId = newVaultId(
         window.bridge.api,
         vaultAddress,
-        COLLATERAL_TOKEN as CollateralCurrency,
+        collateralCurrency as CollateralCurrency,
         WRAPPED_TOKEN as WrappedCurrency
       );
       await window.bridge.redeem.request(amountPolkaBtc, data[BTC_ADDRESS], vaultId);

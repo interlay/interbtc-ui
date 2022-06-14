@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const Vaults = styled.div`
   display: flex;
+  gap: 20px;
   justify-content: center;
 `;
 
