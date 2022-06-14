@@ -1,10 +1,10 @@
-import { CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
-import { CoinPair, CTALink } from 'componentLibrary';
+import { CurrencySymbols } from 'types/currency';
+import { CoinPair, CTALink } from '../';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateral: CollateralIdLiteral;
-  wrappedAsset: CurrencyIdLiteral;
+  collateralSymbol: CurrencySymbols;
+  wrappedSymbol: CurrencySymbols;
   pendingRequests: number;
   apy: string;
   collateralScore: string;
@@ -12,8 +12,8 @@ interface VaultCardProps {
 }
 
 const VaultCard = ({
-  collateral,
-  wrappedAsset,
+  collateralSymbol,
+  wrappedSymbol,
   pendingRequests,
   apy,
   collateralScore,
@@ -21,12 +21,9 @@ const VaultCard = ({
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
-      <CoinPair
-        coinOne={collateral}
-        coinTwo={wrappedAsset}
-        size='large' />
+      <CoinPair coinOne={collateralSymbol} coinTwo={wrappedSymbol} size='large' />
       <CardTitle>
-        {collateral} - {wrappedAsset}
+        {collateralSymbol} - {wrappedSymbol}
       </CardTitle>
     </CardHeader>
     <CardBody>
@@ -48,10 +45,7 @@ const VaultCard = ({
         </DlItem>
       </StyledDl>
       <CTAWrapper>
-        <CTALink
-          href={link}
-          variant='primary'
-          fullWidth={false}>
+        <CTALink href={link} variant='primary' fullWidth={false}>
           View
         </CTALink>
       </CTAWrapper>

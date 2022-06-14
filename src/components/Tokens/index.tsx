@@ -1,12 +1,8 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 
 import TokenSelector from './TokenSelector';
-import {
-  SelectVariants,
-  SELECT_VARIANTS
-} from 'components/Select';
+import { SelectVariants, SELECT_VARIANTS } from 'components/Select';
 
 import {
   WrappedToken,
@@ -14,19 +10,16 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
   CollateralToken,
-  COLLATERAL_TOKEN,
-  COLLATERAL_TOKEN_SYMBOL,
-  CollateralTokenLogoIcon,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeTokenLogoIcon,
   GovernanceToken,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenLogoIcon
 } from 'config/relay-chains';
 import { displayMonetaryAmount } from 'common/utils/utils';
-import {
-  TokenType,
-  StoreType
-} from 'common/types/util.types';
+import { TokenType, StoreType } from 'common/types/util.types';
 
 interface TokenOption {
   token: WrappedToken | CollateralToken | GovernanceToken;
@@ -43,19 +36,13 @@ interface Props {
   showBalances?: boolean;
 }
 
-const Tokens = ({
-  variant = 'optionSelector',
-  callbackFunction,
-  showBalances = true
-}: Props): JSX.Element => {
+const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = true }: Props): JSX.Element => {
   const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
   const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(undefined);
 
-  const getTokenOption =
-    React.useCallback(
-      (type: TokenType) => tokenOptions?.find(token => token.type === type),
-      [tokenOptions]
-    );
+  const getTokenOption = React.useCallback((type: TokenType) => tokenOptions?.find((token) => token.type === type), [
+    tokenOptions
+  ]);
 
   React.useEffect(() => {
     if (!tokenOptions) return;
@@ -91,22 +78,19 @@ const Tokens = ({
   React.useEffect(() => {
     const tokenOptions: Array<TokenOption> = [
       {
-        token: COLLATERAL_TOKEN,
+        token: RELAY_CHAIN_NATIVE_TOKEN,
         type: TokenType.COLLATERAL,
         balance: displayMonetaryAmount(collateralTokenBalance),
         transferableBalance: displayMonetaryAmount(collateralTokenTransferableBalance),
-        icon:
-        <CollateralTokenLogoIcon
-          height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
-        symbol: COLLATERAL_TOKEN_SYMBOL
+        icon: <RelayChainNativeTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
+        symbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
       },
       {
         token: WRAPPED_TOKEN,
         type: TokenType.WRAPPED,
         balance: displayMonetaryAmount(wrappedTokenBalance),
         transferableBalance: displayMonetaryAmount(wrappedTokenTransferableBalance),
-        icon: <WrappedTokenLogoIcon
-          height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
+        icon: <WrappedTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
       },
       {
@@ -114,15 +98,13 @@ const Tokens = ({
         type: TokenType.GOVERNANCE,
         balance: displayMonetaryAmount(governanceTokenBalance),
         transferableBalance: displayMonetaryAmount(governanceTokenTransferableBalance),
-        icon: <GovernanceTokenLogoIcon
-          height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
+        icon: <GovernanceTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: GOVERNANCE_TOKEN_SYMBOL
       }
     ];
 
     setTokenOptions(tokenOptions);
-  },
-  [
+  }, [
     collateralTokenBalance,
     collateralTokenTransferableBalance,
     wrappedTokenBalance,
@@ -143,15 +125,15 @@ const Tokens = ({
 
   return (
     <>
-      {tokenOptions && currentToken ?
+      {tokenOptions && currentToken ? (
         <TokenSelector
           variant={variant}
           showBalances={showBalances}
           tokenOptions={tokenOptions}
           currentToken={currentToken}
-          onChange={handleUpdateToken} /> :
-        null
-      }
+          onChange={handleUpdateToken}
+        />
+      ) : null}
     </>
   );
 };

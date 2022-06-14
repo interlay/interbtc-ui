@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 
 import InterlayTooltip from 'components/UI/InterlayTooltip';
@@ -10,22 +9,14 @@ interface Props {
   className?: string;
 }
 
-const InformationTooltip = ({
-  label,
-  forDisabledAction,
-  className
-}: Props): JSX.Element => (
+const InformationTooltip = ({ label, forDisabledAction, className }: Props): JSX.Element => (
   <InterlayTooltip label={label}>
     <InformationCircleIcon
-      onClick={event => {
+      onClick={(event) => {
         forDisabledAction && event.stopPropagation();
       }}
-      className={clsx(
-        'w-5',
-        'h-5',
-        { 'pointer-events-auto': forDisabledAction },
-        className
-      )} />
+      className={clsx('w-5', 'h-5', { 'pointer-events-auto': forDisabledAction }, className)}
+    />
   </InterlayTooltip>
 );
 

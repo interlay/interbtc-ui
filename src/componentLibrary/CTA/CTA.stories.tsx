@@ -2,7 +2,7 @@ import { Story, Meta } from '@storybook/react';
 
 import { CTA, CTAProps } from './';
 
-const Template: Story<CTAProps> = args => <CTA {...args} />;
+const Template: Story<CTAProps> = (args) => <CTA {...args} />;
 
 const Primary = Template.bind({});
 Primary.args = {
@@ -23,11 +23,7 @@ FullWidth.args = {
   fullWidth: true
 };
 
-export {
-  Primary,
-  Secondary,
-  FullWidth
-};
+export { Primary, Secondary, FullWidth };
 
 export default {
   title: 'Elements/CTA',

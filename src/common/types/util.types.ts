@@ -1,19 +1,10 @@
 import { Store, CombinedState } from 'redux';
 import { u256 } from '@polkadot/types/primitive';
-import {
-  BitcoinAmount,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
 import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import {
-  GeneralActions,
-  RedeemActions,
-  IssueActions,
-  VaultActions
-} from './actions.types';
+import { GeneralActions, RedeemActions, IssueActions, VaultActions } from './actions.types';
 import { rootReducer } from '../reducers/index';
 import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
@@ -57,15 +48,21 @@ export enum ParachainStatus {
 }
 
 export type Prices = {
-  bitcoin: {
-    usd: number;
-  };
-  collateralToken: {
-    usd: number;
-  };
-  governanceToken: {
-    usd: number;
-  };
+  bitcoin:
+    | {
+        usd: number;
+      }
+    | undefined;
+  collateralToken:
+    | {
+        usd: number;
+      }
+    | undefined;
+  governanceToken:
+    | {
+        usd: number;
+      }
+    | undefined;
 };
 
 export type GeneralState = {

@@ -1,4 +1,3 @@
-
 import clsx from 'clsx';
 
 import MaintenanceBanner from 'parts/MaintenanceBanner';
@@ -10,17 +9,10 @@ interface Props {
   children: React.ReactNode;
 }
 
-const Layout = ({
-  className,
-  children
-}: Props): JSX.Element => {
+const Layout = ({ className, children }: Props): JSX.Element => {
   return (
     <Sidebar className={className}>
-      <div
-        className={clsx(
-          'relative',
-          'min-h-screen'
-        )}>
+      <div className={clsx('relative', 'min-h-screen')}>
         <MaintenanceBanner />
         <Topbar />
         {children}

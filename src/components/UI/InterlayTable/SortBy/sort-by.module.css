@@ -1,29 +1,27 @@
-
 /* TODO: should avoid hard-coding colors */
-.sort-by { 
-	padding-right: 20px;
-	position: relative;
+.sort-by {
+  padding-right: 20px;
+  position: relative;
 }
 .sort-by:before,
 .sort-by:after {
-	position: absolute;
-	display: block;
-	content: "";
-	right: 4px;
-	top: 50%;
-	height: 0;
-	width: 0;
-	border-width: 4px;
-	border-left-color: transparent !important;
-	border-right-color: transparent !important;
-	border-style: solid;
+  position: absolute;
+  display: block;
+  content: '';
+  right: 4px;
+  top: 50%;
+  height: 0;
+  width: 0;
+  border-width: 4px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-style: solid;
 }
 .sort-by:before {
-	border-top-color: transparent !important;
-	margin-top: -8px;
+  border-top-color: transparent !important;
+  margin-top: -8px;
 }
 .sort-by:after {
-	border-bottom-color: transparent !important;
-	margin-top: 2px;
+  border-bottom-color: transparent !important;
+  margin-top: 2px;
 }
-

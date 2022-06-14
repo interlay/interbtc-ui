@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 
 import UpperContent from './UpperContent';
@@ -13,9 +12,7 @@ const IssueRequests = (): JSX.Element => {
   return (
     <>
       <div>
-        <PageTitle
-          mainTitle={t('issue_page.issue_requests')}
-          subTitle={<TimerIncrement />} />
+        <PageTitle mainTitle={t('issue_page.issue_requests')} subTitle={<TimerIncrement />} />
         <Hr1 className='mt-2' />
       </div>
       <UpperContent />

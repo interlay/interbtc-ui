@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 
 import UpperContent from './UpperContent';
@@ -13,9 +12,7 @@ const RedeemRequests = (): JSX.Element => {
   return (
     <>
       <div>
-        <PageTitle
-          mainTitle={t('dashboard.redeem.redeem')}
-          subTitle={<TimerIncrement />} />
+        <PageTitle mainTitle={t('dashboard.redeem.redeem')} subTitle={<TimerIncrement />} />
         <Hr1 className='mt-2' />
       </div>
       <UpperContent />

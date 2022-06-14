@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -18,18 +17,8 @@ const Home = (): JSX.Element => {
 
   return (
     <>
-      <PageTitle
-        mainTitle={t('dashboard.dashboard')}
-        subTitle={<TimerIncrement />} />
-      <div
-        className={clsx(
-          'grid',
-          'gap-5',
-          'grid-cols-1',
-          'md:grid-cols-2',
-          'lg:gap-10',
-          'xl:grid-cols-3'
-        )}>
+      <PageTitle mainTitle={t('dashboard.dashboard')} subTitle={<TimerIncrement />} />
+      <div className={clsx('grid', 'gap-5', 'grid-cols-1', 'md:grid-cols-2', 'lg:gap-10', 'xl:grid-cols-3')}>
         <WrappedTokenCard />
         <CollateralLockedCard hasLinks />
         <CollateralizationCard hasLinks />

@@ -1,4 +1,4 @@
-const redeemRequestQuery = (where?: string): string => `
+const redeemsQuery = (where?: string): string => `
   query ($limit: Int!, $offset: Int) {
     redeems(orderBy: request_timestamp_DESC, limit: $limit, offset: $offset, where:{${where ? `, ${where}` : ''}}) {
       id
@@ -41,4 +41,4 @@ const redeemRequestQuery = (where?: string): string => `
   }
 `;
 
-export default redeemRequestQuery;
+export default redeemsQuery;
