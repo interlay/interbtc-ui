@@ -6,7 +6,6 @@ import { CollateralUnit } from '@interlay/interbtc-api';
 import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import { GeneralActions, RedeemActions, IssueActions, VaultActions } from './actions.types';
 import { rootReducer } from '../reducers/index';
-import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
 
@@ -89,7 +88,6 @@ export type AppState = ReturnType<typeof rootReducer>;
 
 export type StoreType = {
   general: GeneralState;
-  issue: IssueState;
   redeem: RedeemState;
   vault: VaultState;
 };
