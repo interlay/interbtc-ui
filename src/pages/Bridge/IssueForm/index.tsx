@@ -35,16 +35,13 @@ import {
   WrappedTokenLogoIcon,
   GovernanceTokenLogoIcon
 } from 'config/relay-chains';
-import { BLOCK_TIME, BLOCKS_BEHIND_LIMIT } from 'config/parachain';
+import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { displayMonetaryAmount, getUsdAmount, getRandomVaultIdWithCapacity } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { ParachainStatus, StoreType } from 'common/types/util.types';
-// ray test touch <
-import { updateIssuePeriodAction } from 'common/actions/issue.actions';
-// ray test touch >
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import Vaults from 'components/Vaults';
@@ -144,9 +141,6 @@ const IssueForm = (): JSX.Element | null => {
         const [
           theFeeRate,
           theDepositRate,
-          // ray test touch <
-          issuePeriodInBlocks,
-          // ray test touch >
           theDustValue,
           theBtcToGovernanceToken
         ] = await Promise.all([
@@ -154,9 +148,6 @@ const IssueForm = (): JSX.Element | null => {
           // not change. However, you will not see the correct value for the security deposit.
           window.bridge.fee.getIssueFee(),
           window.bridge.fee.getIssueGriefingCollateralRate(),
-          // ray test touch <
-          window.bridge.issue.getIssuePeriod(),
-          // ray test touch >
           window.bridge.issue.getDustValue(),
           window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN)
         ]);
@@ -164,10 +155,6 @@ const IssueForm = (): JSX.Element | null => {
 
         setFeeRate(theFeeRate);
         setDepositRate(theDepositRate);
-        // ray test touch <
-        const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
-        dispatch(updateIssuePeriodAction(issuePeriod));
-        // ray test touch >
         setDustValue(theDustValue);
         setBTCToGovernanceTokenRate(theBtcToGovernanceToken);
       } catch (error) {

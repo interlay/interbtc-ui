@@ -140,28 +140,24 @@ export interface TogglePremiumRedeem {
   premiumRedeem: boolean;
 }
 
-export type RedeemActions = ChangeAddress | InitState | TogglePremiumRedeem;
-
-// ISSUE
-export const STORE_ISSUE_REQUEST = 'STORE_ISSUE_REQUEST';
 // ray test touch <
-export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
+export type RedeemActions = ChangeAddress | InitState | TogglePremiumRedeem;
 // ray test touch >
 
+// ray test touch <
+// ISSUE
+export const STORE_ISSUE_REQUEST = 'STORE_ISSUE_REQUEST';
+// ray test touch >
+
+// ray test touch <
 export interface StoreIssueRequest {
   type: typeof STORE_ISSUE_REQUEST;
   request: Issue;
 }
-
-// ray test touch <
-export interface UpdateIssuePeriod {
-  type: typeof UPDATE_ISSUE_PERIOD;
-  period: number;
-}
 // ray test touch >
 
 // ray test touch <
-export type IssueActions = StoreIssueRequest | ChangeAddress | InitState | UpdateIssuePeriod;
+export type IssueActions = StoreIssueRequest | ChangeAddress | InitState;
 // ray test touch >
 
 // VAULT
