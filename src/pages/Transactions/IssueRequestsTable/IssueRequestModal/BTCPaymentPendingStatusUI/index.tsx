@@ -21,16 +21,12 @@ interface Props {
 const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { prices, bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  // ray test touch <
-  // const { issuePeriod } = useSelector((state: StoreType) => state.issue);
-  // ray test touch >
   const amountBTCToSend = (request.wrappedAmount || request.request.amountWrapped).add(
     request.bridgeFee || request.request.bridgeFeeWrapped
   );
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
-    // ray test touch <
     if (!bridgeLoaded) return;
     if (!request) return;
 
@@ -45,8 +41,6 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         ]);
 
         const maxIssuePeriodInBlocks = Math.max(issuePeriodInBlocks, requestById.period);
-        console.log('ray : ***** issuePeriodInBlocks => ', issuePeriodInBlocks);
-        console.log('ray : ***** requestById.period => ', requestById.period);
 
         // TODO: double-check `request.request?.timestamp`
         // Date.now() is an approximation, used with the parachain response until we can get the block timestamp later
@@ -60,7 +54,6 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         console.log('[BTCPaymentPendingStatusUI useEffect] error.message => ', error.message);
       }
     })();
-    // ray test touch >
   }, [request, bridgeLoaded]);
 
   return (
