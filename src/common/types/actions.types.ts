@@ -156,10 +156,6 @@ export interface StoreIssueRequest {
 }
 // ray test touch >
 
-// ray test touch <
-export type IssueActions = StoreIssueRequest | ChangeAddress | InitState;
-// ray test touch >
-
 // VAULT
 
 export const UPDATE_COLLATERALIZATION = 'UPDATE_COLLATERALIZATION';
