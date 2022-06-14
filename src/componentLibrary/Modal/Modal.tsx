@@ -3,21 +3,19 @@ import Portal from 'parts/Portal';
 import { ModalContainer, ModalContent, ModalOverlay, CloseIcon } from './Modal.style';
 import { theme } from '../theme';
 import { useMountTransition } from 'utils/hooks/use-mount-transition';
-import { Icon, IconVariant } from '../Icon';
+import { Icon } from '../Icon';
 interface ModalProps {
   open: boolean;
   onClose: () => void;
   children: ReactNode;
   initialFocusRef?: MutableRefObject<HTMLElement | null>;
-  closeIconVariant?: IconVariant;
 }
 
 const Modal = ({
   open,
   onClose,
   children,
-  initialFocusRef,
-  closeIconVariant = 'close'
+  initialFocusRef
 }: ModalProps): JSX.Element | null => {
   const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -48,7 +46,7 @@ const Modal = ({
         <ModalOverlay onClick={onClose} />
         <ModalContent transitionTrigger={transitionTrigger}>
           <CloseIcon onClick={onClose} ref={closeButtonRef}>
-            <Icon variant={closeIconVariant} />
+            <Icon variant='close' />
           </CloseIcon>
           {children}
         </ModalContent>

@@ -6,12 +6,11 @@ type IconVariant = 'close' | 'checkmark';
 
 interface IconProps {
   variant: IconVariant;
-  color?: string;
 }
 
-const Icon = ({ variant, color }: IconProps): JSX.Element | null => {
+const Icon = ({ variant }: IconProps): JSX.Element | null => {
   return (
-    <IconWrapper color={color}>
+    <IconWrapper>
       {
         variant === 'close' ? <CloseIcon /> : 
         variant === 'checkmark' ? <CheckmarkIcon /> : 

@@ -3,7 +3,8 @@ const theme = {
   colors: {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: `var(--colors-text-secondary)`,
-    textTertiary: `var(--colors-text-tertiary)`
+    textTertiary: `var(--colors-text-tertiary)`,
+    iconDefault: `var(--colors-icon-default)`
   },
   font: {
     primary: `var(--fonts-primary)`

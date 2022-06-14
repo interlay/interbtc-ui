@@ -6,8 +6,7 @@ const Template: Story<IconProps> = (args) => <Icon {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  variant: 'close',
-  color: 'white'
+  variant: 'close'
 };
 
 
