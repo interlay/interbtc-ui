@@ -1,0 +1,1 @@
+export { NewVaultsTable } from "./NewVaultsTable";

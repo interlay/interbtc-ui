@@ -1,8 +1,8 @@
 import { Story, Meta } from '@storybook/react';
 
-import { Table, TableProps } from './';
+import { NewVaultsTable } from './';
 
-const Template: Story<TableProps> = (args) => <Table {...args} />;
+const Template: Story = (args) => <NewVaultsTable {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
@@ -13,6 +13,6 @@ Default.args = {
 export { Default };
 
 export default {
-  title: 'Components/Table',
-  component: Table
+  title: 'Components/NewVaultsTable',
+  component: NewVaultsTable
 } as Meta;

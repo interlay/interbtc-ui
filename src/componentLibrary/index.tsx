@@ -18,3 +18,6 @@ export type { VaultCardProps } from './VaultCard';
 
 export { Stack } from './Stack';
 export type { StackProps } from './Stack';
+
+export { Table } from './Table';
+export type { TableProps } from './Table';
