@@ -28,9 +28,17 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({ request }: Props): JSX.Element 
     // TODO: should add loading UX
     (async () => {
       try {
-        const redeemPeriod = await window.bridge.redeem.getRedeemPeriod();
+        const [
+          redeemPeriodInBlocks,
+          requestById
+        ] = await Promise.all([
+          window.bridge.redeem.getRedeemPeriod(),
+          window.bridge.redeem.getRequestById(request.id)
+        ]);
+
+        const maxRedeemPeriodInBlocks = Math.max(redeemPeriodInBlocks, requestById.period);
         const requestTimestamp = Math.floor(new Date(request.request.timestamp).getTime() / 1000);
-        const theInitialLeftSeconds = requestTimestamp + redeemPeriod * BLOCK_TIME - Math.floor(Date.now() / 1000);
+        const theInitialLeftSeconds = requestTimestamp + maxRedeemPeriodInBlocks * BLOCK_TIME - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
         // TODO: should add error handling UX
