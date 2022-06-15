@@ -6,9 +6,7 @@ import { BitcoinUnit } from '@interlay/monetary-js';
 
 import LineChart from '../../../../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
-// ray test touch <
 import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
-// ray test touch >
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from 'utils/constants/colors';
 import cumulativeVolumesFetcher, {

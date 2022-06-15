@@ -1,9 +1,7 @@
 import { useQuery, UseQueryResult } from 'react-query';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
-// ray test touch <
 import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
-// ray test touch >
 import { WRAPPED_TOKEN, CollateralToken } from 'config/relay-chains';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
 import cumulativeVolumesFetcher, {
