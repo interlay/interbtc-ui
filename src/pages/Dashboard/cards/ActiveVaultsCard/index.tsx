@@ -6,6 +6,9 @@ import LineChart from '../../LineChart';
 import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
+// ray test touch <
+import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
+// ray test touch >
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUNDOWN } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
@@ -21,7 +24,7 @@ interface VaultRegistration {
   registrationTimestamp: number;
 }
 
-const graphTimestamps = getLastMidnightTimestamps(6, true);
+const graphTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 
 const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();

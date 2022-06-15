@@ -6,6 +6,9 @@ import { BitcoinUnit } from '@interlay/monetary-js';
 
 import LineChart from '../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
+// ray test touch <
+import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
+// ray test touch >
 import { WRAPPED_TOKEN_SYMBOL, WRAPPED_TOKEN } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from 'utils/constants/colors';
@@ -16,10 +19,7 @@ import cumulativeVolumesFetcher, {
   VolumeType
 } from 'services/fetchers/cumulative-volumes-fetcher';
 
-// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
-// thus issues per day 5 days ago can be displayed
-// cumulative issues is also only displayed to 5 days
-const cutoffTimestamps = getLastMidnightTimestamps(6, true);
+const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 
 const IssuedChart = (): JSX.Element => {
   const { t } = useTranslation();
