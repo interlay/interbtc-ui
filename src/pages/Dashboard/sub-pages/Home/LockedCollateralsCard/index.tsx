@@ -11,21 +11,28 @@ import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, CollateralToken } from 'con
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
-import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
+// ray test touch <
+import { getUsdAmount, getLastMidnightTimestamps } from 'common/utils/utils';
+// ray test touch >
 import { StoreType } from 'common/types/util.types';
 import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
+
+// ray test touch <
+const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
+// ray test touch >
 
 const LockedCollateralsCard = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
+  
   // ray test touch <
   const {
     isIdle: cumulativeRelayChainNativeTokenVolumesIdle,
     isLoading: cumulativeRelayChainNativeTokenVolumesLoading,
     data: cumulativeRelayChainNativeTokenVolumes,
     error: cumulativeRelayChainNativeTokenVolumesError
-  } = useCumulativeCollateralVolumes(RELAY_CHAIN_NATIVE_TOKEN, COUNT_OF_DATES_FOR_CHART);
+  } = useCumulativeCollateralVolumes(RELAY_CHAIN_NATIVE_TOKEN, cutoffTimestamps);
   useErrorHandler(cumulativeRelayChainNativeTokenVolumesError);
 
   const {
@@ -33,7 +40,7 @@ const LockedCollateralsCard = (): JSX.Element => {
     isLoading: cumulativeGovernanceTokenVolumesLoading,
     data: cumulativeGovernanceTokenVolumes,
     error: cumulativeGovernanceTokenVolumesError
-  } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN as CollateralToken, COUNT_OF_DATES_FOR_CHART);
+  } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN as CollateralToken, cutoffTimestamps);
   useErrorHandler(cumulativeGovernanceTokenVolumesError);
   // ray test touch >
 
@@ -58,19 +65,43 @@ const LockedCollateralsCard = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
     // ray test touch <
-    console.log('ray : ***** cumulativeRelayChainNativeTokenVolumes => ', cumulativeRelayChainNativeTokenVolumes);
+    if (
+      // TODO: `getUsdAmount` returns "-" in these cases
+      prices.collateralToken === undefined ||
+      prices.governanceToken === undefined
+    ) {
+      throw new Error('Something went wrong with price feeds!');
+    }
     // ray test touch >
 
     // ray test touch <
-    const totalLockedRelayChainNativeTokenAmount = cumulativeRelayChainNativeTokenVolumes.slice(-1)[0].amount;
-    const totalLockedRelayChainNativeTokenValueInUSD = Number(getUsdAmount(totalLockedRelayChainNativeTokenAmount, prices.collateralToken?.usd));
+    console.log('ray : ***** cumulativeRelayChainNativeTokenVolumes => ', cumulativeRelayChainNativeTokenVolumes);
+    console.log('ray : ***** cutoffTimestamps => ', cutoffTimestamps);
+    // TODO: `useMemo`
+    const cumulativeUSDVolumes = [];
+    for (let index = 0; index < COUNT_OF_DATES_FOR_CHART; index++) {
+      // TODO: could be better
+      const relayChainNativeTokenItem = cumulativeRelayChainNativeTokenVolumes[index];
+      const governanceTokenItem = cumulativeGovernanceTokenVolumes[index];
 
-    const totalLockedGovernanceTokenAmount = cumulativeGovernanceTokenVolumes.slice(-1)[0].amount;
-    const totalLockedGovernanceTokenValueInUSD = Number(getUsdAmount(totalLockedGovernanceTokenAmount, prices.governanceToken?.usd));
+      // TODO: using `Number` against the return of `getUsdAmount` is error-prone
+      const relayChainNativeTokenItemValueInUSD = Number(getUsdAmount(relayChainNativeTokenItem.amount, prices.collateralToken.usd));
+      const governanceTokenItemValueInUSD = Number(getUsdAmount(governanceTokenItem.amount, prices.governanceToken.usd));
 
-    const totalLockedCollateralValueInUSD =
-      totalLockedRelayChainNativeTokenValueInUSD +
-      totalLockedGovernanceTokenValueInUSD;
+      const sumValueInUSD =
+        relayChainNativeTokenItemValueInUSD +
+        governanceTokenItemValueInUSD;
+
+      cumulativeUSDVolumes.push({
+        sumValueInUSD,
+        tillTimestamp: cutoffTimestamps[index]
+      });
+    }
+    console.log('ray : ***** cumulativeUSDVolumes => ', cumulativeUSDVolumes);
+    // ray test touch >
+
+    // ray test touch <
+    const totalLockedCollateralValueInUSD = cumulativeUSDVolumes.slice(-1)[0].sumValueInUSD;
     // ray test touch >
 
     let chartLineColor;
@@ -100,7 +131,7 @@ const LockedCollateralsCard = (): JSX.Element => {
           labels={[t('dashboard.vault.total_collateral_locked')]}
           yLabels={
             // ray test touch <
-            cumulativeRelayChainNativeTokenVolumes
+            cumulativeUSDVolumes
               .slice(0, -1)
               .map((item) => item.tillTimestamp.toISOString().substring(0, 10))
             // ray test touch >
@@ -115,7 +146,7 @@ const LockedCollateralsCard = (): JSX.Element => {
           ]}
           datasets={[
             // ray test touch <
-            cumulativeRelayChainNativeTokenVolumes.slice(1).map((item) => displayMonetaryAmount(item.amount))
+            cumulativeUSDVolumes.slice(1).map((item) => item.sumValueInUSD)
             // ray test touch >
           ]}
         />

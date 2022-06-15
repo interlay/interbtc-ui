@@ -3,7 +3,7 @@ import { CollateralUnit } from '@interlay/interbtc-api';
 
 
 import { WRAPPED_TOKEN, CollateralToken } from 'config/relay-chains';
-import { getLastMidnightTimestamps } from 'common/utils/utils';
+
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
@@ -14,9 +14,9 @@ import cumulativeVolumesFetcher, {
 
 const useCumulativeCollateralVolumes = (
   collateralToken: CollateralToken,
-  countOfDatesForChart: number
+  cutoffTimestamps: Array<Date>
 ): UseQueryResult<VolumeDataPoint<CollateralUnit>[], Error> => {
-  const cutoffTimestamps = getLastMidnightTimestamps(countOfDatesForChart, true);
+  
 
   return useQuery<VolumeDataPoint<CollateralUnit>[], Error>(
     [

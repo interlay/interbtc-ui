@@ -10,9 +10,13 @@ import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
 import { CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
-import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
+import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
+
+// ray test touch <
+const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
+// ray test touch >
 
 interface Props {
   collateralToken: CollateralToken;
@@ -31,7 +35,7 @@ const LockedCollateralCard = ({
     isLoading: cumulativeVolumesLoading,
     data: cumulativeVolumes,
     error: cumulativeVolumesError
-  } = useCumulativeCollateralVolumes(collateralToken, COUNT_OF_DATES_FOR_CHART);
+  } = useCumulativeCollateralVolumes(collateralToken, cutoffTimestamps);
   useErrorHandler(cumulativeVolumesError);
 
   const renderContent = () => {
