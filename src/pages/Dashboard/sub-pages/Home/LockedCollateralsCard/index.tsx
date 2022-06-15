@@ -6,7 +6,7 @@ import LineChart from '../../../LineChart';
 import DashboardCard from '../../../cards/DashboardCard';
 import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, CollateralToken } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
@@ -56,7 +56,15 @@ const LockedCollateralsCard = (): JSX.Element => {
     ) {
       throw new Error('Something went wrong!');
     }
-    const totalLockedCollateralTokenAmount = cumulativeRelayChainNativeTokenVolumes.slice(-1)[0].amount;
+    // ray test touch <
+    const totalLockedRelayChainNativeTokenAmount = cumulativeRelayChainNativeTokenVolumes.slice(-1)[0].amount;
+    const totalLockedRelayChainNativeTokenValueInUSD = Number(getUsdAmount(totalLockedRelayChainNativeTokenAmount, prices.collateralToken?.usd));
+
+    const totalLockedGovernanceTokenAmount = cumulativeGovernanceTokenVolumes.slice(-1)[0].amount;
+    const totalLockedGovernanceTokenValueInUSD = Number(getUsdAmount(totalLockedGovernanceTokenAmount, prices.governanceToken?.usd));
+
+    const totalLockedCollateralValueInUSD = totalLockedRelayChainNativeTokenValueInUSD + totalLockedGovernanceTokenValueInUSD;
+    // ray test touch >
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -74,10 +82,7 @@ const LockedCollateralsCard = (): JSX.Element => {
           leftPart={
             <>
               <StatsDt>{t('dashboard.vault.locked_collateral')}</StatsDt>
-              <StatsDd>
-                {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-              </StatsDd>
-              <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken?.usd)}</StatsDd>
+              <StatsDd>${totalLockedCollateralValueInUSD}</StatsDd>
             </>
           }
           rightPart={<StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}
