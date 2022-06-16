@@ -7,7 +7,7 @@ const Template: Story<VaultCardProps> = (args) => <VaultCard {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  collateralSymbol: CurrencySymbols.KSM,
+  collateralSymbol: CurrencySymbols.DOT,
   wrappedSymbol: CurrencySymbols.KBTC,
   pendingRequests: 3,
   apy: '16.23',
