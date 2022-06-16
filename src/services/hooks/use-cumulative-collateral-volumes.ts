@@ -1,7 +1,6 @@
 import { useQuery, UseQueryResult } from 'react-query';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
-
 import { WRAPPED_TOKEN, CollateralToken } from 'config/relay-chains';
 
 import cumulativeVolumesFetcher, {
@@ -10,14 +9,10 @@ import cumulativeVolumesFetcher, {
   VolumeType
 } from 'services/fetchers/cumulative-volumes-fetcher';
 
-
-
 const useCumulativeCollateralVolumes = (
   collateralToken: CollateralToken,
   cutoffTimestamps: Array<Date>
 ): UseQueryResult<VolumeDataPoint<CollateralUnit>[], Error> => {
-  
-
   return useQuery<VolumeDataPoint<CollateralUnit>[], Error>(
     [
       CUMULATIVE_VOLUMES_FETCHER,

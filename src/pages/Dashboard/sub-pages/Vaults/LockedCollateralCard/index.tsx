@@ -61,9 +61,9 @@ const LockedCollateralCard = ({
           leftPart={
             <>
               <StatsDt>
-	              {t('dashboard.vault.total_collateral_token_symbol_locked', {
-	                collateralTokenSymbol
-	              })}
+                {t('dashboard.vault.total_collateral_token_symbol_locked', {
+                  collateralTokenSymbol
+                })}
               </StatsDt>
               <StatsDd>
                 {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {collateralTokenSymbol}

@@ -21,7 +21,7 @@ const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, tru
 const LockedCollateralsCard = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-  
+
   const {
     isIdle: cumulativeRelayChainNativeTokenVolumesIdle,
     isLoading: cumulativeRelayChainNativeTokenVolumesLoading,
@@ -40,43 +40,38 @@ const LockedCollateralsCard = (): JSX.Element => {
 
   const relayChainNativeTokenPriceInUSD = prices.collateralToken?.usd;
   const governanceTokenPriceInUSD = prices.governanceToken?.usd;
-  if (
-    
-    relayChainNativeTokenPriceInUSD === undefined ||
-    governanceTokenPriceInUSD === undefined
-  ) {
+  if (relayChainNativeTokenPriceInUSD === undefined || governanceTokenPriceInUSD === undefined) {
     throw new Error('Something went wrong with price feeds!');
   }
 
   const cumulativeUSDVolumes = React.useMemo(() => {
-    if (
-      cumulativeRelayChainNativeTokenVolumes === undefined ||
-      cumulativeGovernanceTokenVolumes === undefined
-    ) return;
+    if (cumulativeRelayChainNativeTokenVolumes === undefined || cumulativeGovernanceTokenVolumes === undefined) return;
 
-    return Array<number>(COUNT_OF_DATES_FOR_CHART).fill(0).map((_, index) => {
-      const collaterals = [
-        {
-          cumulativeVolumes: cumulativeRelayChainNativeTokenVolumes,
-          tokenPriceInUSD: relayChainNativeTokenPriceInUSD
-        },
-        {
-          cumulativeVolumes: cumulativeGovernanceTokenVolumes,
-          tokenPriceInUSD: governanceTokenPriceInUSD
+    return Array<number>(COUNT_OF_DATES_FOR_CHART)
+      .fill(0)
+      .map((_, index) => {
+        const collaterals = [
+          {
+            cumulativeVolumes: cumulativeRelayChainNativeTokenVolumes,
+            tokenPriceInUSD: relayChainNativeTokenPriceInUSD
+          },
+          {
+            cumulativeVolumes: cumulativeGovernanceTokenVolumes,
+            tokenPriceInUSD: governanceTokenPriceInUSD
+          }
+        ];
+
+        let sumValueInUSD = 0;
+        for (const collateral of collaterals) {
+          // TODO: using `Number` against the return of `getUsdAmount` is error-prone because `getUsdAmount` returns "-" in the case of undefined `rate`
+          sumValueInUSD += Number(getUsdAmount(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD));
         }
-      ];
 
-      let sumValueInUSD = 0;
-      for (const collateral of collaterals) {
-        // TODO: using `Number` against the return of `getUsdAmount` is error-prone because `getUsdAmount` returns "-" in the case of undefined `rate`
-        sumValueInUSD += Number(getUsdAmount(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD));;
-      }
-
-      return {
-        sumValueInUSD,
-        tillTimestamp: cutoffTimestamps[index]
-      };
-    })
+        return {
+          sumValueInUSD,
+          tillTimestamp: cutoffTimestamps[index]
+        };
+      });
   }, [
     cumulativeRelayChainNativeTokenVolumes,
     cumulativeGovernanceTokenVolumes,
@@ -98,7 +93,7 @@ const LockedCollateralsCard = (): JSX.Element => {
     if (cumulativeUSDVolumes === undefined) {
       throw new Error('Something went wrong with cumulativeUSDVolumes!');
     }
-    
+
     const totalLockedCollateralValueInUSD = cumulativeUSDVolumes.slice(-1)[0].sumValueInUSD;
 
     let chartLineColor;
@@ -126,11 +121,7 @@ const LockedCollateralsCard = (): JSX.Element => {
           wrapperClassName='h-full'
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_collateral_locked_usd')]}
-          yLabels={
-            cumulativeUSDVolumes
-              .slice(0, -1)
-              .map((item) => item.tillTimestamp.toISOString().substring(0, 10))
-          }
+          yLabels={cumulativeUSDVolumes.slice(0, -1).map((item) => item.tillTimestamp.toISOString().substring(0, 10))}
           yAxes={[
             {
               ticks: {
@@ -139,9 +130,7 @@ const LockedCollateralsCard = (): JSX.Element => {
               }
             }
           ]}
-          datasets={[
-            cumulativeUSDVolumes.slice(1).map((item) => item.sumValueInUSD)
-          ]}
+          datasets={[cumulativeUSDVolumes.slice(1).map((item) => item.sumValueInUSD)]}
         />
       </>
     );

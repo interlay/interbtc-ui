@@ -36,7 +36,9 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
   const [burnCollateralTokenAmount, setBurnCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
-  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN));
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
+  );
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;

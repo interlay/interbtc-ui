@@ -10,9 +10,14 @@ import CollateralizationCard from '../../cards/CollateralizationCard';
 import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
-import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, CollateralToken } from 'config/relay-chains';
+import {
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  CollateralToken
+} from 'config/relay-chains';
 import { StoreType } from 'common/types/util.types';
-
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
@@ -21,22 +26,22 @@ const Vaults = (): JSX.Element => {
   const relayChainNativeTokenPriceInUSD = prices.collateralToken?.usd;
   const governanceTokenPriceInUSD = prices.governanceToken?.usd;
 
-  const collaterals = React.useMemo(() => ([
-    {
-      collateralToken: RELAY_CHAIN_NATIVE_TOKEN,
-      collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-      collateralTokenPriceInUSD: relayChainNativeTokenPriceInUSD
-    },
-    {
-      collateralToken: GOVERNANCE_TOKEN as CollateralToken,
-      collateralTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
-      collateralTokenPriceInUSD: governanceTokenPriceInUSD
-    }
-  ]), [
-    relayChainNativeTokenPriceInUSD,
-    governanceTokenPriceInUSD
-  ]);
-  
+  const collaterals = React.useMemo(
+    () => [
+      {
+        collateralToken: RELAY_CHAIN_NATIVE_TOKEN,
+        collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+        collateralTokenPriceInUSD: relayChainNativeTokenPriceInUSD
+      },
+      {
+        collateralToken: GOVERNANCE_TOKEN as CollateralToken,
+        collateralTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
+        collateralTokenPriceInUSD: governanceTokenPriceInUSD
+      }
+    ],
+    [relayChainNativeTokenPriceInUSD, governanceTokenPriceInUSD]
+  );
+
   return (
     <>
       <div>
@@ -46,12 +51,13 @@ const Vaults = (): JSX.Element => {
       <div className={clsx('grid', 'grid-cols-3', 'gap-7')}>
         <ActiveVaultsCard />
         <CollateralizationCard />
-        {collaterals.map(item => (
+        {collaterals.map((item) => (
           <LockedCollateralCard
             key={item.collateralTokenSymbol}
             collateralToken={item.collateralToken}
             collateralTokenSymbol={item.collateralTokenSymbol}
-            collateralTokenPriceInUSD={item.collateralTokenPriceInUSD} />
+            collateralTokenPriceInUSD={item.collateralTokenPriceInUSD}
+          />
         ))}
       </div>
       <VaultsTable />
