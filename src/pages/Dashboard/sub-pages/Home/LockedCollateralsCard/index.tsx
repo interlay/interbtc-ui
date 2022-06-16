@@ -12,21 +12,16 @@ import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, CollateralToken } from 'con
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
-// ray test touch <
 import { getUsdAmount, getLastMidnightTimestamps } from 'common/utils/utils';
-// ray test touch >
 import { StoreType } from 'common/types/util.types';
 import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
 
-// ray test touch <
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
-// ray test touch >
 
 const LockedCollateralsCard = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
   
-  // ray test touch <
   const {
     isIdle: cumulativeRelayChainNativeTokenVolumesIdle,
     isLoading: cumulativeRelayChainNativeTokenVolumesLoading,
@@ -42,9 +37,7 @@ const LockedCollateralsCard = (): JSX.Element => {
     error: cumulativeGovernanceTokenVolumesError
   } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN as CollateralToken, cutoffTimestamps);
   useErrorHandler(cumulativeGovernanceTokenVolumesError);
-  // ray test touch >
 
-  // ray test touch <
   const relayChainNativeTokenPriceInUSD = prices.collateralToken?.usd;
   const governanceTokenPriceInUSD = prices.governanceToken?.usd;
   if (
@@ -85,37 +78,23 @@ const LockedCollateralsCard = (): JSX.Element => {
     relayChainNativeTokenPriceInUSD,
     governanceTokenPriceInUSD
   ]);
-  // ray test touch >
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
     if (
       cumulativeRelayChainNativeTokenVolumesIdle ||
       cumulativeRelayChainNativeTokenVolumesLoading ||
-      // ray test touch <
       cumulativeGovernanceTokenVolumesIdle ||
       cumulativeGovernanceTokenVolumesLoading
-      // ray test touch >
     ) {
       return <>Loading...</>;
     }
 
-    // ray test touch <
     if (cumulativeUSDVolumes === undefined) {
       throw new Error('Something went wrong with cumulativeUSDVolumes!');
     }
-    // ray test touch >
     
-
-    // ray test touch <
-    console.log('ray : ***** cumulativeRelayChainNativeTokenVolumes => ', cumulativeRelayChainNativeTokenVolumes);
-    console.log('ray : ***** cutoffTimestamps => ', cutoffTimestamps);
-    console.log('ray : ***** cumulativeUSDVolumes => ', cumulativeUSDVolumes);
-    // ray test touch >
-
-    // ray test touch <
     const totalLockedCollateralValueInUSD = cumulativeUSDVolumes.slice(-1)[0].sumValueInUSD;
-    // ray test touch >
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -143,11 +122,9 @@ const LockedCollateralsCard = (): JSX.Element => {
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_collateral_locked')]}
           yLabels={
-            // ray test touch <
             cumulativeUSDVolumes
               .slice(0, -1)
               .map((item) => item.tillTimestamp.toISOString().substring(0, 10))
-            // ray test touch >
           }
           yAxes={[
             {
@@ -158,9 +135,7 @@ const LockedCollateralsCard = (): JSX.Element => {
             }
           ]}
           datasets={[
-            // ray test touch <
             cumulativeUSDVolumes.slice(1).map((item) => item.sumValueInUSD)
-            // ray test touch >
           ]}
         />
       </>

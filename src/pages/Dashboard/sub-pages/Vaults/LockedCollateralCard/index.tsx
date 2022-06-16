@@ -14,9 +14,7 @@ import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from '
 import { StoreType } from 'common/types/util.types';
 import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
 
-// ray test touch <
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
-// ray test touch >
 
 interface Props {
   collateralToken: CollateralToken;
