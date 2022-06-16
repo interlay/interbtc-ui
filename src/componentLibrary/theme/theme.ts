@@ -57,14 +57,19 @@ const theme = {
     lg: 'var(--rounded-lg)',
     xl: 'var(--rounded-xl)'
   },
+  boxShadow: {
+    default: `var(--box-shadow-default)`
+  },
   // Components
   card: {
-    bg: 'var(--colors-card-bg)'
+    bg: 'var(--colors-card-bg)',
+    secondaryBg: 'var(--colors-card-secondary-bg)'
   },
   cta: {
     primary: {
       bg: 'var(--colors-cta-primary)',
-      bgHover: 'var(--colors-cta-primary-hover)'
+      bgHover: 'var(--colors-cta-primary-hover)',
+      text: 'var(--colors-cta-primary-text)'
     },
     secondary: {
       bg: 'var(--colors-cta-secondary)'
