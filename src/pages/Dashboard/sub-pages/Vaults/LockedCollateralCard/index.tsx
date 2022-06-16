@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
@@ -11,7 +10,6 @@ import { CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
 import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
 
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
@@ -19,13 +17,16 @@ const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, tru
 interface Props {
   collateralToken: CollateralToken;
   collateralTokenSymbol: string;
+  collateralTokenPriceInUSD: number | undefined;
 }
 
 const LockedCollateralCard = ({
   collateralToken,
-  collateralTokenSymbol
+  collateralTokenSymbol,
+  // ray test touch <
+  collateralTokenPriceInUSD
+  // ray test touch >
 }: Props): JSX.Element => {
-  const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
 
   const {
@@ -65,7 +66,7 @@ const LockedCollateralCard = ({
               <StatsDd>
                 {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {collateralTokenSymbol}
               </StatsDd>
-              <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, prices.collateralToken?.usd)}</StatsDd>
+              <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, collateralTokenPriceInUSD)}</StatsDd>
             </>
           }
         />

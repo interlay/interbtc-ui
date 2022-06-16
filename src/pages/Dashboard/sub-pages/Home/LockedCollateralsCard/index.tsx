@@ -13,8 +13,8 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';
 import { getUsdAmount, getLastMidnightTimestamps } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
 import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
+import { StoreType } from 'common/types/util.types';
 
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 
@@ -55,24 +55,22 @@ const LockedCollateralsCard = (): JSX.Element => {
     ) return;
 
     return Array<number>(COUNT_OF_DATES_FOR_CHART).fill(0).map((_, index) => {
-      // ray test touch <
       const collaterals = [
         {
           cumulativeVolumes: cumulativeRelayChainNativeTokenVolumes,
-          priceInUSD: relayChainNativeTokenPriceInUSD
+          tokenPriceInUSD: relayChainNativeTokenPriceInUSD
         },
         {
           cumulativeVolumes: cumulativeGovernanceTokenVolumes,
-          priceInUSD: governanceTokenPriceInUSD
+          tokenPriceInUSD: governanceTokenPriceInUSD
         }
       ];
 
       let sumValueInUSD = 0;
       for (const collateral of collaterals) {
         // TODO: using `Number` against the return of `getUsdAmount` is error-prone because `getUsdAmount` returns "-" in the case of undefined `rate`
-        sumValueInUSD += Number(getUsdAmount(collateral.cumulativeVolumes[index].amount, collateral.priceInUSD));;
+        sumValueInUSD += Number(getUsdAmount(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD));;
       }
-      // ray test touch >
 
       return {
         sumValueInUSD,
