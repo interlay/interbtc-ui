@@ -1,7 +1,5 @@
-// ray test touch <
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-// ray test touch >
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -13,14 +11,11 @@ import TimerIncrement from 'parts/TimerIncrement';
 import PageTitle from 'parts/PageTitle';
 import Hr1 from 'components/hrs/Hr1';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, CollateralToken } from 'config/relay-chains';
-// ray test touch <
 import { StoreType } from 'common/types/util.types';
-// ray test touch >
 
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
-  // ray test touch <
   const { prices } = useSelector((state: StoreType) => state.general);
 
   const relayChainNativeTokenPriceInUSD = prices.collateralToken?.usd;
@@ -41,7 +36,6 @@ const Vaults = (): JSX.Element => {
     relayChainNativeTokenPriceInUSD,
     governanceTokenPriceInUSD
   ]);
-  // ray test touch >
   
   return (
     <>
@@ -52,7 +46,6 @@ const Vaults = (): JSX.Element => {
       <div className={clsx('grid', 'grid-cols-3', 'gap-7')}>
         <ActiveVaultsCard />
         <CollateralizationCard />
-        {/* ray test touch < */}
         {collaterals.map(item => (
           <LockedCollateralCard
             key={item.collateralTokenSymbol}
@@ -60,7 +53,6 @@ const Vaults = (): JSX.Element => {
             collateralTokenSymbol={item.collateralTokenSymbol}
             collateralTokenPriceInUSD={item.collateralTokenPriceInUSD} />
         ))}
-        {/* ray test touch > */}
       </div>
       <VaultsTable />
     </>

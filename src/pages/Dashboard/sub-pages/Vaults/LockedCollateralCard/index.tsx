@@ -23,9 +23,7 @@ interface Props {
 const LockedCollateralCard = ({
   collateralToken,
   collateralTokenSymbol,
-  // ray test touch <
   collateralTokenPriceInUSD
-  // ray test touch >
 }: Props): JSX.Element => {
   const { t } = useTranslation();
 
