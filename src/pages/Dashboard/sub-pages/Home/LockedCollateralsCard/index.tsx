@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -24,7 +25,6 @@ const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, tru
 const LockedCollateralsCard = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
-
   
   // ray test touch <
   const {
@@ -44,6 +44,49 @@ const LockedCollateralsCard = (): JSX.Element => {
   useErrorHandler(cumulativeGovernanceTokenVolumesError);
   // ray test touch >
 
+  // ray test touch <
+  const relayChainNativeTokenPriceInUSD = prices.collateralToken?.usd;
+  const governanceTokenPriceInUSD = prices.governanceToken?.usd;
+  if (
+    
+    relayChainNativeTokenPriceInUSD === undefined ||
+    governanceTokenPriceInUSD === undefined
+  ) {
+    throw new Error('Something went wrong with price feeds!');
+  }
+
+  const cumulativeUSDVolumes = React.useMemo(() => {
+    if (
+      cumulativeRelayChainNativeTokenVolumes === undefined ||
+      cumulativeGovernanceTokenVolumes === undefined
+    ) return;
+
+    return Array<number>(COUNT_OF_DATES_FOR_CHART).fill(0).map((_, index) => {
+      // TODO: could be better
+      const relayChainNativeTokenItem = cumulativeRelayChainNativeTokenVolumes[index];
+      const governanceTokenItem = cumulativeGovernanceTokenVolumes[index];
+
+      // TODO: using `Number` against the return of `getUsdAmount` is error-prone because `getUsdAmount` returns "-" in the case of undefined `rate`
+      const relayChainNativeTokenItemValueInUSD = Number(getUsdAmount(relayChainNativeTokenItem.amount, relayChainNativeTokenPriceInUSD));
+      const governanceTokenItemValueInUSD = Number(getUsdAmount(governanceTokenItem.amount, governanceTokenPriceInUSD));
+
+      const sumValueInUSD =
+        relayChainNativeTokenItemValueInUSD +
+        governanceTokenItemValueInUSD;
+
+      return {
+        sumValueInUSD,
+        tillTimestamp: cutoffTimestamps[index]
+      };
+    })
+  }, [
+    cumulativeRelayChainNativeTokenVolumes,
+    cumulativeGovernanceTokenVolumes,
+    relayChainNativeTokenPriceInUSD,
+    governanceTokenPriceInUSD
+  ]);
+  // ray test touch >
+
   const renderContent = () => {
     // TODO: should use skeleton loaders
     if (
@@ -56,47 +99,17 @@ const LockedCollateralsCard = (): JSX.Element => {
     ) {
       return <>Loading...</>;
     }
-    if (
-      cumulativeRelayChainNativeTokenVolumes === undefined ||
-      // ray test touch <
-      cumulativeGovernanceTokenVolumes === undefined
-      // ray test touch >
-    ) {
-      throw new Error('Something went wrong!');
-    }
+
     // ray test touch <
-    if (
-      // TODO: `getUsdAmount` returns "-" in these cases
-      prices.collateralToken === undefined ||
-      prices.governanceToken === undefined
-    ) {
-      throw new Error('Something went wrong with price feeds!');
+    if (cumulativeUSDVolumes === undefined) {
+      throw new Error('Something went wrong with cumulativeUSDVolumes!');
     }
     // ray test touch >
+    
 
     // ray test touch <
     console.log('ray : ***** cumulativeRelayChainNativeTokenVolumes => ', cumulativeRelayChainNativeTokenVolumes);
     console.log('ray : ***** cutoffTimestamps => ', cutoffTimestamps);
-    // TODO: `useMemo`
-    const cumulativeUSDVolumes = [];
-    for (let index = 0; index < COUNT_OF_DATES_FOR_CHART; index++) {
-      // TODO: could be better
-      const relayChainNativeTokenItem = cumulativeRelayChainNativeTokenVolumes[index];
-      const governanceTokenItem = cumulativeGovernanceTokenVolumes[index];
-
-      // TODO: using `Number` against the return of `getUsdAmount` is error-prone
-      const relayChainNativeTokenItemValueInUSD = Number(getUsdAmount(relayChainNativeTokenItem.amount, prices.collateralToken.usd));
-      const governanceTokenItemValueInUSD = Number(getUsdAmount(governanceTokenItem.amount, prices.governanceToken.usd));
-
-      const sumValueInUSD =
-        relayChainNativeTokenItemValueInUSD +
-        governanceTokenItemValueInUSD;
-
-      cumulativeUSDVolumes.push({
-        sumValueInUSD,
-        tillTimestamp: cutoffTimestamps[index]
-      });
-    }
     console.log('ray : ***** cumulativeUSDVolumes => ', cumulativeUSDVolumes);
     // ray test touch >
 

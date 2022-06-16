@@ -44,19 +44,19 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
   return [...Array(daysBack).keys()]
     .map((index) => {
       const timestamp = Date.now() - (startFromTonight ? index - 1 : index) * 3600 * 24 * 1000;
-      const partialDay = timestamp % (86400 * 1000); // modulo ms per day
+      const partialDay = timestamp % (86400 * 1000); // Modulo ms per day
       return new Date(timestamp - partialDay);
     })
     .reverse();
 }
 
 // TODO: replace these functions with internationalization functions
-// always round USD amounts to two decimals
+// Always round USD amounts to two decimals
 function getUsdAmount<C extends CurrencyUnit>(
   amount: MonetaryAmount<Currency<C>, C>,
   rate: number | undefined
 ): string {
-  // If price data is unavailable dash is shown.
+  // If price data is unavailable dash is shown
   if (rate === undefined) {
     return '—';
   }
@@ -77,6 +77,7 @@ function displayMonetaryAmount<C extends CurrencyUnit>(
   return defaultValue;
 }
 
+// ray test touch <
 /**
  * Checks whether string represents an integer or a floating point number
  * @remarks String of the form ".23" are not considered numeric. Use "0.23" instead.
@@ -114,7 +115,7 @@ const btcAddressFromEventToString = (addressObject: string, network: BitcoinNetw
   const parsedAddress = JSON.parse(addressObject);
   const hexHash = Object.values<string>(parsedAddress)[0];
   const hash = Buffer.from(
-    hexHash.substring(2), // remove hex prefix
+    hexHash.substring(2), // Remove hex prefix
     'hex'
   );
   const paymentType = Object.keys(parsedAddress)[0].toUpperCase();
@@ -141,6 +142,7 @@ const btcAddressFromEventToString = (addressObject: string, network: BitcoinNetw
     }).address || ''
   );
 };
+// ray test touch >
 
 const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
@@ -180,6 +182,8 @@ export {
   requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,
+  // ray test touch <
   getRandomArrayElement,
+  // ray test touch >
   getPolkadotLink
 };
