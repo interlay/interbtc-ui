@@ -1,10 +1,8 @@
-import { payments, networks } from 'bitcoinjs-lib';
 import Big from 'big.js';
-import { Issue, Redeem, CurrencyUnit, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { CurrencyUnit, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
 import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
 
-import { NUMERIC_STRING_REGEX, PARACHAIN_URL } from '../../constants';
-import { BitcoinNetwork } from 'types/bitcoin';
+import { PARACHAIN_URL } from '../../constants';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
@@ -77,73 +75,6 @@ function displayMonetaryAmount<C extends CurrencyUnit>(
   return defaultValue;
 }
 
-// ray test touch <
-/**
- * Checks whether string represents an integer or a floating point number
- * @remarks String of the form ".23" are not considered numeric. Use "0.23" instead.
- * @param {string} s Arbitrary string
- * @return {boolean} True if string is numeric, false otherwise.
- */
-function isPositiveNumeric(s: string): boolean {
-  const reg = new RegExp(NUMERIC_STRING_REGEX);
-  return reg.test(s);
-}
-
-function range(start: number, end: number): number[] {
-  return Array.from({ length: end - start }, (_, k) => k + start);
-}
-
-const requestsInStore = (storeRequests: Issue[] | Redeem[], parachainRequests: Issue[] | Redeem[]): boolean => {
-  if (storeRequests.length !== parachainRequests.length) return false;
-  let inStore = true;
-
-  storeRequests.forEach((storeRequest: Issue | Redeem) => {
-    let found = false;
-    parachainRequests.forEach((parachainRequest: Issue | Redeem) => {
-      if (storeRequest.id === parachainRequest.id) {
-        found = true;
-      }
-    });
-    if (!found) {
-      inStore = false;
-    }
-  });
-  return inStore;
-};
-
-const btcAddressFromEventToString = (addressObject: string, network: BitcoinNetwork): string => {
-  const parsedAddress = JSON.parse(addressObject);
-  const hexHash = Object.values<string>(parsedAddress)[0];
-  const hash = Buffer.from(
-    hexHash.substring(2), // Remove hex prefix
-    'hex'
-  );
-  const paymentType = Object.keys(parsedAddress)[0].toUpperCase();
-
-  let payment;
-  switch (paymentType) {
-    case 'P2WPKHV0':
-      payment = payments.p2wpkh;
-      break;
-    case 'P2PKH':
-      payment = payments.p2pkh;
-      break;
-    case 'P2SH':
-      payment = payments.p2sh;
-      break;
-    default:
-      throw new Error('Something went wrong!');
-  }
-
-  return (
-    payment({
-      hash,
-      network: networks[network === BitcoinNetwork.Mainnet ? 'bitcoin' : network]
-    }).address || ''
-  );
-};
-// ray test touch >
-
 const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
@@ -176,14 +107,7 @@ export {
   getLastMidnightTimestamps,
   getUsdAmount,
   displayMonetaryAmount,
-  isPositiveNumeric,
-  range,
-  btcAddressFromEventToString,
-  requestsInStore,
   copyToClipboard,
   getRandomVaultIdWithCapacity,
-  // ray test touch <
-  getRandomArrayElement,
-  // ray test touch >
   getPolkadotLink
 };
