@@ -1,12 +1,9 @@
 @import url('theme.base.css');
 
 :root {
-  --colors-dark-blue: #091133;
   --colors-light-blue: #075abc;
   --colors-light-blue-10: rgba(7, 90, 188, 0.1);
   --colors-light-blue-90: rgba(7, 90, 188, 0.9);
-  --colors-yellow: #feca2f;
-  --colors-dark-yellow: #e6b800;
   --box-shadow-black: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
@@ -20,7 +17,7 @@
   --colors-text-primary: var(--colors-neutral-black);
   --colors-text-secondary: var(--colors-light-blue);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
-  --colors-modal-bg: var(--colors-dark-blue);
+  --colors-modal-bg: var(--colors-neutral-white);
   --colors-icon-default: var(--colors-neutral-white);
   --box-shadow-default: var(--box-shadow-black);
 }
