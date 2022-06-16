@@ -116,7 +116,7 @@ const LockedCollateralsCard = (): JSX.Element => {
         <Stats
           leftPart={
             <>
-              <StatsDt>{t('dashboard.vault.locked_collateral')}</StatsDt>
+              <StatsDt>{t('dashboard.vault.total_collateral_locked_usd')}</StatsDt>
               <StatsDd>${totalLockedCollateralValueInUSD}</StatsDd>
             </>
           }
@@ -125,7 +125,7 @@ const LockedCollateralsCard = (): JSX.Element => {
         <LineChart
           wrapperClassName='h-full'
           colors={[chartLineColor]}
-          labels={[t('dashboard.vault.total_collateral_locked')]}
+          labels={[t('dashboard.vault.total_collateral_locked_usd')]}
           yLabels={
             cumulativeUSDVolumes
               .slice(0, -1)

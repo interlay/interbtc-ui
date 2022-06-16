@@ -60,7 +60,11 @@ const LockedCollateralCard = ({
         <Stats
           leftPart={
             <>
-              <StatsDt>{t('dashboard.vault.locked_collateral')}</StatsDt>
+              <StatsDt>
+	              {t('dashboard.vault.total_collateral_token_symbol_locked', {
+	                collateralTokenSymbol
+	              })}
+              </StatsDt>
               <StatsDd>
                 {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {collateralTokenSymbol}
               </StatsDd>
@@ -71,7 +75,11 @@ const LockedCollateralCard = ({
         <LineChart
           wrapperClassName='h-full'
           colors={[chartLineColor]}
-          labels={[t('dashboard.vault.total_collateral_locked')]}
+          labels={[
+            t('dashboard.vault.total_collateral_token_symbol_locked', {
+              collateralTokenSymbol
+            })
+          ]}
           yLabels={cumulativeVolumes
             .slice(0, -1)
             .map((dataPoint) => dataPoint.tillTimestamp.toISOString().substring(0, 10))}
