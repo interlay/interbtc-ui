@@ -8,11 +8,11 @@ import { INTERLAY_DENIM, KINTSUGI_APPLE } from 'utils/constants/colors';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
 
 // TODO: this function should be removed once real data is pulled in
-const graphTimestamps = getLastMidnightTimestamps(5, false);
+const cutoffTimestamps = getLastMidnightTimestamps(5, false);
 
 // TODO: hardcoded
 const data = [3, 3, 3, 3, 3];
-const dates = graphTimestamps.map((date) => date.toISOString().substring(0, 10));
+const dates = cutoffTimestamps.map((date) => date.toISOString().substring(0, 10));
 
 const ActiveCollatorsCard = (): JSX.Element => {
   const { t } = useTranslation();
