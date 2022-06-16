@@ -55,17 +55,24 @@ const LockedCollateralsCard = (): JSX.Element => {
     ) return;
 
     return Array<number>(COUNT_OF_DATES_FOR_CHART).fill(0).map((_, index) => {
-      // TODO: could be better
-      const relayChainNativeTokenItem = cumulativeRelayChainNativeTokenVolumes[index];
-      const governanceTokenItem = cumulativeGovernanceTokenVolumes[index];
+      // ray test touch <
+      const collaterals = [
+        {
+          cumulativeVolumes: cumulativeRelayChainNativeTokenVolumes,
+          priceInUSD: relayChainNativeTokenPriceInUSD
+        },
+        {
+          cumulativeVolumes: cumulativeGovernanceTokenVolumes,
+          priceInUSD: governanceTokenPriceInUSD
+        }
+      ];
 
-      // TODO: using `Number` against the return of `getUsdAmount` is error-prone because `getUsdAmount` returns "-" in the case of undefined `rate`
-      const relayChainNativeTokenItemValueInUSD = Number(getUsdAmount(relayChainNativeTokenItem.amount, relayChainNativeTokenPriceInUSD));
-      const governanceTokenItemValueInUSD = Number(getUsdAmount(governanceTokenItem.amount, governanceTokenPriceInUSD));
-
-      const sumValueInUSD =
-        relayChainNativeTokenItemValueInUSD +
-        governanceTokenItemValueInUSD;
+      let sumValueInUSD = 0;
+      for (const collateral of collaterals) {
+        // TODO: using `Number` against the return of `getUsdAmount` is error-prone because `getUsdAmount` returns "-" in the case of undefined `rate`
+        sumValueInUSD += Number(getUsdAmount(collateral.cumulativeVolumes[index].amount, collateral.priceInUSD));;
+      }
+      // ray test touch >
 
       return {
         sumValueInUSD,
