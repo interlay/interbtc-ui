@@ -367,7 +367,7 @@ const VaultsTable = (): JSX.Element => {
   // TODO: should add pagination
   return (
     <InterlayTableContainer className='space-y-6'>
-      <SectionTitle>{t('dashboard.vault.active_vaults')}</SectionTitle>
+      <SectionTitle>{t('dashboard.vault.vaults')}</SectionTitle>
       {renderTable()}
     </InterlayTableContainer>
   );

@@ -274,7 +274,6 @@
       "loading": "loading..."
     },
     "vault": {
-      "active_vaults": "Active Vaults",
       "collateralization": "Collateralization",
       "total_collateral_locked_usd": "Total Collateral Locked (USD)",
       "total_collateral_token_symbol_locked": "Total {{collateralTokenSymbol}} Locked",
