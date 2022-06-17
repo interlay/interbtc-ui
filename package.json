@@ -77,7 +77,7 @@
     "@testing-library/cypress": "^8.0.2",
     "@types/styled-components": "^5.1.25",
     "autoprefixer": "9",
-    "chromatic": "6.5.4",
+    "chromatic": "6.6.1",
     "cross-env": "^7.0.3",
     "cypress": "^9.5.0",
     "eslint-config-google": "^0.14.0",
