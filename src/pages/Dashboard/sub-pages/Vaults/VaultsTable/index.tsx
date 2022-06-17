@@ -119,6 +119,9 @@ const VaultsTable = (): JSX.Element => {
     enabled: !!bridgeLoaded
   });
   useErrorHandler(vaultsExtError);
+  // ray test touch <
+  console.log('ray : ***** vaultsExt => ', vaultsExt);
+  // ray test touch >
 
   const columns = React.useMemo(
     () => [
@@ -225,6 +228,11 @@ const VaultsTable = (): JSX.Element => {
       relayChainNativeTokenCollateralSecureThreshold &&
       currentActiveBlockNumber
     ) {
+      // ray test touch <
+      const test = vaultsExt[0].id;
+      console.log('ray : ***** test => ', test);
+      console.log('ray : ***** test.currencies.collateral => ', test.currencies.collateral);
+      // ray test touch >
       const rawVaults = vaultsExt.map((vaultExt) => {
         const statusLabel = getVaultStatusLabel(
           vaultExt,
