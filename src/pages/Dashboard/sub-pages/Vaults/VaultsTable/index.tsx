@@ -31,6 +31,7 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
+// ray test touch <
 const getCollateralizationColor = (
   collateralization: string | undefined,
   secureCollateralThreshold: Big
@@ -44,6 +45,7 @@ const getCollateralizationColor = (
     return clsx('text-interlayCinnabar', 'font-medium');
   }
 };
+// ray test touch >
 
 interface Vault {
   vaultId: string;
@@ -134,11 +136,13 @@ const VaultsTable = (): JSX.Element => {
         }
       },
       {
+        // ray test touch <
         Header: t('locked_dot', {
           collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
         }),
         accessor: 'lockedDOT',
         classNames: ['text-right']
+        // ray test touch >
       },
       {
         Header: t('locked_btc'),
@@ -165,12 +169,15 @@ const VaultsTable = (): JSX.Element => {
           } else {
             return (
               <>
+                {/* ray test touch < */}
                 {relayChainNativeTokenCollateralSecureThreshold && (
                   <div>
                     <p
                       className={getCollateralizationColor(
                         original.settledCollateralization,
+                        // ray test touch <
                         relayChainNativeTokenCollateralSecureThreshold
+                        // ray test touch >
                       )}
                     >
                       {original.settledCollateralization === undefined
@@ -182,7 +189,9 @@ const VaultsTable = (): JSX.Element => {
                       <span
                         className={getCollateralizationColor(
                           original.unsettledCollateralization,
+                          // ray test touch <
                           relayChainNativeTokenCollateralSecureThreshold
+                          // ray test touch >
                         )}
                       >
                         {original.unsettledCollateralization === undefined
@@ -192,6 +201,7 @@ const VaultsTable = (): JSX.Element => {
                     </p>
                   </div>
                 )}
+                {/* ray test touch > */}
               </>
             );
           }
@@ -223,41 +233,58 @@ const VaultsTable = (): JSX.Element => {
   const vaults: Array<Vault> | undefined = React.useMemo(() => {
     if (
       vaultsExt &&
+      // ray test touch <
       btcToRelayChainNativeTokenRate &&
       relayChainNativeTokenCollateralLiquidationThreshold &&
       relayChainNativeTokenCollateralSecureThreshold &&
+      // ray test touch >
       currentActiveBlockNumber
     ) {
       // ray test touch <
-      const test = vaultsExt[0].id;
+      const one = vaultsExt[0];
+      const test = one.id;
+      const collateral = test.currencies.collateral;
       console.log('ray : ***** test => ', test);
-      console.log('ray : ***** test.currencies.collateral => ', test.currencies.collateral);
+      console.log('ray : ***** collateral => ', collateral);
+      console.log('ray : ***** collateral.asToken.type => ', collateral.asToken.type);
       // ray test touch >
       const rawVaults = vaultsExt.map((vaultExt) => {
         const statusLabel = getVaultStatusLabel(
           vaultExt,
           currentActiveBlockNumber,
+          // ray test touch <
           relayChainNativeTokenCollateralLiquidationThreshold,
           relayChainNativeTokenCollateralSecureThreshold,
           btcToRelayChainNativeTokenRate,
+          // ray test touch >
           t
         );
 
         const vaultCollateral = vaultExt.backingCollateral;
         const settledTokens = vaultExt.issuedTokens;
-        const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToRelayChainNativeTokenRate);
+        const settledCollateralization = getCollateralization(
+          vaultCollateral,
+          settledTokens,
+          // ray test touch <
+          btcToRelayChainNativeTokenRate
+          // ray test touch >
+        );
         const unsettledTokens = vaultExt.toBeIssuedTokens;
         const unsettledCollateralization = getCollateralization(
           vaultCollateral,
           unsettledTokens.add(settledTokens),
+          // ray test touch <
           btcToRelayChainNativeTokenRate
+          // ray test touch >
         );
 
         return {
           vaultId: vaultExt.id.accountId.toString(),
           // TODO: fetch collateral reserved
           lockedBTC: settledTokens,
+          // ray test touch <
           lockedDOT: displayMonetaryAmount(vaultCollateral),
+          // ray test touch >
           pendingBTC: displayMonetaryAmount(unsettledTokens),
           status: statusLabel,
           unsettledCollateralization: unsettledCollateralization?.toString(),
@@ -291,12 +318,14 @@ const VaultsTable = (): JSX.Element => {
     if (
       currentActiveBlockNumberIdle ||
       currentActiveBlockNumberLoading ||
+      // ray test touch <
       relayChainNativeTokenCollateralSecureThresholdIdle ||
       relayChainNativeTokenCollateralSecureThresholdLoading ||
       relayChainNativeTokenCollateralLiquidationThresholdIdle ||
       relayChainNativeTokenCollateralLiquidationThresholdLoading ||
       btcToRelayChainNativeTokenRateIdle ||
       btcToRelayChainNativeTokenRateLoading ||
+      // ray test touch >
       vaultsExtIdle ||
       vaultsExtLoading
     ) {
@@ -372,7 +401,6 @@ const VaultsTable = (): JSX.Element => {
     );
   };
 
-  // TODO: should add pagination
   return (
     <InterlayTableContainer className='space-y-6'>
       <SectionTitle>{t('dashboard.vault.vaults')}</SectionTitle>

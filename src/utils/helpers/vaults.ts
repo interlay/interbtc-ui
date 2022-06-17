@@ -5,6 +5,7 @@ import { BitcoinAmount, BitcoinUnit, MonetaryAmount, Currency } from '@interlay/
 
 import { BTCToCollateralTokenRate } from 'types/currency';
 
+// ray test touch <
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   tokens: BitcoinAmount,
@@ -17,8 +18,9 @@ const getCollateralization = (
     return undefined;
   }
 };
+// ray test touch >
 
-// TODO: it could be better to be a hook
+// ray test touch <
 const getVaultStatusLabel = (
   vaultExt: VaultExt<BitcoinUnit>,
   currentActiveBlockNumber: number,
@@ -43,7 +45,7 @@ const getVaultStatusLabel = (
       statusLabel = t('dashboard.vault.undercollateralized');
     }
   }
-  // Should only display bannedUntil status if current active block number < the bannedUntil block number
+  // Should only display bannedUntil status if current active block number < the bannedUntil block number.
   // Otherwise, should not show this status.
   if (vaultExt.bannedUntil && currentActiveBlockNumber < vaultExt.bannedUntil) {
     statusLabel = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
@@ -60,5 +62,6 @@ const getVaultStatusLabel = (
 
   return statusLabel;
 };
+// ray test touch >
 
 export { getCollateralization, getVaultStatusLabel };
