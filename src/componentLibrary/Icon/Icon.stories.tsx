@@ -9,7 +9,6 @@ Default.args = {
   variant: 'close'
 };
 
-
 export { Default };
 
 export default {

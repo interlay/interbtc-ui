@@ -11,7 +11,11 @@ import PriceInfo from 'pages/Bridge/PriceInfo';
 import ExternalLink from 'components/ExternalLink';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';
 import Hr2 from 'components/hrs/Hr2';
-import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, RelayChainNativeTokenLogoIcon } from 'config/relay-chains';
+import {
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeTokenLogoIcon
+} from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';

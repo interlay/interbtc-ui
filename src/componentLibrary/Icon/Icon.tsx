@@ -11,13 +11,9 @@ interface IconProps {
 const Icon = ({ variant }: IconProps): JSX.Element | null => {
   return (
     <IconWrapper>
-      {
-        variant === 'close' ? <CloseIcon /> : 
-        variant === 'checkmark' ? <CheckmarkIcon /> : 
-        null
-      }
+      {variant === 'close' ? <CloseIcon /> : variant === 'checkmark' ? <CheckmarkIcon /> : null}
     </IconWrapper>
-  )
+  );
 };
 
 Icon.displayName = 'Icon';

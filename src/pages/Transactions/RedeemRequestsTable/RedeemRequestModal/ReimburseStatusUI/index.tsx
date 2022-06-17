@@ -32,7 +32,9 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
-  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN));
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
+  );
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 

@@ -6,6 +6,4 @@ const IconWrapper = styled.div`
   fill: ${theme.colors.iconDefault};
 `;
 
-export {
-  IconWrapper
-}
+export { IconWrapper };
