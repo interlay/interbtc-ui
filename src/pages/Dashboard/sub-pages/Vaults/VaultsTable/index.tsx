@@ -71,10 +71,10 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
-    isIdle: secureCollateralThresholdIdle,
-    isLoading: secureCollateralThresholdLoading,
-    data: secureCollateralThreshold,
-    error: secureCollateralThresholdError
+    isIdle: relayChainNativeTokenCollateralSecureThresholdIdle,
+    isLoading: relayChainNativeTokenCollateralSecureThresholdLoading,
+    data: relayChainNativeTokenCollateralSecureThreshold,
+    error: relayChainNativeTokenCollateralSecureThresholdError
   } = useQuery<Big, Error>(
     [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<Big>(),
@@ -82,13 +82,13 @@ const VaultsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(secureCollateralThresholdError);
+  useErrorHandler(relayChainNativeTokenCollateralSecureThresholdError);
 
   const {
-    isIdle: liquidationCollateralThresholdIdle,
-    isLoading: liquidationCollateralThresholdLoading,
-    data: liquidationCollateralThreshold,
-    error: liquidationCollateralThresholdError
+    isIdle: relayChainNativeTokenCollateralLiquidationThresholdIdle,
+    isLoading: relayChainNativeTokenCollateralLiquidationThresholdLoading,
+    data: relayChainNativeTokenCollateralLiquidationThreshold,
+    error: relayChainNativeTokenCollateralLiquidationThresholdError
   } = useQuery<Big, Error>(
     [GENERIC_FETCHER, 'vaults', 'getLiquidationCollateralThreshold', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<Big>(),
@@ -96,13 +96,13 @@ const VaultsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(liquidationCollateralThresholdError);
+  useErrorHandler(relayChainNativeTokenCollateralLiquidationThresholdError);
 
   const {
-    isIdle: btcToCollateralTokenRateIdle,
-    isLoading: btcToCollateralTokenRateLoading,
-    data: btcToCollateralTokenRate,
-    error: btcToCollateralTokenRateError
+    isIdle: btcToRelayChainNativeTokenRateIdle,
+    isLoading: btcToRelayChainNativeTokenRateLoading,
+    data: btcToRelayChainNativeTokenRate,
+    error: btcToRelayChainNativeTokenRateError
   } = useQuery<BTCToCollateralTokenRate, Error>(
     [GENERIC_FETCHER, 'oracle', 'getExchangeRate', RELAY_CHAIN_NATIVE_TOKEN],
     genericFetcher<BTCToCollateralTokenRate>(),
@@ -110,7 +110,7 @@ const VaultsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(btcToCollateralTokenRateError);
+  useErrorHandler(btcToRelayChainNativeTokenRateError);
 
   const { isIdle: vaultsExtIdle, isLoading: vaultsExtLoading, data: vaultsExt, error: vaultsExtError } = useQuery<
     Array<VaultExt<BitcoinUnit>>,
@@ -162,12 +162,12 @@ const VaultsTable = (): JSX.Element => {
           } else {
             return (
               <>
-                {secureCollateralThreshold && (
+                {relayChainNativeTokenCollateralSecureThreshold && (
                   <div>
                     <p
                       className={getCollateralizationColor(
                         original.settledCollateralization,
-                        secureCollateralThreshold
+                        relayChainNativeTokenCollateralSecureThreshold
                       )}
                     >
                       {original.settledCollateralization === undefined
@@ -179,7 +179,7 @@ const VaultsTable = (): JSX.Element => {
                       <span
                         className={getCollateralizationColor(
                           original.unsettledCollateralization,
-                          secureCollateralThreshold
+                          relayChainNativeTokenCollateralSecureThreshold
                         )}
                       >
                         {original.unsettledCollateralization === undefined
@@ -214,35 +214,35 @@ const VaultsTable = (): JSX.Element => {
         }
       }
     ],
-    [t, secureCollateralThreshold]
+    [t, relayChainNativeTokenCollateralSecureThreshold]
   );
 
   const vaults: Array<Vault> | undefined = React.useMemo(() => {
     if (
       vaultsExt &&
-      btcToCollateralTokenRate &&
-      liquidationCollateralThreshold &&
-      secureCollateralThreshold &&
+      btcToRelayChainNativeTokenRate &&
+      relayChainNativeTokenCollateralLiquidationThreshold &&
+      relayChainNativeTokenCollateralSecureThreshold &&
       currentActiveBlockNumber
     ) {
       const rawVaults = vaultsExt.map((vaultExt) => {
         const statusLabel = getVaultStatusLabel(
           vaultExt,
           currentActiveBlockNumber,
-          liquidationCollateralThreshold,
-          secureCollateralThreshold,
-          btcToCollateralTokenRate,
+          relayChainNativeTokenCollateralLiquidationThreshold,
+          relayChainNativeTokenCollateralSecureThreshold,
+          btcToRelayChainNativeTokenRate,
           t
         );
 
         const vaultCollateral = vaultExt.backingCollateral;
         const settledTokens = vaultExt.issuedTokens;
-        const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
+        const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToRelayChainNativeTokenRate);
         const unsettledTokens = vaultExt.toBeIssuedTokens;
         const unsettledCollateralization = getCollateralization(
           vaultCollateral,
           unsettledTokens.add(settledTokens),
-          btcToCollateralTokenRate
+          btcToRelayChainNativeTokenRate
         );
 
         return {
@@ -266,10 +266,10 @@ const VaultsTable = (): JSX.Element => {
       return sortedVaults;
     }
   }, [
-    btcToCollateralTokenRate,
+    btcToRelayChainNativeTokenRate,
     currentActiveBlockNumber,
-    liquidationCollateralThreshold,
-    secureCollateralThreshold,
+    relayChainNativeTokenCollateralLiquidationThreshold,
+    relayChainNativeTokenCollateralSecureThreshold,
     t,
     vaultsExt
   ]);
@@ -283,12 +283,12 @@ const VaultsTable = (): JSX.Element => {
     if (
       currentActiveBlockNumberIdle ||
       currentActiveBlockNumberLoading ||
-      secureCollateralThresholdIdle ||
-      secureCollateralThresholdLoading ||
-      liquidationCollateralThresholdIdle ||
-      liquidationCollateralThresholdLoading ||
-      btcToCollateralTokenRateIdle ||
-      btcToCollateralTokenRateLoading ||
+      relayChainNativeTokenCollateralSecureThresholdIdle ||
+      relayChainNativeTokenCollateralSecureThresholdLoading ||
+      relayChainNativeTokenCollateralLiquidationThresholdIdle ||
+      relayChainNativeTokenCollateralLiquidationThresholdLoading ||
+      btcToRelayChainNativeTokenRateIdle ||
+      btcToRelayChainNativeTokenRateLoading ||
       vaultsExtIdle ||
       vaultsExtLoading
     ) {
