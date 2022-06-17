@@ -1,13 +1,31 @@
 import { Story, Meta } from '@storybook/react';
+import { CurrencySymbols } from '../../types/currency';
 
 import { NewVaultsTable } from './';
+import { NewVaultsTableProps } from './NewVaultsTable';
 
-const Template: Story = (args) => <NewVaultsTable {...args} />;
+const Template: Story<NewVaultsTableProps> = (args) => <NewVaultsTable {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-    columnLabels: ['test1', 'test2'],
-    rows: [[1,2], [11, 12], ["a", 35]]
+  data: [
+    {
+      collateralCurrency: CurrencySymbols.KSM,
+      wrappedCurrency: CurrencySymbols.KBTC,
+      apy: '11.23',
+      minCollateralAmount: '1.21',
+      collateralRate: '260.12',
+      isActive: true
+    },
+    {
+      collateralCurrency: CurrencySymbols.KINT,
+      wrappedCurrency: CurrencySymbols.KBTC,
+      apy: '430.33',
+      minCollateralAmount: '9.14',
+      collateralRate: '314.55',
+      isActive: false
+    }
+  ]
 };
 
 export { Default };
