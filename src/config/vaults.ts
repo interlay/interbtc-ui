@@ -6,7 +6,7 @@ let VAULT_COLLATERAL: Array<CurrencyIdLiteral> = [];
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
   case POLKADOT: {
-    VAULT_COLLATERAL = [];
+    VAULT_COLLATERAL = [CurrencyIdLiteral.DOT, CurrencyIdLiteral.INTR];
     break;
   }
   case KUSAMA: {

@@ -2,6 +2,7 @@ import { CollateralUnit, CurrencyIdLiteral, CurrencyUnit } from '@interlay/inter
 import { Bitcoin, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
 
 enum CurrencySymbols {
+  BTC = 'BTC',
   DOT = 'DOT',
   INTERBTC = 'interBTC',
   INTR = 'INTR',

@@ -6,7 +6,7 @@ interface CTAProps {
 }
 
 const BaseCTA = styled.div<CTAProps>`
-  color: ${theme.colors.textPrimary};
+  color: ${theme.cta.primary.text};
   border: none;
   border-radius: ${theme.rounded.md};
   font-family: ${theme.font.primary};
