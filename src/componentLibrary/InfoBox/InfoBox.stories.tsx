@@ -23,6 +23,6 @@ WithCTA.args = {
 export { WithoutCTA, WithCTA };
 
 export default {
-  title: 'Componentss/InfoBox',
+  title: 'Components/InfoBox',
   component: InfoBox
 } as Meta;
