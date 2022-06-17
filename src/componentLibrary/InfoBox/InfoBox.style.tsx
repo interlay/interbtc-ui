@@ -3,11 +3,15 @@ import styled from 'styled-components';
 import { theme } from '../';
 
 const InfoBoxWrapper = styled.div`
+  align-items: center;
+  box-shadow: ${theme.boxShadow.default};
   background: ${theme.card.bg};
   border: ${theme.border.default};
   border-radius: ${theme.rounded.xl};
+  display: flex;
   font-family: ${theme.font.primary};
   font-weight: ${theme.fontWeight.bold};
+  justify-content: space-between;
   padding: ${theme.spacing.spacing5};
   width: 100%;
 `;

@@ -25,6 +25,10 @@
   font-style: normal;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --fonts-primary: 'airbnb-cereal';
 

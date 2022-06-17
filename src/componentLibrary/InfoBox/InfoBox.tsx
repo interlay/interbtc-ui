@@ -1,3 +1,5 @@
+import { CTA } from '../CTA';
+
 import { InfoBoxWrapper, InfoBoxHeader, InfoBoxText } from './InfoBox.style';
 
 interface InfoBoxProps {
@@ -9,9 +11,15 @@ interface InfoBoxProps {
 const InfoBox = ({ title, text, onSubmit }: InfoBoxProps): JSX.Element => {
   return (
     <InfoBoxWrapper>
-      <InfoBoxHeader>{title}</InfoBoxHeader>
-      <InfoBoxText>{text}</InfoBoxText>
-      {onSubmit && <p>Click handler here</p>}
+      <div>
+        <InfoBoxHeader>{title}</InfoBoxHeader>
+        <InfoBoxText>{text}</InfoBoxText>
+      </div>
+      {onSubmit && (
+        <div>
+          <CTA variant='primary'>Claim</CTA>
+        </div>
+      )}
     </InfoBoxWrapper>
   );
 };
