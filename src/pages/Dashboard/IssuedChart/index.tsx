@@ -6,7 +6,7 @@ import { BitcoinUnit } from '@interlay/monetary-js';
 
 import LineChart from '../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
+import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
 import { WRAPPED_TOKEN_SYMBOL, WRAPPED_TOKEN } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from 'utils/constants/colors';

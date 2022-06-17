@@ -7,7 +7,7 @@ import LineChart from '../../../LineChart';
 import DashboardCard from '../../../cards/DashboardCard';
 import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
+import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
 import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';

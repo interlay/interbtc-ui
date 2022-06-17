@@ -6,7 +6,7 @@ import LineChart from '../../LineChart';
 import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
 import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
+import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUNDOWN } from 'utils/constants/colors';
 import { PAGES } from 'utils/constants/links';

@@ -5,7 +5,7 @@ import LineChart from 'pages/Dashboard/LineChart';
 import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
 import Stats, { StatsDt, StatsDd } from 'pages/Dashboard/Stats';
 import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/general';
+import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
 import { CollateralToken } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
