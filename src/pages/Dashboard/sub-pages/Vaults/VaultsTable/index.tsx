@@ -49,9 +49,9 @@ const getCollateralizationColor = (
 
 interface Vault {
   vaultId: string;
-  lockedBTC: BitcoinAmount;
+  lockedBTCAmount: BitcoinAmount;
   lockedCollateralTokenAmount: string;
-  pendingBTC: string;
+  pendingBTCAmount: string;
   status: string;
   unsettledCollateralization: string | undefined;
   settledCollateralization: string | undefined;
@@ -146,7 +146,7 @@ const VaultsTable = (): JSX.Element => {
       },
       {
         Header: t('locked_btc'),
-        accessor: 'lockedBTC',
+        accessor: 'lockedBTCAmount',
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: BitcoinAmount }) {
           return displayMonetaryAmount(value);
@@ -154,7 +154,7 @@ const VaultsTable = (): JSX.Element => {
       },
       {
         Header: t('pending_btc'),
-        accessor: 'pendingBTC',
+        accessor: 'pendingBTCAmount',
         classNames: ['text-right'],
         tooltip: t('vault.tip_pending_btc')
       },
@@ -281,11 +281,11 @@ const VaultsTable = (): JSX.Element => {
         return {
           vaultId: vaultExt.id.accountId.toString(),
           // TODO: fetch collateral reserved
-          lockedBTC: settledTokens,
+          lockedBTCAmount: settledTokens,
           // ray test touch <
           lockedCollateralTokenAmount: displayMonetaryAmount(vaultCollateral),
           // ray test touch >
-          pendingBTC: displayMonetaryAmount(unsettledTokens),
+          pendingBTCAmount: displayMonetaryAmount(unsettledTokens),
           status: statusLabel,
           unsettledCollateralization: unsettledCollateralization?.toString(),
           settledCollateralization: settledCollateralization?.toString()
@@ -293,8 +293,8 @@ const VaultsTable = (): JSX.Element => {
       });
 
       const sortedVaults = rawVaults.sort((vaultA, vaultB) => {
-        const vaultALockedBTC = vaultA.lockedBTC;
-        const vaultBLockedBTC = vaultB.lockedBTC;
+        const vaultALockedBTC = vaultA.lockedBTCAmount;
+        const vaultBLockedBTC = vaultB.lockedBTCAmount;
         return vaultBLockedBTC.gt(vaultALockedBTC) ? 1 : vaultALockedBTC.gt(vaultBLockedBTC) ? -1 : 0;
       });
 
