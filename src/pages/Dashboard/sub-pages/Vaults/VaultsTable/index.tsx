@@ -31,7 +31,6 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
-// ray test touch <
 interface CollateralizationCellProps {
   settledCollateralization: string | undefined;
   unsettledCollateralization: string | undefined;
@@ -79,7 +78,6 @@ const CollateralizationCell = ({
     );
   }
 };
-// ray test touch >
 
 // ray test touch <
 const getCollateralizationColor = (
