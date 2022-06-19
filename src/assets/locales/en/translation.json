@@ -65,7 +65,7 @@
   "btc_parachain_status": "BTC Parachain Status",
   "vote": "Vote",
   "pending_btc": "Pending BTC",
-  "locked_collateral_token_symbol": "Locked {{collateralTokenSymbol}}",
+  "locked_collateral": "Locked Collateral",
   "locked_planck": "Locked Planck",
   "locked_btc": "Locked BTC",
   "issue": "Issue",

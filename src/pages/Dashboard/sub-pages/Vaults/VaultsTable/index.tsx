@@ -22,7 +22,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
 import { getCollateralization, getVaultStatusLabel } from 'utils/helpers/vaults';
 import { PAGES, URL_PARAMETERS } from 'utils/constants/links';
 import { shortAddress, displayMonetaryAmount } from 'common/utils/utils';
@@ -136,11 +136,7 @@ const VaultsTable = (): JSX.Element => {
         }
       },
       {
-        Header: t('locked_collateral_token_symbol', {
-          // ray test touch <
-          collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
-          // ray test touch >
-        }),
+        Header: t('locked_collateral'),
         accessor: 'lockedCollateralTokenAmount',
         classNames: ['text-right']
       },
