@@ -22,7 +22,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
 import { getCollateralization, getVaultStatusLabel } from 'utils/helpers/vaults';
 import { PAGES, URL_PARAMETERS } from 'utils/constants/links';
 import { shortAddress, displayMonetaryAmount } from 'common/utils/utils';
@@ -133,6 +133,23 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(relayChainNativeTokenCollateralSecureThresholdError);
+  // ray test touch <<
+  // TODO: should use https://react-query.tanstack.com/guides/parallel-queries
+  const {
+    // isIdle: governanceTokenCollateralSecureThresholdIdle,
+    // isLoading: governanceTokenCollateralSecureThresholdLoading,
+    data: governanceTokenCollateralSecureThreshold,
+    error: governanceTokenCollateralSecureThresholdError
+  } = useQuery<Big, Error>(
+    [GENERIC_FETCHER, 'vaults', 'getSecureCollateralThreshold', GOVERNANCE_TOKEN],
+    genericFetcher<Big>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(governanceTokenCollateralSecureThresholdError);
+  console.log('ray : ***** governanceTokenCollateralSecureThreshold?.toString()', governanceTokenCollateralSecureThreshold?.toString());
+  // ray test touch >>
 
   const {
     isIdle: relayChainNativeTokenCollateralLiquidationThresholdIdle,
@@ -147,6 +164,22 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(relayChainNativeTokenCollateralLiquidationThresholdError);
+  // ray test touch <<
+  const {
+    // isIdle: governanceTokenCollateralLiquidationThresholdIdle,
+    // isLoading: governanceTokenCollateralLiquidationThresholdLoading,
+    data: governanceTokenCollateralLiquidationThreshold,
+    error: governanceTokenCollateralLiquidationThresholdError
+  } = useQuery<Big, Error>(
+    [GENERIC_FETCHER, 'vaults', 'getLiquidationCollateralThreshold', GOVERNANCE_TOKEN],
+    genericFetcher<Big>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(governanceTokenCollateralLiquidationThresholdError);
+  console.log('ray : ***** governanceTokenCollateralLiquidationThreshold?.toString()', governanceTokenCollateralLiquidationThreshold?.toString());
+  // ray test touch >>
 
   const {
     isIdle: btcToRelayChainNativeTokenRateIdle,
@@ -161,6 +194,22 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(btcToRelayChainNativeTokenRateError);
+  // ray test touch <<
+  const {
+    // isIdle: btcToGovernanceTokenRateIdle,
+    // isLoading: btcToGovernanceTokenRateLoading,
+    data: btcToGovernanceTokenRate,
+    error: btcToGovernanceTokenRateError
+  } = useQuery<BTCToCollateralTokenRate, Error>(
+    [GENERIC_FETCHER, 'oracle', 'getExchangeRate', GOVERNANCE_TOKEN],
+    genericFetcher<BTCToCollateralTokenRate>(),
+    {
+      enabled: !!bridgeLoaded
+    }
+  );
+  useErrorHandler(btcToGovernanceTokenRateError);
+  console.log('ray : ***** btcToGovernanceTokenRate?.toString()', btcToGovernanceTokenRate?.toString());
+  // ray test touch >>
 
   const { isIdle: vaultsExtIdle, isLoading: vaultsExtLoading, data: vaultsExt, error: vaultsExtError } = useQuery<
     Array<VaultExt<BitcoinUnit>>,
