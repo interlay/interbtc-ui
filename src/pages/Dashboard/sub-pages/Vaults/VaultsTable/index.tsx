@@ -136,13 +136,13 @@ const VaultsTable = (): JSX.Element => {
         }
       },
       {
-        // ray test touch <
         Header: t('locked_collateral_token_symbol', {
+          // ray test touch <
           collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+          // ray test touch >
         }),
         accessor: 'lockedCollateralTokenAmount',
         classNames: ['text-right']
-        // ray test touch >
       },
       {
         Header: t('locked_btc'),
@@ -282,9 +282,7 @@ const VaultsTable = (): JSX.Element => {
           vaultId: vaultExt.id.accountId.toString(),
           // TODO: fetch collateral reserved
           lockedBTCAmount: settledTokens,
-          // ray test touch <
           lockedCollateralTokenAmount: displayMonetaryAmount(vaultCollateral),
-          // ray test touch >
           pendingBTCAmount: displayMonetaryAmount(unsettledTokens),
           status: statusLabel,
           unsettledCollateralization: unsettledCollateralization?.toString(),
