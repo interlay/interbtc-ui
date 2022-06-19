@@ -32,6 +32,56 @@ import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
 // ray test touch <
+interface CollateralizationCellProps {
+  settledCollateralization: string | undefined;
+  unsettledCollateralization: string | undefined;
+  collateralSecureThreshold: Big;
+}
+
+const CollateralizationCell = ({
+  settledCollateralization,
+  unsettledCollateralization,
+  collateralSecureThreshold
+}: CollateralizationCellProps) => {
+  const { t } = useTranslation();
+
+  if (unsettledCollateralization === undefined && settledCollateralization === undefined) {
+    return <span>∞</span>;
+  } else {
+    return (
+      <>
+        <div>
+          <p
+            className={getCollateralizationColor(
+              settledCollateralization,
+              collateralSecureThreshold
+            )}
+          >
+            {settledCollateralization === undefined
+              ? '∞'
+              : roundTwoDecimals(settledCollateralization.toString()) + '%'}
+          </p>
+          <p className='text-xs'>
+            <span>{t('vault.pending_table_subcell')}</span>
+            <span
+              className={getCollateralizationColor(
+                unsettledCollateralization,
+                collateralSecureThreshold
+              )}
+            >
+              {unsettledCollateralization === undefined
+                ? '∞'
+                : roundTwoDecimals(unsettledCollateralization.toString()) + '%'}
+            </span>
+          </p>
+        </div>
+      </>
+    );
+  }
+};
+// ray test touch >
+
+// ray test touch <
 const getCollateralizationColor = (
   collateralization: string | undefined,
   secureCollateralThreshold: Big
@@ -160,47 +210,14 @@ const VaultsTable = (): JSX.Element => {
         classNames: ['text-left'],
         tooltip: t('vault.tip_collateralization'),
         Cell: function FormattedCell({ row: { original } }: { row: { original: Vault } }) {
-          if (original.unsettledCollateralization === undefined && original.settledCollateralization === undefined) {
-            return <span>∞</span>;
-          } else {
-            return (
-              <>
-                {/* ray test touch < */}
-                {relayChainNativeTokenCollateralSecureThreshold && (
-                  <div>
-                    <p
-                      className={getCollateralizationColor(
-                        original.settledCollateralization,
-                        // ray test touch <
-                        relayChainNativeTokenCollateralSecureThreshold
-                        // ray test touch >
-                      )}
-                    >
-                      {original.settledCollateralization === undefined
-                        ? '∞'
-                        : roundTwoDecimals(original.settledCollateralization.toString()) + '%'}
-                    </p>
-                    <p className='text-xs'>
-                      <span>{t('vault.pending_table_subcell')}</span>
-                      <span
-                        className={getCollateralizationColor(
-                          original.unsettledCollateralization,
-                          // ray test touch <
-                          relayChainNativeTokenCollateralSecureThreshold
-                          // ray test touch >
-                        )}
-                      >
-                        {original.unsettledCollateralization === undefined
-                          ? '∞'
-                          : roundTwoDecimals(original.unsettledCollateralization.toString()) + '%'}
-                      </span>
-                    </p>
-                  </div>
-                )}
-                {/* ray test touch > */}
-              </>
-            );
-          }
+          if (relayChainNativeTokenCollateralSecureThreshold === undefined) return;
+
+          return (
+            <CollateralizationCell
+              settledCollateralization={original.settledCollateralization}
+              unsettledCollateralization={original.unsettledCollateralization}
+              collateralSecureThreshold={relayChainNativeTokenCollateralSecureThreshold} />
+          );
         }
       },
       {
