@@ -50,7 +50,7 @@ const getCollateralizationColor = (
 interface Vault {
   vaultId: string;
   lockedBTC: BitcoinAmount;
-  lockedDOT: string;
+  lockedCollateralTokenAmount: string;
   pendingBTC: string;
   status: string;
   unsettledCollateralization: string | undefined;
@@ -137,10 +137,10 @@ const VaultsTable = (): JSX.Element => {
       },
       {
         // ray test touch <
-        Header: t('locked_dot', {
+        Header: t('locked_collateral_token_symbol', {
           collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
         }),
-        accessor: 'lockedDOT',
+        accessor: 'lockedCollateralTokenAmount',
         classNames: ['text-right']
         // ray test touch >
       },
@@ -283,7 +283,7 @@ const VaultsTable = (): JSX.Element => {
           // TODO: fetch collateral reserved
           lockedBTC: settledTokens,
           // ray test touch <
-          lockedDOT: displayMonetaryAmount(vaultCollateral),
+          lockedCollateralTokenAmount: displayMonetaryAmount(vaultCollateral),
           // ray test touch >
           pendingBTC: displayMonetaryAmount(unsettledTokens),
           status: statusLabel,
