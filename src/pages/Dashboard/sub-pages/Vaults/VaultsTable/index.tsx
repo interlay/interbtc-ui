@@ -136,8 +136,8 @@ const VaultsTable = (): JSX.Element => {
   // ray test touch <<
   // TODO: should use https://react-query.tanstack.com/guides/parallel-queries
   const {
-    // isIdle: governanceTokenCollateralSecureThresholdIdle,
-    // isLoading: governanceTokenCollateralSecureThresholdLoading,
+    isIdle: governanceTokenCollateralSecureThresholdIdle,
+    isLoading: governanceTokenCollateralSecureThresholdLoading,
     data: governanceTokenCollateralSecureThreshold,
     error: governanceTokenCollateralSecureThresholdError
   } = useQuery<Big, Error>(
@@ -166,8 +166,8 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(relayChainNativeTokenCollateralLiquidationThresholdError);
   // ray test touch <<
   const {
-    // isIdle: governanceTokenCollateralLiquidationThresholdIdle,
-    // isLoading: governanceTokenCollateralLiquidationThresholdLoading,
+    isIdle: governanceTokenCollateralLiquidationThresholdIdle,
+    isLoading: governanceTokenCollateralLiquidationThresholdLoading,
     data: governanceTokenCollateralLiquidationThreshold,
     error: governanceTokenCollateralLiquidationThresholdError
   } = useQuery<Big, Error>(
@@ -196,8 +196,8 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(btcToRelayChainNativeTokenRateError);
   // ray test touch <<
   const {
-    // isIdle: btcToGovernanceTokenRateIdle,
-    // isLoading: btcToGovernanceTokenRateLoading,
+    isIdle: btcToGovernanceTokenRateIdle,
+    isLoading: btcToGovernanceTokenRateLoading,
     data: btcToGovernanceTokenRate,
     error: btcToGovernanceTokenRateError
   } = useQuery<BTCToCollateralTokenRate, Error>(
@@ -218,9 +218,6 @@ const VaultsTable = (): JSX.Element => {
     enabled: !!bridgeLoaded
   });
   useErrorHandler(vaultsExtError);
-  // ray test touch <
-  console.log('ray : ***** vaultsExt => ', vaultsExt);
-  // ray test touch >
 
   const columns = React.useMemo(
     () => [
@@ -376,14 +373,18 @@ const VaultsTable = (): JSX.Element => {
     if (
       currentActiveBlockNumberIdle ||
       currentActiveBlockNumberLoading ||
-      // ray test touch <
       relayChainNativeTokenCollateralSecureThresholdIdle ||
       relayChainNativeTokenCollateralSecureThresholdLoading ||
+      governanceTokenCollateralSecureThresholdIdle ||
+      governanceTokenCollateralSecureThresholdLoading ||
       relayChainNativeTokenCollateralLiquidationThresholdIdle ||
       relayChainNativeTokenCollateralLiquidationThresholdLoading ||
+      governanceTokenCollateralLiquidationThresholdIdle ||
+      governanceTokenCollateralLiquidationThresholdLoading ||
       btcToRelayChainNativeTokenRateIdle ||
       btcToRelayChainNativeTokenRateLoading ||
-      // ray test touch >
+      btcToGovernanceTokenRateIdle ||
+      btcToGovernanceTokenRateLoading ||
       vaultsExtIdle ||
       vaultsExtLoading
     ) {
