@@ -31,7 +31,6 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
-// ray test touch <
 enum Accessor {
   VaultId = 'vaultId',
   LockedCollateralTokenAmount = 'lockedCollateralTokenAmount',
@@ -40,13 +39,10 @@ enum Accessor {
   CollateralizationUI = 'collateralizationUI',
   Status = 'status'
 }
-// ray test touch >
 
 interface CollateralizationCellProps {
-  // ray test touch <<
   settledCollateralization: Big | undefined;
   unsettledCollateralization: Big | undefined;
-  // ray test touch >>
   collateralSecureThreshold: Big;
 }
 
@@ -92,7 +88,6 @@ const CollateralizationCell = ({
   }
 };
 
-// ray test touch <<
 const getCollateralizationColor = (
   collateralization: Big | undefined,
   secureCollateralThreshold: Big
@@ -106,18 +101,13 @@ const getCollateralizationColor = (
     return clsx('text-interlayCinnabar', 'font-medium');
   }
 };
-// ray test touch >>
 
 interface Vault {
   [Accessor.VaultId]: string;
   [Accessor.LockedCollateralTokenAmount]: string;
   [Accessor.LockedBTCAmount]: BitcoinAmount;
   [Accessor.PendingBTCAmount]: string;
-  // ray test touch <<
-  // unsettledCollateralization: string | undefined;
-  // settledCollateralization: string | undefined;
   [Accessor.CollateralizationUI]: React.ReactNode;
-  // ray test touch >>
   [Accessor.Status]: string;
 }
 
@@ -264,14 +254,12 @@ const VaultsTable = (): JSX.Element => {
         classNames: ['text-right'],
         tooltip: t('vault.tip_pending_btc')
       },
-      // ray test touch <<
       {
         Header: t('collateralization'),
         accessor: Accessor.CollateralizationUI,
         classNames: ['text-left'],
         tooltip: t('vault.tip_collateralization')
       },
-      // ray test touch >>
       {
         Header: t('status'),
         accessor: Accessor.Status,
@@ -292,9 +280,7 @@ const VaultsTable = (): JSX.Element => {
         }
       }
     ],
-    // ray test touch <<
     [t]
-    // ray test touch >>
   );
 
   const vaults: Array<Vault> | undefined = React.useMemo(() => {
@@ -352,16 +338,12 @@ const VaultsTable = (): JSX.Element => {
           [Accessor.LockedCollateralTokenAmount]: displayMonetaryAmount(vaultCollateral),
           [Accessor.LockedBTCAmount]: settledTokens,
           [Accessor.PendingBTCAmount]: displayMonetaryAmount(unsettledTokens),
-          // ray test touch <<
-          // unsettledCollateralization: unsettledCollateralization?.toString(),
-          // settledCollateralization: settledCollateralization?.toString(),
           [Accessor.CollateralizationUI]: (
             <CollateralizationCell
               settledCollateralization={settledCollateralization}
               unsettledCollateralization={unsettledCollateralization}
               collateralSecureThreshold={relayChainNativeTokenCollateralSecureThreshold} />
           ),
-          // ray test touch >>
           [Accessor.Status]: statusLabel
         };
       });
