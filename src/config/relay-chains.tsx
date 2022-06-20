@@ -116,9 +116,11 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     RELAY_CHAIN_NATIVE_TOKEN = Polkadot as Currency<CollateralUnit>;
     GOVERNANCE_TOKEN = Interlay as GovernanceToken;
     VOTE_GOVERNANCE_TOKEN = Interlay as VoteGovernanceToken;
+    // ray test touch <
     WRAPPED_TOKEN_SYMBOL = 'interBTC';
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = 'DOT';
     GOVERNANCE_TOKEN_SYMBOL = 'INTR';
+    // ray test touch >
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vINTR';
     RELAY_CHAIN_NAME = 'polkadot';
     BRIDGE_PARACHAIN_NAME = 'interlay';
@@ -151,9 +153,11 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     RELAY_CHAIN_NATIVE_TOKEN = Kusama as Currency<CollateralUnit>;
     GOVERNANCE_TOKEN = Kintsugi as GovernanceToken;
     VOTE_GOVERNANCE_TOKEN = Kintsugi as VoteGovernanceToken;
+    // ray test touch <
     WRAPPED_TOKEN_SYMBOL = 'kBTC';
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = 'KSM';
     GOVERNANCE_TOKEN_SYMBOL = 'KINT';
+    // ray test touch >
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vKINT';
     RELAY_CHAIN_NAME = 'kusama';
     BRIDGE_PARACHAIN_NAME = 'kintsugi';

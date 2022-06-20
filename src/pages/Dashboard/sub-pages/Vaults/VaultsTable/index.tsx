@@ -22,7 +22,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { getCollateralization, getVaultStatusLabel } from 'utils/helpers/vaults';
 import { PAGES, URL_PARAMETERS } from 'utils/constants/links';
 import { shortAddress, displayMonetaryAmount } from 'common/utils/utils';
@@ -301,17 +301,36 @@ const VaultsTable = (): JSX.Element => {
           throw new Error('Non token collateral is not supported!');
         }
         const collateralTokenType = collateral.asToken.type;
-        console.log('ray : ***** collateralTokenType => ', collateralTokenType);
+
+        let collateralLiquidationThreshold: Big;
+        let collateralSecureThreshold: Big;
+        let btcToCollateralTokenRate: BTCToCollateralTokenRate;
+        switch (collateralTokenType) {
+          case RELAY_CHAIN_NATIVE_TOKEN_SYMBOL: {
+            collateralLiquidationThreshold = relayChainNativeTokenCollateralLiquidationThreshold;
+            collateralSecureThreshold = relayChainNativeTokenCollateralSecureThreshold;
+            btcToCollateralTokenRate = btcToRelayChainNativeTokenRate;
+            break;
+          }
+          case GOVERNANCE_TOKEN_SYMBOL: {
+            collateralLiquidationThreshold = governanceTokenCollateralLiquidationThreshold;
+            collateralSecureThreshold = governanceTokenCollateralSecureThreshold;
+            btcToCollateralTokenRate = btcToGovernanceTokenRate;
+            break;
+          }
+          default:
+            throw new Error('Something went wrong with collateralTokenType!');
+        }
         // ray test touch >>
 
         const statusLabel = getVaultStatusLabel(
           vaultExt,
           currentActiveBlockNumber,
-          // ray test touch <
-          relayChainNativeTokenCollateralLiquidationThreshold,
-          relayChainNativeTokenCollateralSecureThreshold,
-          btcToRelayChainNativeTokenRate,
-          // ray test touch >
+          // ray test touch <<
+          collateralLiquidationThreshold,
+          collateralSecureThreshold,
+          btcToCollateralTokenRate,
+          // ray test touch >>
           t
         );
 
@@ -320,17 +339,17 @@ const VaultsTable = (): JSX.Element => {
         const settledCollateralization = getCollateralization(
           vaultCollateral,
           settledTokens,
-          // ray test touch <
-          btcToRelayChainNativeTokenRate
-          // ray test touch >
+          // ray test touch <<
+          btcToCollateralTokenRate
+          // ray test touch >>
         );
         const unsettledTokens = vaultExt.toBeIssuedTokens;
         const unsettledCollateralization = getCollateralization(
           vaultCollateral,
           unsettledTokens.add(settledTokens),
-          // ray test touch <
-          btcToRelayChainNativeTokenRate
-          // ray test touch >
+          // ray test touch <<
+          btcToCollateralTokenRate
+          // ray test touch >>
         );
 
         return {
