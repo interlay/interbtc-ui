@@ -31,9 +31,22 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
+// ray test touch <
+enum Accessor {
+  VaultId = 'vaultId',
+  LockedCollateralTokenAmount = 'lockedCollateralTokenAmount',
+  LockedBTCAmount = 'lockedBTCAmount',
+  PendingBTCAmount = 'pendingBTCAmount',
+  CollateralizationUI = 'collateralizationUI',
+  Status = 'status'
+}
+// ray test touch >
+
 interface CollateralizationCellProps {
-  settledCollateralization: string | undefined;
-  unsettledCollateralization: string | undefined;
+  // ray test touch <<
+  settledCollateralization: Big | undefined;
+  unsettledCollateralization: Big | undefined;
+  // ray test touch >>
   collateralSecureThreshold: Big;
 }
 
@@ -79,30 +92,33 @@ const CollateralizationCell = ({
   }
 };
 
-// ray test touch <
+// ray test touch <<
 const getCollateralizationColor = (
-  collateralization: string | undefined,
+  collateralization: Big | undefined,
   secureCollateralThreshold: Big
 ): string | undefined => {
   if (collateralization === undefined) return undefined;
 
-  if (new Big(collateralization).gte(secureCollateralThreshold)) {
+  if (collateralization.gte(secureCollateralThreshold)) {
     return clsx('text-interlayConifer', 'font-medium');
   } else {
     // Liquidation
     return clsx('text-interlayCinnabar', 'font-medium');
   }
 };
-// ray test touch >
+// ray test touch >>
 
 interface Vault {
-  vaultId: string;
-  lockedBTCAmount: BitcoinAmount;
-  lockedCollateralTokenAmount: string;
-  pendingBTCAmount: string;
-  status: string;
-  unsettledCollateralization: string | undefined;
-  settledCollateralization: string | undefined;
+  [Accessor.VaultId]: string;
+  [Accessor.LockedCollateralTokenAmount]: string;
+  [Accessor.LockedBTCAmount]: BitcoinAmount;
+  [Accessor.PendingBTCAmount]: string;
+  // ray test touch <<
+  // unsettledCollateralization: string | undefined;
+  // settledCollateralization: string | undefined;
+  [Accessor.CollateralizationUI]: React.ReactNode;
+  // ray test touch >>
+  [Accessor.Status]: string;
 }
 
 const VaultsTable = (): JSX.Element => {
@@ -223,7 +239,7 @@ const VaultsTable = (): JSX.Element => {
     () => [
       {
         Header: t('account_id'),
-        accessor: 'vaultId',
+        accessor: Accessor.VaultId,
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: string }) {
           return <>{shortAddress(value)}</>;
@@ -231,12 +247,12 @@ const VaultsTable = (): JSX.Element => {
       },
       {
         Header: t('locked_collateral'),
-        accessor: 'lockedCollateralTokenAmount',
+        accessor: Accessor.LockedCollateralTokenAmount,
         classNames: ['text-right']
       },
       {
         Header: t('locked_btc'),
-        accessor: 'lockedBTCAmount',
+        accessor: Accessor.LockedBTCAmount,
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: BitcoinAmount }) {
           return displayMonetaryAmount(value);
@@ -244,29 +260,21 @@ const VaultsTable = (): JSX.Element => {
       },
       {
         Header: t('pending_btc'),
-        accessor: 'pendingBTCAmount',
+        accessor: Accessor.PendingBTCAmount,
         classNames: ['text-right'],
         tooltip: t('vault.tip_pending_btc')
       },
+      // ray test touch <<
       {
         Header: t('collateralization'),
-        accessor: '',
+        accessor: Accessor.CollateralizationUI,
         classNames: ['text-left'],
-        tooltip: t('vault.tip_collateralization'),
-        Cell: function FormattedCell({ row: { original } }: { row: { original: Vault } }) {
-          if (relayChainNativeTokenCollateralSecureThreshold === undefined) return;
-
-          return (
-            <CollateralizationCell
-              settledCollateralization={original.settledCollateralization}
-              unsettledCollateralization={original.unsettledCollateralization}
-              collateralSecureThreshold={relayChainNativeTokenCollateralSecureThreshold} />
-          );
-        }
+        tooltip: t('vault.tip_collateralization')
       },
+      // ray test touch >>
       {
         Header: t('status'),
-        accessor: 'status',
+        accessor: Accessor.Status,
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: string }) {
           let statusClasses;
@@ -284,27 +292,30 @@ const VaultsTable = (): JSX.Element => {
         }
       }
     ],
-    [t, relayChainNativeTokenCollateralSecureThreshold]
+    // ray test touch <<
+    [t]
+    // ray test touch >>
   );
 
   const vaults: Array<Vault> | undefined = React.useMemo(() => {
     if (
       vaultsExt &&
-      // ray test touch <
       btcToRelayChainNativeTokenRate &&
+      btcToGovernanceTokenRate &&
       relayChainNativeTokenCollateralLiquidationThreshold &&
+      governanceTokenCollateralLiquidationThreshold &&
       relayChainNativeTokenCollateralSecureThreshold &&
-      // ray test touch >
+      governanceTokenCollateralSecureThreshold &&
       currentActiveBlockNumber
     ) {
-      // ray test touch <
+      // ray test touch <<
       const one = vaultsExt[0];
       const test = one.id;
       const collateral = test.currencies.collateral;
       console.log('ray : ***** test => ', test);
       console.log('ray : ***** collateral => ', collateral);
       console.log('ray : ***** collateral.asToken.type => ', collateral.asToken.type);
-      // ray test touch >
+      // ray test touch >>
       const rawVaults = vaultsExt.map((vaultExt) => {
         const statusLabel = getVaultStatusLabel(
           vaultExt,
@@ -336,30 +347,41 @@ const VaultsTable = (): JSX.Element => {
         );
 
         return {
-          vaultId: vaultExt.id.accountId.toString(),
+          [Accessor.VaultId]: vaultExt.id.accountId.toString(),
           // TODO: fetch collateral reserved
-          lockedBTCAmount: settledTokens,
-          lockedCollateralTokenAmount: displayMonetaryAmount(vaultCollateral),
-          pendingBTCAmount: displayMonetaryAmount(unsettledTokens),
-          status: statusLabel,
-          unsettledCollateralization: unsettledCollateralization?.toString(),
-          settledCollateralization: settledCollateralization?.toString()
+          [Accessor.LockedCollateralTokenAmount]: displayMonetaryAmount(vaultCollateral),
+          [Accessor.LockedBTCAmount]: settledTokens,
+          [Accessor.PendingBTCAmount]: displayMonetaryAmount(unsettledTokens),
+          // ray test touch <<
+          // unsettledCollateralization: unsettledCollateralization?.toString(),
+          // settledCollateralization: settledCollateralization?.toString(),
+          [Accessor.CollateralizationUI]: (
+            <CollateralizationCell
+              settledCollateralization={settledCollateralization}
+              unsettledCollateralization={unsettledCollateralization}
+              collateralSecureThreshold={relayChainNativeTokenCollateralSecureThreshold} />
+          ),
+          // ray test touch >>
+          [Accessor.Status]: statusLabel
         };
       });
 
       const sortedVaults = rawVaults.sort((vaultA, vaultB) => {
-        const vaultALockedBTC = vaultA.lockedBTCAmount;
-        const vaultBLockedBTC = vaultB.lockedBTCAmount;
+        const vaultALockedBTC = vaultA[Accessor.LockedBTCAmount];
+        const vaultBLockedBTC = vaultB[Accessor.LockedBTCAmount];
         return vaultBLockedBTC.gt(vaultALockedBTC) ? 1 : vaultALockedBTC.gt(vaultBLockedBTC) ? -1 : 0;
       });
 
       return sortedVaults;
     }
   }, [
-    btcToRelayChainNativeTokenRate,
     currentActiveBlockNumber,
+    btcToRelayChainNativeTokenRate,
+    btcToGovernanceTokenRate,
     relayChainNativeTokenCollateralLiquidationThreshold,
+    governanceTokenCollateralLiquidationThreshold,
     relayChainNativeTokenCollateralSecureThreshold,
+    governanceTokenCollateralSecureThreshold,
     t,
     vaultsExt
   ]);
@@ -434,7 +456,7 @@ const VaultsTable = (): JSX.Element => {
                 key={key}
                 className={clsx(rowClassName, 'cursor-pointer')}
                 {...restRowProps}
-                onClick={handleRowClick(row.original.vaultId)}
+                onClick={handleRowClick(row.original[Accessor.VaultId])}
               >
                 {/* TODO: should type properly */}
                 {row.cells.map((cell: any) => {
