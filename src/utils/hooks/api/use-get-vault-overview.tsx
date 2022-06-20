@@ -1,4 +1,5 @@
 import { useQueries, UseQueryResult } from 'react-query';
+import { useSelector } from 'react-redux';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import {
@@ -14,7 +15,7 @@ import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
 import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
 import { StoreType } from 'common/types/util.types';
-import { useSelector } from 'react-redux';
+import { VAULT_WRAPPED } from 'config/vaults';
 
 interface VaultOverview {
   apy: Big;
@@ -50,7 +51,7 @@ const getVaultOverview = async (
     collateralization,
     issues: issuesCount.data.issuesConnection.totalCount,
     collateralId: tokenIdLiteral,
-    wrappedId: CurrencyIdLiteral.KBTC
+    wrappedId: VAULT_WRAPPED
   };
 };
 

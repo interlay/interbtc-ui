@@ -1,5 +1,6 @@
 const KintIcon = (): JSX.Element => (
   <svg role='img' width='100%' viewBox='0 0 60 60' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <title>KINT</title>
     <circle cx='30' cy='30' r='29.5' fill='#000' stroke='#fff' />
     <path
       d='M36.09 23.944a8.366 8.366 0 0 0-5.89-2.407h-.084a8.42 8.42 0 1 0 .084 16.84h.084a8.42 8.42 0 0 0 5.806-14.433Z'
