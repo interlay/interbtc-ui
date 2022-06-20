@@ -290,12 +290,13 @@ const VaultsTable = (): JSX.Element => {
         if (collateral.isToken === false) {
           throw new Error('Non token collateral is not supported!');
         }
-        const collateralTokenType = collateral.asToken.type;
+        const collateralTokenSymbol = collateral.asToken.type;
+        
 
         let collateralLiquidationThreshold: Big;
         let collateralSecureThreshold: Big;
         let btcToCollateralTokenRate: BTCToCollateralTokenRate;
-        switch (collateralTokenType) {
+        switch (collateralTokenSymbol) {
           case RELAY_CHAIN_NATIVE_TOKEN_SYMBOL: {
             collateralLiquidationThreshold = relayChainNativeTokenCollateralLiquidationThreshold;
             collateralSecureThreshold = relayChainNativeTokenCollateralSecureThreshold;
@@ -338,7 +339,7 @@ const VaultsTable = (): JSX.Element => {
         return {
           [Accessor.VaultId]: vaultExt.id.accountId.toString(),
           // TODO: fetch collateral reserved
-          [Accessor.LockedCollateralTokenAmount]: displayMonetaryAmount(vaultCollateral),
+          [Accessor.LockedCollateralTokenAmount]: `${displayMonetaryAmount(vaultCollateral)} ${collateralTokenSymbol}`,
           [Accessor.LockedBTCAmount]: settledTokens,
           [Accessor.PendingBTCAmount]: displayMonetaryAmount(unsettledTokens),
           [Accessor.CollateralizationUI]: (
