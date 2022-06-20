@@ -33,6 +33,9 @@ import { StoreType } from 'common/types/util.types';
 
 enum Accessor {
   VaultId = 'vaultId',
+  // ray test touch <<
+  Collateral = 'collateral',
+  // ray test touch >>
   LockedCollateralTokenAmount = 'lockedCollateralTokenAmount',
   LockedBTCAmount = 'lockedBTCAmount',
   PendingBTCAmount = 'pendingBTCAmount',
@@ -226,6 +229,13 @@ const VaultsTable = (): JSX.Element => {
           return <>{shortAddress(value)}</>;
         }
       },
+      // ray test touch <<
+      {
+        Header: t('collateral'),
+        accessor: Accessor.Collateral,
+        classNames: ['text-center']
+      },
+      // ray test touch >>
       {
         Header: t('locked_collateral'),
         accessor: Accessor.LockedCollateralTokenAmount,
@@ -338,6 +348,9 @@ const VaultsTable = (): JSX.Element => {
 
         return {
           [Accessor.VaultId]: vaultExt.id.accountId.toString(),
+          // ray test touch <<
+          [Accessor.Collateral]: collateralTokenSymbol,
+          // ray test touch >>
           // TODO: fetch collateral reserved
           [Accessor.LockedCollateralTokenAmount]: `${displayMonetaryAmount(vaultCollateral)} ${collateralTokenSymbol}`,
           [Accessor.LockedBTCAmount]: settledTokens,

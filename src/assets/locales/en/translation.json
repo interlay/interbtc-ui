@@ -117,6 +117,7 @@
   "select_vault": "Please Select Vault",
   "not_enough_vault_capacity": "None vault has enough capacity.",
   "view_all_transactions_on_subscan": "View all transactions on Subscan",
+  "collateral": "Collateral",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
