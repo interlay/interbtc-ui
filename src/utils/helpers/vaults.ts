@@ -5,7 +5,6 @@ import { BitcoinAmount, BitcoinUnit, MonetaryAmount, Currency } from '@interlay/
 
 import { BTCToCollateralTokenRate } from 'types/currency';
 
-// ray test touch <
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
   tokens: BitcoinAmount,
@@ -18,9 +17,7 @@ const getCollateralization = (
     return undefined;
   }
 };
-// ray test touch >
 
-// ray test touch <
 const getVaultStatusLabel = (
   vaultExt: VaultExt<BitcoinUnit>,
   currentActiveBlockNumber: number,
@@ -62,6 +59,5 @@ const getVaultStatusLabel = (
 
   return statusLabel;
 };
-// ray test touch >
 
 export { getCollateralization, getVaultStatusLabel };

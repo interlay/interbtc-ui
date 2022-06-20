@@ -139,7 +139,6 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(relayChainNativeTokenCollateralSecureThresholdError);
-  // ray test touch <<
   // TODO: should use https://react-query.tanstack.com/guides/parallel-queries
   const {
     isIdle: governanceTokenCollateralSecureThresholdIdle,
@@ -154,8 +153,6 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(governanceTokenCollateralSecureThresholdError);
-  console.log('ray : ***** governanceTokenCollateralSecureThreshold?.toString()', governanceTokenCollateralSecureThreshold?.toString());
-  // ray test touch >>
 
   const {
     isIdle: relayChainNativeTokenCollateralLiquidationThresholdIdle,
@@ -170,7 +167,6 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(relayChainNativeTokenCollateralLiquidationThresholdError);
-  // ray test touch <<
   const {
     isIdle: governanceTokenCollateralLiquidationThresholdIdle,
     isLoading: governanceTokenCollateralLiquidationThresholdLoading,
@@ -184,8 +180,6 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(governanceTokenCollateralLiquidationThresholdError);
-  console.log('ray : ***** governanceTokenCollateralLiquidationThreshold?.toString()', governanceTokenCollateralLiquidationThreshold?.toString());
-  // ray test touch >>
 
   const {
     isIdle: btcToRelayChainNativeTokenRateIdle,
@@ -200,7 +194,6 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(btcToRelayChainNativeTokenRateError);
-  // ray test touch <<
   const {
     isIdle: btcToGovernanceTokenRateIdle,
     isLoading: btcToGovernanceTokenRateLoading,
@@ -214,8 +207,6 @@ const VaultsTable = (): JSX.Element => {
     }
   );
   useErrorHandler(btcToGovernanceTokenRateError);
-  console.log('ray : ***** btcToGovernanceTokenRate?.toString()', btcToGovernanceTokenRate?.toString());
-  // ray test touch >>
 
   const { isIdle: vaultsExtIdle, isLoading: vaultsExtLoading, data: vaultsExt, error: vaultsExtError } = useQuery<
     Array<VaultExt<BitcoinUnit>>,
@@ -295,7 +286,6 @@ const VaultsTable = (): JSX.Element => {
       currentActiveBlockNumber
     ) {
       const rawVaults = vaultsExt.map((vaultExt) => {
-        // ray test touch <<
         const collateral = vaultExt.id.currencies.collateral;
         if (collateral.isToken === false) {
           throw new Error('Non token collateral is not supported!');
@@ -321,16 +311,13 @@ const VaultsTable = (): JSX.Element => {
           default:
             throw new Error('Something went wrong with collateralTokenType!');
         }
-        // ray test touch >>
 
         const statusLabel = getVaultStatusLabel(
           vaultExt,
           currentActiveBlockNumber,
-          // ray test touch <<
           collateralLiquidationThreshold,
           collateralSecureThreshold,
           btcToCollateralTokenRate,
-          // ray test touch >>
           t
         );
 
@@ -339,17 +326,13 @@ const VaultsTable = (): JSX.Element => {
         const settledCollateralization = getCollateralization(
           vaultCollateral,
           settledTokens,
-          // ray test touch <<
           btcToCollateralTokenRate
-          // ray test touch >>
         );
         const unsettledTokens = vaultExt.toBeIssuedTokens;
         const unsettledCollateralization = getCollateralization(
           vaultCollateral,
           unsettledTokens.add(settledTokens),
-          // ray test touch <<
           btcToCollateralTokenRate
-          // ray test touch >>
         );
 
         return {
