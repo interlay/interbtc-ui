@@ -294,15 +294,16 @@ const VaultsTable = (): JSX.Element => {
       governanceTokenCollateralSecureThreshold &&
       currentActiveBlockNumber
     ) {
-      // ray test touch <<
-      const one = vaultsExt[0];
-      const test = one.id;
-      const collateral = test.currencies.collateral;
-      console.log('ray : ***** test => ', test);
-      console.log('ray : ***** collateral => ', collateral);
-      console.log('ray : ***** collateral.asToken.type => ', collateral.asToken.type);
-      // ray test touch >>
       const rawVaults = vaultsExt.map((vaultExt) => {
+        // ray test touch <<
+        const collateral = vaultExt.id.currencies.collateral;
+        if (collateral.isToken === false) {
+          throw new Error('Non token collateral is not supported!');
+        }
+        const collateralTokenType = collateral.asToken.type;
+        console.log('ray : ***** collateralTokenType => ', collateralTokenType);
+        // ray test touch >>
+
         const statusLabel = getVaultStatusLabel(
           vaultExt,
           currentActiveBlockNumber,
