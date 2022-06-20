@@ -17,10 +17,10 @@ import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+} from 'services/fetchers/cumulative-volumes-fetcher';
 import { WRAPPED_TOKEN } from 'config/relay-chains';
 
-const nowAtfirstLoad = new Date();
+const nowAtFirstLoad = new Date();
 
 const UpperContent = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
@@ -44,7 +44,7 @@ const UpperContent = (): JSX.Element => {
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [CUMULATIVE_VOLUMES_FETCHER, 'Redeemed' as VolumeType, [nowAtfirstLoad], WRAPPED_TOKEN],
+    [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, [nowAtFirstLoad], WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);

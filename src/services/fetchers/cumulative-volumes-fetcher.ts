@@ -6,7 +6,11 @@ import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetch
 const CUMULATIVE_VOLUMES_FETCHER = 'cumulative-volumes-fetcher';
 
 // TODO: should type properly (`Relay`)
-type VolumeType = 'Issue' | 'Redeem';
+enum VolumeType {
+  Issued = 'Issued',
+  Redeemed = 'Redeemed',
+  Collateral = 'Collateral'
+}
 type VolumeDataPoint<U extends CurrencyUnit> = {
   amount: MonetaryAmount<Currency<U>, U>;
   tillTimestamp: Date;
@@ -61,7 +65,6 @@ const cumulativeVolumesFetcher = async <U extends CurrencyUnit>(
     queryKey: [GRAPHQL_FETCHER, query]
   });
 
-  // TODO: should type properly (`Relay`)
   const volumes = volumesData?.data || {};
 
   return Object.values(volumes).map(([volumeData], i) => ({
@@ -81,8 +84,8 @@ type CumulativeVolumesFetcherParams<U extends CurrencyUnit> =
     ]
   | [queryKey: string, type: VolumeType, cutoffTimestamps: Date[], returnCurrency: Currency<U>];
 
-export { CUMULATIVE_VOLUMES_FETCHER };
+export { CUMULATIVE_VOLUMES_FETCHER, VolumeType };
 
-export type { CumulativeVolumesFetcherParams, VolumeType, VolumeDataPoint };
+export type { CumulativeVolumesFetcherParams, VolumeDataPoint };
 
 export default cumulativeVolumesFetcher;

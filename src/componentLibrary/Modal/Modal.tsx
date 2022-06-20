@@ -11,12 +11,7 @@ interface ModalProps {
   initialFocusRef?: MutableRefObject<HTMLElement | null>;
 }
 
-const Modal = ({
-  open,
-  onClose,
-  children,
-  initialFocusRef
-}: ModalProps): JSX.Element | null => {
+const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.Element | null => {
   const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 

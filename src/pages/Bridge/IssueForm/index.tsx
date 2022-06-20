@@ -138,12 +138,7 @@ const IssueForm = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [
-          theFeeRate,
-          theDepositRate,
-          theDustValue,
-          theBtcToGovernanceToken
-        ] = await Promise.all([
+        const [theFeeRate, theDepositRate, theDustValue, theBtcToGovernanceToken] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
           window.bridge.fee.getIssueFee(),

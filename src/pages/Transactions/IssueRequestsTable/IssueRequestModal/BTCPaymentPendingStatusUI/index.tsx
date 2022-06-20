@@ -32,10 +32,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
 
     (async () => {
       try {
-        const [
-          issuePeriodInBlocks,
-          requestById
-        ] = await Promise.all([
+        const [issuePeriodInBlocks, requestById] = await Promise.all([
           window.bridge.issue.getIssuePeriod(),
           window.bridge.issue.getRequestById(request.id)
         ]);
@@ -47,7 +44,8 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         const requestCreationTimestamp = request.request?.timestamp ?? Date.now();
 
         const requestTimestamp = Math.floor(new Date(requestCreationTimestamp).getTime() / 1000);
-        const theInitialLeftSeconds = requestTimestamp + maxIssuePeriodInBlocks * BLOCK_TIME - Math.floor(Date.now() / 1000);
+        const theInitialLeftSeconds =
+          requestTimestamp + maxIssuePeriodInBlocks * BLOCK_TIME - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
       } catch (error) {
         // TODO: should add error handling UX
