@@ -40,9 +40,6 @@ const LockedCollateralsCard = (): JSX.Element => {
 
   const relayChainNativeTokenPriceInUSD = prices.collateralToken?.usd;
   const governanceTokenPriceInUSD = prices.governanceToken?.usd;
-  if (relayChainNativeTokenPriceInUSD === undefined || governanceTokenPriceInUSD === undefined) {
-    throw new Error('Something went wrong with price feeds!');
-  }
 
   const cumulativeUSDVolumes = React.useMemo(() => {
     if (cumulativeRelayChainNativeTokenVolumes === undefined || cumulativeGovernanceTokenVolumes === undefined) return;
@@ -54,12 +51,16 @@ const LockedCollateralsCard = (): JSX.Element => {
           {
             cumulativeVolumes: cumulativeRelayChainNativeTokenVolumes,
             tokenPriceInUSD: relayChainNativeTokenPriceInUSD
-          },
-          {
-            cumulativeVolumes: cumulativeGovernanceTokenVolumes,
-            tokenPriceInUSD: governanceTokenPriceInUSD
           }
         ];
+
+        // Includes governance token data only if the price is available.
+        if (governanceTokenPriceInUSD !== undefined) {
+          collaterals.push({
+            cumulativeVolumes: cumulativeGovernanceTokenVolumes,
+            tokenPriceInUSD: governanceTokenPriceInUSD
+          });
+        }
 
         let sumValueInUSD = 0;
         for (const collateral of collaterals) {
