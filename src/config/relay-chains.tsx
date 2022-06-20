@@ -116,7 +116,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     RELAY_CHAIN_NATIVE_TOKEN = Polkadot as Currency<CollateralUnit>;
     GOVERNANCE_TOKEN = Interlay as GovernanceToken;
     VOTE_GOVERNANCE_TOKEN = Interlay as VoteGovernanceToken;
-    WRAPPED_TOKEN_SYMBOL = 'interBTC';
+    WRAPPED_TOKEN_SYMBOL = 'IBTC';
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = 'DOT';
     GOVERNANCE_TOKEN_SYMBOL = 'INTR';
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vINTR';
