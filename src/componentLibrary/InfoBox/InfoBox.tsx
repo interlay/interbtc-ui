@@ -6,19 +6,19 @@ interface InfoBoxProps {
   title: string;
   text: string;
   ctaText?: string;
-  ctaAction?: () => void;
+  ctaOnClick?: () => void;
 }
 
-const InfoBox = ({ title, text, ctaText, ctaAction }: InfoBoxProps): JSX.Element => {
+const InfoBox = ({ title, text, ctaText, ctaOnClick }: InfoBoxProps): JSX.Element => {
   return (
     <InfoBoxWrapper>
       <div>
         <InfoBoxHeader>{title}</InfoBoxHeader>
         <InfoBoxText>{text}</InfoBoxText>
       </div>
-      {ctaAction && (
+      {ctaOnClick && (
         <div>
-          <CTA variant='primary' onClick={ctaAction}>
+          <CTA variant='primary' onClick={ctaOnClick}>
             {ctaText}
           </CTA>
         </div>

@@ -14,7 +14,7 @@ const WithCTA = Template.bind({});
 WithCTA.args = {
   title: 'My vaults at risk',
   text: '0',
-  ctaAction: () => {
+  ctaOnClick: () => {
     alert('CTA action');
   },
   ctaText: 'Claim'
