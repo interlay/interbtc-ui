@@ -18,7 +18,7 @@ const InfoBox = ({ title, text, ctaText, ctaAction }: InfoBoxProps): JSX.Element
       </div>
       {ctaAction && (
         <div>
-          <CTA variant='primary' onSubmit={ctaAction}>
+          <CTA variant='primary' onClick={ctaAction}>
             {ctaText}
           </CTA>
         </div>

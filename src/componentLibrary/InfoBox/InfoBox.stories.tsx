@@ -15,7 +15,7 @@ WithCTA.args = {
   title: 'My vaults at risk',
   text: '0',
   ctaAction: () => {
-    return null;
+    alert('CTA action');
   },
   ctaText: 'Claim'
 };
