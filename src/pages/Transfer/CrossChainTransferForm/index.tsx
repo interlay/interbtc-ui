@@ -46,6 +46,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   // the application level.
   const [api, setApi] = React.useState<RelayChainApi | undefined>(undefined);
   const [relayChainBalance, setRelayChainBalance] = React.useState<RelayChainMonetaryAmount | undefined>(undefined);
+  const [destinationRelayChainBalance, setDestinationRelayChainBalance] = React.useState<
+    RelayChainMonetaryAmount | undefined
+  >(undefined);
   const [fromChain, setFromChain] = React.useState<ChainType | undefined>(ChainType.RelayChain);
   const [toChain, setToChain] = React.useState<ChainType | undefined>(ChainType.Parachain);
   const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
@@ -141,7 +144,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       return t('insufficient_funds');
       // Check transferred amount won't be below existential deposit when fees are deducted
       // This check is redundant if the relay chain balance is above zero
-    } else if (relayChainBalance?.isZero() && transferAmount.sub(transferFee).lt(existentialDeposit)) {
+    } else if (destinationRelayChainBalance?.isZero() && transferAmount.sub(transferFee).lt(existentialDeposit)) {
       return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_maintain_existential_depoit');
       // Check the transfer amount is more than the fee
     } else if (transferAmount.lte(transferFee)) {
@@ -177,7 +180,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const fetchRelayChainBalance = async () => {
       try {
         const balance: any = await getRelayChainBalance(api, destination?.address);
-        setRelayChainBalance(balance.sub(transferFee));
+        setDestinationRelayChainBalance(balance.sub(transferFee));
       } catch (error) {
         handleError(error);
       }
@@ -185,6 +188,23 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     fetchRelayChainBalance();
   }, [api, destination, handleError]);
+
+  React.useEffect(() => {
+    if (!api) return;
+    if (!handleError) return;
+    if (!address) return;
+
+    const fetchRelayChainBalance = async () => {
+      try {
+        const balance: any = await getRelayChainBalance(api, address);
+        setRelayChainBalance(balance.sub(transferFee));
+      } catch (error) {
+        handleError(error);
+      }
+    };
+
+    fetchRelayChainBalance();
+  }, [api, address, handleError]);
 
   const handleSetFromChain = (chain: ChainOption) => {
     setFromChain(chain.type);
