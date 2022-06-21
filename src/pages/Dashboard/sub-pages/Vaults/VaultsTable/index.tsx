@@ -31,16 +31,6 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
-enum Accessor {
-  VaultId = 'vaultId',
-  Collateral = 'collateral',
-  LockedCollateralTokenAmount = 'lockedCollateralTokenAmount',
-  LockedBTCAmount = 'lockedBTCAmount',
-  PendingBTCAmount = 'pendingBTCAmount',
-  CollateralizationUI = 'collateralizationUI',
-  Status = 'status'
-}
-
 interface CollateralizationCellProps {
   settledCollateralization: Big | undefined;
   unsettledCollateralization: Big | undefined;
@@ -102,6 +92,16 @@ const getCollateralizationColor = (
     return clsx('text-interlayCinnabar', 'font-medium');
   }
 };
+
+enum Accessor {
+  VaultId = 'vaultId',
+  Collateral = 'collateral',
+  LockedCollateralTokenAmount = 'lockedCollateralTokenAmount',
+  LockedBTCAmount = 'lockedBTCAmount',
+  PendingBTCAmount = 'pendingBTCAmount',
+  CollateralizationUI = 'collateralizationUI',
+  Status = 'status'
+}
 
 interface Vault {
   [Accessor.VaultId]: string;
