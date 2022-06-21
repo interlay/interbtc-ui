@@ -1,5 +1,5 @@
 import { CurrencySymbols } from 'types/currency';
-import { BtcIcon, DotIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
+import { BtcIcon, DotIcon, InterBtcIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
 import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
 
 interface CoinIconProps extends IconWrapperProps {
@@ -13,6 +13,8 @@ const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
         <BtcIcon />
       ) : coin === CurrencySymbols.DOT ? (
         <DotIcon />
+      ) : coin === CurrencySymbols.INTERBTC ? (
+        <InterBtcIcon />
       ) : coin === CurrencySymbols.KBTC ? (
         <KbtcIcon />
       ) : coin === CurrencySymbols.KSM ? (

@@ -7,7 +7,7 @@ const Template: Story<CoinIconProps> = (args) => <CoinIcon {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  coin: CurrencySymbols.KBTC,
+  coin: CurrencySymbols.INTERBTC,
   size: 'small'
 };
 
