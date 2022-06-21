@@ -35,6 +35,7 @@ import {
 const TRANSFER_AMOUNT = 'transfer-amount';
 
 const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, RELAY_CHAIN_NATIVE_TOKEN);
+console.log('transferFee', transferFee);
 
 type CrossChainTransferFormData = {
   [TRANSFER_AMOUNT]: string;
