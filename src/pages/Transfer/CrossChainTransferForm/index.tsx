@@ -135,6 +135,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       ? newMonetaryAmount(getExistentialDeposit(api), RELAY_CHAIN_NATIVE_TOKEN)
       : newMonetaryAmount('0', RELAY_CHAIN_NATIVE_TOKEN);
 
+    console.log('existential', existentialDeposit, displayMonetaryAmount(existentialDeposit));
     // TODO: we need to handle and validate transfer fees properly. Implemented here initially
     // because it was an issue during testing.
     if (collateralTokenTransferableBalance.lt(transferAmount)) {
