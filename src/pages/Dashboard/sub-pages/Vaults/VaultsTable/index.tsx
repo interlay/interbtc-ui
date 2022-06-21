@@ -74,11 +74,11 @@ const CollateralizationCell = ({
 
 const getCollateralizationColor = (
   collateralization: Big | undefined,
-  secureCollateralThreshold: Big
+  collateralSecureThreshold: Big
 ): string | undefined => {
   if (collateralization === undefined) return undefined;
 
-  if (collateralization.gte(secureCollateralThreshold)) {
+  if (collateralization.gte(collateralSecureThreshold)) {
     return clsx('text-interlayConifer', 'font-medium');
   } else {
     // Liquidation
@@ -341,7 +341,7 @@ const VaultsTable = (): JSX.Element => {
             <CollateralizationCell
               settledCollateralization={settledCollateralization}
               unsettledCollateralization={unsettledCollateralization}
-              collateralSecureThreshold={relayChainNativeTokenCollateralSecureThreshold}
+              collateralSecureThreshold={collateralSecureThreshold}
             />
           ),
           [Accessor.Status]: statusLabel
