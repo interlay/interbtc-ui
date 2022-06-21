@@ -22,7 +22,12 @@ import InterlayTable, {
   InterlayTh,
   InterlayTd
 } from 'components/UI/InterlayTable';
-import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
+import {
+  RELAY_CHAIN_NATIVE_TOKEN,
+  GOVERNANCE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  GOVERNANCE_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import { getCollateralization, getVaultStatusLabel } from 'utils/helpers/vaults';
 import { PAGES, URL_PARAMETERS } from 'utils/constants/links';
 import { shortAddress, displayMonetaryAmount } from 'common/utils/utils';
@@ -50,24 +55,12 @@ const CollateralizationCell = ({
     return (
       <>
         <div>
-          <p
-            className={getCollateralizationColor(
-              settledCollateralization,
-              collateralSecureThreshold
-            )}
-          >
-            {settledCollateralization === undefined
-              ? '∞'
-              : roundTwoDecimals(settledCollateralization.toString()) + '%'}
+          <p className={getCollateralizationColor(settledCollateralization, collateralSecureThreshold)}>
+            {settledCollateralization === undefined ? '∞' : roundTwoDecimals(settledCollateralization.toString()) + '%'}
           </p>
           <p className='text-xs'>
             <span>{t('vault.pending_table_subcell')}</span>
-            <span
-              className={getCollateralizationColor(
-                unsettledCollateralization,
-                collateralSecureThreshold
-              )}
-            >
+            <span className={getCollateralizationColor(unsettledCollateralization, collateralSecureThreshold)}>
               {unsettledCollateralization === undefined
                 ? '∞'
                 : roundTwoDecimals(unsettledCollateralization.toString()) + '%'}
@@ -297,7 +290,6 @@ const VaultsTable = (): JSX.Element => {
           throw new Error('Non token collateral is not supported!');
         }
         const collateralTokenSymbol = collateral.asToken.type;
-        
 
         let collateralLiquidationThreshold: Big;
         let collateralSecureThreshold: Big;
@@ -330,11 +322,7 @@ const VaultsTable = (): JSX.Element => {
 
         const vaultCollateral = vaultExt.backingCollateral;
         const settledTokens = vaultExt.issuedTokens;
-        const settledCollateralization = getCollateralization(
-          vaultCollateral,
-          settledTokens,
-          btcToCollateralTokenRate
-        );
+        const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
         const unsettledTokens = vaultExt.toBeIssuedTokens;
         const unsettledCollateralization = getCollateralization(
           vaultCollateral,
@@ -353,7 +341,8 @@ const VaultsTable = (): JSX.Element => {
             <CollateralizationCell
               settledCollateralization={settledCollateralization}
               unsettledCollateralization={unsettledCollateralization}
-              collateralSecureThreshold={relayChainNativeTokenCollateralSecureThreshold} />
+              collateralSecureThreshold={relayChainNativeTokenCollateralSecureThreshold}
+            />
           ),
           [Accessor.Status]: statusLabel
         };
