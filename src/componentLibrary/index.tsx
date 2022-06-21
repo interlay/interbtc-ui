@@ -10,6 +10,9 @@ export type { CoinPairProps } from './CoinPair';
 export { CoinIcon } from './CoinIcon';
 export type { CoinIconProps } from './CoinIcon';
 
+export { InfoBox } from './InfoBox';
+export type { InfoBoxProps } from './InfoBox';
+
 export { Grid, GridItem } from './Grid';
 export type { GridProps, GridItemProps } from './Grid';
 

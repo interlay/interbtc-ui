@@ -25,6 +25,10 @@
   font-style: normal;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --fonts-primary: 'airbnb-cereal';
 
@@ -49,8 +53,10 @@
   --text-5xl: 3rem;
   --text-6xl: 4rem;
 
+  --line-height-s: 1.125rem;
   --line-height-base: 1.3125rem;
   --line-height-lg: 1.4375rem;
+  --line-height-xl: 2.5rem;
 
   --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;
