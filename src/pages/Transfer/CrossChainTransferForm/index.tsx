@@ -177,7 +177,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!handleError) return;
     if (!destination) return;
 
-    const fetchRelayChainBalance = async () => {
+    const fetchDestinationRelayChainBalance = async () => {
       try {
         const balance: any = await getRelayChainBalance(api, destination?.address);
         setDestinationRelayChainBalance(balance.sub(transferFee));
@@ -186,7 +186,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       }
     };
 
-    fetchRelayChainBalance();
+    fetchDestinationRelayChainBalance();
   }, [api, destination, handleError]);
 
   React.useEffect(() => {
