@@ -11,7 +11,6 @@ export const Card = styled.div`
   font-family: ${theme.font.primary};
   gap: ${theme.spacing.spacing8};
   padding: ${theme.spacing.spacing8} ${theme.spacing.spacing4};
-  width: 386px;
 `;
 
 export const CardHeader = styled.header`
