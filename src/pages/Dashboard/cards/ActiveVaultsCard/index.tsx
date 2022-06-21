@@ -76,7 +76,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
         <Stats
           leftPart={
             <>
-              <StatsDt>{t('dashboard.vault.active_vaults')}</StatsDt>
+              <StatsDt>{t('dashboard.vault.vaults')}</StatsDt>
               <StatsDd>{vaultRegistrations.length}</StatsDd>
             </>
           }
