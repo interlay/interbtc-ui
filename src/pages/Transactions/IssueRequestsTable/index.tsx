@@ -35,6 +35,7 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
+import { getColorShade } from 'utils/helpers/colors';
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -196,20 +197,20 @@ const IssueRequestsTable = (): JSX.Element => {
             case IssueStatus.Completed: {
               icon = <FaCheck />;
               notice = t('completed');
-              colorClassName = 'text-interlayConifer';
+              colorClassName = getColorShade('green');
               break;
             }
             case IssueStatus.Cancelled:
             case IssueStatus.Expired: {
               icon = <FaRegTimesCircle />;
               notice = t('cancelled');
-              colorClassName = 'text-interlayCinnabar';
+              colorClassName = getColorShade('yellow');
               break;
             }
             default: {
               icon = <FaRegClock />;
               notice = t('pending');
-              colorClassName = 'text-interlayCalifornia';
+              colorClassName = getColorShade('red');
               break;
             }
           }

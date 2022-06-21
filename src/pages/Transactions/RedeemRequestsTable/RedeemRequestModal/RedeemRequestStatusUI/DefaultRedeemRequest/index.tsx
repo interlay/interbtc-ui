@@ -10,6 +10,7 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -77,13 +78,13 @@ const DefaultRedeemRequest = ({ request }: Props): JSX.Element => {
   return (
     <RequestWrapper>
       <h2 className={clsx('text-3xl', 'font-medium')}>{t('received')}</h2>
-      <Ring48 className='ring-interlayCalifornia'>
+      <Ring48 className={getColorShade('yellow', 'ring')}>
         <Ring48Title>{t('redeem_page.waiting_for')}</Ring48Title>
         <Ring48Title>{t('confirmations')}</Ring48Title>
-        <Ring48Value className='text-interlayConifer'>
+        <Ring48Value className={getColorShade('green')}>
           {`${request.backingPayment.confirmations || 0}/${stableBitcoinConfirmations}`}
         </Ring48Value>
-        <Ring48Value className='text-interlayConifer'>
+        <Ring48Value className={getColorShade('green')}>
           {`${requestConfirmations}/${stableParachainConfirmations}`}
         </Ring48Value>
       </Ring48>

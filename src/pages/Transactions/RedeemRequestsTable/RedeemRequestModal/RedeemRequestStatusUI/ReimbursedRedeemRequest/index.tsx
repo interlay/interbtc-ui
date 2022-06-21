@@ -20,6 +20,7 @@ import {
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -70,7 +71,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
 
   return (
     <RequestWrapper>
-      <h2 className={clsx('text-3xl', 'font-medium', 'text-interlayConifer')}>{t('redeem_page.reimburse_success')}</h2>
+      <h2 className={clsx('text-3xl', 'font-medium', getColorShade('green'))}>{t('redeem_page.reimburse_success')}</h2>
       <p className='w-full'>
         {t('redeem_page.burn_notice', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
@@ -78,11 +79,11 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
         })}
       </p>
       <p className='font-medium'>
-        <span className='text-interlayCinnabar'>
+        <span className={getColorShade('red')}>
           {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
         </span>
         <span>&nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin?.usd)})`}</span>
-        <span className='text-interlayCinnabar'>&nbsp;{t('redeem_page.reimbursed').toLowerCase()}</span>.
+        <span className={getColorShade('red')}>&nbsp;{t('redeem_page.reimbursed').toLowerCase()}</span>.
       </p>
       <p className='font-medium'>
         <PrimaryColorSpan>{t('redeem_page.recover_receive_dot')}</PrimaryColorSpan>
