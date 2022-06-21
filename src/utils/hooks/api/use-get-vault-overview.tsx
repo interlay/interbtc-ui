@@ -17,18 +17,28 @@ import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
 import { StoreType } from 'common/types/util.types';
 import { VAULT_WRAPPED } from 'config/vaults';
 
-interface VaultOverview {
+interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
   issues: number;
   collateralId: CurrencyIdLiteral;
   wrappedId: CurrencyIdLiteral;
+  lockedCollateral: number;
+  usdRewards: number;
+  vaultAtRisk: boolean;
+}
+
+interface VaultOverview {
+  vaults: Array<VaultData>;
+  totalLocked: number;
+  totalUsdRewards: number;
+  totalAtRisk: number;
 }
 
 const getVaultOverview = async (
   vault: VaultExt<BitcoinUnit>,
   accountId: AccountId
-): Promise<VaultOverview> => {
+): Promise<VaultData> => {
   const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
 
   const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
@@ -51,11 +61,14 @@ const getVaultOverview = async (
     collateralization,
     issues: issuesCount.data.issuesConnection.totalCount,
     collateralId: tokenIdLiteral,
-    wrappedId: VAULT_WRAPPED
+    wrappedId: VAULT_WRAPPED,
+    lockedCollateral: 1324.24,
+    usdRewards: 10.23,
+    vaultAtRisk: true
   };
 };
 
-const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOverview> => {
+const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview => {
   // TODO: can we handle this check at the application level rather than in components and utilties?
   // https://www.notion.so/interlay/Handle-api-loaded-check-at-application-level-38fe5d146c8143a88cef2dde7b0e19d8
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -74,7 +87,20 @@ const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOver
     })
   );
 
-  return vaultData.map((data: any) => data.data).filter(data => data !== undefined);
+  const parsedVaults: Array<VaultData> = vaultData.map((data: any) => data.data).filter(data => data !== undefined);
+  
+  const totalLocked = parsedVaults.reduce((a, b) => {
+      return a + b.lockedCollateral;
+    }, 0);
+
+    const totalUsdRewards = parsedVaults.reduce((a, b) => {
+      return a + b.usdRewards;
+    }, 0);
+
+    const totalAtRisk = parsedVaults.map((vault) => vault.vaultAtRisk).length;
+
+
+  return { vaults: parsedVaults, totalLocked, totalUsdRewards, totalAtRisk };
 };
 
 export { useGetVaultOverview };
