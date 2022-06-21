@@ -89,7 +89,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
         <PrimaryColorSpan>
           &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`}
         </PrimaryColorSpan>
-        <span>&nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.collateralToken?.usd)})`}</span>
+        <span>&nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)})`}</span>
         <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}</PrimaryColorSpan>.
       </p>
       <div className='w-full'>
@@ -110,7 +110,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(burnCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.collateralToken?.usd)}
+          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
         />
         <PriceInfo
           className='w-full'
@@ -127,7 +127,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)}
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
         />
         <Hr2 className={clsx('border-t-2', 'my-2.5')} />
         <PriceInfo
@@ -145,7 +145,7 @@ const ReimbursedRedeemRequest = ({ request }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(collateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(collateralTokenAmount, prices.collateralToken?.usd)}
+          approxUSD={getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)}
         />
       </div>
       <ExternalLink className='text-sm' href={getPolkadotLink(request.request.height.absolute)}>

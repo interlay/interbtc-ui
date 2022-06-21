@@ -139,7 +139,9 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
           <PrimaryColorSpan>
             &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
           </PrimaryColorSpan>
-          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)})`}</span>
+          <span>
+            &nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)})`}
+          </span>
           <span>
             &nbsp;
             {t('redeem_page.compensation', {
@@ -172,7 +174,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
-                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)
+                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)
                 })}
               </span>
               .
@@ -199,7 +201,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
-                  amountPrice: getUsdAmount(collateralTokenAmount, prices.collateralToken?.usd)
+                  amountPrice: getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)
                 })}
               </span>
               <PrimaryColorSpan>
@@ -208,7 +210,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {
-                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)
+                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)
                 })}
               </span>
             </p>

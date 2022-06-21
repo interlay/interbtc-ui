@@ -372,13 +372,13 @@ const App = (): JSX.Element => {
       // Update the store only if the price is actually changed
       if (
         newPrices.bitcoin?.usd !== prices.bitcoin?.usd ||
-        newPrices[RELAY_CHAIN_NAME]?.usd !== prices.collateralToken?.usd ||
+        newPrices[RELAY_CHAIN_NAME]?.usd !== prices.relayChainNativeToken?.usd ||
         newPrices[BRIDGE_PARACHAIN_NAME]?.usd !== prices.governanceToken?.usd
       ) {
         dispatch(
           updateOfPricesAction({
             bitcoin: newPrices.bitcoin,
-            collateralToken: newPrices[RELAY_CHAIN_NAME],
+            relayChainNativeToken: newPrices[RELAY_CHAIN_NAME],
             governanceToken: newPrices[BRIDGE_PARACHAIN_NAME]
           })
         );
