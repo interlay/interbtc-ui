@@ -154,10 +154,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   React.useEffect(() => {
-    console.log('change destination', destination);
-  }, [destination]);
-
-  React.useEffect(() => {
     if (api) return;
     if (!handleError) return;
 
