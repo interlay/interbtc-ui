@@ -379,7 +379,8 @@ const App = (): JSX.Element => {
           updateOfPricesAction({
             bitcoin: newPrices.bitcoin,
             relayChainNativeToken: newPrices[RELAY_CHAIN_NAME],
-            governanceToken: newPrices[BRIDGE_PARACHAIN_NAME]
+            governanceToken: newPrices[BRIDGE_PARACHAIN_NAME],
+            ...newPrices
           })
         );
       }
