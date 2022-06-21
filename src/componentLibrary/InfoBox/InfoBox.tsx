@@ -17,11 +17,9 @@ const InfoBox = ({ title, text, ctaText, ctaOnClick }: InfoBoxProps): JSX.Elemen
         <InfoBoxText>{text}</InfoBoxText>
       </div>
       {ctaOnClick && (
-        <div>
-          <CTA variant='primary' onClick={ctaOnClick}>
-            {ctaText}
-          </CTA>
-        </div>
+        <CTA variant='primary' onClick={ctaOnClick}>
+          {ctaText}
+        </CTA>
       )}
     </InfoBoxWrapper>
   );
