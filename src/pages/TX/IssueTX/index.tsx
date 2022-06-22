@@ -11,6 +11,7 @@ import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { URL_PARAMETERS } from 'utils/constants/links';
 // ray test touch <
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
 // ray test touch >
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
 // ray test touch <
@@ -29,13 +30,7 @@ const IssueTX = (): JSX.Element => {
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations,
     error: stableBitcoinConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
