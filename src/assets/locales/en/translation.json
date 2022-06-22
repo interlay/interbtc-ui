@@ -209,7 +209,7 @@
       "relay_chain_balance": "Transferable relay chain balance",
       "parachain_balance": "Transferable balance",
       "insufficient_funds_to_pay_fees": "Please transfer an amount greater than the transfer fee of {{transferFee}}",
-      "insufficient_funds_to_maintain_existential_depoit": "Insufficient amount to maintain existential deposit"
+      "insufficient_funds_to_maintain_existential_deposit": "Insufficient amount to maintain existential deposit"
     }
   },
   "burn_page": {
