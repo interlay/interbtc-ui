@@ -145,7 +145,10 @@ const CrossChainTransferForm = (): JSX.Element => {
       // Check transferred amount won't be below existential deposit when fees are deducted
       // This check is redundant if the relay chain balance is above zero
     } else if (destinationRelayChainBalance?.isZero() && transferAmount.sub(transferFee).lt(existentialDeposit)) {
-      return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_maintain_existential_depoit');
+      return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_maintain_existential_deposit', {
+        transferFee: `${displayMonetaryAmount(transferFee)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`,
+        existentialDeposit: `${displayMonetaryAmount(existentialDeposit)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`
+      });
       // Check the transfer amount is more than the fee
     } else if (transferAmount.lte(transferFee)) {
       return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_pay_fees', {
