@@ -18,6 +18,7 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { displayMonetaryAmount, getUsdAmount, shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { getColorShade } from 'utils/helpers/colors';
 
 // TODO: should type properly (`Relay`)
 const renderModalStatusPanel = (request: any) => {
@@ -173,7 +174,7 @@ const IssueRequestModal = ({
               </div>
             </div>
             <p className='space-x-1'>
-              <span className='text-interlayCinnabar'>{t('note')}:</span>
+              <span className={getColorShade('red')}>{t('note')}:</span>
               <span
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },

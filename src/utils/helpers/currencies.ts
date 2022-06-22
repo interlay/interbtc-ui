@@ -20,7 +20,7 @@ const CURRENCIES: Currencies = [
   {
     currency: InterBtc as Currency<CurrencyUnit>,
     id: CurrencyIdLiteral.INTERBTC,
-    symbol: CurrencySymbols.INTERBTC
+    symbol: CurrencySymbols.IBTC
   },
   {
     currency: Interlay as Currency<CurrencyUnit>,

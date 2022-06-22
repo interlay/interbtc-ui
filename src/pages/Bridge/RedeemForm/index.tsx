@@ -36,6 +36,7 @@ import { togglePremiumRedeemAction } from 'common/actions/redeem.actions';
 import { updateWrappedTokenBalanceAction, showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType, ParachainStatus } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { getColorShade } from 'utils/helpers/colors';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -421,7 +422,7 @@ const RedeemForm = (): JSX.Element | null => {
           />
           {premiumRedeemSelected && (
             <PriceInfo
-              title={<h5 className='text-interlayConifer'>{t('redeem_page.earned_premium')}</h5>}
+              title={<h5 className={getColorShade('green')}>{t('redeem_page.earned_premium')}</h5>}
               unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(totalDOT)}
               unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}

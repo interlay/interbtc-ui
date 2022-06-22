@@ -5,14 +5,15 @@ import { FaTimesCircle, FaExclamationCircle } from 'react-icons/fa';
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { getColorShade } from 'utils/helpers/colors';
 
 const CancelledIssueRequest = (): JSX.Element => {
   const { t } = useTranslation();
 
   return (
     <RequestWrapper className='px-12'>
-      <h2 className={clsx('text-3xl', 'font-medium', 'text-interlayCinnabar')}>{t('cancelled')}</h2>
-      <FaTimesCircle className={clsx('w-40', 'h-40', 'text-interlayCinnabar')} />
+      <h2 className={clsx('text-3xl', 'font-medium', getColorShade('red'))}>{t('cancelled')}</h2>
+      <FaTimesCircle className={clsx('w-40', 'h-40', getColorShade('red'))} />
       <p
         className={clsx(
           { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -26,7 +27,7 @@ const CancelledIssueRequest = (): JSX.Element => {
       </p>
       {/* TODO: could componentize */}
       <div>
-        <h6 className={clsx('flex', 'items-center', 'justify-center', 'space-x-0.5', 'text-interlayCinnabar')}>
+        <h6 className={clsx('flex', 'items-center', 'justify-center', 'space-x-0.5', getColorShade('red'))}>
           <span>{t('note')}</span>
           <FaExclamationCircle />
         </h6>

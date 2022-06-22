@@ -5,7 +5,7 @@ import { Bitcoin, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary
 enum CurrencySymbols {
   BTC = 'BTC',
   DOT = 'DOT',
-  INTERBTC = 'interBTC',
+  IBTC = 'IBTC',
   INTR = 'INTR',
   KBTC = 'KBTC',
   KINT = 'KINT',

@@ -11,6 +11,7 @@ import { BLOCK_TIME } from 'config/parachain';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { StoreType } from 'common/types/util.types';
 import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -59,7 +60,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
       <div className={clsx('flex', 'flex-col', 'justify-center', 'items-center')}>
         <div className='text-xl'>
           {t('send')}
-          <span className='text-interlayCalifornia'>&nbsp;{displayMonetaryAmount(amountBTCToSend)}&nbsp;</span>
+          <span className={getColorShade('yellow')}>&nbsp;{displayMonetaryAmount(amountBTCToSend)}&nbsp;</span>
           BTC
         </div>
         <span
@@ -116,7 +117,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.warning_mbtc_wallets')}
         </span>
-        <span className='text-interlayCalifornia'>{displayMonetaryAmount(amountBTCToSend.mul(1000))}&nbsp;mBTC</span>
+        <span className={getColorShade('yellow')}>{displayMonetaryAmount(amountBTCToSend.mul(1000))}&nbsp;mBTC</span>
       </p>
       <QRCode
         includeMargin

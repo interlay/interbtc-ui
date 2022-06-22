@@ -19,6 +19,7 @@ import {
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -57,7 +58,7 @@ const RetriedRedeemRequest = ({ request }: Props): JSX.Element => {
 
   return (
     <RequestWrapper>
-      <h2 className={clsx('text-3xl', 'font-medium', 'text-interlayConifer')}>
+      <h2 className={clsx('text-3xl', 'font-medium', getColorShade('green'))}>
         {t('redeem_page.compensation_success')}
       </h2>
       <p className='w-full'>{t('redeem_page.compensation_notice')}</p>
@@ -109,7 +110,7 @@ const RetriedRedeemRequest = ({ request }: Props): JSX.Element => {
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
       <div className='w-full'>
-        <h6 className={clsx('flex', 'items-center', 'justify-center', 'space-x-0.5', 'text-interlayCinnabar')}>
+        <h6 className={clsx('flex', 'items-center', 'justify-center', 'space-x-0.5', getColorShade('red'))}>
           <span>{t('note')}</span>
           <FaExclamationCircle />
         </h6>
