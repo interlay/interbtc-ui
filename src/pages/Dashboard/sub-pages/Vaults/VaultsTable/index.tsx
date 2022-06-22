@@ -35,6 +35,7 @@ import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface CollateralizationCellProps {
   settledCollateralization: Big | undefined;
@@ -79,10 +80,10 @@ const getCollateralizationColor = (
   if (collateralization === undefined) return undefined;
 
   if (collateralization.gte(collateralSecureThreshold)) {
-    return clsx('text-interlayConifer', 'font-medium');
+    return clsx(getColorShade('green'), 'font-medium');
   } else {
     // Liquidation
-    return clsx('text-interlayCinnabar', 'font-medium');
+    return clsx(getColorShade('red'), 'font-medium');
   }
 };
 
@@ -257,13 +258,13 @@ const VaultsTable = (): JSX.Element => {
         Cell: function FormattedCell({ value }: { value: string }) {
           let statusClasses;
           if (value === constants.VAULT_STATUS_ACTIVE) {
-            statusClasses = clsx('text-interlayConifer', 'font-medium');
+            statusClasses = clsx(getColorShade('green'), 'font-medium');
           }
           if (value === constants.VAULT_STATUS_UNDER_COLLATERALIZED) {
-            statusClasses = clsx('text-interlayCalifornia', 'font-medium');
+            statusClasses = clsx(getColorShade('yellow'), 'font-medium');
           }
           if (value === constants.VAULT_STATUS_THEFT || value === constants.VAULT_STATUS_LIQUIDATED) {
-            statusClasses = clsx('text-interlayCinnabar', 'font-medium');
+            statusClasses = clsx(getColorShade('red'), 'font-medium');
           }
 
           return <span className={statusClasses}>{value}</span>;

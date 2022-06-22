@@ -38,7 +38,7 @@ const LockedCollateralsCard = (): JSX.Element => {
   } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN as CollateralToken, cutoffTimestamps);
   useErrorHandler(cumulativeGovernanceTokenVolumesError);
 
-  const relayChainNativeTokenPriceInUSD = prices.collateralToken?.usd;
+  const relayChainNativeTokenPriceInUSD = prices.relayChainNativeToken?.usd;
   const governanceTokenPriceInUSD = prices.governanceToken?.usd;
 
   const cumulativeUSDVolumes = React.useMemo(() => {

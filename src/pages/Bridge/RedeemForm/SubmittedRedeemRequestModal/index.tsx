@@ -13,6 +13,7 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { PAGES, QUERY_PARAMETERS } from 'utils/constants/links';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
+import { getColorShade } from 'utils/helpers/colors';
 
 const queryString = require('query-string');
 
@@ -38,7 +39,7 @@ const SubmittedRedeemRequestModal = ({
       <InterlayModalInnerWrapper className={clsx('p-8', 'max-w-lg')}>
         <CloseIconButton ref={focusRef} onClick={onClose} />
         <div className={clsx('flex', 'flex-col', 'space-y-8')}>
-          <h4 className={clsx('text-2xl', 'text-interlayCalifornia', 'font-medium', 'text-center')}>
+          <h4 className={clsx('text-2xl', getColorShade('yellow'), 'font-medium', 'text-center')}>
             {t('redeem_page.withdraw')}
           </h4>
           <div className='space-y-6'>
@@ -46,7 +47,7 @@ const SubmittedRedeemRequestModal = ({
               <h5
                 className={clsx(
                   'font-medium',
-                  'text-interlayCalifornia',
+                  getColorShade('yellow'),
                   'flex',
                   'items-center',
                   'justify-center',
@@ -58,7 +59,7 @@ const SubmittedRedeemRequestModal = ({
               </h5>
               <h1 className={clsx('text-3xl', 'font-medium', 'space-x-1', 'text-center')}>
                 <span>{t('redeem_page.will_receive_BTC')}</span>
-                <span className='text-interlayCalifornia'>{displayMonetaryAmount(request.amountBTC)} BTC</span>
+                <span className={getColorShade('yellow')}>{displayMonetaryAmount(request.amountBTC)} BTC</span>
               </h1>
               <span
                 className={clsx(

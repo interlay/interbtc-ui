@@ -18,6 +18,7 @@ import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { shortAddress } from 'common/utils/utils';
 import { ISSUES_FETCHER } from 'services/fetchers/issues-fetcher';
 import { StoreType } from 'common/types/util.types';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -59,8 +60,8 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
   return (
     <>
       <RequestWrapper className='px-12'>
-        <h2 className={clsx('text-3xl', 'font-medium', 'text-interlayConifer')}>{t('confirmed')}</h2>
-        <FaCheckCircle className={clsx('w-40', 'h-40', 'text-interlayConifer')} />
+        <h2 className={clsx('text-3xl', 'font-medium', getColorShade('green'))}>{t('confirmed')}</h2>
+        <FaCheckCircle className={clsx('w-40', 'h-40', getColorShade('green'))} />
         <p className='space-x-1'>
           <span
             className={clsx(

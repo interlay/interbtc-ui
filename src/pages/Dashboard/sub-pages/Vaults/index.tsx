@@ -23,7 +23,7 @@ const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
   const { prices } = useSelector((state: StoreType) => state.general);
 
-  const relayChainNativeTokenPriceInUSD = prices.collateralToken?.usd;
+  const relayChainNativeTokenPriceInUSD = prices.relayChainNativeToken?.usd;
   const governanceTokenPriceInUSD = prices.governanceToken?.usd;
 
   const collaterals = React.useMemo(

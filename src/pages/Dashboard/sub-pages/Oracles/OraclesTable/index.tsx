@@ -32,6 +32,7 @@ import {
   BtcToCurrencyOracleStatus,
   ORACLE_ALL_LATEST_UPDATES_FETCHER
 } from 'services/fetchers/oracle-exchange-rates-fetcher';
+import { getColorShade } from 'utils/helpers/colors';
 
 const OracleTable = (): JSX.Element => {
   const { t } = useTranslation();
@@ -110,13 +111,13 @@ const OracleTable = (): JSX.Element => {
             <div className={clsx('inline-flex', 'items-center', 'space-x-1')}>
               {value ? (
                 <>
-                  <CheckCircleIcon className='text-interlayConifer' />
-                  <span className='text-interlayConifer'>{t('online')}</span>
+                  <CheckCircleIcon className={getColorShade('green')} />
+                  <span className={getColorShade('green')}>{t('online')}</span>
                 </>
               ) : (
                 <>
-                  <CancelIcon className='text-interlayCinnabar' />
-                  <span className='text-interlayCinnabar'>{t('offline')}</span>
+                  <CancelIcon className={getColorShade('red')} />
+                  <span className={getColorShade('red')}>{t('offline')}</span>
                 </>
               )}
             </div>

@@ -9,6 +9,7 @@ import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { PAGES, QUERY_PARAMETERS } from 'utils/constants/links';
+import { getColorShade } from 'utils/helpers/colors';
 
 const queryString = require('query-string');
 
@@ -30,7 +31,7 @@ const SubmittedIssueRequestModal = ({
       <InterlayModalInnerWrapper className={clsx('p-8', 'max-w-lg')}>
         <CloseIconButton ref={focusRef} onClick={onClose} />
         <div className={clsx('flex', 'flex-col', 'space-y-8')}>
-          <h4 className={clsx('text-2xl', 'text-interlayCalifornia', 'font-medium', 'text-center')}>
+          <h4 className={clsx('text-2xl', getColorShade('yellow'), 'font-medium', 'text-center')}>
             {t('issue_page.deposit')}
           </h4>
           <BTCPaymentPendingStatusUI request={request} />

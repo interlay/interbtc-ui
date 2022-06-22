@@ -52,7 +52,7 @@ export type Prices = {
         usd: number;
       }
     | undefined;
-  collateralToken:
+  relayChainNativeToken:
     | {
         usd: number;
       }
