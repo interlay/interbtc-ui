@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 import { DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
-import { getColorShade } from '../../../utils/helpers/colors';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface CustomProps {
   startIcon?: React.ReactNode;
