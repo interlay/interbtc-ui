@@ -36,7 +36,7 @@ const InterlayCinnabarOutlinedButton = React.forwardRef<Ref, Props>(
                 getColorShade('red'),
                 'border',
                 getColorShade('red', 'border'),
-                `hover:${getColorShade('red', 'bg')}`,
+                getColorShade('red', 'hover:bg'),
                 'hover:bg-opacity-5'
               ),
 

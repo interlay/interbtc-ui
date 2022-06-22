@@ -36,7 +36,7 @@ const InterlayCaliforniaOutlinedButton = React.forwardRef<Ref, Props>(
                 getColorShade('yellow'),
                 'border',
                 getColorShade('yellow', 'border'),
-                `hover:${getColorShade('yellow', 'bg')}`,
+                getColorShade('yellow', 'hover:bg'),
                 'hover:bg-opacity-5'
               ),
 

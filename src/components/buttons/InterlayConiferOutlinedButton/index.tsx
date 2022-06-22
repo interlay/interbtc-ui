@@ -36,7 +36,7 @@ const InterlayConiferOutlinedButton = React.forwardRef<Ref, Props>(
                 getColorShade('green'),
                 'border',
                 getColorShade('green', 'border'),
-                `hover:${getColorShade('green', 'bg')}`,
+                getColorShade('green', 'hover:bg'),
                 'hover:bg-opacity-5'
               ),
 

@@ -20,7 +20,7 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
-import { getColorShade } from '../../../../../utils/helpers/colors';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
