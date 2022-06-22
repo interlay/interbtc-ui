@@ -312,7 +312,7 @@ const RedeemForm = (): JSX.Element | null => {
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
-    const totalDOTInUSD = getUsdAmount(totalDOT, prices.collateralToken?.usd);
+    const totalDOTInUSD = getUsdAmount(totalDOT, prices.relayChainNativeToken?.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
     const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin?.usd);

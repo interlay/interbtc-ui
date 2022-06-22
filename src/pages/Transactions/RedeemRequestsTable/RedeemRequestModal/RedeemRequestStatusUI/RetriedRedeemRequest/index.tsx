@@ -67,7 +67,7 @@ const RetriedRedeemRequest = ({ request }: Props): JSX.Element => {
         <PrimaryColorSpan>
           &nbsp;{`${displayMonetaryAmount(punishmentCollateralTokenAmount)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`}
         </PrimaryColorSpan>
-        <span>&nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)}`})</span>
+        <span>&nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)}`})</span>
         <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}.</PrimaryColorSpan>
       </p>
       <div className='w-full'>
@@ -85,7 +85,7 @@ const RetriedRedeemRequest = ({ request }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)}
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
         />
         <Hr2 className={clsx('border-t-2', 'my-2.5')} />
         <PriceInfo
@@ -103,7 +103,7 @@ const RetriedRedeemRequest = ({ request }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)}
+          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
         />
       </div>
       <ExternalLink className='text-sm' href={getPolkadotLink(request.request.height.absolute)}>
