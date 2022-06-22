@@ -1,31 +1,25 @@
 import { useParams } from 'react-router-dom';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
-// ray test touch <
-import { useSelector } from 'react-redux';
 
+// ray test touch <
 import IssueRequestModal from 'pages/Transactions/IssueRequestsTable/IssueRequestModal';
 // ray test touch >
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { URL_PARAMETERS } from 'utils/constants/links';
 // ray test touch <
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 // ray test touch >
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
-// ray test touch <
-import { StoreType } from 'common/types/util.types';
-// ray test touch >
 
 // http://localhost:3000/tx/issue/0xfd6d53d8df584d675fe2322ccb126754d6c6d249878f0a2c9526607458714f76
 const IssueTX = (): JSX.Element => {
   const { [URL_PARAMETERS.TRANSACTION_HASH]: transactionHash } = useParams<Record<string, string>>();
 
   // ray test touch <
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-
   const {
     isIdle: stableBitcoinConfirmationsIdle,
     isLoading: stableBitcoinConfirmationsLoading,
@@ -47,9 +41,7 @@ const IssueTX = (): JSX.Element => {
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
   // ray test touch >
 
