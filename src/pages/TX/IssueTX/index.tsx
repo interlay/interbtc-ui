@@ -8,18 +8,15 @@ import IssueRequestModal from 'pages/Transactions/IssueRequestsTable/IssueReques
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { URL_PARAMETERS } from 'utils/constants/links';
-// ray test touch <
 import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
 import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
-// ray test touch >
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
 
 // http://localhost:3000/tx/issue/0xfd6d53d8df584d675fe2322ccb126754d6c6d249878f0a2c9526607458714f76
 const IssueTX = (): JSX.Element => {
   const { [URL_PARAMETERS.TRANSACTION_HASH]: transactionHash } = useParams<Record<string, string>>();
 
-  // ray test touch <
   const {
     isIdle: stableBitcoinConfirmationsIdle,
     isLoading: stableBitcoinConfirmationsLoading,
@@ -43,7 +40,6 @@ const IssueTX = (): JSX.Element => {
     error: currentActiveBlockNumberError
   } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
-  // ray test touch >
 
   const {
     isIdle: issuesIdle,
@@ -74,7 +70,6 @@ const IssueTX = (): JSX.Element => {
   ) {
     return <PrimaryColorEllipsisLoader />;
   }
-  // ray test touch <
   if (
     stableBitcoinConfirmations === undefined ||
     stableParachainConfirmations === undefined ||
@@ -83,15 +78,12 @@ const IssueTX = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  console.log('[IssueTX] issues => ', issues);
-
   const issue = getIssueWithStatus(
     issues[0],
     stableBitcoinConfirmations,
     stableParachainConfirmations,
     currentActiveBlockNumber
   );
-  // ray test touch >
 
   // ray test touch <
   return (
