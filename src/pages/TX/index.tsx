@@ -6,9 +6,7 @@ import { URL_PARAMETERS } from 'utils/constants/links';
 
 const IssueTX = React.lazy(() => import(/* webpackChunkName: 'issue-tx' */ './IssueTX'));
 const RedeemTX = React.lazy(() => import(/* webpackChunkName: 'redeem-tx' */ './RedeemTX'));
-const ReplaceTX = React.lazy(
-  () => import(/* webpackChunkName: 'replace-tx' */ './ReplaceTX')
-);
+const ReplaceTX = React.lazy(() => import(/* webpackChunkName: 'replace-tx' */ './ReplaceTX'));
 
 enum TXType {
   Issue = 'issue',

@@ -40,11 +40,7 @@ interface CustomProps {
   request: any;
 }
 
-const IssueRequestModal = ({
-  open,
-  onClose,
-  request
-}: CustomProps & Omit<ModalProps, 'children'>): JSX.Element | null => {
+const IssueRequestModal = ({ open, onClose, request }: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {
   const { t } = useTranslation();
 
   const { address, prices } = useSelector((state: StoreType) => state.general);
