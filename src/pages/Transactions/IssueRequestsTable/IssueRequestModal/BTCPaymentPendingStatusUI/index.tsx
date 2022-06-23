@@ -7,9 +7,11 @@ import { FaExclamationCircle } from 'react-icons/fa';
 
 import Timer from 'components/Timer';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
+import { BLOCK_TIME } from 'config/parachain';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { StoreType } from 'common/types/util.types';
 import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -19,29 +21,46 @@ interface Props {
 // TODO: when sorting out GraphQL typing, take into account that this component also displays a request from the lib
 const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { prices } = useSelector((state: StoreType) => state.general);
-  const { issuePeriod } = useSelector((state: StoreType) => state.issue);
+  const { prices, bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const amountBTCToSend = (request.wrappedAmount || request.request.amountWrapped).add(
     request.bridgeFee || request.request.bridgeFeeWrapped
   );
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
-    // TODO: double-check `request.request?.timestamp`
-    // Date.now() is an approximation, used with the parachain response until we can get the block timestamp later
-    const requestCreationTimestamp = request.request?.timestamp ?? Date.now();
+    if (!bridgeLoaded) return;
+    if (!request) return;
 
-    const requestTimestamp = Math.floor(new Date(requestCreationTimestamp).getTime() / 1000);
-    const theInitialLeftSeconds = requestTimestamp + issuePeriod - Math.floor(Date.now() / 1000);
-    setInitialLeftSeconds(theInitialLeftSeconds);
-  }, [request.request, issuePeriod]);
+    (async () => {
+      try {
+        const [issuePeriodInBlocks, requestById] = await Promise.all([
+          window.bridge.issue.getIssuePeriod(),
+          window.bridge.issue.getRequestById(request.id)
+        ]);
+
+        const maxIssuePeriodInBlocks = Math.max(issuePeriodInBlocks, requestById.period);
+
+        // TODO: double-check `request.request?.timestamp`
+        // Date.now() is an approximation, used with the parachain response until we can get the block timestamp later
+        const requestCreationTimestamp = request.request?.timestamp ?? Date.now();
+
+        const requestTimestamp = Math.floor(new Date(requestCreationTimestamp).getTime() / 1000);
+        const theInitialLeftSeconds =
+          requestTimestamp + maxIssuePeriodInBlocks * BLOCK_TIME - Math.floor(Date.now() / 1000);
+        setInitialLeftSeconds(theInitialLeftSeconds);
+      } catch (error) {
+        // TODO: should add error handling UX
+        console.log('[BTCPaymentPendingStatusUI useEffect] error.message => ', error.message);
+      }
+    })();
+  }, [request, bridgeLoaded]);
 
   return (
     <div className='space-y-8'>
       <div className={clsx('flex', 'flex-col', 'justify-center', 'items-center')}>
         <div className='text-xl'>
           {t('send')}
-          <span className='text-interlayCalifornia'>&nbsp;{displayMonetaryAmount(amountBTCToSend)}&nbsp;</span>
+          <span className={getColorShade('yellow')}>&nbsp;{displayMonetaryAmount(amountBTCToSend)}&nbsp;</span>
           BTC
         </div>
         <span
@@ -98,7 +117,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.warning_mbtc_wallets')}
         </span>
-        <span className='text-interlayCalifornia'>{displayMonetaryAmount(amountBTCToSend.mul(1000))}&nbsp;mBTC</span>
+        <span className={getColorShade('yellow')}>{displayMonetaryAmount(amountBTCToSend.mul(1000))}&nbsp;mBTC</span>
       </p>
       <QRCode
         includeMargin

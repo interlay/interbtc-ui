@@ -18,7 +18,6 @@ const getCollateralization = (
   }
 };
 
-// TODO: it could be better to be a hook
 const getVaultStatusLabel = (
   vaultExt: VaultExt<BitcoinUnit>,
   currentActiveBlockNumber: number,
@@ -43,7 +42,7 @@ const getVaultStatusLabel = (
       statusLabel = t('dashboard.vault.undercollateralized');
     }
   }
-  // Should only display bannedUntil status if current active block number < the bannedUntil block number
+  // Should only display bannedUntil status if current active block number < the bannedUntil block number.
   // Otherwise, should not show this status.
   if (vaultExt.bannedUntil && currentActiveBlockNumber < vaultExt.bannedUntil) {
     statusLabel = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });

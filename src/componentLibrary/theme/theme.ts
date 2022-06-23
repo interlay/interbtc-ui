@@ -11,7 +11,9 @@ const theme = {
   colors: {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
-    textTertiary: 'var(--colors-text-tertiary)'
+    textTertiary: 'var(--colors-text-tertiary)',
+    textAccent: 'var(--colors-text-accent)',
+    iconDefault: `var(--colors-icon-default)`
   },
   font: {
     primary: 'var(--fonts-primary)'
@@ -36,7 +38,9 @@ const theme = {
   },
   lineHeight: {
     base: 'var(--line-height-base)',
-    lg: 'var(--line-height-lg)'
+    s: 'var(--line-height-s)',
+    lg: 'var(--line-height-lg)',
+    xl: 'var(--line-height-xl)'
   },
   spacing: {
     spacing1: 'var(--spacing-1)',
@@ -56,14 +60,22 @@ const theme = {
     lg: 'var(--rounded-lg)',
     xl: 'var(--rounded-xl)'
   },
+  border: {
+    default: `1px solid var(--colors-border)`
+  },
+  boxShadow: {
+    default: `var(--box-shadow-default)`
+  },
   // Components
   card: {
-    bg: 'var(--colors-card-bg)'
+    bg: 'var(--colors-card-bg)',
+    secondaryBg: 'var(--colors-card-secondary-bg)'
   },
   cta: {
     primary: {
       bg: 'var(--colors-cta-primary)',
-      bgHover: 'var(--colors-cta-primary-hover)'
+      bgHover: 'var(--colors-cta-primary-hover)',
+      text: 'var(--colors-cta-primary-text)'
     },
     secondary: {
       bg: 'var(--colors-cta-secondary)'
@@ -75,6 +87,12 @@ const theme = {
   },
   newVaultsTable: {
     highlightColor: `var(--colors-new-vaults-table-highlight)`
+  },
+  modal: {
+    bg: 'var(--colors-modal-bg)'
+  },
+  transition: {
+    duration: 100
   }
 };
 

@@ -65,7 +65,7 @@
   "btc_parachain_status": "BTC Parachain Status",
   "vote": "Vote",
   "pending_btc": "Pending BTC",
-  "locked_dot": "Locked {{collateralTokenSymbol}}",
+  "locked_collateral": "Locked Collateral",
   "locked_planck": "Locked Planck",
   "locked_btc": "Locked BTC",
   "issue": "Issue",
@@ -117,6 +117,7 @@
   "select_vault": "Please Select Vault",
   "not_enough_vault_capacity": "None vault has enough capacity.",
   "view_all_transactions_on_subscan": "View all transactions on Subscan",
+  "collateral": "Collateral",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -274,9 +275,9 @@
       "loading": "loading..."
     },
     "vault": {
-      "active_vaults": "Active Vaults",
       "collateralization": "Collateralization",
-      "locked_collateral": "Locked collateral",
+      "total_collateral_locked_usd": "Total Collateral Locked (USD)",
+      "total_collateral_token_symbol_locked": "Total {{collateralTokenSymbol}} Locked",
       "theft": "Theft detected",
       "liquidated": "Liquidated",
       "liquidation": "Being liquidated",
@@ -433,7 +434,7 @@
     "tip_pending_btc": "BTC volume of in-progress issue requests.",
     "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
     "pending_table_subcell": "Pending: ",
-    "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
+    "locked_collateral": "Locked Collateral {{collateralTokenSymbol}}",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
     "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
     "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}",

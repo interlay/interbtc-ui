@@ -11,6 +11,7 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { copyToClipboard, getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -61,7 +62,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
       />
       <PriceInfo
         className='w-full'
-        title={<h5 className='text-interlayCalifornia'>{t('issue_page.refund_deposited')}</h5>}
+        title={<h5 className={getColorShade('yellow')}>{t('issue_page.refund_deposited')}</h5>}
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.backingPayment.amount)}
         unitName='BTC'
@@ -69,7 +70,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
       />
       <PriceInfo
         className='w-full'
-        title={<h5 className='text-interlayConifer'>{t('issue_page.refund_issued')}</h5>}
+        title={<h5 className={getColorShade('green')}>{t('issue_page.refund_issued')}</h5>}
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.execution.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
@@ -104,7 +105,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
       >
         {t('issue_page.refund_requested_vault')}
         &nbsp;{t('issue_page.refund_vault_to_return')}
-        <span className='text-interlayCinnabar'>&nbsp;{displayMonetaryAmount(request.refund.amountPaid)}</span>
+        <span className={getColorShade('red')}>&nbsp;{displayMonetaryAmount(request.refund.amountPaid)}</span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
       </p>

@@ -8,6 +8,7 @@ import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
 import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { shortAddress, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -20,14 +21,14 @@ const CompletedRedeemRequest = ({ request }: Props): JSX.Element => {
   return (
     <RequestWrapper>
       {/* TODO: could componentize */}
-      <h2 className={clsx('text-3xl', 'font-medium', 'text-interlayConifer')}>{t('completed')}</h2>
+      <h2 className={clsx('text-3xl', 'font-medium', getColorShade('green'))}>{t('completed')}</h2>
       <p className={clsx('space-x-1', 'font-medium')}>
         <span>{t('issue_page.you_received')}</span>
         <PrimaryColorSpan>{`${displayMonetaryAmount(request.request.requestedAmountBacking)} BTC`}</PrimaryColorSpan>.
       </p>
-      <Ring48 className='ring-interlayConifer'>
+      <Ring48 className={getColorShade('green', 'ring')}>
         <Ring48Title>{t('issue_page.in_parachain_block')}</Ring48Title>
-        <Ring48Value className='text-interlayConifer'>{request.request.height.active}</Ring48Value>
+        <Ring48Value className={getColorShade('green')}>{request.request.height.active}</Ring48Value>
       </Ring48>
       <ExternalLink className='text-sm' href={getPolkadotLink(request.request.height.absolute)}>
         {t('issue_page.view_parachain_block')}

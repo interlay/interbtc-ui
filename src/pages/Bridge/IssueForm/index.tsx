@@ -35,14 +35,13 @@ import {
   WrappedTokenLogoIcon,
   GovernanceTokenLogoIcon
 } from 'config/relay-chains';
-import { BLOCK_TIME, BLOCKS_BEHIND_LIMIT } from 'config/parachain';
+import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { displayMonetaryAmount, getUsdAmount, getRandomVaultIdWithCapacity } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { ParachainStatus, StoreType } from 'common/types/util.types';
-import { updateIssuePeriodAction } from 'common/actions/issue.actions';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import Vaults from 'components/Vaults';
@@ -139,18 +138,11 @@ const IssueForm = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [
-          theFeeRate,
-          theDepositRate,
-          issuePeriodInBlocks,
-          theDustValue,
-          theBtcToGovernanceToken
-        ] = await Promise.all([
+        const [theFeeRate, theDepositRate, theDustValue, theBtcToGovernanceToken] = await Promise.all([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
           window.bridge.fee.getIssueFee(),
           window.bridge.fee.getIssueGriefingCollateralRate(),
-          window.bridge.issue.getIssuePeriod(),
           window.bridge.issue.getDustValue(),
           window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN)
         ]);
@@ -158,8 +150,6 @@ const IssueForm = (): JSX.Element | null => {
 
         setFeeRate(theFeeRate);
         setDepositRate(theDepositRate);
-        const issuePeriod = issuePeriodInBlocks * BLOCK_TIME;
-        dispatch(updateIssuePeriodAction(issuePeriod));
         setDustValue(theDustValue);
         setBTCToGovernanceTokenRate(theBtcToGovernanceToken);
       } catch (error) {

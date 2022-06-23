@@ -25,6 +25,10 @@
   font-style: normal;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --fonts-primary: 'airbnb-cereal';
 
@@ -34,6 +38,7 @@
   --font-weights-bold: 700;
 
   --colors-neutral-white: #ffffff;
+  --colors-neutral-white-06: rgba(255, 255, 255, 0.06);
   --colors-neutral-light-grey: #999999;
   --colors-neutral-light-grey-transparent: #99999978;
   --colors-neutral-black: #000000;
@@ -49,8 +54,10 @@
   --text-5xl: 3rem;
   --text-6xl: 4rem;
 
+  --line-height-s: 1.125rem;
   --line-height-base: 1.3125rem;
   --line-height-lg: 1.4375rem;
+  --line-height-xl: 2.5rem;
 
   --spacing-1: 0.25rem;
   --spacing-2: 0.5rem;

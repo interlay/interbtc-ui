@@ -20,6 +20,7 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -32,7 +33,9 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
-  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN));
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
+  );
   const { t } = useTranslation();
   const handleError = useErrorHandler();
 
@@ -116,7 +119,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
           className={clsx(
             'text-lg',
             'font-medium',
-            'text-interlayCalifornia',
+            getColorShade('yellow'),
             'flex',
             'justify-center',
             'items-center',
@@ -137,7 +140,9 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
           <PrimaryColorSpan>
             &nbsp;{displayMonetaryAmount(punishmentCollateralTokenAmount)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
           </PrimaryColorSpan>
-          <span>&nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)})`}</span>
+          <span>
+            &nbsp;{`(≈ $ ${getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)})`}
+          </span>
           <span>
             &nbsp;
             {t('redeem_page.compensation', {
@@ -170,7 +175,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
-                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)
+                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)
                 })}
               </span>
               .
@@ -197,7 +202,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
-                  amountPrice: getUsdAmount(collateralTokenAmount, prices.collateralToken?.usd)
+                  amountPrice: getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)
                 })}
               </span>
               <PrimaryColorSpan>
@@ -206,7 +211,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {
-                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.collateralToken?.usd)
+                  compensationPrice: getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)
                 })}
               </span>
             </p>

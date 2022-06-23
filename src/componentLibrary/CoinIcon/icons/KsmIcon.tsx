@@ -1,12 +1,5 @@
 const KsmIcon = (): JSX.Element => (
-  <svg
-    role='img'
-    width='100%'
-    viewBox='0 0 60 60'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
-    preserveAspectRatio='none'
-  >
+  <svg role='img' width='100%' viewBox='0 0 60 60' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <title>KSM</title>
     <path
       d='M59 30c0 16.016-12.984 29-29 29S1 46.016 1 30 13.984 1 30 1s29 12.984 29 29Z'
