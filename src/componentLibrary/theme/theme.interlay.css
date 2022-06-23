@@ -5,8 +5,10 @@
   --colors-blue: blue;
 }
 
-.theme-kintsugi {
+.theme-interlay {
   --colors-cta-primary: var(--colors-blue);
   --colors-cta-secondary: var(--colors-neutral-white);
   --colors-text-primary: var(--colors-neutral-black);
+  --colors-table-bg: var(--colors-neutral-white);
+  --colors-new-vaults-table-highlight: var(--colors-blue);
 }

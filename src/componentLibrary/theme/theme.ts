@@ -68,6 +68,13 @@ const theme = {
     secondary: {
       bg: 'var(--colors-cta-secondary)'
     }
+  },
+  table: {
+    bg: 'var(--colors-table-bg)',
+    border: '1px var(--colors-neutral-light-grey-transparent) solid'
+  },
+  newVaultsTable: {
+    highlightColor: `var(--colors-new-vaults-table-highlight)`
   }
 };
 

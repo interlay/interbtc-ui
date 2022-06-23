@@ -22,5 +22,5 @@ export type { StackProps } from './Stack';
 export { Table } from './Table';
 export type { TableProps } from './Table';
 
-export { NewVaultsTable } from "./NewVaultsTable";
-export type {NewVaultsTableProps} from "./NewVaultsTable";
+export { NewVaultsTable } from './NewVaultsTable';
+export type { NewVaultsTableProps, NewVaultsTableRow } from './NewVaultsTable';

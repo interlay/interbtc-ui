@@ -6,8 +6,12 @@ const Template: Story<TableProps> = (args) => <Table {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-    columnLabels: ['test1', 'test2'],
-    rows: [[1,2], [11, 12], ["a", 35]]
+  columnLabels: ['Name', 'Amount'],
+  rows: [
+    ['Alice', 2123],
+    ['Bob', 12],
+    ['Carol', 35]
+  ]
 };
 
 export { Default };

@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react';
-import { CurrencySymbols } from '../../types/currency';
 
+import { CurrencySymbols } from 'types/currency';
 import { NewVaultsTable } from './';
 import { NewVaultsTableProps } from './NewVaultsTable';
 
@@ -15,7 +15,8 @@ Default.args = {
       apy: '11.23',
       minCollateralAmount: '1.21',
       collateralRate: '260.12',
-      isActive: true
+      isActive: true,
+      ctaOnClick: () => alert('add vault')
     },
     {
       collateralCurrency: CurrencySymbols.KINT,
@@ -23,7 +24,8 @@ Default.args = {
       apy: '430.33',
       minCollateralAmount: '9.14',
       collateralRate: '314.55',
-      isActive: false
+      isActive: false,
+      ctaOnClick: () => alert('add vault')
     }
   ]
 };

@@ -5,15 +5,17 @@ const CoinPairWrapper = styled.div`
   display: flex;
   gap: ${theme.spacing.spacing2};
   align-items: center;
+  font-weight: ${theme.fontWeight.medium};
+  white-space: nowrap;
 `;
+
 interface NumericValueProps {
-  variant: 'primary' | 'secondary';
+  highlight?: boolean;
 }
 
 const NumericValue = styled.div<NumericValueProps>`
-  color: ${(props) => (props.variant === 'primary' ? theme.colors.textPrimary : theme.colors.textSecondary)};
-  font-weight: ${theme.fontWeight.bold};
-  font: ${theme.font};
+  color: ${(props) => (props.highlight ? theme.newVaultsTable.highlightColor : theme.colors.textSecondary)};
+  font-weight: ${theme.fontWeight.medium};
 `;
 
 const AddVaultButton = styled.div`
