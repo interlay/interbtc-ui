@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
+import RedeemUI from 'components/RedeemUI';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { URL_PARAMETERS } from 'utils/constants/links';
@@ -83,11 +84,8 @@ const RedeemTX = (): JSX.Element => {
     currentActiveBlockNumber
   );
 
-  // ray test touch <
-  console.log('ray : ***** redeem => ', redeem);
-  // ray test touch >
-
-  return <>RedeemTX</>;
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  return <RedeemUI redeem={redeem} onClose={() => {}} />;
 };
 
 export default withErrorBoundary(RedeemTX, {
