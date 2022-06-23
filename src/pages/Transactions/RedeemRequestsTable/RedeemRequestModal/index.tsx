@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
-
 import RequestModalTitle from '../../RequestModalTitle';
 import RedeemUI from 'components/RedeemUI';
 import CloseIconButton from 'components/buttons/CloseIconButton';
@@ -29,9 +28,7 @@ const RedeemRequestModal = ({
         <RequestModalTitle>{t('issue_page.request', { id: request.id })}</RequestModalTitle>
         <Hr1 className={clsx('border-t-2', 'my-2')} />
         <CloseIconButton ref={focusRef} onClick={onClose} />
-        {/* ray test touch < */}
         <RedeemUI redeem={request} onClose={onClose} />
-        {/* ray test touch > */}
       </InterlayModalInnerWrapper>
     </InterlayModal>
   );

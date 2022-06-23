@@ -1,4 +1,3 @@
-// ray test touch <
 import clsx from 'clsx';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -156,4 +155,3 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
 };
 
 export default RedeemUI;
-// ray test touch >

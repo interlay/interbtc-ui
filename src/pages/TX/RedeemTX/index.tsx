@@ -1,4 +1,3 @@
-// ray test touch <
 import { useParams } from 'react-router-dom';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -10,11 +9,9 @@ import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-con
 import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
 import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 import redeemsFetcher, { REDEEMS_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
-// ray test touch >
 
 // MEMO: /tx/redeem/0xb1887a4e14567610aa9ca880e29c14a00a0def0f89843bf2fe9feb3b0690635f
 const RedeemTX = (): JSX.Element => {
-  // ray test touch <
   const { [URL_PARAMETERS.TRANSACTION_HASH]: txHash } = useParams<Record<string, string>>();
 
   const {
@@ -86,6 +83,7 @@ const RedeemTX = (): JSX.Element => {
     currentActiveBlockNumber
   );
 
+  // ray test touch <
   console.log('ray : ***** redeem => ', redeem);
   // ray test touch >
 
