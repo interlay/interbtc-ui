@@ -7,7 +7,7 @@ import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
 import WhoopsStatusUI from './WhoopsStatusUI';
 // ray test touch <
-import PriceInfo from 'pages/Bridge/PriceInfo';
+import PriceInfo from 'components/PriceInfo';
 // ray test touch >
 import Hr2 from 'components/hrs/Hr2';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';

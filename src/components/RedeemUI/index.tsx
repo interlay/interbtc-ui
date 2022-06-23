@@ -5,7 +5,7 @@ import { RedeemStatus } from '@interlay/interbtc-api';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
-import PriceInfo from 'pages/Bridge/PriceInfo';
+import PriceInfo from 'components/PriceInfo';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';
 import Hr2 from 'components/hrs/Hr2';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';

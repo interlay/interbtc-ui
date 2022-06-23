@@ -7,7 +7,7 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import PriceInfo from 'pages/Bridge/PriceInfo';
+import PriceInfo from 'components/PriceInfo';
 import ExternalLink from 'components/ExternalLink';
 import PrimaryColorSpan from 'components/PrimaryColorSpan';
 import Hr2 from 'components/hrs/Hr2';
