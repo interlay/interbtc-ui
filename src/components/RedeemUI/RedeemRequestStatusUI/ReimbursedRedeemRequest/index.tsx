@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { FaExclamationCircle } from 'react-icons/fa';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
@@ -13,6 +13,7 @@ import PrimaryColorSpan from 'components/PrimaryColorSpan';
 import Hr2 from 'components/hrs/Hr2';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
+  WRAPPED_TOKEN_SYMBOL,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainNativeTokenLogoIcon
 } from 'config/relay-chains';
@@ -23,19 +24,26 @@ import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
-  request: any;
+  redeem: any;
 }
 
-const RetriedRedeemRequest = ({ request }: Props): JSX.Element => {
+const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
+  );
+  const [burnCollateralTokenAmount, setBurnCollateralTokenAmount] = React.useState(
+    newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
+  );
+  const [collateralTokenAmount, setCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
-    if (!request) return;
+    if (!redeem) return;
 
     // TODO: should add loading UX
     (async () => {
@@ -45,33 +53,68 @@ const RetriedRedeemRequest = ({ request }: Props): JSX.Element => {
           window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
         ]);
 
-        const btcAmount = request.request.requestedAmountBacking;
-        const theBurnDOTAmount = btcDotRate.toCounter(btcAmount);
+        const burnedBTCAmount = redeem.request.requestedAmountBacking.add(redeem.bridgeFee);
+        const theBurnDOTAmount = btcDotRate.toCounter(burnedBTCAmount);
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
+        const theDOTAmount = theBurnDOTAmount.add(thePunishmentDOTAmount);
+        setBurnedBTCAmount(burnedBTCAmount);
         setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
+        setBurnCollateralTokenAmount(theBurnDOTAmount);
+        setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
+        setCollateralTokenAmount(theDOTAmount);
       } catch (error) {
         // TODO: should add error handling UX
-        console.log('[RetriedRedeemRequest useEffect] error.message => ', error.message);
+        console.log('[ReimbursedRedeemRequest useEffect] error.message => ', error.message);
       }
     })();
-  }, [request, bridgeLoaded]);
+  }, [redeem, bridgeLoaded]);
 
   return (
     <RequestWrapper>
-      <h2 className={clsx('text-3xl', 'font-medium', getColorShade('green'))}>
-        {t('redeem_page.compensation_success')}
-      </h2>
-      <p className='w-full'>{t('redeem_page.compensation_notice')}</p>
+      <h2 className={clsx('text-3xl', 'font-medium', getColorShade('green'))}>{t('redeem_page.reimburse_success')}</h2>
+      <p className='w-full'>
+        {t('redeem_page.burn_notice', {
+          wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
+          collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+        })}
+      </p>
+      <p className='font-medium'>
+        <span className={getColorShade('red')}>
+          {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
+        </span>
+        <span>&nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin?.usd)})`}</span>
+        <span className={getColorShade('red')}>&nbsp;{t('redeem_page.reimbursed').toLowerCase()}</span>.
+      </p>
       <p className='font-medium'>
         <PrimaryColorSpan>{t('redeem_page.recover_receive_dot')}</PrimaryColorSpan>
         <PrimaryColorSpan>
-          &nbsp;{`${displayMonetaryAmount(punishmentCollateralTokenAmount)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`}
+          &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`}
         </PrimaryColorSpan>
-        <span>&nbsp;({`≈ $${getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)}`})</span>
-        <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}.</PrimaryColorSpan>
+        <span>&nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)})`}</span>
+        <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}</PrimaryColorSpan>.
       </p>
       <div className='w-full'>
         <PriceInfo
+          className='w-full'
+          title={
+            <h5
+              className={clsx(
+                { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}
+            >
+              {t('redeem_page.compensation_burn', {
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              })}
+            </h5>
+          }
+          unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
+          value={displayMonetaryAmount(burnCollateralTokenAmount)}
+          unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
+        />
+        <PriceInfo
+          className='w-full'
           title={
             <h5
               className={clsx(
@@ -101,31 +144,16 @@ const RetriedRedeemRequest = ({ request }: Props): JSX.Element => {
             </h5>
           }
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
-          value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
+          value={displayMonetaryAmount(collateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
+          approxUSD={getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)}
         />
       </div>
-      <ExternalLink className='text-sm' href={getPolkadotLink(request.request.height.absolute)}>
+      <ExternalLink className='text-sm' href={getPolkadotLink(redeem.request.height.absolute)}>
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
-      <div className='w-full'>
-        <h6 className={clsx('flex', 'items-center', 'justify-center', 'space-x-0.5', getColorShade('red'))}>
-          <span>{t('note')}</span>
-          <FaExclamationCircle />
-        </h6>
-        <p
-          className={clsx(
-            'text-justify',
-            { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-          )}
-        >
-          {t('redeem_page.retry_new_redeem')}
-        </p>
-      </div>
     </RequestWrapper>
   );
 };
 
-export default RetriedRedeemRequest;
+export default ReimbursedRedeemRequest;

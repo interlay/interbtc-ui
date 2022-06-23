@@ -12,10 +12,10 @@ import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
-  request: any;
+  redeem: any;
 }
 
-const CompletedRedeemRequest = ({ request }: Props): JSX.Element => {
+const CompletedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -24,13 +24,13 @@ const CompletedRedeemRequest = ({ request }: Props): JSX.Element => {
       <h2 className={clsx('text-3xl', 'font-medium', getColorShade('green'))}>{t('completed')}</h2>
       <p className={clsx('space-x-1', 'font-medium')}>
         <span>{t('issue_page.you_received')}</span>
-        <PrimaryColorSpan>{`${displayMonetaryAmount(request.request.requestedAmountBacking)} BTC`}</PrimaryColorSpan>.
+        <PrimaryColorSpan>{`${displayMonetaryAmount(redeem.request.requestedAmountBacking)} BTC`}</PrimaryColorSpan>.
       </p>
       <Ring48 className={getColorShade('green', 'ring')}>
         <Ring48Title>{t('issue_page.in_parachain_block')}</Ring48Title>
-        <Ring48Value className={getColorShade('green')}>{request.request.height.active}</Ring48Value>
+        <Ring48Value className={getColorShade('green')}>{redeem.request.height.active}</Ring48Value>
       </Ring48>
-      <ExternalLink className='text-sm' href={getPolkadotLink(request.request.height.absolute)}>
+      <ExternalLink className='text-sm' href={getPolkadotLink(redeem.request.height.absolute)}>
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
       {/* TODO: could componentize */}
@@ -43,9 +43,9 @@ const CompletedRedeemRequest = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(redeem.backingPayment.btcTxId || '')}</span>
       </p>
-      <ExternalLink className='text-sm' href={`${BTC_EXPLORER_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
+      <ExternalLink className='text-sm' href={`${BTC_EXPLORER_TRANSACTION_API}${redeem.backingPayment.btcTxId}`}>
         {t('issue_page.view_on_block_explorer')}
       </ExternalLink>
     </RequestWrapper>

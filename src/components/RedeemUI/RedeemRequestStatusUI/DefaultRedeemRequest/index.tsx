@@ -14,10 +14,10 @@ import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
-  request: any;
+  redeem: any;
 }
 
-const DefaultRedeemRequest = ({ request }: Props): JSX.Element => {
+const DefaultRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -71,8 +71,8 @@ const DefaultRedeemRequest = ({ request }: Props): JSX.Element => {
     return <>Loading...</>;
   }
 
-  const requestConfirmations = request.backingPayment.includedAtParachainActiveBlock
-    ? parachainHeight - request.backingPayment.includedAtParachainActiveBlock
+  const requestConfirmations = redeem.backingPayment.includedAtParachainActiveBlock
+    ? parachainHeight - redeem.backingPayment.includedAtParachainActiveBlock
     : 0;
 
   return (
@@ -82,7 +82,7 @@ const DefaultRedeemRequest = ({ request }: Props): JSX.Element => {
         <Ring48Title>{t('redeem_page.waiting_for')}</Ring48Title>
         <Ring48Title>{t('confirmations')}</Ring48Title>
         <Ring48Value className={getColorShade('green')}>
-          {`${request.backingPayment.confirmations || 0}/${stableBitcoinConfirmations}`}
+          {`${redeem.backingPayment.confirmations || 0}/${stableBitcoinConfirmations}`}
         </Ring48Value>
         <Ring48Value className={getColorShade('green')}>
           {`${requestConfirmations}/${stableParachainConfirmations}`}
@@ -97,7 +97,7 @@ const DefaultRedeemRequest = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(redeem.backingPayment.btcTxId || '')}</span>
       </p>
     </RequestWrapper>
   );

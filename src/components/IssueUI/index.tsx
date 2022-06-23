@@ -6,7 +6,9 @@ import { IssueStatus } from '@interlay/interbtc-api';
 import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
 import WhoopsStatusUI from './WhoopsStatusUI';
+// ray test touch <
 import PriceInfo from 'pages/Bridge/PriceInfo';
+// ray test touch >
 import Hr2 from 'components/hrs/Hr2';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { WrappedTokenAmount } from 'config/relay-chains';
@@ -52,7 +54,9 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
     <div className={clsx('grid', 'grid-cols-1', 'lg:grid-cols-2', 'gap-10')}>
       <div className='space-y-6'>
         <div className='text-center'>
+          {/* ray test touch < */}
           {/* TODO: could componentize */}
+          {/* ray test touch > */}
           <h4 className={clsx('space-x-1', 'text-xl')}>
             <span>{t('receive')}</span>
             <span
@@ -111,7 +115,9 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
           />
         </div>
         <div className='space-y-4'>
+          {/* ray test touch < */}
           {/* TODO: could componentize */}
+          {/* ray test touch > */}
           <div className={clsx('flex', 'justify-between')}>
             <span
               className={clsx(

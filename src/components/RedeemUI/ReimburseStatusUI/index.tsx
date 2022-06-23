@@ -24,11 +24,13 @@ import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
-  request: any;
+  redeem: any;
+  // ray test touch <
   onClose: () => void;
+  // ray test touch >
 }
 
-const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
+const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
   const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
@@ -41,7 +43,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
-    if (!request) return;
+    if (!redeem) return;
     if (!handleError) return;
 
     // TODO: should add loading UX
@@ -51,14 +53,14 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
           window.bridge.vaults.getPunishmentFee(),
           window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
         ]);
-        const wrappedTokenAmount = request ? request.request.requestedAmountBacking : BitcoinAmount.zero;
+        const wrappedTokenAmount = redeem ? redeem.request.requestedAmountBacking : BitcoinAmount.zero;
         setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
         setPunishmentCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount).mul(new Big(punishment)));
       } catch (error) {
         handleError(error);
       }
     })();
-  }, [request, bridgeLoaded, handleError]);
+  }, [redeem, bridgeLoaded, handleError]);
 
   const queryClient = useQueryClient();
   // TODO: should type properly (`Relay`)
@@ -101,7 +103,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
       throw new Error('Bridge is not loaded!');
     }
 
-    retryMutation.mutate(request);
+    retryMutation.mutate(redeem);
   };
 
   const handleReimburse = () => {
@@ -109,7 +111,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
       throw new Error('Bridge is not loaded!');
     }
 
-    reimburseMutation.mutate(request);
+    reimburseMutation.mutate(redeem);
   };
 
   return (
