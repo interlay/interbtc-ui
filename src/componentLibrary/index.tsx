@@ -27,3 +27,6 @@ export type { TableProps } from './Table';
 
 export { NewVaultsTable } from './NewVaultsTable';
 export type { NewVaultsTableProps, NewVaultsTableRow } from './NewVaultsTable';
+
+export { Modal } from './Modal';
+export type { ModalProps } from './Modal';
