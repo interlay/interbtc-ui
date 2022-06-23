@@ -4,7 +4,7 @@ import { theme } from 'componentLibrary';
 
 const TableWrapper = styled.div`
   background: ${theme.table.bg};
-  color: ${theme.colors.textSecondary};
+  color: ${theme.table.text};
   border: ${theme.table.border};
   border-radius: ${theme.rounded.lg};
   font-family: ${theme.font.primary};

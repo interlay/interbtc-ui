@@ -83,10 +83,11 @@ const theme = {
   },
   table: {
     bg: 'var(--colors-table-bg)',
-    border: '1px var(--colors-neutral-light-grey-transparent) solid'
+    border: '1px var(--colors-neutral-light-grey-50) solid',
+    text: 'var(--colors-table-text)',
   },
   newVaultsTable: {
-    highlightColor: `var(--colors-new-vaults-table-highlight)`
+    highlightColor: 'var(--colors-new-vaults-table-highlight)'
   },
   modal: {
     bg: 'var(--colors-modal-bg)'

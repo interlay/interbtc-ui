@@ -14,7 +14,7 @@ interface NumericValueProps {
 }
 
 const NumericValue = styled.div<NumericValueProps>`
-  color: ${(props) => (props.highlight ? theme.newVaultsTable.highlightColor : theme.colors.textSecondary)};
+  color: ${(props) => (props.highlight ? theme.newVaultsTable.highlightColor : 'inherit')};
   font-weight: ${theme.fontWeight.medium};
 `;
 

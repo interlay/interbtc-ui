@@ -20,6 +20,7 @@
   --colors-modal-bg: var(--colors-neutral-white);
   --colors-icon-default: var(--colors-neutral-white);
   --colors-table-bg: var(--colors-neutral-white);
-  --colors-new-vaults-table-highlight: var(--colors-blue);
+  --colors-table-text: var(--colors-neutral-black);
+  --colors-new-vaults-table-highlight: var(--colors-light-blue);
   --box-shadow-default: var(--box-shadow-black);
 }

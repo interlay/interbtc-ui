@@ -9,7 +9,7 @@ interface NewVaultsTableRow {
   minCollateralAmount: string;
   collateralRate: string;
   isActive: boolean;
-  // TODO: Define ctaOnClick callback API.
+  // TODO: Define ctaOnClick callback signature.
   ctaOnClick: () => void;
 }
 
