@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Issue } from '@interlay/interbtc-api';
 
-import BTCPaymentPendingStatusUI from 'pages/Transactions/IssueRequestsTable/IssueRequestModal/BTCPaymentPendingStatusUI';
+import BTCPaymentPendingStatusUI from 'components/IssueUI/BTCPaymentPendingStatusUI';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
