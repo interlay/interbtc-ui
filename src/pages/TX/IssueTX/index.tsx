@@ -2,9 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
-// ray test touch <
-import IssueRequestModal from 'pages/Transactions/IssueRequestsTable/IssueRequestModal';
-// ray test touch >
+import IssueUI from 'components/IssueUI';
 import ErrorFallback from 'components/ErrorFallback';
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import { URL_PARAMETERS } from 'utils/constants/links';
@@ -85,16 +83,9 @@ const IssueTX = (): JSX.Element => {
     currentActiveBlockNumber
   );
 
-  // ray test touch <
   return (
-    <IssueRequestModal
-      open
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      onClose={() => {}}
-      request={issue}
-    />
+    <IssueUI issue={issue} />
   );
-  // ray test touch >
 };
 
 export default withErrorBoundary(IssueTX, {
