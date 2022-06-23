@@ -8,7 +8,6 @@ import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
@@ -28,7 +27,7 @@ interface Props {
 }
 
 const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
-  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, prices, address } = useSelector((state: StoreType) => state.general);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
@@ -50,7 +49,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
           window.bridge.vaults.getPunishmentFee(),
           window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
         ]);
-        const wrappedTokenAmount = redeem ? redeem.request.requestedAmountBacking : BitcoinAmount.zero;
+        const wrappedTokenAmount = redeem.request.requestedAmountBacking;
         setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
         setPunishmentCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount).mul(new Big(punishment)));
       } catch (error) {
@@ -110,6 +109,8 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
 
     reimburseMutation.mutate(redeem);
   };
+
+  const isOwner = address === redeem.userParachainAddress;
 
   return (
     <RequestWrapper className='lg:px-12'>
@@ -181,7 +182,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
             </p>
             <InterlayConiferOutlinedButton
               className='w-full'
-              disabled={reimburseMutation.isLoading}
+              disabled={reimburseMutation.isLoading || !isOwner}
               pending={retryMutation.isLoading}
               onClick={handleRetry}
             >
@@ -216,7 +217,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
             </p>
             <InterlayDenimOrKintsugiMidnightOutlinedButton
               className='w-full'
-              disabled={retryMutation.isLoading}
+              disabled={retryMutation.isLoading || !isOwner}
               pending={reimburseMutation.isLoading}
               onClick={handleReimburse}
             >
