@@ -11,7 +11,7 @@ import useStableParachainConfirmations from 'services/hooks/use-stable-parachain
 import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
 
-// http://localhost:3000/tx/issue/0xfd6d53d8df584d675fe2322ccb126754d6c6d249878f0a2c9526607458714f76
+// MEMO: /tx/issue/0xfd6d53d8df584d675fe2322ccb126754d6c6d249878f0a2c9526607458714f76
 const IssueTX = (): JSX.Element => {
   const { [URL_PARAMETERS.TRANSACTION_HASH]: transactionHash } = useParams<Record<string, string>>();
 
