@@ -35,9 +35,7 @@ interface Props {
   issue: any; // TODO: should type properly (`Relay`)
 }
 
-const IssueUI = ({
-  issue
-}: Props): JSX.Element => {
+const IssueUI = ({ issue }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   const { address, prices } = useSelector((state: StoreType) => state.general);
@@ -45,7 +43,9 @@ const IssueUI = ({
   const receivedWrappedTokenAmount: WrappedTokenAmount = issue.execution
     ? issue.execution.amountWrapped
     : issue.request.amountWrapped;
-  const bridgeFee: WrappedTokenAmount = issue.execution ? issue.execution.bridgeFeeWrapped : issue.request.bridgeFeeWrapped;
+  const bridgeFee: WrappedTokenAmount = issue.execution
+    ? issue.execution.bridgeFeeWrapped
+    : issue.request.bridgeFeeWrapped;
   const sentBackingTokenAmount = receivedWrappedTokenAmount.add(bridgeFee);
 
   return (

@@ -8,13 +8,9 @@ import { StoreType } from 'common/types/util.types';
 const useCurrentActiveBlockNumber = (): UseQueryResult<number, Error> => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  return useQuery<number, Error>(
-    [GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  return useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
+    enabled: !!bridgeLoaded
+  });
 };
 
 export default useCurrentActiveBlockNumber;
