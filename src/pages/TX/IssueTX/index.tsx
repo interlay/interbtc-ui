@@ -84,9 +84,7 @@ const IssueTX = (): JSX.Element => {
     currentActiveBlockNumber
   );
 
-  return (
-    <IssueUI issue={issue} />
-  );
+  return <IssueUI issue={issue} />;
 };
 
 export default withErrorBoundary(IssueTX, {
