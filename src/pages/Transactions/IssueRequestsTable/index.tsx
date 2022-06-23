@@ -204,13 +204,13 @@ const IssueRequestsTable = (): JSX.Element => {
             case IssueStatus.Expired: {
               icon = <FaRegTimesCircle />;
               notice = t('cancelled');
-              colorClassName = getColorShade('yellow');
+              colorClassName = getColorShade('red');
               break;
             }
             default: {
               icon = <FaRegClock />;
               notice = t('pending');
-              colorClassName = getColorShade('red');
+              colorClassName = getColorShade('yellow');
               break;
             }
           }
