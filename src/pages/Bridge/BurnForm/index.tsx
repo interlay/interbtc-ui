@@ -201,7 +201,7 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(burnableTokens)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(burnableTokens, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(burnableTokens, prices.bitcoin?.usd).toString()}
           />
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}

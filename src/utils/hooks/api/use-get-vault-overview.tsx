@@ -7,7 +7,9 @@ import {
   tickerToCurrencyIdLiteral,
   newAccountId,
   VaultExt,
-  CurrencyIdLiteral
+  CurrencyIdLiteral,
+  WrappedIdLiteral,
+  CollateralCurrency
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 
@@ -30,10 +32,16 @@ interface VaultData {
 
 interface VaultOverview {
   vaults: Array<VaultData>;
-  totalLocked: number;
+  totalLockedCollateral: number;
   totalUsdRewards: number;
   totalAtRisk: number;
 }
+
+const getVaultTotals = (vaults: Array<VaultData>) => ({
+  totalLockedCollateral: vaults.reduce((a, b) => a + b.lockedCollateral, 0),
+  totalUsdRewards: vaults.reduce((a, b) => a + b.usdRewards, 0),
+  totalAtRisk: vaults.map((vault) => vault.vaultAtRisk).filter(Boolean).length
+})
 
 const getVaultOverview = async (
   vault: VaultExt<BitcoinUnit>,
@@ -43,6 +51,11 @@ const getVaultOverview = async (
 
   const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
+  const rewards = await window.bridge.vaults.getWrappedReward(accountId, tokenIdLiteral, VAULT_WRAPPED as WrappedIdLiteral)
+  const collateral = await window.bridge.vaults.getCollateral(accountId, tokenIdLiteral);
+  const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency as CollateralCurrency);
+
+  console.log('threshold', collateralization?.lt(threshold));
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
@@ -62,9 +75,9 @@ const getVaultOverview = async (
     issues: issuesCount.data.issuesConnection.totalCount,
     collateralId: tokenIdLiteral,
     wrappedId: VAULT_WRAPPED,
-    lockedCollateral: 1324.24,
-    usdRewards: 10.23,
-    vaultAtRisk: true
+    lockedCollateral: collateral.toBig().toNumber(),
+    usdRewards: rewards.toBig().toNumber(),
+    vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
   };
 };
 
@@ -89,18 +102,9 @@ const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview =
 
   const parsedVaults: Array<VaultData> = vaultData.map((data: any) => data.data).filter(data => data !== undefined);
   
-  const totalLocked = parsedVaults.reduce((a, b) => {
-      return a + b.lockedCollateral;
-    }, 0);
+  const { totalLockedCollateral, totalUsdRewards, totalAtRisk} = getVaultTotals(parsedVaults);
 
-    const totalUsdRewards = parsedVaults.reduce((a, b) => {
-      return a + b.usdRewards;
-    }, 0);
-
-    const totalAtRisk = parsedVaults.map((vault) => vault.vaultAtRisk).length;
-
-
-  return { vaults: parsedVaults, totalLocked, totalUsdRewards, totalAtRisk };
+  return { vaults: parsedVaults, totalLockedCollateral, totalUsdRewards, totalAtRisk };
 };
 
 export { useGetVaultOverview };
