@@ -16,9 +16,7 @@ import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 interface Props {
   redeem: any; // TODO: should type properly (`Relay`)
-  // ray test touch <
   onClose: () => void;
-  // ray test touch >
 }
 
 const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {

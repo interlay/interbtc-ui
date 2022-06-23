@@ -23,11 +23,8 @@ import { REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
 import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
-  // TODO: should type properly (`Relay`)
-  redeem: any;
-  // ray test touch <
+  redeem: any; // TODO: should type properly (`Relay`)
   onClose: () => void;
-  // ray test touch >
 }
 
 const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
