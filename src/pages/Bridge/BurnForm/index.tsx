@@ -233,7 +233,7 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken?.usd)}
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
           />
           <SubmitButton
             // TODO: should not check everywhere like this

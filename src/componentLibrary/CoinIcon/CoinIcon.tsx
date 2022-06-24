@@ -13,7 +13,7 @@ const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
         <BtcIcon />
       ) : coin === CurrencySymbols.DOT ? (
         <DotIcon />
-      ) : coin === CurrencySymbols.INTERBTC ? (
+      ) : coin === CurrencySymbols.IBTC ? (
         <InterBtcIcon />
       ) : coin === CurrencySymbols.KBTC ? (
         <KbtcIcon />

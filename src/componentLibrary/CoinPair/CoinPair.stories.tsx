@@ -7,14 +7,14 @@ const Template: Story<CoinPairProps> = (args) => <CoinPair {...args} />;
 
 const Small = Template.bind({});
 Small.args = {
-  coinOne: CurrencySymbols.INTERBTC,
+  coinOne: CurrencySymbols.IBTC,
   coinTwo: CurrencySymbols.KBTC,
   size: 'small'
 };
 
 const Large = Template.bind({});
 Large.args = {
-  coinOne: CurrencySymbols.INTERBTC,
+  coinOne: CurrencySymbols.IBTC,
   coinTwo: CurrencySymbols.KBTC,
   size: 'large'
 };
