@@ -72,10 +72,10 @@ const RedeemRequestsTable = (): JSX.Element => {
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
-    isIdle: parachainConfirmationsIdle,
-    isLoading: parachainConfirmationsLoading,
-    data: parachainConfirmations,
-    error: parachainConfirmationsError
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations,
+    error: stableParachainConfirmationsError
   } = useQuery<number, Error>(
     [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
     genericFetcher<number>(),
@@ -83,7 +83,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(parachainConfirmationsError);
+  useErrorHandler(stableParachainConfirmationsError);
 
   const {
     isIdle: redeemRequestsTotalCountIdle,
@@ -237,13 +237,13 @@ const RedeemRequestsTable = (): JSX.Element => {
   const data =
     redeemRequests === undefined ||
     stableBitcoinConfirmations === undefined ||
-    parachainConfirmations === undefined ||
+    stableParachainConfirmations === undefined ||
     currentActiveBlockNumber === undefined
       ? []
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeem: any) =>
-            getRedeemWithStatus(redeem, stableBitcoinConfirmations, parachainConfirmations, currentActiveBlockNumber)
+            getRedeemWithStatus(redeem, stableBitcoinConfirmations, stableParachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -254,8 +254,8 @@ const RedeemRequestsTable = (): JSX.Element => {
   if (
     stableBitcoinConfirmationsIdle ||
     stableBitcoinConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
     currentActiveBlockNumberIdle ||
     currentActiveBlockNumberLoading ||
     redeemRequestsIdle ||

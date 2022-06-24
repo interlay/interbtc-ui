@@ -73,10 +73,10 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
-    isIdle: parachainConfirmationsIdle,
-    isLoading: parachainConfirmationsLoading,
-    data: parachainConfirmations,
-    error: parachainConfirmationsError
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations,
+    error: stableParachainConfirmationsError
   } = useQuery<number, Error>(
     [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
     genericFetcher<number>(),
@@ -84,7 +84,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(parachainConfirmationsError);
+  useErrorHandler(stableParachainConfirmationsError);
 
   const {
     isIdle: redeemRequestsTotalCountIdle,
@@ -270,13 +270,13 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
   const data =
     redeemRequests === undefined ||
     stableBitcoinConfirmations === undefined ||
-    parachainConfirmations === undefined ||
+    stableParachainConfirmations === undefined ||
     currentActiveBlockNumber === undefined
       ? []
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeemRequest: any) =>
-            getRedeemWithStatus(redeemRequest, stableBitcoinConfirmations, parachainConfirmations, currentActiveBlockNumber)
+            getRedeemWithStatus(redeemRequest, stableBitcoinConfirmations, stableParachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -287,8 +287,8 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
   if (
     stableBitcoinConfirmationsIdle ||
     stableBitcoinConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
     currentActiveBlockNumberIdle ||
     currentActiveBlockNumberLoading ||
     redeemRequestsTotalCountIdle ||

@@ -73,10 +73,10 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
-    isIdle: parachainConfirmationsIdle,
-    isLoading: parachainConfirmationsLoading,
-    data: parachainConfirmations,
-    error: parachainConfirmationsError
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations,
+    error: stableParachainConfirmationsError
   } = useQuery<number, Error>(
     [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
     genericFetcher<number>(),
@@ -84,7 +84,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(parachainConfirmationsError);
+  useErrorHandler(stableParachainConfirmationsError);
 
   const {
     isIdle: issueRequestsTotalCountIdle,
@@ -241,13 +241,13 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
   const data =
     issueRequests === undefined ||
     stableBitcoinConfirmations === undefined ||
-    parachainConfirmations === undefined ||
+    stableParachainConfirmations === undefined ||
     currentActiveBlockNumber === undefined
       ? []
       : issueRequests.map(
           // TODO: should type properly (`Relay`)
           (issueRequest: any) =>
-            getIssueWithStatus(issueRequest, stableBitcoinConfirmations, parachainConfirmations, currentActiveBlockNumber)
+            getIssueWithStatus(issueRequest, stableBitcoinConfirmations, stableParachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -258,8 +258,8 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
   if (
     stableBitcoinConfirmationsIdle ||
     stableBitcoinConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
     currentActiveBlockNumberIdle ||
     currentActiveBlockNumberLoading ||
     issueRequestsTotalCountIdle ||
