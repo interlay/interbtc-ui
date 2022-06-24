@@ -52,9 +52,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
     <div className={clsx('grid', 'grid-cols-1', 'lg:grid-cols-2', 'gap-10')}>
       <div className='space-y-6'>
         <div className='text-center'>
-          {/* ray test touch < */}
           {/* TODO: could componentize */}
-          {/* ray test touch > */}
           <h4 className={clsx('space-x-1', 'text-xl')}>
             <span>{t('receive')}</span>
             <span
@@ -113,9 +111,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
           />
         </div>
         <div className='space-y-4'>
-          {/* ray test touch < */}
           {/* TODO: could componentize */}
-          {/* ray test touch > */}
           <div className={clsx('flex', 'justify-between')}>
             <span
               className={clsx(
