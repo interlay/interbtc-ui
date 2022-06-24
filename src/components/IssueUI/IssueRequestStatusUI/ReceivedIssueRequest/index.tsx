@@ -11,9 +11,10 @@ import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
 import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { getColorShade } from 'utils/helpers/colors';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -57,9 +58,7 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber = 0, // TODO: double-check
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   // TODO: should use skeleton loaders

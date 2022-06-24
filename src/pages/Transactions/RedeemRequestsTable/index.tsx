@@ -33,6 +33,7 @@ import redeemCountQuery from 'services/queries/redeem-count-query';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import redeemsFetcher, { REDEEMS_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 import { StoreType } from 'common/types/util.types';
 import { getColorShade } from 'utils/helpers/colors';
 
@@ -66,9 +67,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   const {

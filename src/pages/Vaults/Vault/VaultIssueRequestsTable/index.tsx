@@ -26,13 +26,14 @@ import StatusCell from 'components/UI/InterlayTable/StatusCell';
 import { BTC_EXPLORER_ADDRESS_API } from 'config/blockstream-explorer-links';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import issueCountQuery from 'services/queries/issue-count-query';
+import { shortAddress, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { shortAddress, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
+import issueCountQuery from 'services/queries/issue-count-query';
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from 'services/fetchers/issues-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
@@ -67,9 +68,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   const {

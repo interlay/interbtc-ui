@@ -31,6 +31,7 @@ import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetcher
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 import { StoreType } from 'common/types/util.types';
 
 const IssueRequestsTable = (): JSX.Element => {
@@ -155,9 +156,7 @@ const IssueRequestsTable = (): JSX.Element => {
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   const {

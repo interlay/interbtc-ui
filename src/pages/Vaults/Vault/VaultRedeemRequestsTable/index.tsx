@@ -23,17 +23,18 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
+import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import { shortAddress, formatDateTimePrecise, displayMonetaryAmount, shortTxId } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import { StoreType } from 'common/types/util.types';
 
 interface Props {
   vaultAddress: string;
@@ -67,9 +68,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   const {

@@ -29,13 +29,14 @@ import {
   GOVERNANCE_TOKEN_SYMBOL
 } from 'config/relay-chains';
 import { getCollateralization, getVaultStatusLabel } from 'utils/helpers/vaults';
+import { getColorShade } from 'utils/helpers/colors';
 import { PAGES, URL_PARAMETERS } from 'utils/constants/links';
 import { shortAddress, displayMonetaryAmount } from 'common/utils/utils';
 import * as constants from '../../../../../constants';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
-import { getColorShade } from 'utils/helpers/colors';
 
 interface CollateralizationCellProps {
   settledCollateralization: Big | undefined;
@@ -116,9 +117,7 @@ const VaultsTable = (): JSX.Element => {
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
