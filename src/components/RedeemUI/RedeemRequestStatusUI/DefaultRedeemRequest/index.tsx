@@ -12,6 +12,7 @@ import { StoreType } from 'common/types/util.types';
 import { getColorShade } from 'utils/helpers/colors';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -27,13 +28,7 @@ const DefaultRedeemRequest = ({ redeem }: Props): JSX.Element => {
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations = 1, // TODO: double-check
     error: stableBitcoinConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
   const {

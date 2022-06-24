@@ -9,12 +9,13 @@ import ExternalLink from 'components/ExternalLink';
 import ErrorFallback from 'components/ErrorFallback';
 import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
 import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
 import { getColorShade } from 'utils/helpers/colors';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
+import { StoreType } from 'common/types/util.types';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -30,13 +31,7 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations = 1, // TODO: double-check
     error: stableBitcoinConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
   const {

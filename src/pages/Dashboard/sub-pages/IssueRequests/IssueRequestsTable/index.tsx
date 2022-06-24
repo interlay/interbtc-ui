@@ -32,6 +32,7 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
 import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
 import { StoreType } from 'common/types/util.types';
 
 const IssueRequestsTable = (): JSX.Element => {
@@ -142,13 +143,7 @@ const IssueRequestsTable = (): JSX.Element => {
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations,
     error: stableBitcoinConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
   const {

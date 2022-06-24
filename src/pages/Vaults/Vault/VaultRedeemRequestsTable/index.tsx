@@ -34,6 +34,7 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
 import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
@@ -54,13 +55,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations,
     error: stableBitcoinConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
