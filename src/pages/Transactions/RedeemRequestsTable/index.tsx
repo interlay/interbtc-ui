@@ -243,7 +243,12 @@ const RedeemRequestsTable = (): JSX.Element => {
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeem: any) =>
-            getRedeemWithStatus(redeem, stableBitcoinConfirmations, stableParachainConfirmations, currentActiveBlockNumber)
+            getRedeemWithStatus(
+              redeem,
+              stableBitcoinConfirmations,
+              stableParachainConfirmations,
+              currentActiveBlockNumber
+            )
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({

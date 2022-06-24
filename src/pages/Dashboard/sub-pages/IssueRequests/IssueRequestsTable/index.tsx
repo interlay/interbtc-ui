@@ -210,7 +210,12 @@ const IssueRequestsTable = (): JSX.Element => {
       : issues.map(
           // TODO: should type properly (`Relay`)
           (issue: any) =>
-            getIssueWithStatus(issue, stableBitcoinConfirmations, stableParachainConfirmations, currentActiveBlockNumber)
+            getIssueWithStatus(
+              issue,
+              stableBitcoinConfirmations,
+              stableParachainConfirmations,
+              currentActiveBlockNumber
+            )
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({

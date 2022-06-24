@@ -276,7 +276,12 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeemRequest: any) =>
-            getRedeemWithStatus(redeemRequest, stableBitcoinConfirmations, stableParachainConfirmations, currentActiveBlockNumber)
+            getRedeemWithStatus(
+              redeemRequest,
+              stableBitcoinConfirmations,
+              stableParachainConfirmations,
+              currentActiveBlockNumber
+            )
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
