@@ -49,10 +49,10 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
   const { t } = useTranslation();
 
   const {
-    isIdle: btcConfirmationsIdle,
-    isLoading: btcConfirmationsLoading,
-    data: btcConfirmations,
-    error: btcConfirmationsError
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations,
+    error: stableBitcoinConfirmationsError
   } = useQuery<number, Error>(
     [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
     genericFetcher<number>(),
@@ -60,7 +60,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(btcConfirmationsError);
+  useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
     isIdle: currentActiveBlockNumberIdle,
@@ -240,14 +240,14 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
 
   const data =
     issueRequests === undefined ||
-    btcConfirmations === undefined ||
+    stableBitcoinConfirmations === undefined ||
     parachainConfirmations === undefined ||
     currentActiveBlockNumber === undefined
       ? []
       : issueRequests.map(
           // TODO: should type properly (`Relay`)
           (issueRequest: any) =>
-            getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, currentActiveBlockNumber)
+            getIssueWithStatus(issueRequest, stableBitcoinConfirmations, parachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -256,8 +256,8 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
   });
 
   if (
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
     parachainConfirmationsIdle ||
     parachainConfirmationsLoading ||
     currentActiveBlockNumberIdle ||

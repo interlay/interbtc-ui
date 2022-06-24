@@ -48,10 +48,10 @@ const RedeemRequestsTable = (): JSX.Element => {
   const { address, bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
-    isIdle: btcConfirmationsIdle,
-    isLoading: btcConfirmationsLoading,
-    data: btcConfirmations,
-    error: btcConfirmationsError
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations,
+    error: stableBitcoinConfirmationsError
   } = useQuery<number, Error>(
     [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
     genericFetcher<number>(),
@@ -59,7 +59,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(btcConfirmationsError);
+  useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
     isIdle: currentActiveBlockNumberIdle,
@@ -236,14 +236,14 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   const data =
     redeemRequests === undefined ||
-    btcConfirmations === undefined ||
+    stableBitcoinConfirmations === undefined ||
     parachainConfirmations === undefined ||
     currentActiveBlockNumber === undefined
       ? []
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeem: any) =>
-            getRedeemWithStatus(redeem, btcConfirmations, parachainConfirmations, currentActiveBlockNumber)
+            getRedeemWithStatus(redeem, stableBitcoinConfirmations, parachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -252,8 +252,8 @@ const RedeemRequestsTable = (): JSX.Element => {
   });
 
   if (
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
     parachainConfirmationsIdle ||
     parachainConfirmationsLoading ||
     currentActiveBlockNumberIdle ||

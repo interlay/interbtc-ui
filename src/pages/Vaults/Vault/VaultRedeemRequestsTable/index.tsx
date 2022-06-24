@@ -49,10 +49,10 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
   const { t } = useTranslation();
 
   const {
-    isIdle: btcConfirmationsIdle,
-    isLoading: btcConfirmationsLoading,
-    data: btcConfirmations,
-    error: btcConfirmationsError
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations,
+    error: stableBitcoinConfirmationsError
   } = useQuery<number, Error>(
     [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
     genericFetcher<number>(),
@@ -60,7 +60,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(btcConfirmationsError);
+  useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
     isIdle: currentActiveBlockNumberIdle,
@@ -269,14 +269,14 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
 
   const data =
     redeemRequests === undefined ||
-    btcConfirmations === undefined ||
+    stableBitcoinConfirmations === undefined ||
     parachainConfirmations === undefined ||
     currentActiveBlockNumber === undefined
       ? []
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeemRequest: any) =>
-            getRedeemWithStatus(redeemRequest, btcConfirmations, parachainConfirmations, currentActiveBlockNumber)
+            getRedeemWithStatus(redeemRequest, stableBitcoinConfirmations, parachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -285,8 +285,8 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
   });
 
   if (
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
     parachainConfirmationsIdle ||
     parachainConfirmationsLoading ||
     currentActiveBlockNumberIdle ||
