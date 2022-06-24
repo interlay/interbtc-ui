@@ -8,7 +8,7 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { ExchangeRate, Bitcoin, BitcoinUnit, Currency, BitcoinAmount } from '@interlay/monetary-js';
 import { CollateralCurrency, CollateralUnit, newMonetaryAmount } from '@interlay/interbtc-api';
 
-import PriceInfo from 'pages/Bridge/PriceInfo';
+import PriceInfo from 'components/PriceInfo';
 import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';

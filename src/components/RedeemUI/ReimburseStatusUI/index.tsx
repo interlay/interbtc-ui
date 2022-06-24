@@ -8,7 +8,6 @@ import Big from 'big.js';
 import clsx from 'clsx';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
@@ -23,13 +22,12 @@ import { REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
 import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
-  // TODO: should type properly (`Relay`)
-  request: any;
+  redeem: any; // TODO: should type properly (`Relay`)
   onClose: () => void;
 }
 
-const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
-  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
+  const { bridgeLoaded, prices, address } = useSelector((state: StoreType) => state.general);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
@@ -41,7 +39,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
-    if (!request) return;
+    if (!redeem) return;
     if (!handleError) return;
 
     // TODO: should add loading UX
@@ -51,14 +49,14 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
           window.bridge.vaults.getPunishmentFee(),
           window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
         ]);
-        const wrappedTokenAmount = request ? request.request.requestedAmountBacking : BitcoinAmount.zero;
+        const wrappedTokenAmount = redeem.request.requestedAmountBacking;
         setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
         setPunishmentCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount).mul(new Big(punishment)));
       } catch (error) {
         handleError(error);
       }
     })();
-  }, [request, bridgeLoaded, handleError]);
+  }, [redeem, bridgeLoaded, handleError]);
 
   const queryClient = useQueryClient();
   // TODO: should type properly (`Relay`)
@@ -101,7 +99,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
       throw new Error('Bridge is not loaded!');
     }
 
-    retryMutation.mutate(request);
+    retryMutation.mutate(redeem);
   };
 
   const handleReimburse = () => {
@@ -109,8 +107,10 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
       throw new Error('Bridge is not loaded!');
     }
 
-    reimburseMutation.mutate(request);
+    reimburseMutation.mutate(redeem);
   };
+
+  const isOwner = address === redeem.userParachainAddress;
 
   return (
     <RequestWrapper className='lg:px-12'>
@@ -182,7 +182,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
             </p>
             <InterlayConiferOutlinedButton
               className='w-full'
-              disabled={reimburseMutation.isLoading}
+              disabled={reimburseMutation.isLoading || !isOwner}
               pending={retryMutation.isLoading}
               onClick={handleRetry}
             >
@@ -217,7 +217,7 @@ const ReimburseStatusUI = ({ request, onClose }: Props): JSX.Element => {
             </p>
             <InterlayDenimOrKintsugiMidnightOutlinedButton
               className='w-full'
-              disabled={retryMutation.isLoading}
+              disabled={retryMutation.isLoading || !isOwner}
               pending={reimburseMutation.isLoading}
               onClick={handleReimburse}
             >

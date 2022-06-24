@@ -8,21 +8,21 @@ import DefaultRedeemRequest from './DefaultRedeemRequest';
 
 interface Props {
   // TODO: should type properly (`Relay`)
-  request: any;
+  redeem: any;
 }
 
-const RedeemRequestStatusUI = ({ request }: Props): JSX.Element => {
-  switch (request.status) {
+const RedeemRequestStatusUI = ({ redeem }: Props): JSX.Element => {
+  switch (redeem.status) {
     case RedeemStatus.Completed:
-      return <CompletedRedeemRequest request={request} />;
+      return <CompletedRedeemRequest redeem={redeem} />;
     case RedeemStatus.PendingWithBtcTxNotFound:
-      return <PendingWithBtcTxNotFoundRedeemRequest request={request} />;
+      return <PendingWithBtcTxNotFoundRedeemRequest redeem={redeem} />;
     case RedeemStatus.Reimbursed:
-      return <ReimbursedRedeemRequest request={request} />;
+      return <ReimbursedRedeemRequest redeem={redeem} />;
     case RedeemStatus.Retried:
-      return <RetriedRedeemRequest request={request} />;
+      return <RetriedRedeemRequest redeem={redeem} />;
     default:
-      return <DefaultRedeemRequest request={request} />;
+      return <DefaultRedeemRequest redeem={redeem} />;
   }
 };
 

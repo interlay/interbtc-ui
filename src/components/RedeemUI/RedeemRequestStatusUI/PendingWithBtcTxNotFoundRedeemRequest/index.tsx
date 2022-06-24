@@ -12,10 +12,10 @@ import { StoreType } from 'common/types/util.types';
 
 interface Props {
   // TODO: should type properly (`Relay`)
-  request: any;
+  redeem: any;
 }
 
-const PendingWithBtcTxNotFoundRedeemRequest = ({ request }: Props): JSX.Element => {
+const PendingWithBtcTxNotFoundRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -23,18 +23,18 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({ request }: Props): JSX.Element 
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
-    if (!request) return;
+    if (!redeem) return;
 
     // TODO: should add loading UX
     (async () => {
       try {
         const [redeemPeriodInBlocks, requestById] = await Promise.all([
           window.bridge.redeem.getRedeemPeriod(),
-          window.bridge.redeem.getRequestById(request.id)
+          window.bridge.redeem.getRequestById(redeem.id)
         ]);
 
         const maxRedeemPeriodInBlocks = Math.max(redeemPeriodInBlocks, requestById.period);
-        const requestTimestamp = Math.floor(new Date(request.request.timestamp).getTime() / 1000);
+        const requestTimestamp = Math.floor(new Date(redeem.request.timestamp).getTime() / 1000);
         const theInitialLeftSeconds =
           requestTimestamp + maxRedeemPeriodInBlocks * BLOCK_TIME - Math.floor(Date.now() / 1000);
         setInitialLeftSeconds(theInitialLeftSeconds);
@@ -43,7 +43,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({ request }: Props): JSX.Element 
         console.log('[PendingWithBtcTxNotFoundRedeemRequest useEffect] error.message => ', error.message);
       }
     })();
-  }, [request, bridgeLoaded]);
+  }, [redeem, bridgeLoaded]);
 
   return (
     <RequestWrapper>

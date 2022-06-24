@@ -9,8 +9,7 @@ import Hr1 from 'components/hrs/Hr1';
 import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 
 interface CustomProps {
-  // TODO: should type properly (`Relay`)
-  request: any;
+  request: any; // TODO: should type properly (`Relay`)
 }
 
 const IssueRequestModal = ({ open, onClose, request }: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {

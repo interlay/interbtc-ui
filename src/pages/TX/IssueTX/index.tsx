@@ -13,7 +13,7 @@ import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetc
 
 // MEMO: /tx/issue/0xfd6d53d8df584d675fe2322ccb126754d6c6d249878f0a2c9526607458714f76
 const IssueTX = (): JSX.Element => {
-  const { [URL_PARAMETERS.TRANSACTION_HASH]: transactionHash } = useParams<Record<string, string>>();
+  const { [URL_PARAMETERS.TRANSACTION_HASH]: txHash } = useParams<Record<string, string>>();
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,
@@ -50,7 +50,7 @@ const IssueTX = (): JSX.Element => {
       ISSUES_FETCHER,
       0, // offset
       1, // limit
-      `id_eq: "${transactionHash}"` // `WHERE` condition
+      `id_eq: "${txHash}"` // `WHERE` condition
     ],
     issuesFetcher
   );
@@ -69,6 +69,7 @@ const IssueTX = (): JSX.Element => {
     return <PrimaryColorEllipsisLoader />;
   }
   if (
+    issues === undefined ||
     stableBitcoinConfirmations === undefined ||
     stableParachainConfirmations === undefined ||
     currentActiveBlockNumber === undefined
@@ -83,9 +84,7 @@ const IssueTX = (): JSX.Element => {
     currentActiveBlockNumber
   );
 
-  return (
-    <IssueUI issue={issue} />
-  );
+  return <IssueUI issue={issue} />;
 };
 
 export default withErrorBoundary(IssueTX, {
