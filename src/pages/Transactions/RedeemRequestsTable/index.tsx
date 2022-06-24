@@ -30,11 +30,11 @@ import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { shortTxId, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
 import redeemCountQuery from 'services/queries/redeem-count-query';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import redeemsFetcher, { REDEEMS_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
 import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
 import { StoreType } from 'common/types/util.types';
 import { getColorShade } from 'utils/helpers/colors';
 
@@ -47,7 +47,7 @@ const RedeemRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
-  const { address, bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { address } = useSelector((state: StoreType) => state.general);
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,
@@ -70,13 +70,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     isLoading: stableParachainConfirmationsLoading,
     data: stableParachainConfirmations,
     error: stableParachainConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableParachainConfirmations();
   useErrorHandler(stableParachainConfirmationsError);
 
   const {
