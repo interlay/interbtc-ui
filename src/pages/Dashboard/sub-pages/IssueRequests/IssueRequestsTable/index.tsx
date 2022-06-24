@@ -151,14 +151,14 @@ const IssueRequestsTable = (): JSX.Element => {
   useErrorHandler(stableBtcConfirmationsError);
 
   const {
-    isIdle: latestActiveBlockIdle,
-    isLoading: latestActiveBlockLoading,
-    data: latestParachainActiveBlock,
-    error: latestActiveBlockError
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
   } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
     enabled: !!bridgeLoaded
   });
-  useErrorHandler(latestActiveBlockError);
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
     isIdle: stableParachainConfirmationsIdle,
@@ -205,12 +205,12 @@ const IssueRequestsTable = (): JSX.Element => {
     issues === undefined ||
     stableBtcConfirmations === undefined ||
     stableParachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+    currentActiveBlockNumber === undefined
       ? []
       : issues.map(
           // TODO: should type properly (`Relay`)
           (issue: any) =>
-            getIssueWithStatus(issue, stableBtcConfirmations, stableParachainConfirmations, latestParachainActiveBlock)
+            getIssueWithStatus(issue, stableBtcConfirmations, stableParachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -224,8 +224,8 @@ const IssueRequestsTable = (): JSX.Element => {
       stableBtcConfirmationsLoading ||
       stableParachainConfirmationsIdle ||
       stableParachainConfirmationsLoading ||
-      latestActiveBlockIdle ||
-      latestActiveBlockLoading ||
+      currentActiveBlockNumberIdle ||
+      currentActiveBlockNumberLoading ||
       issuesIdle ||
       issuesLoading ||
       issuesCountIdle ||

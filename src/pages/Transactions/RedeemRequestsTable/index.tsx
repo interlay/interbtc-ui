@@ -62,14 +62,14 @@ const RedeemRequestsTable = (): JSX.Element => {
   useErrorHandler(btcConfirmationsError);
 
   const {
-    isIdle: latestParachainActiveBlockIdle,
-    isLoading: latestParachainActiveBlockLoading,
-    data: latestParachainActiveBlock,
-    error: latestParachainActiveBlockError
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
   } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
     enabled: !!bridgeLoaded
   });
-  useErrorHandler(latestParachainActiveBlockError);
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
     isIdle: parachainConfirmationsIdle,
@@ -238,12 +238,12 @@ const RedeemRequestsTable = (): JSX.Element => {
     redeemRequests === undefined ||
     btcConfirmations === undefined ||
     parachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+    currentActiveBlockNumber === undefined
       ? []
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeem: any) =>
-            getRedeemWithStatus(redeem, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+            getRedeemWithStatus(redeem, btcConfirmations, parachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -256,8 +256,8 @@ const RedeemRequestsTable = (): JSX.Element => {
     btcConfirmationsLoading ||
     parachainConfirmationsIdle ||
     parachainConfirmationsLoading ||
-    latestParachainActiveBlockIdle ||
-    latestParachainActiveBlockLoading ||
+    currentActiveBlockNumberIdle ||
+    currentActiveBlockNumberLoading ||
     redeemRequestsIdle ||
     redeemRequestsLoading ||
     redeemRequestsTotalCountIdle ||

@@ -53,14 +53,14 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
   useErrorHandler(stableParachainConfirmationsError);
 
   const {
-    isIdle: parachainHeightIdle,
-    isLoading: parachainHeightLoading,
-    data: parachainHeight = 0, // TODO: double-check
-    error: parachainHeightError
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber = 0, // TODO: double-check
+    error: currentActiveBlockNumberError
   } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
     enabled: !!bridgeLoaded
   });
-  useErrorHandler(parachainHeightError);
+  useErrorHandler(currentActiveBlockNumberError);
 
   // TODO: should use skeleton loaders
   if (stableBitcoinConfirmationsIdle || stableBitcoinConfirmationsLoading) {
@@ -69,12 +69,12 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
   if (stableParachainConfirmationsIdle || stableParachainConfirmationsLoading) {
     return <>Loading...</>;
   }
-  if (parachainHeightIdle || parachainHeightLoading) {
+  if (currentActiveBlockNumberIdle || currentActiveBlockNumberLoading) {
     return <>Loading...</>;
   }
 
   const requestConfirmations = request.backingPayment.includedAtParachainActiveBlock
-    ? parachainHeight - request.backingPayment.includedAtParachainActiveBlock
+    ? currentActiveBlockNumber - request.backingPayment.includedAtParachainActiveBlock
     : 0;
 
   return (

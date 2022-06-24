@@ -63,14 +63,14 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
   useErrorHandler(btcConfirmationsError);
 
   const {
-    isIdle: latestParachainActiveBlockIdle,
-    isLoading: latestParachainActiveBlockLoading,
-    data: latestParachainActiveBlock,
-    error: latestParachainActiveBlockError
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
   } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
     enabled: !!bridgeLoaded
   });
-  useErrorHandler(latestParachainActiveBlockError);
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
     isIdle: parachainConfirmationsIdle,
@@ -271,12 +271,12 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
     redeemRequests === undefined ||
     btcConfirmations === undefined ||
     parachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+    currentActiveBlockNumber === undefined
       ? []
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeemRequest: any) =>
-            getRedeemWithStatus(redeemRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+            getRedeemWithStatus(redeemRequest, btcConfirmations, parachainConfirmations, currentActiveBlockNumber)
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -289,8 +289,8 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
     btcConfirmationsLoading ||
     parachainConfirmationsIdle ||
     parachainConfirmationsLoading ||
-    latestParachainActiveBlockIdle ||
-    latestParachainActiveBlockLoading ||
+    currentActiveBlockNumberIdle ||
+    currentActiveBlockNumberLoading ||
     redeemRequestsTotalCountIdle ||
     redeemRequestsTotalCountLoading ||
     redeemRequestsIdle ||
