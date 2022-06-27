@@ -1,26 +1,23 @@
+import { useQuery } from 'react-query';
+import { useErrorHandler } from 'react-error-boundary';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { useSelector } from 'react-redux';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import ExternalLink from 'components/ExternalLink';
-import ErrorFallback from 'components/ErrorFallback';
 import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
-import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)
-  request: any;
+  redeem: any;
 }
 
-const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
+const DefaultRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -53,38 +50,39 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
   useErrorHandler(stableParachainConfirmationsError);
 
   const {
-    isIdle: parachainHeightIdle,
-    isLoading: parachainHeightLoading,
-    data: parachainHeight = 0, // TODO: double-check
-    error: parachainHeightError
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber = 0, // TODO: double-check
+    error: currentActiveBlockNumberError
   } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
     enabled: !!bridgeLoaded
   });
-  useErrorHandler(parachainHeightError);
+  useErrorHandler(currentActiveBlockNumberError);
 
   // TODO: should use skeleton loaders
-  if (stableBitcoinConfirmationsIdle || stableBitcoinConfirmationsLoading) {
-    return <>Loading...</>;
-  }
-  if (stableParachainConfirmationsIdle || stableParachainConfirmationsLoading) {
-    return <>Loading...</>;
-  }
-  if (parachainHeightIdle || parachainHeightLoading) {
+  if (
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
+    currentActiveBlockNumberIdle ||
+    currentActiveBlockNumberLoading
+  ) {
     return <>Loading...</>;
   }
 
-  const requestConfirmations = request.backingPayment.includedAtParachainActiveBlock
-    ? parachainHeight - request.backingPayment.includedAtParachainActiveBlock
+  const requestConfirmations = redeem.backingPayment.includedAtParachainActiveBlock
+    ? currentActiveBlockNumber - redeem.backingPayment.includedAtParachainActiveBlock
     : 0;
 
   return (
     <RequestWrapper>
       <h2 className={clsx('text-3xl', 'font-medium')}>{t('received')}</h2>
-      <Ring48 className={getColorShade('green')}>
-        <Ring48Title>{t('issue_page.waiting_for')}</Ring48Title>
+      <Ring48 className={getColorShade('yellow', 'ring')}>
+        <Ring48Title>{t('redeem_page.waiting_for')}</Ring48Title>
         <Ring48Title>{t('confirmations')}</Ring48Title>
         <Ring48Value className={getColorShade('green')}>
-          {`${request.backingPayment.confirmations ?? 0}/${stableBitcoinConfirmations}`}
+          {`${redeem.backingPayment.confirmations || 0}/${stableBitcoinConfirmations}`}
         </Ring48Value>
         <Ring48Value className={getColorShade('green')}>
           {`${requestConfirmations}/${stableParachainConfirmations}`}
@@ -99,18 +97,10 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
+        <span className='font-medium'>{shortAddress(redeem.backingPayment.btcTxId || '')}</span>
       </p>
-      <ExternalLink className='text-sm' href={`${BTC_EXPLORER_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
-        {t('issue_page.view_on_block_explorer')}
-      </ExternalLink>
     </RequestWrapper>
   );
 };
 
-export default withErrorBoundary(ReceivedIssueRequest, {
-  FallbackComponent: ErrorFallback,
-  onReset: () => {
-    window.location.reload();
-  }
-});
+export default DefaultRedeemRequest;

@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import clsx from 'clsx';
 
 import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import PriceInfo from 'pages/Bridge/PriceInfo';
+import PriceInfo from 'components/PriceInfo';
 import Hr2 from 'components/hrs/Hr2';
 import InterlayTooltip from 'components/UI/InterlayTooltip';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';

@@ -48,10 +48,10 @@ const RedeemRequestsTable = (): JSX.Element => {
   const { address, bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
-    isIdle: btcConfirmationsIdle,
-    isLoading: btcConfirmationsLoading,
-    data: btcConfirmations,
-    error: btcConfirmationsError
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations,
+    error: stableBitcoinConfirmationsError
   } = useQuery<number, Error>(
     [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
     genericFetcher<number>(),
@@ -59,23 +59,23 @@ const RedeemRequestsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(btcConfirmationsError);
+  useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
-    isIdle: latestParachainActiveBlockIdle,
-    isLoading: latestParachainActiveBlockLoading,
-    data: latestParachainActiveBlock,
-    error: latestParachainActiveBlockError
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
   } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
     enabled: !!bridgeLoaded
   });
-  useErrorHandler(latestParachainActiveBlockError);
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
-    isIdle: parachainConfirmationsIdle,
-    isLoading: parachainConfirmationsLoading,
-    data: parachainConfirmations,
-    error: parachainConfirmationsError
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations,
+    error: stableParachainConfirmationsError
   } = useQuery<number, Error>(
     [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
     genericFetcher<number>(),
@@ -83,7 +83,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(parachainConfirmationsError);
+  useErrorHandler(stableParachainConfirmationsError);
 
   const {
     isIdle: redeemRequestsTotalCountIdle,
@@ -236,14 +236,19 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   const data =
     redeemRequests === undefined ||
-    btcConfirmations === undefined ||
-    parachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+    stableBitcoinConfirmations === undefined ||
+    stableParachainConfirmations === undefined ||
+    currentActiveBlockNumber === undefined
       ? []
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeem: any) =>
-            getRedeemWithStatus(redeem, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+            getRedeemWithStatus(
+              redeem,
+              stableBitcoinConfirmations,
+              stableParachainConfirmations,
+              currentActiveBlockNumber
+            )
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -252,12 +257,12 @@ const RedeemRequestsTable = (): JSX.Element => {
   });
 
   if (
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
-    latestParachainActiveBlockIdle ||
-    latestParachainActiveBlockLoading ||
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
+    currentActiveBlockNumberIdle ||
+    currentActiveBlockNumberLoading ||
     redeemRequestsIdle ||
     redeemRequestsLoading ||
     redeemRequestsTotalCountIdle ||
