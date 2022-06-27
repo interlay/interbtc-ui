@@ -129,6 +129,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       governanceToken: 'interlay',
       wrappedToken: 'interlay-btc' // Is this right?
     };
+    // NOTE: this will need to be changed when we support collateral which isn't also the relay/governance token
     PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${TOKEN_PRICES.relayChainNativeToken},${TOKEN_PRICES.governanceToken},${TOKEN_PRICES.wrappedToken}&vs_currencies=usd`;
     RelayChainLogoIcon = DOTLogoIcon;
     BridgeParachainLogoIcon = InterlayLogoIcon;
@@ -168,6 +169,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       governanceToken: 'kintsugi',
       wrappedToken: 'kintsugi-btc'
     };
+    // NOTE: this will need to be changed when we support collateral which isn't also the relay/governance token
     PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${TOKEN_PRICES.relayChainNativeToken},${TOKEN_PRICES.governanceToken},${TOKEN_PRICES.wrappedToken}&vs_currencies=usd`;
     RelayChainLogoIcon = KusamaLogoIcon;
     BridgeParachainLogoIcon = KintsugiLogoIcon;
