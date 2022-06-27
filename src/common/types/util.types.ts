@@ -62,7 +62,7 @@ export type Prices = {
         usd: number;
       }
     | undefined;
-  [token: string]:
+  wrappedToken:
     | {
         usd: number;
       }

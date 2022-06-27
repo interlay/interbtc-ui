@@ -28,8 +28,7 @@ import {
   RELAY_CHAIN_NATIVE_TOKEN,
   GOVERNANCE_TOKEN,
   PRICES_URL,
-  RELAY_CHAIN_NAME,
-  BRIDGE_PARACHAIN_NAME
+  TOKEN_PRICES
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
@@ -372,16 +371,17 @@ const App = (): JSX.Element => {
       // Update the store only if the price is actually changed
       if (
         newPrices.bitcoin?.usd !== prices.bitcoin?.usd ||
-        newPrices[RELAY_CHAIN_NAME]?.usd !== prices.relayChainNativeToken?.usd ||
-        newPrices[BRIDGE_PARACHAIN_NAME]?.usd !== prices.governanceToken?.usd
+        newPrices[TOKEN_PRICES.relayChainNativeToken]?.usd !== prices.relayChainNativeToken?.usd ||
+        newPrices[TOKEN_PRICES.governanceToken]?.usd !== prices.governanceToken?.usd ||
+        newPrices[TOKEN_PRICES.wrappedToken]?.usd !== prices.wrappedToken?.usd
       ) {
-        const { bitcoin, ...rest } = newPrices;
+        const { bitcoin } = newPrices;
         dispatch(
           updateOfPricesAction({
             bitcoin: bitcoin,
-            relayChainNativeToken: newPrices[RELAY_CHAIN_NAME],
-            governanceToken: newPrices[BRIDGE_PARACHAIN_NAME],
-            ...rest
+            relayChainNativeToken: newPrices[TOKEN_PRICES.relayChainNativeToken],
+            governanceToken: newPrices[TOKEN_PRICES.governanceToken],
+            wrappedToken: newPrices[TOKEN_PRICES.wrappedToken]
           })
         );
       }

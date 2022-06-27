@@ -46,6 +46,8 @@ type VoteGovernanceToken = Currency<VoteUnit>;
 type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceUnit>;
 type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VoteGovernanceToken, VoteUnit>;
 
+let TOKEN_PRICES: { relayChainNativeToken: string; governanceToken: string; wrappedToken: string };
+
 let APP_NAME: string;
 let CROWDLOAN_LINK: string;
 let TERMS_AND_CONDITIONS_LINK: string;
@@ -122,8 +124,13 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vINTR';
     RELAY_CHAIN_NAME = 'polkadot';
     BRIDGE_PARACHAIN_NAME = 'interlay';
+    TOKEN_PRICES = {
+      relayChainNativeToken: 'polkadot',
+      governanceToken: 'interlay',
+      wrappedToken: 'interlay-btc' // Is this right?
+    };
     // eslint-disable-next-line max-len
-    PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
+    PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${TOKEN_PRICES.relayChainNativeToken},${TOKEN_PRICES.governanceToken},${TOKEN_PRICES.wrappedToken}&vs_currencies=usd`;
     RelayChainLogoIcon = DOTLogoIcon;
     BridgeParachainLogoIcon = InterlayLogoIcon;
     WrappedTokenLogoIcon = InterBTCLogoIcon;
@@ -158,7 +165,12 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     RELAY_CHAIN_NAME = 'kusama';
     BRIDGE_PARACHAIN_NAME = 'kintsugi';
     // eslint-disable-next-line max-len
-    PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME}&vs_currencies=usd`;
+    TOKEN_PRICES = {
+      relayChainNativeToken: 'kusama',
+      governanceToken: 'kintsugi',
+      wrappedToken: 'kintsugi-btc'
+    };
+    PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME},kintsugi-btc&vs_currencies=usd`;
     RelayChainLogoIcon = KusamaLogoIcon;
     BridgeParachainLogoIcon = KintsugiLogoIcon;
     WrappedTokenLogoIcon = KBTCLogoIcon;
@@ -216,5 +228,6 @@ export {
   PUBLIC_ASSETS_FOLDER_NAME,
   APP_DOMAIN,
   OPEN_GRAPH_IMAGE_FILE_NAME,
-  STAKE_LOCK_TIME
+  STAKE_LOCK_TIME,
+  TOKEN_PRICES
 };
