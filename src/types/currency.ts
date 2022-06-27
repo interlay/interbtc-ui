@@ -14,13 +14,6 @@ enum CurrencySymbols {
   UNDEFINED = 'UNDEFINED'
 }
 
-enum Networks {
-  KINT = 'kintsugi',
-  KSM = 'kusama',
-  DOT = 'polkadot',
-  INTR = 'interlay'
-}
-
 type BTCToCollateralTokenRate = ExchangeRate<Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit>;
 
 type CurrencyValues = {
@@ -31,6 +24,6 @@ type CurrencyValues = {
 
 type Currencies = Array<CurrencyValues>;
 
-export { CurrencySymbols, Networks };
+export { CurrencySymbols };
 
 export type { CurrencyValues, Currencies, BTCToCollateralTokenRate };
