@@ -74,8 +74,7 @@ const App = (): JSX.Element => {
     collateralTokenBalance,
     collateralTokenTransferableBalance,
     governanceTokenBalance,
-    governanceTokenTransferableBalance,
-    prices
+    governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
@@ -368,24 +367,17 @@ const App = (): JSX.Element => {
       }
 
       const newPrices = await response.json();
-      // Update the store only if the price is actually changed
-      if (
-        newPrices.bitcoin?.usd !== prices.bitcoin?.usd ||
-        newPrices[TOKEN_PRICES.relayChainNativeToken]?.usd !== prices.relayChainNativeToken?.usd ||
-        newPrices[TOKEN_PRICES.governanceToken]?.usd !== prices.governanceToken?.usd ||
-        newPrices[TOKEN_PRICES.wrappedToken]?.usd !== prices.wrappedToken?.usd
-      ) {
-        const { bitcoin, ...rest } = newPrices;
-        dispatch(
-          updateOfPricesAction({
-            bitcoin: bitcoin,
-            relayChainNativeToken: newPrices[TOKEN_PRICES.relayChainNativeToken],
-            governanceToken: newPrices[TOKEN_PRICES.governanceToken],
-            wrappedToken: newPrices[TOKEN_PRICES.wrappedToken],
-            ...rest
-          })
-        );
-      }
+
+      const { bitcoin, ...rest } = newPrices;
+      dispatch(
+        updateOfPricesAction({
+          bitcoin: bitcoin,
+          relayChainNativeToken: newPrices[TOKEN_PRICES.relayChainNativeToken],
+          governanceToken: newPrices[TOKEN_PRICES.governanceToken],
+          wrappedToken: newPrices[TOKEN_PRICES.wrappedToken],
+          ...rest
+        })
+      );
     },
     { refetchInterval: 60000 }
   );
