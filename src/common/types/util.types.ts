@@ -67,6 +67,11 @@ export type Prices = {
         usd: number;
       }
     | undefined;
+  [token: string]:
+    | {
+        usd: number;
+      }
+    | undefined;
 };
 
 export type GeneralState = {

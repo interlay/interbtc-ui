@@ -23,6 +23,21 @@ import { VAULT_GOVERNANCE, VAULT_WRAPPED } from 'config/vaults';
 import { getUsdAmount } from 'common/utils/utils';
 import { GovernanceTokenMonetaryAmount, WrappedTokenAmount } from 'config/relay-chains';
 
+const getCollateralPrice = (prices: Prices, tokenIdLiteral: CollateralIdLiteral) => {
+  switch (tokenIdLiteral) {
+    case CurrencyIdLiteral.DOT:
+      return prices.polkadot;
+    case CurrencyIdLiteral.INTR:
+      return prices.interlay;
+    case CurrencyIdLiteral.KSM:
+      return prices.kusama;
+    case CurrencyIdLiteral.KINT:
+      return prices.kintsugi;
+    default:
+      return undefined;
+  }
+}
+
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
@@ -64,6 +79,7 @@ const getVaultOverview = async (
   prices: Prices
 ): Promise<VaultData> => {
   const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
+  const collateralPrice = getCollateralPrice(prices, tokenIdLiteral);
 
   const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
@@ -92,7 +108,7 @@ const getVaultOverview = async (
     wrappedId: VAULT_WRAPPED,
     collateral: {
       raw: collateral,
-      usd: parseFloat(getUsdAmount(collateral, 1))
+      usd: parseFloat(getUsdAmount(collateral, collateralPrice?.usd))
     },
     governanceTokenRewards: {
       raw: governanceTokenRewards,

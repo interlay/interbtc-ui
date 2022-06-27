@@ -129,7 +129,6 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       governanceToken: 'interlay',
       wrappedToken: 'interlay-btc' // Is this right?
     };
-    // eslint-disable-next-line max-len
     PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${TOKEN_PRICES.relayChainNativeToken},${TOKEN_PRICES.governanceToken},${TOKEN_PRICES.wrappedToken}&vs_currencies=usd`;
     RelayChainLogoIcon = DOTLogoIcon;
     BridgeParachainLogoIcon = InterlayLogoIcon;
@@ -164,13 +163,12 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vKINT';
     RELAY_CHAIN_NAME = 'kusama';
     BRIDGE_PARACHAIN_NAME = 'kintsugi';
-    // eslint-disable-next-line max-len
     TOKEN_PRICES = {
       relayChainNativeToken: 'kusama',
       governanceToken: 'kintsugi',
       wrappedToken: 'kintsugi-btc'
     };
-    PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${RELAY_CHAIN_NAME},${BRIDGE_PARACHAIN_NAME},kintsugi-btc&vs_currencies=usd`;
+    PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${TOKEN_PRICES.relayChainNativeToken},${TOKEN_PRICES.governanceToken},${TOKEN_PRICES.wrappedToken}&vs_currencies=usd`;
     RelayChainLogoIcon = KusamaLogoIcon;
     BridgeParachainLogoIcon = KintsugiLogoIcon;
     WrappedTokenLogoIcon = KBTCLogoIcon;

@@ -375,13 +375,14 @@ const App = (): JSX.Element => {
         newPrices[TOKEN_PRICES.governanceToken]?.usd !== prices.governanceToken?.usd ||
         newPrices[TOKEN_PRICES.wrappedToken]?.usd !== prices.wrappedToken?.usd
       ) {
-        const { bitcoin } = newPrices;
+        const { bitcoin, ...rest } = newPrices;
         dispatch(
           updateOfPricesAction({
             bitcoin: bitcoin,
             relayChainNativeToken: newPrices[TOKEN_PRICES.relayChainNativeToken],
             governanceToken: newPrices[TOKEN_PRICES.governanceToken],
-            wrappedToken: newPrices[TOKEN_PRICES.wrappedToken]
+            wrappedToken: newPrices[TOKEN_PRICES.wrappedToken],
+            ...rest
           })
         );
       }
