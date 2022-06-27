@@ -10,9 +10,10 @@ import {
   CurrencyIdLiteral,
   WrappedIdLiteral,
   CollateralCurrency,
-  GovernanceIdLiteral
+  GovernanceIdLiteral,
+  CollateralUnit
 } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { BitcoinUnit, MonetaryAmount, Currency } from '@interlay/monetary-js';
 
 import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
@@ -28,7 +29,10 @@ interface VaultData {
   issues: number;
   collateralId: CurrencyIdLiteral;
   wrappedId: CurrencyIdLiteral;
-  lockedCollateral: number;
+  collateral: {
+    raw: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+    usd: number;
+  },
   governanceTokenRewards: {
     raw: GovernanceTokenMonetaryAmount;
     usd: number;
@@ -49,8 +53,7 @@ interface VaultOverview {
 
 const getVaultTotals = (vaults: Array<VaultData>) => {
   return {
-    totalLockedCollateral: 10,
-    // totalLockedCollateral: vaults.reduce((a, b) => a + b.lockedCollateral, 0),
+    totalLockedCollateral: vaults.reduce((a, b) => a + b.collateral.usd, 0),
     totalUsdRewards: vaults.reduce((a, b) => a + b.governanceTokenRewards.usd + b.wrappedTokenRewards.usd, 0),
     totalAtRisk: vaults.map((vault) => vault.vaultAtRisk).filter(Boolean).length
 }}
@@ -68,13 +71,6 @@ const getVaultOverview = async (
   const wrappedTokenRewards = await window.bridge.vaults.getWrappedReward(accountId, tokenIdLiteral, VAULT_WRAPPED as WrappedIdLiteral)
   const collateral = await window.bridge.vaults.getCollateral(accountId, tokenIdLiteral);
   const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency as CollateralCurrency);
-
-  console.log('rewards',
-  governanceTokenRewards.toHuman(),
-  wrappedTokenRewards.toHuman(),
-  'dollarAmounts',
-  parseFloat(getUsdAmount(governanceTokenRewards, prices?.governanceToken?.usd)),
-  parseFloat(getUsdAmount(governanceTokenRewards, prices?.wrappedToken?.usd)));
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
@@ -94,7 +90,10 @@ const getVaultOverview = async (
     issues: issuesCount.data.issuesConnection.totalCount,
     collateralId: tokenIdLiteral,
     wrappedId: VAULT_WRAPPED,
-    lockedCollateral: collateral.toBig().toNumber(),
+    collateral: {
+      raw: collateral,
+      usd: parseFloat(getUsdAmount(collateral, 1))
+    },
     governanceTokenRewards: {
       raw: governanceTokenRewards,
       usd: parseFloat(getUsdAmount(governanceTokenRewards, prices?.governanceToken?.usd)),
