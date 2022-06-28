@@ -16,7 +16,9 @@ import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultCo
 import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { displayMonetaryAmount } from 'common/utils/utils';
+// ray test touch <
+import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
+// ray test touch >
 import STATUSES from 'utils/constants/statuses';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { updateCollateralAction, updateCollateralizationAction } from 'common/actions/vault.actions';
@@ -51,7 +53,9 @@ const UpdateCollateralModal = ({
   hasLockedBTC,
   collateralCurrency
 }: Props): JSX.Element => {
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  // ray test touch <
+  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+  // ray test touch >
 
   const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
 
@@ -63,7 +67,7 @@ const UpdateCollateralModal = ({
   } = useForm<UpdateCollateralFormData>({
     mode: 'onChange'
   });
-  const strCollateralTokenAmount = watch(COLLATERAL_TOKEN_AMOUNT);
+  const strCollateralTokenAmount = watch(COLLATERAL_TOKEN_AMOUNT) || '0';
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -102,7 +106,7 @@ const UpdateCollateralModal = ({
   useErrorHandler(collateralBalanceError);
 
   const collateralTokenAmount = newMonetaryAmount(
-    strCollateralTokenAmount || '0',
+    strCollateralTokenAmount,
     collateralCurrency.currency,
     true
   ) as MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
@@ -319,7 +323,7 @@ const UpdateCollateralModal = ({
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
               // ray test touch <
-              approxUSD={`≈ $ TODO`}
+              approxUSD={`≈ $ ${getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)}`}
               // ray test touch >
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
