@@ -14,12 +14,8 @@ interface NumericValueProps {
 }
 
 const NumericValue = styled.div<NumericValueProps>`
-  color: ${(props) => (props.highlight ? theme.newVaultsTable.highlightColor : 'inherit')};
+  color: ${(props) => (props.highlight ? theme.table.rowHighlight : 'inherit')};
   font-weight: ${theme.fontWeight.medium};
 `;
 
-const AddVaultButton = styled.div`
-  border-radius: 20px;
-`;
-
-export { CoinPairWrapper, NumericValue, AddVaultButton };
+export { CoinPairWrapper, NumericValue };

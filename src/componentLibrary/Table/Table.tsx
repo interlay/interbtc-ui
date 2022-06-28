@@ -2,9 +2,12 @@ import { ReactNode } from 'react';
 
 import { StyledTable, TableWrapper, TableRow, TableHeader, TableCell } from './Table.style';
 
+type Cell = ReactNode;
+type Row = Cell[];
+
 interface TableProps {
   columnLabels: string[];
-  rows: ReactNode[][];
+  rows: Row[];
 }
 
 const Table = ({ columnLabels, rows }: TableProps): JSX.Element => {
