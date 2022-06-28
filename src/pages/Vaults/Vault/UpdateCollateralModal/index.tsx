@@ -10,9 +10,12 @@ import clsx from 'clsx';
 import { roundTwoDecimals, newMonetaryAmount, CollateralUnit, CurrencyUnit } from '@interlay/interbtc-api';
 import { MonetaryAmount, Currency } from '@interlay/monetary-js';
 
-import ErrorMessage from 'components/ErrorMessage';
-import NumberInput from 'components/NumberInput';
 import ErrorFallback from 'components/ErrorFallback';
+// ray test touch <
+// import ErrorMessage from 'components/ErrorMessage';
+// import NumberInput from 'components/NumberInput';
+import TokenField from 'components/TokenField';
+// ray test touch >
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
@@ -303,7 +306,29 @@ const UpdateCollateralModal = ({
               collateralTokenSymbol: collateralCurrency.symbol
             })}
           </p>
-          <div className='space-y-1'>
+          {/* ray test touch < */}
+          <div className='space-y-1.5'>
+            <label htmlFor={COLLATERAL_TOKEN_AMOUNT} className='text-sm'>
+              {labelText}
+            </label>
+            <TokenField
+              id={COLLATERAL_TOKEN_AMOUNT}
+              name={COLLATERAL_TOKEN_AMOUNT}
+              label={collateralCurrency.symbol}
+              min={0}
+              ref={register({
+                required: {
+                  value: true,
+                  message: t('vault.collateral_is_required')
+                },
+                validate: (value) => validateCollateralTokenAmount(value)
+              })}
+              approxUSD={`≈ $ TODO`}
+              error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
+              helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
+            />
+          </div>
+          {/* <div className='space-y-1'>
             <label htmlFor={COLLATERAL_TOKEN_AMOUNT} className='text-sm'>
               {labelText}
             </label>
@@ -320,7 +345,8 @@ const UpdateCollateralModal = ({
               })}
             />
             <ErrorMessage className='h-9'>{errors[COLLATERAL_TOKEN_AMOUNT]?.message}</ErrorMessage>
-          </div>
+          </div> */}
+          {/* ray test touch > */}
           <p>
             {t('vault.new_collateralization')}
             &nbsp;
@@ -335,7 +361,7 @@ const UpdateCollateralModal = ({
 
 export { CollateralUpdateStatus };
 
-// TODO: not working on modals
+// TODO: `withErrorBoundary` does not work on modals
 export default withErrorBoundary(UpdateCollateralModal, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
