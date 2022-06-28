@@ -11,11 +11,7 @@ import { roundTwoDecimals, newMonetaryAmount, CollateralUnit, CurrencyUnit } fro
 import { MonetaryAmount, Currency } from '@interlay/monetary-js';
 
 import ErrorFallback from 'components/ErrorFallback';
-// ray test touch <
-// import ErrorMessage from 'components/ErrorMessage';
-// import NumberInput from 'components/NumberInput';
 import TokenField from 'components/TokenField';
-// ray test touch >
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
@@ -306,7 +302,6 @@ const UpdateCollateralModal = ({
               collateralTokenSymbol: collateralCurrency.symbol
             })}
           </p>
-          {/* ray test touch < */}
           <div className='space-y-1.5'>
             <label htmlFor={COLLATERAL_TOKEN_AMOUNT} className='text-sm'>
               {labelText}
@@ -323,30 +318,13 @@ const UpdateCollateralModal = ({
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
+              // ray test touch <
               approxUSD={`≈ $ TODO`}
+              // ray test touch >
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />
           </div>
-          {/* <div className='space-y-1'>
-            <label htmlFor={COLLATERAL_TOKEN_AMOUNT} className='text-sm'>
-              {labelText}
-            </label>
-            <NumberInput
-              id={COLLATERAL_TOKEN_AMOUNT}
-              name={COLLATERAL_TOKEN_AMOUNT}
-              min={0}
-              ref={register({
-                required: {
-                  value: true,
-                  message: t('vault.collateral_is_required')
-                },
-                validate: (value) => validateCollateralTokenAmount(value)
-              })}
-            />
-            <ErrorMessage className='h-9'>{errors[COLLATERAL_TOKEN_AMOUNT]?.message}</ErrorMessage>
-          </div> */}
-          {/* ray test touch > */}
           <p>
             {t('vault.new_collateralization')}
             &nbsp;
