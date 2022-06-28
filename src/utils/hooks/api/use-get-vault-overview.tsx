@@ -118,7 +118,7 @@ const getVaultOverview = async (
 };
 
 const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview => {
-  const [queryError, setQueryError] = useState<any>(undefined);
+  const [queryError, setQueryError] = useState<Error | undefined>(undefined);
   const [parsedVaults, setParsedVaults] = useState<Array<VaultData> | undefined>(undefined);
   const [vaultTotals, setVaultTotals] = useState<VaultTotals | undefined>(undefined);
 
@@ -134,7 +134,7 @@ const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview =
         queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
         queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices),
         options: {
-          enabled: !!bridgeLoaded,
+          enabled: !!bridgeLoaded
         }
       };
     })
