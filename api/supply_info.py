@@ -3,7 +3,7 @@ import requests
 import os
 
 KINT_SUBSCAN_URL = "https://kintsugi.api.subscan.io/"
-INTR_SUBSCAN_URL = "https://kintsugi.api.subscan.io/"
+INTR_SUBSCAN_URL = "https://interlay.api.subscan.io/"
 
 KINT_API_KEY = os.environ.get("SUBSCAN_API_KEY")
 INTR_API_KEY = os.environ.get("INTR_SUBSCAN_API_KEY")
