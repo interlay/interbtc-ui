@@ -25,26 +25,18 @@ const VaultOverview = (): JSX.Element => {
         <>
           <Grid>
             <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 2, start: 1 }}>
-              <InfoBox title='My vaults at risk' text={`${vaultOverview?.totals?.totalAtRisk}`} />
+              <InfoBox title='My vaults at risk' text={`${vaultOverview.totals?.totalAtRisk}`} />
             </GridItem>
             <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 5, start: 3 }}>
               <InfoBox
                 title='My locked collateral'
-                text={
-                  typeof vaultOverview?.totals?.totalLockedCollateral === 'number'
-                    ? `$${vaultOverview?.totals?.totalLockedCollateral.toFixed(2)}`
-                    : '-'
-                }
+                text={`$${vaultOverview.totals?.totalLockedCollateral.toFixed(2)}`}
               />
             </GridItem>
             <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 5, start: 8 }}>
               <InfoBox
                 title='My total claimable rewards'
-                text={
-                  typeof vaultOverview?.totals?.totalUsdRewards === 'number'
-                    ? `$${vaultOverview?.totals?.totalUsdRewards.toFixed(2)}`
-                    : '-'
-                }
+                text={`$${vaultOverview.totals?.totalUsdRewards.toFixed(2)}`}
               />
             </GridItem>
             {vaultOverview.vaults.map((vault) => (

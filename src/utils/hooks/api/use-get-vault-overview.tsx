@@ -79,6 +79,10 @@ const getVaultOverview = async (
   const collateral = await window.bridge.vaults.getCollateral(accountId, tokenIdLiteral);
   const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency as CollateralCurrency);
 
+  const usdCollateral = getUsdAmount(collateral, collateralPrice?.usd);
+  const usdGovernanceTokenRewards = getUsdAmount(governanceTokenRewards, prices?.governanceToken?.usd);
+  const usdWrappedTokenRewards =  getUsdAmount(wrappedTokenRewards, prices?.wrappedToken?.usd);
+
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
     headers: {
@@ -99,15 +103,15 @@ const getVaultOverview = async (
     wrappedId: VAULT_WRAPPED,
     collateral: {
       raw: collateral,
-      usd: parseFloat(getUsdAmount(collateral, collateralPrice?.usd))
+      usd: usdCollateral === '-' ? 0 : parseFloat(usdCollateral)
     },
     governanceTokenRewards: {
       raw: governanceTokenRewards,
-      usd: parseFloat(getUsdAmount(governanceTokenRewards, prices?.governanceToken?.usd)),
+      usd: usdGovernanceTokenRewards === '-' ? 0 : parseFloat(usdGovernanceTokenRewards)
     },
     wrappedTokenRewards: {
       raw: wrappedTokenRewards,
-      usd: parseFloat(getUsdAmount(wrappedTokenRewards, prices?.wrappedToken?.usd)),
+      usd: usdWrappedTokenRewards === '-' ? 0 : parseFloat(usdWrappedTokenRewards)
     },
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
   };
