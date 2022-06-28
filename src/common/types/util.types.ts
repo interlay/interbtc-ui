@@ -46,32 +46,16 @@ export enum ParachainStatus {
   Shutdown
 }
 
+export type Price = {
+  usd: number;
+};
+
 export type Prices = {
-  bitcoin:
-    | {
-        usd: number;
-      }
-    | undefined;
-  relayChainNativeToken:
-    | {
-        usd: number;
-      }
-    | undefined;
-  governanceToken:
-    | {
-        usd: number;
-      }
-    | undefined;
-  wrappedToken:
-    | {
-        usd: number;
-      }
-    | undefined;
-  [token: string]:
-    | {
-        usd: number;
-      }
-    | undefined;
+  bitcoin: Price | undefined;
+  relayChainNativeToken: Price | undefined;
+  governanceToken: Price | undefined;
+  wrappedToken: Price | undefined;
+  [token: string]: Price | undefined;
 };
 
 export type GeneralState = {

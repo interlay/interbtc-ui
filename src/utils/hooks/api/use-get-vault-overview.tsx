@@ -13,9 +13,8 @@ import {
   WrappedIdLiteral,
   CollateralCurrency,
   GovernanceIdLiteral,
-  CollateralUnit
 } from '@interlay/interbtc-api';
-import { BitcoinUnit, MonetaryAmount, Currency } from '@interlay/monetary-js';
+import { BitcoinUnit } from '@interlay/monetary-js';
 
 import { HYDRA_URL } from '../../../constants';
 import issueCountQuery from 'services/queries/issue-count-query';
@@ -23,22 +22,8 @@ import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
 import { Prices, StoreType } from 'common/types/util.types';
 import { VAULT_GOVERNANCE, VAULT_WRAPPED } from 'config/vaults';
 import { getUsdAmount } from 'common/utils/utils';
-import { GovernanceTokenMonetaryAmount, WrappedTokenAmount } from 'config/relay-chains';
-
-const getCollateralPrice = (prices: Prices, tokenIdLiteral: CollateralIdLiteral) => {
-  switch (tokenIdLiteral) {
-    case CurrencyIdLiteral.DOT:
-      return prices.polkadot;
-    case CurrencyIdLiteral.INTR:
-      return prices.interlay;
-    case CurrencyIdLiteral.KSM:
-      return prices.kusama;
-    case CurrencyIdLiteral.KINT:
-      return prices.kintsugi;
-    default:
-      return undefined;
-  }
-}
+import { getCollateralPrice } from 'utils/helpers/prices';
+import { GovernanceTokenMonetaryAmount, CollateralTokenMonetaryAmount, WrappedTokenAmount } from 'config/relay-chains';
 
 type VaultTotals = {
   totalLockedCollateral: number;
@@ -53,7 +38,7 @@ interface VaultData {
   collateralId: CurrencyIdLiteral;
   wrappedId: CurrencyIdLiteral;
   collateral: {
-    raw: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+    raw: CollateralTokenMonetaryAmount;
     usd: number;
   },
   governanceTokenRewards: {

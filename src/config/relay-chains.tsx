@@ -44,6 +44,7 @@ type CollateralToken = Currency<CollateralUnit>;
 type GovernanceToken = Currency<GovernanceUnit>;
 type VoteGovernanceToken = Currency<VoteUnit>;
 type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceUnit>;
+type CollateralTokenMonetaryAmount = MonetaryAmount<CollateralToken, CollateralUnit>;
 type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VoteGovernanceToken, VoteUnit>;
 
 let TOKEN_PRICES: { relayChainNativeToken: string; governanceToken: string; wrappedToken: string };
@@ -198,6 +199,7 @@ export type {
   GovernanceToken,
   WrappedTokenAmount,
   GovernanceTokenMonetaryAmount,
+  CollateralTokenMonetaryAmount,
   VoteGovernanceTokenMonetaryAmount
 };
 
