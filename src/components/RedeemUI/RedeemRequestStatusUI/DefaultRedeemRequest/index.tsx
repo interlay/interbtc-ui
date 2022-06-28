@@ -1,6 +1,4 @@
-import { useQuery } from 'react-query';
 import { useErrorHandler } from 'react-error-boundary';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -8,9 +6,10 @@ import RequestWrapper from 'pages/Bridge/RequestWrapper';
 import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { shortAddress } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { getColorShade } from 'utils/helpers/colors';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -19,20 +18,13 @@ interface Props {
 
 const DefaultRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations = 1, // TODO: double-check
     error: stableBitcoinConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
@@ -40,13 +32,7 @@ const DefaultRedeemRequest = ({ redeem }: Props): JSX.Element => {
     isLoading: stableParachainConfirmationsLoading,
     data: stableParachainConfirmations = 100, // TODO: double-check
     error: stableParachainConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableParachainConfirmations();
   useErrorHandler(stableParachainConfirmationsError);
 
   const {
@@ -54,9 +40,7 @@ const DefaultRedeemRequest = ({ redeem }: Props): JSX.Element => {
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber = 0, // TODO: double-check
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   // TODO: should use skeleton loaders
