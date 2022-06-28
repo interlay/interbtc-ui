@@ -81,6 +81,12 @@ const theme = {
       bg: 'var(--colors-cta-secondary)'
     }
   },
+  table: {
+    bg: 'var(--colors-table-bg)',
+    border: '1px var(--colors-neutral-light-grey-50) solid',
+    text: 'var(--colors-table-text)',
+    rowHighlight: 'var(--colors-table-row-highlight)'
+  },
   modal: {
     bg: 'var(--colors-modal-bg)'
   },

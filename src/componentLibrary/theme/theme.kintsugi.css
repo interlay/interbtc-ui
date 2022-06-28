@@ -24,5 +24,8 @@
   --colors-text-accent: var(--colors-yellow);
   --colors-modal-bg: var(--colors-dark-blue);
   --colors-icon-default: var(--colors-neutral-white);
+  --colors-table-bg: var(--colors-dark-blue);
+  --colors-table-text: var(--colors-neutral-white);
+  --colors-table-row-highlight: var(--colors-yellow);
   --box-shadow-default: var(--box-shadow-none);
 }

@@ -21,3 +21,12 @@ export type { VaultCardProps } from './VaultCard';
 
 export { Stack } from './Stack';
 export type { StackProps } from './Stack';
+
+export { Table } from './Table';
+export type { TableProps } from './Table';
+
+export { NewVaultsTable } from './NewVaultsTable';
+export type { NewVaultsTableProps, NewVaultsTableRow } from './NewVaultsTable';
+
+export { Modal } from './Modal';
+export type { ModalProps } from './Modal';
