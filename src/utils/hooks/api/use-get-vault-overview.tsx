@@ -40,6 +40,12 @@ const getCollateralPrice = (prices: Prices, tokenIdLiteral: CollateralIdLiteral)
   }
 }
 
+type VaultTotals = {
+  totalLockedCollateral: number;
+  totalUsdRewards: number;
+  totalAtRisk: number;
+}
+
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
@@ -62,10 +68,8 @@ interface VaultData {
 }
 
 interface VaultOverview {
-  vaults: Array<VaultData>;
-  totalLockedCollateral: number;
-  totalUsdRewards: number;
-  totalAtRisk: number;
+  vaults: Array<VaultData> | undefined;
+  totals: VaultTotals | undefined;
 }
 
 const getVaultTotals = (vaults: Array<VaultData>) => {
@@ -126,8 +130,8 @@ const getVaultOverview = async (
 
 const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview => {
   const [queryError, setQueryError] = useState<any>(undefined);
-  const [parsedVaults, setParsedVaults] = useState<any>(undefined);
-  const [vaultTotals, setVaultTotals] = useState<any>(undefined);
+  const [parsedVaults, setParsedVaults] = useState<Array<VaultData> | undefined>(undefined);
+  const [vaultTotals, setVaultTotals] = useState<VaultTotals | undefined>(undefined);
 
   const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
   const vaults = useGetVaults({ address });
@@ -169,7 +173,7 @@ const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview =
     setVaultTotals(vaultTotals);
   }, [parsedVaults]);
 
-  return { vaults: parsedVaults, ...vaultTotals };
+  return { vaults: parsedVaults, totals: vaultTotals };
 };
 
 export { useGetVaultOverview };
