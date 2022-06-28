@@ -47,6 +47,8 @@ type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceU
 type CollateralTokenMonetaryAmount = MonetaryAmount<CollateralToken, CollateralUnit>;
 type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VoteGovernanceToken, VoteUnit>;
 
+// NOTE: this won't be required once prices have been refactored:
+// https://www.notion.so/interlay/Refactor-prices-behaviour-56f041debc6248da8f27a3b3b4092f15
 let TOKEN_PRICES: { relayChainNativeToken: string; governanceToken: string; wrappedToken: string };
 
 let APP_NAME: string;
