@@ -83,6 +83,8 @@ const getVaultOverview = async (
   const usdGovernanceTokenRewards = getUsdAmount(governanceTokenRewards, prices?.governanceToken?.usd);
   const usdWrappedTokenRewards =  getUsdAmount(wrappedTokenRewards, prices?.wrappedToken?.usd);
 
+  console.log('usd amounts', usdCollateral, usdGovernanceTokenRewards, usdWrappedTokenRewards);
+
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
     headers: {
