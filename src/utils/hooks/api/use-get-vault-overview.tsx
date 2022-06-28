@@ -1,5 +1,7 @@
-import { useQueries, UseQueryResult } from 'react-query';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useQueries, UseQueryResult } from 'react-query';
+import { useErrorHandler } from 'react-error-boundary';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import {
@@ -123,10 +125,14 @@ const getVaultOverview = async (
 };
 
 const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview => {
-  // TODO: can we handle this check at the application level rather than in components and utilties?
-  // https://www.notion.so/interlay/Handle-api-loaded-check-at-application-level-38fe5d146c8143a88cef2dde7b0e19d8
+  const [queryError, setQueryError] = useState<any>(undefined);
+  const [parsedVaults, setParsedVaults] = useState<any>(undefined);
+  const [vaultTotals, setVaultTotals] = useState<any>(undefined);
+
   const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
   const vaults = useGetVaults({ address });
+
+  useErrorHandler(queryError);
 
   // TODO: updating react-query to > 3.28.0 will allow us to type this properly
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<unknown, unknown>>>(
@@ -135,17 +141,35 @@ const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview =
         queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
         queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices),
         options: {
-          enabled: !!bridgeLoaded
+          enabled: !!bridgeLoaded,
         }
       };
     })
   );
 
-  const parsedVaults: Array<VaultData> = vaultData.map((data: any) => data.data).filter(data => data !== undefined);
-  
-  const { totalLockedCollateral, totalUsdRewards,totalAtRisk} = getVaultTotals(parsedVaults);
+  useEffect(() => {
+    if (!vaultData) return;
 
-  return { vaults: parsedVaults, totalLockedCollateral, totalUsdRewards, totalAtRisk };
+    for (const data of vaultData) {
+      if (data.error) {
+        setQueryError(data.error);
+
+        return;
+      }
+    }
+
+    const parsedVaults: Array<VaultData> = vaultData.map((data: any) => data.data).filter(data => data !== undefined);
+    setParsedVaults(parsedVaults);
+  }, [vaultData]);
+
+  useEffect(() => {
+    if (!parsedVaults) return;
+
+    const vaultTotals = getVaultTotals(parsedVaults);
+    setVaultTotals(vaultTotals);
+  }, [parsedVaults]);
+
+  return { vaults: parsedVaults, ...vaultTotals };
 };
 
 export { useGetVaultOverview };
