@@ -56,8 +56,8 @@ const getVaultOverview = async (
   const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency as CollateralCurrency);
 
   const usdCollateral = getUsdAmount(collateral, collateralPrice?.usd);
-  const usdGovernanceTokenRewards = getUsdAmount(governanceTokenRewards, prices?.governanceToken?.usd);
-  const usdWrappedTokenRewards =  getUsdAmount(wrappedTokenRewards, prices?.wrappedToken?.usd);
+  const usdGovernanceTokenRewards = getUsdAmount(governanceTokenRewards, prices.governanceToken?.usd);
+  const usdWrappedTokenRewards =  getUsdAmount(wrappedTokenRewards, prices.wrappedToken?.usd);
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
