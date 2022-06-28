@@ -8,9 +8,15 @@ INTR_SUBSCAN_URL = "https://kintsugi.api.subscan.io/"
 KINT_API_KEY = os.environ.get("SUBSCAN_API_KEY")
 INTR_API_KEY = os.environ.get("INTR_SUBSCAN_API_KEY")
 
+CROWDLOAN_VESTING_END = 4838400
+
 
 def from_12_decimals(val):
     return val / 1_000_000_000_000
+
+
+def from_10_decimals(val):
+    return val / 10_000_000_000
 
 
 def from_8_decimals(val):
@@ -23,7 +29,7 @@ def subscan_get_request(url):
         api_key = INTR_API_KEY
 
     headers_dict = {"content-type": "application/json", "X-API-KEY": api_key}
-    return requests.get(url)
+    return requests.get(url, headers=headers_dict)
 
 
 def subscan_post_request(url, json):
@@ -32,7 +38,7 @@ def subscan_post_request(url, json):
         api_key = INTR_API_KEY
 
     headers_dict = {"content-type": "application/json", "X-API-KEY": api_key}
-    return requests.post(url, json=json)
+    return requests.post(url, json=json, headers=headers_dict)
 
 
 def max_crowdloan_vested():
@@ -84,7 +90,7 @@ def get_kbtc_supply():
     return str(kBTC_supply)
 
 
-@api.route("/supply/intr-circ-supply", methods=["GET"])
+@app.route("/supply/intr-circ-supply", methods=["GET"])
 def get_intr_circ_supply():
     token_info_subscan = subscan_get_request(
         INTR_SUBSCAN_URL + "api/scan/token"
@@ -101,13 +107,13 @@ def get_intr_circ_supply():
     return str(circulating_supply)
 
 
-@api.route("/supply/intr-total-supply", methods=["GET"])
-def get_kint_total_supply():
+@app.route("/supply/intr-total-supply", methods=["GET"])
+def get_intr_total_supply():
     return str(1_000_000_000)
 
 
-@api.route("/supply/ibtc-supply", methods=["GET"])
-def get_kbtc_supply():
+@app.route("/supply/ibtc-supply", methods=["GET"])
+def get_ibtc_supply():
     token_info_subscan = subscan_get_request(
         INTR_SUBSCAN_URL + "api/scan/token"
     ).json()["data"]["detail"]
