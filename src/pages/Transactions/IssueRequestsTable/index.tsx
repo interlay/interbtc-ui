@@ -23,19 +23,21 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
+import { getColorShade } from 'utils/helpers/colors';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { formatDateTimePrecise, shortTxId, displayMonetaryAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
-import { getColorShade } from 'utils/helpers/colors';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
+import { StoreType } from 'common/types/util.types';
+import { showAccountModalAction } from 'common/actions/general.actions';
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -47,20 +49,14 @@ const IssueRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
-  const { address, extensions, bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { address, extensions } = useSelector((state: StoreType) => state.general);
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations,
     error: stableBitcoinConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
@@ -68,9 +64,7 @@ const IssueRequestsTable = (): JSX.Element => {
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
@@ -78,13 +72,7 @@ const IssueRequestsTable = (): JSX.Element => {
     isLoading: stableParachainConfirmationsLoading,
     data: stableParachainConfirmations,
     error: stableParachainConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableParachainConfirmations();
   useErrorHandler(stableParachainConfirmationsError);
 
   const {

@@ -13,6 +13,7 @@ import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
 import { getVaultStatusLabel } from 'utils/helpers/vaults';
 import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
 import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
@@ -42,9 +43,7 @@ const VaultStatusStatPanel = ({ vaultAccountId }: Props): JSX.Element => {
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   const {

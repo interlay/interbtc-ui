@@ -1,7 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// // @ts-nocheck
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useTable } from 'react-table';
 import clsx from 'clsx';
@@ -23,17 +20,18 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import StatusCell from 'components/UI/InterlayTable/StatusCell';
+import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import { shortAddress, formatDateTimePrecise, displayMonetaryAmount, shortTxId } from 'common/utils/utils';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
+import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from 'services/fetchers/redeems-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
 
 interface Props {
   vaultAddress: string;
@@ -42,7 +40,6 @@ interface Props {
 
 const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
@@ -53,13 +50,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations,
     error: stableBitcoinConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
@@ -67,9 +58,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
+  } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
   const {
@@ -77,13 +66,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
     isLoading: stableParachainConfirmationsLoading,
     data: stableParachainConfirmations,
     error: stableParachainConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableParachainConfirmations();
   useErrorHandler(stableParachainConfirmationsError);
 
   const {
