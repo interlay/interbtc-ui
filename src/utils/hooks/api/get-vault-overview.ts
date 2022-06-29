@@ -65,7 +65,7 @@ const getVaultOverview = async (
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: issueCountQuery(`vault: {accountId_eq: "${accountId.toString()}"}, status_eq: Pending`)
+      query: issueCountQuery(`vault: {accountId_eq: "${accountId.toString()}", collateralToken_eq: ${tokenIdLiteral}}, status_eq: Pending`)
     })
   });
 
