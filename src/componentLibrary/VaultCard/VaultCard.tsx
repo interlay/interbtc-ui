@@ -45,7 +45,7 @@ const VaultCard = ({
         </DlItem>
       </StyledDl>
       <CTAWrapper>
-        <CTALink href={link} variant='primary' fullWidth={false}>
+        <CTALink to={link} variant='primary' fullWidth={false}>
           View
         </CTALink>
       </CTAWrapper>
