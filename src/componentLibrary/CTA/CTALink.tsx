@@ -1,7 +1,8 @@
 import { forwardRef } from 'react';
+import { Link, LinkProps } from 'react-router-dom';
 import { PrimaryCTA, SecondaryCTA } from './CTA.style';
 
-interface CTALinkProps extends React.ComponentPropsWithRef<'a'> {
+interface CTALinkProps extends LinkProps {
   fullWidth?: boolean;
   variant: 'primary' | 'secondary';
 }
@@ -10,11 +11,11 @@ interface CTALinkProps extends React.ComponentPropsWithRef<'a'> {
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
   ({ variant, fullWidth = false, className, href, children, ...rest }, ref): JSX.Element =>
     variant === 'primary' ? (
-      <PrimaryCTA as='a' fullWidth={fullWidth} ref={ref} href={href} className={className} {...rest}>
+      <PrimaryCTA as={Link} fullWidth={fullWidth} ref={ref} href={href} className={className} {...rest}>
         {children}
       </PrimaryCTA>
     ) : (
-      <SecondaryCTA as='a' fullWidth={fullWidth} ref={ref} href={href} className={className} {...rest}>
+      <SecondaryCTA as={Link} fullWidth={fullWidth} ref={ref} href={href} className={className} {...rest}>
         {children}
       </SecondaryCTA>
     )
