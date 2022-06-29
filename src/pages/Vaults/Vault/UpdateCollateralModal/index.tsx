@@ -306,6 +306,7 @@ const UpdateCollateralModal = ({
             <label htmlFor={COLLATERAL_TOKEN_AMOUNT} className='text-sm'>
               {labelText}
             </label>
+            {/* ray test touch < */}
             <TokenField
               id={COLLATERAL_TOKEN_AMOUNT}
               name={COLLATERAL_TOKEN_AMOUNT}
@@ -322,6 +323,7 @@ const UpdateCollateralModal = ({
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />
+            {/* ray test touch > */}
           </div>
           <p>
             {t('vault.new_collateralization')}
