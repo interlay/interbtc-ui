@@ -9,13 +9,13 @@ interface CTALinkProps extends LinkProps {
 
 // TODO: Does this need to be changed to a React Router link component?
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
-  ({ variant, fullWidth = false, className, href, children, ...rest }, ref): JSX.Element =>
+  ({ variant, fullWidth = false, className, children, ...rest }, ref): JSX.Element =>
     variant === 'primary' ? (
-      <PrimaryCTA as={Link} fullWidth={fullWidth} ref={ref} href={href} className={className} {...rest}>
+      <PrimaryCTA as={Link} fullWidth={fullWidth} ref={ref} className={className} {...rest}>
         {children}
       </PrimaryCTA>
     ) : (
-      <SecondaryCTA as={Link} fullWidth={fullWidth} ref={ref} href={href} className={className} {...rest}>
+      <SecondaryCTA as={Link} fullWidth={fullWidth} ref={ref} className={className} {...rest}>
         {children}
       </SecondaryCTA>
     )
