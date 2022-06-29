@@ -30,7 +30,7 @@ import ErrorModal from 'components/ErrorModal';
 import Hr2 from 'components/hrs/Hr2';
 import SubmitButton from 'components/SubmitButton';
 import InformationTooltip from 'components/tooltips/InformationTooltip';
-import PriceInfo from 'pages/Bridge/PriceInfo';
+import PriceInfo from 'components/PriceInfo';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';

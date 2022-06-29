@@ -205,7 +205,7 @@ const Vault = (): JSX.Element => {
         value: displayMonetaryAmount(feesEarnedInterBTC)
       },
       {
-        title: t('vault.locked_dot', {
+        title: t('vault.locked_collateral', {
           // TODO: when updating kint and adding the vault collateral as config,
           // this will need to be changed to use the symbol not the id literal.
           collateralTokenSymbol: collateralCurrencyValues?.symbol

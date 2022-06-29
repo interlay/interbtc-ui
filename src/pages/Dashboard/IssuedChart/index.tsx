@@ -6,6 +6,7 @@ import { BitcoinUnit } from '@interlay/monetary-js';
 
 import LineChart from '../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
+import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
 import { WRAPPED_TOKEN_SYMBOL, WRAPPED_TOKEN } from 'config/relay-chains';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from 'utils/constants/colors';
@@ -14,12 +15,9 @@ import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+} from 'services/fetchers/cumulative-volumes-fetcher';
 
-// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
-// thus issues per day 5 days ago can be displayed
-// cumulative issues is also only displayed to 5 days
-const cutoffTimestamps = getLastMidnightTimestamps(6, true);
+const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 
 const IssuedChart = (): JSX.Element => {
   const { t } = useTranslation();
@@ -31,7 +29,7 @@ const IssuedChart = (): JSX.Element => {
     error: cumulativeIssuesPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [CUMULATIVE_VOLUMES_FETCHER, 'Issued' as VolumeType, cutoffTimestamps, WRAPPED_TOKEN],
+    [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Issued, cutoffTimestamps, WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeIssuesPerDayError);
@@ -43,7 +41,7 @@ const IssuedChart = (): JSX.Element => {
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [CUMULATIVE_VOLUMES_FETCHER, 'Redeemed' as VolumeType, cutoffTimestamps, WRAPPED_TOKEN],
+    [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, cutoffTimestamps, WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);

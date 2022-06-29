@@ -18,6 +18,7 @@ import {
   ORACLE_LATEST_EXCHANGE_RATE_FETCHER
 } from 'services/fetchers/oracle-exchange-rates-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   hasLinks?: boolean;
@@ -87,8 +88,8 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
               <StatsDt>{t('dashboard.oracles.oracles_are')}</StatsDt>
               <StatsDd
                 className={clsx(
-                  { 'text-interlayConifer': oracleOnline === true },
-                  { 'text-interlayCinnabar': oracleOnline === false }
+                  { [getColorShade('green')]: oracleOnline === true },
+                  { [getColorShade('red')]: oracleOnline === false }
                 )}
               >
                 {statusText}
@@ -100,14 +101,14 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
         <Ring64
           className={clsx(
             'mx-auto',
-            { 'ring-interlayConifer': oracleOnline === true },
-            { 'ring-interlayCinnabar': oracleOnline === false }
+            { [getColorShade('green', 'ring')]: oracleOnline === true },
+            { [getColorShade('red', 'ring')]: oracleOnline === false }
           )}
         >
           <Ring64Title
             className={clsx(
-              { 'text-interlayConifer': oracleOnline === true },
-              { 'text-interlayCinnabar': oracleOnline === false }
+              { [getColorShade('green')]: oracleOnline === true },
+              { [getColorShade('red')]: oracleOnline === false }
             )}
           >
             {statusCircleText}

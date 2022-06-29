@@ -14,6 +14,7 @@ import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
+import { getColorShade } from 'utils/helpers/colors';
 
 const UpperContent = (): JSX.Element => {
   const { totalWrappedTokenAmount, prices } = useSelector((state: StoreType) => state.general);
@@ -60,7 +61,7 @@ const UpperContent = (): JSX.Element => {
               })}
             </StatsDd>
             <StatsDd>${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin?.usd).toLocaleString()}</StatsDd>
-            <StatsDt className='!text-interlayConifer'>{t('dashboard.issue.issue_requests')}</StatsDt>
+            <StatsDt className={`!${getColorShade('green')}`}>{t('dashboard.issue.issue_requests')}</StatsDt>
             <StatsDd>{totalSuccessfulIssueCount}</StatsDd>
           </>
         }

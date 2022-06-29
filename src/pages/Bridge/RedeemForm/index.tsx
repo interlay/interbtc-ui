@@ -12,7 +12,7 @@ import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 import TokenField from 'components/TokenField';
-import PriceInfo from 'pages/Bridge/PriceInfo';
+import PriceInfo from 'components/PriceInfo';
 import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
 import Toggle from 'components/Toggle';
 import TextField from 'components/TextField';
@@ -36,6 +36,7 @@ import { togglePremiumRedeemAction } from 'common/actions/redeem.actions';
 import { updateWrappedTokenBalanceAction, showAccountModalAction } from 'common/actions/general.actions';
 import { StoreType, ParachainStatus } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { getColorShade } from 'utils/helpers/colors';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -311,7 +312,7 @@ const RedeemForm = (): JSX.Element | null => {
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
-    const totalDOTInUSD = getUsdAmount(totalDOT, prices.collateralToken?.usd);
+    const totalDOTInUSD = getUsdAmount(totalDOT, prices.relayChainNativeToken?.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
     const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin?.usd);
@@ -421,7 +422,7 @@ const RedeemForm = (): JSX.Element | null => {
           />
           {premiumRedeemSelected && (
             <PriceInfo
-              title={<h5 className='text-interlayConifer'>{t('redeem_page.earned_premium')}</h5>}
+              title={<h5 className={getColorShade('green')}>{t('redeem_page.earned_premium')}</h5>}
               unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(totalDOT)}
               unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}

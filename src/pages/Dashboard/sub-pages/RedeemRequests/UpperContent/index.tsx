@@ -17,10 +17,11 @@ import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+} from 'services/fetchers/cumulative-volumes-fetcher';
 import { WRAPPED_TOKEN } from 'config/relay-chains';
+import { getColorShade } from 'utils/helpers/colors';
 
-const nowAtfirstLoad = new Date();
+const nowAtFirstLoad = new Date();
 
 const UpperContent = (): JSX.Element => {
   const { prices } = useSelector((state: StoreType) => state.general);
@@ -44,7 +45,7 @@ const UpperContent = (): JSX.Element => {
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [CUMULATIVE_VOLUMES_FETCHER, 'Redeemed' as VolumeType, [nowAtfirstLoad], WRAPPED_TOKEN],
+    [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, [nowAtFirstLoad], WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);
@@ -93,7 +94,7 @@ const UpperContent = (): JSX.Element => {
                 ? '—'
                 : (prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
             </StatsDd>
-            <StatsDt className='!text-interlayConifer'>{t('dashboard.redeem.total_redeems')}</StatsDt>
+            <StatsDt className={`!${getColorShade('green')}`}>{t('dashboard.redeem.total_redeems')}</StatsDt>
             <StatsDd>{totalSuccessfulRedeemCount}</StatsDd>
             {/* TODO: add this again when the network is stable */}
             {/* <StatsDt className='!text-interlayConifer'>

@@ -19,7 +19,10 @@ function decodeRedeemValues(redeem: any): any {
   // TODO: get actual vault collateral when it's added to events
   redeem.collateralPremium = newMonetaryAmount(redeem.collateralPremium, RELAY_CHAIN_NATIVE_TOKEN);
   if (redeem.cancellation) {
-    redeem.cancellation.slashedCollateral = newMonetaryAmount(redeem.cancellation.slashedCollateral, RELAY_CHAIN_NATIVE_TOKEN);
+    redeem.cancellation.slashedCollateral = newMonetaryAmount(
+      redeem.cancellation.slashedCollateral,
+      RELAY_CHAIN_NATIVE_TOKEN
+    );
   }
 
   return redeem;

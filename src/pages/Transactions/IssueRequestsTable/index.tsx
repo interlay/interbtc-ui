@@ -23,18 +23,21 @@ import InterlayTable, {
   InterlayTd
 } from 'components/UI/InterlayTable';
 import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
+import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
 import useQueryParams from 'utils/hooks/use-query-params';
 import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
+import { getColorShade } from 'utils/helpers/colors';
 import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { formatDateTimePrecise, shortTxId, displayMonetaryAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
 import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
+import { StoreType } from 'common/types/util.types';
+import { showAccountModalAction } from 'common/actions/general.actions';
 
 const IssueRequestsTable = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -46,45 +49,31 @@ const IssueRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
-  const { address, extensions, bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { address, extensions } = useSelector((state: StoreType) => state.general);
 
   const {
-    isIdle: btcConfirmationsIdle,
-    isLoading: btcConfirmationsLoading,
-    data: btcConfirmations,
-    error: btcConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
-  useErrorHandler(btcConfirmationsError);
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations,
+    error: stableBitcoinConfirmationsError
+  } = useStableBitcoinConfirmations();
+  useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
-    isIdle: latestParachainActiveBlockIdle,
-    isLoading: latestParachainActiveBlockLoading,
-    data: latestParachainActiveBlock,
-    error: latestParachainActiveBlockError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
-  useErrorHandler(latestParachainActiveBlockError);
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
+  } = useCurrentActiveBlockNumber();
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
-    isIdle: parachainConfirmationsIdle,
-    isLoading: parachainConfirmationsLoading,
-    data: parachainConfirmations,
-    error: parachainConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
-  useErrorHandler(parachainConfirmationsError);
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations,
+    error: stableParachainConfirmationsError
+  } = useStableParachainConfirmations();
+  useErrorHandler(stableParachainConfirmationsError);
 
   const {
     isIdle: issueRequestsTotalCountIdle,
@@ -196,20 +185,20 @@ const IssueRequestsTable = (): JSX.Element => {
             case IssueStatus.Completed: {
               icon = <FaCheck />;
               notice = t('completed');
-              colorClassName = 'text-interlayConifer';
+              colorClassName = getColorShade('green');
               break;
             }
             case IssueStatus.Cancelled:
             case IssueStatus.Expired: {
               icon = <FaRegTimesCircle />;
               notice = t('cancelled');
-              colorClassName = 'text-interlayCinnabar';
+              colorClassName = getColorShade('red');
               break;
             }
             default: {
               icon = <FaRegClock />;
               notice = t('pending');
-              colorClassName = 'text-interlayCalifornia';
+              colorClassName = getColorShade('yellow');
               break;
             }
           }
@@ -229,14 +218,19 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const data =
     issueRequests === undefined ||
-    btcConfirmations === undefined ||
-    parachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+    stableBitcoinConfirmations === undefined ||
+    stableParachainConfirmations === undefined ||
+    currentActiveBlockNumber === undefined
       ? []
       : issueRequests.map(
           // TODO: should type properly (`Relay`)
           (issueRequest: any) =>
-            getIssueWithStatus(issueRequest, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+            getIssueWithStatus(
+              issueRequest,
+              stableBitcoinConfirmations,
+              stableParachainConfirmations,
+              currentActiveBlockNumber
+            )
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -245,12 +239,12 @@ const IssueRequestsTable = (): JSX.Element => {
   });
 
   if (
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
-    latestParachainActiveBlockIdle ||
-    latestParachainActiveBlockLoading ||
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
+    currentActiveBlockNumberIdle ||
+    currentActiveBlockNumberLoading ||
     issueRequestsTotalCountIdle ||
     issueRequestsTotalCountLoading ||
     issueRequestsIdle ||

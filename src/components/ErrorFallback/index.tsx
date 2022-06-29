@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import InterlayLink from 'components/UI/InterlayLink';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   error: Error | string;
@@ -22,7 +23,7 @@ const ErrorFallback = ({ error, resetErrorBoundary }: Props): JSX.Element => {
   }
 
   return (
-    <p className={clsx('text-interlayCinnabar', 'space-x-1')}>
+    <p className={clsx(getColorShade('red'), 'space-x-1')}>
       <span>Error: {message}.</span>
       <span>
         Please&nbsp;
