@@ -18,8 +18,6 @@ const VaultOverview = (): JSX.Element => {
   const vaultOverview = useGetVaultOverview({ address: accountAddress });
   const { t } = useTranslation();
 
-  console.log('in component', vaultOverview);
-
   return (
     <MainContainer>
       <VaultsHeader title={t('vault.vault_overview')} accountAddress={accountAddress} />
