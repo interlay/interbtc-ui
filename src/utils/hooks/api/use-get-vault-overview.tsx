@@ -39,10 +39,10 @@ const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview |
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<unknown, unknown>>>(
     vaults.map(vault => {
       return {
-        queryKey: ['vaultsOverview', address, vault?.collateralId],
+        queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
         queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices),
         options: {
-          enabled: vault
+          enabled: !!vault
         }
       };
     })
