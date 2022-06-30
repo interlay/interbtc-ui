@@ -18,10 +18,12 @@ const VaultOverview = (): JSX.Element => {
   const vaultOverview = useGetVaultOverview({ address: accountAddress });
   const { t } = useTranslation();
 
+  console.log('in component', vaultOverview);
+
   return (
     <MainContainer>
       <VaultsHeader title={t('vault.vault_overview')} accountAddress={accountAddress} />
-      {vaultOverview.vaults && vaultOverview.vaults.length ? (
+      {vaultOverview ? (
         <Grid>
           <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 2, start: 1 }}>
             <InfoBox title='My vaults at risk' text={`${vaultOverview.totals?.totalAtRisk}`} />
@@ -32,7 +34,7 @@ const VaultOverview = (): JSX.Element => {
           <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 5, start: 8 }}>
             <InfoBox title='My total claimable rewards' text={`$${vaultOverview.totals?.totalUsdRewards.toFixed(2)}`} />
           </GridItem>
-          {vaultOverview.vaults.map((vault) => (
+          {vaultOverview?.vaults?.map((vault) => (
             <GridItem key={vault.collateralId} mobile={{ span: 4 }} desktop={{ span: 3 }}>
               <VaultCard
                 collateralSymbol={getCurrencySymbol(vault.collateralId)}
