@@ -22,59 +22,48 @@ interface VaultOverview {
   totals: VaultTotals | undefined;
 }
 
-const getVaultTotals = (vaults: Array<VaultData>) => {
-  return {
+const getVaultTotals = (vaults: Array<VaultData>) => ({
     totalLockedCollateral: vaults.reduce((a, b) => a + b.collateral.usd, 0),
     totalUsdRewards: vaults.reduce((a, b) => a + b.governanceTokenRewards.usd + b.wrappedTokenRewards.usd, 0),
     totalAtRisk: vaults.map((vault) => vault.vaultAtRisk).filter(Boolean).length
-}}
+});
 
-const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview => {
-  const [queryError, setQueryError] = useState<Error | undefined>(undefined);
-  const [parsedVaults, setParsedVaults] = useState<Array<VaultData> | undefined>(undefined);
-  const [vaultTotals, setVaultTotals] = useState<VaultTotals | undefined>(undefined);
+const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview | undefined => {
+  const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
+  const [queryError, setQueryError] = useState<any | undefined>(undefined);
 
-  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const { prices } = useSelector((state: StoreType) => state.general);
   const vaults = useGetVaults({ address });
-
   useErrorHandler(queryError);
 
-  // TODO: updating react-query to > 3.28.0 will allow us to type this properly
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<unknown, unknown>>>(
     vaults.map(vault => {
       return {
-        queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
+        queryKey: ['vaultsOverview', address, vault?.collateralId],
         queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices),
         options: {
-          enabled: !!bridgeLoaded
+          enabled: vault
         }
       };
     })
   );
 
   useEffect(() => {
-    if (!vaultData) return;
-
-    for (const data of vaultData) {
-      if (data.error) {
-        setQueryError(data.error);
+    if (!vaultData || vaultData.length === 0) return;
+    
+    for (const vault of vaultData) {
+      if (vault.error) {
+        setQueryError(vault.error);
 
         return;
       }
     }
 
-    const parsedVaults: Array<VaultData> = vaultData.map((data: any) => data.data).filter(data => data !== undefined);
-    setParsedVaults(parsedVaults);
+    const haveQueriesCompleted = vaultData.every(vault => vault && !vault.isLoading);
+    setQueriesComplete(haveQueriesCompleted);
   }, [vaultData]);
-
-  useEffect(() => {
-    if (!parsedVaults) return;
-
-    const vaultTotals = getVaultTotals(parsedVaults);
-    setVaultTotals(vaultTotals);
-  }, [parsedVaults]);
-
-  return { vaults: parsedVaults, totals: vaultTotals };
+  
+  return queriesComplete ? { vaults: vaultData, totals: getVaultTotals(vaultData.map(vault => vault.data)) } : undefined;
 };
 
 export { useGetVaultOverview };
