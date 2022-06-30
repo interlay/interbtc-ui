@@ -63,7 +63,7 @@ const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview |
     setQueriesComplete(haveQueriesCompleted);
   }, [vaultData]);
   
-  return queriesComplete ? { vaults: vaultData, totals: getVaultTotals(vaultData.map(vault => vault.data)) } : undefined;
+  return queriesComplete ? { vaults: vaultData.map((data: any) => data.data).filter(data => data !== undefined), totals: getVaultTotals(vaultData.map(vault => vault.data)) } : undefined;
 };
 
 export { useGetVaultOverview };
