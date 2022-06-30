@@ -23,7 +23,5 @@ const BaseInput = styled.input`
   border: ${theme.border.default};
 `;
 
-export {
-  BaseInput
-};
+export { BaseInput };
 // ray test touch >>

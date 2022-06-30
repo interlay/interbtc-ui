@@ -2,9 +2,7 @@
 // interface TokenFieldProps {}
 
 const TokenField = (): JSX.Element => {
-  return (
-    <>TokenField</>
-  );
+  return <>TokenField</>;
 };
 
 export { TokenField };
