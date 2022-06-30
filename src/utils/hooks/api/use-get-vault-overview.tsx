@@ -30,13 +30,13 @@ const getVaultTotals = (vaults: Array<VaultData>) => ({
 
 const useGetVaultOverview = ({ address }: { address: string; }): VaultOverview | undefined => {
   const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
-  const [queryError, setQueryError] = useState<any | undefined>(undefined);
+  const [queryError, setQueryError] = useState<Error | undefined>(undefined);
 
   const { prices } = useSelector((state: StoreType) => state.general);
   const vaults = useGetVaults({ address });
   useErrorHandler(queryError);
 
-  const vaultData: Array<any> = useQueries<Array<UseQueryResult<unknown, unknown>>>(
+  const vaultData: Array<any> = useQueries<Array<UseQueryResult<VaultOverview, Error>>>(
     vaults.map(vault => {
       return {
         queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
