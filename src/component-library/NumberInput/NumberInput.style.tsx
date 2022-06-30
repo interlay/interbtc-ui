@@ -1,4 +1,3 @@
-// ray test touch <<
 import styled from 'styled-components';
 
 import { Input, InputProps } from 'component-library/Input';
@@ -12,4 +11,3 @@ const BaseNumberInput = styled(Input).attrs<InputProps>({
 })``;
 
 export { BaseNumberInput };
-// ray test touch >>

@@ -1,4 +1,3 @@
-// ray test touch <<
 import * as React from 'react';
 import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
 
@@ -45,4 +44,3 @@ NumberInput.displayName = 'NumberInput';
 export type Props = InterlayInputProps;
 
 export default NumberInput;
-// ray test touch >>

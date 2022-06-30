@@ -1,4 +1,3 @@
-// ray test touch <<
 import * as React from 'react';
 import { BaseNumberInput } from './NumberInput.style';
 import { InputProps } from 'component-library/Input';
@@ -41,4 +40,3 @@ NumberInput.displayName = 'NumberInput';
 
 export { NumberInput };
 export type { NumberInputProps };
-// ray test touch >>

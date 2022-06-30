@@ -1,4 +1,3 @@
-// ray test touch <<
 import { Story, Meta } from '@storybook/react';
 
 import { NumberInput, NumberInputProps } from '.';
@@ -14,4 +13,3 @@ export default {
   title: 'Forms/NumberInput',
   component: NumberInput
 } as Meta;
-// ray test touch >>
