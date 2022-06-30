@@ -28,10 +28,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
     return (
       <div ref={inputParent}>
-        <BaseNumberInput
-          ref={ref}
-          {...props}
-        />
+        <BaseNumberInput ref={ref} {...props} />
       </div>
     );
   }
