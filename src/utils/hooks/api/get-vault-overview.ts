@@ -6,7 +6,7 @@ import {
   VaultExt,
   WrappedIdLiteral,
   CollateralCurrency,
-  GovernanceIdLiteral,
+  GovernanceIdLiteral
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 import Big from 'big.js';
@@ -28,15 +28,15 @@ interface VaultData {
   collateral: {
     raw: CollateralTokenMonetaryAmount;
     usd: number;
-  },
+  };
   governanceTokenRewards: {
     raw: GovernanceTokenMonetaryAmount;
     usd: number;
-  }
+  };
   wrappedTokenRewards: {
     raw: WrappedTokenAmount;
     usd: number;
-  }
+  };
   vaultAtRisk: boolean;
 }
 
@@ -50,14 +50,24 @@ const getVaultOverview = async (
 
   const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
-  const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(accountId, tokenIdLiteral, VAULT_GOVERNANCE as GovernanceIdLiteral)
-  const wrappedTokenRewards = await window.bridge.vaults.getWrappedReward(accountId, tokenIdLiteral, VAULT_WRAPPED as WrappedIdLiteral)
+  const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(
+    accountId,
+    tokenIdLiteral,
+    VAULT_GOVERNANCE as GovernanceIdLiteral
+  );
+  const wrappedTokenRewards = await window.bridge.vaults.getWrappedReward(
+    accountId,
+    tokenIdLiteral,
+    VAULT_WRAPPED as WrappedIdLiteral
+  );
   const collateral = await window.bridge.vaults.getCollateral(accountId, tokenIdLiteral);
-  const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency as CollateralCurrency);
+  const threshold = await window.bridge.vaults.getSecureCollateralThreshold(
+    vault.backingCollateral.currency as CollateralCurrency
+  );
 
   const usdCollateral = getUsdAmount(collateral, collateralPrice?.usd);
   const usdGovernanceTokenRewards = getUsdAmount(governanceTokenRewards, prices.governanceToken?.usd);
-  const usdWrappedTokenRewards =  getUsdAmount(wrappedTokenRewards, prices.wrappedToken?.usd);
+  const usdWrappedTokenRewards = getUsdAmount(wrappedTokenRewards, prices.wrappedToken?.usd);
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
@@ -65,7 +75,9 @@ const getVaultOverview = async (
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: issueCountQuery(`vault: {accountId_eq: "${accountId.toString()}", collateralToken_eq: ${tokenIdLiteral}}, status_eq: Pending`)
+      query: issueCountQuery(
+        `vault: {accountId_eq: "${accountId.toString()}", collateralToken_eq: ${tokenIdLiteral}}, status_eq: Pending`
+      )
     })
   });
 

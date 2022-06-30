@@ -3,7 +3,7 @@
 .github
 .husky
 .storybook
-api
-build
-node_modules
-public
+/api
+/build
+/node_modules
+/public
