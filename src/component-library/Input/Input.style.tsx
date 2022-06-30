@@ -19,7 +19,9 @@ const BaseInput = styled.input`
   line-height: ${theme.lineHeight.base};
   box-shadow: ${theme.boxShadow.default};
   border-radius: ${theme.rounded.md};
-  &::placeholder: ${theme.colors.textTertiary};
+  &::placeholder: {
+    color: ${theme.colors.textTertiary};
+  }
   border: ${theme.border.default};
 `;
 
