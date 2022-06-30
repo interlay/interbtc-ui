@@ -8,7 +8,7 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { ExchangeRate, Bitcoin, BitcoinUnit, Currency, BitcoinAmount } from '@interlay/monetary-js';
 import { CollateralCurrency, CollateralUnit, newMonetaryAmount } from '@interlay/interbtc-api';
 
-import PriceInfo from 'pages/Bridge/PriceInfo';
+import PriceInfo from 'components/PriceInfo';
 import TokenField from 'components/TokenField';
 import SubmitButton from 'components/SubmitButton';
 import FormTitle from 'components/FormTitle';
@@ -233,7 +233,7 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken?.usd)}
+            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
           />
           <SubmitButton
             // TODO: should not check everywhere like this

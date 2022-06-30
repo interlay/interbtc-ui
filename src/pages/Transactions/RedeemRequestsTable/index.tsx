@@ -30,10 +30,13 @@ import { QUERY_PARAMETERS } from 'utils/constants/links';
 import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
 import { shortTxId, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
 import redeemCountQuery from 'services/queries/redeem-count-query';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import redeemsFetcher, { REDEEMS_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
+import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
 import { StoreType } from 'common/types/util.types';
+import { getColorShade } from 'utils/helpers/colors';
 
 const RedeemRequestsTable = (): JSX.Element => {
   const { t } = useTranslation();
@@ -44,45 +47,31 @@ const RedeemRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
-  const { address, bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { address } = useSelector((state: StoreType) => state.general);
 
   const {
-    isIdle: btcConfirmationsIdle,
-    isLoading: btcConfirmationsLoading,
-    data: btcConfirmations,
-    error: btcConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
-  useErrorHandler(btcConfirmationsError);
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations,
+    error: stableBitcoinConfirmationsError
+  } = useStableBitcoinConfirmations();
+  useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
-    isIdle: latestParachainActiveBlockIdle,
-    isLoading: latestParachainActiveBlockLoading,
-    data: latestParachainActiveBlock,
-    error: latestParachainActiveBlockError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
-  useErrorHandler(latestParachainActiveBlockError);
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
+  } = useCurrentActiveBlockNumber();
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
-    isIdle: parachainConfirmationsIdle,
-    isLoading: parachainConfirmationsLoading,
-    data: parachainConfirmations,
-    error: parachainConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
-  useErrorHandler(parachainConfirmationsError);
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations,
+    error: stableParachainConfirmationsError
+  } = useStableParachainConfirmations();
+  useErrorHandler(stableParachainConfirmationsError);
 
   const {
     isIdle: redeemRequestsTotalCountIdle,
@@ -192,31 +181,31 @@ const RedeemRequestsTable = (): JSX.Element => {
             case RedeemStatus.Reimbursed: {
               icon = <FaCheck />; // TODO: should update according to the design
               notice = t('redeem_page.reimbursed');
-              colorClassName = 'text-interlayConifer'; // TODO: should update according to the design
+              colorClassName = getColorShade('green'); // TODO: should update according to the design
               break;
             }
             case RedeemStatus.Expired: {
               icon = <FaRegTimesCircle />;
               notice = t('redeem_page.recover');
-              colorClassName = 'text-interlayCinnabar';
+              colorClassName = getColorShade('red');
               break;
             }
             case RedeemStatus.Retried: {
               icon = <FaCheck />;
               notice = t('redeem_page.retried');
-              colorClassName = 'text-interlayConifer';
+              colorClassName = getColorShade('green');
               break;
             }
             case RedeemStatus.Completed: {
               icon = <FaCheck />;
               notice = t('completed');
-              colorClassName = 'text-interlayConifer';
+              colorClassName = getColorShade('green');
               break;
             }
             default: {
               icon = <FaRegClock />;
               notice = t('pending');
-              colorClassName = 'text-interlayCalifornia';
+              colorClassName = getColorShade('yellow');
               break;
             }
           }
@@ -235,14 +224,19 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   const data =
     redeemRequests === undefined ||
-    btcConfirmations === undefined ||
-    parachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+    stableBitcoinConfirmations === undefined ||
+    stableParachainConfirmations === undefined ||
+    currentActiveBlockNumber === undefined
       ? []
       : redeemRequests.map(
           // TODO: should type properly (`Relay`)
           (redeem: any) =>
-            getRedeemWithStatus(redeem, btcConfirmations, parachainConfirmations, latestParachainActiveBlock)
+            getRedeemWithStatus(
+              redeem,
+              stableBitcoinConfirmations,
+              stableParachainConfirmations,
+              currentActiveBlockNumber
+            )
         );
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -251,12 +245,12 @@ const RedeemRequestsTable = (): JSX.Element => {
   });
 
   if (
-    btcConfirmationsIdle ||
-    btcConfirmationsLoading ||
-    parachainConfirmationsIdle ||
-    parachainConfirmationsLoading ||
-    latestParachainActiveBlockIdle ||
-    latestParachainActiveBlockLoading ||
+    stableBitcoinConfirmationsIdle ||
+    stableBitcoinConfirmationsLoading ||
+    stableParachainConfirmationsIdle ||
+    stableParachainConfirmationsLoading ||
+    currentActiveBlockNumberIdle ||
+    currentActiveBlockNumberLoading ||
     redeemRequestsIdle ||
     redeemRequestsLoading ||
     redeemRequestsTotalCountIdle ||

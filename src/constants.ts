@@ -13,9 +13,6 @@ const BTC_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-np-zAC-H
 // btc transaction validation regex
 const BTC_TRANSACTION_ID_REGEX = /[a-fA-F0-9]{64}/;
 
-// regex for validating input strings as numbers
-const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
-
 const BITCOIN_NETWORK = (process.env.REACT_APP_BITCOIN_NETWORK || BitcoinNetwork.Testnet) as BitcoinNetwork;
 const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || 'http://localhost:3002';
 
@@ -82,7 +79,6 @@ export {
   BTC_DECIMALS,
   BTC_ADDRESS_REGEX,
   BTC_TRANSACTION_ID_REGEX,
-  NUMERIC_STRING_REGEX,
   BITCOIN_NETWORK,
   BITCOIN_REGTEST_URL,
   STORE_NAME,

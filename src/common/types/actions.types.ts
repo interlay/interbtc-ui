@@ -1,4 +1,4 @@
-import { Issue, CollateralUnit } from '@interlay/interbtc-api';
+import { CollateralUnit } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 
 import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
@@ -140,23 +140,7 @@ export interface TogglePremiumRedeem {
   premiumRedeem: boolean;
 }
 
-export type RedeemActions = ChangeAddress | InitState | TogglePremiumRedeem;
-
-// ISSUE
-export const STORE_ISSUE_REQUEST = 'STORE_ISSUE_REQUEST';
-export const UPDATE_ISSUE_PERIOD = 'UPDATE_ISSUE_PERIOD';
-
-export interface StoreIssueRequest {
-  type: typeof STORE_ISSUE_REQUEST;
-  request: Issue;
-}
-
-export interface UpdateIssuePeriod {
-  type: typeof UPDATE_ISSUE_PERIOD;
-  period: number;
-}
-
-export type IssueActions = StoreIssueRequest | ChangeAddress | InitState | UpdateIssuePeriod;
+export type RedeemActions = TogglePremiumRedeem;
 
 // VAULT
 

@@ -4,9 +4,8 @@ import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
 import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import { GeneralActions, RedeemActions, IssueActions, VaultActions } from './actions.types';
+import { GeneralActions, RedeemActions, VaultActions } from './actions.types';
 import { rootReducer } from '../reducers/index';
-import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
 
@@ -53,7 +52,7 @@ export type Prices = {
         usd: number;
       }
     | undefined;
-  collateralToken:
+  relayChainNativeToken:
     | {
         usd: number;
       }
@@ -89,7 +88,6 @@ export type AppState = ReturnType<typeof rootReducer>;
 
 export type StoreType = {
   general: GeneralState;
-  issue: IssueState;
   redeem: RedeemState;
   vault: VaultState;
 };
@@ -99,8 +97,7 @@ export type dispatcher = {
   dispatch: {};
 };
 
-export type StoreState = Store<CombinedState<StoreType>, GeneralActions | RedeemActions | IssueActions | VaultActions> &
-  dispatcher;
+export type StoreState = Store<CombinedState<StoreType>, GeneralActions | RedeemActions | VaultActions> & dispatcher;
 
 export type TimeDataPoint = {
   x: Date;

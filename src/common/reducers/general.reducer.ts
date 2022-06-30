@@ -42,7 +42,7 @@ const initialState = {
   parachainStatus: ParachainStatus.Loading,
   prices: {
     bitcoin: { usd: 0 },
-    collateralToken: { usd: 0 },
+    relayChainNativeToken: { usd: 0 },
     governanceToken: { usd: 0 }
   }
 };

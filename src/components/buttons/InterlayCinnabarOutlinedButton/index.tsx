@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
 import { DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface CustomProps {
   startIcon?: React.ReactNode;
@@ -32,10 +33,10 @@ const InterlayCinnabarOutlinedButton = React.forwardRef<Ref, Props>(
           disabledOrPending
             ? clsx(DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES)
             : clsx(
-                'text-interlayCinnabar',
+                getColorShade('red'),
                 'border',
-                'border-interlayCinnabar',
-                'hover:bg-interlayCinnabar',
+                getColorShade('red', 'border'),
+                getColorShade('red', 'hover:bg'),
                 'hover:bg-opacity-5'
               ),
 
