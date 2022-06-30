@@ -1,4 +1,3 @@
-/* ray test touch < */
 /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
 /* Chrome, Safari, Edge, Opera */
 input.interlayInput::-webkit-outer-spin-button,
@@ -11,4 +10,3 @@ input.interlayInput::-webkit-inner-spin-button {
 input.interlayInput[type='number'] {
   -moz-appearance: textfield;
 }
-/* ray test touch > */
