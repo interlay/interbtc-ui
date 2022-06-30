@@ -4,7 +4,8 @@ import { theme } from 'component-library';
 const BaseInput = styled.input`
   /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
   /* Chrome, Safari, Edge, Opera */
-  &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
