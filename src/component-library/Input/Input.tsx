@@ -6,7 +6,7 @@ type InputProps = React.ComponentPropsWithRef<'input'>;
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (props, ref): JSX.Element => {
-    return <BaseInput ref={ref} {...props} />;
+    return <BaseInput ref={ref} type='text' {...props} />;
   }
 );
 Input.displayName = 'Input';

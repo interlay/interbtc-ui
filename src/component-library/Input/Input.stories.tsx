@@ -15,5 +15,5 @@ export { Default };
 
 export default {
   title: 'Forms/Input',
-  component: Default
+  component: Input
 } as Meta;
