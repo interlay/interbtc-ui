@@ -22,7 +22,7 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
 
   useErrorHandler(queryError);
 
-  // TODO: updating react-query to > 3.28.0 will allow us to avoid casting further down
+  // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const vaults: Array<any> = useQueries<Array<UseQueryResult<VaultResponse, Error>>>(
     VAULT_COLLATERAL.map((token) => {
       return {
