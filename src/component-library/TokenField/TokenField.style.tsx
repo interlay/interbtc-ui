@@ -1,17 +1,8 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { theme } from 'component-library';
 import { NumberInput } from 'component-library/NumberInput';
 
-// ray test touch <<
-const spaceY = (level: keyof typeof theme.spacing) => css`
-  & > :not([hidden]) ~ :not([hidden]) {
-    margin-top: ${theme.spacing[level]};
-  }
-`;
-// ray test touch >>
-
-// TODO: should port `src\components\TextField`
 const TokenFieldWrapper = styled.div`
   position: relative;
 `;
@@ -24,7 +15,6 @@ const TokenFieldLabel = styled.label`
   position: absolute;
   right: ${theme.spacing.spacing4};
   top: ${theme.spacing.spacing2};
-  ${spaceY(0.5)}
 `;
 
 const TokenFieldInput = styled(NumberInput)`
