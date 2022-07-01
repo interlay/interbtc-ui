@@ -1,4 +1,3 @@
-// ray test touch <
 import styled, { css } from 'styled-components';
 
 import { theme } from 'component-library';
@@ -49,4 +48,3 @@ export {
   TokenFieldInput,
   TokenFieldUSD
 };
-// ray test touch >

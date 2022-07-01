@@ -1,4 +1,3 @@
-// ray test touch <
 import * as React from 'react';
 
 import { TokenFieldLabel, TokenFieldWrapper, TokenFieldInput, TokenFieldUSD } from './TokenField.style';
@@ -32,4 +31,3 @@ TokenField.displayName = 'TokenField';
 
 export { TokenField };
 export type { TokenFieldProps };
-// ray test touch >

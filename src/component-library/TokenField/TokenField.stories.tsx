@@ -1,4 +1,3 @@
-// ray test touch <
 import { Story, Meta } from '@storybook/react';
 
 import { TokenField, TokenFieldProps } from '.';
@@ -17,4 +16,3 @@ export default {
   title: 'Forms/TokenField',
   component: TokenField
 } as Meta;
-// ray test touch >
