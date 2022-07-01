@@ -50,7 +50,6 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
     setQueriesComplete(haveQueriesCompleted);
   }, [vaults]);
 
-  // TODO: casting can be removed after react-query update
   return queriesComplete ? vaults.map((vault) => vault.data) : [];
 };
 

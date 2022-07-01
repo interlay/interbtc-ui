@@ -34,6 +34,7 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
   const vaults = useGetVaults({ address });
   useErrorHandler(queryError);
 
+  // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<VaultOverview, Error>>>(
     vaults.map((vault) => {
       return {
