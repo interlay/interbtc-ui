@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { theme } from 'componentLibrary';
 
 interface CTAProps {
-  fullWidth: boolean;
+  $fullWidth: boolean;
 }
 
 const BaseCTA = styled.button<CTAProps>`
@@ -16,7 +16,7 @@ const BaseCTA = styled.button<CTAProps>`
   line-height: ${theme.lineHeight.base};
   padding: ${theme.spacing.spacing3} ${theme.spacing.spacing10};
   text-decoration: none;
-  width: ${(props) => (props.fullWidth ? '100%' : 'auto')};
+  width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
   opacity: ${(props) => (props.disabled ? '50%' : '100%')};
 `;
 
