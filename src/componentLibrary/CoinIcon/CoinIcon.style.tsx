@@ -5,7 +5,7 @@ interface IconWrapperProps {
 }
 
 export const IconWrapper = styled.div<IconWrapperProps>`
-  width: ${props => props.size === 'small' ? '2.625rem' : '3.755rem'};
+  width: ${(props) => (props.size === 'small' ? '2.625rem' : '3.755rem')};
 `;
 
 export type { IconWrapperProps };

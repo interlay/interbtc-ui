@@ -1,4 +1,3 @@
-
 import { BitcoinNetwork } from 'types/bitcoin';
 
 const BALANCE_MAX_INTEGER_LENGTH = 13;
@@ -14,23 +13,17 @@ const BTC_MAINNET_REGEX = /\b([13][a-km-zA-HJ-NP-Z1-9]{25,34}|bc1[ac-hj-np-zAC-H
 // btc transaction validation regex
 const BTC_TRANSACTION_ID_REGEX = /[a-fA-F0-9]{64}/;
 
-// regex for validating input strings as numbers
-const NUMERIC_STRING_REGEX = /^[0-9]+([.][0-9]+)?$/;
-
-const BITCOIN_NETWORK = (
-  process.env.REACT_APP_BITCOIN_NETWORK ||
-  BitcoinNetwork.Testnet
-) as BitcoinNetwork;
+const BITCOIN_NETWORK = (process.env.REACT_APP_BITCOIN_NETWORK || BitcoinNetwork.Testnet) as BitcoinNetwork;
 const BITCOIN_REGTEST_URL = process.env.REACT_APP_BITCOIN_REGTEST_URL || 'http://localhost:3002';
 
 const STORE_NAME = 'pbtc-store-2';
 
 const BTC_ADDRESS_REGEX =
-  BITCOIN_NETWORK === BitcoinNetwork.Mainnet ?
-    BTC_MAINNET_REGEX :
-    BITCOIN_NETWORK === BitcoinNetwork.Testnet ?
-      BTC_TESTNET_REGEX :
-      BTC_REGTEST_REGEX;
+  BITCOIN_NETWORK === BitcoinNetwork.Mainnet
+    ? BTC_MAINNET_REGEX
+    : BITCOIN_NETWORK === BitcoinNetwork.Testnet
+    ? BTC_TESTNET_REGEX
+    : BTC_REGTEST_REGEX;
 
 const PARACHAIN_URL = process.env.REACT_APP_PARACHAIN_URL || 'ws://127.0.0.1:9944';
 const RELAY_CHAIN_URL = process.env.REACT_APP_RELAY_CHAIN_URL;
@@ -54,11 +47,11 @@ if (BITCOIN_NETWORK === BitcoinNetwork.Mainnet) {
   // kintsugi
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama') {
     ss58Format = 2092;
-  // interlay
+    // interlay
   } else {
     ss58Format = 2032;
   }
-// generic substrate
+  // generic substrate
 } else {
   ss58Format = 42;
 }
@@ -86,7 +79,6 @@ export {
   BTC_DECIMALS,
   BTC_ADDRESS_REGEX,
   BTC_TRANSACTION_ID_REGEX,
-  NUMERIC_STRING_REGEX,
   BITCOIN_NETWORK,
   BITCOIN_REGTEST_URL,
   STORE_NAME,

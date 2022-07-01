@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import clsx from 'clsx';
 
@@ -14,43 +13,17 @@ interface CustomProps {
   description: string;
 }
 
-const ErrorModal = ({
-  open,
-  onClose,
-  title,
-  description
-}: Props): JSX.Element => {
+const ErrorModal = ({ open, onClose, title, description }: Props): JSX.Element => {
   const focusRef = React.useRef(null);
 
   return (
-    <InterlayModal
-      initialFocus={focusRef}
-      open={open}
-      onClose={onClose}>
-      <InterlayModalInnerWrapper
-        className={clsx(
-          'p-6',
-          'max-w-lg'
-        )}>
-        <InterlayModalTitle
-          as='h3'
-          className={clsx(
-            'text-lg',
-            'font-medium',
-            'mb-6'
-          )}>
+    <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
+      <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
+        <InterlayModalTitle as='h3' className={clsx('text-lg', 'font-medium', 'mb-6')}>
           {title}
         </InterlayModalTitle>
-        <CloseIconButton
-          ref={focusRef}
-          onClick={onClose} />
-        <p
-          className={clsx(
-            'text-base',
-            'break-all'
-          )}>
-          {description}
-        </p>
+        <CloseIconButton ref={focusRef} onClick={onClose} />
+        <p className={clsx('text-base', 'break-all')}>{description}</p>
       </InterlayModalInnerWrapper>
     </InterlayModal>
   );

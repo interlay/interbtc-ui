@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'react-i18next';
 
 import OracleStatusCard from '../../cards/OracleStatusCard';
@@ -13,9 +12,7 @@ const Oracles = (): JSX.Element => {
   return (
     <>
       <div>
-        <PageTitle
-          mainTitle={t('dashboard.oracles.oracles')}
-          subTitle={<TimerIncrement />} />
+        <PageTitle mainTitle={t('dashboard.oracles.oracles')} subTitle={<TimerIncrement />} />
         <Hr1 className='mt-2' />
       </div>
       <OracleStatusCard />

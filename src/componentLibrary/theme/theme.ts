@@ -1,34 +1,46 @@
 const theme = {
+  // layout
+  layout: {
+    // Note: media queries can't be used with CSS variables
+    // TODO: this is a placeholder - will review BPs with UX
+    breakpoints: {
+      lg: '48em'
+    }
+  },
   // generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
-    textSecondary: `var(--colors-text-secondary)`,
-    textTertiary: `var(--colors-text-tertiary)`
+    textSecondary: 'var(--colors-text-secondary)',
+    textTertiary: 'var(--colors-text-tertiary)',
+    textAccent: 'var(--colors-text-accent)',
+    iconDefault: `var(--colors-icon-default)`
   },
   font: {
-    primary: `var(--fonts-primary)`
+    primary: 'var(--fonts-primary)'
   },
   fontWeight: {
-    light: `var(--font-weights-light)`,
-    book: `var(--font-weights-book)`,
-    medium: `var(--font-weights-medium)`,
-    bold: `var(--font-weights-bold)`
+    light: 'var(--font-weights-light)',
+    book: 'var(--font-weights-book)',
+    medium: 'var(--font-weights-medium)',
+    bold: 'var(--font-weights-bold)'
   },
   text: {
-    xs: `var(--text-xs)`,
-    s: `var(--text-s)`,
-    base: `var(--text-base)`,
-    lg: `var(--text-lg)`,
-    xl: `var(--text-xl)`,
-    xl2: `var(--text-2xl)`,
-    xl3: `var(--text-3xl)`,
-    xl4: `var(--text-4xl)`,
-    xl5: `var(--text-5xl)`,
-    xl6: `var(--text-6xl)`
+    xs: 'var(--text-xs)',
+    s: 'var(--text-s)',
+    base: 'var(--text-base)',
+    lg: 'var(--text-lg)',
+    xl: 'var(--text-xl)',
+    xl2: 'var(--text-2xl)',
+    xl3: 'var(--text-3xl)',
+    xl4: 'var(--text-4xl)',
+    xl5: 'var(--text-5xl)',
+    xl6: 'var(--text-6xl)'
   },
   lineHeight: {
-    base: `var(--line-height-base)`,
-    lg: `var(--line-height-lg)`
+    base: 'var(--line-height-base)',
+    s: 'var(--line-height-s)',
+    lg: 'var(--line-height-lg)',
+    xl: 'var(--line-height-xl)'
   },
   spacing: {
     spacing1: 'var(--spacing-1)',
@@ -48,17 +60,38 @@ const theme = {
     lg: 'var(--rounded-lg)',
     xl: 'var(--rounded-xl)'
   },
+  border: {
+    default: `1px solid var(--colors-border)`
+  },
+  boxShadow: {
+    default: `var(--box-shadow-default)`
+  },
   // Components
   card: {
-    bg: 'var(--colors-card-bg)'
+    bg: 'var(--colors-card-bg)',
+    secondaryBg: 'var(--colors-card-secondary-bg)'
   },
   cta: {
     primary: {
-      bg: 'var(--colors-cta-primary)'
+      bg: 'var(--colors-cta-primary)',
+      bgHover: 'var(--colors-cta-primary-hover)',
+      text: 'var(--colors-cta-primary-text)'
     },
     secondary: {
       bg: 'var(--colors-cta-secondary)'
     }
+  },
+  table: {
+    bg: 'var(--colors-table-bg)',
+    border: '1px var(--colors-neutral-light-grey-50) solid',
+    text: 'var(--colors-table-text)',
+    rowHighlight: 'var(--colors-table-row-highlight)'
+  },
+  modal: {
+    bg: 'var(--colors-modal-bg)'
+  },
+  transition: {
+    duration: 100
   }
 };
 

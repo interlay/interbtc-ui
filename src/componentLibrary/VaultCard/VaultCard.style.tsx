@@ -2,15 +2,16 @@ import styled from 'styled-components';
 import { theme } from 'componentLibrary/theme';
 
 export const Card = styled.div`
+  box-shadow: ${theme.boxShadow.default};
   color: ${theme.colors.textSecondary};
   display: flex;
   background-color: ${theme.card.bg};
+  border: ${theme.border.default};
   border-radius: ${theme.rounded.xl};
   flex-direction: column;
   font-family: ${theme.font.primary};
   gap: ${theme.spacing.spacing8};
   padding: ${theme.spacing.spacing8} ${theme.spacing.spacing4};
-  width: 386px;
 `;
 
 export const CardHeader = styled.header`
@@ -27,14 +28,14 @@ export const CardTitle = styled.h2`
   text-align: center;
 `;
 
-export const CardBody = styled.div `
+export const CardBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${theme.spacing.spacing8};
 `;
 
 export const StyledDl = styled.dl`
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: ${theme.card.secondaryBg};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.s};
   font-weight: ${theme.fontWeight.medium};

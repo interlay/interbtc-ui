@@ -1,38 +1,23 @@
-
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 
 import LineChart from '../LineChart';
 import ErrorFallback from 'components/ErrorFallback';
+import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
 import { WRAPPED_TOKEN_SYMBOL, WRAPPED_TOKEN } from 'config/relay-chains';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
-import {
-  INTERLAY_DENIM,
-  INTERLAY_MULBERRY,
-  KINTSUGI_MIDNIGHT,
-  KINTSUGI_PRAIRIE_SAND
-} from 'utils/constants/colors';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from 'utils/constants/colors';
 import { getLastMidnightTimestamps } from 'common/utils/utils';
-import cumulativeVolumesFetcher,
-{
+import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
+} from 'services/fetchers/cumulative-volumes-fetcher';
 
-// get 6 values to be able to calculate difference between 5 days ago and 6 days ago
-// thus issues per day 5 days ago can be displayed
-// cumulative issues is also only displayed to 5 days
-const cutoffTimestamps = getLastMidnightTimestamps(6, true);
+const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 
 const IssuedChart = (): JSX.Element => {
   const { t } = useTranslation();
@@ -42,14 +27,9 @@ const IssuedChart = (): JSX.Element => {
     isLoading: cumulativeIssuesPerDayLoading,
     data: cumulativeIssuesPerDay,
     error: cumulativeIssuesPerDayError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [
-      CUMULATIVE_VOLUMES_FETCHER,
-      'Issued' as VolumeType,
-      cutoffTimestamps,
-      WRAPPED_TOKEN
-    ],
+    [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Issued, cutoffTimestamps, WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeIssuesPerDayError);
@@ -59,21 +39,20 @@ const IssuedChart = (): JSX.Element => {
     isLoading: cumulativeRedeemsPerDayLoading,
     data: cumulativeRedeemsPerDay,
     error: cumulativeRedeemsPerDayError
-  // TODO: should type properly (`Relay`)
+    // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [
-      CUMULATIVE_VOLUMES_FETCHER,
-      'Redeemed' as VolumeType,
-      cutoffTimestamps,
-      WRAPPED_TOKEN
-    ],
+    [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, cutoffTimestamps, WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);
 
   // TODO: should use skeleton loaders
-  if (cumulativeIssuesPerDayIdle || cumulativeIssuesPerDayLoading ||
-  cumulativeRedeemsPerDayIdle || cumulativeRedeemsPerDayLoading) {
+  if (
+    cumulativeIssuesPerDayIdle ||
+    cumulativeIssuesPerDayLoading ||
+    cumulativeRedeemsPerDayIdle ||
+    cumulativeRedeemsPerDayLoading
+  ) {
     return <>Loading...</>;
   }
   if (cumulativeIssuesPerDay === undefined || cumulativeRedeemsPerDay === undefined) {
@@ -88,20 +67,22 @@ const IssuedChart = (): JSX.Element => {
     };
   });
 
-  const pointTvlPerDay = cumulativeTvlPerDay.map((dataPoint, i) => {
-    if (i === 0) {
-      return newMonetaryAmount(0, WRAPPED_TOKEN);
-    } else {
-      return dataPoint.amount.sub(cumulativeTvlPerDay[i - 1].amount);
-    }
-  }).slice(1); // cut off first 0 value
+  const pointTvlPerDay = cumulativeTvlPerDay
+    .map((dataPoint, i) => {
+      if (i === 0) {
+        return newMonetaryAmount(0, WRAPPED_TOKEN);
+      } else {
+        return dataPoint.amount.sub(cumulativeTvlPerDay[i - 1].amount);
+      }
+    })
+    .slice(1); // cut off first 0 value
 
   let firstChartLineColor;
   let secondChartLineColor;
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     firstChartLineColor = INTERLAY_DENIM[500];
     secondChartLineColor = INTERLAY_MULBERRY[500];
-  // MEMO: should check dark mode as well
+    // MEMO: should check dark mode as well
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     firstChartLineColor = KINTSUGI_MIDNIGHT[200];
     secondChartLineColor = KINTSUGI_PRAIRIE_SAND[400];
@@ -112,10 +93,7 @@ const IssuedChart = (): JSX.Element => {
   return (
     <LineChart
       wrapperClassName='h-full'
-      colors={[
-        firstChartLineColor,
-        secondChartLineColor
-      ]}
+      colors={[firstChartLineColor, secondChartLineColor]}
       labels={[
         t('dashboard.issue.total_issued_chart', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
@@ -124,10 +102,7 @@ const IssuedChart = (): JSX.Element => {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         })
       ]}
-      yLabels={
-        cutoffTimestamps.slice(0, -1)
-          .map(timestamp => timestamp.toISOString().substring(0, 10))
-      }
+      yLabels={cutoffTimestamps.slice(0, -1).map((timestamp) => timestamp.toISOString().substring(0, 10))}
       yAxes={[
         {
           position: 'left',
@@ -145,9 +120,10 @@ const IssuedChart = (): JSX.Element => {
         }
       ]}
       datasets={[
-        cumulativeTvlPerDay.slice(1).map(dataPoint => dataPoint.amount.str.BTC()),
-        pointTvlPerDay.map(amount => amount.str.BTC())
-      ]} />
+        cumulativeTvlPerDay.slice(1).map((dataPoint) => dataPoint.amount.str.BTC()),
+        pointTvlPerDay.map((amount) => amount.str.BTC())
+      ]}
+    />
   );
 };
 

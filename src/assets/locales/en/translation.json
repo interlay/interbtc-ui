@@ -47,11 +47,8 @@
   "collateralization": "Collateralization",
   "fees_earned": "Fees earned",
   "apy": "APY",
-  "no_account": "You don't have an account. Create one",
   "here": "here",
   "refresh_page.": "Once you create a new account please refresh the page.",
-  "select_an_account": "Please select an account",
-  "install_supported_wallets": "Please install one of the currently supported wallets. By connecting the wallet you accept the ",
   "btc_relay_status": "BTC Relay Status:",
   "no_data": "Unable to fetch data.",
   "empty_data": "No transactions found.",
@@ -68,7 +65,7 @@
   "btc_parachain_status": "BTC Parachain Status",
   "vote": "Vote",
   "pending_btc": "Pending BTC",
-  "locked_dot": "Locked {{collateralTokenSymbol}}",
+  "locked_collateral": "Locked Collateral",
   "locked_planck": "Locked Planck",
   "locked_btc": "Locked BTC",
   "issue": "Issue",
@@ -78,11 +75,13 @@
   "nav_transactions": "Transactions",
   "nav_staking": "Staking",
   "nav_dashboard": "Dashboard",
-  "nav_vault": "Vault",
+  "nav_vaults": "Vaults",
   "nav_crowdloan": "Claim {{governanceTokenSymbol}}",
   "nav_feedback": "Feedback",
   "nav_docs": "Docs",
   "nav_terms_and_conditions": "Terms and Conditions",
+  "nav_earn": "Earn",
+  "nav_governance": "Governance",
   "report_bug": "Report a bug:",
   "request_funds": "{{tokenSymbol}} Faucet",
   "request_btc": "BTC Faucet",
@@ -115,6 +114,10 @@
   "built_by": "Built by",
   "get_governance_token": "Get {{governanceTokenSymbol}}",
   "get_governance_token_description": "Please check the individual terms and conditions of each exchange before you buy/trade {{governanceTokenSymbol}}.",
+  "select_vault": "Please Select Vault",
+  "not_enough_vault_capacity": "None vault has enough capacity.",
+  "view_all_transactions_on_subscan": "View all transactions on Subscan",
+  "collateral": "Collateral",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -205,8 +208,8 @@
       "please_enter_amount": "Please enter amount",
       "relay_chain_balance": "Transferable relay chain balance",
       "parachain_balance": "Transferable balance",
-      "insufficient_funds_to_pay_fees": "Please transfer an amount greater than the transfer fee of {{transferFee}}",
-      "insufficient_funds_to_maintain_existential_depoit": "Insufficient amount to maintain existential deposit"
+      "insufficient_funds_to_pay_fees": "Please transfer an amount greater than the transfer fee of {{transferFee}}.",
+      "insufficient_funds_to_maintain_existential_deposit": "Insufficient amount to maintain existential deposit on the receiving account. Please transfer an amount greater than the existential deposit of {{existentialDeposit}} and the transfer fee of {{transferFee}}."
     }
   },
   "burn_page": {
@@ -272,9 +275,9 @@
       "loading": "loading..."
     },
     "vault": {
-      "active_vaults": "Active Vaults",
       "collateralization": "Collateralization",
-      "locked_collateral": "Locked collateral",
+      "total_collateral_locked_usd": "Total Collateral Locked (USD)",
+      "total_collateral_token_symbol_locked": "Total {{collateralTokenSymbol}} Locked",
       "theft": "Theft detected",
       "liquidated": "Liquidated",
       "liquidation": "Being liquidated",
@@ -388,7 +391,10 @@
     "warning_mbtc_wallets": "Warning: Some Bitcoin wallets display values in mBTC. Please ensure you send the correct amount:",
     "tooltip_bridge_fee": "The bridge fee is paid to the Vaults, Relayers, and maintainers of the system.",
     "tooltip_security_deposit": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed.",
-    "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain."
+    "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain.",
+    "manually_select_vault": "Manually Select Vault",
+    "vault_must_be_selected": "Specific vault must be selected.",
+    "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity"
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
@@ -404,31 +410,50 @@
     "old_vault": "Old Vault",
     "new_vault": "New Vault",
     "replace_vault": "Replace My Vault",
+    "redeem_vault": "Redeem",
     "request_replacement": "Request Replacement",
+    "request_redeem": "Request Redeem",
     "withdraw_your_collateral": "You are requesting that your vault is replaced by other vaults in the system. If this is successful, you can withdraw your collateral.",
-    "your_have": "Your currently have:",
+    "redeem_description": "You are requesting to redeem from this Vault.",
+    "you_have": "You currently have:",
     "replace_amount": "Replace amount",
+    "redeem_amount": "Redeem amount",
+    "btc_address": "BTC Address",
     "successfully_updated_collateral": "Successfully updated collateral",
     "deposit_collateral": "Deposit Collateral",
-    "current_total_collateral": "Current Total Collateral {{currentCollateral}} {{collateralTokenSymbol}} ",
+    "current_total_collateral": "Current Total Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
+    "minimum_required_collateral": "Minimum Required Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
+    "maximum_withdrawable_collateral": "Maximum Withdrawable Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
     "new_total_collateral": "New Total Collateral",
     "collateral_higher_than_0": "Collateral must be higher than 0",
     "collateral_below_threshold": "Please enter an amount that maintains the collateralization of your Vault above the Secure Collateral Threshold.",
     "new_collateralization": "New Collateralization:",
     "withdraw_collateral": "Withdraw Collateral",
+    "vault_overview": "Vault Overview",
     "vault_dashboard": "Vault Dashboard",
     "tip_pending_btc": "BTC volume of in-progress issue requests.",
     "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
     "pending_table_subcell": "Pending: ",
-    "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
+    "locked_collateral": "Locked Collateral {{collateralTokenSymbol}}",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
     "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
     "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}",
     "status": "Status",
-    "claim_governance_token_rewards": "Claim {{governanceTokenAmount}} {{governanceTokenSymbol}} Rewards"
+    "claim_governance_token_rewards": "Claim {{governanceTokenAmount}} {{governanceTokenSymbol}} Rewards",
+    "issue_vault": "Issue With Vault",
+    "issue_amount": "Issue amount",
+    "request_issue": "Request Issue",
+    "max_capacity": "Maximum vault capacity:",
+    "issue_description": "You are requesting to issue with this vault.",
+    "tooltip_issuing_deactivated": "Issuing is deactivated for this vault.",
+    "tooltip_issue_capacity_zero": "Vault issue capacity is 0."
   },
   "staking_page": {
-    "estimated_governance_token_rewards_tooltip_label": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}."
+    "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
+    "new_vote_governance_token_gained": "New {{voteGovernanceTokenSymbol}} Gained",
+    "the_increase_in_your_vote_governance_token_balance": "The increase in your {{voteGovernanceTokenSymbol}} balance",
+    "total_vote_governance_token_in_the_network": "Total {{voteGovernanceTokenSymbol}} in the network",
+    "total_staked_governance_token_in_the_network": "Total Staked {{governanceTokenSymbol}} in the network"
   },
   "about": {
     "research_paper": "Research Paper",
@@ -455,5 +480,16 @@
   },
   "validation": {
     "invalid_polkadot_address": "Enter a valid Polkadot address"
+  },
+  "account_modal": {
+    "no_account": "You don't have an account. Create one",
+    "install_supported_wallets": "Please install one of the currently supported wallets. By connecting the wallet you accept the ",
+    "select_account": "Please select an account",
+    "install_wallet": "Please install supported wallet",
+    "select_wallet": "Please select a wallet",
+    "create_account": "Please create an account",
+    "connected_with": "Connected with ",
+    "change_wallet": "Change Wallet",
+    "disconnect": "Disconnect"
   }
 }

@@ -1,21 +1,11 @@
 import { Store, CombinedState } from 'redux';
 import { u256 } from '@polkadot/types/primitive';
-import {
-  BitcoinAmount,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
 import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import {
-  GeneralActions,
-  RedeemActions,
-  IssueActions,
-  VaultActions
-} from './actions.types';
+import { GeneralActions, RedeemActions, VaultActions } from './actions.types';
 import { rootReducer } from '../reducers/index';
-import { IssueState } from './issue.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
 
@@ -56,16 +46,16 @@ export enum ParachainStatus {
   Shutdown
 }
 
+export type Price = {
+  usd: number;
+};
+
 export type Prices = {
-  bitcoin: {
-    usd: number;
-  };
-  collateralToken: {
-    usd: number;
-  };
-  governanceToken: {
-    usd: number;
-  };
+  bitcoin: Price | undefined;
+  relayChainNativeToken: Price | undefined;
+  governanceToken: Price | undefined;
+  wrappedToken: Price | undefined;
+  [token: string]: Price | undefined;
 };
 
 export type GeneralState = {
@@ -92,7 +82,6 @@ export type AppState = ReturnType<typeof rootReducer>;
 
 export type StoreType = {
   general: GeneralState;
-  issue: IssueState;
   redeem: RedeemState;
   vault: VaultState;
 };
@@ -102,8 +91,7 @@ export type dispatcher = {
   dispatch: {};
 };
 
-export type StoreState = Store<CombinedState<StoreType>, GeneralActions | RedeemActions | IssueActions | VaultActions> &
-  dispatcher;
+export type StoreState = Store<CombinedState<StoreType>, GeneralActions | RedeemActions | VaultActions> & dispatcher;
 
 export type TimeDataPoint = {
   x: Date;

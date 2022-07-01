@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 
 import useInterval from 'utils/hooks/use-interval';
@@ -11,7 +10,7 @@ function TimerIncrement(): JSX.Element {
   const [seconds, setSeconds] = useState(0);
 
   useInterval(() => {
-    setSeconds(prev => prev + 1);
+    setSeconds((prev) => prev + 1);
   }, 1000);
 
   return <>{formatTime(seconds)}</>;

@@ -1,17 +1,14 @@
 import { ApiPromise } from '@polkadot/api';
 import { AddressOrPair } from '@polkadot/api-base/types';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { COLLATERAL_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
 import { RelayChainMonetaryAmount } from './';
 
-const getRelayChainBalance = async (
-  api: ApiPromise,
-  address: AddressOrPair
-): Promise<RelayChainMonetaryAmount> => {
+const getRelayChainBalance = async (api: ApiPromise, address: AddressOrPair): Promise<RelayChainMonetaryAmount> => {
   // TODO: resolve type error related to Codec type and cast properly
-  const account = await api.query.system.account(address) as any;
+  const account = (await api.query.system.account(address)) as any;
 
-  return newMonetaryAmount(account.data.free, COLLATERAL_TOKEN);
+  return newMonetaryAmount(account.data.free, RELAY_CHAIN_NATIVE_TOKEN);
 };
 
 export { getRelayChainBalance };

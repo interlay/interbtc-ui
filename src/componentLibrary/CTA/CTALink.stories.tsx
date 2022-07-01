@@ -1,8 +1,8 @@
 import { Story, Meta } from '@storybook/react';
 
-import { CTALink, CTALinkProps } from '.';
+import { CTALink, CTALinkProps } from './';
 
-const Template: Story<CTALinkProps> = args => <CTALink {...args} />;
+const Template: Story<CTALinkProps> = (args) => <CTALink {...args} />;
 
 const Primary = Template.bind({});
 Primary.args = {
@@ -23,11 +23,7 @@ FullWidth.args = {
   fullWidth: true
 };
 
-export {
-  Primary,
-  Secondary,
-  FullWidth
-};
+export { Primary, Secondary, FullWidth };
 
 export default {
   title: 'Elements/CTALink',

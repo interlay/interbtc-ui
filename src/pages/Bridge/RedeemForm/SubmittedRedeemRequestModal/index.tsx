@@ -7,24 +7,13 @@ import { Redeem } from '@interlay/interbtc-api';
 
 import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import InterlayModal, {
-  Props as ModalProps,
-  InterlayModalInnerWrapper
-} from 'components/UI/InterlayModal';
+import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import {
-  POLKADOT,
-  KUSAMA
-} from 'utils/constants/relay-chain-names';
-import {
-  PAGES,
-  QUERY_PARAMETERS
-} from 'utils/constants/links';
-import {
-  displayMonetaryAmount,
-  getUsdAmount
-} from 'common/utils/utils';
+import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { PAGES, QUERY_PARAMETERS } from 'utils/constants/links';
+import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
+import { getColorShade } from 'utils/helpers/colors';
 
 const queryString = require('query-string');
 
@@ -46,31 +35,11 @@ const SubmittedRedeemRequestModal = ({
   const focusRef = React.useRef(null);
 
   return (
-    <InterlayModal
-      initialFocus={focusRef}
-      open={open}
-      onClose={onClose}>
-      <InterlayModalInnerWrapper
-        className={clsx(
-          'p-8',
-          'max-w-lg'
-        )}>
-        <CloseIconButton
-          ref={focusRef}
-          onClick={onClose} />
-        <div
-          className={clsx(
-            'flex',
-            'flex-col',
-            'space-y-8'
-          )}>
-          <h4
-            className={clsx(
-              'text-2xl',
-              'text-interlayCalifornia',
-              'font-medium',
-              'text-center'
-            )}>
+    <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
+      <InterlayModalInnerWrapper className={clsx('p-8', 'max-w-lg')}>
+        <CloseIconButton ref={focusRef} onClick={onClose} />
+        <div className={clsx('flex', 'flex-col', 'space-y-8')}>
+          <h4 className={clsx('text-2xl', getColorShade('yellow'), 'font-medium', 'text-center')}>
             {t('redeem_page.withdraw')}
           </h4>
           <div className='space-y-6'>
@@ -78,62 +47,47 @@ const SubmittedRedeemRequestModal = ({
               <h5
                 className={clsx(
                   'font-medium',
-                  'text-interlayCalifornia',
+                  getColorShade('yellow'),
                   'flex',
                   'items-center',
                   'justify-center',
                   'space-x-1'
-                )}>
+                )}
+              >
                 <FaExclamationCircle className='inline' />
-                <span>
-                  {t('redeem_page.redeem_processed')}
-                </span>
+                <span>{t('redeem_page.redeem_processed')}</span>
               </h5>
-              <h1
-                className={clsx(
-                  'text-3xl',
-                  'font-medium',
-                  'space-x-1',
-                  'text-center'
-                )}>
+              <h1 className={clsx('text-3xl', 'font-medium', 'space-x-1', 'text-center')}>
                 <span>{t('redeem_page.will_receive_BTC')}</span>
-                <span className='text-interlayCalifornia'>
-                  {displayMonetaryAmount(request.amountBTC)} BTC
-                </span>
+                <span className={getColorShade('yellow')}>{displayMonetaryAmount(request.amountBTC)} BTC</span>
               </h1>
               <span
                 className={clsx(
                   'block',
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                   'text-2xl',
                   'text-center'
-                )}>
-                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin.usd)}`}
+                )}
+              >
+                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin?.usd)}`}
               </span>
             </div>
             <div>
               <label
                 htmlFor={USER_BTC_ADDRESS}
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('redeem_page.btc_destination_address')}
               </label>
               <span
                 id={USER_BTC_ADDRESS}
                 // TODO: could componentize
-                className={clsx(
-                  'block',
-                  'p-2.5',
-                  'border-2',
-                  'font-medium',
-                  'rounded-lg',
-                  'text-center'
-                )}>
+                className={clsx('block', 'p-2.5', 'border-2', 'font-medium', 'rounded-lg', 'text-center')}
+              >
                 {request.userBTCAddress}
               </span>
             </div>
@@ -141,10 +95,10 @@ const SubmittedRedeemRequestModal = ({
               <p>{t('redeem_page.we_will_inform_you_btc')}</p>
               <p
                 className={clsx(
-                  { 'text-interlayTextSecondaryInLightMode':
-                    process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}>
+                )}
+              >
                 {t('redeem_page.typically_takes')}
               </p>
             </div>
@@ -155,10 +109,9 @@ const SubmittedRedeemRequestModal = ({
               search: queryString.stringify({
                 [QUERY_PARAMETERS.REDEEM_REQUEST_ID]: request.id
               })
-            }}>
-            <InterlayDefaultContainedButton
-              onClick={onClose}
-              className='w-full'>
+            }}
+          >
+            <InterlayDefaultContainedButton onClick={onClose} className='w-full'>
               {t('redeem_page.view_progress')}
             </InterlayDefaultContainedButton>
           </InterlayRouterLink>

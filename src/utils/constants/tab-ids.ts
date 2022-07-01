@@ -1,4 +1,3 @@
-
 const TAB_IDS = Object.freeze({
   issue: 'issue',
   redeem: 'redeem',

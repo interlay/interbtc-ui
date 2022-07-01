@@ -1,27 +1,16 @@
-
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useQuery } from 'react-query';
-import {
-  useErrorHandler,
-  withErrorBoundary
-} from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 import { CollateralUnit } from '@interlay/interbtc-api';
 
 import DashboardCard from '../DashboardCard';
-import Stats, {
-  StatsDt,
-  StatsDd,
-  StatsRouterLink
-} from '../../Stats';
+import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
 import { StoreType } from 'common/types/util.types';
-import Ring64, {
-  Ring64Title,
-  Ring64Value
-} from 'components/Ring64';
-import { COLLATERAL_TOKEN, COLLATERAL_TOKEN_SYMBOL } from 'config/relay-chains';
+import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
+import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import {
   BtcToCurrencyOracleStatus,
@@ -29,6 +18,7 @@ import {
   ORACLE_LATEST_EXCHANGE_RATE_FETCHER
 } from 'services/fetchers/oracle-exchange-rates-fetcher';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   hasLinks?: boolean;
@@ -43,17 +33,9 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
     isLoading: oracleTimeoutLoading,
     data: oracleTimeout,
     error: oracleTimeoutError
-  } = useQuery<number, Error>(
-    [
-      GENERIC_FETCHER,
-      'oracle',
-      'getOnlineTimeout'
-    ],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useQuery<number, Error>([GENERIC_FETCHER, 'oracle', 'getOnlineTimeout'], genericFetcher<number>(), {
+    enabled: !!bridgeLoaded
+  });
   useErrorHandler(oracleTimeoutError);
 
   const {
@@ -61,12 +43,8 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
     isLoading: oracleStatusLoading,
     data: oracleStatus,
     error: oracleStatusError
-  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit> | undefined, Error >(
-    [
-      ORACLE_LATEST_EXCHANGE_RATE_FETCHER,
-      COLLATERAL_TOKEN,
-      oracleTimeout
-    ],
+  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit> | undefined, Error>(
+    [ORACLE_LATEST_EXCHANGE_RATE_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout],
     latestExchangeRateFetcher,
     {
       enabled: !!oracleTimeout
@@ -76,12 +54,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (
-      oracleStatusIdle ||
-      oracleStatusLoading ||
-      oracleTimeoutIdle ||
-      oracleTimeoutLoading
-    ) {
+    if (oracleStatusIdle || oracleStatusLoading || oracleTimeoutIdle || oracleTimeoutLoading) {
       return <>Loading...</>;
     }
 
@@ -112,55 +85,45 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
         <Stats
           leftPart={
             <>
-              <StatsDt>
-                {t('dashboard.oracles.oracles_are')}
-              </StatsDt>
+              <StatsDt>{t('dashboard.oracles.oracles_are')}</StatsDt>
               <StatsDd
                 className={clsx(
-                  { 'text-interlayConifer': oracleOnline === true },
-                  { 'text-interlayCinnabar': oracleOnline === false }
-                )}>
+                  { [getColorShade('green')]: oracleOnline === true },
+                  { [getColorShade('red')]: oracleOnline === false }
+                )}
+              >
                 {statusText}
               </StatsDd>
             </>
           }
-          rightPart={
-            <>
-              {hasLinks && (
-                <StatsRouterLink to={PAGES.DASHBOARD_ORACLES}>
-                  View oracles
-                </StatsRouterLink>
-              )}
-            </>
-          } />
+          rightPart={<>{hasLinks && <StatsRouterLink to={PAGES.DASHBOARD_ORACLES}>View oracles</StatsRouterLink>}</>}
+        />
         <Ring64
           className={clsx(
             'mx-auto',
-            { 'ring-interlayConifer': oracleOnline === true },
-            { 'ring-interlayCinnabar': oracleOnline === false }
-          )}>
+            { [getColorShade('green', 'ring')]: oracleOnline === true },
+            { [getColorShade('red', 'ring')]: oracleOnline === false }
+          )}
+        >
           <Ring64Title
             className={clsx(
-              { 'text-interlayConifer': oracleOnline === true },
-              { 'text-interlayCinnabar': oracleOnline === false }
-            )}>
+              { [getColorShade('green')]: oracleOnline === true },
+              { [getColorShade('red')]: oracleOnline === false }
+            )}
+          >
             {statusCircleText}
           </Ring64Title>
-          {exchangeRate &&
+          {exchangeRate && (
             <Ring64Value>
-              {exchangeRate.toHuman(5)} BTC/{COLLATERAL_TOKEN_SYMBOL}
+              {exchangeRate.toHuman(5)} BTC/{RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
-          }
+          )}
         </Ring64>
       </>
     );
   };
 
-  return (
-    <DashboardCard>
-      {renderContent()}
-    </DashboardCard>
-  );
+  return <DashboardCard>{renderContent()}</DashboardCard>;
 };
 
 export default withErrorBoundary(OracleStatusCard, {

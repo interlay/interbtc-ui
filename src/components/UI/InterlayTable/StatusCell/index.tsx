@@ -1,13 +1,7 @@
-
 import { useTranslation } from 'react-i18next';
-import {
-  FaRegCheckCircle,
-  FaRegClock,
-  FaRegTimesCircle,
-  FaUserClock,
-  FaClipboardCheck
-} from 'react-icons/fa';
+import { FaRegCheckCircle, FaRegClock, FaRegTimesCircle, FaUserClock, FaClipboardCheck } from 'react-icons/fa';
 import clsx from 'clsx';
+import { getColorShade } from 'utils/helpers/colors';
 
 interface Props {
   status: {
@@ -18,9 +12,7 @@ interface Props {
   };
 }
 
-const StatusCell = ({
-  status
-}: Props): JSX.Element => {
+const StatusCell = ({ status }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   // TODO: should double-check with the designer
@@ -28,45 +20,37 @@ const StatusCell = ({
   let notice;
   let colorClassName;
   switch (true) {
-  case status.completed:
-    icon = <FaRegCheckCircle />;
-    notice = t('completed');
-    colorClassName = 'text-interlayConifer';
-    break;
-  case status.cancelled:
-    icon = <FaRegTimesCircle />;
-    notice = t('cancelled');
-    colorClassName = 'text-interlayCinnabar';
-    break;
-  case status.isExpired:
-    icon = <FaUserClock />;
-    notice = t('expired');
-    colorClassName = 'text-interlayCinnabar';
-    break;
-  case status.reimbursed:
-    icon = <FaClipboardCheck />;
-    notice = t('reimbursed');
-    colorClassName = 'text-interlayConifer';
-    break;
-  default:
-    icon = <FaRegClock />;
-    notice = t('pending');
-    colorClassName = 'text-interlayCalifornia';
-    break;
+    case status.completed:
+      icon = <FaRegCheckCircle />;
+      notice = t('completed');
+      colorClassName = getColorShade('green');
+      break;
+    case status.cancelled:
+      icon = <FaRegTimesCircle />;
+      notice = t('cancelled');
+      colorClassName = getColorShade('red');
+      break;
+    case status.isExpired:
+      icon = <FaUserClock />;
+      notice = t('expired');
+      colorClassName = getColorShade('red');
+      break;
+    case status.reimbursed:
+      icon = <FaClipboardCheck />;
+      notice = t('reimbursed');
+      colorClassName = getColorShade('green');
+      break;
+    default:
+      icon = <FaRegClock />;
+      notice = t('pending');
+      colorClassName = getColorShade('yellow');
+      break;
   }
 
   return (
-    <div
-      className={clsx(
-        'inline-flex',
-        'items-center',
-        'space-x-1.5',
-        colorClassName
-      )}>
+    <div className={clsx('inline-flex', 'items-center', 'space-x-1.5', colorClassName)}>
       {icon}
-      <span>
-        {notice}
-      </span>
+      <span>{notice}</span>
     </div>
   );
 };

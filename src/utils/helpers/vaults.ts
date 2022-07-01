@@ -1,19 +1,9 @@
-
 import Big from 'big.js';
 import { TFunction } from 'react-i18next';
-import {
-  VaultExt,
-  VaultStatusExt,
-  CollateralUnit
-} from '@interlay/interbtc-api';
-import {
-  BitcoinAmount,
-  BitcoinUnit,
-  MonetaryAmount,
-  Currency
-} from '@interlay/monetary-js';
+import { VaultExt, VaultStatusExt, CollateralUnit } from '@interlay/interbtc-api';
+import { BitcoinAmount, BitcoinUnit, MonetaryAmount, Currency } from '@interlay/monetary-js';
 
-import { BTCToCollateralTokenRate } from 'types/currency.d';
+import { BTCToCollateralTokenRate } from 'types/currency';
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
@@ -28,7 +18,6 @@ const getCollateralization = (
   }
 };
 
-// TODO: it could be better to be a hook
 const getVaultStatusLabel = (
   vaultExt: VaultExt<BitcoinUnit>,
   currentActiveBlockNumber: number,
@@ -37,8 +26,11 @@ const getVaultStatusLabel = (
   btcToCollateralTokenRate: BTCToCollateralTokenRate,
   t: TFunction
 ): string => {
-  const settledCollateralization =
-    getCollateralization(vaultExt.backingCollateral, vaultExt.issuedTokens, btcToCollateralTokenRate);
+  const settledCollateralization = getCollateralization(
+    vaultExt.backingCollateral,
+    vaultExt.issuedTokens,
+    btcToCollateralTokenRate
+  );
 
   // Default to active
   let statusLabel = t('dashboard.vault.active');
@@ -50,7 +42,7 @@ const getVaultStatusLabel = (
       statusLabel = t('dashboard.vault.undercollateralized');
     }
   }
-  // Should only display bannedUntil status if current active block number < the bannedUntil block number
+  // Should only display bannedUntil status if current active block number < the bannedUntil block number.
   // Otherwise, should not show this status.
   if (vaultExt.bannedUntil && currentActiveBlockNumber < vaultExt.bannedUntil) {
     statusLabel = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
@@ -68,7 +60,4 @@ const getVaultStatusLabel = (
   return statusLabel;
 };
 
-export {
-  getCollateralization,
-  getVaultStatusLabel
-};
+export { getCollateralization, getVaultStatusLabel };
