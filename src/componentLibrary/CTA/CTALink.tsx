@@ -11,11 +11,11 @@ interface CTALinkProps extends LinkProps {
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
   ({ variant, fullWidth = false, className, children, ...rest }, ref): JSX.Element =>
     variant === 'primary' ? (
-      <PrimaryCTA as={Link} fullWidth={fullWidth} ref={ref} className={className} {...rest}>
+      <PrimaryCTA as={Link} $fullWidth={fullWidth} ref={ref} className={className} {...rest}>
         {children}
       </PrimaryCTA>
     ) : (
-      <SecondaryCTA as={Link} fullWidth={fullWidth} ref={ref} className={className} {...rest}>
+      <SecondaryCTA as={Link} $fullWidth={fullWidth} ref={ref} className={className} {...rest}>
         {children}
       </SecondaryCTA>
     )

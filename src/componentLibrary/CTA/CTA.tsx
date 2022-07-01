@@ -12,7 +12,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
     variant === 'primary' ? (
       <PrimaryCTA
         as='button'
-        fullWidth={fullWidth}
+        $fullWidth={fullWidth}
         disabled={disabled}
         ref={ref}
         onClick={onClick}
@@ -24,7 +24,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
     ) : (
       <SecondaryCTA
         as='button'
-        fullWidth={fullWidth}
+        $fullWidth={fullWidth}
         disabled={disabled}
         ref={ref}
         onClick={onClick}
