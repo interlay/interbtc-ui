@@ -1,3 +1,4 @@
+// ray test touch <
 import * as React from 'react';
 import clsx from 'clsx';
 
@@ -13,8 +14,7 @@ interface CustomProps {
   approxUSD: string;
 }
 
-type Ref = HTMLInputElement;
-const TokenField = React.forwardRef<Ref, Props>(
+const TokenField = React.forwardRef<HTMLInputElement, Props>(
   ({ id, label, error, helperText, required, approxUSD, ...rest }, ref): JSX.Element => {
     return (
       <div className='space-y-1.5'>
@@ -75,3 +75,4 @@ TokenField.displayName = 'TokenField';
 export type Props = CustomProps & NumberInputProps;
 
 export default TokenField;
+// ray test touch >
