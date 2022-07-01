@@ -22,8 +22,8 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
 
   useErrorHandler(queryError);
 
-  // TODO: upgrade react-query to handle instances of casting
-  const vaults = useQueries<Array<UseQueryResult<VaultResponse, Error>>>(
+  // TODO: updating react-query to > 3.28.0 will allow us to avoid casting further down
+  const vaults: Array<any> = useQueries<Array<UseQueryResult<VaultResponse, Error>>>(
     VAULT_COLLATERAL.map((token) => {
       return {
         queryKey: ['vaults', address, token],
@@ -40,7 +40,7 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
 
     for (const vault of vaults) {
       if (vault.error) {
-        setQueryError(vault.error as Error);
+        setQueryError(vault.error);
 
         return;
       }
@@ -51,7 +51,7 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
   }, [vaults]);
 
   // TODO: casting can be removed after react-query update
-  return queriesComplete ? (vaults.map((vault) => vault.data) as VaultResponse) : [];
+  return queriesComplete ? vaults.map((vault) => vault.data) : [];
 };
 
 export { useGetVaults };
