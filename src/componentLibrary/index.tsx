@@ -30,3 +30,6 @@ export type { NewVaultsTableProps, NewVaultsTableRow } from './NewVaultsTable';
 
 export { Modal } from './Modal';
 export type { ModalProps } from './Modal';
+
+export { Balance } from './Balance';
+export type { BalanceProps } from './Balance';
