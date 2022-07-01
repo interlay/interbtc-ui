@@ -15,6 +15,7 @@ import { getUsdAmount } from 'common/utils/utils';
 import { getCollateralPrice } from 'utils/helpers/prices';
 import { Prices } from 'common/types/util.types';
 import issueCountQuery from 'services/queries/issue-count-query';
+import redeemCountQuery from 'services/queries/redeem-count-query';
 import { VAULT_GOVERNANCE, VAULT_WRAPPED } from 'config/vaults';
 import { GovernanceTokenMonetaryAmount, CollateralTokenMonetaryAmount, WrappedTokenAmount } from 'config/relay-chains';
 import { HYDRA_URL } from '../../../constants';
@@ -22,7 +23,7 @@ import { HYDRA_URL } from '../../../constants';
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
-  issues: number;
+  pendingRequests: number;
   collateralId: CurrencyIdLiteral;
   wrappedId: CurrencyIdLiteral;
   collateral: {
@@ -48,6 +49,7 @@ const getVaultOverview = async (
   const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
   const collateralPrice = getCollateralPrice(prices, tokenIdLiteral);
 
+  // TODO: api calls should be consolidated when vault data is available through GraphQL
   const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
   const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(
@@ -81,12 +83,27 @@ const getVaultOverview = async (
     })
   });
 
+  const redeems = await fetch(HYDRA_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: redeemCountQuery(
+        `vault: {accountId_eq: "${accountId.toString()}", collateralToken_eq: ${tokenIdLiteral}}, status_eq: Pending`
+      )
+    })
+  });
+
   const issuesCount = await issues.json();
+  const redeemsCount = await redeems.json();
+
+  const pendingRequests = issuesCount.data.issuesConnection.totalCount + redeemsCount.data.redeemsConnection.totalCount;
 
   return {
     apy,
     collateralization,
-    issues: issuesCount.data.issuesConnection.totalCount,
+    pendingRequests,
     collateralId: tokenIdLiteral,
     wrappedId: VAULT_WRAPPED,
     collateral: {

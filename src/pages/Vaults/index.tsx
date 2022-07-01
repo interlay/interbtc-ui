@@ -37,7 +37,7 @@ const VaultOverview = (): JSX.Element => {
               <VaultCard
                 collateralSymbol={getCurrencySymbol(vault.collateralId)}
                 wrappedSymbol={getCurrencySymbol(vault.wrappedId)}
-                pendingRequests={vault.issues}
+                pendingRequests={vault.pendingRequests}
                 apy={safeRoundTwoDecimals(vault.apy.toString())}
                 collateralScore={safeRoundTwoDecimals(vault.collateralization?.mul(100).toString(), '∞')}
                 link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`}
