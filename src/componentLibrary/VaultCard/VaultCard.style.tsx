@@ -6,12 +6,12 @@ export const Card = styled.div`
   color: ${theme.colors.textSecondary};
   display: flex;
   background-color: ${theme.card.bg};
+  border: ${theme.border.default};
   border-radius: ${theme.rounded.xl};
   flex-direction: column;
   font-family: ${theme.font.primary};
   gap: ${theme.spacing.spacing8};
   padding: ${theme.spacing.spacing8} ${theme.spacing.spacing4};
-  width: 386px;
 `;
 
 export const CardHeader = styled.header`

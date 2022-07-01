@@ -28,8 +28,7 @@ import {
   RELAY_CHAIN_NATIVE_TOKEN,
   GOVERNANCE_TOKEN,
   PRICES_URL,
-  RELAY_CHAIN_NAME,
-  BRIDGE_PARACHAIN_NAME
+  TOKEN_PRICES
 } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
@@ -75,8 +74,7 @@ const App = (): JSX.Element => {
     collateralTokenBalance,
     collateralTokenTransferableBalance,
     governanceTokenBalance,
-    governanceTokenTransferableBalance,
-    prices
+    governanceTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
@@ -369,20 +367,17 @@ const App = (): JSX.Element => {
       }
 
       const newPrices = await response.json();
-      // Update the store only if the price is actually changed
-      if (
-        newPrices.bitcoin?.usd !== prices.bitcoin?.usd ||
-        newPrices[RELAY_CHAIN_NAME]?.usd !== prices.relayChainNativeToken?.usd ||
-        newPrices[BRIDGE_PARACHAIN_NAME]?.usd !== prices.governanceToken?.usd
-      ) {
-        dispatch(
-          updateOfPricesAction({
-            bitcoin: newPrices.bitcoin,
-            relayChainNativeToken: newPrices[RELAY_CHAIN_NAME],
-            governanceToken: newPrices[BRIDGE_PARACHAIN_NAME]
-          })
-        );
-      }
+
+      const { bitcoin, ...rest } = newPrices;
+      dispatch(
+        updateOfPricesAction({
+          bitcoin: bitcoin,
+          relayChainNativeToken: newPrices[TOKEN_PRICES.relayChainNativeToken],
+          governanceToken: newPrices[TOKEN_PRICES.governanceToken],
+          wrappedToken: newPrices[TOKEN_PRICES.wrappedToken],
+          ...rest
+        })
+      );
     },
     { refetchInterval: 60000 }
   );

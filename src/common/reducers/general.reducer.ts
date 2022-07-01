@@ -43,7 +43,8 @@ const initialState = {
   prices: {
     bitcoin: { usd: 0 },
     relayChainNativeToken: { usd: 0 },
-    governanceToken: { usd: 0 }
+    governanceToken: { usd: 0 },
+    wrappedToken: { usd: 0 }
   }
 };
 
