@@ -19,12 +19,12 @@ const TokenFieldLabel = styled.label`
 
 const TokenFieldInput = styled(NumberInput)`
   font-size: ${theme.text.xl5};
-  padding-right: ${theme.spacing.spacing8};
+  padding-right: ${theme.spacing.spacing12};
 `;
 
 const TokenFieldUSD = styled.span`
   display: block;
-  font-size: ${theme.text.xl};
+  font-size: ${theme.text.lg};
   color: ${theme.colors.textTertiary};
   text-align: right;
   position: absolute;

@@ -31,7 +31,7 @@ const BaseInput = styled.input`
     color: ${theme.colors.textTertiary};
   }
   border: ${theme.border.default};
-  padding: ${theme.spacing.spacing2} ${theme.spacing.spacing3};
+  padding: ${theme.spacing.spacing2};
 `;
 
 export { BaseInput };
