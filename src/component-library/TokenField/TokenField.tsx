@@ -12,17 +12,9 @@ const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
   ({ id, label, approxUSD, ...rest }, ref): JSX.Element => {
     return (
       <TokenFieldWrapper>
-        <TokenFieldInput
-          ref={ref}
-          id={id}
-          {...rest}
-        />
-        <TokenFieldLabel>
-          {label}
-        </TokenFieldLabel>
-        <TokenFieldUSD>
-          {`≈ $ ${approxUSD}`}
-        </TokenFieldUSD>
+        <TokenFieldInput ref={ref} id={id} {...rest} />
+        <TokenFieldLabel>{label}</TokenFieldLabel>
+        <TokenFieldUSD>{`≈ $ ${approxUSD}`}</TokenFieldUSD>
       </TokenFieldWrapper>
     );
   }

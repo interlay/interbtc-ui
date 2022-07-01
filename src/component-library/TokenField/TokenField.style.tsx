@@ -32,9 +32,4 @@ const TokenFieldUSD = styled.span`
   bottom: ${theme.spacing.spacing2};
 `;
 
-export {
-  TokenFieldWrapper,
-  TokenFieldLabel,
-  TokenFieldInput,
-  TokenFieldUSD
-};
+export { TokenFieldWrapper, TokenFieldLabel, TokenFieldInput, TokenFieldUSD };
