@@ -11,9 +11,6 @@ module.exports = {
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
-    // TODO: double-check
-    // "plugin:prettier/recommended",
-    // "prettier"
     'react-app',
     // Disabled to avoid conflict with Cypress. Configuration
     // can be changed if/when we start using Jest.
@@ -76,19 +73,10 @@ module.exports = {
     ],
 
     // JS ESLinting rules
-    'comma-dangle': [
-      'error',
-      'never'
-    ],
+    'comma-dangle': ['error', 'never'],
     'no-console': 'off', // TODO: `off` for now but later should be `warn`
-    indent: [
-      'error',
-      2
-    ],
-    'quote-props': [
-      'error',
-      'as-needed'
-    ],
+    indent: ['error', 2],
+    'quote-props': ['error', 'as-needed'],
     'capitalized-comments': 'off',
     'max-len': [
       'warn',
@@ -96,10 +84,7 @@ module.exports = {
         code: 120
       } // 130 on GitHub, 80 on npmjs.org for README.md code blocks
     ],
-    'arrow-parens': [
-      'error',
-      'as-needed'
-    ],
+    'arrow-parens': ['error', 'as-needed'],
     'space-before-function-paren': [
       'error',
       {
@@ -148,14 +133,8 @@ module.exports = {
         nonwords: false
       }
     ],
-    'object-curly-spacing': [
-      'error',
-      'always'
-    ],
-    'space-in-parens': [
-      'error',
-      'never'
-    ],
+    'object-curly-spacing': ['error', 'always'],
+    'space-in-parens': ['error', 'never'],
     'import/exports-last': 'error',
     'require-jsdoc': 0, // TODO: `0` for now but later should be on by being removed
     // TODO: double-check
@@ -166,10 +145,7 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',
-    'react/jsx-first-prop-new-line': [
-      'error',
-      'multiline'
-    ],
+    'react/jsx-first-prop-new-line': ['error', 'multiline'],
     'react/jsx-max-props-per-line': [
       'error',
       {
@@ -201,10 +177,7 @@ module.exports = {
         beforeClosing: 'never'
       }
     ],
-    'jsx-quotes': [
-      'error',
-      'prefer-single'
-    ],
+    'jsx-quotes': ['error', 'prefer-single'],
     'react/jsx-closing-bracket-location': [
       'error',
       {
