@@ -88,7 +88,7 @@ const theme = {
     }
   },
   table: {
-    border: '1px var(--colors-neutral-light-grey-50) solid',
+    border: '1px var(--colors-neutral-light-grey-50) solid'
   },
   transition: {
     duration: 100
