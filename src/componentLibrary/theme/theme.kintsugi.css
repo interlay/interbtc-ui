@@ -3,29 +3,23 @@
 :root {
   --colors-dark-blue: #091133;
   --colors-mid-blue: #434e66;
-  --colors-yellow: #feca2f;
-  --colors-dark-yellow: hsl(48, 100%, 45%);
-  --colors-dark-yellow: #e6b800;
+  --colors-yellow: #ffcb00;
+  --colors-dark-yellow: #e6b700;
   --box-shadow-none: none;
 }
 
 .theme-kintsugi {
   --colors-border: var(--colors-mid-blue);
-
+  --colors-bg-primary: var(--colors-dark-blue);
   --colors-card-bg: var(--colors-dark-blue);
   --colors-card-secondary-bg: var(--colors-neutral-white-06);
   --colors-cta-primary: var(--colors-yellow);
   --colors-cta-primary-hover: var(--colors-dark-yellow);
   --colors-cta-primary-text: var(--colors-neutral-black);
   --colors-cta-secondary: var(--colors-neutral-white);
-  --colors-text-primary: var(--colors-neutral-black);
-  --colors-text-secondary: var(--colors-neutral-white);
+  --colors-cta-secondary-text: var(--colors-neutral-black);
+  --colors-text-primary: var(--colors-neutral-white);
+  --colors-text-secondary: var(--colors-yellow);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
-  --colors-text-accent: var(--colors-yellow);
-  --colors-modal-bg: var(--colors-dark-blue);
-  --colors-icon-default: var(--colors-neutral-white);
-  --colors-table-bg: var(--colors-dark-blue);
-  --colors-table-text: var(--colors-neutral-white);
-  --colors-table-row-highlight: var(--colors-yellow);
   --box-shadow-default: var(--box-shadow-none);
 }
