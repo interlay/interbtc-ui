@@ -10,7 +10,6 @@ const BaseCTA = styled.button<CTAProps>`
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border: none;
   border-radius: ${theme.rounded.md};
-  font-family: ${theme.font.primary};
   font-size: ${theme.text.base};
   font-weight: ${theme.fontWeight.medium};
   line-height: ${theme.lineHeight.base};
@@ -30,4 +29,5 @@ export const PrimaryCTA = styled(BaseCTA)`
 
 export const SecondaryCTA = styled(BaseCTA)`
   background-color: ${theme.cta.secondary.bg};
+  color: ${theme.cta.secondary.text};
 `;

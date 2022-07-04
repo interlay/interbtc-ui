@@ -3,11 +3,10 @@ import styled from 'styled-components';
 import { theme } from 'componentLibrary';
 
 const TableWrapper = styled.div`
-  background: ${theme.table.bg};
-  color: ${theme.table.text};
+  background: ${theme.colors.bgPrimary};
+  color: ${theme.colors.textPrimary};
   border: ${theme.table.border};
   border-radius: ${theme.rounded.lg};
-  font-family: ${theme.font.primary};
   line-height: ${theme.lineHeight.base};
   overflow: auto;
 `;

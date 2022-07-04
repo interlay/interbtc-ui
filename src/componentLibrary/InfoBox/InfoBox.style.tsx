@@ -9,7 +9,6 @@ const InfoBoxWrapper = styled.div`
   border: ${theme.border.default};
   border-radius: ${theme.rounded.xl};
   display: flex;
-  font-family: ${theme.font.primary};
   font-weight: ${theme.fontWeight.bold};
   justify-content: space-between;
   padding: ${theme.spacing.spacing5};
@@ -25,7 +24,7 @@ const InfoBoxHeader = styled.h2`
 `;
 
 const InfoBoxText = styled.p`
-  color: ${theme.colors.textAccent};
+  color: ${theme.colors.textSecondary};
   line-height: ${theme.lineHeight.xl};
   font-size: ${theme.text.xl3};
 `;

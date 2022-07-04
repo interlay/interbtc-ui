@@ -9,7 +9,6 @@ export const Card = styled.div`
   border: ${theme.border.default};
   border-radius: ${theme.rounded.xl};
   flex-direction: column;
-  font-family: ${theme.font.primary};
   gap: ${theme.spacing.spacing8};
   padding: ${theme.spacing.spacing8} ${theme.spacing.spacing4};
 `;
