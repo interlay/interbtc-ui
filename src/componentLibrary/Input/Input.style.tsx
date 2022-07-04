@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from 'component-library';
+import { theme } from 'componentLibrary';
 
 const BaseInput = styled.input`
   /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */

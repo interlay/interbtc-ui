@@ -1,6 +1,6 @@
 import { css, DefaultTheme, FlattenInterpolation } from 'styled-components';
 
-import { theme } from 'component-library';
+import { theme } from 'componentLibrary';
 
 const spaceX = (level: keyof typeof theme.spacing): FlattenInterpolation<DefaultTheme> => css`
   & > :not([hidden]) ~ :not([hidden]) {

@@ -12,8 +12,8 @@ import { store, persistor } from './store';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
 // TODO: import only one theme
-import 'component-library/theme/theme.interlay.css';
-import 'component-library/theme/theme.kintsugi.css';
+import 'componentLibrary/theme/theme.interlay.css';
+import 'componentLibrary/theme/theme.kintsugi.css';
 
 window.isFetchingActive = false;
 

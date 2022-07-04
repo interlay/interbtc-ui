@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { TokenFieldLabel, TokenFieldWrapper, TokenFieldInput, TokenFieldUSD } from './TokenField.style';
-import { NumberInputProps } from 'component-library/NumberInput';
+import { NumberInputProps } from 'componentLibrary/NumberInput';
 
 interface TokenFieldProps extends NumberInputProps {
   label: string;
