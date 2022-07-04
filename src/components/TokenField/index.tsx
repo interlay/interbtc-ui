@@ -13,6 +13,7 @@ interface CustomProps {
   approxUSD: string;
 }
 
+// TODO: replace its use cases with `src\componentLibrary\TokenField`
 const TokenField = React.forwardRef<HTMLInputElement, Props>(
   ({ id, label, error, helperText, required, approxUSD, ...rest }, ref): JSX.Element => {
     return (
