@@ -42,13 +42,7 @@ const theme = {
     xl: 'var(--line-height-xl)'
   },
   spacing: {
-    // ray test touch <
-    0.5: 'var(--spacing-half)',
-    // ray test touch >
     spacing1: 'var(--spacing-1)',
-    // ray test touch <
-    1.5: 'var(--spacing-1-half)',
-    // ray test touch >
     spacing2: 'var(--spacing-2)',
     spacing3: 'var(--spacing-3)',
     spacing4: 'var(--spacing-4)',
