@@ -21,8 +21,11 @@ interface VaultOverview {
 }
 
 const getVaultTotals = (vaults: Array<VaultData>) => ({
-  totalLockedCollateral: vaults.reduce((a, b) => a + b.collateral.usd, 0),
-  totalUsdRewards: vaults.reduce((a, b) => a + b.governanceTokenRewards.usd + b.wrappedTokenRewards.usd, 0),
+  totalLockedCollateral: vaults.reduce((total, vault) => total + vault.collateral.usd, 0),
+  totalUsdRewards: vaults.reduce(
+    (total, vault) => total + vault.governanceTokenRewards.usd + vault.wrappedTokenRewards.usd,
+    0
+  ),
   totalAtRisk: vaults.reduce((total, vault) => (vault.vaultAtRisk ? total + 1 : total), 0)
 });
 
