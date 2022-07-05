@@ -69,10 +69,6 @@ const useGetAvailableVaults = (): Array<AvailableVault> => {
     setQueriesComplete(haveQueriesCompleted);
   }, [availableVaults]);
 
-  useEffect(() => {
-    console.log(queriesComplete);
-  }, [queriesComplete]);
-
   return queriesComplete ? availableVaults.map((vault) => vault.data) : [];
 };
 
