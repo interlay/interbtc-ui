@@ -3,22 +3,6 @@ import styled from 'styled-components';
 import { theme } from 'componentLibrary';
 
 const BaseInput = styled.input`
-  /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
-  /* Chrome, Safari, Edge, Opera */
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-  &[type='number'] {
-    -moz-appearance: textfield;
-  }
-
-  // TODO: focus styling is missing. see https://www.a11yproject.com/posts/never-remove-css-outlines/#:~:text=Using%20the%20CSS%20rule%20%3Afocus,with%20the%20link%20or%20control.
-  :focus {
-    outline: none;
-  }
-
   color: ${theme.colors.textPrimary};
   background-color: transparent;
   display: block;
@@ -32,6 +16,21 @@ const BaseInput = styled.input`
 
   &::placeholder: {
     color: ${theme.colors.textTertiary};
+  }
+  // ray test touch <
+  &:focus {
+    outline: ${theme.outline.default};
+  }
+  // ray test touch >
+  /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
+  /* Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &[type='number'] {
+    -moz-appearance: textfield;
   }
 `;
 

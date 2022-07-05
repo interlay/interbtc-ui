@@ -60,10 +60,15 @@ const theme = {
     xl: 'var(--rounded-xl)'
   },
   border: {
-    default: `1px solid var(--colors-border)`
+    default: '1px solid var(--colors-border)'
   },
+  // ray test touch <
+  outline: {
+    default: '2px solid var(--colors-border)'
+  },
+  // ray test touch >
   boxShadow: {
-    default: `var(--box-shadow-default)`
+    default: 'var(--box-shadow-default)'
   },
   // Components
   card: {
