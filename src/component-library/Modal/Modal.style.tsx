@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from 'componentLibrary/theme';
+import { theme } from 'component-library/theme';
 import { TransitionTrigger } from 'utils/hooks/use-mount-transition';
 
 interface ModalContentProps {

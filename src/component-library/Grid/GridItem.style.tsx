@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from 'componentLibrary';
+import { theme } from 'component-library';
 
 import { GridItemProps } from './GridItem';
 

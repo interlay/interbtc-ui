@@ -1,4 +1,4 @@
-import { CTA, Table, CoinPair } from 'componentLibrary';
+import { CTA, Table, CoinPair } from 'component-library';
 import { CurrencySymbols } from 'types/currency';
 import { CoinPairWrapper, NumericValue } from './NewVaultsTable.style';
 

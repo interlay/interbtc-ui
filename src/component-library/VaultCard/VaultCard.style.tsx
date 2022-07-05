@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { theme } from 'componentLibrary/theme';
+import { theme } from 'component-library/theme';
 
 export const Card = styled.div`
   box-shadow: ${theme.boxShadow.default};
