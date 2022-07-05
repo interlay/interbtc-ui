@@ -1,5 +1,5 @@
 const theme = {
-  // layout
+  // Layout
   layout: {
     // Note: media queries can't be used with CSS variables
     // TODO: this is a placeholder - will review BPs with UX
@@ -7,7 +7,7 @@ const theme = {
       lg: '48em'
     }
   },
-  // generic
+  // Generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
@@ -62,11 +62,9 @@ const theme = {
   border: {
     default: '1px solid var(--colors-border)'
   },
-  // ray test touch <
   outline: {
     default: '2px solid var(--colors-border)'
   },
-  // ray test touch >
   boxShadow: {
     default: 'var(--box-shadow-default)'
   },

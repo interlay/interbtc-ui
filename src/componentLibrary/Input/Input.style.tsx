@@ -17,11 +17,9 @@ const BaseInput = styled.input`
   &::placeholder: {
     color: ${theme.colors.textTertiary};
   }
-  // ray test touch <
   &:focus {
     outline: ${theme.outline.default};
   }
-  // ray test touch >
   /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
   /* Chrome, Safari, Edge, Opera */
   &::-webkit-outer-spin-button,
