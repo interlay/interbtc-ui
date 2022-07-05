@@ -27,11 +27,12 @@ const BaseInput = styled.input`
   line-height: ${theme.lineHeight.base};
   box-shadow: ${theme.boxShadow.default};
   border-radius: ${theme.rounded.md};
+  border: ${theme.border.default};
+  padding: ${theme.spacing.spacing2};
+
   &::placeholder: {
     color: ${theme.colors.textTertiary};
   }
-  border: ${theme.border.default};
-  padding: ${theme.spacing.spacing2};
 `;
 
 export { BaseInput };
