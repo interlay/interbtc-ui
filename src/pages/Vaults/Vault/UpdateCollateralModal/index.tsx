@@ -202,7 +202,7 @@ const UpdateCollateralModal = ({
     }
 
     if (collateralTokenAmount.gt(collateralBalance as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>)) {
-      return t(`Must be less than ${collateralCurrency.symbol} balance!`);
+      return t(`Must be less than ${collateralCurrency.id} balance!`);
     }
 
     if (!bridgeLoaded) {
@@ -288,19 +288,19 @@ const UpdateCollateralModal = ({
           <p>
             {t('vault.current_total_collateral', {
               currentCollateral: displayMonetaryAmount(currentTotalCollateralTokenAmount),
-              collateralTokenSymbol: collateralCurrency.symbol
+              collateralTokenSymbol: collateralCurrency.id
             })}
           </p>
           <p>
             {t('vault.minimum_required_collateral', {
               currentCollateral: getMinRequiredCollateralTokenAmount(),
-              collateralTokenSymbol: collateralCurrency.symbol
+              collateralTokenSymbol: collateralCurrency.id
             })}
           </p>
           <p>
             {t('vault.maximum_withdrawable_collateral', {
               currentCollateral: getMaxWithdrawableCollateralTokenAmount(),
-              collateralTokenSymbol: collateralCurrency.symbol
+              collateralTokenSymbol: collateralCurrency.id
             })}
           </p>
           <div className='space-y-1'>

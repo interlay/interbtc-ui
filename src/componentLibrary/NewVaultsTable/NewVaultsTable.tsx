@@ -1,11 +1,11 @@
 import { CTA, Table, CoinPair } from 'componentLibrary';
-import { CurrencySymbols } from 'types/currency';
+
+import { Tokens } from '../types';
 import { CoinPairWrapper, NumericValue } from './NewVaultsTable.style';
 
 interface NewVaultsTableRow {
-  collateralCurrency: CurrencySymbols;
-  wrappedCurrency: CurrencySymbols;
-  apy: string;
+  collateralCurrency: Tokens;
+  wrappedCurrency: Tokens;
   minCollateralAmount: string;
   collateralRate: string;
   isActive: boolean;
@@ -20,7 +20,6 @@ interface NewVaultsTableProps {
 const renderRowCells = ({
   collateralCurrency,
   wrappedCurrency,
-  apy,
   minCollateralAmount,
   collateralRate,
   isActive,
@@ -30,10 +29,6 @@ const renderRowCells = ({
     <CoinPair size='small' coinOne={collateralCurrency} coinTwo={wrappedCurrency} /> {collateralCurrency} -{' '}
     {wrappedCurrency}
   </CoinPairWrapper>,
-
-  <NumericValue key='apy' highlight>
-    {apy}%
-  </NumericValue>,
 
   <NumericValue key='min_collateral'>
     {minCollateralAmount} {collateralCurrency}
@@ -47,7 +42,7 @@ const renderRowCells = ({
 ];
 
 const NewVaultsTable = ({ data }: NewVaultsTableProps): JSX.Element => {
-  const columnLabels = ['Vault Pair', 'Estimated APY', 'Min Collateral', 'Collateral Rate'];
+  const columnLabels = ['Vault Pair', 'Min Collateral', 'Collateral Rate'];
   const rows = data.map(renderRowCells);
 
   return <Table columnLabels={columnLabels} rows={rows} />;

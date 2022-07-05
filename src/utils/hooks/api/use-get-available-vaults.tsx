@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import { useQueries, UseQueryResult } from 'react-query';
 import { useErrorHandler } from 'react-error-boundary';
-import { CollateralCurrency, CollateralIdLiteral } from '@interlay/interbtc-api';
+import { CollateralCurrency, CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
 
 import { StoreType } from 'common/types/util.types';
-import { VAULT_COLLATERAL } from 'config/vaults';
+import { VAULT_COLLATERAL, VAULT_WRAPPED } from 'config/vaults';
 import { useSelector } from 'react-redux';
-import { getCurrencies } from 'utils/helpers/currencies';
+import { getCurrency } from 'utils/helpers/currencies';
 import Big from 'big.js';
 
 type AvailableVault = {
-  collateralIdLiteral: CollateralIdLiteral;
+  collateralCurrency: CollateralIdLiteral;
+  wrappedCurrency: CurrencyIdLiteral;
   secureCollateralThreshold: Big;
   minimumCollateral: Big;
 };
 
 const getAvailableVaults = async (collateralIdLiteral: CollateralIdLiteral): Promise<AvailableVault> => {
-  const currency = getCurrencies(collateralIdLiteral);
+  const currency = getCurrency(collateralIdLiteral);
 
   const secureCollateralThreshold = await window.bridge.vaults.getSecureCollateralThreshold(
     currency?.currency as CollateralCurrency
@@ -25,9 +26,10 @@ const getAvailableVaults = async (collateralIdLiteral: CollateralIdLiteral): Pro
   const minimumCollateral = await window.bridge.vaults.getMinimumCollateral(currency?.currency as CollateralCurrency);
 
   return {
-    collateralIdLiteral,
-    secureCollateralThreshold,
-    minimumCollateral
+    collateralCurrency: collateralIdLiteral,
+    wrappedCurrency: VAULT_WRAPPED,
+    minimumCollateral,
+    secureCollateralThreshold
   };
 };
 

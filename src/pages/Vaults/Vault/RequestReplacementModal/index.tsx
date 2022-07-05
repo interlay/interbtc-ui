@@ -89,7 +89,7 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
           <p>{t('vault.withdraw_your_collateral')}</p>
           <p>{t('vault.you_have')}</p>
           <p>
-            {displayMonetaryAmount(lockedCollateral)} {collateralCurrency?.symbol}
+            {displayMonetaryAmount(lockedCollateral)} {collateralCurrency?.id}
           </p>
           <p>
             {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
