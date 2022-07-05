@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import { theme } from 'componentLibrary';
-import { NumberInput } from 'componentLibrary/NumberInput';
+import { theme } from 'component-library';
+import { NumberInput } from 'component-library/NumberInput';
 
 const TokenFieldWrapper = styled.div`
   position: relative;

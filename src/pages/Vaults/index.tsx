@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import MainContainer from 'parts/MainContainer';
-import { VaultCard, Grid, GridItem, InfoBox } from 'componentLibrary';
+import { VaultCard, Grid, GridItem, InfoBox } from 'component-library';
 import ErrorFallback from 'components/ErrorFallback';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { URL_PARAMETERS } from 'utils/constants/links';

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from 'componentLibrary';
+import { theme } from 'component-library';
 
 const TableWrapper = styled.div`
   background: ${theme.colors.bgPrimary};
