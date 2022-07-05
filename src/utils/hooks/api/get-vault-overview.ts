@@ -4,9 +4,7 @@ import {
   CurrencyIdLiteral,
   tickerToCurrencyIdLiteral,
   VaultExt,
-  WrappedIdLiteral,
-  CollateralCurrency,
-  GovernanceIdLiteral
+  CollateralCurrency
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 import Big from 'big.js';
@@ -55,13 +53,9 @@ const getVaultOverview = async (
   const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(
     accountId,
     tokenIdLiteral,
-    VAULT_GOVERNANCE as GovernanceIdLiteral
+    VAULT_GOVERNANCE
   );
-  const wrappedTokenRewards = await window.bridge.vaults.getWrappedReward(
-    accountId,
-    tokenIdLiteral,
-    VAULT_WRAPPED as WrappedIdLiteral
-  );
+  const wrappedTokenRewards = await window.bridge.vaults.getWrappedReward(accountId, tokenIdLiteral, VAULT_WRAPPED);
   const collateral = await window.bridge.vaults.getCollateral(accountId, tokenIdLiteral);
   const threshold = await window.bridge.vaults.getSecureCollateralThreshold(
     vault.backingCollateral.currency as CollateralCurrency
