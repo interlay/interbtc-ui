@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 
-interface CustomTextFieldProps {
+interface TextFieldCustomProps {
   label?: JSX.Element | string;
   error?: boolean;
   helperText?: JSX.Element | string;
@@ -63,7 +63,7 @@ TextField.displayName = 'TextField';
 
 const TextFieldContainer = (props: React.ComponentPropsWithRef<'div'>): JSX.Element => <div {...props} />;
 
-interface CustomTextFieldLabelProps {
+interface TextFieldLabelCustomProps {
   required?: boolean;
 }
 
@@ -72,7 +72,7 @@ const TextFieldLabel = ({
   required,
   className,
   ...rest
-}: CustomTextFieldLabelProps & React.ComponentPropsWithRef<'label'>): JSX.Element => (
+}: TextFieldLabelCustomProps & React.ComponentPropsWithRef<'label'>): JSX.Element => (
   <label className={clsx('text-sm', 'space-x-0.5', className)} {...rest}>
     <span>{children}</span>
     {required && <span>*</span>}
@@ -85,6 +85,6 @@ const TextFieldHelperText = ({ className, ...rest }: React.ComponentPropsWithRef
 
 export { TextFieldLabel, TextFieldHelperText, TextFieldContainer };
 
-export type Props = CustomTextFieldProps & InterlayInputProps;
+export type Props = TextFieldCustomProps & InterlayInputProps;
 
 export default TextField;
