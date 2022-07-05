@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react';
 
-import { Stack, StackProps } from './';
+import { Stack, StackProps } from '.';
 
 const Template: Story<StackProps> = (args) => <Stack {...args} />;
 

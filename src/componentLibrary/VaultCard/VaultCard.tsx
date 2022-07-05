@@ -1,5 +1,5 @@
 import { CurrencySymbols } from 'types/currency';
-import { CoinPair, CTALink } from '../';
+import { CoinPair, CTALink } from '..';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {

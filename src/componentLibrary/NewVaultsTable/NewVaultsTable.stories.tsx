@@ -1,7 +1,7 @@
 import { Story, Meta } from '@storybook/react';
 
 import { CurrencySymbols } from 'types/currency';
-import { NewVaultsTable } from './';
+import { NewVaultsTable } from '.';
 import { NewVaultsTableProps } from './NewVaultsTable';
 
 const Template: Story<NewVaultsTableProps> = (args) => <NewVaultsTable {...args} />;

@@ -1,7 +1,7 @@
 import { Story, Meta } from '@storybook/react';
 
 import { CurrencySymbols } from 'types/currency';
-import { CoinPair, CoinPairProps } from './';
+import { CoinPair, CoinPairProps } from '.';
 
 const Template: Story<CoinPairProps> = (args) => <CoinPair {...args} />;
 

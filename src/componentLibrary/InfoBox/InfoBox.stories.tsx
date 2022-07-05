@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react';
 
-import { InfoBox, InfoBoxProps } from './';
+import { InfoBox, InfoBoxProps } from '.';
 
 const Template: Story<InfoBoxProps> = (args) => <InfoBox {...args} />;
 

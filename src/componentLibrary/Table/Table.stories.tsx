@@ -1,6 +1,6 @@
 import { Story, Meta } from '@storybook/react';
 
-import { Table, TableProps } from './';
+import { Table, TableProps } from '.';
 
 const Template: Story<TableProps> = (args) => <Table {...args} />;
 

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from '../';
+import { theme } from '..';
 
 const InfoBoxWrapper = styled.div`
   align-items: center;

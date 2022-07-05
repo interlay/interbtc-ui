@@ -1,5 +1,5 @@
 const theme = {
-  // layout
+  // Layout
   layout: {
     // Note: media queries can't be used with CSS variables
     // TODO: this is a placeholder - will review BPs with UX
@@ -7,7 +7,7 @@ const theme = {
       lg: '48em'
     }
   },
-  // generic
+  // Generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
@@ -60,10 +60,13 @@ const theme = {
     xl: 'var(--rounded-xl)'
   },
   border: {
-    default: `1px solid var(--colors-border)`
+    default: '1px solid var(--colors-border)'
+  },
+  outline: {
+    default: '2px solid var(--colors-border)'
   },
   boxShadow: {
-    default: `var(--box-shadow-default)`
+    default: 'var(--box-shadow-default)'
   },
   // Components
   card: {
@@ -82,7 +85,7 @@ const theme = {
     }
   },
   table: {
-    border: '1px var(--colors-neutral-light-grey-50) solid',
+    border: '1px var(--colors-neutral-light-grey-50) solid'
   },
   transition: {
     duration: 100

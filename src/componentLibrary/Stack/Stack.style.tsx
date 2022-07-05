@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import { theme } from '../';
-import { StackProps } from './';
+import { theme } from '..';
+import { StackProps } from '.';
 
 export const StackContainer = styled.div<StackProps>`
   > *:not(:last-child) {

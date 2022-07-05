@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
-import { Grid, GridItem } from './';
+import { Grid, GridItem } from '.';
 
 export const Default: ComponentStory<typeof Grid> = () => (
   <Grid>
