@@ -18,8 +18,6 @@ const VaultOverview = (): JSX.Element => {
   const vaultOverview = useGetVaultOverview({ address: accountAddress });
   const availableVaults = useGetAvailableVaults();
 
-  console.log(availableVaults);
-
   const { t } = useTranslation();
 
   return (
