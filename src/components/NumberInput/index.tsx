@@ -7,7 +7,6 @@ const disableChangeOnWheel = (event: MouseEvent) => {
   event.preventDefault();
 };
 
-// TODO: replace its use cases with `src\componentLibrary\NumberInput`
 const NumberInput = React.forwardRef<HTMLInputElement, Props>(
   (props, ref): JSX.Element => {
     const inputParent = React.useRef<HTMLDivElement | null>(null);
