@@ -19,7 +19,7 @@ const BaseInput = styled.input`
     outline: none;
   }
 
-  color: ${theme.colors.textPrimary}; // TODO: this might not be needed as it's inherited
+  color: ${theme.colors.textPrimary};
   background-color: transparent;
   display: block;
   width: 100%;
