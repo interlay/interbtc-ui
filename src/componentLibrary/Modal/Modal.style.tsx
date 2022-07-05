@@ -30,10 +30,10 @@ const ModalContent = styled.div<ModalContentProps>`
   z-index: 2;
   max-width: 32em;
   margin: 1.5em;
-  background: ${theme.modal.bg};
+  background: ${theme.colors.bgPrimary};
   padding: ${theme.spacing.spacing4};
   border-radius: ${theme.rounded.md};
-  color: ${theme.colors.textSecondary};
+  color: ${theme.colors.textPrimary};
   transition: opacity ${theme.transition.duration}ms ease-out;
   transition-property: opacity, transform;
   ${({ transitionTrigger }) =>

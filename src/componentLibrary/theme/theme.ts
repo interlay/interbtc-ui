@@ -12,8 +12,7 @@ const theme = {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
     textTertiary: 'var(--colors-text-tertiary)',
-    textAccent: 'var(--colors-text-accent)',
-    iconDefault: `var(--colors-icon-default)`
+    bgPrimary: 'var(--colors-bg-primary)'
   },
   font: {
     primary: 'var(--fonts-primary)'
@@ -78,17 +77,12 @@ const theme = {
       text: 'var(--colors-cta-primary-text)'
     },
     secondary: {
-      bg: 'var(--colors-cta-secondary)'
+      bg: 'var(--colors-cta-secondary)',
+      text: 'var(--colors-cta-secondary-text)'
     }
   },
   table: {
-    bg: 'var(--colors-table-bg)',
     border: '1px var(--colors-neutral-light-grey-50) solid',
-    text: 'var(--colors-table-text)',
-    rowHighlight: 'var(--colors-table-row-highlight)'
-  },
-  modal: {
-    bg: 'var(--colors-modal-bg)'
   },
   transition: {
     duration: 100
