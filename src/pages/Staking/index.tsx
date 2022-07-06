@@ -35,7 +35,7 @@ import {
   VoteGovernanceTokenMonetaryAmount,
   VOTE_GOVERNANCE_TOKEN
 } from 'config/relay-chains';
-import { KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 import { BLOCK_TIME } from 'config/parachain';
 import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
 import { ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT, ZERO_GOVERNANCE_TOKEN_AMOUNT } from 'utils/constants/currency';
@@ -70,7 +70,15 @@ const checkOnlyExtendLockTime = (lockTime: number, lockAmount: GovernanceTokenMo
 };
 
 // FIXME: account for transaction fees not with a hardcoded value
-const TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
+let TRANSACTION_FEE_AMOUNT: number;
+if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
+  TRANSACTION_FEE_AMOUNT = 1;
+} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+  TRANSACTION_FEE_AMOUNT = 0.01;
+} else {
+  throw new Error('Something went wrong!');
+}
+const transactionFeeAmount = newMonetaryAmount(TRANSACTION_FEE_AMOUNT, GOVERNANCE_TOKEN, true);
 
 const LOCKING_AMOUNT = 'locking-amount';
 const LOCK_TIME = 'lock-time';
@@ -328,7 +336,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
+    return governanceTokenBalance.sub(stakedAmount).sub(transactionFeeAmount);
   }, [governanceTokenBalance, stakedAmountAndEndBlockIdle, stakedAmountAndEndBlockLoading, stakedAmount]);
 
   const onSubmit = (data: StakingFormData) => {
