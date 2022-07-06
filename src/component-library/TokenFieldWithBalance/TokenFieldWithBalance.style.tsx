@@ -7,7 +7,5 @@ const TokenFieldWithBalanceWrapper = styled.div`
   ${spaceY('spacing2')}
 `;
 
-export {
-  TokenFieldWithBalanceWrapper
-};
+export { TokenFieldWithBalanceWrapper };
 // ray test touch >
