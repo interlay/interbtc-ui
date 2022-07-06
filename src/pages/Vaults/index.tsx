@@ -4,19 +4,20 @@ import { useTranslation } from 'react-i18next';
 
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import MainContainer from 'parts/MainContainer';
-import { Grid, GridItem, InfoBox, VaultCard, NewVaultsTable } from 'component-library';
+// import { Grid, GridItem, InfoBox, VaultCard, NewVaultsTable } from 'component-library';
+import { Grid, GridItem, InfoBox, VaultCard } from 'component-library';
 import ErrorFallback from 'components/ErrorFallback';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { URL_PARAMETERS } from 'utils/constants/links';
 import { useGetVaultOverview } from 'utils/hooks/api/use-get-vault-overview';
-import { useGetAvailableVaults } from 'utils/hooks/api/use-get-available-vaults';
+// import { useGetAvailableVaults } from 'utils/hooks/api/use-get-available-vaults';
 import { VaultsHeader } from './VaultsHeader';
 
 const VaultOverview = (): JSX.Element => {
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
 
   const vaultOverview = useGetVaultOverview({ address: accountAddress });
-  const availableVaults = useGetAvailableVaults();
+  // const availableVaults = useGetAvailableVaults();
 
   const { t } = useTranslation();
 
@@ -46,7 +47,7 @@ const VaultOverview = (): JSX.Element => {
               />
             </GridItem>
           ))}
-          <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 12, start: 1 }}>
+          {/* <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 12, start: 1 }}>
             <NewVaultsTable
               data={availableVaults.map((vault) => ({
                 collateralCurrency: vault.collateralCurrency,
@@ -59,7 +60,7 @@ const VaultOverview = (): JSX.Element => {
                 }
               }))}
             />
-          </GridItem>
+          </GridItem> */}
         </Grid>
       ) : (
         <PrimaryColorEllipsisLoader />
