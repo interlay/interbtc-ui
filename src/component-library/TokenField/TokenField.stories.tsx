@@ -6,8 +6,8 @@ const Template: Story<TokenFieldProps> = (args) => <TokenField {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  label: 'KSM',
-  approxUSD: '100.00'
+  tokenSymbol: 'KSM',
+  valueInUSD: '100.00'
 };
 
 export { Default };

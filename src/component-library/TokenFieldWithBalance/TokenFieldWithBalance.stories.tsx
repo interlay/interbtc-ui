@@ -8,9 +8,9 @@ const Template: Story<TokenFieldWithBalanceProps> = (args) => <TokenFieldWithBal
 const Default = Template.bind({});
 Default.args = {
   // ray test touch <
-  label: 'KSM',
+  tokenSymbol: 'KSM',
   currencySymbol: CurrencySymbols.KSM,
-  approxUSD: '100.00',
+  valueInUSD: '100.00',
   usdValue: '100.00',
   currencyValue: '100.00',
   defaultValue: '100.00' // `value`

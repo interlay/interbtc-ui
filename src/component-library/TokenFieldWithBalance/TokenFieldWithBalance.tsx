@@ -18,7 +18,7 @@ interface TokenFieldWithBalanceProps extends TokenFieldProps, BalanceProps {}
 // ray test touch >
 
 const TokenFieldWithBalance = React.forwardRef<HTMLInputElement, TokenFieldWithBalanceProps>(
-  ({ currencySymbol, currencyValue, usdValue, approxUSD, label, value, ...rest }, ref): JSX.Element => {
+  ({ currencySymbol, currencyValue, usdValue, valueInUSD, tokenSymbol, value, ...rest }, ref): JSX.Element => {
     // ray test touch <
     // TODO:
     // - `approxUSD` -> `usdValue` | `valueInUSD`
@@ -28,7 +28,7 @@ const TokenFieldWithBalance = React.forwardRef<HTMLInputElement, TokenFieldWithB
     return (
       <TokenFieldWithBalanceWrapper>
         <Balance currencySymbol={currencySymbol} currencyValue={currencyValue} usdValue={usdValue} />
-        <TokenField ref={ref} label={label} approxUSD={approxUSD} value={value} {...rest} />
+        <TokenField ref={ref} tokenSymbol={tokenSymbol} valueInUSD={valueInUSD} value={value} {...rest} />
       </TokenFieldWithBalanceWrapper>
     );
   }

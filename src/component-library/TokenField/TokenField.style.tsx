@@ -7,7 +7,7 @@ const TokenFieldWrapper = styled.div`
   position: relative;
 `;
 
-const TokenFieldLabel = styled.label`
+const TokenFieldSymbol = styled.span`
   font-size: ${theme.text.xl2};
   color: ${theme.colors.textTertiary};
   font-weight: ${theme.fontWeight.medium};
@@ -32,4 +32,4 @@ const TokenFieldUSD = styled.span`
   bottom: ${theme.spacing.spacing2};
 `;
 
-export { TokenFieldWrapper, TokenFieldLabel, TokenFieldInput, TokenFieldUSD };
+export { TokenFieldWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD };
