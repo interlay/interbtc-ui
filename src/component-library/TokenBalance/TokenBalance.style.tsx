@@ -3,18 +3,18 @@ import styled from 'styled-components';
 import { theme } from 'component-library';
 import { spaceX } from 'component-library/css';
 
-const BalanceWrapper = styled.dl`
+const TokenBalanceWrapper = styled.dl`
   display: flex;
   font-weight: ${theme.fontWeight.book};
   ${spaceX('spacing1')}
 `;
 
-const BalanceLabel = styled.dt`
+const TokenBalanceLabel = styled.dt`
   color: ${theme.colors.textPrimary};
 `;
 
-const BalanceValue = styled.dd`
+const TokenBalanceValue = styled.dd`
   color: ${theme.colors.textSecondary};
 `;
 
-export { BalanceLabel, BalanceValue, BalanceWrapper };
+export { TokenBalanceLabel, TokenBalanceValue, TokenBalanceWrapper };

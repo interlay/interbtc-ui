@@ -5,14 +5,15 @@ import { NumberInputProps } from 'component-library/NumberInput';
 
 interface TokenFieldProps extends NumberInputProps {
   tokenSymbol: string;
+  value: string;
   valueInUSD: string;
 }
 
 const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
-  ({ id, tokenSymbol, valueInUSD, ...rest }, ref): JSX.Element => {
+  ({ tokenSymbol, valueInUSD, ...rest }, ref): JSX.Element => {
     return (
       <TokenFieldWrapper>
-        <TokenFieldInput ref={ref} id={id} {...rest} />
+        <TokenFieldInput ref={ref} {...rest} />
         <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
         <TokenFieldUSD>{`≈ $ ${valueInUSD}`}</TokenFieldUSD>
       </TokenFieldWrapper>
