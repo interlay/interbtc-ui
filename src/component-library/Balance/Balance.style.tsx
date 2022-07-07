@@ -1,10 +1,12 @@
 import styled from 'styled-components';
 
 import { theme } from 'component-library';
+import { spaceX } from 'component-library/css';
 
 const BalanceWrapper = styled.dl`
   display: flex;
   font-weight: ${theme.fontWeight.book};
+  ${spaceX('spacing1')}
 `;
 
 const BalanceLabel = styled.dt`
@@ -12,7 +14,6 @@ const BalanceLabel = styled.dt`
 `;
 
 const BalanceValue = styled.dd`
-  margin-left: ${theme.spacing.spacing1};
   color: ${theme.colors.textSecondary};
 `;
 
