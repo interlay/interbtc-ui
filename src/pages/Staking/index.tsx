@@ -43,7 +43,7 @@ import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from 'commo
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { getStakingTransactionFee } from '../../utils/helpers/transaction';
+import { getStakingTransactionFeeReserve } from '../../utils/helpers/transaction';
 
 const SHARED_CLASSES = clsx('mx-auto', 'md:max-w-2xl');
 
@@ -99,7 +99,7 @@ const Staking = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const [transactionFeeAmount, setTransactionFeeAmount] = React.useState<GovernanceTokenMonetaryAmount | undefined>(
+  const [transactionFeeReserve, setTransactionFeeReserve] = React.useState<GovernanceTokenMonetaryAmount | undefined>(
     undefined
   );
 
@@ -283,8 +283,8 @@ const Staking = (): JSX.Element => {
   React.useEffect(() => {
     (async () => {
       if (bridgeLoaded && !!address) {
-        const newTransactionFeeAmount = await getStakingTransactionFee(address);
-        setTransactionFeeAmount(newTransactionFeeAmount);
+        const newTransactionFeeReserve = await getStakingTransactionFeeReserve(address);
+        setTransactionFeeReserve(newTransactionFeeReserve);
       }
     })();
   }, [bridgeLoaded, address]);
@@ -338,20 +338,20 @@ const Staking = (): JSX.Element => {
       !governanceTokenBalance ||
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading ||
-      transactionFeeAmount === undefined
+      transactionFeeReserve === undefined
     )
       return;
     if (stakedAmount === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return governanceTokenBalance.sub(stakedAmount).sub(transactionFeeAmount);
+    return governanceTokenBalance.sub(stakedAmount).sub(transactionFeeReserve);
   }, [
     governanceTokenBalance,
     stakedAmountAndEndBlockIdle,
     stakedAmountAndEndBlockLoading,
     stakedAmount,
-    transactionFeeAmount
+    transactionFeeReserve
   ]);
 
   const onSubmit = (data: StakingFormData) => {
