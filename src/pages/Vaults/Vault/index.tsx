@@ -33,7 +33,7 @@ import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCalifo
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import { WRAPPED_TOKEN_SYMBOL, GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount } from 'config/relay-chains';
 import { URL_PARAMETERS } from 'utils/constants/links';
-import { getCurrencies } from 'utils/helpers/currencies';
+import { getCurrency } from 'utils/helpers/currencies';
 import { WRAPPED_TOKEN_ID_LITERAL } from 'utils/constants/currency';
 import { safeRoundTwoDecimals, displayMonetaryAmount } from 'common/utils/utils';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
@@ -102,7 +102,7 @@ const Vault = (): JSX.Element => {
     return newAccountId(window.bridge.api, selectedVaultAccountAddress);
   }, [bridgeLoaded, selectedVaultAccountAddress]);
 
-  const collateralCurrencyValues = React.useMemo(() => getCurrencies(vaultCollateral as CurrencyIdLiteral), [
+  const collateralCurrencyValues = React.useMemo(() => getCurrency(vaultCollateral as CurrencyIdLiteral), [
     vaultCollateral
   ]);
 
@@ -208,7 +208,7 @@ const Vault = (): JSX.Element => {
         title: t('vault.locked_collateral', {
           // TODO: when updating kint and adding the vault collateral as config,
           // this will need to be changed to use the symbol not the id literal.
-          collateralTokenSymbol: collateralCurrencyValues?.symbol
+          collateralTokenSymbol: collateralCurrencyValues?.id
         }),
         value: displayMonetaryAmount(collateral)
       },

@@ -33,3 +33,5 @@ export type { ModalProps } from './Modal';
 
 export { Balance } from './Balance';
 export type { BalanceProps } from './Balance';
+
+export * from './types';

@@ -1,9 +1,9 @@
-import { CurrencySymbols } from 'types/currency';
+import { Tokens } from '../types';
 
 import { BalanceWrapper, BalanceLabel, BalanceValue } from './Balance.style';
 
 interface BalanceProps {
-  currencySymbol: CurrencySymbols;
+  currencySymbol: Tokens;
   currencyValue: string;
   usdValue: string;
 }
