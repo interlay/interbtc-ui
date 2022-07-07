@@ -43,6 +43,7 @@ import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from 'commo
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
+import { getStakingTransactionFee } from '../../utils/helpers/transaction';
 
 const SHARED_CLASSES = clsx('mx-auto', 'md:max-w-2xl');
 
@@ -68,9 +69,6 @@ const checkOnlyIncreaseLockAmount = (lockTime: number, lockAmount: GovernanceTok
 const checkOnlyExtendLockTime = (lockTime: number, lockAmount: GovernanceTokenMonetaryAmount) => {
   return lockTime > 0 && lockAmount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 };
-
-// FIXME: account for transaction fees not with a hardcoded value
-const TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
 
 const LOCKING_AMOUNT = 'locking-amount';
 const LOCK_TIME = 'lock-time';
@@ -100,6 +98,10 @@ const Staking = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
+
+  const [transactionFeeAmount, setTransactionFeeAmount] = React.useState<GovernanceTokenMonetaryAmount | undefined>(
+    undefined
+  );
 
   const { governanceTokenBalance, bridgeLoaded, address, prices } = useSelector((state: StoreType) => state.general);
 
@@ -279,6 +281,15 @@ const Staking = (): JSX.Element => {
   );
 
   React.useEffect(() => {
+    (async () => {
+      if (bridgeLoaded && !!address) {
+        const newTransactionFeeAmount = await getStakingTransactionFee(address);
+        setTransactionFeeAmount(newTransactionFeeAmount);
+      }
+    })();
+  }, [bridgeLoaded, address]);
+
+  React.useEffect(() => {
     if (!lockTime) return;
 
     const lockTimeValue = Number(lockTime);
@@ -323,13 +334,25 @@ const Staking = (): JSX.Element => {
   const stakedAmount = getStakedAmount();
 
   const availableBalance = React.useMemo(() => {
-    if (!governanceTokenBalance || stakedAmountAndEndBlockIdle || stakedAmountAndEndBlockLoading) return;
+    if (
+      !governanceTokenBalance ||
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading ||
+      transactionFeeAmount === undefined
+    )
+      return;
     if (stakedAmount === undefined) {
       throw new Error('Something went wrong!');
     }
 
-    return governanceTokenBalance.sub(stakedAmount).sub(TRANSACTION_FEE_AMOUNT);
-  }, [governanceTokenBalance, stakedAmountAndEndBlockIdle, stakedAmountAndEndBlockLoading, stakedAmount]);
+    return governanceTokenBalance.sub(stakedAmount).sub(transactionFeeAmount);
+  }, [
+    governanceTokenBalance,
+    stakedAmountAndEndBlockIdle,
+    stakedAmountAndEndBlockLoading,
+    stakedAmount,
+    transactionFeeAmount
+  ]);
 
   const onSubmit = (data: StakingFormData) => {
     if (!bridgeLoaded) return;
