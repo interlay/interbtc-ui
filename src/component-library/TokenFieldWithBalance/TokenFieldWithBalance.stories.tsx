@@ -8,7 +8,9 @@ const Default = Template.bind({});
 Default.args = {
   tokenSymbol: 'KSM',
   valueInUSD: '100.00',
-  defaultValue: '100.00' // `value`
+  defaultValue: '100.00', // `value`
+  balanceValue: '1000.00',
+  balanceValueInUSD: '1000.00'
 };
 
 export { Default };
