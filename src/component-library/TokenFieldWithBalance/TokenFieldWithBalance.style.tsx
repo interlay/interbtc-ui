@@ -1,4 +1,3 @@
-// ray test touch <
 import styled from 'styled-components';
 
 import { spaceY } from 'component-library/css';
@@ -8,4 +7,3 @@ const TokenFieldWithBalanceWrapper = styled.div`
 `;
 
 export { TokenFieldWithBalanceWrapper };
-// ray test touch >
