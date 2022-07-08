@@ -4,7 +4,7 @@ import { theme } from 'component-library';
 import { spaceY } from 'component-library/css';
 import { NumberInput } from 'component-library/NumberInput';
 
-const TokenFieldWrapper = styled.div`
+const TokenFieldInnerWrapper = styled.div`
   position: relative;
 `;
 
@@ -33,8 +33,8 @@ const TokenFieldUSD = styled.span`
   bottom: ${theme.spacing.spacing2};
 `;
 
-const TokenFieldWithBalanceWrapper = styled.div`
+const TokenFieldWrapper = styled.div`
   ${spaceY('spacing2')}
 `;
 
-export { TokenFieldWithBalanceWrapper, TokenFieldWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD };
+export { TokenFieldWrapper, TokenFieldInnerWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD };

@@ -1,8 +1,8 @@
 import { Story, Meta } from '@storybook/react';
 
-import { TokenFieldWithBalance, TokenFieldWithBalanceProps } from './';
+import { TokenField, TokenFieldProps } from '.';
 
-const Template: Story<TokenFieldWithBalanceProps> = (args) => <TokenFieldWithBalance {...args} />;
+const Template: Story<TokenFieldProps> = (args) => <TokenField {...args} />;
 
 const WithBalance = Template.bind({});
 WithBalance.args = {
@@ -23,5 +23,5 @@ export { WithBalance, WithoutBalance };
 
 export default {
   title: 'Forms/TokenFieldWithBalance',
-  component: TokenFieldWithBalance
+  component: TokenField
 } as Meta;

@@ -42,5 +42,5 @@ export type { InputProps } from './Input';
 export { NumberInput } from './NumberInput';
 export type { NumberInputProps } from './NumberInput';
 
-export { TokenFieldWithBalance } from './TokenFieldWithBalance';
-export type { TokenFieldWithBalanceProps } from './TokenFieldWithBalance';
+export { TokenField } from './TokenField';
+export type { TokenFieldProps } from './TokenField';
