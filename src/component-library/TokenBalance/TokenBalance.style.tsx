@@ -1,12 +1,11 @@
 import styled from 'styled-components';
 
 import { theme } from 'component-library';
-import { spaceX } from 'component-library/css';
 
 const TokenBalanceWrapper = styled.dl`
   display: flex;
   font-weight: ${theme.fontWeight.book};
-  ${spaceX('spacing1')}
+  gap: ${theme.spacing.spacing1};
 `;
 
 const TokenBalanceLabel = styled.dt`
