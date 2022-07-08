@@ -1,20 +1,29 @@
 import * as React from 'react';
 
-import { TokenFieldWithBalanceWrapper } from './TokenFieldWithBalance.style';
-import { TokenField, TokenFieldProps } from 'component-library/TokenField';
+import { TokenFieldWithBalanceWrapper, TokenFieldWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD } from './TokenFieldWithBalance.style';
+import { NumberInputProps } from 'component-library/NumberInput';
 import { TokenBalance } from 'component-library/TokenBalance';
 
-interface TokenFieldWithBalanceProps extends TokenFieldProps {
-  balanceValue: string;
-  balanceValueInUSD: string;
+interface TokenFieldWithBalanceProps extends NumberInputProps {
+  balance?: string;
+  tokenSymbol: string;
+  valueInUSD: string;
 }
 
 const TokenFieldWithBalance = React.forwardRef<HTMLInputElement, TokenFieldWithBalanceProps>(
-  ({ tokenSymbol, valueInUSD, value, balanceValue, balanceValueInUSD, ...rest }, ref): JSX.Element => {
+  ({ tokenSymbol, valueInUSD, balance, ...rest }, ref): JSX.Element => {
+
     return (
       <TokenFieldWithBalanceWrapper>
-        <TokenBalance tokenSymbol={tokenSymbol} value={balanceValue} valueInUSD={balanceValueInUSD} />
-        <TokenField ref={ref} tokenSymbol={tokenSymbol} value={value} valueInUSD={valueInUSD} {...rest} />
+        {balance && (
+          // TODO: replace `valueInUSD` value with the balance value in USD according to the underlying token symbol
+          <TokenBalance tokenSymbol={tokenSymbol} value={balance} valueInUSD={`${balance}00`} />
+        )}
+        <TokenFieldWrapper>
+          <TokenFieldInput ref={ref} {...rest} />
+          <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
+          <TokenFieldUSD>{`≈ $ ${valueInUSD}`}</TokenFieldUSD>
+        </TokenFieldWrapper>
       </TokenFieldWithBalanceWrapper>
     );
   }
