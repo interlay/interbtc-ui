@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import { theme } from 'component-library';
-import { spaceY } from 'component-library/css';
 import { NumberInput } from 'component-library/NumberInput';
 
 const TokenFieldInnerWrapper = styled.div`
@@ -33,8 +32,4 @@ const TokenFieldUSD = styled.span`
   bottom: ${theme.spacing.spacing2};
 `;
 
-const TokenFieldWrapper = styled.div`
-  ${spaceY('spacing2')}
-`;
-
-export { TokenFieldWrapper, TokenFieldInnerWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD };
+export { TokenFieldInnerWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD };

@@ -3,7 +3,7 @@ import { StackContainer } from './Stack.style';
 interface StackProps {
   children: React.ReactNode;
   className?: string;
-  spacing?: 'single' | 'double';
+  spacing?: 'half' | 'single' | 'double';
 }
 
 const Stack = ({ children, className, spacing = 'single' }: StackProps): JSX.Element => {
