@@ -24,6 +24,6 @@ const getSpacing = (spacing: StackProps['spacing']) => {
 
 export const StackContainer = styled.div<StackProps>`
   > *:not(:last-child) {
-    margin-bottom: ${(props) => (getSpacing(props.spacing))};
+    margin-bottom: ${(props) => getSpacing(props.spacing)};
   }
 `;

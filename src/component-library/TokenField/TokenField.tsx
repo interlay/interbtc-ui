@@ -9,14 +9,13 @@ interface TokenFieldProps extends NumberInputProps {
   balance?: {
     value: string;
     valueInUSD: string;
-  }
+  };
   tokenSymbol: string;
   valueInUSD: string;
 }
 
 const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
   ({ tokenSymbol, valueInUSD, balance, ...rest }, ref): JSX.Element => {
-
     return (
       <Stack spacing='half'>
         {balance ? (
