@@ -9,22 +9,15 @@ import InterlayDefaultOutlinedButton, {
 import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 import InterlayLink from 'components/UI/InterlayLink';
 import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
-// ray test touch <
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-// ray test touch >
 import { BORDER_CLASSES } from 'utils/constants/styles';
 import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg';
 import { ReactComponent as MexcLogoForKintsugiIcon } from 'assets/img/exchanges/mexc-logo-for-kintsugi.svg';
-// ray test touch <
 import { ReactComponent as MexcLogoForInterlayIcon } from 'assets/img/exchanges/mexc-logo-for-interlay.svg';
-// ray test touch >
 import { ReactComponent as ZenlinkLogoIcon } from 'assets/img/exchanges/zenlink-logo.svg';
-// ray test touch <
 import { ReactComponent as LbankLogoIcon } from 'assets/img/exchanges/lbank-logo.svg';
-// ray test touch >
 
-// ray test touch <
 let exchanges: Array<{
   link: string;
   icon: React.ReactNode;
@@ -71,7 +64,6 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
 } else {
   throw new Error('Something went wrong!');
 }
-// ray test touch >
 
 interface ExchangeLinkProps {
   href: string;
@@ -122,11 +114,9 @@ const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.El
           <div className={clsx('px-4', 'py-2', 'space-y-10')}>
             <p className='text-center'>{getGovernanceTokenDescriptionLabel}</p>
             <div className={clsx('grid', 'grid-cols-2', 'gap-x-3', 'gap-y-2')}>
-              {/* ray test touch < */}
               {exchanges.map((item) => (
                 <ExchangeLink key={item.link} href={item.link} icon={item.icon} />
               ))}
-              {/* ray test touch > */}
             </div>
           </div>
         </InterlayModalInnerWrapper>
