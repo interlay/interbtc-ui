@@ -65,6 +65,8 @@ const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ 'pages/V
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch'));
 
+type UnsubscriptionRef = (() => void) | null;
+
 const App = (): JSX.Element => {
   const {
     bridgeLoaded,
@@ -79,6 +81,10 @@ const App = (): JSX.Element => {
   // eslint-disable-next-line max-len
   const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
   const dispatch = useDispatch();
+
+  const unsubscribeCollateralTokenBalance = React.useRef<UnsubscriptionRef>(null);
+  const unsubscribeWrappedTokenBalance = React.useRef<UnsubscriptionRef>(null);
+  const unsubscribeGovernanceTokenBalance = React.useRef<UnsubscriptionRef>(null);
 
   // Loads the main bridge API - connection to the bridge
   const loadBridge = React.useCallback(async (): Promise<void> => {
@@ -246,19 +252,15 @@ const App = (): JSX.Element => {
     })();
   }, [address, bridgeLoaded, dispatch]);
 
-  // Subscribes to balances
+  // Subscribes to collateral token balance
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
     if (!address) return;
 
-    let unsubscribeFromCollateral: () => void;
-    let unsubscribeFromWrapped: () => void;
-    let unsubscribeFromGovernance: () => void;
-
     (async () => {
       try {
-        unsubscribeFromCollateral = await window.bridge.tokens.subscribeToBalance(
+        const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           RELAY_CHAIN_NATIVE_TOKEN,
           address,
           (_: string, balance: ChainBalance<CollateralUnit>) => {
@@ -270,14 +272,34 @@ const App = (): JSX.Element => {
             }
           }
         );
+
+        if (unsubscribeCollateralTokenBalance.current) {
+          unsubscribeCollateralTokenBalance.current();
+        }
+        // Unsubscribe if previous subscription is alive
+        unsubscribeCollateralTokenBalance.current = unsubscribe;
       } catch (error) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();
 
+    return () => {
+      if (unsubscribeCollateralTokenBalance.current) {
+        unsubscribeCollateralTokenBalance.current();
+        unsubscribeCollateralTokenBalance.current = null;
+      }
+    };
+  }, [dispatch, bridgeLoaded, address, collateralTokenBalance, collateralTokenTransferableBalance]);
+
+  // Subscribes to wrapped token balance
+  React.useEffect(() => {
+    if (!dispatch) return;
+    if (!bridgeLoaded) return;
+    if (!address) return;
+
     (async () => {
       try {
-        unsubscribeFromWrapped = await window.bridge.tokens.subscribeToBalance(
+        const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           WRAPPED_TOKEN,
           address,
           (_: string, balance: ChainBalance<BitcoinUnit>) => {
@@ -289,14 +311,34 @@ const App = (): JSX.Element => {
             }
           }
         );
+        // Unsubscribe if previous subscription is alive
+        if (unsubscribeWrappedTokenBalance.current) {
+          unsubscribeWrappedTokenBalance.current();
+        }
+
+        unsubscribeWrappedTokenBalance.current = unsubscribe;
       } catch (error) {
         console.log('[App React.useEffect 5] error.message => ', error.message);
       }
     })();
 
+    return () => {
+      if (unsubscribeWrappedTokenBalance.current) {
+        unsubscribeWrappedTokenBalance.current();
+        unsubscribeWrappedTokenBalance.current = null;
+      }
+    };
+  }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
+
+  // Subscribes to governance token balance
+  React.useEffect(() => {
+    if (!dispatch) return;
+    if (!bridgeLoaded) return;
+    if (!address) return;
+
     (async () => {
       try {
-        unsubscribeFromGovernance = await window.bridge.tokens.subscribeToBalance(
+        const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           GOVERNANCE_TOKEN,
           address,
           (_: string, balance: ChainBalance<GovernanceUnit>) => {
@@ -308,33 +350,24 @@ const App = (): JSX.Element => {
             }
           }
         );
+        // Unsubscribe if previous subscription is alive
+        if (unsubscribeGovernanceTokenBalance.current) {
+          unsubscribeGovernanceTokenBalance.current();
+        }
+
+        unsubscribeGovernanceTokenBalance.current = unsubscribe;
       } catch (error) {
         console.log('[App React.useEffect 6] error.message => ', error.message);
       }
     })();
 
     return () => {
-      if (unsubscribeFromCollateral) {
-        unsubscribeFromCollateral();
-      }
-      if (unsubscribeFromWrapped) {
-        unsubscribeFromWrapped();
-      }
-      if (unsubscribeFromGovernance) {
-        unsubscribeFromGovernance();
+      if (unsubscribeGovernanceTokenBalance.current) {
+        unsubscribeGovernanceTokenBalance.current();
+        unsubscribeGovernanceTokenBalance.current = null;
       }
     };
-  }, [
-    dispatch,
-    bridgeLoaded,
-    address,
-    wrappedTokenBalance,
-    wrappedTokenTransferableBalance,
-    collateralTokenBalance,
-    collateralTokenTransferableBalance,
-    governanceTokenBalance,
-    governanceTokenTransferableBalance
-  ]);
+  }, [dispatch, bridgeLoaded, address, governanceTokenBalance, governanceTokenTransferableBalance]);
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
