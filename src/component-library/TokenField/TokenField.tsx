@@ -5,7 +5,10 @@ import { NumberInputProps } from 'component-library/NumberInput';
 import { TokenBalance } from 'component-library/TokenBalance';
 
 interface TokenFieldProps extends NumberInputProps {
-  balance?: string;
+  balance?: {
+    value: string;
+    valueInUSD: string;
+  }
   tokenSymbol: string;
   valueInUSD: string;
 }
@@ -15,10 +18,9 @@ const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
 
     return (
       <TokenFieldWrapper>
-        {balance && (
-          // TODO: replace `valueInUSD` value with the balance value in USD according to the underlying token symbol
-          <TokenBalance tokenSymbol={tokenSymbol} value={balance} valueInUSD={`${balance}00`} />
-        )}
+        {balance ? (
+          <TokenBalance tokenSymbol={tokenSymbol} value={balance.value} valueInUSD={balance.valueInUSD} />
+        ) : null}
         <TokenFieldInnerWrapper>
           <TokenFieldInput ref={ref} {...rest} />
           <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>

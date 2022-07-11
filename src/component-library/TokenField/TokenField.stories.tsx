@@ -9,7 +9,10 @@ WithBalance.args = {
   tokenSymbol: 'KSM',
   valueInUSD: '100.00',
   defaultValue: '100.00', // `value`
-  balance: '1000.00'
+  balance: {
+    value: '1000.00',
+    valueInUSD: '1000.00'
+  }
 };
 
 const WithoutBalance = Template.bind({});
@@ -22,6 +25,6 @@ WithoutBalance.args = {
 export { WithBalance, WithoutBalance };
 
 export default {
-  title: 'Forms/TokenFieldWithBalance',
+  title: 'Forms/TokenField',
   component: TokenField
 } as Meta;
