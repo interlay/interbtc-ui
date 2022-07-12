@@ -94,6 +94,7 @@ const Vault = (): JSX.Element => {
     setRequestIssueModalOpen(true);
   };
 
+  // ray test touch <
   const vaultAccountId = React.useMemo(() => {
     // eslint-disable-next-line max-len
     // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
@@ -101,6 +102,7 @@ const Vault = (): JSX.Element => {
 
     return newAccountId(window.bridge.api, selectedVaultAccountAddress);
   }, [bridgeLoaded, selectedVaultAccountAddress]);
+  // ray test touch >
 
   const collateralCurrencyValues = React.useMemo(() => getCurrency(vaultCollateral as CurrencyIdLiteral), [
     vaultCollateral
@@ -322,6 +324,9 @@ const Vault = (): JSX.Element => {
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
           vaultAddress={selectedVaultAccountAddress}
+          // ray test touch <
+          vaultAccountId={vaultAccountId}
+          // ray test touch >
           hasLockedBTC={hasLockedBTC}
           collateralCurrency={collateralCurrencyValues}
         />

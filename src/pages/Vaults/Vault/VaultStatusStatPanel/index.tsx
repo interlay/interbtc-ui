@@ -18,8 +18,7 @@ import { BTCToCollateralTokenRate } from 'types/currency';
 import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  // TODO: should remove `undefined` later on when the loading is properly handled
-  vaultAccountId: AccountId | undefined;
+  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
 }
 
 const VaultStatusStatPanel = ({ vaultAccountId }: Props): JSX.Element => {
