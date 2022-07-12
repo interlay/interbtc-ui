@@ -26,6 +26,7 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
   // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const vaults: Array<any> = useQueries<Array<UseQueryResult<VaultResponse, Error>>>(
     VAULT_COLLATERAL.map((token) => {
+      console.log('address from get vaults hook', address);
       return {
         queryKey: ['vaults', address, token],
         queryFn: async () => await getVaults(newAccountId(window.bridge.api, address), token),
@@ -35,6 +36,10 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
       };
     })
   );
+
+  useEffect(() => {
+    console.log('queriesComplete', queriesComplete);
+  }, [queriesComplete]);
 
   useEffect(() => {
     if (!vaults || vaults.length === 0) return;
