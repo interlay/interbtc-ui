@@ -131,7 +131,7 @@ const TransferForm = (): JSX.Element => {
               { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}
           >
-            Transferable balance: {activeToken?.transferableBalance}
+            Transferable balance: {activeToken?.transferableBalance || 0}
           </p>
           <div className={clsx('flex', 'gap-2')}>
             {/* TODO: use forwardRef to pull in select value as form data */}
