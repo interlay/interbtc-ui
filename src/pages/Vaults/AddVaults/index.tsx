@@ -5,11 +5,8 @@ interface AddVaultProps {
   vaults: any;
 }
 
-const isVaultActive = (vaults: any, currentVault: any) => {
-  const vaultActive = vaults?.some((vault: any) => vault.collateralId === currentVault.collateralCurrency);
-
-  return vaultActive ? true : false;
-};
+const isVaultInstalled = (vaults: any, currentVault: any) =>
+  vaults?.some((vault: any) => vault.collateralId === currentVault.collateralCurrency);
 
 const AddVaults = ({ vaults }: AddVaultProps): JSX.Element => {
   const availableVaults = useGetAvailableVaults();
@@ -21,8 +18,8 @@ const AddVaults = ({ vaults }: AddVaultProps): JSX.Element => {
         wrappedCurrency: vault.wrappedCurrency,
         minCollateralAmount: vault.minimumCollateral.toNumber().toFixed(2),
         collateralRate: vault.secureCollateralThreshold.toNumber().toFixed(2),
-        isActive: isVaultActive(vaults, vault),
-        isInstalled: true,
+        isActive: true,
+        isInstalled: isVaultInstalled(vaults, vault),
         ctaOnClick: () => {
           return undefined;
         }
