@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 
 type VaultResponse = Array<VaultExt<BitcoinUnit>>;
 
+// `getOrNull` returns null as a successful response if the vault does not exist
 const getVaults = async (accountId: AccountId, token: CurrencyIdLiteral) =>
   await window.bridge.vaults.getOrNull(accountId, token);
 
