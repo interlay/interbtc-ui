@@ -38,10 +38,6 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
   );
 
   useEffect(() => {
-    console.log('queriesComplete', queriesComplete);
-  }, [queriesComplete]);
-
-  useEffect(() => {
     if (!vaults || vaults.length === 0) return;
 
     for (const vault of vaults) {
