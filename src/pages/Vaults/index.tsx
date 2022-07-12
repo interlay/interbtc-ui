@@ -9,6 +9,7 @@ import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader'
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 
+import { AddVaults } from './AddVaults';
 import { VaultsHeader } from './VaultsHeader';
 
 const VaultOverview = (): JSX.Element => {
