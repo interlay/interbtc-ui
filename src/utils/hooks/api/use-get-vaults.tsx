@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 type VaultResponse = Array<VaultExt<BitcoinUnit>>;
 
 const getVaults = async (accountId: AccountId, token: CurrencyIdLiteral) =>
-  await window.bridge.vaults.get(accountId, token);
+  await window.bridge.vaults.getOrNull(accountId, token);
 
 const useGetVaults = ({ address }: { address: string }): VaultResponse => {
   const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
@@ -50,7 +50,7 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
     setQueriesComplete(haveQueriesCompleted);
   }, [vaults]);
 
-  return queriesComplete ? vaults.map((vault) => vault.data) : [];
+  return queriesComplete ? vaults.filter((vault) => vault.data !== null).map((vault) => vault.data) : [];
 };
 
 export { useGetVaults };
