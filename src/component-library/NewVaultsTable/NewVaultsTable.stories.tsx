@@ -14,6 +14,7 @@ Default.args = {
       minCollateralAmount: '1.21',
       collateralRate: '260.12',
       isActive: true,
+      isInstalled: true,
       ctaOnClick: () => alert('add vault')
     },
     {
@@ -22,6 +23,7 @@ Default.args = {
       minCollateralAmount: '9.14',
       collateralRate: '314.55',
       isActive: false,
+      isInstalled: false,
       ctaOnClick: () => alert('add vault')
     }
   ]

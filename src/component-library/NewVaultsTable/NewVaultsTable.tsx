@@ -8,6 +8,7 @@ interface NewVaultsTableRow {
   minCollateralAmount: string;
   collateralRate: string;
   isActive: boolean;
+  isInstalled: boolean;
   // TODO: Define ctaOnClick callback signature.
   ctaOnClick: () => void;
 }
@@ -22,6 +23,7 @@ const renderRowCells = ({
   minCollateralAmount,
   collateralRate,
   isActive,
+  isInstalled,
   ctaOnClick
 }: NewVaultsTableRow) => [
   <CoinPairWrapper key='coin_pair'>
@@ -35,8 +37,8 @@ const renderRowCells = ({
 
   <NumericValue key='collateral_rate'>{collateralRate}%</NumericValue>,
 
-  <CTA key='cta' variant='secondary' disabled={!isActive} fullWidth onClick={ctaOnClick}>
-    {isActive ? 'Add' : 'Coming soon'}
+  <CTA key='cta' variant='secondary' disabled={!isActive || !!isInstalled} fullWidth onClick={ctaOnClick}>
+    {isActive && !isInstalled ? 'Add' : isInstalled ? 'Vault installed' : 'Coming soon'}
   </CTA>
 ];
 
