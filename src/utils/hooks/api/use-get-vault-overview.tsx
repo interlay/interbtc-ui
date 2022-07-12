@@ -34,17 +34,19 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
   const [queryError, setQueryError] = useState<Error | undefined>(undefined);
 
   const { prices } = useSelector((state: StoreType) => state.general);
-  const vaults = useGetVaults({ address });
+  const vaultsResponseData = useGetVaults({ address });
   useErrorHandler(queryError);
 
   // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<VaultOverview, Error>>>(
-    vaults.map((vault) => {
-      return {
-        queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
-        queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices)
-      };
-    })
+    vaultsResponseData
+      .filter((vault) => vault !== undefined)
+      .map((vault) => {
+        return {
+          queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
+          queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices)
+        };
+      })
   );
 
   useEffect(() => {
@@ -65,7 +67,7 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
   return queriesComplete
     ? {
         vaults: vaultData.map((data: any) => data.data).filter((data) => data !== undefined),
-        totals: getVaultTotals(vaultData.map((vault) => vault.data))
+        totals: getVaultTotals(vaultData.filter((vault) => vault.data !== undefined).map((vault) => vault.data))
       }
     : undefined;
 };
