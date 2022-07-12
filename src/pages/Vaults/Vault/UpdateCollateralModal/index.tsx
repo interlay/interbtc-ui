@@ -7,7 +7,6 @@ import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import Big from 'big.js';
 import clsx from 'clsx';
-// ray test touch <
 import { AccountId } from '@polkadot/types/interfaces';
 import {
   roundTwoDecimals,
@@ -16,7 +15,6 @@ import {
   CurrencyUnit,
   ChainBalance
 } from '@interlay/interbtc-api';
-// ray test touch >
 import { MonetaryAmount, Currency } from '@interlay/monetary-js';
 
 import ErrorFallback from 'components/ErrorFallback';
@@ -48,9 +46,7 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
-  // ray test touch <
   vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
-  // ray test touch >
   hasLockedBTC: boolean;
   collateralCurrency: CurrencyValues;
 }
@@ -60,9 +56,7 @@ const UpdateCollateralModal = ({
   onClose,
   collateralUpdateStatus,
   vaultAddress,
-  // ray test touch <
   vaultAccountId,
-  // ray test touch >
   hasLockedBTC,
   collateralCurrency
 }: Props): JSX.Element => {
@@ -102,7 +96,6 @@ const UpdateCollateralModal = ({
   );
   useErrorHandler(requiredCollateralTokenAmountError);
 
-  // ray test touch <
   const {
     isIdle: collateralBalanceIdle,
     isLoading: collateralBalanceLoading,
@@ -116,7 +109,6 @@ const UpdateCollateralModal = ({
     }
   );
   useErrorHandler(collateralBalanceError);
-  // ray test touch >
 
   const collateralTokenAmount = newMonetaryAmount(
     strCollateralTokenAmount,
@@ -217,13 +209,11 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    // ray test touch <
     if (
       collateralTokenAmount.gt(collateralBalance?.transferable as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>)
     ) {
       return t(`Must be less than ${collateralCurrency.id} balance!`);
     }
-    // ray test touch >
 
     if (!bridgeLoaded) {
       return 'Bridge must be loaded!';
