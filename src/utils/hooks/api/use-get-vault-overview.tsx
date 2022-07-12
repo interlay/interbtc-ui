@@ -35,7 +35,6 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
 
   const { prices } = useSelector((state: StoreType) => state.general);
   const vaults = useGetVaults({ address });
-  console.log('vaults overview hook', vaults);
   useErrorHandler(queryError);
 
   // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
