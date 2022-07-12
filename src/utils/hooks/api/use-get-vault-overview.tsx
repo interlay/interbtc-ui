@@ -44,10 +44,7 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
       .map((vault) => {
         return {
           queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
-          queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices),
-          options: {
-            enabled: !!vaults.length
-          }
+          queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices)
         };
       })
   );
