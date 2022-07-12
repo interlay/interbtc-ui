@@ -1,10 +1,10 @@
-import { CurrencySymbols } from 'types/currency';
+import { Tokens } from '../types';
 import { CoinPair, CTALink } from '..';
 import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateralSymbol: CurrencySymbols;
-  wrappedSymbol: CurrencySymbols;
+  collateralSymbol: Tokens;
+  wrappedSymbol: Tokens;
   pendingRequests: number;
   apy: string;
   collateralScore: string;

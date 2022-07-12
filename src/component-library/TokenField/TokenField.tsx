@@ -1,21 +1,32 @@
 import * as React from 'react';
 
-import { TokenFieldLabel, TokenFieldWrapper, TokenFieldInput, TokenFieldUSD } from './TokenField.style';
+import { TokenFieldInnerWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD } from './TokenField.style';
 import { NumberInputProps } from 'component-library/NumberInput';
+import { TokenBalance } from 'component-library/TokenBalance';
+import { Stack } from 'component-library/Stack';
 
 interface TokenFieldProps extends NumberInputProps {
-  label: string;
-  approxUSD: string;
+  balance?: {
+    value: string;
+    valueInUSD: string;
+  };
+  tokenSymbol: string;
+  valueInUSD: string;
 }
 
 const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
-  ({ id, label, approxUSD, ...rest }, ref): JSX.Element => {
+  ({ tokenSymbol, valueInUSD, balance, ...rest }, ref): JSX.Element => {
     return (
-      <TokenFieldWrapper>
-        <TokenFieldInput ref={ref} id={id} {...rest} />
-        <TokenFieldLabel>{label}</TokenFieldLabel>
-        <TokenFieldUSD>{`≈ $ ${approxUSD}`}</TokenFieldUSD>
-      </TokenFieldWrapper>
+      <Stack spacing='half'>
+        {balance ? (
+          <TokenBalance tokenSymbol={tokenSymbol} value={balance.value} valueInUSD={balance.valueInUSD} />
+        ) : null}
+        <TokenFieldInnerWrapper>
+          <TokenFieldInput ref={ref} {...rest} />
+          <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
+          <TokenFieldUSD>{`≈ $ ${valueInUSD}`}</TokenFieldUSD>
+        </TokenFieldInnerWrapper>
+      </Stack>
     );
   }
 );

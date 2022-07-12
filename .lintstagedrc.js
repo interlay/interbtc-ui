@@ -1,9 +1,7 @@
-
 module.exports = {
-  './src/**/*.{ts,tsx,js,jsx}': [
+  './src/**/*.{ts,tsx,js}': [
     'sh -c "yarn type-check"',
-    'yarn lint-fix'
-  ],
-  // TODO: double-check
-  // './src/**/*.{ts,tsx,js,jsx,scss}': 'yarn format'
+    'yarn lint-fix',
+    'yarn format'
+  ]
 };

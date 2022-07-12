@@ -9,50 +9,36 @@ import {
   Interlay // On Polkadot
 } from '@interlay/monetary-js';
 
-import { CurrencyValues, Currencies, CurrencySymbols } from 'types/currency';
+import { CurrencyValues, Currencies } from 'types/currency';
 
 const CURRENCIES: Currencies = [
   {
     currency: Polkadot as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.DOT,
-    symbol: CurrencySymbols.DOT
+    id: CurrencyIdLiteral.DOT
   },
   {
     currency: InterBtc as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.INTERBTC,
-    symbol: CurrencySymbols.IBTC
+    id: CurrencyIdLiteral.INTERBTC
   },
   {
     currency: Interlay as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.INTR,
-    symbol: CurrencySymbols.INTR
+    id: CurrencyIdLiteral.INTR
   },
   {
     currency: KBtc as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.KBTC,
-    symbol: CurrencySymbols.KBTC
+    id: CurrencyIdLiteral.KBTC
   },
   {
     currency: Kintsugi as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.KINT,
-    symbol: CurrencySymbols.KINT
+    id: CurrencyIdLiteral.KINT
   },
   {
     currency: Kusama as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.KSM,
-    symbol: CurrencySymbols.KSM
+    id: CurrencyIdLiteral.KSM
   }
 ];
 
-const getCurrencies = (idLiteral: CurrencyIdLiteral): CurrencyValues | undefined =>
+const getCurrency = (idLiteral: CurrencyIdLiteral): CurrencyValues | undefined =>
   CURRENCIES.find((currency) => currency.id === idLiteral);
 
-const getCurrencySymbol = (idLiteral: CurrencyIdLiteral): CurrencySymbols => {
-  const currencyPair = getCurrencies(idLiteral);
-
-  return currencyPair ? currencyPair.symbol : CurrencySymbols.UNDEFINED;
-};
-
-export { getCurrencies, getCurrencySymbol };
-
-export type { CurrencySymbols };
+export { getCurrency };

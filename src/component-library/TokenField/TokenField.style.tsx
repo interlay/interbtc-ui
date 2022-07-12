@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import { theme } from 'component-library';
 import { NumberInput } from 'component-library/NumberInput';
 
-const TokenFieldWrapper = styled.div`
+const TokenFieldInnerWrapper = styled.div`
   position: relative;
 `;
 
-const TokenFieldLabel = styled.label`
+const TokenFieldSymbol = styled.span`
   font-size: ${theme.text.xl2};
   color: ${theme.colors.textTertiary};
   font-weight: ${theme.fontWeight.medium};
@@ -32,4 +32,4 @@ const TokenFieldUSD = styled.span`
   bottom: ${theme.spacing.spacing2};
 `;
 
-export { TokenFieldWrapper, TokenFieldLabel, TokenFieldInput, TokenFieldUSD };
+export { TokenFieldInnerWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD };

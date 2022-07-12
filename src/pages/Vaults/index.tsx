@@ -4,18 +4,21 @@ import { useTranslation } from 'react-i18next';
 
 import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import MainContainer from 'parts/MainContainer';
-import { VaultCard, Grid, GridItem, InfoBox } from 'component-library';
+// import { Grid, GridItem, InfoBox, VaultCard, NewVaultsTable } from 'component-library';
+import { Grid, GridItem, InfoBox, VaultCard } from 'component-library';
 import ErrorFallback from 'components/ErrorFallback';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { URL_PARAMETERS } from 'utils/constants/links';
-import { getCurrencySymbol } from 'utils/helpers/currencies';
 import { useGetVaultOverview } from 'utils/hooks/api/use-get-vault-overview';
+// import { useGetAvailableVaults } from 'utils/hooks/api/use-get-available-vaults';
 import { VaultsHeader } from './VaultsHeader';
 
 const VaultOverview = (): JSX.Element => {
-  // TODO: can this way of deconstructing url params needs be simplified?
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
+
   const vaultOverview = useGetVaultOverview({ address: accountAddress });
+  // const availableVaults = useGetAvailableVaults();
+
   const { t } = useTranslation();
 
   return (
@@ -35,8 +38,8 @@ const VaultOverview = (): JSX.Element => {
           {vaultOverview?.vaults?.map((vault) => (
             <GridItem key={vault.collateralId} mobile={{ span: 4 }} desktop={{ span: 3 }}>
               <VaultCard
-                collateralSymbol={getCurrencySymbol(vault.collateralId)}
-                wrappedSymbol={getCurrencySymbol(vault.wrappedId)}
+                collateralSymbol={vault.collateralId}
+                wrappedSymbol={vault.wrappedId}
                 pendingRequests={vault.pendingRequests}
                 apy={safeRoundTwoDecimals(vault.apy.toString())}
                 collateralScore={safeRoundTwoDecimals(vault.collateralization?.mul(100).toString(), '∞')}
@@ -44,6 +47,20 @@ const VaultOverview = (): JSX.Element => {
               />
             </GridItem>
           ))}
+          {/* <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 12, start: 1 }}>
+            <NewVaultsTable
+              data={availableVaults.map((vault) => ({
+                collateralCurrency: vault.collateralCurrency,
+                wrappedCurrency: vault.wrappedCurrency,
+                minCollateralAmount: vault.minimumCollateral.toNumber().toFixed(2),
+                collateralRate: vault.secureCollateralThreshold.toNumber().toFixed(2),
+                isActive: false,
+                ctaOnClick: () => {
+                  return undefined;
+                }
+              }))}
+            />
+          </GridItem> */}
         </Grid>
       ) : (
         <PrimaryColorEllipsisLoader />
