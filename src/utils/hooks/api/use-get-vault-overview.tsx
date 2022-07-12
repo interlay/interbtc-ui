@@ -34,12 +34,12 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
   const [queryError, setQueryError] = useState<Error | undefined>(undefined);
 
   const { prices } = useSelector((state: StoreType) => state.general);
-  const vaults = useGetVaults({ address });
+  const vaultsResponseData = useGetVaults({ address });
   useErrorHandler(queryError);
 
   // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<VaultOverview, Error>>>(
-    vaults
+    vaultsResponseData
       .filter((vault) => vault !== undefined)
       .map((vault) => {
         return {
