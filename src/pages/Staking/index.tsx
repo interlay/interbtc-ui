@@ -43,7 +43,7 @@ import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from 'commo
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { getStakingTransactionFeeReserve } from '../../utils/helpers/transaction';
+import { getStakingTransactionFeeReserve } from 'services/fetchers/staking-transaction-fee-reserve-fetcher';
 
 const SHARED_CLASSES = clsx('mx-auto', 'md:max-w-2xl');
 
@@ -98,10 +98,6 @@ const Staking = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
-
-  const [transactionFeeReserve, setTransactionFeeReserve] = React.useState<GovernanceTokenMonetaryAmount | undefined>(
-    undefined
-  );
 
   const { governanceTokenBalance, bridgeLoaded, address, prices } = useSelector((state: StoreType) => state.general);
 
@@ -210,6 +206,20 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(stakedAmountAndEndBlockError);
 
+  const {
+    isIdle: transactionFeeReserveIdle,
+    isLoading: transactionFeeReserveLoading,
+    data: transactionFeeReserve,
+    error: transactionFeeReserveError
+  } = useQuery<GovernanceTokenMonetaryAmount, Error>(
+    ['transactionFeeReserve', address],
+    getStakingTransactionFeeReserve(address),
+    {
+      enabled: bridgeLoaded && !!address
+    }
+  );
+  useErrorHandler(transactionFeeReserveError);
+
   const initialStakeMutation = useMutation<void, Error, LockingAmountAndTime>(
     (variables: LockingAmountAndTime) => {
       if (currentBlockNumber === undefined) {
@@ -281,15 +291,6 @@ const Staking = (): JSX.Element => {
   );
 
   React.useEffect(() => {
-    (async () => {
-      if (bridgeLoaded && !!address) {
-        const newTransactionFeeReserve = await getStakingTransactionFeeReserve(address);
-        setTransactionFeeReserve(newTransactionFeeReserve);
-      }
-    })();
-  }, [bridgeLoaded, address]);
-
-  React.useEffect(() => {
     if (!lockTime) return;
 
     const lockTimeValue = Number(lockTime);
@@ -338,6 +339,8 @@ const Staking = (): JSX.Element => {
       !governanceTokenBalance ||
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading ||
+      transactionFeeReserveIdle ||
+      transactionFeeReserveLoading ||
       transactionFeeReserve === undefined
     )
       return;
@@ -351,7 +354,9 @@ const Staking = (): JSX.Element => {
     stakedAmountAndEndBlockIdle,
     stakedAmountAndEndBlockLoading,
     stakedAmount,
-    transactionFeeReserve
+    transactionFeeReserve,
+    transactionFeeReserveLoading,
+    transactionFeeReserveIdle
   ]);
 
   const onSubmit = (data: StakingFormData) => {

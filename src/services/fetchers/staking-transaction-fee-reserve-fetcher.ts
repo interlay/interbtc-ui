@@ -3,7 +3,7 @@ import { AddressOrPair } from "@polkadot/api/types"
 
 import { GovernanceTokenMonetaryAmount, GOVERNANCE_TOKEN } from "config/relay-chains";
 
-const getStakingTransactionFeeReserve = async (account: AddressOrPair): Promise<GovernanceTokenMonetaryAmount> => {
+const getStakingTransactionFeeReserve = (account: AddressOrPair) => async (): Promise<GovernanceTokenMonetaryAmount> => {
     const transactions = [
         window.bridge.api.tx.escrow.withdraw(),
         window.bridge.api.tx.escrowAnnuity.withdrawRewards()
