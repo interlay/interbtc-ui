@@ -14,14 +14,16 @@ Default.args = {
       wrappedCurrency: 'KBTC',
       minCollateralAmount: '1.21',
       collateralRate: formatPercentage(2.6012),
-      isActive: true
+      isActive: true,
+      isInstalled: true
     },
     {
       collateralCurrency: 'KINT',
       wrappedCurrency: 'KBTC',
       minCollateralAmount: '9.14',
       collateralRate: formatPercentage(3.1455),
-      isActive: false
+      isActive: false,
+      isInstalled: false
     }
   ]
 };

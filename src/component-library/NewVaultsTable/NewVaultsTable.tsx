@@ -10,6 +10,7 @@ interface NewVaultsTableRow {
   minCollateralAmount: string;
   collateralRate: string;
   isActive: boolean;
+  isInstalled: boolean;
 }
 
 interface NewVaultsTableProps {
@@ -26,7 +27,7 @@ const columns = [
 
 const NewVaultsTable = ({ data, onClickAddVault }: NewVaultsTableProps): JSX.Element => {
   const rows = data.map((row, id) => {
-    const { collateralCurrency, collateralRate, isActive, minCollateralAmount, wrappedCurrency } = row;
+    const { collateralCurrency, collateralRate, isActive, isInstalled, minCollateralAmount, wrappedCurrency } = row;
     return {
       id,
       pair: (
@@ -40,10 +41,16 @@ const NewVaultsTable = ({ data, onClickAddVault }: NewVaultsTableProps): JSX.Ele
           {minCollateralAmount} {collateralCurrency}
         </NumericValue>
       ),
-      'collateral-rate': <NumericValue key='collateral_rate'>{collateralRate}</NumericValue>,
+      'collateral-rate': <NumericValue key='collateral_rate'>{collateralRate}‰</NumericValue>,
       action: (
-        <CTA key='cta' variant='secondary' disabled={!isActive} fullWidth onClick={() => onClickAddVault(row)}>
-          {isActive ? 'Add' : 'Coming soon'}
+        <CTA
+          key='cta'
+          variant='secondary'
+          disabled={!isActive || !!isInstalled}
+          fullWidth
+          onClick={() => onClickAddVault(row)}
+        >
+          {isActive && !isInstalled ? 'Add' : isInstalled ? 'Vault installed' : 'Coming soon'}
         </CTA>
       )
     };
