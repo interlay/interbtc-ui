@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Kusama } from '@interlay/monetary-js';
 import { useQueries, UseQueryResult } from 'react-query';
 import { useErrorHandler } from 'react-error-boundary';
 import { CollateralCurrency, CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
@@ -23,7 +24,8 @@ const getAvailableVaults = async (collateralIdLiteral: CollateralIdLiteral): Pro
     currency?.currency as CollateralCurrency
   );
 
-  const minimumCollateral = await window.bridge.vaults.getMinimumCollateral(currency?.currency as CollateralCurrency);
+  const minimumCollateral = await window.bridge.vaults.getMinimumCollateral(Kusama);
+  console.log('min', minimumCollateral.toString());
 
   return {
     collateralCurrency: collateralIdLiteral,
