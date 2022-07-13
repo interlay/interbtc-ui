@@ -9,5 +9,7 @@ interface PProps extends BaseTextProps {
 
 const P = ({ color, children }: PProps): JSX.Element => <ParagraphText color={color}>{children}</ParagraphText>;
 
+P.displayName = 'P';
+
 export { P };
 export type { PProps };

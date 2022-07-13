@@ -9,5 +9,7 @@ interface H1Props extends BaseTextProps {
 
 const H1 = ({ color, children }: H1Props): JSX.Element => <H1Text color={color}>{children}</H1Text>;
 
+H1.displayName = 'H1';
+
 export { H1 };
 export type { H1Props };

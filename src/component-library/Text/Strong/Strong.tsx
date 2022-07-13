@@ -9,5 +9,7 @@ interface StrongProps extends BaseTextProps {
 
 const Strong = ({ color, children }: StrongProps): JSX.Element => <StrongText color={color}>{children}</StrongText>;
 
+Strong.displayName = 'Strong';
+
 export { Strong };
 export type { StrongProps };

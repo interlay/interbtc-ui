@@ -9,5 +9,7 @@ interface H3Props extends BaseTextProps {
 
 const H3 = ({ color, children }: H3Props): JSX.Element => <H3Text color={color}>{children}</H3Text>;
 
+H3.displayName = 'H3';
+
 export { H3 };
 export type { H3Props };

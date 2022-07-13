@@ -9,5 +9,7 @@ interface EmProps extends BaseTextProps {
 
 const Em = ({ color, children }: EmProps): JSX.Element => <EmText color={color}>{children}</EmText>;
 
+Em.displayName = 'Em';
+
 export { Em };
 export type { EmProps };
