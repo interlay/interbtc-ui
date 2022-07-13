@@ -1,6 +1,4 @@
-// ray test touch <
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
-// ray test touch >
 
 import { Tokens } from '../types';
 import { BtcIcon, DotIcon, InterBtcIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
@@ -13,7 +11,6 @@ interface CoinIconProps extends IconWrapperProps {
 const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
   return (
     <IconWrapper size={size}>
-      {/* ray test touch < */}
       {coin === 'BTC' ? (
         <BtcIcon />
       ) : coin === CurrencyIdLiteral.DOT ? (
@@ -27,7 +24,6 @@ const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
       ) : coin === CurrencyIdLiteral.KINT ? (
         <KintIcon />
       ) : null}
-      {/* ray test touch > */}
     </IconWrapper>
   );
 };

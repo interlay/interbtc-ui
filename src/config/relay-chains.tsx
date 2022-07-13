@@ -11,9 +11,7 @@ import {
   InterBtcAmount, // on Polkadot
   Interlay // On Polkadot
 } from '@interlay/monetary-js';
-// ray test touch <
 import { CollateralUnit, GovernanceUnit, VoteUnit, CurrencyIdLiteral } from '@interlay/interbtc-api';
-// ray test touch >
 
 import {
   INTERLAY_CROWDLOAN_LINK,
@@ -66,12 +64,10 @@ let VOTE_GOVERNANCE_TOKEN: VoteGovernanceToken;
 let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
-// ray test touch <
 let WRAPPED_TOKEN_SYMBOL: CurrencyIdLiteral;
 let GOVERNANCE_TOKEN_SYMBOL: CurrencyIdLiteral;
 let RELAY_CHAIN_NATIVE_TOKEN_SYMBOL: CurrencyIdLiteral;
 let VOTE_GOVERNANCE_TOKEN_SYMBOL: string;
-// ray test touch >
 let RelayChainLogoIcon: React.FunctionComponent<
   React.SVGProps<SVGSVGElement> & {
     title?: string | undefined;
@@ -125,12 +121,10 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     RELAY_CHAIN_NATIVE_TOKEN = Polkadot as Currency<CollateralUnit>;
     GOVERNANCE_TOKEN = Interlay as GovernanceToken;
     VOTE_GOVERNANCE_TOKEN = Interlay as VoteGovernanceToken;
-    // ray test touch <
     WRAPPED_TOKEN_SYMBOL = CurrencyIdLiteral.INTERBTC;
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = CurrencyIdLiteral.DOT;
     GOVERNANCE_TOKEN_SYMBOL = CurrencyIdLiteral.INTR;
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vINTR';
-    // ray test touch >
     RELAY_CHAIN_NAME = 'polkadot';
     BRIDGE_PARACHAIN_NAME = 'interlay';
     TOKEN_PRICES = {
@@ -167,12 +161,10 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     RELAY_CHAIN_NATIVE_TOKEN = Kusama as Currency<CollateralUnit>;
     GOVERNANCE_TOKEN = Kintsugi as GovernanceToken;
     VOTE_GOVERNANCE_TOKEN = Kintsugi as VoteGovernanceToken;
-    // ray test touch <
     WRAPPED_TOKEN_SYMBOL = CurrencyIdLiteral.KBTC;
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = CurrencyIdLiteral.KSM;
     GOVERNANCE_TOKEN_SYMBOL = CurrencyIdLiteral.KINT;
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vKINT';
-    // ray test touch >
     RELAY_CHAIN_NAME = 'kusama';
     BRIDGE_PARACHAIN_NAME = 'kintsugi';
     TOKEN_PRICES = {
