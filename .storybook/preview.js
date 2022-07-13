@@ -1,7 +1,9 @@
-import '../src/componentLibrary/theme/theme.interlay.css';
-import '../src/componentLibrary/theme/theme.kintsugi.css';
+import '../src/component-library/theme/theme.interlay.css';
+import '../src/component-library/theme/theme.kintsugi.css';
 import './sb-preview.css';
 import { withThemes } from 'storybook-addon-themes/react';
+import { addDecorator } from "@storybook/react";
+import { MemoryRouter } from "react-router-dom";
 
 const parameters = {
   backgrounds: { disable: true },
@@ -22,6 +24,8 @@ const parameters = {
     Decorator: withThemes 
   },
 };
+
+addDecorator(story => <MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>);
 
 export {
   parameters

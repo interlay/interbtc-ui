@@ -58,7 +58,7 @@ function getUsdAmount<C extends CurrencyUnit>(
   if (rate === undefined) {
     return '—';
   }
-  return amount.toBig(amount.currency.base).mul(new Big(rate)).toFixed(2).toString();
+  return amount.toBig(amount.currency.base).mul(new Big(rate)).toFixed(2);
 }
 
 function displayMonetaryAmount<C extends CurrencyUnit>(

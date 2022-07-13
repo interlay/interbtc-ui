@@ -7,8 +7,7 @@ const disableChangeOnWheel = (event: MouseEvent) => {
   event.preventDefault();
 };
 
-type Ref = HTMLInputElement;
-const NumberInput = React.forwardRef<Ref, InterlayInputProps>(
+const NumberInput = React.forwardRef<HTMLInputElement, Props>(
   (props, ref): JSX.Element => {
     const inputParent = React.useRef<HTMLDivElement | null>(null);
 

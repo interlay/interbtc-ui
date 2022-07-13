@@ -9,7 +9,7 @@ import DashboardCard from '../DashboardCard';
 import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
 import { StoreType } from 'common/types/util.types';
-import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
+import Ring64, { Ring64Subtitle, Ring64Title, Ring64Value } from 'components/Ring64';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import {
@@ -105,6 +105,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
             { [getColorShade('red', 'ring')]: oracleOnline === false }
           )}
         >
+          <Ring64Subtitle>BTC/{RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}</Ring64Subtitle>
           <Ring64Title
             className={clsx(
               { [getColorShade('green')]: oracleOnline === true },
@@ -115,7 +116,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           </Ring64Title>
           {exchangeRate && (
             <Ring64Value>
-              {exchangeRate.toHuman(5)} BTC/{RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+              {exchangeRate.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
           )}
         </Ring64>

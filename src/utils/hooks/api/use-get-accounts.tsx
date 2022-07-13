@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { web3Accounts } from '@polkadot/extension-dapp';

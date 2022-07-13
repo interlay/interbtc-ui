@@ -1,80 +1,75 @@
-import { useQueries, UseQueryResult } from 'react-query';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { AccountId } from '@polkadot/types/interfaces';
-import Big from 'big.js';
-import {
-  CollateralIdLiteral,
-  tickerToCurrencyIdLiteral,
-  newAccountId,
-  VaultExt,
-  CurrencyIdLiteral
-} from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { useQueries, UseQueryResult } from 'react-query';
+import { useErrorHandler } from 'react-error-boundary';
+import { newAccountId } from '@interlay/interbtc-api';
 
-import { HYDRA_URL } from '../../../constants';
-import issueCountQuery from 'services/queries/issue-count-query';
 import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
 import { StoreType } from 'common/types/util.types';
-import { VAULT_WRAPPED } from 'config/vaults';
 
-interface VaultOverview {
-  apy: Big;
-  collateralization: Big | undefined;
-  issues: number;
-  collateralId: CurrencyIdLiteral;
-  wrappedId: CurrencyIdLiteral;
-}
+import { getVaultOverview, VaultData } from './get-vault-overview';
 
-const getVaultOverview = async (
-  vault: VaultExt<BitcoinUnit>,
-  accountId: AccountId
-): Promise<VaultOverview> => {
-  const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
-
-  const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
-  const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
-
-  const issues = await fetch(HYDRA_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      query: issueCountQuery(`vault: {accountId_eq: "${accountId.toString()}"}, status_eq: Pending`)
-    })
-  });
-
-  const issuesCount = await issues.json();
-
-  return {
-    apy,
-    collateralization,
-    issues: issuesCount.data.issuesConnection.totalCount,
-    collateralId: tokenIdLiteral,
-    wrappedId: VAULT_WRAPPED
-  };
+type VaultTotals = {
+  totalLockedCollateral: number;
+  totalUsdRewards: number;
+  totalAtRisk: number;
 };
 
-const useGetVaultOverview = ({ address }: { address: string; }): Array<VaultOverview> => {
-  // TODO: can we handle this check at the application level rather than in components and utilties?
-  // https://www.notion.so/interlay/Handle-api-loaded-check-at-application-level-38fe5d146c8143a88cef2dde7b0e19d8
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  const vaults = useGetVaults({ address });
+interface VaultOverview {
+  vaults: Array<VaultData> | undefined;
+  totals: VaultTotals | undefined;
+}
 
-  // TODO: updating react-query to > 3.28.0 will allow us to type this properly
-  const vaultData: Array<any> = useQueries<Array<UseQueryResult<unknown, unknown>>>(
-    vaults.map(vault => {
-      return {
-        queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
-        queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address)),
-        options: {
-          enabled: !!bridgeLoaded
-        }
-      };
-    })
+const getVaultTotals = (vaults: Array<VaultData>) => ({
+  totalLockedCollateral: vaults.reduce((total, vault) => total + vault.collateral.usd, 0),
+  totalUsdRewards: vaults.reduce(
+    (total, vault) => total + vault.governanceTokenRewards.usd + vault.wrappedTokenRewards.usd,
+    0
+  ),
+  totalAtRisk: vaults.reduce((total, vault) => (vault.vaultAtRisk ? total + 1 : total), 0)
+});
+
+const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | undefined => {
+  const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
+  const [queryError, setQueryError] = useState<Error | undefined>(undefined);
+
+  const { prices } = useSelector((state: StoreType) => state.general);
+  const vaultsResponseData = useGetVaults({ address });
+  useErrorHandler(queryError);
+
+  // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
+  const vaultData: Array<any> = useQueries<Array<UseQueryResult<VaultOverview, Error>>>(
+    vaultsResponseData
+      .filter((vault) => vault !== undefined)
+      .map((vault) => {
+        return {
+          queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
+          queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices)
+        };
+      })
   );
 
-  return vaultData.map((data: any) => data.data).filter(data => data !== undefined);
+  useEffect(() => {
+    if (!vaultData || vaultData.length === 0) return;
+
+    for (const vault of vaultData) {
+      if (vault.error) {
+        setQueryError(vault.error);
+
+        return;
+      }
+    }
+
+    const haveQueriesCompleted = vaultData.every((vault) => vault && !vault.isLoading);
+    setQueriesComplete(haveQueriesCompleted);
+  }, [vaultData]);
+
+  return queriesComplete
+    ? {
+        vaults: vaultData.map((data: any) => data.data).filter((data) => data !== undefined),
+        totals: getVaultTotals(vaultData.filter((vault) => vault.data !== undefined).map((vault) => vault.data))
+      }
+    : undefined;
 };
 
 export { useGetVaultOverview };

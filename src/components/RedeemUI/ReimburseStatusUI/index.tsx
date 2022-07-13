@@ -71,8 +71,8 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
         onClose();
       },
       onError: (error) => {
-        // TODO: should add error handling UX
         console.log('[useMutation] error => ', error);
+        toast.error(t('redeem_page.error_cancelling_redeem'));
       }
     }
   );
@@ -88,8 +88,8 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
         onClose();
       },
       onError: (error) => {
-        // TODO: should add error handling UX
         console.log('[useMutation] error => ', error);
+        toast.error(t('redeem_page.error_cancelling_redeem'));
       }
     }
   );
