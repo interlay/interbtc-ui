@@ -1,9 +1,9 @@
-import { BaseLoadingSpinner } from './LoadingSpinner.style';
+import { BaseLoadingSpinner, BaseLoadingSpinnerProps } from './LoadingSpinner.style';
 
-type LoadingSpinnerProps = React.ComponentPropsWithRef<'span'>;
+type LoadingSpinnerProps = BaseLoadingSpinnerProps & React.ComponentPropsWithRef<'span'>;
 
-const LoadingSpinner = (props: LoadingSpinnerProps): JSX.Element => {
-  return <BaseLoadingSpinner {...props} />;
+const LoadingSpinner = ({ diameter = 48, thickness = 10, ...rest }: LoadingSpinnerProps): JSX.Element => {
+  return <BaseLoadingSpinner diameter={diameter} thickness={thickness} {...rest} />;
 };
 
 export { LoadingSpinner };

@@ -18,7 +18,10 @@ const Template: Story<LoadingSpinnerProps> = (args) => (
 );
 
 const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  diameter: 60,
+  thickness: 5
+};
 
 export { Default };
 

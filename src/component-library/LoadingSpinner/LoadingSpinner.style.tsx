@@ -2,10 +2,15 @@ import styled from 'styled-components';
 
 import { theme } from 'component-library';
 
-const BaseLoadingSpinner = styled.span`
-  width: 48px;
-  height: 48px;
-  border: 10px solid ${theme.cta.secondary.bg};
+interface BaseLoadingSpinnerProps {
+  diameter?: number;
+  thickness?: number;
+}
+
+const BaseLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
+  width: ${(props) => props.diameter}px;
+  height: ${(props) => props.diameter}px;
+  border: ${(props) => props.thickness}px solid ${theme.cta.secondary.bg};
   border-radius: 50%;
   position: relative;
   transform: rotate(45deg);
@@ -15,9 +20,9 @@ const BaseLoadingSpinner = styled.span`
     content: '';
     position: absolute;
     box-sizing: border-box;
-    inset: -10px;
+    inset: -${(props) => props.thickness}px;
     border-radius: 50%;
-    border: 10px solid ${theme.cta.primary.bg};
+    border: ${(props) => props.thickness}px solid ${theme.cta.primary.bg};
     animation: prixClipFix 2s infinite linear;
   }
   @keyframes prixClipFix {
@@ -38,5 +43,7 @@ const BaseLoadingSpinner = styled.span`
     }
   }
 `;
+
+export type { BaseLoadingSpinnerProps };
 
 export { BaseLoadingSpinner };
