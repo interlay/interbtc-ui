@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
+import { theme } from 'component-library';
+
 const BaseLoadingSpinner = styled.span`
   width: 48px;
   height: 48px;
-  border: 10px solid #fff;
+  border: 10px solid ${theme.cta.secondary.bg};
   border-radius: 50%;
   position: relative;
   transform: rotate(45deg);
@@ -15,7 +17,7 @@ const BaseLoadingSpinner = styled.span`
     box-sizing: border-box;
     inset: -10px;
     border-radius: 50%;
-    border: 10px solid #ff3d00;
+    border: 10px solid ${theme.cta.primary.bg};
     animation: prixClipFix 2s infinite linear;
   }
   @keyframes prixClipFix {
