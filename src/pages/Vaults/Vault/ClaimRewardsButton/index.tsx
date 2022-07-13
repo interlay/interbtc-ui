@@ -18,8 +18,7 @@ import { StoreType } from 'common/types/util.types';
 import { CurrencyValues } from 'types/currency';
 
 interface CustomProps {
-  // TODO: should remove `undefined` later on when the loading is properly handled
-  vaultAccountId: AccountId | undefined;
+  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
   collateralToken: CurrencyValues | undefined;
 }
 

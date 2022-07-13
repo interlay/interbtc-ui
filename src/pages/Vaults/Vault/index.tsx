@@ -322,6 +322,7 @@ const Vault = (): JSX.Element => {
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
           vaultAddress={selectedVaultAccountAddress}
+          vaultAccountId={vaultAccountId}
           hasLockedBTC={hasLockedBTC}
           collateralCurrency={collateralCurrencyValues}
         />
