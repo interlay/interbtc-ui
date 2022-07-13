@@ -25,7 +25,6 @@ const getAvailableVaults = async (collateralIdLiteral: CollateralIdLiteral): Pro
   );
 
   const minimumCollateral = await window.bridge.vaults.getMinimumCollateral(Kusama);
-  console.log('min', minimumCollateral.toString());
 
   return {
     collateralCurrency: collateralIdLiteral,
