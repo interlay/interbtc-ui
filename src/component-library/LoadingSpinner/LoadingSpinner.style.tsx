@@ -1,4 +1,3 @@
-// ray test touch <
 import styled from 'styled-components';
 
 const BaseLoadingSpinner = styled.span`
@@ -39,4 +38,3 @@ const BaseLoadingSpinner = styled.span`
 `;
 
 export { BaseLoadingSpinner };
-// ray test touch >

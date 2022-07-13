@@ -1,4 +1,3 @@
-// ray test touch <
 import { Story, Meta } from '@storybook/react';
 
 import { LoadingSpinner, LoadingSpinnerProps } from '.';
@@ -27,4 +26,3 @@ export default {
   title: 'Elements/LoadingSpinner',
   component: LoadingSpinner
 } as Meta;
-// ray test touch >
