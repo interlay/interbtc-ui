@@ -55,7 +55,11 @@ export type Prices = {
   relayChainNativeToken: Price | undefined;
   governanceToken: Price | undefined;
   wrappedToken: Price | undefined;
-  [token: string]: Price | undefined;
+  polkadot?: Price | undefined;
+  interlay?: Price | undefined;
+  kintsugi?: Price | undefined;
+  'kintsugi-btc'?: Price | undefined;
+  kusama?: Price | undefined;
 };
 
 export type GeneralState = {

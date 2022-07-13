@@ -10,7 +10,7 @@ import { BitcoinUnit } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { getUsdAmount } from 'common/utils/utils';
-import { getCollateralPrice } from 'utils/helpers/prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 import { Prices } from 'common/types/util.types';
 import issueCountQuery from 'services/queries/issue-count-query';
 import redeemCountQuery from 'services/queries/redeem-count-query';
@@ -45,7 +45,7 @@ const getVaultOverview = async (
   prices: Prices
 ): Promise<VaultData> => {
   const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
-  const collateralPrice = getCollateralPrice(prices, tokenIdLiteral);
+  const collateralPrice = getTokenPrice(prices, tokenIdLiteral);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
