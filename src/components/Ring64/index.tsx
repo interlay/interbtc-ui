@@ -17,6 +17,12 @@ const Ring64 = ({ className, ...rest }: React.ComponentPropsWithRef<'div'>): JSX
   />
 );
 
+const Ring64Subtitle = ({ className, children, ...rest }: React.ComponentPropsWithRef<'p'>): JSX.Element => (
+  <p className={clsx('text-base', 'font-bold', className)} {...rest}>
+    {children}
+  </p>
+);
+
 const Ring64Title = ({ className, children, ...rest }: React.ComponentPropsWithRef<'h1'>): JSX.Element => (
   <h1 className={clsx('font-bold', 'text-3xl', className)} {...rest}>
     {children}
@@ -29,6 +35,6 @@ const Ring64Value = ({ className, children, ...rest }: React.ComponentPropsWithR
   </h2>
 );
 
-export { Ring64Title, Ring64Value };
+export { Ring64Subtitle, Ring64Title, Ring64Value };
 
 export default Ring64;

@@ -7,17 +7,23 @@ import { useQuery } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import Big from 'big.js';
 import clsx from 'clsx';
-import { roundTwoDecimals, newMonetaryAmount, CollateralUnit, CurrencyUnit } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
+import {
+  roundTwoDecimals,
+  newMonetaryAmount,
+  CollateralUnit,
+  CurrencyUnit,
+  ChainBalance
+} from '@interlay/interbtc-api';
 import { MonetaryAmount, Currency } from '@interlay/monetary-js';
 
-import ErrorMessage from 'components/ErrorMessage';
-import NumberInput from 'components/NumberInput';
 import ErrorFallback from 'components/ErrorFallback';
+import TokenField from 'components/TokenField';
 import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
 import CloseIconButton from 'components/buttons/CloseIconButton';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { displayMonetaryAmount } from 'common/utils/utils';
+import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import STATUSES from 'utils/constants/statuses';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { updateCollateralAction, updateCollateralizationAction } from 'common/actions/vault.actions';
@@ -40,6 +46,7 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
+  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
   hasLockedBTC: boolean;
   collateralCurrency: CurrencyValues;
 }
@@ -49,10 +56,11 @@ const UpdateCollateralModal = ({
   onClose,
   collateralUpdateStatus,
   vaultAddress,
+  vaultAccountId,
   hasLockedBTC,
   collateralCurrency
 }: Props): JSX.Element => {
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
 
   const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
 
@@ -64,7 +72,7 @@ const UpdateCollateralModal = ({
   } = useForm<UpdateCollateralFormData>({
     mode: 'onChange'
   });
-  const strCollateralTokenAmount = watch(COLLATERAL_TOKEN_AMOUNT);
+  const strCollateralTokenAmount = watch(COLLATERAL_TOKEN_AMOUNT) || '0';
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -93,17 +101,17 @@ const UpdateCollateralModal = ({
     isLoading: collateralBalanceLoading,
     data: collateralBalance,
     error: collateralBalanceError
-  } = useQuery<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>, Error>(
-    [GENERIC_FETCHER, 'tokens', 'total', collateralCurrency.currency],
-    genericFetcher<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>>(),
+  } = useQuery<ChainBalance<CollateralUnit>, Error>(
+    [GENERIC_FETCHER, 'tokens', 'balance', collateralCurrency.currency, vaultAccountId],
+    genericFetcher<ChainBalance<CollateralUnit>>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: !!bridgeLoaded && !!vaultAccountId
     }
   );
   useErrorHandler(collateralBalanceError);
 
   const collateralTokenAmount = newMonetaryAmount(
-    strCollateralTokenAmount || '0',
+    strCollateralTokenAmount,
     collateralCurrency.currency,
     true
   ) as MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
@@ -201,8 +209,10 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    if (collateralTokenAmount.gt(collateralBalance as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>)) {
-      return t(`Must be less than ${collateralCurrency.symbol} balance!`);
+    if (
+      collateralTokenAmount.gt(collateralBalance?.transferable as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>)
+    ) {
+      return t(`Must be less than ${collateralCurrency.id} balance!`);
     }
 
     if (!bridgeLoaded) {
@@ -288,28 +298,29 @@ const UpdateCollateralModal = ({
           <p>
             {t('vault.current_total_collateral', {
               currentCollateral: displayMonetaryAmount(currentTotalCollateralTokenAmount),
-              collateralTokenSymbol: collateralCurrency.symbol
+              collateralTokenSymbol: collateralCurrency.id
             })}
           </p>
           <p>
             {t('vault.minimum_required_collateral', {
               currentCollateral: getMinRequiredCollateralTokenAmount(),
-              collateralTokenSymbol: collateralCurrency.symbol
+              collateralTokenSymbol: collateralCurrency.id
             })}
           </p>
           <p>
             {t('vault.maximum_withdrawable_collateral', {
               currentCollateral: getMaxWithdrawableCollateralTokenAmount(),
-              collateralTokenSymbol: collateralCurrency.symbol
+              collateralTokenSymbol: collateralCurrency.id
             })}
           </p>
-          <div className='space-y-1'>
+          <div className='space-y-1.5'>
             <label htmlFor={COLLATERAL_TOKEN_AMOUNT} className='text-sm'>
               {labelText}
             </label>
-            <NumberInput
+            <TokenField
               id={COLLATERAL_TOKEN_AMOUNT}
               name={COLLATERAL_TOKEN_AMOUNT}
+              label={collateralCurrency.id}
               min={0}
               ref={register({
                 required: {
@@ -318,8 +329,10 @@ const UpdateCollateralModal = ({
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
+              approxUSD={`≈ $ ${getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)}`}
+              error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
+              helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />
-            <ErrorMessage className='h-9'>{errors[COLLATERAL_TOKEN_AMOUNT]?.message}</ErrorMessage>
           </div>
           <p>
             {t('vault.new_collateralization')}
@@ -335,7 +348,7 @@ const UpdateCollateralModal = ({
 
 export { CollateralUpdateStatus };
 
-// TODO: not working on modals
+// TODO: `withErrorBoundary` does not work on modals
 export default withErrorBoundary(UpdateCollateralModal, {
   FallbackComponent: ErrorFallback,
   onReset: () => {

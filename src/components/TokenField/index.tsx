@@ -13,8 +13,7 @@ interface CustomProps {
   approxUSD: string;
 }
 
-type Ref = HTMLInputElement;
-const TokenField = React.forwardRef<Ref, Props>(
+const TokenField = React.forwardRef<HTMLInputElement, Props>(
   ({ id, label, error, helperText, required, approxUSD, ...rest }, ref): JSX.Element => {
     return (
       <div className='space-y-1.5'>
