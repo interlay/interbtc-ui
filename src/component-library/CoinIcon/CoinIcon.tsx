@@ -1,5 +1,3 @@
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
-
 import { Tokens } from '../types';
 import { BtcIcon, DotIcon, InterBtcIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
 import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
@@ -13,15 +11,15 @@ const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
     <IconWrapper size={size}>
       {coin === 'BTC' ? (
         <BtcIcon />
-      ) : coin === CurrencyIdLiteral.DOT ? (
+      ) : coin === 'DOT' ? (
         <DotIcon />
-      ) : coin === CurrencyIdLiteral.INTERBTC ? (
+      ) : coin === 'IBTC' ? (
         <InterBtcIcon />
-      ) : coin === CurrencyIdLiteral.KBTC ? (
+      ) : coin === 'KBTC' ? (
         <KbtcIcon />
-      ) : coin === CurrencyIdLiteral.KSM ? (
+      ) : coin === 'KSM' ? (
         <KsmIcon />
-      ) : coin === CurrencyIdLiteral.KINT ? (
+      ) : coin === 'KINT' ? (
         <KintIcon />
       ) : null}
     </IconWrapper>

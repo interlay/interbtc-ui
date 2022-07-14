@@ -1,5 +1,3 @@
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
-
-type Tokens = 'BTC' | CurrencyIdLiteral;
+type Tokens = 'BTC' | 'DOT' | 'IBTC' | 'INTR' | 'KBTC' | 'KINT' | 'KSM';
 
 export type { Tokens };
