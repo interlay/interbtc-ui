@@ -54,7 +54,7 @@ const Transfer = (): JSX.Element | null => {
       case selectedTabId === null:
       case selectedTabId && !tabIdValues.includes(selectedTabId):
         updateQueryParametersRef.current({
-          [QUERY_PARAMETERS.TAB]: TAB_IDS.crossChainTransfer
+          [QUERY_PARAMETERS.TAB]: TAB_IDS.transfer
         });
     }
   }, [selectedTabId]);
