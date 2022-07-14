@@ -44,3 +44,6 @@ export type { NumberInputProps } from './NumberInput';
 
 export { TokenField } from './TokenField';
 export type { TokenFieldProps } from './TokenField';
+
+export { Strong, Em, P, H1, H2, H3, H4, H5, H6 } from './Text';
+export type { StrongProps, EmProps, PProps, H1Props, H2Props, H3Props, H4Props, H5Props, H6Props } from './Text';
