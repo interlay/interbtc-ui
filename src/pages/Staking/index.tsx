@@ -47,6 +47,8 @@ import {
   stakingTransactionFeeReserveFetcher,
   STAKING_TRANSACTION_FEE_RESERVE_FETCHER
 } from 'services/fetchers/staking-transaction-fee-reserve-fetcher';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 const SHARED_CLASSES = clsx('mx-auto', 'md:max-w-2xl');
 
@@ -101,8 +103,9 @@ const Staking = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
-  const { governanceTokenBalance, bridgeLoaded, address, prices } = useSelector((state: StoreType) => state.general);
+  const { governanceTokenBalance, bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
 
   const {
     register,
@@ -648,7 +651,10 @@ const Staking = (): JSX.Element => {
     }
   };
 
-  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken?.usd);
+  const valueInUSDOfLockingAmount = getUsdAmount(
+    monetaryLockingAmount,
+    getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+  );
 
   const claimRewardsButtonEnabled = claimableRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 

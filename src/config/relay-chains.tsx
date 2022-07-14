@@ -11,7 +11,7 @@ import {
   InterBtcAmount, // on Polkadot
   Interlay // On Polkadot
 } from '@interlay/monetary-js';
-import { CollateralUnit, GovernanceUnit, VoteUnit, CurrencyIdLiteral } from '@interlay/interbtc-api';
+import { CollateralUnit, CurrencyIdLiteral, GovernanceUnit, VoteUnit } from '@interlay/interbtc-api';
 
 import {
   INTERLAY_CROWDLOAN_LINK,
@@ -47,10 +47,6 @@ type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceU
 type CollateralTokenMonetaryAmount = MonetaryAmount<CollateralToken, CollateralUnit>;
 type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VoteGovernanceToken, VoteUnit>;
 
-// NOTE: this won't be required once prices have been refactored:
-// https://www.notion.so/interlay/Refactor-prices-behaviour-56f041debc6248da8f27a3b3b4092f15
-let TOKEN_PRICES: { relayChainNativeToken: string; governanceToken: string; wrappedToken: string };
-
 let APP_NAME: string;
 let CROWDLOAN_LINK: string;
 let TERMS_AND_CONDITIONS_LINK: string;
@@ -61,7 +57,6 @@ let WRAPPED_TOKEN: WrappedToken;
 let RELAY_CHAIN_NATIVE_TOKEN: CollateralToken;
 let GOVERNANCE_TOKEN: GovernanceToken;
 let VOTE_GOVERNANCE_TOKEN: VoteGovernanceToken;
-let PRICES_URL: string;
 let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
 let WRAPPED_TOKEN_SYMBOL: CurrencyIdLiteral;
@@ -127,13 +122,6 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vINTR';
     RELAY_CHAIN_NAME = 'polkadot';
     BRIDGE_PARACHAIN_NAME = 'interlay';
-    TOKEN_PRICES = {
-      relayChainNativeToken: 'polkadot',
-      governanceToken: 'interlay',
-      wrappedToken: 'interlay-btc' // Is this right?
-    };
-    // NOTE: this will need to be changed when we support collateral which isn't also the relay/governance token
-    PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${TOKEN_PRICES.relayChainNativeToken},${TOKEN_PRICES.governanceToken},${TOKEN_PRICES.wrappedToken}&vs_currencies=usd`;
     RelayChainLogoIcon = DOTLogoIcon;
     BridgeParachainLogoIcon = InterlayLogoIcon;
     WrappedTokenLogoIcon = InterBTCLogoIcon;
@@ -167,13 +155,6 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     VOTE_GOVERNANCE_TOKEN_SYMBOL = 'vKINT';
     RELAY_CHAIN_NAME = 'kusama';
     BRIDGE_PARACHAIN_NAME = 'kintsugi';
-    TOKEN_PRICES = {
-      relayChainNativeToken: 'kusama',
-      governanceToken: 'kintsugi',
-      wrappedToken: 'kintsugi-btc'
-    };
-    // NOTE: this will need to be changed when we support collateral which isn't also the relay/governance token
-    PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,${TOKEN_PRICES.relayChainNativeToken},${TOKEN_PRICES.governanceToken},${TOKEN_PRICES.wrappedToken}&vs_currencies=usd`;
     RelayChainLogoIcon = KusamaLogoIcon;
     BridgeParachainLogoIcon = KintsugiLogoIcon;
     WrappedTokenLogoIcon = KBTCLogoIcon;
@@ -222,7 +203,6 @@ export {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NAME,
   BRIDGE_PARACHAIN_NAME,
-  PRICES_URL,
   RelayChainLogoIcon,
   BridgeParachainLogoIcon,
   WrappedTokenLogoIcon,
@@ -232,6 +212,5 @@ export {
   PUBLIC_ASSETS_FOLDER_NAME,
   APP_DOMAIN,
   OPEN_GRAPH_IMAGE_FILE_NAME,
-  STAKE_LOCK_TIME,
-  TOKEN_PRICES
+  STAKE_LOCK_TIME
 };

@@ -8,10 +8,13 @@ import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { PAGES } from 'utils/constants/links';
 import { StoreType } from 'common/types/util.types';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 const WrappedTokenCard = (): JSX.Element => {
-  const { prices, totalWrappedTokenAmount } = useSelector((state: StoreType) => state.general);
+  const { totalWrappedTokenAmount } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const renderContent = () => {
     return (
@@ -26,7 +29,7 @@ const WrappedTokenCard = (): JSX.Element => {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                 })}
               </StatsDd>
-              <StatsDd>${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin?.usd)}</StatsDd>
+              <StatsDd>${getUsdAmount(totalWrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd)}</StatsDd>
             </>
           }
           rightPart={

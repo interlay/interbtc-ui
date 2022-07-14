@@ -15,7 +15,13 @@ import { Prices } from 'common/types/util.types';
 import issueCountQuery from 'services/queries/issue-count-query';
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import { VAULT_GOVERNANCE, VAULT_WRAPPED } from 'config/vaults';
-import { GovernanceTokenMonetaryAmount, CollateralTokenMonetaryAmount, WrappedTokenAmount } from 'config/relay-chains';
+import {
+  GovernanceTokenMonetaryAmount,
+  CollateralTokenMonetaryAmount,
+  WrappedTokenAmount,
+  GOVERNANCE_TOKEN_SYMBOL,
+  WRAPPED_TOKEN_SYMBOL
+} from 'config/relay-chains';
 import { HYDRA_URL } from '../../../constants';
 
 interface VaultData {
@@ -42,7 +48,7 @@ interface VaultData {
 const getVaultOverview = async (
   vault: VaultExt<BitcoinUnit>,
   accountId: AccountId,
-  prices: Prices
+  prices: Prices | undefined
 ): Promise<VaultData> => {
   const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
   const collateralPrice = getTokenPrice(prices, tokenIdLiteral);
@@ -62,8 +68,11 @@ const getVaultOverview = async (
   );
 
   const usdCollateral = getUsdAmount(collateral, collateralPrice?.usd);
-  const usdGovernanceTokenRewards = getUsdAmount(governanceTokenRewards, prices.governanceToken?.usd);
-  const usdWrappedTokenRewards = getUsdAmount(wrappedTokenRewards, prices.wrappedToken?.usd);
+  const usdGovernanceTokenRewards = getUsdAmount(
+    governanceTokenRewards,
+    getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+  );
+  const usdWrappedTokenRewards = getUsdAmount(wrappedTokenRewards, getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd);
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',

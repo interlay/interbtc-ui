@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 
@@ -17,14 +16,15 @@ import {
   GOVERNANCE_TOKEN_SYMBOL,
   CollateralToken
 } from 'config/relay-chains';
-import { StoreType } from 'common/types/util.types';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
-  const { prices } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
 
-  const relayChainNativeTokenPriceInUSD = prices.relayChainNativeToken?.usd;
-  const governanceTokenPriceInUSD = prices.governanceToken?.usd;
+  const relayChainNativeTokenPriceInUSD = getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd;
+  const governanceTokenPriceInUSD = getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd;
 
   const collaterals = React.useMemo(
     () => [

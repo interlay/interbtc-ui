@@ -31,6 +31,8 @@ import {
   RelayChainApi,
   RelayChainMonetaryAmount
 } from 'utils/relay-chain-api';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
@@ -59,6 +61,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
   const handleError = useErrorHandler();
 
   const {
@@ -70,7 +73,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     mode: 'onChange'
   });
 
-  const { address, collateralTokenTransferableBalance, parachainStatus, prices } = useSelector(
+  const { address, collateralTokenTransferableBalance, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
 
@@ -118,7 +121,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!event.target.value) return;
 
     const value = newMonetaryAmount(event.target.value, RELAY_CHAIN_NATIVE_TOKEN, true);
-    const usd = getUsdAmount(value, prices.relayChainNativeToken?.usd);
+    const usd = getUsdAmount(value, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
 
     setApproxUsdValue(usd);
   };

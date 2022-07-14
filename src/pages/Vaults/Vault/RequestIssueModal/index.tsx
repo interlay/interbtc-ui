@@ -31,6 +31,8 @@ import Hr2 from 'components/hrs/Hr2';
 import SubmitButton from 'components/SubmitButton';
 import InformationTooltip from 'components/tooltips/InformationTooltip';
 import PriceInfo from 'components/PriceInfo';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -83,19 +85,14 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
 
   const { t } = useTranslation();
+  const prices = useGetPrices();
   const focusRef = React.useRef(null);
 
   const handleError = useErrorHandler();
 
-  const {
-    bridgeLoaded,
-    address,
-    bitcoinHeight,
-    btcRelayHeight,
-    prices,
-    governanceTokenBalance,
-    parachainStatus
-  } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, governanceTokenBalance, parachainStatus } = useSelector(
+    (state: StoreType) => state.general
+  );
 
   const vaultAccountId = React.useMemo(() => {
     if (!bridgeLoaded) return;
@@ -258,7 +255,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
                   },
                   validate: (value) => validateForm(value)
                 })}
-                approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
+                approxUSD={`≈ $ ${getUsdAmount(
+                  parsedBTCAmount || BitcoinAmount.zero,
+                  getTokenPrice(prices, 'BTC')?.usd
+                )}`}
                 error={!!errors[WRAPPED_TOKEN_AMOUNT]}
                 helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
               />
@@ -277,7 +277,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<BitcoinLogoIcon width={23} height={23} />}
               value={displayMonetaryAmount(bridgeFee)}
               unitName='BTC'
-              approxUSD={getUsdAmount(bridgeFee, prices.bitcoin?.usd)}
+              approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, 'BTC')?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -302,7 +302,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(securityDeposit)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(securityDeposit, prices.governanceToken?.usd)}
+              approxUSD={getUsdAmount(securityDeposit, getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -327,7 +327,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken?.usd)}
+              approxUSD={getUsdAmount(
+                extraRequiredCollateralTokenAmount,
+                getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+              )}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -353,7 +356,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<WrappedTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(wrappedTokenAmount)}
               unitName={WRAPPED_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin?.usd)}
+              approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd)}
             />
             <SubmitButton
               disabled={

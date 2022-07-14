@@ -2,7 +2,7 @@ import { CollateralUnit } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 
 import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import { StoreType, ParachainStatus, Prices } from './util.types';
+import { StoreType, ParachainStatus } from './util.types';
 
 // GENERAL ACTIONS
 export const IS_BRIDGE_LOADED = 'IS_BRIDGE_LOADED';
@@ -19,7 +19,6 @@ export const UPDATE_GOVERNANCE_TOKEN_BALANCE = 'UPDATE_GOVERNANCE_TOKEN_BALANCE'
 export const UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE';
 export const SET_INSTALLED_EXTENSION = 'SET_INSTALLED_EXTENSION';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
-export const UPDATE_OF_PRICES = 'UPDATE_OF_PRICES';
 export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 
@@ -35,10 +34,6 @@ export interface UpdateHeights {
   bitcoinHeight: number;
 }
 
-export interface UpdateOfPrices {
-  type: typeof UPDATE_OF_PRICES;
-  prices: Prices;
-}
 export interface IsBridgeLoaded {
   type: typeof IS_BRIDGE_LOADED;
   isLoaded: boolean;
@@ -127,7 +122,6 @@ export type GeneralActions =
   | UpdateGovernanceTokenTransferableBalance
   | SetInstalledExtension
   | ShowAccountModal
-  | UpdateOfPrices
   | UpdateHeights
   | UpdateTotals;
 

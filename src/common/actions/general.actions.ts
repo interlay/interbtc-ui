@@ -15,7 +15,6 @@ import {
   UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
-  UPDATE_OF_PRICES,
   IS_FAUCET_LOADED,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
@@ -32,11 +31,10 @@ import {
   SetInstalledExtension,
   ShowAccountModal,
   IsFaucetLoaded,
-  UpdateOfPrices,
   UpdateHeights,
   UpdateTotals
 } from '../types/actions.types';
-import { ParachainStatus, Prices } from '../types/util.types';
+import { ParachainStatus } from '../types/util.types';
 
 export const isBridgeLoaded = (isLoaded = false): IsBridgeLoaded => ({
   type: IS_BRIDGE_LOADED,
@@ -96,11 +94,6 @@ export const updateGovernanceTokenTransferableBalanceAction = (
 ): UpdateGovernanceTokenTransferableBalance => ({
   type: UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
   governanceTokenTransferableBalance
-});
-
-export const updateOfPricesAction = (prices: Prices): UpdateOfPrices => ({
-  type: UPDATE_OF_PRICES,
-  prices
 });
 
 export const initGeneralDataAction = (

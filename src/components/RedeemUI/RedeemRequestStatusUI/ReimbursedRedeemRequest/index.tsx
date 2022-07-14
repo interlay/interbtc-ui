@@ -21,6 +21,8 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { getUsdAmount, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { getColorShade } from 'utils/helpers/colors';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -29,7 +31,9 @@ interface Props {
 
 const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
+
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
@@ -82,7 +86,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         <span className={getColorShade('red')}>
           {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
         </span>
-        <span>&nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, prices.bitcoin?.usd)})`}</span>
+        <span>&nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, getTokenPrice(prices, 'BTC')?.usd)})`}</span>
         <span className={getColorShade('red')}>&nbsp;{t('redeem_page.reimbursed').toLowerCase()}</span>.
       </p>
       <p className='font-medium'>
@@ -90,7 +94,10 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         <PrimaryColorSpan>
           &nbsp;{`${displayMonetaryAmount(collateralTokenAmount)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`}
         </PrimaryColorSpan>
-        <span>&nbsp;{`(≈ $${getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)})`}</span>
+        <span>
+          &nbsp;
+          {`(≈ $${getUsdAmount(collateralTokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd)})`}
+        </span>
         <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}</PrimaryColorSpan>.
       </p>
       <div className='w-full'>
@@ -111,7 +118,10 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(burnCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(burnCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
+          approxUSD={getUsdAmount(
+            burnCollateralTokenAmount,
+            getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+          )}
         />
         <PriceInfo
           className='w-full'
@@ -128,7 +138,10 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(punishmentCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
+          approxUSD={getUsdAmount(
+            punishmentCollateralTokenAmount,
+            getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+          )}
         />
         <Hr2 className={clsx('border-t-2', 'my-2.5')} />
         <PriceInfo
@@ -146,7 +159,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(collateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)}
+          approxUSD={getUsdAmount(collateralTokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd)}
         />
       </div>
       <ExternalLink className='text-sm' href={getPolkadotLink(redeem.request.height.absolute)}>

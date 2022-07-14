@@ -29,6 +29,9 @@ import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetch
 import { updateCollateralAction, updateCollateralizationAction } from 'common/actions/vault.actions';
 import { StoreType } from 'common/types/util.types';
 import { CurrencyValues } from 'types/currency';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 enum CollateralUpdateStatus {
   Close,
@@ -60,7 +63,8 @@ const UpdateCollateralModal = ({
   hasLockedBTC,
   collateralCurrency
 }: Props): JSX.Element => {
-  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
 
   const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
 
@@ -329,7 +333,10 @@ const UpdateCollateralModal = ({
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
-              approxUSD={`≈ $ ${getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)}`}
+              approxUSD={`≈ $ ${getUsdAmount(
+                collateralTokenAmount,
+                getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+              )}`}
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />

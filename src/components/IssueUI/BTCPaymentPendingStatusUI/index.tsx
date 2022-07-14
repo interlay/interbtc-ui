@@ -12,6 +12,8 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { StoreType } from 'common/types/util.types';
 import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { getColorShade } from 'utils/helpers/colors';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -21,10 +23,13 @@ interface Props {
 // TODO: when sorting out GraphQL typing, take into account that this component also displays a request from the lib
 const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { prices, bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
+
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const amountBTCToSend = (request.wrappedAmount || request.request.amountWrapped).add(
     request.bridgeFee || request.request.bridgeFeeWrapped
   );
+
   const [initialLeftSeconds, setInitialLeftSeconds] = React.useState<number>();
 
   React.useEffect(() => {
@@ -70,7 +75,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
             'block'
           )}
         >
-          {`≈ $ ${getUsdAmount(amountBTCToSend, prices.bitcoin?.usd)}`}
+          {`≈ $ ${getUsdAmount(amountBTCToSend, getTokenPrice(prices, 'BTC')?.usd)}`}
         </span>
       </div>
       <div>

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 import clsx from 'clsx';
@@ -12,8 +11,9 @@ import InterlayRouterLink from 'components/UI/InterlayRouterLink';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { PAGES, QUERY_PARAMETERS } from 'utils/constants/links';
 import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
 import { getColorShade } from 'utils/helpers/colors';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 const queryString = require('query-string');
 
@@ -29,8 +29,7 @@ const SubmittedRedeemRequestModal = ({
   request
 }: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {
   const { t } = useTranslation();
-
-  const { prices } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
 
   const focusRef = React.useRef(null);
 
@@ -70,7 +69,7 @@ const SubmittedRedeemRequestModal = ({
                   'text-center'
                 )}
               >
-                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin?.usd)}`}
+                {`≈ $${getUsdAmount(request.amountBTC, getTokenPrice(prices, 'BTC')?.usd)}`}
               </span>
             </div>
             <div>

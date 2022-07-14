@@ -16,7 +16,6 @@ import {
   GeneralActions,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
-  UPDATE_OF_PRICES,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS
 } from '../types/actions.types';
@@ -58,8 +57,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       };
     case UPDATE_HEIGHTS:
       return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
-    case UPDATE_OF_PRICES:
-      return { ...state, prices: action.prices };
     case IS_BRIDGE_LOADED:
       return { ...state, bridgeLoaded: action.isLoaded };
     case CHANGE_ADDRESS:

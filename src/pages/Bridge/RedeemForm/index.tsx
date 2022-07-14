@@ -37,6 +37,8 @@ import { updateWrappedTokenBalanceAction, showAccountModalAction } from 'common/
 import { StoreType, ParachainStatus } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { getColorShade } from 'utils/helpers/colors';
+import { getTokenPrice } from 'utils/helpers/prices';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -49,19 +51,14 @@ type RedeemFormData = {
 const RedeemForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const handleError = useErrorHandler();
 
-  const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin?.usd);
-  const {
-    wrappedTokenBalance,
-    bridgeLoaded,
-    address,
-    bitcoinHeight,
-    btcRelayHeight,
-    prices,
-    parachainStatus
-  } = useSelector((state: StoreType) => state.general);
+  const usdPrice = getTokenPrice(prices, 'BTC')?.usd;
+  const { wrappedTokenBalance, bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+    (state: StoreType) => state.general
+  );
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
 
   const {
@@ -302,20 +299,20 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
-    const redeemFeeInUSD = getUsdAmount(redeemFee, prices.bitcoin?.usd);
+    const redeemFeeInUSD = getUsdAmount(redeemFee, getTokenPrice(prices, 'BTC')?.usd);
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const totalBTC = wrappedTokenAmount
       ? parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero;
-    const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin?.usd);
+    const totalBTCInUSD = getUsdAmount(totalBTC, getTokenPrice(prices, 'BTC')?.usd);
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
-    const totalDOTInUSD = getUsdAmount(totalDOT, prices.relayChainNativeToken?.usd);
+    const totalDOTInUSD = getUsdAmount(totalDOT, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
-    const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin?.usd);
+    const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, getTokenPrice(prices, 'BTC')?.usd);
     const accountSet = !!address;
 
     return (

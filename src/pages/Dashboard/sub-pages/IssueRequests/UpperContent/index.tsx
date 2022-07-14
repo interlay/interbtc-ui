@@ -15,10 +15,13 @@ import { StoreType } from 'common/types/util.types';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import issueCountQuery from 'services/queries/issue-count-query';
 import { getColorShade } from 'utils/helpers/colors';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 const UpperContent = (): JSX.Element => {
-  const { totalWrappedTokenAmount, prices } = useSelector((state: StoreType) => state.general);
+  const { totalWrappedTokenAmount } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const {
     isIdle: totalSuccessfulIssuesIdle,
@@ -60,7 +63,9 @@ const UpperContent = (): JSX.Element => {
                 wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
               })}
             </StatsDd>
-            <StatsDd>${getUsdAmount(totalWrappedTokenAmount, prices.bitcoin?.usd).toLocaleString()}</StatsDd>
+            <StatsDd>
+              ${getUsdAmount(totalWrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd).toLocaleString()}
+            </StatsDd>
             <StatsDt className={`!${getColorShade('green')}`}>{t('dashboard.issue.issue_requests')}</StatsDt>
             <StatsDd>{totalSuccessfulIssueCount}</StatsDd>
           </>

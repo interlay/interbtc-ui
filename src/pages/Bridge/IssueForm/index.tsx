@@ -47,6 +47,8 @@ import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import Vaults from 'components/Vaults';
 import { VaultApiType } from 'common/types/vault.types';
 import Checkbox, { CheckboxLabelSide } from 'components/Checkbox';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
 
 const BTC_AMOUNT = 'btc-amount';
 const VAULT_SELECTION = 'vault-selection';
@@ -74,18 +76,13 @@ type IssueFormData = {
 const IssueForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const handleError = useErrorHandler();
 
-  const {
-    bridgeLoaded,
-    address,
-    bitcoinHeight,
-    btcRelayHeight,
-    prices,
-    parachainStatus,
-    governanceTokenBalance
-  } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus, governanceTokenBalance } = useSelector(
+    (state: StoreType) => state.general
+  );
 
   const {
     register,
@@ -322,7 +319,10 @@ const IssueForm = (): JSX.Element | null => {
                 },
                 validate: (value) => validateForm(value)
               })}
-              approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
+              approxUSD={`≈ $ ${getUsdAmount(
+                parsedBTCAmount || BitcoinAmount.zero,
+                getTokenPrice(prices, 'BTC')?.usd
+              )}`}
               error={!!errors[BTC_AMOUNT]}
               helperText={errors[BTC_AMOUNT]?.message}
             />
@@ -369,7 +369,7 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(bridgeFee, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, 'BTC')?.usd)}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -394,7 +394,7 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(securityDeposit)}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(securityDeposit, prices.governanceToken?.usd)}
+            approxUSD={getUsdAmount(securityDeposit, getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd)}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -419,7 +419,10 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken?.usd)}
+            approxUSD={getUsdAmount(
+              extraRequiredCollateralTokenAmount,
+              getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+            )}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -445,7 +448,7 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(wrappedTokenAmount)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd)}
           />
           <SubmitButton
             disabled={

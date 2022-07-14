@@ -1,8 +1,13 @@
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { Price, Prices } from 'common/types/util.types';
 
-// TODO: Add BTC to CurrencyIdLiteral in lib and remove union type
-const getTokenPrice = (prices: Prices, tokenIdLiteral: CurrencyIdLiteral | 'BTC'): Price | undefined => {
+// TODO: Add BTC and IBTC to CurrencyIdLiteral in lib and remove union type
+const getTokenPrice = (
+  prices: Prices | undefined,
+  tokenIdLiteral: CurrencyIdLiteral | 'BTC' | 'IBTC'
+): Price | undefined => {
+  if (!prices) return;
+
   switch (tokenIdLiteral) {
     case 'BTC':
       return prices.bitcoin;
@@ -10,6 +15,8 @@ const getTokenPrice = (prices: Prices, tokenIdLiteral: CurrencyIdLiteral | 'BTC'
       return prices.polkadot;
     case CurrencyIdLiteral.INTR:
       return prices.interlay;
+    case 'IBTC':
+      return prices['interlay-btc'];
     case CurrencyIdLiteral.KSM:
       return prices.kusama;
     case CurrencyIdLiteral.KINT:

@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { withErrorBoundary } from 'react-error-boundary';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { Keyring } from '@polkadot/api';
 import {
@@ -22,14 +21,7 @@ import Layout from 'parts/Layout';
 import FullLoadingSpinner from 'components/FullLoadingSpinner';
 import ErrorFallback from 'components/ErrorFallback';
 import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import {
-  APP_NAME,
-  WRAPPED_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN,
-  GOVERNANCE_TOKEN,
-  PRICES_URL,
-  TOKEN_PRICES
-} from 'config/relay-chains';
+import { APP_NAME, WRAPPED_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
 import { PAGES } from 'utils/constants/links';
 import { CLASS_NAMES } from 'utils/constants/styles';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
@@ -50,8 +42,7 @@ import {
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
   updateGovernanceTokenBalanceAction,
-  updateGovernanceTokenTransferableBalanceAction,
-  updateOfPricesAction
+  updateGovernanceTokenTransferableBalanceAction
 } from 'common/actions/general.actions';
 import { BitcoinNetwork } from 'types/bitcoin';
 
@@ -389,32 +380,6 @@ const App = (): JSX.Element => {
       document.body.classList.add('theme-kintsugi');
     }
   }, []);
-
-  // Keeps fetching live data prices
-  const { error: pricesError } = useQuery(
-    PRICES_URL,
-    async () => {
-      const response = await fetch(PRICES_URL);
-      if (!response.ok) {
-        throw new Error('Network response for prices was not ok.');
-      }
-
-      const newPrices = await response.json();
-
-      const { bitcoin, ...rest } = newPrices;
-      dispatch(
-        updateOfPricesAction({
-          bitcoin: bitcoin,
-          relayChainNativeToken: newPrices[TOKEN_PRICES.relayChainNativeToken],
-          governanceToken: newPrices[TOKEN_PRICES.governanceToken],
-          wrappedToken: newPrices[TOKEN_PRICES.wrappedToken],
-          ...rest
-        })
-      );
-    },
-    { refetchInterval: 60000 }
-  );
-  useErrorHandler(pricesError);
 
   return (
     <>
