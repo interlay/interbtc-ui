@@ -31,6 +31,7 @@ import Hr2 from 'components/hrs/Hr2';
 import SubmitButton from 'components/SubmitButton';
 import InformationTooltip from 'components/tooltips/InformationTooltip';
 import PriceInfo from 'components/PriceInfo';
+import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -63,7 +64,9 @@ const extraRequiredCollateralTokenAmount = newMonetaryAmount(
 
 // TODO: share form with bridge page
 const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }: Props): JSX.Element => {
-  const { register, handleSubmit, errors, watch, trigger } = useForm<RequestIssueFormData>({ mode: 'onChange' });
+  const { register, handleSubmit, errors, watch, trigger, setValue } = useForm<RequestIssueFormData>({
+    mode: 'onChange'
+  });
   const btcAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
@@ -226,6 +229,12 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     setSubmittedRequest(undefined);
   };
 
+  const vaultBalance = displayMonetaryAmount(vaultCapacity);
+  const handleClickVaultBalance = async () => {
+    setValue(WRAPPED_TOKEN_AMOUNT, vaultBalance);
+    await trigger(WRAPPED_TOKEN_AMOUNT);
+  };
+
   const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
   const bridgeFee = parsedBTCAmount.mul(feeRate);
   const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
@@ -242,7 +251,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
           <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
             <p>{t('vault.issue_description')}</p>
             <p>
-              {t('vault.max_capacity')} <strong>{displayMonetaryAmount(vaultCapacity)} BTC</strong>
+              {t('vault.max_capacity')}{' '}
+              <InterlayButtonBase type='button' onClick={handleClickVaultBalance}>
+                <strong>{vaultBalance} BTC</strong>
+              </InterlayButtonBase>
             </p>
             <p>{t('vault.issue_amount')}</p>
             <div>
