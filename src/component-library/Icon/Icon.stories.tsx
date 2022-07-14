@@ -4,12 +4,17 @@ import { Icon, IconProps } from '.';
 
 const Template: Story<IconProps> = (args) => <Icon {...args} />;
 
-const Default = Template.bind({});
-Default.args = {
+const Close = Template.bind({});
+Close.args = {
   variant: 'close'
 };
 
-export { Default };
+const CheckMark = Template.bind({});
+CheckMark.args = {
+  variant: 'checkmark'
+};
+
+export { Close, CheckMark };
 
 export default {
   title: 'Elements/Icon',
