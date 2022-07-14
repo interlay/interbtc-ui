@@ -43,7 +43,10 @@ import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from 'commo
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
-import { getStakingTransactionFeeReserve } from 'services/fetchers/staking-transaction-fee-reserve-fetcher';
+import {
+  stakingTransactionFeeReserveFetcher,
+  STAKING_TRANSACTION_FEE_RESERVE_FETCHER
+} from 'services/fetchers/staking-transaction-fee-reserve-fetcher';
 
 const SHARED_CLASSES = clsx('mx-auto', 'md:max-w-2xl');
 
@@ -212,8 +215,8 @@ const Staking = (): JSX.Element => {
     data: transactionFeeReserve,
     error: transactionFeeReserveError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    ['transactionFeeReserve', address],
-    getStakingTransactionFeeReserve(address),
+    [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, address],
+    stakingTransactionFeeReserveFetcher(address),
     {
       enabled: bridgeLoaded && !!address
     }
@@ -340,12 +343,14 @@ const Staking = (): JSX.Element => {
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading ||
       transactionFeeReserveIdle ||
-      transactionFeeReserveLoading ||
-      transactionFeeReserve === undefined
+      transactionFeeReserveLoading
     )
       return;
     if (stakedAmount === undefined) {
       throw new Error('Something went wrong!');
+    }
+    if (transactionFeeReserve === undefined) {
+      throw new Error('Transaction fee reserve value returned undefined.');
     }
 
     return governanceTokenBalance.sub(stakedAmount).sub(transactionFeeReserve);
