@@ -75,6 +75,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(
             />
           </InterlayLink>
         </div>
+        <p className={clsx('px-4', 'pb-4', 'text-center')}>
+          {t('version')} {process.env.REACT_APP_VERSION}
+        </p>
       </div>
     );
   }
