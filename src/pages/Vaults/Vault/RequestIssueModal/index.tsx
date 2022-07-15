@@ -33,6 +33,7 @@ import InformationTooltip from 'components/tooltips/InformationTooltip';
 import PriceInfo from 'components/PriceInfo';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -257,7 +258,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
                 })}
                 approxUSD={`≈ $ ${getUsdAmount(
                   parsedBTCAmount || BitcoinAmount.zero,
-                  getTokenPrice(prices, 'BTC')?.usd
+                  getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
                 )}`}
                 error={!!errors[WRAPPED_TOKEN_AMOUNT]}
                 helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
@@ -277,7 +278,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<BitcoinLogoIcon width={23} height={23} />}
               value={displayMonetaryAmount(bridgeFee)}
               unitName='BTC'
-              approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, 'BTC')?.usd)}
+              approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -356,7 +357,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<WrappedTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(wrappedTokenAmount)}
               unitName={WRAPPED_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd)}
+              approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
             />
             <SubmitButton
               disabled={

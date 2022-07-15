@@ -14,6 +14,7 @@ import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from 'common/uti
 import { getColorShade } from 'utils/helpers/colors';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -75,7 +76,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
             'block'
           )}
         >
-          {`≈ $ ${getUsdAmount(amountBTCToSend, getTokenPrice(prices, 'BTC')?.usd)}`}
+          {`≈ $ ${getUsdAmount(amountBTCToSend, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
         </span>
       </div>
       <div>

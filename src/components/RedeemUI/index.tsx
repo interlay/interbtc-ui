@@ -13,6 +13,7 @@ import { displayMonetaryAmount, getUsdAmount, shortAddress } from 'common/utils/
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 interface Props {
   redeem: any; // TODO: should type properly (`Relay`)
@@ -56,7 +57,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
               'block'
             )}
           >
-            {`≈ $ ${getUsdAmount(redeemedWrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd)}`}
+            {`≈ $ ${getUsdAmount(redeemedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
           </span>
         </div>
         <div>
@@ -74,7 +75,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(redeem.bridgeFee, getTokenPrice(prices, 'BTC')?.usd)}
+            approxUSD={getUsdAmount(redeem.bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <PriceInfo
             title={
@@ -90,7 +91,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.btcTransferFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(redeem.btcTransferFee, getTokenPrice(prices, 'BTC')?.usd)}
+            approxUSD={getUsdAmount(redeem.btcTransferFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -107,7 +108,10 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.request.requestedAmountBacking)}
             unitName='BTC'
-            approxUSD={getUsdAmount(redeem.request.requestedAmountBacking, getTokenPrice(prices, 'BTC')?.usd)}
+            approxUSD={getUsdAmount(
+              redeem.request.requestedAmountBacking,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
           />
         </div>
         <div className='space-y-4'>

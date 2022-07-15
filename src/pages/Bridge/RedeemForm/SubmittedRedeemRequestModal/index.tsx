@@ -14,6 +14,7 @@ import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
 import { getColorShade } from 'utils/helpers/colors';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const queryString = require('query-string');
 
@@ -69,7 +70,7 @@ const SubmittedRedeemRequestModal = ({
                   'text-center'
                 )}
               >
-                {`≈ $${getUsdAmount(request.amountBTC, getTokenPrice(prices, 'BTC')?.usd)}`}
+                {`≈ $${getUsdAmount(request.amountBTC, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
               </span>
             </div>
             <div>

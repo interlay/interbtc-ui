@@ -45,10 +45,11 @@ import { ParachainStatus, StoreType } from 'common/types/util.types';
 import { showAccountModalAction } from 'common/actions/general.actions';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import Vaults from 'components/Vaults';
-import { VaultApiType } from 'common/types/vault.types';
 import Checkbox, { CheckboxLabelSide } from 'components/Checkbox';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { VaultApiType } from 'common/types/vault.types';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const BTC_AMOUNT = 'btc-amount';
 const VAULT_SELECTION = 'vault-selection';
@@ -321,7 +322,7 @@ const IssueForm = (): JSX.Element | null => {
               })}
               approxUSD={`≈ $ ${getUsdAmount(
                 parsedBTCAmount || BitcoinAmount.zero,
-                getTokenPrice(prices, 'BTC')?.usd
+                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}`}
               error={!!errors[BTC_AMOUNT]}
               helperText={errors[BTC_AMOUNT]?.message}
@@ -369,7 +370,7 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, 'BTC')?.usd)}
+            approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -448,7 +449,7 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(wrappedTokenAmount)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd)}
+            approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <SubmitButton
             disabled={

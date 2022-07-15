@@ -17,6 +17,7 @@ import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 // TODO: should type properly (`Relay`)
 const renderModalStatusPanel = (request: any) => {
@@ -75,7 +76,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
               'block'
             )}
           >
-            {`≈ $ ${getUsdAmount(receivedWrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd)}`}
+            {`≈ $ ${getUsdAmount(receivedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
           </span>
         </div>
         <div>
@@ -93,7 +94,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, 'BTC')?.usd)}
+            approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -110,7 +111,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(sentBackingTokenAmount)}
             unitName='BTC'
-            approxUSD={getUsdAmount(sentBackingTokenAmount, getTokenPrice(prices, 'BTC')?.usd)}
+            approxUSD={getUsdAmount(sentBackingTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
         </div>
         <div className='space-y-4'>

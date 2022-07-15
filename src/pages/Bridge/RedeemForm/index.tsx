@@ -39,6 +39,7 @@ import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { getColorShade } from 'utils/helpers/colors';
 import { getTokenPrice } from 'utils/helpers/prices';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -55,7 +56,7 @@ const RedeemForm = (): JSX.Element | null => {
 
   const handleError = useErrorHandler();
 
-  const usdPrice = getTokenPrice(prices, 'BTC')?.usd;
+  const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
   const { wrappedTokenBalance, bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
@@ -299,12 +300,12 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
-    const redeemFeeInUSD = getUsdAmount(redeemFee, getTokenPrice(prices, 'BTC')?.usd);
+    const redeemFeeInUSD = getUsdAmount(redeemFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const totalBTC = wrappedTokenAmount
       ? parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero;
-    const totalBTCInUSD = getUsdAmount(totalBTC, getTokenPrice(prices, 'BTC')?.usd);
+    const totalBTCInUSD = getUsdAmount(totalBTC, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
@@ -312,7 +313,10 @@ const RedeemForm = (): JSX.Element | null => {
     const totalDOTInUSD = getUsdAmount(totalDOT, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
-    const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, getTokenPrice(prices, 'BTC')?.usd);
+    const bitcoinNetworkFeeInUSD = getUsdAmount(
+      currentInclusionFee,
+      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+    );
     const accountSet = !!address;
 
     return (

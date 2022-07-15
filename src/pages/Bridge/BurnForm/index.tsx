@@ -35,6 +35,7 @@ import {
 } from 'common/actions/general.actions';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
@@ -204,7 +205,7 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(burnableTokens)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(burnableTokens, getTokenPrice(prices, 'BTC')?.usd)}
+            approxUSD={getUsdAmount(burnableTokens, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
@@ -219,7 +220,7 @@ const BurnForm = (): JSX.Element | null => {
             })}
             approxUSD={`≈ $ ${getUsdAmount(
               parsedInterBTCAmount || BitcoinAmount.zero,
-              getTokenPrice(prices, 'BTC')?.usd
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
             )}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}

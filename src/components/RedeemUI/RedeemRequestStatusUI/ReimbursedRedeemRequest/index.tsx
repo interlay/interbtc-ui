@@ -23,6 +23,7 @@ import { StoreType } from 'common/types/util.types';
 import { getColorShade } from 'utils/helpers/colors';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -86,7 +87,9 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         <span className={getColorShade('red')}>
           {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
         </span>
-        <span>&nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, getTokenPrice(prices, 'BTC')?.usd)})`}</span>
+        <span>
+          &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)})`}
+        </span>
         <span className={getColorShade('red')}>&nbsp;{t('redeem_page.reimbursed').toLowerCase()}</span>.
       </p>
       <p className='font-medium'>

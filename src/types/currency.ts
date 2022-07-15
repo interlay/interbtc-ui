@@ -8,6 +8,12 @@ type CurrencyValues = {
   id: CurrencyIdLiteral;
 };
 
+// Note: this may be moved to the lib if used more widely.
+enum ForeignAssetIdLiteral {
+  BTC = 'BTC'
+}
+
 type Currencies = Array<CurrencyValues>;
 
 export type { CurrencyValues, Currencies, BTCToCollateralTokenRate };
+export { ForeignAssetIdLiteral };

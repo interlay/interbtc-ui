@@ -17,6 +17,7 @@ import issueCountQuery from 'services/queries/issue-count-query';
 import { getColorShade } from 'utils/helpers/colors';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const UpperContent = (): JSX.Element => {
   const { totalWrappedTokenAmount } = useSelector((state: StoreType) => state.general);
@@ -64,7 +65,11 @@ const UpperContent = (): JSX.Element => {
               })}
             </StatsDd>
             <StatsDd>
-              ${getUsdAmount(totalWrappedTokenAmount, getTokenPrice(prices, 'BTC')?.usd).toLocaleString()}
+              $
+              {getUsdAmount(
+                totalWrappedTokenAmount,
+                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+              ).toLocaleString()}
             </StatsDd>
             <StatsDt className={`!${getColorShade('green')}`}>{t('dashboard.issue.issue_requests')}</StatsDt>
             <StatsDd>{totalSuccessfulIssueCount}</StatsDd>

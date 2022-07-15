@@ -12,6 +12,7 @@ import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 import { getColorShade } from 'utils/helpers/colors';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -58,7 +59,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.request.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
-        approxUSD={getUsdAmount(request.request.amountWrapped, getTokenPrice(prices, 'BTC')?.usd)}
+        approxUSD={getUsdAmount(request.request.amountWrapped, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
       />
       <PriceInfo
         className='w-full'
@@ -66,7 +67,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.backingPayment.amount)}
         unitName='BTC'
-        approxUSD={getUsdAmount(request.backingPayment.amount, getTokenPrice(prices, 'BTC')?.usd)}
+        approxUSD={getUsdAmount(request.backingPayment.amount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
       />
       <PriceInfo
         className='w-full'
@@ -74,7 +75,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.execution.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
-        approxUSD={getUsdAmount(request.execution.amountWrapped, getTokenPrice(prices, 'BTC')?.usd)}
+        approxUSD={getUsdAmount(request.execution.amountWrapped, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
       />
       <Hr2 className={clsx('border-t-2', 'my-2.5', 'w-full')} />
       <PriceInfo
@@ -94,7 +95,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         unitName='BTC'
         approxUSD={getUsdAmount(
           request.backingPayment.amountWrapped.sub(request.execution.amountWrapped),
-          getTokenPrice(prices, 'BTC')?.usd
+          getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
         )}
       />
       <p

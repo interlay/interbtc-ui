@@ -20,6 +20,7 @@ import { WRAPPED_TOKEN } from 'config/relay-chains';
 import { getColorShade } from 'utils/helpers/colors';
 import { useGetPrices } from 'utils/hooks/api/use-get-prices';
 import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const nowAtFirstLoad = new Date();
 
@@ -27,7 +28,7 @@ const UpperContent = (): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const btcUsdPrice = getTokenPrice(prices, 'BTC')?.usd;
+  const btcUsdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
 
   const {
     isIdle: totalSuccessfulRedeemsIdle,
