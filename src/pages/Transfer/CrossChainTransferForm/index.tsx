@@ -118,6 +118,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleUpdateUsdAmount = (value: string) => {
+    if (!value) return;
+
     const tokenAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
     const usd = getUsdAmount(tokenAmount, prices.relayChainNativeToken?.usd);
 
@@ -231,6 +233,10 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   };
 
+  const isRelayChain = fromChain === ChainType.RelayChain;
+  const chainBalance = isRelayChain ? relayChainBalance : collateralTokenTransferableBalance;
+  const balance = displayMonetaryAmount(chainBalance);
+
   const handleClickBalance = () => {
     setValue(TRANSFER_AMOUNT, balance);
     handleUpdateUsdAmount(balance);
@@ -253,8 +259,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     return <PrimaryColorEllipsisLoader />;
   }
 
-  const isRelayChain = fromChain === ChainType.RelayChain;
-  const balance = displayMonetaryAmount(isRelayChain ? relayChainBalance : collateralTokenTransferableBalance);
   const availableBalanceLabel = isRelayChain
     ? t('transfer_page.cross_chain_transfer_form.relay_chain_balance')
     : t('transfer_page.cross_chain_transfer_form.parachain_balance');
