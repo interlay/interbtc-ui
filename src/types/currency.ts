@@ -8,7 +8,8 @@ type CurrencyValues = {
   id: CurrencyIdLiteral;
 };
 
-// Note: this may be moved to the lib if used more widely.
+// Note: this may be moved to the lib if used more widely, or removed altogether
+// if `CurrencyIdLiteral` is extended to support aUSD
 enum ForeignAssetIdLiteral {
   BTC = 'BTC'
 }
