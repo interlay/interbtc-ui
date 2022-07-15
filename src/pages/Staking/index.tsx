@@ -110,7 +110,8 @@ const Staking = (): JSX.Element => {
     watch,
     reset,
     formState: { errors },
-    trigger
+    trigger,
+    setValue
   } = useForm<StakingFormData>({
     mode: 'onChange', // 'onBlur'
     defaultValues: {
@@ -505,9 +506,7 @@ const Staking = (): JSX.Element => {
   };
   const availableLockTime = getAvailableLockTime();
 
-  const renderAvailableBalanceLabel = () => {
-    return availableBalance === undefined ? '-' : displayMonetaryAmount(availableBalance);
-  };
+  const availableMonetaryBalance = displayMonetaryAmount(availableBalance);
 
   const renderUnlockDateLabel = () => {
     if (errors[LOCK_TIME]) {
@@ -648,6 +647,11 @@ const Staking = (): JSX.Element => {
     }
   };
 
+  const handleClickBalance = () => {
+    setValue(LOCKING_AMOUNT, availableMonetaryBalance);
+    trigger(LOCKING_AMOUNT);
+  };
+
   const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken?.usd);
 
   const claimRewardsButtonEnabled = claimableRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
@@ -743,8 +747,9 @@ const Staking = (): JSX.Element => {
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
-                balance={renderAvailableBalanceLabel()}
+                balance={availableBalance ? availableMonetaryBalance : '-'}
                 tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
+                onClick={handleClickBalance}
               />
               <TokenField
                 id={LOCKING_AMOUNT}

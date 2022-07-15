@@ -20,6 +20,7 @@ import { showAccountModalAction } from 'common/actions/general.actions';
 import isValidPolkadotAddress from 'utils/helpers/is-valid-polkadot-address';
 import STATUSES from 'utils/constants/statuses';
 import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
+import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 const RECIPIENT_ADDRESS = 'recipient-address';
@@ -38,6 +39,7 @@ const TransferForm = (): JSX.Element => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     reset
   } = useForm<TransferFormData>({
@@ -101,6 +103,8 @@ const TransferForm = (): JSX.Element => {
     setActiveToken(token);
   };
 
+  const handleClickBalance = () => setValue(TRANSFER_AMOUNT, activeToken?.transferableBalance);
+
   React.useEffect(() => {
     setAccountSet(!!address);
   }, [address]);
@@ -131,7 +135,10 @@ const TransferForm = (): JSX.Element => {
               { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}
           >
-            Transferable balance: {activeToken?.transferableBalance || 0}
+            Transferable balance:
+            <InterlayButtonBase className={clsx('ml-1')} type='button' onClick={handleClickBalance}>
+              {activeToken?.transferableBalance || 0}
+            </InterlayButtonBase>
           </p>
           <div className={clsx('flex', 'gap-2')}>
             {/* TODO: use forwardRef to pull in select value as form data */}
