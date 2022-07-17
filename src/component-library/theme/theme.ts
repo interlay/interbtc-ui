@@ -51,9 +51,7 @@ const theme = {
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)',
-    // ray test touch <
     spacing24: 'var(--spacing-24)'
-    // ray test touch >
   },
   rounded: {
     sm: 'var(--rounded-sm)',

@@ -1,4 +1,3 @@
-// ray test touch <
 import { Story, Meta } from '@storybook/react';
 
 import { SuccessIcon, SuccessIconProps } from '.';
@@ -14,4 +13,3 @@ export default {
   title: 'Elements/SuccessIcon',
   component: SuccessIcon
 } as Meta;
-// ray test touch >

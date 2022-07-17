@@ -1,4 +1,3 @@
-// ray test touch <
 import { BaseSuccessIcon } from './SuccessIcon.style';
 
 type SuccessIconProps = React.ComponentPropsWithRef<'svg'>;
@@ -9,4 +8,3 @@ const SuccessIcon = (props: SuccessIconProps): JSX.Element => {
 
 export { SuccessIcon };
 export type { SuccessIconProps };
-// ray test touch >

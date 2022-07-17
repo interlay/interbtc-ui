@@ -1,4 +1,3 @@
-// ray test touch <
 import styled from 'styled-components';
 import { ReactComponent as CheckCircleIcon } from '@material-icons/svg/svg/check_circle/baseline.svg';
 
@@ -11,4 +10,3 @@ const BaseSuccessIcon = styled(CheckCircleIcon)`
 `;
 
 export { BaseSuccessIcon };
-// ray test touch >
