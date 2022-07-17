@@ -10,7 +10,6 @@ interface IconProps {
 }
 
 const Icon = ({ variant }: IconProps): JSX.Element | null => {
-  // ray test touch <
   let icon;
   switch (variant) {
     case 'close':
@@ -22,7 +21,6 @@ const Icon = ({ variant }: IconProps): JSX.Element | null => {
     default:
       throw new Error('Something went wrong!');
   }
-  // ray test touch >
 
   return <IconWrapper>{icon}</IconWrapper>;
 };
