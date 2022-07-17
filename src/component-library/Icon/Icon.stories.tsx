@@ -9,10 +9,12 @@ Close.args = {
   variant: 'close'
 };
 
+// ray test touch <
 const CheckMark = Template.bind({});
 CheckMark.args = {
   variant: 'checkmark'
 };
+// ray test touch >
 
 export { Close, CheckMark };
 
