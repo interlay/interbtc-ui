@@ -9,7 +9,7 @@ interface IconProps {
   variant: IconVariant;
 }
 
-const Icon = ({ variant }: IconProps): JSX.Element | null => {
+const Icon = ({ variant }: IconProps): JSX.Element => {
   let icon;
   switch (variant) {
     case 'close':
@@ -24,8 +24,6 @@ const Icon = ({ variant }: IconProps): JSX.Element | null => {
 
   return <IconWrapper>{icon}</IconWrapper>;
 };
-
-Icon.displayName = 'Icon';
 
 export { Icon };
 export type { IconProps, IconVariant };
