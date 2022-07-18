@@ -261,14 +261,22 @@ const RedeemForm = (): JSX.Element | null => {
 
     const validateForm = (value: string): string | undefined => {
       const parsedValue = BitcoinAmount.from.BTC(value);
-      const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
+
       if (parsedValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
-      } else if (parsedValue.gte(maxRedeemableCapacity)) {
+      }
+
+      if (parsedValue.gte(maxRedeemableCapacity)) {
         return `${t('redeem_page.request_exceeds_capacity', {
           maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC`
         })}`;
-      } else if (parsedValue.lte(minValue)) {
+      }
+
+      const parsedWrappedTokenAmount = BitcoinAmount.from.BTC(value);
+      const theRedeemFee = parsedWrappedTokenAmount.mul(redeemFeeRate);
+      const minValue = dustValue.add(currentInclusionFee).add(theRedeemFee);
+
+      if (parsedValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
 
