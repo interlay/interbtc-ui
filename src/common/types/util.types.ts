@@ -72,8 +72,10 @@ export type GeneralState = {
   wrappedTokenTransferableBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  // ray test touch <
   governanceTokenBalance: GovernanceTokenMonetaryAmount;
   governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount;
+  // ray test touch >
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;

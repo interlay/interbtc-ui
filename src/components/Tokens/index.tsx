@@ -62,8 +62,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     collateralTokenTransferableBalance,
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
+    // ray test touch <
     governanceTokenBalance,
     governanceTokenTransferableBalance
+    // ray test touch >
   } = useSelector((state: StoreType) => state.general);
 
   const handleUpdateToken = (tokenType: TokenType) => {

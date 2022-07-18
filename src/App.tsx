@@ -27,8 +27,10 @@ import {
   setInstalledExtensionAction,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
+  // ray test touch <
   updateGovernanceTokenBalanceAction,
   updateGovernanceTokenTransferableBalanceAction,
+  // ray test touch >
   updateWrappedTokenBalanceAction,
   updateWrappedTokenTransferableBalanceAction
 } from '@/common/actions/general.actions';
@@ -45,6 +47,7 @@ import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { CLASS_NAMES } from '@/utils/constants/styles';
+
 
 import * as constants from './constants';
 
@@ -68,8 +71,10 @@ const App = (): JSX.Element => {
     wrappedTokenTransferableBalance,
     collateralTokenBalance,
     collateralTokenTransferableBalance,
+    // ray test touch <
     governanceTokenBalance,
     governanceTokenTransferableBalance
+    // ray test touch >
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
@@ -77,7 +82,9 @@ const App = (): JSX.Element => {
 
   const unsubscribeCollateralTokenBalance = React.useRef<UnsubscriptionRef>(null);
   const unsubscribeWrappedTokenBalance = React.useRef<UnsubscriptionRef>(null);
+  // ray test touch <
   const unsubscribeGovernanceTokenBalance = React.useRef<UnsubscriptionRef>(null);
+  // ray test touch >
 
   // Loads the main bridge API - connection to the bridge
   const loadBridge = React.useCallback(async (): Promise<void> => {
@@ -323,6 +330,7 @@ const App = (): JSX.Element => {
     };
   }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
+  // ray test touch <
   // Subscribes to governance token balance
   React.useEffect(() => {
     if (!dispatch) return;
@@ -361,6 +369,7 @@ const App = (): JSX.Element => {
       }
     };
   }, [dispatch, bridgeLoaded, address, governanceTokenBalance, governanceTokenTransferableBalance]);
+  // ray test touch >
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {

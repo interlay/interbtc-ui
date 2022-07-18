@@ -101,9 +101,16 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
 
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, governanceTokenBalance, parachainStatus } = useSelector(
-    (state: StoreType) => state.general
-  );
+  const {
+    bridgeLoaded,
+    address,
+    bitcoinHeight,
+    btcRelayHeight,
+    // ray test touch <
+    governanceTokenBalance,
+    // ray test touch >
+    parachainStatus
+  } = useSelector((state: StoreType) => state.general);
 
   const vaultAccountId = React.useMemo(() => {
     if (!bridgeLoaded) return;
