@@ -51,11 +51,13 @@ export type Price = {
 };
 
 export type Prices = {
-  bitcoin: Price | undefined;
-  relayChainNativeToken: Price | undefined;
-  governanceToken: Price | undefined;
-  wrappedToken: Price | undefined;
-  [token: string]: Price | undefined;
+  bitcoin: Price;
+  polkadot: Price;
+  interlay: Price;
+  'interlay-btc': Price;
+  kintsugi?: Price;
+  'kintsugi-btc': Price;
+  kusama: Price;
 };
 
 export type GeneralState = {
@@ -75,7 +77,6 @@ export type GeneralState = {
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
-  prices: Prices;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

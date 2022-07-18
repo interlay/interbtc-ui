@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -10,7 +9,6 @@ import Stats, { StatsDt, StatsDd } from '../../../Stats';
 import ErrorFallback from 'components/ErrorFallback';
 import Panel from 'components/Panel';
 import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { StoreType } from 'common/types/util.types';
 import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
 import redeemCountQuery from 'services/queries/redeem-count-query';
 import cumulativeVolumesFetcher, {
@@ -20,12 +18,17 @@ import cumulativeVolumesFetcher, {
 } from 'services/fetchers/cumulative-volumes-fetcher';
 import { WRAPPED_TOKEN } from 'config/relay-chains';
 import { getColorShade } from 'utils/helpers/colors';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const nowAtFirstLoad = new Date();
 
 const UpperContent = (): JSX.Element => {
-  const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const prices = useGetPrices();
+
+  const btcUsdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
 
   const {
     isIdle: totalSuccessfulRedeemsIdle,
@@ -89,10 +92,7 @@ const UpperContent = (): JSX.Element => {
               &nbsp;BTC
             </StatsDd>
             <StatsDd>
-              {/* eslint-disable-next-line max-len */}$
-              {prices.bitcoin === undefined
-                ? '—'
-                : (prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
+              {btcUsdPrice === undefined ? '—' : (btcUsdPrice * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
             </StatsDd>
             <StatsDt className={`!${getColorShade('green')}`}>{t('dashboard.redeem.total_redeems')}</StatsDt>
             <StatsDd>{totalSuccessfulRedeemCount}</StatsDd>

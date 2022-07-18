@@ -15,6 +15,9 @@ import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
 import { displayMonetaryAmount, getUsdAmount, shortAddress } from 'common/utils/utils';
 import { StoreType } from 'common/types/util.types';
 import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 // TODO: should type properly (`Relay`)
 const renderModalStatusPanel = (request: any) => {
@@ -37,8 +40,9 @@ interface Props {
 
 const IssueUI = ({ issue }: Props): JSX.Element => {
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
-  const { address, prices } = useSelector((state: StoreType) => state.general);
+  const { address } = useSelector((state: StoreType) => state.general);
 
   const receivedWrappedTokenAmount: WrappedTokenAmount = issue.execution
     ? issue.execution.amountWrapped
@@ -72,7 +76,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
               'block'
             )}
           >
-            {`≈ $ ${getUsdAmount(receivedWrappedTokenAmount, prices.bitcoin?.usd)}`}
+            {`≈ $ ${getUsdAmount(receivedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
           </span>
         </div>
         <div>
@@ -90,7 +94,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(bridgeFee, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -107,7 +111,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(sentBackingTokenAmount)}
             unitName='BTC'
-            approxUSD={getUsdAmount(sentBackingTokenAmount, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(sentBackingTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
         </div>
         <div className='space-y-4'>

@@ -33,6 +33,9 @@ import {
   updateCollateralTokenBalanceAction,
   showAccountModalAction
 } from 'common/actions/general.actions';
+import { useGetPrices } from 'utils/hooks/api/use-get-prices';
+import { getTokenPrice } from 'utils/helpers/prices';
+import { ForeignAssetIdLiteral } from 'types/currency';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
@@ -43,11 +46,12 @@ type BurnFormData = {
 const BurnForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const { prices, bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus, address } = useSelector(
+  const { bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus, address } = useSelector(
     (state: StoreType) => state.general
   );
 
@@ -201,7 +205,7 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(burnableTokens)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(burnableTokens, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(burnableTokens, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
@@ -214,7 +218,10 @@ const BurnForm = (): JSX.Element | null => {
               },
               validate: (value) => validateForm(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(
+              parsedInterBTCAmount || BitcoinAmount.zero,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />
@@ -233,7 +240,10 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.relayChainNativeToken?.usd)}
+            approxUSD={getUsdAmount(
+              earnedCollateralTokenAmount,
+              getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+            )}
           />
           <SubmitButton
             // TODO: should not check everywhere like this
