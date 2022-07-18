@@ -13,6 +13,7 @@ import Chains, { ChainOption } from 'components/Chains';
 import TokenField from 'components/TokenField';
 import ErrorFallback from 'components/ErrorFallback';
 import FormTitle from 'components/FormTitle';
+import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
 import SubmitButton from 'components/SubmitButton';
 import ErrorModal from 'components/ErrorModal';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
@@ -68,7 +69,9 @@ const CrossChainTransferForm = (): JSX.Element => {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
+    setValue,
+    trigger
   } = useForm<CrossChainTransferFormData>({
     mode: 'onChange'
   });
@@ -117,11 +120,11 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   };
 
-  const handleUpdateUsdAmount = (event: any) => {
-    if (!event.target.value) return;
+  const handleUpdateUsdAmount = (value: string) => {
+    if (!value) return;
 
-    const value = newMonetaryAmount(event.target.value, RELAY_CHAIN_NATIVE_TOKEN, true);
-    const usd = getUsdAmount(value, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
+    const tokenAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
+    const usd = getUsdAmount(tokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
 
     setApproxUsdValue(usd);
   };
@@ -233,6 +236,16 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   };
 
+  const isRelayChain = fromChain === ChainType.RelayChain;
+  const chainBalance = isRelayChain ? relayChainBalance : collateralTokenTransferableBalance;
+  const balance = displayMonetaryAmount(chainBalance);
+
+  const handleClickBalance = () => {
+    setValue(TRANSFER_AMOUNT, balance);
+    handleUpdateUsdAmount(balance);
+    trigger(TRANSFER_AMOUNT);
+  };
+
   // This ensures that triggering the notification and clearing
   // the form happen at the same time.
   React.useEffect(() => {
@@ -245,80 +258,75 @@ const CrossChainTransferForm = (): JSX.Element => {
     });
   }, [submitStatus, reset, t]);
 
+  if (!api) {
+    return <PrimaryColorEllipsisLoader />;
+  }
+
+  const availableBalanceLabel = isRelayChain
+    ? t('transfer_page.cross_chain_transfer_form.relay_chain_balance')
+    : t('transfer_page.cross_chain_transfer_form.parachain_balance');
+
   return (
     <>
-      {api && (
-        <>
-          <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
-            <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
-            <div>
-              {fromChain === ChainType.RelayChain ? (
-                <AvailableBalanceUI
-                  label={t('transfer_page.cross_chain_transfer_form.relay_chain_balance')}
-                  balance={displayMonetaryAmount(relayChainBalance)}
-                  tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-                />
-              ) : (
-                <AvailableBalanceUI
-                  label={t('transfer_page.cross_chain_transfer_form.parachain_balance')}
-                  balance={displayMonetaryAmount(collateralTokenTransferableBalance)}
-                  tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-                />
-              )}
-              <TokenField
-                onChange={handleUpdateUsdAmount}
-                id={TRANSFER_AMOUNT}
-                name={TRANSFER_AMOUNT}
-                ref={register({
-                  required: {
-                    value: true,
-                    message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
-                  },
-                  validate: (value) =>
-                    fromChain === ChainType.RelayChain
-                      ? validateRelayChainTransferAmount(value)
-                      : validateParachainTransferAmount(value)
-                })}
-                error={!!errors[TRANSFER_AMOUNT]}
-                helperText={errors[TRANSFER_AMOUNT]?.message}
-                label={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-                approxUSD={`≈ $ ${approxUsdValue}`}
-              />
-            </div>
-            <Chains
-              label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-              selectedChain={fromChain}
-              onChange={handleSetFromChain}
-            />
-            <Chains
-              label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-              selectedChain={toChain}
-              onChange={handleSetToChain}
-            />
-            <Accounts
-              label={t('transfer_page.cross_chain_transfer_form.target_account')}
-              callbackFunction={setDestination}
-            />
-            <SubmitButton
-              disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
-              pending={submitStatus === STATUSES.PENDING}
-              onClick={handleConfirmClick}
-            >
-              {address ? t('transfer') : t('connect_wallet')}
-            </SubmitButton>
-          </form>
-          {submitStatus === STATUSES.REJECTED && submitError && (
-            <ErrorModal
-              open={!!submitError}
-              onClose={() => {
-                setSubmitStatus(STATUSES.IDLE);
-                setSubmitError(null);
-              }}
-              title='Error'
-              description={typeof submitError === 'string' ? submitError : submitError.message}
-            />
-          )}
-        </>
+      <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
+        <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
+        <div>
+          <AvailableBalanceUI
+            label={availableBalanceLabel}
+            balance={balance}
+            tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+            onClick={handleClickBalance}
+          />
+          <TokenField
+            onChange={(e) => handleUpdateUsdAmount(e.target.value)}
+            id={TRANSFER_AMOUNT}
+            name={TRANSFER_AMOUNT}
+            ref={register({
+              required: {
+                value: true,
+                message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
+              },
+              validate: (value) =>
+                isRelayChain ? validateRelayChainTransferAmount(value) : validateParachainTransferAmount(value)
+            })}
+            error={!!errors[TRANSFER_AMOUNT]}
+            helperText={errors[TRANSFER_AMOUNT]?.message}
+            label={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+            approxUSD={`≈ $ ${approxUsdValue}`}
+          />
+        </div>
+        <Chains
+          label={t('transfer_page.cross_chain_transfer_form.from_chain')}
+          selectedChain={fromChain}
+          onChange={handleSetFromChain}
+        />
+        <Chains
+          label={t('transfer_page.cross_chain_transfer_form.to_chain')}
+          selectedChain={toChain}
+          onChange={handleSetToChain}
+        />
+        <Accounts
+          label={t('transfer_page.cross_chain_transfer_form.target_account')}
+          callbackFunction={setDestination}
+        />
+        <SubmitButton
+          disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
+          pending={submitStatus === STATUSES.PENDING}
+          onClick={handleConfirmClick}
+        >
+          {address ? t('transfer') : t('connect_wallet')}
+        </SubmitButton>
+      </form>
+      {submitStatus === STATUSES.REJECTED && submitError && (
+        <ErrorModal
+          open={!!submitError}
+          onClose={() => {
+            setSubmitStatus(STATUSES.IDLE);
+            setSubmitError(null);
+          }}
+          title='Error'
+          description={typeof submitError === 'string' ? submitError : submitError.message}
+        />
       )}
     </>
   );
