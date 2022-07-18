@@ -9,23 +9,12 @@ import ErrorFallback from 'components/ErrorFallback';
 import { safeRoundTwoDecimals } from 'common/utils/utils';
 import { URL_PARAMETERS } from 'utils/constants/links';
 import { useGetVaultOverview } from 'utils/hooks/api/use-get-vault-overview';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
 import { VaultsHeader } from './VaultsHeader';
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
-import { useEffect } from 'react';
 
 const VaultOverview = (): JSX.Element => {
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
 
   const vaultOverview = useGetVaultOverview({ address: accountAddress });
-  const prices = useGetPrices();
-
-  useEffect(() => {
-    if (!prices) return;
-    console.log('use get prices', prices);
-    console.log('prices utility', getTokenPrice(prices, CurrencyIdLiteral.KBTC));
-  }, [prices]);
 
   const { t } = useTranslation();
 
