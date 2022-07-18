@@ -1,7 +1,4 @@
-import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
-import { ReactComponent as CheckmarkIcon } from '@material-icons/svg/svg/check/baseline.svg';
-
-import { IconWrapper } from './Icon.style';
+import { BaseCloseIcon, BaseCheckmarkIcon } from './Icon.style';
 
 type IconVariant = 'close' | 'checkmark';
 
@@ -10,19 +7,14 @@ interface IconProps {
 }
 
 const Icon = ({ variant }: IconProps): JSX.Element => {
-  let icon;
   switch (variant) {
     case 'close':
-      icon = <CloseIcon />;
-      break;
+      return <BaseCloseIcon />;
     case 'checkmark':
-      icon = <CheckmarkIcon />;
-      break;
+      return <BaseCheckmarkIcon />;
     default:
       throw new Error('Something went wrong!');
   }
-
-  return <IconWrapper>{icon}</IconWrapper>;
 };
 
 export { Icon };
