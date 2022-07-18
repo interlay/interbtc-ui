@@ -2,7 +2,6 @@ import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { Price, Prices } from 'common/types/util.types';
 import { ForeignAssetIdLiteral } from 'types/currency';
 
-// TODO: Add BTC and IBTC to CurrencyIdLiteral in lib and remove union type
 const getTokenPrice = (
   prices: Prices | undefined,
   tokenIdLiteral: CurrencyIdLiteral | ForeignAssetIdLiteral
