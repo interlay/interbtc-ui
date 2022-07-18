@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
-import { Prices } from 'common/types/util.types';
+
+import { Prices } from '@/common/types/util.types';
+
 import { PRICES_URL } from '../../../constants';
 
 const useGetPrices = (): Prices | undefined => {

@@ -1,16 +1,16 @@
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../../Stats';
-import DashboardCard from '../../../cards/DashboardCard';
-import IssuedChart from 'pages/Dashboard/IssuedChart';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { PAGES } from 'utils/constants/links';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { StoreType } from 'common/types/util.types';
-import { ForeignAssetIdLiteral } from 'types/currency';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
+import IssuedChart from '@/pages/Dashboard/IssuedChart';
+import Stats, { StatsDd, StatsDt, StatsRouterLink } from '@/pages/Dashboard/Stats';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { PAGES } from '@/utils/constants/links';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const WrappedTokenCard = (): JSX.Element => {
   const { totalWrappedTokenAmount } = useSelector((state: StoreType) => state.general);

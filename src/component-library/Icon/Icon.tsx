@@ -1,5 +1,6 @@
-import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
 import { ReactComponent as CheckmarkIcon } from '@material-icons/svg/svg/check/baseline.svg';
+import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
+
 import { IconWrapper } from './Icon.style';
 
 type IconVariant = 'close' | 'checkmark';

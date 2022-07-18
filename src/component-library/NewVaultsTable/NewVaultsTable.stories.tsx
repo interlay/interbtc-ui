@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { NewVaultsTable } from '.';
 import { NewVaultsTableProps } from './NewVaultsTable';
@@ -30,6 +30,6 @@ Default.args = {
 export { Default };
 
 export default {
-  title: 'Components/NewVaultsTable',
+  title: '@/components/NewVaultsTable',
   component: NewVaultsTable
 } as Meta;

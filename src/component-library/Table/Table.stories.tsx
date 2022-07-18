@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { Table, TableProps } from '.';
 
@@ -17,6 +17,6 @@ Default.args = {
 export { Default };
 
 export default {
-  title: 'Components/Table',
+  title: '@/components/Table',
   component: Table
 } as Meta;

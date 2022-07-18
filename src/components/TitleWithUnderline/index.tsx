@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 
-import Hr1 from 'components/hrs/Hr1';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+
+import Hr1 from '../hrs/Hr1';
 
 interface Props {
   text: string;

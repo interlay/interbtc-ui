@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import { useQueries, UseQueryResult } from 'react-query';
-import { useErrorHandler } from 'react-error-boundary';
 import { newAccountId } from '@interlay/interbtc-api';
+import { useEffect, useState } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
+import { useQueries, UseQueryResult } from 'react-query';
 
-import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
+import { useGetVaults } from '@/utils/hooks/api/use-get-vaults';
 
 import { getVaultOverview, VaultData } from './get-vault-overview';
 import { useGetPrices } from './use-get-prices';

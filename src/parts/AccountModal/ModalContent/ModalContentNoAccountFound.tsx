@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
-import { WALLETS, WalletSourceName } from 'config/wallets';
-import ExternalLink from 'components/ExternalLink';
+import ExternalLink from '@/components/ExternalLink';
+import { WALLETS, WalletSourceName } from '@/config/wallets';
 
 interface ModalContentNoAccountFoundProps {
   selectedWallet: WalletSourceName;

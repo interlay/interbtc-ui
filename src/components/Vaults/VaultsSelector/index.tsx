@@ -1,20 +1,20 @@
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/solid';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/solid';
 
-import { VaultApiType } from 'common/types/vault.types';
-import { shortAddress } from 'common/utils/utils';
+import { VaultApiType } from '@/common/types/vault.types';
+import { shortAddress } from '@/common/utils/utils';
 import Select, {
+  SELECT_VARIANTS,
   SelectBody,
   SelectButton,
   SelectCheck,
   SelectLabel,
   SelectOption,
   SelectOptions,
-  SelectText,
-  SELECT_VARIANTS
-} from '../../Select';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+  SelectText
+} from '@/components/Select';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   vaults: VaultApiType[];

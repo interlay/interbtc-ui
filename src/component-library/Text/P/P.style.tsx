@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-import { BaseTextProps, resolveTextColor } from '..';
-import { theme } from '../..';
+import { theme } from '../../theme';
+import { BaseTextProps } from '../types';
+import { resolveTextColor } from '../utils';
 
 const ParagraphText = styled.p<BaseTextProps>`
   color: ${({ color }) => resolveTextColor(color)};

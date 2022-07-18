@@ -1,54 +1,55 @@
+import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
+import { AddressOrPair } from '@polkadot/api/types';
+import Big from 'big.js';
+import clsx from 'clsx';
+import { add, format } from 'date-fns';
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useQuery, useMutation } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { AddressOrPair } from '@polkadot/api/types';
-import { format, add } from 'date-fns';
-import Big from 'big.js';
-import clsx from 'clsx';
-import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
+import { useMutation, useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from '@/common/utils/utils';
+import AvailableBalanceUI from '@/components/AvailableBalanceUI';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import Panel from '@/components/Panel';
+import SubmitButton from '@/components/SubmitButton';
+import TitleWithUnderline from '@/components/TitleWithUnderline';
+import TokenField from '@/components/TokenField';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import WarningBanner from '@/components/WarningBanner';
+import { BLOCK_TIME } from '@/config/parachain';
+import {
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceTokenMonetaryAmount,
+  STAKE_LOCK_TIME,
+  VOTE_GOVERNANCE_TOKEN,
+  VOTE_GOVERNANCE_TOKEN_SYMBOL,
+  VoteGovernanceTokenMonetaryAmount
+} from '@/config/relay-chains';
+import MainContainer from '@/parts/MainContainer';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import {
+  STAKING_TRANSACTION_FEE_RESERVE_FETCHER,
+  stakingTransactionFeeReserveFetcher
+} from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
+import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
+import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
+import { KUSAMA } from '@/utils/constants/relay-chain-names';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import BalancesUI from './BalancesUI';
-import WithdrawButton from './WithdrawButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
 import TotalsUI from './TotalsUI';
-import MainContainer from 'parts/MainContainer';
-import TitleWithUnderline from 'components/TitleWithUnderline';
-import Panel from 'components/Panel';
-import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import TokenField from 'components/TokenField';
-import SubmitButton from 'components/SubmitButton';
-import ErrorFallback from 'components/ErrorFallback';
-import ErrorModal from 'components/ErrorModal';
-import WarningBanner from 'components/WarningBanner';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
-import {
-  VOTE_GOVERNANCE_TOKEN_SYMBOL,
-  GOVERNANCE_TOKEN_SYMBOL,
-  GOVERNANCE_TOKEN,
-  STAKE_LOCK_TIME,
-  GovernanceTokenMonetaryAmount,
-  VoteGovernanceTokenMonetaryAmount,
-  VOTE_GOVERNANCE_TOKEN
-} from 'config/relay-chains';
-import { KUSAMA } from 'utils/constants/relay-chain-names';
-import { BLOCK_TIME } from 'config/parachain';
-import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
-import { ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT, ZERO_GOVERNANCE_TOKEN_AMOUNT } from 'utils/constants/currency';
-import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import {
-  stakingTransactionFeeReserveFetcher,
-  STAKING_TRANSACTION_FEE_RESERVE_FETCHER
-} from 'services/fetchers/staking-transaction-fee-reserve-fetcher';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
+import WithdrawButton from './WithdrawButton';
 
 const SHARED_CLASSES = clsx('mx-auto', 'md:max-w-2xl');
 

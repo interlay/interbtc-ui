@@ -1,12 +1,13 @@
+import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
+
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import Hr1 from '@/components/hrs/Hr1';
+import RedeemUI from '@/components/RedeemUI';
+import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
 
 import RequestModalTitle from '../../RequestModalTitle';
-import RedeemUI from 'components/RedeemUI';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import Hr1 from 'components/hrs/Hr1';
-import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
 
 interface CustomProps {
   // TODO: should type properly (`Relay`)

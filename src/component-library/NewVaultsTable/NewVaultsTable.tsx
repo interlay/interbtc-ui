@@ -1,4 +1,6 @@
-import { CTA, Table, CoinPair } from '..';
+import { CoinPair } from '../CoinPair';
+import { CTA } from '../CTA';
+import { Table } from '../Table';
 import { Tokens } from '../types';
 import { CoinPairWrapper, NumericValue } from './NewVaultsTable.style';
 

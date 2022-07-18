@@ -1,41 +1,41 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { CollateralCurrency, CollateralUnit, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
+import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { ExchangeRate, Bitcoin, BitcoinUnit, Currency, BitcoinAmount } from '@interlay/monetary-js';
-import { CollateralCurrency, CollateralUnit, newMonetaryAmount } from '@interlay/interbtc-api';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
-import PriceInfo from 'components/PriceInfo';
-import TokenField from 'components/TokenField';
-import SubmitButton from 'components/SubmitButton';
-import FormTitle from 'components/FormTitle';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorModal from 'components/ErrorModal';
-import ErrorFallback from 'components/ErrorFallback';
-import Hr2 from 'components/hrs/Hr2';
+import {
+  showAccountModalAction,
+  updateCollateralTokenBalanceAction,
+  updateWrappedTokenBalanceAction
+} from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/components/SubmitButton';
+import TokenField from '@/components/TokenField';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainNativeTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
-} from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import STATUSES from 'utils/constants/statuses';
-import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
-import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
-import {
-  updateWrappedTokenBalanceAction,
-  updateCollateralTokenBalanceAction,
-  showAccountModalAction
-} from 'common/actions/general.actions';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { ForeignAssetIdLiteral } from 'types/currency';
+} from '@/config/relay-chains';
+import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 

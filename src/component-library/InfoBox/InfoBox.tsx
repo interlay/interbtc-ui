@@ -1,6 +1,5 @@
 import { CTA } from '../CTA';
-
-import { InfoBoxWrapper, InfoBoxHeader, InfoBoxText } from './InfoBox.style';
+import { InfoBoxHeader, InfoBoxText,InfoBoxWrapper } from './InfoBox.style';
 
 interface InfoBoxProps {
   title: string;

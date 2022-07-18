@@ -1,15 +1,15 @@
-import * as React from 'react';
-import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 import { Issue } from '@interlay/interbtc-api';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import BTCPaymentPendingStatusUI from 'components/IssueUI/BTCPaymentPendingStatusUI';
-import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import { PAGES, QUERY_PARAMETERS } from 'utils/constants/links';
-import { getColorShade } from 'utils/helpers/colors';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
+import BTCPaymentPendingStatusUI from '@/components/IssueUI/BTCPaymentPendingStatusUI';
+import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
+import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
+import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
+import { getColorShade } from '@/utils/helpers/colors';
 
 const queryString = require('query-string');
 

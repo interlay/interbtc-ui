@@ -1,6 +1,6 @@
 import { Tokens } from '../types';
-import { BtcIcon, DotIcon, InterBtcIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
 import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
+import { BtcIcon, DotIcon, InterBtcIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
 
 interface CoinIconProps extends IconWrapperProps {
   coin: Tokens;

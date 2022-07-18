@@ -1,55 +1,56 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
-import clsx from 'clsx';
 import {
-  Issue,
-  newMonetaryAmount,
+  CurrencyIdLiteral,
   GovernanceUnit,
   InterbtcPrimitivesVaultId,
-  CurrencyIdLiteral
+  Issue,
+  newMonetaryAmount
 } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
+import Big from 'big.js';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
 
-import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import SubmitButton from 'components/SubmitButton';
-import FormTitle from 'components/FormTitle';
-import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
-import TokenField from 'components/TokenField';
-import PriceInfo from 'components/PriceInfo';
-import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorModal from 'components/ErrorModal';
-import ErrorFallback from 'components/ErrorFallback';
-import Hr2 from 'components/hrs/Hr2';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { VaultApiType } from '@/common/types/vault.types';
+import { displayMonetaryAmount, getRandomVaultIdWithCapacity, getUsdAmount } from '@/common/utils/utils';
+import AvailableBalanceUI from '@/components/AvailableBalanceUI';
+import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/components/SubmitButton';
+import TokenField from '@/components/TokenField';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import Vaults from '@/components/Vaults';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon,
-  GovernanceTokenLogoIcon
-} from 'config/relay-chains';
-import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { displayMonetaryAmount, getUsdAmount, getRandomVaultIdWithCapacity } from 'common/utils/utils';
-import STATUSES from 'utils/constants/statuses';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { ParachainStatus, StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import Vaults from 'components/Vaults';
-import Checkbox, { CheckboxLabelSide } from 'components/Checkbox';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { VaultApiType } from 'common/types/vault.types';
-import { ForeignAssetIdLiteral } from 'types/currency';
+  GovernanceTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon
+} from '@/config/relay-chains';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import ParachainStatusInfo from '../ParachainStatusInfo';
+import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 
 const BTC_AMOUNT = 'btc-amount';
 const VAULT_SELECTION = 'vault-selection';

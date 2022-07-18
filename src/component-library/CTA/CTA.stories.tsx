@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta,Story } from '@storybook/react';
 
 import { CTA, CTAProps } from '.';
 
@@ -23,7 +23,7 @@ FullWidth.args = {
   fullWidth: true
 };
 
-export { Primary, Secondary, FullWidth };
+export { FullWidth,Primary, Secondary };
 
 export default {
   title: 'Elements/CTA',

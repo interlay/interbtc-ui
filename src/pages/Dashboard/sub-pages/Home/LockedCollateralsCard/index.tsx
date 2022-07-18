@@ -1,26 +1,26 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
 
-import LineChart from '../../../LineChart';
-import DashboardCard from '../../../cards/DashboardCard';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../../Stats';
-import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
+import { getLastMidnightTimestamps, getUsdAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import {
-  RELAY_CHAIN_NATIVE_TOKEN,
-  GOVERNANCE_TOKEN,
   CollateralToken,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-  GOVERNANCE_TOKEN_SYMBOL
-} from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
-import { PAGES } from 'utils/constants/links';
-import { getUsdAmount, getLastMidnightTimestamps } from 'common/utils/utils';
-import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+} from '@/config/relay-chains';
+import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
+import LineChart from '@/pages/Dashboard/LineChart';
+import Stats, { StatsDd, StatsDt, StatsRouterLink } from '@/pages/Dashboard/Stats';
+import useCumulativeCollateralVolumes from '@/services/hooks/use-cumulative-collateral-volumes';
+import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
+import { PAGES } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 

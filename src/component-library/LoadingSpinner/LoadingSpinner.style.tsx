@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from 'component-library';
+import { theme } from '../theme';
 
 interface BaseLoadingSpinnerProps {
   diameter?: number;

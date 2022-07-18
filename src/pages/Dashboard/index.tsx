@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import MainContainer from 'parts/MainContainer';
-import { PAGES } from 'utils/constants/links';
+import MainContainer from '@/parts/MainContainer';
+import { PAGES } from '@/utils/constants/links';
 
 const Home = React.lazy(() => import(/* webpackChunkName: 'home' */ './sub-pages/Home'));
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ './sub-pages/Vaults'));

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import { theme } from 'component-library';
-import { NumberInput } from 'component-library/NumberInput';
+import { NumberInput } from '../NumberInput';
+import { theme } from '../theme';
 
 const TokenFieldInnerWrapper = styled.div`
   position: relative;
@@ -32,4 +32,4 @@ const TokenFieldUSD = styled.span`
   bottom: ${theme.spacing.spacing2};
 `;
 
-export { TokenFieldInnerWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD };
+export { TokenFieldInnerWrapper, TokenFieldInput, TokenFieldSymbol, TokenFieldUSD };

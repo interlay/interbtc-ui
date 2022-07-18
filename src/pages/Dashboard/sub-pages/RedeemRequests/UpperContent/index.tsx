@@ -1,26 +1,27 @@
-import { useTranslation } from 'react-i18next';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useQuery } from 'react-query';
-import clsx from 'clsx';
 import { BitcoinUnit } from '@interlay/monetary-js';
+import clsx from 'clsx';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 
-import RedeemedChart from './RedeemedChart';
-import Stats, { StatsDt, StatsDd } from '../../../Stats';
-import ErrorFallback from 'components/ErrorFallback';
-import Panel from 'components/Panel';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemCountQuery from 'services/queries/redeem-count-query';
+import ErrorFallback from '@/components/ErrorFallback';
+import Panel from '@/components/Panel';
+import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import Stats, { StatsDd, StatsDt } from '@/pages/Dashboard/Stats';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-fetcher';
-import { WRAPPED_TOKEN } from 'config/relay-chains';
-import { getColorShade } from 'utils/helpers/colors';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { ForeignAssetIdLiteral } from 'types/currency';
+} from '@/services/fetchers/cumulative-volumes-fetcher';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import RedeemedChart from './RedeemedChart';
 
 const nowAtFirstLoad = new Date();
 

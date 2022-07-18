@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { VaultCard, VaultCardProps } from '.';
 
@@ -17,6 +17,6 @@ Default.args = {
 export { Default };
 
 export default {
-  title: 'Components/VaultCard',
+  title: '@/components/VaultCard',
   component: VaultCard
 } as Meta;

@@ -1,11 +1,13 @@
-import * as React from 'react';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import VaultSelector from './VaultsSelector';
-import { VaultApiType } from 'common/types/vault.types';
-import { FieldError } from 'react-hook-form';
-import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 import clsx from 'clsx';
-import STATUSES from 'utils/constants/statuses';
+import * as React from 'react';
+import { FieldError } from 'react-hook-form';
+
+import { VaultApiType } from '@/common/types/vault.types';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+
+import VaultSelector from './VaultsSelector';
 
 interface Props {
   label: string;

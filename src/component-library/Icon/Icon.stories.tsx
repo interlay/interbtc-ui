@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta,Story } from '@storybook/react';
 
 import { Icon, IconProps } from '.';
 
@@ -14,7 +14,7 @@ CheckMark.args = {
   variant: 'checkmark'
 };
 
-export { Close, CheckMark };
+export { CheckMark,Close };
 
 export default {
   title: 'Elements/Icon',

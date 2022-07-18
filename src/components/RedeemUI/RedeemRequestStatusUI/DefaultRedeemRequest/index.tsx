@@ -1,15 +1,15 @@
+import clsx from 'clsx';
 import { useErrorHandler } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { shortAddress } from 'common/utils/utils';
-import { getColorShade } from 'utils/helpers/colors';
-import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
-import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
+import { shortAddress } from '@/common/utils/utils';
+import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)

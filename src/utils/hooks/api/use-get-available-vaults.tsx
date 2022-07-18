@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useQueries, UseQueryResult } from 'react-query';
-import { useErrorHandler } from 'react-error-boundary';
 import { CollateralCurrency, CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
-
-import { StoreType } from 'common/types/util.types';
-import { VAULT_COLLATERAL, VAULT_WRAPPED } from 'config/vaults';
-import { useSelector } from 'react-redux';
-import { getCurrency } from 'utils/helpers/currencies';
 import Big from 'big.js';
+import { useEffect, useState } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
+import { useQueries, UseQueryResult } from 'react-query';
+import { useSelector } from 'react-redux';
+
+import { StoreType } from '@/common/types/util.types';
+import { VAULT_COLLATERAL, VAULT_WRAPPED } from '@/config/vaults';
+import { getCurrency } from '@/utils/helpers/currencies';
 
 type AvailableVault = {
   collateralCurrency: CollateralIdLiteral;

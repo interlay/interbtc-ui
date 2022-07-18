@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { APP_NAME, PUBLIC_ASSETS_FOLDER_NAME, APP_DOMAIN, OPEN_GRAPH_IMAGE_FILE_NAME } from 'config/relay-chains';
+import { APP_DOMAIN, APP_NAME, OPEN_GRAPH_IMAGE_FILE_NAME, PUBLIC_ASSETS_FOLDER_NAME } from '@/config/relay-chains';
 
 const InterlayHelmet = (): JSX.Element => (
   <Helmet>

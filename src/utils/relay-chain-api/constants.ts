@@ -1,6 +1,6 @@
+import { BITCOIN_NETWORK } from '@/constants';
 // NOTE: all relay chain api and xcm transfers config will be moved to crosschain-api
-import { BitcoinNetwork } from 'types/bitcoin';
-import { BITCOIN_NETWORK } from '../../constants';
+import { BitcoinNetwork } from '@/types/bitcoin';
 
 const PARACHAIN_ID = process.env.REACT_APP_PARACHAIN_ID;
 

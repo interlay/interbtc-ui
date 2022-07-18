@@ -1,21 +1,21 @@
-import { useQuery, useMutation } from 'react-query';
+import { CollateralCurrency, newVaultId, WrappedCurrency } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
+import { useMutation, useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-import { AccountId } from '@polkadot/types/interfaces';
-import { newVaultId, CollateralCurrency, WrappedCurrency } from '@interlay/interbtc-api';
 
-import ErrorFallback from 'components/ErrorFallback';
-import ErrorModal from 'components/ErrorModal';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount } from '@/common/utils/utils';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
-} from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
-import { GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount, WRAPPED_TOKEN } from 'config/relay-chains';
-import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from 'utils/constants/currency';
-import { displayMonetaryAmount } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
-import { CurrencyValues } from 'types/currency';
+} from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import { GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount, WRAPPED_TOKEN } from '@/config/relay-chains';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { CurrencyValues } from '@/types/currency';
+import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 
 interface CustomProps {
   vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled

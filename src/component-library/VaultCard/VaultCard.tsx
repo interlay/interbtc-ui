@@ -1,6 +1,7 @@
+import { CoinPair } from '../CoinPair';
+import { CTALink } from '../CTA';
 import { Tokens } from '../types';
-import { CoinPair, CTALink } from '..';
-import { Card, CardHeader, CardTitle, CardBody, StyledDl, DlItem, CTAWrapper } from './VaultCard.style';
+import { Card, CardBody, CardHeader, CardTitle, CTAWrapper, DlItem, StyledDl } from './VaultCard.style';
 
 interface VaultCardProps {
   collateralSymbol: Tokens;

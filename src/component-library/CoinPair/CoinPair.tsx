@@ -1,5 +1,5 @@
-import { Tokens } from '../types';
 import { CoinIcon } from '..';
+import { Tokens } from '../types';
 import { CoinPairWrapper, CoinPairWrapperProps } from './CoinPair.style';
 
 interface CoinPairProps extends CoinPairWrapperProps {
