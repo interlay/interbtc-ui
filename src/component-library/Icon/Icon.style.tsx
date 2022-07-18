@@ -13,12 +13,10 @@ const BaseCheckmarkIcon = styled(CheckmarkIcon)`
   fill: ${theme.colors.textPrimary};
 `;
 
-// ray test touch <
 const BaseCheckCircleIcon = styled(CheckCircleIcon)`
   width: ${theme.spacing.spacing28};
   height: ${theme.spacing.spacing28};
   fill: ${theme.colors.textSecondary};
 `;
-// ray test touch >
 
 export { BaseCloseIcon, BaseCheckmarkIcon, BaseCheckCircleIcon };
