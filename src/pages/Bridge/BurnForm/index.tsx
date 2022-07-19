@@ -141,7 +141,7 @@ const BurnForm = (): JSX.Element | null => {
       }
     };
 
-    const validateForm = (value: number): string | undefined => {
+    const validateForm = (value: string): string | undefined => {
       // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
       const bitcoinAmountValue = BitcoinAmount.from.BTC(value);
 
@@ -209,9 +209,8 @@ const BurnForm = (): JSX.Element | null => {
           />
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
-            name={WRAPPED_TOKEN_AMOUNT}
             label={WRAPPED_TOKEN_SYMBOL}
-            ref={register({
+            {...register(WRAPPED_TOKEN_AMOUNT, {
               required: {
                 value: true,
                 message: t('burn_page.please_enter_the_amount')

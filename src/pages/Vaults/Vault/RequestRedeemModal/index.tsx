@@ -36,7 +36,11 @@ interface Props {
 
 // TODO: share form with bridge page
 const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
-  const { register, handleSubmit, errors } = useForm<RequestRedeemFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<RequestRedeemFormData>();
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
@@ -98,9 +102,8 @@ const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }:
           <p>{t('vault.redeem_amount')}</p>
           <div>
             <NumberInput
-              name={WRAPPED_TOKEN_AMOUNT}
               min={0}
-              ref={register({
+              {...register(WRAPPED_TOKEN_AMOUNT, {
                 required: {
                   value: true,
                   message: t('Amount is required!')
@@ -114,10 +117,9 @@ const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }:
           <div>
             <TextField
               id={BTC_ADDRESS}
-              name={BTC_ADDRESS}
               type='text'
               placeholder={t('enter_btc_address')}
-              ref={register({
+              {...register(BTC_ADDRESS, {
                 required: {
                   value: true,
                   message: t('redeem_page.enter_btc')

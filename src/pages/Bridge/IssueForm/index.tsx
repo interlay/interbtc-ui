@@ -311,10 +311,9 @@ const IssueForm = (): JSX.Element | null => {
           <div>
             <TokenField
               id={BTC_AMOUNT}
-              name={BTC_AMOUNT}
               label='BTC'
               min={0}
-              ref={register({
+              {...register(BTC_AMOUNT, {
                 required: {
                   value: true,
                   message: t('issue_page.enter_valid_amount')

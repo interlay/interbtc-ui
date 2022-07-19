@@ -323,10 +323,9 @@ const UpdateCollateralModal = ({
             </label>
             <TokenField
               id={COLLATERAL_TOKEN_AMOUNT}
-              name={COLLATERAL_TOKEN_AMOUNT}
               label={collateralCurrency.id}
               min={0}
-              ref={register({
+              {...register(COLLATERAL_TOKEN_AMOUNT, {
                 required: {
                   value: true,
                   message: t('vault.collateral_is_required')
