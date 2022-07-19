@@ -28,6 +28,7 @@ import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import useTokenBalance from '@/services/hooks/use-token-balance';
 import { CurrencyValues } from '@/types/currency';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -101,24 +102,25 @@ const UpdateCollateralModal = ({
   useErrorHandler(requiredCollateralTokenAmountError);
 
   // ray test touch <
+  // const {
+  //   isIdle: collateralBalanceIdle,
+  //   isLoading: collateralBalanceLoading,
+  //   data: collateralBalance,
+  //   error: collateralBalanceError
+  // } = useQuery<ChainBalance<CollateralUnit>, Error>(
+  //   [GENERIC_FETCHER, 'tokens', 'balance', collateralCurrency.currency, vaultAccountId],
+  //   genericFetcher<ChainBalance<CollateralUnit>>(),
+  //   {
+  //     enabled: !!bridgeLoaded && !!vaultAccountId
+  //   }
+  // );
   const {
     isIdle: collateralBalanceIdle,
     isLoading: collateralBalanceLoading,
     data: collateralBalance,
     error: collateralBalanceError
-  } = useQuery<ChainBalance<CollateralUnit>, Error>(
-    [GENERIC_FETCHER, 'tokens', 'balance', collateralCurrency.currency, vaultAccountId],
-    genericFetcher<ChainBalance<CollateralUnit>>(),
-    {
-      enabled: !!bridgeLoaded && !!vaultAccountId
-    }
-  );
+  } = useTokenBalance(collateralCurrency.currency, vaultAccountId);
   useErrorHandler(collateralBalanceError);
-  // ray test touch >
-
-  // ray test touch <
-  // const { data: test } = useTokenBalance(collateralCurrency.currency, vaultAccountId);
-  // console.log('ray : ***** test?.transferable.toHuman() => ', test?.transferable.toHuman());
   // ray test touch >
 
   const collateralTokenAmount = newMonetaryAmount(
