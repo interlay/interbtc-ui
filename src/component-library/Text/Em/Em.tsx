@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { BaseTextProps } from '..';
+import { BaseTextProps } from '../types';
 import { EmText } from './Em.style';
 
 interface EmProps extends BaseTextProps {

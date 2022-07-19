@@ -1,4 +1,4 @@
-import { BaseCloseIcon, BaseCheckmarkIcon, BaseCheckCircleIcon } from './Icon.style';
+import { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseCloseIcon } from './Icon.style';
 
 type IconVariant = 'close' | 'checkmark' | 'check-circle';
 

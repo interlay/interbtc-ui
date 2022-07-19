@@ -1,29 +1,29 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import Big from 'big.js';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import PriceInfo from 'components/PriceInfo';
-import ExternalLink from 'components/ExternalLink';
-import PrimaryColorSpan from 'components/PrimaryColorSpan';
-import Hr2 from 'components/hrs/Hr2';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getPolkadotLink, getUsdAmount } from '@/common/utils/utils';
+import ExternalLink from '@/components/ExternalLink';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorSpan from '@/components/PrimaryColorSpan';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-  RelayChainNativeTokenLogoIcon
-} from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { getUsdAmount, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { getColorShade } from 'utils/helpers/colors';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { ForeignAssetIdLiteral } from 'types/currency';
+  RelayChainNativeTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL
+} from '@/config/relay-chains';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 interface Props {
   // TODO: should type properly (`Relay`)

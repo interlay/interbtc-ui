@@ -1,4 +1,4 @@
-import { stripHexPrefix, ElectrsAPI } from '@interlay/interbtc-api';
+import { ElectrsAPI, stripHexPrefix } from '@interlay/interbtc-api';
 
 import graphqlFetcher, { GRAPHQL_FETCHER } from './graphql-fetcher';
 

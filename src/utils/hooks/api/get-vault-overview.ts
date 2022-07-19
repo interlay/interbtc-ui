@@ -1,28 +1,28 @@
-import { AccountId } from '@polkadot/types/interfaces';
 import {
+  CollateralCurrency,
   CollateralIdLiteral,
   CurrencyIdLiteral,
   tickerToCurrencyIdLiteral,
-  VaultExt,
-  CollateralCurrency
+  VaultExt
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 
-import { getUsdAmount } from 'common/utils/utils';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { Prices } from 'common/types/util.types';
-import issueCountQuery from 'services/queries/issue-count-query';
-import redeemCountQuery from 'services/queries/redeem-count-query';
-import { VAULT_GOVERNANCE, VAULT_WRAPPED } from 'config/vaults';
+import { Prices } from '@/common/types/util.types';
+import { getUsdAmount } from '@/common/utils/utils';
 import {
-  GovernanceTokenMonetaryAmount,
   CollateralTokenMonetaryAmount,
-  WrappedTokenAmount,
   GOVERNANCE_TOKEN_SYMBOL,
-  WRAPPED_TOKEN_SYMBOL
-} from 'config/relay-chains';
-import { HYDRA_URL } from '../../../constants';
+  GovernanceTokenMonetaryAmount,
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedTokenAmount
+} from '@/config/relay-chains';
+import { VAULT_GOVERNANCE, VAULT_WRAPPED } from '@/config/vaults';
+import { HYDRA_URL } from '@/constants';
+import issueCountQuery from '@/services/queries/issue-count-query';
+import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { getTokenPrice } from '@/utils/helpers/prices';
 
 interface VaultData {
   apy: Big;

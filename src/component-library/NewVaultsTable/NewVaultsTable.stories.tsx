@@ -1,7 +1,6 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
-import { NewVaultsTable } from '.';
-import { NewVaultsTableProps } from './NewVaultsTable';
+import { NewVaultsTable, NewVaultsTableProps } from '.';
 
 const Template: Story<NewVaultsTableProps> = (args) => <NewVaultsTable {...args} />;
 

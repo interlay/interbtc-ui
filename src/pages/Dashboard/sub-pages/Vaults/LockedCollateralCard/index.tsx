@@ -1,16 +1,16 @@
-import { useTranslation } from 'react-i18next';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
 
-import LineChart from 'pages/Dashboard/LineChart';
-import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
-import Stats, { StatsDt, StatsDd } from 'pages/Dashboard/Stats';
-import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
-import { CollateralToken } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
-import { getUsdAmount, displayMonetaryAmount, getLastMidnightTimestamps } from 'common/utils/utils';
-import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
+import { displayMonetaryAmount, getLastMidnightTimestamps, getUsdAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import { CollateralToken } from '@/config/relay-chains';
+import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
+import LineChart from '@/pages/Dashboard/LineChart';
+import Stats, { StatsDd, StatsDt } from '@/pages/Dashboard/Stats';
+import useCumulativeCollateralVolumes from '@/services/hooks/use-cumulative-collateral-volumes';
+import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 

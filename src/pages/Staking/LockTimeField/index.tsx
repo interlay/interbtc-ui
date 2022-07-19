@@ -1,10 +1,10 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import { TextFieldHelperText, TextFieldLabel } from 'components/TextField';
-import NumberInput, { Props as NumberInputProps } from 'components/NumberInput';
-import { STAKE_LOCK_TIME } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import NumberInput, { Props as NumberInputProps } from '@/components/NumberInput';
+import { TextFieldHelperText, TextFieldLabel } from '@/components/TextField';
+import { STAKE_LOCK_TIME } from '@/config/relay-chains';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 // MEMO: inspired by https://medium.com/codex/making-html-5-numeric-inputs-only-accept-integers-d3d117973d56
 const integerRegexPattern = /\d/;

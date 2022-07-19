@@ -1,9 +1,9 @@
-import * as React from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import SidebarContent from './SidebarContent';
 import OpenButton from './OpenButton';
+import SidebarContent from './SidebarContent';
 
 interface Props {
   className?: string;

@@ -1,7 +1,7 @@
 type TextColor = 'primary' | 'secondary' | 'tertiary';
 
 interface BaseTextProps {
-    color?: TextColor
+  color?: TextColor;
 }
 
-export type { TextColor, BaseTextProps };
+export type { BaseTextProps, TextColor };

@@ -1,5 +1,5 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
 // TODO: should use a package like `date-fns` instead of manually calculating
 const formatTime = (leftSeconds: number): string => {

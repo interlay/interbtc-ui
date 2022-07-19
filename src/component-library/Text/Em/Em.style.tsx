@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-import { BaseTextProps, resolveTextColor } from '..';
+import { BaseTextProps } from '../types';
+import { resolveTextColor } from '../utils';
 
 const EmText = styled.em<BaseTextProps>`
   color: ${({ color }) => resolveTextColor(color)};

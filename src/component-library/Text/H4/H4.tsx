@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { BaseTextProps } from '..';
+import { BaseTextProps } from '../types';
 import { H4Text } from './H4.style';
 
 interface H4Props extends BaseTextProps {

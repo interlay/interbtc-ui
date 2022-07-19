@@ -1,18 +1,18 @@
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import PriceInfo from 'components/PriceInfo';
-import Hr2 from 'components/hrs/Hr2';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { copyToClipboard, getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { getColorShade } from 'utils/helpers/colors';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { ForeignAssetIdLiteral } from 'types/currency';
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import InterlayTooltip from '@/components/UI/InterlayTooltip';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 interface Props {
   // TODO: should type properly (`Relay`)

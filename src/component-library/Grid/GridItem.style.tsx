@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { theme } from 'component-library';
 
+import { theme } from '../theme';
 import { GridItemProps } from './GridItem';
 
 export const GridItemContainer = styled.div<GridItemProps>`

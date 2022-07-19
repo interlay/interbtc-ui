@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { Icon, IconProps } from '.';
 
@@ -19,7 +19,7 @@ CheckCircle.args = {
   variant: 'check-circle'
 };
 
-export { Close, Checkmark, CheckCircle };
+export { CheckCircle, Checkmark, Close };
 
 export default {
   title: 'Elements/Icon',

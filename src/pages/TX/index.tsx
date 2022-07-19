@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
-import MainContainer from 'parts/MainContainer';
-import { URL_PARAMETERS } from 'utils/constants/links';
+import MainContainer from '@/parts/MainContainer';
+import { URL_PARAMETERS } from '@/utils/constants/links';
 
 const IssueTX = React.lazy(() => import(/* webpackChunkName: 'issue-tx' */ './IssueTX'));
 const RedeemTX = React.lazy(() => import(/* webpackChunkName: 'redeem-tx' */ './RedeemTX'));

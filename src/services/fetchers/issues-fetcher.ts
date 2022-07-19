@@ -1,10 +1,10 @@
+import { IssueStatus, newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import { newMonetaryAmount, IssueStatus } from '@interlay/interbtc-api';
 
-import issuesQuery from 'services/queries/issues-query';
-import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
-import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
+import getTxDetailsForRequest from '@/services/fetchers/request-btctx-fetcher';
+import issuesQuery from '@/services/queries/issues-query';
 
 type IssuesFetcherParams = [queryKey: string, offset: number, limit: number, where?: string];
 

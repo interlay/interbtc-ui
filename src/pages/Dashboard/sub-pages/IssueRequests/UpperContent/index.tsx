@@ -1,23 +1,24 @@
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useQuery } from 'react-query';
 import clsx from 'clsx';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useSelector } from 'react-redux';
 
-import IssuedChart from 'pages/Dashboard/IssuedChart';
-import Stats, { StatsDt, StatsDd } from '../../../Stats';
-import ErrorFallback from 'components/ErrorFallback';
-import Panel from 'components/Panel';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import issueCountQuery from 'services/queries/issue-count-query';
-import { getColorShade } from 'utils/helpers/colors';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { ForeignAssetIdLiteral } from 'types/currency';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import Panel from '@/components/Panel';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import IssuedChart from '@/pages/Dashboard/IssuedChart';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import issueCountQuery from '@/services/queries/issue-count-query';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import Stats, { StatsDd, StatsDt } from '../../../Stats';
 
 const UpperContent = (): JSX.Element => {
   const { totalWrappedTokenAmount } = useSelector((state: StoreType) => state.general);

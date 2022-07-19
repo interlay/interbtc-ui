@@ -1,4 +1,4 @@
-import { TokenBalanceWrapper, TokenBalanceLabel, TokenBalanceValue } from './TokenBalance.style';
+import { TokenBalanceLabel, TokenBalanceValue, TokenBalanceWrapper } from './TokenBalance.style';
 
 interface TokenBalanceProps {
   tokenSymbol: string;

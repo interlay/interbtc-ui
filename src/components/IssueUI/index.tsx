@@ -1,23 +1,24 @@
+import { IssueStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { IssueStatus } from '@interlay/interbtc-api';
+
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount, shortAddress } from '@/common/utils/utils';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { WrappedTokenAmount } from '@/config/relay-chains';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import BTCPaymentPendingStatusUI from './BTCPaymentPendingStatusUI';
 import IssueRequestStatusUI from './IssueRequestStatusUI';
 import WhoopsStatusUI from './WhoopsStatusUI';
-import PriceInfo from 'components/PriceInfo';
-import Hr2 from 'components/hrs/Hr2';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { WrappedTokenAmount } from 'config/relay-chains';
-import { getColorShade } from 'utils/helpers/colors';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { displayMonetaryAmount, getUsdAmount, shortAddress } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { ForeignAssetIdLiteral } from 'types/currency';
 
 // TODO: should type properly (`Relay`)
 const renderModalStatusPanel = (request: any) => {
