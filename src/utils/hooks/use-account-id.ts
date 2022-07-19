@@ -6,7 +6,7 @@ import { newAccountId } from '@interlay/interbtc-api';
 
 import { StoreType } from 'common/types/util.types';
 
-const useAccountId = (accountAddress: string | undefined): AccountId | undefined => {
+const useAccountId = (accountAddress?: string): AccountId | undefined => {
   const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
 
   return React.useMemo(() => {
