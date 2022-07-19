@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
 import { ReactComponent as CheckmarkIcon } from '@material-icons/svg/svg/check/baseline.svg';
 import { ReactComponent as CheckCircleIcon } from '@material-icons/svg/svg/check_circle/baseline.svg';
+import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
+import styled from 'styled-components';
 
-import { theme } from 'component-library';
+import { theme } from '../theme';
 
 const BaseCloseIcon = styled(CloseIcon)`
   fill: ${theme.colors.textPrimary};
@@ -19,4 +19,4 @@ const BaseCheckCircleIcon = styled(CheckCircleIcon)`
   fill: ${theme.colors.textSecondary};
 `;
 
-export { BaseCloseIcon, BaseCheckmarkIcon, BaseCheckCircleIcon };
+export { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseCloseIcon };

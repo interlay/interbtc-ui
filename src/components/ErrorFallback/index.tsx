@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import InterlayLink from 'components/UI/InterlayLink';
-import { getColorShade } from 'utils/helpers/colors';
+import InterlayLink from '@/components/UI/InterlayLink';
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface Props {
   error: Error | string;

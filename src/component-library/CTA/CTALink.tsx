@@ -1,5 +1,6 @@
 import { forwardRef } from 'react';
 import { Link, LinkProps } from 'react-router-dom';
+
 import { PrimaryCTA, SecondaryCTA } from './CTA.style';
 
 interface CTALinkProps extends LinkProps {

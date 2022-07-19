@@ -1,15 +1,15 @@
-import { useParams } from 'react-router-dom';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
 
-import IssueUI from 'components/IssueUI';
-import ErrorFallback from 'components/ErrorFallback';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import { URL_PARAMETERS } from 'utils/constants/links';
-import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
-import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
-import issuesFetcher, { ISSUES_FETCHER, getIssueWithStatus } from 'services/fetchers/issues-fetcher';
+import ErrorFallback from '@/components/ErrorFallback';
+import IssueUI from '@/components/IssueUI';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
+import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+import { URL_PARAMETERS } from '@/utils/constants/links';
 
 // MEMO: /tx/issue/0xfd6d53d8df584d675fe2322ccb126754d6c6d249878f0a2c9526607458714f76
 const IssueTX = (): JSX.Element => {

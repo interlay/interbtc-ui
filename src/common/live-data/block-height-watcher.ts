@@ -1,4 +1,5 @@
 import { Dispatch } from 'redux';
+
 import { updateHeightsAction } from '../actions/general.actions';
 import { StoreState } from '../types/util.types';
 

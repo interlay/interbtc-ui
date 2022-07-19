@@ -1,4 +1,5 @@
 import { forwardRef } from 'react';
+
 import { PrimaryCTA, SecondaryCTA } from './CTA.style';
 
 interface CTAProps extends React.ComponentPropsWithRef<'button'> {

@@ -1,2 +1,2 @@
-export { TokenField } from './TokenField';
 export type { TokenFieldProps } from './TokenField';
+export { TokenField } from './TokenField';

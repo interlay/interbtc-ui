@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { BaseTextProps } from '..';
+import { BaseTextProps } from '../types';
 import { H3Text } from './H3.style';
 
 interface H3Props extends BaseTextProps {

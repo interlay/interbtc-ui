@@ -1,9 +1,11 @@
 import { MutableRefObject, ReactNode, useEffect, useRef } from 'react';
-import Portal from 'parts/Portal';
-import { ModalContainer, ModalContent, ModalOverlay, CloseIcon } from './Modal.style';
-import { theme } from '../theme';
-import { useMountTransition } from 'utils/hooks/use-mount-transition';
+
+import Portal from '@/parts/Portal';
+import { useMountTransition } from '@/utils/hooks/use-mount-transition';
+
 import { Icon } from '../Icon';
+import { theme } from '../theme';
+import { CloseIcon, ModalContainer, ModalContent, ModalOverlay } from './Modal.style';
 interface ModalProps {
   open: boolean;
   onClose: () => void;

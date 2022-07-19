@@ -1,8 +1,8 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import { InterlayModalTitle } from 'components/UI/InterlayModal';
-import CloseIconButton from 'components/buttons/CloseIconButton';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import { InterlayModalTitle } from '@/components/UI/InterlayModal';
 
 interface AccountContentWrapperProps {
   title: string;

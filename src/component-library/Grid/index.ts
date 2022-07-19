@@ -1,5 +1,4 @@
-export { Grid } from './Grid';
 export type { GridProps } from './Grid';
-
-export { GridItem } from './GridItem';
+export { Grid } from './Grid';
 export type { GridItemProps } from './GridItem';
+export { GridItem } from './GridItem';

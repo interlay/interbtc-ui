@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { StyledTable, TableWrapper, TableRow, TableHeader, TableCell } from './Table.style';
+import { StyledTable, TableCell, TableHeader, TableRow, TableWrapper } from './Table.style';
 
 type Cell = ReactNode;
 type Row = Cell[];

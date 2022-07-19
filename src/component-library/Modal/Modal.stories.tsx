@@ -1,8 +1,8 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 import { useEffect, useState } from 'react';
 
-import { Modal, ModalProps } from '.';
 import { CTA } from '../CTA';
+import { Modal, ModalProps } from '.';
 
 const Template: Story<ModalProps> = (args) => {
   const [open, setOpen] = useState<boolean>(false);

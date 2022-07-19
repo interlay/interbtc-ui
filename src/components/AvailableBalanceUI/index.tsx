@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import InterlayButtonBase from 'components/UI/InterlayButtonBase';
 import React from 'react';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props extends React.HTMLAttributes<unknown> {
   label: string;

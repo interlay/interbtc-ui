@@ -1,6 +1,7 @@
 import * as React from 'react';
+
+import { InputProps } from '../Input';
 import { BaseNumberInput } from './NumberInput.style';
-import { InputProps } from 'component-library/Input';
 
 // `onWheel` prop can't be used with `preventDefault` because
 // React implements passive event listeners.

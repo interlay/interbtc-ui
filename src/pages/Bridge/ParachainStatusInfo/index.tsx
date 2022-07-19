@@ -1,10 +1,10 @@
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { ParachainStatus } from 'common/types/util.types';
-import { getColorShade } from 'utils/helpers/colors';
+import { ParachainStatus } from '@/common/types/util.types';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface Props {
   status: ParachainStatus;

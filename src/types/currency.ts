@@ -1,5 +1,5 @@
 import { CollateralUnit, CurrencyIdLiteral, CurrencyUnit } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
+import { Bitcoin, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
 
 type BTCToCollateralTokenRate = ExchangeRate<Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit>;
 
@@ -16,5 +16,5 @@ enum ForeignAssetIdLiteral {
 
 type Currencies = Array<CurrencyValues>;
 
-export type { CurrencyValues, Currencies, BTCToCollateralTokenRate };
+export type { BTCToCollateralTokenRate, Currencies, CurrencyValues };
 export { ForeignAssetIdLiteral };

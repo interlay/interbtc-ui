@@ -1,6 +1,7 @@
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
-import { Price, Prices } from 'common/types/util.types';
-import { ForeignAssetIdLiteral } from 'types/currency';
+
+import { Price, Prices } from '@/common/types/util.types';
+import { ForeignAssetIdLiteral } from '@/types/currency';
 
 const getTokenPrice = (
   prices: Prices | undefined,

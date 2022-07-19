@@ -1,16 +1,16 @@
 import clsx from 'clsx';
 
 import Select, {
-  SelectButton,
-  SelectOptions,
-  SelectOption,
+  SELECT_VARIANTS,
   SelectBody,
+  SelectButton,
   SelectCheck,
-  SelectText,
   SelectLabel,
-  SELECT_VARIANTS
-} from 'components/Select';
-import { ChainType } from 'types/chains.types';
+  SelectOption,
+  SelectOptions,
+  SelectText
+} from '@/components/Select';
+import { ChainType } from '@/types/chains.types';
 
 interface ChainOption {
   type: ChainType;

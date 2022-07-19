@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { BaseTextProps } from '..';
+import { BaseTextProps } from '../types';
 import { StrongText } from './Strong.style';
 
 interface StrongProps extends BaseTextProps {

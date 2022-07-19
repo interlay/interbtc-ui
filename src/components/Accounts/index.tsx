@@ -1,10 +1,11 @@
-import * as React from 'react';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import * as React from 'react';
+import { useSelector } from 'react-redux';
+
+import { StoreType } from '@/common/types/util.types';
+import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
 
 import AccountSelector from './AccountSelector';
-import useGetAccounts from 'utils/hooks/api/use-get-accounts';
-import { useSelector } from 'react-redux';
-import { StoreType } from 'common/types/util.types';
 
 interface Props {
   callbackFunction?: (account: InjectedAccountWithMeta) => void;

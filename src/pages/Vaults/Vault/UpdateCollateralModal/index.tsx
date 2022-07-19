@@ -1,37 +1,37 @@
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import Big from 'big.js';
-import clsx from 'clsx';
-import { AccountId } from '@polkadot/types/interfaces';
 import {
-  roundTwoDecimals,
-  newMonetaryAmount,
+  ChainBalance,
   CollateralUnit,
   CurrencyUnit,
-  ChainBalance
+  newMonetaryAmount,
+  roundTwoDecimals
 } from '@interlay/interbtc-api';
-import { MonetaryAmount, Currency } from '@interlay/monetary-js';
+import { Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import ErrorFallback from 'components/ErrorFallback';
-import TokenField from 'components/TokenField';
-import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import STATUSES from 'utils/constants/statuses';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { updateCollateralAction, updateCollateralizationAction } from 'common/actions/vault.actions';
-import { StoreType } from 'common/types/util.types';
-import { CurrencyValues } from 'types/currency';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { getTokenPrice } from 'utils/helpers/prices';
+import { updateCollateralAction, updateCollateralizationAction } from '@/common/actions/vault.actions';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
+import ErrorFallback from '@/components/ErrorFallback';
+import TokenField from '@/components/TokenField';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { CurrencyValues } from '@/types/currency';
+import STATUSES from '@/utils/constants/statuses';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 enum CollateralUpdateStatus {
   Close,

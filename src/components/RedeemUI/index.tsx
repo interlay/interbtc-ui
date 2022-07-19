@@ -1,19 +1,20 @@
+import { RedeemStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { RedeemStatus } from '@interlay/interbtc-api';
+
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { displayMonetaryAmount, getUsdAmount, shortAddress } from '@/common/utils/utils';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorSpan from '@/components/PrimaryColorSpan';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
-import PriceInfo from 'components/PriceInfo';
-import PrimaryColorSpan from 'components/PrimaryColorSpan';
-import Hr2 from 'components/hrs/Hr2';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { displayMonetaryAmount, getUsdAmount, shortAddress } from 'common/utils/utils';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { useGetPrices } from 'utils/hooks/api/use-get-prices';
-import { getTokenPrice } from 'utils/helpers/prices';
-import { ForeignAssetIdLiteral } from 'types/currency';
 
 interface Props {
   redeem: any; // TODO: should type properly (`Relay`)

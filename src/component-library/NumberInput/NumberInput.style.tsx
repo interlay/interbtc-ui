@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Input, InputProps } from 'component-library/Input';
+import { Input, InputProps } from '../Input';
 
 const BaseNumberInput = styled(Input).attrs<InputProps>({
   type: 'number',
