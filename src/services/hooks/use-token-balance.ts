@@ -1,6 +1,4 @@
-// ray test touch <<
 import * as React from 'react';
-// ray test touch >>
 import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 import { CurrencyUnit, ChainBalance, newAccountId } from '@interlay/interbtc-api';
@@ -12,9 +10,7 @@ import { StoreType } from 'common/types/util.types';
 // `D` stands for Decimals
 const useTokenBalance = <D extends CurrencyUnit>(
   token: Currency<D>,
-  // ray test touch <<
   accountAddress: string | undefined
-  // ray test touch >>
 ): UseQueryResult<ChainBalance<CurrencyUnit>, Error> => {
   const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
 
@@ -39,8 +35,8 @@ const useTokenBalance = <D extends CurrencyUnit>(
   );
 };
 
-// ray test touch <
+// ray test touch <<
 // const useGovernanceTokenBalance = () => {};
-// ray test touch >
+// ray test touch >>
 
 export default useTokenBalance;
