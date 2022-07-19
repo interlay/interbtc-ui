@@ -50,9 +50,7 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
-  // ray test touch <<
   vaultAccountId: AccountId;
-  // ray test touch >>
   hasLockedBTC: boolean;
   collateralCurrency: CurrencyValues;
 }

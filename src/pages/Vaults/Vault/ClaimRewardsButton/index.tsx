@@ -18,9 +18,7 @@ import { CurrencyValues } from '@/types/currency';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 
 interface CustomProps {
-  // ray test touch <<
   vaultAccountId: AccountId;
-  // ray test touch >>
   collateralToken: CurrencyValues;
 }
 

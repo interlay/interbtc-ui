@@ -285,11 +285,9 @@ const Vault = (): JSX.Element => {
             <InterlayDefaultContainedButton onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            {/* ray test touch << */}
             {vaultAccountId && collateralCurrencyValues && (
               <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
             )}
-            {/* ray test touch >> */}
             <InterlayTooltip label={issueButtonTooltip}>
               {/* Button wrapped in div to enable tooltip on disabled button. */}
               <div className='grid'>
