@@ -100,6 +100,7 @@ const UpdateCollateralModal = ({
   );
   useErrorHandler(requiredCollateralTokenAmountError);
 
+  // ray test touch <
   const {
     isIdle: collateralBalanceIdle,
     isLoading: collateralBalanceLoading,
@@ -113,6 +114,12 @@ const UpdateCollateralModal = ({
     }
   );
   useErrorHandler(collateralBalanceError);
+  // ray test touch >
+
+  // ray test touch <
+  // const { data: test } = useTokenBalance(collateralCurrency.currency, vaultAccountId);
+  // console.log('ray : ***** test?.transferable.toHuman() => ', test?.transferable.toHuman());
+  // ray test touch >
 
   const collateralTokenAmount = newMonetaryAmount(
     strCollateralTokenAmount,
