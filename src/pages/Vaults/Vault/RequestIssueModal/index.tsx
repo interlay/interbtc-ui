@@ -1,4 +1,4 @@
-import { CurrencyIdLiteral, GovernanceUnit, Issue, newAccountId, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, GovernanceUnit, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -35,6 +35,7 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import useAccountId from '@/utils/hooks/use-account-id';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -112,10 +113,13 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     parachainStatus
   } = useSelector((state: StoreType) => state.general);
 
-  const vaultAccountId = React.useMemo(() => {
-    if (!bridgeLoaded) return;
-    return newAccountId(window.bridge.api, vaultAddress);
-  }, [bridgeLoaded, vaultAddress]);
+  // ray test touch <<
+  const vaultAccountId = useAccountId(vaultAddress);
+  // const vaultAccountId = React.useMemo(() => {
+  //   if (!bridgeLoaded) return;
+  //   return newAccountId(window.bridge.api, vaultAddress);
+  // }, [bridgeLoaded, vaultAddress]);
+  // ray test touch >>
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;

@@ -2,7 +2,6 @@ import {
   CollateralCurrency,
   CollateralIdLiteral,
   CurrencyIdLiteral,
-  newAccountId,
   VaultExt,
   VaultStatusExt
 } from '@interlay/interbtc-api';
@@ -35,6 +34,7 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 import { WRAPPED_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getCurrency } from '@/utils/helpers/currencies';
+import useAccountId from '@/utils/hooks/use-account-id';
 
 import { VaultsHeader } from '../VaultsHeader';
 import ClaimRewardsButton from './ClaimRewardsButton';
@@ -96,13 +96,14 @@ const Vault = (): JSX.Element => {
   };
 
   // ray test touch <<
-  const vaultAccountId = React.useMemo(() => {
-    // eslint-disable-next-line max-len
-    // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
-    if (!bridgeLoaded) return;
+  const vaultAccountId = useAccountId(selectedVaultAccountAddress);
+  // const vaultAccountId = React.useMemo(() => {
+  //   // eslint-disable-next-line max-len
+  //   // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
+  //   if (!bridgeLoaded) return;
 
-    return newAccountId(window.bridge.api, selectedVaultAccountAddress);
-  }, [bridgeLoaded, selectedVaultAccountAddress]);
+  //   return newAccountId(window.bridge.api, selectedVaultAccountAddress);
+  // }, [bridgeLoaded, selectedVaultAccountAddress]);
   // ray test touch >>
 
   const collateralCurrencyValues = React.useMemo(() => getCurrency(vaultCollateral as CurrencyIdLiteral), [
