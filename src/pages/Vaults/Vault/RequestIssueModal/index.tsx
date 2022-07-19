@@ -113,13 +113,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     parachainStatus
   } = useSelector((state: StoreType) => state.general);
 
-  // ray test touch <<
   const vaultAccountId = useAccountId(vaultAddress);
-  // const vaultAccountId = React.useMemo(() => {
-  //   if (!bridgeLoaded) return;
-  //   return newAccountId(window.bridge.api, vaultAddress);
-  // }, [bridgeLoaded, vaultAddress]);
-  // ray test touch >>
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
