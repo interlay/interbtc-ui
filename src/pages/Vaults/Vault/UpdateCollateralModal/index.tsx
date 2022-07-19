@@ -50,7 +50,6 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
-  vaultAccountId: AccountId;
   hasLockedBTC: boolean;
   collateralCurrency: CurrencyValues;
 }
@@ -60,7 +59,6 @@ const UpdateCollateralModal = ({
   onClose,
   collateralUpdateStatus,
   vaultAddress,
-  vaultAccountId,
   hasLockedBTC,
   collateralCurrency
 }: Props): JSX.Element => {
@@ -106,7 +104,7 @@ const UpdateCollateralModal = ({
     isLoading: collateralBalanceLoading,
     data: collateralBalance,
     error: collateralBalanceError
-  } = useTokenBalance(collateralCurrency.currency, vaultAccountId);
+  } = useTokenBalance(collateralCurrency.currency, vaultAddress);
   useErrorHandler(collateralBalanceError);
 
   const collateralTokenAmount = newMonetaryAmount(
