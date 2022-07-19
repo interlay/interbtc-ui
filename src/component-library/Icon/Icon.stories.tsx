@@ -9,12 +9,17 @@ Close.args = {
   variant: 'close'
 };
 
-const CheckMark = Template.bind({});
-CheckMark.args = {
+const Checkmark = Template.bind({});
+Checkmark.args = {
   variant: 'checkmark'
 };
 
-export { Close, CheckMark };
+const CheckCircle = Template.bind({});
+CheckCircle.args = {
+  variant: 'check-circle'
+};
+
+export { Close, Checkmark, CheckCircle };
 
 export default {
   title: 'Elements/Icon',

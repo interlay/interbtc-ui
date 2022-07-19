@@ -50,7 +50,8 @@ const theme = {
     spacing6: 'var(--spacing-6)',
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
-    spacing12: 'var(--spacing-12)'
+    spacing12: 'var(--spacing-12)',
+    spacing28: 'var(--spacing-28)'
   },
   rounded: {
     sm: 'var(--rounded-sm)',
