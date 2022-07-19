@@ -101,19 +101,6 @@ const UpdateCollateralModal = ({
   );
   useErrorHandler(requiredCollateralTokenAmountError);
 
-  // ray test touch <
-  // const {
-  //   isIdle: collateralBalanceIdle,
-  //   isLoading: collateralBalanceLoading,
-  //   data: collateralBalance,
-  //   error: collateralBalanceError
-  // } = useQuery<ChainBalance<CollateralUnit>, Error>(
-  //   [GENERIC_FETCHER, 'tokens', 'balance', collateralCurrency.currency, vaultAccountId],
-  //   genericFetcher<ChainBalance<CollateralUnit>>(),
-  //   {
-  //     enabled: !!bridgeLoaded && !!vaultAccountId
-  //   }
-  // );
   const {
     isIdle: collateralBalanceIdle,
     isLoading: collateralBalanceLoading,
@@ -121,7 +108,6 @@ const UpdateCollateralModal = ({
     error: collateralBalanceError
   } = useTokenBalance(collateralCurrency.currency, vaultAccountId);
   useErrorHandler(collateralBalanceError);
-  // ray test touch >
 
   const collateralTokenAmount = newMonetaryAmount(
     strCollateralTokenAmount,
