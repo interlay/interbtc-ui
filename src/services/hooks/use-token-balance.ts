@@ -14,9 +14,7 @@ const useTokenBalance = <D extends CurrencyUnit>(
 ): UseQueryResult<ChainBalance<CurrencyUnit>, Error> => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  // ray test touch <<
   const accountId = useAccountId(accountAddress);
-  // ray test touch >>
 
   return useQuery<ChainBalance<CurrencyUnit>, Error>(
     [GENERIC_FETCHER, 'tokens', 'balance', token, accountId],

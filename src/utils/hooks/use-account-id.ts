@@ -1,4 +1,3 @@
-// ray test touch <<
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { AccountId } from '@polkadot/types/interfaces';
@@ -20,4 +19,3 @@ const useAccountId = (accountAddress?: string): AccountId | undefined => {
 };
 
 export default useAccountId;
-// ray test touch >>
