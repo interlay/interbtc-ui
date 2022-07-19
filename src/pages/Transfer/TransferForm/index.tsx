@@ -53,6 +53,7 @@ const TransferForm = (): JSX.Element => {
 
   const onSubmit = async (data: TransferFormData) => {
     if (!activeToken) return;
+    if (data[TRANSFER_AMOUNT] === undefined) return;
 
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -70,7 +71,7 @@ const TransferForm = (): JSX.Element => {
   };
 
   const validateTransferAmount = React.useCallback(
-    (value: number): string | undefined => {
+    (value: string): string | undefined => {
       if (!activeToken) return;
 
       const balance = newMonetaryAmount(
@@ -103,7 +104,7 @@ const TransferForm = (): JSX.Element => {
     setActiveToken(token);
   };
 
-  const handleClickBalance = () => setValue(TRANSFER_AMOUNT, activeToken?.transferableBalance);
+  const handleClickBalance = () => setValue(TRANSFER_AMOUNT, activeToken?.transferableBalance || '');
 
   React.useEffect(() => {
     setAccountSet(!!address);
@@ -145,8 +146,7 @@ const TransferForm = (): JSX.Element => {
             <Tokens variant='formField' showBalances={false} callbackFunction={handleTokenChange} />
             <TokenAmountField
               id={TRANSFER_AMOUNT}
-              name={TRANSFER_AMOUNT}
-              ref={register({
+              {...register(TRANSFER_AMOUNT, {
                 required: {
                   value: true,
                   message: t('redeem_page.please_enter_amount')
@@ -161,11 +161,10 @@ const TransferForm = (): JSX.Element => {
         <div>
           <TextField
             id={RECIPIENT_ADDRESS}
-            name={RECIPIENT_ADDRESS}
             type='text'
             label={t('recipient')}
             placeholder={t('recipient_account')}
-            ref={register({
+            {...register(RECIPIENT_ADDRESS, {
               required: {
                 value: true,
                 message: t('enter_recipient_address')

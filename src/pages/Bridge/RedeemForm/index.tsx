@@ -337,10 +337,9 @@ const RedeemForm = (): JSX.Element | null => {
           </FormTitle>
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
-            name={WRAPPED_TOKEN_AMOUNT}
             label={WRAPPED_TOKEN_SYMBOL}
             min={0}
-            ref={register({
+            {...register(WRAPPED_TOKEN_AMOUNT, {
               required: {
                 value: true,
                 message: t('redeem_page.please_enter_amount')
@@ -354,11 +353,10 @@ const RedeemForm = (): JSX.Element | null => {
           <ParachainStatusInfo status={parachainStatus} />
           <TextField
             id={BTC_ADDRESS}
-            name={BTC_ADDRESS}
             type='text'
             label='BTC Address'
             placeholder={t('enter_btc_address')}
-            ref={register({
+            {...register(BTC_ADDRESS, {
               required: {
                 value: true,
                 message: t('redeem_page.enter_btc')

@@ -129,13 +129,13 @@ const CrossChainTransferForm = (): JSX.Element => {
     setApproxUsdValue(usd);
   };
 
-  const validateRelayChainTransferAmount = (value: number): string | undefined => {
+  const validateRelayChainTransferAmount = (value: string): string | undefined => {
     const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
 
     return relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
   };
 
-  const validateParachainTransferAmount = (value: number): string | undefined => {
+  const validateParachainTransferAmount = (value: string): string | undefined => {
     const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
 
     // TODO: this api check won't be necessary when the api call is moved out of
@@ -278,10 +278,9 @@ const CrossChainTransferForm = (): JSX.Element => {
             onClick={handleClickBalance}
           />
           <TokenField
-            onChange={(e) => handleUpdateUsdAmount(e.target.value)}
             id={TRANSFER_AMOUNT}
-            name={TRANSFER_AMOUNT}
-            ref={register({
+            {...register(TRANSFER_AMOUNT, {
+              onChange: (e) => handleUpdateUsdAmount(e.target.value),
               required: {
                 value: true,
                 message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')

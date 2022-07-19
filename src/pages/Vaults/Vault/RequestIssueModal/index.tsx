@@ -67,7 +67,14 @@ const extraRequiredCollateralTokenAmount = newMonetaryAmount(
 
 // TODO: share form with bridge page
 const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }: Props): JSX.Element => {
-  const { register, handleSubmit, errors, watch, trigger, setValue } = useForm<RequestIssueFormData>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    trigger,
+    setValue
+  } = useForm<RequestIssueFormData>({
     mode: 'onChange'
   });
   const btcAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
@@ -258,10 +265,9 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
             <div>
               <TokenField
                 id={WRAPPED_TOKEN_AMOUNT}
-                name={WRAPPED_TOKEN_AMOUNT}
                 label='BTC'
                 min={0}
-                ref={register({
+                {...register(WRAPPED_TOKEN_AMOUNT, {
                   required: {
                     value: true,
                     message: t('issue_page.enter_valid_amount')

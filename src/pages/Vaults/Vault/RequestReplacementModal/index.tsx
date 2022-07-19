@@ -34,7 +34,11 @@ interface Props {
 }
 
 const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
-  const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<RequestReplacementFormData>();
   const lockedCollateral = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
@@ -65,7 +69,7 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
     setRequestPending(false);
   });
 
-  const validateAmount = (value: string): string | undefined => {
+  const validateAmount = (value: number): string | undefined => {
     const wrappedTokenAmount = BitcoinAmount.from.BTC(value);
     if (wrappedTokenAmount.lte(BitcoinAmount.zero)) {
       return t('Amount must be greater than zero!');
@@ -97,9 +101,8 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
           <p>{t('vault.replace_amount')}</p>
           <div>
             <NumberInput
-              name={AMOUNT}
               min={0}
-              ref={register({
+              {...register(AMOUNT, {
                 required: {
                   value: true,
                   message: t('Amount is required!')

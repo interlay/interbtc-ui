@@ -759,10 +759,9 @@ const Staking = (): JSX.Element => {
               />
               <TokenField
                 id={LOCKING_AMOUNT}
-                name={LOCKING_AMOUNT}
                 label={GOVERNANCE_TOKEN_SYMBOL}
                 min={0}
-                ref={register({
+                {...register(LOCKING_AMOUNT, {
                   required: {
                     value: extendLockTimeSet ? false : true,
                     message: 'This field is required!'
@@ -777,9 +776,8 @@ const Staking = (): JSX.Element => {
             </div>
             <LockTimeField
               id={LOCK_TIME}
-              name={LOCK_TIME}
               min={0}
-              ref={register({
+              {...register(LOCK_TIME, {
                 required: {
                   value: votingBalanceGreaterThanZero ? false : true,
                   message: 'This field is required!'
