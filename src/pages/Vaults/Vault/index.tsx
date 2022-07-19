@@ -95,6 +95,7 @@ const Vault = (): JSX.Element => {
     setRequestIssueModalOpen(true);
   };
 
+  // ray test touch <<
   const vaultAccountId = React.useMemo(() => {
     // eslint-disable-next-line max-len
     // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
@@ -102,6 +103,7 @@ const Vault = (): JSX.Element => {
 
     return newAccountId(window.bridge.api, selectedVaultAccountAddress);
   }, [bridgeLoaded, selectedVaultAccountAddress]);
+  // ray test touch >>
 
   const collateralCurrencyValues = React.useMemo(() => getCurrency(vaultCollateral as CurrencyIdLiteral), [
     vaultCollateral
@@ -271,7 +273,7 @@ const Vault = (): JSX.Element => {
             {vaultItems.map((item) => (
               <StatPanel key={item.title} label={item.title} value={item.value} />
             ))}
-            <VaultStatusStatPanel collateralId={collateralCurrencyValues?.id} vaultAccountId={vaultAccountId} />
+            {vaultAccountId && <VaultStatusStatPanel collateralId={collateralCurrencyValues?.id} vaultAccountId={vaultAccountId} />}
           </div>
         </div>
         {/* Check interaction with the vault */}
@@ -283,7 +285,11 @@ const Vault = (): JSX.Element => {
             <InterlayDefaultContainedButton onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
+            {/* ray test touch << */}
+            {vaultAccountId && collateralCurrencyValues && (
+              <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
+            )}
+            {/* ray test touch >> */}
             <InterlayTooltip label={issueButtonTooltip}>
               {/* Button wrapped in div to enable tooltip on disabled button. */}
               <div className='grid'>
@@ -314,7 +320,7 @@ const Vault = (): JSX.Element => {
         />
         <ReplaceTable vaultAddress={selectedVaultAccountAddress} collateralId={collateralCurrencyValues?.id} />
       </MainContainer>
-      {collateralCurrencyValues && collateralUpdateStatus !== CollateralUpdateStatus.Close && (
+      {collateralCurrencyValues && collateralUpdateStatus !== CollateralUpdateStatus.Close && vaultAccountId && (
         <UpdateCollateralModal
           open={
             collateralUpdateStatus === CollateralUpdateStatus.Deposit ||

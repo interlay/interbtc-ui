@@ -18,8 +18,10 @@ import { CurrencyValues } from '@/types/currency';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 
 interface CustomProps {
-  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
-  collateralToken: CurrencyValues | undefined;
+  // ray test touch <<
+  vaultAccountId: AccountId;
+  // ray test touch >>
+  collateralToken: CurrencyValues;
 }
 
 const ClaimRewardsButton = ({
@@ -37,7 +39,7 @@ const ClaimRewardsButton = ({
     error: governanceTokenRewardError,
     refetch: governanceTokenRewardRefetch
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getGovernanceReward', vaultAccountId, collateralToken?.id, GOVERNANCE_TOKEN_SYMBOL],
+    [GENERIC_FETCHER, 'vaults', 'getGovernanceReward', vaultAccountId, collateralToken.id, GOVERNANCE_TOKEN_SYMBOL],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded && !!vaultAccountId
@@ -54,7 +56,7 @@ const ClaimRewardsButton = ({
       const vaultId = newVaultId(
         window.bridge.api,
         vaultAccountId.toString(),
-        collateralToken?.currency as CollateralCurrency,
+        collateralToken.currency as CollateralCurrency,
         WRAPPED_TOKEN as WrappedCurrency
       );
 

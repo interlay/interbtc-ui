@@ -50,7 +50,9 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
-  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
+  // ray test touch <<
+  vaultAccountId: AccountId;
+  // ray test touch >>
   hasLockedBTC: boolean;
   collateralCurrency: CurrencyValues;
 }

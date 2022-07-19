@@ -330,7 +330,7 @@ const App = (): JSX.Element => {
     };
   }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
-  // ray test touch <
+  // ray test touch <<
   // Subscribes to governance token balance
   React.useEffect(() => {
     if (!dispatch) return;
@@ -369,7 +369,7 @@ const App = (): JSX.Element => {
       }
     };
   }, [dispatch, bridgeLoaded, address, governanceTokenBalance, governanceTokenTransferableBalance]);
-  // ray test touch >
+  // ray test touch >>
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
