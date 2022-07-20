@@ -19,7 +19,6 @@ import ErrorFallback from '@/components/ErrorFallback';
 import TokenField from '@/components/TokenField';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useTokenBalance from '@/services/hooks/use-token-balance';
 import { CurrencyValues } from '@/types/currency';
@@ -318,12 +317,10 @@ const UpdateCollateralModal = ({
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
-              // ray test touch <<
               approxUSD={`≈ $ ${getUsdAmount(
                 collateralTokenAmount,
-                getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+                getTokenPrice(prices, collateralCurrency.id)?.usd
               )}`}
-              // ray test touch >>
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />
