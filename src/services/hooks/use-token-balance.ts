@@ -1,10 +1,11 @@
 import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
+import { AccountId } from '@polkadot/types/interfaces';
 import { CurrencyUnit, ChainBalance } from '@interlay/interbtc-api';
 import { Currency } from '@interlay/monetary-js';
 
 // ray test touch <<
-import { GOVERNANCE_TOKEN } from 'config/relay-chains';
+import { GOVERNANCE_TOKEN, GovernanceToken } from 'config/relay-chains';
 // ray test touch >>
 import useAccountId from 'utils/hooks/use-account-id';
 import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
@@ -39,7 +40,19 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseTokenBalance => 
   return useTokenBalance(GOVERNANCE_TOKEN, accountAddress);
 };
 
-export { useGovernanceTokenBalance };
+const useGovernanceTokenBalanceFetcher = (
+  accountAddress?: string
+): [string, string, string, GovernanceToken, AccountId] => {
+  const accountId = useAccountId(accountAddress);
+
+  if (accountId === undefined) {
+    throw new Error('Something went wrong!');
+  }
+
+  return [GENERIC_FETCHER, 'tokens', 'balance', GOVERNANCE_TOKEN, accountId];
+};
+
+export { useGovernanceTokenBalance, useGovernanceTokenBalanceFetcher };
 // ray test touch >>
 
 export default useTokenBalance;
