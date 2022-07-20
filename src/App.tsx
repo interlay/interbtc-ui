@@ -50,7 +50,6 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { CLASS_NAMES } from '@/utils/constants/styles';
 
-
 import * as constants from './constants';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
@@ -332,7 +331,6 @@ const App = (): JSX.Element => {
     };
   }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
-  // ray test touch <<
   const queryClient = useQueryClient();
   const governanceTokenBalanceQueryKey = useGovernanceTokenBalanceQueryKey();
 
@@ -341,27 +339,25 @@ const App = (): JSX.Element => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
     if (!address) return;
-    // ray test touch <<<
     if (!queryClient) return;
     if (!governanceTokenBalanceQueryKey) return;
-    // ray test touch >>>
 
     (async () => {
       try {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           GOVERNANCE_TOKEN,
           address,
+          // TODO: it looks like the callback is called just before the balance is updated
           (_: string, balance: ChainBalance<GovernanceUnit>) => {
-            // ray test touch <<<
             queryClient.invalidateQueries(governanceTokenBalanceQueryKey);
-            console.log('ray : ***** subscribe');
-            // ray test touch >>>
+            // ray test touch <<
             if (!balance.free.eq(governanceTokenBalance)) {
               dispatch(updateGovernanceTokenBalanceAction(balance.free));
             }
             if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
               dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
             }
+            // ray test touch >>
           }
         );
         // Unsubscribe if previous subscription is alive
@@ -387,12 +383,9 @@ const App = (): JSX.Element => {
     address,
     governanceTokenBalance,
     governanceTokenTransferableBalance,
-    // ray test touch <<
     queryClient,
     governanceTokenBalanceQueryKey
-    // ray test touch >>
   ]);
-  // ray test touch >>
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
