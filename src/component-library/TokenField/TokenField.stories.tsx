@@ -8,7 +8,7 @@ const WithBalance = Template.bind({});
 WithBalance.args = {
   tokenSymbol: 'KSM',
   valueInUSD: '100.00',
-  defaultValue: '100.00', // `value`
+  defaultValue: 100.0, // `value`
   balance: {
     value: '1000.00',
     valueInUSD: '1000.00'
@@ -19,7 +19,7 @@ const WithoutBalance = Template.bind({});
 WithoutBalance.args = {
   tokenSymbol: 'KSM',
   valueInUSD: '100.00',
-  defaultValue: '100.00' // `value`
+  defaultValue: 100.0 // `value`
 };
 
 export { WithBalance, WithoutBalance };
