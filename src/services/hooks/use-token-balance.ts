@@ -1,3 +1,6 @@
+// ray test touch <<
+import * as React from 'react';
+// ray test touch >>
 import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 import { AccountId } from '@polkadot/types/interfaces';
@@ -42,10 +45,14 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseTokenBalance => 
 
 const useGovernanceTokenBalanceQueryKey = (
   accountAddress?: string
-): [string, string, string, GovernanceToken, AccountId | undefined] => {
+): [string, string, string, GovernanceToken, AccountId] | undefined => {
   const accountId = useAccountId(accountAddress);
 
-  return [GENERIC_FETCHER, 'tokens', 'balance', GOVERNANCE_TOKEN, accountId];
+  return React.useMemo(() => {
+    if (!accountId) return;
+
+    return [GENERIC_FETCHER, 'tokens', 'balance', GOVERNANCE_TOKEN, accountId];
+  }, [accountId]);
 };
 
 export { useGovernanceTokenBalance, useGovernanceTokenBalanceQueryKey };

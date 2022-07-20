@@ -325,10 +325,12 @@ const UpdateCollateralModal = ({
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
+              // ray test touch <<
               approxUSD={`≈ $ ${getUsdAmount(
                 collateralTokenAmount,
                 getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
               )}`}
+              // ray test touch >>
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />

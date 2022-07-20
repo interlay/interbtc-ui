@@ -14,6 +14,7 @@ import { Keyring } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import * as React from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
+import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -41,6 +42,7 @@ import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { APP_NAME, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import InterlayHelmet from '@/parts/InterlayHelmet';
 import Layout from '@/parts/Layout';
+import { useGovernanceTokenBalanceQueryKey } from '@/services/hooks/use-token-balance';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { PAGES } from '@/utils/constants/links';
@@ -331,11 +333,18 @@ const App = (): JSX.Element => {
   }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
   // ray test touch <<
+  const queryClient = useQueryClient();
+  const governanceTokenBalanceQueryKey = useGovernanceTokenBalanceQueryKey();
+
   // Subscribes to governance token balance
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
     if (!address) return;
+    // ray test touch <<<
+    if (!queryClient) return;
+    if (!governanceTokenBalanceQueryKey) return;
+    // ray test touch >>>
 
     (async () => {
       try {
@@ -343,6 +352,10 @@ const App = (): JSX.Element => {
           GOVERNANCE_TOKEN,
           address,
           (_: string, balance: ChainBalance<GovernanceUnit>) => {
+            // ray test touch <<<
+            queryClient.invalidateQueries(governanceTokenBalanceQueryKey);
+            console.log('ray : ***** subscribe');
+            // ray test touch >>>
             if (!balance.free.eq(governanceTokenBalance)) {
               dispatch(updateGovernanceTokenBalanceAction(balance.free));
             }
@@ -368,7 +381,17 @@ const App = (): JSX.Element => {
         unsubscribeGovernanceTokenBalance.current = null;
       }
     };
-  }, [dispatch, bridgeLoaded, address, governanceTokenBalance, governanceTokenTransferableBalance]);
+  }, [
+    dispatch,
+    bridgeLoaded,
+    address,
+    governanceTokenBalance,
+    governanceTokenTransferableBalance,
+    // ray test touch <<
+    queryClient,
+    governanceTokenBalanceQueryKey
+    // ray test touch >>
+  ]);
   // ray test touch >>
 
   // Color schemes according to Interlay vs. Kintsugi
