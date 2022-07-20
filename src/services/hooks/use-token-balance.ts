@@ -42,12 +42,8 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseTokenBalance => 
 
 const useGovernanceTokenBalanceFetcher = (
   accountAddress?: string
-): [string, string, string, GovernanceToken, AccountId] => {
+): [string, string, string, GovernanceToken, AccountId | undefined] => {
   const accountId = useAccountId(accountAddress);
-
-  if (accountId === undefined) {
-    throw new Error('Something went wrong!');
-  }
 
   return [GENERIC_FETCHER, 'tokens', 'balance', GOVERNANCE_TOKEN, accountId];
 };
