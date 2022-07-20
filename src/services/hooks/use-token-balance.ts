@@ -40,7 +40,7 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseTokenBalance => 
   return useTokenBalance(GOVERNANCE_TOKEN, accountAddress);
 };
 
-const useGovernanceTokenBalanceFetcher = (
+const useGovernanceTokenBalanceQueryKey = (
   accountAddress?: string
 ): [string, string, string, GovernanceToken, AccountId | undefined] => {
   const accountId = useAccountId(accountAddress);
@@ -48,7 +48,7 @@ const useGovernanceTokenBalanceFetcher = (
   return [GENERIC_FETCHER, 'tokens', 'balance', GOVERNANCE_TOKEN, accountId];
 };
 
-export { useGovernanceTokenBalance, useGovernanceTokenBalanceFetcher };
+export { useGovernanceTokenBalance, useGovernanceTokenBalanceQueryKey };
 // ray test touch >>
 
 export default useTokenBalance;
