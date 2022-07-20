@@ -1,12 +1,5 @@
-import {
-  ChainBalance,
-  CollateralUnit,
-  CurrencyUnit,
-  newMonetaryAmount,
-  roundTwoDecimals
-} from '@interlay/interbtc-api';
+import { CollateralUnit, CurrencyUnit, newMonetaryAmount, roundTwoDecimals } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';

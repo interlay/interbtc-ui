@@ -1,9 +1,9 @@
+import { newAccountId } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { AccountId } from '@polkadot/types/interfaces';
-import { newAccountId } from '@interlay/interbtc-api';
 
-import { StoreType } from 'common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
 
 const useAccountId = (accountAddress?: string): AccountId | undefined => {
   const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);

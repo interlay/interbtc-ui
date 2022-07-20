@@ -1,14 +1,14 @@
+import { ChainBalance, CurrencyUnit } from '@interlay/interbtc-api';
+import { Currency } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 import * as React from 'react';
 import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
-import { AccountId } from '@polkadot/types/interfaces';
-import { CurrencyUnit, ChainBalance } from '@interlay/interbtc-api';
-import { Currency } from '@interlay/monetary-js';
 
-import { GOVERNANCE_TOKEN, GovernanceToken } from 'config/relay-chains';
-import useAccountId from 'utils/hooks/use-account-id';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
+import { GOVERNANCE_TOKEN, GovernanceToken } from '@/config/relay-chains';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import useAccountId from '@/utils/hooks/use-account-id';
 
 type ChainTokenBalance = ChainBalance<CurrencyUnit>;
 
