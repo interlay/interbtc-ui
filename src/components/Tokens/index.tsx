@@ -18,6 +18,7 @@ import {
   WrappedToken,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 
 import TokenSelector from './TokenSelector';
 
@@ -61,12 +62,26 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     collateralTokenBalance,
     collateralTokenTransferableBalance,
     wrappedTokenBalance,
-    wrappedTokenTransferableBalance,
-    // ray test touch <
-    governanceTokenBalance,
-    governanceTokenTransferableBalance
-    // ray test touch >
+    wrappedTokenTransferableBalance
+    // ray test touch <<
+    // governanceTokenBalance,
+    // governanceTokenTransferableBalance
+    // ray test touch >>
   } = useSelector((state: StoreType) => state.general);
+
+  // ray test touch <<
+  const {
+    // isIdle: governanceTokenBalanceIdle,
+    // isLoading: governanceTokenBalanceLoading,
+    data: governanceTokenBalance
+    // error: governanceTokenBalanceError
+  } = useGovernanceTokenBalance();
+  console.log('ray : ***** governanceTokenBalanceA?.free.toHuman()', governanceTokenBalance?.free.toHuman());
+  console.log(
+    'ray : ***** governanceTokenBalanceA?.transferable.toHuman()',
+    governanceTokenBalance?.transferable.toHuman()
+  );
+  // ray test touch >>
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
@@ -98,8 +113,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       {
         token: GOVERNANCE_TOKEN,
         type: TokenType.GOVERNANCE,
-        balance: displayMonetaryAmount(governanceTokenBalance),
-        transferableBalance: displayMonetaryAmount(governanceTokenTransferableBalance),
+        // ray test touch <<
+        balance: governanceTokenBalance ? displayMonetaryAmount(governanceTokenBalance.free) : '-',
+        transferableBalance: governanceTokenBalance ? displayMonetaryAmount(governanceTokenBalance.transferable) : '-',
+        // ray test touch >>
         icon: <GovernanceTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: GOVERNANCE_TOKEN_SYMBOL
       }
@@ -111,8 +128,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     collateralTokenTransferableBalance,
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
+    // ray test touch <<
     governanceTokenBalance,
-    governanceTokenTransferableBalance,
+    // governanceTokenTransferableBalance,
+    // ray test touch >>
     variant
   ]);
 
