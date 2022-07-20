@@ -3,22 +3,31 @@ import { useSelector } from 'react-redux';
 import { CurrencyUnit, ChainBalance } from '@interlay/interbtc-api';
 import { Currency } from '@interlay/monetary-js';
 
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
+// ray test touch <<
+import { GOVERNANCE_TOKEN } from 'config/relay-chains';
+// ray test touch >>
 import useAccountId from 'utils/hooks/use-account-id';
+import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
 import { StoreType } from 'common/types/util.types';
+
+// ray test touch <<
+type ChainTokenBalance = ChainBalance<CurrencyUnit>;
+
+type UseTokenBalance = UseQueryResult<ChainTokenBalance, Error>;
+// ray test touch >>
 
 // `D` stands for Decimals
 const useTokenBalance = <D extends CurrencyUnit>(
   token: Currency<D>,
   accountAddress: string | undefined
-): UseQueryResult<ChainBalance<CurrencyUnit>, Error> => {
+): UseTokenBalance => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const accountId = useAccountId(accountAddress);
 
-  return useQuery<ChainBalance<CurrencyUnit>, Error>(
+  return useQuery<ChainTokenBalance, Error>(
     [GENERIC_FETCHER, 'tokens', 'balance', token, accountId],
-    genericFetcher<ChainBalance<CurrencyUnit>>(),
+    genericFetcher<ChainTokenBalance>(),
     {
       enabled: !!bridgeLoaded && !!accountId
     }
@@ -26,7 +35,11 @@ const useTokenBalance = <D extends CurrencyUnit>(
 };
 
 // ray test touch <<
-// const useGovernanceTokenBalance = () => {};
+const useGovernanceTokenBalance = (accountAddress?: string): UseTokenBalance => {
+  return useTokenBalance(GOVERNANCE_TOKEN, accountAddress);
+};
+
+export { useGovernanceTokenBalance };
 // ray test touch >>
 
 export default useTokenBalance;
