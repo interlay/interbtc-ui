@@ -38,6 +38,9 @@ import {
   STAKING_TRANSACTION_FEE_RESERVE_FETCHER,
   stakingTransactionFeeReserveFetcher
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
+// ray test touch <<
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+// ray test touch >>
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 import { KUSAMA } from '@/utils/constants/relay-chain-names';
@@ -107,7 +110,15 @@ const Staking = (): JSX.Element => {
   const prices = useGetPrices();
 
   // ray test touch <
-  const { governanceTokenBalance, bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+
+  const {
+    isIdle: governanceTokenBalanceIdle,
+    isLoading: governanceTokenBalanceLoading,
+    data: governanceTokenBalance,
+    error: governanceTokenBalanceError
+  } = useGovernanceTokenBalance();
+  useErrorHandler(governanceTokenBalanceError);
   // ray test touch >
 
   const {
@@ -346,7 +357,11 @@ const Staking = (): JSX.Element => {
 
   const availableBalance = React.useMemo(() => {
     if (
-      !governanceTokenBalance ||
+      // ray test touch <<
+      governanceTokenBalanceIdle ||
+      governanceTokenBalanceLoading ||
+      // !governanceTokenBalance ||
+      // ray test touch >>
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading ||
       transactionFeeReserveIdle ||
@@ -354,21 +369,28 @@ const Staking = (): JSX.Element => {
     )
       return;
     if (stakedAmount === undefined) {
-      throw new Error('Something went wrong!');
+      throw new Error('Staked amount value returned undefined!');
     }
     if (transactionFeeReserve === undefined) {
-      throw new Error('Transaction fee reserve value returned undefined.');
+      throw new Error('Transaction fee reserve value returned undefined!');
+    }
+    // ray test touch <<
+    if (governanceTokenBalance === undefined) {
+      throw new Error('Governance token balance value returned undefined!');
     }
 
-    return governanceTokenBalance.sub(stakedAmount).sub(transactionFeeReserve);
+    return governanceTokenBalance.free.sub(stakedAmount).sub(transactionFeeReserve);
+    // ray test touch >>
   }, [
+    governanceTokenBalanceIdle,
+    governanceTokenBalanceLoading,
     governanceTokenBalance,
     stakedAmountAndEndBlockIdle,
     stakedAmountAndEndBlockLoading,
     stakedAmount,
-    transactionFeeReserve,
+    transactionFeeReserveIdle,
     transactionFeeReserveLoading,
-    transactionFeeReserveIdle
+    transactionFeeReserve
   ]);
 
   const onSubmit = (data: StakingFormData) => {
