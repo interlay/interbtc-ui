@@ -1,4 +1,4 @@
-import { CollateralUnit, CurrencyUnit, newMonetaryAmount, roundTwoDecimals } from '@interlay/interbtc-api';
+import { CollateralUnit, newMonetaryAmount, roundTwoDecimals } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -21,7 +21,9 @@ import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useTokenBalance from '@/services/hooks/use-token-balance';
-import { CurrencyValues } from '@/types/currency';
+// ray test touch <<
+import { GenericCurrencyValues } from '@/types/currency';
+// ray test touch >>
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -43,7 +45,9 @@ interface Props {
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
   hasLockedBTC: boolean;
-  collateralCurrency: CurrencyValues;
+  // ray test touch <<
+  collateralCurrency: GenericCurrencyValues<CollateralUnit>;
+  // ray test touch >>
 }
 
 const UpdateCollateralModal = ({
@@ -96,7 +100,9 @@ const UpdateCollateralModal = ({
     isLoading: collateralBalanceLoading,
     data: collateralBalance,
     error: collateralBalanceError
-  } = useTokenBalance(collateralCurrency.currency, vaultAddress);
+    // ray test touch <<
+  } = useTokenBalance<CollateralUnit>(collateralCurrency.currency, vaultAddress);
+  // ray test touch >>
   useErrorHandler(collateralBalanceError);
 
   const collateralTokenAmount = newMonetaryAmount(
@@ -181,9 +187,7 @@ const UpdateCollateralModal = ({
 
     // Collateral update only allowed if above required collateral
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
-      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(
-        requiredCollateralTokenAmount
-      ) as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
 
       return collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount)
         ? t('vault.collateral_below_threshold')
@@ -199,7 +203,10 @@ const UpdateCollateralModal = ({
     }
 
     if (
-      collateralTokenAmount.gt(collateralBalance?.transferable as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>)
+      // ray test touch <<
+      collateralBalance &&
+      collateralTokenAmount.gt(collateralBalance.transferable)
+      // ray test touch >>
     ) {
       return t(`Must be less than ${collateralCurrency.id} balance!`);
     }

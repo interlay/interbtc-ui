@@ -43,6 +43,9 @@ import {
 } from '@/config/relay-chains';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+// ray test touch <<
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+// ray test touch >>
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -87,11 +90,21 @@ const IssueForm = (): JSX.Element | null => {
     address,
     bitcoinHeight,
     btcRelayHeight,
-    parachainStatus,
+    parachainStatus
     // ray test touch <
-    governanceTokenBalance
+    // governanceTokenBalance
     // ray test touch >
   } = useSelector((state: StoreType) => state.general);
+
+  // ray test touch <<
+  const {
+    isIdle: governanceTokenBalanceIdle,
+    isLoading: governanceTokenBalanceLoading,
+    data: governanceTokenBalance,
+    error: governanceTokenBalanceError
+  } = useGovernanceTokenBalance();
+  useErrorHandler(governanceTokenBalanceError);
+  // ray test touch >>
 
   const {
     register,
@@ -190,12 +203,26 @@ const IssueForm = (): JSX.Element | null => {
     }
   }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
 
-  if (status === STATUSES.IDLE || status === STATUSES.PENDING || requestLimitsIdle || requestLimitsLoading) {
+  // ray test touch <<
+  if (
+    status === STATUSES.IDLE ||
+    status === STATUSES.PENDING ||
+    requestLimitsIdle ||
+    requestLimitsLoading ||
+    governanceTokenBalanceIdle ||
+    governanceTokenBalanceLoading
+  ) {
     return <PrimaryColorEllipsisLoader />;
   }
+  // ray test touch >>
   if (requestLimits === undefined) {
     throw new Error('Something went wrong!');
   }
+  // ray test touch <<
+  if (governanceTokenBalance === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  // ray test touch >>
 
   if (status === STATUSES.RESOLVED) {
     const validateForm = (value: string): string | undefined => {
@@ -204,7 +231,9 @@ const IssueForm = (): JSX.Element | null => {
 
       const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
       const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
-      if (governanceTokenBalance.lte(minRequiredGovernanceTokenAmount)) {
+      // ray test touch <<
+      if (governanceTokenBalance.free.lte(minRequiredGovernanceTokenAmount)) {
+        // ray test touch >>
         return t('insufficient_funds_governance_token', {
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
         });

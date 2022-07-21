@@ -1,4 +1,4 @@
-import { ChainBalance, CurrencyUnit } from '@interlay/interbtc-api';
+import { ChainBalance, CurrencyUnit, GovernanceUnit } from '@interlay/interbtc-api';
 import { Currency } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import * as React from 'react';
@@ -10,30 +10,33 @@ import { GOVERNANCE_TOKEN, GovernanceToken } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-type ChainTokenBalance = ChainBalance<CurrencyUnit>;
-
-type UseTokenBalance = UseQueryResult<ChainTokenBalance, Error>;
+// ray test touch <<
+// type ChainTokenBalance = ChainBalance<CurrencyUnit>;
+// type UseTokenBalance = UseQueryResult<ChainTokenBalance, Error>;
+// ray test touch >>
 
 // `D` stands for Decimals
-const useTokenBalance = <D extends CurrencyUnit>(
-  token: Currency<D>,
+const useTokenBalance = <T extends CurrencyUnit>(
+  token: Currency<T>,
   accountAddress: string | undefined
-): UseTokenBalance => {
+): UseQueryResult<ChainBalance<T>, Error> => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const accountId = useAccountId(accountAddress);
 
-  return useQuery<ChainTokenBalance, Error>(
+  return useQuery<ChainBalance<T>, Error>(
     [GENERIC_FETCHER, 'tokens', 'balance', token, accountId],
-    genericFetcher<ChainTokenBalance>(),
+    genericFetcher<ChainBalance<T>>(),
     {
       enabled: !!bridgeLoaded && !!accountId
     }
   );
 };
 
-const useGovernanceTokenBalance = (accountAddress?: string): UseTokenBalance => {
-  return useTokenBalance(GOVERNANCE_TOKEN, accountAddress);
+const useGovernanceTokenBalance = (accountAddress?: string): UseQueryResult<ChainBalance<GovernanceUnit>, Error> => {
+  // ray test touch <<
+  return useTokenBalance<GovernanceUnit>(GOVERNANCE_TOKEN, accountAddress);
+  // ray test touch >>
 };
 
 const useGovernanceTokenBalanceQueryKey = (

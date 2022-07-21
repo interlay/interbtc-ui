@@ -1,8 +1,14 @@
 import * as React from 'react';
+// ray test touch <<
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+// ray test touch >>
 import { useSelector } from 'react-redux';
 
 import { StoreType, TokenType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
+// ray test touch <<
+import ErrorFallback from '@/components/ErrorFallback';
+// ray test touch >>
 import { SELECT_VARIANTS, SelectVariants } from '@/components/Select';
 import {
   CollateralToken,
@@ -65,7 +71,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     wrappedTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
 
-  const { data: governanceTokenBalance } = useGovernanceTokenBalance();
+  const { data: governanceTokenBalance, error: governanceTokenBalanceError } = useGovernanceTokenBalance();
+  // ray test touch <<
+  useErrorHandler(governanceTokenBalanceError);
+  // ray test touch >>
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
@@ -139,4 +148,11 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 };
 
 export type { TokenOption };
-export default Tokens;
+// ray test touch <<
+export default withErrorBoundary(Tokens, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
+// ray test touch >>
