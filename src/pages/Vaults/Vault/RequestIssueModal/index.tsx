@@ -30,6 +30,9 @@ import {
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
+// ray test touch <<
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+// ray test touch >>
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
@@ -107,11 +110,21 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     address,
     bitcoinHeight,
     btcRelayHeight,
-    // ray test touch <
-    governanceTokenBalance,
-    // ray test touch >
+    // ray test touch <<
+    // governanceTokenBalance,
+    // ray test touch >>
     parachainStatus
   } = useSelector((state: StoreType) => state.general);
+
+  // ray test touch <<
+  const {
+    isIdle: governanceTokenBalanceIdle,
+    isLoading: governanceTokenBalanceLoading,
+    data: governanceTokenBalance,
+    error: governanceTokenBalanceError
+  } = useGovernanceTokenBalance();
+  useErrorHandler(governanceTokenBalanceError);
+  // ray test touch >>
 
   const vaultAccountId = useAccountId(vaultAddress);
 
@@ -163,9 +176,21 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     })();
   }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId]);
 
-  if (status === STATUSES.IDLE || status === STATUSES.PENDING || vaultAccountId === undefined) {
+  // ray test touch <<
+  if (
+    status === STATUSES.IDLE ||
+    status === STATUSES.PENDING ||
+    vaultAccountId === undefined ||
+    governanceTokenBalanceIdle ||
+    governanceTokenBalanceLoading
+  ) {
     return <PrimaryColorEllipsisLoader />;
   }
+  if (governanceTokenBalance === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  // ray test touch >>
+
   const onSubmit = async (data: RequestIssueFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -198,7 +223,9 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
 
     const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
     const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
-    if (governanceTokenBalance.lte(minRequiredGovernanceTokenAmount)) {
+    // ray test touch <<
+    if (governanceTokenBalance.free.lte(minRequiredGovernanceTokenAmount)) {
+      // ray test touch >>
       return t('insufficient_funds_governance_token', {
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
       });
