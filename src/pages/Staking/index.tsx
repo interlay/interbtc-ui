@@ -38,9 +38,7 @@ import {
   STAKING_TRANSACTION_FEE_RESERVE_FETCHER,
   stakingTransactionFeeReserveFetcher
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
-// ray test touch <<
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
-// ray test touch >>
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 import { KUSAMA } from '@/utils/constants/relay-chain-names';
@@ -109,7 +107,6 @@ const Staking = (): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  // ray test touch <
   const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -119,7 +116,6 @@ const Staking = (): JSX.Element => {
     error: governanceTokenBalanceError
   } = useGovernanceTokenBalance();
   useErrorHandler(governanceTokenBalanceError);
-  // ray test touch >
 
   const {
     register,
@@ -357,11 +353,8 @@ const Staking = (): JSX.Element => {
 
   const availableBalance = React.useMemo(() => {
     if (
-      // ray test touch <<
       governanceTokenBalanceIdle ||
       governanceTokenBalanceLoading ||
-      // !governanceTokenBalance ||
-      // ray test touch >>
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading ||
       transactionFeeReserveIdle ||
@@ -374,13 +367,11 @@ const Staking = (): JSX.Element => {
     if (transactionFeeReserve === undefined) {
       throw new Error('Transaction fee reserve value returned undefined!');
     }
-    // ray test touch <<
     if (governanceTokenBalance === undefined) {
       throw new Error('Governance token balance value returned undefined!');
     }
 
     return governanceTokenBalance.free.sub(stakedAmount).sub(transactionFeeReserve);
-    // ray test touch >>
   }, [
     governanceTokenBalanceIdle,
     governanceTokenBalanceLoading,
