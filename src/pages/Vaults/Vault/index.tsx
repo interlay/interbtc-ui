@@ -271,7 +271,7 @@ const Vault = (): JSX.Element => {
             {vaultItems.map((item) => (
               <StatPanel key={item.title} label={item.title} value={item.value} />
             ))}
-            <VaultStatusStatPanel vaultAccountId={vaultAccountId} />
+            <VaultStatusStatPanel collateralId={collateralCurrencyValues?.id} vaultAccountId={vaultAccountId} />
           </div>
         </div>
         {/* Check interaction with the vault */}
