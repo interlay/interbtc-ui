@@ -1,9 +1,7 @@
 import {
   CollateralCurrency,
   CollateralIdLiteral,
-  // ray test touch <<
   CollateralUnit,
-  // ray test touch >>
   CurrencyIdLiteral,
   VaultExt,
   VaultStatusExt
@@ -34,9 +32,7 @@ import { GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount, WRAPPED_TOKEN_S
 import MainContainer from '@/parts/MainContainer';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-// ray test touch <<
 import { GenericCurrencyValues } from '@/types/currency';
-// ray test touch >>
 import { WRAPPED_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getCurrency } from '@/utils/helpers/currencies';

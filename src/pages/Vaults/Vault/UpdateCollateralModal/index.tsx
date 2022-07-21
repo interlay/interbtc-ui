@@ -21,9 +21,7 @@ import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useTokenBalance from '@/services/hooks/use-token-balance';
-// ray test touch <<
 import { GenericCurrencyValues } from '@/types/currency';
-// ray test touch >>
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -45,9 +43,7 @@ interface Props {
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
   hasLockedBTC: boolean;
-  // ray test touch <<
   collateralCurrency: GenericCurrencyValues<CollateralUnit>;
-  // ray test touch >>
 }
 
 const UpdateCollateralModal = ({
@@ -100,9 +96,7 @@ const UpdateCollateralModal = ({
     isLoading: collateralBalanceLoading,
     data: collateralBalance,
     error: collateralBalanceError
-    // ray test touch <<
   } = useTokenBalance<CollateralUnit>(collateralCurrency.currency, vaultAddress);
-  // ray test touch >>
   useErrorHandler(collateralBalanceError);
 
   const collateralTokenAmount = newMonetaryAmount(
@@ -202,12 +196,7 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    if (
-      // ray test touch <<
-      collateralBalance &&
-      collateralTokenAmount.gt(collateralBalance.transferable)
-      // ray test touch >>
-    ) {
+    if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
       return t(`Must be less than ${collateralCurrency.id} balance!`);
     }
 

@@ -10,12 +10,6 @@ import { GOVERNANCE_TOKEN, GovernanceToken } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-// ray test touch <<
-// type ChainTokenBalance = ChainBalance<CurrencyUnit>;
-// type UseTokenBalance = UseQueryResult<ChainTokenBalance, Error>;
-// ray test touch >>
-
-// `D` stands for Decimals
 const useTokenBalance = <T extends CurrencyUnit>(
   token: Currency<T>,
   accountAddress: string | undefined
@@ -34,9 +28,7 @@ const useTokenBalance = <T extends CurrencyUnit>(
 };
 
 const useGovernanceTokenBalance = (accountAddress?: string): UseQueryResult<ChainBalance<GovernanceUnit>, Error> => {
-  // ray test touch <<
   return useTokenBalance<GovernanceUnit>(GOVERNANCE_TOKEN, accountAddress);
-  // ray test touch >>
 };
 
 const useGovernanceTokenBalanceQueryKey = (
