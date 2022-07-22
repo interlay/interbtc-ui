@@ -1,16 +1,15 @@
 import { useNumberField } from '@react-aria/numberfield';
-import { mergeProps } from '@react-aria/utils';
+import { chain, mergeProps } from '@react-aria/utils';
 import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
 import * as React from 'react';
 
-import { chain } from '@/component-library/utils/chain';
 import { useDOMRef } from '@/component-library/utils/dom';
 
-import { BaseNumberInput } from './NumberInput.style';
+import { Input } from '../Input';
 
 // Prevents the user from changing the input value using mouse wheel
-const handleWheel = (e: WheelEvent) => e.preventDefault();
+const handleWheel = (event: WheelEvent) => event.preventDefault();
 
 // Format options for react-stately
 const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 20 };
@@ -47,7 +46,8 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = chain(inputProps.onChange, onChange);
 
-    return <BaseNumberInput {...mergeProps(props, inputProps)} onChange={handleChange} ref={inputRef} />;
+    // TODO: should move props into <FormField/> when added here as a wrapper
+    return <Input {...mergeProps(props, inputProps)} onChange={handleChange} ref={inputRef} />;
   }
 );
 
