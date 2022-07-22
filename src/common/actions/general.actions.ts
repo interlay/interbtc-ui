@@ -21,20 +21,12 @@ import {
   UPDATE_BALANCE_POLKA_BTC,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
   UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
-  // ray test touch <
-  UPDATE_GOVERNANCE_TOKEN_BALANCE,
-  UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
-  // ray test touch >
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
   UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   UpdateBalancePolkaBTC,
   UpdateCollateralTokenBalance,
   UpdateCollateralTokenTransferableBalance,
-  // ray test touch <
-  UpdateGovernanceTokenBalance,
-  UpdateGovernanceTokenTransferableBalance,
-  // ray test touch >
   UpdateHeights,
   UpdateTotals,
   UpdateWrappedTokenTransferableBalance
@@ -86,24 +78,6 @@ export const updateCollateralTokenTransferableBalanceAction = (
   type: UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   collateralTokenTransferableBalance
 });
-
-// ray test touch <
-export const updateGovernanceTokenBalanceAction = (
-  governanceTokenBalance: GovernanceTokenMonetaryAmount
-): UpdateGovernanceTokenBalance => ({
-  type: UPDATE_GOVERNANCE_TOKEN_BALANCE,
-  governanceTokenBalance
-});
-// ray test touch >
-
-// ray test touch <
-export const updateGovernanceTokenTransferableBalanceAction = (
-  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount
-): UpdateGovernanceTokenTransferableBalance => ({
-  type: UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
-  governanceTokenTransferableBalance
-});
-// ray test touch >
 
 export const initGeneralDataAction = (
   totalWrappedTokenAmount: BitcoinAmount,

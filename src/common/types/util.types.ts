@@ -3,8 +3,6 @@ import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { u256 } from '@polkadot/types/primitive';
 import { CombinedState, Store } from 'redux';
 
-import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
-
 import { rootReducer } from '../reducers/index';
 import { GeneralActions, RedeemActions, VaultActions } from './actions.types';
 import { RedeemState } from './redeem.types';
@@ -72,10 +70,6 @@ export type GeneralState = {
   wrappedTokenTransferableBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  // ray test touch <
-  governanceTokenBalance: GovernanceTokenMonetaryAmount;
-  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount;
-  // ray test touch >
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;

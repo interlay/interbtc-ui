@@ -1,7 +1,7 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
-import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 
 import {
   CHANGE_ADDRESS,
@@ -14,10 +14,6 @@ import {
   UPDATE_BALANCE_POLKA_BTC,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
   UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
-  // ray test touch <
-  UPDATE_GOVERNANCE_TOKEN_BALANCE,
-  UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
-  // ray test touch >
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
   UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE
@@ -36,10 +32,6 @@ const initialState = {
   wrappedTokenTransferableBalance: BitcoinAmount.zero,
   collateralTokenBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   collateralTokenTransferableBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
-  // ray test touch <
-  governanceTokenBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
-  governanceTokenTransferableBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
-  // ray test touch >
   extensions: [],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
@@ -81,12 +73,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       return { ...state, collateralTokenBalance: action.collateralTokenBalance };
     case UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE:
       return { ...state, collateralTokenTransferableBalance: action.collateralTokenTransferableBalance };
-    // ray test touch <
-    case UPDATE_GOVERNANCE_TOKEN_BALANCE:
-      return { ...state, governanceTokenBalance: action.governanceTokenBalance };
-    case UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE:
-      return { ...state, governanceTokenTransferableBalance: action.governanceTokenTransferableBalance };
-    // ray test touch >
     case UPDATE_BALANCE_POLKA_BTC:
       return { ...state, wrappedTokenBalance: action.wrappedTokenBalance };
     case UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE:
