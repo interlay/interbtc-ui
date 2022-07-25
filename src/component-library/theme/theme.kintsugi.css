@@ -18,6 +18,8 @@
   --colors-cta-primary-text: var(--colors-neutral-black);
   --colors-cta-secondary: var(--colors-neutral-white);
   --colors-cta-secondary-text: var(--colors-neutral-black);
+  --colors-cta-outlined-text: var(--colors-yellow);
+  --colors-cta-outlined-border: var(--colors-yellow);
   --colors-text-primary: var(--colors-neutral-white);
   --colors-text-secondary: var(--colors-yellow);
   --colors-text-tertiary: var(--colors-neutral-light-grey);

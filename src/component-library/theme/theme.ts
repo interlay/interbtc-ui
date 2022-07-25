@@ -83,6 +83,10 @@ const theme = {
     secondary: {
       bg: 'var(--colors-cta-secondary)',
       text: 'var(--colors-cta-secondary-text)'
+    },
+    outlined: {
+      text: 'var(--colors-cta-outlined-text)',
+      border: '1px solid var(--colors-cta-outlined-border)'
     }
   },
   table: {

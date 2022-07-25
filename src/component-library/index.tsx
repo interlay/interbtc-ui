@@ -10,6 +10,8 @@ export type { InfoBoxProps } from './InfoBox';
 export { InfoBox } from './InfoBox';
 export type { InputProps } from './Input';
 export { Input } from './Input';
+export type { InsightsListItemProps, InsightsListProps } from './InsightsList';
+export { InsightsList, InsightsListItem } from './InsightsList';
 export type { ModalProps } from './Modal';
 export { Modal } from './Modal';
 export type { NewVaultsTableProps, NewVaultsTableRow } from './NewVaultsTable';
