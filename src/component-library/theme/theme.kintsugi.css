@@ -26,4 +26,6 @@
   --colors-text-secondary: var(--colors-yellow);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
   --box-shadow-default: var(--box-shadow-none);
+  /* Tabs */
+  --colors-tabs-bg: var(--colors-neutral-white-05);
 }

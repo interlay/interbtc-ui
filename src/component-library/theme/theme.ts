@@ -96,6 +96,9 @@ const theme = {
   },
   transition: {
     duration: 100
+  },
+  tabs: {
+    bg: 'var(--colors-tabs-bg)'
   }
 };
 
