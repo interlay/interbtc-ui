@@ -9,6 +9,7 @@
 }
 
 .theme-interlay {
+  --colors-border: var(--colors-neutral-black-25);
   --colors-bg-primary: var(--colors-neutral-white);
   --colors-card-bg: var(--colors-neutral-white);
   --colors-card-secondary-bg: var(--colors-light-blue-10);
@@ -17,6 +18,9 @@
   --colors-cta-primary-text: var(--colors-neutral-white);
   --colors-cta-secondary: var(--colors-lighter-blue);
   --colors-cta-secondary-text: var(--colors-light-blue);
+  --colors-cta-outlined-text: var(--colors-neutral-black-9);
+  --colors-cta-outlined-border: var(--colors-neutral-black-25);
+  --colors-cta-outlined-hover: var(--colors-neutral-black-05);
   --colors-text-primary: var(--colors-neutral-black);
   --colors-text-secondary: var(--colors-light-blue);
   --colors-text-tertiary: var(--colors-neutral-light-grey);

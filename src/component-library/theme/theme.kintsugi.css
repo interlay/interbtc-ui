@@ -4,8 +4,8 @@
   --colors-dark-blue: #091133;
   --colors-mid-blue: #434e66;
   --colors-yellow: #ffcb00;
-  --colors-dark-yellow: #e6b700;
   --colors-yellow-05: rgba(255, 203, 0, 0.05);
+  --colors-dark-yellow: #e6b700;
   --box-shadow-none: none;
 }
 
