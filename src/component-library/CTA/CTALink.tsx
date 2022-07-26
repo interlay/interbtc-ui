@@ -3,10 +3,14 @@ import { Link, LinkProps } from 'react-router-dom';
 
 import { OutlinedCTA, PrimaryCTA, SecondaryCTA } from './CTA.style';
 
-interface CTALinkProps extends LinkProps {
+type Props = {
+  variant?: 'primary' | 'secondary' | 'outlined';
   fullWidth?: boolean;
-  variant: 'primary' | 'secondary' | 'outlined';
-}
+};
+
+type NativeAttrs = Omit<LinkProps, keyof Props>;
+
+type CTALinkProps = Props & NativeAttrs;
 
 // TODO: Does this need to be changed to a React Router link component?
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
@@ -21,6 +25,7 @@ const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
     };
 
     switch (variant) {
+      default:
       case 'primary':
         return <PrimaryCTA {...props} />;
       case 'secondary':

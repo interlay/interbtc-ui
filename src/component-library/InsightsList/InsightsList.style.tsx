@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { Card } from '../Card';
 import { theme } from '../theme';
 import { devices } from '../utils/decives';
 
@@ -27,17 +28,9 @@ export const InsightsListItemWrapper = styled.div<InsightsListItemWrapperProps>`
   }
 `;
 
-export const Card = styled.div`
-  display: flex;
+export const InsightsListWrapper = styled(Card)`
   justify-content: space-between;
   gap: ${theme.spacing.spacing8};
-  flex-direction: column;
-  box-shadow: ${theme.boxShadow.default};
-  color: ${theme.colors.textSecondary};
-  background-color: ${theme.card.bg};
-  border: ${theme.border.default};
-  border-radius: ${theme.rounded.xl};
-  padding: ${theme.spacing.spacing6};
 
   @media ${devices.laptop} {
     flex-direction: row;

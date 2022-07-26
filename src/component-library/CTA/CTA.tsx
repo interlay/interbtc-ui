@@ -1,12 +1,15 @@
-import { forwardRef } from 'react';
+import { ButtonHTMLAttributes, forwardRef } from 'react';
 
 import { OutlinedCTA, PrimaryCTA, SecondaryCTA } from './CTA.style';
 
-interface CTAProps extends React.ComponentPropsWithRef<'button'> {
-  disabled?: boolean;
-  variant: 'primary' | 'secondary' | 'outlined';
+type Props = {
+  variant?: 'primary' | 'secondary' | 'outlined';
   fullWidth?: boolean;
-}
+};
+
+type NativeAttrs = Omit<ButtonHTMLAttributes<unknown>, keyof Props>;
+
+type CTAProps = Props & NativeAttrs;
 
 const CTA = forwardRef<HTMLButtonElement, CTAProps>(
   ({ disabled = false, variant, fullWidth = false, onClick, className, children, ...rest }, ref): JSX.Element => {
@@ -22,6 +25,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
     };
 
     switch (variant) {
+      default:
       case 'primary':
         return <PrimaryCTA {...props} />;
       case 'secondary':
