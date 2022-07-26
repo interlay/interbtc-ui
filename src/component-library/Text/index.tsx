@@ -1,3 +1,5 @@
+export type { DlProps } from './Dl';
+export { Dl } from './Dl';
 export type { EmProps } from './Em';
 export { Em } from './Em';
 export type { H1Props } from './H1';
