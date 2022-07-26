@@ -111,12 +111,10 @@ const Staking = (): JSX.Element => {
 
   // ray test touch <
   const {
-    isIdle: governanceTokenBalanceIdle,
-    isLoading: governanceTokenBalanceLoading,
-    data: governanceTokenBalance,
-    error: governanceTokenBalanceError
+    governanceTokenBalanceIdle,
+    governanceTokenBalanceLoading,
+    governanceTokenBalance
   } = useGovernanceTokenBalance();
-  useErrorHandler(governanceTokenBalanceError);
   // ray test touch >
 
   const {

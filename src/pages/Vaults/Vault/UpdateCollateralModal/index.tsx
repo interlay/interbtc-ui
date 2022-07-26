@@ -93,12 +93,10 @@ const UpdateCollateralModal = ({
 
   // ray test touch <
   const {
-    isIdle: collateralBalanceIdle,
-    isLoading: collateralBalanceLoading,
-    data: collateralBalance,
-    error: collateralBalanceError
+    tokenBalanceIdle: collateralBalanceIdle,
+    tokenBalanceLoading: collateralBalanceLoading,
+    tokenBalance: collateralBalance
   } = useTokenBalance<CollateralUnit>(collateralCurrency.currency, vaultAddress);
-  useErrorHandler(collateralBalanceError);
   // ray test touch >
 
   const collateralTokenAmount = newMonetaryAmount(

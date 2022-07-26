@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 
 import { StoreType, TokenType } from '@/common/types/util.types';
@@ -67,8 +67,9 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     wrappedTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
 
-  const { data: governanceTokenBalance, error: governanceTokenBalanceError } = useGovernanceTokenBalance();
-  useErrorHandler(governanceTokenBalanceError);
+  // ray test touch <
+  const { governanceTokenBalance } = useGovernanceTokenBalance();
+  // ray test touch >
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
