@@ -2,9 +2,7 @@ import { ChainBalance, CurrencyUnit, GovernanceUnit } from '@interlay/interbtc-a
 import { Currency } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import * as React from 'react';
-// ray test touch <
 import { useErrorHandler } from 'react-error-boundary';
-// ray test touch >
 import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
@@ -13,13 +11,11 @@ import { GOVERNANCE_TOKEN, GovernanceToken } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-// ray test touch <
 interface UseTokenBalance<T extends CurrencyUnit> {
   tokenBalanceIdle: UseQueryResult<ChainBalance<T>, Error>['isIdle'];
   tokenBalanceLoading: UseQueryResult<ChainBalance<T>, Error>['isLoading'];
   tokenBalance: UseQueryResult<ChainBalance<T>, Error>['data'];
 }
-// ray test touch >
 
 const useTokenBalance = <T extends CurrencyUnit>(
   token: Currency<T>,
@@ -29,7 +25,6 @@ const useTokenBalance = <T extends CurrencyUnit>(
 
   const accountId = useAccountId(accountAddress);
 
-  // ray test touch <
   const {
     isIdle: tokenBalanceIdle,
     isLoading: tokenBalanceLoading,
@@ -49,19 +44,15 @@ const useTokenBalance = <T extends CurrencyUnit>(
     tokenBalanceLoading,
     tokenBalance
   };
-  // ray test touch >
 };
 
-// ray test touch <
 interface UseGovernanceTokenBalance {
   governanceTokenBalanceIdle: UseQueryResult<ChainBalance<GovernanceUnit>, Error>['isIdle'];
   governanceTokenBalanceLoading: UseQueryResult<ChainBalance<GovernanceUnit>, Error>['isLoading'];
   governanceTokenBalance: UseQueryResult<ChainBalance<GovernanceUnit>, Error>['data'];
 }
-// ray test touch >
 
 const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenBalance => {
-  // ray test touch <
   const {
     tokenBalanceIdle: governanceTokenBalanceIdle,
     tokenBalanceLoading: governanceTokenBalanceLoading,
@@ -73,7 +64,6 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenB
     governanceTokenBalanceLoading,
     governanceTokenBalance
   };
-  // ray test touch >
 };
 
 const useGovernanceTokenBalanceQueryKey = (

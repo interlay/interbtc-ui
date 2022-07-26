@@ -67,9 +67,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     wrappedTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
 
-  // ray test touch <
   const { governanceTokenBalance } = useGovernanceTokenBalance();
-  // ray test touch >
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);

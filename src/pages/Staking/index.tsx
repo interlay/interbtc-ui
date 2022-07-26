@@ -109,13 +109,11 @@ const Staking = (): JSX.Element => {
 
   const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
 
-  // ray test touch <
   const {
     governanceTokenBalanceIdle,
     governanceTokenBalanceLoading,
     governanceTokenBalance
   } = useGovernanceTokenBalance();
-  // ray test touch >
 
   const {
     register,
