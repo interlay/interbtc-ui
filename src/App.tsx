@@ -321,7 +321,9 @@ const App = (): JSX.Element => {
   }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
   const queryClient = useQueryClient();
+  // ray test touch <
   const governanceTokenBalanceQueryKey = useGovernanceTokenBalanceQueryKey();
+  // ray test touch >
 
   // Subscribes to governance token balance
   React.useEffect(() => {

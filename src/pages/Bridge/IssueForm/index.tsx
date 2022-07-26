@@ -87,6 +87,7 @@ const IssueForm = (): JSX.Element | null => {
     (state: StoreType) => state.general
   );
 
+  // ray test touch <
   const {
     isIdle: governanceTokenBalanceIdle,
     isLoading: governanceTokenBalanceLoading,
@@ -94,6 +95,7 @@ const IssueForm = (): JSX.Element | null => {
     error: governanceTokenBalanceError
   } = useGovernanceTokenBalance();
   useErrorHandler(governanceTokenBalanceError);
+  // ray test touch >
 
   const {
     register,

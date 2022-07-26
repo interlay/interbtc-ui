@@ -107,6 +107,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     (state: StoreType) => state.general
   );
 
+  // ray test touch <
   const {
     isIdle: governanceTokenBalanceIdle,
     isLoading: governanceTokenBalanceLoading,
@@ -114,6 +115,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     error: governanceTokenBalanceError
   } = useGovernanceTokenBalance();
   useErrorHandler(governanceTokenBalanceError);
+  // ray test touch >
 
   const vaultAccountId = useAccountId(vaultAddress);
 

@@ -18,6 +18,7 @@ const useTokenBalance = <T extends CurrencyUnit>(
 
   const accountId = useAccountId(accountAddress);
 
+  // ray test touch <
   return useQuery<ChainBalance<T>, Error>(
     [GENERIC_FETCHER, 'tokens', 'balance', token, accountId],
     genericFetcher<ChainBalance<T>>(),
@@ -25,10 +26,13 @@ const useTokenBalance = <T extends CurrencyUnit>(
       enabled: !!bridgeLoaded && !!accountId
     }
   );
+  // ray test touch >
 };
 
 const useGovernanceTokenBalance = (accountAddress?: string): UseQueryResult<ChainBalance<GovernanceUnit>, Error> => {
+  // ray test touch <
   return useTokenBalance<GovernanceUnit>(GOVERNANCE_TOKEN, accountAddress);
+  // ray test touch >
 };
 
 const useGovernanceTokenBalanceQueryKey = (
