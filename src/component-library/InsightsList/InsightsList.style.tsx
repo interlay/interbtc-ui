@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
+import { devices } from '../utils/decives';
 
 type InsightsListItemWrapperProps = { hasInfo?: boolean };
 
@@ -12,21 +13,35 @@ export const InsightsListItemWrapper = styled.div<InsightsListItemWrapperProps>`
   gap: ${(props) => !props.hasInfo && theme.spacing.spacing4};
 
   &:not(:last-of-type) {
-    padding-right: ${theme.spacing.spacing8};
-    border-right: ${theme.border.default};
+    padding-bottom: ${theme.spacing.spacing8};
+    border-bottom: ${theme.border.default};
+  }
+
+  @media ${devices.laptop} {
+    &:not(:last-of-type) {
+      padding-bottom: 0;
+      padding-right: ${theme.spacing.spacing8};
+      border-bottom: none;
+      border-right: ${theme.border.default};
+    }
   }
 `;
 
 export const Card = styled.div`
-  box-shadow: ${theme.boxShadow.default};
-  color: ${theme.colors.textSecondary};
   display: flex;
   justify-content: space-between;
+  gap: ${theme.spacing.spacing8};
+  flex-direction: column;
+  box-shadow: ${theme.boxShadow.default};
+  color: ${theme.colors.textSecondary};
   background-color: ${theme.card.bg};
   border: ${theme.border.default};
   border-radius: ${theme.rounded.xl};
-  gap: ${theme.spacing.spacing8};
   padding: ${theme.spacing.spacing6};
+
+  @media ${devices.laptop} {
+    flex-direction: row;
+  }
 `;
 
 export const InsightTitle = styled.h2`
@@ -46,5 +61,6 @@ export const InsightLabel = styled.p`
 
 export const InsightSubLabel = styled.p`
   color: ${theme.colors.textTertiary};
+  font-size: ${theme.text.s};
   line-height: ${theme.lineHeight.base};
 `;

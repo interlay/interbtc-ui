@@ -34,8 +34,11 @@ export const SecondaryCTA = styled(BaseCTA)`
 `;
 
 export const OutlinedCTA = styled(BaseCTA)`
-  // TODO: missing hover
   color: ${theme.cta.outlined.text};
   border: ${theme.cta.outlined.border};
   background: none;
+
+  &:hover:not([disabled]) {
+    background-color: ${theme.cta.outlined.bgHover};
+  }
 `;

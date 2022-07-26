@@ -86,7 +86,8 @@ const theme = {
     },
     outlined: {
       text: 'var(--colors-cta-outlined-text)',
-      border: '1px solid var(--colors-cta-outlined-border)'
+      border: '1px solid var(--colors-cta-outlined-border)',
+      bgHover: 'var(--colors-cta-outlined-hover)'
     }
   },
   table: {
