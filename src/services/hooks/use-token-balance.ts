@@ -4,7 +4,7 @@ import { useQuery, useQueryClient, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -60,6 +60,28 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenB
   };
 };
 
+// ray test touch <
+interface UseRelayChainNativeTokenBalance {
+  relayChainNativeTokenBalanceIdle: UseQueryResult<ChainBalance<CollateralUnit>, Error>['isIdle'];
+  relayChainNativeTokenBalanceLoading: UseQueryResult<ChainBalance<CollateralUnit>, Error>['isLoading'];
+  relayChainNativeTokenBalance: UseQueryResult<ChainBalance<CollateralUnit>, Error>['data'];
+}
+
+const useRelayChainNativeTokenBalance = (accountAddress?: string): UseRelayChainNativeTokenBalance => {
+  const {
+    tokenBalanceIdle: relayChainNativeTokenBalanceIdle,
+    tokenBalanceLoading: relayChainNativeTokenBalanceLoading,
+    tokenBalance: relayChainNativeTokenBalance
+  } = useTokenBalance<CollateralUnit>(RELAY_CHAIN_NATIVE_TOKEN, accountAddress);
+
+  return {
+    relayChainNativeTokenBalanceIdle,
+    relayChainNativeTokenBalanceLoading,
+    relayChainNativeTokenBalance
+  };
+};
+// ray test touch >
+
 const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => void) | undefined => {
   const accountId = useAccountId(accountAddress);
 
@@ -73,6 +95,6 @@ const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => vo
 };
 
 // MEMO: should wrap components with `withErrorBoundary` from `react-error-boundary` where these hooks are placed for nearest error handling
-export { useGovernanceTokenBalance, useGovernanceTokenBalanceInvalidate };
+export { useGovernanceTokenBalance, useGovernanceTokenBalanceInvalidate, useRelayChainNativeTokenBalance };
 
 export default useTokenBalance;
