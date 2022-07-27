@@ -18,7 +18,7 @@ import { getVaultStatusLabel } from '@/utils/helpers/vaults';
 import StatPanel from '../StatPanel';
 
 interface Props {
-  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
+  vaultAccountId: AccountId;
   collateralId: CurrencyIdLiteral | undefined;
 }
 

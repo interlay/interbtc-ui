@@ -1,8 +1,8 @@
 import {
   CollateralCurrency,
   CollateralIdLiteral,
+  CollateralUnit,
   CurrencyIdLiteral,
-  newAccountId,
   VaultExt,
   VaultStatusExt
 } from '@interlay/interbtc-api';
@@ -32,9 +32,11 @@ import { GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount, WRAPPED_TOKEN_S
 import MainContainer from '@/parts/MainContainer';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { GenericCurrencyValues } from '@/types/currency';
 import { WRAPPED_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getCurrency } from '@/utils/helpers/currencies';
+import useAccountId from '@/utils/hooks/use-account-id';
 
 import { VaultsHeader } from '../VaultsHeader';
 import ClaimRewardsButton from './ClaimRewardsButton';
@@ -95,13 +97,7 @@ const Vault = (): JSX.Element => {
     setRequestIssueModalOpen(true);
   };
 
-  const vaultAccountId = React.useMemo(() => {
-    // eslint-disable-next-line max-len
-    // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
-    if (!bridgeLoaded) return;
-
-    return newAccountId(window.bridge.api, selectedVaultAccountAddress);
-  }, [bridgeLoaded, selectedVaultAccountAddress]);
+  const vaultAccountId = useAccountId(selectedVaultAccountAddress);
 
   const collateralCurrencyValues = React.useMemo(() => getCurrency(vaultCollateral as CurrencyIdLiteral), [
     vaultCollateral
@@ -271,7 +267,9 @@ const Vault = (): JSX.Element => {
             {vaultItems.map((item) => (
               <StatPanel key={item.title} label={item.title} value={item.value} />
             ))}
-            <VaultStatusStatPanel collateralId={collateralCurrencyValues?.id} vaultAccountId={vaultAccountId} />
+            {vaultAccountId && (
+              <VaultStatusStatPanel collateralId={collateralCurrencyValues?.id} vaultAccountId={vaultAccountId} />
+            )}
           </div>
         </div>
         {/* Check interaction with the vault */}
@@ -283,7 +281,9 @@ const Vault = (): JSX.Element => {
             <InterlayDefaultContainedButton onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
+            {vaultAccountId && collateralCurrencyValues && (
+              <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
+            )}
             <InterlayTooltip label={issueButtonTooltip}>
               {/* Button wrapped in div to enable tooltip on disabled button. */}
               <div className='grid'>
@@ -314,7 +314,7 @@ const Vault = (): JSX.Element => {
         />
         <ReplaceTable vaultAddress={selectedVaultAccountAddress} collateralId={collateralCurrencyValues?.id} />
       </MainContainer>
-      {collateralCurrencyValues && collateralUpdateStatus !== CollateralUpdateStatus.Close && (
+      {collateralCurrencyValues && collateralUpdateStatus !== CollateralUpdateStatus.Close && vaultAccountId && (
         <UpdateCollateralModal
           open={
             collateralUpdateStatus === CollateralUpdateStatus.Deposit ||
@@ -323,9 +323,8 @@ const Vault = (): JSX.Element => {
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
           vaultAddress={selectedVaultAccountAddress}
-          vaultAccountId={vaultAccountId}
           hasLockedBTC={hasLockedBTC}
-          collateralCurrency={collateralCurrencyValues}
+          collateralCurrency={collateralCurrencyValues as GenericCurrencyValues<CollateralUnit>}
         />
       )}
       <RequestReplacementModal

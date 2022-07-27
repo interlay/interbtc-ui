@@ -21,16 +21,12 @@ import {
   UPDATE_BALANCE_POLKA_BTC,
   UPDATE_COLLATERAL_TOKEN_BALANCE,
   UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
-  UPDATE_GOVERNANCE_TOKEN_BALANCE,
-  UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
   UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   UpdateBalancePolkaBTC,
   UpdateCollateralTokenBalance,
   UpdateCollateralTokenTransferableBalance,
-  UpdateGovernanceTokenBalance,
-  UpdateGovernanceTokenTransferableBalance,
   UpdateHeights,
   UpdateTotals,
   UpdateWrappedTokenTransferableBalance
@@ -81,20 +77,6 @@ export const updateCollateralTokenTransferableBalanceAction = (
 ): UpdateCollateralTokenTransferableBalance => ({
   type: UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   collateralTokenTransferableBalance
-});
-
-export const updateGovernanceTokenBalanceAction = (
-  governanceTokenBalance: GovernanceTokenMonetaryAmount
-): UpdateGovernanceTokenBalance => ({
-  type: UPDATE_GOVERNANCE_TOKEN_BALANCE,
-  governanceTokenBalance
-});
-
-export const updateGovernanceTokenTransferableBalanceAction = (
-  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount
-): UpdateGovernanceTokenTransferableBalance => ({
-  type: UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
-  governanceTokenTransferableBalance
 });
 
 export const initGeneralDataAction = (

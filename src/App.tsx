@@ -6,7 +6,6 @@ import {
   CollateralUnit,
   createInterBtcApi,
   FaucetClient,
-  GovernanceUnit,
   SecurityStatusCode
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
@@ -27,8 +26,6 @@ import {
   setInstalledExtensionAction,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
-  updateGovernanceTokenBalanceAction,
-  updateGovernanceTokenTransferableBalanceAction,
   updateWrappedTokenBalanceAction,
   updateWrappedTokenTransferableBalanceAction
 } from '@/common/actions/general.actions';
@@ -39,6 +36,7 @@ import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { APP_NAME, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import InterlayHelmet from '@/parts/InterlayHelmet';
 import Layout from '@/parts/Layout';
+import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { PAGES } from '@/utils/constants/links';
@@ -67,9 +65,7 @@ const App = (): JSX.Element => {
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
     collateralTokenBalance,
-    collateralTokenTransferableBalance,
-    governanceTokenBalance,
-    governanceTokenTransferableBalance
+    collateralTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
@@ -323,24 +319,22 @@ const App = (): JSX.Element => {
     };
   }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
+  const governanceTokenBalanceInvalidate = useGovernanceTokenBalanceInvalidate();
+
   // Subscribes to governance token balance
   React.useEffect(() => {
-    if (!dispatch) return;
     if (!bridgeLoaded) return;
     if (!address) return;
+    if (!governanceTokenBalanceInvalidate) return;
 
     (async () => {
       try {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           GOVERNANCE_TOKEN,
           address,
-          (_: string, balance: ChainBalance<GovernanceUnit>) => {
-            if (!balance.free.eq(governanceTokenBalance)) {
-              dispatch(updateGovernanceTokenBalanceAction(balance.free));
-            }
-            if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
-              dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
-            }
+          // TODO: it looks like the callback is called just before the balance is updated (not after)
+          () => {
+            governanceTokenBalanceInvalidate();
           }
         );
         // Unsubscribe if previous subscription is alive
@@ -360,7 +354,7 @@ const App = (): JSX.Element => {
         unsubscribeGovernanceTokenBalance.current = null;
       }
     };
-  }, [dispatch, bridgeLoaded, address, governanceTokenBalance, governanceTokenTransferableBalance]);
+  }, [bridgeLoaded, address, governanceTokenBalanceInvalidate]);
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
