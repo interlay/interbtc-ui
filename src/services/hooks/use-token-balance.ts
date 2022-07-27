@@ -64,7 +64,6 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenB
   };
 };
 
-// ray test touch <
 const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => void) | undefined => {
   const accountId = useAccountId(accountAddress);
 
@@ -76,7 +75,6 @@ const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => vo
       }
     : undefined;
 };
-// ray test touch >
 
 // MEMO: should wrap components with `withErrorBoundary` from `react-error-boundary` where these hooks are placed for nearest error handling
 export { useGovernanceTokenBalance, useGovernanceTokenBalanceInvalidate };

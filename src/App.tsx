@@ -36,9 +36,7 @@ import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { APP_NAME, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import InterlayHelmet from '@/parts/InterlayHelmet';
 import Layout from '@/parts/Layout';
-// ray test touch <
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
-// ray test touch >
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { PAGES } from '@/utils/constants/links';
@@ -321,17 +319,13 @@ const App = (): JSX.Element => {
     };
   }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
-  // ray test touch <
   const governanceTokenBalanceInvalidate = useGovernanceTokenBalanceInvalidate();
-  // ray test touch >
 
   // Subscribes to governance token balance
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!address) return;
-    // ray test touch <
     if (!governanceTokenBalanceInvalidate) return;
-    // ray test touch >
 
     (async () => {
       try {
@@ -340,9 +334,7 @@ const App = (): JSX.Element => {
           address,
           // TODO: it looks like the callback is called just before the balance is updated (not after)
           () => {
-            // ray test touch <
             governanceTokenBalanceInvalidate();
-            // ray test touch >
           }
         );
         // Unsubscribe if previous subscription is alive
@@ -362,9 +354,7 @@ const App = (): JSX.Element => {
         unsubscribeGovernanceTokenBalance.current = null;
       }
     };
-    // ray test touch <
   }, [bridgeLoaded, address, governanceTokenBalanceInvalidate]);
-  // ray test touch >
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
