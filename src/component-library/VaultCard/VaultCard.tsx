@@ -1,7 +1,16 @@
 import { CoinPair } from '../CoinPair';
 import { CTALink } from '../CTA';
 import { Tokens } from '../types';
-import { Card, CardBody, CardHeader, CardTitle, CTAWrapper, DlItem, StyledDl } from './VaultCard.style';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  CollateralScore,
+  CTAWrapper,
+  DlItem,
+  StyledDl
+} from './VaultCard.style';
 
 interface VaultCardProps {
   collateralSymbol: Tokens;
@@ -10,6 +19,7 @@ interface VaultCardProps {
   apy: string;
   collateralScore: string;
   link: string;
+  atRisk: boolean;
 }
 
 const VaultCard = ({
@@ -18,7 +28,8 @@ const VaultCard = ({
   pendingRequests,
   apy,
   collateralScore,
-  link
+  link,
+  atRisk
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
@@ -42,7 +53,9 @@ const VaultCard = ({
         </DlItem>
         <DlItem>
           <dt>Collateralization</dt>
-          <dd>{collateralScore === '∞' ? collateralScore : `${collateralScore}%`}</dd>
+          <CollateralScore $atRisk={atRisk}>
+            {collateralScore === '∞' ? collateralScore : `${collateralScore}%`}
+          </CollateralScore>
         </DlItem>
       </StyledDl>
       <CTAWrapper>
