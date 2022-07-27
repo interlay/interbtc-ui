@@ -7,6 +7,7 @@ import { StyledTab } from './Tabs.style';
 
 type TabProps<T> = { item: AriaTabProps & { rendered: ReactNode }; state: TabListState<T> };
 
+// @internal
 // eslint-disable-next-line @typescript-eslint/ban-types
 const Tab = <T extends object>({ item, state }: TabProps<T>): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null);
