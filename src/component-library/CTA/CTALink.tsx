@@ -1,10 +1,11 @@
 import { forwardRef } from 'react';
 import { Link, LinkProps } from 'react-router-dom';
 
+import { CTAVariants } from '../utils/prop-types';
 import { OutlinedCTA, PrimaryCTA, SecondaryCTA } from './CTA.style';
 
 type Props = {
-  variant?: 'primary' | 'secondary' | 'outlined';
+  variant?: CTAVariants;
   fullWidth?: boolean;
 };
 
