@@ -20,8 +20,19 @@ export type { StackProps } from './Stack';
 export { Stack } from './Stack';
 export type { TableProps } from './Table';
 export { Table } from './Table';
-export type { EmProps, H1Props, H2Props, H3Props, H4Props, H5Props, H6Props, PProps, StrongProps } from './Text';
-export { Em, H1, H2, H3, H4, H5, H6, P, Strong } from './Text';
+export type {
+  DlProps,
+  EmProps,
+  H1Props,
+  H2Props,
+  H3Props,
+  H4Props,
+  H5Props,
+  H6Props,
+  PProps,
+  StrongProps
+} from './Text';
+export { Dl, Em, H1, H2, H3, H4, H5, H6, P, Strong } from './Text';
 export type { ComponentLibraryTheme } from './theme';
 export { theme } from './theme';
 export type { TokenBalanceProps } from './TokenBalance';
