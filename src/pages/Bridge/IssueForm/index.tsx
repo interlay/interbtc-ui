@@ -200,10 +200,7 @@ const IssueForm = (): JSX.Element | null => {
   ) {
     return <PrimaryColorEllipsisLoader />;
   }
-  if (requestLimits === undefined) {
-    throw new Error('Something went wrong!');
-  }
-  if (governanceTokenBalance === undefined) {
+  if (requestLimits === undefined || governanceTokenBalance === undefined) {
     throw new Error('Something went wrong!');
   }
 
