@@ -42,6 +42,7 @@ const VaultOverview = (): JSX.Element => {
                 apy={safeRoundTwoDecimals(vault.apy.toString())}
                 collateralScore={safeRoundTwoDecimals(vault.collateralization?.mul(100).toString(), '∞')}
                 link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`}
+                atRisk={vault.vaultAtRisk}
               />
             </GridItem>
           ))}

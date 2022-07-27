@@ -108,7 +108,7 @@
     "type-check": "tsc",
     "format": "yarn prettier --write src",
     "setup": "yarn generate:defs && yarn generate:meta",
-    "build": "craco build",
+    "build": "REACT_APP_VERSION=$npm_package_version craco build",
     "build-with-webpack-bundle-analysis": "yarn build --stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
     "tailwind-config-viewer": "cd src && tailwind-config-viewer -o",
     "test": "node -e \"console.log('Tests are not ready yet!')\"",

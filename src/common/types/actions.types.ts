@@ -16,8 +16,6 @@ export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
 export const UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE';
-export const UPDATE_GOVERNANCE_TOKEN_BALANCE = 'UPDATE_GOVERNANCE_TOKEN_BALANCE';
-export const UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE';
 export const SET_INSTALLED_EXTENSION = 'SET_INSTALLED_EXTENSION';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
 export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
@@ -90,16 +88,6 @@ export interface UpdateCollateralTokenTransferableBalance {
   collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
 }
 
-export interface UpdateGovernanceTokenBalance {
-  type: typeof UPDATE_GOVERNANCE_TOKEN_BALANCE;
-  governanceTokenBalance: GovernanceTokenMonetaryAmount;
-}
-
-export interface UpdateGovernanceTokenTransferableBalance {
-  type: typeof UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE;
-  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount;
-}
-
 export interface SetInstalledExtension {
   type: typeof SET_INSTALLED_EXTENSION;
   extensions: string[];
@@ -119,8 +107,6 @@ export type GeneralActions =
   | UpdateWrappedTokenTransferableBalance
   | UpdateCollateralTokenBalance
   | UpdateCollateralTokenTransferableBalance
-  | UpdateGovernanceTokenBalance
-  | UpdateGovernanceTokenTransferableBalance
   | SetInstalledExtension
   | ShowAccountModal
   | UpdateHeights

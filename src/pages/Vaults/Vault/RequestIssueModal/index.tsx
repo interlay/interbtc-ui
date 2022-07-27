@@ -1,4 +1,4 @@
-import { CurrencyIdLiteral, GovernanceUnit, Issue, newAccountId, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, GovernanceUnit, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -30,11 +30,13 @@ import {
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import useAccountId from '@/utils/hooks/use-account-id';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -101,14 +103,17 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
 
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, governanceTokenBalance, parachainStatus } = useSelector(
+  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
 
-  const vaultAccountId = React.useMemo(() => {
-    if (!bridgeLoaded) return;
-    return newAccountId(window.bridge.api, vaultAddress);
-  }, [bridgeLoaded, vaultAddress]);
+  const {
+    governanceTokenBalanceIdle,
+    governanceTokenBalanceLoading,
+    governanceTokenBalance
+  } = useGovernanceTokenBalance();
+
+  const vaultAccountId = useAccountId(vaultAddress);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -158,9 +163,19 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     })();
   }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId]);
 
-  if (status === STATUSES.IDLE || status === STATUSES.PENDING || vaultAccountId === undefined) {
+  if (
+    status === STATUSES.IDLE ||
+    status === STATUSES.PENDING ||
+    vaultAccountId === undefined ||
+    governanceTokenBalanceIdle ||
+    governanceTokenBalanceLoading
+  ) {
     return <PrimaryColorEllipsisLoader />;
   }
+  if (governanceTokenBalance === undefined) {
+    throw new Error('Something went wrong!');
+  }
+
   const onSubmit = async (data: RequestIssueFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -193,7 +208,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
 
     const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
     const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
-    if (governanceTokenBalance.lte(minRequiredGovernanceTokenAmount)) {
+    if (governanceTokenBalance.free.lte(minRequiredGovernanceTokenAmount)) {
       return t('insufficient_funds_governance_token', {
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
       });

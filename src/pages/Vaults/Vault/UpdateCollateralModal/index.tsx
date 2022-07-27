@@ -1,12 +1,5 @@
-import {
-  ChainBalance,
-  CollateralUnit,
-  CurrencyUnit,
-  newMonetaryAmount,
-  roundTwoDecimals
-} from '@interlay/interbtc-api';
+import { CollateralUnit, newMonetaryAmount, roundTwoDecimals } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -26,9 +19,9 @@ import ErrorFallback from '@/components/ErrorFallback';
 import TokenField from '@/components/TokenField';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { CurrencyValues } from '@/types/currency';
+import useTokenBalance from '@/services/hooks/use-token-balance';
+import { GenericCurrencyValues } from '@/types/currency';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -49,9 +42,8 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
-  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
   hasLockedBTC: boolean;
-  collateralCurrency: CurrencyValues;
+  collateralCurrency: GenericCurrencyValues<CollateralUnit>;
 }
 
 const UpdateCollateralModal = ({
@@ -59,7 +51,6 @@ const UpdateCollateralModal = ({
   onClose,
   collateralUpdateStatus,
   vaultAddress,
-  vaultAccountId,
   hasLockedBTC,
   collateralCurrency
 }: Props): JSX.Element => {
@@ -101,18 +92,10 @@ const UpdateCollateralModal = ({
   useErrorHandler(requiredCollateralTokenAmountError);
 
   const {
-    isIdle: collateralBalanceIdle,
-    isLoading: collateralBalanceLoading,
-    data: collateralBalance,
-    error: collateralBalanceError
-  } = useQuery<ChainBalance<CollateralUnit>, Error>(
-    [GENERIC_FETCHER, 'tokens', 'balance', collateralCurrency.currency, vaultAccountId],
-    genericFetcher<ChainBalance<CollateralUnit>>(),
-    {
-      enabled: !!bridgeLoaded && !!vaultAccountId
-    }
-  );
-  useErrorHandler(collateralBalanceError);
+    tokenBalanceIdle: collateralBalanceIdle,
+    tokenBalanceLoading: collateralBalanceLoading,
+    tokenBalance: collateralBalance
+  } = useTokenBalance<CollateralUnit>(collateralCurrency.currency, vaultAddress);
 
   const collateralTokenAmount = newMonetaryAmount(
     strCollateralTokenAmount,
@@ -196,9 +179,7 @@ const UpdateCollateralModal = ({
 
     // Collateral update only allowed if above required collateral
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
-      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(
-        requiredCollateralTokenAmount
-      ) as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
 
       return collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount)
         ? t('vault.collateral_below_threshold')
@@ -213,9 +194,7 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    if (
-      collateralTokenAmount.gt(collateralBalance?.transferable as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>)
-    ) {
+    if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
       return t(`Must be less than ${collateralCurrency.id} balance!`);
     }
 
@@ -334,7 +313,7 @@ const UpdateCollateralModal = ({
               })}
               approxUSD={`≈ $ ${getUsdAmount(
                 collateralTokenAmount,
-                getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+                getTokenPrice(prices, collateralCurrency.id)?.usd
               )}`}
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}

@@ -12,7 +12,8 @@ const theme = {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
     textTertiary: 'var(--colors-text-tertiary)',
-    bgPrimary: 'var(--colors-bg-primary)'
+    bgPrimary: 'var(--colors-bg-primary)',
+    warn: `var(--colors-shared-red)`
   },
   font: {
     primary: 'var(--fonts-primary)'
