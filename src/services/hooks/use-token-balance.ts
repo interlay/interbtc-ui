@@ -1,13 +1,11 @@
 import { ChainBalance, CurrencyUnit, GovernanceUnit } from '@interlay/interbtc-api';
 import { Currency } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
-import * as React from 'react';
 import { useErrorHandler } from 'react-error-boundary';
-import { useQuery, UseQueryResult } from 'react-query';
+import { useQuery, useQueryClient, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { GOVERNANCE_TOKEN, GovernanceToken } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -67,20 +65,20 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenB
 };
 
 // ray test touch <
-const useGovernanceTokenBalanceQueryKey = (
-  accountAddress?: string
-): [string, string, string, GovernanceToken, AccountId] | undefined => {
+const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => void) | undefined => {
   const accountId = useAccountId(accountAddress);
 
-  return React.useMemo(() => {
-    if (!accountId) return;
+  const queryClient = useQueryClient();
 
-    return [GENERIC_FETCHER, 'tokens', 'balance', GOVERNANCE_TOKEN, accountId];
-  }, [accountId]);
+  return accountId
+    ? () => {
+        queryClient.invalidateQueries([GENERIC_FETCHER, 'tokens', 'balance', GOVERNANCE_TOKEN, accountId]);
+      }
+    : undefined;
 };
 // ray test touch >
 
 // MEMO: should wrap components with `withErrorBoundary` from `react-error-boundary` where these hooks are placed for nearest error handling
-export { useGovernanceTokenBalance, useGovernanceTokenBalanceQueryKey };
+export { useGovernanceTokenBalance, useGovernanceTokenBalanceInvalidate };
 
 export default useTokenBalance;

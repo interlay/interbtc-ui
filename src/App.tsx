@@ -13,7 +13,6 @@ import { Keyring } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import * as React from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
-import { useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -38,7 +37,7 @@ import { APP_NAME, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } f
 import InterlayHelmet from '@/parts/InterlayHelmet';
 import Layout from '@/parts/Layout';
 // ray test touch <
-import { useGovernanceTokenBalanceQueryKey } from '@/services/hooks/use-token-balance';
+import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
 // ray test touch >
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
@@ -322,18 +321,16 @@ const App = (): JSX.Element => {
     };
   }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
-  const queryClient = useQueryClient();
   // ray test touch <
-  const governanceTokenBalanceQueryKey = useGovernanceTokenBalanceQueryKey();
+  const governanceTokenBalanceInvalidate = useGovernanceTokenBalanceInvalidate();
   // ray test touch >
 
   // Subscribes to governance token balance
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!address) return;
-    if (!queryClient) return;
     // ray test touch <
-    if (!governanceTokenBalanceQueryKey) return;
+    if (!governanceTokenBalanceInvalidate) return;
     // ray test touch >
 
     (async () => {
@@ -344,7 +341,7 @@ const App = (): JSX.Element => {
           // TODO: it looks like the callback is called just before the balance is updated (not after)
           () => {
             // ray test touch <
-            queryClient.invalidateQueries(governanceTokenBalanceQueryKey);
+            governanceTokenBalanceInvalidate();
             // ray test touch >
           }
         );
@@ -366,7 +363,7 @@ const App = (): JSX.Element => {
       }
     };
     // ray test touch <
-  }, [bridgeLoaded, address, queryClient, governanceTokenBalanceQueryKey]);
+  }, [bridgeLoaded, address, governanceTokenBalanceInvalidate]);
   // ray test touch >
 
   // Color schemes according to Interlay vs. Kintsugi
