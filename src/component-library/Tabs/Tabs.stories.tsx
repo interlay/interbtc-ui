@@ -1,13 +1,25 @@
 import { Meta, Story } from '@storybook/react';
-import { Item } from 'react-stately';
 
-import { Tabs, TabsProps } from '.';
+import { P } from '../Text';
+import { Tabs, TabsItem, TabsProps } from '.';
 
 const Template: Story<TabsProps> = (args) => (
   <Tabs {...args}>
-    <Item title='Recent'>Recent</Item>
-    <Item title='Favorites'>Favorites</Item>
-    <Item title='All'>All</Item>
+    <TabsItem title='Recent'>
+      <P>All</P>
+    </TabsItem>
+    <TabsItem title='Pending'>
+      <P>Pending</P>
+    </TabsItem>
+    <TabsItem title='Issue'>
+      <P>Issue</P>
+    </TabsItem>
+    <TabsItem title='Redeem'>
+      <P>Redeem</P>
+    </TabsItem>
+    <TabsItem title='Replace'>
+      <P>Replace</P>
+    </TabsItem>
   </Tabs>
 );
 

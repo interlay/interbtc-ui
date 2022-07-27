@@ -7,7 +7,8 @@ const TabListWrapper = styled.div`
   position: relative;
   background-color: ${theme.tabs.bg};
   padding: ${theme.spacing.spacing1};
-  border-radius: ${theme.rounded.xl};
+  // TODO: There is not a variable for this
+  border-radius: 10px;
   z-index: 0;
 `;
 
@@ -16,29 +17,45 @@ const TabList = styled.div`
 `;
 
 const StyledTab = styled.div`
-  padding: 8px ${theme.spacing.spacing10};
-  font-size: 14px;
-  font-weight: 600;
+  padding: ${theme.spacing.spacing1} ${theme.spacing.spacing4};
+  font-size: ${theme.text.xs};
   cursor: default;
   outline: none;
-  border-radius: 20px;
-  color: #444;
+  border-radius: ${theme.rounded.md};
+  color: ${theme.tabs.color};
   transition: color 150ms;
 
   &[aria-selected='true'] {
-    color: white;
+    color: ${theme.tabs.active.color};
   }
 `;
 
-const TabSelection = styled.div`
+type TabSelectionProps = { isFocusVisible: boolean };
+
+const TabSelection = styled.div<TabSelectionProps>`
   position: absolute;
   top: ${theme.spacing.spacing1};
   bottom: ${theme.spacing.spacing1};
   left: 0;
-  border-radius: inherit;
-  background: dodgerblue;
+  border-radius: ${theme.rounded.md};
+  background-color: ${theme.tabs.active.bg};
   will-change: transform, width;
   transition: transform 150ms, width 100ms;
+  z-index: -1;
+
+  ${(props) =>
+    props.isFocusVisible &&
+    `&:after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 10px;
+    border: 2px solid ${theme.tabs.active.bg};
+    z-index: 3;
+  }`}
 `;
 
 export { StyledTab, TabList, TabListWrapper, TabSelection };
