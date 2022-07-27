@@ -1,3 +1,5 @@
+export type { CardProps } from './Card';
+export { Card } from './Card';
 export type { CoinIconProps } from './CoinIcon';
 export { CoinIcon } from './CoinIcon';
 export type { CoinPairProps } from './CoinPair';

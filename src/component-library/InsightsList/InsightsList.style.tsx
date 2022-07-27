@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { Card } from '../Card';
 import { theme } from '../theme';
-import { devices } from '../utils/decives';
+import { breakpoints } from '../utils/breakpoints';
 
 type InsightsListItemWrapperProps = { hasInfo?: boolean };
 
@@ -18,7 +18,7 @@ export const InsightsListItemWrapper = styled.div<InsightsListItemWrapperProps>`
     border-bottom: ${theme.border.default};
   }
 
-  @media ${devices.laptop} {
+  @media ${breakpoints.large} {
     &:not(:last-of-type) {
       padding-bottom: 0;
       padding-right: ${theme.spacing.spacing8};
@@ -32,7 +32,7 @@ export const InsightsListWrapper = styled(Card)`
   justify-content: space-between;
   gap: ${theme.spacing.spacing8};
 
-  @media ${devices.laptop} {
+  @media ${breakpoints.large} {
     flex-direction: row;
   }
 `;
