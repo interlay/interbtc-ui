@@ -66,6 +66,7 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenB
   };
 };
 
+// ray test touch <
 const useGovernanceTokenBalanceQueryKey = (
   accountAddress?: string
 ): [string, string, string, GovernanceToken, AccountId] | undefined => {
@@ -77,6 +78,7 @@ const useGovernanceTokenBalanceQueryKey = (
     return [GENERIC_FETCHER, 'tokens', 'balance', GOVERNANCE_TOKEN, accountId];
   }, [accountId]);
 };
+// ray test touch >
 
 // MEMO: should wrap components with `withErrorBoundary` from `react-error-boundary` where these hooks are placed for nearest error handling
 export { useGovernanceTokenBalance, useGovernanceTokenBalanceQueryKey };
