@@ -10,7 +10,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {
   showAccountModalAction,
+  // ray test touch <
   updateCollateralTokenBalanceAction,
+  // ray test touch >
   updateWrappedTokenBalanceAction
 } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
@@ -125,7 +127,9 @@ const BurnForm = (): JSX.Element | null => {
         const earnedCollateralTokenAmount = burnRate.toCounter(
           new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero()
         );
+        // ray test touch <
         dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedCollateralTokenAmount)));
+        // ray test touch >
         reset({
           [WRAPPED_TOKEN_AMOUNT]: ''
         });

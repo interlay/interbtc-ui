@@ -13,6 +13,7 @@ export const INIT_STATE = 'INIT_STATE';
 export const INIT_GENERAL_DATA_ACTION = 'INIT_GENERAL_DATA_ACTION';
 export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
 export const UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE';
+// ray test touch <
 export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
@@ -71,6 +72,7 @@ export interface UpdateWrappedTokenTransferableBalance {
   wrappedTokenTransferableBalance: BitcoinAmount;
 }
 
+// ray test touch <
 export interface UpdateCollateralTokenBalance {
   type: typeof UPDATE_COLLATERAL_TOKEN_BALANCE;
   collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>;
@@ -80,6 +82,7 @@ export interface UpdateCollateralTokenTransferableBalance {
   type: typeof UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE;
   collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>;
 }
+// ray test touch >
 
 export interface ShowAccountModal {
   type: typeof SHOW_ACCOUNT_MODAL;
@@ -92,6 +95,7 @@ export type GeneralActions =
   | IsVaultClientLoaded
   | UpdateBalancePolkaBTC
   | UpdateWrappedTokenTransferableBalance
+  // ray test touch <
   | UpdateCollateralTokenBalance
   | UpdateCollateralTokenTransferableBalance
   | ShowAccountModal

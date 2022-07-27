@@ -15,6 +15,7 @@ import {
   isVaultClientLoaded,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
+  // ray test touch >
   updateWrappedTokenBalanceAction,
   updateWrappedTokenTransferableBalanceAction
 } from '@/common/actions/general.actions';
@@ -55,8 +56,10 @@ const App = (): JSX.Element => {
     bridgeLoaded,
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
+    // ray test touch <
     collateralTokenBalance,
     collateralTokenTransferableBalance
+    // ray test touch >
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
 

@@ -148,7 +148,9 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     // TODO: we need to handle and validate transfer fees properly. Implemented here initially
     // because it was an issue during testing.
+    // ray test touch <
     if (collateralTokenTransferableBalance.lt(transferAmount)) {
+      // ray test touch >
       return t('insufficient_funds');
       // Check transferred amount won't be below existential deposit when fees are deducted
       // This check is redundant if the relay chain balance is above zero
@@ -239,7 +241,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const isRelayChain = fromChain === ChainType.RelayChain;
+  // ray test touch <
   const chainBalance = isRelayChain ? relayChainBalance : collateralTokenTransferableBalance;
+  // ray test touch >
   const balance = displayMonetaryAmount(chainBalance);
 
   const handleClickBalance = () => {

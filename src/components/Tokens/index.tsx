@@ -59,8 +59,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   }, [tokenOptions, currentToken, getTokenOption, callbackFunction]);
 
   const {
+    // ray test touch <
     collateralTokenBalance,
     collateralTokenTransferableBalance,
+    // ray test touch >
     wrappedTokenBalance,
     wrappedTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
@@ -106,8 +108,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 
     setTokenOptions(tokenOptions);
   }, [
+    // ray test touch <
     collateralTokenBalance,
     collateralTokenTransferableBalance,
+    // ray test touch >
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
     governanceTokenBalance,
