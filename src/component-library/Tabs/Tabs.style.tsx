@@ -7,8 +7,7 @@ const TabListWrapper = styled.div`
   position: relative;
   background-color: ${theme.tabs.bg};
   padding: ${theme.spacing.spacing1};
-  // TODO: There is not a variable for this
-  border-radius: 10px;
+  border-radius: ${theme.rounded.xl};
   z-index: 0;
 `;
 
@@ -21,8 +20,9 @@ const StyledTab = styled.div`
   font-size: ${theme.text.xs};
   cursor: default;
   outline: none;
-  border-radius: ${theme.rounded.md};
+  border-radius: ${theme.rounded.lg};
   color: ${theme.tabs.color};
+  // TODO: have this transition into theme
   transition: color 150ms;
 
   &[aria-selected='true'] {
@@ -37,10 +37,11 @@ const TabSelection = styled.div<TabSelectionProps>`
   top: ${theme.spacing.spacing1};
   bottom: ${theme.spacing.spacing1};
   left: 0;
-  border-radius: ${theme.rounded.md};
+  border-radius: ${theme.rounded.lg};
   background-color: ${theme.tabs.active.bg};
   will-change: transform, width;
-  transition: transform 150ms, width 100ms;
+  // TODO: have this transition into theme
+  transition: transform 150ms, width ${theme.transition.duration};
   z-index: -1;
 
   ${(props) =>
@@ -52,7 +53,7 @@ const TabSelection = styled.div<TabSelectionProps>`
     left: -4px;
     right: -4px;
     bottom: -4px;
-    border-radius: 10px;
+    border-radius: ${theme.rounded.xl};
     border: 2px solid ${theme.tabs.active.bg};
     z-index: 3;
   }`}

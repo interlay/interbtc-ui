@@ -6,8 +6,7 @@ import { useRef } from 'react';
 type TabPanelProps<T> = AriaTabPanelProps & { state: TabListState<T> };
 
 // @internal
-// eslint-disable-next-line @typescript-eslint/ban-types
-const TabPanel = <T extends object>({ state, ...props }: TabPanelProps<T>): JSX.Element => {
+const TabPanel = <T extends Record<string, unknown>>({ state, ...props }: TabPanelProps<T>): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null);
   const { tabPanelProps } = useTabPanel(props, state, ref);
 
@@ -19,3 +18,4 @@ const TabPanel = <T extends object>({ state, ...props }: TabPanelProps<T>): JSX.
 };
 
 export { TabPanel };
+export type { TabPanelProps };

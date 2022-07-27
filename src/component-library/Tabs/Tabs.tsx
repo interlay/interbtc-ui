@@ -23,8 +23,7 @@ type TabsProps = Props & NativeAttrs;
 
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
   ({ children, ...props }, ref): JSX.Element => {
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    const ariaProps = { children: children as CollectionChildren<object>, ...props };
+    const ariaProps = { children: children as CollectionChildren<Record<string, unknown>>, ...props };
     const state = useTabListState(ariaProps);
     const tabsListRef = useDOMRef<HTMLDivElement>(ref);
     const { tabListProps } = useTabList(ariaProps, state, tabsListRef);
