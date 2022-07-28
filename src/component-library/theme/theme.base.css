@@ -51,6 +51,10 @@
 
   --colors-shared-red: #cb5458;
 
+  --colors-error: #ef4444;
+  --colors-warning: #ff9900;
+  --colors-success: #a2e75e;
+
   --text-xs: 0.75rem;
   --text-s: 0.875rem;
   --text-base: 1rem;
@@ -83,4 +87,5 @@
   --rounded-md: 6px;
   --rounded-lg: 8px;
   --rounded-xl: 12px;
+  --rounded-full: 9999px;
 }
