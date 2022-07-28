@@ -4,6 +4,7 @@
   --colors-dark-blue: #091133;
   --colors-mid-blue: #434e66;
   --colors-yellow: #ffcb00;
+  --colors-yellow-05: rgba(255, 203, 0, 0.05);
   --colors-dark-yellow: #e6b700;
   --box-shadow-none: none;
 }
@@ -18,6 +19,9 @@
   --colors-cta-primary-text: var(--colors-neutral-black);
   --colors-cta-secondary: var(--colors-neutral-white);
   --colors-cta-secondary-text: var(--colors-neutral-black);
+  --colors-cta-outlined-text: var(--colors-yellow);
+  --colors-cta-outlined-border: var(--colors-yellow);
+  --colors-cta-outlined-hover: var(--colors-yellow-05);
   --colors-text-primary: var(--colors-neutral-white);
   --colors-text-secondary: var(--colors-yellow);
   --colors-text-tertiary: var(--colors-neutral-light-grey);

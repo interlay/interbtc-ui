@@ -32,3 +32,13 @@ export const SecondaryCTA = styled(BaseCTA)`
   background-color: ${theme.cta.secondary.bg};
   color: ${theme.cta.secondary.text};
 `;
+
+export const OutlinedCTA = styled(BaseCTA)`
+  color: ${theme.cta.outlined.text};
+  border: ${theme.cta.outlined.border};
+  background: none;
+
+  &:hover:not([disabled]) {
+    background-color: ${theme.cta.outlined.bgHover};
+  }
+`;
