@@ -51,7 +51,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
     return (
       <div>
         <TabListWrapper>
-          <TabSelection isFocusVisible={isFocusVisible} style={activeTabStyle} />
+          <TabSelection isFocusVisible={isFocusVisible} {...activeTabStyle} />
           <TabList {...mergeProps(tabListProps, focusProps)} ref={tabsListRef}>
             {[...state.collection].map((item) => (
               <Tab key={item.key} item={item} state={state} />

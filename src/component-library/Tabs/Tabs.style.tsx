@@ -30,7 +30,7 @@ const StyledTab = styled.div`
   }
 `;
 
-type TabSelectionProps = { isFocusVisible: boolean };
+type TabSelectionProps = { isFocusVisible: boolean; width: number; transform: string };
 
 const TabSelection = styled.div<TabSelectionProps>`
   position: absolute;
@@ -41,8 +41,11 @@ const TabSelection = styled.div<TabSelectionProps>`
   background-color: ${theme.tabs.active.bg};
   will-change: transform, width;
   // TODO: have this transition into theme
-  transition: transform 150ms, width ${theme.transition.duration};
+  transition: transform 150ms, width ${theme.transition.duration}ms;
   z-index: -1;
+
+  width: ${(props) => props.width}px;
+  transform: ${(props) => props.transform};
 
   ${(props) =>
     props.isFocusVisible &&
