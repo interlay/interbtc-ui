@@ -1,4 +1,4 @@
-import { CurrencyIdLiteral, RedeemStatus } from '@interlay/interbtc-api';
+import { CollateralIdLiteral, RedeemStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -35,10 +35,10 @@ import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters'
 
 interface Props {
   vaultAddress: string;
-  collateralId: CurrencyIdLiteral | undefined;
+  collateralTokenIdLiteral: CollateralIdLiteral;
 }
 
-const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Element | null => {
+const VaultRedeemRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
@@ -78,12 +78,9 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
-      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}`)
+      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralTokenIdLiteral}}`)
     ],
-    graphqlFetcher<GraphqlReturn<any>>(),
-    {
-      enabled: !!collateralId
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(redeemRequestsTotalCountError);
 
@@ -98,12 +95,9 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
       REDEEMS_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralTokenIdLiteral}}` // `WHERE` condition
     ],
-    redeemsFetcher,
-    {
-      enabled: !!collateralId
-    }
+    redeemsFetcher
   );
   useErrorHandler(redeemRequestsError);
 

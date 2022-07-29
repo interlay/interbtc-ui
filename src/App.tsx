@@ -1,14 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 import './i18n';
 
-import {
-  ChainBalance,
-  CollateralUnit,
-  createInterBtcApi,
-  FaucetClient,
-  SecurityStatusCode
-} from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { ChainBalance, createInterBtcApi, FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
 import { Keyring } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import * as React from 'react';
@@ -38,7 +31,6 @@ import InterlayHelmet from '@/parts/InterlayHelmet';
 import Layout from '@/parts/Layout';
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
 import { BitcoinNetwork } from '@/types/bitcoin';
-import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
@@ -137,7 +129,7 @@ const App = (): JSX.Element => {
     (async () => {
       try {
         dispatch(isVaultClientLoaded(false));
-        const vault = await window.bridge.vaults.get(id, COLLATERAL_TOKEN_ID_LITERAL);
+        const vault = await window.bridge.vaults.get(id, RELAY_CHAIN_NATIVE_TOKEN);
         dispatch(isVaultClientLoaded(!!vault));
       } catch (error) {
         // TODO: should add error handling
@@ -241,7 +233,7 @@ const App = (): JSX.Element => {
     })();
   }, [address, bridgeLoaded, dispatch]);
 
-  // Subscribes to collateral token balance
+  // Subscribes to relay-chain native token balance
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
@@ -252,7 +244,7 @@ const App = (): JSX.Element => {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           RELAY_CHAIN_NATIVE_TOKEN,
           address,
-          (_: string, balance: ChainBalance<CollateralUnit>) => {
+          (_: string, balance: ChainBalance) => {
             if (!balance.free.eq(collateralTokenBalance)) {
               dispatch(updateCollateralTokenBalanceAction(balance.free));
             }
@@ -291,7 +283,7 @@ const App = (): JSX.Element => {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           WRAPPED_TOKEN,
           address,
-          (_: string, balance: ChainBalance<BitcoinUnit>) => {
+          (_: string, balance: ChainBalance) => {
             if (!balance.free.eq(wrappedTokenBalance)) {
               dispatch(updateWrappedTokenBalanceAction(balance.free));
             }
@@ -385,39 +377,45 @@ const App = (): JSX.Element => {
         <Route
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
-              <Switch location={location}>
-                <Route exact path={PAGES.VAULTS}>
-                  <Vaults />
-                </Route>
-                <Route exact path={PAGES.VAULT}>
-                  <Vault />
-                </Route>
-                <Route path={PAGES.VAULT}>
-                  <Vaults />
-                </Route>
-                <Route path={PAGES.DASHBOARD}>
-                  <Dashboard />
-                </Route>
-                <Route path={PAGES.STAKING}>
-                  <Staking />
-                </Route>
-                <Route path={PAGES.TRANSACTIONS}>
-                  <Transactions />
-                </Route>
-                <Route path={PAGES.TX}>
-                  <TX />
-                </Route>
-                <Route path={PAGES.BRIDGE}>
-                  <Bridge />
-                </Route>
-                <Route path={PAGES.TRANSFER}>
-                  <Transfer />
-                </Route>
-                <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
-                <Route path='*'>
-                  <NoMatch />
-                </Route>
-              </Switch>
+              {/* ray test touch < */}
+              {bridgeLoaded ? (
+                <Switch location={location}>
+                  <Route exact path={PAGES.VAULTS}>
+                    <Vaults />
+                  </Route>
+                  <Route exact path={PAGES.VAULT}>
+                    <Vault />
+                  </Route>
+                  <Route path={PAGES.VAULT}>
+                    <Vaults />
+                  </Route>
+                  <Route path={PAGES.DASHBOARD}>
+                    <Dashboard />
+                  </Route>
+                  <Route path={PAGES.STAKING}>
+                    <Staking />
+                  </Route>
+                  <Route path={PAGES.TRANSACTIONS}>
+                    <Transactions />
+                  </Route>
+                  <Route path={PAGES.TX}>
+                    <TX />
+                  </Route>
+                  <Route path={PAGES.BRIDGE}>
+                    <Bridge />
+                  </Route>
+                  <Route path={PAGES.TRANSFER}>
+                    <Transfer />
+                  </Route>
+                  <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
+                  <Route path='*'>
+                    <NoMatch />
+                  </Route>
+                </Switch>
+              ) : (
+                <FullLoadingSpinner />
+              )}
+              {/* ray test touch > */}
             </React.Suspense>
           )}
         />

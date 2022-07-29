@@ -1,14 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import {
-  CurrencyIdLiteral,
+  CollateralCurrencyExt,
+  CollateralIdLiteral,
   InterbtcPrimitivesVaultId,
   ReplaceRequestExt,
   stripHexPrefix,
   WrappedCurrency
 } from '@interlay/interbtc-api';
-import { ReplaceRequestStatus } from '@interlay/interbtc-api/build/src/interfaces';
-import { BitcoinUnit, CollateralUnit, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { H256 } from '@polkadot/types/interfaces';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -37,10 +35,10 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 
 interface Props {
   vaultAddress: string;
-  collateralId: CurrencyIdLiteral | undefined;
+  collateralTokenIdLiteral: CollateralIdLiteral;
 }
 
-const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
+const ReplaceTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -54,7 +52,7 @@ const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
     [GENERIC_FETCHER, 'replace', 'mapReplaceRequests', vaultId],
     genericFetcher<Map<H256, ReplaceRequestExt>>(),
     {
-      enabled: !!bridgeLoaded && !!collateralId,
+      enabled: !!bridgeLoaded && !!collateralTokenIdLiteral,
       refetchInterval: 10000
     }
   );
@@ -103,7 +101,7 @@ const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
         Header: WRAPPED_TOKEN_SYMBOL,
         accessor: 'amount',
         classNames: ['text-right'],
-        Cell: function FormattedCell({ value }: { value: MonetaryAmount<WrappedCurrency, BitcoinUnit> }) {
+        Cell: function FormattedCell({ value }: { value: MonetaryAmount<WrappedCurrency> }) {
           return <>{displayMonetaryAmount(value)}</>;
         }
       },
@@ -111,7 +109,7 @@ const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
         Header: t('griefing_collateral'),
         accessor: 'collateral',
         classNames: ['text-right'],
-        Cell: function FormattedCell({ value }: { value: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit> }) {
+        Cell: function FormattedCell({ value }: { value: MonetaryAmount<CollateralCurrencyExt> }) {
           return <>{displayMonetaryAmount(value)}</>;
         }
       },
@@ -119,7 +117,7 @@ const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
         Header: t('status'),
         accessor: 'status',
         classNames: ['text-center'],
-        Cell: function FormattedCell({ value }: { value: ReplaceRequestStatus }) {
+        Cell: function FormattedCell({ value }: { value: ReplaceRequestExt['status'] }) {
           let label;
           if (value.isPending) {
             label = t('pending');
@@ -138,12 +136,16 @@ const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
   );
 
   const data = replaceRequests
-    ? [...replaceRequests.filter((request) => request?.collateral?.currency?.ticker === collateralId).entries()].map(
-        ([key, value]) => ({
-          id: key,
-          ...value
-        })
-      )
+    ? [
+        ...replaceRequests
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
+          .filter((request) => request?.collateral?.currency?.ticker === collateralTokenIdLiteral)
+          .entries()
+      ].map(([key, value]) => ({
+        id: key,
+        ...value
+      }))
     : [];
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
@@ -162,10 +164,10 @@ const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
       <SectionTitle>{t('vault.replace_requests')}</SectionTitle>
       <InterlayTable {...getTableProps()}>
         <InterlayThead>
-          {headerGroups.map((headerGroup) => (
+          {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key
             <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
+              {headerGroup.headers.map((column: any) => (
                 // eslint-disable-next-line react/jsx-key
                 <InterlayTh
                   {...column.getHeaderProps([
@@ -182,13 +184,13 @@ const ReplaceTable = ({ vaultAddress, collateralId }: Props): JSX.Element => {
           ))}
         </InterlayThead>
         <InterlayTbody {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {rows.map((row: any) => {
             prepareRow(row);
 
             return (
               // eslint-disable-next-line react/jsx-key
               <InterlayTr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
+                {row.cells.map((cell: any) => {
                   return (
                     // eslint-disable-next-line react/jsx-key
                     <InterlayTd

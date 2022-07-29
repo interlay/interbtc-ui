@@ -1,3 +1,4 @@
+import { CollateralCurrencyExt } from '@interlay/interbtc-api';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
@@ -8,7 +9,6 @@ import {
 } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
-import { CollateralToken } from '@/config/relay-chains';
 import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
 import LineChart from '@/pages/Dashboard/LineChart';
 import Stats, { StatsDd, StatsDt } from '@/pages/Dashboard/Stats';
@@ -19,7 +19,7 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 
 interface Props {
-  collateralToken: CollateralToken;
+  collateralToken: CollateralCurrencyExt;
   collateralTokenSymbol: string;
   collateralTokenPriceInUSD: number | undefined;
 }

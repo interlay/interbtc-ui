@@ -1,4 +1,3 @@
-import { BitcoinUnit } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -48,7 +47,7 @@ const UpperContent = (): JSX.Element => {
     data: cumulativeRedeemsPerDay,
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
-  } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
+  } = useQuery<VolumeDataPoint[], Error>(
     [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, [nowAtFirstLoad], WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
@@ -89,11 +88,13 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.redeem.total_redeemed')}
             </StatsDt>
             <StatsDd>
-              {totalRedeemedAmount.str.BTC()}
+              {totalRedeemedAmount.toString()}
               &nbsp;BTC
             </StatsDd>
             <StatsDd>
-              {btcUsdPrice === undefined ? '—' : (btcUsdPrice * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
+              {btcUsdPrice === undefined
+                ? '—'
+                : (btcUsdPrice * Number(totalRedeemedAmount.toString())).toLocaleString()}
             </StatsDd>
             <StatsDt className={`!${getColorShade('green')}`}>{t('dashboard.redeem.total_redeems')}</StatsDt>
             <StatsDd>{totalSuccessfulRedeemCount}</StatsDd>

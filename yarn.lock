@@ -1846,14 +1846,14 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.13.7":
-  version "1.13.7"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.13.7.tgz#fbc6ed4c1ee2478e93f796c4e61a00a24a3b1fe9"
-  integrity sha512-2ENJIjyog54iDfrXlBEvR3WZMZ8f0rNB+0Ym4FKa8f4dhg625Pnl182JvVvc/tBXqzO/AyYb1DSzaEgaU87dMg==
+"@interlay/interbtc-api@1.16.2":
+  version "1.16.2"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.16.2.tgz#97fbf907ae8f55a01d84782fd1420b750ada8fa3"
+  integrity sha512-ry5YaXrF9BywINIIObbVgXIThcKgnRlI0NUG359wdIHVE7MeWla8U1R2CmoqkPujZQNC/J4WqZxJbAaoLNXO3w==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "1.7.0"
-    "@interlay/monetary-js" "0.6.0"
+    "@interlay/monetary-js" "0.7.0"
     "@polkadot/api" "8.8.2"
     "@types/big.js" "6.1.2"
     big.js "6.1.1"
@@ -1869,10 +1869,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.7.0.tgz#413031e5d15565d57f787e66455b9619ae8649b5"
   integrity sha512-gh+cI1pTYRxHM5XZyb85OIsrotatTYKBbqiIj7xo6sLrONMagWl1T2DwsJy4wn0A9qtETw/PqLirV7bAC1TXpg==
 
-"@interlay/monetary-js@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.6.0.tgz#15899cced7e1b72bac419b9cd491fa0b2d0e21c2"
-  integrity sha512-boDoPBcfOZ/aVU1uuTREy3PuEy3+3ykDsLvgdZGEsUzrQprzBLYb1EvqT5P9eumjgVwbiZCkfk7NcmNyvCN8pw==
+"@interlay/monetary-js@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.7.0.tgz#7142f7d2b86acf77d8524cee22b4ae2c5ba2d3a6"
+  integrity sha512-vxUcrl2Kum4W2bPt9Lz0WM/pPZEjOrwBtMEgNBAqBtBROXWeOi5jdwQeUwNSr2jqxv0g3V0mVyCVqOxy00iiQg==
   dependencies:
     "@types/big.js" "6.1.2"
     big.js "6.1.1"

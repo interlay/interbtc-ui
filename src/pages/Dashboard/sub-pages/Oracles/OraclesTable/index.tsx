@@ -1,6 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// // @ts-nocheck
-import { CollateralUnit } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -61,7 +59,7 @@ const OracleTable = (): JSX.Element => {
     isLoading: oracleSubmissionsLoading,
     data: oracleSubmissions,
     error: oracleSubmissionsError
-  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit>[], Error>(
+  } = useQuery<BtcToCurrencyOracleStatus<CollateralCurrencyExt>[], Error>(
     [ORACLE_ALL_LATEST_UPDATES_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout, namesMap],
     allLatestSubmissionsFetcher,
     {

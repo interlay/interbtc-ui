@@ -1,6 +1,6 @@
-import { CurrencyUnit, decodeFixedPointType } from '@interlay/interbtc-api';
+import { CurrencyExt, decodeFixedPointType } from '@interlay/interbtc-api';
 import { OracleStatus } from '@interlay/interbtc-api/build/src/types/oracleTypes';
-import { Bitcoin, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
+import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
 
@@ -9,27 +9,23 @@ import oracleExchangeRatesQuery, { composableExchangeRateSubquery } from '../que
 const ORACLE_LATEST_EXCHANGE_RATE_FETCHER = 'oracle-exchange-rate-fetcher';
 const ORACLE_ALL_LATEST_UPDATES_FETCHER = 'oracle-all-latest-updates-fetcher';
 
-type BtcToCurrencyOracleStatus<U extends CurrencyUnit> = OracleStatus<Bitcoin, BitcoinUnit, Currency<U>, U>;
+type BtcToCurrencyOracleStatus<T extends CurrencyExt> = OracleStatus<Bitcoin, T>;
 
-type LatestExchangeRateFetcherParams<U extends CurrencyUnit> = [
-  key: string,
-  currency: Currency<U>,
-  onlineTimeout: number
-];
+type LatestExchangeRateFetcherParams<T extends CurrencyExt> = [key: string, currency: T, onlineTimeout: number];
 
-type AllOracleLatestUpdatesFetcherParams<U extends CurrencyUnit> = [
+type AllOracleLatestUpdatesFetcherParams<T extends CurrencyExt> = [
   key: string,
-  currency: Currency<U>,
+  currency: T,
   onlineTimeout: number,
   namesMap: Map<string, string>
 ];
 
-function decodeOracleValues<U extends CurrencyUnit>(
+function decodeOracleValues<T extends CurrencyExt>(
   updateData: any,
-  currency: Currency<U>,
+  currency: T,
   onlineTimeout: number,
   namesMap: Map<string, string>
-): BtcToCurrencyOracleStatus<U> {
+): BtcToCurrencyOracleStatus<T> {
   // updateValue is a bigint representing a FixedU128, the value is equivalent to an UnsignedFixedPoint
   const rate = decodeFixedPointType(updateData.updateValue);
   const lastUpdate = new Date(updateData.timestamp);
@@ -38,23 +34,17 @@ function decodeOracleValues<U extends CurrencyUnit>(
     source: namesMap.get(updateData.oracleId) || updateData.oracleId,
     feed: `${Bitcoin.ticker}/${currency.ticker}`,
     lastUpdate,
-    exchangeRate: new ExchangeRate<Bitcoin, BitcoinUnit, Currency<U>, U>(
-      Bitcoin,
-      currency,
-      rate,
-      Bitcoin.rawBase,
-      currency.rawBase
-    ),
+    exchangeRate: new ExchangeRate<Bitcoin, T>(Bitcoin, currency, rate),
     online: Date.now() <= lastUpdate.getTime() + onlineTimeout
   };
 }
 
 // TODO: should type properly (`Relay`)
-const latestExchangeRateFetcher = async <U extends CurrencyUnit>(
+const latestExchangeRateFetcher = async <T extends CurrencyExt>(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   { queryKey }: any
-): Promise<BtcToCurrencyOracleStatus<U> | undefined> => {
-  const [key, currency, onlineTimeout] = queryKey as LatestExchangeRateFetcherParams<U>;
+): Promise<BtcToCurrencyOracleStatus<T> | undefined> => {
+  const [key, currency, onlineTimeout] = queryKey as LatestExchangeRateFetcherParams<T>;
 
   if (key !== ORACLE_LATEST_EXCHANGE_RATE_FETCHER) throw new Error('Invalid key!');
 
@@ -75,11 +65,11 @@ const latestExchangeRateFetcher = async <U extends CurrencyUnit>(
   )[0];
 };
 
-const allLatestSubmissionsFetcher = async <U extends CurrencyUnit>(
+const allLatestSubmissionsFetcher = async <T extends CurrencyExt>(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   { queryKey }: any
-): Promise<BtcToCurrencyOracleStatus<U>[]> => {
-  const [key, currency, onlineTimeout, namesMap] = queryKey as AllOracleLatestUpdatesFetcherParams<U>;
+): Promise<BtcToCurrencyOracleStatus<T>[]> => {
+  const [key, currency, onlineTimeout, namesMap] = queryKey as AllOracleLatestUpdatesFetcherParams<T>;
 
   if (key !== ORACLE_ALL_LATEST_UPDATES_FETCHER) throw new Error('Invalid key!');
 
@@ -109,4 +99,4 @@ export {
   ORACLE_LATEST_EXCHANGE_RATE_FETCHER
 };
 
-export type { AllOracleLatestUpdatesFetcherParams, BtcToCurrencyOracleStatus, LatestExchangeRateFetcherParams };
+export type { BtcToCurrencyOracleStatus };

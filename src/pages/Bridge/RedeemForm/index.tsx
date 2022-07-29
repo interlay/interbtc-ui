@@ -1,5 +1,5 @@
-import { CollateralUnit, InterbtcPrimitivesVaultId, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, InterbtcPrimitivesVaultId, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -78,21 +78,17 @@ const RedeemForm = (): JSX.Element | null => {
   });
   const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
+  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero);
+  const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
   const [btcToDotRate, setBtcToDotRate] = React.useState(
-    new ExchangeRate<Bitcoin, BitcoinUnit, Currency<CollateralUnit>, CollateralUnit>(
-      Bitcoin,
-      RELAY_CHAIN_NATIVE_TOKEN,
-      new Big(0)
-    )
+    new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
   );
   const [hasPremiumRedeemVaults, setHasPremiumRedeemVaults] = React.useState<boolean>(false);
-  const [maxRedeemableCapacity, setMaxRedeemableCapacity] = React.useState(BitcoinAmount.zero);
+  const [maxRedeemableCapacity, setMaxRedeemableCapacity] = React.useState(BitcoinAmount.zero());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
-  const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero);
+  const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero());
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Redeem>();
@@ -102,7 +98,7 @@ const RedeemForm = (): JSX.Element | null => {
     if (!wrappedTokenAmount) return;
     if (!redeemFeeRate) return;
 
-    const parsedWrappedTokenAmount = BitcoinAmount.from.BTC(wrappedTokenAmount);
+    const parsedWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
     const theRedeemFee = parsedWrappedTokenAmount.mul(redeemFeeRate);
     setRedeemFee(theRedeemFee);
   }, [bridgeLoaded, wrappedTokenAmount, redeemFeeRate]);
@@ -200,7 +196,7 @@ const RedeemForm = (): JSX.Element | null => {
     const onSubmit = async (data: RedeemFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        const wrappedTokenAmount = BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]);
+        const wrappedTokenAmount = new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]);
 
         // Differentiate between premium and regular redeem
         let vaultId: InterbtcPrimitivesVaultId;
@@ -214,7 +210,7 @@ const RedeemForm = (): JSX.Element | null => {
             }
           }
           if (vaultId === undefined) {
-            let maxAmount = BitcoinAmount.zero;
+            let maxAmount = BitcoinAmount.zero();
             for (const redeemableTokens of premiumRedeemVaults.values()) {
               if (maxAmount.lt(redeemableTokens)) {
                 maxAmount = redeemableTokens;
@@ -262,7 +258,7 @@ const RedeemForm = (): JSX.Element | null => {
         setSubmitStatus(STATUSES.RESOLVED);
 
         dispatch(
-          updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT])))
+          updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT])))
         );
       } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
@@ -271,7 +267,7 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const validateForm = (value: string): string | undefined => {
-      const parsedValue = BitcoinAmount.from.BTC(value);
+      const parsedValue = new BitcoinAmount(value);
 
       if (parsedValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
@@ -283,7 +279,7 @@ const RedeemForm = (): JSX.Element | null => {
         })}`;
       }
 
-      const parsedWrappedTokenAmount = BitcoinAmount.from.BTC(value);
+      const parsedWrappedTokenAmount = new BitcoinAmount(value);
       const theRedeemFee = parsedWrappedTokenAmount.mul(redeemFeeRate);
       const minValue = dustValue.add(currentInclusionFee).add(theRedeemFee);
 
@@ -323,18 +319,12 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
-    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
-      redeemFee,
-      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-    );
-    const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
+    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(redeemFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
+    const parsedInterBTCAmount = new BitcoinAmount(wrappedTokenAmount || 0);
     const totalBTC = wrappedTokenAmount
       ? parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee)
-      : BitcoinAmount.zero;
-    const totalBTCInUSD = displayMonetaryAmountInUSDFormat(
-      totalBTC,
-      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-    );
+      : BitcoinAmount.zero();
+    const totalBTCInUSD = displayMonetaryAmountInUSDFormat(totalBTC, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
@@ -373,7 +363,7 @@ const RedeemForm = (): JSX.Element | null => {
               },
               validate: (value) => validateForm(value)
             })}
-            approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(parsedInterBTCAmount || BitcoinAmount.zero, usdPrice)}`}
+            approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(parsedInterBTCAmount || BitcoinAmount.zero(), usdPrice)}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />
