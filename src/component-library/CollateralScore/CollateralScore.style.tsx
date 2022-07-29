@@ -19,7 +19,7 @@ const StyledLabelWrapper = styled.div<LabelProps>`
 const StyledLabel = styled.span<LabelProps>`
   font-size: ${(props) => (props.isDefault ? theme.text.xs : theme.text.s)};
   color: ${theme.colors.textPrimary};
-  font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
+  font-weight: ${(props) => (props.isDefault ? theme.fontWeight.book : theme.fontWeight.bold)};
 `;
 
 const StyledScoreWrapper = styled.div<LabelProps>`

@@ -122,7 +122,7 @@ const theme = {
         border: {
           left: '10px solid transparent',
           right: '10px solid transparent',
-          bottom: '18px solid var(--colors-neutral-white)'
+          bottom: '18px solid var(--colors-score-bar-indicator-color)'
         }
       }
     }
