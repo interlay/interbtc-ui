@@ -24,6 +24,8 @@ export type { StackProps } from './Stack';
 export { Stack } from './Stack';
 export type { TableProps } from './Table';
 export { Table } from './Table';
+export type { TabsItemProps, TabsProps } from './Tabs';
+export { Tabs, TabsItem } from './Tabs';
 export type {
   DlProps,
   EmProps,

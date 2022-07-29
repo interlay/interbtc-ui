@@ -1,6 +1,7 @@
 @import url('theme.base.css');
 
 :root {
+  --colors-blue: #041333;
   --colors-dark-blue: #091133;
   --colors-mid-blue: #434e66;
   --colors-yellow: #ffcb00;
@@ -26,4 +27,9 @@
   --colors-text-secondary: var(--colors-yellow);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
   --box-shadow-default: var(--box-shadow-none);
+  /* Tabs */
+  --colors-tabs-bg: var(--colors-dark-blue);
+  --colors-tabs-text: var(--colors-neutral-lighter-grey);
+  --colors-tabs-active-color: var(--colors-blue);
+  --colors-tabs-active-bg: var(--colors-neutral-white);
 }

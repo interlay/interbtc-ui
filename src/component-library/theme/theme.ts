@@ -96,6 +96,15 @@ const theme = {
   },
   transition: {
     duration: 100
+  },
+  tabs: {
+    bg: 'var(--colors-tabs-bg)',
+    color: 'var(--colors-tabs-text)',
+    active: {
+      color: 'var(--colors-tabs-active-color)',
+      bg: 'var(--colors-tabs-active-bg)'
+    },
+    border: '1px solid var(--colors-border)'
   }
 };
 
