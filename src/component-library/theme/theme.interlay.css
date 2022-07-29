@@ -26,5 +26,8 @@
   --colors-text-tertiary: var(--colors-neutral-light-grey);
   --box-shadow-default: var(--box-shadow-black);
   /* Tabs */
-  --colors-tabs-bg: var(--colors-neutral-white-05);
+  --colors-tabs-bg: var(--colors-neutral-white);
+  --colors-tabs-text: var(--colors-neutral-black-9);
+  --colors-tabs-active-color: var(--colors-light-blue);
+  --colors-tabs-active-bg: var(--colors-lighter-blue);
 }

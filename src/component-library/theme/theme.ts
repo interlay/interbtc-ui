@@ -103,7 +103,8 @@ const theme = {
     active: {
       color: 'var(--colors-tabs-active-color)',
       bg: 'var(--colors-tabs-active-bg)'
-    }
+    },
+    border: '1px solid var(--colors-border)'
   }
 };
 
