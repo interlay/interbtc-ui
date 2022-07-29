@@ -116,7 +116,15 @@ const theme = {
   },
   score: {
     bar: {
-      radius: 'var(--rounded-full)'
+      height: '10px',
+      radius: 'var(--rounded-full)',
+      indicator: {
+        border: {
+          left: '10px solid transparent',
+          right: '10px solid transparent',
+          bottom: '18px solid var(--colors-neutral-white)'
+        }
+      }
     }
   }
 };

@@ -1,8 +1,8 @@
 import { Meta, Story } from '@storybook/react';
 
-import { ScoreBar, ScoreBarProps } from '.';
+import { CollateralScore, CollateralScoreProps } from '.';
 
-const Template: Story<ScoreBarProps> = (args) => <ScoreBar {...args} />;
+const Template: Story<CollateralScoreProps> = (args) => <CollateralScore {...args} />;
 
 const Default = Template.bind({});
 
@@ -25,8 +25,8 @@ Highlight.args = {
 export { Default, Highlight };
 
 export default {
-  title: 'Components/ScoreBar',
-  component: ScoreBar,
+  title: 'Components/CollateralScore',
+  component: CollateralScore,
   decorators: [
     (Story) => (
       <div style={{ width: '50%', margin: 'auto', padding: 20 }}>

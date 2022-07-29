@@ -1,4 +1,4 @@
-const tuple = <T extends string[]>(...args: T): string[] => args;
+const tuple = <T extends string[]>(...args: T): T => args;
 
 const ctaVariants = tuple('primary', 'secondary', 'outlined');
 
