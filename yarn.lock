@@ -2955,14 +2955,14 @@
     "@babel/runtime" "^7.6.2"
 
 "@react-aria/meter@^3.2.1":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@react-aria/meter/-/meter-3.3.0.tgz#13776293fcc42055a9e9dd7233abe8713d8f5376"
-  integrity sha512-svLFhWgpi6WBtStLFI7bXk9wMrLAl/8YYoEC5oUpk3B0DXgyBXx3o8/SHqSab9nNJEepfQXLvC0PVoL6116h3A==
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/meter/-/meter-3.2.1.tgz#c34526a2cde2f00f4c0f64a5e085ccd416d61d08"
+  integrity sha512-gY3CGGkuWEixWUQWMTD7Wi6wvW7TfBBfITlLJvVjsk3wgW7HQJYF8qTmJp0imUCbiD1t43Si6QC1SjSNl41WmA==
   dependencies:
     "@babel/runtime" "^7.6.2"
-    "@react-aria/progress" "^3.3.0"
-    "@react-types/meter" "^3.2.2"
-    "@react-types/shared" "^3.14.0"
+    "@react-aria/progress" "^3.2.1"
+    "@react-types/meter" "^3.2.1"
+    "@react-types/shared" "^3.13.1"
 
 "@react-aria/numberfield@^3.2.1":
   version "3.2.1"
@@ -2982,7 +2982,7 @@
     "@react-types/shared" "^3.13.1"
     "@react-types/textfield" "^3.5.1"
 
-"@react-aria/progress@^3.3.0":
+"@react-aria/progress@^3.2.1":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@react-aria/progress/-/progress-3.3.0.tgz#ae2745da40ad84331c05ec33efe0d5f3a9220df5"
   integrity sha512-VenJJWOErvD12RKoffQomlTc2Zl6snrTT6aoM6APApW/QORUyyI8VW6CTUM68RkoQ0q3qySjsL+7yyrd6sping==
@@ -3267,7 +3267,7 @@
   dependencies:
     "@react-types/shared" "^3.14.0"
 
-"@react-types/meter@^3.2.2":
+"@react-types/meter@^3.2.1":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@react-types/meter/-/meter-3.2.2.tgz#029f593e405cf3aebccd9c0f54c588c399689559"
   integrity sha512-SZ5iH+ZgXOxjsDzpA49Pq0WWiBZC50LmyK7FxtZg9VhhsrySkpYQ9GZUWTjnAp42/k/LvMIpctp+dG6mXaiAjg==

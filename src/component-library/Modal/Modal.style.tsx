@@ -33,6 +33,7 @@ const ModalContent = styled.div<ModalContentProps>`
   max-width: 32em;
   margin: 1.5em;
   background: ${theme.colors.bgPrimary};
+  border: ${theme.border.default};
   padding: ${theme.spacing.spacing8};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};

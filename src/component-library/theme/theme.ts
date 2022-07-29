@@ -52,6 +52,7 @@ const theme = {
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)',
+    spacing24: 'var(--spacing-24)',
     spacing28: 'var(--spacing-28)'
   },
   rounded: {
@@ -158,7 +159,21 @@ const theme = {
     }
   },
   overlay: {
-    bg: 'var(--colors-neutral-black-20)'
+    bg: 'var(--colors-neutral-black-30)'
+  },
+  transation: {
+    status: {
+      color: {
+        error: 'var(--colors-error)',
+        warning: 'var(--colors-warning-light)',
+        success: 'var(--colors-success)'
+      },
+      bg: {
+        error: 'var(--colors-error-20)',
+        warning: 'var(--colors-warning-light-20)',
+        success: 'var(--colors-success-20)'
+      }
+    }
   }
 };
 

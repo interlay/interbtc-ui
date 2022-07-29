@@ -8,12 +8,16 @@ const BaseInput = styled.input`
   width: 100%;
   line-height: ${theme.lineHeight.base};
   padding: ${theme.spacing.spacing2};
-  outline: 0;
+  outline: none;
   border: 0;
   font: inherit;
   letter-spacing: inherit;
   background: none;
   color: currentcolor;
+
+  &:focus {
+    box-shadow: none;
+  }
 
   &::placeholder: {
     color: ${theme.colors.textTertiary};
