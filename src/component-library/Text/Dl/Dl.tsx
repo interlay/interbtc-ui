@@ -1,27 +1,27 @@
+import { ReactNode } from 'react';
+
 import { BaseTextProps } from '../types';
 import { Dd, DefinitionList, Dt, ListItem } from './Dl.style';
 
 type DlItem = {
   term: string;
-  definition: string;
+  definition: ReactNode;
 };
 
 interface DlProps extends BaseTextProps {
   listItems: Array<DlItem>;
 }
 
-const Dl = ({ listItems }: DlProps): JSX.Element => {
-  return (
-    <DefinitionList>
-      {listItems.map((listItem) => (
-        <ListItem key={listItem.term}>
-          <Dt>{listItem.term}:</Dt>
-          <Dd>{listItem.definition}</Dd>
-        </ListItem>
-      ))}
-    </DefinitionList>
-  );
-};
+const Dl = ({ listItems, ...props }: DlProps): JSX.Element => (
+  <DefinitionList {...props}>
+    {listItems.map((listItem) => (
+      <ListItem key={listItem.term}>
+        <Dt>{listItem.term}:</Dt>
+        <Dd>{listItem.definition}</Dd>
+      </ListItem>
+    ))}
+  </DefinitionList>
+);
 
 Dl.displayName = 'P';
 
