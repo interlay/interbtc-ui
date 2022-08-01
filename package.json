@@ -13,6 +13,7 @@
     "@polkadot/types": "8.8.2",
     "@reach/tooltip": "^0.16.0",
     "@react-aria/focus": "^3.6.1",
+    "@react-aria/meter": "^3.2.1",
     "@react-aria/numberfield": "^3.2.1",
     "@react-aria/tabs": "^3.2.1",
     "@react-aria/utils": "^3.13.1",
