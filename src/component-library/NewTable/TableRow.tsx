@@ -1,39 +1,40 @@
 import { useFocusRing } from '@react-aria/focus';
 import { useTableRow } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
-import { useRef } from 'react';
+import { TableState } from '@react-stately/table';
+import { GridNode } from '@react-types/grid';
+import { HTMLAttributes, useRef } from 'react';
 
-const TableRow = ({ item, children, state }: any): JSX.Element => {
+type Props = {
+  state: TableState<Record<string, any>>;
+  item: GridNode<Record<string, any>>;
+};
+
+type NativeAttrs = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>;
+
+type TableRowProps = Props & NativeAttrs;
+
+// TODO: Logic for row selection needs to be added here
+const TableRow = ({ item, children, state, ...props }: TableRowProps): JSX.Element => {
   const ref = useRef<HTMLTableRowElement>(null);
-  const isSelected = state.selectionManager.isSelected(item.key);
-  const { rowProps, isPressed } = useTableRow(
+  const { rowProps } = useTableRow(
     {
       node: item
     },
     state,
     ref
   );
-  const { isFocusVisible, focusProps } = useFocusRing();
+  const {
+    // isFocusVisible,
+    focusProps
+  } = useFocusRing();
 
   return (
-    <tr
-      style={{
-        background: isSelected
-          ? 'blueviolet'
-          : isPressed
-          ? 'var(--spectrum-global-color-gray-400)'
-          : item.index % 2
-          ? 'var(--spectrum-alias-highlight-hover)'
-          : 'none',
-        color: isSelected ? 'white' : undefined,
-        outline: isFocusVisible ? '2px solid orange' : 'none'
-      }}
-      {...mergeProps(rowProps, focusProps)}
-      ref={ref}
-    >
+    <tr ref={ref} {...mergeProps(props, rowProps, focusProps)}>
       {children}
     </tr>
   );
 };
 
 export { TableRow };
+export type { TableRowProps };

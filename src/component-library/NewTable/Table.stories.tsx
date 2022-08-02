@@ -1,39 +1,37 @@
 import { useAsyncList } from '@react-stately/data';
 import { Meta, Story } from '@storybook/react';
 
-import { Cell, Column, Row, Table, TableBody, TableHeader } from '.';
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableProps, TableRow } from '.';
 
-const Template: Story<any> = (args) => {
+const Template: Story<TableProps> = (args) => {
   return (
-    <Table {...args} aria-label='Example static collection table' style={{ height: '210px', maxWidth: '400px' }}>
+    <Table {...args}>
       <TableHeader>
-        <Column key='name' allowsSorting>
-          Name
-        </Column>
-        <Column>Type</Column>
-        <Column>Date Modified</Column>
+        <TableColumn>Name</TableColumn>
+        <TableColumn>Type</TableColumn>
+        <TableColumn>Date Modified</TableColumn>
       </TableHeader>
       <TableBody>
-        <Row>
-          <Cell>Games</Cell>
-          <Cell>File folder</Cell>
-          <Cell>6/7/2020</Cell>
-        </Row>
-        <Row>
-          <Cell>Program Files</Cell>
-          <Cell>File folder</Cell>
-          <Cell>4/7/2021</Cell>
-        </Row>
-        <Row>
-          <Cell>bootmgr</Cell>
-          <Cell>System file</Cell>
-          <Cell>11/20/2010</Cell>
-        </Row>
-        <Row>
-          <Cell>log.txt</Cell>
-          <Cell>Text Document</Cell>
-          <Cell>1/18/2016</Cell>
-        </Row>
+        <TableRow>
+          <TableCell>Games</TableCell>
+          <TableCell>File folder</TableCell>
+          <TableCell>6/7/2020</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Program Files</TableCell>
+          <TableCell>File folder</TableCell>
+          <TableCell>4/7/2021</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>bootmgr</TableCell>
+          <TableCell>System file</TableCell>
+          <TableCell>11/20/2010</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>log.txt</TableCell>
+          <TableCell>Text Document</TableCell>
+          <TableCell>1/18/2016</TableCell>
+        </TableRow>
       </TableBody>
     </Table>
   );
@@ -42,7 +40,7 @@ const Template: Story<any> = (args) => {
 const Default = Template.bind({});
 Default.args = {};
 
-const SortingTemplate: Story<any> = () => {
+const SortingTemplate: Story<TableProps> = (args) => {
   const list = useAsyncList({
     async load() {
       return {
@@ -70,24 +68,20 @@ const SortingTemplate: Story<any> = () => {
   });
 
   return (
-    <Table
-      aria-label='Example table with client side sorting'
-      sortDescriptor={list.sortDescriptor}
-      onSortChange={list.sort}
-    >
+    <Table {...args} sortDescriptor={list.sortDescriptor} onSortChange={list.sort}>
       <TableHeader>
-        <Column key='name' allowsSorting>
+        <TableColumn key='name' allowsSorting>
           Name
-        </Column>
-        <Column key='type' allowsSorting>
+        </TableColumn>
+        <TableColumn key='type' allowsSorting>
           Type
-        </Column>
-        <Column key='date' allowsSorting>
+        </TableColumn>
+        <TableColumn key='date' allowsSorting>
           Date Modified
-        </Column>
+        </TableColumn>
       </TableHeader>
       <TableBody items={list.items}>
-        {(item) => <Row key={item.name}>{(columnKey) => <Cell>{item[columnKey]}</Cell>}</Row>}
+        {(item: any) => <TableRow key={item.name}>{(columnKey) => <TableCell>{item[columnKey]}</TableCell>}</TableRow>}
       </TableBody>
     </Table>
   );

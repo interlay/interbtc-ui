@@ -1,40 +1,36 @@
 import { useFocusRing } from '@react-aria/focus';
 import { useTableColumnHeader } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
-import { useRef } from 'react';
+import { TableState } from '@react-stately/table';
+import { GridNode } from '@react-types/grid';
+import { HTMLAttributes, useRef } from 'react';
 
-const TableColumnHeader = ({ column, state }: any): JSX.Element => {
+import { StyledTableColumnHeader } from './Table.style';
+
+type Props = {
+  state: TableState<Record<string, any>>;
+  column: GridNode<Record<string, any>>;
+};
+
+type NativeAttrs = Omit<HTMLAttributes<HTMLTableCellElement>, keyof Props>;
+
+type TableColumnHeaderProps = Props & NativeAttrs;
+
+// TODO: add here arrow for sorting
+const TableColumnHeader = ({ column, state, ...props }: TableColumnHeaderProps): JSX.Element => {
   const ref = useRef<HTMLTableCellElement>(null);
   const { columnHeaderProps } = useTableColumnHeader({ node: column }, state, ref);
-  const { isFocusVisible, focusProps } = useFocusRing();
-  const arrowIcon = state.sortDescriptor?.direction === 'ascending' ? '▲' : '▼';
+  const {
+    // isFocusVisible,
+    focusProps
+  } = useFocusRing();
 
   return (
-    <th
-      {...mergeProps(columnHeaderProps, focusProps)}
-      colSpan={column.colspan}
-      style={{
-        textAlign: column.colspan > 1 ? 'center' : 'left',
-        padding: '5px 10px',
-        outline: isFocusVisible ? '2px solid orange' : 'none',
-        cursor: 'default'
-      }}
-      ref={ref}
-    >
+    <StyledTableColumnHeader colSpan={column.colspan} ref={ref} {...mergeProps(props, columnHeaderProps, focusProps)}>
       {column.rendered}
-      {column.props.allowsSorting && (
-        <span
-          aria-hidden='true'
-          style={{
-            padding: '0 2px',
-            visibility: state.sortDescriptor?.column === column.key ? 'visible' : 'hidden'
-          }}
-        >
-          {arrowIcon}
-        </span>
-      )}
-    </th>
+    </StyledTableColumnHeader>
   );
 };
 
 export { TableColumnHeader };
+export type { TableColumnHeaderProps };

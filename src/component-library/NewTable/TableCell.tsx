@@ -1,26 +1,35 @@
 import { useFocusRing } from '@react-aria/focus';
 import { useTableCell } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
-import { useRef } from 'react';
+import { TableState } from '@react-stately/table';
+import { GridNode } from '@react-types/grid';
+import { HTMLAttributes, useRef } from 'react';
 
-const TableCell = ({ cell, state }: any): JSX.Element => {
+import { StyledTableCell } from './Table.style';
+
+type Props = {
+  state: TableState<Record<string, any>>;
+  cell: GridNode<Record<string, any>>;
+};
+
+type NativeAttrs = Omit<HTMLAttributes<HTMLTableCellElement>, keyof Props>;
+
+type TableCellProps = Props & NativeAttrs;
+
+const TableCell = ({ cell, state, ...props }: TableCellProps): JSX.Element => {
   const ref = useRef<HTMLTableCellElement>(null);
   const { gridCellProps } = useTableCell({ node: cell }, state, ref);
-  const { isFocusVisible, focusProps } = useFocusRing();
+  const {
+    // isFocusVisible,
+    focusProps
+  } = useFocusRing();
 
   return (
-    <td
-      {...mergeProps(gridCellProps, focusProps)}
-      style={{
-        padding: '5px 10px',
-        outline: isFocusVisible ? '2px solid orange' : 'none',
-        cursor: 'default'
-      }}
-      ref={ref}
-    >
+    <StyledTableCell ref={ref} {...mergeProps(props, gridCellProps, focusProps)}>
       {cell.rendered}
-    </td>
+    </StyledTableCell>
   );
 };
 
 export { TableCell };
+export type { TableCellProps };

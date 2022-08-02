@@ -1,6 +1,11 @@
-// export type { TableProps } from './Table';
-import { Cell, Column, Row, TableBody, TableHeader } from '@react-stately/table';
+import {
+  Cell as TableCell,
+  Column as TableColumn,
+  Row as TableRow,
+  TableBody,
+  TableHeader
+} from '@react-stately/table';
 
+export type { TableProps } from './Table';
 export { Table } from './Table';
-
-export { Cell, Column, Row, TableBody, TableHeader };
+export { TableBody, TableCell, TableColumn, TableHeader, TableRow };
