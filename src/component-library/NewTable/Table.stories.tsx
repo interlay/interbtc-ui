@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableProps, Tabl
 
 const Template: Story<TableProps> = (args) => {
   return (
-    <Table {...args}>
+    <Table {...args} aria-label='story table' style={{ padding: 20 }}>
       <TableHeader>
         <TableColumn>Name</TableColumn>
         <TableColumn>Type</TableColumn>
@@ -68,7 +68,13 @@ const SortingTemplate: Story<TableProps> = (args) => {
   });
 
   return (
-    <Table {...args} sortDescriptor={list.sortDescriptor} onSortChange={list.sort}>
+    <Table
+      {...args}
+      aria-label='story table'
+      sortDescriptor={list.sortDescriptor}
+      onSortChange={list.sort}
+      style={{ padding: 20 }}
+    >
       <TableHeader>
         <TableColumn key='name' allowsSorting>
           Name
