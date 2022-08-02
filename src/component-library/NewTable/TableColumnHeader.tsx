@@ -1,4 +1,3 @@
-import { useFocusRing } from '@react-aria/focus';
 import { useTableColumnHeader } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
 import { TableState } from '@react-stately/table';
@@ -20,13 +19,9 @@ type TableColumnHeaderProps = Props & NativeAttrs;
 const TableColumnHeader = ({ column, state, ...props }: TableColumnHeaderProps): JSX.Element => {
   const ref = useRef<HTMLTableCellElement>(null);
   const { columnHeaderProps } = useTableColumnHeader({ node: column }, state, ref);
-  const {
-    // isFocusVisible,
-    focusProps
-  } = useFocusRing();
 
   return (
-    <StyledTableColumnHeader colSpan={column.colspan} ref={ref} {...mergeProps(props, columnHeaderProps, focusProps)}>
+    <StyledTableColumnHeader colSpan={column.colspan} ref={ref} {...mergeProps(props, columnHeaderProps)}>
       {column.rendered}
     </StyledTableColumnHeader>
   );

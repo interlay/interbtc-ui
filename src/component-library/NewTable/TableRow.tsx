@@ -1,4 +1,3 @@
-import { useFocusRing } from '@react-aria/focus';
 import { useTableRow } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
 import { TableState } from '@react-stately/table';
@@ -24,13 +23,9 @@ const TableRow = ({ item, children, state, ...props }: TableRowProps): JSX.Eleme
     state,
     ref
   );
-  const {
-    // isFocusVisible,
-    focusProps
-  } = useFocusRing();
 
   return (
-    <tr ref={ref} {...mergeProps(props, rowProps, focusProps)}>
+    <tr ref={ref} {...mergeProps(props, rowProps)}>
       {children}
     </tr>
   );

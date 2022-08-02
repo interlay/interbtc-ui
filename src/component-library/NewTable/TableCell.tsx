@@ -1,4 +1,3 @@
-import { useFocusRing } from '@react-aria/focus';
 import { useTableCell } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
 import { TableState } from '@react-stately/table';
@@ -19,13 +18,9 @@ type TableCellProps = Props & NativeAttrs;
 const TableCell = ({ cell, state, ...props }: TableCellProps): JSX.Element => {
   const ref = useRef<HTMLTableCellElement>(null);
   const { gridCellProps } = useTableCell({ node: cell }, state, ref);
-  const {
-    // isFocusVisible,
-    focusProps
-  } = useFocusRing();
 
   return (
-    <StyledTableCell ref={ref} {...mergeProps(props, gridCellProps, focusProps)}>
+    <StyledTableCell ref={ref} {...mergeProps(props, gridCellProps)}>
       {cell.rendered}
     </StyledTableCell>
   );
