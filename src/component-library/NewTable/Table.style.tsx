@@ -9,14 +9,6 @@ const StyledTable = styled.table`
   isolation: isolate;
 `;
 
-type StyledTableRowGroupProps = {
-  isBodyRowGroup: boolean;
-};
-
-const StyledTableRowGroup = styled.div<StyledTableRowGroupProps>`
-  position: ${(props) => props.isBodyRowGroup && 'relative'};
-`;
-
 const StyledTableColumnHeader = styled.th`
   border-bottom: ${theme.table.border2};
   color: ${theme.colors.textPrimary};
@@ -48,4 +40,4 @@ const StyledTableCell = styled.td`
   }
 `;
 
-export { StyledTable, StyledTableCell, StyledTableColumnHeader, StyledTableRowGroup };
+export { StyledTable, StyledTableCell, StyledTableColumnHeader };
