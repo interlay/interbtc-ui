@@ -738,7 +738,7 @@ const Staking = (): JSX.Element => {
     <>
       <MainContainer>
         {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
-          <WarningBanner className={SHARED_CLASSES} warningLevel='alert'>
+          <WarningBanner className={SHARED_CLASSES} severity='alert'>
             <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
           </WarningBanner>
         )}

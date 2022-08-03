@@ -74,7 +74,7 @@ const Transfer = (): JSX.Element | null => {
   return (
     <MainContainer>
       {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
-        <WarningBanner className={clsx('mx-auto', 'md:max-w-xl')} warningLevel='info'>
+        <WarningBanner className={clsx('mx-auto', 'md:max-w-xl')} severity='info'>
           <p>
             In order to transfer Interlay tokens to Acala or Moonbeam, please use their respective dApps. Send tokens to{' '}
             <InterlayRouterLink to={{ pathname: 'https://apps.acala.network/bridge' }} target='_blank'>

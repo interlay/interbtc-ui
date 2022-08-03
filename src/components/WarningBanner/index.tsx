@@ -4,15 +4,15 @@ import { ReactComponent as InformationCircleIcon } from '@/assets/img/hero-icons
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { BORDER_CLASSES } from '@/utils/constants/styles';
 
-type WarningLevel = 'alert' | 'info';
+type Severity = 'alert' | 'info';
 
 interface CustomProps {
-  warningLevel: WarningLevel;
+  severity: Severity;
 }
 
 type Props = CustomProps & React.ComponentPropsWithRef<'div'>;
 
-const WarningBanner = ({ warningLevel, children, className, ...rest }: Props): JSX.Element => {
+const WarningBanner = ({ severity, children, className, ...rest }: Props): JSX.Element => {
   return (
     <div
       className={clsx(
@@ -22,14 +22,14 @@ const WarningBanner = ({ warningLevel, children, className, ...rest }: Props): J
         'py-3',
         'space-x-3',
         'sm:rounded-lg',
-        { 'text-white': warningLevel === 'alert' },
-        { 'text-interlayTextPrimaryInLightMode': warningLevel === 'info' },
-        { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && warningLevel === 'alert' },
-        { 'bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && warningLevel === 'info' },
+        { 'text-white': severity === 'alert' },
+        { 'text-interlayTextPrimaryInLightMode': severity === 'info' },
+        { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && severity === 'alert' },
+        { 'bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && severity === 'info' },
         {
-          'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && warningLevel === 'alert'
+          'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && severity === 'alert'
         },
-        { 'dark:bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && warningLevel === 'info' },
+        { 'dark:bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && severity === 'info' },
         'text-sm',
         'font-medium',
         BORDER_CLASSES,
@@ -38,6 +38,7 @@ const WarningBanner = ({ warningLevel, children, className, ...rest }: Props): J
       style={{
         minHeight: 64
       }}
+      role='alert'
       {...rest}
     >
       <InformationCircleIcon className={clsx('w-6', 'h-6')} />
