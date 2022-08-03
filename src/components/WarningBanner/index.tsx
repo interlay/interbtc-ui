@@ -23,6 +23,7 @@ const WarningBanner = ({ warningLevel, children, className, ...rest }: Props): J
         'space-x-3',
         'sm:rounded-lg',
         { 'text-white': warningLevel === 'alert' },
+        { 'text-interlayTextPrimaryInLightMode': warningLevel === 'info' },
         { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && warningLevel === 'alert' },
         { 'bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && warningLevel === 'info' },
         {
