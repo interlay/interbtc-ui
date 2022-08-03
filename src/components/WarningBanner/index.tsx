@@ -4,13 +4,15 @@ import { ReactComponent as InformationCircleIcon } from '@/assets/img/hero-icons
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { BORDER_CLASSES } from '@/utils/constants/styles';
 
+type WarningLevel = 'alert' | 'info';
+
 interface CustomProps {
-  message: string;
+  warningLevel: WarningLevel;
 }
 
 type Props = CustomProps & React.ComponentPropsWithRef<'div'>;
 
-const WarningBanner = ({ message, className, ...rest }: Props): JSX.Element => {
+const WarningBanner = ({ warningLevel, children, className, ...rest }: Props): JSX.Element => {
   return (
     <div
       className={clsx(
@@ -20,9 +22,13 @@ const WarningBanner = ({ message, className, ...rest }: Props): JSX.Element => {
         'py-3',
         'space-x-3',
         'sm:rounded-lg',
-        'text-white',
-        { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'text-white': warningLevel === 'alert' },
+        { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && warningLevel === 'alert' },
+        { 'bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && warningLevel === 'info' },
+        {
+          'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && warningLevel === 'alert'
+        },
+        { 'dark:bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && warningLevel === 'info' },
         'text-sm',
         'font-medium',
         BORDER_CLASSES,
@@ -34,7 +40,7 @@ const WarningBanner = ({ message, className, ...rest }: Props): JSX.Element => {
       {...rest}
     >
       <InformationCircleIcon className={clsx('w-6', 'h-6')} />
-      <p>{message}</p>
+      {children}
     </div>
   );
 };
