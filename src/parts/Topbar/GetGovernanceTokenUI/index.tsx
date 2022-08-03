@@ -28,11 +28,11 @@ let exchanges: Array<{
 if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   exchanges = [
     {
-      link: 'https://google.com',
+      link: '',
       icon: <AcalaLogoIcon width={122} height={48} />
     },
     {
-      link: 'https://google.com',
+      link: '',
       icon: <StellaswapLogoIcon width={122} height={25} />
     },
     {
