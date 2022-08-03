@@ -75,7 +75,8 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     formState: { errors },
     watch,
     trigger,
-    setValue
+    setValue,
+    setError
   } = useForm<RequestIssueFormData>({
     mode: 'onChange'
   });
@@ -150,18 +151,23 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
         if (theDustValue.status === 'fulfilled') {
           setDustValue(theDustValue.value);
         }
-        if (theBtcToGovernanceToken.status === 'fulfilled') {
-          setBTCToGovernanceTokenRate(theBtcToGovernanceToken.value);
-        }
         if (issuableAmount.status === 'fulfilled') {
           setVaultCapacity(issuableAmount.value);
+        }
+        if (theBtcToGovernanceToken.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(theBtcToGovernanceToken.value);
+        } else {
+          setError(WRAPPED_TOKEN_AMOUNT, {
+            type: 'validate',
+            message: t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
+          });
         }
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
       }
     })();
-  }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId]);
+  }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId, setError, t]);
 
   if (
     status === STATUSES.IDLE ||
@@ -237,6 +243,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
 
     if (btcAmount === undefined) {
       return 'Invalid BTC amount input!';
+    }
+
+    if (btcToGovernanceTokenRate.toBig().eq(0)) {
+      return t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
     }
 
     return undefined;

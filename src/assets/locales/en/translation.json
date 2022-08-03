@@ -119,6 +119,7 @@
   "not_enough_vault_capacity": "None vault has enough capacity.",
   "view_all_transactions_on_subscan": "View all transactions on Subscan",
   "collateral": "Collateral",
+  "error_oracle_offline": "You can't {{action}} {{wrappedTokenSymbol}} at the moment because oracle is offline.",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
