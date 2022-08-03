@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-import { BaseTextProps } from '../types';
+import { TextProps } from '../types';
 import { resolveTextColor } from '../utils';
 
-const EmText = styled.em<BaseTextProps>`
+const EmText = styled.em<TextProps>`
   color: ${({ color }) => resolveTextColor(color)};
   font-style: italic;
 `;

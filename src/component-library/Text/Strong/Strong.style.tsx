@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 import { theme } from '../../theme';
-import { BaseTextProps } from '../types';
+import { TextProps } from '../types';
 import { resolveTextColor } from '../utils';
 
-const StrongText = styled.strong<BaseTextProps>`
+const StrongText = styled.strong<TextProps>`
   color: ${({ color }) => resolveTextColor(color)};
   font-weight: ${theme.fontWeight.bold};
 `;

@@ -1,15 +1,12 @@
-import { ReactNode } from 'react';
-
-import { BaseTextProps } from '../types';
+import { TextProps } from '../types';
 import { H2Text } from './H2.style';
 
-interface H2Props extends BaseTextProps {
-  children: ReactNode;
-}
-
-const H2 = ({ color, children }: H2Props): JSX.Element => <H2Text color={color}>{children}</H2Text>;
+const H2 = ({ color, children, ...props }: TextProps<HTMLHeadingElement>): JSX.Element => (
+  <H2Text color={color} {...props}>
+    {children}
+  </H2Text>
+);
 
 H2.displayName = 'H2';
 
 export { H2 };
-export type { H2Props };

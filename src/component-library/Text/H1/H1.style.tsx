@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 import { theme } from '../../theme';
-import { BaseTextProps } from '../types';
+import { TextProps } from '../types';
 import { resolveTextColor } from '../utils';
 
-const H1Text = styled.h1<BaseTextProps>`
+const H1Text = styled.h1<TextProps>`
   color: ${({ color }) => resolveTextColor(color)};
   font-size: ${theme.text.xl5};
 `;
