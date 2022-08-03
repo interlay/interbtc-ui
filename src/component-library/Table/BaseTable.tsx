@@ -15,11 +15,9 @@ type InheritAttrs = TableStateProps<Record<string, any>> & AriaTableProps<Record
 
 type NativeAttrs = Omit<HTMLAttributes<HTMLTableElement>, keyof InheritAttrs>;
 
-type TableProps = InheritAttrs & NativeAttrs;
+type BaseTableProps = InheritAttrs & NativeAttrs;
 
-// TODO: add selection with and without checkbox
-// TODO: add sorting
-const Table = forwardRef<HTMLTableElement, TableProps>(
+const BaseTable = forwardRef<HTMLTableElement, BaseTableProps>(
   (
     {
       selectionMode,
@@ -74,7 +72,7 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
   }
 );
 
-Table.displayName = 'Table';
+BaseTable.displayName = 'BaseTable';
 
-export { Table };
-export type { TableProps };
+export { BaseTable };
+export type { BaseTableProps };

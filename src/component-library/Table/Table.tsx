@@ -1,39 +1,30 @@
-import { ReactNode } from 'react';
+import { Cell, Column, Row, TableBody, TableHeader } from '@react-stately/table';
+import { forwardRef, ReactNode } from 'react';
 
-import { StyledTable, TableCell, TableHeader, TableRow, TableWrapper } from './Table.style';
+import { BaseTable, BaseTableProps } from './BaseTable';
 
-type Cell = ReactNode;
-type Row = Cell[];
-
-interface TableProps {
-  columnLabels: string[];
-  rows: Row[];
-}
-
-const Table = ({ columnLabels, rows }: TableProps): JSX.Element => {
-  return (
-    <TableWrapper>
-      <StyledTable>
-        <thead>
-          <TableRow>
-            {columnLabels.map((columnLabel) => (
-              <TableHeader key={columnLabel}>{columnLabel}</TableHeader>
-            ))}
-          </TableRow>
-        </thead>
-        <tbody>
-          {rows.map((row, rowIndex: number) => (
-            <TableRow key={`row-${rowIndex}`}>
-              {row.map((cell, cellIndex) => (
-                <TableCell key={`row-${rowIndex}-cell${cellIndex}`}>{cell}</TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </tbody>
-      </StyledTable>
-    </TableWrapper>
-  );
+type Props = {
+  columns: Array<{ name: ReactNode; uid: string }>;
+  rows: Array<Record<string, any>>;
+  children?: ReactNode;
 };
+
+type InheritAttrs = Omit<BaseTableProps, keyof Props>;
+
+type TableProps = Props & InheritAttrs;
+
+const Table = forwardRef<HTMLTableElement, TableProps>(
+  ({ columns, rows, ...props }, ref): JSX.Element => {
+    return (
+      <BaseTable ref={ref} {...props}>
+        <TableHeader columns={columns}>{(column) => <Column key={column.uid}>{column.name}</Column>}</TableHeader>
+        <TableBody items={rows}>{(item: any) => <Row>{(columnKey) => <Cell>{item[columnKey]}</Cell>}</Row>}</TableBody>
+      </BaseTable>
+    );
+  }
+);
+
+Table.displayName = 'Table';
 
 export { Table };
 export type { TableProps };

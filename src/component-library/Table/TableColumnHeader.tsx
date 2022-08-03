@@ -15,7 +15,6 @@ type NativeAttrs = Omit<HTMLAttributes<HTMLTableCellElement>, keyof Props>;
 
 type TableColumnHeaderProps = Props & NativeAttrs;
 
-// TODO: add here arrow for sorting
 const TableColumnHeader = ({ column, state, ...props }: TableColumnHeaderProps): JSX.Element => {
   const ref = useRef<HTMLTableCellElement>(null);
   const { columnHeaderProps } = useTableColumnHeader({ node: column }, state, ref);

@@ -93,8 +93,7 @@ const theme = {
     }
   },
   table: {
-    border: '1px var(--colors-neutral-light-grey-50) solid',
-    border2: '1px solid var(--colors-table-border)'
+    border: '1px var(--colors-neutral-light-grey-50) solid'
   },
   alert: {
     status: {

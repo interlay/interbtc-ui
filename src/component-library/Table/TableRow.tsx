@@ -13,7 +13,6 @@ type NativeAttrs = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>;
 
 type TableRowProps = Props & NativeAttrs;
 
-// TODO: Logic for row selection needs to be added here
 const TableRow = ({ item, children, state, ...props }: TableRowProps): JSX.Element => {
   const ref = useRef<HTMLTableRowElement>(null);
   const { rowProps } = useTableRow(
