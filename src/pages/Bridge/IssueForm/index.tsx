@@ -144,7 +144,12 @@ const IssueForm = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [theFeeRate, theDepositRate, theDustValue, theBtcToGovernanceToken] = await Promise.all([
+        const [
+          theFeeRateResult,
+          theDepositRateResult,
+          theDustValueResult,
+          theBtcToGovernanceTokenResult
+        ] = await Promise.allSettled([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
           window.bridge.fee.getIssueFee(),
@@ -154,16 +159,38 @@ const IssueForm = (): JSX.Element | null => {
         ]);
         setStatus(STATUSES.RESOLVED);
 
-        setFeeRate(theFeeRate);
-        setDepositRate(theDepositRate);
-        setDustValue(theDustValue);
-        setBTCToGovernanceTokenRate(theBtcToGovernanceToken);
+        if (theFeeRateResult.status === 'rejected') {
+          throw new Error(theFeeRateResult.reason);
+        }
+
+        if (theDepositRateResult.status === 'rejected') {
+          throw new Error(theDepositRateResult.reason);
+        }
+
+        if (theDustValueResult.status === 'rejected') {
+          throw new Error(theDustValueResult.reason);
+        }
+
+        if (theBtcToGovernanceTokenResult.status === 'rejected') {
+          setError(BTC_AMOUNT, {
+            type: 'validate',
+            message: t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
+          });
+        }
+
+        if (theBtcToGovernanceTokenResult.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(theBtcToGovernanceTokenResult.value);
+        }
+
+        setFeeRate(theFeeRateResult.value);
+        setDepositRate(theDepositRateResult.value);
+        setDustValue(theDustValueResult.value);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
       }
     })();
-  }, [bridgeLoaded, dispatch, handleError]);
+  }, [bridgeLoaded, dispatch, handleError, setError, t]);
 
   React.useEffect(() => {
     // deselect checkbox when required btcAmount exceeds capacity
@@ -242,6 +269,10 @@ const IssueForm = (): JSX.Element | null => {
         return 'Invalid BTC amount input!';
       }
 
+      if (isOracleOffline) {
+        return t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
+      }
+
       return undefined;
     };
 
@@ -313,6 +344,9 @@ const IssueForm = (): JSX.Element | null => {
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
     const accountSet = !!address;
     const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
+
+    // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
+    const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
 
     return (
       <>

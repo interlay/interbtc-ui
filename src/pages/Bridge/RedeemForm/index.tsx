@@ -134,15 +134,19 @@ const RedeemForm = (): JSX.Element | null => {
         if (premiumRedeemFeeResult.status === 'rejected') {
           throw new Error(premiumRedeemFeeResult.reason);
         }
-        if (btcToDotRateResult.status === 'rejected') {
-          throw new Error(btcToDotRateResult.reason);
-        }
         if (redeemFeeRateResult.status === 'rejected') {
           throw new Error(redeemFeeRateResult.reason);
         }
         if (currentInclusionFeeResult.status === 'rejected') {
           throw new Error(currentInclusionFeeResult.reason);
         }
+        if (btcToDotRateResult.status === 'rejected') {
+          setFormError(WRAPPED_TOKEN_AMOUNT, {
+            type: 'validate',
+            message: t('error_oracle_offline', { action: 'redeem', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
+          });
+        }
+
         if (premiumRedeemVaultsResult.status === 'fulfilled' && premiumRedeemVaultsResult.value.size > 0) {
           // Premium redeem vaults are refetched on submission so we only need to set
           // true/false rather than keep them in state. No need to set false as this is
@@ -154,10 +158,12 @@ const RedeemForm = (): JSX.Element | null => {
           const initialMaxCapacity = vaultsWithRedeemableTokens.value.values().next().value;
           setMaxRedeemableCapacity(initialMaxCapacity);
         }
+        if (btcToDotRateResult.status === 'fulfilled') {
+          setBtcToDotRate(btcToDotRateResult.value);
+        }
 
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
-        setBtcToDotRate(btcToDotRateResult.value);
         setRedeemFeeRate(redeemFeeRateResult.value);
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
@@ -166,7 +172,7 @@ const RedeemForm = (): JSX.Element | null => {
         handleError(error);
       }
     })();
-  }, [bridgeLoaded, handleError]);
+  }, [bridgeLoaded, handleError, setFormError, t]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return <PrimaryColorEllipsisLoader />;
@@ -300,6 +306,10 @@ const RedeemForm = (): JSX.Element | null => {
         return 'Input value is too high!';
       }
 
+      if (isOracleOffline) {
+        return t('error_oracle_offline', { action: 'redeem', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
+      }
+
       return undefined;
     };
 
@@ -327,6 +337,9 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
     const accountSet = !!address;
+
+    // `btcToDotRate` has 0 value only if oracle call fails
+    const isOracleOffline = btcToDotRate.toBig().eq(0);
 
     return (
       <>
