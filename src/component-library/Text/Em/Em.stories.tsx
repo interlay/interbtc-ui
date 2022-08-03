@@ -1,8 +1,9 @@
 import { Meta, Story } from '@storybook/react';
 
-import { Em, EmProps } from '.';
+import { TextProps } from '../types';
+import { Em } from '.';
 
-const Template: Story<EmProps> = (args) => <Em {...args} />;
+const Template: Story<TextProps> = (args) => <Em {...args} />;
 
 const Primary = Template.bind({});
 Primary.args = {

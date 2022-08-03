@@ -1,9 +1,8 @@
 import styled from 'styled-components';
 
 import { theme } from '../../theme';
-import { BaseTextProps } from '../types';
 
-const DefinitionList = styled.dl<BaseTextProps>`
+const DefinitionList = styled.dl`
   display: flex;
   font-size: ${theme.text.s};
 `;

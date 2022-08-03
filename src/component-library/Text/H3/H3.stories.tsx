@@ -1,8 +1,9 @@
 import { Meta, Story } from '@storybook/react';
 
-import { H3, H3Props } from '.';
+import { TextProps } from '../types';
+import { H3 } from '.';
 
-const Template: Story<H3Props> = (args) => <H3 {...args} />;
+const Template: Story<TextProps> = (args) => <H3 {...args} />;
 
 const Primary = Template.bind({});
 Primary.args = {

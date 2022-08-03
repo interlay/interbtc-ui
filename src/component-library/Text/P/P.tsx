@@ -1,15 +1,12 @@
-import { ReactNode } from 'react';
-
-import { BaseTextProps } from '../types';
+import { TextProps } from '../types';
 import { ParagraphText } from './P.style';
 
-interface PProps extends BaseTextProps {
-  children: ReactNode;
-}
-
-const P = ({ color, children }: PProps): JSX.Element => <ParagraphText color={color}>{children}</ParagraphText>;
+const P = ({ color, children, ...props }: TextProps<HTMLParagraphElement>): JSX.Element => (
+  <ParagraphText color={color} {...props}>
+    {children}
+  </ParagraphText>
+);
 
 P.displayName = 'P';
 
 export { P };
-export type { PProps };

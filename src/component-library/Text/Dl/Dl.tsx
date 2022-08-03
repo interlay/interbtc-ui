@@ -1,4 +1,4 @@
-import { BaseTextProps } from '../types';
+import { TextProps } from '../types';
 import { Dd, DefinitionList, Dt, ListItem } from './Dl.style';
 
 type DlItem = {
@@ -6,13 +6,13 @@ type DlItem = {
   definition: string;
 };
 
-interface DlProps extends BaseTextProps {
+interface DlProps extends TextProps<HTMLDListElement> {
   listItems: Array<DlItem>;
 }
 
-const Dl = ({ listItems }: DlProps): JSX.Element => {
+const Dl = ({ listItems, ...props }: DlProps): JSX.Element => {
   return (
-    <DefinitionList>
+    <DefinitionList {...props}>
       {listItems.map((listItem) => (
         <ListItem key={listItem.term}>
           <Dt>{listItem.term}:</Dt>
