@@ -12,21 +12,53 @@ import {
   StyledSublabel
 } from './CollateralScore.style';
 
+type Ranges = Record<Severity, { min: number; max: number }>;
+
+const segmentPercentage = 33.33;
+
+const defaultRanges: Ranges = {
+  error: { min: 0, max: segmentPercentage },
+  warning: { min: 33.34, max: 66.66 },
+  success: { min: 66.67, max: 100 }
+};
+
 const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 2 };
 
-const getSeverity = (percentage: number): Severity => {
-  if (percentage <= 33) return 'error';
-  if (percentage <= 66) return 'warning';
+const getSeverity = (value: number, ranges: Ranges): Severity => {
+  if (value <= ranges['error'].max) return 'error';
+  if (value <= ranges['warning'].max) return 'warning';
   return 'success';
+};
+
+const getBarPercentage = (severity: Severity, value: number, ranges: Ranges): number => {
+  // We need the percentage against each segment range and we get by
+  // subtracting the start of segment from the current value
+  const segmentValue = (value > ranges.success.max ? ranges.success.max : value) - ranges[severity].min;
+
+  // Same approach but now for the max value
+  const segmentMaxValue = ranges[severity].max - ranges[severity].min;
+
+  // We calculate against the percentage that each segment occupies from the parent
+  const rangePercentage = (segmentValue / segmentMaxValue) * segmentPercentage;
+
+  switch (severity) {
+    case 'error':
+      return rangePercentage;
+    case 'warning':
+      // 33.33 + (current segment percentage)
+      return segmentPercentage + rangePercentage;
+    case 'success':
+      // 66.66 + (current segment percentage)
+      return segmentPercentage * 2 + rangePercentage;
+  }
 };
 
 type Props = {
   variant?: 'default' | 'highlight';
   score?: number;
-  minScore?: number;
-  maxScore?: number;
   label?: ReactNode;
   sublabel?: ReactNode;
+  ranges?: Ranges;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -35,19 +67,17 @@ type CollateralScoreProps = Props & NativeAttrs;
 
 const CollateralScore = ({
   score = 0,
-  minScore = 0,
-  maxScore = 100,
   label,
   sublabel,
   variant = 'default',
+  ranges = defaultRanges,
   ...props
 }: CollateralScoreProps): JSX.Element => {
-  // There is only a max visually for the bar, since our score
-  // can overexceed the max score since a vault can be over-collateralised.
-  const maxValue = score > maxScore ? score : maxScore;
+  // Makes sure we always have the correct aria-valuemax
+  const maxValue = score > ranges.success.max ? score : ranges.success.max;
 
   const { meterProps, labelProps } = useMeter({
-    minValue: minScore,
+    minValue: ranges.error.min,
     maxValue,
     value: score,
     formatOptions,
@@ -55,9 +85,10 @@ const CollateralScore = ({
     ...props
   });
 
+  // Does not allow negative numbers
   const value = meterProps['aria-valuenow'] || 0;
-  const barPercentage = Math.round((value / maxValue) * 100);
-  const severity: Severity = getSeverity(barPercentage);
+  const severity: Severity = getSeverity(value, ranges);
+  const barPercentage = getBarPercentage(severity, value, ranges);
 
   const isDefault = variant === 'default';
 

@@ -9,8 +9,7 @@ const Default = Template.bind({});
 Default.args = {
   variant: 'default',
   label: 'New Collateralization',
-  sublabel: '(high risk)',
-  maxScore: 150
+  sublabel: '(high risk)'
 };
 
 const Highlight = Template.bind({});
@@ -18,8 +17,7 @@ const Highlight = Template.bind({});
 Highlight.args = {
   variant: 'highlight',
   label: 'Collateral Score',
-  sublabel: 'High Risk: 0-150%',
-  maxScore: 150
+  sublabel: 'High Risk: 0-150%'
 };
 
 export { Default, Highlight };
