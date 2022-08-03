@@ -245,7 +245,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
       return 'Invalid BTC amount input!';
     }
 
-    if (btcToGovernanceTokenRate.toBig().eq(0)) {
+    if (isOracleOffline) {
       return t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
     }
 
@@ -269,6 +269,9 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
   const bridgeFee = parsedBTCAmount.mul(feeRate);
   const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
   const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
+
+  // `btcToGovernanceTokenRate` has 0 value only if oracle call is unsuccessful
+  const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
 
   return (
     <>

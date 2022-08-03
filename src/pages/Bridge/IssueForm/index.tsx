@@ -269,7 +269,7 @@ const IssueForm = (): JSX.Element | null => {
         return 'Invalid BTC amount input!';
       }
 
-      if (btcToGovernanceTokenRate.toBig().eq(0)) {
+      if (isOracleOffline) {
         return t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
       }
 
@@ -344,6 +344,9 @@ const IssueForm = (): JSX.Element | null => {
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
     const accountSet = !!address;
     const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
+
+    // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
+    const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
 
     return (
       <>

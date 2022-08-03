@@ -306,7 +306,7 @@ const RedeemForm = (): JSX.Element | null => {
         return 'Input value is too high!';
       }
 
-      if (btcToDotRate.toBig().eq(0)) {
+      if (isOracleOffline) {
         return t('error_oracle_offline', { action: 'redeem', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
       }
 
@@ -337,6 +337,9 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
     const accountSet = !!address;
+
+    // `btcToDotRate` has 0 value only if oracle call fails
+    const isOracleOffline = btcToDotRate.toBig().eq(0);
 
     return (
       <>
