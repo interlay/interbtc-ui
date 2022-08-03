@@ -1,8 +1,9 @@
 import { Meta, Story } from '@storybook/react';
 
-import { Strong, StrongProps } from '.';
+import { TextProps } from '../types';
+import { Strong } from '.';
 
-const Template: Story<StrongProps> = (args) => <Strong {...args} />;
+const Template: Story<TextProps> = (args) => <Strong {...args} />;
 
 const Primary = Template.bind({});
 Primary.args = {

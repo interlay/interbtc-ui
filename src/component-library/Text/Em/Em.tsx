@@ -1,15 +1,12 @@
-import { ReactNode } from 'react';
-
-import { BaseTextProps } from '../types';
+import { TextProps } from '../types';
 import { EmText } from './Em.style';
 
-interface EmProps extends BaseTextProps {
-  children: ReactNode;
-}
-
-const Em = ({ color, children }: EmProps): JSX.Element => <EmText color={color}>{children}</EmText>;
+const Em = ({ color, children, ...props }: TextProps<HTMLElement>): JSX.Element => (
+  <EmText color={color} {...props}>
+    {children}
+  </EmText>
+);
 
 Em.displayName = 'Em';
 
 export { Em };
-export type { EmProps };
