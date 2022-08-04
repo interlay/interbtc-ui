@@ -1,48 +1,56 @@
+import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
+import { AddressOrPair } from '@polkadot/api/types';
+import Big from 'big.js';
+import clsx from 'clsx';
+import { add, format } from 'date-fns';
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useQuery, useMutation } from 'react-query';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { AddressOrPair } from '@polkadot/api/types';
-import { format, add } from 'date-fns';
-import Big from 'big.js';
-import clsx from 'clsx';
-import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
+import { useMutation, useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from '@/common/utils/utils';
+import AvailableBalanceUI from '@/components/AvailableBalanceUI';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import Panel from '@/components/Panel';
+import SubmitButton from '@/components/SubmitButton';
+import TitleWithUnderline from '@/components/TitleWithUnderline';
+import TokenField from '@/components/TokenField';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import WarningBanner from '@/components/WarningBanner';
+import { BLOCK_TIME } from '@/config/parachain';
+import {
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceTokenMonetaryAmount,
+  STAKE_LOCK_TIME,
+  VOTE_GOVERNANCE_TOKEN,
+  VOTE_GOVERNANCE_TOKEN_SYMBOL,
+  VoteGovernanceTokenMonetaryAmount
+} from '@/config/relay-chains';
+import MainContainer from '@/parts/MainContainer';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import {
+  STAKING_TRANSACTION_FEE_RESERVE_FETCHER,
+  stakingTransactionFeeReserveFetcher
+} from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
+import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
+import { KUSAMA } from '@/utils/constants/relay-chain-names';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import BalancesUI from './BalancesUI';
-import WithdrawButton from './WithdrawButton';
 import ClaimRewardsButton from './ClaimRewardsButton';
 import InformationUI from './InformationUI';
 import LockTimeField from './LockTimeField';
 import TotalsUI from './TotalsUI';
-import MainContainer from 'parts/MainContainer';
-import TitleWithUnderline from 'components/TitleWithUnderline';
-import Panel from 'components/Panel';
-import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import TokenField from 'components/TokenField';
-import SubmitButton from 'components/SubmitButton';
-import ErrorFallback from 'components/ErrorFallback';
-import ErrorModal from 'components/ErrorModal';
-import WarningBanner from 'components/WarningBanner';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
-import {
-  VOTE_GOVERNANCE_TOKEN_SYMBOL,
-  GOVERNANCE_TOKEN_SYMBOL,
-  GOVERNANCE_TOKEN,
-  STAKE_LOCK_TIME,
-  GovernanceTokenMonetaryAmount,
-  VoteGovernanceTokenMonetaryAmount,
-  VOTE_GOVERNANCE_TOKEN
-} from 'config/relay-chains';
-import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
-import { BLOCK_TIME } from 'config/parachain';
-import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
-import { ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT, ZERO_GOVERNANCE_TOKEN_AMOUNT } from 'utils/constants/currency';
-import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
+import WithdrawButton from './WithdrawButton';
 
 const SHARED_CLASSES = clsx('mx-auto', 'md:max-w-2xl');
 
@@ -68,17 +76,6 @@ const checkOnlyIncreaseLockAmount = (lockTime: number, lockAmount: GovernanceTok
 const checkOnlyExtendLockTime = (lockTime: number, lockAmount: GovernanceTokenMonetaryAmount) => {
   return lockTime > 0 && lockAmount.eq(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 };
-
-// FIXME: account for transaction fees not with a hardcoded value
-let TRANSACTION_FEE_AMOUNT: number;
-if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
-  TRANSACTION_FEE_AMOUNT = 1;
-} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
-  TRANSACTION_FEE_AMOUNT = 0.01;
-} else {
-  throw new Error('Something went wrong!');
-}
-const transactionFeeAmount = newMonetaryAmount(TRANSACTION_FEE_AMOUNT, GOVERNANCE_TOKEN, true);
 
 const LOCKING_AMOUNT = 'locking-amount';
 const LOCK_TIME = 'lock-time';
@@ -108,8 +105,15 @@ const Staking = (): JSX.Element => {
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
-  const { governanceTokenBalance, bridgeLoaded, address, prices } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+
+  const {
+    governanceTokenBalanceIdle,
+    governanceTokenBalanceLoading,
+    governanceTokenBalance
+  } = useGovernanceTokenBalance();
 
   const {
     register,
@@ -117,7 +121,8 @@ const Staking = (): JSX.Element => {
     watch,
     reset,
     formState: { errors },
-    trigger
+    trigger,
+    setValue
   } = useForm<StakingFormData>({
     mode: 'onChange', // 'onBlur'
     defaultValues: {
@@ -215,6 +220,20 @@ const Staking = (): JSX.Element => {
     }
   );
   useErrorHandler(stakedAmountAndEndBlockError);
+
+  const {
+    isIdle: transactionFeeReserveIdle,
+    isLoading: transactionFeeReserveLoading,
+    data: transactionFeeReserve,
+    error: transactionFeeReserveError
+  } = useQuery<GovernanceTokenMonetaryAmount, Error>(
+    [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, address],
+    stakingTransactionFeeReserveFetcher(address),
+    {
+      enabled: bridgeLoaded && !!address
+    }
+  );
+  useErrorHandler(transactionFeeReserveError);
 
   const initialStakeMutation = useMutation<void, Error, LockingAmountAndTime>(
     (variables: LockingAmountAndTime) => {
@@ -331,13 +350,37 @@ const Staking = (): JSX.Element => {
   const stakedAmount = getStakedAmount();
 
   const availableBalance = React.useMemo(() => {
-    if (!governanceTokenBalance || stakedAmountAndEndBlockIdle || stakedAmountAndEndBlockLoading) return;
+    if (
+      governanceTokenBalanceIdle ||
+      governanceTokenBalanceLoading ||
+      stakedAmountAndEndBlockIdle ||
+      stakedAmountAndEndBlockLoading ||
+      transactionFeeReserveIdle ||
+      transactionFeeReserveLoading
+    )
+      return;
     if (stakedAmount === undefined) {
-      throw new Error('Something went wrong!');
+      throw new Error('Staked amount value returned undefined!');
+    }
+    if (transactionFeeReserve === undefined) {
+      throw new Error('Transaction fee reserve value returned undefined!');
+    }
+    if (governanceTokenBalance === undefined) {
+      throw new Error('Governance token balance value returned undefined!');
     }
 
-    return governanceTokenBalance.sub(stakedAmount).sub(transactionFeeAmount);
-  }, [governanceTokenBalance, stakedAmountAndEndBlockIdle, stakedAmountAndEndBlockLoading, stakedAmount]);
+    return governanceTokenBalance.free.sub(stakedAmount).sub(transactionFeeReserve);
+  }, [
+    governanceTokenBalanceIdle,
+    governanceTokenBalanceLoading,
+    governanceTokenBalance,
+    stakedAmountAndEndBlockIdle,
+    stakedAmountAndEndBlockLoading,
+    stakedAmount,
+    transactionFeeReserveIdle,
+    transactionFeeReserveLoading,
+    transactionFeeReserve
+  ]);
 
   const onSubmit = (data: StakingFormData) => {
     if (!bridgeLoaded) return;
@@ -480,9 +523,7 @@ const Staking = (): JSX.Element => {
   };
   const availableLockTime = getAvailableLockTime();
 
-  const renderAvailableBalanceLabel = () => {
-    return availableBalance === undefined ? '-' : displayMonetaryAmount(availableBalance);
-  };
+  const availableMonetaryBalance = displayMonetaryAmount(availableBalance);
 
   const renderUnlockDateLabel = () => {
     if (errors[LOCK_TIME]) {
@@ -623,7 +664,15 @@ const Staking = (): JSX.Element => {
     }
   };
 
-  const valueInUSDOfLockingAmount = getUsdAmount(monetaryLockingAmount, prices.governanceToken?.usd);
+  const valueInUSDOfLockingAmount = getUsdAmount(
+    monetaryLockingAmount,
+    getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+  );
+
+  const handleClickBalance = () => {
+    setValue(LOCKING_AMOUNT, availableMonetaryBalance);
+    trigger(LOCKING_AMOUNT);
+  };
 
   const claimRewardsButtonEnabled = claimableRewardAmount?.gt(ZERO_GOVERNANCE_TOKEN_AMOUNT);
 
@@ -689,10 +738,9 @@ const Staking = (): JSX.Element => {
     <>
       <MainContainer>
         {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
-          <WarningBanner
-            className={SHARED_CLASSES}
-            message='Block times are currently higher than expected. Lock times may be longer than expected.'
-          />
+          <WarningBanner className={SHARED_CLASSES} severity='alert'>
+            <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
+          </WarningBanner>
         )}
         <Panel className={SHARED_CLASSES}>
           <form className={clsx('p-8', 'space-y-8')} onSubmit={handleSubmit(onSubmit)}>
@@ -718,15 +766,15 @@ const Staking = (): JSX.Element => {
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
-                balance={renderAvailableBalanceLabel()}
+                balance={availableBalance ? availableMonetaryBalance : '-'}
                 tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
+                onClick={handleClickBalance}
               />
               <TokenField
                 id={LOCKING_AMOUNT}
-                name={LOCKING_AMOUNT}
                 label={GOVERNANCE_TOKEN_SYMBOL}
                 min={0}
-                ref={register({
+                {...register(LOCKING_AMOUNT, {
                   required: {
                     value: extendLockTimeSet ? false : true,
                     message: 'This field is required!'
@@ -741,9 +789,8 @@ const Staking = (): JSX.Element => {
             </div>
             <LockTimeField
               id={LOCK_TIME}
-              name={LOCK_TIME}
               min={0}
-              ref={register({
+              {...register(LOCK_TIME, {
                 required: {
                   value: votingBalanceGreaterThanZero ? false : true,
                   message: 'This field is required!'

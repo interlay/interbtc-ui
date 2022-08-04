@@ -1,9 +1,10 @@
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { ParachainStatus } from 'common/types/util.types';
+import { ParachainStatus } from '@/common/types/util.types';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface Props {
   status: ParachainStatus;
@@ -35,7 +36,7 @@ const ParachainStatusInfo = ({ status, className }: Props): JSX.Element | null =
     // Shutdown and Error cases
     default:
       return (
-        <div className={clsx('text-interlayCinnabar', 'font-medium', 'text-sm', className)}>
+        <div className={clsx(getColorShade('red'), 'font-medium', 'text-sm', className)}>
           <p>{t('issue_redeem_disabled')}</p>
           <p>
             {t('interbtc_bridge_recovery_mode', {

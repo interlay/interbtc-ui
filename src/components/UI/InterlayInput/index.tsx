@@ -1,12 +1,12 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { BORDER_CLASSES, TEXT_CLASSES } from 'utils/constants/styles';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { BORDER_CLASSES, TEXT_CLASSES } from '@/utils/constants/styles';
+
 import styles from './interlay-input.module.css';
 
-type Ref = HTMLInputElement;
-const InterlayInput = React.forwardRef<Ref, Props>(
+const InterlayInput = React.forwardRef<HTMLInputElement, Props>(
   ({ className, ...rest }, ref): JSX.Element => (
     <input
       ref={ref}

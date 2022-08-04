@@ -65,7 +65,7 @@
   "btc_parachain_status": "BTC Parachain Status",
   "vote": "Vote",
   "pending_btc": "Pending BTC",
-  "locked_dot": "Locked {{collateralTokenSymbol}}",
+  "locked_collateral": "Locked Collateral",
   "locked_planck": "Locked Planck",
   "locked_btc": "Locked BTC",
   "issue": "Issue",
@@ -113,11 +113,14 @@
   "interbtc_bridge_recovery_mode": "The {{wrappedTokenSymbol}} bridge has entered recovery mode. User funds are safe. Please try again later or check the status on the Dashboard page.",
   "waiting_for_confirmations": "Waiting for Confirmations",
   "built_by": "Built by",
+  "version": "Version",
   "get_governance_token": "Get {{governanceTokenSymbol}}",
   "get_governance_token_description": "Please check the individual terms and conditions of each exchange before you buy/trade {{governanceTokenSymbol}}.",
   "select_vault": "Please Select Vault",
   "not_enough_vault_capacity": "None vault has enough capacity.",
   "view_all_transactions_on_subscan": "View all transactions on Subscan",
+  "collateral": "Collateral",
+  "error_oracle_offline": "You can't {{action}} {{wrappedTokenSymbol}} at the moment because oracle is offline.",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -208,8 +211,8 @@
       "please_enter_amount": "Please enter amount",
       "relay_chain_balance": "Transferable relay chain balance",
       "parachain_balance": "Transferable balance",
-      "insufficient_funds_to_pay_fees": "Please transfer an amount greater than the transfer fee of {{transferFee}}",
-      "insufficient_funds_to_maintain_existential_depoit": "Insufficient amount to maintain existential deposit"
+      "insufficient_funds_to_pay_fees": "Please transfer an amount greater than the transfer fee of {{transferFee}}.",
+      "insufficient_funds_to_maintain_existential_deposit": "Insufficient amount to maintain existential deposit on the receiving account. Please transfer an amount greater than the existential deposit of {{existentialDeposit}} and the transfer fee of {{transferFee}}."
     }
   },
   "burn_page": {
@@ -275,10 +278,9 @@
       "loading": "loading..."
     },
     "vault": {
-      "active_vaults": "Active Vaults",
       "collateralization": "Collateralization",
-      "locked_collateral": "Locked collateral",
-      "theft": "Theft detected",
+      "total_collateral_locked_usd": "Total Collateral Locked (USD)",
+      "total_collateral_token_symbol_locked": "Total {{collateralTokenSymbol}} Locked",
       "liquidated": "Liquidated",
       "liquidation": "Being liquidated",
       "undercollateralized": "Undercollateralized",
@@ -434,7 +436,7 @@
     "tip_pending_btc": "BTC volume of in-progress issue requests.",
     "tip_collateralization": "Collateralization rate for locked BTC. 'Pending' includes in-progress issue requests.",
     "pending_table_subcell": "Pending: ",
-    "locked_dot": "Locked Collateral {{collateralTokenSymbol}}",
+    "locked_collateral": "Locked Collateral {{collateralTokenSymbol}}",
     "fees_earned_interbtc": "Fees earned {{wrappedTokenSymbol}}",
     "remaining_capacity": "Remaining {{wrappedTokenSymbol}} capacity",
     "rewards_earned_governance_token_symbol": "Rewards earned {{governanceTokenSymbol}}",

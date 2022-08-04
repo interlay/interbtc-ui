@@ -1,13 +1,15 @@
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import DashboardCard from '../DashboardCard';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { PAGES } from '@/utils/constants/links';
+import { getColorShade } from '@/utils/helpers/colors';
+
 import Stats, { StatsRouterLink } from '../../Stats';
-import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { PAGES } from 'utils/constants/links';
-import { ParachainStatus, StoreType } from 'common/types/util.types';
+import DashboardCard from '../DashboardCard';
 
 interface Props {
   hasLinks?: boolean;
@@ -40,9 +42,9 @@ const ParachainSecurityCard = ({ hasLinks }: Props): JSX.Element => {
         className={clsx(
           'mx-auto',
           { 'ring-interlayPaleSky': parachainStatus === ParachainStatus.Loading },
-          { 'ring-interlayConifer': parachainStatus === ParachainStatus.Running },
+          { [getColorShade('green', 'ring')]: parachainStatus === ParachainStatus.Running },
           {
-            'ring-interlayCalifornia':
+            [getColorShade('yellow', 'ring')]:
               parachainStatus === ParachainStatus.Error || parachainStatus === ParachainStatus.Shutdown
           }
         )}
@@ -50,9 +52,9 @@ const ParachainSecurityCard = ({ hasLinks }: Props): JSX.Element => {
         <Ring64Title
           className={clsx(
             { 'text-interlayPaleSky': parachainStatus === ParachainStatus.Loading },
-            { 'text-interlayConifer': parachainStatus === ParachainStatus.Running },
+            { [getColorShade('green')]: parachainStatus === ParachainStatus.Running },
             {
-              'text-interlayCalifornia':
+              [getColorShade('yellow')]:
                 parachainStatus === ParachainStatus.Error || parachainStatus === ParachainStatus.Shutdown
             }
           )}

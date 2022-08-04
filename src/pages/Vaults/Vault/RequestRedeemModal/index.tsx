@@ -1,22 +1,23 @@
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import clsx from 'clsx';
 import { CollateralCurrency, newVaultId, WrappedCurrency } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
-import { WRAPPED_TOKEN } from 'config/relay-chains';
-import ErrorMessage from 'components/ErrorMessage';
-import NumberInput from 'components/NumberInput';
-import TextField from 'components/TextField';
-import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
-import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
-import { displayMonetaryAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { BTC_ADDRESS_REGEX } from '../../../../constants';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount } from '@/common/utils/utils';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayMulberryOutlinedButton from '@/components/buttons/InterlayMulberryOutlinedButton';
+import ErrorMessage from '@/components/ErrorMessage';
+import NumberInput from '@/components/NumberInput';
+import TextField from '@/components/TextField';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
+import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import { BTC_ADDRESS_REGEX } from '@/constants';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -35,7 +36,11 @@ interface Props {
 
 // TODO: share form with bridge page
 const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
-  const { register, handleSubmit, errors } = useForm<RequestRedeemFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<RequestRedeemFormData>();
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
@@ -97,9 +102,8 @@ const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }:
           <p>{t('vault.redeem_amount')}</p>
           <div>
             <NumberInput
-              name={WRAPPED_TOKEN_AMOUNT}
               min={0}
-              ref={register({
+              {...register(WRAPPED_TOKEN_AMOUNT, {
                 required: {
                   value: true,
                   message: t('Amount is required!')
@@ -113,10 +117,9 @@ const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }:
           <div>
             <TextField
               id={BTC_ADDRESS}
-              name={BTC_ADDRESS}
               type='text'
               placeholder={t('enter_btc_address')}
-              ref={register({
+              {...register(BTC_ADDRESS, {
                 required: {
                   value: true,
                   message: t('redeem_page.enter_btc')

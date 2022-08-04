@@ -1,24 +1,24 @@
+import { CollateralCurrency } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
+import clsx from 'clsx';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 import { useQueryClient } from 'react-query';
-import clsx from 'clsx';
-import { BitcoinAmount } from '@interlay/monetary-js';
-import { CollateralCurrency } from '@interlay/interbtc-api';
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import ErrorMessage from 'components/ErrorMessage';
-import NumberInput from 'components/NumberInput';
-import InterlayCinnabarOutlinedButton from 'components/buttons/InterlayCinnabarOutlinedButton';
-import InterlayMulberryOutlinedButton from 'components/buttons/InterlayMulberryOutlinedButton';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { displayMonetaryAmount } from 'common/utils/utils';
-import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
-import { CurrencyValues } from 'types/currency';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount } from '@/common/utils/utils';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayMulberryOutlinedButton from '@/components/buttons/InterlayMulberryOutlinedButton';
+import ErrorMessage from '@/components/ErrorMessage';
+import NumberInput from '@/components/NumberInput';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { CurrencyValues } from '@/types/currency';
 
 const AMOUNT = 'amount';
 
@@ -34,7 +34,11 @@ interface Props {
 }
 
 const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
-  const { register, handleSubmit, errors } = useForm<RequestReplacementFormData>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<RequestReplacementFormData>();
   const lockedCollateral = useSelector((state: StoreType) => state.vault.collateral);
   const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
@@ -65,7 +69,7 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
     setRequestPending(false);
   });
 
-  const validateAmount = (value: string): string | undefined => {
+  const validateAmount = (value: number): string | undefined => {
     const wrappedTokenAmount = BitcoinAmount.from.BTC(value);
     if (wrappedTokenAmount.lte(BitcoinAmount.zero)) {
       return t('Amount must be greater than zero!');
@@ -89,7 +93,7 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
           <p>{t('vault.withdraw_your_collateral')}</p>
           <p>{t('vault.you_have')}</p>
           <p>
-            {displayMonetaryAmount(lockedCollateral)} {collateralCurrency?.symbol}
+            {displayMonetaryAmount(lockedCollateral)} {collateralCurrency?.id}
           </p>
           <p>
             {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
@@ -97,9 +101,8 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
           <p>{t('vault.replace_amount')}</p>
           <div>
             <NumberInput
-              name={AMOUNT}
               min={0}
-              ref={register({
+              {...register(AMOUNT, {
                 required: {
                   value: true,
                   message: t('Amount is required!')

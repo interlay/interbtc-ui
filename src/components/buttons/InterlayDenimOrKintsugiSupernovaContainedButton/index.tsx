@@ -1,10 +1,10 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { DISABLED_BACKGROUND_CLASSES, DISABLED_TEXT_CLASSES } from 'utils/constants/styles';
-import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
+import { ReactComponent as SpinIcon } from '@/assets/img/icons/spin.svg';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { DISABLED_BACKGROUND_CLASSES, DISABLED_TEXT_CLASSES } from '@/utils/constants/styles';
 
 interface CustomProps {
   startIcon?: React.ReactNode;

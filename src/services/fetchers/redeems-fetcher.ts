@@ -1,10 +1,10 @@
-import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount, RedeemStatus } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
-import redeemsQuery from 'services/queries/redeems-query';
-import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
-import graphqlFetcher, { GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import getTxDetailsForRequest from 'services/fetchers/request-btctx-fetcher';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
+import getTxDetailsForRequest from '@/services/fetchers/request-btctx-fetcher';
+import redeemsQuery from '@/services/queries/redeems-query';
 
 type RedeemsFetcherParams = [key: typeof REDEEMS_FETCHER, offset: number, limit: number, where?: string];
 
@@ -19,7 +19,10 @@ function decodeRedeemValues(redeem: any): any {
   // TODO: get actual vault collateral when it's added to events
   redeem.collateralPremium = newMonetaryAmount(redeem.collateralPremium, RELAY_CHAIN_NATIVE_TOKEN);
   if (redeem.cancellation) {
-    redeem.cancellation.slashedCollateral = newMonetaryAmount(redeem.cancellation.slashedCollateral, RELAY_CHAIN_NATIVE_TOKEN);
+    redeem.cancellation.slashedCollateral = newMonetaryAmount(
+      redeem.cancellation.slashedCollateral,
+      RELAY_CHAIN_NATIVE_TOKEN
+    );
   }
 
   return redeem;

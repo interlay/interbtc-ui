@@ -1,9 +1,10 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import { DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES } from 'utils/constants/styles';
-import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
+import { ReactComponent as SpinIcon } from '@/assets/img/icons/spin.svg';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import { DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES } from '@/utils/constants/styles';
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface CustomProps {
   startIcon?: React.ReactNode;
@@ -32,10 +33,10 @@ const InterlayCaliforniaOutlinedButton = React.forwardRef<Ref, Props>(
           disabledOrPending
             ? clsx(DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES)
             : clsx(
-                'text-interlayCalifornia',
+                getColorShade('yellow'),
                 'border',
-                'border-interlayCalifornia',
-                'hover:bg-interlayCalifornia',
+                getColorShade('yellow', 'border'),
+                getColorShade('yellow', 'hover:bg'),
                 'hover:bg-opacity-5'
               ),
 

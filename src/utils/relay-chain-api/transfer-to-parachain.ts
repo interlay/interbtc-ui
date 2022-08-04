@@ -1,7 +1,7 @@
 import { DefaultTransactionAPI } from '@interlay/interbtc-api';
-import { web3FromAddress } from '@polkadot/extension-dapp';
-import { AddressOrPair } from '@polkadot/api/types';
 import { ApiPromise } from '@polkadot/api';
+import { AddressOrPair } from '@polkadot/api/types';
+import { web3FromAddress } from '@polkadot/extension-dapp';
 import { decodeAddress } from '@polkadot/keyring';
 
 import { PARACHAIN_ID } from './';

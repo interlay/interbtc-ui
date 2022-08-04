@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/outline';
 import clsx from 'clsx';
-import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/outline';
+import * as React from 'react';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import { copyToClipboard } from 'common/utils/utils';
+import { copyToClipboard } from '@/common/utils/utils';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
 
 interface CustomProps {
   address: string;

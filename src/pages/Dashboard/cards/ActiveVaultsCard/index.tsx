@@ -1,16 +1,18 @@
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+
+import { getLastMidnightTimestamps } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import { INTERLAY_DENIM, KINTSUGI_SUNDOWN } from '@/utils/constants/colors';
+import { PAGES } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import LineChart from '../../LineChart';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
+import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
-import ErrorFallback from 'components/ErrorFallback';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { INTERLAY_DENIM, KINTSUGI_SUNDOWN } from 'utils/constants/colors';
-import { PAGES } from 'utils/constants/links';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import { getLastMidnightTimestamps } from 'common/utils/utils';
 
 interface Props {
   hasLinks?: boolean;
@@ -21,7 +23,7 @@ interface VaultRegistration {
   registrationTimestamp: number;
 }
 
-const graphTimestamps = getLastMidnightTimestamps(6, true);
+const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 
 const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
@@ -53,7 +55,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
     }
 
     const vaultRegistrations = vaults.data.vaults;
-    const graphData = graphTimestamps
+    const graphData = cutoffTimestamps
       .slice(1)
       .map(
         (timestamp) =>
@@ -75,7 +77,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
         <Stats
           leftPart={
             <>
-              <StatsDt>{t('dashboard.vault.active_vaults')}</StatsDt>
+              <StatsDt>{t('dashboard.vault.vaults')}</StatsDt>
               <StatsDd>{vaultRegistrations.length}</StatsDd>
             </>
           }
@@ -85,7 +87,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
           wrapperClassName='h-full'
           colors={[chartLineColor]}
           labels={[t('dashboard.vault.total_vaults_chart')]}
-          yLabels={graphTimestamps.slice(0, -1).map((date) => new Date(date).toISOString().substring(0, 10))}
+          yLabels={cutoffTimestamps.slice(0, -1).map((date) => new Date(date).toISOString().substring(0, 10))}
           yAxes={[
             {
               ticks: {

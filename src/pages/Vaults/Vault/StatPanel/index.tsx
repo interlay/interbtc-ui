@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import Panel from 'components/Panel';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import Panel from '@/components/Panel';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   label: string;

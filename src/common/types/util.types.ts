@@ -1,12 +1,10 @@
-import { Store, CombinedState } from 'redux';
-import { u256 } from '@polkadot/types/primitive';
-import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
+import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { u256 } from '@polkadot/types/primitive';
+import { CombinedState, Store } from 'redux';
 
-import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import { GeneralActions, RedeemActions, IssueActions, VaultActions } from './actions.types';
 import { rootReducer } from '../reducers/index';
-import { IssueState } from './issue.types';
+import { GeneralActions, RedeemActions, VaultActions } from './actions.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
 
@@ -47,22 +45,18 @@ export enum ParachainStatus {
   Shutdown
 }
 
+export type Price = {
+  usd: number;
+};
+
 export type Prices = {
-  bitcoin:
-    | {
-        usd: number;
-      }
-    | undefined;
-  collateralToken:
-    | {
-        usd: number;
-      }
-    | undefined;
-  governanceToken:
-    | {
-        usd: number;
-      }
-    | undefined;
+  bitcoin: Price;
+  polkadot: Price;
+  interlay: Price;
+  'interlay-btc': Price;
+  kintsugi?: Price;
+  'kintsugi-btc': Price;
+  kusama: Price;
 };
 
 export type GeneralState = {
@@ -76,20 +70,16 @@ export type GeneralState = {
   wrappedTokenTransferableBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  governanceTokenBalance: GovernanceTokenMonetaryAmount;
-  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
-  prices: Prices;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;
 
 export type StoreType = {
   general: GeneralState;
-  issue: IssueState;
   redeem: RedeemState;
   vault: VaultState;
 };
@@ -99,8 +89,7 @@ export type dispatcher = {
   dispatch: {};
 };
 
-export type StoreState = Store<CombinedState<StoreType>, GeneralActions | RedeemActions | IssueActions | VaultActions> &
-  dispatcher;
+export type StoreState = Store<CombinedState<StoreType>, GeneralActions | RedeemActions | VaultActions> & dispatcher;
 
 export type TimeDataPoint = {
   x: Date;

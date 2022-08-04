@@ -1,8 +1,8 @@
 import useDarkMode from 'use-dark-mode';
 
-import Toggle from 'components/Toggle';
-import { CLASS_NAMES } from 'utils/constants/styles';
-import { KUSAMA } from 'utils/constants/relay-chain-names';
+import Toggle from '@/components/Toggle';
+import { KUSAMA } from '@/utils/constants/relay-chain-names';
+import { CLASS_NAMES } from '@/utils/constants/styles';
 
 // TODO: not used for now
 const DarkModeToggle = (): JSX.Element => {

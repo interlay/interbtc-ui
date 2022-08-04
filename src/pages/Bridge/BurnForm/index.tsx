@@ -1,38 +1,41 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { CollateralCurrency, CollateralUnit, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
+import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { ExchangeRate, Bitcoin, BitcoinUnit, Currency, BitcoinAmount } from '@interlay/monetary-js';
-import { CollateralCurrency, CollateralUnit, newMonetaryAmount } from '@interlay/interbtc-api';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
-import PriceInfo from 'pages/Bridge/PriceInfo';
-import TokenField from 'components/TokenField';
-import SubmitButton from 'components/SubmitButton';
-import FormTitle from 'components/FormTitle';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorModal from 'components/ErrorModal';
-import ErrorFallback from 'components/ErrorFallback';
-import Hr2 from 'components/hrs/Hr2';
+import {
+  showAccountModalAction,
+  updateCollateralTokenBalanceAction,
+  updateWrappedTokenBalanceAction
+} from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/components/SubmitButton';
+import TokenField from '@/components/TokenField';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainNativeTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
-} from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import STATUSES from 'utils/constants/statuses';
-import { BALANCE_MAX_INTEGER_LENGTH } from '../../../constants';
-import { getUsdAmount, displayMonetaryAmount } from 'common/utils/utils';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
-import {
-  updateWrappedTokenBalanceAction,
-  updateCollateralTokenBalanceAction,
-  showAccountModalAction
-} from 'common/actions/general.actions';
+} from '@/config/relay-chains';
+import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
@@ -43,11 +46,12 @@ type BurnFormData = {
 const BurnForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const { prices, bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus, address } = useSelector(
+  const { bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus, address } = useSelector(
     (state: StoreType) => state.general
   );
 
@@ -137,7 +141,7 @@ const BurnForm = (): JSX.Element | null => {
       }
     };
 
-    const validateForm = (value: number): string | undefined => {
+    const validateForm = (value: string): string | undefined => {
       // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
       const bitcoinAmountValue = BitcoinAmount.from.BTC(value);
 
@@ -201,20 +205,22 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(burnableTokens)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(burnableTokens, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(burnableTokens, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
-            name={WRAPPED_TOKEN_AMOUNT}
             label={WRAPPED_TOKEN_SYMBOL}
-            ref={register({
+            {...register(WRAPPED_TOKEN_AMOUNT, {
               required: {
                 value: true,
                 message: t('burn_page.please_enter_the_amount')
               },
               validate: (value) => validateForm(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
+            approxUSD={`≈ $ ${getUsdAmount(
+              parsedInterBTCAmount || BitcoinAmount.zero,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />
@@ -233,7 +239,10 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(earnedCollateralTokenAmount, prices.collateralToken?.usd)}
+            approxUSD={getUsdAmount(
+              earnedCollateralTokenAmount,
+              getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+            )}
           />
           <SubmitButton
             // TODO: should not check everywhere like this

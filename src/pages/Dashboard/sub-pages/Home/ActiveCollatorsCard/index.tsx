@@ -1,21 +1,22 @@
 import { useTranslation } from 'react-i18next';
 
+import { getLastMidnightTimestamps } from '@/common/utils/utils';
+import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
+import { INTERLAY_DENIM, KINTSUGI_APPLE } from '@/utils/constants/colors';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+
 import LineChart from '../../../LineChart';
-import Stats, { StatsDt, StatsDd } from '../../../Stats';
-import DashboardCard from 'pages/Dashboard/cards/DashboardCard';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { INTERLAY_DENIM, KINTSUGI_APPLE } from 'utils/constants/colors';
-import { getLastMidnightTimestamps } from 'common/utils/utils';
+import Stats, { StatsDd, StatsDt } from '../../../Stats';
+
+// TODO: this function should be removed once real data is pulled in
+const cutoffTimestamps = getLastMidnightTimestamps(5, false);
+
+// TODO: hardcoded
+const data = [3, 3, 3, 3, 3];
+const dates = cutoffTimestamps.map((date) => date.toISOString().substring(0, 10));
 
 const ActiveCollatorsCard = (): JSX.Element => {
   const { t } = useTranslation();
-
-  // TODO: this function should be removed once real data is pulled in
-  const graphTimestamps = getLastMidnightTimestamps(5, false);
-
-  // TODO: hardcoded
-  const data = [3, 3, 3, 3, 3];
-  const dates = graphTimestamps.map((date) => date.toISOString().substring(0, 10));
 
   let chartLineColor;
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {

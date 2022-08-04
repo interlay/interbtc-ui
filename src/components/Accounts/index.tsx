@@ -1,8 +1,11 @@
-import * as React from 'react';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import * as React from 'react';
+import { useSelector } from 'react-redux';
+
+import { StoreType } from '@/common/types/util.types';
+import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
 
 import AccountSelector from './AccountSelector';
-import useGetAccounts from 'utils/hooks/api/use-get-accounts';
 
 interface Props {
   callbackFunction?: (account: InjectedAccountWithMeta) => void;
@@ -10,21 +13,22 @@ interface Props {
 }
 
 const Accounts = ({ callbackFunction, label }: Props): JSX.Element => {
+  const { address } = useSelector((state: StoreType) => state.general);
   const [selectedAccount, setSelectedAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const accounts = useGetAccounts();
 
   React.useEffect(() => {
-    if (!accounts) return;
+    if (!accounts || !address) return;
 
     if (!selectedAccount) {
-      // Set selected account to first item
-      setSelectedAccount(accounts[0]);
+      const currentAccount = accounts.find((account) => account.address === address);
+      setSelectedAccount(currentAccount);
     }
 
     if (callbackFunction && selectedAccount) {
       callbackFunction(selectedAccount);
     }
-  }, [accounts, callbackFunction, selectedAccount]);
+  }, [accounts, callbackFunction, address, selectedAccount]);
 
   return (
     <div>
