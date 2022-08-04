@@ -8,7 +8,7 @@ import { ReactComponent as KrakenLogoIcon } from '@/assets/img/exchanges/kraken-
 import { ReactComponent as LbankLogoIcon } from '@/assets/img/exchanges/lbank-logo.svg';
 import { ReactComponent as MexcLogoForInterlayIcon } from '@/assets/img/exchanges/mexc-logo-for-interlay.svg';
 import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchanges/mexc-logo-for-kintsugi.svg';
-import { ReactComponent as StellaswapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
+import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlink-logo.svg';
 import InterlayDefaultOutlinedButton, {
   Props as InterlayDefaultOutlinedButtonProps
@@ -28,12 +28,12 @@ let exchanges: Array<{
 if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   exchanges = [
     {
-      link: '',
+      link: 'https://acala.network/',
       icon: <AcalaLogoIcon width={122} height={48} />
     },
     {
-      link: '',
-      icon: <StellaswapLogoIcon width={122} height={25} />
+      link: 'https://stellaswap.com/',
+      icon: <StellaSwapLogoIcon width={122} height={25} />
     },
     {
       link: 'https://trade.kraken.com/charts/KRAKEN:INTR-USD',
