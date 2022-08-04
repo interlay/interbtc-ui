@@ -44,8 +44,4 @@ const StyledTableCell = styled.td`
   }
 `;
 
-// const StyledTableRowGroup = styled.div`
-//  vertical-align: middle;
-// `
-
 export { StyledTable, StyledTableCell, StyledTableColumnHeader };

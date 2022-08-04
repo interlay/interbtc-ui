@@ -7,7 +7,7 @@ type Props = {
   as?: keyof JSX.IntrinsicElements;
 };
 
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
+type NativeAttrs = Omit<HTMLAttributes<HTMLTableSectionElement>, keyof Props>;
 
 type TableRowGroupProps = Props & NativeAttrs;
 

@@ -10,39 +10,44 @@ interface NewVaultsTableRow {
   minCollateralAmount: string;
   collateralRate: string;
   isActive: boolean;
-  // TODO: Define ctaOnClick callback signature.
-  ctaOnClick: () => void;
 }
 
 interface NewVaultsTableProps {
   data: NewVaultsTableRow[];
+  onClickAddVault: (data: NewVaultsTableRow) => void;
 }
 
-const NewVaultsTable = ({ data }: NewVaultsTableProps): JSX.Element => {
-  const columnLabels = [
-    { name: 'Vault Pair', uid: 'pair' },
-    { name: 'Min Collateral', uid: 'min-collateral' },
-    { name: 'Collateral Rate', uid: 'collateral-rate' }
-  ];
-  const rows = data.map((row, id) => ({
-    id,
-    pair: (
-      <CoinPairWrapper key='coin_pair'>
-        <CoinPair size='small' coinOne={row.collateralCurrency} coinTwo={row.wrappedCurrency} />{' '}
-        {row.collateralCurrency} - {row.wrappedCurrency}
-      </CoinPairWrapper>
-    ),
-    'min-collateral': (
-      <NumericValue key='min_collateral'>
-        {row.minCollateralAmount} {row.collateralCurrency}
-      </NumericValue>
-    ),
-    'collateral-rate': (
-      <CTA key='cta' variant='secondary' disabled={!row.isActive} fullWidth onClick={row.ctaOnClick}>
-        {row.isActive ? 'Add' : 'Coming soon'}
-      </CTA>
-    )
-  }));
+const columnLabels = [
+  { name: 'Vault Pair', uid: 'pair' },
+  { name: 'Min Collateral', uid: 'min-collateral' },
+  { name: 'Collateral Rate', uid: 'collateral-rate' },
+  { name: '', uid: 'action' }
+];
+
+const NewVaultsTable = ({ data, onClickAddVault }: NewVaultsTableProps): JSX.Element => {
+  const rows = data.map((row, id) => {
+    const { collateralCurrency, collateralRate, isActive, minCollateralAmount, wrappedCurrency } = row;
+    return {
+      id,
+      pair: (
+        <CoinPairWrapper key='coin_pair'>
+          <CoinPair size='small' coinOne={collateralCurrency} coinTwo={wrappedCurrency} /> {collateralCurrency} -{' '}
+          {wrappedCurrency}
+        </CoinPairWrapper>
+      ),
+      'min-collateral': (
+        <NumericValue key='min_collateral'>
+          {minCollateralAmount} {collateralCurrency}
+        </NumericValue>
+      ),
+      'collateral-rate': <NumericValue key='collateral_rate'>{collateralRate}%</NumericValue>,
+      action: (
+        <CTA key='cta' variant='secondary' disabled={!isActive} fullWidth onClick={() => onClickAddVault(row)}>
+          {isActive ? 'Add' : 'Coming soon'}
+        </CTA>
+      )
+    };
+  });
 
   return (
     <Wrapper variant='bordered'>
