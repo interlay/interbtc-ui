@@ -50,9 +50,6 @@ const getVaultStatusLabel = (
   if (vaultExt.status === VaultStatusExt.Inactive) {
     statusLabel = t('dashboard.vault.inactive');
   }
-  if (vaultExt.status === VaultStatusExt.CommittedTheft) {
-    statusLabel = t('dashboard.vault.theft');
-  }
   if (vaultExt.status === VaultStatusExt.Liquidated) {
     statusLabel = t('dashboard.vault.liquidated');
   }
