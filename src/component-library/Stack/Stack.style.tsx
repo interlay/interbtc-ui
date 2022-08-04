@@ -13,7 +13,7 @@ const getSpacing = (spacing: StackProps['spacing']) => {
       result = theme.spacing.spacing4;
       break;
     case 'double':
-      result = theme.spacing.spacing4;
+      result = theme.spacing.spacing8;
       break;
     default:
       throw new Error('Something went wrong!');
