@@ -3105,14 +3105,6 @@
     "@babel/runtime" "^7.6.2"
     "@react-types/shared" "^3.14.0"
 
-"@react-stately/data@^3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@react-stately/data/-/data-3.6.0.tgz#6af1cb81940e7ec3c8ef93b07fb968617a2951bb"
-  integrity sha512-psuc5nziuPWYdxIFhXEt9DBT+cuhOCyGPz8cOP5RuWFfSM4r583M0SYrsi5YXCvUwhZEFFQNbapxJFfMpAHPtw==
-  dependencies:
-    "@babel/runtime" "^7.6.2"
-    "@react-types/shared" "^3.14.0"
-
 "@react-stately/grid@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@react-stately/grid/-/grid-3.3.0.tgz#f55d6bd74b74a81d35282cd2b552ee2ae2b9bbbf"
