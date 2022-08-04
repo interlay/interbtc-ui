@@ -59,7 +59,8 @@ const theme = {
     rg: 'var(--rounded-rg)',
     md: 'var(--rounded-md)',
     lg: 'var(--rounded-lg)',
-    xl: 'var(--rounded-xl)'
+    xl: 'var(--rounded-xl)',
+    full: 'var(--rounded-full)'
   },
   border: {
     default: '1px solid var(--colors-border)'
@@ -94,6 +95,13 @@ const theme = {
   table: {
     border: '1px var(--colors-neutral-light-grey-50) solid'
   },
+  alert: {
+    status: {
+      error: 'var(--colors-error)',
+      warning: 'var(--colors-warning)',
+      success: 'var(--colors-success)'
+    }
+  },
   transition: {
     duration: 100
   },
@@ -105,6 +113,19 @@ const theme = {
       bg: 'var(--colors-tabs-active-bg)'
     },
     border: '1px solid var(--colors-border)'
+  },
+  score: {
+    bar: {
+      height: '10px',
+      radius: 'var(--rounded-full)',
+      indicator: {
+        border: {
+          left: '10px solid transparent',
+          right: '10px solid transparent',
+          bottom: '18px solid var(--colors-score-bar-indicator-color)'
+        }
+      }
+    }
   }
 };
 
