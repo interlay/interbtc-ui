@@ -6,10 +6,17 @@ const Template: Story<CollateralScoreProps> = (args) => <CollateralScore {...arg
 
 const Default = Template.bind({});
 
+const ranges = {
+  error: { min: 0, max: 150 },
+  warning: { min: 150, max: 250 },
+  success: { min: 250, max: 300 }
+};
+
 Default.args = {
   variant: 'default',
   label: 'New Collateralization',
-  sublabel: '(high risk)'
+  sublabel: '(high risk)',
+  ranges
 };
 
 const Highlight = Template.bind({});
@@ -17,7 +24,8 @@ const Highlight = Template.bind({});
 Highlight.args = {
   variant: 'highlight',
   label: 'Collateral Score',
-  sublabel: 'High Risk: 0-150%'
+  sublabel: 'High Risk: 0-150%',
+  ranges
 };
 
 export { Default, Highlight };

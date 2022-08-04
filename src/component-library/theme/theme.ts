@@ -96,7 +96,7 @@ const theme = {
     border: '1px var(--colors-neutral-light-grey-50) solid'
   },
   alert: {
-    severity: {
+    status: {
       error: 'var(--colors-error)',
       warning: 'var(--colors-warning)',
       success: 'var(--colors-success)'

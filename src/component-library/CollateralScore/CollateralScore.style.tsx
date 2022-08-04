@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
-import { Severity } from '../utils/prop-types';
+import { Status } from '../utils/prop-types';
 
 type LabelProps = {
   isDefault: boolean;
@@ -31,28 +31,27 @@ const StyledScoreWrapper = styled.div<LabelProps>`
 `;
 
 type SublabelProps = {
-  severity?: Severity;
+  status?: Status;
 } & LabelProps;
 
 const StyledSublabel = styled.span<SublabelProps>`
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
   font-size: ${theme.text.xs};
   line-height: ${(props) => (props.isDefault ? theme.lineHeight.lg : theme.lineHeight.s)};
-  color: ${(props) => (props.severity ? theme.alert.severity[props.severity] : theme.colors.textTertiary)};
+  color: ${(props) => (props.status ? theme.alert.status[props.status] : theme.colors.textTertiary)};
 `;
 
 type ScoreProps = {
-  severity: Severity;
+  status: Status;
 } & LabelProps;
 
 const StyledScore = styled.span<ScoreProps>`
   font-size: ${(props) => (props.isDefault ? theme.text.xs : theme.text.xl4)};
   line-height: ${(props) => (props.isDefault ? theme.lineHeight.lg : theme.lineHeight.xl)};
-  color: ${(props) => theme.alert.severity[props.severity]};
+  color: ${(props) => theme.alert.status[props.status]};
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
-  // TODO: Add transition speed to theme
-  transition: color 250ms;
-  will-change: left;
+  transition: color ${theme.transition.duration}ms;
+  will-change: color;
 `;
 
 type BarProps = {
@@ -60,7 +59,7 @@ type BarProps = {
 };
 
 type SegmentProps = {
-  severity: Severity;
+  status: Status;
 };
 
 const StyledBar = styled.div<BarProps>`
@@ -79,15 +78,14 @@ const StyledBar = styled.div<BarProps>`
     left: ${(props) => props.width}%;
     top: 100%;
     transform: translate(-50%);
-    // TODO: Add transition speed to theme
-    transition: left 250ms;
+    transition: left ${theme.transition.duration}ms;
     will-change: left;
     margin-top: ${theme.spacing.spacing2};
   }
 `;
 
 const StyledSegment = styled.span<SegmentProps>`
-  background-color: ${(props) => theme.alert.severity[props.severity]};
+  background-color: ${(props) => theme.alert.status[props.status]};
   flex: 1;
 
   &:first-child {
