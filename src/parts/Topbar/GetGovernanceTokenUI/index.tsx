@@ -2,13 +2,13 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-// import { ReactComponent as AcalaLogoIcon } from '@/assets/img/exchanges/acala-logo.svg';
+import { ReactComponent as AcalaLogoIcon } from '@/assets/img/exchanges/acala-logo.svg';
 import { ReactComponent as GateLogoIcon } from '@/assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from '@/assets/img/exchanges/kraken-logo.svg';
 import { ReactComponent as LbankLogoIcon } from '@/assets/img/exchanges/lbank-logo.svg';
 import { ReactComponent as MexcLogoForInterlayIcon } from '@/assets/img/exchanges/mexc-logo-for-interlay.svg';
 import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchanges/mexc-logo-for-kintsugi.svg';
-// import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
+import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlink-logo.svg';
 import InterlayDefaultOutlinedButton, {
   Props as InterlayDefaultOutlinedButtonProps
@@ -27,14 +27,14 @@ let exchanges: Array<{
 
 if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   exchanges = [
-    // {
-    //   link: 'https://acala.network/',
-    //   icon: <AcalaLogoIcon width={122} height={48} />
-    // },
-    // {
-    //   link: 'https://stellaswap.com/',
-    //   icon: <StellaSwapLogoIcon width={122} height={25} />
-    // },
+    {
+      link: 'https://apps.acala.network/swap',
+      icon: <AcalaLogoIcon width={122} height={48} />
+    },
+    {
+      link: 'https://app.stellaswap.com/exchange/swap',
+      icon: <StellaSwapLogoIcon width={122} height={25} />
+    },
     {
       link: 'https://trade.kraken.com/charts/KRAKEN:INTR-USD',
       icon: <KrakenLogoIcon width={122} height={20} />
