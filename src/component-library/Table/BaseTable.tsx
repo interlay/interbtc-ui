@@ -18,34 +18,12 @@ type NativeAttrs = Omit<HTMLAttributes<HTMLTableElement>, keyof InheritAttrs>;
 type BaseTableProps = InheritAttrs & NativeAttrs;
 
 const BaseTable = forwardRef<HTMLTableElement, BaseTableProps>(
-  (
-    {
-      selectionMode,
-      selectedKeys,
-      disabledKeys,
-      defaultSelectedKeys,
-      onSelectionChange,
-      onRowAction,
-      onCellAction,
-      ...props
-    },
-    ref
-  ): JSX.Element => {
-    const ariaProps: InheritAttrs = {
-      selectedKeys,
-      disabledKeys,
-      selectionMode,
-      defaultSelectedKeys,
-      onSelectionChange,
-      onRowAction,
-      onCellAction,
-      ...props
-    };
-    const state = useTableState(ariaProps);
-
+  (props, ref): JSX.Element => {
+    const state = useTableState(props);
     const tableRef = useDOMRef(ref);
+    const { gridProps } = useTable(props, state, tableRef);
+
     const { collection } = state;
-    const { gridProps } = useTable(ariaProps, state, tableRef);
 
     return (
       <StyledTable ref={tableRef} {...mergeProps(props, gridProps)}>
