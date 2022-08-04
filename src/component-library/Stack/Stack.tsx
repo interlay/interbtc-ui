@@ -1,18 +1,21 @@
+import { HTMLAttributes } from 'react';
+
 import { StackContainer } from './Stack.style';
 
-interface StackProps {
-  children: React.ReactNode;
-  className?: string;
+type Props = {
+  as?: keyof JSX.IntrinsicElements;
   spacing?: 'half' | 'single' | 'double';
-}
-
-const Stack = ({ children, className, spacing = 'single' }: StackProps): JSX.Element => {
-  return (
-    <StackContainer className={className} spacing={spacing}>
-      {children}
-    </StackContainer>
-  );
 };
+
+type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
+
+type StackProps = Props & NativeAttrs;
+
+const Stack = ({ children, spacing = 'single', ...props }: StackProps): JSX.Element => (
+  <StackContainer spacing={spacing} {...props}>
+    {children}
+  </StackContainer>
+);
 
 export { Stack };
 export type { StackProps };
