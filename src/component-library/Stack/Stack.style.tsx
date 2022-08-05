@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
-import { StackProps } from '.';
+import { Spacing } from './Stack';
 
-const getSpacing = (spacing: StackProps['spacing']) => {
+const getSpacing = (spacing?: Spacing) => {
   let result;
   switch (spacing) {
     case 'half':
@@ -22,8 +22,14 @@ const getSpacing = (spacing: StackProps['spacing']) => {
   return result;
 };
 
-export const StackContainer = styled.div<StackProps>`
+type StackContainerProps = {
+  $spacing: Spacing;
+};
+
+const StackContainer = styled.div<StackContainerProps>`
   > *:not(:last-child) {
-    margin-bottom: ${(props) => getSpacing(props.spacing)};
+    margin-bottom: ${(props) => getSpacing(props.$spacing)};
   }
 `;
+
+export { StackContainer };
