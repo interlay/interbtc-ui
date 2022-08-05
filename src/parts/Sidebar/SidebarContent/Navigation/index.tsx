@@ -78,6 +78,12 @@ const Navigation = ({
         icon: CashIcon
       },
       {
+        name: 'nav_vaults',
+        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
+        icon: ChipIcon,
+        hidden: !vaultClientLoaded
+      },
+      {
         name: 'nav_bridge',
         link: PAGES.BRIDGE,
         icon: RefreshIcon,
@@ -96,13 +102,6 @@ const Navigation = ({
         link: PAGES.DASHBOARD,
         icon: ChartSquareBarIcon,
         hidden: false,
-        disabled: true
-      },
-      {
-        name: 'nav_vaults',
-        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
-        icon: ChipIcon,
-        hidden: !vaultClientLoaded,
         disabled: true
       },
       {

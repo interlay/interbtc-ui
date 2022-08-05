@@ -52,8 +52,8 @@ const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/p
 // const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
 // const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
-// const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
-// const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
+const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
+const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
 type UnsubscriptionRef = (() => void) | null;
@@ -386,12 +386,12 @@ const App = (): JSX.Element => {
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
-                {/* <Route exact path={PAGES.VAULTS}>
+                <Route exact path={PAGES.VAULTS}>
                   <Vaults />
-                </Route> */}
-                {/* <Route exact path={PAGES.VAULT}>
+                </Route>
+                <Route exact path={PAGES.VAULT}>
                   <Vault />
-                </Route> */}
+                </Route>
                 {/* <Route path={PAGES.BRIDGE}>
                   <Bridge />
                 </Route> */}
