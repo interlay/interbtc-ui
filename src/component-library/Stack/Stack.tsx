@@ -2,8 +2,10 @@ import { HTMLAttributes } from 'react';
 
 import { StackContainer } from './Stack.style';
 
+type Spacing = 'half' | 'single' | 'double';
+
 type Props = {
-  spacing?: 'half' | 'single' | 'double';
+  spacing?: Spacing;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -11,10 +13,10 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 type StackProps = Props & NativeAttrs;
 
 const Stack = ({ children, spacing = 'single', ...props }: StackProps): JSX.Element => (
-  <StackContainer spacing={spacing} {...props}>
+  <StackContainer $spacing={spacing} {...props}>
     {children}
   </StackContainer>
 );
 
 export { Stack };
-export type { StackProps };
+export type { Spacing, StackProps };
