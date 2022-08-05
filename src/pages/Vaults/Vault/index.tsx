@@ -275,6 +275,7 @@ const Vault = (): JSX.Element => {
           </div>
         </div>
         {/* Check interaction with the vault */}
+        {/* TODO: Remove the chain name conditional when oracles are live */}
         {vaultClientLoaded &&
           address === selectedVaultAccountAddress &&
           process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
