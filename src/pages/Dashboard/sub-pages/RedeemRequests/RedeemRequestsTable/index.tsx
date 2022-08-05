@@ -1,41 +1,40 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useTable } from 'react-table';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import clsx from 'clsx';
 import { RedeemStatus } from '@interlay/interbtc-api';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useTable } from 'react-table';
 
-import SectionTitle from 'parts/SectionTitle';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorFallback from 'components/ErrorFallback';
-import ExternalLink from 'components/ExternalLink';
-import InterlayPagination from 'components/UI/InterlayPagination';
+import { displayMonetaryAmount, formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import ExternalLink from '@/components/ExternalLink';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import InterlayPagination from '@/components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
-  InterlayThead,
   InterlayTbody,
-  InterlayTr,
+  InterlayTd,
   InterlayTh,
-  InterlayTd
-} from 'components/UI/InterlayTable';
-import StatusCell from 'components/UI/InterlayTable/StatusCell';
-import { BTC_EXPLORER_ADDRESS_API } from 'config/blockstream-explorer-links';
-import useQueryParams from 'utils/hooks/use-query-params';
-import useUpdateQueryParameters from 'utils/hooks/use-update-query-parameters';
-import { shortAddress, formatDateTimePrecise, displayMonetaryAmount } from 'common/utils/utils';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
-import { TABLE_PAGE_LIMIT } from 'utils/constants/general';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemsFetcher, { REDEEMS_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
-import redeemCountQuery from 'services/queries/redeem-count-query';
-import { StoreType } from 'common/types/util.types';
+  InterlayThead,
+  InterlayTr
+} from '@/components/UI/InterlayTable';
+import StatusCell from '@/components/UI/InterlayTable/StatusCell';
+import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
+import SectionTitle from '@/parts/SectionTitle';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import useQueryParams from '@/utils/hooks/use-query-params';
+import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
 const RedeemRequestsTable = (): JSX.Element => {
   const queryParams = useQueryParams();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const { t } = useTranslation();
@@ -130,41 +129,27 @@ const RedeemRequestsTable = (): JSX.Element => {
   );
 
   const {
-    isIdle: stableBtcConfirmationsIdle,
-    isLoading: stableBtcConfirmationsLoading,
-    data: stableBtcConfirmations,
-    error: stableBtcConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableBitcoinConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
-  useErrorHandler(stableBtcConfirmationsError);
+    isIdle: stableBitcoinConfirmationsIdle,
+    isLoading: stableBitcoinConfirmationsLoading,
+    data: stableBitcoinConfirmations,
+    error: stableBitcoinConfirmationsError
+  } = useStableBitcoinConfirmations();
+  useErrorHandler(stableBitcoinConfirmationsError);
 
   const {
-    isIdle: latestParachainActiveBlockIdle,
-    isLoading: latestParachainActiveBlockLoading,
-    data: latestParachainActiveBlock,
-    error: latestParachainActiveBlockError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'system', 'getCurrentActiveBlockNumber'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
-  useErrorHandler(latestParachainActiveBlockError);
+    isIdle: currentActiveBlockNumberIdle,
+    isLoading: currentActiveBlockNumberLoading,
+    data: currentActiveBlockNumber,
+    error: currentActiveBlockNumberError
+  } = useCurrentActiveBlockNumber();
+  useErrorHandler(currentActiveBlockNumberError);
 
   const {
     isIdle: stableParachainConfirmationsIdle,
     isLoading: stableParachainConfirmationsLoading,
     data: stableParachainConfirmations,
     error: stableParachainConfirmationsError
-  } = useQuery<number, Error>(
-    [GENERIC_FETCHER, 'btcRelay', 'getStableParachainConfirmations'],
-    genericFetcher<number>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
+  } = useStableParachainConfirmations();
   useErrorHandler(stableParachainConfirmationsError);
 
   const selectedPageIndex = selectedPage - 1;
@@ -196,18 +181,18 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   const data =
     redeems === undefined ||
-    stableBtcConfirmations === undefined ||
+    stableBitcoinConfirmations === undefined ||
     stableParachainConfirmations === undefined ||
-    latestParachainActiveBlock === undefined
+    currentActiveBlockNumber === undefined
       ? []
       : redeems.map(
           // TODO: should type properly (`Relay`)
           (redeem: any) =>
             getRedeemWithStatus(
               redeem,
-              stableBtcConfirmations,
+              stableBitcoinConfirmations,
               stableParachainConfirmations,
-              latestParachainActiveBlock
+              currentActiveBlockNumber
             )
         );
 
@@ -218,12 +203,12 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   const renderContent = () => {
     if (
-      stableBtcConfirmationsIdle ||
-      stableBtcConfirmationsLoading ||
+      stableBitcoinConfirmationsIdle ||
+      stableBitcoinConfirmationsLoading ||
       stableParachainConfirmationsIdle ||
       stableParachainConfirmationsLoading ||
-      latestParachainActiveBlockIdle ||
-      latestParachainActiveBlockLoading ||
+      currentActiveBlockNumberIdle ||
+      currentActiveBlockNumberLoading ||
       redeemsIdle ||
       redeemsLoading ||
       redeemsCountIdle ||

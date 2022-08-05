@@ -1,5 +1,6 @@
 import * as React from 'react';
-import InterlayInput, { Props as InterlayInputProps } from 'components/UI/InterlayInput';
+
+import InterlayInput, { Props as InterlayInputProps } from '@/components/UI/InterlayInput';
 
 // `onWheel` prop can't be used with `preventDefault` because
 // React implements passive event listeners.
@@ -7,8 +8,7 @@ const disableChangeOnWheel = (event: MouseEvent) => {
   event.preventDefault();
 };
 
-type Ref = HTMLInputElement;
-const NumberInput = React.forwardRef<Ref, InterlayInputProps>(
+const NumberInput = React.forwardRef<HTMLInputElement, Props>(
   (props, ref): JSX.Element => {
     const inputParent = React.useRef<HTMLDivElement | null>(null);
 

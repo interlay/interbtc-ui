@@ -1,6 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import { FaRegCheckCircle, FaRegClock, FaRegTimesCircle, FaUserClock, FaClipboardCheck } from 'react-icons/fa';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
+import { FaClipboardCheck, FaRegCheckCircle, FaRegClock, FaRegTimesCircle, FaUserClock } from 'react-icons/fa';
+
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface Props {
   status: {
@@ -22,27 +24,27 @@ const StatusCell = ({ status }: Props): JSX.Element => {
     case status.completed:
       icon = <FaRegCheckCircle />;
       notice = t('completed');
-      colorClassName = 'text-interlayConifer';
+      colorClassName = getColorShade('green');
       break;
     case status.cancelled:
       icon = <FaRegTimesCircle />;
       notice = t('cancelled');
-      colorClassName = 'text-interlayCinnabar';
+      colorClassName = getColorShade('red');
       break;
     case status.isExpired:
       icon = <FaUserClock />;
       notice = t('expired');
-      colorClassName = 'text-interlayCinnabar';
+      colorClassName = getColorShade('red');
       break;
     case status.reimbursed:
       icon = <FaClipboardCheck />;
       notice = t('reimbursed');
-      colorClassName = 'text-interlayConifer';
+      colorClassName = getColorShade('green');
       break;
     default:
       icon = <FaRegClock />;
       notice = t('pending');
-      colorClassName = 'text-interlayCalifornia';
+      colorClassName = getColorShade('yellow');
       break;
   }
 

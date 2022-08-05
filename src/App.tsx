@@ -1,70 +1,62 @@
-import * as React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import { useSelector, useDispatch } from 'react-redux';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
-import { Keyring } from '@polkadot/api';
+import 'react-toastify/dist/ReactToastify.css';
+import './i18n';
+
 import {
-  createInterBtcApi,
-  SecurityStatusCode,
-  FaucetClient,
   ChainBalance,
   CollateralUnit,
-  GovernanceUnit
+  createInterBtcApi,
+  FaucetClient,
+  SecurityStatusCode
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
-import 'react-toastify/dist/ReactToastify.css';
+import { Keyring } from '@polkadot/api';
+import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import * as React from 'react';
+import { withErrorBoundary } from 'react-error-boundary';
+import { useDispatch, useSelector } from 'react-redux';
+import { Redirect, Route, Switch } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
 
-import InterlayHelmet from 'parts/InterlayHelmet';
-import Layout from 'parts/Layout';
-import FullLoadingSpinner from 'components/FullLoadingSpinner';
-import ErrorFallback from 'components/ErrorFallback';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
 import {
-  APP_NAME,
-  WRAPPED_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN,
-  GOVERNANCE_TOKEN,
-  PRICES_URL,
-  RELAY_CHAIN_NAME,
-  BRIDGE_PARACHAIN_NAME
-} from 'config/relay-chains';
-import { PAGES } from 'utils/constants/links';
-import { CLASS_NAMES } from 'utils/constants/styles';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
-import STATUSES from 'utils/constants/statuses';
-import './i18n';
-import * as constants from './constants';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
-import {
-  isBridgeLoaded,
   changeAddressAction,
   initGeneralDataAction,
-  setInstalledExtensionAction,
+  isBridgeLoaded,
   isFaucetLoaded,
   isVaultClientLoaded,
-  updateWrappedTokenBalanceAction,
-  updateWrappedTokenTransferableBalanceAction,
+  setInstalledExtensionAction,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
-  updateGovernanceTokenBalanceAction,
-  updateGovernanceTokenTransferableBalanceAction,
-  updateOfPricesAction
-} from 'common/actions/general.actions';
-import { BitcoinNetwork } from 'types/bitcoin';
+  updateWrappedTokenBalanceAction,
+  updateWrappedTokenTransferableBalanceAction
+} from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import ErrorFallback from '@/components/ErrorFallback';
+import FullLoadingSpinner from '@/components/FullLoadingSpinner';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { APP_NAME, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import InterlayHelmet from '@/parts/InterlayHelmet';
+import Layout from '@/parts/Layout';
+import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
+import { BitcoinNetwork } from '@/types/bitcoin';
+import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
+import { PAGES } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import { CLASS_NAMES } from '@/utils/constants/styles';
 
-// const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ 'pages/Bridge'));
-const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ 'pages/Transfer'));
-// const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ 'pages/Transactions'));
-// const Transaction = React.lazy(() => import(/* webpackChunkName: 'transaction' */ 'pages/Transaction'));
-const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ 'pages/Staking'));
-// const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ 'pages/Dashboard'));
-// const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ 'pages/Vaults'));
-// const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ 'pages/Vaults/Vault'));
-const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ 'pages/NoMatch'));
+import * as constants from './constants';
+
+// const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
+const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
+// const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ '@/pages/Transactions'));
+// const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
+const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
+// const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
+// const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
+// const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
+const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
+
+type UnsubscriptionRef = (() => void) | null;
 
 const App = (): JSX.Element => {
   const {
@@ -73,14 +65,15 @@ const App = (): JSX.Element => {
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
     collateralTokenBalance,
-    collateralTokenTransferableBalance,
-    governanceTokenBalance,
-    governanceTokenTransferableBalance,
-    prices
+    collateralTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
   // eslint-disable-next-line max-len
   const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
   const dispatch = useDispatch();
+
+  const unsubscribeCollateralTokenBalance = React.useRef<UnsubscriptionRef>(null);
+  const unsubscribeWrappedTokenBalance = React.useRef<UnsubscriptionRef>(null);
+  const unsubscribeGovernanceTokenBalance = React.useRef<UnsubscriptionRef>(null);
 
   // Loads the main bridge API - connection to the bridge
   const loadBridge = React.useCallback(async (): Promise<void> => {
@@ -248,19 +241,15 @@ const App = (): JSX.Element => {
     })();
   }, [address, bridgeLoaded, dispatch]);
 
-  // Subscribes to balances
+  // Subscribes to collateral token balance
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
     if (!address) return;
 
-    let unsubscribeFromCollateral: () => void;
-    let unsubscribeFromWrapped: () => void;
-    let unsubscribeFromGovernance: () => void;
-
     (async () => {
       try {
-        unsubscribeFromCollateral = await window.bridge.tokens.subscribeToBalance(
+        const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           RELAY_CHAIN_NATIVE_TOKEN,
           address,
           (_: string, balance: ChainBalance<CollateralUnit>) => {
@@ -272,14 +261,34 @@ const App = (): JSX.Element => {
             }
           }
         );
+
+        if (unsubscribeCollateralTokenBalance.current) {
+          unsubscribeCollateralTokenBalance.current();
+        }
+        // Unsubscribe if previous subscription is alive
+        unsubscribeCollateralTokenBalance.current = unsubscribe;
       } catch (error) {
         console.log('[App React.useEffect 4] error.message => ', error.message);
       }
     })();
 
+    return () => {
+      if (unsubscribeCollateralTokenBalance.current) {
+        unsubscribeCollateralTokenBalance.current();
+        unsubscribeCollateralTokenBalance.current = null;
+      }
+    };
+  }, [dispatch, bridgeLoaded, address, collateralTokenBalance, collateralTokenTransferableBalance]);
+
+  // Subscribes to wrapped token balance
+  React.useEffect(() => {
+    if (!dispatch) return;
+    if (!bridgeLoaded) return;
+    if (!address) return;
+
     (async () => {
       try {
-        unsubscribeFromWrapped = await window.bridge.tokens.subscribeToBalance(
+        const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           WRAPPED_TOKEN,
           address,
           (_: string, balance: ChainBalance<BitcoinUnit>) => {
@@ -291,52 +300,61 @@ const App = (): JSX.Element => {
             }
           }
         );
+        // Unsubscribe if previous subscription is alive
+        if (unsubscribeWrappedTokenBalance.current) {
+          unsubscribeWrappedTokenBalance.current();
+        }
+
+        unsubscribeWrappedTokenBalance.current = unsubscribe;
       } catch (error) {
         console.log('[App React.useEffect 5] error.message => ', error.message);
       }
     })();
 
+    return () => {
+      if (unsubscribeWrappedTokenBalance.current) {
+        unsubscribeWrappedTokenBalance.current();
+        unsubscribeWrappedTokenBalance.current = null;
+      }
+    };
+  }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
+
+  const governanceTokenBalanceInvalidate = useGovernanceTokenBalanceInvalidate();
+
+  // Subscribes to governance token balance
+  React.useEffect(() => {
+    if (!bridgeLoaded) return;
+    if (!address) return;
+    if (!governanceTokenBalanceInvalidate) return;
+
     (async () => {
       try {
-        unsubscribeFromGovernance = await window.bridge.tokens.subscribeToBalance(
+        const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           GOVERNANCE_TOKEN,
           address,
-          (_: string, balance: ChainBalance<GovernanceUnit>) => {
-            if (!balance.free.eq(governanceTokenBalance)) {
-              dispatch(updateGovernanceTokenBalanceAction(balance.free));
-            }
-            if (!balance.transferable.eq(governanceTokenTransferableBalance)) {
-              dispatch(updateGovernanceTokenTransferableBalanceAction(balance.transferable));
-            }
+          // TODO: it looks like the callback is called just before the balance is updated (not after)
+          () => {
+            governanceTokenBalanceInvalidate();
           }
         );
+        // Unsubscribe if previous subscription is alive
+        if (unsubscribeGovernanceTokenBalance.current) {
+          unsubscribeGovernanceTokenBalance.current();
+        }
+
+        unsubscribeGovernanceTokenBalance.current = unsubscribe;
       } catch (error) {
         console.log('[App React.useEffect 6] error.message => ', error.message);
       }
     })();
 
     return () => {
-      if (unsubscribeFromCollateral) {
-        unsubscribeFromCollateral();
-      }
-      if (unsubscribeFromWrapped) {
-        unsubscribeFromWrapped();
-      }
-      if (unsubscribeFromGovernance) {
-        unsubscribeFromGovernance();
+      if (unsubscribeGovernanceTokenBalance.current) {
+        unsubscribeGovernanceTokenBalance.current();
+        unsubscribeGovernanceTokenBalance.current = null;
       }
     };
-  }, [
-    dispatch,
-    bridgeLoaded,
-    address,
-    wrappedTokenBalance,
-    wrappedTokenTransferableBalance,
-    collateralTokenBalance,
-    collateralTokenTransferableBalance,
-    governanceTokenBalance,
-    governanceTokenTransferableBalance
-  ]);
+  }, [bridgeLoaded, address, governanceTokenBalanceInvalidate]);
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
@@ -359,35 +377,6 @@ const App = (): JSX.Element => {
     }
   }, []);
 
-  // Keeps fetching live data prices
-  const { error: pricesError } = useQuery(
-    PRICES_URL,
-    async () => {
-      const response = await fetch(PRICES_URL);
-      if (!response.ok) {
-        throw new Error('Network response for prices was not ok.');
-      }
-
-      const newPrices = await response.json();
-      // Update the store only if the price is actually changed
-      if (
-        newPrices.bitcoin?.usd !== prices.bitcoin?.usd ||
-        newPrices[RELAY_CHAIN_NAME]?.usd !== prices.collateralToken?.usd ||
-        newPrices[BRIDGE_PARACHAIN_NAME]?.usd !== prices.governanceToken?.usd
-      ) {
-        dispatch(
-          updateOfPricesAction({
-            bitcoin: newPrices.bitcoin,
-            collateralToken: newPrices[RELAY_CHAIN_NAME],
-            governanceToken: newPrices[BRIDGE_PARACHAIN_NAME]
-          })
-        );
-      }
-    },
-    { refetchInterval: 60000 }
-  );
-  useErrorHandler(pricesError);
-
   return (
     <>
       <InterlayHelmet />
@@ -403,29 +392,24 @@ const App = (): JSX.Element => {
                 {/* <Route exact path={PAGES.VAULT}>
                   <Vault />
                 </Route> */}
-                {/* <Route path={PAGES.VAULT}>
-                  <Vaults />
-                </Route> */}
-                {/* <Route path={PAGES.DASHBOARD}>
-                  <Dashboard />
+                {/* <Route path={PAGES.BRIDGE}>
+                  <Bridge />
                 </Route> */}
                 <Route path={PAGES.STAKING}>
                   <Staking />
                 </Route>
-                {/* <Route path={PAGES.TRANSACTIONS}>
-                  <Transactions />
-                </Route> */}
-                {/* <Route path={PAGES.BRIDGE}>
-                </Route> */}
-                {/* <Route path={PAGES.TRANSACTION}>
-                  <Transaction />
-                </Route>  */}
-                {/* <Route path={PAGES.BRIDGE}>
-                  <Bridge />
-                </Route> */}
                 <Route path={PAGES.TRANSFER}>
                   <Transfer />
                 </Route>
+                {/* <Route path={PAGES.DASHBOARD}>
+                  <Dashboard />
+                </Route> */}
+                {/* <Route path={PAGES.TRANSACTIONS}>
+                  <Transactions />
+                </Route> */}
+                {/* <Route path={PAGES.TX}>
+                  <TX />
+                </Route> */}
                 <Redirect exact from={PAGES.HOME} to={PAGES.TRANSFER} />
                 <Route path='*'>
                   <NoMatch />

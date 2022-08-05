@@ -1,9 +1,10 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from 'components/UI/InterlayButtonBase';
-import { DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES } from 'utils/constants/styles';
-import { ReactComponent as SpinIcon } from 'assets/img/icons/spin.svg';
+import { ReactComponent as SpinIcon } from '@/assets/img/icons/spin.svg';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import { DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES } from '@/utils/constants/styles';
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface CustomProps {
   startIcon?: React.ReactNode;
@@ -32,10 +33,10 @@ const InterlayConiferOutlinedButton = React.forwardRef<Ref, Props>(
           disabledOrPending
             ? clsx(DISABLED_BORDER_CLASSES, DISABLED_TEXT_CLASSES)
             : clsx(
-                'text-interlayConifer',
+                getColorShade('green'),
                 'border',
-                'border-interlayConifer',
-                'hover:bg-interlayConifer',
+                getColorShade('green', 'border'),
+                getColorShade('green', 'hover:bg'),
                 'hover:bg-opacity-5'
               ),
 

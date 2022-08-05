@@ -1,12 +1,14 @@
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
+import { StoreType } from '@/common/types/util.types';
+import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
+import { PAGES } from '@/utils/constants/links';
+import { getColorShade } from '@/utils/helpers/colors';
+
+import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
-import Ring64, { Ring64Title, Ring64Value } from 'components/Ring64';
-import { PAGES } from 'utils/constants/links';
-import { StoreType } from 'common/types/util.types';
 
 enum Status {
   Loading,
@@ -50,8 +52,8 @@ const BTCRelayCard = ({ hasLinks }: Props): JSX.Element => {
                 className={clsx(
                   'font-bold',
                   { 'text-interlayPaleSky': state === Status.Loading },
-                  { 'text-interlayConifer': state === Status.Ok },
-                  { 'text-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
+                  { [getColorShade('green')]: state === Status.Ok },
+                  { [getColorShade('red')]: state !== Status.Loading && state !== Status.Ok }
                 )}
               >
                 {statusText}
@@ -65,15 +67,15 @@ const BTCRelayCard = ({ hasLinks }: Props): JSX.Element => {
         className={clsx(
           'mx-auto',
           { 'ring-interlayPaleSky': state === Status.Loading },
-          { 'ring-interlayConifer': state === Status.Ok },
-          { 'ring-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
+          { [getColorShade('green', 'ring')]: state === Status.Ok },
+          { [getColorShade('red', 'ring')]: state !== Status.Loading && state !== Status.Ok }
         )}
       >
         <Ring64Title
           className={clsx(
             { 'text-interlayPaleSky': state === Status.Loading },
-            { 'text-interlayConifer': state === Status.Ok },
-            { 'text-interlayCinnabar': state !== Status.Loading && state !== Status.Ok }
+            { [getColorShade('green')]: state === Status.Ok },
+            { [getColorShade('red')]: state !== Status.Loading && state !== Status.Ok }
           )}
         >
           {graphText}

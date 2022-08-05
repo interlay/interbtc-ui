@@ -1,20 +1,21 @@
+import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 
-import Navigation from './Navigation';
+import { ReactComponent as InterlayLogoWithTextIcon } from '@/assets/img/interlay-logo-with-text.svg';
+import InterlayLink from '@/components/UI/InterlayLink';
+import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
+import { INTERLAY_COMPANY_LINK } from '@/config/links';
+import { GovernanceTokenLogoWithTextIcon } from '@/config/relay-chains';
+import { BitcoinNetwork } from '@/types/bitcoin';
+import { PAGES } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from '@/utils/constants/styles';
+
 import CloseButton from './CloseButton';
+import Navigation from './Navigation';
 import SocialMediaContainer from './SocialMediaContainer';
 import TestnetBadge from './TestnetBadge';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import InterlayLink from 'components/UI/InterlayLink';
-import { INTERLAY_COMPANY_LINK } from 'config/links';
-import { GovernanceTokenLogoWithTextIcon } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { PAGES } from 'utils/constants/links';
-import { BORDER_CLASSES } from 'utils/constants/styles';
-import { BitcoinNetwork } from 'types/bitcoin';
-import { ReactComponent as InterlayLogoWithTextIcon } from 'assets/img/interlay-logo-with-text.svg';
 
 interface Props {
   onSmallScreen?: boolean;
@@ -75,6 +76,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(
             />
           </InterlayLink>
         </div>
+        <p className={clsx('px-4', 'pb-4', 'text-center')}>
+          {t('version')} {process.env.REACT_APP_VERSION}
+        </p>
       </div>
     );
   }

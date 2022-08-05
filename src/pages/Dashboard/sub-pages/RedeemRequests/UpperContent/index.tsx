@@ -1,30 +1,35 @@
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useQuery } from 'react-query';
-import clsx from 'clsx';
 import { BitcoinUnit } from '@interlay/monetary-js';
+import clsx from 'clsx';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 
-import RedeemedChart from './RedeemedChart';
-import Stats, { StatsDt, StatsDd } from '../../../Stats';
-import ErrorFallback from 'components/ErrorFallback';
-import Panel from 'components/Panel';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { StoreType } from 'common/types/util.types';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import redeemCountQuery from 'services/queries/redeem-count-query';
+import ErrorFallback from '@/components/ErrorFallback';
+import Panel from '@/components/Panel';
+import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-till-timestamps-fetcher';
-import { WRAPPED_TOKEN } from 'config/relay-chains';
+} from '@/services/fetchers/cumulative-volumes-fetcher';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-const nowAtfirstLoad = new Date();
+import Stats, { StatsDd, StatsDt } from '../../../Stats';
+import RedeemedChart from './RedeemedChart';
+
+const nowAtFirstLoad = new Date();
 
 const UpperContent = (): JSX.Element => {
-  const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const prices = useGetPrices();
+
+  const btcUsdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
 
   const {
     isIdle: totalSuccessfulRedeemsIdle,
@@ -44,7 +49,7 @@ const UpperContent = (): JSX.Element => {
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
   } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
-    [CUMULATIVE_VOLUMES_FETCHER, 'Redeemed' as VolumeType, [nowAtfirstLoad], WRAPPED_TOKEN],
+    [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, [nowAtFirstLoad], WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
   useErrorHandler(cumulativeRedeemsPerDayError);
@@ -88,12 +93,9 @@ const UpperContent = (): JSX.Element => {
               &nbsp;BTC
             </StatsDd>
             <StatsDd>
-              {/* eslint-disable-next-line max-len */}$
-              {prices.bitcoin === undefined
-                ? '—'
-                : (prices.bitcoin.usd * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
+              {btcUsdPrice === undefined ? '—' : (btcUsdPrice * Number(totalRedeemedAmount.str.BTC())).toLocaleString()}
             </StatsDd>
-            <StatsDt className='!text-interlayConifer'>{t('dashboard.redeem.total_redeems')}</StatsDt>
+            <StatsDt className={`!${getColorShade('green')}`}>{t('dashboard.redeem.total_redeems')}</StatsDt>
             <StatsDd>{totalSuccessfulRedeemCount}</StatsDd>
             {/* TODO: add this again when the network is stable */}
             {/* <StatsDt className='!text-interlayConifer'>

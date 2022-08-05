@@ -1,27 +1,27 @@
-import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import { ExternalLinkIcon } from '@heroicons/react/outline';
-import clsx from 'clsx';
 import { web3Accounts } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
+import InterlayCaliforniaOutlinedButton from '@/components/buttons/InterlayCaliforniaOutlinedButton';
+import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import Tokens from '@/components/Tokens';
+import InterlayLink from '@/components/UI/InterlayLink';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import * as constants from '@/constants';
+import AccountModal from '@/parts/AccountModal';
+import { BitcoinNetwork } from '@/types/bitcoin';
+import { GOVERNANCE_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
-import Tokens from 'components/Tokens';
-import AccountModal from 'parts/AccountModal';
-import InterlayLink from 'components/UI/InterlayLink';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from 'components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
-import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import InterlayCaliforniaOutlinedButton from 'components/buttons/InterlayCaliforniaOutlinedButton';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { GOVERNANCE_TOKEN_ID_LITERAL } from 'utils/constants/currency';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import { StoreType } from 'common/types/util.types';
-// FIXME: name clash for constants so had to use relative path
-import * as constants from '../../constants';
-import { BitcoinNetwork } from 'types/bitcoin';
 
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 

@@ -1,9 +1,9 @@
+import { CollateralUnit, VaultExt, VaultStatusExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, BitcoinUnit, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { TFunction } from 'react-i18next';
-import { VaultExt, VaultStatusExt, CollateralUnit } from '@interlay/interbtc-api';
-import { BitcoinAmount, BitcoinUnit, MonetaryAmount, Currency } from '@interlay/monetary-js';
 
-import { BTCToCollateralTokenRate } from 'types/currency';
+import { BTCToCollateralTokenRate } from '@/types/currency';
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
@@ -18,7 +18,6 @@ const getCollateralization = (
   }
 };
 
-// TODO: it could be better to be a hook
 const getVaultStatusLabel = (
   vaultExt: VaultExt<BitcoinUnit>,
   currentActiveBlockNumber: number,
@@ -43,16 +42,13 @@ const getVaultStatusLabel = (
       statusLabel = t('dashboard.vault.undercollateralized');
     }
   }
-  // Should only display bannedUntil status if current active block number < the bannedUntil block number
+  // Should only display bannedUntil status if current active block number < the bannedUntil block number.
   // Otherwise, should not show this status.
   if (vaultExt.bannedUntil && currentActiveBlockNumber < vaultExt.bannedUntil) {
     statusLabel = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
   }
   if (vaultExt.status === VaultStatusExt.Inactive) {
     statusLabel = t('dashboard.vault.inactive');
-  }
-  if (vaultExt.status === VaultStatusExt.CommittedTheft) {
-    statusLabel = t('dashboard.vault.theft');
   }
   if (vaultExt.status === VaultStatusExt.Liquidated) {
     statusLabel = t('dashboard.vault.liquidated');

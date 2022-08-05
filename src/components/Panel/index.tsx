@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { BORDER_CLASSES } from 'utils/constants/styles';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from '@/utils/constants/styles';
 
 const Panel = ({ className, ...rest }: Props): JSX.Element => (
   <div

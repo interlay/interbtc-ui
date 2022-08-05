@@ -1,16 +1,18 @@
 import clsx from 'clsx';
 
-import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
-import { BORDER_CLASSES } from 'utils/constants/styles';
-import { ReactComponent as InformationCircleIcon } from 'assets/img/hero-icons/information-circle.svg';
+import { ReactComponent as InformationCircleIcon } from '@/assets/img/hero-icons/information-circle.svg';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from '@/utils/constants/styles';
+
+type Severity = 'alert' | 'info';
 
 interface CustomProps {
-  message: string;
+  severity: Severity;
 }
 
 type Props = CustomProps & React.ComponentPropsWithRef<'div'>;
 
-const WarningBanner = ({ message, className, ...rest }: Props): JSX.Element => {
+const WarningBanner = ({ severity, children, className, ...rest }: Props): JSX.Element => {
   return (
     <div
       className={clsx(
@@ -20,9 +22,14 @@ const WarningBanner = ({ message, className, ...rest }: Props): JSX.Element => {
         'py-3',
         'space-x-3',
         'sm:rounded-lg',
-        'text-white',
-        { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-        { 'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+        { 'text-white': severity === 'alert' },
+        { 'text-interlayTextPrimaryInLightMode': severity === 'info' },
+        { 'bg-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && severity === 'alert' },
+        { 'bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && severity === 'info' },
+        {
+          'dark:bg-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && severity === 'alert'
+        },
+        { 'dark:bg-interlayCalifornia': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && severity === 'info' },
         'text-sm',
         'font-medium',
         BORDER_CLASSES,
@@ -31,10 +38,11 @@ const WarningBanner = ({ message, className, ...rest }: Props): JSX.Element => {
       style={{
         minHeight: 64
       }}
+      role='alert'
       {...rest}
     >
       <InformationCircleIcon className={clsx('w-6', 'h-6')} />
-      <p>{message}</p>
+      {children}
     </div>
   );
 };
