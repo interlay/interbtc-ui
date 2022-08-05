@@ -2,7 +2,7 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { safeRoundTwoDecimals } from '@/common/utils/utils';
+// import { safeRoundTwoDecimals } from '@/common/utils/utils';
 import { Grid, GridItem, InfoBox, VaultCard } from '@/component-library';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -39,8 +39,8 @@ const VaultOverview = (): JSX.Element => {
                 collateralSymbol={vault.collateralId}
                 wrappedSymbol={vault.wrappedId}
                 pendingRequests={vault.pendingRequests}
-                apy={safeRoundTwoDecimals(vault.apy.toString())}
-                collateralScore={safeRoundTwoDecimals(vault.collateralization?.mul(100).toString(), '∞')}
+                apy={'0'}
+                collateralScore={'∞'}
                 link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`}
                 atRisk={vault.vaultAtRisk}
               />

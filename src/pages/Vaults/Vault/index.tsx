@@ -35,6 +35,7 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 import { GenericCurrencyValues } from '@/types/currency';
 import { WRAPPED_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { URL_PARAMETERS } from '@/utils/constants/links';
+import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import { getCurrency } from '@/utils/helpers/currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -267,43 +268,47 @@ const Vault = (): JSX.Element => {
             {vaultItems.map((item) => (
               <StatPanel key={item.title} label={item.title} value={item.value} />
             ))}
-            {vaultAccountId && (
+            {/* TODO: Remove the chain name conditional when oracles are live */}
+            {vaultAccountId && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
               <VaultStatusStatPanel collateralId={collateralCurrencyValues?.id} vaultAccountId={vaultAccountId} />
             )}
           </div>
         </div>
         {/* Check interaction with the vault */}
-        {vaultClientLoaded && address === selectedVaultAccountAddress && (
-          <div className={clsx('grid', hasLockedBTC ? 'grid-cols-6' : 'grid-cols-4', 'gap-5')}>
-            <InterlayDenimOrKintsugiSupernovaContainedButton onClick={handleDepositCollateralModalOpen}>
-              {t('vault.deposit_collateral')}
-            </InterlayDenimOrKintsugiSupernovaContainedButton>
-            <InterlayDefaultContainedButton onClick={handleWithdrawCollateralModalOpen}>
-              {t('vault.withdraw_collateral')}
-            </InterlayDefaultContainedButton>
-            {vaultAccountId && collateralCurrencyValues && (
-              <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
-            )}
-            <InterlayTooltip label={issueButtonTooltip}>
-              {/* Button wrapped in div to enable tooltip on disabled button. */}
-              <div className='grid'>
-                <InterlayCaliforniaContainedButton onClick={handleRequestIssueModalOpen} disabled={isIssuingDisabled}>
-                  {t('vault.issue_vault')}
+        {/* TODO: Remove the chain name conditional when oracles are live */}
+        {vaultClientLoaded &&
+          address === selectedVaultAccountAddress &&
+          process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
+            <div className={clsx('grid', hasLockedBTC ? 'grid-cols-6' : 'grid-cols-4', 'gap-5')}>
+              <InterlayDenimOrKintsugiSupernovaContainedButton onClick={handleDepositCollateralModalOpen}>
+                {t('vault.deposit_collateral')}
+              </InterlayDenimOrKintsugiSupernovaContainedButton>
+              <InterlayDefaultContainedButton onClick={handleWithdrawCollateralModalOpen}>
+                {t('vault.withdraw_collateral')}
+              </InterlayDefaultContainedButton>
+              {vaultAccountId && collateralCurrencyValues && (
+                <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
+              )}
+              <InterlayTooltip label={issueButtonTooltip}>
+                {/* Button wrapped in div to enable tooltip on disabled button. */}
+                <div className='grid'>
+                  <InterlayCaliforniaContainedButton onClick={handleRequestIssueModalOpen} disabled={isIssuingDisabled}>
+                    {t('vault.issue_vault')}
+                  </InterlayCaliforniaContainedButton>
+                </div>
+              </InterlayTooltip>
+              {hasLockedBTC && (
+                <InterlayCaliforniaContainedButton onClick={handleRequestReplaceModalOpen}>
+                  {t('vault.replace_vault')}
                 </InterlayCaliforniaContainedButton>
-              </div>
-            </InterlayTooltip>
-            {hasLockedBTC && (
-              <InterlayCaliforniaContainedButton onClick={handleRequestReplaceModalOpen}>
-                {t('vault.replace_vault')}
-              </InterlayCaliforniaContainedButton>
-            )}
-            {hasLockedBTC && (
-              <InterlayCaliforniaContainedButton onClick={handleRequestRedeemModalOpen}>
-                {t('vault.redeem_vault')}
-              </InterlayCaliforniaContainedButton>
-            )}
-          </div>
-        )}
+              )}
+              {hasLockedBTC && (
+                <InterlayCaliforniaContainedButton onClick={handleRequestRedeemModalOpen}>
+                  {t('vault.redeem_vault')}
+                </InterlayCaliforniaContainedButton>
+              )}
+            </div>
+          )}
         <VaultIssueRequestsTable
           vaultAddress={selectedVaultAccountAddress}
           collateralId={collateralCurrencyValues?.id}

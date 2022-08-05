@@ -1,5 +1,5 @@
 import {
-  CollateralCurrency,
+  // CollateralCurrency,
   CollateralIdLiteral,
   CurrencyIdLiteral,
   tickerToCurrencyIdLiteral,
@@ -7,8 +7,8 @@ import {
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
-import Big from 'big.js';
 
+// import Big from 'big.js';
 import { Prices } from '@/common/types/util.types';
 import { getUsdAmount } from '@/common/utils/utils';
 import {
@@ -25,8 +25,8 @@ import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 interface VaultData {
-  apy: Big;
-  collateralization: Big | undefined;
+  // apy: Big;
+  // collateralization: Big | undefined;
   pendingRequests: number;
   collateralId: CurrencyIdLiteral;
   wrappedId: CurrencyIdLiteral;
@@ -54,8 +54,8 @@ const getVaultOverview = async (
   const collateralPrice = getTokenPrice(prices, tokenIdLiteral);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
-  const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
-  const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
+  // const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
+  // const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
   const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(
     accountId,
     tokenIdLiteral,
@@ -63,9 +63,9 @@ const getVaultOverview = async (
   );
   const wrappedTokenRewards = await window.bridge.vaults.getWrappedReward(accountId, tokenIdLiteral, VAULT_WRAPPED);
   const collateral = await window.bridge.vaults.getCollateral(accountId, tokenIdLiteral);
-  const threshold = await window.bridge.vaults.getSecureCollateralThreshold(
-    vault.backingCollateral.currency as CollateralCurrency
-  );
+  // const threshold = await window.bridge.vaults.getSecureCollateralThreshold(
+  //   vault.backingCollateral.currency as CollateralCurrency
+  // );
 
   const usdCollateral = getUsdAmount(collateral, collateralPrice?.usd);
   const usdGovernanceTokenRewards = getUsdAmount(
@@ -104,8 +104,8 @@ const getVaultOverview = async (
   const pendingRequests = issuesCount.data.issuesConnection.totalCount + redeemsCount.data.redeemsConnection.totalCount;
 
   return {
-    apy,
-    collateralization,
+    // apy,
+    // collateralization,
     pendingRequests,
     collateralId: tokenIdLiteral,
     wrappedId: VAULT_WRAPPED,
@@ -121,7 +121,8 @@ const getVaultOverview = async (
       raw: wrappedTokenRewards,
       usd: usdWrappedTokenRewards === '—' ? 0 : parseFloat(usdWrappedTokenRewards)
     },
-    vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
+    // vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
+    vaultAtRisk: false
   };
 };
 
