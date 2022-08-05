@@ -3,7 +3,6 @@ import { HTMLAttributes } from 'react';
 import { StackContainer } from './Stack.style';
 
 type Props = {
-  as?: keyof JSX.IntrinsicElements;
   spacing?: 'half' | 'single' | 'double';
 };
 
