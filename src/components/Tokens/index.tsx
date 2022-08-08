@@ -1,25 +1,28 @@
 import * as React from 'react';
+import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 
-import TokenSelector from './TokenSelector';
-import { SelectVariants, SELECT_VARIANTS } from 'components/Select';
-
+import { StoreType, TokenType } from '@/common/types/util.types';
+import { displayMonetaryAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import { SELECT_VARIANTS, SelectVariants } from '@/components/Select';
 import {
-  WrappedToken,
-  WRAPPED_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon,
   CollateralToken,
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceToken,
+  GovernanceTokenLogoIcon,
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainNativeTokenLogoIcon,
-  GovernanceToken,
-  GOVERNANCE_TOKEN,
-  GOVERNANCE_TOKEN_SYMBOL,
-  GovernanceTokenLogoIcon
-} from 'config/relay-chains';
-import { displayMonetaryAmount } from 'common/utils/utils';
-import { TokenType, StoreType } from 'common/types/util.types';
+  WRAPPED_TOKEN,
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedToken,
+  WrappedTokenLogoIcon
+} from '@/config/relay-chains';
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+
+import TokenSelector from './TokenSelector';
 
 interface TokenOption {
   token: WrappedToken | CollateralToken | GovernanceToken;
@@ -61,10 +64,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     collateralTokenBalance,
     collateralTokenTransferableBalance,
     wrappedTokenBalance,
-    wrappedTokenTransferableBalance,
-    governanceTokenBalance,
-    governanceTokenTransferableBalance
+    wrappedTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
+
+  const { governanceTokenBalance } = useGovernanceTokenBalance();
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
@@ -96,8 +99,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       {
         token: GOVERNANCE_TOKEN,
         type: TokenType.GOVERNANCE,
-        balance: displayMonetaryAmount(governanceTokenBalance),
-        transferableBalance: displayMonetaryAmount(governanceTokenTransferableBalance),
+        balance: governanceTokenBalance ? displayMonetaryAmount(governanceTokenBalance.free) : '-',
+        transferableBalance: governanceTokenBalance ? displayMonetaryAmount(governanceTokenBalance.transferable) : '-',
         icon: <GovernanceTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: GOVERNANCE_TOKEN_SYMBOL
       }
@@ -110,7 +113,6 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
     governanceTokenBalance,
-    governanceTokenTransferableBalance,
     variant
   ]);
 
@@ -139,4 +141,9 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 };
 
 export type { TokenOption };
-export default Tokens;
+export default withErrorBoundary(Tokens, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

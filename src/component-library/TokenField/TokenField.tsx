@@ -1,9 +1,9 @@
 import * as React from 'react';
 
-import { TokenFieldInnerWrapper, TokenFieldSymbol, TokenFieldInput, TokenFieldUSD } from './TokenField.style';
-import { NumberInputProps } from 'component-library/NumberInput';
-import { TokenBalance } from 'component-library/TokenBalance';
-import { Stack } from 'component-library/Stack';
+import { NumberInputProps } from '../NumberInput';
+import { Stack } from '../Stack';
+import { TokenBalance } from '../TokenBalance';
+import { TokenFieldInnerWrapper, TokenFieldInput, TokenFieldSymbol, TokenFieldUSD } from './TokenField.style';
 
 interface TokenFieldProps extends NumberInputProps {
   balance?: {

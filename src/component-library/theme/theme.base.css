@@ -39,10 +39,21 @@
   --font-weights-bold: 700;
 
   --colors-neutral-white: #ffffff;
+  --colors-neutral-white-05: rgba(255, 255, 255, 0.05);
   --colors-neutral-white-06: rgba(255, 255, 255, 0.06);
+  --colors-neutral-lighter-grey: #dadada;
   --colors-neutral-light-grey: #999999;
   --colors-neutral-light-grey-50: #9999997f;
   --colors-neutral-black: #000000;
+  --colors-neutral-black-05: rgba(0, 0, 0, 0.05);
+  --colors-neutral-black-25: rgba(0, 0, 0, 0.25);
+  --colors-neutral-black-9: rgba(0, 0, 0, 0.9);
+
+  --colors-shared-red: #cb5458;
+
+  --colors-error: #ef4444;
+  --colors-warning: #ff9900;
+  --colors-success: #a2e75e;
 
   --text-xs: 0.75rem;
   --text-s: 0.875rem;
@@ -69,10 +80,12 @@
   --spacing-8: 2rem;
   --spacing-10: 2.5rem;
   --spacing-12: 3rem;
+  --spacing-28: 7rem;
 
   --rounded-sm: 2px;
   --rounded-rg: 4px;
   --rounded-md: 6px;
   --rounded-lg: 8px;
   --rounded-xl: 12px;
+  --rounded-full: 9999px;
 }

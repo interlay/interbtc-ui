@@ -1,11 +1,10 @@
-import { Store, CombinedState } from 'redux';
-import { u256 } from '@polkadot/types/primitive';
-import { BitcoinAmount, MonetaryAmount, Currency } from '@interlay/monetary-js';
 import { CollateralUnit } from '@interlay/interbtc-api';
+import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { u256 } from '@polkadot/types/primitive';
+import { CombinedState, Store } from 'redux';
 
-import { GovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import { GeneralActions, RedeemActions, VaultActions } from './actions.types';
 import { rootReducer } from '../reducers/index';
+import { GeneralActions, RedeemActions, VaultActions } from './actions.types';
 import { RedeemState } from './redeem.types';
 import { VaultState } from './vault.types';
 
@@ -51,11 +50,13 @@ export type Price = {
 };
 
 export type Prices = {
-  bitcoin: Price | undefined;
-  relayChainNativeToken: Price | undefined;
-  governanceToken: Price | undefined;
-  wrappedToken: Price | undefined;
-  [token: string]: Price | undefined;
+  bitcoin: Price;
+  polkadot: Price;
+  interlay: Price;
+  'interlay-btc': Price;
+  kintsugi?: Price;
+  'kintsugi-btc': Price;
+  kusama: Price;
 };
 
 export type GeneralState = {
@@ -69,13 +70,10 @@ export type GeneralState = {
   wrappedTokenTransferableBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
   collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  governanceTokenBalance: GovernanceTokenMonetaryAmount;
-  governanceTokenTransferableBalance: GovernanceTokenMonetaryAmount;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
-  prices: Prices;
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

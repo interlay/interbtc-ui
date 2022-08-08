@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import { theme } from 'component-library/theme';
+
+import { theme } from '../theme';
+
+interface CollateralScoreProps {
+  $atRisk: boolean;
+}
 
 export const Card = styled.div`
   box-shadow: ${theme.boxShadow.default};
@@ -54,6 +59,10 @@ export const DlItem = styled.div`
   &:last-of-type {
     margin-bottom: 0;
   }
+`;
+
+export const CollateralScore = styled.dd<CollateralScoreProps>`
+  color: ${(props) => (props.$atRisk ? theme.colors.warn : theme.colors.textTertiary)};
 `;
 
 export const CTAWrapper = styled.div`

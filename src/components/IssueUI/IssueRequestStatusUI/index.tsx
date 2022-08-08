@@ -1,9 +1,9 @@
 import { IssueStatus } from '@interlay/interbtc-api';
 
-import CompletedIssueRequest from './CompletedIssueRequest';
 import CancelledIssueRequest from './CancelledIssueRequest';
-import ReceivedIssueRequest from './ReceivedIssueRequest';
+import CompletedIssueRequest from './CompletedIssueRequest';
 import ConfirmedIssueRequest from './ConfirmedIssueRequest';
+import ReceivedIssueRequest from './ReceivedIssueRequest';
 
 interface Props {
   // TODO: should type properly (`Relay`)

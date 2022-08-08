@@ -1,26 +1,33 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
 
-import LineChart from '../../../LineChart';
+import { getLastMidnightTimestamps, getUsdAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import {
+  CollateralToken,
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+} from '@/config/relay-chains';
+import useCumulativeCollateralVolumes from '@/services/hooks/use-cumulative-collateral-volumes';
+import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
+import { PAGES } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
 import DashboardCard from '../../../cards/DashboardCard';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../../Stats';
-import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
-import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN, CollateralToken } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from 'utils/constants/colors';
-import { PAGES } from 'utils/constants/links';
-import { getUsdAmount, getLastMidnightTimestamps } from 'common/utils/utils';
-import useCumulativeCollateralVolumes from 'services/hooks/use-cumulative-collateral-volumes';
-import { StoreType } from 'common/types/util.types';
+import LineChart from '../../../LineChart';
+import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../../Stats';
 
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 
 const LockedCollateralsCard = (): JSX.Element => {
-  const { prices } = useSelector((state: StoreType) => state.general);
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const {
     isIdle: cumulativeRelayChainNativeTokenVolumesIdle,
@@ -38,8 +45,8 @@ const LockedCollateralsCard = (): JSX.Element => {
   } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN as CollateralToken, cutoffTimestamps);
   useErrorHandler(cumulativeGovernanceTokenVolumesError);
 
-  const relayChainNativeTokenPriceInUSD = prices.relayChainNativeToken?.usd;
-  const governanceTokenPriceInUSD = prices.governanceToken?.usd;
+  const relayChainNativeTokenPriceInUSD = getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd;
+  const governanceTokenPriceInUSD = getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd;
 
   const cumulativeUSDVolumes = React.useMemo(() => {
     if (cumulativeRelayChainNativeTokenVolumes === undefined || cumulativeGovernanceTokenVolumes === undefined) return;

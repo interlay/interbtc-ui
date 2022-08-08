@@ -20,6 +20,12 @@ module.exports = {
       'node_modules'
     ];
 
+    // Resolves path alias specified in tsconfig.paths.json
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname, '../src')
+    };
+
     // MEMO: inspired by https://github.com/storybookjs/storybook/issues/4038
     return {
       ...config,

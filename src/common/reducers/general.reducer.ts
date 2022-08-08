@@ -1,24 +1,22 @@
-import { BitcoinAmount } from '@interlay/monetary-js';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
-import { RELAY_CHAIN_NATIVE_TOKEN, GOVERNANCE_TOKEN } from 'config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+
 import {
+  CHANGE_ADDRESS,
+  GeneralActions,
+  INIT_GENERAL_DATA_ACTION,
   IS_BRIDGE_LOADED,
   IS_VAULT_CLIENT_LOADED,
-  INIT_GENERAL_DATA_ACTION,
-  CHANGE_ADDRESS,
-  UPDATE_COLLATERAL_TOKEN_BALANCE,
-  UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
-  UPDATE_GOVERNANCE_TOKEN_BALANCE,
-  UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE,
-  UPDATE_BALANCE_POLKA_BTC,
-  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
-  GeneralActions,
   SET_INSTALLED_EXTENSION,
   SHOW_ACCOUNT_MODAL,
-  UPDATE_OF_PRICES,
+  UPDATE_BALANCE_POLKA_BTC,
+  UPDATE_COLLATERAL_TOKEN_BALANCE,
+  UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_HEIGHTS,
-  UPDATE_TOTALS
+  UPDATE_TOTALS,
+  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE
 } from '../types/actions.types';
 import { GeneralState, ParachainStatus } from '../types/util.types';
 
@@ -34,8 +32,6 @@ const initialState = {
   wrappedTokenTransferableBalance: BitcoinAmount.zero,
   collateralTokenBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   collateralTokenTransferableBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
-  governanceTokenBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
-  governanceTokenTransferableBalance: newMonetaryAmount(0, GOVERNANCE_TOKEN),
   extensions: [],
   btcRelayHeight: 0,
   bitcoinHeight: 0,
@@ -58,8 +54,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       };
     case UPDATE_HEIGHTS:
       return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
-    case UPDATE_OF_PRICES:
-      return { ...state, prices: action.prices };
     case IS_BRIDGE_LOADED:
       return { ...state, bridgeLoaded: action.isLoaded };
     case CHANGE_ADDRESS:
@@ -79,10 +73,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       return { ...state, collateralTokenBalance: action.collateralTokenBalance };
     case UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE:
       return { ...state, collateralTokenTransferableBalance: action.collateralTokenTransferableBalance };
-    case UPDATE_GOVERNANCE_TOKEN_BALANCE:
-      return { ...state, governanceTokenBalance: action.governanceTokenBalance };
-    case UPDATE_GOVERNANCE_TOKEN_TRANSFERABLE_BALANCE:
-      return { ...state, governanceTokenTransferableBalance: action.governanceTokenTransferableBalance };
     case UPDATE_BALANCE_POLKA_BTC:
       return { ...state, wrappedTokenBalance: action.wrappedTokenBalance };
     case UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE:

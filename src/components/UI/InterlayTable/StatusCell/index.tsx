@@ -1,7 +1,8 @@
-import { useTranslation } from 'react-i18next';
-import { FaRegCheckCircle, FaRegClock, FaRegTimesCircle, FaUserClock, FaClipboardCheck } from 'react-icons/fa';
 import clsx from 'clsx';
-import { getColorShade } from 'utils/helpers/colors';
+import { useTranslation } from 'react-i18next';
+import { FaClipboardCheck, FaRegCheckCircle, FaRegClock, FaRegTimesCircle, FaUserClock } from 'react-icons/fa';
+
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface Props {
   status: {

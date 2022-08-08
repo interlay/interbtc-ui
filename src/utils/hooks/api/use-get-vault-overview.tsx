@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useQueries, UseQueryResult } from 'react-query';
-import { useErrorHandler } from 'react-error-boundary';
 import { newAccountId } from '@interlay/interbtc-api';
+import { useEffect, useState } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
+import { useQueries, UseQueryResult } from 'react-query';
 
-import { useGetVaults } from 'utils/hooks/api/use-get-vaults';
-import { StoreType } from 'common/types/util.types';
+import { useGetVaults } from '@/utils/hooks/api/use-get-vaults';
 
 import { getVaultOverview, VaultData } from './get-vault-overview';
+import { useGetPrices } from './use-get-prices';
 
 type VaultTotals = {
   totalLockedCollateral: number;
@@ -33,7 +32,8 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
   const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
   const [queryError, setQueryError] = useState<Error | undefined>(undefined);
 
-  const { prices } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
+
   const vaultsResponseData = useGetVaults({ address });
   useErrorHandler(queryError);
 

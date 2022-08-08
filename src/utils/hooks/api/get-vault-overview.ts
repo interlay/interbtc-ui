@@ -1,22 +1,28 @@
-import { AccountId } from '@polkadot/types/interfaces';
 import {
+  CollateralCurrency,
   CollateralIdLiteral,
   CurrencyIdLiteral,
   tickerToCurrencyIdLiteral,
-  VaultExt,
-  CollateralCurrency
+  VaultExt
 } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 
-import { getUsdAmount } from 'common/utils/utils';
-import { getCollateralPrice } from 'utils/helpers/prices';
-import { Prices } from 'common/types/util.types';
-import issueCountQuery from 'services/queries/issue-count-query';
-import redeemCountQuery from 'services/queries/redeem-count-query';
-import { VAULT_GOVERNANCE, VAULT_WRAPPED } from 'config/vaults';
-import { GovernanceTokenMonetaryAmount, CollateralTokenMonetaryAmount, WrappedTokenAmount } from 'config/relay-chains';
-import { HYDRA_URL } from '../../../constants';
+import { Prices } from '@/common/types/util.types';
+import { getUsdAmount } from '@/common/utils/utils';
+import {
+  CollateralTokenMonetaryAmount,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceTokenMonetaryAmount,
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedTokenAmount
+} from '@/config/relay-chains';
+import { VAULT_GOVERNANCE, VAULT_WRAPPED } from '@/config/vaults';
+import { HYDRA_URL } from '@/constants';
+import issueCountQuery from '@/services/queries/issue-count-query';
+import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { getTokenPrice } from '@/utils/helpers/prices';
 
 interface VaultData {
   apy: Big;
@@ -42,10 +48,10 @@ interface VaultData {
 const getVaultOverview = async (
   vault: VaultExt<BitcoinUnit>,
   accountId: AccountId,
-  prices: Prices
+  prices: Prices | undefined
 ): Promise<VaultData> => {
   const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
-  const collateralPrice = getCollateralPrice(prices, tokenIdLiteral);
+  const collateralPrice = getTokenPrice(prices, tokenIdLiteral);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
@@ -62,8 +68,11 @@ const getVaultOverview = async (
   );
 
   const usdCollateral = getUsdAmount(collateral, collateralPrice?.usd);
-  const usdGovernanceTokenRewards = getUsdAmount(governanceTokenRewards, prices.governanceToken?.usd);
-  const usdWrappedTokenRewards = getUsdAmount(wrappedTokenRewards, prices.wrappedToken?.usd);
+  const usdGovernanceTokenRewards = getUsdAmount(
+    governanceTokenRewards,
+    getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+  );
+  const usdWrappedTokenRewards = getUsdAmount(wrappedTokenRewards, getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd);
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',

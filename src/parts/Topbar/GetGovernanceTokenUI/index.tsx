@@ -1,22 +1,24 @@
+import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 
-import TitleWithUnderline from 'components/TitleWithUnderline';
+import { ReactComponent as AcalaLogoIcon } from '@/assets/img/exchanges/acala-logo.svg';
+import { ReactComponent as GateLogoIcon } from '@/assets/img/exchanges/gate-logo.svg';
+import { ReactComponent as KrakenLogoIcon } from '@/assets/img/exchanges/kraken-logo.svg';
+import { ReactComponent as LbankLogoIcon } from '@/assets/img/exchanges/lbank-logo.svg';
+import { ReactComponent as MexcLogoForInterlayIcon } from '@/assets/img/exchanges/mexc-logo-for-interlay.svg';
+import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchanges/mexc-logo-for-kintsugi.svg';
+import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
+import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlink-logo.svg';
 import InterlayDefaultOutlinedButton, {
   Props as InterlayDefaultOutlinedButtonProps
-} from 'components/buttons/InterlayDefaultOutlinedButton';
-import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
-import InterlayLink from 'components/UI/InterlayLink';
-import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { BORDER_CLASSES } from 'utils/constants/styles';
-import { ReactComponent as GateLogoIcon } from 'assets/img/exchanges/gate-logo.svg';
-import { ReactComponent as KrakenLogoIcon } from 'assets/img/exchanges/kraken-logo.svg';
-import { ReactComponent as MexcLogoForKintsugiIcon } from 'assets/img/exchanges/mexc-logo-for-kintsugi.svg';
-import { ReactComponent as MexcLogoForInterlayIcon } from 'assets/img/exchanges/mexc-logo-for-interlay.svg';
-import { ReactComponent as ZenlinkLogoIcon } from 'assets/img/exchanges/zenlink-logo.svg';
-import { ReactComponent as LbankLogoIcon } from 'assets/img/exchanges/lbank-logo.svg';
+} from '@/components/buttons/InterlayDefaultOutlinedButton';
+import TitleWithUnderline from '@/components/TitleWithUnderline';
+import InterlayLink from '@/components/UI/InterlayLink';
+import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
+import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { BORDER_CLASSES } from '@/utils/constants/styles';
 
 let exchanges: Array<{
   link: string;
@@ -25,6 +27,14 @@ let exchanges: Array<{
 
 if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   exchanges = [
+    {
+      link: 'https://acala.network/',
+      icon: <AcalaLogoIcon width={122} height={48} />
+    },
+    {
+      link: 'https://stellaswap.com/',
+      icon: <StellaSwapLogoIcon width={122} height={25} />
+    },
     {
       link: 'https://trade.kraken.com/charts/KRAKEN:INTR-USD',
       icon: <KrakenLogoIcon width={122} height={20} />

@@ -1,19 +1,20 @@
+import { Redeem } from '@interlay/interbtc-api';
+import clsx from 'clsx';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
-import clsx from 'clsx';
-import { Redeem } from '@interlay/interbtc-api';
 
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import InterlayModal, { Props as ModalProps, InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
-import InterlayRouterLink from 'components/UI/InterlayRouterLink';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { PAGES, QUERY_PARAMETERS } from 'utils/constants/links';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { getColorShade } from 'utils/helpers/colors';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
+import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
+import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const queryString = require('query-string');
 
@@ -29,8 +30,7 @@ const SubmittedRedeemRequestModal = ({
   request
 }: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {
   const { t } = useTranslation();
-
-  const { prices } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
 
   const focusRef = React.useRef(null);
 
@@ -70,7 +70,7 @@ const SubmittedRedeemRequestModal = ({
                   'text-center'
                 )}
               >
-                {`≈ $${getUsdAmount(request.amountBTC, prices.bitcoin?.usd)}`}
+                {`≈ $${getUsdAmount(request.amountBTC, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
               </span>
             </div>
             <div>

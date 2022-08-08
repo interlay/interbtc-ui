@@ -1,7 +1,7 @@
 const btcBlocksQuery = (where?: string): string => `
   query ($limit: Int!, $offset: Int) {
     relayedBlocks(
-      orderBy: timestamp_DESC,
+      orderBy: backingHeight_DESC,
       limit: $limit,
       offset: $offset,
       where:{${where ? `, ${where}` : ''}}

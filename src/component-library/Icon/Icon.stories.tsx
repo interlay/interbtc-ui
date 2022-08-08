@@ -1,15 +1,25 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { Icon, IconProps } from '.';
 
 const Template: Story<IconProps> = (args) => <Icon {...args} />;
 
-const Default = Template.bind({});
-Default.args = {
+const Close = Template.bind({});
+Close.args = {
   variant: 'close'
 };
 
-export { Default };
+const Checkmark = Template.bind({});
+Checkmark.args = {
+  variant: 'checkmark'
+};
+
+const CheckCircle = Template.bind({});
+CheckCircle.args = {
+  variant: 'check-circle'
+};
+
+export { CheckCircle, Checkmark, Close };
 
 export default {
   title: 'Elements/Icon',

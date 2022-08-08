@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from '..';
+import { theme } from '../theme';
 
 const InfoBoxWrapper = styled.div`
   align-items: center;
@@ -29,4 +29,4 @@ const InfoBoxText = styled.p`
   font-size: ${theme.text.xl3};
 `;
 
-export { InfoBoxWrapper, InfoBoxHeader, InfoBoxText };
+export { InfoBoxHeader, InfoBoxText, InfoBoxWrapper };

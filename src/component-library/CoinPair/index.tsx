@@ -1,2 +1,2 @@
-export { CoinPair } from './CoinPair';
 export type { CoinPairProps } from './CoinPair';
+export { CoinPair } from './CoinPair';

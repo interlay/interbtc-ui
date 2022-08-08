@@ -1,18 +1,18 @@
-import { useSelector } from 'react-redux';
-import { useMutation, useQueryClient } from 'react-query';
-import { format, add } from 'date-fns';
 import clsx from 'clsx';
+import { add, format } from 'date-fns';
+import { useMutation, useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
 
-import ErrorModal from 'components/ErrorModal';
+import { StoreType } from '@/common/types/util.types';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
-} from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
-import { GOVERNANCE_TOKEN_SYMBOL } from 'config/relay-chains';
-import { BLOCK_TIME } from 'config/parachain';
-import { YEAR_MONTH_DAY_PATTERN } from 'utils/constants/date-time';
-import { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
+} from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
+import ErrorModal from '@/components/ErrorModal';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import { BLOCK_TIME } from '@/config/parachain';
+import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 
 const getFormattedUnlockDate = (remainingBlockNumbersToUnstake: number, formatPattern: string) => {
   const unlockDate = add(new Date(), {

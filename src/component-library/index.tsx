@@ -1,46 +1,39 @@
-export * from './types';
-
-export { theme } from './theme';
-export type { ComponentLibraryTheme } from './theme';
-
-export { CTA, CTALink } from './CTA';
-export type { CTAProps, CTALinkProps } from './CTA';
-
-export { CoinPair } from './CoinPair';
-export type { CoinPairProps } from './CoinPair';
-
-export { CoinIcon } from './CoinIcon';
+export type { CardProps } from './Card';
+export { Card } from './Card';
 export type { CoinIconProps } from './CoinIcon';
-
-export { InfoBox } from './InfoBox';
-export type { InfoBoxProps } from './InfoBox';
-
+export { CoinIcon } from './CoinIcon';
+export type { CoinPairProps } from './CoinPair';
+export { CoinPair } from './CoinPair';
+export type { CTALinkProps, CTAProps } from './CTA';
+export { CTA, CTALink } from './CTA';
+export type { GridItemProps, GridProps } from './Grid';
 export { Grid, GridItem } from './Grid';
-export type { GridProps, GridItemProps } from './Grid';
-
-export { VaultCard } from './VaultCard';
-export type { VaultCardProps } from './VaultCard';
-
-export { Stack } from './Stack';
-export type { StackProps } from './Stack';
-
-export { Table } from './Table';
-export type { TableProps } from './Table';
-
-export { NewVaultsTable } from './NewVaultsTable';
-export type { NewVaultsTableProps, NewVaultsTableRow } from './NewVaultsTable';
-
-export { Modal } from './Modal';
-export type { ModalProps } from './Modal';
-
-export { TokenBalance } from './TokenBalance';
-export type { TokenBalanceProps } from './TokenBalance';
-
-export { Input } from './Input';
+export type { InfoBoxProps } from './InfoBox';
+export { InfoBox } from './InfoBox';
 export type { InputProps } from './Input';
-
-export { NumberInput } from './NumberInput';
+export { Input } from './Input';
+export type { InsightsListItemProps, InsightsListProps } from './InsightsList';
+export { InsightsList, InsightsListItem } from './InsightsList';
+export type { ModalProps } from './Modal';
+export { Modal } from './Modal';
+export type { NewVaultsTableProps, NewVaultsTableRow } from './NewVaultsTable';
+export { NewVaultsTable } from './NewVaultsTable';
 export type { NumberInputProps } from './NumberInput';
-
-export { TokenField } from './TokenField';
+export { NumberInput } from './NumberInput';
+export type { StackProps } from './Stack';
+export { Stack } from './Stack';
+export type { TableProps } from './Table';
+export { Table } from './Table';
+export type { TabsItemProps, TabsProps } from './Tabs';
+export { Tabs, TabsItem } from './Tabs';
+export type { DlProps, TextProps } from './Text';
+export { Dl, Em, H1, H2, H3, H4, H5, H6, P, Strong } from './Text';
+export type { ComponentLibraryTheme } from './theme';
+export { theme } from './theme';
+export type { TokenBalanceProps } from './TokenBalance';
+export { TokenBalance } from './TokenBalance';
 export type { TokenFieldProps } from './TokenField';
+export { TokenField } from './TokenField';
+export * from './types';
+export type { VaultCardProps } from './VaultCard';
+export { VaultCard } from './VaultCard';

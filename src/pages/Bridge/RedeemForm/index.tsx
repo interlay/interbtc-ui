@@ -1,42 +1,46 @@
-import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { CollateralUnit, InterbtcPrimitivesVaultId, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
+import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { Redeem, CollateralUnit, newMonetaryAmount, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
-import SubmitButton from 'components/SubmitButton';
-import FormTitle from 'components/FormTitle';
-import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
-import TokenField from 'components/TokenField';
-import PriceInfo from 'components/PriceInfo';
-import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
-import Toggle from 'components/Toggle';
-import TextField from 'components/TextField';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorModal from 'components/ErrorModal';
-import ErrorFallback from 'components/ErrorFallback';
-import Hr2 from 'components/hrs/Hr2';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { showAccountModalAction, updateWrappedTokenBalanceAction } from '@/common/actions/general.actions';
+import { togglePremiumRedeemAction } from '@/common/actions/redeem.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getRandomVaultIdWithCapacity, getUsdAmount } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/components/SubmitButton';
+import TextField from '@/components/TextField';
+import Toggle from '@/components/Toggle';
+import TokenField from '@/components/TokenField';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-  RelayChainNativeTokenLogoIcon
-} from 'config/relay-chains';
-import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import STATUSES from 'utils/constants/statuses';
-import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '../../../constants';
-import { displayMonetaryAmount, getUsdAmount, getRandomVaultIdWithCapacity } from 'common/utils/utils';
-import { togglePremiumRedeemAction } from 'common/actions/redeem.actions';
-import { updateWrappedTokenBalanceAction, showAccountModalAction } from 'common/actions/general.actions';
-import { StoreType, ParachainStatus } from 'common/types/util.types';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import { getColorShade } from 'utils/helpers/colors';
+  RelayChainNativeTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL
+} from '@/config/relay-chains';
+import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '@/constants';
+import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import { getColorShade } from '@/utils/helpers/colors';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
@@ -49,19 +53,14 @@ type RedeemFormData = {
 const RedeemForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const handleError = useErrorHandler();
 
-  const usdPrice = useSelector((state: StoreType) => state.general.prices.bitcoin?.usd);
-  const {
-    wrappedTokenBalance,
-    bridgeLoaded,
-    address,
-    bitcoinHeight,
-    btcRelayHeight,
-    prices,
-    parachainStatus
-  } = useSelector((state: StoreType) => state.general);
+  const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
+  const { wrappedTokenBalance, bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+    (state: StoreType) => state.general
+  );
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
 
   const {
@@ -135,15 +134,19 @@ const RedeemForm = (): JSX.Element | null => {
         if (premiumRedeemFeeResult.status === 'rejected') {
           throw new Error(premiumRedeemFeeResult.reason);
         }
-        if (btcToDotRateResult.status === 'rejected') {
-          throw new Error(btcToDotRateResult.reason);
-        }
         if (redeemFeeRateResult.status === 'rejected') {
           throw new Error(redeemFeeRateResult.reason);
         }
         if (currentInclusionFeeResult.status === 'rejected') {
           throw new Error(currentInclusionFeeResult.reason);
         }
+        if (btcToDotRateResult.status === 'rejected') {
+          setFormError(WRAPPED_TOKEN_AMOUNT, {
+            type: 'validate',
+            message: t('error_oracle_offline', { action: 'redeem', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
+          });
+        }
+
         if (premiumRedeemVaultsResult.status === 'fulfilled' && premiumRedeemVaultsResult.value.size > 0) {
           // Premium redeem vaults are refetched on submission so we only need to set
           // true/false rather than keep them in state. No need to set false as this is
@@ -155,10 +158,12 @@ const RedeemForm = (): JSX.Element | null => {
           const initialMaxCapacity = vaultsWithRedeemableTokens.value.values().next().value;
           setMaxRedeemableCapacity(initialMaxCapacity);
         }
+        if (btcToDotRateResult.status === 'fulfilled') {
+          setBtcToDotRate(btcToDotRateResult.value);
+        }
 
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
-        setBtcToDotRate(btcToDotRateResult.value);
         setRedeemFeeRate(redeemFeeRateResult.value);
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
@@ -167,7 +172,7 @@ const RedeemForm = (): JSX.Element | null => {
         handleError(error);
       }
     })();
-  }, [bridgeLoaded, handleError]);
+  }, [bridgeLoaded, handleError, setFormError, t]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return <PrimaryColorEllipsisLoader />;
@@ -263,14 +268,22 @@ const RedeemForm = (): JSX.Element | null => {
 
     const validateForm = (value: string): string | undefined => {
       const parsedValue = BitcoinAmount.from.BTC(value);
-      const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
+
       if (parsedValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
-      } else if (parsedValue.gte(maxRedeemableCapacity)) {
+      }
+
+      if (parsedValue.gte(maxRedeemableCapacity)) {
         return `${t('redeem_page.request_exceeds_capacity', {
           maxRedeemableAmount: `${displayMonetaryAmount(maxRedeemableCapacity)} BTC`
         })}`;
-      } else if (parsedValue.lte(minValue)) {
+      }
+
+      const parsedWrappedTokenAmount = BitcoinAmount.from.BTC(value);
+      const theRedeemFee = parsedWrappedTokenAmount.mul(redeemFeeRate);
+      const minValue = dustValue.add(currentInclusionFee).add(theRedeemFee);
+
+      if (parsedValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
 
@@ -293,6 +306,10 @@ const RedeemForm = (): JSX.Element | null => {
         return 'Input value is too high!';
       }
 
+      if (isOracleOffline) {
+        return t('error_oracle_offline', { action: 'redeem', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
+      }
+
       return undefined;
     };
 
@@ -302,21 +319,27 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
-    const redeemFeeInUSD = getUsdAmount(redeemFee, prices.bitcoin?.usd);
+    const redeemFeeInUSD = getUsdAmount(redeemFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const totalBTC = wrappedTokenAmount
       ? parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero;
-    const totalBTCInUSD = getUsdAmount(totalBTC, prices.bitcoin?.usd);
+    const totalBTCInUSD = getUsdAmount(totalBTC, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
-    const totalDOTInUSD = getUsdAmount(totalDOT, prices.relayChainNativeToken?.usd);
+    const totalDOTInUSD = getUsdAmount(totalDOT, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
-    const bitcoinNetworkFeeInUSD = getUsdAmount(currentInclusionFee, prices.bitcoin?.usd);
+    const bitcoinNetworkFeeInUSD = getUsdAmount(
+      currentInclusionFee,
+      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+    );
     const accountSet = !!address;
+
+    // `btcToDotRate` has 0 value only if oracle call fails
+    const isOracleOffline = btcToDotRate.toBig().eq(0);
 
     return (
       <>
@@ -328,10 +351,9 @@ const RedeemForm = (): JSX.Element | null => {
           </FormTitle>
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
-            name={WRAPPED_TOKEN_AMOUNT}
             label={WRAPPED_TOKEN_SYMBOL}
             min={0}
-            ref={register({
+            {...register(WRAPPED_TOKEN_AMOUNT, {
               required: {
                 value: true,
                 message: t('redeem_page.please_enter_amount')
@@ -345,11 +367,10 @@ const RedeemForm = (): JSX.Element | null => {
           <ParachainStatusInfo status={parachainStatus} />
           <TextField
             id={BTC_ADDRESS}
-            name={BTC_ADDRESS}
             type='text'
             label='BTC Address'
             placeholder={t('enter_btc_address')}
-            ref={register({
+            {...register(BTC_ADDRESS, {
               required: {
                 value: true,
                 message: t('redeem_page.enter_btc')

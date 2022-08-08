@@ -12,7 +12,8 @@ const theme = {
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
     textTertiary: 'var(--colors-text-tertiary)',
-    bgPrimary: 'var(--colors-bg-primary)'
+    bgPrimary: 'var(--colors-bg-primary)',
+    warn: `var(--colors-shared-red)`
   },
   font: {
     primary: 'var(--fonts-primary)'
@@ -50,14 +51,16 @@ const theme = {
     spacing6: 'var(--spacing-6)',
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
-    spacing12: 'var(--spacing-12)'
+    spacing12: 'var(--spacing-12)',
+    spacing28: 'var(--spacing-28)'
   },
   rounded: {
     sm: 'var(--rounded-sm)',
     rg: 'var(--rounded-rg)',
     md: 'var(--rounded-md)',
     lg: 'var(--rounded-lg)',
-    xl: 'var(--rounded-xl)'
+    xl: 'var(--rounded-xl)',
+    full: 'var(--rounded-full)'
   },
   border: {
     default: '1px solid var(--colors-border)'
@@ -82,13 +85,47 @@ const theme = {
     secondary: {
       bg: 'var(--colors-cta-secondary)',
       text: 'var(--colors-cta-secondary-text)'
+    },
+    outlined: {
+      text: 'var(--colors-cta-outlined-text)',
+      border: '1px solid var(--colors-cta-outlined-border)',
+      bgHover: 'var(--colors-cta-outlined-hover)'
     }
   },
   table: {
     border: '1px var(--colors-neutral-light-grey-50) solid'
   },
+  alert: {
+    status: {
+      error: 'var(--colors-error)',
+      warning: 'var(--colors-warning)',
+      success: 'var(--colors-success)'
+    }
+  },
   transition: {
     duration: 100
+  },
+  tabs: {
+    bg: 'var(--colors-tabs-bg)',
+    color: 'var(--colors-tabs-text)',
+    active: {
+      color: 'var(--colors-tabs-active-color)',
+      bg: 'var(--colors-tabs-active-bg)'
+    },
+    border: '1px solid var(--colors-border)'
+  },
+  score: {
+    bar: {
+      height: '10px',
+      radius: 'var(--rounded-full)',
+      indicator: {
+        border: {
+          left: '10px solid transparent',
+          right: '10px solid transparent',
+          bottom: '18px solid var(--colors-score-bar-indicator-color)'
+        }
+      }
+    }
   }
 };
 

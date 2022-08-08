@@ -2,7 +2,7 @@ import { Switch } from '@headlessui/react';
 import { Props as HeadlessUIProps } from '@headlessui/react/dist/types';
 import clsx from 'clsx';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const Toggle = ({ checked, className, onChange, ...rest }: Props): JSX.Element => {
   return (

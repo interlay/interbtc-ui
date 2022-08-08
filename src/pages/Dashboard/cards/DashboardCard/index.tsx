@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import Panel from 'components/Panel';
+import Panel from '@/components/Panel';
 
 const DashboardCard = ({ className, ...rest }: React.ComponentPropsWithRef<'div'>): JSX.Element => (
   <Panel

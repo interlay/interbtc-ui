@@ -1,25 +1,27 @@
+import { CurrencyUnit, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Currency } from '@interlay/monetary-js';
+import clsx from 'clsx';
 import * as React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
-import { withErrorBoundary } from 'react-error-boundary';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { newMonetaryAmount, CurrencyUnit } from '@interlay/interbtc-api';
-import { Currency } from '@interlay/monetary-js';
+
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import SubmitButton from '@/components/SubmitButton';
+import TextField from '@/components/TextField';
+import Tokens, { TokenOption } from '@/components/Tokens';
+import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import isValidPolkadotAddress from '@/utils/helpers/is-valid-polkadot-address';
 
 import TokenAmountField from '../TokenAmountField';
-import Tokens, { TokenOption } from 'components/Tokens';
-import ErrorFallback from 'components/ErrorFallback';
-import SubmitButton from 'components/SubmitButton';
-import FormTitle from 'components/FormTitle';
-import TextField from 'components/TextField';
-import ErrorModal from 'components/ErrorModal';
-import { ParachainStatus, StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import isValidPolkadotAddress from 'utils/helpers/is-valid-polkadot-address';
-import STATUSES from 'utils/constants/statuses';
-import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 const RECIPIENT_ADDRESS = 'recipient-address';
@@ -38,6 +40,7 @@ const TransferForm = (): JSX.Element => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
     reset
   } = useForm<TransferFormData>({
@@ -51,6 +54,7 @@ const TransferForm = (): JSX.Element => {
 
   const onSubmit = async (data: TransferFormData) => {
     if (!activeToken) return;
+    if (data[TRANSFER_AMOUNT] === undefined) return;
 
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -68,7 +72,7 @@ const TransferForm = (): JSX.Element => {
   };
 
   const validateTransferAmount = React.useCallback(
-    (value: number): string | undefined => {
+    (value: string): string | undefined => {
       if (!activeToken) return;
 
       const balance = newMonetaryAmount(
@@ -101,6 +105,8 @@ const TransferForm = (): JSX.Element => {
     setActiveToken(token);
   };
 
+  const handleClickBalance = () => setValue(TRANSFER_AMOUNT, activeToken?.transferableBalance || '');
+
   React.useEffect(() => {
     setAccountSet(!!address);
   }, [address]);
@@ -131,15 +137,17 @@ const TransferForm = (): JSX.Element => {
               { 'dark:text-kintsugiOchre': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
             )}
           >
-            Transferable balance: {activeToken?.transferableBalance}
+            Transferable balance:
+            <InterlayButtonBase className={clsx('ml-1')} type='button' onClick={handleClickBalance}>
+              {activeToken?.transferableBalance || 0}
+            </InterlayButtonBase>
           </p>
           <div className={clsx('flex', 'gap-2')}>
             {/* TODO: use forwardRef to pull in select value as form data */}
             <Tokens variant='formField' showBalances={false} callbackFunction={handleTokenChange} />
             <TokenAmountField
               id={TRANSFER_AMOUNT}
-              name={TRANSFER_AMOUNT}
-              ref={register({
+              {...register(TRANSFER_AMOUNT, {
                 required: {
                   value: true,
                   message: t('redeem_page.please_enter_amount')
@@ -154,11 +162,10 @@ const TransferForm = (): JSX.Element => {
         <div>
           <TextField
             id={RECIPIENT_ADDRESS}
-            name={RECIPIENT_ADDRESS}
             type='text'
             label={t('recipient')}
             placeholder={t('recipient_account')}
-            ref={register({
+            {...register(RECIPIENT_ADDRESS, {
               required: {
                 value: true,
                 message: t('enter_recipient_address')

@@ -1,40 +1,37 @@
-import { useQuery } from 'react-query';
+import { CurrencyIdLiteral, VaultExt } from '@interlay/interbtc-api';
+import { BitcoinUnit } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-import Big from 'big.js';
-import { AccountId } from '@polkadot/types/interfaces';
-import { VaultExt } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+
+import { StoreType } from '@/common/types/util.types';
+import ErrorFallback from '@/components/ErrorFallback';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
+import { BTCToCollateralTokenRate } from '@/types/currency';
+import { getVaultStatusLabel } from '@/utils/helpers/vaults';
 
 import StatPanel from '../StatPanel';
-import ErrorFallback from 'components/ErrorFallback';
-import { RELAY_CHAIN_NATIVE_TOKEN } from 'config/relay-chains';
-import { getVaultStatusLabel } from 'utils/helpers/vaults';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
-import { BTCToCollateralTokenRate } from 'types/currency';
-import { StoreType } from 'common/types/util.types';
 
 interface Props {
-  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
+  vaultAccountId: AccountId;
+  collateralId: CurrencyIdLiteral | undefined;
 }
 
-const VaultStatusStatPanel = ({ vaultAccountId }: Props): JSX.Element => {
+const VaultStatusStatPanel = ({ vaultAccountId, collateralId }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { isIdle: vaultExtIdle, isLoading: vaultExtLoading, data: vaultExt, error: vaultExtError } = useQuery<
     VaultExt<BitcoinUnit>,
     Error
-  >(
-    [GENERIC_FETCHER, 'vaults', 'get', vaultAccountId, COLLATERAL_TOKEN_ID_LITERAL],
-    genericFetcher<VaultExt<BitcoinUnit>>(),
-    {
-      enabled: !!bridgeLoaded && !!vaultAccountId
-    }
-  );
+  >([GENERIC_FETCHER, 'vaults', 'get', vaultAccountId, collateralId], genericFetcher<VaultExt<BitcoinUnit>>(), {
+    enabled: !!bridgeLoaded && !!vaultAccountId && !!collateralId
+  });
   useErrorHandler(vaultExtError);
 
   const {
