@@ -9,9 +9,13 @@ module.exports = {
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-essentials',
-    '@storybook/preset-create-react-app',
+    // '@storybook/preset-create-react-app',
     'storybook-addon-themes'
   ],
+  "framework": "@storybook/react",
+  "core": {
+    "builder": "webpack5"
+  },
   webpackFinal: config => {
     // MEMO: inspired by https://github.com/storybookjs/storybook/issues/3916
     config.resolve.modules = [

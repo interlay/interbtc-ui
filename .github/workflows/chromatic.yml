@@ -24,3 +24,6 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           # 👇 Chromatic projectToken, refer to the manage page to obtain it.
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+        # env:
+        #   # https://github.com/storybookjs/storybook/issues/16555
+        #   NODE_OPTIONS: --openssl-legacy-provider
