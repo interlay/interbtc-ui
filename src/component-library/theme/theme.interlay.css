@@ -30,6 +30,4 @@
   --colors-tabs-text: var(--colors-neutral-black-9);
   --colors-tabs-active-color: var(--colors-light-blue);
   --colors-tabs-active-bg: var(--colors-lighter-blue);
-  /* Score Bar */
-  --colors-score-bar-indicator-color: var(--colors-neutral-black);
 }
