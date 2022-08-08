@@ -12,6 +12,8 @@ jobs:
     # Job steps
     steps:
       - uses: actions/checkout@v1
+        with:
+          node-version: "16"
       - name: Install dependencies
         run: yarn
         # 👇 Adds Chromatic as a step in the workflow

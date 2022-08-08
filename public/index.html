@@ -7,30 +7,6 @@
   <meta name="theme-color" content="#000000" />
   <meta name="msapplication-TileColor" content="#da532c" />
 
-  <!-- TODO: should consider performance-impact/production-case -->
-  <script>
-    (function(h,o,u,n,d) {
-      h=h[d]=h[d]||{q:[],onReady:function(c){h.q.push(c)}}
-      d=o.createElement(u);d.async=1;d.src=n
-      n=o.getElementsByTagName(u)[0];n.parentNode.insertBefore(d,n)
-    })(window,document,'script','https://www.datadoghq-browser-agent.com/datadog-rum-v3.js','DD_RUM')
-    DD_RUM.onReady(function() {
-      DD_RUM.init({
-        clientToken: 'pubbb98ce7f4f47e9647cc741f3cfd434c3',
-        applicationId: '4c51c23a-037b-41df-9f1e-60c72e357664',
-        site: 'datadoghq.eu',
-        service:'bridge.interlay.io',
-        env: '%REACT_APP_VERCEL_GIT_COMMIT_REF%',
-        version: '%REACT_APP_VERCEL_GIT_COMMIT_SHA%',
-        sampleRate: 100,
-        trackInteractions: true,
-        defaultPrivacyLevel: 'mask-user-input'
-      });
-
-      DD_RUM.startSessionReplayRecording();
-    })
-  </script>
-
   <!-- TODO: double-check & optimize -->
   <script src="https://kit.fontawesome.com/f1462b62fe.js" crossorigin="anonymous"></script>
   <!--

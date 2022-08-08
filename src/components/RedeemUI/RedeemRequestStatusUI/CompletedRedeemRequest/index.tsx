@@ -1,14 +1,14 @@
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import ExternalLink from 'components/ExternalLink';
-import PrimaryColorSpan from 'components/PrimaryColorSpan';
-import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
-import { BTC_EXPLORER_TRANSACTION_API } from 'config/blockstream-explorer-links';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { shortAddress, displayMonetaryAmount, getPolkadotLink } from 'common/utils/utils';
-import { getColorShade } from 'utils/helpers/colors';
+import { displayMonetaryAmount, getPolkadotLink, shortAddress } from '@/common/utils/utils';
+import ExternalLink from '@/components/ExternalLink';
+import PrimaryColorSpan from '@/components/PrimaryColorSpan';
+import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
+import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
 
 interface Props {
   // TODO: should type properly (`Relay`)

@@ -1,36 +1,42 @@
+import { CurrencyIdLiteral, GovernanceUnit, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
+import Big from 'big.js';
+import clsx from 'clsx';
 import * as React from 'react';
+import { useErrorHandler } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import clsx from 'clsx';
-import Big from 'big.js';
-import { useErrorHandler } from 'react-error-boundary';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
-import { newMonetaryAmount, GovernanceUnit, newAccountId, Issue, CurrencyIdLiteral } from '@interlay/interbtc-api';
 
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import ErrorModal from '@/components/ErrorModal';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/components/SubmitButton';
+import TokenField from '@/components/TokenField';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
-  GovernanceTokenLogoIcon,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon,
-  WRAPPED_TOKEN_SYMBOL
-} from 'config/relay-chains';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import { ParachainStatus, StoreType } from 'common/types/util.types';
-import TokenField from 'components/TokenField';
-import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import STATUSES from 'utils/constants/statuses';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import SubmittedIssueRequestModal from 'pages/Bridge/IssueForm/SubmittedIssueRequestModal';
-import ErrorModal from 'components/ErrorModal';
-import Hr2 from 'components/hrs/Hr2';
-import SubmitButton from 'components/SubmitButton';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
-import PriceInfo from 'components/PriceInfo';
+  GovernanceTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon
+} from '@/config/relay-chains';
+import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import useAccountId from '@/utils/hooks/use-account-id';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -63,7 +69,17 @@ const extraRequiredCollateralTokenAmount = newMonetaryAmount(
 
 // TODO: share form with bridge page
 const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }: Props): JSX.Element => {
-  const { register, handleSubmit, errors, watch, trigger } = useForm<RequestIssueFormData>({ mode: 'onChange' });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    trigger,
+    setValue,
+    setError
+  } = useForm<RequestIssueFormData>({
+    mode: 'onChange'
+  });
   const btcAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
@@ -83,24 +99,22 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
 
   const { t } = useTranslation();
+  const prices = useGetPrices();
   const focusRef = React.useRef(null);
 
   const handleError = useErrorHandler();
 
-  const {
-    bridgeLoaded,
-    address,
-    bitcoinHeight,
-    btcRelayHeight,
-    prices,
-    governanceTokenBalance,
-    parachainStatus
-  } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+    (state: StoreType) => state.general
+  );
 
-  const vaultAccountId = React.useMemo(() => {
-    if (!bridgeLoaded) return;
-    return newAccountId(window.bridge.api, vaultAddress);
-  }, [bridgeLoaded, vaultAddress]);
+  const {
+    governanceTokenBalanceIdle,
+    governanceTokenBalanceLoading,
+    governanceTokenBalance
+  } = useGovernanceTokenBalance();
+
+  const vaultAccountId = useAccountId(vaultAddress);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -137,22 +151,37 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
         if (theDustValue.status === 'fulfilled') {
           setDustValue(theDustValue.value);
         }
-        if (theBtcToGovernanceToken.status === 'fulfilled') {
-          setBTCToGovernanceTokenRate(theBtcToGovernanceToken.value);
-        }
         if (issuableAmount.status === 'fulfilled') {
           setVaultCapacity(issuableAmount.value);
+        }
+        if (theBtcToGovernanceToken.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(theBtcToGovernanceToken.value);
+        } else {
+          setError(WRAPPED_TOKEN_AMOUNT, {
+            type: 'validate',
+            message: t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
+          });
         }
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
       }
     })();
-  }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId]);
+  }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId, setError, t]);
 
-  if (status === STATUSES.IDLE || status === STATUSES.PENDING || vaultAccountId === undefined) {
+  if (
+    status === STATUSES.IDLE ||
+    status === STATUSES.PENDING ||
+    vaultAccountId === undefined ||
+    governanceTokenBalanceIdle ||
+    governanceTokenBalanceLoading
+  ) {
     return <PrimaryColorEllipsisLoader />;
   }
+  if (governanceTokenBalance === undefined) {
+    throw new Error('Something went wrong!');
+  }
+
   const onSubmit = async (data: RequestIssueFormData) => {
     try {
       setSubmitStatus(STATUSES.PENDING);
@@ -185,7 +214,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
 
     const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
     const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
-    if (governanceTokenBalance.lte(minRequiredGovernanceTokenAmount)) {
+    if (governanceTokenBalance.free.lte(minRequiredGovernanceTokenAmount)) {
       return t('insufficient_funds_governance_token', {
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
       });
@@ -216,6 +245,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
       return 'Invalid BTC amount input!';
     }
 
+    if (isOracleOffline) {
+      return t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
+    }
+
     return undefined;
   };
 
@@ -226,10 +259,19 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     setSubmittedRequest(undefined);
   };
 
+  const vaultBalance = displayMonetaryAmount(vaultCapacity);
+  const handleClickVaultBalance = async () => {
+    setValue(WRAPPED_TOKEN_AMOUNT, vaultBalance);
+    await trigger(WRAPPED_TOKEN_AMOUNT);
+  };
+
   const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
   const bridgeFee = parsedBTCAmount.mul(feeRate);
   const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
   const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
+
+  // `btcToGovernanceTokenRate` has 0 value only if oracle call is unsuccessful
+  const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
 
   return (
     <>
@@ -242,23 +284,28 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
           <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
             <p>{t('vault.issue_description')}</p>
             <p>
-              {t('vault.max_capacity')} <strong>{displayMonetaryAmount(vaultCapacity)} BTC</strong>
+              {t('vault.max_capacity')}{' '}
+              <InterlayButtonBase type='button' onClick={handleClickVaultBalance}>
+                <strong>{vaultBalance} BTC</strong>
+              </InterlayButtonBase>
             </p>
             <p>{t('vault.issue_amount')}</p>
             <div>
               <TokenField
                 id={WRAPPED_TOKEN_AMOUNT}
-                name={WRAPPED_TOKEN_AMOUNT}
                 label='BTC'
                 min={0}
-                ref={register({
+                {...register(WRAPPED_TOKEN_AMOUNT, {
                   required: {
                     value: true,
                     message: t('issue_page.enter_valid_amount')
                   },
                   validate: (value) => validateForm(value)
                 })}
-                approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
+                approxUSD={`≈ $ ${getUsdAmount(
+                  parsedBTCAmount || BitcoinAmount.zero,
+                  getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+                )}`}
                 error={!!errors[WRAPPED_TOKEN_AMOUNT]}
                 helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
               />
@@ -277,7 +324,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<BitcoinLogoIcon width={23} height={23} />}
               value={displayMonetaryAmount(bridgeFee)}
               unitName='BTC'
-              approxUSD={getUsdAmount(bridgeFee, prices.bitcoin?.usd)}
+              approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -302,7 +349,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(securityDeposit)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(securityDeposit, prices.governanceToken?.usd)}
+              approxUSD={getUsdAmount(securityDeposit, getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd)}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -327,7 +374,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken?.usd)}
+              approxUSD={getUsdAmount(
+                extraRequiredCollateralTokenAmount,
+                getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+              )}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -353,7 +403,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<WrappedTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(wrappedTokenAmount)}
               unitName={WRAPPED_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin?.usd)}
+              approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
             />
             <SubmitButton
               disabled={

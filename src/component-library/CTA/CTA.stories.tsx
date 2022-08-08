@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { CTA, CTAProps } from '.';
 
@@ -16,6 +16,12 @@ Secondary.args = {
   children: 'Call to action'
 };
 
+const Outlined = Template.bind({});
+Outlined.args = {
+  variant: 'outlined',
+  children: 'Call to action'
+};
+
 const FullWidth = Template.bind({});
 FullWidth.args = {
   variant: 'primary',
@@ -23,7 +29,7 @@ FullWidth.args = {
   fullWidth: true
 };
 
-export { Primary, Secondary, FullWidth };
+export { FullWidth, Outlined, Primary, Secondary };
 
 export default {
   title: 'Elements/CTA',

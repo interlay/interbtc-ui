@@ -1,6 +1,6 @@
 import { CollateralIdLiteral, CurrencyIdLiteral, GovernanceIdLiteral, WrappedIdLiteral } from '@interlay/interbtc-api';
 
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 let VAULT_COLLATERAL: Array<CollateralIdLiteral> = [];
 let VAULT_WRAPPED: WrappedIdLiteral;
@@ -24,4 +24,4 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
   }
 }
 
-export { VAULT_COLLATERAL, VAULT_WRAPPED, VAULT_GOVERNANCE };
+export { VAULT_COLLATERAL, VAULT_GOVERNANCE, VAULT_WRAPPED };

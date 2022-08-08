@@ -1,8 +1,8 @@
-import Big from 'big.js';
 import { CurrencyUnit, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
 import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
 
-import { PARACHAIN_URL } from '../../constants';
+import { PARACHAIN_URL } from '@/constants';
 
 // TODO: should be one module
 function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
@@ -99,15 +99,15 @@ function getPolkadotLink(blockHeight: number): string {
 }
 
 export {
-  safeRoundTwoDecimals,
-  shortAddress,
-  shortTxId,
+  copyToClipboard,
+  displayMonetaryAmount,
   formatDateTime,
   formatDateTimePrecise,
   getLastMidnightTimestamps,
-  getUsdAmount,
-  displayMonetaryAmount,
-  copyToClipboard,
+  getPolkadotLink,
   getRandomVaultIdWithCapacity,
-  getPolkadotLink
+  getUsdAmount,
+  safeRoundTwoDecimals,
+  shortAddress,
+  shortTxId
 };

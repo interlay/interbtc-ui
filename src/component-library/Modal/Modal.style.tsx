@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-import { theme } from 'component-library/theme';
-import { TransitionTrigger } from 'utils/hooks/use-mount-transition';
+import { TransitionTrigger } from '@/utils/hooks/use-mount-transition';
+
+import { theme } from '../theme';
 
 interface ModalContentProps {
   transitionTrigger: TransitionTrigger;
@@ -54,4 +55,4 @@ const CloseIcon = styled.button`
   fill: ${theme.colors.textSecondary};
 `;
 
-export { ModalContainer, ModalOverlay, ModalContent, CloseIcon };
+export { CloseIcon, ModalContainer, ModalContent, ModalOverlay };

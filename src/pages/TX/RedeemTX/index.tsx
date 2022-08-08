@@ -1,15 +1,15 @@
-import { useParams } from 'react-router-dom';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
+import { useParams } from 'react-router-dom';
 
-import RedeemUI from 'components/RedeemUI';
-import ErrorFallback from 'components/ErrorFallback';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import { URL_PARAMETERS } from 'utils/constants/links';
-import useStableBitcoinConfirmations from 'services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from 'services/hooks/use-stable-parachain-confirmations';
-import useCurrentActiveBlockNumber from 'services/hooks/use-current-active-block-number';
-import redeemsFetcher, { REDEEMS_FETCHER, getRedeemWithStatus } from 'services/fetchers/redeems-fetcher';
+import ErrorFallback from '@/components/ErrorFallback';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import RedeemUI from '@/components/RedeemUI';
+import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+import { URL_PARAMETERS } from '@/utils/constants/links';
 
 // MEMO: /tx/redeem/0xb1887a4e14567610aa9ca880e29c14a00a0def0f89843bf2fe9feb3b0690635f
 const RedeemTX = (): JSX.Element => {

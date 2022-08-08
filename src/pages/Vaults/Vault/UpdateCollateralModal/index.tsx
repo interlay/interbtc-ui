@@ -1,34 +1,30 @@
-import * as React from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { CollateralUnit, newMonetaryAmount, roundTwoDecimals } from '@interlay/interbtc-api';
+import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
-import { AccountId } from '@polkadot/types/interfaces';
-import {
-  roundTwoDecimals,
-  newMonetaryAmount,
-  CollateralUnit,
-  CurrencyUnit,
-  ChainBalance
-} from '@interlay/interbtc-api';
-import { MonetaryAmount, Currency } from '@interlay/monetary-js';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import ErrorFallback from 'components/ErrorFallback';
-import TokenField from 'components/TokenField';
-import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import CloseIconButton from 'components/buttons/CloseIconButton';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from 'components/UI/InterlayModal';
-import { ACCOUNT_ID_TYPE_NAME } from 'config/general';
-import { displayMonetaryAmount, getUsdAmount } from 'common/utils/utils';
-import STATUSES from 'utils/constants/statuses';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { updateCollateralAction, updateCollateralizationAction } from 'common/actions/vault.actions';
-import { StoreType } from 'common/types/util.types';
-import { CurrencyValues } from 'types/currency';
+import { updateCollateralAction, updateCollateralizationAction } from '@/common/actions/vault.actions';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import CloseIconButton from '@/components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
+import ErrorFallback from '@/components/ErrorFallback';
+import TokenField from '@/components/TokenField';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import useTokenBalance from '@/services/hooks/use-token-balance';
+import { GenericCurrencyValues } from '@/types/currency';
+import STATUSES from '@/utils/constants/statuses';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 enum CollateralUpdateStatus {
   Close,
@@ -46,9 +42,8 @@ interface Props {
   onClose: () => void;
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
-  vaultAccountId: AccountId | undefined; // TODO: should remove `undefined` later on when the loading is properly handled
   hasLockedBTC: boolean;
-  collateralCurrency: CurrencyValues;
+  collateralCurrency: GenericCurrencyValues<CollateralUnit>;
 }
 
 const UpdateCollateralModal = ({
@@ -56,11 +51,11 @@ const UpdateCollateralModal = ({
   onClose,
   collateralUpdateStatus,
   vaultAddress,
-  vaultAccountId,
   hasLockedBTC,
   collateralCurrency
 }: Props): JSX.Element => {
-  const { bridgeLoaded, prices } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
 
   const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
 
@@ -97,18 +92,10 @@ const UpdateCollateralModal = ({
   useErrorHandler(requiredCollateralTokenAmountError);
 
   const {
-    isIdle: collateralBalanceIdle,
-    isLoading: collateralBalanceLoading,
-    data: collateralBalance,
-    error: collateralBalanceError
-  } = useQuery<ChainBalance<CollateralUnit>, Error>(
-    [GENERIC_FETCHER, 'tokens', 'balance', collateralCurrency.currency, vaultAccountId],
-    genericFetcher<ChainBalance<CollateralUnit>>(),
-    {
-      enabled: !!bridgeLoaded && !!vaultAccountId
-    }
-  );
-  useErrorHandler(collateralBalanceError);
+    tokenBalanceIdle: collateralBalanceIdle,
+    tokenBalanceLoading: collateralBalanceLoading,
+    tokenBalance: collateralBalance
+  } = useTokenBalance<CollateralUnit>(collateralCurrency.currency, vaultAddress);
 
   const collateralTokenAmount = newMonetaryAmount(
     strCollateralTokenAmount,
@@ -192,9 +179,7 @@ const UpdateCollateralModal = ({
 
     // Collateral update only allowed if above required collateral
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
-      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(
-        requiredCollateralTokenAmount
-      ) as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>;
+      const maxWithdrawableCollateralTokenAmount = currentTotalCollateralTokenAmount.sub(requiredCollateralTokenAmount);
 
       return collateralTokenAmount.gt(maxWithdrawableCollateralTokenAmount)
         ? t('vault.collateral_below_threshold')
@@ -209,9 +194,7 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    if (
-      collateralTokenAmount.gt(collateralBalance?.transferable as MonetaryAmount<Currency<CurrencyUnit>, CurrencyUnit>)
-    ) {
+    if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
       return t(`Must be less than ${collateralCurrency.id} balance!`);
     }
 
@@ -319,17 +302,19 @@ const UpdateCollateralModal = ({
             </label>
             <TokenField
               id={COLLATERAL_TOKEN_AMOUNT}
-              name={COLLATERAL_TOKEN_AMOUNT}
               label={collateralCurrency.id}
               min={0}
-              ref={register({
+              {...register(COLLATERAL_TOKEN_AMOUNT, {
                 required: {
                   value: true,
                   message: t('vault.collateral_is_required')
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
-              approxUSD={`≈ $ ${getUsdAmount(collateralTokenAmount, prices.relayChainNativeToken?.usd)}`}
+              approxUSD={`≈ $ ${getUsdAmount(
+                collateralTokenAmount,
+                getTokenPrice(prices, collateralCurrency.id)?.usd
+              )}`}
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />

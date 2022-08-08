@@ -1,18 +1,20 @@
-import clsx from 'clsx';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { RedeemStatus } from '@interlay/interbtc-api';
+import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
+
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { displayMonetaryAmount, getUsdAmount, shortAddress } from '@/common/utils/utils';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorSpan from '@/components/PrimaryColorSpan';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
-import PriceInfo from 'components/PriceInfo';
-import PrimaryColorSpan from 'components/PrimaryColorSpan';
-import Hr2 from 'components/hrs/Hr2';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { displayMonetaryAmount, getUsdAmount, shortAddress } from 'common/utils/utils';
-import { StoreType } from 'common/types/util.types';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
 
 interface Props {
   redeem: any; // TODO: should type properly (`Relay`)
@@ -21,8 +23,7 @@ interface Props {
 
 const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
   const { t } = useTranslation();
-
-  const { prices } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
 
   const redeemedWrappedTokenAmount = redeem.request.requestedAmountBacking
     .add(redeem.bridgeFee)
@@ -57,7 +58,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
               'block'
             )}
           >
-            {`≈ $ ${getUsdAmount(redeemedWrappedTokenAmount, prices.bitcoin?.usd)}`}
+            {`≈ $ ${getUsdAmount(redeemedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
           </span>
         </div>
         <div>
@@ -75,7 +76,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(redeem.bridgeFee, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(redeem.bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <PriceInfo
             title={
@@ -91,7 +92,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.btcTransferFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(redeem.btcTransferFee, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(redeem.btcTransferFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -108,7 +109,10 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.request.requestedAmountBacking)}
             unitName='BTC'
-            approxUSD={getUsdAmount(redeem.request.requestedAmountBacking, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(
+              redeem.request.requestedAmountBacking,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
           />
         </div>
         <div className='space-y-4'>

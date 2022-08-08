@@ -1,17 +1,18 @@
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+
+import { getLastMidnightTimestamps } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
+import { INTERLAY_DENIM, KINTSUGI_SUNDOWN } from '@/utils/constants/colors';
+import { PAGES } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import LineChart from '../../LineChart';
-import Stats, { StatsDt, StatsDd, StatsRouterLink } from '../../Stats';
+import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
-import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { INTERLAY_DENIM, KINTSUGI_SUNDOWN } from 'utils/constants/colors';
-import { PAGES } from 'utils/constants/links';
-import graphqlFetcher, { GraphqlReturn, GRAPHQL_FETCHER } from 'services/fetchers/graphql-fetcher';
-import { getLastMidnightTimestamps } from 'common/utils/utils';
 
 interface Props {
   hasLinks?: boolean;

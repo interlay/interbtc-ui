@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useQueries, UseQueryResult } from 'react-query';
-import { useErrorHandler } from 'react-error-boundary';
-import { AccountId } from '@polkadot/types/interfaces';
 import { CurrencyIdLiteral, newAccountId, VaultExt } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
-
-import { StoreType } from 'common/types/util.types';
-import { VAULT_COLLATERAL } from 'config/vaults';
+import { AccountId } from '@polkadot/types/interfaces';
+import { useEffect, useState } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
+import { useQueries, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
+
+import { StoreType } from '@/common/types/util.types';
+import { VAULT_COLLATERAL } from '@/config/vaults';
 
 type VaultResponse = Array<VaultExt<BitcoinUnit>>;
 

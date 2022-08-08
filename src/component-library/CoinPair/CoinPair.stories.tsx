@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { CoinPair, CoinPairProps } from '.';
 
@@ -18,7 +18,7 @@ Large.args = {
   size: 'large'
 };
 
-export { Small, Large };
+export { Large, Small };
 
 export default {
   title: 'Elements/CoinPair',

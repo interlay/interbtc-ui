@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from '..';
+import { theme } from '../theme';
 import { StackProps } from '.';
 
 const getSpacing = (spacing: StackProps['spacing']) => {

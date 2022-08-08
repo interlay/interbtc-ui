@@ -1,2 +1,2 @@
-export { theme } from './theme';
 export type { ComponentLibraryTheme } from './theme';
+export { theme } from './theme';

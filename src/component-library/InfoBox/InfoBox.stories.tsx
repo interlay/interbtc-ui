@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { InfoBox, InfoBoxProps } from '.';
 
@@ -20,7 +20,7 @@ WithCTA.args = {
   ctaText: 'Claim'
 };
 
-export { WithoutCTA, WithCTA };
+export { WithCTA, WithoutCTA };
 
 export default {
   title: 'Components/InfoBox',

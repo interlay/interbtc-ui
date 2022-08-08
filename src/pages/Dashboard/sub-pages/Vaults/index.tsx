@@ -1,30 +1,31 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
-import VaultsTable from './VaultsTable';
-import LockedCollateralCard from './LockedCollateralCard';
-import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
-import CollateralizationCard from '../../cards/CollateralizationCard';
-import TimerIncrement from 'parts/TimerIncrement';
-import PageTitle from 'parts/PageTitle';
-import Hr1 from 'components/hrs/Hr1';
+import Hr1 from '@/components/hrs/Hr1';
 import {
-  RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  CollateralToken,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
-  CollateralToken
-} from 'config/relay-chains';
-import { StoreType } from 'common/types/util.types';
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+} from '@/config/relay-chains';
+import PageTitle from '@/parts/PageTitle';
+import TimerIncrement from '@/parts/TimerIncrement';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import ActiveVaultsCard from '../../cards/ActiveVaultsCard';
+import CollateralizationCard from '../../cards/CollateralizationCard';
+import LockedCollateralCard from './LockedCollateralCard';
+import VaultsTable from './VaultsTable';
 
 const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
-  const { prices } = useSelector((state: StoreType) => state.general);
+  const prices = useGetPrices();
 
-  const relayChainNativeTokenPriceInUSD = prices.relayChainNativeToken?.usd;
-  const governanceTokenPriceInUSD = prices.governanceToken?.usd;
+  const relayChainNativeTokenPriceInUSD = getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd;
+  const governanceTokenPriceInUSD = getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd;
 
   const collaterals = React.useMemo(
     () => [

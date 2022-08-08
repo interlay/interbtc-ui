@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { FaTimesCircle, FaExclamationCircle } from 'react-icons/fa';
+import { FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import { WRAPPED_TOKEN_SYMBOL } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { getColorShade } from 'utils/helpers/colors';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
 
 const CancelledIssueRequest = (): JSX.Element => {
   const { t } = useTranslation();

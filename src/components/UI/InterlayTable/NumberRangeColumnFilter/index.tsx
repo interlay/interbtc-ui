@@ -3,8 +3,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 
 // TODO: not used for now
 function NumberRangeColumnFilter({ column: { filterValue = [], preFilteredRows, setFilter, id } }) {

@@ -1,21 +1,22 @@
-import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 
-import LineChart from '../LineChart';
-import ErrorFallback from 'components/ErrorFallback';
-import { COUNT_OF_DATES_FOR_CHART } from 'config/charts';
-import { WRAPPED_TOKEN_SYMBOL, WRAPPED_TOKEN } from 'config/relay-chains';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from 'utils/constants/colors';
-import { getLastMidnightTimestamps } from 'common/utils/utils';
+import { getLastMidnightTimestamps } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
+import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,
   VolumeType
-} from 'services/fetchers/cumulative-volumes-fetcher';
+} from '@/services/fetchers/cumulative-volumes-fetcher';
+import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from '@/utils/constants/colors';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+
+import LineChart from '../LineChart';
 
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);
 

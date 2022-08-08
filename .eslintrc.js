@@ -1,6 +1,6 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'import', 'cypress'],
+  plugins: ['@typescript-eslint', 'react', 'simple-import-sort', 'import', 'cypress'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
@@ -52,9 +52,13 @@ module.exports = {
     ],
     'no-negated-condition': 'error',
     'no-dupe-keys': 'error',
-    'import/exports-last': 'error',
     'require-jsdoc': 0, // TODO: `0` for now but later should be on by being removed
     'new-cap': ['error', { capIsNew: false }],
+
+    // Import Rules
+    'simple-import-sort/imports': 'error',
+    'simple-import-sort/exports': 'error',
+    'import/exports-last': 'error',
 
     // React ESLinting rules
     'react/jsx-uses-react': 'off',

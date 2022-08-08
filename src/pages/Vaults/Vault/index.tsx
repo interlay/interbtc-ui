@@ -1,51 +1,54 @@
-import * as React from 'react';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useSelector, useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
-import clsx from 'clsx';
-import { BitcoinAmount, BitcoinUnit } from '@interlay/monetary-js';
 import {
-  newAccountId,
-  VaultExt,
-  VaultStatusExt,
+  CollateralCurrency,
   CollateralIdLiteral,
+  CollateralUnit,
   CurrencyIdLiteral,
-  CollateralCurrency
+  VaultExt,
+  VaultStatusExt
 } from '@interlay/interbtc-api';
+import { BitcoinAmount, BitcoinUnit } from '@interlay/monetary-js';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
-import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
+import {
+  updateAPYAction,
+  updateCollateralAction,
+  updateCollateralizationAction,
+  updateLockedBTCAction
+} from '@/common/actions/vault.actions';
+import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount, safeRoundTwoDecimals } from '@/common/utils/utils';
+import InterlayCaliforniaContainedButton from '@/components/buttons/InterlayCaliforniaContainedButton';
+import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
+import InterlayDenimOrKintsugiSupernovaContainedButton from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
+import ErrorFallback from '@/components/ErrorFallback';
+import InterlayTooltip from '@/components/UI/InterlayTooltip';
+import { GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import MainContainer from '@/parts/MainContainer';
+import SectionTitle from '@/parts/SectionTitle';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { GenericCurrencyValues } from '@/types/currency';
+import { WRAPPED_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
+import { URL_PARAMETERS } from '@/utils/constants/links';
+import { getCurrency } from '@/utils/helpers/currencies';
+import useAccountId from '@/utils/hooks/use-account-id';
+
 import { VaultsHeader } from '../VaultsHeader';
-import RequestReplacementModal from './RequestReplacementModal';
-import RequestRedeemModal from './RequestRedeemModal';
+import ClaimRewardsButton from './ClaimRewardsButton';
 import ReplaceTable from './ReplaceTable';
+import RequestIssueModal from './RequestIssueModal';
+import RequestRedeemModal from './RequestRedeemModal';
+import RequestReplacementModal from './RequestReplacementModal';
+import StatPanel from './StatPanel';
+import UpdateCollateralModal, { CollateralUpdateStatus } from './UpdateCollateralModal';
 import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
-import StatPanel from './StatPanel';
 import VaultStatusStatPanel from './VaultStatusStatPanel';
-import ClaimRewardsButton from './ClaimRewardsButton';
-import MainContainer from 'parts/MainContainer';
-import SectionTitle from 'parts/SectionTitle';
-import ErrorFallback from 'components/ErrorFallback';
-import InterlayDenimOrKintsugiSupernovaContainedButton from 'components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
-import InterlayCaliforniaContainedButton from 'components/buttons/InterlayCaliforniaContainedButton';
-import InterlayDefaultContainedButton from 'components/buttons/InterlayDefaultContainedButton';
-import { WRAPPED_TOKEN_SYMBOL, GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount } from 'config/relay-chains';
-import { URL_PARAMETERS } from 'utils/constants/links';
-import { getCurrency } from 'utils/helpers/currencies';
-import { WRAPPED_TOKEN_ID_LITERAL } from 'utils/constants/currency';
-import { safeRoundTwoDecimals, displayMonetaryAmount } from 'common/utils/utils';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { StoreType } from 'common/types/util.types';
-import {
-  updateCollateralizationAction,
-  updateCollateralAction,
-  updateLockedBTCAction,
-  updateAPYAction
-} from 'common/actions/vault.actions';
-import RequestIssueModal from './RequestIssueModal';
-import InterlayTooltip from 'components/UI/InterlayTooltip';
 
 const Vault = (): JSX.Element => {
   const [collateralUpdateStatus, setCollateralUpdateStatus] = React.useState(CollateralUpdateStatus.Close);
@@ -94,13 +97,7 @@ const Vault = (): JSX.Element => {
     setRequestIssueModalOpen(true);
   };
 
-  const vaultAccountId = React.useMemo(() => {
-    // eslint-disable-next-line max-len
-    // TODO: should correct loading procedure according to https://kentcdodds.com/blog/application-state-management-with-react
-    if (!bridgeLoaded) return;
-
-    return newAccountId(window.bridge.api, selectedVaultAccountAddress);
-  }, [bridgeLoaded, selectedVaultAccountAddress]);
+  const vaultAccountId = useAccountId(selectedVaultAccountAddress);
 
   const collateralCurrencyValues = React.useMemo(() => getCurrency(vaultCollateral as CurrencyIdLiteral), [
     vaultCollateral
@@ -270,7 +267,9 @@ const Vault = (): JSX.Element => {
             {vaultItems.map((item) => (
               <StatPanel key={item.title} label={item.title} value={item.value} />
             ))}
-            <VaultStatusStatPanel vaultAccountId={vaultAccountId} />
+            {vaultAccountId && (
+              <VaultStatusStatPanel collateralId={collateralCurrencyValues?.id} vaultAccountId={vaultAccountId} />
+            )}
           </div>
         </div>
         {/* Check interaction with the vault */}
@@ -282,7 +281,9 @@ const Vault = (): JSX.Element => {
             <InterlayDefaultContainedButton onClick={handleWithdrawCollateralModalOpen}>
               {t('vault.withdraw_collateral')}
             </InterlayDefaultContainedButton>
-            <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
+            {vaultAccountId && collateralCurrencyValues && (
+              <ClaimRewardsButton vaultAccountId={vaultAccountId} collateralToken={collateralCurrencyValues} />
+            )}
             <InterlayTooltip label={issueButtonTooltip}>
               {/* Button wrapped in div to enable tooltip on disabled button. */}
               <div className='grid'>
@@ -313,7 +314,7 @@ const Vault = (): JSX.Element => {
         />
         <ReplaceTable vaultAddress={selectedVaultAccountAddress} collateralId={collateralCurrencyValues?.id} />
       </MainContainer>
-      {collateralCurrencyValues && collateralUpdateStatus !== CollateralUpdateStatus.Close && (
+      {collateralCurrencyValues && collateralUpdateStatus !== CollateralUpdateStatus.Close && vaultAccountId && (
         <UpdateCollateralModal
           open={
             collateralUpdateStatus === CollateralUpdateStatus.Deposit ||
@@ -322,9 +323,8 @@ const Vault = (): JSX.Element => {
           onClose={handleUpdateCollateralModalClose}
           collateralUpdateStatus={collateralUpdateStatus}
           vaultAddress={selectedVaultAccountAddress}
-          vaultAccountId={vaultAccountId}
           hasLockedBTC={hasLockedBTC}
-          collateralCurrency={collateralCurrencyValues}
+          collateralCurrency={collateralCurrencyValues as GenericCurrencyValues<CollateralUnit>}
         />
       )}
       <RequestReplacementModal

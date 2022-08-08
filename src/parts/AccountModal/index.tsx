@@ -1,21 +1,22 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
 import { web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
-import InterlayModal, { InterlayModalInnerWrapper } from 'components/UI/InterlayModal';
-import { APP_NAME } from 'config/relay-chains';
-import { KUSAMA, POLKADOT } from 'utils/constants/relay-chain-names';
-import useGetAccounts from 'utils/hooks/api/use-get-accounts';
-import { StoreType } from 'common/types/util.types';
-import { changeAddressAction } from 'common/actions/general.actions';
-import { WalletSourceName } from 'config/wallets';
-import ModalContentSelectWallet from './ModalContent/ModalContentSelectWallet';
-import ModalContentSelectAccount from './ModalContent/ModalContentSelectAccount';
+import { changeAddressAction } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
+import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
+import { APP_NAME } from '@/config/relay-chains';
+import { WalletSourceName } from '@/config/wallets';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
+
+import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';
 import ModalContentNoAccountFound from './ModalContent/ModalContentNoAccountFound';
 import ModalContentNoWalletFound from './ModalContent/ModalContentNoWalletFound';
-import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';
+import ModalContentSelectAccount from './ModalContent/ModalContentSelectAccount';
+import ModalContentSelectWallet from './ModalContent/ModalContentSelectWallet';
 
 interface Props {
   open: boolean;

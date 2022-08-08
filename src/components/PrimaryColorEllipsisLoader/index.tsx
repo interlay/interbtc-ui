@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
-import EllipsisLoader from 'components/EllipsisLoader';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
+import EllipsisLoader from '@/components/EllipsisLoader';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const PrimaryColorEllipsisLoader = (): JSX.Element => (
   <div className={clsx('flex', 'justify-center')}>

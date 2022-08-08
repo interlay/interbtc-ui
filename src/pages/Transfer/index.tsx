@@ -1,21 +1,25 @@
-import * as React from 'react';
 import clsx from 'clsx';
+import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import TransferForm from './TransferForm';
-import CrossChainTransferForm from './CrossChainTransferForm';
-import MainContainer from 'parts/MainContainer';
-import Panel from 'components/Panel';
-import Hr1 from 'components/hrs/Hr1';
+import Hr1 from '@/components/hrs/Hr1';
+import Panel from '@/components/Panel';
+import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
 import InterlayTabGroup, {
-  InterlayTabList,
-  InterlayTabPanels,
   InterlayTab,
-  InterlayTabPanel
-} from 'components/UI/InterlayTabGroup';
-import useQueryParams from 'utils/hooks/use-query-params';
-import useUpdateQueryParameters, { QueryParameters } from 'utils/hooks/use-update-query-parameters';
-import { QUERY_PARAMETERS } from 'utils/constants/links';
+  InterlayTabList,
+  InterlayTabPanel,
+  InterlayTabPanels
+} from '@/components/UI/InterlayTabGroup';
+import WarningBanner from '@/components/WarningBanner';
+import MainContainer from '@/parts/MainContainer';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { POLKADOT } from '@/utils/constants/relay-chain-names';
+import useQueryParams from '@/utils/hooks/use-query-params';
+import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
+
+import CrossChainTransferForm from './CrossChainTransferForm';
+import TransferForm from './TransferForm';
 
 const TAB_IDS = Object.freeze({
   transfer: 'transfer',
@@ -54,7 +58,7 @@ const Transfer = (): JSX.Element | null => {
       case selectedTabId === null:
       case selectedTabId && !tabIdValues.includes(selectedTabId):
         updateQueryParametersRef.current({
-          [QUERY_PARAMETERS.TAB]: TAB_IDS.crossChainTransfer
+          [QUERY_PARAMETERS.TAB]: TAB_IDS.transfer
         });
     }
   }, [selectedTabId]);
@@ -69,6 +73,20 @@ const Transfer = (): JSX.Element | null => {
 
   return (
     <MainContainer>
+      {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
+        <WarningBanner className={clsx('mx-auto', 'md:max-w-xl')} severity='info'>
+          <p>
+            In order to transfer Interlay tokens to Acala or Moonbeam, please use their respective dApps. Send tokens to{' '}
+            <InterlayRouterLink to={{ pathname: 'https://apps.acala.network/bridge' }} target='_blank'>
+              Acala
+            </InterlayRouterLink>{' '}
+            |{' '}
+            <InterlayRouterLink to={{ pathname: 'https://apps.moonbeam.network/moonbeam' }} target='_blank'>
+              Moonbeam
+            </InterlayRouterLink>
+          </p>
+        </WarningBanner>
+      )}
       <Panel className={clsx('mx-auto', 'w-full', 'md:max-w-xl', 'p-10')}>
         <InterlayTabGroup defaultIndex={selectedTabIndex} onChange={handleTabSelect}>
           <InterlayTabList>

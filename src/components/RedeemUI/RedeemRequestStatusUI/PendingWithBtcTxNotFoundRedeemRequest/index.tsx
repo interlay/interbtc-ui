@@ -1,14 +1,14 @@
-import * as React from 'react';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
+import * as React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 
-import RequestWrapper from 'pages/Bridge/RequestWrapper';
-import Timer from 'components/Timer';
-import Ring48, { Ring48Title, Ring48Value } from 'components/Ring48';
-import { BLOCK_TIME } from 'config/parachain';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { StoreType } from 'common/types/util.types';
+import { StoreType } from '@/common/types/util.types';
+import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
+import Timer from '@/components/Timer';
+import { BLOCK_TIME } from '@/config/parachain';
+import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {
   // TODO: should type properly (`Relay`)

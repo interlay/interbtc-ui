@@ -1,7 +1,8 @@
 import { createSubstrateAPI } from '@interlay/interbtc-api';
 
-import { RELAY_CHAIN_URL } from '../../constants';
-import { RelayChainApi } from './';
+import { RELAY_CHAIN_URL } from '@/constants';
+
+import { RelayChainApi } from '.';
 
 const createRelayChainApi = async (): Promise<RelayChainApi | undefined> => {
   // Return api as undefined if relay chain isn't set. This should never happen

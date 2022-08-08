@@ -1,4 +1,4 @@
-import { Story, Meta } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 
 import { VaultCard, VaultCardProps } from '.';
 
@@ -11,10 +11,22 @@ Default.args = {
   pendingRequests: 3,
   apy: '16.23',
   collateralScore: '115.45',
-  link: '#'
+  link: '#',
+  atRisk: false
 };
 
-export { Default };
+const AtRisk = Template.bind({});
+AtRisk.args = {
+  collateralSymbol: 'DOT',
+  wrappedSymbol: 'BTC',
+  pendingRequests: 3,
+  apy: '16.23',
+  collateralScore: '115.45',
+  link: '#',
+  atRisk: true
+};
+
+export { AtRisk, Default };
 
 export default {
   title: 'Components/VaultCard',

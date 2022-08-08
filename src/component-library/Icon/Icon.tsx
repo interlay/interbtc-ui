@@ -1,22 +1,23 @@
-import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
-import { ReactComponent as CheckmarkIcon } from '@material-icons/svg/svg/check/baseline.svg';
-import { IconWrapper } from './Icon.style';
+import { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseCloseIcon } from './Icon.style';
 
-type IconVariant = 'close' | 'checkmark';
+type IconVariant = 'close' | 'checkmark' | 'check-circle';
 
-interface IconProps {
+interface IconProps extends React.ComponentPropsWithRef<'svg'> {
   variant: IconVariant;
 }
 
-const Icon = ({ variant }: IconProps): JSX.Element | null => {
-  return (
-    <IconWrapper>
-      {variant === 'close' ? <CloseIcon /> : variant === 'checkmark' ? <CheckmarkIcon /> : null}
-    </IconWrapper>
-  );
+const Icon = ({ variant, ...rest }: IconProps): JSX.Element => {
+  switch (variant) {
+    case 'close':
+      return <BaseCloseIcon {...rest} />;
+    case 'checkmark':
+      return <BaseCheckmarkIcon {...rest} />;
+    case 'check-circle':
+      return <BaseCheckCircleIcon {...rest} />;
+    default:
+      throw new Error('Something went wrong!');
+  }
 };
-
-Icon.displayName = 'Icon';
 
 export { Icon };
 export type { IconProps, IconVariant };

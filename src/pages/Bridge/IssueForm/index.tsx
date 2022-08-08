@@ -1,52 +1,57 @@
-import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-import { useTranslation } from 'react-i18next';
-import Big from 'big.js';
-import clsx from 'clsx';
 import {
-  Issue,
-  newMonetaryAmount,
+  CurrencyIdLiteral,
   GovernanceUnit,
   InterbtcPrimitivesVaultId,
-  CurrencyIdLiteral
+  Issue,
+  newMonetaryAmount
 } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, ExchangeRate, Currency } from '@interlay/monetary-js';
+import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
+import Big from 'big.js';
+import clsx from 'clsx';
+import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
 
-import AvailableBalanceUI from 'components/AvailableBalanceUI';
-import SubmitButton from 'components/SubmitButton';
-import FormTitle from 'components/FormTitle';
-import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
-import TokenField from 'components/TokenField';
-import PriceInfo from 'components/PriceInfo';
-import ParachainStatusInfo from 'pages/Bridge/ParachainStatusInfo';
-import PrimaryColorEllipsisLoader from 'components/PrimaryColorEllipsisLoader';
-import ErrorModal from 'components/ErrorModal';
-import ErrorFallback from 'components/ErrorFallback';
-import Hr2 from 'components/hrs/Hr2';
-import InformationTooltip from 'components/tooltips/InformationTooltip';
+import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
+import { showAccountModalAction } from '@/common/actions/general.actions';
+import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { VaultApiType } from '@/common/types/vault.types';
+import { displayMonetaryAmount, getRandomVaultIdWithCapacity, getUsdAmount } from '@/common/utils/utils';
+import AvailableBalanceUI from '@/components/AvailableBalanceUI';
+import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
+import ErrorFallback from '@/components/ErrorFallback';
+import ErrorModal from '@/components/ErrorModal';
+import FormTitle from '@/components/FormTitle';
+import Hr2 from '@/components/hrs/Hr2';
+import PriceInfo from '@/components/PriceInfo';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/components/SubmitButton';
+import TokenField from '@/components/TokenField';
+import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import Vaults from '@/components/Vaults';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
   GOVERNANCE_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon,
-  GovernanceTokenLogoIcon
-} from 'config/relay-chains';
-import { BLOCKS_BEHIND_LIMIT } from 'config/parachain';
-import { POLKADOT, KUSAMA } from 'utils/constants/relay-chain-names';
-import { displayMonetaryAmount, getUsdAmount, getRandomVaultIdWithCapacity } from 'common/utils/utils';
-import STATUSES from 'utils/constants/statuses';
-import { COLLATERAL_TOKEN_ID_LITERAL } from 'utils/constants/currency';
-import genericFetcher, { GENERIC_FETCHER } from 'services/fetchers/generic-fetcher';
-import { ParachainStatus, StoreType } from 'common/types/util.types';
-import { showAccountModalAction } from 'common/actions/general.actions';
-import { ReactComponent as BitcoinLogoIcon } from 'assets/img/bitcoin-logo.svg';
-import Vaults from 'components/Vaults';
-import { VaultApiType } from 'common/types/vault.types';
-import Checkbox, { CheckboxLabelSide } from 'components/Checkbox';
+  GovernanceTokenLogoIcon,
+  WRAPPED_TOKEN_SYMBOL,
+  WrappedTokenLogoIcon
+} from '@/config/relay-chains';
+import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
+import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+import { ForeignAssetIdLiteral } from '@/types/currency';
+import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import STATUSES from '@/utils/constants/statuses';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 
 const BTC_AMOUNT = 'btc-amount';
 const VAULT_SELECTION = 'vault-selection';
@@ -74,18 +79,19 @@ type IssueFormData = {
 const IssueForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const prices = useGetPrices();
 
   const handleError = useErrorHandler();
 
+  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+    (state: StoreType) => state.general
+  );
+
   const {
-    bridgeLoaded,
-    address,
-    bitcoinHeight,
-    btcRelayHeight,
-    prices,
-    parachainStatus,
+    governanceTokenBalanceIdle,
+    governanceTokenBalanceLoading,
     governanceTokenBalance
-  } = useSelector((state: StoreType) => state.general);
+  } = useGovernanceTokenBalance();
 
   const {
     register,
@@ -138,7 +144,12 @@ const IssueForm = (): JSX.Element | null => {
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [theFeeRate, theDepositRate, theDustValue, theBtcToGovernanceToken] = await Promise.all([
+        const [
+          theFeeRateResult,
+          theDepositRateResult,
+          theDustValueResult,
+          theBtcToGovernanceTokenResult
+        ] = await Promise.allSettled([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
           window.bridge.fee.getIssueFee(),
@@ -148,16 +159,38 @@ const IssueForm = (): JSX.Element | null => {
         ]);
         setStatus(STATUSES.RESOLVED);
 
-        setFeeRate(theFeeRate);
-        setDepositRate(theDepositRate);
-        setDustValue(theDustValue);
-        setBTCToGovernanceTokenRate(theBtcToGovernanceToken);
+        if (theFeeRateResult.status === 'rejected') {
+          throw new Error(theFeeRateResult.reason);
+        }
+
+        if (theDepositRateResult.status === 'rejected') {
+          throw new Error(theDepositRateResult.reason);
+        }
+
+        if (theDustValueResult.status === 'rejected') {
+          throw new Error(theDustValueResult.reason);
+        }
+
+        if (theBtcToGovernanceTokenResult.status === 'rejected') {
+          setError(BTC_AMOUNT, {
+            type: 'validate',
+            message: t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
+          });
+        }
+
+        if (theBtcToGovernanceTokenResult.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(theBtcToGovernanceTokenResult.value);
+        }
+
+        setFeeRate(theFeeRateResult.value);
+        setDepositRate(theDepositRateResult.value);
+        setDustValue(theDustValueResult.value);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
       }
     })();
-  }, [bridgeLoaded, dispatch, handleError]);
+  }, [bridgeLoaded, dispatch, handleError, setError, t]);
 
   React.useEffect(() => {
     // deselect checkbox when required btcAmount exceeds capacity
@@ -184,10 +217,17 @@ const IssueForm = (): JSX.Element | null => {
     }
   }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
 
-  if (status === STATUSES.IDLE || status === STATUSES.PENDING || requestLimitsIdle || requestLimitsLoading) {
+  if (
+    status === STATUSES.IDLE ||
+    status === STATUSES.PENDING ||
+    requestLimitsIdle ||
+    requestLimitsLoading ||
+    governanceTokenBalanceIdle ||
+    governanceTokenBalanceLoading
+  ) {
     return <PrimaryColorEllipsisLoader />;
   }
-  if (requestLimits === undefined) {
+  if (requestLimits === undefined || governanceTokenBalance === undefined) {
     throw new Error('Something went wrong!');
   }
 
@@ -198,7 +238,7 @@ const IssueForm = (): JSX.Element | null => {
 
       const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
       const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
-      if (governanceTokenBalance.lte(minRequiredGovernanceTokenAmount)) {
+      if (governanceTokenBalance.free.lte(minRequiredGovernanceTokenAmount)) {
         return t('insufficient_funds_governance_token', {
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
         });
@@ -227,6 +267,10 @@ const IssueForm = (): JSX.Element | null => {
 
       if (btcAmount === undefined) {
         return 'Invalid BTC amount input!';
+      }
+
+      if (isOracleOffline) {
+        return t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
       }
 
       return undefined;
@@ -301,6 +345,9 @@ const IssueForm = (): JSX.Element | null => {
     const accountSet = !!address;
     const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
 
+    // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
+    const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
+
     return (
       <>
         <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
@@ -312,17 +359,19 @@ const IssueForm = (): JSX.Element | null => {
           <div>
             <TokenField
               id={BTC_AMOUNT}
-              name={BTC_AMOUNT}
               label='BTC'
               min={0}
-              ref={register({
+              {...register(BTC_AMOUNT, {
                 required: {
                   value: true,
                   message: t('issue_page.enter_valid_amount')
                 },
                 validate: (value) => validateForm(value)
               })}
-              approxUSD={`≈ $ ${getUsdAmount(parsedBTCAmount || BitcoinAmount.zero, prices.bitcoin?.usd)}`}
+              approxUSD={`≈ $ ${getUsdAmount(
+                parsedBTCAmount || BitcoinAmount.zero,
+                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+              )}`}
               error={!!errors[BTC_AMOUNT]}
               helperText={errors[BTC_AMOUNT]?.message}
             />
@@ -369,7 +418,7 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(bridgeFee, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -394,7 +443,7 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(securityDeposit)}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(securityDeposit, prices.governanceToken?.usd)}
+            approxUSD={getUsdAmount(securityDeposit, getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd)}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -419,7 +468,10 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(extraRequiredCollateralTokenAmount, prices.governanceToken?.usd)}
+            approxUSD={getUsdAmount(
+              extraRequiredCollateralTokenAmount,
+              getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+            )}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -445,7 +497,7 @@ const IssueForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(wrappedTokenAmount)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(wrappedTokenAmount, prices.bitcoin?.usd)}
+            approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <SubmitButton
             disabled={

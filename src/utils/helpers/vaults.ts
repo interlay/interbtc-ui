@@ -1,9 +1,9 @@
+import { CollateralUnit, VaultExt, VaultStatusExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, BitcoinUnit, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { TFunction } from 'react-i18next';
-import { VaultExt, VaultStatusExt, CollateralUnit } from '@interlay/interbtc-api';
-import { BitcoinAmount, BitcoinUnit, MonetaryAmount, Currency } from '@interlay/monetary-js';
 
-import { BTCToCollateralTokenRate } from 'types/currency';
+import { BTCToCollateralTokenRate } from '@/types/currency';
 
 const getCollateralization = (
   collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
@@ -49,9 +49,6 @@ const getVaultStatusLabel = (
   }
   if (vaultExt.status === VaultStatusExt.Inactive) {
     statusLabel = t('dashboard.vault.inactive');
-  }
-  if (vaultExt.status === VaultStatusExt.CommittedTheft) {
-    statusLabel = t('dashboard.vault.theft');
   }
   if (vaultExt.status === VaultStatusExt.Liquidated) {
     statusLabel = t('dashboard.vault.liquidated');
