@@ -17,7 +17,7 @@ interface NewVaultsTableProps {
   onClickAddVault: (data: NewVaultsTableRow) => void;
 }
 
-const columnLabels = [
+const columns = [
   { name: 'Vault Pair', uid: 'pair' },
   { name: 'Min Collateral', uid: 'min-collateral' },
   { name: 'Collateral Rate', uid: 'collateral-rate' },
@@ -51,7 +51,7 @@ const NewVaultsTable = ({ data, onClickAddVault }: NewVaultsTableProps): JSX.Ele
 
   return (
     <Wrapper variant='bordered'>
-      <Table columns={columnLabels} rows={rows} />
+      <Table columns={columns} rows={rows} />
     </Wrapper>
   );
 };
