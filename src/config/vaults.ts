@@ -8,7 +8,7 @@ let VAULT_GOVERNANCE: GovernanceIdLiteral;
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
   case POLKADOT: {
-    VAULT_COLLATERAL = [CurrencyIdLiteral.DOT, CurrencyIdLiteral.INTR];
+    VAULT_COLLATERAL = [CurrencyIdLiteral.DOT];
     VAULT_WRAPPED = CurrencyIdLiteral.INTERBTC;
     VAULT_GOVERNANCE = CurrencyIdLiteral.INTR;
     break;
