@@ -12,6 +12,7 @@ import {
 } from '@/config/relay-chains';
 import PageTitle from '@/parts/PageTitle';
 import TimerIncrement from '@/parts/TimerIncrement';
+import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -27,6 +28,7 @@ const Vaults = (): JSX.Element => {
   const relayChainNativeTokenPriceInUSD = getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd;
   const governanceTokenPriceInUSD = getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd;
 
+  // TODO: Refactor to use vault config as a source for supported collateral currencies
   const collaterals = React.useMemo(
     () => [
       {
@@ -34,11 +36,15 @@ const Vaults = (): JSX.Element => {
         collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
         collateralTokenPriceInUSD: relayChainNativeTokenPriceInUSD
       },
-      {
-        collateralToken: GOVERNANCE_TOKEN as CollateralToken,
-        collateralTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
-        collateralTokenPriceInUSD: governanceTokenPriceInUSD
-      }
+      ...(process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA
+        ? [
+            {
+              collateralToken: GOVERNANCE_TOKEN as CollateralToken,
+              collateralTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
+              collateralTokenPriceInUSD: governanceTokenPriceInUSD
+            }
+          ]
+        : [])
     ],
     [relayChainNativeTokenPriceInUSD, governanceTokenPriceInUSD]
   );
