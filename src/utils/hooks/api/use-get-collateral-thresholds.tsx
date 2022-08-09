@@ -7,7 +7,7 @@ import {
 import Big from 'big.js';
 import { useQuery, UseQueryResult } from 'react-query';
 
-import { VAULT_COLLATERAL } from '../../../config/vaults';
+import { VAULT_COLLATERAL } from '@/config/vaults';
 
 // TODO: Refactor with currencies update
 type AllCollateralThresholds = { [currencySymbol in CollateralIdLiteral]: CollateralThresholds };

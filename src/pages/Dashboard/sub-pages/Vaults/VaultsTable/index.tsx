@@ -29,6 +29,7 @@ import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import { VAULT_COLLATERAL } from '@/config/vaults';
 import * as constants from '@/constants';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
@@ -37,9 +38,7 @@ import { BTCToCollateralTokenRate } from '@/types/currency';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getCollateralization, getVaultStatusLabel } from '@/utils/helpers/vaults';
-
-import { VAULT_COLLATERAL } from '../../../../../config/vaults';
-import { useGetCollateralThresholds } from '../../../../../utils/hooks/api/use-get-collateral-thresholds';
+import { useGetCollateralThresholds } from '@/utils/hooks/api/use-get-collateral-thresholds';
 
 interface CollateralizationCellProps {
   settledCollateralization: Big | undefined;
