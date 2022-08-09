@@ -126,6 +126,12 @@ const theme = {
         }
       }
     }
+  },
+  spinner: {
+    indeterminate: {
+      color: 'var(--colors-indeterminate-color)',
+      bg: 'var(--colors-indeterminate-bg)'
+    }
   }
 };
 
