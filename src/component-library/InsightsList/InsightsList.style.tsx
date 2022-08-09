@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 import { Card } from '../Card';
 import { theme } from '../theme';
-import { breakpoints } from '../utils/breakpoints';
 
 type InsightsListItemWrapperProps = { hasInfo?: boolean };
 
@@ -18,7 +17,7 @@ export const InsightsListItemWrapper = styled.div<InsightsListItemWrapperProps>`
     border-bottom: ${theme.border.default};
   }
 
-  @media ${breakpoints.large} {
+  @media (min-width: 74em) {
     &:not(:last-of-type) {
       padding-bottom: 0;
       padding-right: ${theme.spacing.spacing8};
@@ -32,7 +31,7 @@ export const InsightsListWrapper = styled(Card)`
   justify-content: space-between;
   gap: ${theme.spacing.spacing8};
 
-  @media ${breakpoints.large} {
+  @media (min-width: 74em) {
     flex-direction: row;
   }
 `;
@@ -45,7 +44,7 @@ export const InsightTitle = styled.h2`
   margin-bottom: ${theme.spacing.spacing2};
 `;
 
-export const InsightLabel = styled.p`
+export const InsightLabel = styled.h3`
   color: ${theme.colors.textSecondary};
   font-weight: ${theme.fontWeight.bold};
   font-size: ${theme.text.xl4};
