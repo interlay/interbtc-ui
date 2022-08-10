@@ -126,6 +126,8 @@ const theme = {
   },
   score: {
     bar: {
+      bg:
+        'linear-gradient(270deg, var(--colors-success-dark) 0%, var(--colors-warning-dark) 50%, var(--colors-error-dark) 100%)',
       height: '10px',
       radius: 'var(--rounded-full)',
       indicator: {

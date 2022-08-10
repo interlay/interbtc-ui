@@ -38,7 +38,7 @@ const StyledSublabel = styled.span<SublabelProps>`
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
   font-size: ${theme.text.xs};
   line-height: ${(props) => (props.isDefault ? theme.lineHeight.lg : theme.lineHeight.s)};
-  color: ${(props) => (props.status ? theme.alert.status[props.status] : theme.colors.textTertiary)};
+  color: ${(props) => (props.status ? theme.alert.status[props.status] : theme.colors.textPrimary)};
 `;
 
 type ScoreProps = {
@@ -58,14 +58,25 @@ type BarProps = {
   width: number;
 };
 
-type SegmentProps = {
-  status: Status;
-};
-
 const StyledBar = styled.div<BarProps>`
   display: flex;
   position: relative;
   height: ${theme.score.bar.height};
+  background: ${theme.score.bar.bg};
+  border-radius: ${theme.score.bar.radius};
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 50%;
+    top: -8px;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 1px dashed #ffffff;
+    border-right: 1px dashed #ffffff;
+    z-index: 1;
+  }
 
   &:after {
     content: '';
@@ -80,23 +91,8 @@ const StyledBar = styled.div<BarProps>`
     transform: translate(-50%);
     transition: left ${theme.transition.duration}ms;
     will-change: left;
-    margin-top: ${theme.spacing.spacing2};
+    margin-top: 16px;
   }
 `;
 
-const StyledSegment = styled.span<SegmentProps>`
-  background-color: ${(props) => theme.alert.status[props.status]};
-  flex: 1;
-
-  &:first-child {
-    border-bottom-left-radius: ${theme.score.bar.radius};
-    border-top-left-radius: ${theme.score.bar.radius};
-  }
-
-  &:last-child {
-    border-bottom-right-radius: ${theme.score.bar.radius};
-    border-top-right-radius: ${theme.score.bar.radius};
-  }
-`;
-
-export { StyledBar, StyledLabel, StyledLabelWrapper, StyledScore, StyledScoreWrapper, StyledSegment, StyledSublabel };
+export { StyledBar, StyledLabel, StyledLabelWrapper, StyledScore, StyledScoreWrapper, StyledSublabel };
