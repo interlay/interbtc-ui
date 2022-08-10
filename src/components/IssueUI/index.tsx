@@ -137,7 +137,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.parachain_block')}
             </span>
-            <span className='font-medium'>{issue.request.height.active}</span>
+            <span className='font-medium'>{issue.request.height.absolute}</span>
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
