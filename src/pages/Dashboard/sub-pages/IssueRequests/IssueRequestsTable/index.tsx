@@ -99,6 +99,14 @@ const IssueRequestsTable = (): JSX.Element => {
         }
       },
       {
+        Header: t('user'),
+        accessor: 'userParachainAddress',
+        classNames: ['text-center'],
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <>{value}</>;
+        }
+      },
+      {
         Header: t('issue_page.vault_dot_address'),
         accessor: 'vault',
         classNames: ['text-left'],
