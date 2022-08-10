@@ -124,7 +124,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
         classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
-          return <>{issue.request.height.active}</>;
+          return <>{issue.request.height.absolute}</>;
         }
       },
       {
@@ -151,11 +151,11 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           let height;
           if (issue.execution) {
-            height = issue.execution.height.active;
+            height = issue.execution.height.absolute;
           } else if (issue.cancellation) {
-            height = issue.cancellation.height.active;
+            height = issue.cancellation.height.absolute;
           } else {
-            height = issue.request.height.active;
+            height = issue.request.height.absolute;
           }
 
           return <>{height}</>;
