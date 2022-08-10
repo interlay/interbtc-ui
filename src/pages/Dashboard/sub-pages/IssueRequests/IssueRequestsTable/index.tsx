@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { displayMonetaryAmount, formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -20,7 +20,7 @@ import InterlayTable, {
   InterlayTr
 } from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
-import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
+import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
@@ -120,6 +120,31 @@ const IssueRequestsTable = (): JSX.Element => {
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: string }) {
           return <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>{shortAddress(value)}</ExternalLink>;
+        }
+      },
+      {
+        Header: t('issue_page.btc_transaction'),
+        classNames: ['text-right'],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issueRequest } }: any) {
+          return (
+            <>
+              {issueRequest.backingPayment.btcTxId ? (
+                <ExternalLink
+                  href={`${BTC_EXPLORER_TRANSACTION_API}${issueRequest.backingPayment.btcTxId}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                >
+                  {shortTxId(issueRequest.backingPayment.btcTxId)}
+                </ExternalLink>
+              ) : issueRequest.status === IssueStatus.Expired || issueRequest.status === IssueStatus.Cancelled ? (
+                t('redeem_page.failed')
+              ) : (
+                `${t('pending')}...`
+              )}
+            </>
+          );
         }
       },
       {
