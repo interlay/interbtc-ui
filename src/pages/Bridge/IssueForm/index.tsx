@@ -229,7 +229,7 @@ const IssueForm = (): JSX.Element | null => {
 
   if (status === STATUSES.RESOLVED) {
     const validateForm = (value: string): string | undefined => {
-      if (!governanceTokenBalance) return;
+      if (governanceTokenBalance === undefined) return;
 
       const numericValue = Number(value || '0');
       const btcAmount = BitcoinAmount.from.BTC(numericValue);
