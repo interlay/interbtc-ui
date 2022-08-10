@@ -32,7 +32,7 @@ const CompletedIssueRequest = ({ request }: Props): JSX.Element => {
       </p>
       <Ring48 className={getColorShade('green', 'ring')}>
         <Ring48Title>{t('issue_page.in_parachain_block')}</Ring48Title>
-        <Ring48Value className={getColorShade('green')}>{request.execution.height.active}</Ring48Value>
+        <Ring48Value className={getColorShade('green')}>{request.execution.height.absolute}</Ring48Value>
       </Ring48>
       <ExternalLink className='text-sm' href={getPolkadotLink(request.execution.height.absolute)}>
         {t('issue_page.view_parachain_block')}

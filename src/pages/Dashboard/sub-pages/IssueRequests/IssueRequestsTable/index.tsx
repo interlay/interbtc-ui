@@ -73,11 +73,11 @@ const IssueRequestsTable = (): JSX.Element => {
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           let height;
           if (issue.execution) {
-            height = issue.execution.height.active;
+            height = issue.execution.height.absolute;
           } else if (issue.cancellation) {
-            height = issue.cancellation.height.active;
+            height = issue.cancellation.height.absolute;
           } else {
-            height = issue.request.height.active;
+            height = issue.request.height.absolute;
           }
 
           return <>{height}</>;
