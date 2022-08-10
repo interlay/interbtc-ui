@@ -87,11 +87,7 @@ const IssueForm = (): JSX.Element | null => {
     (state: StoreType) => state.general
   );
 
-  const {
-    governanceTokenBalanceIdle,
-    governanceTokenBalanceLoading,
-    governanceTokenBalance
-  } = useGovernanceTokenBalance();
+  const { governanceTokenBalanceLoading, governanceTokenBalance } = useGovernanceTokenBalance();
 
   const {
     register,
@@ -222,17 +218,19 @@ const IssueForm = (): JSX.Element | null => {
     status === STATUSES.PENDING ||
     requestLimitsIdle ||
     requestLimitsLoading ||
-    governanceTokenBalanceIdle ||
     governanceTokenBalanceLoading
   ) {
     return <PrimaryColorEllipsisLoader />;
   }
-  if (requestLimits === undefined || governanceTokenBalance === undefined) {
+
+  if (requestLimits === undefined) {
     throw new Error('Something went wrong!');
   }
 
   if (status === STATUSES.RESOLVED) {
     const validateForm = (value: string): string | undefined => {
+      if (!governanceTokenBalance) return;
+
       const numericValue = Number(value || '0');
       const btcAmount = BitcoinAmount.from.BTC(numericValue);
 
@@ -347,6 +345,9 @@ const IssueForm = (): JSX.Element | null => {
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
+
+    // TODO: `parachainStatus` and `address` should be checked at upper levels
+    const isSubmitBtnDisabled = accountSet ? parachainStatus !== ParachainStatus.Running || !address : false;
 
     return (
       <>
@@ -500,10 +501,7 @@ const IssueForm = (): JSX.Element | null => {
             approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
           />
           <SubmitButton
-            disabled={
-              // TODO: `parachainStatus` and `address` should be checked at upper levels
-              parachainStatus !== ParachainStatus.Running || !address
-            }
+            disabled={isSubmitBtnDisabled}
             pending={submitStatus === STATUSES.PENDING}
             onClick={handleConfirmClick}
           >
