@@ -1,10 +1,8 @@
 import { IssueStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, getUsdAmount, shortAddress } from '@/common/utils/utils';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
@@ -43,7 +41,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const { address } = useSelector((state: StoreType) => state.general);
+  const destinationAddress = issue.userParachainAddress;
 
   const receivedWrappedTokenAmount: WrappedTokenAmount = issue.execution
     ? issue.execution.amountWrapped
@@ -126,7 +124,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.destination_address')}
             </span>
-            <span className='font-medium'>{shortAddress(address)}</span>
+            <span className='font-medium'>{shortAddress(destinationAddress)}</span>
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
