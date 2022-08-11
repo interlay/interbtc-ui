@@ -10,7 +10,7 @@ interface BaseLoadingSpinnerProps {
 const BaseLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
   width: ${(props) => props.$diameter}px;
   height: ${(props) => props.$diameter}px;
-  border: ${(props) => props.$thickness}px solid ${theme.cta.secondary.bg};
+  border: ${(props) => props.$thickness}px solid ${theme.spinner.determinate.bg};
   border-radius: 50%;
   position: relative;
   transform: rotate(45deg);
@@ -22,10 +22,11 @@ const BaseLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
     box-sizing: border-box;
     inset: -${(props) => props.$thickness}px;
     border-radius: 50%;
-    border: ${(props) => props.$thickness}px solid ${theme.cta.primary.bg};
-    animation: prixClipFix 2s infinite linear;
+    border: ${(props) => props.$thickness}px solid ${theme.spinner.determinate.color};
+    animation: loadDeterminate 2s infinite linear;
   }
-  @keyframes prixClipFix {
+
+  @keyframes loadDeterminate {
     0% {
       clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
     }
@@ -52,7 +53,7 @@ const BaseIndeterminateLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
   border-bottom: ${(props) => props.$thickness}px solid ${theme.spinner.indeterminate.bg};
   border-left: ${(props) => props.$thickness}px solid ${theme.spinner.indeterminate.color};
   transform: translateZ(0);
-  animation: load8 1.1s infinite linear;
+  animation: loadIndeterminate 1.1s infinite linear;
 
   &,
   &:after {
@@ -61,7 +62,7 @@ const BaseIndeterminateLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
     height: ${(props) => props.$diameter}px;
   }
 
-  @-webkit-keyframes load8 {
+  @-webkit-keyframes loadIndeterminate {
     0% {
       transform: rotate(0deg);
     }
@@ -70,7 +71,7 @@ const BaseIndeterminateLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
     }
   }
 
-  @keyframes load8 {
+  @keyframes loadIndeterminate {
     0% {
       transform: rotate(0deg);
     }

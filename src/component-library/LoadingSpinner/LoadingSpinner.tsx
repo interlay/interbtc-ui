@@ -19,7 +19,6 @@ const LoadingSpinner = ({
   diameter = 48,
   thickness = 10,
   variant = 'determinate',
-  // color = 'primary',
   ...props
 }: LoadingSpinnerProps): JSX.Element => {
   const commonProps: LoadingSpinnerProps & BaseLoadingSpinnerProps = {
