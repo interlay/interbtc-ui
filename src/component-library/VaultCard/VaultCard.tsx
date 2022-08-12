@@ -48,7 +48,7 @@ const VaultCard = ({
       </StyledDl>
       <StyledDl>
         <DlItem>
-          <dt>Current APY</dt>
+          <dt>Current APR</dt>
           <dd>≈{apy}%</dd>
         </DlItem>
         <DlItem>
