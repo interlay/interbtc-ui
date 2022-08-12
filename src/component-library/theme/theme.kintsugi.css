@@ -38,4 +38,7 @@
   /* Score Bar */
   --colors-score-bar-indicator-color: var(--colors-yellow);
   --colors-score-bar-separator-color: var(--colors-neutral-white);
+  /* Progress Circle */
+  --color-progress-circle-mask: var(--colors-mid-blue);
+  --color-progress-circle-fill: var(--colors-yellow);
 }
