@@ -15,6 +15,7 @@
     "@react-aria/focus": "^3.6.1",
     "@react-aria/meter": "^3.2.1",
     "@react-aria/numberfield": "^3.2.1",
+    "@react-aria/progress": "^3.3.0",
     "@react-aria/table": "^3.4.0",
     "@react-aria/tabs": "^3.2.1",
     "@react-aria/utils": "^3.13.1",
