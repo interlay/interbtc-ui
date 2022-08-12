@@ -158,6 +158,12 @@ const theme = {
       bg: 'var(--colors-indeterminate-bg)'
     }
   },
+  progress: {
+    circle: {
+      mask: 'var(--color-progress-circle-mask)',
+      fill: 'var(--color-progress-circle-fill)'
+    }
+  },
   overlay: {
     bg: 'var(--colors-neutral-black-30)'
   },
