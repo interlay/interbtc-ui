@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
+import { Sizes } from '../utils/prop-types';
 
 interface CTAProps {
   $fullWidth: boolean;
+  $size: Sizes;
 }
 
 const BaseCTA = styled.button<CTAProps>`
@@ -11,10 +13,10 @@ const BaseCTA = styled.button<CTAProps>`
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border: none;
   border-radius: ${theme.rounded.md};
-  font-size: ${theme.text.base};
+  font-size: ${(props) => theme.cta[props.$size].text};
   font-weight: ${theme.fontWeight.medium};
-  line-height: ${theme.lineHeight.base};
-  padding: ${theme.spacing.spacing3} ${theme.spacing.spacing10};
+  line-height: ${(props) => theme.cta[props.$size].lineHeight};
+  padding: ${(props) => theme.cta[props.$size].padding};
   text-decoration: none;
   width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
   opacity: ${(props) => (props.disabled ? '50%' : '100%')};

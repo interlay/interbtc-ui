@@ -90,6 +90,16 @@ const theme = {
       text: 'var(--colors-cta-outlined-text)',
       border: '1px solid var(--colors-cta-outlined-border)',
       bgHover: 'var(--colors-cta-outlined-hover)'
+    },
+    small: {
+      padding: 'var(--spacing-2)',
+      text: 'var(--text-xs)',
+      lineHeight: 'var(--line-height-s)'
+    },
+    medium: {
+      padding: 'var(--spacing-3) var(--spacing-10)',
+      text: 'var(--text-base)',
+      lineHeight: 'var(--line-height-base)'
     }
   },
   table: {
