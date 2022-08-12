@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { BaseInput, Wrapper } from './Input.style';
+import { Adornment, BaseInput, Wrapper } from './Input.style';
 
 type Props = {
   startAdornment?: React.ReactNode;
@@ -14,10 +14,15 @@ type InputProps = Props & NativeAttrs;
 // TODO: needs to be implemented with react-aria
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ startAdornment, endAdornment, className, style, ...props }, ref): JSX.Element => (
-    <Wrapper className={className} style={style}>
-      {startAdornment}
+    <Wrapper
+      $hasStartAdornment={!!startAdornment}
+      $hasEndAdornment={!!endAdornment}
+      className={className}
+      style={style}
+    >
+      <Adornment>{startAdornment}</Adornment>
       <BaseInput ref={ref} type='text' {...props} />
-      {endAdornment}
+      <Adornment>{endAdornment}</Adornment>
     </Wrapper>
   )
 );

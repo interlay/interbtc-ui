@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react';
 
-import { Input, InputAdornment, InputProps } from '.';
+import { Input, InputProps } from '.';
 
 const Template: Story<InputProps> = (args) => <Input {...args} />;
 
@@ -13,11 +13,17 @@ Default.args = {
 
 const EndAdornment = Template.bind({});
 EndAdornment.args = {
-  endAdornment: <InputAdornment>Coin</InputAdornment>,
+  endAdornment: 'Coin',
   placeholder: 'placeholder'
 };
 
-export { Default, EndAdornment };
+const StartAdornment = Template.bind({});
+StartAdornment.args = {
+  startAdornment: 'Coin',
+  placeholder: 'placeholder'
+};
+
+export { Default, EndAdornment, StartAdornment };
 
 export default {
   title: 'Forms/Input',

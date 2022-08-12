@@ -31,7 +31,12 @@ const BaseInput = styled.input`
   }
 `;
 
-const Wrapper = styled.div`
+type WrapperProps = {
+  $hasStartAdornment: boolean;
+  $hasEndAdornment: boolean;
+};
+
+const Wrapper = styled.div<WrapperProps>`
   box-shadow: ${theme.boxShadow.default};
   border-radius: ${theme.rounded.md};
   border: ${theme.border.default};
@@ -39,7 +44,8 @@ const Wrapper = styled.div`
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding-right: ${theme.spacing.spacing2};
+  padding-left: ${(props) => props.$hasStartAdornment && theme.spacing.spacing2};
+  padding-right: ${(props) => props.$hasEndAdornment && theme.spacing.spacing2};
 
   // TODO: remove when implemented with react-aria
   &:focus-within {
@@ -49,11 +55,9 @@ const Wrapper = styled.div`
 
 const Adornment = styled.div`
   display: flex;
-  height: 0.01em;
-  max-height: 2em;
   align-items: center;
-  white-space: nowrap;
-  margin-left: 8px;
+  height: 100%;
+  position: relative;
 `;
 
 export { Adornment, BaseInput, Wrapper };
