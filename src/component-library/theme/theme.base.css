@@ -53,8 +53,11 @@
   --colors-shared-red: #cb5458;
 
   --colors-error: #ef4444;
+  --colors-error-dark: #ff0000;
   --colors-warning: #ff9900;
+  --colors-warning-dark: #ffb100;
   --colors-success: #a2e75e;
+  --colors-success-dark: #61ff00;
 
   --text-xs: 0.75rem;
   --text-s: 0.875rem;

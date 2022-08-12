@@ -8,13 +8,10 @@ import {
   StyledLabelWrapper,
   StyledScore,
   StyledScoreWrapper,
-  StyledSegment,
   StyledSublabel
 } from './CollateralScore.style';
 
 type StatusRanges = Record<Status, { min: number; max: number }>;
-
-const segmentPercentage = 33.33;
 
 const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 2 };
 
@@ -33,17 +30,15 @@ const getBarPercentage = (status: Status, value: number, ranges: StatusRanges): 
   const segmentMaxValue = ranges[status].max - ranges[status].min;
 
   // We calculate against the percentage that each segment occupies from the parent
-  const rangePercentage = (segmentValue / segmentMaxValue) * segmentPercentage;
-
   switch (status) {
     case 'error':
-      return rangePercentage;
+      return (segmentValue / segmentMaxValue) * 25;
     case 'warning':
-      // 33.33 + (current segment percentage)
-      return segmentPercentage + rangePercentage;
+      // error + (current segment percentage)
+      return 25 + (segmentValue / segmentMaxValue) * 50;
     case 'success':
-      // 66.66 + (current segment percentage)
-      return segmentPercentage * 2 + rangePercentage;
+      // error + warning + (current segment percentage)
+      return 75 + (segmentValue / segmentMaxValue) * 25;
   }
 };
 
@@ -101,11 +96,7 @@ const CollateralScore = ({
           </StyledSublabel>
         </StyledScoreWrapper>
       </StyledLabelWrapper>
-      <StyledBar width={barPercentage} {...props}>
-        <StyledSegment status='error' />
-        <StyledSegment status='warning' />
-        <StyledSegment status='success' />
-      </StyledBar>
+      <StyledBar width={barPercentage} {...props} />
     </div>
   );
 };

@@ -126,6 +126,13 @@ const theme = {
   },
   score: {
     bar: {
+      status: {
+        error: 'var(--colors-error-dark)',
+        warning: 'var(--colors-warning-dark)',
+        success: 'var(--colors-success-dark)'
+      },
+      bg:
+        'linear-gradient(270deg, var(--colors-success-dark) 0%, var(--colors-warning-dark) 50%, var(--colors-error-dark) 100%)',
       height: '10px',
       radius: 'var(--rounded-full)',
       indicator: {
@@ -134,6 +141,9 @@ const theme = {
           right: '10px solid transparent',
           bottom: '18px solid var(--colors-score-bar-indicator-color)'
         }
+      },
+      separator: {
+        color: 'var(--colors-score-bar-separator-color)'
       }
     }
   },

@@ -30,9 +30,10 @@
   --colors-tabs-text: var(--colors-neutral-black-9);
   --colors-tabs-active-color: var(--colors-light-blue);
   --colors-tabs-active-bg: var(--colors-lighter-blue);
-  /* Score Bar */
-  --colors-score-bar-indicator-color: var(--colors-neutral-black);
   /* Loading Spinner */
   --colors-indeterminate-color: var(--colors-light-blue);
   --colors-indeterminate-bg: var(--colors-lighter-blue);
+  /* Score Bar */
+  --colors-score-bar-indicator-color: var(--colors-light-blue);
+  --colors-score-bar-separator-color: var(--colors-neutral-black);
 }
