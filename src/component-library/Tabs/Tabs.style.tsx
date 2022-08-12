@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 
+import { hideScrollbar } from '../css';
 import { theme } from '../theme';
+
+const StyledTabs = styled.div`
+  display: block;
+  width: 100%;
+`;
 
 const TabListWrapper = styled.div`
   display: inline-block;
@@ -10,6 +16,9 @@ const TabListWrapper = styled.div`
   border-radius: ${theme.rounded.md};
   border: ${theme.tabs.border};
   z-index: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  ${hideScrollbar()}
 `;
 
 const TabList = styled.div`
@@ -63,4 +72,4 @@ const TabSelection = styled.div<TabSelectionProps>`
   }`}
 `;
 
-export { StyledTab, TabList, TabListWrapper, TabSelection };
+export { StyledTab, StyledTabs, TabList, TabListWrapper, TabSelection };

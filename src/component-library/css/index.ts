@@ -25,4 +25,13 @@ const spaceY = (level: keyof typeof theme.spacing): FlattenInterpolation<Default
   }
 `;
 
-export { spaceX, spaceY };
+const hideScrollbar = (): FlattenInterpolation<DefaultTheme> => css`
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+`;
+
+export { hideScrollbar, spaceX, spaceY };
