@@ -136,6 +136,9 @@ const theme = {
           right: '10px solid transparent',
           bottom: '18px solid var(--colors-score-bar-indicator-color)'
         }
+      },
+      separator: {
+        color: 'var(--colors-score-bar-separator-color)'
       }
     }
   },

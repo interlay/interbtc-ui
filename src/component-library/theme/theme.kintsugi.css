@@ -32,12 +32,10 @@
   --colors-tabs-text: var(--colors-neutral-lighter-grey);
   --colors-tabs-active-color: var(--colors-blue);
   --colors-tabs-active-bg: var(--colors-neutral-white);
-<<<<<<< HEAD
   /* Loading Spinner */
   --colors-indeterminate-color: var(--colors-neutral-white);
   --colors-indeterminate-bg: var(--colors-neutral-black-20);
-=======
   /* Score Bar */
   --colors-score-bar-indicator-color: var(--colors-yellow);
->>>>>>> f4dcdf8f (feat: collateral score revamp)
+  --colors-score-bar-separator-color: var(--colors-neutral-white);
 }

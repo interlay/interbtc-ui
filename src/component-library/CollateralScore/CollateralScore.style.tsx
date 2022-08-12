@@ -73,8 +73,8 @@ const StyledBar = styled.div<BarProps>`
     bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    border-left: 1px dashed #ffffff;
-    border-right: 1px dashed #ffffff;
+    border-left: 1px dashed ${theme.score.bar.separator.color};
+    border-right: 1px dashed ${theme.score.bar.separator.color};
     z-index: 1;
   }
 
