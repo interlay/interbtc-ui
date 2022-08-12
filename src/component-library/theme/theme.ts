@@ -136,6 +136,9 @@ const theme = {
       color: 'var(--colors-indeterminate-color)',
       bg: 'var(--colors-indeterminate-bg)'
     }
+  },
+  overlay: {
+    bg: 'var(--colors-neutral-black-20)'
   }
 };
 
