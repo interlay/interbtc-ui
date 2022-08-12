@@ -3,23 +3,22 @@ import styled from 'styled-components';
 import { theme } from '../theme';
 
 const BaseInput = styled.input`
-  color: ${theme.colors.textPrimary};
   background-color: transparent;
   display: block;
   width: 100%;
-  font-size: ${theme.text.base};
   line-height: ${theme.lineHeight.base};
-  box-shadow: ${theme.boxShadow.default};
-  border-radius: ${theme.rounded.md};
-  border: ${theme.border.default};
   padding: ${theme.spacing.spacing2};
+  outline: 0;
+  border: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  background: none;
+  color: currentcolor;
 
   &::placeholder: {
     color: ${theme.colors.textTertiary};
   }
-  &:focus {
-    outline: ${theme.outline.default};
-  }
+
   /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
   /* Chrome, Safari, Edge, Opera */
   &::-webkit-outer-spin-button,
@@ -32,4 +31,33 @@ const BaseInput = styled.input`
   }
 `;
 
-export { BaseInput };
+type WrapperProps = {
+  $hasStartAdornment: boolean;
+  $hasEndAdornment: boolean;
+};
+
+const Wrapper = styled.div<WrapperProps>`
+  box-shadow: ${theme.boxShadow.default};
+  border-radius: ${theme.rounded.md};
+  border: ${theme.border.default};
+  color: ${theme.colors.textPrimary};
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-left: ${(props) => props.$hasStartAdornment && theme.spacing.spacing2};
+  padding-right: ${(props) => props.$hasEndAdornment && theme.spacing.spacing2};
+
+  // TODO: remove when implemented with react-aria
+  &:focus-within {
+    outline: ${theme.outline.default};
+  }
+`;
+
+const Adornment = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100%;
+  position: relative;
+`;
+
+export { Adornment, BaseInput, Wrapper };

@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
-import { Input } from '../Input';
+import { Input, InputProps } from '../Input';
 
 // Prevents the user from changing the input value using mouse wheel
 const handleWheel = (event: WheelEvent) => event.preventDefault();
@@ -22,9 +22,11 @@ type Props = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 };
 
-type InheritAttrs = Omit<NumberFieldStateProps, keyof Props>;
+type InheritAttrs = Omit<InputProps, keyof Props>;
 
-type NumberInputProps = Props & InheritAttrs;
+type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & keyof InheritAttrs) | 'locale'>;
+
+type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
 const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
   ({ onChange, ...props }, ref): JSX.Element => {
