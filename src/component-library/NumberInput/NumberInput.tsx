@@ -24,7 +24,7 @@ type Props = {
 
 type InheritAttrs = Omit<InputProps, keyof Props>;
 
-type AriaAttrs = Omit<NumberFieldStateProps, keyof Props & keyof InheritAttrs>;
+type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & keyof InheritAttrs) | 'locale'>;
 
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
