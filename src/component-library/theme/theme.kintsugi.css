@@ -32,4 +32,7 @@
   --colors-tabs-text: var(--colors-neutral-lighter-grey);
   --colors-tabs-active-color: var(--colors-blue);
   --colors-tabs-active-bg: var(--colors-neutral-white);
+  /* Loading Spinner */
+  --colors-indeterminate-color: var(--colors-neutral-white);
+  --colors-indeterminate-bg: var(--colors-neutral-black-20);
 }
