@@ -126,6 +126,11 @@ const theme = {
   },
   score: {
     bar: {
+      status: {
+        error: 'var(--colors-error-dark)',
+        warning: 'var(--colors-warning-dark)',
+        success: 'var(--colors-success-dark)'
+      },
       bg:
         'linear-gradient(270deg, var(--colors-success-dark) 0%, var(--colors-warning-dark) 50%, var(--colors-error-dark) 100%)',
       height: '10px',

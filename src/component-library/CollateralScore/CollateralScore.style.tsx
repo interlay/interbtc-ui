@@ -13,12 +13,13 @@ const StyledLabelWrapper = styled.div<LabelProps>`
   justify-content: ${(props) => (props.isDefault ? 'space-between' : 'center')};
   align-items: center;
   gap: ${theme.spacing.spacing2};
-  margin-bottom: ${(props) => (props.isDefault ? theme.spacing.spacing4 : theme.spacing.spacing6)};
+  margin-bottom: ${(props) => (props.isDefault ? theme.spacing.spacing8 : theme.spacing.spacing6)};
 `;
 
 const StyledLabel = styled.span<LabelProps>`
-  font-size: ${(props) => (props.isDefault ? theme.text.xs : theme.text.s)};
-  color: ${theme.colors.textPrimary};
+  font-size: ${(props) => (props.isDefault ? theme.text.xs : theme.text.lg)};
+  line-height: ${(props) => (props.isDefault ? theme.lineHeight.s : theme.text.base)};
+  color: ${(props) => (props.isDefault ? theme.colors.textTertiary : theme.colors.textPrimary)};
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.book : theme.fontWeight.bold)};
 `;
 
@@ -37,8 +38,8 @@ type SublabelProps = {
 const StyledSublabel = styled.span<SublabelProps>`
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
   font-size: ${theme.text.xs};
-  line-height: ${(props) => (props.isDefault ? theme.lineHeight.lg : theme.lineHeight.s)};
-  color: ${(props) => (props.status ? theme.alert.status[props.status] : theme.colors.textPrimary)};
+  line-height: ${theme.lineHeight.s};
+  color: ${(props) => (props.status ? theme.score.bar.status[props.status] : theme.colors.textPrimary)};
 `;
 
 type ScoreProps = {
@@ -48,7 +49,7 @@ type ScoreProps = {
 const StyledScore = styled.span<ScoreProps>`
   font-size: ${(props) => (props.isDefault ? theme.text.xs : theme.text.xl4)};
   line-height: ${(props) => (props.isDefault ? theme.lineHeight.lg : theme.lineHeight.xl)};
-  color: ${(props) => theme.alert.status[props.status]};
+  color: ${(props) => theme.score.bar.status[props.status]};
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
   transition: color ${theme.transition.duration}ms;
   will-change: color;
