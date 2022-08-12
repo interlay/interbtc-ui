@@ -1,11 +1,12 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
-import { CTAVariants } from '../utils/prop-types';
+import { CTAVariants, Sizes } from '../utils/prop-types';
 import { OutlinedCTA, PrimaryCTA, SecondaryCTA } from './CTA.style';
 
 type Props = {
   variant?: CTAVariants;
   fullWidth?: boolean;
+  size?: Sizes;
 };
 
 type NativeAttrs = Omit<ButtonHTMLAttributes<unknown>, keyof Props>;
@@ -13,7 +14,10 @@ type NativeAttrs = Omit<ButtonHTMLAttributes<unknown>, keyof Props>;
 type CTAProps = Props & NativeAttrs;
 
 const CTA = forwardRef<HTMLButtonElement, CTAProps>(
-  ({ disabled = false, variant, fullWidth = false, onClick, className, children, ...rest }, ref): JSX.Element => {
+  (
+    { disabled = false, variant, fullWidth = false, size = 'medium', onClick, className, children, ...rest },
+    ref
+  ): JSX.Element => {
     const props = {
       as: 'button' as keyof JSX.IntrinsicElements,
       disabled,
@@ -22,6 +26,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
       onClick,
       className,
       children,
+      $size: size,
       ...rest
     };
 
