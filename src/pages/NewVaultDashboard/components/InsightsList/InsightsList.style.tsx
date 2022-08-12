@@ -22,7 +22,8 @@ type InsightsListItemWrapperProps = {
 
 const InsightsListItemWrapper = styled.div<InsightsListItemWrapperProps>`
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: ${theme.spacing.spacing4};
   flex: 1;
 
   &:not(:last-of-type) {

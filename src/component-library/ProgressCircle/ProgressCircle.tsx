@@ -4,7 +4,7 @@ import { HTMLAttributes } from 'react';
 
 import { Fill, Mask } from './ProgressCircle.style';
 
-type Props = { diameter?: number | string; thickness: number };
+type Props = { diameter?: number | string; thickness?: number };
 
 type InheritAttrs = Omit<AriaProgressBarProps, keyof Props>;
 

@@ -32,11 +32,14 @@ const InsightsList = ({ direction, items, title, ...props }: InsightsListProps):
   return (
     <InsightsListWrapper {...props} $isCol={isCol} variant='bordered'>
       {title && <InsightsTitle>{title}</InsightsTitle>}
-      {items.map(({ title, label, sublabel }, key) => (
+      {items.map(({ title, label, sublabel, adornment }, key) => (
         <InsightsListItemWrapper $isCol={isCol} key={key}>
-          <InsightItemTitle color='tertiary'>{title}</InsightItemTitle>
-          <InsightItemLabel color='secondary'>{label}</InsightItemLabel>
-          {sublabel && <InsightItemSubLabel>{sublabel}</InsightItemSubLabel>}
+          <div>
+            <InsightItemTitle color='tertiary'>{title}</InsightItemTitle>
+            <InsightItemLabel color='secondary'>{label}</InsightItemLabel>
+            {sublabel && <InsightItemSubLabel>{sublabel}</InsightItemSubLabel>}
+          </div>
+          {adornment}
         </InsightsListItemWrapper>
       ))}
     </InsightsListWrapper>

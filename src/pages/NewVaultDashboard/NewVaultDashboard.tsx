@@ -1,6 +1,7 @@
 import { withErrorBoundary } from 'react-error-boundary';
 
 import { CTA, Stack } from '@/component-library';
+import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
 import MainContainer from '@/parts/MainContainer';
 
@@ -13,12 +14,6 @@ import {
   StyledVaultCollateral
 } from './NewVaultDashboard.styles';
 
-const insightsItems: InsightListItem[] = [
-  { title: 'Locked Collateral KSM', label: '400' },
-  { title: 'Locked BTC', label: '0.54538777', sublabel: '($339.05)' },
-  { title: 'Remaining kBTC capacity', label: '93.5%', sublabel: '(2.59643046 kBTC)' }
-];
-
 const VaultDashboard = (): JSX.Element => {
   const stakingTitle = (
     <StyledStakingTitleWrapper>
@@ -29,6 +24,21 @@ const VaultDashboard = (): JSX.Element => {
     </StyledStakingTitleWrapper>
   );
 
+  // TODO: should we leave the diameter as fixed pixels?
+  const vaultCapacity = <ProgressCircle diameter='65' value={93} />;
+
+  const insightsItems: InsightListItem[] = [
+    { title: 'Locked Collateral KSM', label: '400' },
+    { title: 'Locked BTC', label: '0.54538777', sublabel: '($339.05)' },
+    { title: 'Remaining kBTC capacity', label: '93.5%', sublabel: '(2.59643046 kBTC)', adornment: vaultCapacity }
+  ];
+
+  const stakingItems: InsightListItem[] = [
+    { title: 'Locked Collateral KSM', label: '400' },
+    { title: 'Locked BTC', label: '0.54538777', sublabel: '($339.05)' },
+    { title: 'Remaining kBTC capacity', label: '93.5%', sublabel: '(2.59643046 kBTC)' }
+  ];
+
   return (
     <MainContainer>
       <Stack>
@@ -37,7 +47,7 @@ const VaultDashboard = (): JSX.Element => {
         <InsightsList items={insightsItems} />
         <StyledCollateralSection>
           <StyledVaultCollateral />
-          <StyledStackingInsightsList title={stakingTitle} direction='column' items={insightsItems} />
+          <StyledStackingInsightsList title={stakingTitle} direction='column' items={stakingItems} />
         </StyledCollateralSection>
         <TransactionHistory />
       </Stack>
