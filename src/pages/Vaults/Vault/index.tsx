@@ -290,7 +290,9 @@ const Vault = (): JSX.Element => {
       <MainContainer className='fade-in-animation'>
         <VaultsHeader title={t('vault.vault_dashboard')} accountAddress={selectedVaultAccountAddress} />
         <div className='space-y-6'>
-          <SectionTitle>Vault Stats</SectionTitle>
+          <SectionTitle>
+            Vault Stats: {collateralCurrencyValues?.id}/{WRAPPED_TOKEN_SYMBOL}{' '}
+          </SectionTitle>
           <Panel className={clsx('inline-block', 'px-4', 'py-2')}>
             <Dl
               listItems={[
