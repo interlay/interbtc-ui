@@ -1,4 +1,4 @@
-import { CurrencyIdLiteral, VaultExt } from '@interlay/interbtc-api';
+import { CurrencyIdLiteral, VaultExt, VaultStatusExt } from '@interlay/interbtc-api';
 import { BitcoinUnit } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
+import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
@@ -119,7 +120,14 @@ const VaultStatusStatPanel = ({ vaultAccountId, collateralId }: Props): JSX.Elem
     );
   }
 
-  return <StatPanel label={t('vault.status')} value={statusLabel} />;
+  const statPanel = <StatPanel label={t('vault.status')} value={statusLabel} />;
+
+  // Render with tooltip if vault is inactive.
+  if (vaultExt?.status === VaultStatusExt.Inactive) {
+    return <InterlayTooltip label={t('dashboard.vault.issuing_disabled_tooltip')}>{statPanel}</InterlayTooltip>;
+  }
+
+  return statPanel;
 };
 
 export default withErrorBoundary(VaultStatusStatPanel, {
