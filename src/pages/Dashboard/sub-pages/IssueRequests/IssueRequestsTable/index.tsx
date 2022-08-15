@@ -111,7 +111,7 @@ const IssueRequestsTable = (): JSX.Element => {
         accessor: 'vault',
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: any }) {
-          return <>{shortAddress(value.accountId)}</>;
+          return <>{value.accountId}</>;
         }
       },
       {
