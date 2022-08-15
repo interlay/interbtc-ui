@@ -48,7 +48,7 @@ const getVaultStatusLabel = (
     statusLabel = t('dashboard.vault.banned_until', { blockHeight: vaultExt.bannedUntil });
   }
   if (vaultExt.status === VaultStatusExt.Inactive) {
-    statusLabel = t('dashboard.vault.inactive');
+    statusLabel = t('dashboard.vault.issuing_disabled');
   }
   if (vaultExt.status === VaultStatusExt.Liquidated) {
     statusLabel = t('dashboard.vault.liquidated');
