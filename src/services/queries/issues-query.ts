@@ -53,6 +53,15 @@ const issuesQuery = (where?: string): string => `
           active
         }
       }
+      period {
+        id
+        value
+        height {
+          absolute
+          id
+        }
+        timestamp
+      }
     }
   }
 `;
