@@ -360,7 +360,7 @@ const RedeemForm = (): JSX.Element | null => {
               },
               validate: (value) => validateForm(value)
             })}
-            approxUSD={`≈ $ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, usdPrice)}`}
+            approxUSD={`≈ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, usdPrice)}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />

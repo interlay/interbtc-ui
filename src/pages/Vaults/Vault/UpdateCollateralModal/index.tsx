@@ -311,10 +311,7 @@ const UpdateCollateralModal = ({
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
-              approxUSD={`≈ $ ${getUsdAmount(
-                collateralTokenAmount,
-                getTokenPrice(prices, collateralCurrency.id)?.usd
-              )}`}
+              approxUSD={`≈ ${getUsdAmount(collateralTokenAmount, getTokenPrice(prices, collateralCurrency.id)?.usd)}`}
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />

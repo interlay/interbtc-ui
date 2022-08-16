@@ -369,7 +369,7 @@ const IssueForm = (): JSX.Element | null => {
                 },
                 validate: (value) => validateForm(value)
               })}
-              approxUSD={`≈ $ ${getUsdAmount(
+              approxUSD={`≈ ${getUsdAmount(
                 parsedBTCAmount || BitcoinAmount.zero,
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}`}

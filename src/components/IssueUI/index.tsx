@@ -75,7 +75,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
               'block'
             )}
           >
-            {`≈ $ ${getUsdAmount(receivedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
+            {`≈ ${getUsdAmount(receivedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
           </span>
         </div>
         <div>

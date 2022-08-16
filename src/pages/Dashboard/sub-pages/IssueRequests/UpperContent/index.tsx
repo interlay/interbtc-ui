@@ -66,7 +66,6 @@ const UpperContent = (): JSX.Element => {
               })}
             </StatsDd>
             <StatsDd>
-              $
               {getUsdAmount(
                 totalWrappedTokenAmount,
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd

@@ -58,7 +58,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
               'block'
             )}
           >
-            {`≈ $ ${getUsdAmount(redeemedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
+            {`≈ ${getUsdAmount(redeemedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
           </span>
         </div>
         <div>

@@ -146,7 +146,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
           </PrimaryColorSpan>
           <span>
             &nbsp;
-            {`(≈ $ ${getUsdAmount(
+            {`(≈ ${getUsdAmount(
               punishmentCollateralTokenAmount,
               getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
             )})`}

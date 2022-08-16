@@ -293,7 +293,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             error={!!errors[TRANSFER_AMOUNT]}
             helperText={errors[TRANSFER_AMOUNT]?.message}
             label={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-            approxUSD={`≈ $ ${approxUsdValue}`}
+            approxUSD={`≈ ${approxUsdValue}`}
           />
         </div>
         <Chains

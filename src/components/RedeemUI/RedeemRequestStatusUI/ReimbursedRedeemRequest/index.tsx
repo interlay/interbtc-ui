@@ -88,7 +88,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
         </span>
         <span>
-          &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)})`}
+          &nbsp;{`(≈ ${getUsdAmount(burnedBTCAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)})`}
         </span>
         <span className={getColorShade('red')}>&nbsp;{t('redeem_page.reimbursed').toLowerCase()}</span>.
       </p>
@@ -99,7 +99,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         </PrimaryColorSpan>
         <span>
           &nbsp;
-          {`(≈ $${getUsdAmount(collateralTokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd)})`}
+          {`(≈ ${getUsdAmount(collateralTokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd)})`}
         </span>
         <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}</PrimaryColorSpan>.
       </p>

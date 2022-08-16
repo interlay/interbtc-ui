@@ -73,7 +73,7 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         </PrimaryColorSpan>
         <span>
           &nbsp;(
-          {`≈ $${getUsdAmount(
+          {`≈ ${getUsdAmount(
             punishmentCollateralTokenAmount,
             getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
           )}`}

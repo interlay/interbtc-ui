@@ -32,7 +32,7 @@ const WrappedTokenCard = (): JSX.Element => {
                 })}
               </StatsDd>
               <StatsDd>
-                ${getUsdAmount(totalWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+                {getUsdAmount(totalWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
               </StatsDd>
             </>
           }

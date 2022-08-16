@@ -68,7 +68,7 @@ const LockedCollateralCard = ({
               <StatsDd>
                 {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {collateralTokenSymbol}
               </StatsDd>
-              <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, collateralTokenPriceInUSD)}</StatsDd>
+              <StatsDd>{getUsdAmount(totalLockedCollateralTokenAmount, collateralTokenPriceInUSD)}</StatsDd>
             </>
           }
         />

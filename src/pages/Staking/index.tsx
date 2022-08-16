@@ -781,7 +781,7 @@ const Staking = (): JSX.Element => {
                   },
                   validate: (value) => validateLockingAmount(value)
                 })}
-                approxUSD={`≈ $ ${valueInUSDOfLockingAmount}`}
+                approxUSD={`≈ ${valueInUSDOfLockingAmount}`}
                 error={!!errors[LOCKING_AMOUNT]}
                 helperText={errors[LOCKING_AMOUNT]?.message}
                 disabled={lockingAmountFieldDisabled}
