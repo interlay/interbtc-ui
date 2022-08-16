@@ -53,7 +53,6 @@ const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
 const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
-const NewVaultDashboard = React.lazy(() => import(/* webpackChunkName: 'new-vaults' */ '@/pages/NewVaultDashboard'));
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
@@ -392,9 +391,6 @@ const App = (): JSX.Element => {
                 </Route>
                 <Route exact path={PAGES.VAULT}>
                   <Vault />
-                </Route>
-                <Route exact path='/new-vaults-dashboard'>
-                  <NewVaultDashboard />
                 </Route>
                 <Route path={PAGES.VAULT}>
                   <Vaults />

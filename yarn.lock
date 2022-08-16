@@ -2982,7 +2982,7 @@
     "@react-types/shared" "^3.13.1"
     "@react-types/textfield" "^3.5.1"
 
-"@react-aria/progress@^3.2.1":
+"@react-aria/progress@^3.2.1", "@react-aria/progress@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@react-aria/progress/-/progress-3.3.0.tgz#ae2745da40ad84331c05ec33efe0d5f3a9220df5"
   integrity sha512-VenJJWOErvD12RKoffQomlTc2Zl6snrTT6aoM6APApW/QORUyyI8VW6CTUM68RkoQ0q3qySjsL+7yyrd6sping==
