@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import Bridge from '@/pages/Bridge';
 
-import Bridge from '../../pages/Bridge';
+import { render, screen } from '../test-utils';
 
 describe('Burn page', () => {
   beforeEach(async () => {

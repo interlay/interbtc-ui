@@ -2,9 +2,10 @@
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/en/configuration.html
  */
+import dotenv from "dotenv"
+dotenv.config({ path: "./.env.test" })
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default {
+const config = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -83,7 +84,8 @@ export default {
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^@/(.+)": "<rootDir>/src/$1"
+    "^@/(.+)": "<rootDir>/src/$1",
+    "\\.css$": "identity-obj-proxy"
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -198,3 +200,5 @@ export default {
   // Whether to use watchman for file crawling
   // watchman: true,
 };
+
+export default config;
