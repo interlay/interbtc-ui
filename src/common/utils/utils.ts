@@ -86,7 +86,6 @@ function displayMonetaryAmountInUSDFormat<C extends CurrencyUnit>(
   return formatUSD(rawUSDAmount);
 }
 
-// ray test touch <
 function displayMonetaryAmount<C extends CurrencyUnit>(
   amount: MonetaryAmount<Currency<C>, C> | undefined,
   defaultValue = '0.00'
@@ -100,7 +99,6 @@ function displayMonetaryAmount<C extends CurrencyUnit>(
   }
   return defaultValue;
 }
-// ray test touch >
 
 const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
