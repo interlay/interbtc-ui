@@ -14,8 +14,8 @@ const StyledTag = styled.div<StyledChipProps>`
   padding: ${theme.spacing.spacing2} ${theme.spacing.spacing4};
   border-radius: ${theme.rounded.full};
   border: ${theme.border.default};
-  border-color: ${(props) => theme.transation.status.color[props.$variant]};
-  background-color: ${(props) => theme.transation.status.bg[props.$variant]};
+  border-color: ${(props) => theme.transaction.status.color[props.$variant]};
+  background-color: ${(props) => theme.transaction.status.bg[props.$variant]};
   gap: ${theme.spacing.spacing2};
 `;
 

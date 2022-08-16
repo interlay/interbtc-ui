@@ -5,26 +5,26 @@ import { Status } from '@/component-library/utils/prop-types';
 
 import { StatusTag, StatusTagProps } from '../StatusTag';
 
-type TransationStatus = 'pending' | 'completed' | 'canceled';
+type TransactionStatus = 'pending' | 'completed' | 'canceled';
 
-const transationStatus: Record<TransationStatus, Status> = {
+const transactionStatus: Record<TransactionStatus, Status> = {
   pending: 'warning',
   completed: 'success',
   canceled: 'error'
 } as const;
 
 type Props = {
-  status: TransationStatus;
+  status: TransactionStatus;
 };
 
 type InheritAttr = Omit<StatusTagProps, keyof Props>;
 
-type TransationStatusTagProps = Props & InheritAttr;
+type TransactionStatusTagProps = Props & InheritAttr;
 
-const TransationStatusTag = ({ status, ...props }: TransationStatusTagProps): JSX.Element => {
+const TransactionStatusTag = ({ status, ...props }: TransactionStatusTagProps): JSX.Element => {
   const { t } = useTranslation();
 
-  const tagStatus = transationStatus[status];
+  const tagStatus = transactionStatus[status];
 
   return (
     <StatusTag status={tagStatus} {...props}>
@@ -34,5 +34,5 @@ const TransationStatusTag = ({ status, ...props }: TransationStatusTagProps): JS
   );
 };
 
-export { TransationStatusTag };
-export type { TransationStatus, TransationStatusTagProps };
+export { TransactionStatusTag };
+export type { TransactionStatus, TransactionStatusTagProps };

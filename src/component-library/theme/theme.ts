@@ -167,7 +167,7 @@ const theme = {
   overlay: {
     bg: 'var(--colors-neutral-black-30)'
   },
-  transation: {
+  transaction: {
     status: {
       color: {
         error: 'var(--colors-error)',

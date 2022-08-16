@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { CTA, TabsItem } from '@/component-library';
 
 import { StyledStack, StyledTableWrapper, StyledTabs, StyledTitle, StyledWrapper } from './TransactionHistory.styles';
-import { TransationTable } from './TransactionTable';
+import { TransactionTable } from './TransactionTable';
 
 const data = [
   {
@@ -41,7 +41,7 @@ const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
 
   const table = (
     <StyledTableWrapper>
-      <TransationTable aria-labelledby={titleId} data={data} />
+      <TransactionTable aria-labelledby={titleId} data={data} />
     </StyledTableWrapper>
   );
 

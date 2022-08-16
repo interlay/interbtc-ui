@@ -1,7 +1,7 @@
 import { HTMLAttributes, memo } from 'react';
 
 import { StyledDate, StyledRequest, StyledRequestCell, StyledTable } from './TransactionHistory.styles';
-import { TransationStatus, TransationStatusTag } from './TransactionStatusTag';
+import { TransactionStatus, TransactionStatusTag } from './TransactionStatusTag';
 
 const columns = [
   { name: 'Request', uid: 'request' },
@@ -9,20 +9,20 @@ const columns = [
   { name: 'Status', uid: 'status' }
 ];
 
-type TransationTableRow = {
+type TransactionTableRow = {
   request: string;
   date: string;
   amount: string;
-  status: TransationStatus;
+  status: TransactionStatus;
 };
 
 type Props = {
-  data: TransationTableRow[];
+  data: TransactionTableRow[];
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
-type TransationTableProps = Props & NativeAttrs;
+type TransactionTableProps = Props & NativeAttrs;
 
 const RequestCell = ({ request, date }: any) => (
   <StyledRequestCell>
@@ -31,18 +31,18 @@ const RequestCell = ({ request, date }: any) => (
   </StyledRequestCell>
 );
 
-const _TransationTable = ({ data, ...props }: TransationTableProps): JSX.Element => {
+const _TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Element => {
   const rows = data.map(({ request, amount, date, status }, key) => ({
     id: key,
     amount,
     request: <RequestCell request={request} date={date} />,
-    status: <TransationStatusTag status={status} />
+    status: <TransactionStatusTag status={status} />
   }));
 
   return <StyledTable columns={columns} rows={rows} {...props} />;
 };
 
-const TransationTable = memo(_TransationTable);
+const TransactionTable = memo(_TransactionTable);
 
-export { TransationTable };
-export type { TransationTableProps };
+export { TransactionTable };
+export type { TransactionTableProps };
