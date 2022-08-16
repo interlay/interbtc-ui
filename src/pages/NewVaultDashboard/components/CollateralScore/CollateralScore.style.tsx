@@ -1,7 +1,12 @@
 import styled from 'styled-components';
 
-import { theme } from '../theme';
-import { Status } from '../utils/prop-types';
+import { theme } from '@/component-library';
+import { Status } from '@/component-library/utils/prop-types';
+
+const StyledWrapper = styled.div`
+  width: 100%;
+  margin-bottom: 32px;
+`;
 
 type LabelProps = {
   isDefault: boolean;
@@ -60,11 +65,11 @@ type BarProps = {
 };
 
 const StyledBar = styled.div<BarProps>`
-  display: flex;
   position: relative;
   height: ${theme.score.bar.height};
   background: ${theme.score.bar.bg};
   border-radius: ${theme.score.bar.radius};
+  width: 100%;
 
   &::before {
     content: '';
@@ -96,4 +101,4 @@ const StyledBar = styled.div<BarProps>`
   }
 `;
 
-export { StyledBar, StyledLabel, StyledLabelWrapper, StyledScore, StyledScoreWrapper, StyledSublabel };
+export { StyledBar, StyledLabel, StyledLabelWrapper, StyledScore, StyledScoreWrapper, StyledSublabel, StyledWrapper };

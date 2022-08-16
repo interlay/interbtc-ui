@@ -1,14 +1,16 @@
 import { useMeter } from '@react-aria/meter';
 import { HTMLAttributes, ReactNode } from 'react';
 
-import { Status } from '../utils/prop-types';
+import { Status } from '@/component-library/utils/prop-types';
+
 import {
   StyledBar,
   StyledLabel,
   StyledLabelWrapper,
   StyledScore,
   StyledScoreWrapper,
-  StyledSublabel
+  StyledSublabel,
+  StyledWrapper
 } from './CollateralScore.style';
 
 type StatusRanges = Record<Status, { min: number; max: number }>;
@@ -82,7 +84,7 @@ const CollateralScore = ({
   const isDefault = variant === 'default';
 
   return (
-    <div {...meterProps}>
+    <StyledWrapper {...meterProps} {...props}>
       <StyledLabelWrapper isDefault={isDefault}>
         <StyledLabel {...labelProps} isDefault={isDefault}>
           {label}
@@ -96,8 +98,8 @@ const CollateralScore = ({
           </StyledSublabel>
         </StyledScoreWrapper>
       </StyledLabelWrapper>
-      <StyledBar width={barPercentage} {...props} />
-    </div>
+      <StyledBar width={barPercentage} />
+    </StyledWrapper>
   );
 };
 

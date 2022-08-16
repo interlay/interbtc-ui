@@ -120,6 +120,10 @@
   "view_all_transactions_on_subscan": "View all transactions on Subscan",
   "collateral": "Collateral",
   "error_oracle_offline": "You can't {{action}} {{wrappedTokenSymbol}} at the moment because oracle is offline.",
+  "last_updated": "Last updated {{seconds}} seconds ago",
+  "all": "All",
+  "replace": "Replace",
+  "canceled": "Canceled",
   "redeem_page": {
     "withdraw": "Withdraw",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
