@@ -1,7 +1,11 @@
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import { displayMonetaryAmount, getLastMidnightTimestamps, getUsdAmount } from '@/common/utils/utils';
+import {
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
+  getLastMidnightTimestamps
+} from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import { CollateralToken } from '@/config/relay-chains';
@@ -68,7 +72,9 @@ const LockedCollateralCard = ({
               <StatsDd>
                 {displayMonetaryAmount(totalLockedCollateralTokenAmount)} {collateralTokenSymbol}
               </StatsDd>
-              <StatsDd>${getUsdAmount(totalLockedCollateralTokenAmount, collateralTokenPriceInUSD)}</StatsDd>
+              <StatsDd>
+                {displayMonetaryAmountInUSDFormat(totalLockedCollateralTokenAmount, collateralTokenPriceInUSD)}
+              </StatsDd>
             </>
           }
         />

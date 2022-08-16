@@ -47,18 +47,43 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     })
     .reverse();
 }
+const convertMonetaryAmountToValueInUSD = <C extends CurrencyUnit>(
+  amount: MonetaryAmount<Currency<C>, C>,
+  rate: number | undefined
+): number | null => {
+  // If the rate is not available
+  if (rate === undefined) {
+    return null;
+  }
 
-// TODO: replace these functions with internationalization functions
-// Always round USD amounts to two decimals
-function getUsdAmount<C extends CurrencyUnit>(
+  return amount.toBig(amount.currency.base).mul(new Big(rate)).toNumber();
+};
+
+const formatUSD = (amount: number): string => {
+  const { format } = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'USD'
+  });
+
+  return format(amount);
+};
+
+function displayMonetaryAmountInUSDFormat<C extends CurrencyUnit>(
   amount: MonetaryAmount<Currency<C>, C>,
   rate: number | undefined
 ): string {
-  // If price data is unavailable dash is shown
+  // If the rate is not available
   if (rate === undefined) {
     return '—';
   }
-  return amount.toBig(amount.currency.base).mul(new Big(rate)).toFixed(2);
+
+  const rawUSDAmount = convertMonetaryAmountToValueInUSD(amount, rate);
+
+  if (rawUSDAmount === null) {
+    throw new Error('Something went wrong!');
+  }
+
+  return formatUSD(rawUSDAmount);
 }
 
 function displayMonetaryAmount<C extends CurrencyUnit>(
@@ -99,14 +124,16 @@ function getPolkadotLink(blockHeight: number): string {
 }
 
 export {
+  convertMonetaryAmountToValueInUSD,
   copyToClipboard,
   displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
   formatDateTime,
   formatDateTimePrecise,
+  formatUSD,
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
-  getUsdAmount,
   safeRoundTwoDecimals,
   shortAddress,
   shortTxId

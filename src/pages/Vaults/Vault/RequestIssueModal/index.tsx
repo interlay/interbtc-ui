@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import ErrorModal from '@/components/ErrorModal';
 import Hr2 from '@/components/hrs/Hr2';
@@ -302,7 +302,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
                   },
                   validate: (value) => validateForm(value)
                 })}
-                approxUSD={`≈ $ ${getUsdAmount(
+                approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
                   parsedBTCAmount || BitcoinAmount.zero,
                   getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
                 )}`}
@@ -324,7 +324,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<BitcoinLogoIcon width={23} height={23} />}
               value={displayMonetaryAmount(bridgeFee)}
               unitName='BTC'
-              approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+              approxUSD={displayMonetaryAmountInUSDFormat(
+                bridgeFee,
+                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+              )}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -349,7 +352,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(securityDeposit)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(securityDeposit, getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd)}
+              approxUSD={displayMonetaryAmountInUSDFormat(
+                securityDeposit,
+                getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+              )}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -374,7 +380,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(
+              approxUSD={displayMonetaryAmountInUSDFormat(
                 extraRequiredCollateralTokenAmount,
                 getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
               )}
@@ -403,7 +409,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<WrappedTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(wrappedTokenAmount)}
               unitName={WRAPPED_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+              approxUSD={displayMonetaryAmountInUSDFormat(
+                wrappedTokenAmount,
+                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+              )}
             />
             <SubmitButton
               disabled={

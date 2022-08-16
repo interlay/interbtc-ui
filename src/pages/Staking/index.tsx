@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount, safeRoundTwoDecimals } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, safeRoundTwoDecimals } from '@/common/utils/utils';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
@@ -664,7 +664,7 @@ const Staking = (): JSX.Element => {
     }
   };
 
-  const valueInUSDOfLockingAmount = getUsdAmount(
+  const valueInUSDOfLockingAmount = displayMonetaryAmountInUSDFormat(
     monetaryLockingAmount,
     getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
   );
@@ -781,7 +781,7 @@ const Staking = (): JSX.Element => {
                   },
                   validate: (value) => validateLockingAmount(value)
                 })}
-                approxUSD={`≈ $ ${valueInUSDOfLockingAmount}`}
+                approxUSD={`≈ ${valueInUSDOfLockingAmount}`}
                 error={!!errors[LOCKING_AMOUNT]}
                 helperText={errors[LOCKING_AMOUNT]?.message}
                 disabled={lockingAmountFieldDisabled}

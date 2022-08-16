@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import { getLastMidnightTimestamps, getUsdAmount } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, formatUSD, getLastMidnightTimestamps } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import {
@@ -71,8 +71,9 @@ const LockedCollateralsCard = (): JSX.Element => {
 
         let sumValueInUSD = 0;
         for (const collateral of collaterals) {
-          // TODO: using `Number` against the return of `getUsdAmount` is error-prone because `getUsdAmount` returns "-" in the case of undefined `rate`
-          sumValueInUSD += Number(getUsdAmount(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD));
+          sumValueInUSD +=
+            convertMonetaryAmountToValueInUSD(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD) ??
+            0;
         }
 
         return {
@@ -102,7 +103,7 @@ const LockedCollateralsCard = (): JSX.Element => {
       throw new Error('Something went wrong with cumulativeUSDVolumes!');
     }
 
-    const totalLockedCollateralValueInUSD = cumulativeUSDVolumes.slice(-1)[0].sumValueInUSD;
+    const totalLockedCollateralValueInUSDLabel = formatUSD(cumulativeUSDVolumes.slice(-1)[0].sumValueInUSD);
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -120,7 +121,7 @@ const LockedCollateralsCard = (): JSX.Element => {
           leftPart={
             <>
               <StatsDt>{t('dashboard.vault.total_collateral_locked_usd')}</StatsDt>
-              <StatsDd>${totalLockedCollateralValueInUSD}</StatsDd>
+              <StatsDd>{totalLockedCollateralValueInUSDLabel}</StatsDd>
             </>
           }
           rightPart={<StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}
