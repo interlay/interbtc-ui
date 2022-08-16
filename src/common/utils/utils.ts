@@ -47,6 +47,18 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     })
     .reverse();
 }
+// ray test touch <
+const convertMonetaryAmountToValueInUSD = <C extends CurrencyUnit>(
+  amount: MonetaryAmount<Currency<C>, C>,
+  rate: number | undefined
+): number | null => {
+  // If the rate is not available
+  if (rate === undefined) {
+    return null;
+  }
+
+  return amount.toBig(amount.currency.base).mul(new Big(rate)).toNumber();
+};
 
 // TODO: replace these functions with internationalization functions
 // Always round USD amounts to two decimals
@@ -58,9 +70,19 @@ function getUsdAmount<C extends CurrencyUnit>(
   if (rate === undefined) {
     return '—';
   }
-  return amount.toBig(amount.currency.base).mul(new Big(rate)).toFixed(2);
-}
 
+  // const { format } = new Intl.NumberFormat(undefined, {
+  //   style: 'currency',
+  //   currency: 'USD',
+  // })
+
+  const rawUSDAmount = amount.toBig(amount.currency.base).mul(new Big(rate)).toNumber();
+
+  return rawUSDAmount.toLocaleString(undefined, { maximumFractionDigits: 2 });
+}
+// ray test touch >
+
+// ray test touch <
 function displayMonetaryAmount<C extends CurrencyUnit>(
   amount: MonetaryAmount<Currency<C>, C> | undefined,
   defaultValue = '0.00'
@@ -74,6 +96,7 @@ function displayMonetaryAmount<C extends CurrencyUnit>(
   }
   return defaultValue;
 }
+// ray test touch >
 
 const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
@@ -99,6 +122,9 @@ function getPolkadotLink(blockHeight: number): string {
 }
 
 export {
+  // ray test touch <
+  convertMonetaryAmountToValueInUSD,
+  // ray test touch >
   copyToClipboard,
   displayMonetaryAmount,
   formatDateTime,

@@ -124,7 +124,9 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!value) return;
 
     const tokenAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
+    // ray test touch <
     const usd = getUsdAmount(tokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
+    // ray test touch >
 
     setApproxUsdValue(usd);
   };

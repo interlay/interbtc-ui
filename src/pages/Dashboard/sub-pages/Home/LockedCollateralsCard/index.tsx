@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import { getLastMidnightTimestamps, getUsdAmount } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, getLastMidnightTimestamps } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import {
@@ -71,8 +71,11 @@ const LockedCollateralsCard = (): JSX.Element => {
 
         let sumValueInUSD = 0;
         for (const collateral of collaterals) {
-          // TODO: using `Number` against the return of `getUsdAmount` is error-prone because `getUsdAmount` returns "-" in the case of undefined `rate`
-          sumValueInUSD += Number(getUsdAmount(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD));
+          // ray test touch <
+          sumValueInUSD +=
+            convertMonetaryAmountToValueInUSD(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD) ??
+            0;
+          // ray test touch >
         }
 
         return {

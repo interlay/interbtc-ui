@@ -10,7 +10,7 @@ import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 
 import { Prices } from '@/common/types/util.types';
-import { getUsdAmount } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import {
   CollateralTokenMonetaryAmount,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -67,12 +67,17 @@ const getVaultOverview = async (
     vault.backingCollateral.currency as CollateralCurrency
   );
 
-  const usdCollateral = getUsdAmount(collateral, collateralPrice?.usd);
-  const usdGovernanceTokenRewards = getUsdAmount(
+  // ray test touch <
+  const usdCollateral = convertMonetaryAmountToValueInUSD(collateral, collateralPrice?.usd);
+  const usdGovernanceTokenRewards = convertMonetaryAmountToValueInUSD(
     governanceTokenRewards,
     getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
   );
-  const usdWrappedTokenRewards = getUsdAmount(wrappedTokenRewards, getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd);
+  const usdWrappedTokenRewards = convertMonetaryAmountToValueInUSD(
+    wrappedTokenRewards,
+    getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
+  );
+  // ray test touch >
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
@@ -111,15 +116,24 @@ const getVaultOverview = async (
     wrappedId: VAULT_WRAPPED,
     collateral: {
       raw: collateral,
-      usd: usdCollateral === '—' ? 0 : parseFloat(usdCollateral)
+      // ray test touch <
+      // usd: usdCollateral === '—' ? 0 : parseFloat(usdCollateral)
+      usd: usdCollateral ?? 0
+      // ray test touch >
     },
     governanceTokenRewards: {
       raw: governanceTokenRewards,
-      usd: usdGovernanceTokenRewards === '—' ? 0 : parseFloat(usdGovernanceTokenRewards)
+      // ray test touch <
+      // usd: usdGovernanceTokenRewards === '—' ? 0 : parseFloat(usdGovernanceTokenRewards)
+      usd: usdGovernanceTokenRewards ?? 0
+      // ray test touch >
     },
     wrappedTokenRewards: {
       raw: wrappedTokenRewards,
-      usd: usdWrappedTokenRewards === '—' ? 0 : parseFloat(usdWrappedTokenRewards)
+      // ray test touch <
+      // usd: usdWrappedTokenRewards === '—' ? 0 : parseFloat(usdWrappedTokenRewards)
+      usd: usdWrappedTokenRewards ?? 0
+      // ray test touch >
     },
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
   };
