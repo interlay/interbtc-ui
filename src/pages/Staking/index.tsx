@@ -832,9 +832,9 @@ const Staking = (): JSX.Element => {
               />
             )}
             <InformationUI
-              label='Estimated APY'
+              label='Estimated APR'
               value={renderEstimatedAPYLabel()}
-              tooltip={`The APY may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`}
+              tooltip={`The APR may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`}
             />
             <InformationUI
               label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
