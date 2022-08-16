@@ -23,10 +23,12 @@ import {
 } from '@/common/actions/vault.actions';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, safeRoundTwoDecimals } from '@/common/utils/utils';
+import { Dl } from '@/component-library';
 import InterlayCaliforniaContainedButton from '@/components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
 import InterlayDenimOrKintsugiSupernovaContainedButton from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import ErrorFallback from '@/components/ErrorFallback';
+import Panel from '@/components/Panel';
 import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import MainContainer from '@/parts/MainContainer';
@@ -57,6 +59,9 @@ const Vault = (): JSX.Element => {
   const [requestIssueModalOpen, setRequestIssueModalOpen] = React.useState(false);
   const [capacity, setCapacity] = React.useState(BitcoinAmount.zero);
   const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero);
+  const [liquidationThreshold, setLiquidationThreshold] = React.useState('');
+  const [premiumRedeemThreshold, setPremiumRedeemThreshold] = React.useState('');
+  const [secureThreshold, setSecureThreshold] = React.useState('');
 
   const { vaultClientLoaded, bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
   const { collateralization, collateral, lockedBTC, apy } = useSelector((state: StoreType) => state.vault);
@@ -111,7 +116,16 @@ const Vault = (): JSX.Element => {
 
       try {
         // TODO: should update using `react-query`
-        const [feesPolkaBTC, lockedAmountBTC, collateralization, apyScore, issuableAmount] = await Promise.allSettled([
+        const [
+          feesPolkaBTC,
+          lockedAmountBTC,
+          collateralization,
+          apyScore,
+          issuableAmount,
+          liquidationThreshold,
+          premiumRedeemThreshold,
+          secureThreshold
+        ] = await Promise.allSettled([
           window.bridge.vaults.getWrappedReward(
             vaultAccountId,
             collateralCurrencyValues.id as CollateralIdLiteral,
@@ -123,7 +137,12 @@ const Vault = (): JSX.Element => {
             collateralCurrencyValues.id as CollateralIdLiteral
           ),
           window.bridge.vaults.getAPY(vaultAccountId, collateralCurrencyValues.id),
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralCurrencyValues.id)
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralCurrencyValues.id),
+          window.bridge.vaults.getLiquidationCollateralThreshold(
+            collateralCurrencyValues.currency as CollateralCurrency
+          ),
+          window.bridge.vaults.getPremiumRedeemThreshold(collateralCurrencyValues.currency as CollateralCurrency),
+          window.bridge.vaults.getSecureCollateralThreshold(collateralCurrencyValues.currency as CollateralCurrency)
         ]);
 
         if (feesPolkaBTC.status === 'fulfilled') {
@@ -144,6 +163,15 @@ const Vault = (): JSX.Element => {
 
         if (issuableAmount.status === 'fulfilled') {
           setCapacity(issuableAmount.value);
+        }
+        if (liquidationThreshold.status === 'fulfilled') {
+          setLiquidationThreshold(liquidationThreshold.value?.mul(100).toString());
+        }
+        if (premiumRedeemThreshold.status === 'fulfilled') {
+          setPremiumRedeemThreshold(premiumRedeemThreshold.value?.mul(100).toString());
+        }
+        if (secureThreshold.status === 'fulfilled') {
+          setSecureThreshold(secureThreshold.value?.mul(100).toString());
         }
       } catch (error) {
         console.log('[Vault React.useEffect] error.message => ', error.message);
@@ -262,7 +290,18 @@ const Vault = (): JSX.Element => {
       <MainContainer className='fade-in-animation'>
         <VaultsHeader title={t('vault.vault_dashboard')} accountAddress={selectedVaultAccountAddress} />
         <div className='space-y-6'>
-          <SectionTitle>Vault Stats</SectionTitle>
+          <SectionTitle>
+            Vault Stats: {collateralCurrencyValues?.id}/{WRAPPED_TOKEN_SYMBOL}{' '}
+          </SectionTitle>
+          <Panel className={clsx('inline-block', 'px-4', 'py-2')}>
+            <Dl
+              listItems={[
+                { term: 'Liquidation threshold', definition: `${liquidationThreshold}%` },
+                { term: 'Premium redeem threshold', definition: `${premiumRedeemThreshold}%` },
+                { term: 'Ideal threshold', definition: `${secureThreshold}%` }
+              ]}
+            />
+          </Panel>
           <div className={clsx('grid', 'md:grid-cols-3', 'lg:grid-cols-4', 'gap-5', '2xl:gap-6')}>
             {vaultItems.map((item) => (
               <StatPanel key={item.title} label={item.title} value={item.value} />
