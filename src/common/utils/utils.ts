@@ -74,14 +74,18 @@ function getUsdAmount<C extends CurrencyUnit>(
   amount: MonetaryAmount<Currency<C>, C>,
   rate: number | undefined
 ): string {
-  // If price data is unavailable dash is shown
+  // If the rate is not available
   if (rate === undefined) {
     return '—';
   }
 
-  const rawUSDAmount = amount.toBig(amount.currency.base).mul(new Big(rate)).toNumber();
+  const rawUSDAmount = convertMonetaryAmountToValueInUSD(amount, rate);
 
-  return rawUSDAmount.toLocaleString(undefined, { maximumFractionDigits: 2 });
+  if (rawUSDAmount === null) {
+    throw new Error('Something went wrong!');
+  }
+
+  return formatUSD(rawUSDAmount);
 }
 // ray test touch >
 
