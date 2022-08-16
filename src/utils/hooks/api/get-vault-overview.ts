@@ -67,7 +67,6 @@ const getVaultOverview = async (
     vault.backingCollateral.currency as CollateralCurrency
   );
 
-  // ray test touch <
   const usdCollateral = convertMonetaryAmountToValueInUSD(collateral, collateralPrice?.usd);
   const usdGovernanceTokenRewards = convertMonetaryAmountToValueInUSD(
     governanceTokenRewards,
@@ -77,7 +76,6 @@ const getVaultOverview = async (
     wrappedTokenRewards,
     getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
   );
-  // ray test touch >
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
@@ -116,24 +114,15 @@ const getVaultOverview = async (
     wrappedId: VAULT_WRAPPED,
     collateral: {
       raw: collateral,
-      // ray test touch <
-      // usd: usdCollateral === '—' ? 0 : parseFloat(usdCollateral)
       usd: usdCollateral ?? 0
-      // ray test touch >
     },
     governanceTokenRewards: {
       raw: governanceTokenRewards,
-      // ray test touch <
-      // usd: usdGovernanceTokenRewards === '—' ? 0 : parseFloat(usdGovernanceTokenRewards)
       usd: usdGovernanceTokenRewards ?? 0
-      // ray test touch >
     },
     wrappedTokenRewards: {
       raw: wrappedTokenRewards,
-      // ray test touch <
-      // usd: usdWrappedTokenRewards === '—' ? 0 : parseFloat(usdWrappedTokenRewards)
       usd: usdWrappedTokenRewards ?? 0
-      // ray test touch >
     },
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
   };

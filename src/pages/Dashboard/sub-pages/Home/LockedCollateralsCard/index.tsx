@@ -71,11 +71,9 @@ const LockedCollateralsCard = (): JSX.Element => {
 
         let sumValueInUSD = 0;
         for (const collateral of collaterals) {
-          // ray test touch <
           sumValueInUSD +=
             convertMonetaryAmountToValueInUSD(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD) ??
             0;
-          // ray test touch >
         }
 
         return {
@@ -105,9 +103,7 @@ const LockedCollateralsCard = (): JSX.Element => {
       throw new Error('Something went wrong with cumulativeUSDVolumes!');
     }
 
-    // ray test touch <
     const totalLockedCollateralValueInUSDLabel = formatUSD(cumulativeUSDVolumes.slice(-1)[0].sumValueInUSD);
-    // ray test touch >
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -125,9 +121,7 @@ const LockedCollateralsCard = (): JSX.Element => {
           leftPart={
             <>
               <StatsDt>{t('dashboard.vault.total_collateral_locked_usd')}</StatsDt>
-              {/* ray test touch < */}
               <StatsDd>{totalLockedCollateralValueInUSDLabel}</StatsDd>
-              {/* ray test touch > */}
             </>
           }
           rightPart={<StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}

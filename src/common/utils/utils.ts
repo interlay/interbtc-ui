@@ -47,7 +47,6 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     })
     .reverse();
 }
-// ray test touch <
 const convertMonetaryAmountToValueInUSD = <C extends CurrencyUnit>(
   amount: MonetaryAmount<Currency<C>, C>,
   rate: number | undefined
@@ -69,7 +68,7 @@ const formatUSD = (amount: number): string => {
   return format(amount);
 };
 
-// TODO: replace these functions with internationalization functions
+// ray test touch <
 // Always round USD amounts to two decimals
 function getUsdAmount<C extends CurrencyUnit>(
   amount: MonetaryAmount<Currency<C>, C>,
@@ -126,16 +125,12 @@ function getPolkadotLink(blockHeight: number): string {
 }
 
 export {
-  // ray test touch <
   convertMonetaryAmountToValueInUSD,
-  // ray test touch >
   copyToClipboard,
   displayMonetaryAmount,
   formatDateTime,
   formatDateTimePrecise,
-  // ray test touch <
   formatUSD,
-  // ray test touch >
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,

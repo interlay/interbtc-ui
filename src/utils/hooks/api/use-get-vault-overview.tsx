@@ -48,9 +48,6 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
         };
       })
   );
-  // ray test touch <
-  console.log('ray : ***** vaultData => ', vaultData);
-  // ray test touch >
 
   useEffect(() => {
     if (!vaultData || vaultData.length === 0) return;
