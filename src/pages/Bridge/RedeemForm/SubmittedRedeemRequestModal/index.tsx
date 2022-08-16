@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
 import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
@@ -70,7 +70,10 @@ const SubmittedRedeemRequestModal = ({
                   'text-center'
                 )}
               >
-                {`≈ ${getUsdAmount(request.amountBTC, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
+                {`≈ ${displayMonetaryAmountInUSDFormat(
+                  request.amountBTC,
+                  getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+                )}`}
               </span>
             </div>
             <div>

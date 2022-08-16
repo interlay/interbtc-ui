@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 import { updateCollateralAction, updateCollateralizationAction } from '@/common/actions/vault.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -311,7 +311,10 @@ const UpdateCollateralModal = ({
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
-              approxUSD={`≈ ${getUsdAmount(collateralTokenAmount, getTokenPrice(prices, collateralCurrency.id)?.usd)}`}
+              approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
+                collateralTokenAmount,
+                getTokenPrice(prices, collateralCurrency.id)?.usd
+              )}`}
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}
             />

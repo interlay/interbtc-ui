@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import IssuedChart from '@/pages/Dashboard/IssuedChart';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -32,7 +32,10 @@ const WrappedTokenCard = (): JSX.Element => {
                 })}
               </StatsDd>
               <StatsDd>
-                {getUsdAmount(totalWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+                {displayMonetaryAmountInUSDFormat(
+                  totalWrappedTokenAmount,
+                  getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+                )}
               </StatsDd>
             </>
           }

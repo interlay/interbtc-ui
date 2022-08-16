@@ -7,7 +7,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getPolkadotLink, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, getPolkadotLink } from '@/common/utils/utils';
 import ExternalLink from '@/components/ExternalLink';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
@@ -73,7 +73,7 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         </PrimaryColorSpan>
         <span>
           &nbsp;(
-          {`≈ ${getUsdAmount(
+          {`≈ ${displayMonetaryAmountInUSDFormat(
             punishmentCollateralTokenAmount,
             getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
           )}`}
@@ -96,7 +96,7 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(
+          approxUSD={displayMonetaryAmountInUSDFormat(
             punishmentCollateralTokenAmount,
             getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
           )}
@@ -117,7 +117,7 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(
+          approxUSD={displayMonetaryAmountInUSDFormat(
             punishmentCollateralTokenAmount,
             getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
           )}

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { displayMonetaryAmount, getUsdAmount, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, shortAddress } from '@/common/utils/utils';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
@@ -58,7 +58,10 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
               'block'
             )}
           >
-            {`≈ ${getUsdAmount(redeemedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
+            {`≈ ${displayMonetaryAmountInUSDFormat(
+              redeemedWrappedTokenAmount,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}`}
           </span>
         </div>
         <div>
@@ -76,7 +79,10 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(redeem.bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+            approxUSD={displayMonetaryAmountInUSDFormat(
+              redeem.bridgeFee,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
           />
           <PriceInfo
             title={
@@ -92,7 +98,10 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.btcTransferFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(redeem.btcTransferFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+            approxUSD={displayMonetaryAmountInUSDFormat(
+              redeem.btcTransferFee,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -109,7 +118,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(redeem.request.requestedAmountBacking)}
             unitName='BTC'
-            approxUSD={getUsdAmount(
+            approxUSD={displayMonetaryAmountInUSDFormat(
               redeem.request.requestedAmountBacking,
               getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
             )}

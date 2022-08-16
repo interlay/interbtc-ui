@@ -68,9 +68,7 @@ const formatUSD = (amount: number): string => {
   return format(amount);
 };
 
-// ray test touch <
-// Always round USD amounts to two decimals
-function getUsdAmount<C extends CurrencyUnit>(
+function displayMonetaryAmountInUSDFormat<C extends CurrencyUnit>(
   amount: MonetaryAmount<Currency<C>, C>,
   rate: number | undefined
 ): string {
@@ -87,7 +85,6 @@ function getUsdAmount<C extends CurrencyUnit>(
 
   return formatUSD(rawUSDAmount);
 }
-// ray test touch >
 
 // ray test touch <
 function displayMonetaryAmount<C extends CurrencyUnit>(
@@ -132,13 +129,13 @@ export {
   convertMonetaryAmountToValueInUSD,
   copyToClipboard,
   displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
   formatDateTime,
   formatDateTimePrecise,
   formatUSD,
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
-  getUsdAmount,
   safeRoundTwoDecimals,
   shortAddress,
   shortTxId

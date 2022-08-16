@@ -12,7 +12,11 @@ import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg
 import { showAccountModalAction, updateWrappedTokenBalanceAction } from '@/common/actions/general.actions';
 import { togglePremiumRedeemAction } from '@/common/actions/redeem.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getRandomVaultIdWithCapacity, getUsdAmount } from '@/common/utils/utils';
+import {
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
+  getRandomVaultIdWithCapacity
+} from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import FormTitle from '@/components/FormTitle';
@@ -319,20 +323,29 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
-    const redeemFeeInUSD = getUsdAmount(redeemFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
+    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
+      redeemFee,
+      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+    );
     const parsedInterBTCAmount = BitcoinAmount.from.BTC(wrappedTokenAmount || 0);
     const totalBTC = wrappedTokenAmount
       ? parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero;
-    const totalBTCInUSD = getUsdAmount(totalBTC, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
+    const totalBTCInUSD = displayMonetaryAmountInUSDFormat(
+      totalBTC,
+      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+    );
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
-    const totalDOTInUSD = getUsdAmount(totalDOT, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
+    const totalDOTInUSD = displayMonetaryAmountInUSDFormat(
+      totalDOT,
+      getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+    );
 
     const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
-    const bitcoinNetworkFeeInUSD = getUsdAmount(
+    const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
       currentInclusionFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
@@ -360,7 +373,7 @@ const RedeemForm = (): JSX.Element | null => {
               },
               validate: (value) => validateForm(value)
             })}
-            approxUSD={`≈ ${getUsdAmount(parsedInterBTCAmount || BitcoinAmount.zero, usdPrice)}`}
+            approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(parsedInterBTCAmount || BitcoinAmount.zero, usdPrice)}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />

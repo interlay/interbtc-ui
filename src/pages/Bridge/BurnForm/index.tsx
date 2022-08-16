@@ -14,7 +14,7 @@ import {
   updateWrappedTokenBalanceAction
 } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import FormTitle from '@/components/FormTitle';
@@ -205,7 +205,10 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(burnableTokens)}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(burnableTokens, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+            approxUSD={displayMonetaryAmountInUSDFormat(
+              burnableTokens,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
           />
           <TokenField
             id={WRAPPED_TOKEN_AMOUNT}
@@ -217,7 +220,7 @@ const BurnForm = (): JSX.Element | null => {
               },
               validate: (value) => validateForm(value)
             })}
-            approxUSD={`≈ ${getUsdAmount(
+            approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
               parsedInterBTCAmount || BitcoinAmount.zero,
               getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
             )}`}
@@ -239,7 +242,7 @@ const BurnForm = (): JSX.Element | null => {
             unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
             value={displayMonetaryAmount(earnedCollateralTokenAmount)}
             unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-            approxUSD={getUsdAmount(
+            approxUSD={displayMonetaryAmountInUSDFormat(
               earnedCollateralTokenAmount,
               getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
             )}
