@@ -1,6 +1,6 @@
 import { HTMLAttributes, ReactNode } from 'react';
 
-import { ReactComponent as InformatinIcon } from '@/assets/img/hero-icons/information-circle.svg';
+import { ReactComponent as InformationIcon } from '@/assets/img/hero-icons/information-circle.svg';
 import { Span } from '@/component-library';
 
 import { StyledDd, StyledDItem, StyledDt } from './IssueRedeemModal.styles';
@@ -26,7 +26,7 @@ const IssueDescriptionItem = ({
   <StyledDItem {...props}>
     <StyledDt>
       {term}
-      {informative && <InformatinIcon width='1.5em' height='1.5em' />}
+      {informative && <InformationIcon width='1.5em' height='1.5em' />}
     </StyledDt>
     <StyledDd>
       <Span color='secondary'>{detail}</Span> {subdetail}
