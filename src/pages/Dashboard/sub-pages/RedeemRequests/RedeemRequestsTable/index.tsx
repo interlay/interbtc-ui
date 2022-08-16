@@ -73,11 +73,11 @@ const RedeemRequestsTable = (): JSX.Element => {
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           let height;
           if (redeem.execution) {
-            height = redeem.execution.height.active;
+            height = redeem.execution.height.absolute;
           } else if (redeem.cancellation) {
-            height = redeem.cancellation.height.active;
+            height = redeem.cancellation.height.absolute;
           } else {
-            height = redeem.request.height.active;
+            height = redeem.request.height.absolute;
           }
 
           return <>{height}</>;

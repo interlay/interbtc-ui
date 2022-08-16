@@ -1,5 +1,6 @@
 import { Meta, Story } from '@storybook/react';
 
+import { P } from '../Text';
 import { Stack, StackProps } from '.';
 
 const Template: Story<StackProps> = (args) => <Stack {...args} />;
@@ -8,7 +9,7 @@ const Default = Template.bind({});
 Default.args = {
   children: (
     <>
-      <p>Stack children</p> <p>Stack children</p>
+      <P>Stack children</P> <P>Stack children</P>
     </>
   )
 };

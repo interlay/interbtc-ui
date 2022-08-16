@@ -12,16 +12,14 @@ Default.args = {
       wrappedCurrency: 'KBTC',
       minCollateralAmount: '1.21',
       collateralRate: '260.12',
-      isActive: true,
-      ctaOnClick: () => alert('add vault')
+      isActive: true
     },
     {
       collateralCurrency: 'KINT',
       wrappedCurrency: 'KBTC',
       minCollateralAmount: '9.14',
       collateralRate: '314.55',
-      isActive: false,
-      ctaOnClick: () => alert('add vault')
+      isActive: false
     }
   ]
 };

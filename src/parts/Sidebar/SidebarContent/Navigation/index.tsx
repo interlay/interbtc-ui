@@ -22,10 +22,11 @@ import Hr2 from '@/components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from '@/config/links';
 import {
   CROWDLOAN_LINK,
-  EARN_LINK,
   GOVERNANCE_LINK,
   GOVERNANCE_TOKEN_SYMBOL,
-  TERMS_AND_CONDITIONS_LINK
+  TERMS_AND_CONDITIONS_LINK,
+  USE_WRAPPED_CURRENCY_LINK,
+  WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -92,10 +93,10 @@ const Navigation = ({
         hidden: !vaultClientLoaded
       },
       {
-        name: 'nav_earn',
-        link: EARN_LINK,
+        name: 'nav_use_wrapped',
+        link: USE_WRAPPED_CURRENCY_LINK,
         icon: CurrencyDollarIcon,
-        hidden: !EARN_LINK,
+        hidden: !USE_WRAPPED_CURRENCY_LINK,
         external: true,
         rest: {
           target: '_blank',
@@ -216,6 +217,8 @@ const Navigation = ({
               ? // TODO: not the nicest way of handling contextual navigation text, but
                 // other solutions involve substantial refactoring of the navigation
                 t(navigationItem.name, { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL })
+              : navigationItem.link === USE_WRAPPED_CURRENCY_LINK
+              ? t(navigationItem.name, { wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
               : t(navigationItem.name)}
           </SidebarNavLink>
         );
