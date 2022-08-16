@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import { convertMonetaryAmountToValueInUSD, getLastMidnightTimestamps } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, formatUSD, getLastMidnightTimestamps } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import {
@@ -105,7 +105,9 @@ const LockedCollateralsCard = (): JSX.Element => {
       throw new Error('Something went wrong with cumulativeUSDVolumes!');
     }
 
-    const totalLockedCollateralValueInUSD = cumulativeUSDVolumes.slice(-1)[0].sumValueInUSD;
+    // ray test touch <
+    const totalLockedCollateralValueInUSDLabel = formatUSD(cumulativeUSDVolumes.slice(-1)[0].sumValueInUSD);
+    // ray test touch >
 
     let chartLineColor;
     if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -123,7 +125,9 @@ const LockedCollateralsCard = (): JSX.Element => {
           leftPart={
             <>
               <StatsDt>{t('dashboard.vault.total_collateral_locked_usd')}</StatsDt>
-              <StatsDd>${totalLockedCollateralValueInUSD}</StatsDd>
+              {/* ray test touch < */}
+              <StatsDd>{totalLockedCollateralValueInUSDLabel}</StatsDd>
+              {/* ray test touch > */}
             </>
           }
           rightPart={<StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}

@@ -60,6 +60,15 @@ const convertMonetaryAmountToValueInUSD = <C extends CurrencyUnit>(
   return amount.toBig(amount.currency.base).mul(new Big(rate)).toNumber();
 };
 
+const formatUSD = (amount: number): string => {
+  const { format } = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'USD'
+  });
+
+  return format(amount);
+};
+
 // TODO: replace these functions with internationalization functions
 // Always round USD amounts to two decimals
 function getUsdAmount<C extends CurrencyUnit>(
@@ -70,11 +79,6 @@ function getUsdAmount<C extends CurrencyUnit>(
   if (rate === undefined) {
     return '—';
   }
-
-  // const { format } = new Intl.NumberFormat(undefined, {
-  //   style: 'currency',
-  //   currency: 'USD',
-  // })
 
   const rawUSDAmount = amount.toBig(amount.currency.base).mul(new Big(rate)).toNumber();
 
@@ -129,6 +133,9 @@ export {
   displayMonetaryAmount,
   formatDateTime,
   formatDateTimePrecise,
+  // ray test touch <
+  formatUSD,
+  // ray test touch >
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
