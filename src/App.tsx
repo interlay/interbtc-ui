@@ -377,45 +377,45 @@ const App = (): JSX.Element => {
         <Route
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
-              {/* ray test touch < */}
-              {bridgeLoaded ? (
-                <Switch location={location}>
-                  <Route exact path={PAGES.VAULTS}>
-                    <Vaults />
-                  </Route>
-                  <Route exact path={PAGES.VAULT}>
-                    <Vault />
-                  </Route>
-                  <Route path={PAGES.VAULT}>
-                    <Vaults />
-                  </Route>
-                  <Route path={PAGES.DASHBOARD}>
-                    <Dashboard />
-                  </Route>
-                  <Route path={PAGES.STAKING}>
-                    <Staking />
-                  </Route>
-                  <Route path={PAGES.TRANSACTIONS}>
-                    <Transactions />
-                  </Route>
-                  <Route path={PAGES.TX}>
-                    <TX />
-                  </Route>
-                  <Route path={PAGES.BRIDGE}>
-                    <Bridge />
-                  </Route>
-                  <Route path={PAGES.TRANSFER}>
-                    <Transfer />
-                  </Route>
-                  <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
-                  <Route path='*'>
-                    <NoMatch />
-                  </Route>
-                </Switch>
-              ) : (
-                <FullLoadingSpinner />
-              )}
-              {/* ray test touch > */}
+              <Switch location={location}>
+                <Route exact path={PAGES.VAULTS}>
+                  {/* ray test touch < */}
+                  {bridgeLoaded ? <Vaults /> : <FullLoadingSpinner />}
+                  {/* ray test touch > */}
+                </Route>
+                <Route exact path={PAGES.VAULT}>
+                  {/* ray test touch < */}
+                  {bridgeLoaded ? <Vault /> : <FullLoadingSpinner />}
+                  {/* ray test touch > */}
+                </Route>
+                <Route path={PAGES.VAULT}>
+                  {/* ray test touch < */}
+                  {bridgeLoaded ? <Vaults /> : <FullLoadingSpinner />}
+                  {/* ray test touch > */}
+                </Route>
+                <Route path={PAGES.DASHBOARD}>
+                  <Dashboard />
+                </Route>
+                <Route path={PAGES.STAKING}>
+                  <Staking />
+                </Route>
+                <Route path={PAGES.TRANSACTIONS}>
+                  <Transactions />
+                </Route>
+                <Route path={PAGES.TX}>
+                  <TX />
+                </Route>
+                <Route path={PAGES.BRIDGE}>
+                  <Bridge />
+                </Route>
+                <Route path={PAGES.TRANSFER}>
+                  <Transfer />
+                </Route>
+                <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
+                <Route path='*'>
+                  <NoMatch />
+                </Route>
+              </Switch>
             </React.Suspense>
           )}
         />
