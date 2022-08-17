@@ -379,20 +379,12 @@ const App = (): JSX.Element => {
             <React.Suspense fallback={<FullLoadingSpinner />}>
               <Switch location={location}>
                 <Route exact path={PAGES.VAULTS}>
-                  {/* ray test touch < */}
                   {bridgeLoaded ? <Vaults /> : <FullLoadingSpinner />}
-                  {/* ray test touch > */}
                 </Route>
                 <Route exact path={PAGES.VAULT}>
-                  {/* ray test touch < */}
                   {bridgeLoaded ? <Vault /> : <FullLoadingSpinner />}
-                  {/* ray test touch > */}
                 </Route>
-                <Route path={PAGES.VAULT}>
-                  {/* ray test touch < */}
-                  {bridgeLoaded ? <Vaults /> : <FullLoadingSpinner />}
-                  {/* ray test touch > */}
-                </Route>
+                <Route path={PAGES.VAULT}>{bridgeLoaded ? <Vaults /> : <FullLoadingSpinner />}</Route>
                 <Route path={PAGES.DASHBOARD}>
                   <Dashboard />
                 </Route>

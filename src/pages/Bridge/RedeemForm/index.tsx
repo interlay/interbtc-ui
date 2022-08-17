@@ -319,12 +319,18 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
-    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(redeemFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
+    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
+      redeemFee,
+      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+    );
     const parsedInterBTCAmount = new BitcoinAmount(wrappedTokenAmount || 0);
     const totalBTC = wrappedTokenAmount
       ? parsedInterBTCAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero();
-    const totalBTCInUSD = displayMonetaryAmountInUSDFormat(totalBTC, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
+    const totalBTCInUSD = displayMonetaryAmountInUSDFormat(
+      totalBTC,
+      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+    );
 
     const totalDOT = wrappedTokenAmount
       ? btcToDotRate.toCounter(parsedInterBTCAmount).mul(premiumRedeemFee)

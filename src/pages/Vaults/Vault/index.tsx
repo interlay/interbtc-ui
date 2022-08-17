@@ -115,7 +115,16 @@ const Vault = (): JSX.Element => {
 
       try {
         // TODO: should update using `react-query`
-        const [feesPolkaBTC, lockedAmountBTC, collateralization, apyScore, issuableAmount, liquidationThreshold, premiumRedeemThreshold, secureThreshold] = await Promise.allSettled([
+        const [
+          feesPolkaBTC,
+          lockedAmountBTC,
+          collateralization,
+          apyScore,
+          issuableAmount,
+          liquidationThreshold,
+          premiumRedeemThreshold,
+          secureThreshold
+        ] = await Promise.allSettled([
           window.bridge.vaults.getWrappedReward(vaultAccountId, collateralToken, WRAPPED_TOKEN),
           window.bridge.vaults.getIssuedAmount(vaultAccountId, collateralToken),
           window.bridge.vaults.getVaultCollateralization(vaultAccountId, collateralToken),
