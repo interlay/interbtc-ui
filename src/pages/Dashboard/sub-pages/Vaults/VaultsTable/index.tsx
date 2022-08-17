@@ -271,6 +271,9 @@ const VaultsTable = (): JSX.Element => {
       collateralThresholds &&
       currentActiveBlockNumber
     ) {
+      // ray test touch <
+      console.log('ray : ***** filteredVaults => ', filteredVaults);
+      // ray test touch >
       const rawVaults = filteredVaults.map((vaultExt) => {
         const collateral = vaultExt.id.currencies.collateral;
         if (collateral.isToken === false) {
