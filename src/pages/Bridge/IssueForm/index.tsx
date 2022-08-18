@@ -1,12 +1,13 @@
 import {
-  CurrencyIdLiteral,
-  GovernanceUnit,
+  CurrencyExt,
+  currencyIdToMonetaryCurrency,
+  GovernanceCurrency,
   InterbtcPrimitivesVaultId,
   Issue,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
+import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -42,6 +43,7 @@ import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenLogoIcon,
+  RELAY_CHAIN_NATIVE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
@@ -49,7 +51,6 @@ import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { ForeignAssetIdLiteral } from '@/types/currency';
-import { COLLATERAL_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -112,13 +113,9 @@ const IssueForm = (): JSX.Element | null => {
   const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
-    new ExchangeRate<Bitcoin, BitcoinUnit, Currency<GovernanceUnit>, GovernanceUnit>(
-      Bitcoin,
-      GOVERNANCE_TOKEN,
-      new Big(0)
-    )
+    new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
+  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
@@ -195,7 +192,7 @@ const IssueForm = (): JSX.Element | null => {
   React.useEffect(() => {
     // deselect checkbox when required btcAmount exceeds capacity
     if (requestLimits) {
-      const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
+      const parsedBTCAmount = new BitcoinAmount(btcAmount);
       const requiredTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
       if (requiredTokenAmount.gt(requestLimits.singleVaultMaxIssuable)) {
         setSelectVaultManually(false);
@@ -204,8 +201,8 @@ const IssueForm = (): JSX.Element | null => {
   }, [btcAmount, feeRate, requestLimits]);
 
   React.useEffect(() => {
-    // vault selection validation
-    const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
+    // Vault selection validation
+    const parsedBTCAmount = new BitcoinAmount(btcAmount);
     const wrappedTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
 
     if (selectVaultManually && vault === undefined) {
@@ -236,7 +233,7 @@ const IssueForm = (): JSX.Element | null => {
       if (governanceTokenBalance === undefined) return;
 
       const numericValue = Number(value || '0');
-      const btcAmount = BitcoinAmount.from.BTC(numericValue);
+      const btcAmount = new BitcoinAmount(numericValue);
 
       const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
       const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
@@ -304,27 +301,30 @@ const IssueForm = (): JSX.Element | null => {
         await requestLimitsRefetch();
         await trigger(BTC_AMOUNT);
 
-        const wrappedTokenAmount = BitcoinAmount.from.BTC(data[BTC_AMOUNT] || '0');
+        const wrappedTokenAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
         const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
 
         let vaultId: InterbtcPrimitivesVaultId;
-        let collateralTokenIdLiteral: CurrencyIdLiteral;
+        let collateralToken: CurrencyExt;
 
         if (selectVaultManually) {
           if (!vault) {
             throw new Error('Specific vault is not selected!');
           }
           vaultId = vault[0];
-          collateralTokenIdLiteral = vault[0].currencies.collateral.asToken.toString();
+          collateralToken = await currencyIdToMonetaryCurrency(
+            window.bridge.assetRegistry,
+            vault[0].currencies.collateral
+          );
         } else {
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
-          collateralTokenIdLiteral = COLLATERAL_TOKEN_ID_LITERAL;
+          collateralToken = RELAY_CHAIN_NATIVE_TOKEN;
         }
 
         const result = await window.bridge.issue.request(
           wrappedTokenAmount,
           vaultId.accountId,
-          collateralTokenIdLiteral,
+          collateralToken,
           false, // default
           0, // default
           vaults
@@ -340,7 +340,7 @@ const IssueForm = (): JSX.Element | null => {
       }
     };
 
-    const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
+    const parsedBTCAmount = new BitcoinAmount(btcAmount);
     const bridgeFee = parsedBTCAmount.mul(feeRate);
     const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
@@ -374,7 +374,7 @@ const IssueForm = (): JSX.Element | null => {
                 validate: (value) => validateForm(value)
               })}
               approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
-                parsedBTCAmount || BitcoinAmount.zero,
+                parsedBTCAmount || BitcoinAmount.zero(),
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}`}
               error={!!errors[BTC_AMOUNT]}

@@ -6,7 +6,6 @@ import { convertMonetaryAmountToValueInUSD, formatUSD, getLastMidnightTimestamps
 import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import {
-  CollateralToken,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NATIVE_TOKEN,
@@ -42,7 +41,7 @@ const LockedCollateralsCard = (): JSX.Element => {
     isLoading: cumulativeGovernanceTokenVolumesLoading,
     data: cumulativeGovernanceTokenVolumes,
     error: cumulativeGovernanceTokenVolumesError
-  } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN as CollateralToken, cutoffTimestamps);
+  } = useCumulativeCollateralVolumes(GOVERNANCE_TOKEN, cutoffTimestamps);
   useErrorHandler(cumulativeGovernanceTokenVolumesError);
 
   const relayChainNativeTokenPriceInUSD = getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd;

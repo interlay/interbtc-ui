@@ -269,7 +269,7 @@ const Staking = (): JSX.Element => {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
           const txs = [
-            window.bridge.api.tx.escrow.increaseAmount(variables.amount.toString(variables.amount.currency.rawBase)),
+            window.bridge.api.tx.escrow.increaseAmount(variables.amount.toString(true)),
             window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
           ];
           const batch = window.bridge.api.tx.utility.batchAll(txs);
@@ -422,7 +422,7 @@ const Staking = (): JSX.Element => {
       return 'Locking amount must not be greater than available balance!';
     }
 
-    const planckLockingAmount = monetaryLockingAmount.to.Planck();
+    const planckLockingAmount = monetaryLockingAmount.toBig(0);
     const lockBlocks = convertWeeksToBlockNumbers(parseInt(lockTime));
     // This is related to the on-chain implementation where currency values are integers.
     // So less tokens than the period would likely round to 0.
@@ -570,7 +570,7 @@ const Staking = (): JSX.Element => {
     }
 
     const newVoteGovernanceTokenAmountGained = newTotalStakeAmount.sub(voteGovernanceTokenBalance);
-    const rounded = newVoteGovernanceTokenAmountGained.toBig(VOTE_GOVERNANCE_TOKEN.base).round(5);
+    const rounded = newVoteGovernanceTokenAmountGained.toBig().round(5);
     const typed = newMonetaryAmount(rounded, VOTE_GOVERNANCE_TOKEN, true);
 
     return `${displayMonetaryAmount(typed)} ${VOTE_GOVERNANCE_TOKEN_SYMBOL}`;

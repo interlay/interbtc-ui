@@ -35,7 +35,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const prices = useGetPrices();
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
+  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero());
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );

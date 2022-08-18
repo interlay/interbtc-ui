@@ -1,5 +1,5 @@
-import { CurrencyUnit, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CurrencyExt, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { PARACHAIN_URL } from '@/constants';
@@ -47,8 +47,8 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     })
     .reverse();
 }
-const convertMonetaryAmountToValueInUSD = <C extends CurrencyUnit>(
-  amount: MonetaryAmount<Currency<C>, C>,
+const convertMonetaryAmountToValueInUSD = <T extends CurrencyExt>(
+  amount: MonetaryAmount<T>,
   rate: number | undefined
 ): number | null => {
   // If the rate is not available
@@ -56,7 +56,7 @@ const convertMonetaryAmountToValueInUSD = <C extends CurrencyUnit>(
     return null;
   }
 
-  return amount.toBig(amount.currency.base).mul(new Big(rate)).toNumber();
+  return amount.toBig().mul(new Big(rate)).toNumber();
 };
 
 const formatUSD = (amount: number): string => {
@@ -68,8 +68,8 @@ const formatUSD = (amount: number): string => {
   return format(amount);
 };
 
-function displayMonetaryAmountInUSDFormat<C extends CurrencyUnit>(
-  amount: MonetaryAmount<Currency<C>, C>,
+function displayMonetaryAmountInUSDFormat<T extends CurrencyExt>(
+  amount: MonetaryAmount<T>,
   rate: number | undefined
 ): string {
   // If the rate is not available
@@ -86,14 +86,11 @@ function displayMonetaryAmountInUSDFormat<C extends CurrencyUnit>(
   return formatUSD(rawUSDAmount);
 }
 
-function displayMonetaryAmount<C extends CurrencyUnit>(
-  amount: MonetaryAmount<Currency<C>, C> | undefined,
-  defaultValue = '0.00'
-): string {
+function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, defaultValue = '0.00'): string {
   if (amount === undefined) return defaultValue;
 
   // TODO: refactor once Monetary.js exposes an `isGreaterThanZero()` method
-  const zero = new MonetaryAmount<Currency<C>, C>(amount.currency, 0);
+  const zero = new MonetaryAmount<CurrencyExt>(amount.currency, 0);
   if (amount.gte(zero)) {
     return amount.toHuman();
   }

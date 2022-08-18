@@ -1,4 +1,4 @@
-import { CurrencyIdLiteral, IssueStatus } from '@interlay/interbtc-api';
+import { CollateralIdLiteral, IssueStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -35,10 +35,10 @@ import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters'
 
 interface Props {
   vaultAddress: string;
-  collateralId: CurrencyIdLiteral | undefined;
+  collateralTokenIdLiteral: CollateralIdLiteral;
 }
 
-const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Element | null => {
+const VaultIssueRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
@@ -76,11 +76,11 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
     error: issueRequestsTotalCountError
     // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [GRAPHQL_FETCHER, issueCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}`)],
-    graphqlFetcher<GraphqlReturn<any>>(),
-    {
-      enabled: !!collateralId
-    }
+    [
+      GRAPHQL_FETCHER,
+      issueCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralTokenIdLiteral}}`)
+    ],
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(issueRequestsTotalCountError);
 
@@ -95,12 +95,9 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Ele
       ISSUES_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralTokenIdLiteral}}` // `WHERE` condition
     ],
-    issuesFetcher,
-    {
-      enabled: !!collateralId
-    }
+    issuesFetcher
   );
   useErrorHandler(issueRequestsError);
 

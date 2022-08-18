@@ -1,5 +1,4 @@
-import { CurrencyIdLiteral, newAccountId, VaultExt } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, newAccountId, VaultExt } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -7,13 +6,13 @@ import { useQueries, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { VAULT_COLLATERAL } from '@/config/vaults';
+import { VAULT_COLLATERAL_TOKENS } from '@/config/vaults';
 
-type VaultResponse = Array<VaultExt<BitcoinUnit>>;
+type VaultResponse = Array<VaultExt>;
 
 // `getOrNull` returns null as a successful response if the vault does not exist
-const getVaults = async (accountId: AccountId, token: CurrencyIdLiteral) =>
-  await window.bridge.vaults.getOrNull(accountId, token);
+const getVaults = async (accountId: AccountId, collateralToken: CollateralCurrencyExt) =>
+  await window.bridge.vaults.getOrNull(accountId, collateralToken);
 
 const useGetVaults = ({ address }: { address: string }): VaultResponse => {
   const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
@@ -25,10 +24,10 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
 
   // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const vaults: Array<any> = useQueries<Array<UseQueryResult<VaultResponse, Error>>>(
-    VAULT_COLLATERAL.map((token) => {
+    VAULT_COLLATERAL_TOKENS.map((item) => {
       return {
-        queryKey: ['vaults', address, token],
-        queryFn: async () => await getVaults(newAccountId(window.bridge.api, address), token),
+        queryKey: ['vaults', address, item.ticker],
+        queryFn: async () => await getVaults(newAccountId(window.bridge.api, address), item),
         options: {
           enabled: !!bridgeLoaded
         }

@@ -1,5 +1,5 @@
-import { CollateralUnit } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CollateralCurrencyExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 
 import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
 
@@ -23,7 +23,7 @@ export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 
 export interface UpdateTotals {
   type: typeof UPDATE_TOTALS;
-  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
   totalWrappedTokenAmount: BitcoinAmount;
 }
 
@@ -61,7 +61,7 @@ export interface InitState {
 export interface InitGeneralDataAction {
   type: typeof INIT_GENERAL_DATA_ACTION;
   totalWrappedTokenAmount: BitcoinAmount;
-  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
   totalGovernanceTokenAmount: GovernanceTokenMonetaryAmount;
   btcRelayHeight: number;
   bitcoinHeight: number;
@@ -80,12 +80,12 @@ export interface UpdateWrappedTokenTransferableBalance {
 
 export interface UpdateCollateralTokenBalance {
   type: typeof UPDATE_COLLATERAL_TOKEN_BALANCE;
-  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>;
 }
 
 export interface UpdateCollateralTokenTransferableBalance {
   type: typeof UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE;
-  collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>;
 }
 
 export interface SetInstalledExtension {
@@ -137,7 +137,7 @@ export interface UpdateCollateralization {
 
 export interface UpdateCollateral {
   type: typeof UPDATE_COLLATERAL;
-  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  collateral: MonetaryAmount<CollateralCurrencyExt>;
 }
 
 export interface UpdateLockedBTC {
