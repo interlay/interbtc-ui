@@ -7,8 +7,8 @@ const Template: Story<TokenBalanceProps> = (args) => <TokenBalance {...args} />;
 const Default = Template.bind({});
 Default.args = {
   tokenSymbol: 'KSM',
-  value: '123.22',
-  valueInUSD: '23.796'
+  value: 123.22,
+  valueInUSD: 23.796
 };
 
 export { Default };

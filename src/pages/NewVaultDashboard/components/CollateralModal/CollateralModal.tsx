@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 
+import { formatUSD } from '@/common/utils/utils';
 import { CTA, Modal, ModalProps, Span, Stack, TokenField } from '@/component-library';
 
 import { CollateralScore } from '../CollateralScore';
@@ -51,30 +52,32 @@ const CollateralModal = ({ variant = 'deposit', onSubmit, ...props }: Collateral
       <form onSubmit={h(handleSubmit)}>
         <Stack spacing='double'>
           <StyledTitle>{title}</StyledTitle>
-          <TokenField tokenSymbol='KSM' valueInUSD='0.00' id={collateralInputId[variant]} {...register} />
+          <TokenField tokenSymbol='KSM' valueInUSD={0} id={collateralInputId[variant]} {...register} />
           <StyledDl>
             <StyledDItem color='tertiary'>
               <StyledDt>Current Total Collateral</StyledDt>
-              <StyledDd>400.00 KSM ($1,050)</StyledDd>
+              <StyledDd>400.00 KSM ({formatUSD(1050)})</StyledDd>
             </StyledDItem>
             <StyledDItem>
-              <StyledDt>Minimum Required Collaterall</StyledDt>
-              <StyledDd>4.00 KSM ($40.00)</StyledDd>
+              <StyledDt>Minimum Required Collateral</StyledDt>
+              <StyledDd>4.00 KSM ({formatUSD(40)})</StyledDd>
             </StyledDItem>
             <CollateralScore
               label={<StyledDt>New Collateralization</StyledDt>}
-              sublabel={<StyledDd>(high rish)</StyledDd>}
+              sublabel={<StyledDd>(high risk)</StyledDd>}
               ranges={ranges}
             />
             <StyledDItem>
               <StyledDt>New liquidation Price</StyledDt>
-              <StyledDd>$12.32 KSM / $42,324.32 BTC</StyledDd>
+              <StyledDd>
+                {formatUSD(12.32)} KSM / {formatUSD(42324.32)} BTC
+              </StyledDd>
             </StyledDItem>
             <StyledHr />
             <StyledDItem>
               <StyledDt>Fees</StyledDt>
               <StyledDd>
-                <Span color='secondary'>0.01 KINT</Span> ($0.24)
+                <Span color='secondary'>0.01 KINT</Span> ({formatUSD(0.24)})
               </StyledDd>
             </StyledDItem>
           </StyledDl>

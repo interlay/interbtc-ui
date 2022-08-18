@@ -7,18 +7,18 @@ const Template: Story<TokenFieldProps> = (args) => <TokenField {...args} />;
 const WithBalance = Template.bind({});
 WithBalance.args = {
   tokenSymbol: 'KSM',
-  valueInUSD: '100.00',
+  valueInUSD: 100.0,
   defaultValue: 100.0, // `value`
   balance: {
-    value: '1000.00',
-    valueInUSD: '1000.00'
+    value: 1000.0,
+    valueInUSD: 1000.0
   }
 };
 
 const WithoutBalance = Template.bind({});
 WithoutBalance.args = {
   tokenSymbol: 'KSM',
-  valueInUSD: '100.00',
+  valueInUSD: 100.0,
   defaultValue: 100.0 // `value`
 };
 
