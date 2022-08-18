@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom';
 
-import Bridge from '@/pages/Bridge';
-
+import App from '../../App';
 import { render, screen } from '../test-utils';
 
 describe('Burn page', () => {
@@ -10,7 +9,7 @@ describe('Burn page', () => {
   });
 
   it('should display burn tab when there is liquidated vault', async () => {
-    render(<Bridge />);
+    render(<App />, { path: '/bridge?tab=burn' });
     const burnTab = screen.getByText('Burn');
 
     expect(burnTab).toBeVisible();
