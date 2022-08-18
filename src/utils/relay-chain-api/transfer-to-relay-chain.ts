@@ -28,7 +28,7 @@ const transferToRelayChain = async (
   const dest = createDest(api, id);
   const currencyId = newCurrencyId(api, RELAY_CHAIN_NATIVE_TOKEN);
 
-  const xcmTransaction = api.tx.xTokens.transfer(currencyId, transferAmount.toString(), dest, TRANSFER_WEIGHT);
+  const xcmTransaction = api.tx.xTokens.transfer(currencyId, transferAmount.toString(true), dest, TRANSFER_WEIGHT);
 
   await transactionApi.sendLogged(xcmTransaction);
 };
