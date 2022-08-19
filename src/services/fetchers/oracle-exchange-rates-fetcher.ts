@@ -9,23 +9,23 @@ import oracleExchangeRatesQuery, { composableExchangeRateSubquery } from '../que
 const ORACLE_LATEST_EXCHANGE_RATE_FETCHER = 'oracle-exchange-rate-fetcher';
 const ORACLE_ALL_LATEST_UPDATES_FETCHER = 'oracle-all-latest-updates-fetcher';
 
-type BtcToCurrencyOracleStatus<T extends CurrencyExt> = OracleStatus<Bitcoin, T>;
+type BtcToCurrencyOracleStatus = OracleStatus<Bitcoin, CurrencyExt>;
 
-type LatestExchangeRateFetcherParams<T extends CurrencyExt> = [key: string, currency: T, onlineTimeout: number];
+type LatestExchangeRateFetcherParams = [key: string, currency: CurrencyExt, onlineTimeout: number];
 
-type AllOracleLatestUpdatesFetcherParams<T extends CurrencyExt> = [
+type AllOracleLatestUpdatesFetcherParams = [
   key: string,
-  currency: T,
+  currency: CurrencyExt,
   onlineTimeout: number,
   namesMap: Map<string, string>
 ];
 
-function decodeOracleValues<T extends CurrencyExt>(
+function decodeOracleValues(
   updateData: any,
-  currency: T,
+  currency: CurrencyExt,
   onlineTimeout: number,
   namesMap: Map<string, string>
-): BtcToCurrencyOracleStatus<T> {
+): BtcToCurrencyOracleStatus {
   // updateValue is a bigint representing a FixedU128, the value is equivalent to an UnsignedFixedPoint
   const rate = decodeFixedPointType(updateData.updateValue);
   const lastUpdate = new Date(updateData.timestamp);
@@ -34,23 +34,24 @@ function decodeOracleValues<T extends CurrencyExt>(
     source: namesMap.get(updateData.oracleId) || updateData.oracleId,
     feed: `${Bitcoin.ticker}/${currency.ticker}`,
     lastUpdate,
-    exchangeRate: new ExchangeRate<Bitcoin, T>(Bitcoin, currency, rate),
+    exchangeRate: new ExchangeRate<Bitcoin, CurrencyExt>(Bitcoin, currency, rate),
     online: Date.now() <= lastUpdate.getTime() + onlineTimeout
   };
 }
 
 // TODO: should type properly (`Relay`)
-const latestExchangeRateFetcher = async <T extends CurrencyExt>(
+const latestExchangeRateFetcher = async(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   { queryKey }: any
-): Promise<BtcToCurrencyOracleStatus<T> | undefined> => {
-  const [key, currency, onlineTimeout] = queryKey as LatestExchangeRateFetcherParams<T>;
+): Promise<BtcToCurrencyOracleStatus | undefined> => {
+  const [key, currency, onlineTimeout] = queryKey as LatestExchangeRateFetcherParams;
 
   if (key !== ORACLE_LATEST_EXCHANGE_RATE_FETCHER) throw new Error('Invalid key!');
 
   // TODO: should type properly (`Relay`)
+  const cond = ('id' in currency) ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
   const latestOracleData = await graphqlFetcher<Array<any>>()({
-    queryKey: [GRAPHQL_FETCHER, oracleExchangeRatesQuery(`typeKey_eq: "${currency.ticker}"`)]
+    queryKey: [GRAPHQL_FETCHER, oracleExchangeRatesQuery(`typeKey: {${cond}}`)]
   });
 
   // TODO: should type properly (`Relay`)
@@ -65,19 +66,21 @@ const latestExchangeRateFetcher = async <T extends CurrencyExt>(
   )[0];
 };
 
-const allLatestSubmissionsFetcher = async <T extends CurrencyExt>(
+const allLatestSubmissionsFetcher = async(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   { queryKey }: any
-): Promise<BtcToCurrencyOracleStatus<T>[]> => {
-  const [key, currency, onlineTimeout, namesMap] = queryKey as AllOracleLatestUpdatesFetcherParams<T>;
+): Promise<BtcToCurrencyOracleStatus[]> => {
+  const [key, currency, onlineTimeout, namesMap] = queryKey as AllOracleLatestUpdatesFetcherParams;
 
   if (key !== ORACLE_ALL_LATEST_UPDATES_FETCHER) throw new Error('Invalid key!');
 
   const query =
     [...namesMap.keys()].reduce(
-      (queryStr, oracleId) =>
-        queryStr +
-        composableExchangeRateSubquery(`ID${oracleId}`, `typeKey_eq: "${currency.ticker}", oracleId_eq: "${oracleId}"`),
+      (queryStr, oracleId) => {
+        const cond = ('id' in currency) ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
+        return queryStr +
+          composableExchangeRateSubquery(`ID${oracleId}`, `typeKey: {${cond}}, oracleId_eq: "${oracleId}"`)
+      },
       '{\n'
     ) + '\n}';
 
