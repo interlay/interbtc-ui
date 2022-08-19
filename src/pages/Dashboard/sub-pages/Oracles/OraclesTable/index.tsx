@@ -1,4 +1,3 @@
-import { CollateralCurrencyExt } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -59,7 +58,7 @@ const OracleTable = (): JSX.Element => {
     isLoading: oracleSubmissionsLoading,
     data: oracleSubmissions,
     error: oracleSubmissionsError
-  } = useQuery<BtcToCurrencyOracleStatus<CollateralCurrencyExt>[], Error>(
+  } = useQuery<BtcToCurrencyOracleStatus[], Error>(
     [ORACLE_ALL_LATEST_UPDATES_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout, namesMap],
     allLatestSubmissionsFetcher,
     {
