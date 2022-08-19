@@ -27,7 +27,9 @@ const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
     const endAdornment = (
       <TokenAdornment>
         <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
+        {/* ray test touch < */}
         <TokenFieldUSD>{`≈ ${formatUSD(valueInUSD)}`}</TokenFieldUSD>
+        {/* ray test touch > */}
       </TokenAdornment>
     );
 

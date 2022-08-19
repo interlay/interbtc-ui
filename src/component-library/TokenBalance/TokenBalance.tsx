@@ -13,7 +13,8 @@ const TokenBalance = ({ tokenSymbol, value, valueInUSD }: TokenBalanceProps): JS
     <TokenBalanceWrapper>
       <TokenBalanceLabel>Balance:</TokenBalanceLabel>
       <TokenBalanceValue>
-        {value} {tokenSymbol} ({formatUSD(valueInUSD)})
+        {/* ray test touch < */}
+        {value} {tokenSymbol} ({formatUSD(valueInUSD)}){/* ray test touch > */}
       </TokenBalanceValue>
     </TokenBalanceWrapper>
   );
