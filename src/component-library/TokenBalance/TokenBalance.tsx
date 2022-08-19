@@ -1,11 +1,9 @@
-import { formatUSD } from '@/common/utils/utils';
-
 import { TokenBalanceLabel, TokenBalanceValue, TokenBalanceWrapper } from './TokenBalance.style';
 
 interface TokenBalanceProps {
   tokenSymbol: string;
-  value: number;
-  valueInUSD: number;
+  value: string;
+  valueInUSD: string;
 }
 
 const TokenBalance = ({ tokenSymbol, value, valueInUSD }: TokenBalanceProps): JSX.Element => {
@@ -14,7 +12,7 @@ const TokenBalance = ({ tokenSymbol, value, valueInUSD }: TokenBalanceProps): JS
       <TokenBalanceLabel>Balance:</TokenBalanceLabel>
       <TokenBalanceValue>
         {/* ray test touch < */}
-        {value} {tokenSymbol} ({formatUSD(valueInUSD)}){/* ray test touch > */}
+        {value} {tokenSymbol} ({valueInUSD}){/* ray test touch > */}
       </TokenBalanceValue>
     </TokenBalanceWrapper>
   );

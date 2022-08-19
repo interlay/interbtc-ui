@@ -52,7 +52,7 @@ const CollateralModal = ({ variant = 'deposit', onSubmit, ...props }: Collateral
       <form onSubmit={h(handleSubmit)}>
         <Stack spacing='double'>
           <StyledTitle>{title}</StyledTitle>
-          <TokenField tokenSymbol='KSM' valueInUSD={0} id={collateralInputId[variant]} {...register} />
+          <TokenField tokenSymbol='KSM' valueInUSD='$0.00' id={collateralInputId[variant]} {...register} />
           <StyledDl>
             <StyledDItem color='tertiary'>
               <StyledDt>Current Total Collateral</StyledDt>

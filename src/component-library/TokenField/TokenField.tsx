@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import { formatUSD } from '@/common/utils/utils';
-
 import { NumberInputProps } from '../NumberInput';
 import { Stack } from '../Stack';
 import { TokenBalance } from '../TokenBalance';
@@ -15,11 +13,11 @@ import {
 
 interface TokenFieldProps extends NumberInputProps {
   balance?: {
-    value: number;
-    valueInUSD: number;
+    value: string;
+    valueInUSD: string;
   };
   tokenSymbol: string;
-  valueInUSD: number;
+  valueInUSD: string;
 }
 
 const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
@@ -28,7 +26,7 @@ const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
       <TokenAdornment>
         <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
         {/* ray test touch < */}
-        <TokenFieldUSD>{`≈ ${formatUSD(valueInUSD)}`}</TokenFieldUSD>
+        <TokenFieldUSD>{`≈ ${valueInUSD}`}</TokenFieldUSD>
         {/* ray test touch > */}
       </TokenAdornment>
     );
