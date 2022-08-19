@@ -1,5 +1,4 @@
-import { CurrencyIdLiteral, VaultExt, VaultStatusExt } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, VaultExt, VaultStatusExt } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -20,18 +19,18 @@ import StatPanel from '../StatPanel';
 
 interface Props {
   vaultAccountId: AccountId;
-  collateralId: CurrencyIdLiteral | undefined;
+  collateralToken: CollateralCurrencyExt;
 }
 
-const VaultStatusStatPanel = ({ vaultAccountId, collateralId }: Props): JSX.Element => {
+const VaultStatusStatPanel = ({ vaultAccountId, collateralToken }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { isIdle: vaultExtIdle, isLoading: vaultExtLoading, data: vaultExt, error: vaultExtError } = useQuery<
-    VaultExt<BitcoinUnit>,
+    VaultExt,
     Error
-  >([GENERIC_FETCHER, 'vaults', 'get', vaultAccountId, collateralId], genericFetcher<VaultExt<BitcoinUnit>>(), {
-    enabled: !!bridgeLoaded && !!vaultAccountId && !!collateralId
+  >([GENERIC_FETCHER, 'vaults', 'get', vaultAccountId, collateralToken], genericFetcher<VaultExt>(), {
+    enabled: !!bridgeLoaded && !!vaultAccountId && !!collateralToken
   });
   useErrorHandler(vaultExtError);
 

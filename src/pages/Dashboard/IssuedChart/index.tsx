@@ -1,5 +1,4 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -29,7 +28,7 @@ const IssuedChart = (): JSX.Element => {
     data: cumulativeIssuesPerDay,
     error: cumulativeIssuesPerDayError
     // TODO: should type properly (`Relay`)
-  } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
+  } = useQuery<VolumeDataPoint[], Error>(
     [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Issued, cutoffTimestamps, WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
@@ -41,7 +40,7 @@ const IssuedChart = (): JSX.Element => {
     data: cumulativeRedeemsPerDay,
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
-  } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
+  } = useQuery<VolumeDataPoint[], Error>(
     [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, cutoffTimestamps, WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
@@ -121,8 +120,8 @@ const IssuedChart = (): JSX.Element => {
         }
       ]}
       datasets={[
-        cumulativeTvlPerDay.slice(1).map((dataPoint) => dataPoint.amount.str.BTC()),
-        pointTvlPerDay.map((amount) => amount.str.BTC())
+        cumulativeTvlPerDay.slice(1).map((dataPoint) => dataPoint.amount.toString()),
+        pointTvlPerDay.map((amount) => amount.toString())
       ]}
     />
   );

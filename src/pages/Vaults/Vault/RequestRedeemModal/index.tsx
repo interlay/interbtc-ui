@@ -1,4 +1,4 @@
-import { CollateralCurrency, newVaultId, WrappedCurrency } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, newVaultId } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -30,12 +30,12 @@ type RequestRedeemFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
-  collateralCurrency: CollateralCurrency | undefined;
+  collateralToken: CollateralCurrencyExt;
   vaultAddress: string;
 }
 
 // TODO: share form with bridge page
-const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
+const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress }: Props): JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -49,21 +49,17 @@ const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }:
   const onSubmit = handleSubmit(async (data) => {
     setRequestPending(true);
     try {
-      if (BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]).to.Satoshi() === undefined) {
+      // Represents being less than 1 Satoshi
+      if (new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT])._rawAmount.lt(1)) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
       const dustValue = await window.bridge.redeem.getDustValue();
-      const amountPolkaBtc = BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT]);
+      const amountPolkaBtc = new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]);
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
 
-      const vaultId = newVaultId(
-        window.bridge.api,
-        vaultAddress,
-        collateralCurrency as CollateralCurrency,
-        WRAPPED_TOKEN as WrappedCurrency
-      );
+      const vaultId = newVaultId(window.bridge.api, vaultAddress, collateralToken, WRAPPED_TOKEN);
       await window.bridge.redeem.request(amountPolkaBtc, data[BTC_ADDRESS], vaultId);
 
       toast.success('Redeem request submitted');
@@ -75,8 +71,8 @@ const RequestRedeemModal = ({ onClose, open, collateralCurrency, vaultAddress }:
   });
 
   const validateAmount = (value: string): string | undefined => {
-    const wrappedTokenAmount = BitcoinAmount.from.BTC(value);
-    if (wrappedTokenAmount.lte(BitcoinAmount.zero)) {
+    const wrappedTokenAmount = new BitcoinAmount(value);
+    if (wrappedTokenAmount.lte(BitcoinAmount.zero())) {
       return t('Amount must be greater than zero!');
     }
 

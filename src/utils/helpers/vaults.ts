@@ -1,25 +1,25 @@
-import { CollateralUnit, VaultExt, VaultStatusExt } from '@interlay/interbtc-api';
-import { BitcoinAmount, BitcoinUnit, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, VaultExt, VaultStatusExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { TFunction } from 'react-i18next';
 
 import { BTCToCollateralTokenRate } from '@/types/currency';
 
 const getCollateralization = (
-  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
+  collateral: MonetaryAmount<CollateralCurrencyExt>,
   tokens: BitcoinAmount,
   btcToCollateralTokenRate: BTCToCollateralTokenRate
 ): Big | undefined => {
-  if (tokens.gt(BitcoinAmount.zero) && btcToCollateralTokenRate.toBig().gt(0)) {
+  if (tokens.gt(BitcoinAmount.zero()) && btcToCollateralTokenRate.toBig().gt(0)) {
     const tokensAsCollateral = btcToCollateralTokenRate.toCounter(tokens);
-    return collateral.toBig().div(tokensAsCollateral.toBig()).mul(100);
+    return collateral.toBig(0).div(tokensAsCollateral.toBig(0)).mul(100);
   } else {
     return undefined;
   }
 };
 
 const getVaultStatusLabel = (
-  vaultExt: VaultExt<BitcoinUnit>,
+  vaultExt: VaultExt,
   currentActiveBlockNumber: number,
   liquidationThreshold: Big,
   secureCollateralThreshold: Big,

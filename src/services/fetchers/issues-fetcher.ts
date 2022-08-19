@@ -1,5 +1,5 @@
-import { IssueStatus, newMonetaryAmount } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { atomicToBaseAmount, IssueStatus, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
 
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
@@ -12,12 +12,12 @@ const ISSUES_FETCHER = 'issues-fetcher';
 
 // TODO: should type properly (`Relay`)
 function decodeIssueValues(issue: any): any {
-  issue.request.amountWrapped = BitcoinAmount.from.Satoshi(issue.request.amountWrapped);
-  issue.request.bridgeFeeWrapped = BitcoinAmount.from.Satoshi(issue.request.bridgeFeeWrapped);
+  issue.request.amountWrapped = new BitcoinAmount(atomicToBaseAmount(issue.request.amountWrapped, Bitcoin));
+  issue.request.bridgeFeeWrapped = new BitcoinAmount(atomicToBaseAmount(issue.request.bridgeFeeWrapped, Bitcoin));
   issue.griefingCollateral = newMonetaryAmount(issue.griefingCollateral, RELAY_CHAIN_NATIVE_TOKEN);
   if (issue.execution) {
-    issue.execution.amountWrapped = BitcoinAmount.from.Satoshi(issue.execution.amountWrapped);
-    issue.execution.bridgeFeeWrapped = BitcoinAmount.from.Satoshi(issue.execution.bridgeFeeWrapped);
+    issue.execution.amountWrapped = new BitcoinAmount(atomicToBaseAmount(issue.execution.amountWrapped, Bitcoin));
+    issue.execution.bridgeFeeWrapped = new BitcoinAmount(atomicToBaseAmount(issue.execution.bridgeFeeWrapped, Bitcoin));
   }
 
   return issue;

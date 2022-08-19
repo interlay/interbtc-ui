@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getPolkadotLink, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, getPolkadotLink } from '@/common/utils/utils';
 import ExternalLink from '@/components/ExternalLink';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
@@ -35,7 +35,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const prices = useGetPrices();
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero);
+  const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero());
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
@@ -88,7 +88,11 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
         </span>
         <span>
-          &nbsp;{`(≈ $${getUsdAmount(burnedBTCAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)})`}
+          &nbsp;
+          {`(≈ ${displayMonetaryAmountInUSDFormat(
+            burnedBTCAmount,
+            getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+          )})`}
         </span>
         <span className={getColorShade('red')}>&nbsp;{t('redeem_page.reimbursed').toLowerCase()}</span>.
       </p>
@@ -99,7 +103,10 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         </PrimaryColorSpan>
         <span>
           &nbsp;
-          {`(≈ $${getUsdAmount(collateralTokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd)})`}
+          {`(≈ ${displayMonetaryAmountInUSDFormat(
+            collateralTokenAmount,
+            getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+          )})`}
         </span>
         <PrimaryColorSpan>&nbsp;{t('redeem_page.recover_receive_total')}</PrimaryColorSpan>.
       </p>
@@ -121,7 +128,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(burnCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(
+          approxUSD={displayMonetaryAmountInUSDFormat(
             burnCollateralTokenAmount,
             getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
           )}
@@ -141,7 +148,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(punishmentCollateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(
+          approxUSD={displayMonetaryAmountInUSDFormat(
             punishmentCollateralTokenAmount,
             getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
           )}
@@ -162,7 +169,10 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
           unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
           value={displayMonetaryAmount(collateralTokenAmount)}
           unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-          approxUSD={getUsdAmount(collateralTokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd)}
+          approxUSD={displayMonetaryAmountInUSDFormat(
+            collateralTokenAmount,
+            getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+          )}
         />
       </div>
       <ExternalLink className='text-sm' href={getPolkadotLink(redeem.request.height.absolute)}>

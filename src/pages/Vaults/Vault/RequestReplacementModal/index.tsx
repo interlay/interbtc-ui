@@ -1,4 +1,4 @@
-import { CollateralCurrency } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -18,7 +18,6 @@ import NumberInput from '@/components/NumberInput';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { CurrencyValues } from '@/types/currency';
 
 const AMOUNT = 'amount';
 
@@ -29,11 +28,11 @@ type RequestReplacementFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
-  collateralCurrency: CurrencyValues | undefined;
+  collateralToken: CollateralCurrencyExt;
   vaultAddress: string;
 }
 
-const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddress }: Props): JSX.Element => {
+const RequestReplacementModal = ({ onClose, open, collateralToken, vaultAddress }: Props): JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -49,15 +48,16 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
   const onSubmit = handleSubmit(async (data) => {
     setRequestPending(true);
     try {
-      if (BitcoinAmount.from.BTC(data[AMOUNT]).to.Satoshi() === undefined) {
+      // Represents being less than 1 Satoshi
+      if (new BitcoinAmount(data[AMOUNT])._rawAmount.lt(1)) {
         throw new Error('Amount to convert is less than 1 satoshi.');
       }
       const dustValue = await window.bridge.redeem.getDustValue();
-      const amountPolkaBtc = BitcoinAmount.from.BTC(data[AMOUNT]);
+      const amountPolkaBtc = new BitcoinAmount(data[AMOUNT]);
       if (amountPolkaBtc.lte(dustValue)) {
         throw new Error(`Please enter an amount greater than Bitcoin dust (${displayMonetaryAmount(dustValue)} BTC)`);
       }
-      await window.bridge.replace.request(amountPolkaBtc, collateralCurrency?.currency as CollateralCurrency);
+      await window.bridge.replace.request(amountPolkaBtc, collateralToken);
 
       const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);
@@ -70,8 +70,8 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
   });
 
   const validateAmount = (value: number): string | undefined => {
-    const wrappedTokenAmount = BitcoinAmount.from.BTC(value);
-    if (wrappedTokenAmount.lte(BitcoinAmount.zero)) {
+    const wrappedTokenAmount = new BitcoinAmount(value);
+    if (wrappedTokenAmount.lte(BitcoinAmount.zero())) {
       return t('Amount must be greater than zero!');
     }
 
@@ -93,7 +93,7 @@ const RequestReplacementModal = ({ onClose, open, collateralCurrency, vaultAddre
           <p>{t('vault.withdraw_your_collateral')}</p>
           <p>{t('vault.you_have')}</p>
           <p>
-            {displayMonetaryAmount(lockedCollateral)} {collateralCurrency?.id}
+            {displayMonetaryAmount(lockedCollateral)} {collateralToken.ticker}
           </p>
           <p>
             {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
