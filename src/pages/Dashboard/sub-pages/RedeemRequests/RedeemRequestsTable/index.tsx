@@ -131,7 +131,9 @@ const RedeemRequestsTable = (): JSX.Element => {
                 >
                   {shortTxId(redeemRequest.backingPayment.btcTxId)}
                 </ExternalLink>
-              ) : redeemRequest.status === RedeemStatus.Expired || redeemRequest.status === RedeemStatus.Retried || redeemRequest.status === RedeemStatus.Reimbursed ? (
+              ) : redeemRequest.status === RedeemStatus.Expired ||
+                redeemRequest.status === RedeemStatus.Retried ||
+                redeemRequest.status === RedeemStatus.Reimbursed ? (
                 t('redeem_page.failed')
               ) : (
                 `${t('pending')}...`

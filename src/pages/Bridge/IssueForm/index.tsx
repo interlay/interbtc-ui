@@ -403,7 +403,7 @@ const IssueForm = (): JSX.Element | null => {
             />
             <Vaults
               label={t('select_vault')}
-              requiredCapacity={wrappedTokenAmount.toString()}
+              requiredCapacity={wrappedTokenAmount.toString(true)}
               isShown={selectVaultManually}
               onSelectionCallback={setVault}
               error={errors[VAULT_SELECTION]}
