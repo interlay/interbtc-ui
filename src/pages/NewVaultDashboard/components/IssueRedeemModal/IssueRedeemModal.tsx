@@ -67,7 +67,7 @@ const IssueRedeemModal = ({ variant = 'issue', onSubmit, ...props }: IssueRedeem
               <TokenField
                 aria-labelledby={amountLabelId}
                 tokenSymbol='KSM'
-                valueInUSD='0.00'
+                valueInUSD='$0.00'
                 id={collateralInputId[variant]}
                 {...register}
               />
