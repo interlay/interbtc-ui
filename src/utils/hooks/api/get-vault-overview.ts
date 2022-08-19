@@ -83,7 +83,7 @@ const getVaultOverview = async (
     },
     body: JSON.stringify({
       query: issueCountQuery(
-        `vault: {accountId_eq: "${accountId.toString()}", collateralToken_eq: ${collateralTokenIdLiteral}}, status_eq: Pending`
+        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}, status_eq: Pending` // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
       )
     })
   });
@@ -95,7 +95,7 @@ const getVaultOverview = async (
     },
     body: JSON.stringify({
       query: redeemCountQuery(
-        `vault: {accountId_eq: "${accountId.toString()}", collateralToken_eq: ${collateralTokenIdLiteral}}, status_eq: Pending`
+        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}, status_eq: Pending` // TODO: add asset_eq, see comment above
       )
     })
   });
