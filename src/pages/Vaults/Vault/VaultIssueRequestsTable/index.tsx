@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { displayMonetaryAmount, formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatDateTimePrecise, formatNumber, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -78,7 +78,9 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pro
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
-      issueCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`) // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
+      issueCountQuery(
+        `vault: {accountId_eq: "${vaultAddress}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`
+      ) // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
     ],
     graphqlFetcher<GraphqlReturn<any>>()
   );
@@ -121,7 +123,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pro
         classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
-          return <>{issue.request.height.absolute}</>;
+          return <>{formatNumber(issue.request.height.absolute)}</>;
         }
       },
       {
@@ -155,7 +157,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pro
             height = issue.request.height.absolute;
           }
 
-          return <>{height}</>;
+          return <>{formatNumber(height)}</>;
         }
       },
       {

@@ -1,5 +1,7 @@
 import { Meta, Story } from '@storybook/react';
 
+import { formatPercentage } from '@/common/utils/utils';
+
 import { VaultCard, VaultCardProps } from '.';
 
 const Template: Story<VaultCardProps> = (args) => <VaultCard {...args} />;
@@ -9,7 +11,7 @@ Default.args = {
   collateralSymbol: 'DOT',
   wrappedSymbol: 'BTC',
   pendingRequests: 3,
-  apy: '16.23',
+  apy: formatPercentage(0.1623),
   collateralScore: '115.45',
   link: '#',
   atRisk: false
@@ -20,7 +22,7 @@ AtRisk.args = {
   collateralSymbol: 'DOT',
   wrappedSymbol: 'BTC',
   pendingRequests: 3,
-  apy: '16.23',
+  apy: formatPercentage(0.1623),
   collateralScore: '115.45',
   link: '#',
   atRisk: true

@@ -1,3 +1,5 @@
+import { formatNumber } from '@/common/utils/utils';
+
 import { CoinPair } from '../CoinPair';
 import { CTALink } from '../CTA';
 import { Tokens } from '../types';
@@ -43,19 +45,17 @@ const VaultCard = ({
         <DlItem>
           {/* TODO: these headings will also be moved to the dictionary */}
           <dt>Pending requests</dt>
-          <dd>{pendingRequests}</dd>
+          <dd>{formatNumber(pendingRequests)}</dd>
         </DlItem>
       </StyledDl>
       <StyledDl>
         <DlItem>
           <dt>Current APR</dt>
-          <dd>≈{apy}%</dd>
+          <dd>≈ {apy}</dd>
         </DlItem>
         <DlItem>
           <dt>Collateralization</dt>
-          <CollateralScore $atRisk={atRisk}>
-            {collateralScore === '∞' ? collateralScore : `${collateralScore}%`}
-          </CollateralScore>
+          <CollateralScore $atRisk={atRisk}>{collateralScore}</CollateralScore>
         </DlItem>
       </StyledDl>
       <CTAWrapper>

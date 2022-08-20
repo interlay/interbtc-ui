@@ -178,7 +178,7 @@ const App = (): JSX.Element => {
             totalWrappedTokenAmount,
             totalLockedCollateralTokenAmount,
             totalGovernanceTokenAmount,
-            Number(btcRelayHeight),
+            btcRelayHeight,
             bitcoinHeight,
             parachainStatus(state)
           )

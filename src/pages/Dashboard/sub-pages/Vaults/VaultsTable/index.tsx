@@ -1,10 +1,4 @@
-import {
-  CollateralIdLiteral,
-  currencyIdToMonetaryCurrency,
-  isCurrencyEqual,
-  roundTwoDecimals,
-  VaultExt
-} from '@interlay/interbtc-api';
+import { CollateralIdLiteral, currencyIdToMonetaryCurrency, isCurrencyEqual, VaultExt } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -17,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatPercentage, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
@@ -67,14 +61,12 @@ const CollateralizationCell = ({
       <>
         <div>
           <p className={getCollateralizationColor(settledCollateralization, collateralSecureThreshold)}>
-            {settledCollateralization === undefined ? '∞' : roundTwoDecimals(settledCollateralization.toString()) + '%'}
+            {settledCollateralization === undefined ? '∞' : formatPercentage(settledCollateralization.toNumber())}
           </p>
           <p className='text-xs'>
             <span>{t('vault.pending_table_subcell')}</span>
             <span className={getCollateralizationColor(unsettledCollateralization, collateralSecureThreshold)}>
-              {unsettledCollateralization === undefined
-                ? '∞'
-                : roundTwoDecimals(unsettledCollateralization.toString()) + '%'}
+              {unsettledCollateralization === undefined ? '∞' : formatPercentage(unsettledCollateralization.toNumber())}
             </span>
           </p>
         </div>

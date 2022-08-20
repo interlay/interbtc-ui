@@ -1,9 +1,4 @@
-import {
-  CollateralCurrencyExt,
-  CurrencyExt,
-  newMonetaryAmount,
-  WrappedCurrency
-} from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount, WrappedCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
@@ -51,7 +46,9 @@ const cumulativeVolumesFetcher = async (
     }
     let wrapCurrCond = '';
     if (wrappedCurrencyIdLiteral !== undefined) {
-      wrapCurrCond = (typeof wrappedCurrencyIdLiteral === 'number' ? 'asset_eq: ' : 'token_eq: ') + wrappedCurrencyIdLiteral.toString();
+      wrapCurrCond =
+        (typeof wrappedCurrencyIdLiteral === 'number' ? 'asset_eq: ' : 'token_eq: ') +
+        wrappedCurrencyIdLiteral.toString();
     }
     const where = `{
       tillTimestamp_lte: "${date.toISOString()}",
@@ -86,9 +83,9 @@ const cumulativeVolumesFetcher = async (
     ${cutoffTimestamps.map((date) => {
       let col;
       if (collateralCurrency) {
-        col = ('id' in collateralCurrency) ? collateralCurrency.id : collateralCurrency.ticker;
+        col = 'id' in collateralCurrency ? collateralCurrency.id : collateralCurrency.ticker;
       }
-      return queryFragment(type, date, col, wrappedCurrency?.ticker)
+      return queryFragment(type, date, col, wrappedCurrency?.ticker);
     })}
   }
   `;

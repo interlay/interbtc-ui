@@ -10,7 +10,7 @@ import { useTable } from 'react-table';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, formatDateTimePrecise, shortTxId } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -170,7 +170,7 @@ const IssueRequestsTable = (): JSX.Element => {
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           const value = issue.backingPayment.confirmations;
-          return <>{value === undefined ? t('not_applicable') : Math.max(value, 0)}</>;
+          return <>{value === undefined ? t('not_applicable') : formatNumber(Math.max(value, 0))}</>;
         }
       },
       {

@@ -40,7 +40,7 @@ function decodeOracleValues(
 }
 
 // TODO: should type properly (`Relay`)
-const latestExchangeRateFetcher = async(
+const latestExchangeRateFetcher = async (
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   { queryKey }: any
 ): Promise<BtcToCurrencyOracleStatus | undefined> => {
@@ -49,7 +49,7 @@ const latestExchangeRateFetcher = async(
   if (key !== ORACLE_LATEST_EXCHANGE_RATE_FETCHER) throw new Error('Invalid key!');
 
   // TODO: should type properly (`Relay`)
-  const cond = ('id' in currency) ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
+  const cond = 'id' in currency ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
   const latestOracleData = await graphqlFetcher<Array<any>>()({
     queryKey: [GRAPHQL_FETCHER, oracleExchangeRatesQuery(`typeKey: {${cond}}`)]
   });
@@ -66,7 +66,7 @@ const latestExchangeRateFetcher = async(
   )[0];
 };
 
-const allLatestSubmissionsFetcher = async(
+const allLatestSubmissionsFetcher = async (
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   { queryKey }: any
 ): Promise<BtcToCurrencyOracleStatus[]> => {
@@ -75,14 +75,12 @@ const allLatestSubmissionsFetcher = async(
   if (key !== ORACLE_ALL_LATEST_UPDATES_FETCHER) throw new Error('Invalid key!');
 
   const query =
-    [...namesMap.keys()].reduce(
-      (queryStr, oracleId) => {
-        const cond = ('id' in currency) ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
-        return queryStr +
-          composableExchangeRateSubquery(`ID${oracleId}`, `typeKey: {${cond}}, oracleId_eq: "${oracleId}"`)
-      },
-      '{\n'
-    ) + '\n}';
+    [...namesMap.keys()].reduce((queryStr, oracleId) => {
+      const cond = 'id' in currency ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
+      return (
+        queryStr + composableExchangeRateSubquery(`ID${oracleId}`, `typeKey: {${cond}}, oracleId_eq: "${oracleId}"`)
+      );
+    }, '{\n') + '\n}';
 
   // TODO: should type properly (`Relay`)
   const latestOracleData = await graphqlFetcher<Array<any>>()({
