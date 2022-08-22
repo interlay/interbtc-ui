@@ -8,13 +8,14 @@ import { forwardRef, HTMLAttributes, Key, useEffect, useState } from 'react';
 import { useDOMRef } from '../utils/dom';
 import { Tab } from './Tab';
 import { TabPanel } from './TabPanel';
-import { TabList, TabListWrapper, TabSelection } from './Tabs.style';
+import { StyledTabs, TabList, TabListWrapper, TabSelection } from './Tabs.style';
 
 type Props = {
   defaultSelectedKey?: Key;
   selectedKey?: Key;
   onSelectionChange?: (index: Key) => void;
   disabledKeys?: Key[];
+  panel?: React.ReactNode;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -22,7 +23,7 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 type TabsProps = Props & NativeAttrs;
 
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ children, ...props }, ref): JSX.Element => {
+  ({ children, className, style, panel, ...props }, ref): JSX.Element => {
     const ariaProps = { children: children as CollectionChildren<Record<string, unknown>>, ...props };
     const state = useTabListState(ariaProps);
     const tabsListRef = useDOMRef<HTMLDivElement>(ref);
@@ -49,7 +50,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
     });
 
     return (
-      <div>
+      <StyledTabs className={className} style={style}>
         <TabListWrapper>
           <TabSelection isFocusVisible={isFocusVisible} {...activeTabStyle} />
           <TabList {...mergeProps(tabListProps, focusProps)} ref={tabsListRef}>
@@ -58,8 +59,10 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
             ))}
           </TabList>
         </TabListWrapper>
-        <TabPanel key={state.selectedItem?.key} state={state} />
-      </div>
+        <TabPanel key={state.selectedItem?.key} state={state}>
+          {panel}
+        </TabPanel>
+      </StyledTabs>
     );
   }
 );

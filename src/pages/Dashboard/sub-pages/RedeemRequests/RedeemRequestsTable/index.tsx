@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { displayMonetaryAmount, formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -20,7 +20,7 @@ import InterlayTable, {
   InterlayTr
 } from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
-import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
+import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
@@ -92,11 +92,19 @@ const RedeemRequestsTable = (): JSX.Element => {
         }
       },
       {
+        Header: t('user'),
+        accessor: 'userParachainAddress',
+        classNames: ['text-center'],
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <>{value}</>;
+        }
+      },
+      {
         Header: t('issue_page.vault_dot_address'),
         accessor: 'vault',
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: any }) {
-          return <>{shortAddress(value.accountId)}</>;
+          return <>{value.accountId}</>;
         }
       },
       {
@@ -105,6 +113,33 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: string }) {
           return <ExternalLink href={`${BTC_EXPLORER_ADDRESS_API}${value}`}>{shortAddress(value)}</ExternalLink>;
+        }
+      },
+      {
+        Header: t('issue_page.btc_transaction'),
+        classNames: ['text-right'],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: redeemRequest } }: any) {
+          return (
+            <>
+              {redeemRequest.backingPayment.btcTxId ? (
+                <ExternalLink
+                  href={`${BTC_EXPLORER_TRANSACTION_API}${redeemRequest.backingPayment.btcTxId}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                  }}
+                >
+                  {shortTxId(redeemRequest.backingPayment.btcTxId)}
+                </ExternalLink>
+              ) : redeemRequest.status === RedeemStatus.Expired ||
+                redeemRequest.status === RedeemStatus.Retried ||
+                redeemRequest.status === RedeemStatus.Reimbursed ? (
+                t('redeem_page.failed')
+              ) : (
+                `${t('pending')}...`
+              )}
+            </>
+          );
         }
       },
       {

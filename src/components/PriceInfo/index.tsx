@@ -38,7 +38,7 @@ const PriceInfo = ({ title, unitIcon, value, unitName, approxUSD, tooltip, class
           { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}
       >
-        {`≈ $ ${approxUSD}`}
+        {`≈ ${approxUSD}`}
       </span>
     </div>
   </div>

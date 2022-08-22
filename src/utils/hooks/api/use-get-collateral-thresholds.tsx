@@ -1,15 +1,9 @@
-import {
-  CollateralCurrency,
-  CollateralIdLiteral,
-  CollateralUnit,
-  currencyIdLiteralToMonetaryCurrency
-} from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CollateralIdLiteral } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useQuery, UseQueryResult } from 'react-query';
 
-import { VAULT_COLLATERAL } from '@/config/vaults';
+import { VAULT_COLLATERAL_TOKENS } from '@/config/vaults';
 
-// TODO: Refactor with currencies update
 type AllCollateralThresholds = { [currencySymbol in CollateralIdLiteral]: CollateralThresholds };
 
 type CollateralThresholds = {
@@ -17,33 +11,26 @@ type CollateralThresholds = {
   secureThreshold: Big;
 };
 
-const getThresholds = async (collateralCurrencyLiteral: CollateralIdLiteral): Promise<CollateralThresholds> => {
+const getThresholds = async (collateralToken: CollateralCurrencyExt): Promise<CollateralThresholds> => {
   try {
-    // TODO: Need to refactor this after currency updates are merged.
-    const currency = currencyIdLiteralToMonetaryCurrency<CollateralUnit>(
-      window.bridge.api,
-      collateralCurrencyLiteral
-    ) as CollateralCurrency;
-
-    const liquidationThreshold = await window.bridge.vaults.getLiquidationCollateralThreshold(currency);
-    const secureThreshold = await window.bridge.vaults.getSecureCollateralThreshold(currency);
+    const liquidationThreshold = await window.bridge.vaults.getLiquidationCollateralThreshold(collateralToken);
+    const secureThreshold = await window.bridge.vaults.getSecureCollateralThreshold(collateralToken);
 
     return { liquidationThreshold, secureThreshold };
   } catch {
-    throw new Error(`useGetCollateralThresholds: error getting thresholds for currency ${collateralCurrencyLiteral}.`);
+    throw new Error(`useGetCollateralThresholds: error getting thresholds for currency ${collateralToken.ticker}.`);
   }
 };
 
 const getAllThresholds = async (): Promise<AllCollateralThresholds> => {
-  const collateralIdLiterals = VAULT_COLLATERAL;
   const allThresholds = await Promise.all(
-    collateralIdLiterals.map((collateralIdLiteral) => getThresholds(collateralIdLiteral))
+    VAULT_COLLATERAL_TOKENS.map((item: CollateralCurrencyExt) => getThresholds(item))
   );
   // TODO: handle types properly
   return allThresholds.reduce(
     (result, thresholds, index) => ({
       ...result,
-      [collateralIdLiterals[index]]: thresholds
+      [VAULT_COLLATERAL_TOKENS[index].ticker]: thresholds
     }),
     {}
   ) as AllCollateralThresholds;

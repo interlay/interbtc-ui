@@ -29,7 +29,14 @@ FullWidth.args = {
   fullWidth: true
 };
 
-export { FullWidth, Outlined, Primary, Secondary };
+const Small = Template.bind({});
+Small.args = {
+  variant: 'primary',
+  size: 'small',
+  children: 'Call to action'
+};
+
+export { FullWidth, Outlined, Primary, Secondary, Small };
 
 export default {
   title: 'Elements/CTALink',

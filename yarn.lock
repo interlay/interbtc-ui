@@ -1846,14 +1846,14 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.13.7":
-  version "1.13.7"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.13.7.tgz#fbc6ed4c1ee2478e93f796c4e61a00a24a3b1fe9"
-  integrity sha512-2ENJIjyog54iDfrXlBEvR3WZMZ8f0rNB+0Ym4FKa8f4dhg625Pnl182JvVvc/tBXqzO/AyYb1DSzaEgaU87dMg==
+"@interlay/interbtc-api@1.16.4":
+  version "1.16.4"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.16.4.tgz#3d9012f55c0540eaa29c97a7caeb383dfaf15db2"
+  integrity sha512-cApsawZXa40HoQcHv4Wn9lxeMew2xeVif1XXIRVv3zPR5/W1Eb47QuDGg5TFFq91e/8lRuLBfjGUaYjaR9vVYA==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/interbtc-types" "1.7.0"
-    "@interlay/monetary-js" "0.6.0"
+    "@interlay/interbtc-types" "1.8.0"
+    "@interlay/monetary-js" "0.7.0"
     "@polkadot/api" "8.8.2"
     "@types/big.js" "6.1.2"
     big.js "6.1.1"
@@ -1864,15 +1864,15 @@
     isomorphic-fetch "^3.0.0"
     regtest-client "^0.2.0"
 
-"@interlay/interbtc-types@1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.7.0.tgz#413031e5d15565d57f787e66455b9619ae8649b5"
-  integrity sha512-gh+cI1pTYRxHM5XZyb85OIsrotatTYKBbqiIj7xo6sLrONMagWl1T2DwsJy4wn0A9qtETw/PqLirV7bAC1TXpg==
+"@interlay/interbtc-types@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.8.0.tgz#4523521478663d31fee2d8a17f71578a1239a8b6"
+  integrity sha512-oMpAL3GDi2QUCt7kJ+tdxj6jCwWiFrQLdMf75JxbCOT/1CBQkPg+jjD+kQahuQ/2Q/9WLaP8mmFNMFGohghiXA==
 
-"@interlay/monetary-js@0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.6.0.tgz#15899cced7e1b72bac419b9cd491fa0b2d0e21c2"
-  integrity sha512-boDoPBcfOZ/aVU1uuTREy3PuEy3+3ykDsLvgdZGEsUzrQprzBLYb1EvqT5P9eumjgVwbiZCkfk7NcmNyvCN8pw==
+"@interlay/monetary-js@0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.7.0.tgz#7142f7d2b86acf77d8524cee22b4ae2c5ba2d3a6"
+  integrity sha512-vxUcrl2Kum4W2bPt9Lz0WM/pPZEjOrwBtMEgNBAqBtBROXWeOi5jdwQeUwNSr2jqxv0g3V0mVyCVqOxy00iiQg==
   dependencies:
     "@types/big.js" "6.1.2"
     big.js "6.1.1"
@@ -2955,14 +2955,14 @@
     "@babel/runtime" "^7.6.2"
 
 "@react-aria/meter@^3.2.1":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@react-aria/meter/-/meter-3.3.0.tgz#13776293fcc42055a9e9dd7233abe8713d8f5376"
-  integrity sha512-svLFhWgpi6WBtStLFI7bXk9wMrLAl/8YYoEC5oUpk3B0DXgyBXx3o8/SHqSab9nNJEepfQXLvC0PVoL6116h3A==
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/meter/-/meter-3.2.1.tgz#c34526a2cde2f00f4c0f64a5e085ccd416d61d08"
+  integrity sha512-gY3CGGkuWEixWUQWMTD7Wi6wvW7TfBBfITlLJvVjsk3wgW7HQJYF8qTmJp0imUCbiD1t43Si6QC1SjSNl41WmA==
   dependencies:
     "@babel/runtime" "^7.6.2"
-    "@react-aria/progress" "^3.3.0"
-    "@react-types/meter" "^3.2.2"
-    "@react-types/shared" "^3.14.0"
+    "@react-aria/progress" "^3.2.1"
+    "@react-types/meter" "^3.2.1"
+    "@react-types/shared" "^3.13.1"
 
 "@react-aria/numberfield@^3.2.1":
   version "3.2.1"
@@ -2982,7 +2982,7 @@
     "@react-types/shared" "^3.13.1"
     "@react-types/textfield" "^3.5.1"
 
-"@react-aria/progress@^3.3.0":
+"@react-aria/progress@^3.2.1", "@react-aria/progress@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@react-aria/progress/-/progress-3.3.0.tgz#ae2745da40ad84331c05ec33efe0d5f3a9220df5"
   integrity sha512-VenJJWOErvD12RKoffQomlTc2Zl6snrTT6aoM6APApW/QORUyyI8VW6CTUM68RkoQ0q3qySjsL+7yyrd6sping==
@@ -3267,7 +3267,7 @@
   dependencies:
     "@react-types/shared" "^3.14.0"
 
-"@react-types/meter@^3.2.2":
+"@react-types/meter@^3.2.1":
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/@react-types/meter/-/meter-3.2.2.tgz#029f593e405cf3aebccd9c0f54c588c399689559"
   integrity sha512-SZ5iH+ZgXOxjsDzpA49Pq0WWiBZC50LmyK7FxtZg9VhhsrySkpYQ9GZUWTjnAp42/k/LvMIpctp+dG6mXaiAjg==

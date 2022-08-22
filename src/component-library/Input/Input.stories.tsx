@@ -11,7 +11,19 @@ Default.args = {
   placeholder: 'placeholder'
 };
 
-export { Default };
+const EndAdornment = Template.bind({});
+EndAdornment.args = {
+  endAdornment: 'Coin',
+  placeholder: 'placeholder'
+};
+
+const StartAdornment = Template.bind({});
+StartAdornment.args = {
+  startAdornment: 'Coin',
+  placeholder: 'placeholder'
+};
+
+export { Default, EndAdornment, StartAdornment };
 
 export default {
   title: 'Forms/Input',

@@ -3,7 +3,13 @@ import * as React from 'react';
 import { NumberInputProps } from '../NumberInput';
 import { Stack } from '../Stack';
 import { TokenBalance } from '../TokenBalance';
-import { TokenFieldInnerWrapper, TokenFieldInput, TokenFieldSymbol, TokenFieldUSD } from './TokenField.style';
+import {
+  TokenAdornment,
+  TokenFieldInnerWrapper,
+  TokenFieldInput,
+  TokenFieldSymbol,
+  TokenFieldUSD
+} from './TokenField.style';
 
 interface TokenFieldProps extends NumberInputProps {
   balance?: {
@@ -16,15 +22,20 @@ interface TokenFieldProps extends NumberInputProps {
 
 const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
   ({ tokenSymbol, valueInUSD, balance, ...rest }, ref): JSX.Element => {
+    const endAdornment = (
+      <TokenAdornment>
+        <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
+        <TokenFieldUSD>{`≈ ${valueInUSD}`}</TokenFieldUSD>
+      </TokenAdornment>
+    );
+
     return (
       <Stack spacing='half'>
         {balance ? (
           <TokenBalance tokenSymbol={tokenSymbol} value={balance.value} valueInUSD={balance.valueInUSD} />
         ) : null}
         <TokenFieldInnerWrapper>
-          <TokenFieldInput ref={ref} {...rest} />
-          <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
-          <TokenFieldUSD>{`≈ $ ${valueInUSD}`}</TokenFieldUSD>
+          <TokenFieldInput ref={ref} endAdornment={endAdornment} {...rest} />
         </TokenFieldInnerWrapper>
       </Stack>
     );

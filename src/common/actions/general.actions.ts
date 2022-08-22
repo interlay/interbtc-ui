@@ -1,5 +1,5 @@
-import { CollateralUnit } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CollateralCurrencyExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 
 import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
 
@@ -66,14 +66,14 @@ export const updateWrappedTokenTransferableBalanceAction = (
 });
 
 export const updateCollateralTokenBalanceAction = (
-  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
+  collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>
 ): UpdateCollateralTokenBalance => ({
   type: UPDATE_COLLATERAL_TOKEN_BALANCE,
   collateralTokenBalance
 });
 
 export const updateCollateralTokenTransferableBalanceAction = (
-  collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
+  collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>
 ): UpdateCollateralTokenTransferableBalance => ({
   type: UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   collateralTokenTransferableBalance
@@ -81,7 +81,7 @@ export const updateCollateralTokenTransferableBalanceAction = (
 
 export const initGeneralDataAction = (
   totalWrappedTokenAmount: BitcoinAmount,
-  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
+  totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>,
   totalGovernanceTokenAmount: GovernanceTokenMonetaryAmount,
   btcRelayHeight: number,
   bitcoinHeight: number,
@@ -113,7 +113,7 @@ export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: numbe
 });
 
 export const updateTotalsAction = (
-  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>,
+  totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>,
   totalWrappedTokenAmount: BitcoinAmount
 ): UpdateTotals => ({
   type: UPDATE_TOTALS,

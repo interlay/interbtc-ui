@@ -1,4 +1,4 @@
-import { DefaultTransactionAPI, newCurrencyId, tickerToCurrencyIdLiteral } from '@interlay/interbtc-api';
+import { DefaultTransactionAPI, newCurrencyId } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { AddressOrPair } from '@polkadot/api/types';
 import { decodeAddress } from '@polkadot/keyring';
@@ -26,10 +26,9 @@ const transferToRelayChain = async (
   const transactionApi = new DefaultTransactionAPI(api, originatingAccount);
 
   const dest = createDest(api, id);
-  // TODO: does this need to be done here, or can it be imported from the lib?
-  const currencyId = newCurrencyId(api, tickerToCurrencyIdLiteral(RELAY_CHAIN_NATIVE_TOKEN.ticker));
+  const currencyId = newCurrencyId(api, RELAY_CHAIN_NATIVE_TOKEN);
 
-  const xcmTransaction = api.tx.xTokens.transfer(currencyId, transferAmount.toString(), dest, TRANSFER_WEIGHT);
+  const xcmTransaction = api.tx.xTokens.transfer(currencyId, transferAmount.toString(true), dest, TRANSFER_WEIGHT);
 
   await transactionApi.sendLogged(xcmTransaction);
 };

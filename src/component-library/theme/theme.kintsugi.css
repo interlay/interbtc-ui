@@ -32,4 +32,13 @@
   --colors-tabs-text: var(--colors-neutral-lighter-grey);
   --colors-tabs-active-color: var(--colors-blue);
   --colors-tabs-active-bg: var(--colors-neutral-white);
+  /* Loading Spinner */
+  --colors-indeterminate-color: var(--colors-neutral-white);
+  --colors-indeterminate-bg: var(--colors-neutral-black-20);
+  /* Score Bar */
+  --colors-score-bar-indicator-color: var(--colors-yellow);
+  --colors-score-bar-separator-color: var(--colors-neutral-white);
+  /* Progress Circle */
+  --color-progress-circle-mask: var(--colors-mid-blue);
+  --color-progress-circle-fill: var(--colors-yellow);
 }

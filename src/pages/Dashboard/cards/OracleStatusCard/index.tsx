@@ -1,4 +1,3 @@
-import { CollateralUnit } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -44,7 +43,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
     isLoading: oracleStatusLoading,
     data: oracleStatus,
     error: oracleStatusError
-  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit> | undefined, Error>(
+  } = useQuery<BtcToCurrencyOracleStatus | undefined, Error>(
     [ORACLE_LATEST_EXCHANGE_RATE_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout],
     latestExchangeRateFetcher,
     {

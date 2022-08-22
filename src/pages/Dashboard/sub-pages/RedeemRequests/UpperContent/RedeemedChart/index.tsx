@@ -1,5 +1,4 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -29,7 +28,7 @@ const RedeemedChart = (): JSX.Element => {
     data: cumulativeRedeemsPerDay,
     error: cumulativeRedeemsPerDayError
     // TODO: should type properly (`Relay`)
-  } = useQuery<VolumeDataPoint<BitcoinUnit>[], Error>(
+  } = useQuery<VolumeDataPoint[], Error>(
     [CUMULATIVE_VOLUMES_FETCHER, VolumeType.Redeemed, cutoffTimestamps, WRAPPED_TOKEN],
     cumulativeVolumesFetcher
   );
@@ -88,8 +87,8 @@ const RedeemedChart = (): JSX.Element => {
         }
       ]}
       datasets={[
-        cumulativeRedeemsPerDay.slice(1).map((dataPoint) => dataPoint.amount.str.BTC()),
-        pointRedeemsPerDay.map((amount) => amount.str.BTC())
+        cumulativeRedeemsPerDay.slice(1).map((dataPoint) => dataPoint.amount.toString()),
+        pointRedeemsPerDay.map((amount) => amount.toString())
       ]}
     />
   );
