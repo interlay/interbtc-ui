@@ -78,7 +78,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pro
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
-      issueCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralTokenIdLiteral}}`)
+      issueCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`) // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
     ],
     graphqlFetcher<GraphqlReturn<any>>()
   );
@@ -95,7 +95,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pro
       ISSUES_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralTokenIdLiteral}}` // `WHERE` condition
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
     ],
     issuesFetcher
   );
