@@ -1,37 +1,37 @@
 @import url('reset.css');
 
 @font-face {
-  font-family: 'airbnb-cereal';
-  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf') format('truetype');
+  font-family: 'inter';
+  src: url('../../assets/fonts/inter/Inter-Light.ttf') format('truetype');
   font-weight: 300; /* light */
   font-style: normal;
 }
 @font-face {
-  font-family: 'airbnb-cereal';
-  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf') format('truetype');
-  font-weight: 400; /* book */
+  font-family: 'inter';
+  src: url('../../assets/fonts/inter/Inter-Regular.ttf') format('truetype');
+  font-weight: 400; /* regular */
   font-style: normal;
 }
 @font-face {
-  font-family: 'airbnb-cereal';
-  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf') format('truetype');
+  font-family: 'inter';
+  src: url('../../assets/fonts/inter/Inter-Medium.ttf') format('truetype');
   font-weight: 500; /* medium */
   font-style: normal;
 }
 @font-face {
-  font-family: 'airbnb-cereal';
-  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf') format('truetype');
+  font-family: 'inter';
+  src: url('../../assets/fonts/inter/Inter-Bold.ttf') format('truetype');
   font-weight: 700; /* bold */
   font-style: normal;
 }
 
 * {
   box-sizing: border-box;
-  font-family: 'airbnb-cereal';
+  font-family: 'inter';
 }
 
 :root {
-  --fonts-primary: 'airbnb-cereal';
+  --fonts-primary: 'inter';
 
   --font-weights-light: 300;
   --font-weights-book: 400;
