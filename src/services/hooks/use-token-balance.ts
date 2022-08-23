@@ -1,5 +1,4 @@
-import { ChainBalance, CurrencyUnit, GovernanceUnit } from '@interlay/interbtc-api';
-import { Currency } from '@interlay/monetary-js';
+import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, useQueryClient, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -9,16 +8,13 @@ import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-interface UseTokenBalance<T extends CurrencyUnit> {
-  tokenBalanceIdle: UseQueryResult<ChainBalance<T>, Error>['isIdle'];
-  tokenBalanceLoading: UseQueryResult<ChainBalance<T>, Error>['isLoading'];
-  tokenBalance: UseQueryResult<ChainBalance<T>, Error>['data'];
+interface UseTokenBalance {
+  tokenBalanceIdle: UseQueryResult<ChainBalance, Error>['isIdle'];
+  tokenBalanceLoading: UseQueryResult<ChainBalance, Error>['isLoading'];
+  tokenBalance: UseQueryResult<ChainBalance, Error>['data'];
 }
 
-const useTokenBalance = <T extends CurrencyUnit>(
-  token: Currency<T>,
-  accountAddress: string | undefined
-): UseTokenBalance<T> => {
+const useTokenBalance = (token: CurrencyExt, accountAddress: string | undefined): UseTokenBalance => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const accountId = useAccountId(accountAddress);
@@ -28,9 +24,9 @@ const useTokenBalance = <T extends CurrencyUnit>(
     isLoading: tokenBalanceLoading,
     data: tokenBalance,
     error: tokenBalanceError
-  } = useQuery<ChainBalance<T>, Error>(
+  } = useQuery<ChainBalance, Error>(
     [GENERIC_FETCHER, 'tokens', 'balance', token, accountId],
-    genericFetcher<ChainBalance<T>>(),
+    genericFetcher<ChainBalance>(),
     {
       enabled: !!bridgeLoaded && !!accountId
     }
@@ -45,9 +41,9 @@ const useTokenBalance = <T extends CurrencyUnit>(
 };
 
 interface UseGovernanceTokenBalance {
-  governanceTokenBalanceIdle: UseQueryResult<ChainBalance<GovernanceUnit>, Error>['isIdle'];
-  governanceTokenBalanceLoading: UseQueryResult<ChainBalance<GovernanceUnit>, Error>['isLoading'];
-  governanceTokenBalance: UseQueryResult<ChainBalance<GovernanceUnit>, Error>['data'];
+  governanceTokenBalanceIdle: UseQueryResult<ChainBalance, Error>['isIdle'];
+  governanceTokenBalanceLoading: UseQueryResult<ChainBalance, Error>['isLoading'];
+  governanceTokenBalance: UseQueryResult<ChainBalance, Error>['data'];
 }
 
 const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenBalance => {
@@ -55,7 +51,7 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenB
     tokenBalanceIdle: governanceTokenBalanceIdle,
     tokenBalanceLoading: governanceTokenBalanceLoading,
     tokenBalance: governanceTokenBalance
-  } = useTokenBalance<GovernanceUnit>(GOVERNANCE_TOKEN, accountAddress);
+  } = useTokenBalance(GOVERNANCE_TOKEN, accountAddress);
 
   return {
     governanceTokenBalanceIdle,

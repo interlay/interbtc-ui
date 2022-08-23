@@ -1,5 +1,5 @@
-import { CollateralUnit } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CollateralCurrencyExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 
 import {
   UPDATE_APY,
@@ -17,9 +17,7 @@ export const updateCollateralizationAction = (collateralization: string | undefi
   collateralization
 });
 
-export const updateCollateralAction = (
-  collateral: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>
-): UpdateCollateral => ({
+export const updateCollateralAction = (collateral: MonetaryAmount<CollateralCurrencyExt>): UpdateCollateral => ({
   type: UPDATE_COLLATERAL,
   collateral
 });

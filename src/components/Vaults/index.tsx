@@ -1,4 +1,5 @@
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { atomicToBaseAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { FieldError } from 'react-hook-form';
@@ -26,8 +27,8 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
     // Filters out vaults with lower than required capacity and sorts by accountId
     // to have vaults with same accountId grouped together.
     const vaultsWithEnoughCapacity = allVaults
-      .filter((vault) => vault[1].gt(BitcoinAmount.from.Satoshi(0)))
-      .filter((vault) => vault[1].gte(BitcoinAmount.from.Satoshi(requiredCapacity)))
+      .filter((vault) => vault[1].gt(BitcoinAmount.zero())) // TODO: redundant check
+      .filter((vault) => vault[1].gte(new BitcoinAmount(atomicToBaseAmount(requiredCapacity, Bitcoin))))
       .sort((vaultA, vaultB) => {
         const vaultAId = vaultA[0].accountId.toString();
         const vaultBId = vaultB[0].accountId.toString();

@@ -13,8 +13,22 @@ const redeemsQuery = (where?: string): string => `
       userParachainAddress
       vault {
         accountId
-        collateralToken
-        wrappedToken
+        collateralToken {
+          ... on ForeignAsset {
+            asset
+          }
+          ... on NativeToken {
+            token
+          }
+        }
+        wrappedToken {
+          ... on ForeignAsset {
+            asset
+          }
+          ... on NativeToken {
+            token
+          }
+        }
       }
       userBackingAddress
       bridgeFee

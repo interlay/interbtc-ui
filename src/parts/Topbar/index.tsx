@@ -15,11 +15,10 @@ import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/
 import Tokens from '@/components/Tokens';
 import InterlayLink from '@/components/UI/InterlayLink';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import * as constants from '@/constants';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
-import { GOVERNANCE_TOKEN_ID_LITERAL } from '@/utils/constants/currency';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 
@@ -35,7 +34,7 @@ const Topbar = (): JSX.Element => {
 
     try {
       const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-      await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN_ID_LITERAL);
+      await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN);
       toast.success('Your account has been funded.');
     } catch (error) {
       toast.error(`Funding failed. ${error.message}`);

@@ -1,5 +1,5 @@
-import { CurrencyUnit, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CurrencyExt, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { PARACHAIN_URL } from '@/constants';
@@ -47,28 +47,50 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     })
     .reverse();
 }
+const convertMonetaryAmountToValueInUSD = <T extends CurrencyExt>(
+  amount: MonetaryAmount<T>,
+  rate: number | undefined
+): number | null => {
+  // If the rate is not available
+  if (rate === undefined) {
+    return null;
+  }
 
-// TODO: replace these functions with internationalization functions
-// Always round USD amounts to two decimals
-function getUsdAmount<C extends CurrencyUnit>(
-  amount: MonetaryAmount<Currency<C>, C>,
+  return amount.toBig().mul(new Big(rate)).toNumber();
+};
+
+const formatUSD = (amount: number): string => {
+  const { format } = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'USD'
+  });
+
+  return format(amount);
+};
+
+function displayMonetaryAmountInUSDFormat<T extends CurrencyExt>(
+  amount: MonetaryAmount<T>,
   rate: number | undefined
 ): string {
-  // If price data is unavailable dash is shown
+  // If the rate is not available
   if (rate === undefined) {
     return '—';
   }
-  return amount.toBig(amount.currency.base).mul(new Big(rate)).toFixed(2);
+
+  const rawUSDAmount = convertMonetaryAmountToValueInUSD(amount, rate);
+
+  if (rawUSDAmount === null) {
+    throw new Error('Something went wrong!');
+  }
+
+  return formatUSD(rawUSDAmount);
 }
 
-function displayMonetaryAmount<C extends CurrencyUnit>(
-  amount: MonetaryAmount<Currency<C>, C> | undefined,
-  defaultValue = '0.00'
-): string {
+function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, defaultValue = '0.00'): string {
   if (amount === undefined) return defaultValue;
 
   // TODO: refactor once Monetary.js exposes an `isGreaterThanZero()` method
-  const zero = new MonetaryAmount<Currency<C>, C>(amount.currency, 0);
+  const zero = new MonetaryAmount<CurrencyExt>(amount.currency, 0);
   if (amount.gte(zero)) {
     return amount.toHuman();
   }
@@ -99,14 +121,16 @@ function getPolkadotLink(blockHeight: number): string {
 }
 
 export {
+  convertMonetaryAmountToValueInUSD,
   copyToClipboard,
   displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
   formatDateTime,
   formatDateTimePrecise,
+  formatUSD,
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
-  getUsdAmount,
   safeRoundTwoDecimals,
   shortAddress,
   shortTxId

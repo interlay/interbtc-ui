@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { copyToClipboard, displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import InterlayTooltip from '@/components/UI/InterlayTooltip';
@@ -59,7 +59,10 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.request.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
-        approxUSD={getUsdAmount(request.request.amountWrapped, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+        approxUSD={displayMonetaryAmountInUSDFormat(
+          request.request.amountWrapped,
+          getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+        )}
       />
       <PriceInfo
         className='w-full'
@@ -67,7 +70,10 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.backingPayment.amount)}
         unitName='BTC'
-        approxUSD={getUsdAmount(request.backingPayment.amount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+        approxUSD={displayMonetaryAmountInUSDFormat(
+          request.backingPayment.amount,
+          getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+        )}
       />
       <PriceInfo
         className='w-full'
@@ -75,7 +81,10 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.execution.amountWrapped)}
         unitName={WRAPPED_TOKEN_SYMBOL}
-        approxUSD={getUsdAmount(request.execution.amountWrapped, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+        approxUSD={displayMonetaryAmountInUSDFormat(
+          request.execution.amountWrapped,
+          getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+        )}
       />
       <Hr2 className={clsx('border-t-2', 'my-2.5', 'w-full')} />
       <PriceInfo
@@ -93,7 +102,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
         value={displayMonetaryAmount(request.backingPayment.amountWrapped.sub(request.execution.amountWrapped))}
         unitName='BTC'
-        approxUSD={getUsdAmount(
+        approxUSD={displayMonetaryAmountInUSDFormat(
           request.backingPayment.amountWrapped.sub(request.execution.amountWrapped),
           getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
         )}

@@ -16,10 +16,7 @@ const StyledTableColumnHeader = styled.th`
   padding: ${theme.spacing.spacing4} 0;
   text-align: left;
   position: relative;
-
-  &:first-of-type {
-    padding-left: ${theme.spacing.spacing4};
-  }
+  padding-left: ${theme.spacing.spacing4};
 
   &:last-of-type {
     text-align: right;
@@ -33,10 +30,7 @@ const StyledTableCell = styled.td`
   padding-bottom: ${theme.spacing.spacing4};
   border-bottom: ${theme.table.border};
   vertical-align: middle;
-
-  &:first-of-type {
-    padding-left: ${theme.spacing.spacing4};
-  }
+  padding-left: ${theme.spacing.spacing4};
 
   &:last-of-type {
     text-align: right;

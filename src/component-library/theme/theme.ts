@@ -52,6 +52,7 @@ const theme = {
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)',
+    spacing24: 'var(--spacing-24)',
     spacing28: 'var(--spacing-28)'
   },
   rounded: {
@@ -90,6 +91,16 @@ const theme = {
       text: 'var(--colors-cta-outlined-text)',
       border: '1px solid var(--colors-cta-outlined-border)',
       bgHover: 'var(--colors-cta-outlined-hover)'
+    },
+    small: {
+      padding: 'var(--spacing-2)',
+      text: 'var(--text-xs)',
+      lineHeight: 'var(--line-height-s)'
+    },
+    medium: {
+      padding: 'var(--spacing-3) var(--spacing-10)',
+      text: 'var(--text-base)',
+      lineHeight: 'var(--line-height-base)'
     }
   },
   table: {
@@ -116,6 +127,13 @@ const theme = {
   },
   score: {
     bar: {
+      status: {
+        error: 'var(--colors-error-dark)',
+        warning: 'var(--colors-warning-dark)',
+        success: 'var(--colors-success-dark)'
+      },
+      bg:
+        'linear-gradient(270deg, var(--colors-success-dark) 0%, var(--colors-warning-dark) 50%, var(--colors-error-dark) 100%)',
       height: '10px',
       radius: 'var(--rounded-full)',
       indicator: {
@@ -124,6 +142,42 @@ const theme = {
           right: '10px solid transparent',
           bottom: '18px solid var(--colors-score-bar-indicator-color)'
         }
+      },
+      separator: {
+        color: 'var(--colors-score-bar-separator-color)'
+      }
+    }
+  },
+  spinner: {
+    determinate: {
+      color: 'var(--colors-cta-primary)',
+      bg: 'var(--colors-cta-secondary)'
+    },
+    indeterminate: {
+      color: 'var(--colors-indeterminate-color)',
+      bg: 'var(--colors-indeterminate-bg)'
+    }
+  },
+  progress: {
+    circle: {
+      mask: 'var(--color-progress-circle-mask)',
+      fill: 'var(--color-progress-circle-fill)'
+    }
+  },
+  overlay: {
+    bg: 'var(--colors-neutral-black-30)'
+  },
+  transaction: {
+    status: {
+      color: {
+        error: 'var(--colors-error)',
+        warning: 'var(--colors-warning-light)',
+        success: 'var(--colors-success)'
+      },
+      bg: {
+        error: 'var(--colors-error-20)',
+        warning: 'var(--colors-warning-light-20)',
+        success: 'var(--colors-success-20)'
       }
     }
   }

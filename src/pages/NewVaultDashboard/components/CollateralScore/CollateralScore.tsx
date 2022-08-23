@@ -1,20 +1,19 @@
 import { useMeter } from '@react-aria/meter';
 import { HTMLAttributes, ReactNode } from 'react';
 
-import { Status } from '../utils/prop-types';
+import { Status } from '@/component-library/utils/prop-types';
+
 import {
   StyledBar,
   StyledLabel,
   StyledLabelWrapper,
   StyledScore,
   StyledScoreWrapper,
-  StyledSegment,
-  StyledSublabel
+  StyledSublabel,
+  StyledWrapper
 } from './CollateralScore.style';
 
 type StatusRanges = Record<Status, { min: number; max: number }>;
-
-const segmentPercentage = 33.33;
 
 const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 2 };
 
@@ -33,17 +32,15 @@ const getBarPercentage = (status: Status, value: number, ranges: StatusRanges): 
   const segmentMaxValue = ranges[status].max - ranges[status].min;
 
   // We calculate against the percentage that each segment occupies from the parent
-  const rangePercentage = (segmentValue / segmentMaxValue) * segmentPercentage;
-
   switch (status) {
     case 'error':
-      return rangePercentage;
+      return (segmentValue / segmentMaxValue) * 25;
     case 'warning':
-      // 33.33 + (current segment percentage)
-      return segmentPercentage + rangePercentage;
+      // error + (current segment percentage)
+      return 25 + (segmentValue / segmentMaxValue) * 50;
     case 'success':
-      // 66.66 + (current segment percentage)
-      return segmentPercentage * 2 + rangePercentage;
+      // error + warning + (current segment percentage)
+      return 75 + (segmentValue / segmentMaxValue) * 25;
   }
 };
 
@@ -87,7 +84,7 @@ const CollateralScore = ({
   const isDefault = variant === 'default';
 
   return (
-    <div {...meterProps}>
+    <StyledWrapper {...meterProps} {...props}>
       <StyledLabelWrapper isDefault={isDefault}>
         <StyledLabel {...labelProps} isDefault={isDefault}>
           {label}
@@ -101,12 +98,8 @@ const CollateralScore = ({
           </StyledSublabel>
         </StyledScoreWrapper>
       </StyledLabelWrapper>
-      <StyledBar width={barPercentage} {...props}>
-        <StyledSegment status='error' />
-        <StyledSegment status='warning' />
-        <StyledSegment status='success' />
-      </StyledBar>
-    </div>
+      <StyledBar width={barPercentage} />
+    </StyledWrapper>
   );
 };
 

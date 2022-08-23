@@ -1,5 +1,4 @@
-import { CurrencyUnit, newMonetaryAmount } from '@interlay/interbtc-api';
-import { Currency } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
@@ -61,7 +60,7 @@ const TransferForm = (): JSX.Element => {
 
       await window.bridge.tokens.transfer(
         data[RECIPIENT_ADDRESS],
-        newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token as Currency<CurrencyUnit>, true)
+        newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token, true)
       );
 
       setSubmitStatus(STATUSES.RESOLVED);
@@ -75,12 +74,8 @@ const TransferForm = (): JSX.Element => {
     (value: string): string | undefined => {
       if (!activeToken) return;
 
-      const balance = newMonetaryAmount(
-        activeToken.transferableBalance,
-        activeToken.token as Currency<CurrencyUnit>,
-        true
-      );
-      const transferAmount = newMonetaryAmount(value, activeToken.token as Currency<CurrencyUnit>, true);
+      const balance = newMonetaryAmount(activeToken.transferableBalance, activeToken.token, true);
+      const transferAmount = newMonetaryAmount(value, activeToken.token, true);
 
       return balance.lt(transferAmount) ? t('insufficient_funds') : undefined;
     },
