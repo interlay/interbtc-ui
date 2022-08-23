@@ -11,25 +11,24 @@ const TokenFieldSymbol = styled.span`
   font-size: ${theme.text.xl2};
   color: ${theme.colors.textTertiary};
   font-weight: ${theme.fontWeight.medium};
-  line-height: ${theme.lineHeight.s};
-  position: absolute;
-  right: ${theme.spacing.spacing4};
-  top: ${theme.spacing.spacing2};
 `;
 
 const TokenFieldInput = styled(NumberInput)`
   font-size: ${theme.text.xl5};
-  padding-right: ${theme.spacing.spacing12};
 `;
 
 const TokenFieldUSD = styled.span`
   display: block;
   font-size: ${theme.text.lg};
   color: ${theme.colors.textTertiary};
-  text-align: right;
-  position: absolute;
-  right: ${theme.spacing.spacing4};
-  bottom: ${theme.spacing.spacing2};
+  white-space: nowrap;
 `;
 
-export { TokenFieldInnerWrapper, TokenFieldInput, TokenFieldSymbol, TokenFieldUSD };
+const TokenAdornment = styled.span`
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export { TokenAdornment, TokenFieldInnerWrapper, TokenFieldInput, TokenFieldSymbol, TokenFieldUSD };

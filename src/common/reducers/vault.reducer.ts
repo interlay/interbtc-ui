@@ -17,7 +17,7 @@ const initialState = {
   requests: new Map<H256, ReplaceRequestExt>(),
   collateralization: '0',
   collateral: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
-  lockedBTC: BitcoinAmount.zero,
+  lockedBTC: BitcoinAmount.zero(),
   apy: '0'
 };
 

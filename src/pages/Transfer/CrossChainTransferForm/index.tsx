@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import Accounts from '@/components/Accounts';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
 import Chains, { ChainOption } from '@/components/Chains';
@@ -124,7 +124,10 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!value) return;
 
     const tokenAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
-    const usd = getUsdAmount(tokenAmount, getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd);
+    const usd = displayMonetaryAmountInUSDFormat(
+      tokenAmount,
+      getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+    );
 
     setApproxUsdValue(usd);
   };
@@ -291,7 +294,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             error={!!errors[TRANSFER_AMOUNT]}
             helperText={errors[TRANSFER_AMOUNT]?.message}
             label={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-            approxUSD={`≈ $ ${approxUsdValue}`}
+            approxUSD={`≈ ${approxUsdValue}`}
           />
         </div>
         <Chains

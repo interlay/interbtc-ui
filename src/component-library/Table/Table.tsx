@@ -3,9 +3,16 @@ import { forwardRef, ReactNode } from 'react';
 
 import { BaseTable, BaseTableProps } from './BaseTable';
 
+type ColumnProps = { name: ReactNode; uid: string | number };
+
+type RowProps = {
+  id: string | number;
+  [field: string]: any;
+};
+
 type Props = {
-  columns: Array<{ name: ReactNode; uid: string }>;
-  rows: Array<Record<string, any>>;
+  columns: ColumnProps[];
+  rows: RowProps[];
 };
 
 type InheritAttrs = Omit<BaseTableProps, keyof Props | 'children'>;
@@ -24,4 +31,4 @@ const Table = forwardRef<HTMLTableElement, TableProps>(
 Table.displayName = 'Table';
 
 export { Table };
-export type { TableProps };
+export type { ColumnProps, RowProps, TableProps };

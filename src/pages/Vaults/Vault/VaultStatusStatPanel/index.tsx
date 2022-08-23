@@ -1,5 +1,4 @@
-import { CurrencyIdLiteral, VaultExt } from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, VaultExt, VaultStatusExt } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -9,6 +8,7 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
+import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
@@ -19,18 +19,18 @@ import StatPanel from '../StatPanel';
 
 interface Props {
   vaultAccountId: AccountId;
-  collateralId: CurrencyIdLiteral | undefined;
+  collateralToken: CollateralCurrencyExt;
 }
 
-const VaultStatusStatPanel = ({ vaultAccountId, collateralId }: Props): JSX.Element => {
+const VaultStatusStatPanel = ({ vaultAccountId, collateralToken }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { isIdle: vaultExtIdle, isLoading: vaultExtLoading, data: vaultExt, error: vaultExtError } = useQuery<
-    VaultExt<BitcoinUnit>,
+    VaultExt,
     Error
-  >([GENERIC_FETCHER, 'vaults', 'get', vaultAccountId, collateralId], genericFetcher<VaultExt<BitcoinUnit>>(), {
-    enabled: !!bridgeLoaded && !!vaultAccountId && !!collateralId
+  >([GENERIC_FETCHER, 'vaults', 'get', vaultAccountId, collateralToken], genericFetcher<VaultExt>(), {
+    enabled: !!bridgeLoaded && !!vaultAccountId && !!collateralToken
   });
   useErrorHandler(vaultExtError);
 
@@ -119,7 +119,14 @@ const VaultStatusStatPanel = ({ vaultAccountId, collateralId }: Props): JSX.Elem
     );
   }
 
-  return <StatPanel label={t('vault.status')} value={statusLabel} />;
+  const statPanel = <StatPanel label={t('vault.status')} value={statusLabel} />;
+
+  // Render with tooltip if vault is inactive.
+  if (vaultExt?.status === VaultStatusExt.Inactive) {
+    return <InterlayTooltip label={t('dashboard.vault.issuing_disabled_tooltip')}>{statPanel}</InterlayTooltip>;
+  }
+
+  return statPanel;
 };
 
 export default withErrorBoundary(VaultStatusStatPanel, {

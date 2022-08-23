@@ -1,5 +1,5 @@
-import { newMonetaryAmount, RedeemStatus } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { atomicToBaseAmount, newMonetaryAmount, RedeemStatus } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
 
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
@@ -12,9 +12,11 @@ const REDEEMS_FETCHER = 'redeems-fetcher';
 
 // TODO: should type properly (`Relay`)
 function decodeRedeemValues(redeem: any): any {
-  redeem.request.requestedAmountBacking = BitcoinAmount.from.Satoshi(redeem.request.requestedAmountBacking);
-  redeem.bridgeFee = BitcoinAmount.from.Satoshi(redeem.bridgeFee);
-  redeem.btcTransferFee = BitcoinAmount.from.Satoshi(redeem.btcTransferFee);
+  redeem.request.requestedAmountBacking = new BitcoinAmount(
+    atomicToBaseAmount(redeem.request.requestedAmountBacking, Bitcoin)
+  );
+  redeem.bridgeFee = new BitcoinAmount(atomicToBaseAmount(redeem.bridgeFee, Bitcoin));
+  redeem.btcTransferFee = new BitcoinAmount(atomicToBaseAmount(redeem.btcTransferFee, Bitcoin));
 
   // TODO: get actual vault collateral when it's added to events
   redeem.collateralPremium = newMonetaryAmount(redeem.collateralPremium, RELAY_CHAIN_NATIVE_TOKEN);
