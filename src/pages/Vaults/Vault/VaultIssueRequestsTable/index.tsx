@@ -161,6 +161,17 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pro
         }
       },
       {
+        Header: t('expiry_block'),
+        classNames: ['text-right'],
+        // TODO: should type properly (`Relay`)
+        Cell: function FormattedCell({ row: { original: issue } }: any) {
+          const issuePeriod = issue.period.value;
+          const expiryBlock = issue.request.height.absolute + issuePeriod;
+
+          return <>{formatNumber(expiryBlock)}</>;
+        }
+      },
+      {
         Header: t('user'),
         accessor: 'userParachainAddress',
         classNames: ['text-center'],
