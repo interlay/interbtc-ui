@@ -168,7 +168,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pro
           const issuePeriod = issue.period.value;
           const expiryBlock = issue.request.height.absolute + issuePeriod;
 
-          return <>{expiryBlock}</>;
+          return <>{formatNumber(expiryBlock)}</>;
         }
       },
       {
