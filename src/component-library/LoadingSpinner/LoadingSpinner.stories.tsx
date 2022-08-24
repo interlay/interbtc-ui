@@ -17,13 +17,23 @@ const Template: Story<LoadingSpinnerProps> = (args) => (
   </div>
 );
 
-const Default = Template.bind({});
-Default.args = {
+const Determinate = Template.bind({});
+
+Determinate.args = {
   diameter: 60,
-  thickness: 5
+  thickness: 5,
+  variant: 'determinate'
 };
 
-export { Default };
+const Indeterminate = Template.bind({});
+
+Indeterminate.args = {
+  diameter: 60,
+  thickness: 5,
+  variant: 'indeterminate'
+};
+
+export { Determinate, Indeterminate };
 
 export default {
   title: 'Elements/LoadingSpinner',

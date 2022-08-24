@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// // @ts-nocheck
-import { CollateralUnit } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -12,7 +9,7 @@ import { useTable } from 'react-table';
 import { ReactComponent as CancelIcon } from '@/assets/img/icons/cancel.svg';
 import { ReactComponent as CheckCircleIcon } from '@/assets/img/icons/check-circle.svg';
 import { StoreType } from '@/common/types/util.types';
-import { formatDateTime } from '@/common/utils/utils';
+import { formatDateTime, formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -61,7 +58,7 @@ const OracleTable = (): JSX.Element => {
     isLoading: oracleSubmissionsLoading,
     data: oracleSubmissions,
     error: oracleSubmissionsError
-  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit>[], Error>(
+  } = useQuery<BtcToCurrencyOracleStatus[], Error>(
     [ORACLE_ALL_LATEST_UPDATES_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout, namesMap],
     allLatestSubmissionsFetcher,
     {
@@ -97,7 +94,8 @@ const OracleTable = (): JSX.Element => {
         Cell: function FormattedCell({ value }: { value: BTCToCollateralTokenRate }) {
           return (
             <>
-              1 BTC = {value.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+              1 BTC = {formatNumber(Number(value.toHuman(5)), { minimumFractionDigits: 5, maximumFractionDigits: 5 })}{' '}
+              {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </>
           );
         }

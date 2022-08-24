@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import { displayMonetaryAmount, getPolkadotLink, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatNumber, getPolkadotLink, shortAddress } from '@/common/utils/utils';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
 import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
@@ -28,7 +28,7 @@ const CompletedRedeemRequest = ({ redeem }: Props): JSX.Element => {
       </p>
       <Ring48 className={getColorShade('green', 'ring')}>
         <Ring48Title>{t('issue_page.in_parachain_block')}</Ring48Title>
-        <Ring48Value className={getColorShade('green')}>{redeem.request.height.active}</Ring48Value>
+        <Ring48Value className={getColorShade('green')}>{formatNumber(redeem.request.height.absolute)}</Ring48Value>
       </Ring48>
       <ExternalLink className='text-sm' href={getPolkadotLink(redeem.request.height.absolute)}>
         {t('issue_page.view_parachain_block')}

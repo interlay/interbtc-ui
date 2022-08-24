@@ -13,6 +13,7 @@ interface ModalProps {
   initialFocusRef?: MutableRefObject<HTMLElement | null>;
 }
 
+// TODO: we have missing relevant behaviours for a Modal. Could be rewritten with react-aria.
 const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.Element | null => {
   const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -39,10 +40,10 @@ const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.El
 
   return open || shouldRender ? (
     <Portal>
-      <ModalContainer>
+      <ModalContainer role='dialog'>
         <ModalOverlay onClick={onClose} />
         <ModalContent transitionTrigger={transitionTrigger}>
-          <CloseIcon onClick={onClose} ref={closeButtonRef}>
+          <CloseIcon aria-label='Dismiss' onClick={onClose} ref={closeButtonRef}>
             <Icon variant='close' />
           </CloseIcon>
           {children}

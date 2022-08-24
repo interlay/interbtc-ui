@@ -1,24 +1,18 @@
-import {
-  CollateralCurrency,
-  CollateralIdLiteral,
-  CurrencyIdLiteral,
-  tickerToCurrencyIdLiteral,
-  VaultExt
-} from '@interlay/interbtc-api';
-import { BitcoinUnit } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, CollateralIdLiteral, VaultExt, WrappedIdLiteral } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 
 import { Prices } from '@/common/types/util.types';
-import { getUsdAmount } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import {
-  CollateralTokenMonetaryAmount,
+  GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenMonetaryAmount,
+  WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenAmount
 } from '@/config/relay-chains';
-import { VAULT_GOVERNANCE, VAULT_WRAPPED } from '@/config/vaults';
 import { HYDRA_URL } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
@@ -28,10 +22,10 @@ interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
   pendingRequests: number;
-  collateralId: CurrencyIdLiteral;
-  wrappedId: CurrencyIdLiteral;
+  collateralId: CollateralIdLiteral;
+  wrappedId: WrappedIdLiteral;
   collateral: {
-    raw: CollateralTokenMonetaryAmount;
+    raw: MonetaryAmount<CollateralCurrencyExt>;
     usd: number;
   };
   governanceTokenRewards: {
@@ -46,33 +40,41 @@ interface VaultData {
 }
 
 const getVaultOverview = async (
-  vault: VaultExt<BitcoinUnit>,
+  vault: VaultExt,
   accountId: AccountId,
   prices: Prices | undefined
 ): Promise<VaultData> => {
-  const tokenIdLiteral = tickerToCurrencyIdLiteral(vault.backingCollateral.currency.ticker) as CollateralIdLiteral;
-  const collateralPrice = getTokenPrice(prices, tokenIdLiteral);
+  const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
+  const collateralTokenPrice = getTokenPrice(prices, collateralTokenIdLiteral);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
-  const apy = await window.bridge.vaults.getAPY(accountId, tokenIdLiteral);
-  const collateralization = await window.bridge.vaults.getVaultCollateralization(accountId, tokenIdLiteral);
+  const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
+  const collateralization = await window.bridge.vaults.getVaultCollateralization(
+    accountId,
+    vault.backingCollateral.currency
+  );
   const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(
     accountId,
-    tokenIdLiteral,
-    VAULT_GOVERNANCE
+    vault.backingCollateral.currency,
+    GOVERNANCE_TOKEN
   );
-  const wrappedTokenRewards = await window.bridge.vaults.getWrappedReward(accountId, tokenIdLiteral, VAULT_WRAPPED);
-  const collateral = await window.bridge.vaults.getCollateral(accountId, tokenIdLiteral);
-  const threshold = await window.bridge.vaults.getSecureCollateralThreshold(
-    vault.backingCollateral.currency as CollateralCurrency
+  const wrappedTokenRewards = await window.bridge.vaults.getWrappedReward(
+    accountId,
+    vault.backingCollateral.currency,
+    WRAPPED_TOKEN
   );
+  const collateral = await window.bridge.vaults.getCollateral(accountId, vault.backingCollateral.currency);
+  const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency);
 
-  const usdCollateral = getUsdAmount(collateral, collateralPrice?.usd);
-  const usdGovernanceTokenRewards = getUsdAmount(
+  const usdCollateral = convertMonetaryAmountToValueInUSD(collateral, collateralTokenPrice?.usd);
+  const usdGovernanceTokenRewards = convertMonetaryAmountToValueInUSD(
     governanceTokenRewards,
     getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
   );
-  const usdWrappedTokenRewards = getUsdAmount(wrappedTokenRewards, getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd);
+  const usdWrappedTokenRewards = convertMonetaryAmountToValueInUSD(
+    wrappedTokenRewards,
+    getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
+  );
 
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
@@ -81,7 +83,7 @@ const getVaultOverview = async (
     },
     body: JSON.stringify({
       query: issueCountQuery(
-        `vault: {accountId_eq: "${accountId.toString()}", collateralToken_eq: ${tokenIdLiteral}}, status_eq: Pending`
+        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}, status_eq: Pending` // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
       )
     })
   });
@@ -93,7 +95,7 @@ const getVaultOverview = async (
     },
     body: JSON.stringify({
       query: redeemCountQuery(
-        `vault: {accountId_eq: "${accountId.toString()}", collateralToken_eq: ${tokenIdLiteral}}, status_eq: Pending`
+        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}, status_eq: Pending` // TODO: add asset_eq, see comment above
       )
     })
   });
@@ -107,19 +109,19 @@ const getVaultOverview = async (
     apy,
     collateralization,
     pendingRequests,
-    collateralId: tokenIdLiteral,
-    wrappedId: VAULT_WRAPPED,
+    collateralId: collateralTokenIdLiteral,
+    wrappedId: WRAPPED_TOKEN_SYMBOL,
     collateral: {
       raw: collateral,
-      usd: usdCollateral === '—' ? 0 : parseFloat(usdCollateral)
+      usd: usdCollateral ?? 0
     },
     governanceTokenRewards: {
       raw: governanceTokenRewards,
-      usd: usdGovernanceTokenRewards === '—' ? 0 : parseFloat(usdGovernanceTokenRewards)
+      usd: usdGovernanceTokenRewards ?? 0
     },
     wrappedTokenRewards: {
       raw: wrappedTokenRewards,
-      usd: usdWrappedTokenRewards === '—' ? 0 : parseFloat(usdWrappedTokenRewards)
+      usd: usdWrappedTokenRewards ?? 0
     },
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
   };

@@ -2,37 +2,40 @@ import styled from 'styled-components';
 
 import { theme } from '../theme';
 
-const TableWrapper = styled.div`
-  background: ${theme.colors.bgPrimary};
-  color: ${theme.colors.textPrimary};
-  border: ${theme.table.border};
-  border-radius: ${theme.rounded.lg};
-  line-height: ${theme.lineHeight.base};
-  overflow: auto;
-`;
-
 const StyledTable = styled.table`
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   border-spacing: 0;
-  margin-bottom: ${theme.spacing.spacing8};
+  isolation: isolate;
 `;
 
-const TableHeader = styled.th`
-  font-weight: ${theme.fontWeight.medium};
-  color: ${theme.colors.textTertiary};
-  text-align: start;
-  padding: ${theme.spacing.spacing4} ${theme.spacing.spacing4};
-`;
-
-const TableRow = styled.tr`
+const StyledTableColumnHeader = styled.th`
   border-bottom: ${theme.table.border};
+  color: ${theme.colors.textTertiary};
+  font-weight: ${theme.fontWeight.medium};
+  padding: ${theme.spacing.spacing4} 0;
+  text-align: left;
+  position: relative;
+  padding-left: ${theme.spacing.spacing4};
+
+  &:last-of-type {
+    text-align: right;
+    padding-right: ${theme.spacing.spacing4};
+  }
 `;
 
-const TableCell = styled.td`
+const StyledTableCell = styled.td`
+  color: ${theme.colors.textPrimary};
+  padding-top: ${theme.spacing.spacing4};
+  padding-bottom: ${theme.spacing.spacing4};
+  border-bottom: ${theme.table.border};
   vertical-align: middle;
-  text-align: start;
-  padding: ${theme.spacing.spacing4} ${theme.spacing.spacing4};
+  padding-left: ${theme.spacing.spacing4};
+
+  &:last-of-type {
+    text-align: right;
+    padding-right: ${theme.spacing.spacing4};
+  }
 `;
 
-export { StyledTable, TableCell, TableHeader, TableRow, TableWrapper };
+export { StyledTable, StyledTableCell, StyledTableColumnHeader };

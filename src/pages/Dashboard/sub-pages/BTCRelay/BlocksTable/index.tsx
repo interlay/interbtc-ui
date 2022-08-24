@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { formatDateTimePrecise } from '@/common/utils/utils';
+import { formatDateTimePrecise, formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -75,7 +75,10 @@ const BlocksTable = (): JSX.Element => {
       {
         Header: t('dashboard.relay.block_height'),
         accessor: 'backingHeight',
-        classNames: ['text-right']
+        classNames: ['text-right'],
+        Cell: function FormattedCell({ value }: { value: number }) {
+          return <>{formatNumber(value)}</>;
+        }
       },
       {
         Header: t('dashboard.relay.block_hash'),
@@ -99,7 +102,7 @@ const BlocksTable = (): JSX.Element => {
         accessor: 'relayedAtHeight',
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: any }) {
-          return <>{value.absolute}</>;
+          return <>{formatNumber(value.absolute)}</>;
         }
       },
       {

@@ -23,6 +23,7 @@ const ModalOverlay = styled.div`
   position: absolute;
   width: 100vw;
   height: 100vh;
+  background: ${theme.overlay.bg};
 `;
 
 const ModalContent = styled.div<ModalContentProps>`
@@ -32,7 +33,8 @@ const ModalContent = styled.div<ModalContentProps>`
   max-width: 32em;
   margin: 1.5em;
   background: ${theme.colors.bgPrimary};
-  padding: ${theme.spacing.spacing4};
+  border: ${theme.border.default};
+  padding: ${theme.spacing.spacing8};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};
   transition: opacity ${theme.transition.duration}ms ease-out;
@@ -42,13 +44,14 @@ const ModalContent = styled.div<ModalContentProps>`
 `;
 
 const CloseIcon = styled.button`
+  display: inline-flex;
   position: absolute;
   top: 0.5em;
   right: 0.5em;
   background: none;
   color: inherit;
   border: none;
-  padding: 0;
+  padding: ${theme.spacing.spacing1};
   font: inherit;
   cursor: pointer;
   outline: inherit;

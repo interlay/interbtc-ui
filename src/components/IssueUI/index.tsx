@@ -1,11 +1,14 @@
 import { IssueStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount, shortAddress } from '@/common/utils/utils';
+import {
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
+  formatNumber,
+  shortAddress
+} from '@/common/utils/utils';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
@@ -43,7 +46,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const { address } = useSelector((state: StoreType) => state.general);
+  const destinationAddress = issue.userParachainAddress;
 
   const receivedWrappedTokenAmount: WrappedTokenAmount = issue.execution
     ? issue.execution.amountWrapped
@@ -77,7 +80,10 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
               'block'
             )}
           >
-            {`≈ $ ${getUsdAmount(receivedWrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
+            {`≈ ${displayMonetaryAmountInUSDFormat(
+              receivedWrappedTokenAmount,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}`}
           </span>
         </div>
         <div>
@@ -95,7 +101,10 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(bridgeFee)}
             unitName='BTC'
-            approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+            approxUSD={displayMonetaryAmountInUSDFormat(
+              bridgeFee,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -112,7 +121,10 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             value={displayMonetaryAmount(sentBackingTokenAmount)}
             unitName='BTC'
-            approxUSD={getUsdAmount(sentBackingTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+            approxUSD={displayMonetaryAmountInUSDFormat(
+              sentBackingTokenAmount,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
           />
         </div>
         <div className='space-y-4'>
@@ -126,7 +138,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.destination_address')}
             </span>
-            <span className='font-medium'>{shortAddress(address)}</span>
+            <span className='font-medium'>{shortAddress(destinationAddress)}</span>
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
@@ -137,7 +149,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.parachain_block')}
             </span>
-            <span className='font-medium'>{issue.request.height.active}</span>
+            <span className='font-medium'>{formatNumber(issue.request.height.absolute)}</span>
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span

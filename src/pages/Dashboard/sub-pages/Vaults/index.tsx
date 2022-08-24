@@ -1,15 +1,9 @@
+import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import clsx from 'clsx';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Hr1 from '@/components/hrs/Hr1';
-import {
-  CollateralToken,
-  GOVERNANCE_TOKEN,
-  GOVERNANCE_TOKEN_SYMBOL,
-  RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
-} from '@/config/relay-chains';
+import { VAULT_COLLATERAL_TOKENS } from '@/config/vaults';
 import PageTitle from '@/parts/PageTitle';
 import TimerIncrement from '@/parts/TimerIncrement';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -24,25 +18,6 @@ const Vaults = (): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const relayChainNativeTokenPriceInUSD = getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd;
-  const governanceTokenPriceInUSD = getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd;
-
-  const collaterals = React.useMemo(
-    () => [
-      {
-        collateralToken: RELAY_CHAIN_NATIVE_TOKEN,
-        collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-        collateralTokenPriceInUSD: relayChainNativeTokenPriceInUSD
-      },
-      {
-        collateralToken: GOVERNANCE_TOKEN as CollateralToken,
-        collateralTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
-        collateralTokenPriceInUSD: governanceTokenPriceInUSD
-      }
-    ],
-    [relayChainNativeTokenPriceInUSD, governanceTokenPriceInUSD]
-  );
-
   return (
     <>
       <div>
@@ -52,12 +27,12 @@ const Vaults = (): JSX.Element => {
       <div className={clsx('grid', 'grid-cols-3', 'gap-7')}>
         <ActiveVaultsCard />
         <CollateralizationCard />
-        {collaterals.map((item) => (
+        {VAULT_COLLATERAL_TOKENS.map((item) => (
           <LockedCollateralCard
-            key={item.collateralTokenSymbol}
-            collateralToken={item.collateralToken}
-            collateralTokenSymbol={item.collateralTokenSymbol}
-            collateralTokenPriceInUSD={item.collateralTokenPriceInUSD}
+            key={item.ticker}
+            collateralToken={item}
+            collateralTokenSymbol={item.ticker}
+            collateralTokenPriceInUSD={getTokenPrice(prices, item.ticker as CollateralIdLiteral)?.usd}
           />
         ))}
       </div>

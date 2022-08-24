@@ -1,6 +1,6 @@
-import { CurrencyUnit, decodeFixedPointType } from '@interlay/interbtc-api';
+import { CurrencyExt, decodeFixedPointType } from '@interlay/interbtc-api';
 import { OracleStatus } from '@interlay/interbtc-api/build/src/types/oracleTypes';
-import { Bitcoin, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
+import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
 
@@ -9,27 +9,23 @@ import oracleExchangeRatesQuery, { composableExchangeRateSubquery } from '../que
 const ORACLE_LATEST_EXCHANGE_RATE_FETCHER = 'oracle-exchange-rate-fetcher';
 const ORACLE_ALL_LATEST_UPDATES_FETCHER = 'oracle-all-latest-updates-fetcher';
 
-type BtcToCurrencyOracleStatus<U extends CurrencyUnit> = OracleStatus<Bitcoin, BitcoinUnit, Currency<U>, U>;
+type BtcToCurrencyOracleStatus = OracleStatus<Bitcoin, CurrencyExt>;
 
-type LatestExchangeRateFetcherParams<U extends CurrencyUnit> = [
-  key: string,
-  currency: Currency<U>,
-  onlineTimeout: number
-];
+type LatestExchangeRateFetcherParams = [key: string, currency: CurrencyExt, onlineTimeout: number];
 
-type AllOracleLatestUpdatesFetcherParams<U extends CurrencyUnit> = [
+type AllOracleLatestUpdatesFetcherParams = [
   key: string,
-  currency: Currency<U>,
+  currency: CurrencyExt,
   onlineTimeout: number,
   namesMap: Map<string, string>
 ];
 
-function decodeOracleValues<U extends CurrencyUnit>(
+function decodeOracleValues(
   updateData: any,
-  currency: Currency<U>,
+  currency: CurrencyExt,
   onlineTimeout: number,
   namesMap: Map<string, string>
-): BtcToCurrencyOracleStatus<U> {
+): BtcToCurrencyOracleStatus {
   // updateValue is a bigint representing a FixedU128, the value is equivalent to an UnsignedFixedPoint
   const rate = decodeFixedPointType(updateData.updateValue);
   const lastUpdate = new Date(updateData.timestamp);
@@ -38,29 +34,24 @@ function decodeOracleValues<U extends CurrencyUnit>(
     source: namesMap.get(updateData.oracleId) || updateData.oracleId,
     feed: `${Bitcoin.ticker}/${currency.ticker}`,
     lastUpdate,
-    exchangeRate: new ExchangeRate<Bitcoin, BitcoinUnit, Currency<U>, U>(
-      Bitcoin,
-      currency,
-      rate,
-      Bitcoin.rawBase,
-      currency.rawBase
-    ),
+    exchangeRate: new ExchangeRate<Bitcoin, CurrencyExt>(Bitcoin, currency, rate),
     online: Date.now() <= lastUpdate.getTime() + onlineTimeout
   };
 }
 
 // TODO: should type properly (`Relay`)
-const latestExchangeRateFetcher = async <U extends CurrencyUnit>(
+const latestExchangeRateFetcher = async (
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   { queryKey }: any
-): Promise<BtcToCurrencyOracleStatus<U> | undefined> => {
-  const [key, currency, onlineTimeout] = queryKey as LatestExchangeRateFetcherParams<U>;
+): Promise<BtcToCurrencyOracleStatus | undefined> => {
+  const [key, currency, onlineTimeout] = queryKey as LatestExchangeRateFetcherParams;
 
   if (key !== ORACLE_LATEST_EXCHANGE_RATE_FETCHER) throw new Error('Invalid key!');
 
   // TODO: should type properly (`Relay`)
+  const cond = 'id' in currency ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
   const latestOracleData = await graphqlFetcher<Array<any>>()({
-    queryKey: [GRAPHQL_FETCHER, oracleExchangeRatesQuery(`typeKey_eq: "${currency.ticker}"`)]
+    queryKey: [GRAPHQL_FETCHER, oracleExchangeRatesQuery(`typeKey: {${cond}}`)]
   });
 
   // TODO: should type properly (`Relay`)
@@ -75,21 +66,21 @@ const latestExchangeRateFetcher = async <U extends CurrencyUnit>(
   )[0];
 };
 
-const allLatestSubmissionsFetcher = async <U extends CurrencyUnit>(
+const allLatestSubmissionsFetcher = async (
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   { queryKey }: any
-): Promise<BtcToCurrencyOracleStatus<U>[]> => {
-  const [key, currency, onlineTimeout, namesMap] = queryKey as AllOracleLatestUpdatesFetcherParams<U>;
+): Promise<BtcToCurrencyOracleStatus[]> => {
+  const [key, currency, onlineTimeout, namesMap] = queryKey as AllOracleLatestUpdatesFetcherParams;
 
   if (key !== ORACLE_ALL_LATEST_UPDATES_FETCHER) throw new Error('Invalid key!');
 
   const query =
-    [...namesMap.keys()].reduce(
-      (queryStr, oracleId) =>
-        queryStr +
-        composableExchangeRateSubquery(`ID${oracleId}`, `typeKey_eq: "${currency.ticker}", oracleId_eq: "${oracleId}"`),
-      '{\n'
-    ) + '\n}';
+    [...namesMap.keys()].reduce((queryStr, oracleId) => {
+      const cond = 'id' in currency ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
+      return (
+        queryStr + composableExchangeRateSubquery(`ID${oracleId}`, `typeKey: {${cond}}, oracleId_eq: "${oracleId}"`)
+      );
+    }, '{\n') + '\n}';
 
   // TODO: should type properly (`Relay`)
   const latestOracleData = await graphqlFetcher<Array<any>>()({
@@ -109,4 +100,4 @@ export {
   ORACLE_LATEST_EXCHANGE_RATE_FETCHER
 };
 
-export type { AllOracleLatestUpdatesFetcherParams, BtcToCurrencyOracleStatus, LatestExchangeRateFetcherParams };
+export type { BtcToCurrencyOracleStatus };

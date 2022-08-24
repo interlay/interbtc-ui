@@ -1,4 +1,3 @@
-import { CollateralUnit } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +5,7 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
+import { formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import Ring64, { Ring64Subtitle, Ring64Title, Ring64Value } from '@/components/Ring64';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
@@ -44,7 +44,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
     isLoading: oracleStatusLoading,
     data: oracleStatus,
     error: oracleStatusError
-  } = useQuery<BtcToCurrencyOracleStatus<CollateralUnit> | undefined, Error>(
+  } = useQuery<BtcToCurrencyOracleStatus | undefined, Error>(
     [ORACLE_LATEST_EXCHANGE_RATE_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout],
     latestExchangeRateFetcher,
     {
@@ -117,7 +117,11 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           </Ring64Title>
           {exchangeRate && (
             <Ring64Value>
-              {exchangeRate.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+              {formatNumber(Number(exchangeRate.toHuman(5)), {
+                minimumFractionDigits: 5,
+                maximumFractionDigits: 5
+              })}{' '}
+              {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
           )}
         </Ring64>

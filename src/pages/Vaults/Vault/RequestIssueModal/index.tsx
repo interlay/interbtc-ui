@@ -1,5 +1,5 @@
-import { CurrencyIdLiteral, GovernanceUnit, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount, BitcoinUnit, Currency, ExchangeRate } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, GovernanceCurrency, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import ErrorModal from '@/components/ErrorModal';
 import Hr2 from '@/components/hrs/Hr2';
@@ -49,7 +49,7 @@ type RequestIssueFormData = {
 interface Props {
   onClose: () => void;
   open: boolean;
-  collateralIdLiteral: CurrencyIdLiteral | undefined;
+  collateralToken: CollateralCurrencyExt;
   vaultAddress: string;
 }
 
@@ -68,7 +68,7 @@ const extraRequiredCollateralTokenAmount = newMonetaryAmount(
 );
 
 // TODO: share form with bridge page
-const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }: Props): JSX.Element => {
+const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Props): JSX.Element => {
   const {
     register,
     handleSubmit,
@@ -83,17 +83,13 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
   const btcAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [vaultCapacity, setVaultCapacity] = React.useState(BitcoinAmount.zero);
+  const [vaultCapacity, setVaultCapacity] = React.useState(BitcoinAmount.zero());
   const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
-    new ExchangeRate<Bitcoin, BitcoinUnit, Currency<GovernanceUnit>, GovernanceUnit>(
-      Bitcoin,
-      GOVERNANCE_TOKEN,
-      new Big(0)
-    )
+    new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero);
+  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
@@ -120,7 +116,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     if (!bridgeLoaded) return;
     if (!handleError) return;
     if (!vaultAccountId) return;
-    if (!collateralIdLiteral) return;
+    if (!collateralToken) return;
 
     (async () => {
       try {
@@ -139,7 +135,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
           window.bridge.issue.getDustValue(),
           window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
           // MEMO: this always uses KSM as collateral token
-          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralIdLiteral)
+          window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralToken)
         ]);
         setStatus(STATUSES.RESOLVED);
         if (theFeeRate.status === 'fulfilled') {
@@ -167,7 +163,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
         handleError(error);
       }
     })();
-  }, [collateralIdLiteral, bridgeLoaded, handleError, vaultAccountId, setError, t]);
+  }, [collateralToken, bridgeLoaded, handleError, vaultAccountId, setError, t]);
 
   if (
     status === STATUSES.IDLE ||
@@ -187,14 +183,14 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
       setSubmitStatus(STATUSES.PENDING);
       await trigger(WRAPPED_TOKEN_AMOUNT);
 
-      const wrappedTokenAmount = BitcoinAmount.from.BTC(data[WRAPPED_TOKEN_AMOUNT] || '0');
+      const wrappedTokenAmount = new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT] || '0');
 
       const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
 
       const result = await window.bridge.issue.request(
         wrappedTokenAmount,
         vaultAccountId,
-        collateralIdLiteral,
+        collateralToken,
         false, // default
         0, // default
         vaults
@@ -210,7 +206,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
 
   const validateForm = (value: string): string | undefined => {
     const numericValue = Number(value || '0');
-    const btcAmount = BitcoinAmount.from.BTC(numericValue);
+    const btcAmount = new BitcoinAmount(numericValue);
 
     const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
     const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
@@ -265,7 +261,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
     await trigger(WRAPPED_TOKEN_AMOUNT);
   };
 
-  const parsedBTCAmount = BitcoinAmount.from.BTC(btcAmount);
+  const parsedBTCAmount = new BitcoinAmount(btcAmount);
   const bridgeFee = parsedBTCAmount.mul(feeRate);
   const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
   const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
@@ -302,8 +298,8 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
                   },
                   validate: (value) => validateForm(value)
                 })}
-                approxUSD={`≈ $ ${getUsdAmount(
-                  parsedBTCAmount || BitcoinAmount.zero,
+                approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
+                  parsedBTCAmount || BitcoinAmount.zero(),
                   getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
                 )}`}
                 error={!!errors[WRAPPED_TOKEN_AMOUNT]}
@@ -324,7 +320,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<BitcoinLogoIcon width={23} height={23} />}
               value={displayMonetaryAmount(bridgeFee)}
               unitName='BTC'
-              approxUSD={getUsdAmount(bridgeFee, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+              approxUSD={displayMonetaryAmountInUSDFormat(
+                bridgeFee,
+                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+              )}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -349,7 +348,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(securityDeposit)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(securityDeposit, getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd)}
+              approxUSD={displayMonetaryAmountInUSDFormat(
+                securityDeposit,
+                getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+              )}
               tooltip={
                 <InformationTooltip
                   className={clsx(
@@ -374,7 +376,7 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(
+              approxUSD={displayMonetaryAmountInUSDFormat(
                 extraRequiredCollateralTokenAmount,
                 getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
               )}
@@ -403,7 +405,10 @@ const RequestIssueModal = ({ onClose, open, collateralIdLiteral, vaultAddress }:
               unitIcon={<WrappedTokenLogoIcon width={20} />}
               value={displayMonetaryAmount(wrappedTokenAmount)}
               unitName={WRAPPED_TOKEN_SYMBOL}
-              approxUSD={getUsdAmount(wrappedTokenAmount, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}
+              approxUSD={displayMonetaryAmountInUSDFormat(
+                wrappedTokenAmount,
+                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+              )}
             />
             <SubmitButton
               disabled={

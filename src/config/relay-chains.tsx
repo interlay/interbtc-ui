@@ -1,7 +1,12 @@
-import { CollateralUnit, CurrencyIdLiteral, GovernanceUnit, VoteUnit } from '@interlay/interbtc-api';
 import {
-  BitcoinUnit,
-  Currency,
+  CurrencyIdLiteral,
+  GovernanceCurrency,
+  GovernanceIdLiteral,
+  VotingCurrency,
+  WrappedCurrency,
+  WrappedIdLiteral
+} from '@interlay/interbtc-api';
+import {
   InterBtc, // on Polkadot
   InterBtcAmount, // on Polkadot
   Interlay, // On Polkadot
@@ -10,7 +15,9 @@ import {
   Kintsugi, // On Kusama
   Kusama, // on Kusama
   MonetaryAmount,
-  Polkadot // on Polkadot
+  Polkadot, // on Polkadot
+  VoteInterlay, // on Polkadot
+  VoteKintsugi // On Kusama
 } from '@interlay/monetary-js';
 
 import { ReactComponent as DOTLogoIcon } from '@/assets/img/dot-logo.svg';
@@ -23,15 +30,15 @@ import { ReactComponent as KintsugiLogoWithTextIcon } from '@/assets/img/kintsug
 import { ReactComponent as KusamaLogoIcon } from '@/assets/img/kusama-logo.svg';
 import {
   INTERLAY_CROWDLOAN_LINK,
-  INTERLAY_EARN_LINK,
   INTERLAY_GOVERNANCE_LINK,
   INTERLAY_SUBSCAN_LINK,
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
+  INTERLAY_USE_WRAPPED_CURRENCY_LINK,
   KINTSUGI_CROWDLOAN_LINK,
-  KINTSUGI_EARN_LINK,
   KINTSUGI_GOVERNANCE_LINK,
   KINTSUGI_SUBSCAN_LINK,
-  KINTSUGI_TERMS_AND_CONDITIONS_LINK
+  KINTSUGI_TERMS_AND_CONDITIONS_LINK,
+  KINTSUGI_USE_WRAPPED_CURRENCY_LINK
 } from '@/config/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
@@ -39,29 +46,26 @@ if (!process.env.REACT_APP_RELAY_CHAIN_NAME) {
   throw new Error('Undefined relay chain name environment variable!');
 }
 
-type WrappedToken = Currency<BitcoinUnit>;
-type CollateralToken = Currency<CollateralUnit>;
-type GovernanceToken = Currency<GovernanceUnit>;
-type VoteGovernanceToken = Currency<VoteUnit>;
-type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceToken, GovernanceUnit>;
-type CollateralTokenMonetaryAmount = MonetaryAmount<CollateralToken, CollateralUnit>;
-type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VoteGovernanceToken, VoteUnit>;
+type RelayChainNativeToken = Polkadot | Kusama;
+type RelayChainNativeTokenIdLiteral = CurrencyIdLiteral.DOT | CurrencyIdLiteral.KSM;
+type GovernanceTokenMonetaryAmount = MonetaryAmount<GovernanceCurrency>;
+type VoteGovernanceTokenMonetaryAmount = MonetaryAmount<VotingCurrency>;
 
 let APP_NAME: string;
 let CROWDLOAN_LINK: string;
 let TERMS_AND_CONDITIONS_LINK: string;
-let EARN_LINK: string;
+let USE_WRAPPED_CURRENCY_LINK: string;
 let GOVERNANCE_LINK: string;
 let SUBSCAN_LINK: string;
-let WRAPPED_TOKEN: WrappedToken;
-let RELAY_CHAIN_NATIVE_TOKEN: CollateralToken;
-let GOVERNANCE_TOKEN: GovernanceToken;
-let VOTE_GOVERNANCE_TOKEN: VoteGovernanceToken;
+let WRAPPED_TOKEN: WrappedCurrency;
+let RELAY_CHAIN_NATIVE_TOKEN: RelayChainNativeToken;
+let GOVERNANCE_TOKEN: GovernanceCurrency;
+let VOTE_GOVERNANCE_TOKEN: VotingCurrency;
 let RELAY_CHAIN_NAME: string;
 let BRIDGE_PARACHAIN_NAME: string;
-let WRAPPED_TOKEN_SYMBOL: CurrencyIdLiteral;
-let GOVERNANCE_TOKEN_SYMBOL: CurrencyIdLiteral;
-let RELAY_CHAIN_NATIVE_TOKEN_SYMBOL: CurrencyIdLiteral;
+let WRAPPED_TOKEN_SYMBOL: WrappedIdLiteral; // TODO: rename as `WRAPPED_TOKEN_ID_LITERAL`
+let GOVERNANCE_TOKEN_SYMBOL: GovernanceIdLiteral; // TODO: rename as `GOVERNANCE_TOKEN_ID_LITERAL`
+let RELAY_CHAIN_NATIVE_TOKEN_SYMBOL: RelayChainNativeTokenIdLiteral; // TODO: rename as `RELAY_CHAIN_NATIVE_TOKEN_ID_LITERAL`
 let VOTE_GOVERNANCE_TOKEN_SYMBOL: string;
 let RelayChainLogoIcon: React.FunctionComponent<
   React.SVGProps<SVGSVGElement> & {
@@ -109,13 +113,13 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
   case POLKADOT: {
     APP_NAME = 'Interlay';
     TERMS_AND_CONDITIONS_LINK = INTERLAY_TERMS_AND_CONDITIONS_LINK;
-    EARN_LINK = INTERLAY_EARN_LINK;
+    USE_WRAPPED_CURRENCY_LINK = INTERLAY_USE_WRAPPED_CURRENCY_LINK;
     GOVERNANCE_LINK = INTERLAY_GOVERNANCE_LINK;
     SUBSCAN_LINK = INTERLAY_SUBSCAN_LINK;
     WRAPPED_TOKEN = InterBtc;
-    RELAY_CHAIN_NATIVE_TOKEN = Polkadot as Currency<CollateralUnit>;
-    GOVERNANCE_TOKEN = Interlay as GovernanceToken;
-    VOTE_GOVERNANCE_TOKEN = Interlay as VoteGovernanceToken;
+    RELAY_CHAIN_NATIVE_TOKEN = Polkadot;
+    GOVERNANCE_TOKEN = Interlay;
+    VOTE_GOVERNANCE_TOKEN = VoteInterlay;
     WRAPPED_TOKEN_SYMBOL = CurrencyIdLiteral.INTERBTC;
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = CurrencyIdLiteral.DOT;
     GOVERNANCE_TOKEN_SYMBOL = CurrencyIdLiteral.INTR;
@@ -142,13 +146,13 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
   case KUSAMA: {
     APP_NAME = 'Kintsugi';
     TERMS_AND_CONDITIONS_LINK = KINTSUGI_TERMS_AND_CONDITIONS_LINK;
-    EARN_LINK = KINTSUGI_EARN_LINK;
+    USE_WRAPPED_CURRENCY_LINK = KINTSUGI_USE_WRAPPED_CURRENCY_LINK;
     GOVERNANCE_LINK = KINTSUGI_GOVERNANCE_LINK;
     SUBSCAN_LINK = KINTSUGI_SUBSCAN_LINK;
     WRAPPED_TOKEN = KBtc;
-    RELAY_CHAIN_NATIVE_TOKEN = Kusama as Currency<CollateralUnit>;
-    GOVERNANCE_TOKEN = Kintsugi as GovernanceToken;
-    VOTE_GOVERNANCE_TOKEN = Kintsugi as VoteGovernanceToken;
+    RELAY_CHAIN_NATIVE_TOKEN = Kusama;
+    GOVERNANCE_TOKEN = Kintsugi;
+    VOTE_GOVERNANCE_TOKEN = VoteKintsugi;
     WRAPPED_TOKEN_SYMBOL = CurrencyIdLiteral.KBTC;
     RELAY_CHAIN_NATIVE_TOKEN_SYMBOL = CurrencyIdLiteral.KSM;
     GOVERNANCE_TOKEN_SYMBOL = CurrencyIdLiteral.KINT;
@@ -177,12 +181,9 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
 }
 
 export type {
-  CollateralToken,
-  CollateralTokenMonetaryAmount,
-  GovernanceToken,
   GovernanceTokenMonetaryAmount,
+  RelayChainNativeToken,
   VoteGovernanceTokenMonetaryAmount,
-  WrappedToken,
   WrappedTokenAmount
 };
 
@@ -192,7 +193,6 @@ export {
   BRIDGE_PARACHAIN_NAME,
   BridgeParachainLogoIcon,
   CROWDLOAN_LINK,
-  EARN_LINK,
   GOVERNANCE_LINK,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -208,6 +208,7 @@ export {
   STAKE_LOCK_TIME,
   SUBSCAN_LINK,
   TERMS_AND_CONDITIONS_LINK,
+  USE_WRAPPED_CURRENCY_LINK,
   VOTE_GOVERNANCE_TOKEN,
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   WRAPPED_TOKEN,

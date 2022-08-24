@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import InterlayConiferOutlinedButton from '@/components/buttons/InterlayConiferOutlinedButton';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -146,7 +146,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
           </PrimaryColorSpan>
           <span>
             &nbsp;
-            {`(≈ $ ${getUsdAmount(
+            {`(≈ ${displayMonetaryAmountInUSDFormat(
               punishmentCollateralTokenAmount,
               getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
             )})`}
@@ -183,7 +183,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.retry_with_another', {
-                  compensationPrice: getUsdAmount(
+                  compensationPrice: displayMonetaryAmountInUSDFormat(
                     punishmentCollateralTokenAmount,
                     getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
                   )
@@ -213,7 +213,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.with_added', {
-                  amountPrice: getUsdAmount(
+                  amountPrice: displayMonetaryAmountInUSDFormat(
                     collateralTokenAmount,
                     getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
                   )
@@ -225,7 +225,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
               <span>
                 &nbsp;
                 {t('redeem_page.as_compensation_instead', {
-                  compensationPrice: getUsdAmount(
+                  compensationPrice: displayMonetaryAmountInUSDFormat(
                     punishmentCollateralTokenAmount,
                     getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
                   )

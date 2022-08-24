@@ -1,6 +1,11 @@
 import styled from 'styled-components';
 
+import { Card } from '../Card';
 import { theme } from '../theme';
+
+const Wrapper = styled(Card)`
+  padding: 0 0 ${theme.spacing.spacing8} 0;
+`;
 
 const CoinPairWrapper = styled.div`
   display: flex;
@@ -19,4 +24,4 @@ const NumericValue = styled.div<NumericValueProps>`
   font-weight: ${theme.fontWeight.medium};
 `;
 
-export { CoinPairWrapper, NumericValue };
+export { CoinPairWrapper, NumericValue, Wrapper };

@@ -1,6 +1,5 @@
-import { CurrencyIdLiteral, CurrencyUnit } from '@interlay/interbtc-api';
+import { CurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
 import {
-  Currency,
   InterBtc, // on Polkadot
   Interlay, // On Polkadot
   KBtc, // on Kusama
@@ -9,36 +8,16 @@ import {
   Polkadot // on Polkadot
 } from '@interlay/monetary-js';
 
-import { Currencies, CurrencyValues } from '@/types/currency';
+const CURRENCIES: Array<CurrencyExt> = [Polkadot, InterBtc, Interlay, KBtc, Kintsugi, Kusama];
 
-const CURRENCIES: Currencies = [
-  {
-    currency: Polkadot as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.DOT
-  },
-  {
-    currency: InterBtc as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.INTERBTC
-  },
-  {
-    currency: Interlay as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.INTR
-  },
-  {
-    currency: KBtc as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.KBTC
-  },
-  {
-    currency: Kintsugi as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.KINT
-  },
-  {
-    currency: Kusama as Currency<CurrencyUnit>,
-    id: CurrencyIdLiteral.KSM
+const getCurrency = (idLiteral: CurrencyIdLiteral): CurrencyExt => {
+  const targetCurrency = CURRENCIES.find((currency) => currency.ticker === idLiteral);
+
+  if (targetCurrency === undefined) {
+    throw new Error('Something went wrong!');
   }
-];
 
-const getCurrency = (idLiteral: CurrencyIdLiteral): CurrencyValues | undefined =>
-  CURRENCIES.find((currency) => currency.id === idLiteral);
+  return targetCurrency;
+};
 
 export { getCurrency };
