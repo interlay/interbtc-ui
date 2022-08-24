@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
+import { formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
@@ -64,7 +65,7 @@ const BlockstreamCard = (): JSX.Element => {
           >
             {t('blockstream')}
           </Ring64Title>
-          <Ring64Value>{t('dashboard.relay.block_number', { number: bitcoinHeight })}</Ring64Value>
+          <Ring64Value>{t('dashboard.relay.block_number', { number: formatNumber(bitcoinHeight) })}</Ring64Value>
         </Ring64>
       </>
     );

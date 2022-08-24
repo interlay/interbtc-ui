@@ -1,5 +1,6 @@
 import { withErrorBoundary } from 'react-error-boundary';
 
+import { formatPercentage } from '@/common/utils/utils';
 import { CTA, Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -30,13 +31,18 @@ const VaultDashboard = (): JSX.Element => {
   const insightsItems: InsightListItem[] = [
     { title: 'Locked Collateral KSM', label: '400' },
     { title: 'Locked BTC', label: '0.54538777', sublabel: '($339.05)' },
-    { title: 'Remaining kBTC capacity', label: '93.5%', sublabel: '(2.59643046 kBTC)', adornment: vaultCapacity }
+    {
+      title: 'Remaining kBTC capacity',
+      label: formatPercentage(0.935),
+      sublabel: '(2.59643046 kBTC)',
+      adornment: vaultCapacity
+    }
   ];
 
   const stakingItems: InsightListItem[] = [
     { title: 'Locked Collateral KSM', label: '400' },
     { title: 'Locked BTC', label: '0.54538777', sublabel: '($339.05)' },
-    { title: 'Remaining kBTC capacity', label: '93.5%', sublabel: '(2.59643046 kBTC)' }
+    { title: 'Remaining kBTC capacity', label: formatPercentage(0.935), sublabel: '(2.59643046 kBTC)' }
   ];
 
   return (

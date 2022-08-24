@@ -15,7 +15,7 @@ import {
   updateLockedBTCAction
 } from '@/common/actions/vault.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, safeRoundTwoDecimals } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatPercentage } from '@/common/utils/utils';
 import { Dl } from '@/component-library';
 import InterlayCaliforniaContainedButton from '@/components/buttons/InterlayCaliforniaContainedButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
@@ -56,9 +56,9 @@ const Vault = (): JSX.Element => {
   const [requestIssueModalOpen, setRequestIssueModalOpen] = React.useState(false);
   const [capacity, setCapacity] = React.useState(BitcoinAmount.zero());
   const [feesEarnedInterBTC, setFeesEarnedInterBTC] = React.useState(BitcoinAmount.zero());
-  const [liquidationThreshold, setLiquidationThreshold] = React.useState('');
-  const [premiumRedeemThreshold, setPremiumRedeemThreshold] = React.useState('');
-  const [secureThreshold, setSecureThreshold] = React.useState('');
+  const [liquidationThreshold, setLiquidationThreshold] = React.useState<number>();
+  const [premiumRedeemThreshold, setPremiumRedeemThreshold] = React.useState<number>();
+  const [secureThreshold, setSecureThreshold] = React.useState<number>();
 
   const { vaultClientLoaded, bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
   const { collateralization, collateral, lockedBTC, apy } = useSelector((state: StoreType) => state.vault);
@@ -155,13 +155,13 @@ const Vault = (): JSX.Element => {
           setCapacity(issuableAmount.value);
         }
         if (liquidationThreshold.status === 'fulfilled') {
-          setLiquidationThreshold(liquidationThreshold.value?.mul(100).toString());
+          setLiquidationThreshold(liquidationThreshold.value?.toNumber());
         }
         if (premiumRedeemThreshold.status === 'fulfilled') {
-          setPremiumRedeemThreshold(premiumRedeemThreshold.value?.mul(100).toString());
+          setPremiumRedeemThreshold(premiumRedeemThreshold.value?.toNumber());
         }
         if (secureThreshold.status === 'fulfilled') {
-          setSecureThreshold(secureThreshold.value?.mul(100).toString());
+          setSecureThreshold(secureThreshold.value?.toNumber());
         }
       } catch (error) {
         console.log('[Vault React.useEffect] error.message => ', error.message);
@@ -206,7 +206,9 @@ const Vault = (): JSX.Element => {
       {
         title: t('collateralization'),
         value:
-          collateralization === '∞' ? collateralization : `${safeRoundTwoDecimals(collateralization?.toString(), '∞')}%`
+          collateralization === '∞' || collateralization === undefined
+            ? '∞'
+            : formatPercentage(Number(collateralization) / 100)
       },
       {
         title: t('vault.fees_earned_interbtc', {
@@ -235,7 +237,7 @@ const Vault = (): JSX.Element => {
       },
       {
         title: t('apy'),
-        value: `≈${safeRoundTwoDecimals(apy)}%`
+        value: `≈ ${formatPercentage(Number(apy) / 100)}`
       },
       {
         title: t('vault.rewards_earned_governance_token_symbol', {
@@ -281,9 +283,15 @@ const Vault = (): JSX.Element => {
           <Panel className={clsx('inline-block', 'px-4', 'py-2')}>
             <Dl
               listItems={[
-                { term: 'Liquidation threshold', definition: `${liquidationThreshold}%` },
-                { term: 'Premium redeem threshold', definition: `${premiumRedeemThreshold}%` },
-                { term: 'Ideal threshold', definition: `${secureThreshold}%` }
+                {
+                  term: 'Liquidation threshold',
+                  definition: liquidationThreshold ? formatPercentage(liquidationThreshold) : '-'
+                },
+                {
+                  term: 'Premium redeem threshold',
+                  definition: premiumRedeemThreshold ? formatPercentage(premiumRedeemThreshold) : '-'
+                },
+                { term: 'Ideal threshold', definition: secureThreshold ? formatPercentage(secureThreshold) : '-' }
               ]}
             />
           </Panel>

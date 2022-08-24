@@ -3,6 +3,7 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
+import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import Panel from '@/components/Panel';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -92,18 +93,16 @@ const UpperContent = (): JSX.Element => {
               &nbsp;BTC
             </StatsDd>
             <StatsDd>
-              {btcUsdPrice === undefined
-                ? '—'
-                : (btcUsdPrice * Number(totalRedeemedAmount.toString())).toLocaleString()}
+              {btcUsdPrice === undefined ? '—' : displayMonetaryAmountInUSDFormat(totalRedeemedAmount, btcUsdPrice)}
             </StatsDd>
             <StatsDt className={`!${getColorShade('green')}`}>{t('dashboard.redeem.total_redeems')}</StatsDt>
-            <StatsDd>{totalSuccessfulRedeemCount}</StatsDd>
+            <StatsDd>{formatNumber(totalSuccessfulRedeemCount)}</StatsDd>
             {/* TODO: add this again when the network is stable */}
             {/* <StatsDt className='!text-interlayConifer'>
               {t('dashboard.redeem.success_rate')}
             </StatsDt>
             <StatsDd>
-              {totalRedeemRequests ? (redeemSuccessRate * 100).toFixed(2) + '%' : t('no_data')}
+              {totalRedeemRequests ? formatPercentage(redeemSuccessRate) : t('no_data')}
             </StatsDd> */}
           </>
         }

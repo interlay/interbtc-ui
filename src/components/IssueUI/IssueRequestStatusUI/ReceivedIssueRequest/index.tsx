@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import { shortAddress } from '@/common/utils/utils';
+import { formatNumber, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
@@ -68,10 +68,10 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
         <Ring48Title>{t('issue_page.waiting_for')}</Ring48Title>
         <Ring48Title>{t('confirmations')}</Ring48Title>
         <Ring48Value className={getColorShade('green')}>
-          {`${request.backingPayment.confirmations ?? 0}/${stableBitcoinConfirmations}`}
+          {`${formatNumber(request.backingPayment.confirmations ?? 0)}/${formatNumber(stableBitcoinConfirmations)}`}
         </Ring48Value>
         <Ring48Value className={getColorShade('green')}>
-          {`${requestConfirmations}/${stableParachainConfirmations}`}
+          {`${formatNumber(requestConfirmations)}/${formatNumber(stableParachainConfirmations)}`}
         </Ring48Value>
       </Ring48>
       <p className='space-x-1'>

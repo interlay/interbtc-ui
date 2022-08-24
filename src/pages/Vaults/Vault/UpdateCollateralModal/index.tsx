@@ -1,9 +1,4 @@
-import {
-  CollateralCurrencyExt,
-  CollateralIdLiteral,
-  newMonetaryAmount,
-  roundTwoDecimals
-} from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CollateralIdLiteral, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -17,7 +12,7 @@ import { toast } from 'react-toastify';
 
 import { updateCollateralAction, updateCollateralizationAction } from '@/common/actions/vault.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -241,9 +236,9 @@ const UpdateCollateralModal = ({
     // The vault API returns collateralization as a regular number rather than a percentage
     const strVaultCollateralizationPercentage = vaultCollateralization?.mul(100).toString();
     if (Number(strVaultCollateralizationPercentage) > 1000) {
-      return 'more than 1000%';
+      return `more than ${formatPercentage(1000 / 100, { minimumFractionDigits: 0 })}`;
     } else {
-      return `${roundTwoDecimals(strVaultCollateralizationPercentage || '0')}%`;
+      return formatPercentage(Number(strVaultCollateralizationPercentage || '0'));
     }
   };
 
