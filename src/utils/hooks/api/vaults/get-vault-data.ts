@@ -46,6 +46,8 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   const collateralTokenPrice = getTokenPrice(prices, collateralTokenIdLiteral);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
+  // or by extending the vaults.get (VaultExt) api call
+  const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
     accountId,
@@ -66,8 +68,6 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     WRAPPED_TOKEN
   );
   const collateral = await window.bridge.vaults.getCollateral(accountId, vault.backingCollateral.currency);
-  const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency);
-  const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
 
   const usdCollateral = convertMonetaryAmountToValueInUSD(collateral, collateralTokenPrice?.usd);
   const usdGovernanceTokenRewards = convertMonetaryAmountToValueInUSD(
@@ -103,6 +103,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     })
   });
 
+  // TODO: move issues and redeems to separate hook
   const issuesCount = await issues.json();
   const redeemsCount = await redeems.json();
 
@@ -127,7 +128,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
       raw: wrappedTokenRewards,
       usd: usdWrappedTokenRewards ?? 0
     },
-    vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false,
+    vaultAtRisk: collateralization ? collateralization?.lt(vaultExt.getSecureCollateralThreshold()) : false,
     vaultStatus: vaultExt.status
   };
 };
