@@ -1,5 +1,3 @@
-import { formatNumber } from '@/common/utils/utils';
-
 import { CoinPair } from '../CoinPair';
 import { CTALink } from '../CTA';
 import { Tokens } from '../types';
@@ -17,7 +15,7 @@ import {
 interface VaultCardProps {
   collateralSymbol: Tokens;
   wrappedSymbol: Tokens;
-  pendingRequests: number;
+  pendingRequests: string;
   apy: string;
   collateralScore: string;
   link: string;
@@ -45,7 +43,7 @@ const VaultCard = ({
         <DlItem>
           {/* TODO: these headings will also be moved to the dictionary */}
           <dt>Pending requests</dt>
-          <dd>{formatNumber(pendingRequests)}</dd>
+          <dd>{pendingRequests}</dd>
         </DlItem>
       </StyledDl>
       <StyledDl>
