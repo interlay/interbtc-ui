@@ -3267,19 +3267,6 @@
     "@react-types/shared" "^3.13.1"
     "@react-types/textfield" "^3.5.1"
 
-<<<<<<< HEAD
-"@react-aria/progress@^3.2.1":
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/@react-aria/progress/-/progress-3.2.1.tgz#5bbe59dcca961a4a97caf88030dd0f081434a8db"
-  integrity sha512-yHmwPl1phxF8R1KZCTNNbY33Lhz5fXQj/uHbh1Pfu5lpWVOdOiGmUDTeQ7G0pkn/eJMboH4/3WLazxrdWLgOqA==
-  dependencies:
-    "@babel/runtime" "^7.6.2"
-    "@react-aria/i18n" "^3.4.1"
-    "@react-aria/label" "^3.3.1"
-    "@react-aria/utils" "^3.13.1"
-    "@react-types/progress" "^3.2.1"
-    "@react-types/shared" "^3.13.1"
-=======
 "@react-aria/progress@^3.2.1", "@react-aria/progress@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@react-aria/progress/-/progress-3.3.0.tgz#ae2745da40ad84331c05ec33efe0d5f3a9220df5"
@@ -3305,7 +3292,6 @@
     "@react-stately/collections" "^3.4.2"
     "@react-stately/selection" "^3.10.2"
     "@react-types/shared" "^3.14.0"
->>>>>>> 8d3fc5e24754da232cbd5610c08f985838786a63
 
 "@react-aria/selection@^3.9.1":
   version "3.9.1"
@@ -18971,7 +18957,6 @@ tsconfig-paths@^3.12.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-<<<<<<< HEAD
 tsconfig-paths@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/tsconfig-paths/-/tsconfig-paths-4.1.0.tgz#f8ef7d467f08ae3a695335bf1ece088c5538d2c1"
@@ -18980,12 +18965,10 @@ tsconfig-paths@^4.1.0:
     json5 "^2.2.1"
     minimist "^1.2.6"
     strip-bom "^3.0.0"
-=======
 tslib@2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.4.0.tgz#7cecaa7f073ce680a05847aa77be941098f36dc3"
   integrity sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==
->>>>>>> 8d3fc5e24754da232cbd5610c08f985838786a63
 
 tslib@^1.8.1:
   version "1.14.1"
