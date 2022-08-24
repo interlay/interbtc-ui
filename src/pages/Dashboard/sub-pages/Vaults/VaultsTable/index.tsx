@@ -268,7 +268,7 @@ const VaultsTable = (): JSX.Element => {
           if (vaultExt.id.currencies.collateral.isToken) {
             return true;
           }
-          console.warn("Unsupported non token collateral vault found and removed from vaults list");
+          console.warn('Unsupported non token collateral vault found and removed from vaults list');
           return false;
         })
         .map((vaultExt) => {
@@ -302,7 +302,11 @@ const VaultsTable = (): JSX.Element => {
 
           const vaultCollateral = vaultExt.backingCollateral;
           const settledTokens = vaultExt.issuedTokens;
-          const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
+          const settledCollateralization = getCollateralization(
+            vaultCollateral,
+            settledTokens,
+            btcToCollateralTokenRate
+          );
           const unsettledTokens = vaultExt.toBeIssuedTokens;
           const unsettledCollateralization = getCollateralization(
             vaultCollateral,
@@ -314,7 +318,9 @@ const VaultsTable = (): JSX.Element => {
             [Accessor.VaultId]: vaultExt.id.accountId.toString(),
             [Accessor.Collateral]: collateralTokenSymbol,
             // TODO: fetch collateral reserved
-            [Accessor.LockedCollateralTokenAmount]: `${displayMonetaryAmount(vaultCollateral)} ${collateralTokenSymbol}`,
+            [Accessor.LockedCollateralTokenAmount]: `${displayMonetaryAmount(
+              vaultCollateral
+            )} ${collateralTokenSymbol}`,
             [Accessor.LockedBTCAmount]: settledTokens,
             [Accessor.PendingBTCAmount]: displayMonetaryAmount(unsettledTokens),
             [Accessor.CollateralizationUI]: (
@@ -326,7 +332,7 @@ const VaultsTable = (): JSX.Element => {
             ),
             [Accessor.Status]: statusLabel
           };
-      });
+        });
 
       const sortedVaults = rawVaults.sort((vaultA, vaultB) => {
         const vaultALockedBTC = vaultA[Accessor.LockedBTCAmount];
