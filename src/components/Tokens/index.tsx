@@ -1,3 +1,4 @@
+import { GovernanceCurrency, WrappedCurrency } from '@interlay/interbtc-api';
 import * as React from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
@@ -7,17 +8,15 @@ import { displayMonetaryAmount } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import { SELECT_VARIANTS, SelectVariants } from '@/components/Select';
 import {
-  CollateralToken,
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
-  GovernanceToken,
   GovernanceTokenLogoIcon,
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  RelayChainNativeToken,
   RelayChainNativeTokenLogoIcon,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  WrappedToken,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
@@ -25,7 +24,7 @@ import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import TokenSelector from './TokenSelector';
 
 interface TokenOption {
-  token: WrappedToken | CollateralToken | GovernanceToken;
+  token: WrappedCurrency | RelayChainNativeToken | GovernanceCurrency;
   type: TokenType;
   balance: string;
   transferableBalance: string;
@@ -51,8 +50,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     if (!tokenOptions) return;
 
     if (!currentToken) {
-      // Set collateral token as default
-      setCurrentToken(getTokenOption(TokenType.COLLATERAL));
+      // Set relay-chain native token as default
+      setCurrentToken(getTokenOption(TokenType.RelayChainNative));
     }
 
     if (callbackFunction && currentToken) {
@@ -82,7 +81,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     const tokenOptions: Array<TokenOption> = [
       {
         token: RELAY_CHAIN_NATIVE_TOKEN,
-        type: TokenType.COLLATERAL,
+        type: TokenType.RelayChainNative,
         balance: displayMonetaryAmount(collateralTokenBalance),
         transferableBalance: displayMonetaryAmount(collateralTokenTransferableBalance),
         icon: <RelayChainNativeTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
@@ -90,7 +89,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       },
       {
         token: WRAPPED_TOKEN,
-        type: TokenType.WRAPPED,
+        type: TokenType.Wrapped,
         balance: displayMonetaryAmount(wrappedTokenBalance),
         transferableBalance: displayMonetaryAmount(wrappedTokenTransferableBalance),
         icon: <WrappedTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
@@ -98,7 +97,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       },
       {
         token: GOVERNANCE_TOKEN,
-        type: TokenType.GOVERNANCE,
+        type: TokenType.Governance,
         balance: governanceTokenBalance ? displayMonetaryAmount(governanceTokenBalance.free) : '-',
         transferableBalance: governanceTokenBalance ? displayMonetaryAmount(governanceTokenBalance.transferable) : '-',
         icon: <GovernanceTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,

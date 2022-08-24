@@ -1,23 +1,8 @@
-import { CurrencyUnit, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CurrencyExt, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { PARACHAIN_URL } from '@/constants';
-
-// TODO: should be one module
-function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
-  return safeRound(input, defaultValue, 2);
-}
-
-function safeRound(input: string | number | undefined, defaultValue: string, decimals: number) {
-  if (input === undefined) return defaultValue;
-  try {
-    const number = new Big(input);
-    return number.round(decimals).toString();
-  } catch {
-    return defaultValue;
-  }
-}
 
 function shortAddress(address: string): string {
   if (address.length < 12) return address;
@@ -48,30 +33,82 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     .reverse();
 }
 
-// TODO: replace these functions with internationalization functions
-// Always round USD amounts to two decimals
-function getUsdAmount<C extends CurrencyUnit>(
-  amount: MonetaryAmount<Currency<C>, C>,
+const convertMonetaryAmountToValueInUSD = <T extends CurrencyExt>(
+  amount: MonetaryAmount<T>,
+  rate: number | undefined
+): number | null => {
+  // If the rate is not available
+  if (rate === undefined) {
+    return null;
+  }
+
+  return amount.toBig().mul(new Big(rate)).toNumber();
+};
+
+const formatUSD = (amount: number): string => {
+  const { format } = new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: 'USD'
+  });
+
+  return format(amount);
+};
+
+function displayMonetaryAmountInUSDFormat<T extends CurrencyExt>(
+  amount: MonetaryAmount<T>,
   rate: number | undefined
 ): string {
-  // If price data is unavailable dash is shown
+  // If the rate is not available
   if (rate === undefined) {
     return '—';
   }
-  return amount.toBig(amount.currency.base).mul(new Big(rate)).toFixed(2);
+
+  const rawUSDAmount = convertMonetaryAmountToValueInUSD(amount, rate);
+
+  if (rawUSDAmount === null) {
+    throw new Error('Something went wrong!');
+  }
+
+  return formatUSD(rawUSDAmount);
 }
 
-function displayMonetaryAmount<C extends CurrencyUnit>(
-  amount: MonetaryAmount<Currency<C>, C> | undefined,
-  defaultValue = '0.00'
-): string {
+const formatNumber = (
+  amount: number,
+  options?: {
+    minimumFractionDigits?: number;
+    maximumFractionDigits?: number;
+  }
+): string => {
+  const { format } = new Intl.NumberFormat(undefined, options);
+
+  return format(amount);
+};
+
+const formatPercentage = (
+  percentage: number,
+  options?: {
+    maximumFractionDigits?: number;
+    minimumFractionDigits?: number;
+  }
+): string => {
+  const { format } = new Intl.NumberFormat(undefined, {
+    style: 'percent',
+    maximumFractionDigits: options?.maximumFractionDigits ?? 2,
+    minimumFractionDigits: options?.minimumFractionDigits ?? 2
+  });
+
+  return format(percentage);
+};
+
+function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, defaultValue = '0.00'): string {
   if (amount === undefined) return defaultValue;
 
   // TODO: refactor once Monetary.js exposes an `isGreaterThanZero()` method
-  const zero = new MonetaryAmount<Currency<C>, C>(amount.currency, 0);
+  const zero = new MonetaryAmount<CurrencyExt>(amount.currency, 0);
   if (amount.gte(zero)) {
-    return amount.toHuman();
+    return formatNumber(Number(amount.toHuman()));
   }
+
   return defaultValue;
 }
 
@@ -99,15 +136,18 @@ function getPolkadotLink(blockHeight: number): string {
 }
 
 export {
+  convertMonetaryAmountToValueInUSD,
   copyToClipboard,
   displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
   formatDateTime,
   formatDateTimePrecise,
+  formatNumber,
+  formatPercentage,
+  formatUSD,
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
-  getUsdAmount,
-  safeRoundTwoDecimals,
   shortAddress,
   shortTxId
 };

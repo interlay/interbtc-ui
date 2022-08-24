@@ -6,7 +6,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { copyToClipboard, displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { copyToClipboard, displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import Timer from '@/components/Timer';
 import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { BLOCK_TIME } from '@/config/parachain';
@@ -76,7 +76,10 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
             'block'
           )}
         >
-          {`≈ $ ${getUsdAmount(amountBTCToSend, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd)}`}
+          {`≈ ${displayMonetaryAmountInUSDFormat(
+            amountBTCToSend,
+            getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+          )}`}
         </span>
       </div>
       <div>

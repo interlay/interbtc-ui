@@ -14,8 +14,22 @@ const issuesQuery = (where?: string): string => `
       userParachainAddress
       vault {
         accountId
-        collateralToken
-        wrappedToken
+        collateralToken {
+          ... on ForeignAsset {
+            asset
+          }
+          ... on NativeToken {
+            token
+          }
+        }
+        wrappedToken {
+          ... on ForeignAsset {
+            asset
+          }
+          ... on NativeToken {
+            token
+          }
+        }
       }
       vaultBackingAddress
       vaultWalletPubkey

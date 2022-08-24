@@ -1,5 +1,5 @@
-import { CollateralIdLiteral, roundTwoDecimals, VaultExt } from '@interlay/interbtc-api';
-import { BitcoinAmount, BitcoinUnit } from '@interlay/monetary-js';
+import { CollateralIdLiteral, currencyIdToMonetaryCurrency, isCurrencyEqual, VaultExt } from '@interlay/interbtc-api';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatPercentage, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
@@ -29,13 +29,14 @@ import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
 } from '@/config/relay-chains';
-import { VAULT_COLLATERAL } from '@/config/vaults';
+import { VAULT_COLLATERAL_TOKENS } from '@/config/vaults';
 import * as constants from '@/constants';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import { BTCToCollateralTokenRate } from '@/types/currency';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
+import asyncFilter from '@/utils/helpers/async-filter';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getCollateralization, getVaultStatusLabel } from '@/utils/helpers/vaults';
 import { useGetCollateralThresholds } from '@/utils/hooks/api/use-get-collateral-thresholds';
@@ -60,14 +61,12 @@ const CollateralizationCell = ({
       <>
         <div>
           <p className={getCollateralizationColor(settledCollateralization, collateralSecureThreshold)}>
-            {settledCollateralization === undefined ? '∞' : roundTwoDecimals(settledCollateralization.toString()) + '%'}
+            {settledCollateralization === undefined ? '∞' : formatPercentage(settledCollateralization.toNumber())}
           </p>
           <p className='text-xs'>
             <span>{t('vault.pending_table_subcell')}</span>
             <span className={getCollateralizationColor(unsettledCollateralization, collateralSecureThreshold)}>
-              {unsettledCollateralization === undefined
-                ? '∞'
-                : roundTwoDecimals(unsettledCollateralization.toString()) + '%'}
+              {unsettledCollateralization === undefined ? '∞' : formatPercentage(unsettledCollateralization.toNumber())}
             </span>
           </p>
         </div>
@@ -159,9 +158,9 @@ const VaultsTable = (): JSX.Element => {
   useErrorHandler(btcToGovernanceTokenRateError);
 
   const { isIdle: vaultsExtIdle, isLoading: vaultsExtLoading, data: vaultsExt, error: vaultsExtError } = useQuery<
-    Array<VaultExt<BitcoinUnit>>,
+    Array<VaultExt>,
     Error
-  >([GENERIC_FETCHER, 'vaults', 'list'], genericFetcher<Array<VaultExt<BitcoinUnit>>>(), {
+  >([GENERIC_FETCHER, 'vaults', 'list'], genericFetcher<Array<VaultExt>>(), {
     enabled: !!bridgeLoaded
   });
   useErrorHandler(vaultsExtError);
@@ -229,22 +228,51 @@ const VaultsTable = (): JSX.Element => {
     [t]
   );
 
+  const [filteredVaults, setFilteredVaults] = React.useState<Array<VaultExt>>([]);
+  const handleError = useErrorHandler();
+  React.useEffect(() => {
+    if (!vaultsExt) return;
+    if (!handleError) return;
+
+    (async () => {
+      try {
+        const theFilteredVaults = await asyncFilter<VaultExt>(vaultsExt, async (vaultExt: VaultExt) =>
+          VAULT_COLLATERAL_TOKENS.some(async (item) => {
+            const collateralToken = await currencyIdToMonetaryCurrency(
+              window.bridge.assetRegistry,
+              vaultExt.id.currencies.collateral
+            );
+            const isEqual = isCurrencyEqual(item, collateralToken);
+
+            return isEqual;
+          })
+        );
+
+        setFilteredVaults(theFilteredVaults);
+      } catch (error) {
+        handleError(error);
+      }
+    })();
+  }, [vaultsExt, handleError]);
+
   const vaults: Array<Vault> | undefined = React.useMemo(() => {
     if (
-      vaultsExt &&
+      filteredVaults &&
       btcToRelayChainNativeTokenRate &&
       btcToGovernanceTokenRate &&
       collateralThresholds &&
       currentActiveBlockNumber
     ) {
-      const rawVaults = vaultsExt
-        .filter((vaultsExt) => VAULT_COLLATERAL.includes(vaultsExt.id.currencies.collateral.asToken.type))
+      const rawVaults = filteredVaults
+        .filter((vaultExt) => {
+          if (vaultExt.id.currencies.collateral.isToken) {
+            return true;
+          }
+          console.warn('Unsupported non token collateral vault found and removed from vaults list');
+          return false;
+        })
         .map((vaultExt) => {
           const collateral = vaultExt.id.currencies.collateral;
-          if (collateral.isToken === false) {
-            throw new Error('Non token collateral is not supported!');
-          }
-          // TODO: Refactor with currencies update.
           const collateralTokenSymbol = collateral.asToken.type as CollateralIdLiteral;
 
           const collateralLiquidationThreshold = collateralThresholds[collateralTokenSymbol].liquidationThreshold;
@@ -320,7 +348,7 @@ const VaultsTable = (): JSX.Element => {
     btcToGovernanceTokenRate,
     collateralThresholds,
     t,
-    vaultsExt
+    filteredVaults
   ]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({

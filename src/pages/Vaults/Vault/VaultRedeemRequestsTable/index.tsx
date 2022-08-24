@@ -1,4 +1,4 @@
-import { CurrencyIdLiteral, RedeemStatus } from '@interlay/interbtc-api';
+import { CollateralIdLiteral, RedeemStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -6,7 +6,13 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { displayMonetaryAmount, formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
+import {
+  displayMonetaryAmount,
+  formatDateTimePrecise,
+  formatNumber,
+  shortAddress,
+  shortTxId
+} from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -35,10 +41,10 @@ import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters'
 
 interface Props {
   vaultAddress: string;
-  collateralId: CurrencyIdLiteral | undefined;
+  collateralTokenIdLiteral: CollateralIdLiteral;
 }
 
-const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.Element | null => {
+const VaultRedeemRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
@@ -78,12 +84,11 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
-      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}`)
+      redeemCountQuery(
+        `vault: {accountId_eq: "${vaultAddress}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`
+      ) // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
     ],
-    graphqlFetcher<GraphqlReturn<any>>(),
-    {
-      enabled: !!collateralId
-    }
+    graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(redeemRequestsTotalCountError);
 
@@ -98,12 +103,9 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
       REDEEMS_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}", collateralToken_eq: ${collateralId}}` // `WHERE` condition
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
     ],
-    redeemsFetcher,
-    {
-      enabled: !!collateralId
-    }
+    redeemsFetcher
   );
   useErrorHandler(redeemRequestsError);
 
@@ -127,7 +129,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
         classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
-          return <>{redeem.request.height.absolute}</>;
+          return <>{formatNumber(redeem.request.height.absolute)}</>;
         }
       },
       {
@@ -161,7 +163,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
             height = issue.request.height.absolute;
           }
 
-          return <>{height}</>;
+          return <>{formatNumber(height)}</>;
         }
       },
       {
@@ -226,7 +228,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralId }: Props): JSX.El
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           const value = redeem.backingPayment.confirmations;
-          return <>{value === undefined ? t('not_applicable') : Math.max(value, 0)}</>;
+          return <>{value === undefined ? t('not_applicable') : formatNumber(Math.max(value, 0))}</>;
         }
       },
       {

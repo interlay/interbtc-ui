@@ -1,5 +1,5 @@
-import { CollateralUnit, newMonetaryAmount, roundTwoDecimals } from '@interlay/interbtc-api';
-import { Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, CollateralIdLiteral, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -12,7 +12,7 @@ import { toast } from 'react-toastify';
 
 import { updateCollateralAction, updateCollateralizationAction } from '@/common/actions/vault.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, getUsdAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -21,7 +21,6 @@ import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useTokenBalance from '@/services/hooks/use-token-balance';
-import { GenericCurrencyValues } from '@/types/currency';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -43,7 +42,7 @@ interface Props {
   collateralUpdateStatus: CollateralUpdateStatus;
   vaultAddress: string;
   hasLockedBTC: boolean;
-  collateralCurrency: GenericCurrencyValues<CollateralUnit>;
+  collateralToken: CollateralCurrencyExt;
 }
 
 const UpdateCollateralModal = ({
@@ -52,7 +51,7 @@ const UpdateCollateralModal = ({
   collateralUpdateStatus,
   vaultAddress,
   hasLockedBTC,
-  collateralCurrency
+  collateralToken
 }: Props): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const prices = useGetPrices();
@@ -82,9 +81,9 @@ const UpdateCollateralModal = ({
     isLoading: requiredCollateralTokenAmountLoading,
     data: requiredCollateralTokenAmount,
     error: requiredCollateralTokenAmountError
-  } = useQuery<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getRequiredCollateralForVault', vaultId, collateralCurrency.currency],
-    genericFetcher<MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>>(),
+  } = useQuery<MonetaryAmount<CollateralCurrencyExt>, Error>(
+    [GENERIC_FETCHER, 'vaults', 'getRequiredCollateralForVault', vaultId, collateralToken],
+    genericFetcher<MonetaryAmount<CollateralCurrencyExt>>(),
     {
       enabled: !!bridgeLoaded
     }
@@ -95,14 +94,14 @@ const UpdateCollateralModal = ({
     tokenBalanceIdle: collateralBalanceIdle,
     tokenBalanceLoading: collateralBalanceLoading,
     tokenBalance: collateralBalance
-  } = useTokenBalance<CollateralUnit>(collateralCurrency.currency, vaultAddress);
+  } = useTokenBalance(collateralToken, vaultAddress);
 
   const collateralTokenAmount = newMonetaryAmount(
     strCollateralTokenAmount,
-    collateralCurrency.currency,
+    collateralToken,
     true
-  ) as MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  let newCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  ) as MonetaryAmount<CollateralCurrencyExt>;
+  let newCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
   let labelText;
   let collateralUpdateStatusText: string;
   if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
@@ -123,7 +122,7 @@ const UpdateCollateralModal = ({
     data: vaultCollateralization,
     error: vaultCollateralizationError
   } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getVaultCollateralization', vaultId, collateralCurrency.id, newCollateralTokenAmount],
+    [GENERIC_FETCHER, 'vaults', 'getVaultCollateralization', vaultId, collateralToken, newCollateralTokenAmount],
     genericFetcher<Big>(),
     {
       enabled: bridgeLoaded && hasLockedBTC
@@ -138,9 +137,9 @@ const UpdateCollateralModal = ({
       setSubmitStatus(STATUSES.PENDING);
       const collateralTokenAmount = newMonetaryAmount(
         data[COLLATERAL_TOKEN_AMOUNT],
-        collateralCurrency.currency,
+        collateralToken,
         true
-      ) as MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+      ) as MonetaryAmount<CollateralCurrencyExt>;
       if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
         await window.bridge.vaults.depositCollateral(collateralTokenAmount);
       } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
@@ -149,12 +148,8 @@ const UpdateCollateralModal = ({
         throw new Error('Something went wrong!');
       }
 
-      const balanceLockedCollateral = (await window.bridge.tokens.balance(collateralCurrency.currency, vaultId))
-        .reserved;
-      console.log('balanceLockedCollateral', balanceLockedCollateral);
-      dispatch(
-        updateCollateralAction(balanceLockedCollateral as MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>)
-      );
+      const balanceLockedCollateral = (await window.bridge.tokens.balance(collateralToken, vaultId)).reserved;
+      dispatch(updateCollateralAction(balanceLockedCollateral as MonetaryAmount<CollateralCurrencyExt>));
 
       if (vaultCollateralization === undefined) {
         dispatch(updateCollateralizationAction('∞'));
@@ -175,7 +170,7 @@ const UpdateCollateralModal = ({
   };
 
   const validateCollateralTokenAmount = (value: string): string | undefined => {
-    const collateralTokenAmount = newMonetaryAmount(value || '0', collateralCurrency.currency, true);
+    const collateralTokenAmount = newMonetaryAmount(value || '0', collateralToken, true);
 
     // Collateral update only allowed if above required collateral
     if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw && requiredCollateralTokenAmount) {
@@ -186,16 +181,17 @@ const UpdateCollateralModal = ({
         : undefined;
     }
 
-    if (collateralTokenAmount.lte(newMonetaryAmount(0, collateralCurrency.currency, true))) {
+    if (collateralTokenAmount.lte(newMonetaryAmount(0, collateralToken, true))) {
       return t('vault.collateral_higher_than_0');
     }
 
-    if (collateralTokenAmount.toBig(collateralTokenAmount.currency.rawBase).lte(1)) {
+    // Represents being less than 1 Planck
+    if (collateralTokenAmount.toBig(0).lte(1)) {
       return 'Please enter an amount greater than 1 Planck';
     }
 
     if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
-      return t(`Must be less than ${collateralCurrency.id} balance!`);
+      return t(`Must be less than ${collateralToken.ticker} balance!`);
     }
 
     if (!bridgeLoaded) {
@@ -240,9 +236,9 @@ const UpdateCollateralModal = ({
     // The vault API returns collateralization as a regular number rather than a percentage
     const strVaultCollateralizationPercentage = vaultCollateralization?.mul(100).toString();
     if (Number(strVaultCollateralizationPercentage) > 1000) {
-      return 'more than 1000%';
+      return `more than ${formatPercentage(1000 / 100, { minimumFractionDigits: 0 })}`;
     } else {
-      return `${roundTwoDecimals(strVaultCollateralizationPercentage || '0')}%`;
+      return formatPercentage(Number(strVaultCollateralizationPercentage || '0'));
     }
   };
 
@@ -281,19 +277,19 @@ const UpdateCollateralModal = ({
           <p>
             {t('vault.current_total_collateral', {
               currentCollateral: displayMonetaryAmount(currentTotalCollateralTokenAmount),
-              collateralTokenSymbol: collateralCurrency.id
+              collateralTokenSymbol: collateralToken.ticker
             })}
           </p>
           <p>
             {t('vault.minimum_required_collateral', {
               currentCollateral: getMinRequiredCollateralTokenAmount(),
-              collateralTokenSymbol: collateralCurrency.id
+              collateralTokenSymbol: collateralToken.ticker
             })}
           </p>
           <p>
             {t('vault.maximum_withdrawable_collateral', {
               currentCollateral: getMaxWithdrawableCollateralTokenAmount(),
-              collateralTokenSymbol: collateralCurrency.id
+              collateralTokenSymbol: collateralToken.ticker
             })}
           </p>
           <div className='space-y-1.5'>
@@ -302,7 +298,7 @@ const UpdateCollateralModal = ({
             </label>
             <TokenField
               id={COLLATERAL_TOKEN_AMOUNT}
-              label={collateralCurrency.id}
+              label={collateralToken.ticker}
               min={0}
               {...register(COLLATERAL_TOKEN_AMOUNT, {
                 required: {
@@ -311,9 +307,9 @@ const UpdateCollateralModal = ({
                 },
                 validate: (value) => validateCollateralTokenAmount(value)
               })}
-              approxUSD={`≈ $ ${getUsdAmount(
+              approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
                 collateralTokenAmount,
-                getTokenPrice(prices, collateralCurrency.id)?.usd
+                getTokenPrice(prices, collateralToken.ticker as CollateralIdLiteral)?.usd
               )}`}
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}

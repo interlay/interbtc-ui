@@ -1,4 +1,4 @@
-import { CollateralCurrency, newVaultId, WrappedCurrency } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, newVaultId, WrappedCurrency } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -12,14 +12,18 @@ import InterlayDenimOrKintsugiSupernovaContainedButton, {
 } from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
-import { GOVERNANCE_TOKEN_SYMBOL, GovernanceTokenMonetaryAmount, WRAPPED_TOKEN } from '@/config/relay-chains';
+import {
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  GovernanceTokenMonetaryAmount,
+  WRAPPED_TOKEN
+} from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { CurrencyValues } from '@/types/currency';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 
 interface CustomProps {
   vaultAccountId: AccountId;
-  collateralToken: CurrencyValues;
+  collateralToken: CollateralCurrencyExt;
 }
 
 const ClaimRewardsButton = ({
@@ -37,7 +41,7 @@ const ClaimRewardsButton = ({
     error: governanceTokenRewardError,
     refetch: governanceTokenRewardRefetch
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getGovernanceReward', vaultAccountId, collateralToken.id, GOVERNANCE_TOKEN_SYMBOL],
+    [GENERIC_FETCHER, 'vaults', 'getGovernanceReward', vaultAccountId, collateralToken, GOVERNANCE_TOKEN],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded && !!vaultAccountId
@@ -54,7 +58,7 @@ const ClaimRewardsButton = ({
       const vaultId = newVaultId(
         window.bridge.api,
         vaultAccountId.toString(),
-        collateralToken.currency as CollateralCurrency,
+        collateralToken,
         WRAPPED_TOKEN as WrappedCurrency
       );
 

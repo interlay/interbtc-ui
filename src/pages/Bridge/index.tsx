@@ -1,4 +1,3 @@
-import { CollateralCurrency } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -78,10 +77,8 @@ const Bridge = (): JSX.Element | null => {
     if (!bridgeLoaded) return;
     (async () => {
       try {
-        const maxBurnableTokens = await window.bridge.redeem.getMaxBurnableTokens(
-          RELAY_CHAIN_NATIVE_TOKEN as CollateralCurrency
-        );
-        setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero));
+        const maxBurnableTokens = await window.bridge.redeem.getMaxBurnableTokens(RELAY_CHAIN_NATIVE_TOKEN);
+        setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero()));
       } catch (error) {
         // TODO: should add error handling
         console.log('[Bridge] error => ', error);

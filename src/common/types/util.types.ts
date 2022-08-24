@@ -1,5 +1,5 @@
-import { CollateralUnit } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { CollateralCurrencyExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { u256 } from '@polkadot/types/primitive';
 import { CombinedState, Store } from 'redux';
 
@@ -65,11 +65,11 @@ export type GeneralState = {
   showAccountModal: boolean;
   address: string;
   totalWrappedTokenAmount: BitcoinAmount;
-  totalLockedCollateralTokenAmount: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
   wrappedTokenBalance: BitcoinAmount;
   wrappedTokenTransferableBalance: BitcoinAmount;
-  collateralTokenBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
-  collateralTokenTransferableBalance: MonetaryAmount<Currency<CollateralUnit>, CollateralUnit>;
+  collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>;
+  collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>;
   extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
@@ -103,7 +103,7 @@ export type RelayedBlock = {
 };
 
 export enum TokenType {
-  COLLATERAL = 'collateral',
-  GOVERNANCE = 'governance',
-  WRAPPED = 'wrapped'
+  RelayChainNative = 'relay-chain-native',
+  Governance = 'governance',
+  Wrapped = 'wrapped'
 }

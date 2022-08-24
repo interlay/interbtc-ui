@@ -1,12 +1,12 @@
 {
   "name": "interbtc-ui",
-  "version": "2.14.0",
+  "version": "2.15.1",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^1.0.3",
-    "@interlay/interbtc-api": "1.13.6",
+    "@interlay/interbtc-api": "1.16.6",
     "@material-icons/svg": "^1.0.28",
     "@polkadot/api": "8.8.2",
     "@polkadot/extension-dapp": "0.44.1",
@@ -15,6 +15,7 @@
     "@react-aria/focus": "^3.6.1",
     "@react-aria/meter": "^3.2.1",
     "@react-aria/numberfield": "^3.2.1",
+    "@react-aria/progress": "^3.3.0",
     "@react-aria/table": "^3.4.0",
     "@react-aria/tabs": "^3.2.1",
     "@react-aria/utils": "^3.13.1",
