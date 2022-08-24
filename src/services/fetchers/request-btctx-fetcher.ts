@@ -20,7 +20,7 @@ async function getTxDetailsForRequest(
   try {
     txDetails.btcTxId = await (useOpReturn
       ? electrsAPI.getTxIdByOpReturn(stripHexPrefix(requestId), recipient)
-      : electrsAPI.getEarliestPaymentToRecipientAddressTxId(recipient));
+      : electrsAPI.getLargestPaymentToRecipientAddressTxId(recipient));
     txDetails.amount = await electrsAPI.getUtxoAmount(txDetails.btcTxId, recipient);
   } catch (error) {
     // no tx found, return null
