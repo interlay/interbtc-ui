@@ -17,7 +17,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatNumber, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -71,7 +71,10 @@ const ReplaceTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.El
       {
         Header: t('vault.creation_block'),
         accessor: 'btcHeight',
-        classNames: ['text-center']
+        classNames: ['text-center'],
+        Cell: function FormattedCell({ value }: { value: number }) {
+          return <>{formatNumber(value)}</>;
+        }
       },
       {
         Header: t('vault.old_vault'),

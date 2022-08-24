@@ -7,7 +7,7 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, safeRoundTwoDecimals } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatPercentage } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
 import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
@@ -80,9 +80,6 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    const systemCollateralizationLabel = systemCollateralization?.mul(100).toString() || '0';
-    const secureCollateralThresholdLabel = secureCollateralThreshold?.mul(100).toString() || '150';
-
     return (
       <>
         <Stats
@@ -91,10 +88,10 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
               {!TEMP_COLLATERALIZATION_DISPLAY_DISABLED && (
                 <>
                   <StatsDt>{t('dashboard.vault.collateralization')}</StatsDt>
-                  <StatsDd>{safeRoundTwoDecimals(systemCollateralizationLabel)}%</StatsDd>
+                  <StatsDd>{formatPercentage(systemCollateralization?.toNumber() || 0)}</StatsDd>
                   <StatsDd>
                     {t('dashboard.vault.secure_threshold', {
-                      threshold: safeRoundTwoDecimals(secureCollateralThresholdLabel)
+                      threshold: formatPercentage(secureCollateralThreshold?.toNumber() || 150)
                     })}
                   </StatsDd>
                 </>

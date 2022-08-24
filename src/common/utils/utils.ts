@@ -4,21 +4,6 @@ import Big from 'big.js';
 
 import { PARACHAIN_URL } from '@/constants';
 
-// TODO: should be one module
-function safeRoundTwoDecimals(input: string | number | undefined, defaultValue = '0'): string {
-  return safeRound(input, defaultValue, 2);
-}
-
-function safeRound(input: string | number | undefined, defaultValue: string, decimals: number) {
-  if (input === undefined) return defaultValue;
-  try {
-    const number = new Big(input);
-    return number.round(decimals).toString();
-  } catch {
-    return defaultValue;
-  }
-}
-
 function shortAddress(address: string): string {
   if (address.length < 12) return address;
   return address.substr(0, 6) + '...' + address.substr(address.length - 7, address.length - 1);
@@ -47,6 +32,7 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     })
     .reverse();
 }
+
 const convertMonetaryAmountToValueInUSD = <T extends CurrencyExt>(
   amount: MonetaryAmount<T>,
   rate: number | undefined
@@ -86,14 +72,43 @@ function displayMonetaryAmountInUSDFormat<T extends CurrencyExt>(
   return formatUSD(rawUSDAmount);
 }
 
+const formatNumber = (
+  amount: number,
+  options?: {
+    minimumFractionDigits?: number;
+    maximumFractionDigits?: number;
+  }
+): string => {
+  const { format } = new Intl.NumberFormat(undefined, options);
+
+  return format(amount);
+};
+
+const formatPercentage = (
+  percentage: number,
+  options?: {
+    maximumFractionDigits?: number;
+    minimumFractionDigits?: number;
+  }
+): string => {
+  const { format } = new Intl.NumberFormat(undefined, {
+    style: 'percent',
+    maximumFractionDigits: options?.maximumFractionDigits ?? 2,
+    minimumFractionDigits: options?.minimumFractionDigits ?? 2
+  });
+
+  return format(percentage);
+};
+
 function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, defaultValue = '0.00'): string {
   if (amount === undefined) return defaultValue;
 
   // TODO: refactor once Monetary.js exposes an `isGreaterThanZero()` method
   const zero = new MonetaryAmount<CurrencyExt>(amount.currency, 0);
   if (amount.gte(zero)) {
-    return amount.toHuman();
+    return formatNumber(Number(amount.toHuman()));
   }
+
   return defaultValue;
 }
 
@@ -127,11 +142,12 @@ export {
   displayMonetaryAmountInUSDFormat,
   formatDateTime,
   formatDateTimePrecise,
+  formatNumber,
+  formatPercentage,
   formatUSD,
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
-  safeRoundTwoDecimals,
   shortAddress,
   shortTxId
 };

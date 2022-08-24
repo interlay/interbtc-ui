@@ -1,5 +1,7 @@
 import { Meta, Story } from '@storybook/react';
 
+import { formatPercentage } from '@/common/utils/utils';
+
 import { NewVaultsTable, NewVaultsTableProps } from '.';
 
 const Template: Story<NewVaultsTableProps> = (args) => <NewVaultsTable {...args} />;
@@ -11,14 +13,14 @@ Default.args = {
       collateralCurrency: 'KSM',
       wrappedCurrency: 'KBTC',
       minCollateralAmount: '1.21',
-      collateralRate: '260.12',
+      collateralRate: formatPercentage(2.6012),
       isActive: true
     },
     {
       collateralCurrency: 'KINT',
       wrappedCurrency: 'KBTC',
       minCollateralAmount: '9.14',
-      collateralRate: '314.55',
+      collateralRate: formatPercentage(3.1455),
       isActive: false
     }
   ]

@@ -15,7 +15,7 @@ import {
 interface VaultCardProps {
   collateralSymbol: Tokens;
   wrappedSymbol: Tokens;
-  pendingRequests: number;
+  pendingRequests: string;
   apy: string;
   collateralScore: string;
   link: string;
@@ -49,13 +49,11 @@ const VaultCard = ({
       <StyledDl>
         <DlItem>
           <dt>Current APR</dt>
-          <dd>≈{apy}%</dd>
+          <dd>≈ {apy}</dd>
         </DlItem>
         <DlItem>
           <dt>Collateralization</dt>
-          <CollateralScore $atRisk={atRisk}>
-            {collateralScore === '∞' ? collateralScore : `${collateralScore}%`}
-          </CollateralScore>
+          <CollateralScore $atRisk={atRisk}>{collateralScore}</CollateralScore>
         </DlItem>
       </StyledDl>
       <CTAWrapper>
