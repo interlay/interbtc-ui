@@ -107,6 +107,7 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-pseudo-elements": "^1.5.1",
     "ts-node": "^8.6.2",
+    "tsconfig-paths": "^4.1.0",
     "webpack-bundle-analyzer": "^4.4.0"
   },
   "scripts": {

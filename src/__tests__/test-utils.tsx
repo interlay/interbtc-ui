@@ -6,15 +6,17 @@ import { HelmetProvider } from 'react-helmet-async';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Provider } from 'react-redux';
 import { Route, Router } from 'react-router-dom';
-import { PersistGate } from 'redux-persist/integration/react';
+import { createStore } from 'redux';
 
-import { persistor, store } from '@/store';
+import { rootReducer } from '../common/reducers';
 
 const queryClient = new QueryClient();
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   path?: `/${string}`;
 }
+
+const testStore = createStore(rootReducer);
 
 const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactNode }> = (history) => ({
   children
@@ -23,10 +25,8 @@ const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactN
     <Router history={history}>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <Route> {children} </Route>
-            </PersistGate>
+          <Provider store={testStore}>
+            <Route> {children} </Route>
           </Provider>
         </HelmetProvider>
       </QueryClientProvider>
@@ -40,7 +40,7 @@ const customRender = (ui: ReactElement, options?: CustomRenderOptions) => {
     history.push(options.path);
   }
 
-  render(ui, { wrapper: ProvidersWrapper(history), ...options });
+  return render(ui, { wrapper: ProvidersWrapper(history), ...options });
 };
 
 export * from '@testing-library/react';
