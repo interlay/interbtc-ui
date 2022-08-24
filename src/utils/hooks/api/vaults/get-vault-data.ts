@@ -21,6 +21,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
+  issuableTokens: MonetaryAmount<CollateralCurrencyExt>;
   pendingRequests: number;
   collateralId: CollateralIdLiteral;
   wrappedId: WrappedIdLiteral;
@@ -37,19 +38,20 @@ interface VaultData {
     usd: number;
   };
   vaultAtRisk: boolean;
+  vaultStatus: number; // TODO: return string
 }
 
-const getVaultOverview = async (
-  vault: VaultExt,
-  accountId: AccountId,
-  prices: Prices | undefined
-): Promise<VaultData> => {
+const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
   const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
   const collateralTokenPrice = getTokenPrice(prices, collateralTokenIdLiteral);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
+    accountId,
+    vault.backingCollateral.currency
+  );
+  const issuableTokens = await window.bridge.vaults.getIssuableTokensFromVault(
     accountId,
     vault.backingCollateral.currency
   );
@@ -65,6 +67,7 @@ const getVaultOverview = async (
   );
   const collateral = await window.bridge.vaults.getCollateral(accountId, vault.backingCollateral.currency);
   const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency);
+  const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
 
   const usdCollateral = convertMonetaryAmountToValueInUSD(collateral, collateralTokenPrice?.usd);
   const usdGovernanceTokenRewards = convertMonetaryAmountToValueInUSD(
@@ -108,6 +111,7 @@ const getVaultOverview = async (
   return {
     apy,
     collateralization,
+    issuableTokens,
     pendingRequests,
     collateralId: collateralTokenIdLiteral,
     wrappedId: WRAPPED_TOKEN_SYMBOL,
@@ -123,9 +127,10 @@ const getVaultOverview = async (
       raw: wrappedTokenRewards,
       usd: usdWrappedTokenRewards ?? 0
     },
-    vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
+    vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false,
+    vaultStatus: vaultExt.status
   };
 };
 
 export type { VaultData };
-export { getVaultOverview };
+export { getVaultData };
