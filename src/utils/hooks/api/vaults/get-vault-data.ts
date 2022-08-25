@@ -5,7 +5,7 @@ import {
   VaultStatusExt,
   WrappedIdLiteral
 } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 
@@ -28,6 +28,7 @@ interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
   issuableTokens: MonetaryAmount<CollateralCurrencyExt>;
+  issuedTokens: BitcoinAmount;
   pendingRequests: number;
   collateralId: CollateralIdLiteral;
   wrappedId: WrappedIdLiteral;
@@ -75,6 +76,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   // or by extending the vaults.get (VaultExt) api call
   const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
+  console.log('vaultExt', vaultExt);
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
     accountId,
@@ -146,6 +148,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     apy,
     collateralization,
     issuableTokens,
+    issuedTokens: vaultExt.issuedTokens,
     pendingRequests,
     collateralId: collateralTokenIdLiteral,
     wrappedId: WRAPPED_TOKEN_SYMBOL,
