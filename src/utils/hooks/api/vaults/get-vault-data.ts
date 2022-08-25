@@ -75,7 +75,6 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   // or by extending the vaults.get (VaultExt) api call
   const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
-  const threshold = vaultExt.getSecureCollateralThreshold();
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
     accountId,
@@ -102,6 +101,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   const premiumRedeemThreshold = await window.bridge.vaults.getPremiumRedeemThreshold(vault.backingCollateral.currency);
   const secureThreshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency);
 
+  const threshold = vaultExt.getSecureCollateralThreshold();
   const usdCollateral = convertMonetaryAmountToValueInUSD(collateral, collateralTokenPrice?.usd);
   const usdGovernanceTokenRewards = convertMonetaryAmountToValueInUSD(
     governanceTokenRewards,
