@@ -1,4 +1,10 @@
-import { CollateralCurrencyExt, CollateralIdLiteral, VaultExt, WrappedIdLiteral } from '@interlay/interbtc-api';
+import {
+  CollateralCurrencyExt,
+  CollateralIdLiteral,
+  VaultExt,
+  VaultStatusExt,
+  WrappedIdLiteral
+} from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
@@ -38,11 +44,29 @@ interface VaultData {
     usd: number;
   };
   vaultAtRisk: boolean;
-  vaultStatus: number; // TODO: return string
+  vaultStatus: string;
   liquidationThreshold: Big;
   premiumRedeemThreshold: Big;
   secureThreshold: Big;
 }
+
+// TODO: move these to dictionary file
+const getVaultStatus = (vaultStatus: VaultStatusExt) => {
+  switch (vaultStatus) {
+    case VaultStatusExt.Active: {
+      return 'Active';
+    }
+    case VaultStatusExt.Inactive: {
+      return 'Issuing disabled';
+    }
+    case VaultStatusExt.Liquidated: {
+      return 'Liquidated';
+    }
+    default: {
+      return 'Undefined';
+    }
+  }
+};
 
 const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
   const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
@@ -51,9 +75,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   // or by extending the vaults.get (VaultExt) api call
   const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
-
   const threshold = vaultExt.getSecureCollateralThreshold();
-
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
     accountId,
@@ -140,7 +162,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
       usd: usdWrappedTokenRewards ?? 0
     },
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false,
-    vaultStatus: vaultExt.status,
+    vaultStatus: getVaultStatus(vaultExt.status),
     liquidationThreshold,
     premiumRedeemThreshold,
     secureThreshold
