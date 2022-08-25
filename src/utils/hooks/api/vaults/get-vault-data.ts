@@ -34,14 +34,17 @@ interface VaultData {
   wrappedId: WrappedIdLiteral;
   collateral: {
     raw: MonetaryAmount<CollateralCurrencyExt>;
+    amount: Big;
     usd: number;
   };
   governanceTokenRewards: {
     raw: GovernanceTokenMonetaryAmount;
+    amount: Big;
     usd: number;
   };
   wrappedTokenRewards: {
     raw: WrappedTokenAmount;
+    amount: Big;
     usd: number;
   };
   vaultAtRisk: boolean;
@@ -154,14 +157,17 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     wrappedId: WRAPPED_TOKEN_SYMBOL,
     collateral: {
       raw: collateral,
+      amount: collateral.toBig(),
       usd: usdCollateral ?? 0
     },
     governanceTokenRewards: {
       raw: governanceTokenRewards,
+      amount: governanceTokenRewards.toBig(),
       usd: usdGovernanceTokenRewards ?? 0
     },
     wrappedTokenRewards: {
       raw: wrappedTokenRewards,
+      amount: wrappedTokenRewards.toBig(),
       usd: usdWrappedTokenRewards ?? 0
     },
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false,
