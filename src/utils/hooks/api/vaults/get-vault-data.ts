@@ -58,6 +58,10 @@ interface VaultData {
   liquidationExchangeRate: Big | undefined;
   premiumRedeemThreshold: Big;
   secureThreshold: Big;
+  remainingCapacity: {
+    amount: MonetaryAmount<CollateralCurrencyExt>;
+    percentage: string;
+  };
 }
 
 // TODO: move these to dictionary file
@@ -159,6 +163,12 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
 
   const pendingRequests = issuesCount.data.issuesConnection.totalCount + redeemsCount.data.redeemsConnection.totalCount;
 
+  // Calculate remaning capacity
+  const backedTokens = vaultExt.getBackedTokens();
+  const divisor = issuableTokens.add(backedTokens).toBig();
+  const remainingCapacity = issuableTokens.div(divisor);
+  //
+
   return {
     apy,
     collateralization,
@@ -191,7 +201,11 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     liquidationThreshold,
     liquidationExchangeRate,
     premiumRedeemThreshold,
-    secureThreshold
+    secureThreshold,
+    remainingCapacity: {
+      amount: remainingCapacity,
+      percentage: remainingCapacity.toBig().mul(100).toString()
+    }
   };
 };
 

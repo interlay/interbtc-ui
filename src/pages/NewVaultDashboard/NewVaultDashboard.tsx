@@ -27,6 +27,8 @@ const VaultDashboard = (): JSX.Element => {
   const vaultOverview = useGetVaultOverview({ address: selectedVaultAccountAddress });
   const vaultData = vaultOverview?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
 
+  console.log(vaultData);
+
   const stakingTitle = (
     <StyledStakingTitleWrapper>
       <StyledStakingTitle>Rewards</StyledStakingTitle>
@@ -75,7 +77,7 @@ const VaultDashboard = (): JSX.Element => {
     <MainContainer>
       <Stack>
         <PageTitle />
-        <VaultInfo />
+        <VaultInfo vaultStatus={vaultData?.vaultStatus ?? ''} />
         <InsightsList items={insightsItems} />
         <StyledCollateralSection>
           <StyledVaultCollateral
