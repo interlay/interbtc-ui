@@ -3,10 +3,10 @@ import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQueries, UseQueryResult } from 'react-query';
 
-import { useGetVaults } from '@/utils/hooks/api/use-get-vaults';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { useGetVaults } from '@/utils/hooks/api/vaults/use-get-vaults';
 
-import { getVaultOverview, VaultData } from './get-vault-overview';
-import { useGetPrices } from './use-get-prices';
+import { getVaultData, VaultData } from './get-vault-data';
 
 type VaultTotals = {
   totalLockedCollateral: number;
@@ -44,7 +44,7 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
       .map((vault) => {
         return {
           queryKey: ['vaultsOverview', address, vault.backingCollateral.currency.ticker],
-          queryFn: () => getVaultOverview(vault, newAccountId(window.bridge.api, address), prices)
+          queryFn: () => getVaultData(vault, newAccountId(window.bridge.api, address), prices)
         };
       })
   );

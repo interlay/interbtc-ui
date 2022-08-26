@@ -8,7 +8,7 @@ import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-import { useGetVaultOverview } from '@/utils/hooks/api/use-get-vault-overview';
+import { useGetVaultOverview } from '@/utils/hooks/api/vaults/use-get-vault-data';
 
 import { VaultsHeader } from './VaultsHeader';
 

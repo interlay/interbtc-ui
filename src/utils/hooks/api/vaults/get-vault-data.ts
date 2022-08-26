@@ -1,5 +1,11 @@
-import { CollateralCurrencyExt, CollateralIdLiteral, VaultExt, WrappedIdLiteral } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import {
+  CollateralCurrencyExt,
+  CollateralIdLiteral,
+  VaultExt,
+  VaultStatusExt,
+  WrappedIdLiteral
+} from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 
@@ -16,40 +22,77 @@ import {
 import { HYDRA_URL } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { ForeignAssetIdLiteral } from '@/types/currency';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
+  issuableTokens: MonetaryAmount<CollateralCurrencyExt>;
   pendingRequests: number;
   collateralId: CollateralIdLiteral;
   wrappedId: WrappedIdLiteral;
+  issuedTokens: {
+    raw: BitcoinAmount;
+    amount: Big;
+    usd: number;
+  };
   collateral: {
     raw: MonetaryAmount<CollateralCurrencyExt>;
+    amount: Big;
     usd: number;
   };
   governanceTokenRewards: {
     raw: GovernanceTokenMonetaryAmount;
+    amount: Big;
     usd: number;
   };
   wrappedTokenRewards: {
     raw: WrappedTokenAmount;
+    amount: Big;
     usd: number;
   };
   vaultAtRisk: boolean;
+  vaultStatus: string;
+  liquidationThreshold: Big;
+  liquidationExchangeRate: Big | undefined;
+  premiumRedeemThreshold: Big;
+  secureThreshold: Big;
 }
 
-const getVaultOverview = async (
-  vault: VaultExt,
-  accountId: AccountId,
-  prices: Prices | undefined
-): Promise<VaultData> => {
+// TODO: move these to dictionary file
+const getVaultStatus = (vaultStatus: VaultStatusExt) => {
+  switch (vaultStatus) {
+    case VaultStatusExt.Active: {
+      return 'Active';
+    }
+    case VaultStatusExt.Inactive: {
+      return 'Issuing disabled';
+    }
+    case VaultStatusExt.Liquidated: {
+      return 'Liquidated';
+    }
+    default: {
+      return 'Undefined';
+    }
+  }
+};
+
+const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
   const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
   const collateralTokenPrice = getTokenPrice(prices, collateralTokenIdLiteral);
+  const bitcoinPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
+  // or by extending the vaults.get (VaultExt) api call
+  const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
+  console.log('vaultExt', vaultExt);
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
+    accountId,
+    vault.backingCollateral.currency
+  );
+  const issuableTokens = await window.bridge.vaults.getIssuableTokensFromVault(
     accountId,
     vault.backingCollateral.currency
   );
@@ -64,8 +107,18 @@ const getVaultOverview = async (
     WRAPPED_TOKEN
   );
   const collateral = await window.bridge.vaults.getCollateral(accountId, vault.backingCollateral.currency);
-  const threshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency);
+  const liquidationThreshold = await window.bridge.vaults.getLiquidationCollateralThreshold(
+    vault.backingCollateral.currency
+  );
+  const liquidationExchangeRate = await window.bridge.vaults.getExchangeRateForLiquidation(
+    accountId,
+    vault.backingCollateral.currency
+  );
+  const premiumRedeemThreshold = await window.bridge.vaults.getPremiumRedeemThreshold(vault.backingCollateral.currency);
+  const secureThreshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency);
 
+  const threshold = vaultExt.getSecureCollateralThreshold();
+  const usdIssuedTokens = convertMonetaryAmountToValueInUSD(vaultExt.issuedTokens, bitcoinPrice?.usd);
   const usdCollateral = convertMonetaryAmountToValueInUSD(collateral, collateralTokenPrice?.usd);
   const usdGovernanceTokenRewards = convertMonetaryAmountToValueInUSD(
     governanceTokenRewards,
@@ -76,6 +129,7 @@ const getVaultOverview = async (
     getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
   );
 
+  // TODO: move issues and redeems to separate hook
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
     headers: {
@@ -108,24 +162,38 @@ const getVaultOverview = async (
   return {
     apy,
     collateralization,
+    issuableTokens,
+    issuedTokens: {
+      raw: vaultExt.issuedTokens,
+      amount: vaultExt.issuedTokens.toBig(),
+      usd: usdIssuedTokens ?? 0
+    },
     pendingRequests,
     collateralId: collateralTokenIdLiteral,
     wrappedId: WRAPPED_TOKEN_SYMBOL,
     collateral: {
       raw: collateral,
+      amount: collateral.toBig(),
       usd: usdCollateral ?? 0
     },
     governanceTokenRewards: {
       raw: governanceTokenRewards,
+      amount: governanceTokenRewards.toBig(),
       usd: usdGovernanceTokenRewards ?? 0
     },
     wrappedTokenRewards: {
       raw: wrappedTokenRewards,
+      amount: wrappedTokenRewards.toBig(),
       usd: usdWrappedTokenRewards ?? 0
     },
-    vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false
+    vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false,
+    vaultStatus: getVaultStatus(vaultExt.status),
+    liquidationThreshold,
+    liquidationExchangeRate,
+    premiumRedeemThreshold,
+    secureThreshold
   };
 };
 
 export type { VaultData };
-export { getVaultOverview };
+export { getVaultData };
