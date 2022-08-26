@@ -16,7 +16,10 @@ import {
 } from './VaultCollateral.styles';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+type Props = {
+  collateralScore: number;
+  liquidationPrice: string;
+};
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
@@ -28,6 +31,7 @@ const ranges = {
   success: { min: 250, max: 300 }
 };
 
+// TODO: handling props as a single property bypasses some type errors
 const VaultCollateral = (props: VaultCollateralProps): JSX.Element => {
   const [collateralAction, setCollateralAction] = useState<CollateralModalVariants>();
   const [vaultAction, setVaultAction] = useState<IssueRedeemModalVariants>();
@@ -45,7 +49,7 @@ const VaultCollateral = (props: VaultCollateralProps): JSX.Element => {
       <StyledWrapper variant='bordered' {...props}>
         <StyledCollateralWrapper>
           <StyledCollateralScore
-            score={0}
+            score={props.collateralScore}
             ranges={ranges}
             variant='highlight'
             label='Collateral Score'
@@ -54,7 +58,7 @@ const VaultCollateral = (props: VaultCollateralProps): JSX.Element => {
           <StyledLiquidationPrice>
             <StyledLiquidationText color='tertiary'>
               Your current KSM Liquidation Price
-              <StyledCoinPairs color='primary'>113.92 KSM/BTC</StyledCoinPairs>
+              <StyledCoinPairs color='primary'>{props.liquidationPrice}</StyledCoinPairs>
             </StyledLiquidationText>
           </StyledLiquidationPrice>
         </StyledCollateralWrapper>
