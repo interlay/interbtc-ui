@@ -22,16 +22,21 @@ import {
 import { HYDRA_URL } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { ForeignAssetIdLiteral } from '@/types/currency';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
   issuableTokens: MonetaryAmount<CollateralCurrencyExt>;
-  issuedTokens: BitcoinAmount;
   pendingRequests: number;
   collateralId: CollateralIdLiteral;
   wrappedId: WrappedIdLiteral;
+  issuedTokens: {
+    raw: BitcoinAmount;
+    amount: Big;
+    usd: number;
+  };
   collateral: {
     raw: MonetaryAmount<CollateralCurrencyExt>;
     amount: Big;
@@ -50,6 +55,7 @@ interface VaultData {
   vaultAtRisk: boolean;
   vaultStatus: string;
   liquidationThreshold: Big;
+  liquidationExchangeRate: Big | undefined;
   premiumRedeemThreshold: Big;
   secureThreshold: Big;
 }
@@ -75,6 +81,7 @@ const getVaultStatus = (vaultStatus: VaultStatusExt) => {
 const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
   const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
   const collateralTokenPrice = getTokenPrice(prices, collateralTokenIdLiteral);
+  const bitcoinPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   // or by extending the vaults.get (VaultExt) api call
@@ -103,10 +110,15 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   const liquidationThreshold = await window.bridge.vaults.getLiquidationCollateralThreshold(
     vault.backingCollateral.currency
   );
+  const liquidationExchangeRate = await window.bridge.vaults.getExchangeRateForLiquidation(
+    accountId,
+    vault.backingCollateral.currency
+  );
   const premiumRedeemThreshold = await window.bridge.vaults.getPremiumRedeemThreshold(vault.backingCollateral.currency);
   const secureThreshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency);
 
   const threshold = vaultExt.getSecureCollateralThreshold();
+  const usdIssuedTokens = convertMonetaryAmountToValueInUSD(vaultExt.issuedTokens, bitcoinPrice?.usd);
   const usdCollateral = convertMonetaryAmountToValueInUSD(collateral, collateralTokenPrice?.usd);
   const usdGovernanceTokenRewards = convertMonetaryAmountToValueInUSD(
     governanceTokenRewards,
@@ -151,7 +163,11 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     apy,
     collateralization,
     issuableTokens,
-    issuedTokens: vaultExt.issuedTokens,
+    issuedTokens: {
+      raw: vaultExt.issuedTokens,
+      amount: vaultExt.issuedTokens.toBig(),
+      usd: usdIssuedTokens ?? 0
+    },
     pendingRequests,
     collateralId: collateralTokenIdLiteral,
     wrappedId: WRAPPED_TOKEN_SYMBOL,
@@ -173,6 +189,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false,
     vaultStatus: getVaultStatus(vaultExt.status),
     liquidationThreshold,
+    liquidationExchangeRate,
     premiumRedeemThreshold,
     secureThreshold
   };
