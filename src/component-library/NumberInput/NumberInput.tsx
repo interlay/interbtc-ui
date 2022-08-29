@@ -20,11 +20,12 @@ const locale = 'en-US';
 
 type Props = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  value?: number;
 };
 
 type InheritAttrs = Omit<InputProps, keyof Props>;
 
-type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & keyof InheritAttrs) | 'locale'>;
+type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'locale'>;
 
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 

@@ -1,2 +1,2 @@
-export type { CollateralModalProps, CollateralModalVariants } from './CollateralModal';
+export type { CollateralModalProps } from './CollateralModal';
 export { CollateralModal } from './CollateralModal';

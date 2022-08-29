@@ -1,3 +1,4 @@
+import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
 
@@ -5,8 +6,10 @@ import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils'
 import { CTA, Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
+import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
+import { getCurrency } from '@/utils/helpers/currencies';
 import { useGetVaultOverview } from '@/utils/hooks/api/vaults/use-get-vault-data';
 
 import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo } from './components';
@@ -27,7 +30,11 @@ const VaultDashboard = (): JSX.Element => {
   const vaultOverview = useGetVaultOverview({ address: selectedVaultAccountAddress });
   const vaultData = vaultOverview?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
 
-  console.log(vaultData);
+  if (!vaultData) {
+    return <PrimaryColorEllipsisLoader />;
+  }
+
+  const collateralToken = getCurrency(vaultData.collateralId as CollateralIdLiteral);
 
   const stakingTitle = (
     <StyledStakingTitleWrapper>
@@ -39,17 +46,18 @@ const VaultDashboard = (): JSX.Element => {
   );
 
   // TODO: should we leave the diameter as fixed pixels?
-  const vaultCapacity = <ProgressCircle diameter='65' value={93} />;
+  const vaultCapacity = <ProgressCircle aria-label='BTC remaining capacity' diameter='65' value={93} />;
 
   const insightsItems: InsightListItem[] = [
     {
-      title: `Locked Collateral ${vaultData?.collateralId}`,
-      label: vaultData ? formatNumber(vaultData.collateral.amount.toNumber()) : undefined
+      title: `Locked Collateral ${collateralToken.ticker}`,
+      label: formatNumber(vaultData.collateral.amount.toNumber()),
+      sublabel: `(${formatUSD(vaultData.collateral.usd)})`
     },
     {
       title: 'Locked BTC',
-      label: vaultData ? formatNumber(vaultData.issuedTokens.amount.toNumber()) : undefined,
-      sublabel: vaultData ? `(${formatUSD(vaultData.issuedTokens.usd)})` : undefined
+      label: formatNumber(vaultData.issuedTokens.amount.toNumber()),
+      sublabel: `(${formatUSD(vaultData.issuedTokens.usd)})`
     },
     {
       title: 'Remaining kBTC capacity',
@@ -60,16 +68,16 @@ const VaultDashboard = (): JSX.Element => {
   ];
 
   const stakingItems: InsightListItem[] = [
-    { title: 'APR', label: vaultData ? formatPercentage(vaultData.apy?.toNumber()) : undefined },
+    { title: 'APR', label: formatPercentage(vaultData.apy?.toNumber()) },
     {
       title: `Fees earned ${vaultData?.wrappedId}`,
-      label: vaultData ? formatNumber(vaultData.wrappedTokenRewards.amount.toNumber()) : undefined,
-      sublabel: vaultData ? `(${formatUSD(vaultData.wrappedTokenRewards.usd)})` : undefined
+      label: formatNumber(vaultData.wrappedTokenRewards.amount.toNumber()),
+      sublabel: `(${formatUSD(vaultData.wrappedTokenRewards.usd)})`
     },
     {
       title: `Fees earned ${vaultData?.collateralId}`,
-      label: vaultData ? formatNumber(vaultData.governanceTokenRewards.amount.toNumber()) : undefined,
-      sublabel: vaultData ? `(${formatUSD(vaultData.governanceTokenRewards.usd)})` : undefined
+      label: formatNumber(vaultData.governanceTokenRewards.amount.toNumber()),
+      sublabel: `(${formatUSD(vaultData.governanceTokenRewards.usd)})`
     }
   ];
 
@@ -81,7 +89,12 @@ const VaultDashboard = (): JSX.Element => {
         <InsightsList items={insightsItems} />
         <StyledCollateralSection>
           <StyledVaultCollateral
+            collateralToken={collateralToken}
+            collateral={vaultData.collateral}
             collateralScore={vaultData?.collateralization?.toNumber() ?? 0}
+            liquidationThreshold={vaultData.liquidationThreshold}
+            premiumRedeemThreshold={vaultData.premiumRedeemThreshold}
+            secureThreshold={vaultData.secureThreshold}
             liquidationPrice={
               vaultData?.liquidationExchangeRate ? formatNumber(vaultData.liquidationExchangeRate.toNumber()) : '0'
             }
