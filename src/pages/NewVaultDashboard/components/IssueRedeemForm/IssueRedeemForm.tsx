@@ -57,7 +57,7 @@ type Props = {
   onSubmit?: () => void;
   collateralToken: CurrencyExt;
   remainingCapacity: MonetaryAmount<CollateralCurrencyExt>;
-  lockedAmountBTC: MonetaryAmount<CollateralCurrencyExt>;
+  lockedAmountBTC: string;
 };
 
 type InheritAttrs = Omit<FormHTMLAttributes<HTMLFormElement>, keyof Props | 'children'>;

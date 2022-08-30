@@ -48,6 +48,8 @@ const VaultDashboard = (): JSX.Element => {
   // TODO: should we leave the diameter as fixed pixels?
   const vaultCapacity = <ProgressCircle aria-label='BTC remaining capacity' diameter='65' value={93} />;
 
+  const lockedAmountBTC = formatNumber(vaultData.issuedTokens.amount.toNumber());
+
   const insightsItems: InsightListItem[] = [
     {
       title: `Locked Collateral ${collateralToken.ticker}`,
@@ -99,7 +101,7 @@ const VaultDashboard = (): JSX.Element => {
               vaultData?.liquidationExchangeRate ? formatNumber(vaultData.liquidationExchangeRate.toNumber()) : '0'
             }
             remainingCapacity={vaultData.remainingCapacity.amount}
-            lockedAmountBTC={vaultData?.lockedAmountBTC}
+            lockedAmountBTC={lockedAmountBTC}
           />
           <StyledStackingInsightsList title={stakingTitle} direction='column' items={stakingItems} />
         </StyledCollateralSection>

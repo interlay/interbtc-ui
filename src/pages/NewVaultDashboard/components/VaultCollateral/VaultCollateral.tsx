@@ -45,7 +45,7 @@ type Props = {
   liquidationThreshold: VaultData['liquidationThreshold'];
   premiumRedeemThreshold: VaultData['premiumRedeemThreshold'];
   remainingCapacity: MonetaryAmount<CollateralCurrencyExt>;
-  lockedAmountBTC: MonetaryAmount<CollateralCurrencyExt>;
+  lockedAmountBTC: string;
   liquidationPrice: string;
 };
 

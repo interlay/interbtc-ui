@@ -23,7 +23,6 @@ import { HYDRA_URL } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
-import { getCurrency } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 interface VaultData {
@@ -63,7 +62,6 @@ interface VaultData {
     amount: MonetaryAmount<CollateralCurrencyExt>;
     percentage: string;
   };
-  lockedAmountBTC: MonetaryAmount<CollateralCurrencyExt>;
 }
 
 // TODO: move these to dictionary file
@@ -88,7 +86,6 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
   const collateralTokenPrice = getTokenPrice(prices, collateralTokenIdLiteral);
   const bitcoinPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC);
-  const collateralToken = getCurrency(collateralTokenIdLiteral as CollateralIdLiteral);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   // or by extending the vaults.get (VaultExt) api call
@@ -123,8 +120,6 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   );
   const premiumRedeemThreshold = await window.bridge.vaults.getPremiumRedeemThreshold(vault.backingCollateral.currency);
   const secureThreshold = await window.bridge.vaults.getSecureCollateralThreshold(vault.backingCollateral.currency);
-
-  const lockedAmountBTC = await window.bridge.vaults.getIssuedAmount(accountId, collateralToken);
 
   const threshold = vaultExt.getSecureCollateralThreshold();
   const usdIssuedTokens = convertMonetaryAmountToValueInUSD(vaultExt.issuedTokens, bitcoinPrice?.usd);
@@ -210,8 +205,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     remainingCapacity: {
       amount: remainingCapacity,
       percentage: remainingCapacity.toBig().mul(100).toString()
-    },
-    lockedAmountBTC
+    }
   };
 };
 
