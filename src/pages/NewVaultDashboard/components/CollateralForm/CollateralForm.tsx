@@ -74,7 +74,7 @@ const collateralInputId: Record<CollateralActions, keyof CollateralFormData> = {
 type Props = {
   collateral: VaultData['collateral'];
   score: number;
-  token: CurrencyExt;
+  collateralToken: CurrencyExt;
   variant?: CollateralActions;
   onSubmit?: () => void;
   ranges: CollateralStatusRanges;
@@ -88,7 +88,7 @@ const CollateralForm = ({
   variant = 'deposit',
   onSubmit,
   collateral,
-  token,
+  collateralToken,
   ranges,
   ...props
 }: CollateralFormProps): JSX.Element => {
@@ -106,7 +106,7 @@ const CollateralForm = ({
   const inputCollateral = watch(tokenFieldId) || '0';
   const inputCollateralAmount = newMonetaryAmount(
     inputCollateral,
-    token,
+    collateralToken,
     true
   ) as MonetaryAmount<CollateralCurrencyExt>;
 
@@ -116,7 +116,7 @@ const CollateralForm = ({
     data: requiredCollateralTokenAmount,
     error: requiredCollateralTokenAmountError
   } = useQuery<MonetaryAmount<CollateralCurrencyExt>, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getRequiredCollateralForVault', vaultAddress, token],
+    [GENERIC_FETCHER, 'vaults', 'getRequiredCollateralForVault', vaultAddress, collateralToken],
     genericFetcher<MonetaryAmount<CollateralCurrencyExt>>(),
     {
       enabled: !!bridgeLoaded
@@ -124,16 +124,21 @@ const CollateralForm = ({
   );
   useErrorHandler(requiredCollateralTokenAmountError);
 
-  const collateralTokenAmount = getCollateralTokenAmount(collateral.amount, inputCollateralAmount, token, variant);
+  const collateralTokenAmount = getCollateralTokenAmount(
+    collateral.amount,
+    inputCollateralAmount,
+    collateralToken,
+    variant
+  );
 
   const {
     // tokenBalanceIdle: collateralBalanceIdle,
     // tokenBalanceLoading: collateralBalanceLoading,
     tokenBalance: collateralBalance
-  } = useTokenBalance(token, vaultAddress);
+  } = useTokenBalance(collateralToken, vaultAddress);
 
   const { isLoading: isGetCollateralizationLoading, data: unparsedScore, error } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getVaultCollateralization', vaultAddress, token, collateralTokenAmount],
+    [GENERIC_FETCHER, 'vaults', 'getVaultCollateralization', vaultAddress, collateralToken, collateralTokenAmount],
     genericFetcher<Big>(),
     {
       enabled: bridgeLoaded
@@ -157,7 +162,7 @@ const CollateralForm = ({
     try {
       const collateralTokenAmount = newMonetaryAmount(
         data[tokenFieldId] || '0',
-        token,
+        collateralToken,
         true
       ) as MonetaryAmount<CollateralCurrencyExt>;
 
@@ -172,7 +177,9 @@ const CollateralForm = ({
         }
       }
 
-      //   const balanceLockedCollateral = (await window.bridge.tokens.balance(collateralToken, vaultId)).reserved;
+      // TODO: state changes
+
+      // const balanceLockedCollateral = (await window.bridge.tokens.balance(collateralToken, vaultAddress)).reserved;
       //   dispatch(updateCollateralAction(balanceLockedCollateral as MonetaryAmount<CollateralCurrencyExt>));
 
       //   if (vaultCollateralization === undefined) {
@@ -194,7 +201,7 @@ const CollateralForm = ({
   };
 
   const validateCollateralTokenAmount = (value?: string): string | undefined => {
-    const collateralTokenAmount = newMonetaryAmount(value || '0', token, true);
+    const collateralTokenAmount = newMonetaryAmount(value || '0', collateralToken, true);
 
     // Collateral update only allowed if above required collateral
     if (variant === 'withdraw' && requiredCollateralTokenAmount) {
@@ -205,7 +212,7 @@ const CollateralForm = ({
         : undefined;
     }
 
-    if (collateralTokenAmount.lte(newMonetaryAmount(0, token, true))) {
+    if (collateralTokenAmount.lte(newMonetaryAmount(0, collateralToken, true))) {
       return t('vault.collateral_higher_than_0');
     }
 
@@ -215,7 +222,7 @@ const CollateralForm = ({
     }
 
     if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
-      return t(`Must be less than ${token.ticker} balance!`);
+      return t(`Must be less than ${collateralToken.ticker} balance!`);
     }
 
     if (!bridgeLoaded) {
@@ -225,7 +232,7 @@ const CollateralForm = ({
     return undefined;
   };
 
-  const collateralUSDAmount = getTokenPrice(prices, token.ticker as CollateralIdLiteral)?.usd;
+  const collateralUSDAmount = getTokenPrice(prices, collateralToken.ticker as CollateralIdLiteral)?.usd;
   const isMinCollateralLoading = requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading;
 
   const titleId = useId();
@@ -240,10 +247,10 @@ const CollateralForm = ({
         <TokenField
           aria-labelledby={titleId}
           placeholder='0.00'
-          tokenSymbol={token.ticker}
+          tokenSymbol={collateralToken.ticker}
           valueInUSD={displayMonetaryAmountInUSDFormat(
             inputCollateralAmount,
-            getTokenPrice(prices, token.ticker as CollateralIdLiteral)?.usd
+            getTokenPrice(prices, collateralToken.ticker as CollateralIdLiteral)?.usd
           )}
           id={tokenFieldId}
           {...register(tokenFieldId, {
@@ -258,7 +265,7 @@ const CollateralForm = ({
           <StyledDItem color='tertiary'>
             <StyledDt>Current Total Collateral</StyledDt>
             <StyledDd>
-              {formatNumber(collateral.amount.toNumber())} {token.ticker} ({formatUSD(collateral.usd)})
+              {formatNumber(collateral.amount.toNumber())} {collateralToken.ticker} ({formatUSD(collateral.usd)})
             </StyledDd>
           </StyledDItem>
           <StyledDItem>
@@ -268,7 +275,7 @@ const CollateralForm = ({
                 '-'
               ) : (
                 <>
-                  {displayMonetaryAmount(requiredCollateralTokenAmount)} {token.ticker} (
+                  {displayMonetaryAmount(requiredCollateralTokenAmount)} {collateralToken.ticker} (
                   {displayMonetaryAmountInUSDFormat(requiredCollateralTokenAmount as any, collateralUSDAmount)})
                 </>
               )}
@@ -283,7 +290,7 @@ const CollateralForm = ({
           <StyledDItem>
             <StyledDt>New liquidation Price</StyledDt>
             <StyledDd>
-              {formatUSD(12.32)} {token.ticker} / {formatUSD(42324.32)} BTC
+              {formatUSD(12.32)} {collateralToken.ticker} / {formatUSD(42324.32)} BTC
             </StyledDd>
           </StyledDItem>
           <StyledHr />

@@ -1,14 +1,14 @@
 import { CollateralCurrencyExt, CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { HTMLAttributes, useState } from 'react';
+import { HTMLAttributes, useMemo, useState } from 'react';
 
 import { CTA, Modal } from '@/component-library';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
-import { CollateralActions, CollateralStatus, CollateralStatusRanges } from '../../types';
+import { CollateralStatus, CollateralStatusRanges, VaultActions } from '../../types';
 import { getCollateralStatus } from '../../utils';
 import { CollateralForm } from '../CollateralForm';
-import { IssueRedeemForm, IssueRedeemFormVariants } from '../IssueRedeemForm';
+import { IssueRedeemForm } from '../IssueRedeemForm';
 import {
   StyledCoinPairs,
   StyledCollateralScore,
@@ -29,6 +29,11 @@ const getVaultCollateralLabel = (status: CollateralStatus, ranges: CollateralSta
     case 'success':
       return `Low Risk: ${ranges.success.min}-${ranges.success.max}%`;
   }
+};
+
+type SetVaultAction = {
+  vaultAction?: VaultActions;
+  isModalOpen: boolean;
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -61,31 +66,27 @@ const VaultCollateral = ({
   lockedAmountBTC,
   ...props
 }: VaultCollateralProps): JSX.Element => {
-  // const [collateralAction, setCollateralAction] = useState<CollateralActions>();
-  const [{ variant: formVariant, open }, setVaultAction] = useState<{
-    variant?: IssueRedeemFormVariants | CollateralActions;
-    open: boolean;
-  }>({ variant: undefined, open: false });
+  const [{ vaultAction, isModalOpen }, setVaultAction] = useState<SetVaultAction>({
+    vaultAction: undefined,
+    isModalOpen: false
+  });
 
-  const handleClickDeposit = () => setVaultAction({ variant: 'deposit', open: true });
+  const handleClickVaultAction = (action: VaultActions) => setVaultAction({ vaultAction: action, isModalOpen: true });
 
-  const handleClickWithdraw = () => setVaultAction({ variant: 'withdraw', open: true });
-
-  const handleClickIssue = () => setVaultAction({ variant: 'issue', open: true });
-
-  const handleClickRedeem = () => setVaultAction({ variant: 'redeem', open: true });
-
-  const ranges = {
-    error: { min: 0, max: liquidationThreshold.toNumber() * 100 },
-    warning: {
-      min: liquidationThreshold.toNumber() * 100,
-      max: premiumRedeemThreshold.toNumber() * 100
-    },
-    success: {
-      min: premiumRedeemThreshold.toNumber() * 100,
-      max: secureThreshold.toNumber() * 100
-    }
-  };
+  const ranges = useMemo(
+    () => ({
+      error: { min: 0, max: liquidationThreshold.toNumber() * 100 },
+      warning: {
+        min: liquidationThreshold.toNumber() * 100,
+        max: premiumRedeemThreshold.toNumber() * 100
+      },
+      success: {
+        min: premiumRedeemThreshold.toNumber() * 100,
+        max: secureThreshold.toNumber() * 100
+      }
+    }),
+    [liquidationThreshold, premiumRedeemThreshold, secureThreshold]
+  );
 
   const collateralStatus = getCollateralStatus(collateralScore, ranges);
   const collateralLabel = getVaultCollateralLabel(collateralStatus, ranges);
@@ -111,36 +112,36 @@ const VaultCollateral = ({
         {/* TODO: buttons overflow on smaller screens */}
         <StyledCTAGroups>
           <StyledCTAGroup>
-            <CTA fullWidth onClick={handleClickDeposit}>
+            <CTA fullWidth onClick={() => handleClickVaultAction('deposit')}>
               Deposit Collateral
             </CTA>
-            <CTA fullWidth onClick={handleClickWithdraw}>
+            <CTA fullWidth onClick={() => handleClickVaultAction('withdraw')}>
               Withdraw Collateral
             </CTA>
           </StyledCTAGroup>
           <StyledCTAGroup>
-            <CTA variant='secondary' fullWidth onClick={handleClickIssue}>
+            <CTA variant='secondary' fullWidth onClick={() => handleClickVaultAction('issue')}>
               Issue kBTC
             </CTA>
-            <CTA variant='secondary' fullWidth onClick={handleClickRedeem}>
+            <CTA variant='secondary' fullWidth onClick={() => handleClickVaultAction('redeem')}>
               Redeem kBTC
             </CTA>
           </StyledCTAGroup>
         </StyledCTAGroups>
       </StyledWrapper>
-      <Modal open={open} onClose={() => setVaultAction((s) => ({ ...s, open: false }))}>
-        {(formVariant === 'deposit' || formVariant === 'withdraw') && (
+      <Modal open={isModalOpen} onClose={() => setVaultAction((s) => ({ ...s, open: false }))}>
+        {(vaultAction === 'deposit' || vaultAction === 'withdraw') && (
           <CollateralForm
             ranges={ranges}
             score={collateralScore}
             collateral={collateral}
-            token={collateralToken}
-            variant={formVariant}
+            collateralToken={collateralToken}
+            variant={vaultAction}
           />
         )}
-        {(formVariant === 'issue' || formVariant === 'redeem') && (
+        {(vaultAction === 'issue' || vaultAction === 'redeem') && (
           <IssueRedeemForm
-            variant={formVariant}
+            variant={vaultAction}
             collateralToken={collateralToken}
             remainingCapacity={remainingCapacity}
             lockedAmountBTC={lockedAmountBTC}

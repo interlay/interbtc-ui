@@ -20,6 +20,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import useAccountId from '@/utils/hooks/use-account-id';
 
+import { TreasuryActions } from '../../types';
 import { HighlightDescriptionItem } from './HighlightDescriptionItem';
 import { IssueDescriptionItem } from './IssueDescriptionItem';
 import { StyledDescription, StyledDl, StyledHr, StyledInputLabel, StyledTitle } from './IssueRedeemForm.styles';
@@ -46,15 +47,13 @@ type IssueRedeemFormData = {
   [REDEEM_AMOUNT]?: string;
 };
 
-const collateralInputId: Record<IssueRedeemFormVariants, keyof IssueRedeemFormData> = {
+const collateralInputId: Record<TreasuryActions, keyof IssueRedeemFormData> = {
   issue: ISSUE_AMOUNT,
   redeem: REDEEM_AMOUNT
 };
 
-type IssueRedeemFormVariants = 'issue' | 'redeem';
-
 type Props = {
-  variant?: IssueRedeemFormVariants;
+  variant?: TreasuryActions;
   onSubmit?: () => void;
   collateralToken: CurrencyExt;
   remainingCapacity: MonetaryAmount<CollateralCurrencyExt>;
@@ -275,4 +274,4 @@ const IssueRedeemForm = ({
 };
 
 export { IssueRedeemForm };
-export type { IssueRedeemFormProps, IssueRedeemFormVariants };
+export type { IssueRedeemFormProps };
