@@ -20,7 +20,6 @@ const locale = 'en-US';
 
 type Props = {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
-  value?: number;
 };
 
 type InheritAttrs = Omit<InputProps, keyof Props>;

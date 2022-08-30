@@ -14,7 +14,7 @@ import { CollateralActions } from '../types';
 type GetCollateralization = {
   isIdle: boolean;
   isLoading: boolean;
-  data: Big | undefined;
+  data: number;
   get: (collateralPortion: MonetaryAmount<CollateralCurrencyExt>) => void;
 };
 
@@ -47,17 +47,17 @@ const useGetColateralization = (
   const get = (collateralPortion: MonetaryAmount<CollateralCurrencyExt>) => {
     switch (collateralAction) {
       case 'deposit': {
-        collateralAmount.add(collateralPortion);
+        collateralAmount = collateralAmount.add(collateralPortion);
         break;
       }
       case 'withdraw': {
-        collateralAmount.sub(collateralPortion);
+        collateralAmount = collateralAmount.sub(collateralPortion);
         break;
       }
     }
   };
 
-  return { isIdle, isLoading, data: scoreValue, get };
+  return { isIdle, isLoading, data: scoreValue?.toNumber() ?? 0, get };
 };
 
 export { useGetColateralization };

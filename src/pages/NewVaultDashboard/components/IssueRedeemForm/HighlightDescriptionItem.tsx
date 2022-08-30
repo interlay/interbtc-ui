@@ -1,6 +1,6 @@
 import { HTMLAttributes, ReactNode } from 'react';
 
-import { StyledHighlightDd, StyledHighlightDItem, StyledHighlightDt } from './IssueRedeemModal.styles';
+import { StyledHighlightDd, StyledHighlightDItem, StyledHighlightDt } from './IssueRedeemForm.styles';
 
 type Props = {
   term: ReactNode;

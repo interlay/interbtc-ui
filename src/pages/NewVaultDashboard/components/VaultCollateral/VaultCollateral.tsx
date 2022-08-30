@@ -1,12 +1,14 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CurrencyExt } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { HTMLAttributes, useState } from 'react';
 
 import { CTA, Modal } from '@/component-library';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
-import { CollateralActions } from '../../types';
-import { CollateralModal } from '../CollateralModal';
-import { IssueRedeemModal, IssueRedeemModalVariants } from '../IssueRedeemModal';
+import { CollateralActions, CollateralStatus, CollateralStatusRanges } from '../../types';
+import { getCollateralStatus } from '../../utils';
+import { CollateralForm } from '../CollateralForm';
+import { IssueRedeemForm, IssueRedeemFormVariants } from '../IssueRedeemForm';
 import {
   StyledCoinPairs,
   StyledCollateralScore,
@@ -18,6 +20,17 @@ import {
   StyledWrapper
 } from './VaultCollateral.styles';
 
+const getVaultCollateralLabel = (status: CollateralStatus, ranges: CollateralStatusRanges) => {
+  switch (status) {
+    case 'error':
+      return `High Risk: ${ranges.error.min}-${ranges.error.max}%`;
+    case 'warning':
+      return `Medium Risk: ${ranges.warning.min}-${ranges.warning.max}%`;
+    case 'success':
+      return `Low Risk: ${ranges.success.min}-${ranges.success.max}%`;
+  }
+};
+
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {
   collateralToken: CurrencyExt;
@@ -26,6 +39,8 @@ type Props = {
   secureThreshold: VaultData['secureThreshold'];
   liquidationThreshold: VaultData['liquidationThreshold'];
   premiumRedeemThreshold: VaultData['premiumRedeemThreshold'];
+  remainingCapacity: MonetaryAmount<CollateralCurrencyExt>;
+  lockedAmountBTC: MonetaryAmount<CollateralCurrencyExt>;
   liquidationPrice: string;
 };
 
@@ -42,18 +57,23 @@ const VaultCollateral = ({
   liquidationThreshold,
   premiumRedeemThreshold,
   secureThreshold,
+  remainingCapacity,
+  lockedAmountBTC,
   ...props
 }: VaultCollateralProps): JSX.Element => {
-  const [collateralAction, setCollateralAction] = useState<CollateralActions>();
-  const [vaultAction, setVaultAction] = useState<IssueRedeemModalVariants>();
+  // const [collateralAction, setCollateralAction] = useState<CollateralActions>();
+  const [{ variant: formVariant, open }, setVaultAction] = useState<{
+    variant?: IssueRedeemFormVariants | CollateralActions;
+    open: boolean;
+  }>({ variant: undefined, open: false });
 
-  const handleClickDeposit = () => setCollateralAction('deposit');
+  const handleClickDeposit = () => setVaultAction({ variant: 'deposit', open: true });
 
-  const handleClickWithdraw = () => setCollateralAction('withdraw');
+  const handleClickWithdraw = () => setVaultAction({ variant: 'withdraw', open: true });
 
-  const handleClickIssue = () => setVaultAction('issue');
+  const handleClickIssue = () => setVaultAction({ variant: 'issue', open: true });
 
-  const handleClickRedeem = () => setVaultAction('redeem');
+  const handleClickRedeem = () => setVaultAction({ variant: 'redeem', open: true });
 
   const ranges = {
     error: { min: 0, max: liquidationThreshold.toNumber() * 100 },
@@ -67,6 +87,9 @@ const VaultCollateral = ({
     }
   };
 
+  const collateralStatus = getCollateralStatus(collateralScore, ranges);
+  const collateralLabel = getVaultCollateralLabel(collateralStatus, ranges);
+
   return (
     <>
       <StyledWrapper variant='bordered' {...props}>
@@ -76,7 +99,7 @@ const VaultCollateral = ({
             ranges={ranges}
             variant='highlight'
             label='Collateral Score'
-            sublabel='High Risk: 0-150%'
+            sublabel={collateralLabel}
           />
           <StyledLiquidationPrice>
             <StyledLiquidationText color='tertiary'>
@@ -105,16 +128,25 @@ const VaultCollateral = ({
           </StyledCTAGroup>
         </StyledCTAGroups>
       </StyledWrapper>
-      <Modal open={!!collateralAction} onClose={() => setCollateralAction(undefined)}>
-        <CollateralModal
-          ranges={ranges}
-          score={collateralScore}
-          collateral={collateral}
-          token={collateralToken}
-          variant={collateralAction}
-        />
+      <Modal open={open} onClose={() => setVaultAction((s) => ({ ...s, open: false }))}>
+        {(formVariant === 'deposit' || formVariant === 'withdraw') && (
+          <CollateralForm
+            ranges={ranges}
+            score={collateralScore}
+            collateral={collateral}
+            token={collateralToken}
+            variant={formVariant}
+          />
+        )}
+        {(formVariant === 'issue' || formVariant === 'redeem') && (
+          <IssueRedeemForm
+            variant={formVariant}
+            collateralToken={collateralToken}
+            remainingCapacity={remainingCapacity}
+            lockedAmountBTC={lockedAmountBTC}
+          />
+        )}
       </Modal>
-      <IssueRedeemModal variant={vaultAction} open={!!vaultAction} onClose={() => setVaultAction(undefined)} />
     </>
   );
 };

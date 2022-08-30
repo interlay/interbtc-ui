@@ -98,6 +98,8 @@ const VaultDashboard = (): JSX.Element => {
             liquidationPrice={
               vaultData?.liquidationExchangeRate ? formatNumber(vaultData.liquidationExchangeRate.toNumber()) : '0'
             }
+            remainingCapacity={vaultData.remainingCapacity.amount}
+            lockedAmountBTC={vaultData?.lockedAmountBTC}
           />
           <StyledStackingInsightsList title={stakingTitle} direction='column' items={stakingItems} />
         </StyledCollateralSection>

@@ -3,7 +3,7 @@ import { HTMLAttributes, ReactNode } from 'react';
 import { ReactComponent as InformationIcon } from '@/assets/img/hero-icons/information-circle.svg';
 import { Span } from '@/component-library';
 
-import { StyledDd, StyledDItem, StyledDt } from './IssueRedeemModal.styles';
+import { StyledDd, StyledDItem, StyledDt } from './IssueRedeemForm.styles';
 
 type Props = {
   informative?: boolean;

@@ -1,8 +1,8 @@
 import { useMeter } from '@react-aria/meter';
 import { HTMLAttributes, ReactNode } from 'react';
 
-import { Status } from '@/component-library/utils/prop-types';
-
+import { CollateralStatus, CollateralStatusRanges } from '../../types';
+import { getCollateralStatus } from '../../utils';
 import {
   StyledBar,
   StyledLabel,
@@ -13,17 +13,9 @@ import {
   StyledWrapper
 } from './CollateralScore.style';
 
-type StatusRanges = Record<Status, { min: number; max: number }>;
-
 const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 2 };
 
-const getStatus = (value: number, ranges: StatusRanges): Status => {
-  if (value <= ranges['error'].max) return 'error';
-  if (value <= ranges['warning'].max) return 'warning';
-  return 'success';
-};
-
-const getBarPercentage = (status: Status, value: number, ranges: StatusRanges): number => {
+const getBarPercentage = (status: CollateralStatus, value: number, ranges: CollateralStatusRanges): number => {
   // We need the percentage against each segment range and we get by
   // subtracting the start of segment from the current value
   const segmentValue = (value > ranges[status].max ? ranges[status].max : value) - ranges[status].min;
@@ -45,7 +37,7 @@ const getBarPercentage = (status: Status, value: number, ranges: StatusRanges): 
 };
 
 type Props = {
-  ranges: StatusRanges;
+  ranges: CollateralStatusRanges;
   variant?: 'default' | 'highlight';
   score?: number;
   label?: ReactNode;
@@ -78,7 +70,7 @@ const CollateralScore = ({
 
   // Does not allow negative numbers
   const value = meterProps['aria-valuenow'] || 0;
-  const status = getStatus(value, ranges);
+  const status = getCollateralStatus(value, ranges);
   const barPercentage = getBarPercentage(status, value, ranges);
 
   const isDefault = variant === 'default';
