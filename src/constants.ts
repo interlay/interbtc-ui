@@ -36,6 +36,7 @@ const SQUID_URL = process.env.REACT_APP_SQUID_URL || 'http://localhost:4000/grap
 
 const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
+// ray test touch <
 // FIXME: hacky workaround to get the right ss58 prefix. Should be fetched at runtime instead
 // Possible example below:
 //       // Load the basic bridge data without depending on interbtc-api
@@ -43,6 +44,7 @@ const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 //      // Default ss58 prefix is 42 for generic substrate chains
 //      const rawSs58Format = await (await api.rpc.system.properties()).ss58Format;
 //      const ss58Format = parseInt(rawSs58Format.unwrapOr('42').toString());
+// ray test touch >
 let ss58Format;
 if (BITCOIN_NETWORK === BitcoinNetwork.Mainnet || BITCOIN_NETWORK === BitcoinNetwork.Testnet) {
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama') {

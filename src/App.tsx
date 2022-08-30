@@ -74,7 +74,9 @@ const App = (): JSX.Element => {
   const loadBridge = React.useCallback(async (): Promise<void> => {
     try {
       setBridgeStatus(STATUSES.PENDING);
+      // ray test touch <
       window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
+      // ray test touch >
       dispatch(isBridgeLoaded(true));
       setBridgeStatus(STATUSES.RESOLVED);
     } catch (error) {
@@ -223,7 +225,9 @@ const App = (): JSX.Element => {
           dispatch(changeAddressAction(address));
         } else {
           dispatch(changeAddressAction(''));
+          // ray test touch <
           window.bridge.removeAccount();
+          // ray test touch >
         }
       } catch (error) {
         // TODO: should add error handling

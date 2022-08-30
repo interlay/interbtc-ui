@@ -88,8 +88,10 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
         return;
       }
 
+      // ray test touch <
       // TODO: should check when the app being initialized (not check everywhere)
       await web3Enable(APP_NAME);
+      // ray test touch >
       const { signer } = await web3FromAddress(newAddress);
       window.bridge.setAccount(newAddress, signer);
       dispatch(changeAddressAction(newAddress));
