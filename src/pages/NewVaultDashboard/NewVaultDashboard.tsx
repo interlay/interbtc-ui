@@ -31,7 +31,14 @@ const VaultDashboard = (): JSX.Element => {
   const vaultData = vaultOverview?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
 
   if (!vaultData) {
-    return <PrimaryColorEllipsisLoader />;
+    return (
+      <MainContainer>
+        <Stack>
+          <PageTitle />
+          <PrimaryColorEllipsisLoader />
+        </Stack>
+      </MainContainer>
+    );
   }
 
   const collateralToken = getCurrency(vaultData.collateralId as CollateralIdLiteral);

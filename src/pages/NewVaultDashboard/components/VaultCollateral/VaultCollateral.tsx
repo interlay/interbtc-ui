@@ -129,7 +129,7 @@ const VaultCollateral = ({
           </StyledCTAGroup>
         </StyledCTAGroups>
       </StyledWrapper>
-      <Modal open={isModalOpen} onClose={() => setVaultAction((s) => ({ ...s, open: false }))}>
+      <Modal open={isModalOpen} onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}>
         {(vaultAction === 'deposit' || vaultAction === 'withdraw') && (
           <CollateralForm
             ranges={ranges}
