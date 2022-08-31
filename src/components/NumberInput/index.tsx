@@ -33,6 +33,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, Props>(
           pattern='[-+]?[0-9]*[.,]?[0-9]+'
           placeholder='0.00'
           spellCheck='false'
+          data-testid='number-input'
           {...props}
         />
       </div>
