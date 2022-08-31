@@ -28,6 +28,7 @@ const VaultDashboard = (): JSX.Element => {
   } = useParams<Record<string, string>>();
 
   const vaultOverview = useGetVaultOverview({ address: selectedVaultAccountAddress });
+
   const vaultData = vaultOverview?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
 
   if (!vaultData) {
@@ -105,7 +106,7 @@ const VaultDashboard = (): JSX.Element => {
           />
           <StyledStackingInsightsList title={stakingTitle} direction='column' items={stakingItems} />
         </StyledCollateralSection>
-        <TransactionHistory />
+        <TransactionHistory address={selectedVaultAccountAddress} vaultCollateral={vaultCollateral} />
       </Stack>
     </MainContainer>
   );

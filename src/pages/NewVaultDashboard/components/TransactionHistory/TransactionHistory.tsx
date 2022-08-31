@@ -1,47 +1,45 @@
 import { useId } from '@react-aria/utils';
-import { HTMLAttributes, useState } from 'react';
+import { HTMLAttributes, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CTA, TabsItem } from '@/component-library';
+import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
 import { StyledStack, StyledTableWrapper, StyledTabs, StyledTitle, StyledWrapper } from './TransactionHistory.styles';
 import { TransactionTable } from './TransactionTable';
 
-const data = [
-  {
-    request: 'Issue',
-    date: 'Feb 24 2022 17:19:43',
-    amount: '0.3234',
-    status: 'pending' as any
-  },
-  {
-    request: 'Issue',
-    date: 'Feb 24 2022 17:19:43',
-    amount: '0.3234',
-    status: 'completed'
-  },
-  {
-    request: 'Issue',
-    date: 'Feb 24 2022 17:19:43',
-    amount: '0.3234',
-    status: 'canceled'
-  }
-];
+type Props = {
+  address: string;
+  vaultCollateral: string;
+};
 
 type NativeAttrs = HTMLAttributes<unknown>;
 
-type TransactionHistoryProps = NativeAttrs;
+type TransactionHistoryProps = Props & NativeAttrs;
 
 const tabKeys = ['all', 'pending', 'issue', 'redeem', 'replace'] as const;
 
 const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
+  const transactions = useGetVaultTransactions(props.address, props.vaultCollateral);
+
   const { t } = useTranslation();
   const titleId = useId();
-  const [, setTab] = useState<string>('all');
+  const [filteredTransactionData, setFilteredTransactiondata] = useState<any>(transactions);
+  const [tab, setTab] = useState<string>('all');
+
+  useEffect(() => {
+    if (tab === 'all') {
+      setFilteredTransactiondata(transactions);
+    } else if (tab === 'pending') {
+      setFilteredTransactiondata(transactions.filter((data: any) => data.status === 'Pending'));
+    } else {
+      setFilteredTransactiondata(transactions.filter((data: any) => data.request.toLowerCase() === tab));
+    }
+  }, [tab, transactions]);
 
   const table = (
     <StyledTableWrapper>
-      <TransactionTable aria-labelledby={titleId} data={data} />
+      <TransactionTable aria-labelledby={titleId} data={filteredTransactionData} />
     </StyledTableWrapper>
   );
 

@@ -3,6 +3,7 @@ import { H256 } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
+import { displayMonetaryAmount, formatDateTimePrecise } from '@/common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import issuesFetcher, { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
@@ -13,10 +14,10 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
     ? issues.map((issue: any) => {
         return {
           id: issue.id,
-          type: 'issue',
-          amount: issue.request.amountWrapped,
+          request: 'Issue',
+          amount: displayMonetaryAmount(issue.request.amountWrapped),
           status: issue.status,
-          timestamp: issue.request.timestamp
+          date: formatDateTimePrecise(new Date(issue.request.timestamp))
         };
       })
     : undefined;
@@ -25,26 +26,29 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
     ? redeems.map((redeem: any) => {
         return {
           id: redeem.id,
-          type: 'redeem',
-          amount: redeem.request.requestedAmountBacking,
+          request: 'Redeem',
+          amount: displayMonetaryAmount(redeem.request.requestedAmountBacking),
           status: redeem.status,
-          timestamp: redeem.request.timestamp
+          date: formatDateTimePrecise(new Date(redeem.request.timestamp))
         };
       })
     : undefined;
 
   const mappedReplaceRequests = replaceRequests
-    ? redeems.map((replaceRequest: any) => {
+    ? replaceRequests.map((replaceRequest: any) => {
         return {
           id: replaceRequest.id,
-          type: 'replaceRequest',
-          amount: replaceRequest.collateral,
-          status: replaceRequest.status
+          request: 'Replace',
+          amount: displayMonetaryAmount(replaceRequest.collateral),
+          status: replaceRequest.status,
+          date: '-'
         };
       })
     : undefined;
 
-  return mappedIssues && mappedRedeems ? [...mappedIssues, ...mappedRedeems, ...mappedReplaceRequests] : [];
+  return mappedIssues && mappedRedeems && mappedReplaceRequests
+    ? [...mappedIssues, ...mappedRedeems, ...mappedReplaceRequests]
+    : [];
 };
 
 const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: string): any => {
