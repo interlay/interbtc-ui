@@ -9,6 +9,7 @@ import { CollateralStatus, CollateralStatusRanges, VaultActions } from '../../ty
 import { getCollateralStatus } from '../../utils';
 import { CollateralForm } from '../CollateralForm';
 import { IssueRedeemForm } from '../IssueRedeemForm';
+import { CollateralThresholds } from './CollateralThresholds';
 import {
   StyledCoinPairs,
   StyledCollateralScore,
@@ -102,10 +103,17 @@ const VaultCollateral = ({
             label='Collateral Score'
             sublabel={collateralLabel}
           />
+          <CollateralThresholds
+            liquidationThreshold={liquidationThreshold}
+            premiumRedeemThreshold={premiumRedeemThreshold}
+            secureThreshold={secureThreshold}
+          />
           <StyledLiquidationPrice>
             <StyledLiquidationText color='tertiary'>
               Your current {collateralToken.ticker} Liquidation Price
-              <StyledCoinPairs color='primary'>{liquidationPrice}</StyledCoinPairs>
+              <StyledCoinPairs color='primary'>
+                {liquidationPrice} {collateralToken.ticker}/BTC
+              </StyledCoinPairs>
             </StyledLiquidationText>
           </StyledLiquidationPrice>
         </StyledCollateralWrapper>
@@ -129,7 +137,7 @@ const VaultCollateral = ({
           </StyledCTAGroup>
         </StyledCTAGroups>
       </StyledWrapper>
-      <Modal open={isModalOpen} onClose={() => setVaultAction((s) => ({ ...s, open: false }))}>
+      <Modal open={isModalOpen} onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}>
         {(vaultAction === 'deposit' || vaultAction === 'withdraw') && (
           <CollateralForm
             ranges={ranges}

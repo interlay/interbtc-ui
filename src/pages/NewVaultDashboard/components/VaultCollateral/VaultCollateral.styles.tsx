@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { Card, P, Strong, theme } from '@/component-library';
+import { Status } from '@/component-library/utils/prop-types';
 
 import { CollateralScore } from '../CollateralScore';
 
@@ -88,6 +89,48 @@ const StyledCTAGroup = styled.div`
   }
 `;
 
+const ThresholdDl = styled.dl`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: ${theme.spacing.spacing4};
+  max-width: 536px;
+  width: 100%;
+  font-size: ${theme.text.xs};
+  line-height: ${theme.lineHeight.s};
+  padding: ${theme.spacing.spacing4} 0;
+  border-bottom: ${theme.border.default};
+
+  @media (min-width: 80em) {
+    flex-direction: row;
+  }
+`;
+
+const ThresholdItem = styled.div`
+  display: inline-flex;
+  gap: ${theme.spacing.spacing1};
+`;
+
+const ThresholdDt = styled.dt`
+  color: ${theme.colors.textTertiary};
+  font-weight: ${theme.fontWeight.medium};
+
+  &:after {
+    content: ':';
+  }
+`;
+
+type ThresholdDdProps = {
+  status: Status;
+};
+
+const ThresholdDd = styled.dd<ThresholdDdProps>`
+  color: ${(props) => theme.score.bar.status[props.status]};
+  font-weight: ${theme.fontWeight.bold};
+`;
+
 export {
   StyledCoinPairs,
   StyledCollateralScore,
@@ -96,5 +139,9 @@ export {
   StyledCTAGroups,
   StyledLiquidationPrice,
   StyledLiquidationText,
-  StyledWrapper
+  StyledWrapper,
+  ThresholdDd,
+  ThresholdDl,
+  ThresholdDt,
+  ThresholdItem
 };
