@@ -99,13 +99,17 @@ const VaultDashboard = (): JSX.Element => {
     </StyledStakingTitleWrapper>
   );
 
-  const lockedAmountBTC = formatNumber(vaultData.issuedTokens.amount.toNumber());
-
   return (
     <MainContainer>
       <Stack>
         <PageTitle />
-        <VaultInfo vaultStatus={vaultData?.vaultStatus} vaultAddress={selectedVaultAccountAddress} />
+        <VaultInfo
+          collateralAmount={vaultData.collateral.raw}
+          vaultStatus={vaultData?.vaultStatus}
+          vaultAddress={selectedVaultAccountAddress}
+          collateralToken={collateralToken}
+          lockedAmountBTC={vaultData.issuedTokens.amount}
+        />
         <InsightsList items={insightsItems} />
         <StyledCollateralSection>
           <StyledVaultCollateral
@@ -119,7 +123,8 @@ const VaultDashboard = (): JSX.Element => {
               vaultData?.liquidationExchangeRate ? formatNumber(vaultData.liquidationExchangeRate.toNumber()) : '0'
             }
             remainingCapacity={vaultData.remainingCapacity.amount}
-            lockedAmountBTC={lockedAmountBTC}
+            lockedAmountBTC={vaultData.issuedTokens.amount}
+            vaultAddress={selectedVaultAccountAddress}
           />
           <StyledStackingInsightsList title={stakingTitle} direction='column' items={stakingItems} />
         </StyledCollateralSection>

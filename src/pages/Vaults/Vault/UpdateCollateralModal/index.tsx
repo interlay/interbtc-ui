@@ -43,6 +43,7 @@ interface Props {
   vaultAddress: string;
   hasLockedBTC: boolean;
   collateralToken: CollateralCurrencyExt;
+  collateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
 }
 
 const UpdateCollateralModal = ({
@@ -51,12 +52,11 @@ const UpdateCollateralModal = ({
   collateralUpdateStatus,
   vaultAddress,
   hasLockedBTC,
-  collateralToken
+  collateralToken,
+  collateralTokenAmount: currentTotalCollateralTokenAmount
 }: Props): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const prices = useGetPrices();
-
-  const currentTotalCollateralTokenAmount = useSelector((state: StoreType) => state.vault.collateral);
 
   const {
     register,

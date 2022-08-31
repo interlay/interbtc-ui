@@ -1,9 +1,12 @@
-import { VaultStatusExt } from '@interlay/interbtc-api';
-import React, { HTMLAttributes, ReactNode } from 'react';
+import { CollateralCurrencyExt, VaultStatusExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
+import React, { HTMLAttributes, ReactNode, useState } from 'react';
 
 import { shortAddress } from '@/common/utils/utils';
 import { CTA, DlProps } from '@/component-library';
 import { Status } from '@/component-library/utils/prop-types';
+import RequestReplacementModal from '@/pages/Vaults/Vault/RequestReplacementModal';
 
 import { StatusTag } from '../StatusTag';
 import { StyledDl, StyledWrapper } from './VaultInfo.styles';
@@ -27,15 +30,26 @@ const getVaultStatus = (vaultStatus: VaultStatusExt): { children: React.ReactNod
 };
 
 type Props = {
+  collateralAmount: MonetaryAmount<CollateralCurrencyExt>;
   vaultStatus: VaultStatusExt;
   vaultAddress: string;
+  collateralToken: CollateralCurrencyExt;
+  lockedAmountBTC: Big;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
 type VaultInfoProps = Props & NativeAttrs;
 
-const VaultInfo = ({ vaultStatus, vaultAddress, ...props }: VaultInfoProps): JSX.Element => {
+const VaultInfo = ({
+  vaultStatus,
+  vaultAddress,
+  collateralToken,
+  collateralAmount,
+  lockedAmountBTC,
+  ...props
+}: VaultInfoProps): JSX.Element => {
+  const [isModalOpen, setModalOpen] = useState(false);
   const { children: definition, status } = getVaultStatus(vaultStatus);
 
   const headlineItems: DlProps['listItems'] = [
@@ -50,9 +64,17 @@ const VaultInfo = ({ vaultStatus, vaultAddress, ...props }: VaultInfoProps): JSX
   return (
     <StyledWrapper variant='bordered' {...props}>
       <StyledDl listItems={headlineItems} />
-      <CTA size='small' variant='outlined'>
+      <CTA size='small' variant='outlined' onClick={() => setModalOpen(true)}>
         Replace Vault
       </CTA>
+      <RequestReplacementModal
+        collateralAmount={collateralAmount}
+        collateralToken={collateralToken}
+        open={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        vaultAddress={vaultAddress}
+        lockedBTC={new BitcoinAmount(lockedAmountBTC)}
+      />
     </StyledWrapper>
   );
 };

@@ -366,6 +366,7 @@ const Vault = (): JSX.Element => {
           vaultAddress={selectedVaultAccountAddress}
           hasLockedBTC={hasLockedBTC}
           collateralToken={collateralToken}
+          collateralTokenAmount={collateral}
         />
       )}
       {collateralToken && (
@@ -374,6 +375,8 @@ const Vault = (): JSX.Element => {
           open={requestReplaceModalOpen}
           collateralToken={collateralToken}
           vaultAddress={selectedVaultAccountAddress}
+          collateralAmount={collateral}
+          lockedBTC={new BitcoinAmount(0)}
         />
       )}
       {collateralToken && (
@@ -382,6 +385,7 @@ const Vault = (): JSX.Element => {
           collateralToken={collateralToken}
           open={requestRedeemModalOpen}
           vaultAddress={selectedVaultAccountAddress}
+          lockedBTC={new BitcoinAmount(0)}
         />
       )}
       {collateralToken && (

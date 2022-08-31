@@ -1,14 +1,16 @@
 import { CollateralCurrencyExt, CurrencyExt } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
 import { HTMLAttributes, useMemo, useState } from 'react';
 
-import { CTA, Modal } from '@/component-library';
+import { CTA } from '@/component-library';
+import RequestIssueModal from '@/pages/Vaults/Vault/RequestIssueModal';
+import RequestRedeemModal from '@/pages/Vaults/Vault/RequestRedeemModal';
+import UpdateCollateralModal, { CollateralUpdateStatus } from '@/pages/Vaults/Vault/UpdateCollateralModal';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
 import { CollateralStatus, CollateralStatusRanges, VaultActions } from '../../types';
 import { getCollateralStatus } from '../../utils';
-import { CollateralForm } from '../CollateralForm';
-import { IssueRedeemForm } from '../IssueRedeemForm';
 import { CollateralThresholds } from './CollateralThresholds';
 import {
   StyledCoinPairs,
@@ -32,12 +34,13 @@ const getVaultCollateralLabel = (status: CollateralStatus, ranges: CollateralSta
   }
 };
 
+// TODO: commented code belongs the next dashboard iteration
+
 type SetVaultAction = {
   vaultAction?: VaultActions;
   isModalOpen: boolean;
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {
   collateralToken: CurrencyExt;
   collateralScore: number;
@@ -46,8 +49,9 @@ type Props = {
   liquidationThreshold: VaultData['liquidationThreshold'];
   premiumRedeemThreshold: VaultData['premiumRedeemThreshold'];
   remainingCapacity: MonetaryAmount<CollateralCurrencyExt>;
-  lockedAmountBTC: string;
+  lockedAmountBTC: Big;
   liquidationPrice: string;
+  vaultAddress: string;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -57,13 +61,14 @@ type VaultCollateralProps = Props & NativeAttrs;
 // TODO: handling props as a single property bypasses some type errors
 const VaultCollateral = ({
   collateral,
+  vaultAddress,
   collateralToken,
   collateralScore,
   liquidationPrice,
   liquidationThreshold,
   premiumRedeemThreshold,
   secureThreshold,
-  remainingCapacity,
+  // remainingCapacity,
   lockedAmountBTC,
   ...props
 }: VaultCollateralProps): JSX.Element => {
@@ -73,7 +78,6 @@ const VaultCollateral = ({
   });
 
   const handleClickVaultAction = (action: VaultActions) => setVaultAction({ vaultAction: action, isModalOpen: true });
-
   const ranges = useMemo(
     () => ({
       error: { min: 0, max: liquidationThreshold.toNumber() * 100 },
@@ -91,6 +95,8 @@ const VaultCollateral = ({
 
   const collateralStatus = getCollateralStatus(collateralScore, ranges);
   const collateralLabel = getVaultCollateralLabel(collateralStatus, ranges);
+
+  const lockedBTC = new BitcoinAmount(lockedAmountBTC);
 
   return (
     <>
@@ -137,7 +143,31 @@ const VaultCollateral = ({
           </StyledCTAGroup>
         </StyledCTAGroups>
       </StyledWrapper>
-      <Modal open={isModalOpen} onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}>
+      <RequestIssueModal
+        open={isModalOpen && vaultAction === 'issue'}
+        vaultAddress={vaultAddress}
+        collateralToken={collateralToken}
+        onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
+      />
+      <RequestRedeemModal
+        open={isModalOpen && vaultAction === 'redeem'}
+        vaultAddress={vaultAddress}
+        collateralToken={collateralToken}
+        onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
+        lockedBTC={lockedBTC}
+      />
+      <UpdateCollateralModal
+        open={isModalOpen && (vaultAction === 'deposit' || vaultAction === 'withdraw')}
+        vaultAddress={vaultAddress}
+        collateralToken={collateralToken}
+        onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
+        collateralUpdateStatus={
+          vaultAction === 'deposit' ? CollateralUpdateStatus.Deposit : CollateralUpdateStatus.Withdraw
+        }
+        hasLockedBTC={lockedBTC.gt(BitcoinAmount.zero())}
+        collateralTokenAmount={collateral.raw}
+      />
+      {/* <Modal open={isModalOpen} )}>
         {(vaultAction === 'deposit' || vaultAction === 'withdraw') && (
           <CollateralForm
             ranges={ranges}
@@ -155,7 +185,7 @@ const VaultCollateral = ({
             lockedAmountBTC={lockedAmountBTC}
           />
         )}
-      </Modal>
+      </Modal> */}
     </>
   );
 };
