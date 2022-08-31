@@ -2,7 +2,7 @@ import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
 
-import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { CTA, Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -43,19 +43,14 @@ const VaultDashboard = (): JSX.Element => {
 
   const collateralToken = getCurrency(vaultData.collateralId as CollateralIdLiteral);
 
-  const stakingTitle = (
-    <StyledStakingTitleWrapper>
-      <StyledStakingTitle>Rewards</StyledStakingTitle>
-      <CTA size='small' variant='outlined'>
-        Withdraw all rewards
-      </CTA>
-    </StyledStakingTitleWrapper>
-  );
-
   // TODO: should we leave the diameter as fixed pixels?
-  const vaultCapacity = <ProgressCircle aria-label='BTC remaining capacity' diameter='65' value={93} />;
-
-  const lockedAmountBTC = formatNumber(vaultData.issuedTokens.amount.toNumber());
+  const vaultCapacity = (
+    <ProgressCircle
+      aria-label='BTC remaining capacity'
+      diameter='65'
+      value={(1 - Number(vaultData.remainingCapacity.percentage)) * 100}
+    />
+  );
 
   const insightsItems: InsightListItem[] = [
     {
@@ -70,31 +65,46 @@ const VaultDashboard = (): JSX.Element => {
     },
     {
       title: 'Remaining kBTC capacity',
-      label: formatPercentage(0.935),
-      sublabel: '(2.59643046 kBTC)',
+      label: displayMonetaryAmount(vaultData.remainingCapacity.amount),
+      sublabel: `(${new Intl.NumberFormat(undefined, {
+        style: 'percent',
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }).format(vaultData.remainingCapacity.percentage)})`,
       adornment: vaultCapacity
     }
   ];
 
   const stakingItems: InsightListItem[] = [
-    { title: 'APR', label: formatPercentage(vaultData.apy?.toNumber()) },
+    { title: 'APR', label: formatPercentage(vaultData.apy.toNumber()) },
     {
-      title: `Fees earned ${vaultData?.wrappedId}`,
+      title: `Fees earned ${vaultData.wrappedId}`,
       label: formatNumber(vaultData.wrappedTokenRewards.amount.toNumber()),
       sublabel: `(${formatUSD(vaultData.wrappedTokenRewards.usd)})`
     },
     {
-      title: `Fees earned ${vaultData?.collateralId}`,
+      title: `Fees earned ${vaultData.collateralId}`,
       label: formatNumber(vaultData.governanceTokenRewards.amount.toNumber()),
       sublabel: `(${formatUSD(vaultData.governanceTokenRewards.usd)})`
     }
   ];
 
+  const stakingTitle = (
+    <StyledStakingTitleWrapper>
+      <StyledStakingTitle>Rewards</StyledStakingTitle>
+      <CTA size='small' variant='outlined'>
+        Withdraw all rewards
+      </CTA>
+    </StyledStakingTitleWrapper>
+  );
+
+  const lockedAmountBTC = formatNumber(vaultData.issuedTokens.amount.toNumber());
+
   return (
     <MainContainer>
       <Stack>
         <PageTitle />
-        <VaultInfo vaultStatus={vaultData?.vaultStatus ?? ''} />
+        <VaultInfo vaultStatus={vaultData?.vaultStatus} vaultAddress={selectedVaultAccountAddress} />
         <InsightsList items={insightsItems} />
         <StyledCollateralSection>
           <StyledVaultCollateral

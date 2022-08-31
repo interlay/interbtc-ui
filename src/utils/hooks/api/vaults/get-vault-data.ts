@@ -53,34 +53,16 @@ interface VaultData {
     usd: number;
   };
   vaultAtRisk: boolean;
-  vaultStatus: string;
+  vaultStatus: VaultStatusExt;
   liquidationThreshold: Big;
   liquidationExchangeRate: Big | undefined;
   premiumRedeemThreshold: Big;
   secureThreshold: Big;
   remainingCapacity: {
     amount: MonetaryAmount<CollateralCurrencyExt>;
-    percentage: string;
+    percentage: number;
   };
 }
-
-// TODO: move these to dictionary file
-const getVaultStatus = (vaultStatus: VaultStatusExt) => {
-  switch (vaultStatus) {
-    case VaultStatusExt.Active: {
-      return 'Active';
-    }
-    case VaultStatusExt.Inactive: {
-      return 'Issuing disabled';
-    }
-    case VaultStatusExt.Liquidated: {
-      return 'Liquidated';
-    }
-    default: {
-      return 'Undefined';
-    }
-  }
-};
 
 const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
   const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
@@ -90,7 +72,6 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   // or by extending the vaults.get (VaultExt) api call
   const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
-  console.log('vaultExt', vaultExt);
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
     accountId,
@@ -167,7 +148,6 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   const backedTokens = vaultExt.getBackedTokens();
   const divisor = issuableTokens.add(backedTokens).toBig();
   const remainingCapacity = issuableTokens.div(divisor);
-  //
 
   return {
     apy,
@@ -197,14 +177,14 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
       usd: usdWrappedTokenRewards ?? 0
     },
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false,
-    vaultStatus: getVaultStatus(vaultExt.status),
+    vaultStatus: vaultExt.status,
     liquidationThreshold,
     liquidationExchangeRate,
     premiumRedeemThreshold,
     secureThreshold,
     remainingCapacity: {
-      amount: remainingCapacity,
-      percentage: remainingCapacity.toBig().mul(100).toString()
+      amount: issuableTokens,
+      percentage: remainingCapacity.toBig().toNumber()
     }
   };
 };
