@@ -19,7 +19,7 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
           amount: issue.execution
             ? displayMonetaryAmount(issue.execution.amountWrapped)
             : displayMonetaryAmount(issue.request.amountWrapped),
-          status: issue.status,
+          status: issue.status.toLowerCase(),
           date: formatDateTimePrecise(new Date(issue.request.timestamp))
         };
       })
@@ -31,7 +31,7 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
           id: redeem.id,
           request: 'Redeem',
           amount: displayMonetaryAmount(redeem.request.requestedAmountBacking),
-          status: redeem.status,
+          status: redeem.status.toLowerCase(),
           date: formatDateTimePrecise(new Date(redeem.request.timestamp))
         };
       })
@@ -43,7 +43,13 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
           id: replaceRequest.id,
           request: 'Replace',
           amount: '-',
-          status: replaceRequest.status,
+          status: replaceRequest.status.isPending
+            ? 'pending'
+            : replaceRequest.status.isCompleted
+            ? 'completed'
+            : replaceRequest.status.isCancelled
+            ? 'cancelled'
+            : '',
           date: '-'
         };
       })
