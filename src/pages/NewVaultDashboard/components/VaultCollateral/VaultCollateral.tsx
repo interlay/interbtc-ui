@@ -43,7 +43,6 @@ type SetVaultAction = {
 
 type Props = {
   collateralToken: CurrencyExt;
-  collateralScore: number;
   collateral: VaultData['collateral'];
   secureThreshold: VaultData['secureThreshold'];
   liquidationThreshold: VaultData['liquidationThreshold'];
@@ -52,6 +51,7 @@ type Props = {
   lockedAmountBTC: Big;
   liquidationPrice: string;
   vaultAddress: string;
+  collateralScore?: Big;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -93,7 +93,9 @@ const VaultCollateral = ({
     [liquidationThreshold, premiumRedeemThreshold, secureThreshold]
   );
 
-  const collateralStatus = getCollateralStatus(collateralScore, ranges);
+  const isInfinityCollateralization = !collateralScore;
+  const score = collateralScore?.toNumber() ?? 0;
+  const collateralStatus = getCollateralStatus(score, ranges, isInfinityCollateralization);
   const collateralLabel = getVaultCollateralLabel(collateralStatus, ranges);
 
   const lockedBTC = new BitcoinAmount(lockedAmountBTC);
@@ -103,11 +105,12 @@ const VaultCollateral = ({
       <StyledWrapper variant='bordered' {...props}>
         <StyledCollateralWrapper>
           <StyledCollateralScore
-            score={collateralScore}
+            score={score}
             ranges={ranges}
             variant='highlight'
             label='Collateral Score'
             sublabel={collateralLabel}
+            infinity={isInfinityCollateralization}
           />
           <CollateralThresholds
             liquidationThreshold={liquidationThreshold}

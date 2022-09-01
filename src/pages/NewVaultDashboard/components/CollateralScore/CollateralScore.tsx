@@ -42,6 +42,7 @@ type Props = {
   score?: number;
   label?: ReactNode;
   sublabel?: ReactNode;
+  infinity?: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -54,15 +55,16 @@ const CollateralScore = ({
   sublabel,
   variant = 'default',
   ranges,
+  infinity = false,
   ...props
 }: CollateralScoreProps): JSX.Element => {
   // Makes sure we always have the correct aria-valuemax
-  const maxValue = score > ranges.success.max ? score : ranges.success.max;
+  const maxValue = !infinity && score > ranges.success.max ? score : ranges.success.max;
 
   const { meterProps, labelProps } = useMeter({
     minValue: ranges.error.min,
     maxValue,
-    value: score,
+    value: infinity ? maxValue : score,
     formatOptions,
     label,
     ...props
@@ -70,7 +72,7 @@ const CollateralScore = ({
 
   // Does not allow negative numbers
   const value = meterProps['aria-valuenow'] || 0;
-  const status = getCollateralStatus(value, ranges);
+  const status = getCollateralStatus(value, ranges, infinity);
   const barPercentage = getBarPercentage(status, value, ranges);
 
   const isDefault = variant === 'default';
@@ -83,7 +85,7 @@ const CollateralScore = ({
         </StyledLabel>
         <StyledScoreWrapper isDefault={isDefault}>
           <StyledScore isDefault={isDefault} status={status}>
-            {meterProps['aria-valuetext']}%
+            {infinity ? '∞' : `${meterProps['aria-valuetext']}%`}
           </StyledScore>
           <StyledSublabel isDefault={isDefault} status={isDefault ? status : undefined}>
             {sublabel}
