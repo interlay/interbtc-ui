@@ -2,8 +2,8 @@ import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
 
-import { displayMonetaryAmount, formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
-import { CTA, Stack } from '@/component-library';
+import { displayMonetaryAmount, formatNumber, formatUSD } from '@/common/utils/utils';
+import { Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -14,13 +14,7 @@ import { useGetVaultOverview } from '@/utils/hooks/api/vaults/use-get-vault-data
 import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
 import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo } from './components';
-import {
-  StyledCollateralSection,
-  StyledStackingInsightsList,
-  StyledStakingTitle,
-  StyledStakingTitleWrapper,
-  StyledVaultCollateral
-} from './NewVaultDashboard.styles';
+import { StyledCollateralSection, StyledRewards, StyledVaultCollateral } from './NewVaultDashboard.styles';
 
 const VaultDashboard = (): JSX.Element => {
   const {
@@ -78,29 +72,6 @@ const VaultDashboard = (): JSX.Element => {
     }
   ];
 
-  const stakingItems: InsightListItem[] = [
-    { title: 'APR', label: formatPercentage(vaultData.apy.toNumber()) },
-    {
-      title: `Fees earned ${vaultData.wrappedId}`,
-      label: formatNumber(vaultData.wrappedTokenRewards.amount.toNumber()),
-      sublabel: `(${formatUSD(vaultData.wrappedTokenRewards.usd)})`
-    },
-    {
-      title: `Fees earned ${vaultData.collateralId}`,
-      label: formatNumber(vaultData.governanceTokenRewards.amount.toNumber()),
-      sublabel: `(${formatUSD(vaultData.governanceTokenRewards.usd)})`
-    }
-  ];
-
-  const stakingTitle = (
-    <StyledStakingTitleWrapper>
-      <StyledStakingTitle>Rewards</StyledStakingTitle>
-      <CTA size='small' variant='outlined'>
-        Withdraw all rewards
-      </CTA>
-    </StyledStakingTitleWrapper>
-  );
-
   return (
     <MainContainer>
       <Stack>
@@ -128,7 +99,15 @@ const VaultDashboard = (): JSX.Element => {
             lockedAmountBTC={vaultData.issuedTokens.amount}
             vaultAddress={selectedVaultAccountAddress}
           />
-          <StyledStackingInsightsList title={stakingTitle} direction='column' items={stakingItems} />
+          <StyledRewards
+            apy={vaultData.apy}
+            collateralId={vaultData.collateralId}
+            governanceTokenRewards={vaultData.governanceTokenRewards}
+            wrappedTokenRewards={vaultData.wrappedTokenRewards}
+            wrappedId={vaultData.wrappedId}
+            collateralToken={collateralToken}
+            vaultAddress={selectedVaultAccountAddress}
+          />
         </StyledCollateralSection>
         <TransactionHistory transactions={transactions} />
       </Stack>

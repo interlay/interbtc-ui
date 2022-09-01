@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-import { H2, theme } from '@/component-library';
+import { theme } from '@/component-library';
 
-import { InsightsList, VaultCollateral } from './components';
+import { Rewards, VaultCollateral } from './components';
 
 const StyledCollateralSection = styled.div`
   display: flex;
@@ -18,27 +18,8 @@ const StyledVaultCollateral = styled(VaultCollateral)`
   flex: 0.7;
 `;
 
-const StyledStackingInsightsList = styled(InsightsList)`
+const StyledRewards = styled(Rewards)`
   flex: 0.3;
 `;
 
-const StyledStakingTitleWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: ${theme.spacing.spacing4};
-`;
-
-const StyledStakingTitle = styled(H2)`
-  font-size: ${theme.text.lg};
-  line-height: ${theme.lineHeight.base};
-  font-weight: ${theme.fontWeight.bold};
-`;
-
-export {
-  StyledCollateralSection,
-  StyledStackingInsightsList,
-  StyledStakingTitle,
-  StyledStakingTitleWrapper,
-  StyledVaultCollateral
-};
+export { StyledCollateralSection, StyledRewards, StyledVaultCollateral };
