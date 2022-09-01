@@ -9,6 +9,7 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 import issuesFetcher, { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import redeemsFetcher, { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 
+// TODO: Issues/Redeems/ReplaceRequests types are missing
 const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) => {
   const mappedIssues = issues
     ? issues.map((issue: any) => {
@@ -54,6 +55,7 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
 const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: string): any => {
   const vaultId = window.bridge?.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
+  // TODO: remove the dependency on legacy issuesFetcher and redeemFetcher
   const { data: issues, error: issuesError } = useQuery<any, Error>(
     [
       ISSUES_FETCHER,
