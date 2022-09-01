@@ -1,9 +1,7 @@
 // ray test touch <
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
-// ray test touch <<
 import { KeyringPair } from '@polkadot/keyring/types';
-// ray test touch >>
 import { TypeRegistry } from '@polkadot/types/create';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
@@ -37,9 +35,7 @@ enum ActionType {
   SetKeyringLoading = 'SET_KEYRING_LOADING',
   SetKeyringReady = 'SET_KEYRING_READY',
   SetKeyringError = 'SET_KEYRING_ERROR',
-  // ray test touch <<
   SetSelectedAccount = 'SET_SELECTED_ACCOUNT'
-  // ray test touch >>
 }
 
 type Action =
@@ -60,9 +56,7 @@ type State = {
   api: ApiPromise | null;
   apiError: Error | null;
   apiStatus: ApiStatus;
-  // ray test touch <<
   selectedAccount: KeyringPair | null;
-  // ray test touch >>
 };
 type SubstrateProviderProps = {
   children: React.ReactNode;
@@ -89,9 +83,7 @@ const initialState = {
   api: null,
   apiError: null,
   apiStatus: ApiStatus.Idle,
-  // ray test touch <<
   selectedAccount: null
-  // ray test touch >>
 };
 
 const registry = new TypeRegistry();
@@ -139,13 +131,11 @@ const substrateReducer = (state: State, action: Action): State => {
         keyring: null,
         keyringStatus: KeyringStatus.Error
       };
-    // ray test touch <<
     case ActionType.SetSelectedAccount:
       return {
         ...state,
         selectedAccount: action.payload
       };
-    // ray test touch >>
     default:
       throw new Error(`Unknown type: ${action}`);
   }
@@ -254,17 +244,13 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     connect(stateRef.current, dispatch);
   }, []);
 
-  // ray test touch <<
   function setSelectedAccount(newAccount: KeyringPair) {
     dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
   }
-  // ray test touch >>
 
   const value = {
     state,
-    // ray test touch <<
     setSelectedAccount
-    // ray test touch >>
   };
 
   return <SubstrateStateContext.Provider value={value}>{children}</SubstrateStateContext.Provider>;
