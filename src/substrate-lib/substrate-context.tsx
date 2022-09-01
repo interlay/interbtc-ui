@@ -12,18 +12,8 @@ import { Keyring } from '@polkadot/ui-keyring/Keyring';
 import { isTestChain } from '@polkadot/util';
 import * as React from 'react';
 
-// ray test touch <<
 import config from '@/config/substrate-context';
-// ray test touch >>
 
-// ray test touch <<
-// TODO: use an enum with TypeScript
-// const KeyringStatus = Object.freeze({
-//   Idle: 'IDLE',
-//   Loading: 'LOADING',
-//   Ready: 'READY',
-//   Error: 'ERROR'
-// });
 enum KeyringStatus {
   Idle = 'IDLE',
   Loading = 'LOADING',
@@ -31,14 +21,6 @@ enum KeyringStatus {
   Error = 'ERROR'
 }
 
-// TODO: use an enum with TypeScript
-// const ApiStatus = Object.freeze({
-//   Idle: 'IDLE',
-//   ConnectInit: 'CONNECT_INIT',
-//   Connecting: 'CONNECTING',
-//   Ready: 'READY',
-//   Error: 'ERROR'
-// });
 enum ApiStatus {
   Idle = 'IDLE',
   ConnectInit = 'CONNECT_INIT',
@@ -47,7 +29,6 @@ enum ApiStatus {
   Error = 'ERROR'
 }
 
-// TODO: use an enum with TypeScript
 enum ActionType {
   ConnectInit = 'CONNECT_INIT',
   Connect = 'CONNECT',
@@ -56,11 +37,11 @@ enum ActionType {
   SetKeyringLoading = 'SET_KEYRING_LOADING',
   SetKeyringReady = 'SET_KEYRING_READY',
   SetKeyringError = 'SET_KEYRING_ERROR'
+  // ray test touch <<
   // SetCurrentAccount= 'SET_CURRENT_ACCOUNT'
+  // ray test touch >>
 }
-// ray test touch >>
 
-// ray test touch <<
 type Action =
   | { type: ActionType.ConnectInit }
   | { type: ActionType.Connect; payload: ApiPromise }
@@ -83,12 +64,6 @@ type SubstrateProviderProps = {
   children: React.ReactNode;
   socket?: string;
 };
-// ray test touch <<
-// type SecureState = Omit<State, 'keyring' | 'api'> & {
-//   keyring: Keyring;
-//   api: ApiPromise;
-// }
-// ray test touch >>
 interface SubstrateStateContextInterface {
   state: State;
   // ray test touch <<
@@ -96,7 +71,6 @@ interface SubstrateStateContextInterface {
   // setSelectedAccountAddress: SecureSetSelectedAccountAddress;
   // ray test touch >>
 }
-// ray test touch >>
 
 const parsedQuery = new URLSearchParams(window.location.search);
 const connectedSocket = parsedQuery.get('rpc') || config.PROVIDER_SOCKET;
