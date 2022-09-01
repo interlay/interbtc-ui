@@ -11,6 +11,7 @@ import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getCurrency } from '@/utils/helpers/currencies';
 import { useGetVaultOverview } from '@/utils/hooks/api/vaults/use-get-vault-data';
+import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
 import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo } from './components';
 import {
@@ -28,6 +29,7 @@ const VaultDashboard = (): JSX.Element => {
   } = useParams<Record<string, string>>();
 
   const vaultOverview = useGetVaultOverview({ address: selectedVaultAccountAddress });
+  const transactions = useGetVaultTransactions(selectedVaultAccountAddress, vaultCollateral);
 
   const vaultData = vaultOverview?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
 
@@ -128,7 +130,7 @@ const VaultDashboard = (): JSX.Element => {
           />
           <StyledStackingInsightsList title={stakingTitle} direction='column' items={stakingItems} />
         </StyledCollateralSection>
-        <TransactionHistory address={selectedVaultAccountAddress} vaultCollateral={vaultCollateral} />
+        <TransactionHistory transactions={transactions} />
       </Stack>
     </MainContainer>
   );

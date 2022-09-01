@@ -3,14 +3,12 @@ import { HTMLAttributes, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CTA, TabsItem } from '@/component-library';
-import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
 import { StyledStack, StyledTableWrapper, StyledTabs, StyledTitle, StyledWrapper } from './TransactionHistory.styles';
 import { TransactionTable } from './TransactionTable';
 
 type Props = {
-  address: string;
-  vaultCollateral: string;
+  transactions: any;
 };
 
 type NativeAttrs = HTMLAttributes<unknown>;
@@ -20,22 +18,20 @@ type TransactionHistoryProps = Props & NativeAttrs;
 const tabKeys = ['all', 'pending', 'issue', 'redeem', 'replace'] as const;
 
 const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
-  const transactions = useGetVaultTransactions(props.address, props.vaultCollateral);
-
   const { t } = useTranslation();
   const titleId = useId();
-  const [filteredTransactionData, setFilteredTransactiondata] = useState<any>(transactions);
+  const [filteredTransactionData, setFilteredTransactiondata] = useState<any>(props.transactions);
   const [tab, setTab] = useState<string>('all');
 
   useEffect(() => {
     if (tab === 'all') {
-      setFilteredTransactiondata(transactions);
+      setFilteredTransactiondata(props.transactions);
     } else if (tab === 'pending') {
-      setFilteredTransactiondata(transactions.filter((data: any) => data.status === 'Pending'));
+      setFilteredTransactiondata(props.transactions.filter((data: any) => data.status === 'Pending'));
     } else {
-      setFilteredTransactiondata(transactions.filter((data: any) => data.request.toLowerCase() === tab));
+      setFilteredTransactiondata(props.transactions.filter((data: any) => data.request.toLowerCase() === tab));
     }
-  }, [tab, transactions]);
+  }, [tab, props.transactions]);
 
   const table = (
     <StyledTableWrapper>

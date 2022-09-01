@@ -16,7 +16,9 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
         return {
           id: issue.id,
           request: 'Issue',
-          amount: displayMonetaryAmount(issue.request.amountWrapped),
+          amount: issue.execution
+            ? displayMonetaryAmount(issue.execution.amountWrapped)
+            : displayMonetaryAmount(issue.request.amountWrapped),
           status: issue.status,
           date: formatDateTimePrecise(new Date(issue.request.timestamp))
         };
@@ -40,7 +42,7 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
         return {
           id: replaceRequest.id,
           request: 'Replace',
-          amount: displayMonetaryAmount(replaceRequest.collateral),
+          amount: '-',
           status: replaceRequest.status,
           date: '-'
         };
