@@ -401,7 +401,8 @@
     "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain.",
     "manually_select_vault": "Manually Select Vault",
     "vault_must_be_selected": "Specific vault must be selected.",
-    "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity"
+    "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity",
+    "no_issuable_token_available": "Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or <1>consider running a Vault</1>!"
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
