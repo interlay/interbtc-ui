@@ -2,7 +2,7 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 // ray test touch <<
-// import { KeyringPair } from '@polkadot/keyring/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 // ray test touch >>
 import { TypeRegistry } from '@polkadot/types/create';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
@@ -36,9 +36,9 @@ enum ActionType {
   ConnectError = 'CONNECT_ERROR',
   SetKeyringLoading = 'SET_KEYRING_LOADING',
   SetKeyringReady = 'SET_KEYRING_READY',
-  SetKeyringError = 'SET_KEYRING_ERROR'
+  SetKeyringError = 'SET_KEYRING_ERROR',
   // ray test touch <<
-  // SetCurrentAccount= 'SET_CURRENT_ACCOUNT'
+  SetSelectedAccount = 'SET_SELECTED_ACCOUNT'
   // ray test touch >>
 }
 
@@ -49,7 +49,8 @@ type Action =
   | { type: ActionType.ConnectError; payload: Error }
   | { type: ActionType.SetKeyringLoading }
   | { type: ActionType.SetKeyringReady; payload: Keyring }
-  | { type: ActionType.SetKeyringError };
+  | { type: ActionType.SetKeyringError }
+  | { type: ActionType.SetSelectedAccount; payload: KeyringPair };
 type Dispatch = (action: Action) => void;
 type State = {
   socket: string;
@@ -59,6 +60,9 @@ type State = {
   api: ApiPromise | null;
   apiError: Error | null;
   apiStatus: ApiStatus;
+  // ray test touch <<
+  selectedAccount: KeyringPair | null;
+  // ray test touch >>
 };
 type SubstrateProviderProps = {
   children: React.ReactNode;
@@ -66,10 +70,6 @@ type SubstrateProviderProps = {
 };
 interface SubstrateStateContextInterface {
   state: State;
-  // ray test touch <<
-  // selectedAccountAddress: string;
-  // setSelectedAccountAddress: SecureSetSelectedAccountAddress;
-  // ray test touch >>
 }
 
 const parsedQuery = new URLSearchParams(window.location.search);
@@ -89,7 +89,9 @@ const initialState = {
   api: null,
   apiError: null,
   apiStatus: ApiStatus.Idle,
-  currentAccount: null
+  // ray test touch <<
+  selectedAccount: null
+  // ray test touch >>
 };
 
 const registry = new TypeRegistry();
@@ -138,11 +140,11 @@ const substrateReducer = (state: State, action: Action): State => {
         keyringStatus: KeyringStatus.Error
       };
     // ray test touch <<
-    // case ActionType.SetCurrentAccount:
-    //   return {
-    //     ...state,
-    //     currentAccount: action.payload
-    //   };
+    case ActionType.SetSelectedAccount:
+      return {
+        ...state,
+        selectedAccount: action.payload
+      };
     // ray test touch >>
     default:
       throw new Error(`Unknown type: ${action}`);
@@ -253,15 +255,15 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   }, []);
 
   // ray test touch <<
-  // function setCurrentAccount(newAccount: KeyringPair) {
-  //   dispatch({ type: ActionType.SetCurrentAccount, payload: newAccount });
-  // }
+  function setSelectedAccount(newAccount: KeyringPair) {
+    dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
+  }
   // ray test touch >>
 
   const value = {
-    state
+    state,
     // ray test touch <<
-    // setCurrentAccount
+    setSelectedAccount
     // ray test touch >>
   };
 
