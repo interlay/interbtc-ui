@@ -39,9 +39,6 @@ import STATUSES from '@/utils/constants/statuses';
 import { CLASS_NAMES } from '@/utils/constants/styles';
 
 import * as constants from './constants';
-// ray test touch <
-import SubstrateContextDemo from './pages/SubstrateContextDemo';
-// ray test touch >
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
@@ -53,6 +50,11 @@ const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
+// ray test touch <
+const SubstrateContextDemo = React.lazy(
+  () => import(/* webpackChunkName: 'substrate-context-demo' */ '@/pages/SubstrateContextDemo')
+);
+// ray test touch >
 
 type UnsubscriptionRef = (() => void) | null;
 

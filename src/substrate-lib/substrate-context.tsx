@@ -78,6 +78,7 @@ const initialState = {
     ...jsonrpc,
     ...config.CUSTOM_RPC_METHODS
   },
+  // TODO: double-check `undefined` vs. `null`
   keyring: null,
   keyringStatus: KeyringStatus.Idle,
   api: null,
