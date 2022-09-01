@@ -1421,6 +1421,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.18.9":
+  version "7.18.9"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.9.tgz#b4fcfce55db3d2e5e080d2490f608a3b9f407f4a"
+  integrity sha512-lkqXDcvlFT5rvEjiu6+QYO+1GXrEHRo2LOtS7E4GtX5ESIZOgepqsZBVIj6Pv+a6zqsya9VCgiK1KAK4BvJDAw==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.10.4", "@babel/template@^7.12.7", "@babel/template@^7.16.7", "@babel/template@^7.3.3":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.16.7.tgz#8d126c8701fde4d66b264b3eba3d96f07666d155"
@@ -2828,6 +2835,48 @@
     ed2curve "^0.3.0"
     tweetnacl "^1.0.3"
 
+"@polkadot/ui-keyring@^2.9.7":
+  version "2.9.7"
+  resolved "https://registry.yarnpkg.com/@polkadot/ui-keyring/-/ui-keyring-2.9.7.tgz#b79b056b4c26866b3e87569407bcc16b95894545"
+  integrity sha512-0Y5Nh7YBEGfJQVRyEQAE3C05JBKRfLN+qVTBlCGe315xus8DyO3YS+w1HYHmHiXV34EfavnhftTla0/KWsND5g==
+  dependencies:
+    "@babel/runtime" "^7.18.9"
+    "@polkadot/keyring" "^10.1.6"
+    "@polkadot/ui-settings" "2.9.7"
+    "@polkadot/util" "^10.1.6"
+    "@polkadot/util-crypto" "^10.1.6"
+    mkdirp "^1.0.4"
+    rxjs "^7.5.6"
+    store "^2.0.12"
+
+"@polkadot/ui-settings@2.9.7":
+  version "2.9.7"
+  resolved "https://registry.yarnpkg.com/@polkadot/ui-settings/-/ui-settings-2.9.7.tgz#c9fcd7dc8d1de36826e06c347f27d9a9df56810c"
+  integrity sha512-MZJbexCei4LsUew9cY4XxxLjNM0M+VMPqByNXSiksneYyz3AoojR3EiLr1WlP1D/pqkvb8gIR61MYpcTRuc87Q==
+  dependencies:
+    "@babel/runtime" "^7.18.9"
+    "@polkadot/networks" "^10.1.6"
+    "@polkadot/util" "^10.1.6"
+    eventemitter3 "^4.0.7"
+    store "^2.0.12"
+
+"@polkadot/util-crypto@10.1.6", "@polkadot/util-crypto@^10.1.6":
+  version "10.1.6"
+  resolved "https://registry.yarnpkg.com/@polkadot/util-crypto/-/util-crypto-10.1.6.tgz#f28bdcea6c5f732fef272928a4ba1cfc7c08e45e"
+  integrity sha512-r3XWcCERomcGyB5PT7Qa1LYtCHfspVbehPGvraRlX5xhZBihpU4zMRWTSBNMPNaeIjUJmmSQHeG0ZnQVvnwzkg==
+  dependencies:
+    "@babel/runtime" "^7.18.9"
+    "@noble/hashes" "1.1.2"
+    "@noble/secp256k1" "1.6.3"
+    "@polkadot/networks" "10.1.6"
+    "@polkadot/util" "10.1.6"
+    "@polkadot/wasm-crypto" "^6.3.1"
+    "@polkadot/x-bigint" "10.1.6"
+    "@polkadot/x-randomvalues" "10.1.6"
+    "@scure/base" "1.1.1"
+    ed2curve "^0.3.0"
+    tweetnacl "^1.0.3"
+
 "@polkadot/util-crypto@9.4.1", "@polkadot/util-crypto@^9.4.1":
   version "9.4.1"
   resolved "https://registry.yarnpkg.com/@polkadot/util-crypto/-/util-crypto-9.4.1.tgz#af50d9b3e3fcf9760ee8eb262b1cc61614c21d98"
@@ -3032,6 +3081,14 @@
     "@babel/runtime" "^7.19.0"
     "@polkadot/x-global" "10.1.9"
 
+"@polkadot/x-randomvalues@10.1.6":
+  version "10.1.6"
+  resolved "https://registry.yarnpkg.com/@polkadot/x-randomvalues/-/x-randomvalues-10.1.6.tgz#9dfb0e403d60139b5ac4ba7ebeecf395a8f193c6"
+  integrity sha512-NDOr7Zvv3lN0Z3+gt/RfmZbeOXg21402ggiBdL8ni9rf0ZMUzFLqRNsbm0334L0lApfhfvxm98MGfK+gq6uVZg==
+  dependencies:
+    "@babel/runtime" "^7.18.9"
+    "@polkadot/x-global" "10.1.6"
+
 "@polkadot/x-randomvalues@9.4.1":
   version "9.4.1"
   resolved "https://registry.yarnpkg.com/@polkadot/x-randomvalues/-/x-randomvalues-9.4.1.tgz#ab995b3a22aee6bffc18490e636e1a7409f36a15"
@@ -3063,6 +3120,14 @@
   dependencies:
     "@babel/runtime" "^7.19.0"
     "@polkadot/x-global" "10.1.9"
+
+"@polkadot/x-textencoder@10.1.6":
+  version "10.1.6"
+  resolved "https://registry.yarnpkg.com/@polkadot/x-textencoder/-/x-textencoder-10.1.6.tgz#a7d2d9bcd7d9c6bc663d524a278aa4a6679ecf28"
+  integrity sha512-e+iHdR1P/8xAc54l3gHfqozH6ZfxPkKlVVaz3vOMnzfc8cA3Zw93mLYkGtLDqv+825LkSrWSmb/bDZb6YyEEXg==
+  dependencies:
+    "@babel/runtime" "^7.18.9"
+    "@polkadot/x-global" "10.1.6"
 
 "@polkadot/x-textencoder@9.4.1":
   version "9.4.1"
@@ -4794,6 +4859,11 @@
   version "1.29.1"
   resolved "https://registry.yarnpkg.com/@substrate/ss58-registry/-/ss58-registry-1.29.1.tgz#6070fc3cdf24ad8b3eba1eb7bdf4d96804615775"
   integrity sha512-7+DeSVpUS2m+7HAeYvvypbnrYVat1b7ze2V9SV3d+pTbUHkovZACaHYm33FBHc9F+RpXgYgf+pikJXK5ux4o1g==
+
+"@substrate/ss58-registry@^1.28.0":
+  version "1.28.0"
+  resolved "https://registry.yarnpkg.com/@substrate/ss58-registry/-/ss58-registry-1.28.0.tgz#39b7fa355d9b97bcb30ef1eedb47b10c3fddcf03"
+  integrity sha512-XPSwSq4CThLyg+OnZ5/LHh3SPDQjRdGS3Ux5ClgWhRCQamlU86FCT1LBwQ/i+ximbdBfqKRRzVhm1ql3AJ9FKQ==
 
 "@surma/rollup-plugin-off-main-thread@^1.1.1":
   version "1.4.2"
@@ -17479,6 +17549,11 @@ store2@^2.12.0:
   version "2.13.2"
   resolved "https://registry.yarnpkg.com/store2/-/store2-2.13.2.tgz#01ad8802ca5b445b9c316b55e72645c13a3cd7e3"
   integrity sha512-CMtO2Uneg3SAz/d6fZ/6qbqqQHi2ynq6/KzMD/26gTkiEShCcpqFfTHgOxsE0egAq6SX3FmN4CeSqn8BzXQkJg==
+
+store@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/store/-/store-2.0.12.tgz#8c534e2a0b831f72b75fc5f1119857c44ef5d593"
+  integrity sha512-eO9xlzDpXLiMr9W1nQ3Nfp9EzZieIQc10zPPMP5jsVV7bLOziSFFBP0XoDXACEIFtdI+rIz0NwWVA/QVJ8zJtw==
 
 storybook-addon-themes@^6.1.0:
   version "6.1.0"

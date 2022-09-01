@@ -39,6 +39,9 @@ import STATUSES from '@/utils/constants/statuses';
 import { CLASS_NAMES } from '@/utils/constants/styles';
 
 import * as constants from './constants';
+// ray test touch <
+import SubstrateContextDemo from './pages/SubstrateContextDemo';
+// ray test touch >
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
@@ -409,6 +412,11 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.TRANSFER}>
                     <Transfer />
                   </Route>
+                  {/* ray test touch < */}
+                  <Route path='/substrate-context-demo'>
+                    <SubstrateContextDemo />
+                  </Route>
+                  {/* ray test touch > */}
                   <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
                   <Route path='*'>
                     <NoMatch />

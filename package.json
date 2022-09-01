@@ -12,6 +12,7 @@
     "@polkadot/api": "9.4.1",
     "@polkadot/extension-dapp": "0.44.1",
     "@polkadot/types": "9.4.1",
+    "@polkadot/ui-keyring": "^2.9.7",
     "@reach/tooltip": "^0.16.0",
     "@react-aria/focus": "^3.6.1",
     "@react-aria/interactions": "^3.11.0",
