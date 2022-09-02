@@ -12,7 +12,11 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import App from './App';
+// ray test touch <
+// import App from './App';
+import SubstrateContextDemo from '@/substrate-lib/components/SubstrateContextDemo';
+
+// ray test touch >
 import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './store';
 
@@ -27,7 +31,10 @@ ReactDOM.render(
         <HelmetProvider>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-              <App />
+              {/* ray test touch < */}
+              {/* <App /> */}
+              <SubstrateContextDemo />
+              {/* ray test touch > */}
             </PersistGate>
           </Provider>
         </HelmetProvider>
