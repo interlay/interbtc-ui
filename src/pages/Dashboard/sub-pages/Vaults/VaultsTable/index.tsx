@@ -27,7 +27,8 @@ import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
 import { VAULT_COLLATERAL_TOKENS } from '@/config/vaults';
 import * as constants from '@/constants';
@@ -372,8 +373,12 @@ const VaultsTable = (): JSX.Element => {
       return <PrimaryColorEllipsisLoader />;
     }
 
-    const handleRowClick = (vaultId: string) => () => {
-      history.push(PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, vaultId));
+    const handleRowClick = (vaultId: string, collateralToken: string) => () => {
+      const vault = PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, vaultId)
+        .replace(`:${URL_PARAMETERS.VAULT.COLLATERAL}`, collateralToken)
+        .replace(`:${URL_PARAMETERS.VAULT.WRAPPED}`, WRAPPED_TOKEN_SYMBOL);
+
+      history.push(vault);
     };
 
     return (
@@ -415,7 +420,7 @@ const VaultsTable = (): JSX.Element => {
                 key={key}
                 className={clsx(rowClassName, 'cursor-pointer')}
                 {...restRowProps}
-                onClick={handleRowClick(row.original[Accessor.VaultId])}
+                onClick={handleRowClick(row.original[Accessor.VaultId], row.original[Accessor.Collateral])}
               >
                 {/* TODO: should type properly */}
                 {row.cells.map((cell: any) => {
