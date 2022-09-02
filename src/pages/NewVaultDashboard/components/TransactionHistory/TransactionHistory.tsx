@@ -41,10 +41,10 @@ const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
   );
 
   return props.transactions.length === 0 ? (
-    <StyledTitle id={titleId}>Transaction history</StyledTitle>
+    <StyledTitle id={titleId}>No transactions found</StyledTitle>
   ) : (
     <>
-      <StyledTitle id={titleId}>No transactions found</StyledTitle>
+      <StyledTitle id={titleId}>Transactions history</StyledTitle>
       <StyledWrapper variant='bordered' {...props}>
         <StyledStack>
           <StyledTabs panel={table} onSelectionChange={(e) => setTab(e as string)}>

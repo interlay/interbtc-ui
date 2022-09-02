@@ -27,7 +27,7 @@ const VaultDashboard = (): JSX.Element => {
 
   const vaultData = vaultOverview?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
 
-  if (!vaultData) {
+  if (!vaultData || !transactions) {
     return (
       <MainContainer>
         <Stack>
