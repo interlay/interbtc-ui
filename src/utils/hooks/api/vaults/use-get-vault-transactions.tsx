@@ -3,7 +3,7 @@ import { H256 } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
-import { displayMonetaryAmount, formatDateTimePrecise } from '@/common/utils/utils';
+import { formatDateTimePrecise } from '@/common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { TransactionTableData } from '@/pages/NewVaultDashboard/components/TransactionHistory/TransactionTable';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
@@ -18,8 +18,8 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
           id: issue.id,
           request: 'Issue',
           amount: issue.execution
-            ? displayMonetaryAmount(issue.execution.amountWrapped)
-            : displayMonetaryAmount(issue.request.amountWrapped),
+            ? issue.execution.amountWrapped.toBig().toString()
+            : issue.request.amountWrapped.toBig().toString(),
           status: issue.status.toLowerCase(),
           date: formatDateTimePrecise(new Date(issue.request.timestamp))
         };
@@ -31,7 +31,7 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
         return {
           id: redeem.id,
           request: 'Redeem',
-          amount: displayMonetaryAmount(redeem.request.requestedAmountBacking),
+          amount: redeem.request.requestedAmountBacking.toBig().toString(),
           status: redeem.status.toLowerCase(),
           date: formatDateTimePrecise(new Date(redeem.request.timestamp))
         };

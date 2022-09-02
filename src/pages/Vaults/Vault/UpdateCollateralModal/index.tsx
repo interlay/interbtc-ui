@@ -6,7 +6,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -57,6 +57,7 @@ const UpdateCollateralModal = ({
 }: Props): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const prices = useGetPrices();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -147,6 +148,8 @@ const UpdateCollateralModal = ({
       } else {
         throw new Error('Something went wrong!');
       }
+
+      queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
 
       const balanceLockedCollateral = (await window.bridge.tokens.balance(collateralToken, vaultId)).reserved;
       dispatch(updateCollateralAction(balanceLockedCollateral as MonetaryAmount<CollateralCurrencyExt>));

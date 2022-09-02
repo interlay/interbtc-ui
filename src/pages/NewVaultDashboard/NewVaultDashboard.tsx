@@ -2,7 +2,7 @@ import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useParams } from 'react-router';
 
-import { displayMonetaryAmount, formatNumber, formatUSD } from '@/common/utils/utils';
+import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -57,17 +57,16 @@ const VaultDashboard = (): JSX.Element => {
     },
     {
       title: 'Locked BTC',
-      label: formatNumber(vaultData.issuedTokens.amount.toNumber()),
+      label: vaultData.issuedTokens.amount.toString(),
       sublabel: `(${formatUSD(vaultData.issuedTokens.usd)})`
     },
     {
       title: 'Remaining kBTC capacity',
-      label: displayMonetaryAmount(vaultData.remainingCapacity.amount),
-      sublabel: `(${new Intl.NumberFormat(undefined, {
-        style: 'percent',
+      label: vaultData.remainingCapacity.amount.toBig().toString(),
+      sublabel: formatPercentage(vaultData.remainingCapacity.percentage, {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2
-      }).format(vaultData.remainingCapacity.percentage)})`,
+      }),
       adornment: vaultCapacity
     }
   ];

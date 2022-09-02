@@ -23,6 +23,24 @@ import {
   StyledWrapper
 } from './VaultCollateral.styles';
 
+const getRanges = (liquidationThreshold: Big, premiumRedeemThreshold: Big, secureThreshold: Big) => {
+  const formattedLiquidationThreshold = Math.trunc(liquidationThreshold.toNumber() * 100);
+  const formattedPremiumRedeemThreshold = Math.trunc(premiumRedeemThreshold.toNumber() * 100);
+  const formattedSecureThreshold = Math.trunc(secureThreshold.toNumber() * 100);
+
+  return {
+    error: { min: 0, max: formattedLiquidationThreshold },
+    warning: {
+      min: formattedLiquidationThreshold,
+      max: formattedPremiumRedeemThreshold
+    },
+    success: {
+      min: formattedPremiumRedeemThreshold,
+      max: formattedSecureThreshold
+    }
+  };
+};
+
 const getVaultCollateralLabel = (status: CollateralStatus, ranges: CollateralStatusRanges) => {
   switch (status) {
     case 'error':
@@ -44,9 +62,9 @@ type SetVaultAction = {
 type Props = {
   collateralToken: CurrencyExt;
   collateral: VaultData['collateral'];
-  secureThreshold: VaultData['secureThreshold'];
-  liquidationThreshold: VaultData['liquidationThreshold'];
-  premiumRedeemThreshold: VaultData['premiumRedeemThreshold'];
+  secureThreshold: Big;
+  liquidationThreshold: Big;
+  premiumRedeemThreshold: Big;
   remainingCapacity: MonetaryAmount<CollateralCurrencyExt>;
   lockedAmountBTC: Big;
   liquidationPrice: string;
@@ -77,21 +95,15 @@ const VaultCollateral = ({
     isModalOpen: false
   });
 
+  console.log(lockedAmountBTC.toNumber());
+
   const handleClickVaultAction = (action: VaultActions) => setVaultAction({ vaultAction: action, isModalOpen: true });
-  const ranges = useMemo(
-    () => ({
-      error: { min: 0, max: liquidationThreshold.toNumber() * 100 },
-      warning: {
-        min: liquidationThreshold.toNumber() * 100,
-        max: premiumRedeemThreshold.toNumber() * 100
-      },
-      success: {
-        min: premiumRedeemThreshold.toNumber() * 100,
-        max: secureThreshold.toNumber() * 100
-      }
-    }),
-    [liquidationThreshold, premiumRedeemThreshold, secureThreshold]
-  );
+
+  const ranges = useMemo(() => getRanges(liquidationThreshold, premiumRedeemThreshold, secureThreshold), [
+    liquidationThreshold,
+    premiumRedeemThreshold,
+    secureThreshold
+  ]);
 
   const isInfinityCollateralization = !collateralScore;
   const score = collateralScore?.toNumber() ?? 0;

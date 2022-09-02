@@ -8,6 +8,7 @@ import {
 import Big from 'big.js';
 import { HTMLAttributes } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { LoadingSpinner } from '@/component-library/LoadingSpinner';
@@ -67,7 +68,12 @@ const Rewards = ({
 
       return window.bridge.rewards.withdrawRewards(vaultId);
     },
-    { onSuccess: () => queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]) }
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
+        toast.success('Your rewards were successfully withdrawed.');
+      }
+    }
   );
 
   const handleClickWithdrawRewards = () => {
@@ -110,7 +116,7 @@ const Rewards = ({
     { title: 'APR', label: formatPercentage(apy.toNumber()) },
     {
       title: `Fees earned ${wrappedId}`,
-      label: formatNumber(wrappedTokenRewards.amount.toNumber()),
+      label: wrappedTokenRewards.amount.toString(),
       sublabel: `(${formatUSD(wrappedTokenRewards.usd)})`
     },
     {
