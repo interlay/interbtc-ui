@@ -14,7 +14,7 @@ import { useGetVaultOverview } from '@/utils/hooks/api/vaults/use-get-vault-data
 import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
 import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo } from './components';
-import { StyledCollateralSection, StyledRewards, StyledVaultCollateral } from './NewVaultDashboard.styles';
+import { StyledCollateralSection, StyledRewards, StyledVaultCollateral } from './VaultDashboard.styles';
 
 const VaultDashboard = (): JSX.Element => {
   const {

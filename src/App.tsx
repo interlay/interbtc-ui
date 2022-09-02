@@ -46,7 +46,7 @@ const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pag
 const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
-const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/NewVaultDashboard'));
+const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
 type UnsubscriptionRef = (() => void) | null;

@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 
 import { formatDateTimePrecise } from '@/common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { TransactionTableData } from '@/pages/NewVaultDashboard/components/TransactionHistory/TransactionTable';
+import { TransactionTableData } from '@/pages/Vaults/Vault/components/TransactionHistory/TransactionTable';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import issuesFetcher, { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import redeemsFetcher, { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
