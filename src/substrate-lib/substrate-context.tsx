@@ -12,6 +12,8 @@ import * as React from 'react';
 
 import config from '@/config/substrate-context';
 
+const UNABLE_TO_INITIALISE_OPTIONS_MORE_THAN_ONCE = 'Unable to initialise options more than once';
+
 enum KeyringStatus {
   Idle = 'IDLE',
   Loading = 'LOADING',
@@ -229,7 +231,12 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
     });
   } catch (error) {
     console.error('[loadAccounts] error.message => ', error.message);
-    dispatch({ type: ActionType.SetKeyringError });
+    // TODO: workaround for now
+    if (error.message === UNABLE_TO_INITIALISE_OPTIONS_MORE_THAN_ONCE) {
+      window.location.reload();
+    } else {
+      dispatch({ type: ActionType.SetKeyringError });
+    }
   }
 };
 
