@@ -38,11 +38,19 @@ enum ActionType {
   SetSelectedAccount = 'SET_SELECTED_ACCOUNT'
 }
 
+// ray test touch <<
+interface APIError extends Error {
+  target: {
+    url: string;
+  };
+}
+// ray test touch >>
+
 type Action =
   | { type: ActionType.ConnectInit }
   | { type: ActionType.Connect; payload: ApiPromise }
   | { type: ActionType.ConnectSuccess }
-  | { type: ActionType.ConnectError; payload: Error }
+  | { type: ActionType.ConnectError; payload: APIError }
   | { type: ActionType.SetKeyringLoading }
   | { type: ActionType.SetKeyringReady; payload: Keyring }
   | { type: ActionType.SetKeyringError }
@@ -54,7 +62,7 @@ type State = {
   keyring: Keyring | null;
   keyringStatus: KeyringStatus;
   api: ApiPromise | null;
-  apiError: Error | null;
+  apiError: APIError | null;
   apiStatus: ApiStatus;
   selectedAccount: KeyringPair | null;
 };
