@@ -5,6 +5,7 @@ import { useQuery } from 'react-query';
 
 import { displayMonetaryAmount, formatDateTimePrecise } from '@/common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { TransactionTableData } from '@/pages/NewVaultDashboard/components/TransactionHistory/TransactionTable';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import issuesFetcher, { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import redeemsFetcher, { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
@@ -60,7 +61,7 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
     : [];
 };
 
-const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: string): any => {
+const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: string): TransactionTableData[] => {
   const vaultId = window.bridge?.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
   // TODO: remove the dependency on legacy issuesFetcher and redeemFetcher

@@ -9,7 +9,7 @@ const columns = [
   { name: 'Status', uid: 'status' }
 ];
 
-type TransactionTableRow = {
+type TransactionTableData = {
   request: string;
   date: string;
   amount: string;
@@ -17,7 +17,7 @@ type TransactionTableRow = {
 };
 
 type Props = {
-  data: TransactionTableRow[];
+  data: TransactionTableData[];
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -45,4 +45,4 @@ const _TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Eleme
 const TransactionTable = memo(_TransactionTable);
 
 export { TransactionTable };
-export type { TransactionTableProps };
+export type { TransactionTableData, TransactionTableProps };

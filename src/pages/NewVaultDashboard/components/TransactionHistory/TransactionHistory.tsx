@@ -6,10 +6,10 @@ import { CTALink, TabsItem } from '@/component-library';
 import { PAGES } from '@/utils/constants/links';
 
 import { StyledStack, StyledTableWrapper, StyledTabs, StyledTitle, StyledWrapper } from './TransactionHistory.styles';
-import { TransactionTable } from './TransactionTable';
+import { TransactionTable, TransactionTableData } from './TransactionTable';
 
 type Props = {
-  transactions: any;
+  transactions: Array<TransactionTableData>;
 };
 
 type NativeAttrs = HTMLAttributes<unknown>;
@@ -21,16 +21,18 @@ const tabKeys = ['all', 'pending', 'issue', 'redeem', 'replace'] as const;
 const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
   const { t } = useTranslation();
   const titleId = useId();
-  const [filteredTransactionData, setFilteredTransactiondata] = useState<any>(props.transactions);
+  const [filteredTransactionData, setFilteredTransactiondata] = useState<Array<TransactionTableData>>(
+    props.transactions
+  );
   const [tab, setTab] = useState<string>('all');
 
   useEffect(() => {
     if (tab === 'all') {
       setFilteredTransactiondata(props.transactions);
     } else if (tab === 'pending') {
-      setFilteredTransactiondata(props.transactions.filter((data: any) => data.status === 'Pending'));
+      setFilteredTransactiondata(props.transactions.filter((data) => data.status === 'pending'));
     } else {
-      setFilteredTransactiondata(props.transactions.filter((data: any) => data.request.toLowerCase() === tab));
+      setFilteredTransactiondata(props.transactions.filter((data) => data.request.toLowerCase() === tab));
     }
   }, [tab, props.transactions]);
 
