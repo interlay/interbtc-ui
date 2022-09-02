@@ -73,7 +73,6 @@ const collateralInputId: Record<CollateralActions, keyof CollateralFormData> = {
 
 type Props = {
   collateral: VaultData['collateral'];
-  score: number;
   collateralToken: CurrencyExt;
   variant?: CollateralActions;
   onSubmit?: () => void;
@@ -238,7 +237,8 @@ const CollateralForm = ({
   const titleId = useId();
   const title = variant === 'deposit' ? 'Deposit Collateral' : 'Withdraw Collateral';
 
-  const collateralStatus = getCollateralStatus(score, ranges);
+  // TODO: handle infinity collateralization in form
+  const collateralStatus = getCollateralStatus(score, ranges, false);
 
   return (
     <form onSubmit={h(handleSubmit)} {...props}>

@@ -88,7 +88,7 @@ const VaultDashboard = (): JSX.Element => {
           <StyledVaultCollateral
             collateralToken={collateralToken}
             collateral={vaultData.collateral}
-            collateralScore={vaultData?.collateralization?.toNumber() ?? 0}
+            collateralScore={vaultData.collateralization}
             liquidationThreshold={vaultData.liquidationThreshold}
             premiumRedeemThreshold={vaultData.premiumRedeemThreshold}
             secureThreshold={vaultData.secureThreshold}
