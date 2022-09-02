@@ -38,13 +38,11 @@ enum ActionType {
   SetSelectedAccount = 'SET_SELECTED_ACCOUNT'
 }
 
-// ray test touch <<
 interface APIError extends Error {
   target: {
     url: string;
   };
 }
-// ray test touch >>
 
 type Action =
   | { type: ActionType.ConnectInit }
