@@ -45,7 +45,7 @@ const Main = () => {
   return <>Main</>;
 };
 
-// http://localhost:3000/substrate-context-demo?rpc=wss://rpc.polkadot.io
+// http://localhost:3000/?rpc=wss://rpc.polkadot.io
 const SubstrateContextDemo = (): JSX.Element => {
   return (
     <SubstrateProvider>
