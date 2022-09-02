@@ -8,14 +8,14 @@ import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-import { useGetVaultOverview } from '@/utils/hooks/api/vaults/use-get-vault-data';
+import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 
 import { VaultsHeader } from './VaultsHeader';
 
 const VaultOverview = (): JSX.Element => {
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
 
-  const vaultOverview = useGetVaultOverview({ address: accountAddress });
+  const vaultOverview = useGetVaultData({ address: accountAddress });
 
   const { t } = useTranslation();
 

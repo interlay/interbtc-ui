@@ -10,7 +10,7 @@ import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader'
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getCurrency } from '@/utils/helpers/currencies';
-import { useGetVaultOverview } from '@/utils/hooks/api/vaults/use-get-vault-data';
+import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
 import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo } from './components';
@@ -22,12 +22,12 @@ const VaultDashboard = (): JSX.Element => {
     [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateral
   } = useParams<Record<string, string>>();
 
-  const vaultOverview = useGetVaultOverview({ address: selectedVaultAccountAddress });
+  const vaultData = useGetVaultData({ address: selectedVaultAccountAddress });
   const transactions = useGetVaultTransactions(selectedVaultAccountAddress, vaultCollateral);
 
-  const vaultData = vaultOverview?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
+  const vault = vaultData?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
 
-  if (!vaultData || !transactions) {
+  if (!vault || !transactions) {
     return (
       <MainContainer>
         <Stack>
@@ -38,32 +38,32 @@ const VaultDashboard = (): JSX.Element => {
     );
   }
 
-  const collateralToken = getCurrency(vaultData.collateralId as CollateralIdLiteral);
+  const collateralToken = getCurrency(vault.collateralId as CollateralIdLiteral);
 
   // TODO: should we leave the diameter as fixed pixels?
   const vaultCapacity = (
     <ProgressCircle
       aria-label='BTC remaining capacity'
       diameter='65'
-      value={(1 - Number(vaultData.remainingCapacity.percentage)) * 100}
+      value={(1 - Number(vault.remainingCapacity.percentage)) * 100}
     />
   );
 
   const insightsItems: InsightListItem[] = [
     {
       title: `Locked Collateral ${collateralToken.ticker}`,
-      label: formatNumber(vaultData.collateral.amount.toNumber()),
-      sublabel: `(${formatUSD(vaultData.collateral.usd)})`
+      label: formatNumber(vault.collateral.amount.toNumber()),
+      sublabel: `(${formatUSD(vault.collateral.usd)})`
     },
     {
       title: 'Locked BTC',
-      label: vaultData.issuedTokens.amount.toString(),
-      sublabel: `(${formatUSD(vaultData.issuedTokens.usd)})`
+      label: vault.issuedTokens.amount.toString(),
+      sublabel: `(${formatUSD(vault.issuedTokens.usd)})`
     },
     {
       title: 'Remaining kBTC capacity',
-      label: vaultData.remainingCapacity.amount.toBig().toString(),
-      sublabel: formatPercentage(vaultData.remainingCapacity.percentage, {
+      label: vault.remainingCapacity.amount.toBig().toString(),
+      sublabel: formatPercentage(vault.remainingCapacity.percentage, {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2
       }),
@@ -76,34 +76,34 @@ const VaultDashboard = (): JSX.Element => {
       <Stack>
         <PageTitle />
         <VaultInfo
-          collateralAmount={vaultData.collateral.raw}
-          vaultStatus={vaultData?.vaultStatus}
+          collateralAmount={vault.collateral.raw}
+          vaultStatus={vault?.vaultStatus}
           vaultAddress={selectedVaultAccountAddress}
           collateralToken={collateralToken}
-          lockedAmountBTC={vaultData.issuedTokens.amount}
+          lockedAmountBTC={vault.issuedTokens.amount}
         />
         <InsightsList items={insightsItems} />
         <StyledCollateralSection>
           <StyledVaultCollateral
             collateralToken={collateralToken}
-            collateral={vaultData.collateral}
-            collateralScore={vaultData.collateralization}
-            liquidationThreshold={vaultData.liquidationThreshold}
-            premiumRedeemThreshold={vaultData.premiumRedeemThreshold}
-            secureThreshold={vaultData.secureThreshold}
+            collateral={vault.collateral}
+            collateralScore={vault.collateralization}
+            liquidationThreshold={vault.liquidationThreshold}
+            premiumRedeemThreshold={vault.premiumRedeemThreshold}
+            secureThreshold={vault.secureThreshold}
             liquidationPrice={
-              vaultData?.liquidationExchangeRate ? formatNumber(vaultData.liquidationExchangeRate.toNumber()) : '0'
+              vault?.liquidationExchangeRate ? formatNumber(vault.liquidationExchangeRate.toNumber()) : '0'
             }
-            remainingCapacity={vaultData.remainingCapacity.amount}
-            lockedAmountBTC={vaultData.issuedTokens.amount}
+            remainingCapacity={vault.remainingCapacity.amount}
+            lockedAmountBTC={vault.issuedTokens.amount}
             vaultAddress={selectedVaultAccountAddress}
           />
           <StyledRewards
-            apy={vaultData.apy}
-            collateralId={vaultData.collateralId}
-            governanceTokenRewards={vaultData.governanceTokenRewards}
-            wrappedTokenRewards={vaultData.wrappedTokenRewards}
-            wrappedId={vaultData.wrappedId}
+            apy={vault.apy}
+            collateralId={vault.collateralId}
+            governanceTokenRewards={vault.governanceTokenRewards}
+            wrappedTokenRewards={vault.wrappedTokenRewards}
+            wrappedId={vault.wrappedId}
             collateralToken={collateralToken}
             vaultAddress={selectedVaultAccountAddress}
           />

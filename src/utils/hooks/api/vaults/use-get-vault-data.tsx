@@ -28,7 +28,7 @@ const getVaultTotals = (vaults: Array<VaultData>) => ({
   totalAtRisk: vaults.reduce((total, vault) => (vault.vaultAtRisk ? total + 1 : total), 0)
 });
 
-const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | undefined => {
+const useGetVaultData = ({ address }: { address: string }): VaultOverview | undefined => {
   const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
   const [queryError, setQueryError] = useState<Error | undefined>(undefined);
 
@@ -72,4 +72,4 @@ const useGetVaultOverview = ({ address }: { address: string }): VaultOverview | 
     : undefined;
 };
 
-export { useGetVaultOverview };
+export { useGetVaultData };
