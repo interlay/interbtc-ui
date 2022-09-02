@@ -52,7 +52,7 @@ const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
               </TabsItem>
             ))}
           </StyledTabs>
-          <CTALink to={PAGES.TRANSACTIONS} variant='outlined'>
+          <CTALink to={PAGES.TRANSACTIONS} variant='outlined' size='small'>
             {'View All >'}
           </CTALink>
         </StyledStack>
