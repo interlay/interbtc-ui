@@ -8,6 +8,7 @@ type StyledChipProps = {
 };
 
 const StyledTag = styled.div<StyledChipProps>`
+  font-size: ${theme.text.s};
   display: inline-flex;
   justify-content: center;
   align-items: center;
