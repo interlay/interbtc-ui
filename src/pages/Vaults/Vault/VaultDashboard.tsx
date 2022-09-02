@@ -100,7 +100,6 @@ const VaultDashboard = (): JSX.Element => {
           />
           <StyledRewards
             apy={vault.apy}
-            collateralId={vault.collateralId}
             governanceTokenRewards={vault.governanceTokenRewards}
             wrappedTokenRewards={vault.wrappedTokenRewards}
             wrappedId={vault.wrappedId}

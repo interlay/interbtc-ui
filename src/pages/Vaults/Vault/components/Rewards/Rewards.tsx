@@ -1,10 +1,4 @@
-import {
-  CollateralCurrencyExt,
-  CollateralIdLiteral,
-  newVaultId,
-  WrappedCurrency,
-  WrappedIdLiteral
-} from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, newVaultId, WrappedCurrency, WrappedIdLiteral } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { HTMLAttributes } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
@@ -13,7 +7,7 @@ import { toast } from 'react-toastify';
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { LoadingSpinner } from '@/component-library/LoadingSpinner';
 import ErrorModal from '@/components/ErrorModal';
-import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 import useAccountId from '@/utils/hooks/use-account-id';
@@ -32,7 +26,6 @@ type Props = {
   wrappedId: WrappedIdLiteral;
   wrappedTokenRewards: VaultData['wrappedTokenRewards'];
   governanceTokenRewards: VaultData['governanceTokenRewards'];
-  collateralId: CollateralIdLiteral;
   collateralToken: CollateralCurrencyExt;
 };
 
@@ -43,7 +36,6 @@ type RewardsProps = Props & NativeAttrs;
 const Rewards = ({
   vaultAddress,
   apy,
-  collateralId,
   wrappedId,
   governanceTokenRewards,
   wrappedTokenRewards,
@@ -120,7 +112,7 @@ const Rewards = ({
       sublabel: `(${formatUSD(wrappedTokenRewards.usd)})`
     },
     {
-      title: `Fees earned ${collateralId}`,
+      title: `Fees earned ${GOVERNANCE_TOKEN_SYMBOL}`,
       label: formatNumber(governanceTokenRewards.amount.toNumber()),
       sublabel: `(${formatUSD(governanceTokenRewards.usd)})`
     }
