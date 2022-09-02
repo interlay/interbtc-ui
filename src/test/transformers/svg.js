@@ -1,3 +1,4 @@
+/* eslint-disable valid-jsdoc */
 /**
  * Source: https://stackoverflow.com/a/73321079
  */
