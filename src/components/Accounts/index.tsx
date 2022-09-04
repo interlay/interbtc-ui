@@ -13,9 +13,11 @@ interface Props {
 }
 
 const Accounts = ({ callbackFunction, label }: Props): JSX.Element => {
+  // ray test touch <
   const { address } = useSelector((state: StoreType) => state.general);
   const [selectedAccount, setSelectedAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
   const accounts = useGetAccounts();
+  // ray test touch >
 
   React.useEffect(() => {
     if (!accounts || !address) return;

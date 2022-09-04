@@ -56,7 +56,9 @@ type UnsubscriptionRef = (() => void) | null;
 const App = (): JSX.Element => {
   const {
     bridgeLoaded,
+    // ray test touch <
     address,
+    // ray test touch >
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
     collateralTokenBalance,
@@ -191,6 +193,7 @@ const App = (): JSX.Element => {
     })();
   }, [dispatch, bridgeLoaded]);
 
+  // ray test touch <
   // Loads the address for the currently selected account
   React.useEffect(() => {
     if (!dispatch) return;
@@ -215,7 +218,7 @@ const App = (): JSX.Element => {
 
         dispatch(setInstalledExtensionAction(theExtensions.map((extension) => extension.name)));
 
-        // TODO: load accounts just once
+        // TODO: loads accounts just once
         const accounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
         const matchedAccount = accounts.find((account) => account.address === address);
 
@@ -235,6 +238,7 @@ const App = (): JSX.Element => {
       }
     })();
   }, [address, bridgeLoaded, dispatch]);
+  // ray test touch >
 
   // Subscribes to relay-chain native token balance
   React.useEffect(() => {
