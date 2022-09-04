@@ -51,9 +51,11 @@ const BurnForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
+  // ray test touch <
   const { bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus, address } = useSelector(
     (state: StoreType) => state.general
   );
+  // ray test touch >
 
   const {
     register,

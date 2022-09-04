@@ -6,7 +6,9 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 
 const useAccountId = (accountAddress?: string): AccountId | undefined => {
+  // ray test touch <
   const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+  // ray test touch >
 
   return React.useMemo(() => {
     // eslint-disable-next-line max-len

@@ -48,10 +48,12 @@ export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
   isLoaded
 });
 
+// ray test touch <
 export const changeAddressAction = (address: string): ChangeAddress => ({
   type: CHANGE_ADDRESS,
   address
 });
+// ray test touch >
 
 export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmount): UpdateBalancePolkaBTC => ({
   type: UPDATE_BALANCE_POLKA_BTC,
@@ -96,15 +98,19 @@ export const initGeneralDataAction = (
   parachainStatus
 });
 
+// ray test touch <
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({
   type: SHOW_ACCOUNT_MODAL,
   showAccountModal
 });
+// ray test touch >
 
+// ray test touch <
 export const setInstalledExtensionAction = (extensions: string[]): SetInstalledExtension => ({
   type: SET_INSTALLED_EXTENSION,
   extensions
 });
+// ray test touch >
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({
   type: UPDATE_HEIGHTS,

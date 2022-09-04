@@ -46,7 +46,9 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 );
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
+  // ray test touch <
   const { bridgeLoaded, address, extensions: injectedExtensions } = useSelector((state: StoreType) => state.general);
+  // ray test touch >
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);

@@ -25,14 +25,18 @@ const initialState = {
   vaultClientLoaded: false,
   hasFeedbackModalBeenDisplayed: false,
   showAccountModal: false,
+  // ray test touch <
   address: '',
+  // ray test touch >
   totalWrappedTokenAmount: BitcoinAmount.zero(),
   totalLockedCollateralTokenAmount: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   wrappedTokenBalance: BitcoinAmount.zero(),
   wrappedTokenTransferableBalance: BitcoinAmount.zero(),
   collateralTokenBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   collateralTokenTransferableBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
+  // ray test touch <
   extensions: [],
+  // ray test touch >
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
@@ -56,8 +60,10 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       return { ...state, btcRelayHeight: action.btcRelayHeight, bitcoinHeight: action.bitcoinHeight };
     case IS_BRIDGE_LOADED:
       return { ...state, bridgeLoaded: action.isLoaded };
+    // ray test touch <
     case CHANGE_ADDRESS:
       return { ...state, address: action.address };
+    // ray test touch >
     case INIT_GENERAL_DATA_ACTION:
       return {
         ...state,
@@ -79,12 +85,14 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       return { ...state, wrappedTokenTransferableBalance: action.wrappedTokenTransferableBalance };
     case SHOW_ACCOUNT_MODAL:
       return { ...state, showAccountModal: action.showAccountModal };
+    // ray test touch <
     case SET_INSTALLED_EXTENSION:
       return {
         ...state,
         extensions: action.extensions,
         address: action.extensions.length ? state.address : ''
       };
+    // ray test touch >
     default:
       return state;
   }

@@ -9,7 +9,9 @@ import { vaultReducer as vault } from './vault.reducer';
 const generalPersistConfig = {
   key: 'general',
   storage: storage,
+  // ray test touch <
   whitelist: ['address']
+  // ray test touch >
 };
 
 const rootReducer = combineReducers({

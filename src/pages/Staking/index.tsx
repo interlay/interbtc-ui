@@ -112,7 +112,9 @@ const Staking = (): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
+  // ray test touch <
   const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+  // ray test touch >
 
   const {
     governanceTokenBalanceIdle,

@@ -105,9 +105,11 @@ const IssueForm = (): JSX.Element | null => {
 
   const handleError = useErrorHandler();
 
+  // ray test touch <
   const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
+  // ray test touch >
 
   const { governanceTokenBalanceLoading, governanceTokenBalance } = useGovernanceTokenBalance();
 
