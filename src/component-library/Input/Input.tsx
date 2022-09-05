@@ -14,16 +14,18 @@ type InputProps = Props & NativeAttrs;
 // TODO: needs to be implemented with react-aria
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ startAdornment, endAdornment, className, style, ...props }, ref): JSX.Element => (
-    <Wrapper
-      $hasStartAdornment={!!startAdornment}
-      $hasEndAdornment={!!endAdornment}
-      className={className}
-      style={style}
-    >
-      <Adornment>{startAdornment}</Adornment>
-      <BaseInput ref={ref} type='text' {...props} />
-      <Adornment>{endAdornment}</Adornment>
-    </Wrapper>
+    <div>
+      <Wrapper
+        $hasStartAdornment={!!startAdornment}
+        $hasEndAdornment={!!endAdornment}
+        className={className}
+        style={style}
+      >
+        <Adornment>{startAdornment}</Adornment>
+        <BaseInput ref={ref} type='text' {...props} />
+        <Adornment>{endAdornment}</Adornment>
+      </Wrapper>
+    </div>
   )
 );
 Input.displayName = 'Input';
