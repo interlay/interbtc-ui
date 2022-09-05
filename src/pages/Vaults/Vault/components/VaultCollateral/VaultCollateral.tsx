@@ -24,9 +24,9 @@ import {
 } from './VaultCollateral.styles';
 
 const getRanges = (liquidationThreshold: Big, premiumRedeemThreshold: Big, secureThreshold: Big) => {
-  const formattedLiquidationThreshold = Math.trunc(liquidationThreshold.toNumber() * 100);
-  const formattedPremiumRedeemThreshold = Math.trunc(premiumRedeemThreshold.toNumber() * 100);
-  const formattedSecureThreshold = Math.trunc(secureThreshold.toNumber() * 100);
+  const formattedLiquidationThreshold = Math.trunc(liquidationThreshold.mul(100).toNumber());
+  const formattedPremiumRedeemThreshold = Math.trunc(premiumRedeemThreshold.mul(100).toNumber());
+  const formattedSecureThreshold = Math.trunc(secureThreshold.mul(100).toNumber());
 
   return {
     error: { min: 0, max: formattedLiquidationThreshold },
@@ -95,8 +95,6 @@ const VaultCollateral = ({
     isModalOpen: false
   });
 
-  console.log(lockedAmountBTC.toNumber());
-
   const handleClickVaultAction = (action: VaultActions) => setVaultAction({ vaultAction: action, isModalOpen: true });
 
   const ranges = useMemo(() => getRanges(liquidationThreshold, premiumRedeemThreshold, secureThreshold), [
@@ -106,7 +104,7 @@ const VaultCollateral = ({
   ]);
 
   const isInfinityCollateralization = !collateralScore;
-  const score = collateralScore?.toNumber() ?? 0;
+  const score = collateralScore?.mul(100).toNumber() ?? 0;
   const collateralStatus = getCollateralStatus(score, ranges, isInfinityCollateralization);
   const collateralLabel = getVaultCollateralLabel(collateralStatus, ranges);
 
