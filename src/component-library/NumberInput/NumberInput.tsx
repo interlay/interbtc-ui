@@ -4,6 +4,8 @@ import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
 import * as React from 'react';
 
+import { useDOMRef } from '@/component-library/utils/dom';
+
 import { Input, InputProps } from '../Input';
 
 // Prevents the user from changing the input value using mouse wheel
@@ -27,8 +29,8 @@ type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'loc
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
 const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ onChange, ...props }, ref: any): JSX.Element => {
-    const inputRef = React.useRef<HTMLInputElement>(null);
+  ({ onChange, ...props }, ref): JSX.Element => {
+    const inputRef = useDOMRef(ref);
     const state = useNumberFieldState({
       ...props,
       locale,
@@ -45,20 +47,9 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
     }, [inputRef]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = chain(inputProps.onChange, onChange);
-    console.log(props);
+
     // TODO: should move props into <FormField/> when added here as a wrapper
-    return (
-      <Input
-        {...mergeProps(props, inputProps)}
-        onChange={handleChange}
-        ref={(e) => {
-          (inputRef as any).current = e;
-          console.log(ref);
-          console.log(e);
-          ref(e);
-        }}
-      />
-    );
+    return <Input {...mergeProps(props, inputProps)} onChange={handleChange} ref={inputRef} />;
   }
 );
 
