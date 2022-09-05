@@ -23,6 +23,7 @@ import { HYDRA_URL } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
+import { getCurrencyEqQuery } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 interface VaultData {
@@ -86,7 +87,6 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   // or by extending the vaults.get (VaultExt) api call
   const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
-  console.log('vaultExt', vaultExt);
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
     accountId,
@@ -129,6 +129,8 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
   );
 
+  const collateralTokenCondition = getCurrencyEqQuery(vault.backingCollateral.currency)
+
   // TODO: move issues and redeems to separate hook
   const issues = await fetch(HYDRA_URL, {
     method: 'POST',
@@ -137,7 +139,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     },
     body: JSON.stringify({
       query: issueCountQuery(
-        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}, status_eq: Pending` // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
+        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending` // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
       )
     })
   });
@@ -149,7 +151,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     },
     body: JSON.stringify({
       query: redeemCountQuery(
-        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}, status_eq: Pending` // TODO: add asset_eq, see comment above
+        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending` // TODO: add asset_eq, see comment above
       )
     })
   });

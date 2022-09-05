@@ -37,6 +37,7 @@ import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getCurrency } from '@/utils/helpers/currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
 
+import { useGetCurrencies } from '../../../utils/hooks/api/use-get-currencies';
 import { VaultsHeader } from '../VaultsHeader';
 import ClaimRewardsButton from './ClaimRewardsButton';
 import ReplaceTable from './ReplaceTable';
@@ -68,7 +69,7 @@ const Vault = (): JSX.Element => {
 
   const {
     [URL_PARAMETERS.VAULT.ACCOUNT]: selectedVaultAccountAddress,
-    [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateralIdLiteral
+    [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateralTokenTicker
   } = useParams<Record<string, string>>();
 
   const handleUpdateCollateralModalClose = () => {
@@ -101,11 +102,13 @@ const Vault = (): JSX.Element => {
 
   const vaultAccountId = useAccountId(selectedVaultAccountAddress);
 
-  const collateralToken = React.useMemo(() => {
-    if (!vaultCollateralIdLiteral) return;
+  const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
-    return getCurrency(vaultCollateralIdLiteral as CollateralIdLiteral);
-  }, [vaultCollateralIdLiteral]);
+  const collateralToken = React.useMemo(() => {
+    if (!vaultCollateralTokenTicker || !currencies) return;
+
+    return getCurrency(currencies, vaultCollateralTokenTicker);
+  }, [vaultCollateralTokenTicker, currencies]);
 
   React.useEffect(() => {
     (async () => {
@@ -337,16 +340,10 @@ const Vault = (): JSX.Element => {
           </div>
         )}
         {collateralToken && (
-          <VaultIssueRequestsTable
-            vaultAddress={selectedVaultAccountAddress}
-            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
-          />
+          <VaultIssueRequestsTable vaultAddress={selectedVaultAccountAddress} collateralToken={collateralToken} />
         )}
         {collateralToken && (
-          <VaultRedeemRequestsTable
-            vaultAddress={selectedVaultAccountAddress}
-            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
-          />
+          <VaultRedeemRequestsTable vaultAddress={selectedVaultAccountAddress} collateralToken={collateralToken} />
         )}
         {collateralToken && (
           <ReplaceTable
