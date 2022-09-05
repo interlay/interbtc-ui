@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
-import { Card } from '../Card';
-import { theme } from '../theme';
+import { Card, theme } from '@/component-library';
 
 const Wrapper = styled(Card)`
   padding: 0 0 ${theme.spacing.spacing8} 0;

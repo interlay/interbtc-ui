@@ -1,22 +1,8 @@
-import { CoinPair } from '../CoinPair';
-import { CTA } from '../CTA';
-import { Table } from '../Table';
-import { Tokens } from '../types';
-import { CoinPairWrapper, NumericValue, Wrapper } from './NewVaultsTable.style';
+import { CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
 
-interface NewVaultsTableRow {
-  collateralCurrency: Tokens;
-  wrappedCurrency: Tokens;
-  minCollateralAmount: string;
-  collateralRate: string;
-  isActive: boolean;
-  isInstalled: boolean;
-}
+import { CoinPair, CTA, Table, TableProps } from '@/component-library';
 
-interface NewVaultsTableProps {
-  data: NewVaultsTableRow[];
-  onClickAddVault: (data: NewVaultsTableRow) => void;
-}
+import { CoinPairWrapper, NumericValue, Wrapper } from './AddVaults.style';
 
 const columns = [
   { name: 'Vault Pair', uid: 'pair' },
@@ -25,7 +11,24 @@ const columns = [
   { name: '', uid: 'action' }
 ];
 
-const NewVaultsTable = ({ data, onClickAddVault }: NewVaultsTableProps): JSX.Element => {
+type VaultsTableRow = {
+  collateralCurrency: CollateralIdLiteral;
+  wrappedCurrency: CurrencyIdLiteral;
+  minCollateralAmount: string;
+  collateralRate: string;
+  isActive: boolean;
+};
+
+type Props = {
+  data: VaultsTableRow[];
+  onClickAddVault: (data: VaultsTableRow) => void;
+};
+
+type InheritAttrs = Omit<TableProps, keyof Props | 'columns' | 'rows'>;
+
+type VaultsTableProps = Props & InheritAttrs;
+
+const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: VaultsTableProps): JSX.Element => {
   const rows = data.map((row, id) => {
     const { collateralCurrency, collateralRate, isActive, isInstalled, minCollateralAmount, wrappedCurrency } = row;
     return {
@@ -57,11 +60,11 @@ const NewVaultsTable = ({ data, onClickAddVault }: NewVaultsTableProps): JSX.Ele
   });
 
   return (
-    <Wrapper variant='bordered'>
-      <Table columns={columns} rows={rows} />
+    <Wrapper variant='bordered' className={className} style={style}>
+      <Table columns={columns} rows={rows} {...props} />
     </Wrapper>
   );
 };
 
-export { NewVaultsTable };
-export type { NewVaultsTableProps, NewVaultsTableRow };
+export { VaultsTable };
+export type { VaultsTableProps, VaultsTableRow };
