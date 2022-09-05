@@ -46,6 +46,7 @@ const BaseLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
 `;
 
 const BaseIndeterminateLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
+  display: inline-flex;
   position: relative;
   text-indent: -9999em;
   border-top: ${(props) => props.$thickness}px solid ${theme.spinner.indeterminate.bg};
