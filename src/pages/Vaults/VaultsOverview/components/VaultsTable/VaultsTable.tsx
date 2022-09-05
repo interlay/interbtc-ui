@@ -2,7 +2,7 @@ import { CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
 
 import { CoinPair, CTA, Table, TableProps } from '@/component-library';
 
-import { CoinPairWrapper, NumericValue, Wrapper } from './AddVaults.style';
+import { CoinPairWrapper, NumericValue, Wrapper } from './VaultsTable.style';
 
 const columns = [
   { name: 'Vault Pair', uid: 'pair' },

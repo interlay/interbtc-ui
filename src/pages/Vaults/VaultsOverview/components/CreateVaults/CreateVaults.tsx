@@ -1,4 +1,3 @@
-import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import { useId } from '@react-aria/utils';
 import { useState } from 'react';
 
@@ -6,7 +5,8 @@ import { H2, Modal } from '@/component-library';
 import { AvailableVaultData, useGetAvailableVaults } from '@/utils/hooks/api/use-get-available-vaults';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
-import { VaultsTable, VaultsTableProps, VaultsTableRow } from './VaultsTable';
+import { CollateralForm } from '../CollateralForm';
+import { VaultsTable, VaultsTableProps, VaultsTableRow } from '../VaultsTable/VaultsTable';
 
 const isVaultInstalled = (vaults: VaultData[], currentVault: AvailableVaultData) =>
   vaults?.some((vault) => vault.collateralId === currentVault.collateralCurrency);
@@ -17,26 +17,19 @@ type Props = {
 
 type InheritAttrs = Omit<VaultsTableProps, keyof Props | 'data' | 'onClickAddVault'>;
 
-type AddVaultsProps = Props & InheritAttrs;
+type CreateVaultsProps = Props & InheritAttrs;
 
-const AddVaults = ({ vaults = [], ...props }: AddVaultsProps): JSX.Element => {
+const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element => {
   const titleId = useId();
   const availableVaults = useGetAvailableVaults();
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  const [selectedCurrency, setSelectedCurrency] = useState<CollateralIdLiteral | undefined>(undefined);
+  const [{ open, data: selectedVault }, setCollateralModal] = useState<{ data: VaultsTableRow; open: boolean }>({
+    data: {} as VaultsTableRow,
+    open: false
+  });
 
-  const handleOpenModal = (currency: CollateralIdLiteral) => {
-    setModalOpen(true);
-    setSelectedCurrency(currency);
-  };
+  const handleClickAddVault = (vault: VaultsTableRow) => setCollateralModal({ open: true, data: vault });
 
-  const onModalClose = () => {
-    setModalOpen(false);
-    setSelectedCurrency(undefined);
-  };
-
-  const handleClickAddVault = (vault: VaultsTableRow) =>
-    handleOpenModal(vault.collateralCurrency as CollateralIdLiteral);
+  const handleCloseModal = () => setCollateralModal((s) => ({ ...s, open: false }));
 
   const data: VaultsTableRow[] = availableVaults.map((vault) => ({
     collateralCurrency: vault.collateralCurrency,
@@ -51,11 +44,12 @@ const AddVaults = ({ vaults = [], ...props }: AddVaultsProps): JSX.Element => {
     <section>
       <H2 id={titleId}>Create a vault</H2>
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
-      <Modal open={modalOpen} onClose={onModalClose}>
-        {selectedCurrency}
+      <Modal open={open} onClose={handleCloseModal}>
+        <CollateralForm collateralToken={selectedVault.collateralCurrency} />
       </Modal>
     </section>
   );
 };
 
-export { AddVaults };
+export { CreateVaults };
+export type { CreateVaultsProps };
