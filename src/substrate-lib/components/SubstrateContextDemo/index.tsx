@@ -45,7 +45,7 @@ const Main = () => {
   return <>Main</>;
 };
 
-// http://localhost:3000/?rpc=wss://rpc.polkadot.io
+// http://localhost:3000/?rpc=wss://api-dev-kintsugi.interlay.io/parachain
 const SubstrateContextDemo = (): JSX.Element => {
   return (
     <SubstrateProvider>

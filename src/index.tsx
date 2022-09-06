@@ -13,8 +13,9 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 
 // ray test touch <
-import App from './App';
-// import SubstrateContextDemo from '@/substrate-lib/components/SubstrateContextDemo';
+// import App from './App';
+import SubstrateContextDemo from '@/substrate-lib/components/SubstrateContextDemo';
+
 // ray test touch >
 import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './store';
@@ -31,8 +32,8 @@ ReactDOM.render(
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
               {/* ray test touch < */}
-              <App />
-              {/* <SubstrateContextDemo /> */}
+              {/* <App /> */}
+              <SubstrateContextDemo />
               {/* ray test touch > */}
             </PersistGate>
           </Provider>
