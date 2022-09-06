@@ -69,6 +69,7 @@ type Props = {
   lockedAmountBTC: Big;
   liquidationPrice: string;
   vaultAddress: string;
+  hasVaultActions: boolean;
   collateralScore?: Big;
 };
 
@@ -88,6 +89,7 @@ const VaultCollateral = ({
   secureThreshold,
   // remainingCapacity,
   lockedAmountBTC,
+  hasVaultActions,
   ...props
 }: VaultCollateralProps): JSX.Element => {
   const [{ vaultAction, isModalOpen }, setVaultAction] = useState<SetVaultAction>({
@@ -137,49 +139,55 @@ const VaultCollateral = ({
           </StyledLiquidationPrice>
         </StyledCollateralWrapper>
         {/* TODO: buttons overflow on smaller screens */}
-        <StyledCTAGroups>
-          <StyledCTAGroup>
-            <CTA fullWidth onClick={() => handleClickVaultAction('deposit')}>
-              Deposit Collateral
-            </CTA>
-            <CTA fullWidth onClick={() => handleClickVaultAction('withdraw')}>
-              Withdraw Collateral
-            </CTA>
-          </StyledCTAGroup>
-          <StyledCTAGroup>
-            <CTA variant='secondary' fullWidth onClick={() => handleClickVaultAction('issue')}>
-              Issue kBTC
-            </CTA>
-            <CTA variant='secondary' fullWidth onClick={() => handleClickVaultAction('redeem')}>
-              Redeem kBTC
-            </CTA>
-          </StyledCTAGroup>
-        </StyledCTAGroups>
+        {hasVaultActions && (
+          <StyledCTAGroups>
+            <StyledCTAGroup>
+              <CTA fullWidth onClick={() => handleClickVaultAction('deposit')}>
+                Deposit Collateral
+              </CTA>
+              <CTA fullWidth onClick={() => handleClickVaultAction('withdraw')}>
+                Withdraw Collateral
+              </CTA>
+            </StyledCTAGroup>
+            <StyledCTAGroup>
+              <CTA variant='secondary' fullWidth onClick={() => handleClickVaultAction('issue')}>
+                Issue kBTC
+              </CTA>
+              <CTA variant='secondary' fullWidth onClick={() => handleClickVaultAction('redeem')}>
+                Redeem kBTC
+              </CTA>
+            </StyledCTAGroup>
+          </StyledCTAGroups>
+        )}
       </StyledWrapper>
-      <RequestIssueModal
-        open={isModalOpen && vaultAction === 'issue'}
-        vaultAddress={vaultAddress}
-        collateralToken={collateralToken}
-        onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
-      />
-      <RequestRedeemModal
-        open={isModalOpen && vaultAction === 'redeem'}
-        vaultAddress={vaultAddress}
-        collateralToken={collateralToken}
-        onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
-        lockedBTC={lockedBTC}
-      />
-      <UpdateCollateralModal
-        open={isModalOpen && (vaultAction === 'deposit' || vaultAction === 'withdraw')}
-        vaultAddress={vaultAddress}
-        collateralToken={collateralToken}
-        onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
-        collateralUpdateStatus={
-          vaultAction === 'deposit' ? CollateralUpdateStatus.Deposit : CollateralUpdateStatus.Withdraw
-        }
-        hasLockedBTC={lockedBTC.gt(BitcoinAmount.zero())}
-        collateralTokenAmount={collateral.raw}
-      />
+      {hasVaultActions && (
+        <>
+          <RequestIssueModal
+            open={isModalOpen && vaultAction === 'issue'}
+            vaultAddress={vaultAddress}
+            collateralToken={collateralToken}
+            onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
+          />
+          <RequestRedeemModal
+            open={isModalOpen && vaultAction === 'redeem'}
+            vaultAddress={vaultAddress}
+            collateralToken={collateralToken}
+            onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
+            lockedBTC={lockedBTC}
+          />
+          <UpdateCollateralModal
+            open={isModalOpen && (vaultAction === 'deposit' || vaultAction === 'withdraw')}
+            vaultAddress={vaultAddress}
+            collateralToken={collateralToken}
+            onClose={() => setVaultAction((s) => ({ ...s, isModalOpen: false }))}
+            collateralUpdateStatus={
+              vaultAction === 'deposit' ? CollateralUpdateStatus.Deposit : CollateralUpdateStatus.Withdraw
+            }
+            hasLockedBTC={lockedBTC.gt(BitcoinAmount.zero())}
+            collateralTokenAmount={collateral.raw}
+          />
+        </>
+      )}
       {/* <Modal open={isModalOpen} )}>
         {(vaultAction === 'deposit' || vaultAction === 'withdraw') && (
           <CollateralForm

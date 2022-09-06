@@ -35,6 +35,7 @@ type Props = {
   vaultAddress: string;
   collateralToken: CollateralCurrencyExt;
   lockedAmountBTC: Big;
+  hasManageVaultBtn: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -47,6 +48,7 @@ const VaultInfo = ({
   collateralToken,
   collateralAmount,
   lockedAmountBTC,
+  hasManageVaultBtn,
   ...props
 }: VaultInfoProps): JSX.Element => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -64,9 +66,11 @@ const VaultInfo = ({
   return (
     <StyledWrapper variant='bordered' {...props}>
       <StyledDl listItems={headlineItems} />
-      <CTA size='small' variant='outlined' onClick={() => setModalOpen(true)}>
-        Replace Vault
-      </CTA>
+      {hasManageVaultBtn && (
+        <CTA size='small' variant='outlined' onClick={() => setModalOpen(true)}>
+          Replace Vault
+        </CTA>
+      )}
       <RequestReplacementModal
         collateralAmount={collateralAmount}
         collateralToken={collateralToken}
