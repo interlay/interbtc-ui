@@ -1,4 +1,7 @@
 // ray test touch <
+import { KeyringPair } from '@polkadot/keyring/types';
+import * as React from 'react';
+
 import {
   ActionType,
   ApiStatus,
@@ -7,7 +10,34 @@ import {
   useSubstrateState
 } from '@/substrate-lib/substrate-context';
 
+// ray test touch <<
 const Main = () => {
+  // TODO: create `useSubstrateSecureState` hook
+  const { keyring } = useSubstrateState();
+  if (keyring === null) {
+    throw new Error('Something went wrong!');
+  }
+
+  // Get the list of accounts we possess the private key for
+  const keyringOptions = React.useMemo(() => {
+    return keyring.getPairs().map((account: KeyringPair) => ({
+      id: account.address,
+      name: (account.meta.name as string).toUpperCase(),
+      value: account.address
+    }));
+  }, [keyring]);
+
+  return (
+    <ul>
+      {keyringOptions.map((item) => (
+        <li key={item.id}>{item.name}</li>
+      ))}
+    </ul>
+  );
+};
+// ray test touch >>
+
+const SubstrateLoadingAndErrorHandlingWrapper = () => {
   const { apiStatus, apiError, keyringStatus, keyring, api } = useSubstrateState();
 
   switch (apiStatus) {
@@ -42,14 +72,14 @@ const Main = () => {
     throw new Error('Something went wrong!');
   }
 
-  return <>Main</>;
+  return <Main />;
 };
 
 // http://localhost:3000/?rpc=wss://api-dev-kintsugi.interlay.io/parachain
 const SubstrateContextDemo = (): JSX.Element => {
   return (
     <SubstrateProvider>
-      <Main />
+      <SubstrateLoadingAndErrorHandlingWrapper />
     </SubstrateProvider>
   );
 };
