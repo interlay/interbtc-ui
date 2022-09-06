@@ -10,7 +10,6 @@ import {
   useSubstrateState
 } from '@/substrate-lib/substrate-context';
 
-// ray test touch <<
 const Main = () => {
   // TODO: create `useSubstrateSecureState` hook
   const { keyring } = useSubstrateState();
@@ -35,7 +34,6 @@ const Main = () => {
     </ul>
   );
 };
-// ray test touch >>
 
 const SubstrateLoadingAndErrorHandlingWrapper = () => {
   const { apiStatus, apiError, keyringStatus, keyring, api } = useSubstrateState();
