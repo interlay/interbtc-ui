@@ -10,4 +10,8 @@ const StyledHelperText = styled.div`
   padding: ${theme.spacing.spacing1} 0;
 `;
 
-export { StyledHelperText };
+const StyledP = styled.p`
+  line-height: ${theme.lineHeight.s};
+`;
+
+export { StyledHelperText, StyledP };

@@ -1,15 +1,15 @@
-import * as React from 'react';
+import { forwardRef, LabelHTMLAttributes } from 'react';
 
 import { StyledLabel } from './Label.style';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 type Props = {};
 
-type NativeAttrs = Omit<React.LabelHTMLAttributes<unknown>, keyof Props>;
+type NativeAttrs = Omit<LabelHTMLAttributes<unknown>, keyof Props>;
 
 type LabelProps = Props & NativeAttrs;
 
-const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
+const Label = forwardRef<HTMLLabelElement, LabelProps>(
   ({ children, ...props }, ref): JSX.Element => (
     <StyledLabel {...props} ref={ref}>
       {children}

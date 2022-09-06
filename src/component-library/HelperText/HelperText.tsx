@@ -1,20 +1,40 @@
-import * as React from 'react';
+import { forwardRef, HTMLAttributes, ReactNode } from 'react';
 
-import { StyledHelperText } from './HelperText.style';
+import { StyledHelperText, StyledP } from './HelperText.style';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type Props = {};
+type Props = {
+  errorMessage?: ReactNode | ReactNode[];
+  errorMessageProps?: HTMLAttributes<HTMLElement>;
+  description?: ReactNode;
+  descriptionProps: HTMLAttributes<HTMLElement>;
+};
 
-type NativeAttrs = Omit<React.HTMLAttributes<unknown>, keyof Props>;
+type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
 type HelperTextProps = Props & NativeAttrs;
 
-const HelperText = React.forwardRef<HTMLDivElement, HelperTextProps>(
-  ({ children, ...props }, ref): JSX.Element => (
-    <StyledHelperText {...props} ref={ref}>
-      {children}
-    </StyledHelperText>
-  )
+const HelperText = forwardRef<HTMLDivElement, HelperTextProps>(
+  ({ errorMessage, errorMessageProps, description, descriptionProps, ...props }, ref): JSX.Element => {
+    const isErrorMessage = !!errorMessage;
+
+    const renderErrorMessage = () => {
+      if (Array.isArray(errorMessage)) {
+        return errorMessage.map((message, key) => <StyledP key={key}>{message}</StyledP>);
+      }
+
+      return errorMessage;
+    };
+
+    return (
+      <StyledHelperText {...props} ref={ref}>
+        {isErrorMessage ? (
+          <div {...errorMessageProps}>{renderErrorMessage()}</div>
+        ) : (
+          <div {...descriptionProps}>{description}</div>
+        )}
+      </StyledHelperText>
+    );
+  }
 );
 
 HelperText.displayName = 'HelperText';
