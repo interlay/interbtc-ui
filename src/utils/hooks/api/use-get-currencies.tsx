@@ -1,4 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, InterbtcPrimitivesCurrencyId, tokenSymbolToCurrency } from '@interlay/interbtc-api';
 import {
   InterBtc, // on Polkadot
   Interlay, // On Polkadot
@@ -13,8 +13,9 @@ import { useQuery, UseQueryResult } from 'react-query';
 const NATIVE_CURRENCIES: Array<CurrencyExt> = [Polkadot, InterBtc, Interlay, KBtc, Kintsugi, Kusama];
 
 type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
-  getCurrencyByTicker: (ticker: string) => CurrencyExt;
-  getForeignCurrencyById: (id: number) => CurrencyExt;
+  getCurrencyFromTicker: (ticker: string) => CurrencyExt;
+  getForeignCurrencyFromId: (id: number) => CurrencyExt;
+  getCurrencyFromIdPrimitive: (currencyPrimitive: InterbtcPrimitivesCurrencyId) => CurrencyExt;
 };
 
 const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
@@ -22,11 +23,11 @@ const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
   return [...NATIVE_CURRENCIES, ...foreignCurrencies];
 };
 
-// Returns all currencies, both native and foreign and helping utils to get currencies.
+// Returns all currencies, both native and foreign and helping utils to get CurrencyExt object.
 const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
   const queryResult = useQuery({ queryKey: 'getCurrencies', queryFn: getCurrencies, enabled: bridgeLoaded });
 
-  const getCurrencyByTicker = useCallback(
+  const getCurrencyFromTicker = useCallback(
     (ticker: string): CurrencyExt => {
       if (queryResult.data === undefined) {
         throw new Error('useGetCurrencies: Cannot call `getCurrencyByTicker` before currencies are loaded.');
@@ -42,7 +43,7 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
     [queryResult.data]
   );
 
-  const getForeignCurrencyById = useCallback(
+  const getForeignCurrencyFromId = useCallback(
     (id: number): CurrencyExt => {
       if (queryResult.data === undefined) {
         throw new Error('useGetCurrencies: Cannot call `getForeignCurrencyById` before currencies are loaded.');
@@ -58,7 +59,19 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
     [queryResult.data]
   );
 
-  return { ...queryResult, getCurrencyByTicker, getForeignCurrencyById };
+  const getCurrencyFromIdPrimitive = useCallback(
+    (currencyPrimitive: InterbtcPrimitivesCurrencyId) => {
+      if (currencyPrimitive.isToken) {
+        return tokenSymbolToCurrency(currencyPrimitive.asToken);
+      } else if (currencyPrimitive.isForeignAsset) {
+        return getForeignCurrencyFromId(currencyPrimitive.asForeignAsset.toNumber());
+      }
+      throw new Error(`No handling implemented for currencyId type of ${currencyPrimitive.type}`);
+    },
+    [getForeignCurrencyFromId]
+  );
+
+  return { ...queryResult, getCurrencyFromTicker, getForeignCurrencyFromId, getCurrencyFromIdPrimitive };
 };
 
 export { useGetCurrencies };

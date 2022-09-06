@@ -1,6 +1,7 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/solid';
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, InterbtcPrimitivesCurrencyId } from '@interlay/interbtc-api';
 import clsx from 'clsx';
+import { useErrorHandler } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
 import { VaultApiType } from '@/common/types/vault.types';
@@ -31,22 +32,17 @@ interface Props {
 interface VaultOptionProps {
   vault: VaultApiType | undefined;
   error?: boolean;
-  getForeignCurrencyById: (id: number) => CurrencyExt;
+  getCurrencyFromIdPrimitive: (idPrimitive: InterbtcPrimitivesCurrencyId) => CurrencyExt;
 }
-const VaultOption = ({ vault, error, getForeignCurrencyById }: VaultOptionProps): JSX.Element => {
+const VaultOption = ({ vault, error, getCurrencyFromIdPrimitive }: VaultOptionProps): JSX.Element => {
   const { t } = useTranslation();
-  console.log(vault);
+
   if (!vault) {
     return t('select_vault');
   }
 
-  const getCurrencyTicker = (vault: VaultApiType): string => {
-    const collateralCurrency = vault[0].currencies.collateral;
-    if (collateralCurrency.isToken) {
-      return collateralCurrency.asToken.toString();
-    }
-    return getForeignCurrencyById(collateralCurrency.asForeignAsset.toNumber()).ticker;
-  };
+  const getCurrencyTicker = (vault: VaultApiType): string =>
+    getCurrencyFromIdPrimitive(vault[0].currencies.collateral).ticker;
 
   return (
     <div className={clsx('flex', 'items-center')}>
@@ -75,9 +71,16 @@ const VaultOption = ({ vault, error, getForeignCurrencyById }: VaultOptionProps)
 
 const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, error }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { isLoading: isLoadingCurrencies, getForeignCurrencyById } = useGetCurrencies(true);
 
-  const isLoading = isPending || isLoadingCurrencies;
+  const {
+    isLoading: currenciesLoading,
+    isIdle: currenciesIdle,
+    getCurrencyFromIdPrimitive,
+    error: currenciesError
+  } = useGetCurrencies(true);
+  useErrorHandler(currenciesError);
+
+  const isLoading = isPending || currenciesIdle || currenciesLoading;
   return (
     <Select variant={SELECT_VARIANTS.formField} value={selectedVault} onChange={onChange}>
       {({ open }) => (
@@ -89,7 +92,11 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
                 {isLoading ? (
                   t('loading_ellipsis')
                 ) : vaults.length > 0 ? (
-                  <VaultOption vault={selectedVault} error={error} getForeignCurrencyById={getForeignCurrencyById} />
+                  <VaultOption
+                    vault={selectedVault}
+                    error={error}
+                    getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive}
+                  />
                 ) : (
                   t('not_enough_vault_capacity')
                 )}
@@ -102,7 +109,7 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
                     <SelectOption key={vault[0].toString()} value={vault}>
                       {({ selected, active }) => (
                         <span className={clsx('flex', 'justify-between', 'mr-4')}>
-                          <VaultOption vault={vault} getForeignCurrencyById={getForeignCurrencyById} />
+                          <VaultOption vault={vault} getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive} />
                           {selected ? <SelectCheck active={active} /> : null}
                         </span>
                       )}

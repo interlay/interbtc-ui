@@ -101,13 +101,19 @@ const Vault = (): JSX.Element => {
 
   const vaultAccountId = useAccountId(selectedVaultAccountAddress);
 
-  const { isLoading: isLoadingCurrencies, getCurrencyByTicker } = useGetCurrencies(bridgeLoaded);
+  const {
+    isLoading: currenciesLoading,
+    isIdle: currenciesIdle,
+    getCurrencyFromTicker,
+    error: currenciesError
+  } = useGetCurrencies(bridgeLoaded);
+  useErrorHandler(currenciesError);
 
   const collateralToken = React.useMemo(() => {
-    if (!vaultCollateralTokenTicker || isLoadingCurrencies) return;
+    if (!vaultCollateralTokenTicker || currenciesIdle || currenciesLoading) return;
 
-    return getCurrencyByTicker(vaultCollateralTokenTicker);
-  }, [vaultCollateralTokenTicker, isLoadingCurrencies, getCurrencyByTicker]);
+    return getCurrencyFromTicker(vaultCollateralTokenTicker);
+  }, [vaultCollateralTokenTicker, currenciesIdle, currenciesLoading, getCurrencyFromTicker]);
 
   React.useEffect(() => {
     (async () => {
