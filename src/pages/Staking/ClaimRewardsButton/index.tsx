@@ -19,9 +19,7 @@ const ClaimRewardsButton = ({
   claimableRewardAmount,
   ...rest
 }: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
-  // ray test touch <
   const { address } = useSelector((state: StoreType) => state.general);
-  // ray test touch >
 
   const queryClient = useQueryClient();
 

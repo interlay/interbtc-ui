@@ -12,9 +12,7 @@ const useGetAccounts = (): Array<InjectedAccountWithMeta> => {
   // with either state or context, or by wrapping react-query.
   const [accounts, setAccounts] = React.useState<Array<InjectedAccountWithMeta>>([]);
 
-  // ray test touch <
   const { extensions } = useSelector((state: StoreType) => state.general);
-  // ray test touch >
 
   React.useEffect(() => {
     if (!extensions.length) return;

@@ -25,9 +25,7 @@ import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
 const Topbar = (): JSX.Element => {
-  // ray test touch <
   const { extensions, address, bridgeLoaded, showAccountModal } = useSelector((state: StoreType) => state.general);
-  // ray test touch >
   const dispatch = useDispatch();
   const { t } = useTranslation();
 

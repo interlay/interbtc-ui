@@ -76,11 +76,9 @@ const CrossChainTransferForm = (): JSX.Element => {
     mode: 'onChange'
   });
 
-  // ray test touch <
   const { address, collateralTokenTransferableBalance, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
-  // ray test touch >
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!address) return;
