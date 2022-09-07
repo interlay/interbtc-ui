@@ -50,6 +50,10 @@ const SubstrateLoadingAndErrorHandlingWrapper = () => {
         throw new Error('Something went wrong!');
       }
       return <>Error Connecting to Substrate: Connection to websocket {apiError.target.url} failed.</>;
+    // ray test touch <<
+    case ApiStatus.Disconnected:
+      return <>Disconnected from Substrate</>;
+    // ray test touch >>
     default:
       throw new Error('Invalid ApiStatus!');
   }

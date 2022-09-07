@@ -38,7 +38,10 @@ enum ApiStatus {
   ConnectInit = 'CONNECT_INIT',
   Connecting = 'CONNECTING',
   Ready = 'READY',
-  Error = 'ERROR'
+  Error = 'ERROR',
+  // ray test touch <<
+  Disconnected = 'DISCONNECTED'
+  // ray test touch >>
 }
 
 enum ActionType {
@@ -46,6 +49,9 @@ enum ActionType {
   Connect = 'CONNECT',
   ConnectSuccess = 'CONNECT_SUCCESS',
   ConnectError = 'CONNECT_ERROR',
+  // ray test touch <<
+  ConnectFail = 'DISCONNECTED',
+  // ray test touch >>
   SetKeyringLoading = 'SET_KEYRING_LOADING',
   SetKeyringReady = 'SET_KEYRING_READY',
   SetKeyringError = 'SET_KEYRING_ERROR',
@@ -63,6 +69,9 @@ type Action =
   | { type: ActionType.Connect; payload: ApiPromise }
   | { type: ActionType.ConnectSuccess }
   | { type: ActionType.ConnectError; payload: APIError }
+  // ray test touch <<
+  | { type: ActionType.ConnectFail }
+  // ray test touch >>
   | { type: ActionType.SetKeyringLoading }
   | { type: ActionType.SetKeyringReady; payload: Keyring }
   | { type: ActionType.SetKeyringError }
@@ -137,6 +146,13 @@ const substrateReducer = (state: State, action: Action): State => {
         apiStatus: ApiStatus.Error,
         apiError: action.payload
       };
+    // ray test touch <<
+    case ActionType.ConnectFail:
+      return {
+        ...state,
+        apiStatus: ApiStatus.Disconnected
+      };
+    // ray test touch >>
     case ActionType.SetKeyringLoading:
       return {
         ...state,
@@ -180,16 +196,16 @@ const connect = async (state: State, dispatch: Dispatch) => {
   const provider = new WsProvider(socket);
 
   // 1. working
-  const _api = new ApiPromise({
-    provider,
-    rpc: jsonrpc
-  });
-
-  // 2. not working
-  // const _api = await ApiPromise.create({
+  // const _api = new ApiPromise({
   //   provider,
   //   rpc: jsonrpc
   // });
+
+  // 2. not working
+  const _api = await ApiPromise.create({
+    provider,
+    rpc: jsonrpc
+  });
 
   // 3. not working
   // const _api = (await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK)).api;
@@ -197,6 +213,9 @@ const connect = async (state: State, dispatch: Dispatch) => {
 
   // Set listeners for disconnection and reconnection event.
   _api.on('connected', () => {
+    // ray test touch <<
+    console.log('ray : ***** connected');
+    // ray test touch >>
     dispatch({
       type: ActionType.Connect,
       payload: _api
@@ -217,6 +236,11 @@ const connect = async (state: State, dispatch: Dispatch) => {
       payload: error
     })
   );
+  // ray test touch <<
+  _api.on('disconnected', () => {
+    dispatch({ type: ActionType.ConnectFail });
+  });
+  // ray test touch >>
 };
 
 const retrieveChainInfo = async (api: ApiPromise) => {
