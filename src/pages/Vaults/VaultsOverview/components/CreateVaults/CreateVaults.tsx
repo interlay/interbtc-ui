@@ -5,7 +5,7 @@ import { H2, Modal } from '@/component-library';
 import { AvailableVaultData, useGetAvailableVaults } from '@/utils/hooks/api/use-get-available-vaults';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
-import { CollateralForm } from '../CollateralForm';
+import { CreateVaultWizard } from '../CreateVaultWizard';
 import { VaultsTable, VaultsTableProps, VaultsTableRow } from '../VaultsTable/VaultsTable';
 
 const isVaultInstalled = (vaults: VaultData[], currentVault: AvailableVaultData) =>
@@ -22,7 +22,7 @@ type CreateVaultsProps = Props & InheritAttrs;
 const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element => {
   const titleId = useId();
   const availableVaults = useGetAvailableVaults();
-  const [{ open, data: selectedVault }, setCollateralModal] = useState<{ data: VaultsTableRow; open: boolean }>({
+  const [{ open }, setCollateralModal] = useState<{ data: VaultsTableRow; open: boolean }>({
     data: {} as VaultsTableRow,
     open: false
   });
@@ -45,7 +45,8 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
       <H2 id={titleId}>Create a vault</H2>
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
       <Modal open={open} onClose={handleCloseModal}>
-        <CollateralForm collateralToken={selectedVault.collateralCurrency} />
+        {/* <CollateralForm collateralToken={selectedVault.collateralCurrency} /> */}
+        <CreateVaultWizard />
       </Modal>
     </section>
   );
