@@ -214,7 +214,7 @@ const connect = async (state: State, dispatch: Dispatch) => {
   // Set listeners for disconnection and reconnection event.
   _api.on('connected', () => {
     // ray test touch <<
-    console.log('ray : ***** connected');
+    console.log('[substrate-context API] on:connected');
     // ray test touch >>
     dispatch({
       type: ActionType.Connect,
@@ -229,15 +229,26 @@ const connect = async (state: State, dispatch: Dispatch) => {
       loadAccounts(_api, dispatch);
     });
   });
-  _api.on('ready', () => dispatch({ type: ActionType.ConnectSuccess }));
-  _api.on('error', (error) =>
+  _api.on('ready', () => {
+    // ray test touch <<
+    console.log('[substrate-context API] on:ready');
+    // ray test touch >>
+    dispatch({ type: ActionType.ConnectSuccess });
+  });
+  _api.on('error', (error) => {
+    // ray test touch <<
+    console.log('[substrate-context API] on:error');
+    // ray test touch >>
     dispatch({
       type: ActionType.ConnectError,
       payload: error
-    })
-  );
+    });
+  });
   // ray test touch <<
   _api.on('disconnected', () => {
+    // ray test touch <<
+    console.log('[substrate-context API] on:disconnected');
+    // ray test touch >>
     dispatch({ type: ActionType.ConnectFail });
   });
   // ray test touch >>
