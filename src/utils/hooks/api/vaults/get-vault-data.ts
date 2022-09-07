@@ -54,30 +54,16 @@ interface VaultData {
     usd: number;
   };
   vaultAtRisk: boolean;
-  vaultStatus: string;
+  vaultStatus: VaultStatusExt;
   liquidationThreshold: Big;
   liquidationExchangeRate: Big | undefined;
   premiumRedeemThreshold: Big;
   secureThreshold: Big;
+  remainingCapacity: {
+    amount: MonetaryAmount<CollateralCurrencyExt>;
+    percentage: number;
+  };
 }
-
-// TODO: move these to dictionary file
-const getVaultStatus = (vaultStatus: VaultStatusExt) => {
-  switch (vaultStatus) {
-    case VaultStatusExt.Active: {
-      return 'Active';
-    }
-    case VaultStatusExt.Inactive: {
-      return 'Issuing disabled';
-    }
-    case VaultStatusExt.Liquidated: {
-      return 'Liquidated';
-    }
-    default: {
-      return 'Undefined';
-    }
-  }
-};
 
 const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
   const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
@@ -161,6 +147,11 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
 
   const pendingRequests = issuesCount.data.issuesConnection.totalCount + redeemsCount.data.redeemsConnection.totalCount;
 
+  // Calculate remaning capacity
+  const backedTokens = vaultExt.getBackedTokens();
+  const divisor = issuableTokens.add(backedTokens).toBig();
+  const remainingCapacity = issuableTokens.div(divisor);
+
   return {
     apy,
     collateralization,
@@ -189,11 +180,15 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
       usd: usdWrappedTokenRewards ?? 0
     },
     vaultAtRisk: collateralization ? collateralization?.lt(threshold) : false,
-    vaultStatus: getVaultStatus(vaultExt.status),
+    vaultStatus: vaultExt.status,
     liquidationThreshold,
     liquidationExchangeRate,
     premiumRedeemThreshold,
-    secureThreshold
+    secureThreshold,
+    remainingCapacity: {
+      amount: issuableTokens,
+      percentage: remainingCapacity.toBig().toNumber()
+    }
   };
 };
 
