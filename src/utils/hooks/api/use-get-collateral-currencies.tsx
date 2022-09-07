@@ -2,9 +2,8 @@ import { CollateralCurrencyExt, getCorrespondingCollateralCurrencies } from '@in
 import { useQuery, UseQueryResult } from 'react-query';
 
 const getCollateralCurrencies = async (): Promise<Array<CollateralCurrencyExt>> => {
-  // TODO: Replace with call to lib that returns all collateral currencies when ready on lib side.
   const nativeCollateralCurrencies = getCorrespondingCollateralCurrencies(window.bridge.getGovernanceCurrency());
-  const foreignCurrencies = await window.bridge.assetRegistry.getForeignAssets();
+  const foreignCurrencies = await window.bridge.assetRegistry.getCollateralForeignAssets();
   return [...nativeCollateralCurrencies, ...foreignCurrencies];
 };
 
