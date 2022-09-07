@@ -27,6 +27,7 @@ type Props = {
   wrappedTokenRewards: VaultData['wrappedTokenRewards'];
   governanceTokenRewards: VaultData['governanceTokenRewards'];
   collateralToken: CollateralCurrencyExt;
+  hasWithdrawRewardsBtn: boolean;
 };
 
 type NativeAttrs = HTMLAttributes<unknown>;
@@ -40,6 +41,7 @@ const Rewards = ({
   governanceTokenRewards,
   wrappedTokenRewards,
   collateralToken,
+  hasWithdrawRewardsBtn,
   ...props
 }: RewardsProps): JSX.Element => {
   const queryClient = useQueryClient();
@@ -78,21 +80,23 @@ const Rewards = ({
   const stakingTitle = (
     <StyledRewardsTitleWrapper>
       <StyledStakingTitle>Rewards</StyledStakingTitle>
-      <StyledCTA
-        size='small'
-        variant='outlined'
-        onClick={handleClickWithdrawRewards}
-        disabled={!hasWithdrawableRewards || claimRewardsMutation.isLoading}
-        $loading={claimRewardsMutation.isLoading}
-      >
-        {/* TODO: temporary approach. Loading spinner should be added to the CTA itself */}
-        {claimRewardsMutation.isLoading && (
-          <StyledLoadingSpinnerWrapper>
-            <LoadingSpinner variant='indeterminate' thickness={2} diameter={20} />
-          </StyledLoadingSpinnerWrapper>
-        )}
-        Withdraw all rewards
-      </StyledCTA>
+      {hasWithdrawRewardsBtn && (
+        <StyledCTA
+          size='small'
+          variant='outlined'
+          onClick={handleClickWithdrawRewards}
+          disabled={!hasWithdrawableRewards || claimRewardsMutation.isLoading}
+          $loading={claimRewardsMutation.isLoading}
+        >
+          {/* TODO: temporary approach. Loading spinner should be added to the CTA itself */}
+          {claimRewardsMutation.isLoading && (
+            <StyledLoadingSpinnerWrapper>
+              <LoadingSpinner variant='indeterminate' thickness={2} diameter={20} />
+            </StyledLoadingSpinnerWrapper>
+          )}
+          Withdraw all rewards
+        </StyledCTA>
+      )}
       {claimRewardsMutation.isError && (
         <ErrorModal
           open={claimRewardsMutation.isError}

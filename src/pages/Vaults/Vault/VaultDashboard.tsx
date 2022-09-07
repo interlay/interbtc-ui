@@ -1,7 +1,9 @@
 import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import { withErrorBoundary } from 'react-error-boundary';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
+import { StoreType } from '@/common/types/util.types';
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
@@ -17,6 +19,7 @@ import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo
 import { StyledCollateralSection, StyledRewards, StyledVaultCollateral } from './VaultDashboard.styles';
 
 const VaultDashboard = (): JSX.Element => {
+  const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
   const {
     [URL_PARAMETERS.VAULT.ACCOUNT]: selectedVaultAccountAddress,
     [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateral
@@ -71,6 +74,8 @@ const VaultDashboard = (): JSX.Element => {
     }
   ];
 
+  const isReadOnlyVault = !vaultClientLoaded || address !== selectedVaultAccountAddress;
+
   return (
     <MainContainer>
       <Stack>
@@ -81,6 +86,7 @@ const VaultDashboard = (): JSX.Element => {
           vaultAddress={selectedVaultAccountAddress}
           collateralToken={collateralToken}
           lockedAmountBTC={vault.issuedTokens.amount}
+          hasManageVaultBtn={!isReadOnlyVault}
         />
         <InsightsList items={insightsItems} />
         <StyledCollateralSection>
@@ -97,6 +103,7 @@ const VaultDashboard = (): JSX.Element => {
             remainingCapacity={vault.remainingCapacity.amount}
             lockedAmountBTC={vault.issuedTokens.amount}
             vaultAddress={selectedVaultAccountAddress}
+            hasVaultActions={!isReadOnlyVault}
           />
           <StyledRewards
             apy={vault.apy}
@@ -105,6 +112,7 @@ const VaultDashboard = (): JSX.Element => {
             wrappedId={vault.wrappedId}
             collateralToken={collateralToken}
             vaultAddress={selectedVaultAccountAddress}
+            hasWithdrawRewardsBtn={!isReadOnlyVault}
           />
         </StyledCollateralSection>
         <TransactionHistory transactions={transactions} />
