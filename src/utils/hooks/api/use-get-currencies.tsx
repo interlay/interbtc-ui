@@ -30,33 +30,33 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
   const getCurrencyFromTicker = useCallback(
     (ticker: string): CurrencyExt => {
       if (queryResult.data === undefined) {
-        throw new Error('useGetCurrencies: Cannot call `getCurrencyByTicker` before currencies are loaded.');
+        throw new Error('useGetCurrencies: Cannot call `getCurrencyFromTicker` before currencies are loaded.');
       }
 
       const targetCurrency = queryResult.data.find((currency) => currency.ticker === ticker);
       if (targetCurrency === undefined) {
-        throw new Error(`useGetCurrencies: getCurrencyByTicker: Currency with ticker ${ticker} not found.`);
+        throw new Error(`useGetCurrencies: getCurrencyFromTicker: Currency with ticker ${ticker} not found.`);
       }
 
       return targetCurrency;
     },
-    [queryResult.data]
+    [queryResult]
   );
 
   const getForeignCurrencyFromId = useCallback(
     (id: number): CurrencyExt => {
       if (queryResult.data === undefined) {
-        throw new Error('useGetCurrencies: Cannot call `getForeignCurrencyById` before currencies are loaded.');
+        throw new Error('useGetCurrencies: Cannot call `getForeignCurrencyFromId` before currencies are loaded.');
       }
 
-      const foreignCurrency = queryResult.data?.find((currency) => 'id' in currency && currency.id === id);
+      const foreignCurrency = queryResult.data.find((currency) => 'id' in currency && currency.id === id);
       if (foreignCurrency === undefined) {
-        throw new Error(`useGetCurrencies: getForeignCurrencyById: Foreign currency with id ${id} not found.`);
+        throw new Error(`useGetCurrencies: getForeignCurrencyFromId: Foreign currency with id ${id} not found.`);
       }
 
       return foreignCurrency;
     },
-    [queryResult.data]
+    [queryResult]
   );
 
   const getCurrencyFromIdPrimitive = useCallback(

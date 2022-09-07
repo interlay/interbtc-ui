@@ -9,6 +9,9 @@ import { TransactionTableData } from '@/pages/Vaults/Vault/components/Transactio
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import issuesFetcher, { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import redeemsFetcher, { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import { getCurrencyEqQuery } from '@/utils/helpers/currencies';
+
+import { useGetCurrencies } from '../use-get-currencies';
 
 // TODO: Issues/Redeems/ReplaceRequests types are missing
 const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) => {
@@ -61,8 +64,21 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
     : [];
 };
 
-const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: string): TransactionTableData[] => {
+const useGetVaultTransactions = (
+  address: string,
+  collateralTokenTicker: string,
+  bridgeLoaded: boolean
+): TransactionTableData[] => {
   const vaultId = window.bridge?.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+
+  const { getCurrencyFromTicker, isSuccess: currenciesSuccess, error: currenciesError } = useGetCurrencies(
+    bridgeLoaded
+  );
+  useErrorHandler(currenciesError);
+
+  const collateralTokenCondition = currenciesSuccess
+    ? getCurrencyEqQuery(getCurrencyFromTicker(collateralTokenTicker))
+    : '';
 
   // TODO: remove the dependency on legacy issuesFetcher and redeemFetcher
   const { data: issues, error: issuesError } = useQuery<any, Error>(
@@ -70,9 +86,10 @@ const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: stri
       ISSUES_FETCHER,
       0, // offset
       10, // limit
-      `vault: {accountId_eq: "${address}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`
+      `vault: {accountId_eq: "${address}", collateralToken: {${collateralTokenCondition}}}`
     ],
-    issuesFetcher
+    issuesFetcher,
+    { enabled: currenciesSuccess }
   );
   useErrorHandler(issuesError);
 
@@ -81,9 +98,10 @@ const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: stri
       REDEEMS_FETCHER,
       0, // offset
       10, // limit
-      `vault: {accountId_eq: "${address}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`
+      `vault: {accountId_eq: "${address}", collateralToken: {${collateralTokenCondition}}}`
     ],
-    redeemsFetcher
+    redeemsFetcher,
+    { enabled: currenciesSuccess }
   );
   useErrorHandler(redeemsError);
 
