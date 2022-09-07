@@ -1,32 +1,8 @@
 import { Meta, Story } from '@storybook/react';
-import { FieldError, useForm } from 'react-hook-form';
 
 import { Input, InputProps } from '.';
 
-const errorMessages = (error?: FieldError) => (error?.types ? Object.values(error.types).flat() : error?.message);
-
-const Template: Story<InputProps> = (args) => {
-  const { register, formState } = useForm<{ test: string }>({ mode: 'onChange', criteriaMode: 'all' });
-  return (
-    <Input
-      {...args}
-      {...register('test', {
-        minLength: {
-          value: 100,
-          message: 'faul'
-        },
-        maxLength: {
-          value: 1,
-          message: 'This input exceed maxLength.'
-        },
-        validate: {
-          a: () => false || 'Error message'
-        }
-      })}
-      errorMessage={errorMessages(formState.errors.test)}
-    />
-  );
-};
+const Template: Story<InputProps> = (args) => <Input {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
