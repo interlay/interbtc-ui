@@ -177,65 +177,77 @@ const substrateReducer = (state: State, action: Action): State => {
 // /
 // Connecting to the Substrate node
 const connect = async (state: State, dispatch: Dispatch) => {
-  const { socket, jsonrpc } = state;
+  try {
+    const { socket, jsonrpc } = state;
 
-  dispatch({ type: ActionType.ConnectInit });
+    dispatch({ type: ActionType.ConnectInit });
 
-  console.log(`Connected socket: ${socket}`);
-  // ray test touch <<
-  console.log('ray : ***** jsonrpc => ', jsonrpc);
-  // ray test touch >>
+    console.log(`Connected socket: ${socket}`);
 
-  // ray test touch <<
-  const provider = new WsProvider(socket);
+    // ray test touch <<
+    const provider = new WsProvider(socket);
 
-  // 1. working
-  // const _api = new ApiPromise({
-  //   provider,
-  //   rpc: jsonrpc
-  // });
+    // 1. working
+    // const _api = new ApiPromise({
+    //   provider,
+    //   rpc: jsonrpc
+    // });
 
-  // 2. not working
-  const _api = await ApiPromise.create({
-    provider,
-    rpc: jsonrpc
-  });
+    // 2. not working
+    const _api = await ApiPromise.create({
+      provider,
+      rpc: jsonrpc
+    });
 
-  // 3. not working
-  // const _api = (await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK)).api;
-  // ray test touch >>
-
-  // Set listeners for disconnection and reconnection event.
-  _api.on('connected', () => {
-    console.log('[substrate-context API] on:connected');
     dispatch({
       type: ActionType.Connect,
       payload: _api
     });
-    // `ready` event is not emitted upon reconnection and is checked explicitly here.
-    _api.isReady.then((_api: ApiPromise) => {
-      dispatch({ type: ActionType.ConnectSuccess });
-      // Keyring accounts were not being loaded properly because the `api` needs to first load
-      // the WASM file used for `sr25519`. Loading accounts at this point follows the recommended pattern:
-      // https://polkadot.js.org/docs/ui-keyring/start/init/#using-with-the-api
-      loadAccounts(_api, dispatch);
-    });
-  });
-  _api.on('ready', () => {
-    console.log('[substrate-context API] on:ready');
     dispatch({ type: ActionType.ConnectSuccess });
-  });
-  _api.on('error', (error) => {
-    console.log('[substrate-context API] on:error');
+
+    loadAccounts(_api, dispatch);
+
+    // 3. not working
+    // const _api = (await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK)).api;
+    // ray test touch >>
+
+    // Set listeners for disconnection and reconnection event.
+    _api.on('connected', () => {
+      console.log('[substrate-context API] on:connected');
+      dispatch({
+        type: ActionType.Connect,
+        payload: _api
+      });
+      // `ready` event is not emitted upon reconnection and is checked explicitly here.
+      _api.isReady.then((_api: ApiPromise) => {
+        dispatch({ type: ActionType.ConnectSuccess });
+        // Keyring accounts were not being loaded properly because the `api` needs to first load
+        // the WASM file used for `sr25519`. Loading accounts at this point follows the recommended pattern:
+        // https://polkadot.js.org/docs/ui-keyring/start/init/#using-with-the-api
+        loadAccounts(_api, dispatch);
+      });
+    });
+    _api.on('ready', () => {
+      console.log('[substrate-context API] on:ready');
+      dispatch({ type: ActionType.ConnectSuccess });
+    });
+    _api.on('error', (error) => {
+      console.log('[substrate-context API] on:error');
+      dispatch({
+        type: ActionType.ConnectError,
+        payload: error
+      });
+    });
+    _api.on('disconnected', () => {
+      console.log('[substrate-context API] on:disconnected');
+      dispatch({ type: ActionType.ConnectFail });
+    });
+  } catch (error) {
     dispatch({
       type: ActionType.ConnectError,
       payload: error
     });
-  });
-  _api.on('disconnected', () => {
-    console.log('[substrate-context API] on:disconnected');
-    dispatch({ type: ActionType.ConnectFail });
-  });
+  }
 };
 
 const retrieveChainInfo = async (api: ApiPromise) => {
