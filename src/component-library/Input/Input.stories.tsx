@@ -1,40 +1,40 @@
 import { Meta, Story } from '@storybook/react';
-import { FieldError, useForm } from 'react-hook-form';
 
 import { Input, InputProps } from '.';
 
-const errorMessages = (error?: FieldError) => (error?.types ? Object.values(error.types).flat() : error?.message);
-
-const Template: Story<InputProps> = (args) => {
-  const { register, formState } = useForm<{ test: string }>({ mode: 'onChange', criteriaMode: 'all' });
-  return (
-    <Input
-      {...args}
-      {...register('test', {
-        minLength: {
-          value: 100,
-          message: 'faul'
-        },
-        maxLength: {
-          value: 1,
-          message: 'This input exceed maxLength.'
-        },
-        validate: {
-          a: () => false || 'Error message'
-        }
-      })}
-      errorMessage={errorMessages(formState.errors.test)}
-    />
-  );
-};
+const Template: Story<InputProps> = (args) => <Input {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
   id: 'id',
-  name: 'name',
   placeholder: 'placeholder',
   label: 'Coin',
   description: "What's your favorite coin?"
+};
+
+const Error = Template.bind({});
+Error.args = {
+  id: 'id',
+  label: 'Coin',
+  description: "What's your favorite coin?",
+  errorMessage: 'Please enter your favorite coin!'
+};
+
+const MultipleErrors = Template.bind({});
+MultipleErrors.args = {
+  id: 'id',
+  label: 'Coin',
+  description: "What's your favorite coin?",
+  errorMessage: ['Please enter your favorite coin!', 'Please enter a valid coin!']
+};
+
+const Disabled = Template.bind({});
+Disabled.args = {
+  id: 'id',
+  label: 'Coin',
+  description: "What's your favorite coin?",
+  defaultValue: 'Bitcoin',
+  isDisabled: true
 };
 
 const EndAdornment = Template.bind({});
@@ -49,7 +49,7 @@ StartAdornment.args = {
   placeholder: 'placeholder'
 };
 
-export { Default, EndAdornment, StartAdornment };
+export { Default, Disabled, EndAdornment, Error, MultipleErrors, StartAdornment };
 
 export default {
   title: 'Forms/Input',

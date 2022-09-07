@@ -6,7 +6,7 @@ const Template: Story<HelperTextProps> = (args) => <HelperText {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  children: 'HelperText'
+  description: 'HelperText'
 };
 
 export { Default };

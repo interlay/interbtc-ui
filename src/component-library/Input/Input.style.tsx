@@ -2,7 +2,11 @@ import styled from 'styled-components';
 
 import { theme } from '../theme';
 
-const BaseInput = styled.input`
+type BaseInputProps = {
+  $isDisabled?: boolean;
+};
+
+const BaseInput = styled.input<BaseInputProps>`
   background-color: transparent;
   display: block;
   width: 100%;
@@ -13,14 +17,17 @@ const BaseInput = styled.input`
   font: inherit;
   letter-spacing: inherit;
   background: none;
-  color: currentcolor;
+  color: ${(props) => {
+    if (props.$isDisabled) return theme.input.disabled.color;
+    return theme.input.color;
+  }};
 
   &:focus {
     box-shadow: none;
   }
 
-  &::placeholder: {
-    color: ${theme.colors.textTertiary};
+  &::placeholder {
+    color: ${(props) => (props.$isDisabled ? theme.input.disabled.color : theme.colors.textTertiary)};
   }
 
   /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
@@ -35,25 +42,35 @@ const BaseInput = styled.input`
   }
 `;
 
-type WrapperProps = {
-  $hasStartAdornment: boolean;
-  $hasEndAdornment: boolean;
+type BaseInputWrapperProps = {
+  $hasStartAdornment?: boolean;
+  $hasEndAdornment?: boolean;
+  $hasError?: boolean;
+  $isDisabled?: boolean;
 };
 
-const Wrapper = styled.div<WrapperProps>`
-  box-shadow: ${theme.boxShadow.default};
+const BaseInputWrapper = styled.div<BaseInputWrapperProps>`
+  background-color: ${theme.input.background};
   border-radius: ${theme.rounded.md};
-  border: ${theme.border.default};
   color: ${theme.colors.textPrimary};
   box-sizing: border-box;
   display: flex;
   align-items: center;
   padding-left: ${(props) => props.$hasStartAdornment && theme.spacing.spacing2};
   padding-right: ${(props) => props.$hasEndAdornment && theme.spacing.spacing2};
+  border: ${(props) => {
+    if (props.$isDisabled) return theme.input.disabled.border;
+    if (props.$hasError) return theme.input.error.border;
+    return theme.border.default;
+  }};
 
-  // TODO: remove when implemented with react-aria
+  &:hover {
+    border: ${(props) => !props.$isDisabled && !props.$hasError && theme.input.hover.border};
+  }
+
   &:focus-within {
-    outline: ${theme.outline.default};
+    border: ${(props) => !props.$isDisabled && theme.input.focus.border};
+    box-shadow: ${(props) => !props.$isDisabled && theme.input.focus.boxShadow};
   }
 `;
 
@@ -64,4 +81,9 @@ const Adornment = styled.div`
   position: relative;
 `;
 
-export { Adornment, BaseInput, Wrapper };
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export { Adornment, BaseInput, BaseInputWrapper, Wrapper };

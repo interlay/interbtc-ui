@@ -1,6 +1,6 @@
 import { forwardRef, HTMLAttributes, ReactNode } from 'react';
 
-import { StyledHelperText, StyledP } from './HelperText.style';
+import { StyledHelperText, StyledSubHelperText } from './HelperText.style';
 
 type Props = {
   errorMessage?: ReactNode | ReactNode[];
@@ -19,14 +19,14 @@ const HelperText = forwardRef<HTMLDivElement, HelperTextProps>(
 
     const renderErrorMessage = () => {
       if (Array.isArray(errorMessage)) {
-        return errorMessage.map((message, key) => <StyledP key={key}>{message}</StyledP>);
+        return errorMessage.map((message) => <StyledSubHelperText key={message}>{message}</StyledSubHelperText>);
       }
 
       return errorMessage;
     };
 
     return (
-      <StyledHelperText {...props} ref={ref}>
+      <StyledHelperText {...props} $hasError={isErrorMessage} ref={ref}>
         {isErrorMessage ? (
           <div {...errorMessageProps}>{renderErrorMessage()}</div>
         ) : (

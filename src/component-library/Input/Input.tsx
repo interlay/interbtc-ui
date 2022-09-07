@@ -1,11 +1,11 @@
-import { useTextField } from '@react-aria/textfield';
+import { AriaTextFieldOptions, useTextField } from '@react-aria/textfield';
 import { mergeProps } from '@react-aria/utils';
 import { forwardRef, ReactNode } from 'react';
 
 import { HelperText, HelperTextProps } from '../HelperText';
 import { Label, LabelProps } from '../Label';
 import { useDOMRef } from '../utils/dom';
-import { Adornment, BaseInput, Wrapper } from './Input.style';
+import { Adornment, BaseInput, BaseInputWrapper, Wrapper } from './Input.style';
 
 type Props = {
   label?: ReactNode;
@@ -16,9 +16,12 @@ type Props = {
   defaultValue?: string;
 };
 
-type NativeAttrs = Omit<React.InputHTMLAttributes<unknown>, keyof Props>;
+type NativeAttrs = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>;
 
-type InheritAttrs = Omit<LabelProps & HelperTextProps, keyof Props & NativeAttrs>;
+type InheritAttrs = Omit<
+  LabelProps & HelperTextProps & AriaTextFieldOptions<'input'>,
+  (keyof Props & NativeAttrs) | 'onChange'
+>;
 
 type InputProps = Props & NativeAttrs & InheritAttrs;
 
@@ -26,27 +29,34 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, style, hidden, startAdornment, endAdornment, onChange, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
     const { labelProps, inputProps, descriptionProps, errorMessageProps } = useTextField(props, inputRef);
-    const { label, description, errorMessage } = props;
+    const { label, description, errorMessage, isDisabled } = props;
 
-    const hasHelpText = !!description || !!errorMessage;
+    const hasErrorMessage = !!errorMessage;
+    const hasHelpText = !!description || hasErrorMessage;
 
     return (
-      <div hidden={hidden} className={className} style={style}>
+      <Wrapper hidden={hidden} className={className} style={style}>
         {label && <Label {...labelProps}>{label}</Label>}
-        <Wrapper $hasStartAdornment={!!startAdornment} $hasEndAdornment={!!endAdornment}>
-          <Adornment>{startAdornment}</Adornment>
-          <BaseInput ref={inputRef} type='text' {...mergeProps(inputProps, { onChange })} />
-          <Adornment>{endAdornment}</Adornment>
-        </Wrapper>
+        <BaseInputWrapper
+          $hasStartAdornment={!!startAdornment}
+          $hasEndAdornment={!!endAdornment}
+          $hasError={hasErrorMessage}
+          $isDisabled={isDisabled}
+        >
+          {startAdornment && <Adornment>{startAdornment}</Adornment>}
+          <BaseInput $isDisabled={isDisabled} ref={inputRef} type='text' {...mergeProps(inputProps, { onChange })} />
+          {endAdornment && <Adornment>{endAdornment}</Adornment>}
+        </BaseInputWrapper>
         {hasHelpText && (
           <HelperText
             description={description}
             errorMessage={errorMessage}
             descriptionProps={descriptionProps}
             errorMessageProps={errorMessageProps}
+            isDisabled={isDisabled}
           />
         )}
-      </div>
+      </Wrapper>
     );
   }
 );

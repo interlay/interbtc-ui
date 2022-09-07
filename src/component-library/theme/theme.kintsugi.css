@@ -8,6 +8,7 @@
   --colors-yellow-05: rgba(255, 203, 0, 0.05);
   --colors-dark-yellow: #e6b700;
   --box-shadow-none: none;
+  --colors-slate-gray: #6a7994;
 }
 
 .theme-kintsugi {
@@ -41,4 +42,12 @@
   /* Progress Circle */
   --color-progress-circle-mask: var(--colors-mid-blue);
   --color-progress-circle-fill: var(--colors-yellow);
+  /* Input */
+  --colors-input-text: var(--colors-neutral-white);
+  --colors-input-default-border: var(--colors-neutral-white-25);
+  --colors-input-hover-border: var(--colors-slate-gray);
+  --colors-input-focus-border: var(--colors-neutral-white);
+  --colors-input-disabled-text: var(--colors-mid-blue);
+  --colors-input-disabled-border: var(--colors-mid-blue);
+  --colors-input-background: transparent;
 }
