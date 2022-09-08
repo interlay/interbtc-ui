@@ -13,9 +13,7 @@ import {
 const Main = () => {
   // TODO: create `useSubstrateSecureState` hook
   const { keyring } = useSubstrateState();
-  // ray test touch <<
   if (keyring === undefined) {
-    // ray test touch >>
     throw new Error('Something went wrong!');
   }
 
@@ -48,9 +46,7 @@ const SubstrateLoadingAndErrorHandlingWrapper = () => {
     case ApiStatus.Ready:
       break;
     case ApiStatus.Error:
-      // ray test touch <<
       if (apiError === undefined) {
-        // ray test touch >>
         throw new Error('Something went wrong!');
       }
       return <>Error Connecting to Substrate: Connection to websocket {apiError.target.url} failed.</>;
@@ -72,9 +68,7 @@ const SubstrateLoadingAndErrorHandlingWrapper = () => {
       throw new Error('Invalid KeyringStatus!');
   }
 
-  // ray test touch <<
   if (keyring === undefined || api === undefined) {
-    // ray test touch >>
     throw new Error('Something went wrong!');
   }
 

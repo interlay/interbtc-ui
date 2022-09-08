@@ -65,18 +65,12 @@ type Dispatch = (action: Action) => void;
 type State = {
   socket: string;
   jsonrpc: Record<string, Record<string, DefinitionRpcExt>>;
-  // ray test touch <<
   keyring: Keyring | undefined;
-  // ray test touch >>
   keyringStatus: KeyringStatus;
-  // ray test touch <<
   api: ApiPromise | undefined;
   apiError: APIError | undefined;
-  // ray test touch >>
   apiStatus: ApiStatus;
-  // ray test touch <<
   selectedAccount: KeyringPair | undefined;
-  // ray test touch >>
 };
 type SubstrateProviderProps = {
   children: React.ReactNode;
@@ -98,19 +92,12 @@ const initialState = {
     ...jsonrpc,
     ...config.CUSTOM_RPC_METHODS
   },
-  // ray test touch <<
-  // TODO: double-check `undefined` vs. `null`
   keyring: undefined,
-  // ray test touch >>
   keyringStatus: KeyringStatus.Idle,
-  // ray test touch <<
   api: undefined,
   apiError: undefined,
-  // ray test touch >>
   apiStatus: ApiStatus.Idle,
-  // ray test touch <<
   selectedAccount: undefined
-  // ray test touch >>
 };
 
 const registry = new TypeRegistry();
