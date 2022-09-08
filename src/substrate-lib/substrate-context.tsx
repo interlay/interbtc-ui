@@ -1,13 +1,8 @@
 // ray test touch <
-// ray test touch <<
 import { createInterBtcApi } from '@interlay/interbtc-api';
+// ray test touch <<
+import { ApiPromise } from '@polkadot/api';
 // ray test touch >>
-import {
-  ApiPromise
-  // ray test touch <<
-  // WsProvider
-  // ray test touch >>
-} from '@polkadot/api';
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { TypeRegistry } from '@polkadot/types/create';
@@ -20,9 +15,7 @@ import * as React from 'react';
 
 import config from '@/config/substrate-context';
 
-// ray test touch <<
 import * as constants from '../constants';
-// ray test touch >>
 
 const UNABLE_TO_INITIALISE_OPTIONS_MORE_THAN_ONCE = 'Unable to initialise options more than once';
 
@@ -140,13 +133,11 @@ const substrateReducer = (state: State, action: Action): State => {
         apiStatus: ApiStatus.Error,
         apiError: action.payload
       };
-    // ray test touch <<
     case ActionType.ConnectFail:
       return {
         ...state,
         apiStatus: ApiStatus.Disconnected
       };
-    // ray test touch >>
     case ActionType.SetKeyringLoading:
       return {
         ...state,
@@ -178,33 +169,12 @@ const substrateReducer = (state: State, action: Action): State => {
 // Connecting to the Substrate node
 const connect = async (state: State, dispatch: Dispatch) => {
   try {
-    const {
-      socket
-      // ray test touch <<
-      // jsonrpc
-      // ray test touch >>
-    } = state;
+    const { socket } = state;
 
     dispatch({ type: ActionType.ConnectInit });
 
     console.log(`Connected socket: ${socket}`);
 
-    // ray test touch <<
-    // const provider = new WsProvider(socket);
-
-    // 1. working
-    // const _api = new ApiPromise({
-    //   provider,
-    //   rpc: jsonrpc
-    // });
-
-    // 2. not working
-    // const _api = await ApiPromise.create({
-    //   provider,
-    //   rpc: jsonrpc
-    // });
-
-    // 3. not working
     const _api = (await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK)).api;
 
     dispatch({
@@ -214,7 +184,6 @@ const connect = async (state: State, dispatch: Dispatch) => {
     dispatch({ type: ActionType.ConnectSuccess });
 
     loadAccounts(_api, dispatch);
-    // ray test touch >>
 
     // Set listeners for disconnection and reconnection event.
     _api.on('connected', () => {
