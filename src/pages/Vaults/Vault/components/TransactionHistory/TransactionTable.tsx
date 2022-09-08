@@ -1,6 +1,6 @@
 import { HTMLAttributes, memo } from 'react';
 
-import { StyledDate, StyledRequest, StyledRequestCell, StyledTable } from './TransactionHistory.styles';
+import { StyledDate, StyledLink, StyledRequest, StyledRequestCell, StyledTable } from './TransactionHistory.styles';
 import { TransactionStatus, TransactionStatusTag } from './TransactionStatusTag';
 
 const columns = [
@@ -27,9 +27,11 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
 type TransactionTableProps = Props & NativeAttrs;
 
-const RequestCell = ({ request, date }: any) => (
+const RequestCell = ({ request, date, requestData, callBack }: any) => (
   <StyledRequestCell>
-    <StyledRequest>{request}</StyledRequest>
+    <StyledRequest onClick={() => callBack(requestData)}>
+      {requestData ? <StyledLink>{request}</StyledLink> : requestData}
+    </StyledRequest>
     <StyledDate color='tertiary'>{date}</StyledDate>
   </StyledRequestCell>
 );
@@ -38,8 +40,8 @@ const _TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Eleme
   const rows = data.map(({ request, requestData, amount, date, status }, key) => ({
     id: key,
     amount,
-    request: <RequestCell request={request} date={date} />,
-    status: <TransactionStatusTag onClick={() => props.callBack(requestData)} status={status} />
+    request: <RequestCell requestData={requestData} callBack={props.callBack} request={request} date={date} />,
+    status: <TransactionStatusTag status={status} />
   }));
 
   return <StyledTable columns={columns} rows={rows} {...props} />;
