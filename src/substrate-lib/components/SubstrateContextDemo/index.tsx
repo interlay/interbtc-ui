@@ -32,11 +32,9 @@ const Main = () => {
   );
 };
 
-// ray test touch <<
 interface SubstrateLoadingAndErrorHandlingWrapperProps {
   children: React.ReactNode;
 }
-// ray test touch >>
 
 const SubstrateLoadingAndErrorHandlingWrapper = ({ children }: SubstrateLoadingAndErrorHandlingWrapperProps) => {
   const { apiStatus, apiError, keyringStatus, keyring, api } = useSubstrateState();
