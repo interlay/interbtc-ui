@@ -19,10 +19,11 @@ type InheritAttrs = Omit<VaultsTableProps, keyof Props | 'data' | 'onClickAddVau
 
 type CreateVaultsProps = Props & InheritAttrs;
 
+// TODO: should not show to read-only
 const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element => {
   const titleId = useId();
   const availableVaults = useGetAvailableVaults();
-  const [{ open }, setCollateralModal] = useState<{ data: VaultsTableRow; open: boolean }>({
+  const [{ open, data: selectedVault }, setCollateralModal] = useState<{ data: VaultsTableRow; open: boolean }>({
     data: {} as VaultsTableRow,
     open: false
   });
@@ -37,7 +38,9 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
     minCollateralAmount: vault.minimumCollateral.toNumber().toFixed(2),
     collateralRate: vault.secureCollateralThreshold.toNumber().toFixed(2),
     isActive: true,
-    isInstalled: isVaultInstalled(vaults, vault)
+    // TODO: restore function
+    // eslint-disable-next-line no-constant-condition
+    isInstalled: false ? isVaultInstalled(vaults, vault) : false
   }));
 
   return (
@@ -45,8 +48,7 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
       <H2 id={titleId}>Create a vault</H2>
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
       <Modal open={open} onClose={handleCloseModal}>
-        {/* <CollateralForm collateralToken={selectedVault.collateralCurrency} /> */}
-        <CreateVaultWizard />
+        <CreateVaultWizard vault={selectedVault} />
       </Modal>
     </section>
   );

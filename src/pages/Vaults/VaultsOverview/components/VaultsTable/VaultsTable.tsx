@@ -17,6 +17,7 @@ type VaultsTableRow = {
   minCollateralAmount: string;
   collateralRate: string;
   isActive: boolean;
+  isInstalled: boolean;
 };
 
 type Props = {
@@ -44,7 +45,7 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
           {minCollateralAmount} {collateralCurrency}
         </NumericValue>
       ),
-      'collateral-rate': <NumericValue key='collateral_rate'>{collateralRate}‰</NumericValue>,
+      'collateral-rate': <NumericValue key='collateral_rate'>{collateralRate}%</NumericValue>,
       action: (
         <CTA
           key='cta'
