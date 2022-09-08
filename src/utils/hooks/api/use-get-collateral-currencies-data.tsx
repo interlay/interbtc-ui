@@ -22,8 +22,10 @@ const getCollateralCurrencyData = async (collateralToken: CollateralCurrencyExt)
     ]);
 
     return { liquidationThreshold, secureThreshold, exchangeRate };
-  } catch {
-    throw new Error(`useGetCollateralThresholds: error getting thresholds for currency ${collateralToken.ticker}.`);
+  } catch (error) {
+    throw new Error(
+      `useGetCollateralCurrenciesData: error getting data for currency ${collateralToken.ticker}: ${error.message}`
+    );
   }
 };
 
