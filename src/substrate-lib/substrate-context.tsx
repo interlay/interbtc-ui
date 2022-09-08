@@ -1,8 +1,6 @@
 // ray test touch <
 import { createInterBtcApi } from '@interlay/interbtc-api';
-// ray test touch <<
 import { ApiPromise } from '@polkadot/api';
-// ray test touch >>
 import { web3Accounts, web3Enable } from '@polkadot/extension-dapp';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { TypeRegistry } from '@polkadot/types/create';
