@@ -1,4 +1,3 @@
-// ray test touch <<
 import { ActionType, ApiStatus, KeyringStatus, useSubstrateState } from '@/substrate-lib/substrate-context';
 
 interface SubstrateLoadingAndErrorHandlingWrapperProps {
@@ -52,4 +51,3 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
 };
 
 export default SubstrateLoadingAndErrorHandlingWrapper;
-// ray test touch >>
