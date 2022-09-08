@@ -72,6 +72,10 @@ type State = {
   apiStatus: ApiStatus;
   selectedAccount: KeyringPair | undefined;
 };
+type SecureState = Omit<State, 'keyring' | 'api'> & {
+  keyring: Keyring;
+  api: ApiPromise;
+};
 type SubstrateProviderProps = {
   children: React.ReactNode;
   socket?: string;
@@ -307,7 +311,26 @@ const useSubstrate = (): SubstrateStateContextInterface => {
   }
   return context;
 };
+
 const useSubstrateState = (): State => useSubstrate().state; // TODO: it could be redundant in favor of useSubstrate
 
-export { ActionType, ApiStatus, KeyringStatus, SubstrateProvider, useSubstrate, useSubstrateState };
+const useSubstrateSecureState = (): SecureState => {
+  const state = useSubstrateState();
+
+  return {
+    ...state,
+    api: state.api as ApiPromise,
+    keyring: state.keyring as Keyring
+  };
+};
+
+export {
+  ActionType,
+  ApiStatus,
+  KeyringStatus,
+  SubstrateProvider,
+  useSubstrate,
+  useSubstrateSecureState,
+  useSubstrateState
+};
 // ray test touch >

@@ -7,15 +7,12 @@ import {
   ApiStatus,
   KeyringStatus,
   SubstrateProvider,
+  useSubstrateSecureState,
   useSubstrateState
 } from '@/substrate-lib/substrate-context';
 
 const Main = () => {
-  // TODO: create `useSubstrateSecureState` hook
-  const { keyring } = useSubstrateState();
-  if (keyring === undefined) {
-    throw new Error('Something went wrong!');
-  }
+  const { keyring } = useSubstrateSecureState();
 
   // Get the list of accounts we possess the private key for
   const keyringOptions = React.useMemo(() => {
