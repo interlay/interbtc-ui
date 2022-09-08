@@ -10,13 +10,16 @@ const columns = [
 ];
 
 type TransactionTableData = {
+  id: string;
   request: string;
   date: string;
   amount: string;
   status: TransactionStatus;
+  requestData: any;
 };
 
 type Props = {
+  callBack: (data: any) => void;
   data: TransactionTableData[];
 };
 
@@ -32,11 +35,11 @@ const RequestCell = ({ request, date }: any) => (
 );
 
 const _TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Element => {
-  const rows = data.map(({ request, amount, date, status }, key) => ({
+  const rows = data.map(({ request, requestData, amount, date, status }, key) => ({
     id: key,
     amount,
     request: <RequestCell request={request} date={date} />,
-    status: <TransactionStatusTag status={status} />
+    status: <TransactionStatusTag onClick={() => props.callBack(requestData)} status={status} />
   }));
 
   return <StyledTable columns={columns} rows={rows} {...props} />;
