@@ -5,7 +5,8 @@ import { ChainBalance, createInterBtcApi, FaucetClient, SecurityStatusCode } fro
 import { Keyring } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import * as React from 'react';
-import { withErrorBoundary } from 'react-error-boundary';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -25,11 +26,12 @@ import {
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
-import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { APP_NAME, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import InterlayHelmet from '@/parts/InterlayHelmet';
 import Layout from '@/parts/Layout';
+import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
+import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -120,24 +122,20 @@ const App = (): JSX.Element => {
     })();
   }, [bridgeLoaded, loadFaucet]);
 
-  // Maybe loads the vault client - only if the current address is also registered as a vault
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
-    if (!address) return;
-
-    const id = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, address);
-
-    (async () => {
-      try {
-        dispatch(isVaultClientLoaded(false));
-        const vault = await window.bridge.vaults.get(id, RELAY_CHAIN_NATIVE_TOKEN);
-        dispatch(isVaultClientLoaded(!!vault));
-      } catch (error) {
-        // TODO: should add error handling
-        console.log('[App React.useEffect 1] error.message => ', error.message);
-      }
-    })();
-  }, [bridgeLoaded, address, dispatch]);
+  // Detects if connected account is vault operator.
+  const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
+    [GRAPHQL_FETCHER, vaultsByAccountIdQuery(address)],
+    graphqlFetcher<GraphqlReturn<string[]>>(),
+    {
+      enabled: bridgeLoaded && !!address,
+      onSuccess: ({ data: { vaults } }) => {
+        const isVaultOperator = vaults.length > 0;
+        dispatch(isVaultClientLoaded(isVaultOperator));
+      },
+      onError: (error) => console.log('[App useQuery] error.message => ', error.message)
+    }
+  );
+  useErrorHandler(vaultsError);
 
   // Initializes data on app bootstrap
   React.useEffect(() => {
