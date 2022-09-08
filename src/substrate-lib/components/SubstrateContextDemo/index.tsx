@@ -32,7 +32,13 @@ const Main = () => {
   );
 };
 
-const SubstrateLoadingAndErrorHandlingWrapper = () => {
+// ray test touch <<
+interface SubstrateLoadingAndErrorHandlingWrapperProps {
+  children: React.ReactNode;
+}
+// ray test touch >>
+
+const SubstrateLoadingAndErrorHandlingWrapper = ({ children }: SubstrateLoadingAndErrorHandlingWrapperProps) => {
   const { apiStatus, apiError, keyringStatus, keyring, api } = useSubstrateState();
 
   switch (apiStatus) {
@@ -69,14 +75,16 @@ const SubstrateLoadingAndErrorHandlingWrapper = () => {
     throw new Error('Something went wrong!');
   }
 
-  return <Main />;
+  return <>{children}</>;
 };
 
 // http://localhost:3000/?rpc=wss://api-dev-kintsugi.interlay.io/parachain
 const SubstrateContextDemo = (): JSX.Element => {
   return (
     <SubstrateProvider>
-      <SubstrateLoadingAndErrorHandlingWrapper />
+      <SubstrateLoadingAndErrorHandlingWrapper>
+        <Main />
+      </SubstrateLoadingAndErrorHandlingWrapper>
     </SubstrateProvider>
   );
 };
