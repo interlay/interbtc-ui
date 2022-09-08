@@ -1,4 +1,4 @@
-import { HYDRA_URL } from '@/constants';
+import { SQUID_URL } from '@/constants';
 
 const GRAPHQL_FETCHER = 'graphql-fetcher';
 
@@ -10,7 +10,7 @@ const graphqlFetcher = <T>() => async ({ queryKey }: any): Promise<GraphqlReturn
     throw new Error('Invalid key!');
   }
 
-  const response = await fetch(HYDRA_URL, {
+  const response = await fetch(SQUID_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

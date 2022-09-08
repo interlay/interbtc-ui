@@ -19,7 +19,7 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenAmount
 } from '@/config/relay-chains';
-import { HYDRA_URL } from '@/constants';
+import { SQUID_URL } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -115,7 +115,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   );
 
   // TODO: move issues and redeems to separate hook
-  const issues = await fetch(HYDRA_URL, {
+  const issues = await fetch(SQUID_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -127,7 +127,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     })
   });
 
-  const redeems = await fetch(HYDRA_URL, {
+  const redeems = await fetch(SQUID_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
