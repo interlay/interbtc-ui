@@ -9,8 +9,8 @@ import { ApiStatus, KeyringStatus } from '../../substrate-context';
 declare global {
   interface Window {
     // ray test touch <<
-    keyring: Keyring | null;
-    api: ApiPromise | null;
+    keyring: Keyring | undefined;
+    api: ApiPromise | undefined;
     // ray test touch >>
     // TODO: should type properly
     util: any;

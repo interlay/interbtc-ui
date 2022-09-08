@@ -14,7 +14,7 @@ const Main = () => {
   // TODO: create `useSubstrateSecureState` hook
   const { keyring } = useSubstrateState();
   // ray test touch <<
-  if (keyring === null) {
+  if (keyring === undefined) {
     // ray test touch >>
     throw new Error('Something went wrong!');
   }
@@ -49,7 +49,7 @@ const SubstrateLoadingAndErrorHandlingWrapper = () => {
       break;
     case ApiStatus.Error:
       // ray test touch <<
-      if (apiError === null) {
+      if (apiError === undefined) {
         // ray test touch >>
         throw new Error('Something went wrong!');
       }
@@ -73,7 +73,7 @@ const SubstrateLoadingAndErrorHandlingWrapper = () => {
   }
 
   // ray test touch <<
-  if (keyring === null || api === null) {
+  if (keyring === undefined || api === undefined) {
     // ray test touch >>
     throw new Error('Something went wrong!');
   }

@@ -66,16 +66,16 @@ type State = {
   socket: string;
   jsonrpc: Record<string, Record<string, DefinitionRpcExt>>;
   // ray test touch <<
-  keyring: Keyring | null;
+  keyring: Keyring | undefined;
   // ray test touch >>
   keyringStatus: KeyringStatus;
   // ray test touch <<
-  api: ApiPromise | null;
-  apiError: APIError | null;
+  api: ApiPromise | undefined;
+  apiError: APIError | undefined;
   // ray test touch >>
   apiStatus: ApiStatus;
   // ray test touch <<
-  selectedAccount: KeyringPair | null;
+  selectedAccount: KeyringPair | undefined;
   // ray test touch >>
 };
 type SubstrateProviderProps = {
@@ -100,16 +100,16 @@ const initialState = {
   },
   // ray test touch <<
   // TODO: double-check `undefined` vs. `null`
-  keyring: null,
+  keyring: undefined,
   // ray test touch >>
   keyringStatus: KeyringStatus.Idle,
   // ray test touch <<
-  api: null,
-  apiError: null,
+  api: undefined,
+  apiError: undefined,
   // ray test touch >>
   apiStatus: ApiStatus.Idle,
   // ray test touch <<
-  selectedAccount: null
+  selectedAccount: undefined
   // ray test touch >>
 };
 
@@ -160,7 +160,7 @@ const substrateReducer = (state: State, action: Action): State => {
     case ActionType.SetKeyringError:
       return {
         ...state,
-        keyring: null,
+        keyring: undefined,
         keyringStatus: KeyringStatus.Error
       };
     case ActionType.SetSelectedAccount:
