@@ -2,6 +2,7 @@
 import { KeyringPair } from '@polkadot/keyring/types';
 import * as React from 'react';
 
+import DeveloperConsole from '@/substrate-lib/components/DeveloperConsole';
 import {
   ActionType,
   ApiStatus,
@@ -83,6 +84,7 @@ const SubstrateContextDemo = (): JSX.Element => {
       <SubstrateLoadingAndErrorHandlingWrapper>
         <Main />
       </SubstrateLoadingAndErrorHandlingWrapper>
+      <DeveloperConsole />
     </SubstrateProvider>
   );
 };
