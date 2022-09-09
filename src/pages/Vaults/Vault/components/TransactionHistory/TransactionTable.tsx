@@ -1,6 +1,6 @@
 import { HTMLAttributes, memo } from 'react';
 
-import { StyledDate, StyledLink, StyledRequest, StyledRequestCell, StyledTable } from './TransactionHistory.styles';
+import { StyledDate, StyledRequest, StyledRequestCell, StyledTable } from './TransactionHistory.styles';
 import { TransactionStatus, TransactionStatusTag } from './TransactionStatusTag';
 
 const columns = [
@@ -29,9 +29,7 @@ type TransactionTableProps = Props & NativeAttrs;
 
 const RequestCell = ({ request, date, requestData, callBack }: any) => (
   <StyledRequestCell>
-    <StyledRequest onClick={() => callBack(requestData)}>
-      {requestData ? <StyledLink>{request}</StyledLink> : requestData}
-    </StyledRequest>
+    <StyledRequest onClick={() => callBack(requestData)}>{request}</StyledRequest>
     <StyledDate color='tertiary'>{date}</StyledDate>
   </StyledRequestCell>
 );

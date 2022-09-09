@@ -9,14 +9,6 @@ const StyledWrapper = styled(Card)`
   align-items: center;
 `;
 
-const StyledLink = styled.div`
-  color: hotpink;
-  cursor: pointer;
-  &:hover {
-    color: deepskyblue;
-  }
-`;
-
 const StyledStack = styled(Stack)`
   width: 100%;
   text-align: right;
@@ -69,7 +61,6 @@ const StyledTableWrapper = styled.div`
 
 export {
   StyledDate,
-  StyledLink,
   StyledRequest,
   StyledRequestCell,
   StyledStack,

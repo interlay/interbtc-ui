@@ -1,4 +1,4 @@
-import { IssueStatus, ReplaceRequestExt } from '@interlay/interbtc-api';
+import { IssueStatus, RedeemStatus, ReplaceRequestExt } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -8,14 +8,14 @@ import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { TransactionTableData } from '@/pages/Vaults/Vault/components/TransactionHistory/TransactionTable';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
-import redeemsFetcher, { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 
-// TODO: Bad stuff happening here! `getIssueWithStatus` and `getRedeemWithStatus are
+// TODO: Bad stuff happening here! `getIssueWithStatus` and `getRedeemWithStatus` are
 // mutating the data which is why `status` is being set in this funky way.
-const setStatus = (status: IssueStatus) => {
+const setIssueStatus = (status: IssueStatus) => {
   switch (status) {
     case IssueStatus.Completed:
       return 'completed';
@@ -29,6 +29,21 @@ const setStatus = (status: IssueStatus) => {
       return 'confirmed'; // yellow
     default:
       throw new Error('Invalid issue request status!');
+  }
+};
+
+const setRedeemStatus = (status: RedeemStatus) => {
+  switch (status) {
+    case RedeemStatus.Completed:
+      return 'completed';
+    case RedeemStatus.PendingWithBtcTxNotFound:
+      return 'pending';
+    case RedeemStatus.Reimbursed: // Reimbursed - green
+      return 'reimbursed';
+    case RedeemStatus.Retried: // Retried
+      return 'retried';
+    default:
+      return 'received';
   }
 };
 
@@ -55,7 +70,7 @@ const parseTransactionsData = (
           amount: issue.execution
             ? issue.execution.amountWrapped.toBig().toString()
             : issue.request.amountWrapped.toBig().toString(),
-          status: setStatus(issue.status),
+          status: setIssueStatus(issue.status),
           date: formatDateTimePrecise(new Date(issue.request.timestamp))
         };
       })
@@ -64,10 +79,16 @@ const parseTransactionsData = (
   const mappedRedeems = redeems
     ? redeems.map((redeem: any) => {
         return {
+          requestData: getRedeemWithStatus(
+            redeem,
+            stableBitcoinConfirmations,
+            stableParachainConfirmations,
+            currentActiveBlockNumber
+          ),
           id: redeem.id,
           request: 'Redeem',
           amount: redeem.request.requestedAmountBacking.toBig().toString(),
-          status: redeem.status.toLowerCase(),
+          status: setRedeemStatus(redeem.status),
           date: formatDateTimePrecise(new Date(redeem.request.timestamp))
         };
       })
