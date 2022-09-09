@@ -14,7 +14,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 // ray test touch <
 import DeveloperConsole from '@/substrate-lib/components/DeveloperConsole';
-// import SubstrateContextDemo from '@/substrate-lib/components/SubstrateContextDemo';
 import SubstrateLoadingAndErrorHandlingWrapper from '@/substrate-lib/components/SubstrateLoadingAndErrorHandlingWrapper';
 import { SubstrateProvider } from '@/substrate-lib/substrate-context';
 
@@ -41,7 +40,6 @@ ReactDOM.render(
                 </SubstrateLoadingAndErrorHandlingWrapper>
                 <DeveloperConsole />
               </SubstrateProvider>
-              {/* <SubstrateContextDemo /> */}
               {/* ray test touch > */}
             </PersistGate>
           </Provider>
