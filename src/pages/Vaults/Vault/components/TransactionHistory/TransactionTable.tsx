@@ -1,4 +1,4 @@
-import { HTMLAttributes, useState } from 'react';
+import React, { HTMLAttributes, useEffect, useState } from 'react';
 
 import IssueRequestModal from '@/pages/Transactions/IssueRequestsTable/IssueRequestModal';
 import RedeemRequestModal from '@/pages/Transactions/RedeemRequestsTable/RedeemRequestModal';
@@ -39,33 +39,41 @@ const RequestCell = ({ request, date }: any) => (
 );
 
 const TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Element => {
-  const [selectedRequest, setSelectedRequest] = useState<{ type: string; data: any } | undefined>(undefined);
+  const [selectedTableRow, setSelectedTableRow] = useState<any>(undefined);
 
-  const rows = data.map(({ request, requestData, amount, date, status }, key) => ({
+  const rows = data.map(({ request, amount, requestData, date, status }, key) => ({
     id: key,
     amount,
+    requestData,
+    type: request,
     request: <RequestCell request={request} date={date} />,
-    status: (
-      <TransactionStatusTag onClick={() => setSelectedRequest({ type: request, data: requestData })} status={status} />
-    )
+    status: <TransactionStatusTag status={status} />
   }));
+
+  const handleRowAction = (key: React.Key) => {
+    setSelectedTableRow(rows.find((row) => row.id === key));
+  };
+
+  useEffect(() => {
+    console.log(selectedTableRow);
+  }, [selectedTableRow]);
 
   return (
     <>
-      <StyledTable columns={columns} rows={rows} {...props} />
+      <StyledTable onRowAction={(key) => handleRowAction(key)} columns={columns} rows={rows} {...props} />
       {/* TODO: these modals should be refactored/replaced */}
-      {selectedRequest?.type === 'Issue' && (
+      {selectedTableRow?.type === 'Issue' && (
         <IssueRequestModal
-          open={selectedRequest.type === 'Issue'}
-          onClose={() => setSelectedRequest(undefined)}
-          request={selectedRequest.data}
+          open={selectedTableRow.type === 'Issue'}
+          onClose={() => setSelectedTableRow(undefined)}
+          request={selectedTableRow.requestData}
         />
       )}
-      {selectedRequest?.type === 'Redeem' && (
+      {selectedTableRow?.type === 'Redeem' && (
         <RedeemRequestModal
-          open={selectedRequest.type === 'Redeem'}
-          onClose={() => setSelectedRequest(undefined)}
-          request={selectedRequest.data}
+          open={selectedTableRow.type === 'Redeem'}
+          onClose={() => setSelectedTableRow(undefined)}
+          request={selectedTableRow.requestData}
         />
       )}
       ;

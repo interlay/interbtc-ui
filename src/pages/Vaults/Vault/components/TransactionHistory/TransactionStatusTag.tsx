@@ -13,7 +13,7 @@ const transactionStatus: Record<TransactionStatus, Status> = {
   completed: 'success',
   confirmed: 'warning',
   received: 'success',
-  retried: 'error'
+  retried: 'success'
 } as const;
 
 type Props = {
