@@ -16,13 +16,20 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 // TODO: Bad stuff happening here! `getIssueWithStatus` and `getRedeemWithStatus are
 // mutating the data which is why `status` is being set in this funky way.
 const setStatus = (status: IssueStatus) => {
-  return status === IssueStatus.Completed
-    ? 'completed'
-    : status === IssueStatus.Cancelled
-    ? 'cancelled'
-    : IssueStatus.Expired
-    ? 'expired'
-    : 'retried';
+  switch (status) {
+    case IssueStatus.Completed:
+      return 'completed';
+    case IssueStatus.Cancelled:
+    case IssueStatus.Expired:
+      return 'cancelled';
+    case IssueStatus.PendingWithBtcTxNotIncluded:
+    case IssueStatus.PendingWithTooFewConfirmations:
+      return 'pending';
+    case IssueStatus.PendingWithEnoughConfirmations:
+      return 'confirmed'; // yellow
+    default:
+      throw new Error('Invalid issue request status!');
+  }
 };
 
 // TODO: Issues/Redeems/ReplaceRequests types are missing
