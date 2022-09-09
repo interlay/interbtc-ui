@@ -5,13 +5,14 @@ import { Status } from '@/component-library/utils/prop-types';
 
 import { StatusTag, StatusTagProps } from '../StatusTag';
 
-type TransactionStatus = 'pending' | 'cancelled' | 'completed' | 'confirmed' | 'retried';
+type TransactionStatus = 'pending' | 'cancelled' | 'completed' | 'confirmed' | 'received' | 'retried';
 
 const transactionStatus: Record<TransactionStatus, Status> = {
   pending: 'warning',
   cancelled: 'error',
   completed: 'success',
   confirmed: 'warning',
+  received: 'success',
   retried: 'error'
 } as const;
 
