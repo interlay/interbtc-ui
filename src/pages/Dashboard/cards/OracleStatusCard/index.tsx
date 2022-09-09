@@ -1,3 +1,5 @@
+import { CurrencyExt } from '@interlay/interbtc-api';
+import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -62,7 +64,16 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    const exchangeRate = oracleStatus?.exchangeRate;
+    const exchangeRate = oracleStatus
+      ? new ExchangeRate<Bitcoin, CurrencyExt>(
+          Bitcoin,
+          RELAY_CHAIN_NATIVE_TOKEN,
+          oracleStatus.exchangeRate.toBig(),
+          0,
+          0
+        )
+      : 0;
+
     const oracleOnline = oracleStatus && oracleStatus.online;
 
     let statusText;
