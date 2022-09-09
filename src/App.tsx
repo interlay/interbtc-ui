@@ -1,7 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 import './i18n';
 
-import { ChainBalance, createInterBtcApi, FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
+import { ChainBalance, FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
 import { Keyring } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import * as React from 'react';
@@ -9,12 +9,10 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
 
 import {
   changeAddressAction,
   initGeneralDataAction,
-  isBridgeLoaded,
   isFaucetLoaded,
   isVaultClientLoaded,
   setInstalledExtensionAction,
@@ -27,7 +25,6 @@ import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import { APP_NAME, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
-import InterlayHelmet from '@/parts/InterlayHelmet';
 import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
@@ -35,7 +32,6 @@ import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import STATUSES from '@/utils/constants/statuses';
 import { CLASS_NAMES } from '@/utils/constants/styles';
 
 import * as constants from './constants';
@@ -64,29 +60,32 @@ const App = (): JSX.Element => {
     collateralTokenBalance,
     collateralTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
+  // ray test touch <<
   // eslint-disable-next-line max-len
-  const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
+  // const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
+  // ray test touch >>
   const dispatch = useDispatch();
 
   const unsubscribeCollateralTokenBalance = React.useRef<UnsubscriptionRef>(null);
   const unsubscribeWrappedTokenBalance = React.useRef<UnsubscriptionRef>(null);
   const unsubscribeGovernanceTokenBalance = React.useRef<UnsubscriptionRef>(null);
 
+  // ray test touch <<
   // Loads the main bridge API - connection to the bridge
-  const loadBridge = React.useCallback(async (): Promise<void> => {
-    try {
-      setBridgeStatus(STATUSES.PENDING);
-      // ray test touch <
-      window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
-      // ray test touch >
-      dispatch(isBridgeLoaded(true));
-      setBridgeStatus(STATUSES.RESOLVED);
-    } catch (error) {
-      toast.warn('Unable to connect to the BTC-Parachain.');
-      console.log('[loadBridge] error.message => ', error.message);
-      setBridgeStatus(STATUSES.REJECTED);
-    }
-  }, [dispatch]);
+  // const loadBridge = React.useCallback(async (): Promise<void> => {
+  //   try {
+  //     setBridgeStatus(STATUSES.PENDING);
+  //     // ray test touch <
+  //     window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
+  //     // ray test touch >
+  //     dispatch(isBridgeLoaded(true));
+  //     setBridgeStatus(STATUSES.RESOLVED);
+  //   } catch (error) {
+  //     console.log('[loadBridge] error.message => ', error.message);
+  //     setBridgeStatus(STATUSES.REJECTED);
+  //   }
+  // }, [dispatch]);
+  // ray test touch >>
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -98,19 +97,21 @@ const App = (): JSX.Element => {
     }
   }, [dispatch]);
 
+  // ray test touch <<
   // Loads the bridge
-  React.useEffect(() => {
-    if (bridgeLoaded) return; // Not necessary but for more clarity
-    if (bridgeStatus !== STATUSES.IDLE) return;
+  // React.useEffect(() => {
+  //   if (bridgeLoaded) return; // Not necessary but for more clarity
+  //   if (bridgeStatus !== STATUSES.IDLE) return;
 
-    (async () => {
-      try {
-        await loadBridge();
-      } catch (error) {
-        console.log('[App React.useEffect 7] error.message => ', error.message);
-      }
-    })();
-  }, [loadBridge, bridgeLoaded, bridgeStatus]);
+  //   (async () => {
+  //     try {
+  //       await loadBridge();
+  //     } catch (error) {
+  //       console.log('[App React.useEffect 7] error.message => ', error.message);
+  //     }
+  //   })();
+  // }, [loadBridge, bridgeLoaded, bridgeStatus]);
+  // ray test touch >>
 
   // Loads the faucet
   React.useEffect(() => {
@@ -378,8 +379,6 @@ const App = (): JSX.Element => {
 
   return (
     <>
-      <InterlayHelmet />
-      <ToastContainer position='top-right' autoClose={5000} hideProgressBar={false} />
       <Layout>
         <Route
           render={({ location }) => (

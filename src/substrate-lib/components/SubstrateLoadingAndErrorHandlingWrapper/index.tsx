@@ -1,3 +1,10 @@
+// ray test touch <<
+import { useDispatch } from 'react-redux';
+import { toast, ToastContainer } from 'react-toastify';
+
+import { isBridgeLoaded } from '@/common/actions/general.actions';
+import InterlayHelmet from '@/parts/InterlayHelmet';
+// ray test touch >>
 import {
   // ray test touch <
   // ActionType,
@@ -16,6 +23,10 @@ interface SubstrateLoadingAndErrorHandlingWrapperProps {
 const SubstrateLoadingAndErrorHandlingWrapper = ({
   children
 }: SubstrateLoadingAndErrorHandlingWrapperProps): JSX.Element => {
+  // ray test touch <<
+  const dispatch = useDispatch();
+  // ray test touch >>
+
   const {
     apiStatus,
     apiError,
@@ -33,11 +44,18 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
       // TODO: improve styling
       return <>Connecting to Substrate</>;
     case ApiStatus.Ready:
+      // ray test touch <<
+      // TODO: remove `isBridgeLoaded` & `bridgeLoaded` use cases via another PR
+      dispatch(isBridgeLoaded(true));
+      // ray test touch >>
       break;
     case ApiStatus.Error:
       if (apiError === undefined) {
         throw new Error('Something went wrong!');
       }
+      // ray test touch <<
+      toast.warn('Unable to connect to the BTC-Parachain.');
+      // ray test touch >>
       // TODO: improve styling
       return <>Error Connecting to Substrate: Connection to websocket {apiError.target.url} failed.</>;
     case ApiStatus.Disconnected:
@@ -71,7 +89,13 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
   }
   // ray test touch >
 
-  return <>{children}</>;
+  return (
+    <>
+      <InterlayHelmet />
+      <ToastContainer position='top-right' autoClose={5000} hideProgressBar={false} />
+      {children}
+    </>
+  );
 };
 
 export default SubstrateLoadingAndErrorHandlingWrapper;
