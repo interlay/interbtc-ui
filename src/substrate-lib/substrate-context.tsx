@@ -174,10 +174,10 @@ const connect = async (state: State, dispatch: Dispatch) => {
 
     console.log(`Connected socket: ${socket}`);
 
-    // ray test touch <<
+    // ray test touch <
     window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
     const _api = window.bridge.api;
-    // ray test touch >>
+    // ray test touch >
 
     dispatch({
       type: ActionType.Connect,

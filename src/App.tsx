@@ -60,32 +60,11 @@ const App = (): JSX.Element => {
     collateralTokenBalance,
     collateralTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
-  // ray test touch <<
-  // eslint-disable-next-line max-len
-  // const [bridgeStatus, setBridgeStatus] = React.useState(STATUSES.IDLE); // TODO: `bridgeLoaded` should be based on enum instead of boolean
-  // ray test touch >>
   const dispatch = useDispatch();
 
   const unsubscribeCollateralTokenBalance = React.useRef<UnsubscriptionRef>(null);
   const unsubscribeWrappedTokenBalance = React.useRef<UnsubscriptionRef>(null);
   const unsubscribeGovernanceTokenBalance = React.useRef<UnsubscriptionRef>(null);
-
-  // ray test touch <<
-  // Loads the main bridge API - connection to the bridge
-  // const loadBridge = React.useCallback(async (): Promise<void> => {
-  //   try {
-  //     setBridgeStatus(STATUSES.PENDING);
-  //     // ray test touch <
-  //     window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
-  //     // ray test touch >
-  //     dispatch(isBridgeLoaded(true));
-  //     setBridgeStatus(STATUSES.RESOLVED);
-  //   } catch (error) {
-  //     console.log('[loadBridge] error.message => ', error.message);
-  //     setBridgeStatus(STATUSES.REJECTED);
-  //   }
-  // }, [dispatch]);
-  // ray test touch >>
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -96,22 +75,6 @@ const App = (): JSX.Element => {
       console.log('[loadFaucet] error.message => ', error.message);
     }
   }, [dispatch]);
-
-  // ray test touch <<
-  // Loads the bridge
-  // React.useEffect(() => {
-  //   if (bridgeLoaded) return; // Not necessary but for more clarity
-  //   if (bridgeStatus !== STATUSES.IDLE) return;
-
-  //   (async () => {
-  //     try {
-  //       await loadBridge();
-  //     } catch (error) {
-  //       console.log('[App React.useEffect 7] error.message => ', error.message);
-  //     }
-  //   })();
-  // }, [loadBridge, bridgeLoaded, bridgeStatus]);
-  // ray test touch >>
 
   // Loads the faucet
   React.useEffect(() => {
