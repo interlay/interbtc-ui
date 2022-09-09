@@ -34,7 +34,7 @@ ReactDOM.render(
         <HelmetProvider>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-              {/* ray test touch << */}
+              {/* ray test touch < */}
               <SubstrateProvider>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <App />
@@ -42,7 +42,7 @@ ReactDOM.render(
                 <DeveloperConsole />
               </SubstrateProvider>
               {/* <SubstrateContextDemo /> */}
-              {/* ray test touch >> */}
+              {/* ray test touch > */}
             </PersistGate>
           </Provider>
         </HelmetProvider>

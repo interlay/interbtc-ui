@@ -182,9 +182,9 @@ const connect = async (state: State, dispatch: Dispatch) => {
     });
     dispatch({ type: ActionType.ConnectSuccess });
 
-    // ray test touch <<
+    // ray test touch <
     // loadAccounts(_api, dispatch);
-    // ray test touch >>
+    // ray test touch >
 
     // Set listeners for disconnection and reconnection event.
     _api.on('connected', () => {

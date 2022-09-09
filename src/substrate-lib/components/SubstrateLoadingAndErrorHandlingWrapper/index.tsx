@@ -1,11 +1,11 @@
 import {
-  // ray test touch <<
+  // ray test touch <
   // ActionType,
-  // ray test touch >>
+  // ray test touch >
   ApiStatus,
-  // ray test touch <<
+  // ray test touch <
   // KeyringStatus,
-  // ray test touch >>
+  // ray test touch >
   useSubstrateState
 } from '@/substrate-lib/substrate-context';
 
@@ -19,10 +19,10 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
   const {
     apiStatus,
     apiError,
-    // ray test touch <<
+    // ray test touch <
     // keyringStatus,
     // keyring,
-    // ray test touch >>
+    // ray test touch >
     api
   } = useSubstrateState();
 
@@ -47,7 +47,7 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
       throw new Error('Invalid ApiStatus!');
   }
 
-  // ray test touch <<
+  // ray test touch <
   // switch (keyringStatus) {
   //   case KeyringStatus.Idle:
   //   case KeyringStatus.Loading:
@@ -60,16 +60,16 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
   //   default:
   //     throw new Error('Invalid KeyringStatus!');
   // }
-  // ray test touch >>
+  // ray test touch >
 
-  // ray test touch <<
+  // ray test touch <
   // if (keyring === undefined || api === undefined) {
   //   throw new Error('Something went wrong!');
   // }
   if (api === undefined) {
     throw new Error('Something went wrong!');
   }
-  // ray test touch >>
+  // ray test touch >
 
   return <>{children}</>;
 };
