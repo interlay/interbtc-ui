@@ -1,23 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CollateralIdLiteral } from '@interlay/interbtc-api';
-import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CollateralIdLiteral, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import Big from 'big.js';
 import { useErrorHandler } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
 import * as z from 'zod';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
-import { CTA } from '@/component-library';
-import { Span, Stack, TokenField } from '@/component-library';
+import { CTA, Span, Stack, TokenField } from '@/component-library';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getCurrency } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -28,14 +23,22 @@ const DEPOSIT_COLLATERAL_AMOUNT = 'deposit-collateral-amount';
 
 type CollateralFormData = { [DEPOSIT_COLLATERAL_AMOUNT]: string };
 
-const validateDepositCollateral = ({ minAmount = new Big(0) }: { minAmount?: Big }) =>
+const validateDepositCollateral = ({ minAmount }: { minAmount: Big }) =>
   z
     .string()
     .min(1, { message: 'Required' })
-    .transform((str) => new Big(str))
-    .refine((val) => val.gte(minAmount), {
-      message: 'Deposit should be equal or greater than minimum required collateral'
-    });
+    .refine(
+      (val) => val && new Big(val).gte(minAmount),
+
+      {
+        message: 'Deposit should be equal or greater than minimum required collateral'
+      }
+    );
+
+const getCollateralSchema = ({ minAmount = new Big(0) }: { minAmount?: Big }) =>
+  z.object({
+    [DEPOSIT_COLLATERAL_AMOUNT]: validateDepositCollateral({ minAmount })
+  });
 
 type Props = {
   collateralToken: CollateralIdLiteral;
@@ -60,9 +63,8 @@ const Component = ({
   ...props
 }: Omit<DespositCollateralStepProps, keyof StepComponentProps>): JSX.Element | null => {
   const titleId = useId();
-  const { t } = useTranslation();
   const { bridgeLoaded, collateralTokenBalance } = useSelector((state: StoreType) => state.general);
-  const { [URL_PARAMETERS.VAULT.ACCOUNT]: vaultAddress } = useParams<Record<string, string>>();
+  // const { [URL_PARAMETERS.VAULT.ACCOUNT]: vaultAddress } = useParams<Record<string, string>>();
   const prices = useGetPrices();
 
   const collateralCurrency = getCurrency(collateralToken);
@@ -71,20 +73,26 @@ const Component = ({
     isLoading: requiredCollateralTokenAmountLoading,
     data: requiredCollateralTokenAmount,
     error: requiredCollateralTokenAmountError
-  } = useQuery<MonetaryAmount<CollateralCurrencyExt>, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getRequiredCollateralForVault', vaultAddress, collateralCurrency],
-    genericFetcher<MonetaryAmount<CollateralCurrencyExt>>(),
+  } = useQuery<Big, Error>(
+    [GENERIC_FETCHER, 'vaults', 'getMinimumCollateral', collateralCurrency],
+    genericFetcher<Big>(),
     {
       enabled: !!bridgeLoaded
     }
   );
   useErrorHandler(requiredCollateralTokenAmountError);
 
-  const isMinCollateralLoading = requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading;
+  // const registerNewVaultMutation = useMutation<void, Error, void>(
+  //   () =>
+  //      window.bridge.vaults.registerNewCollateralVault()
+  //   {
+  //     onSuccess: () => {
+  //       console.log("success")
+  //     }
+  //   }
+  // );
 
-  const schema = z.object({
-    [DEPOSIT_COLLATERAL_AMOUNT]: validateDepositCollateral({ minAmount: requiredCollateralTokenAmount?.toBig() })
-  });
+  const isMinCollateralLoading = requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading;
 
   const {
     register,
@@ -93,7 +101,7 @@ const Component = ({
     formState: { errors }
   } = useForm<CollateralFormData>({
     mode: 'onChange',
-    resolver: zodResolver(schema)
+    resolver: zodResolver(getCollateralSchema({ minAmount: requiredCollateralTokenAmount }))
   });
 
   const inputCollateral = watch(DEPOSIT_COLLATERAL_AMOUNT) || '0';
@@ -108,13 +116,12 @@ const Component = ({
     onDeposit?.();
   };
 
-  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd;
-
+  // const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd;
+  console.log(requiredCollateralTokenAmount?.toString());
   return (
     <form onSubmit={h(handleSubmit)} {...props}>
       <Stack spacing='double'>
         <StyledDepositTitle id={titleId}>Deposit Collateral</StyledDepositTitle>
-        {/* TODO: Balance */}
         <TokenField
           aria-labelledby={titleId}
           placeholder='0.00'
@@ -130,12 +137,7 @@ const Component = ({
               getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd
             )
           }}
-          {...register(DEPOSIT_COLLATERAL_AMOUNT, {
-            required: {
-              value: true,
-              message: t('vault.collateral_is_required')
-            }
-          })}
+          {...register(DEPOSIT_COLLATERAL_AMOUNT)}
         />
         <StyledDl>
           <StyledDItem>
@@ -145,8 +147,11 @@ const Component = ({
                 '-'
               ) : (
                 <>
-                  {displayMonetaryAmount(requiredCollateralTokenAmount)} {collateralCurrency.ticker} (
-                  {displayMonetaryAmountInUSDFormat(requiredCollateralTokenAmount as any, collateralUSDAmount)})
+                  {displayMonetaryAmount(
+                    newMonetaryAmount(requiredCollateralTokenAmount || new Big(0), collateralCurrency)
+                  )}{' '}
+                  {collateralCurrency.ticker} (
+                  {/* {displayMonetaryAmountInUSDFormat(requiredCollateralTokenAmount as any, collateralUSDAmount)}) */}
                 </>
               )}
             </StyledDd>

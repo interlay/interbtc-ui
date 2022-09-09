@@ -21,7 +21,7 @@ const CreateVaultWizard = ({ vault }: CreateVaultWizardProps): JSX.Element => {
     <>
       <DisclaimerStep step={step} onClickAgree={handleNextStep} />
       <DespositCollateralStep step={step} onDeposit={handleNextStep} collateralToken={vault.collateralCurrency} />
-      <VaultCreatedStep step={step} />
+      <VaultCreatedStep step={step} collateralToken={vault.collateralCurrency} />
     </>
   );
 };
