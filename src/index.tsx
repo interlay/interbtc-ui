@@ -13,10 +13,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 
 // ray test touch <
-// import App from './App';
-import SubstrateContextDemo from '@/substrate-lib/components/SubstrateContextDemo';
+import DeveloperConsole from '@/substrate-lib/components/DeveloperConsole';
+// import SubstrateContextDemo from '@/substrate-lib/components/SubstrateContextDemo';
+import SubstrateLoadingAndErrorHandlingWrapper from '@/substrate-lib/components/SubstrateLoadingAndErrorHandlingWrapper';
+import { SubstrateProvider } from '@/substrate-lib/substrate-context';
 
 // ray test touch >
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './store';
 
@@ -31,10 +34,15 @@ ReactDOM.render(
         <HelmetProvider>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-              {/* ray test touch < */}
-              {/* <App /> */}
-              <SubstrateContextDemo />
-              {/* ray test touch > */}
+              {/* ray test touch << */}
+              <SubstrateProvider>
+                <SubstrateLoadingAndErrorHandlingWrapper>
+                  <App />
+                </SubstrateLoadingAndErrorHandlingWrapper>
+                <DeveloperConsole />
+              </SubstrateProvider>
+              {/* <SubstrateContextDemo /> */}
+              {/* ray test touch >> */}
             </PersistGate>
           </Provider>
         </HelmetProvider>
