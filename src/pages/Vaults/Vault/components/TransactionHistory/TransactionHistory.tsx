@@ -3,7 +3,6 @@ import { HTMLAttributes, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CTALink, TabsItem } from '@/component-library';
-import IssueRequestModal from '@/pages/Transactions/IssueRequestsTable/IssueRequestModal';
 import { PAGES } from '@/utils/constants/links';
 
 import { StyledStack, StyledTableWrapper, StyledTabs, StyledTitle, StyledWrapper } from './TransactionHistory.styles';
@@ -22,17 +21,11 @@ const tabKeys = ['all', 'pending', 'issue', 'redeem', 'replace'] as const;
 const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
   const { t } = useTranslation();
   const titleId = useId();
+
+  const [tab, setTab] = useState<string>('all');
   const [filteredTransactionData, setFilteredTransactiondata] = useState<Array<TransactionTableData>>(
     props.transactions
   );
-  const [tab, setTab] = useState<string>('all');
-  const [selectedIssueRequest, setSelectedIssueRequest] = useState('');
-
-  console.log('selectedIssueRequest', selectedIssueRequest);
-
-  const handleIssueModalClose = () => {
-    setSelectedIssueRequest('');
-  };
 
   useEffect(() => {
     if (tab === 'all') {
@@ -46,7 +39,7 @@ const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
 
   const table = (
     <StyledTableWrapper>
-      <TransactionTable callBack={setSelectedIssueRequest} aria-labelledby={titleId} data={filteredTransactionData} />
+      <TransactionTable aria-labelledby={titleId} data={filteredTransactionData} />
     </StyledTableWrapper>
   );
 
@@ -69,13 +62,6 @@ const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
           </CTALink>
         </StyledStack>
       </StyledWrapper>
-      {selectedIssueRequest && (
-        <IssueRequestModal
-          open={!!selectedIssueRequest}
-          onClose={handleIssueModalClose}
-          request={selectedIssueRequest}
-        />
-      )}
     </>
   );
 };
