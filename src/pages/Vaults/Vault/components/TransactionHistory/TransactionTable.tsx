@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useEffect, useState } from 'react';
+import React, { HTMLAttributes, useState } from 'react';
 
 import IssueRequestModal from '@/pages/Transactions/IssueRequestsTable/IssueRequestModal';
 import RedeemRequestModal from '@/pages/Transactions/RedeemRequestsTable/RedeemRequestModal';
@@ -50,17 +50,14 @@ const TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Elemen
     status: <TransactionStatusTag status={status} />
   }));
 
-  const handleRowAction = (key: React.Key) => {
-    setSelectedTableRow(rows.find((row) => row.id === key));
-  };
-
-  useEffect(() => {
-    console.log(selectedTableRow);
-  }, [selectedTableRow]);
-
   return (
     <>
-      <StyledTable onRowAction={(key) => handleRowAction(key)} columns={columns} rows={rows} {...props} />
+      <StyledTable
+        onRowAction={(key) => setSelectedTableRow(rows.find((row) => row.id === key))}
+        columns={columns}
+        rows={rows}
+        {...props}
+      />
       {/* TODO: these modals should be refactored/replaced */}
       {selectedTableRow?.type === 'Issue' && (
         <IssueRequestModal
