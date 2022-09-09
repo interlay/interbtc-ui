@@ -157,7 +157,7 @@ const App = (): JSX.Element => {
     })();
   }, [dispatch, bridgeLoaded]);
 
-  // ray test touch <
+  // ray test touch <<
   // Loads the address for the currently selected account
   React.useEffect(() => {
     if (!dispatch) return;
@@ -189,7 +189,6 @@ const App = (): JSX.Element => {
         if (matchedAccount) {
           const { signer } = await web3FromAddress(address);
           window.bridge.setAccount(address, signer);
-          dispatch(changeAddressAction(address));
         } else {
           dispatch(changeAddressAction(''));
           // ray test touch <
@@ -202,7 +201,7 @@ const App = (): JSX.Element => {
       }
     })();
   }, [address, bridgeLoaded, dispatch]);
-  // ray test touch >
+  // ray test touch >>
 
   // Subscribes to relay-chain native token balance
   React.useEffect(() => {
