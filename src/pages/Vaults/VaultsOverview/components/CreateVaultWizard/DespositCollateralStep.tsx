@@ -1,18 +1,21 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CollateralCurrencyExt, CollateralIdLiteral, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CollateralIdLiteral, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import Big from 'big.js';
 import { useErrorHandler } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 import * as z from 'zod';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
 import { CTA, Span, Stack, TokenField } from '@/component-library';
+import ErrorModal from '@/components/ErrorModal';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { getCurrency } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -42,7 +45,7 @@ const getCollateralSchema = ({ minAmount = new Big(0) }: { minAmount?: Big }) =>
 
 type Props = {
   collateralToken: CollateralIdLiteral;
-  onDeposit?: () => void;
+  onSuccessfulDeposit?: () => void;
 };
 
 type DespositCollateralStepProps = Props & StepComponentProps;
@@ -58,21 +61,21 @@ const DespositCollateralStep = ({ step, ...props }: DespositCollateralStepProps)
 };
 
 const Component = ({
-  onDeposit,
+  onSuccessfulDeposit,
   collateralToken,
   ...props
 }: Omit<DespositCollateralStepProps, keyof StepComponentProps>): JSX.Element | null => {
   const titleId = useId();
   const { bridgeLoaded, collateralTokenBalance } = useSelector((state: StoreType) => state.general);
-  // const { [URL_PARAMETERS.VAULT.ACCOUNT]: vaultAddress } = useParams<Record<string, string>>();
+  const { governanceTokenBalance } = useGovernanceTokenBalance();
   const prices = useGetPrices();
 
   const collateralCurrency = getCurrency(collateralToken);
   const {
-    isIdle: requiredCollateralTokenAmountIdle,
-    isLoading: requiredCollateralTokenAmountLoading,
-    data: requiredCollateralTokenAmount,
-    error: requiredCollateralTokenAmountError
+    isIdle: minCollateralIdle,
+    isLoading: minCollateralLoading,
+    data: minCollateral,
+    error: minCollateralError
   } = useQuery<Big, Error>(
     [GENERIC_FETCHER, 'vaults', 'getMinimumCollateral', collateralCurrency],
     genericFetcher<Big>(),
@@ -80,19 +83,14 @@ const Component = ({
       enabled: !!bridgeLoaded
     }
   );
-  useErrorHandler(requiredCollateralTokenAmountError);
+  useErrorHandler(minCollateralError);
 
-  // const registerNewVaultMutation = useMutation<void, Error, void>(
-  //   () =>
-  //      window.bridge.vaults.registerNewCollateralVault()
-  //   {
-  //     onSuccess: () => {
-  //       console.log("success")
-  //     }
-  //   }
-  // );
-
-  const isMinCollateralLoading = requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading;
+  const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
+    (collateralAmount) => window.bridge.vaults.registerNewCollateralVault(collateralAmount),
+    {
+      onSuccess: onSuccessfulDeposit
+    }
+  );
 
   const {
     register,
@@ -101,7 +99,7 @@ const Component = ({
     formState: { errors }
   } = useForm<CollateralFormData>({
     mode: 'onChange',
-    resolver: zodResolver(getCollateralSchema({ minAmount: requiredCollateralTokenAmount }))
+    resolver: zodResolver(getCollateralSchema({ minAmount: minCollateral }))
   });
 
   const inputCollateral = watch(DEPOSIT_COLLATERAL_AMOUNT) || '0';
@@ -112,12 +110,35 @@ const Component = ({
   ) as MonetaryAmount<CollateralCurrencyExt>;
 
   const handleSubmit = async (data: CollateralFormData) => {
-    console.log(data, errors);
-    onDeposit?.();
+    const amount = newMonetaryAmount(
+      data[DEPOSIT_COLLATERAL_AMOUNT],
+      collateralCurrency,
+      true
+    ) as MonetaryAmount<CollateralCurrencyExt>;
+    registerNewVaultMutation.mutate(amount);
+    console.log(errors, data);
   };
 
-  // const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd;
-  console.log(requiredCollateralTokenAmount?.toString());
+  const minCollateralValue = minCollateral || new Big(0);
+  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd;
+  const minCollateralAmount = newMonetaryAmount(minCollateralValue, collateralCurrency);
+
+  const isMinCollateralLoading = minCollateralIdle || minCollateralLoading;
+
+  const balance =
+    getCurrency(collateralToken) === GOVERNANCE_TOKEN
+      ? {
+          value: displayMonetaryAmount(governanceTokenBalance?.free),
+          valueInUSD: displayMonetaryAmountInUSDFormat(
+            governanceTokenBalance?.free as MonetaryAmount<CurrencyExt>,
+            collateralUSDAmount
+          )
+        }
+      : {
+          value: displayMonetaryAmount(collateralTokenBalance),
+          valueInUSD: displayMonetaryAmountInUSDFormat(collateralTokenBalance, collateralUSDAmount)
+        };
+
   return (
     <form onSubmit={h(handleSubmit)} {...props}>
       <Stack spacing='double'>
@@ -126,17 +147,8 @@ const Component = ({
           aria-labelledby={titleId}
           placeholder='0.00'
           tokenSymbol={collateralCurrency.ticker}
-          valueInUSD={displayMonetaryAmountInUSDFormat(
-            inputCollateralAmount,
-            getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd
-          )}
-          balance={{
-            value: collateralTokenBalance.toString(),
-            valueInUSD: displayMonetaryAmountInUSDFormat(
-              collateralTokenBalance,
-              getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd
-            )
-          }}
+          valueInUSD={displayMonetaryAmountInUSDFormat(inputCollateralAmount, collateralUSDAmount)}
+          balance={balance}
           {...register(DEPOSIT_COLLATERAL_AMOUNT)}
         />
         <StyledDl>
@@ -147,11 +159,8 @@ const Component = ({
                 '-'
               ) : (
                 <>
-                  {displayMonetaryAmount(
-                    newMonetaryAmount(requiredCollateralTokenAmount || new Big(0), collateralCurrency)
-                  )}{' '}
-                  {collateralCurrency.ticker} (
-                  {/* {displayMonetaryAmountInUSDFormat(requiredCollateralTokenAmount as any, collateralUSDAmount)}) */}
+                  {displayMonetaryAmount(minCollateralAmount)} {collateralCurrency.ticker} (
+                  {displayMonetaryAmountInUSDFormat(minCollateralAmount, collateralUSDAmount)})
                 </>
               )}
             </StyledDd>
@@ -164,11 +173,18 @@ const Component = ({
             </StyledDd>
           </StyledDItem>
         </StyledDl>
-
-        <CTA type='submit' fullWidth>
+        <CTA type='submit' fullWidth loading={registerNewVaultMutation.isLoading}>
           Deposit Collateral
         </CTA>
       </Stack>
+      {registerNewVaultMutation.isError && (
+        <ErrorModal
+          open={registerNewVaultMutation.isError}
+          onClose={() => registerNewVaultMutation.reset()}
+          title='Error'
+          description={registerNewVaultMutation.error?.message || ''}
+        />
+      )}
     </form>
   );
 };
