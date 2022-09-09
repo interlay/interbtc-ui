@@ -1,4 +1,4 @@
-import { HTMLAttributes, useEffect, useState } from 'react';
+import { HTMLAttributes, useState } from 'react';
 
 import IssueRequestModal from '@/pages/Transactions/IssueRequestsTable/IssueRequestModal';
 import RedeemRequestModal from '@/pages/Transactions/RedeemRequestsTable/RedeemRequestModal';
@@ -41,14 +41,6 @@ const RequestCell = ({ request, date }: any) => (
 const TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Element => {
   const [selectedRequest, setSelectedRequest] = useState<{ type: string; data: any } | undefined>(undefined);
 
-  const handleIssueModalClose = () => {
-    setSelectedRequest(undefined);
-  };
-
-  useEffect(() => {
-    console.log(selectedRequest);
-  }, [selectedRequest]);
-
   const rows = data.map(({ request, requestData, amount, date, status }, key) => ({
     id: key,
     amount,
@@ -65,14 +57,14 @@ const TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Elemen
       {selectedRequest?.type === 'Issue' && (
         <IssueRequestModal
           open={selectedRequest.type === 'Issue'}
-          onClose={handleIssueModalClose}
+          onClose={() => setSelectedRequest(undefined)}
           request={selectedRequest.data}
         />
       )}
       {selectedRequest?.type === 'Redeem' && (
         <RedeemRequestModal
           open={selectedRequest.type === 'Redeem'}
-          onClose={handleIssueModalClose}
+          onClose={() => setSelectedRequest(undefined)}
           request={selectedRequest.data}
         />
       )}
