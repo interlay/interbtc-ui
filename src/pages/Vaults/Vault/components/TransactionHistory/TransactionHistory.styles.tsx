@@ -36,6 +36,11 @@ const StyledStatus = styled.div`
 const StyledTable = styled(Table)`
   text-align: left;
   margin-top: ${theme.spacing.spacing4};
+
+  /* TODO: better solution for this */
+  tr:hover {
+    cursor: pointer;
+  }
 `;
 
 const StyledRequestCell = styled.div`
