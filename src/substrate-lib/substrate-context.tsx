@@ -2,6 +2,7 @@
 import { createInterBtcApi } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { TypeRegistry } from '@polkadot/types/create';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
@@ -45,7 +46,10 @@ enum ActionType {
   SetKeyringLoading = 'SET_KEYRING_LOADING',
   SetKeyringReady = 'SET_KEYRING_READY',
   SetKeyringError = 'SET_KEYRING_ERROR',
-  SetSelectedAccount = 'SET_SELECTED_ACCOUNT'
+  // ray test touch <<
+  SetSelectedAccount = 'SET_SELECTED_ACCOUNT',
+  SetAccounts = 'SET_ACCOUNTS'
+  // ray test touch >>
 }
 
 interface APIError extends Error {
@@ -64,7 +68,8 @@ type Action =
   | { type: ActionType.SetKeyringReady; payload: Keyring }
   | { type: ActionType.SetKeyringError }
   // ray test touch <<
-  | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined };
+  | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined }
+  | { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> };
 // ray test touch >>
 type Dispatch = (action: Action) => void;
 type State = {
@@ -75,7 +80,10 @@ type State = {
   api: ApiPromise | undefined;
   apiError: APIError | undefined;
   apiStatus: ApiStatus;
+  // ray test touch <<
   selectedAccount: KeyringPair | undefined;
+  accounts: Array<InjectedAccountWithMeta> | undefined;
+  // ray test touch >>
 };
 type SecureState = Omit<State, 'keyring' | 'api'> & {
   keyring: Keyring;
@@ -110,7 +118,10 @@ const initialState = {
   api: undefined,
   apiError: undefined,
   apiStatus: ApiStatus.Idle,
-  selectedAccount: undefined
+  // ray test touch <<
+  selectedAccount: undefined,
+  accounts: undefined
+  // ray test touch >>
 };
 
 const registry = new TypeRegistry();
@@ -163,11 +174,18 @@ const substrateReducer = (state: State, action: Action): State => {
         keyring: undefined,
         keyringStatus: KeyringStatus.Error
       };
+    // ray test touch <<
     case ActionType.SetSelectedAccount:
       return {
         ...state,
         selectedAccount: action.payload
       };
+    case ActionType.SetAccounts:
+      return {
+        ...state,
+        accounts: action.payload
+      };
+    // ray test touch >>
     default:
       throw new Error(`Unknown type: ${action}`);
   }
@@ -195,7 +213,7 @@ const connect = async (state: State, dispatch: Dispatch) => {
     dispatch({ type: ActionType.ConnectSuccess });
 
     // ray test touch <<
-    // loadAccounts(_api, dispatch);
+    loadAccounts(_api, dispatch);
     // ray test touch >>
 
     // ray test touch <
@@ -331,8 +349,8 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
 
   const value = {
     state,
-    setSelectedAccount,
     // ray test touch <<
+    setSelectedAccount,
     removeSelectedAccount
     // ray test touch >>
   };
