@@ -10,9 +10,11 @@ import { keyring } from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 import { isTestChain } from '@polkadot/util';
 import * as React from 'react';
+import { useLocalStorage } from 'react-use';
 
 import { APP_NAME } from '@/config/relay-chains';
 import config from '@/config/substrate-context';
+import { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY } from '@/config/wallets';
 
 import * as constants from '../constants';
 
@@ -61,7 +63,9 @@ type Action =
   | { type: ActionType.SetKeyringLoading }
   | { type: ActionType.SetKeyringReady; payload: Keyring }
   | { type: ActionType.SetKeyringError }
-  | { type: ActionType.SetSelectedAccount; payload: KeyringPair };
+  // ray test touch <<
+  | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined };
+// ray test touch >>
 type Dispatch = (action: Action) => void;
 type State = {
   socket: string;
@@ -83,6 +87,10 @@ type SubstrateProviderProps = {
 };
 interface SubstrateStateContextInterface {
   state: State;
+  // ray test touch <<
+  setSelectedAccount: (newAccount: KeyringPair) => void;
+  unsetSelectedAccount: () => void;
+  // ray test touch >>
 }
 
 const parsedQuery = new URLSearchParams(window.location.search);
@@ -190,6 +198,7 @@ const connect = async (state: State, dispatch: Dispatch) => {
     // loadAccounts(_api, dispatch);
     // ray test touch >>
 
+    // ray test touch <
     // Set listeners for disconnection and reconnection event.
     _api.on('connected', () => {
       console.log('[substrate-context API] on:connected');
@@ -221,6 +230,7 @@ const connect = async (state: State, dispatch: Dispatch) => {
       console.log('[substrate-context API] on:disconnected');
       dispatch({ type: ActionType.ConnectFail });
     });
+    // ray test touch >
   } catch (error) {
     dispatch({
       type: ActionType.ConnectError,
@@ -301,14 +311,26 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   }, []);
 
   // ray test touch <<
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [_, setValue] = useLocalStorage<KeyringPair | undefined>(SELECTED_ACCOUNT_LOCAL_STORAGE_KEY, undefined);
+
   function setSelectedAccount(newAccount: KeyringPair) {
     dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
+    setValue(newAccount);
+  }
+
+  function unsetSelectedAccount() {
+    dispatch({ type: ActionType.SetSelectedAccount, payload: undefined });
+    setValue(undefined);
   }
   // ray test touch >>
 
   const value = {
     state,
-    setSelectedAccount
+    setSelectedAccount,
+    // ray test touch <<
+    unsetSelectedAccount
+    // ray test touch >>
   };
 
   return <SubstrateStateContext.Provider value={value}>{children}</SubstrateStateContext.Provider>;

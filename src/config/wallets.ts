@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ReactComponent as PolkadotExtensionLogoIcon } from '@/assets/img/polkadot-extension-logo.svg';
 import { ReactComponent as SubWalletLogoIcon } from '@/assets/img/subwallet-logo.svg';
 import { ReactComponent as TalismanWalletLogoIcon } from '@/assets/img/talisman-wallet-logo.svg';
+import { APP_NAME } from '@/config/relay-chains';
 
 enum WalletSourceName {
   PolkadotExtensionLogoIcon = 'polkadot-js',
@@ -34,4 +35,8 @@ const WALLETS: { [wallet in WalletSourceName]: WalletData } = {
   }
 };
 
-export { WALLETS, WalletSourceName };
+// ray test touch <<
+const SELECTED_ACCOUNT_LOCAL_STORAGE_KEY = `${APP_NAME}-selected-account`;
+// ray test touch >>
+
+export { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY, WALLETS, WalletSourceName };
