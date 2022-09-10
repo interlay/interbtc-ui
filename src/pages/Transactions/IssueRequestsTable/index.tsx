@@ -50,7 +50,9 @@ const IssueRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
+  // ray test touch <<
   const { address, extensions } = useSelector((state: StoreType) => state.general);
+  // ray test touch >>
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,

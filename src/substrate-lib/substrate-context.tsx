@@ -11,6 +11,7 @@ import { Keyring } from '@polkadot/ui-keyring/Keyring';
 import { isTestChain } from '@polkadot/util';
 import * as React from 'react';
 
+import { APP_NAME } from '@/config/relay-chains';
 import config from '@/config/substrate-context';
 
 import * as constants from '../constants';
@@ -185,9 +186,9 @@ const connect = async (state: State, dispatch: Dispatch) => {
     });
     dispatch({ type: ActionType.ConnectSuccess });
 
-    // ray test touch <
+    // ray test touch <<
     // loadAccounts(_api, dispatch);
-    // ray test touch >
+    // ray test touch >>
 
     // Set listeners for disconnection and reconnection event.
     _api.on('connected', () => {
@@ -246,9 +247,11 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
   dispatch({ type: ActionType.SetKeyringLoading });
 
   try {
-    await web3Enable(config.APP_NAME);
+    await web3Enable(APP_NAME);
 
-    let allAccounts = await web3Accounts();
+    // ray test touch <<
+    let allAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
+    // ray test touch >>
     allAccounts = allAccounts.map(({ address, meta }) => ({
       address,
       meta: {
@@ -297,9 +300,11 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     connect(stateRef.current, dispatch);
   }, []);
 
+  // ray test touch <<
   function setSelectedAccount(newAccount: KeyringPair) {
     dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
   }
+  // ray test touch >>
 
   const value = {
     state,

@@ -46,13 +46,17 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 );
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
+  // ray test touch <<
   const { bridgeLoaded, address, extensions: injectedExtensions } = useSelector((state: StoreType) => state.general);
+  // ray test touch >>
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const focusRef = React.useRef(null);
   const [selectedWallet, setSelectedWallet] = React.useState<WalletSourceName | undefined>();
 
+  // ray test touch <<
   const accounts = useGetAccounts();
+  // ray test touch >>
   const accountsFromSelectedWallet = React.useMemo(
     () => accounts.filter(({ meta: { source } }) => source === selectedWallet),
     [accounts, selectedWallet]
@@ -89,10 +93,10 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
         return;
       }
 
-      // ray test touch <
+      // ray test touch <<
       // TODO: should check when the app being initialized (not check everywhere)
       await web3Enable(APP_NAME);
-      // ray test touch >
+      // ray test touch >>
       const { signer } = await web3FromAddress(newAddress);
       window.bridge.setAccount(newAddress, signer);
       dispatch(changeAddressAction(newAddress));
@@ -100,12 +104,15 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
       onClose();
     };
 
+    // ray test touch <<
     const handleAccountDisconnect = () => {
       dispatch(changeAddressAction(''));
       window.bridge.removeAccount();
       onClose();
     };
+    // ray test touch >>
 
+    // ray test touch <<
     if (supportedExtensions.length > 0) {
       if (selectedWallet === undefined) {
         return (
@@ -142,6 +149,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
         </AccountModalContentWrapper>
       );
     }
+    // ray test touch >>
   }, [
     accounts,
     accountsFromSelectedWallet,

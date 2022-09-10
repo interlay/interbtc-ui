@@ -16,7 +16,9 @@ const Accounts = ({ callbackFunction, label }: Props): JSX.Element => {
   // ray test touch <
   const { address } = useSelector((state: StoreType) => state.general);
   const [selectedAccount, setSelectedAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
+  // ray test touch <<
   const accounts = useGetAccounts();
+  // ray test touch >>
   // ray test touch >
 
   React.useEffect(() => {
