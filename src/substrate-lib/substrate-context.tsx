@@ -278,15 +278,8 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
     await web3Enable(APP_NAME);
 
     // ray test touch <<
-    let allAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
+    const allAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
     // ray test touch >>
-    allAccounts = allAccounts.map(({ address, meta }) => ({
-      address,
-      meta: {
-        ...meta,
-        name: `${meta.name} (${meta.source})`
-      }
-    }));
     // ray test touch <<
     dispatch({
       type: ActionType.SetAccounts,
