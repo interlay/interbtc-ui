@@ -82,7 +82,7 @@ type State = {
   apiStatus: ApiStatus;
   // ray test touch <<
   selectedAccount: KeyringPair | undefined;
-  accounts: Array<InjectedAccountWithMeta> | undefined;
+  accounts: Array<InjectedAccountWithMeta>; // TODO: update with `accounts: Array<InjectedAccountWithMeta> | undefined;`
   // ray test touch >>
 };
 type SecureState = Omit<State, 'keyring' | 'api'> & {
@@ -120,7 +120,7 @@ const initialState = {
   apiStatus: ApiStatus.Idle,
   // ray test touch <<
   selectedAccount: undefined,
-  accounts: undefined
+  accounts: [] // TODO: update with `accounts: undefined`
   // ray test touch >>
 };
 
@@ -287,6 +287,12 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
         name: `${meta.name} (${meta.source})`
       }
     }));
+    // ray test touch <<
+    dispatch({
+      type: ActionType.SetAccounts,
+      payload: allAccounts
+    });
+    // ray test touch >>
 
     // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
     // ref: https://github.com/polkadot-js/apps/blob/15b8004b2791eced0dde425d5dc7231a5f86c682/packages/react-api/src/Api.tsx?_pjax=div%5Bitemtype%3D%22http%3A%2F%2Fschema.org%2FSoftwareSourceCode%22%5D%20%3E%20main#L101-L110
