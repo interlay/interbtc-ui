@@ -43,22 +43,7 @@ const Topbar = (): JSX.Element => {
 
   const [isRequestPending, setIsRequestPending] = React.useState(false);
 
-  // ray test touch <<
   const { accounts } = useSubstrateSecureState();
-  // const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>([]);
-  // React.useEffect(() => {
-  //   if (!extensions.length) return;
-  //   (async () => {
-  //     try {
-  //       const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
-  //       setAccounts(theAccounts);
-  //     } catch (error) {
-  //       // TODO: should add error handling properly
-  //       console.log('[Topbar] error.message => ', error.message);
-  //     }
-  //   })();
-  // }, [extensions.length]);
-  // ray test touch >>
 
   const handleFundsRequest = async () => {
     if (!bridgeLoaded) return;
