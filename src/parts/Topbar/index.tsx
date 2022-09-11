@@ -1,6 +1,4 @@
 import { ExternalLinkIcon } from '@heroicons/react/outline';
-import { web3Accounts } from '@polkadot/extension-dapp';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,8 +14,8 @@ import Tokens from '@/components/Tokens';
 import InterlayLink from '@/components/UI/InterlayLink';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import * as constants from '@/constants';
 import AccountModal from '@/parts/AccountModal';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { BitcoinNetwork } from '@/types/bitcoin';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
@@ -46,20 +44,20 @@ const Topbar = (): JSX.Element => {
   const [isRequestPending, setIsRequestPending] = React.useState(false);
 
   // ray test touch <<
-  const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>([]);
-  React.useEffect(() => {
-    if (!extensions.length) return;
-
-    (async () => {
-      try {
-        const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
-        setAccounts(theAccounts);
-      } catch (error) {
-        // TODO: should add error handling properly
-        console.log('[Topbar] error.message => ', error.message);
-      }
-    })();
-  }, [extensions.length]);
+  const { accounts } = useSubstrateSecureState();
+  // const [accounts, setAccounts] = React.useState<InjectedAccountWithMeta[]>([]);
+  // React.useEffect(() => {
+  //   if (!extensions.length) return;
+  //   (async () => {
+  //     try {
+  //       const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
+  //       setAccounts(theAccounts);
+  //     } catch (error) {
+  //       // TODO: should add error handling properly
+  //       console.log('[Topbar] error.message => ', error.message);
+  //     }
+  //   })();
+  // }, [extensions.length]);
   // ray test touch >>
 
   const handleFundsRequest = async () => {
