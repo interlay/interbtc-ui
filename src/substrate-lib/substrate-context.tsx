@@ -48,9 +48,7 @@ enum ActionType {
   SetKeyringLoading = 'SET_KEYRING_LOADING',
   SetKeyringReady = 'SET_KEYRING_READY',
   SetKeyringError = 'SET_KEYRING_ERROR',
-  // ray test touch <<
   SetSelectedAccount = 'SET_SELECTED_ACCOUNT',
-  // ray test touch >>
   SetAccounts = 'SET_ACCOUNTS',
   SetExtensions = 'SET_EXTENSIONS'
 }
@@ -70,9 +68,7 @@ type Action =
   | { type: ActionType.SetKeyringLoading }
   | { type: ActionType.SetKeyringReady; payload: Keyring }
   | { type: ActionType.SetKeyringError }
-  // ray test touch <<
   | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined }
-  // ray test touch >>
   | { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> }
   | { type: ActionType.SetExtensions; payload: Array<InjectedExtension> };
 type Dispatch = (action: Action) => void;
@@ -84,9 +80,7 @@ type State = {
   api: ApiPromise | undefined;
   apiError: APIError | undefined;
   apiStatus: ApiStatus;
-  // ray test touch <<
   selectedAccount: KeyringPair | undefined;
-  // ray test touch >>
   accounts: Array<InjectedAccountWithMeta>;
   extensions: Array<InjectedExtension>;
 };
@@ -100,10 +94,8 @@ type SubstrateProviderProps = {
 };
 interface SubstrateStateContextInterface {
   state: State;
-  // ray test touch <<
   setSelectedAccount: (newAccount: KeyringPair) => Promise<void>;
   removeSelectedAccount: () => void;
-  // ray test touch >>
 }
 
 const parsedQuery = new URLSearchParams(window.location.search);
@@ -123,9 +115,7 @@ const initialState = {
   api: undefined,
   apiError: undefined,
   apiStatus: ApiStatus.Idle,
-  // ray test touch <<
   selectedAccount: undefined,
-  // ray test touch >>
   accounts: [],
   extensions: []
 };
@@ -180,13 +170,11 @@ const substrateReducer = (state: State, action: Action): State => {
         keyring: undefined,
         keyringStatus: KeyringStatus.Error
       };
-    // ray test touch <<
     case ActionType.SetSelectedAccount:
       return {
         ...state,
         selectedAccount: action.payload
       };
-    // ray test touch >>
     case ActionType.SetAccounts:
       return {
         ...state,
@@ -336,7 +324,6 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     connect(stateRef.current, dispatch);
   }, []);
 
-  // ray test touch <<
   const reduxDispatch = useDispatch();
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
@@ -359,14 +346,11 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     // TODO: remove
     reduxDispatch(changeAddressAction(''));
   }
-  // ray test touch >>
 
   const value = {
     state,
-    // ray test touch <<
     setSelectedAccount,
     removeSelectedAccount
-    // ray test touch >>
   };
 
   return <SubstrateStateContext.Provider value={value}>{children}</SubstrateStateContext.Provider>;

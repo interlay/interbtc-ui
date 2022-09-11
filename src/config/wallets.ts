@@ -35,8 +35,6 @@ const WALLETS: { [wallet in WalletSourceName]: WalletData } = {
   }
 };
 
-// ray test touch <<
 const SELECTED_ACCOUNT_LOCAL_STORAGE_KEY = `${APP_NAME}-selected-account`;
-// ray test touch >>
 
 export { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY, WALLETS, WalletSourceName };

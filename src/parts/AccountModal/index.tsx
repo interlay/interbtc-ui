@@ -3,9 +3,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 
-import { StoreType } from '@/common/types/util.types';
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
 import { WalletSourceName } from '@/config/wallets';
 import { useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
@@ -45,9 +43,6 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 );
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
-  // ray test touch <<
-  const { address } = useSelector((state: StoreType) => state.general);
-  // ray test touch >>
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
   const [selectedWallet, setSelectedWallet] = React.useState<WalletSourceName | undefined>();
@@ -58,7 +53,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     [accounts, selectedWallet]
   );
 
-  const { extensions, keyring } = useSubstrateSecureState();
+  const { extensions, keyring, selectedAccount } = useSubstrateSecureState();
   const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const supportedExtensions = React.useMemo(
     () => extensions.filter((item) => Object.values(WalletSourceName).includes(item.name as WalletSourceName)),
@@ -68,14 +63,13 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
   React.useEffect(() => {
     // Sets selected wallet on modal open.
     if (open) {
-      const selectedAccount = accounts.find(({ address: accountAddress }) => address === accountAddress);
       if (selectedAccount) {
         setSelectedWallet(selectedAccount.meta.source as WalletSourceName);
       } else {
         setSelectedWallet(undefined);
       }
     }
-  }, [address, accounts, open]);
+  }, [selectedAccount, open]);
 
   // State of the modal content.
   const modalContent = React.useMemo(() => {
@@ -97,7 +91,6 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
       onClose();
     };
 
-    // ray test touch <<
     if (supportedExtensions.length > 0) {
       if (selectedWallet === undefined) {
         return (
@@ -111,7 +104,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
             <AccountModalContentWrapper title={t('account_modal.select_account')} focusRef={focusRef} onClose={onClose}>
               <ModalContentSelectAccount
                 accountsFromSelectedWallet={accountsFromSelectedWallet}
-                address={address}
+                address={selectedAccount ? selectedAccount.address : ''}
                 selectedWallet={selectedWallet}
                 handleAccountSelect={handleAccountSelect}
                 handleAccountDisconnect={handleAccountDisconnect}
@@ -134,11 +127,10 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
         </AccountModalContentWrapper>
       );
     }
-    // ray test touch >>
   }, [
     accounts,
     accountsFromSelectedWallet,
-    address,
+    selectedAccount,
     supportedExtensions,
     onClose,
     selectedWallet,

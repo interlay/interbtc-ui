@@ -52,9 +52,9 @@ const IssueRequestsTable = (): JSX.Element => {
   const updateQueryParameters = useUpdateQueryParameters();
 
   const { extensions } = useSubstrateSecureState();
-  // ray test touch <<
+  // ray test touch <
   const { address } = useSelector((state: StoreType) => state.general);
-  // ray test touch >>
+  // ray test touch >
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,
