@@ -32,6 +32,7 @@ import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-blo
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import issueCountQuery from '@/services/queries/issue-count-query';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
@@ -50,8 +51,9 @@ const IssueRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
+  const { extensions } = useSubstrateSecureState();
   // ray test touch <<
-  const { address, extensions } = useSelector((state: StoreType) => state.general);
+  const { address } = useSelector((state: StoreType) => state.general);
   // ray test touch >>
 
   const {

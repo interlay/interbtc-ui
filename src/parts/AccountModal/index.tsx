@@ -10,6 +10,7 @@ import { StoreType } from '@/common/types/util.types';
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
 import { APP_NAME } from '@/config/relay-chains';
 import { WalletSourceName } from '@/config/wallets';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
 
@@ -47,7 +48,7 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
   // ray test touch <<
-  const { bridgeLoaded, address, extensions: injectedExtensions } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
   // ray test touch >>
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -60,12 +61,10 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     [accounts, selectedWallet]
   );
 
+  const { extensions } = useSubstrateSecureState();
   const supportedExtensions = React.useMemo(
-    () =>
-      injectedExtensions.filter((extensionName) =>
-        Object.values(WalletSourceName).includes(extensionName as WalletSourceName)
-      ),
-    [injectedExtensions]
+    () => extensions.filter((item) => Object.values(WalletSourceName).includes(item.name as WalletSourceName)),
+    [extensions]
   );
 
   React.useEffect(() => {
