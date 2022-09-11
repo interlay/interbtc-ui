@@ -1,16 +1,14 @@
 // ray test touch <
-import { web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { changeAddressAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
-import { APP_NAME } from '@/config/relay-chains';
 import { WalletSourceName } from '@/config/wallets';
-import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
+import { useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
 
@@ -51,7 +49,6 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
   const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
   // ray test touch >>
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const focusRef = React.useRef(null);
   const [selectedWallet, setSelectedWallet] = React.useState<WalletSourceName | undefined>();
 
@@ -61,7 +58,8 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     [accounts, selectedWallet]
   );
 
-  const { extensions } = useSubstrateSecureState();
+  const { extensions, keyring } = useSubstrateSecureState();
+  const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const supportedExtensions = React.useMemo(
     () => extensions.filter((item) => Object.values(WalletSourceName).includes(item.name as WalletSourceName)),
     [extensions]
@@ -81,30 +79,36 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
 
   // State of the modal content.
   const modalContent = React.useMemo(() => {
+    if (!keyring) return;
+    if (!setSelectedAccount) return;
+    if (!removeSelectedAccount) return;
+
     const handleWalletSelect = (walletName: WalletSourceName | undefined) => {
       setSelectedWallet(walletName);
     };
 
-    const handleAccountSelect = async (newAddress: string) => {
+    const handleAccountSelect = async (newAccount: InjectedAccountWithMeta) => {
       if (!bridgeLoaded) {
         return;
       }
 
       // ray test touch <<
       // TODO: should check when the app being initialized (not check everywhere)
-      await web3Enable(APP_NAME);
+      // await web3Enable(APP_NAME);
+      // const { signer } = await web3FromAddress(newAddress);
+      // window.bridge.setAccount(newAddress, signer);
+      // dispatch(changeAddressAction(newAddress));
+      setSelectedAccount(keyring.getPair(newAccount.address));
       // ray test touch >>
-      const { signer } = await web3FromAddress(newAddress);
-      window.bridge.setAccount(newAddress, signer);
-      dispatch(changeAddressAction(newAddress));
 
       onClose();
     };
 
     // ray test touch <<
     const handleAccountDisconnect = () => {
-      dispatch(changeAddressAction(''));
-      window.bridge.removeAccount();
+      // dispatch(changeAddressAction(''));
+      // window.bridge.removeAccount();
+      removeSelectedAccount();
       onClose();
     };
     // ray test touch >>
@@ -152,11 +156,13 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     accountsFromSelectedWallet,
     address,
     bridgeLoaded,
-    dispatch,
     supportedExtensions,
     onClose,
     selectedWallet,
-    t
+    t,
+    keyring,
+    setSelectedAccount,
+    removeSelectedAccount
   ]);
 
   return (

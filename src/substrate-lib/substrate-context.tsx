@@ -11,8 +11,10 @@ import { keyring } from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 import { isTestChain } from '@polkadot/util';
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { useLocalStorage } from 'react-use';
 
+import { changeAddressAction } from '@/common/actions/general.actions';
 import { APP_NAME } from '@/config/relay-chains';
 import config from '@/config/substrate-context';
 import { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY } from '@/config/wallets';
@@ -335,6 +337,8 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   }, []);
 
   // ray test touch <<
+  const reduxDispatch = useDispatch();
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [_, setValue] = useLocalStorage<KeyringPair | undefined>(SELECTED_ACCOUNT_LOCAL_STORAGE_KEY, undefined);
 
@@ -344,12 +348,16 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     // TODO: race condition might happen
     const { signer } = await web3FromAddress(newAccount.address);
     window.bridge.setAccount(newAccount.address, signer);
+    // TODO: remove
+    reduxDispatch(changeAddressAction(newAccount.address));
   }
 
   function removeSelectedAccount() {
     dispatch({ type: ActionType.SetSelectedAccount, payload: undefined });
     setValue(undefined);
     window.bridge.removeAccount();
+    // TODO: remove
+    reduxDispatch(changeAddressAction(''));
   }
   // ray test touch >>
 
