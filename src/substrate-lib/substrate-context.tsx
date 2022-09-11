@@ -50,9 +50,7 @@ enum ActionType {
   SetSelectedAccount = 'SET_SELECTED_ACCOUNT',
   // ray test touch >>
   SetAccounts = 'SET_ACCOUNTS',
-  // ray test touch <<
   SetExtensions = 'SET_EXTENSIONS'
-  // ray test touch >>
 }
 
 interface APIError extends Error {
@@ -73,12 +71,8 @@ type Action =
   // ray test touch <<
   | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined }
   // ray test touch >>
-  // ray test touch <
   | { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> }
-  // ray test touch >
-  // ray test touch <<
   | { type: ActionType.SetExtensions; payload: Array<InjectedExtension> };
-// ray test touch >>
 type Dispatch = (action: Action) => void;
 type State = {
   socket: string;
@@ -91,12 +85,8 @@ type State = {
   // ray test touch <<
   selectedAccount: KeyringPair | undefined;
   // ray test touch >>
-  // ray test touch <
   accounts: Array<InjectedAccountWithMeta>;
-  // ray test touch >
-  // ray test touch <<
   extensions: Array<InjectedExtension>;
-  // ray test touch >>
 };
 type SecureState = Omit<State, 'keyring' | 'api'> & {
   keyring: Keyring;
@@ -134,12 +124,8 @@ const initialState = {
   // ray test touch <<
   selectedAccount: undefined,
   // ray test touch >>
-  // ray test touch <
   accounts: [],
-  // ray test touch >
-  // ray test touch <<
   extensions: []
-  // ray test touch >>
 };
 
 const registry = new TypeRegistry();
@@ -204,13 +190,11 @@ const substrateReducer = (state: State, action: Action): State => {
         ...state,
         accounts: action.payload
       };
-    // ray test touch <<
     case ActionType.SetExtensions:
       return {
         ...state,
         extensions: action.payload
       };
-    // ray test touch >>
     default:
       throw new Error(`Unknown type: ${action}`);
   }
@@ -298,14 +282,11 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
   dispatch({ type: ActionType.SetKeyringLoading });
 
   try {
-    // ray test touch <<
     const theExtensions = await web3Enable(APP_NAME);
-    console.log('ray : ***** theExtensions => ', theExtensions);
     dispatch({
       type: ActionType.SetExtensions,
       payload: theExtensions
     });
-    // ray test touch >>
 
     const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
     dispatch({
