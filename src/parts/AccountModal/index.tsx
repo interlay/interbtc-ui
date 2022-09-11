@@ -46,7 +46,7 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
   // ray test touch <<
-  const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { address } = useSelector((state: StoreType) => state.general);
   // ray test touch >>
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
@@ -88,30 +88,14 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     };
 
     const handleAccountSelect = async (newAccount: InjectedAccountWithMeta) => {
-      if (!bridgeLoaded) {
-        return;
-      }
-
-      // ray test touch <<
-      // TODO: should check when the app being initialized (not check everywhere)
-      // await web3Enable(APP_NAME);
-      // const { signer } = await web3FromAddress(newAddress);
-      // window.bridge.setAccount(newAddress, signer);
-      // dispatch(changeAddressAction(newAddress));
       setSelectedAccount(keyring.getPair(newAccount.address));
-      // ray test touch >>
-
       onClose();
     };
 
-    // ray test touch <<
     const handleAccountDisconnect = () => {
-      // dispatch(changeAddressAction(''));
-      // window.bridge.removeAccount();
       removeSelectedAccount();
       onClose();
     };
-    // ray test touch >>
 
     // ray test touch <<
     if (supportedExtensions.length > 0) {
@@ -155,7 +139,6 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     accounts,
     accountsFromSelectedWallet,
     address,
-    bridgeLoaded,
     supportedExtensions,
     onClose,
     selectedWallet,
