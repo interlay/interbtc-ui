@@ -48,8 +48,8 @@ enum ActionType {
   SetKeyringError = 'SET_KEYRING_ERROR',
   // ray test touch <<
   SetSelectedAccount = 'SET_SELECTED_ACCOUNT',
-  SetAccounts = 'SET_ACCOUNTS'
   // ray test touch >>
+  SetAccounts = 'SET_ACCOUNTS'
 }
 
 interface APIError extends Error {
@@ -69,8 +69,11 @@ type Action =
   | { type: ActionType.SetKeyringError }
   // ray test touch <<
   | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined }
+  // ray test touch >>
+  // ray test touch <
+  // TODO: update with `| { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> | undefined };`
   | { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> };
-// ray test touch >>
+// ray test touch >
 type Dispatch = (action: Action) => void;
 type State = {
   socket: string;
@@ -82,8 +85,10 @@ type State = {
   apiStatus: ApiStatus;
   // ray test touch <<
   selectedAccount: KeyringPair | undefined;
-  accounts: Array<InjectedAccountWithMeta>; // TODO: update with `accounts: Array<InjectedAccountWithMeta> | undefined;`
   // ray test touch >>
+  // ray test touch <
+  accounts: Array<InjectedAccountWithMeta>; // TODO: update with `accounts: Array<InjectedAccountWithMeta> | undefined;`
+  // ray test touch >
 };
 type SecureState = Omit<State, 'keyring' | 'api'> & {
   keyring: Keyring;
@@ -120,8 +125,10 @@ const initialState = {
   apiStatus: ApiStatus.Idle,
   // ray test touch <<
   selectedAccount: undefined,
-  accounts: [] // TODO: update with `accounts: undefined`
   // ray test touch >>
+  // ray test touch <
+  accounts: [] // TODO: update with `accounts: undefined`
+  // ray test touch >
 };
 
 const registry = new TypeRegistry();
@@ -180,12 +187,12 @@ const substrateReducer = (state: State, action: Action): State => {
         ...state,
         selectedAccount: action.payload
       };
+    // ray test touch >>
     case ActionType.SetAccounts:
       return {
         ...state,
         accounts: action.payload
       };
-    // ray test touch >>
     default:
       throw new Error(`Unknown type: ${action}`);
   }
@@ -212,9 +219,7 @@ const connect = async (state: State, dispatch: Dispatch) => {
     });
     dispatch({ type: ActionType.ConnectSuccess });
 
-    // ray test touch <<
     loadAccounts(_api, dispatch);
-    // ray test touch >>
 
     // ray test touch <
     // Set listeners for disconnection and reconnection event.
@@ -277,22 +282,18 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
   try {
     await web3Enable(APP_NAME);
 
-    // ray test touch <<
-    const allAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
-    // ray test touch >>
-    // ray test touch <<
+    const theAccounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
     dispatch({
       type: ActionType.SetAccounts,
-      payload: allAccounts
+      payload: theAccounts
     });
-    // ray test touch >>
 
     // Logics to check if the connecting chain is a dev chain, coming from polkadot-js Apps
     // ref: https://github.com/polkadot-js/apps/blob/15b8004b2791eced0dde425d5dc7231a5f86c682/packages/react-api/src/Api.tsx?_pjax=div%5Bitemtype%3D%22http%3A%2F%2Fschema.org%2FSoftwareSourceCode%22%5D%20%3E%20main#L101-L110
     const { systemChain, systemChainType } = await retrieveChainInfo(api);
     const isDevelopment = systemChainType.isDevelopment || systemChainType.isLocal || isTestChain(systemChain);
 
-    keyring.loadAll({ isDevelopment }, allAccounts);
+    keyring.loadAll({ isDevelopment }, theAccounts);
 
     dispatch({
       type: ActionType.SetKeyringReady,

@@ -54,9 +54,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
   const focusRef = React.useRef(null);
   const [selectedWallet, setSelectedWallet] = React.useState<WalletSourceName | undefined>();
 
-  // ray test touch <<
   const accounts = useGetAccounts();
-  // ray test touch >>
   const accountsFromSelectedWallet = React.useMemo(
     () => accounts.filter(({ meta: { source } }) => source === selectedWallet),
     [accounts, selectedWallet]
