@@ -17,7 +17,6 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 // mutating the data which is why `status` is being set like this. We need to refactor
 // the modal and fetchers to handle all use cases better.
 const setIssueStatus = (status: IssueStatus) => {
-  console.log('issue request status', status);
   switch (status) {
     case IssueStatus.Completed:
       return 'completed';
