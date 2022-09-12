@@ -21,6 +21,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledDd, StyledDepositTitle, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
+import { withStep } from './Step';
 import { StepComponentProps } from './types';
 const DEPOSIT_COLLATERAL_AMOUNT = 'deposit-collateral-amount';
 
@@ -50,21 +51,11 @@ type Props = {
 
 type DespositCollateralStepProps = Props & StepComponentProps;
 
-const componentStep = 2 as const;
-
-const DespositCollateralStep = ({ step, ...props }: DespositCollateralStepProps): JSX.Element | null => {
-  if (step !== componentStep) {
-    return null;
-  }
-
-  return <Component {...props} />;
-};
-
-const Component = ({
+const DepositCollateralStep = ({
   onSuccessfulDeposit,
   collateralToken,
   ...props
-}: Omit<DespositCollateralStepProps, keyof StepComponentProps>): JSX.Element | null => {
+}: DespositCollateralStepProps): JSX.Element | null => {
   const titleId = useId();
   const { bridgeLoaded, collateralTokenBalance } = useSelector((state: StoreType) => state.general);
   const { governanceTokenBalance } = useGovernanceTokenBalance();
@@ -115,6 +106,7 @@ const Component = ({
       collateralCurrency,
       true
     ) as MonetaryAmount<CollateralCurrencyExt>;
+
     registerNewVaultMutation.mutate(amount);
     console.log(errors, data);
   };
@@ -188,4 +180,7 @@ const Component = ({
     </form>
   );
 };
-export { DespositCollateralStep };
+
+const componentStep = 2 as const;
+
+export default withStep(DepositCollateralStep, componentStep);

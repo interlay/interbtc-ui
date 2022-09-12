@@ -14,6 +14,7 @@ import {
   StyledDisclaimerListItem,
   StyledDisclaimerText
 } from './CreateVaultWizard.styles';
+import { withStep } from './Step';
 import { StepComponentProps } from './types';
 
 type Props = {
@@ -22,20 +23,14 @@ type Props = {
 
 type DisclaimerStepProps = Props & StepComponentProps;
 
-const componentStep = 1 as const;
-
-const DisclaimerStep = ({ step, onClickAgree }: DisclaimerStepProps): JSX.Element | null => {
+const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element | null => {
   const { t } = useTranslation();
-
-  if (step !== componentStep) {
-    return null;
-  }
 
   return (
     <Stack spacing='double'>
       <Stack spacing='none' alignItems='center'>
         <WarningIcon width='2.5rem' height='2.5rem' />
-        <H3>Vault Risks</H3>
+        <H3>{t('vault.vault_risks')}</H3>
       </Stack>
       <Stack>
         <StyledDisclaimerText>{t('vault.disclaimer.understand_risks')}</StyledDisclaimerText>
@@ -76,7 +71,7 @@ const DisclaimerStep = ({ step, onClickAgree }: DisclaimerStepProps): JSX.Elemen
       </Stack>
       <Stack>
         <CTA size='large' fullWidth onClick={onClickAgree}>
-          I understand the risks involved
+          {t('vault.disclaimer.accept_risks_involved')}
         </CTA>
         <CTALink
           as='a'
@@ -87,11 +82,13 @@ const DisclaimerStep = ({ step, onClickAgree }: DisclaimerStepProps): JSX.Elemen
           size='large'
           fullWidth
         >
-          Read the Vault documentation
+          {t('vault.read_vault_documentation')}
         </CTALink>
       </Stack>
     </Stack>
   );
 };
 
-export { DisclaimerStep };
+const componentStep = 1 as const;
+
+export default withStep(DisclaimerStep, componentStep);

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
 import { VaultsTableRow } from '../VaultsTable';
-import { DespositCollateralStep } from './DespositCollateralStep';
-import { DisclaimerStep } from './DisclaimerStep';
+import DespositCollateralStep from './DespositCollateralStep';
+import DisclaimerStep from './DisclaimerStep';
 import { Steps } from './types';
-import { VaultCreatedStep } from './VaultCreatedStep';
+import VaultCreatedStep from './VaultCreatedStep';
 
 type Props = {
   vault: VaultsTableRow;
