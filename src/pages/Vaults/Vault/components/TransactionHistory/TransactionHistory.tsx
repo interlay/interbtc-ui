@@ -22,10 +22,10 @@ const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
   const { t } = useTranslation();
   const titleId = useId();
 
-  const [tab, setTab] = useState<string>('all');
   const [filteredTransactionData, setFilteredTransactiondata] = useState<Array<TransactionTableData>>(
     props.transactions
   );
+  const [tab, setTab] = useState<string>('all');
 
   useEffect(() => {
     if (tab === 'all') {
