@@ -14,7 +14,8 @@ import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-c
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 
 // TODO: Bad stuff happening here! `getIssueWithStatus` and `getRedeemWithStatus` are
-// mutating the data which is why `status` is being set in this funky way.
+// mutating the data which is why `status` is being set like this. We need to refactor
+// the modal and fetchers to handle all use cases better.
 const setIssueStatus = (status: IssueStatus) => {
   switch (status) {
     case IssueStatus.Completed:
