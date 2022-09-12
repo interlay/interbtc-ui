@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
-import { Input, InputProps } from '../Input';
+import { BaseInput, BaseInputProps } from '../Input';
 
 // Prevents the user from changing the input value using mouse wheel
 const handleWheel = (event: WheelEvent) => event.preventDefault();
@@ -19,12 +19,13 @@ const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFract
 const locale = 'en-US';
 
 type Props = {
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  value?: number;
+  defaultValue?: number;
 };
 
-type InheritAttrs = Omit<InputProps, keyof Props>;
+type InheritAttrs = Omit<BaseInputProps, keyof Props>;
 
-type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'locale'>;
+type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'onChange' | 'locale'>;
 
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
@@ -36,7 +37,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       locale,
       formatOptions
     });
-    const { inputProps } = useNumberField(props, state, inputRef);
+    const { inputProps, ...ariaProps } = useNumberField(props, state, inputRef);
 
     React.useEffect(() => {
       const input = inputRef.current;
@@ -48,8 +49,7 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = chain(inputProps.onChange, onChange);
 
-    // TODO: should move props into <FormField/> when added here as a wrapper
-    return <Input {...mergeProps(props, inputProps)} onChange={handleChange} ref={inputRef} />;
+    return <BaseInput {...ariaProps} {...mergeProps(props, inputProps)} onChange={handleChange} ref={inputRef} />;
   }
 );
 

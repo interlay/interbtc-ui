@@ -6,7 +6,7 @@ type BaseInputProps = {
   $isDisabled?: boolean;
 };
 
-const BaseInput = styled.input<BaseInputProps>`
+const StyledBaseInput = styled.input<BaseInputProps>`
   background-color: transparent;
   display: block;
   width: 100%;
@@ -86,4 +86,4 @@ const Wrapper = styled.div`
   flex-direction: column;
 `;
 
-export { Adornment, BaseInput, BaseInputWrapper, Wrapper };
+export { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper };

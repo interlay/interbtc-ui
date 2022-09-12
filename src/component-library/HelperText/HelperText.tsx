@@ -6,7 +6,7 @@ type Props = {
   errorMessage?: ReactNode | ReactNode[];
   errorMessageProps?: HTMLAttributes<HTMLElement>;
   description?: ReactNode;
-  descriptionProps: HTMLAttributes<HTMLElement>;
+  descriptionProps?: HTMLAttributes<HTMLElement>;
   isDisabled?: boolean;
 };
 
