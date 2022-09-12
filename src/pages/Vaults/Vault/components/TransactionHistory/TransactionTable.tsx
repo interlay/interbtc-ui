@@ -41,7 +41,6 @@ const RequestCell = ({ request, date }: any) => (
 const TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Element => {
   const [selectedTableRow, setSelectedTableRow] = useState<any>(undefined);
 
-  // TODO: add type here
   const rows = data.map(({ request, amount, requestData, date, status }, key) => ({
     id: key,
     amount,
