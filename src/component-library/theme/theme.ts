@@ -101,6 +101,11 @@ const theme = {
       padding: 'var(--spacing-3) var(--spacing-10)',
       text: 'var(--text-base)',
       lineHeight: 'var(--line-height-base)'
+    },
+    large: {
+      padding: 'var(--spacing-3) var(--spacing-10)',
+      text: 'var(--text-base)',
+      lineHeight: 'var(--line-height-base)'
     }
   },
   table: {
