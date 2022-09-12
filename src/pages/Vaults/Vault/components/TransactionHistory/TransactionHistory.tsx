@@ -21,7 +21,6 @@ const tabKeys = ['all', 'pending', 'issue', 'redeem', 'replace'] as const;
 const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
   const { t } = useTranslation();
   const titleId = useId();
-
   const [filteredTransactionData, setFilteredTransactiondata] = useState<Array<TransactionTableData>>(
     props.transactions
   );
