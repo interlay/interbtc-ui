@@ -2,7 +2,7 @@ import { useNumberField } from '@react-aria/numberfield';
 import { chain, mergeProps } from '@react-aria/utils';
 import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
-import * as React from 'react';
+import { ChangeEventHandler, forwardRef, useEffect } from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
@@ -23,13 +23,13 @@ type Props = {
   defaultValue?: number;
 };
 
-type InheritAttrs = Omit<BaseInputProps, keyof Props>;
+type InheritAttrs = Omit<BaseInputProps, keyof Props | 'disabled' | 'required' | 'readOnly'>;
 
 type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'onChange' | 'locale'>;
 
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
-const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
+const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   ({ onChange, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
     const state = useNumberFieldState({
@@ -37,9 +37,9 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       locale,
       formatOptions
     });
-    const { inputProps, ...ariaProps } = useNumberField(props, state, inputRef);
+    const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(props, state, inputRef);
 
-    React.useEffect(() => {
+    useEffect(() => {
       const input = inputRef.current;
 
       input?.addEventListener('wheel', handleWheel, { passive: false });
@@ -47,9 +47,18 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       return () => input?.removeEventListener('wheel', handleWheel);
     }, [inputRef]);
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = chain(inputProps.onChange, onChange);
+    const handleChange: ChangeEventHandler<HTMLInputElement> = chain(inputProps.onChange, onChange);
 
-    return <BaseInput {...ariaProps} {...mergeProps(props, inputProps)} onChange={handleChange} ref={inputRef} />;
+    return (
+      <BaseInput
+        ref={inputRef}
+        descriptionProps={descriptionProps}
+        errorMessageProps={errorMessageProps}
+        labelProps={labelProps}
+        onChange={handleChange}
+        {...mergeProps(props, inputProps)}
+      />
+    );
   }
 );
 

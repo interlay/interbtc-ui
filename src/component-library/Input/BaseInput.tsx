@@ -1,26 +1,24 @@
-import { forwardRef, HTMLAttributes, ReactNode } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
 
-import { HelperText } from '../HelperText';
+import { HelperText, HelperTextProps } from '../HelperText';
 import { Label, LabelProps } from '../Label';
 import { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper } from './Input.style';
 
 type Props = {
   label?: ReactNode;
   labelProps?: LabelProps;
-  description?: ReactNode;
-  descriptionProps?: HTMLAttributes<HTMLElement>;
-  errorMessage?: ReactNode;
-  errorMessageProps?: HTMLAttributes<HTMLElement>;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;
-  inputProps?: HTMLAttributes<HTMLInputElement>;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-type NativeAttrs = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>;
+type NativeAttrs = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>;
 
-type BaseInputProps = Props & NativeAttrs;
+type InhriteAttrs = Omit<HelperTextProps, keyof Props & NativeAttrs>;
+
+type BaseInputProps = Props & NativeAttrs & InhriteAttrs;
 
 const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
   (
@@ -63,7 +61,6 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
             errorMessage={errorMessage}
             descriptionProps={descriptionProps}
             errorMessageProps={errorMessageProps}
-            isDisabled={disabled}
           />
         )}
       </Wrapper>

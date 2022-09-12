@@ -10,7 +10,10 @@ type Props = {
   defaultValue?: string;
 };
 
-type InheritAttrs = Omit<BaseInputProps, keyof Props>;
+type InheritAttrs = Omit<
+  BaseInputProps,
+  keyof Props | 'errorMessageProps' | 'descriptionProps' | 'disabled' | 'required' | 'readOnly'
+>;
 
 type AriaAttrs = Omit<AriaTextFieldOptions<'input'>, (keyof Props & InheritAttrs) | 'onChange'>;
 
@@ -19,9 +22,17 @@ type InputProps = Props & InheritAttrs & AriaAttrs;
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ onChange, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
-    const { inputProps, ...ariaProps } = useTextField(props, inputRef);
+    const { inputProps, descriptionProps, errorMessageProps, labelProps } = useTextField(props, inputRef);
 
-    return <BaseInput ref={inputRef} {...ariaProps} {...mergeProps(inputProps, { onChange })} />;
+    return (
+      <BaseInput
+        ref={inputRef}
+        descriptionProps={descriptionProps}
+        errorMessageProps={errorMessageProps}
+        labelProps={labelProps}
+        {...mergeProps(props, inputProps, { onChange })}
+      />
+    );
   }
 );
 

@@ -1,13 +1,12 @@
-import { forwardRef, HTMLAttributes, ReactNode } from 'react';
+import { forwardRef, HTMLAttributes } from 'react';
 
 import { StyledHelperText, StyledSubHelperText } from './HelperText.style';
 
 type Props = {
-  errorMessage?: ReactNode | ReactNode[];
+  errorMessage?: string | string[];
   errorMessageProps?: HTMLAttributes<HTMLElement>;
-  description?: ReactNode;
+  description?: string;
   descriptionProps?: HTMLAttributes<HTMLElement>;
-  isDisabled?: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;

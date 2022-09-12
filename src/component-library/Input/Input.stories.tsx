@@ -6,7 +6,13 @@ const Template: Story<InputProps> = (args) => <Input {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  id: 'id',
+  placeholder: 'placeholder',
+  label: 'Coin',
+  description: "What's your favorite coin?"
+};
+
+const Label = Template.bind({});
+Label.args = {
   placeholder: 'placeholder',
   label: 'Coin',
   description: "What's your favorite coin?"
@@ -14,7 +20,6 @@ Default.args = {
 
 const Error = Template.bind({});
 Error.args = {
-  id: 'id',
   label: 'Coin',
   description: "What's your favorite coin?",
   errorMessage: 'Please enter your favorite coin!'
@@ -22,7 +27,6 @@ Error.args = {
 
 const MultipleErrors = Template.bind({});
 MultipleErrors.args = {
-  id: 'id',
   label: 'Coin',
   description: "What's your favorite coin?",
   errorMessage: ['Please enter your favorite coin!', 'Please enter a valid coin!']
@@ -30,7 +34,6 @@ MultipleErrors.args = {
 
 const Disabled = Template.bind({});
 Disabled.args = {
-  id: 'id',
   label: 'Coin',
   description: "What's your favorite coin?",
   defaultValue: 'Bitcoin',
