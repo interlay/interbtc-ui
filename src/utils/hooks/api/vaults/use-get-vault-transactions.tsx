@@ -1,4 +1,4 @@
-import { ReplaceRequestExt } from '@interlay/interbtc-api';
+import { IssueStatus, RedeemStatus, ReplaceRequestExt } from '@interlay/interbtc-api';
 import { H256 } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -7,20 +7,71 @@ import { formatDateTimePrecise } from '@/common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { TransactionTableData } from '@/pages/Vaults/Vault/components/TransactionHistory/TransactionTable';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import issuesFetcher, { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
-import redeemsFetcher, { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
+import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
+import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
+import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+
+// TODO: Bad stuff happening here! `getIssueWithStatus` and `getRedeemWithStatus` are
+// mutating the data which is why `status` is being set like this. We need to refactor
+// the modal and fetchers to handle all use cases better.
+const setIssueStatus = (status: IssueStatus) => {
+  switch (status) {
+    case IssueStatus.Completed:
+      return 'completed';
+    case IssueStatus.Cancelled:
+    case IssueStatus.Expired:
+      return 'cancelled';
+    case IssueStatus.PendingWithBtcTxNotIncluded:
+    case IssueStatus.PendingWithTooFewConfirmations:
+      return 'pending';
+    case IssueStatus.PendingWithEnoughConfirmations:
+      return 'confirmed';
+    default:
+      throw new Error('Invalid issue request status!');
+  }
+};
+
+const setRedeemStatus = (status: RedeemStatus) => {
+  switch (status) {
+    case RedeemStatus.Completed:
+      return 'completed';
+    case RedeemStatus.PendingWithBtcTxNotFound:
+      return 'pending';
+    case RedeemStatus.Reimbursed:
+      return 'reimbursed';
+    case RedeemStatus.Retried:
+      return 'retried';
+    default:
+      return 'received';
+  }
+};
 
 // TODO: Issues/Redeems/ReplaceRequests types are missing
-const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) => {
+const parseTransactionsData = (
+  issues: any,
+  redeems: any,
+  replaceRequests: any,
+  stableBitcoinConfirmations: any,
+  stableParachainConfirmations: any,
+  currentActiveBlockNumber: any
+) => {
   const mappedIssues = issues
     ? issues.map((issue: any) => {
         return {
+          requestData: getIssueWithStatus(
+            issue,
+            stableBitcoinConfirmations,
+            stableParachainConfirmations,
+            currentActiveBlockNumber
+          ),
           id: issue.id,
           request: 'Issue',
           amount: issue.execution
             ? issue.execution.amountWrapped.toBig().toString()
             : issue.request.amountWrapped.toBig().toString(),
-          status: issue.status.toLowerCase(),
+          status: setIssueStatus(issue.status),
           date: formatDateTimePrecise(new Date(issue.request.timestamp))
         };
       })
@@ -29,10 +80,16 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
   const mappedRedeems = redeems
     ? redeems.map((redeem: any) => {
         return {
+          requestData: getRedeemWithStatus(
+            redeem,
+            stableBitcoinConfirmations,
+            stableParachainConfirmations,
+            currentActiveBlockNumber
+          ),
           id: redeem.id,
           request: 'Redeem',
           amount: redeem.request.requestedAmountBacking.toBig().toString(),
-          status: redeem.status.toLowerCase(),
+          status: setRedeemStatus(redeem.status),
           date: formatDateTimePrecise(new Date(redeem.request.timestamp))
         };
       })
@@ -64,6 +121,18 @@ const parseTransactionsData = (issues: any, redeems: any, replaceRequests: any) 
 const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: string): TransactionTableData[] => {
   const vaultId = window.bridge?.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
+  const { data: stableBitcoinConfirmations, error: stableBitcoinConfirmationsError } = useStableBitcoinConfirmations();
+  useErrorHandler(stableBitcoinConfirmationsError);
+
+  const { data: currentActiveBlockNumber, error: currentActiveBlockNumberError } = useCurrentActiveBlockNumber();
+  useErrorHandler(currentActiveBlockNumberError);
+
+  const {
+    data: stableParachainConfirmations,
+    error: stableParachainConfirmationsError
+  } = useStableParachainConfirmations();
+  useErrorHandler(stableParachainConfirmationsError);
+
   // TODO: remove the dependency on legacy issuesFetcher and redeemFetcher
   const { data: issues, error: issuesError } = useQuery<any, Error>(
     [
@@ -94,7 +163,14 @@ const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: stri
   );
   useErrorHandler(replaceRequestsError);
 
-  return parseTransactionsData(issues, redeems, replaceRequests);
+  return parseTransactionsData(
+    issues,
+    redeems,
+    replaceRequests,
+    stableBitcoinConfirmations,
+    stableParachainConfirmations,
+    currentActiveBlockNumber
+  );
 };
 
 export { useGetVaultTransactions };
