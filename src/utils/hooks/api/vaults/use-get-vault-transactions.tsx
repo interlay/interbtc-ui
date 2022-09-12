@@ -24,6 +24,7 @@ const setIssueStatus = (status: IssueStatus) => {
     case IssueStatus.Expired:
       return 'cancelled';
     case IssueStatus.PendingWithBtcTxNotIncluded:
+    case IssueStatus.PendingWithBtcTxNotFound:
     case IssueStatus.PendingWithTooFewConfirmations:
       return 'pending';
     case IssueStatus.PendingWithEnoughConfirmations:
