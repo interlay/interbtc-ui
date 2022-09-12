@@ -7,6 +7,7 @@ type Props = {
   errorMessageProps?: HTMLAttributes<HTMLElement>;
   description?: ReactNode;
   descriptionProps: HTMLAttributes<HTMLElement>;
+  isDisabled?: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;

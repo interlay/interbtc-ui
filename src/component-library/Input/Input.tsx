@@ -10,6 +10,10 @@ import { Adornment, BaseInput, BaseInputWrapper, Wrapper } from './Input.style';
 type Props = {
   label?: ReactNode;
   labelProps?: LabelProps;
+  description?: ReactNode;
+  descriptionProps?: HelperTextProps;
+  errorMessage?: ReactNode;
+  errorMessageProps?: HelperTextProps;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
   value?: string;
@@ -18,10 +22,7 @@ type Props = {
 
 type NativeAttrs = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof Props>;
 
-type InheritAttrs = Omit<
-  LabelProps & HelperTextProps & AriaTextFieldOptions<'input'>,
-  (keyof Props & NativeAttrs) | 'onChange'
->;
+type InheritAttrs = Omit<AriaTextFieldOptions<'input'>, (keyof Props & NativeAttrs) | 'onChange'>;
 
 type InputProps = Props & NativeAttrs & InheritAttrs;
 
