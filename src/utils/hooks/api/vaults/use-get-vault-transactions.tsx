@@ -27,7 +27,7 @@ const setIssueStatus = (status: IssueStatus) => {
     case IssueStatus.PendingWithTooFewConfirmations:
       return 'pending';
     case IssueStatus.PendingWithEnoughConfirmations:
-      return 'confirmed'; // yellow
+      return 'confirmed';
     default:
       throw new Error('Invalid issue request status!');
   }
@@ -39,9 +39,9 @@ const setRedeemStatus = (status: RedeemStatus) => {
       return 'completed';
     case RedeemStatus.PendingWithBtcTxNotFound:
       return 'pending';
-    case RedeemStatus.Reimbursed: // Reimbursed - green
+    case RedeemStatus.Reimbursed:
       return 'reimbursed';
-    case RedeemStatus.Retried: // Retried
+    case RedeemStatus.Retried:
       return 'retried';
     default:
       return 'received';
