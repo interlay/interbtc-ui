@@ -37,7 +37,8 @@ const StyledTable = styled(Table)`
   text-align: left;
   margin-top: ${theme.spacing.spacing4};
 
-  /* TODO: better solution for this. Require UX input on hover state */
+  /* TODO: better solution for this. Require UX input on hover state.
+  Should be handled in the component, not the application. */
   tr:hover {
     cursor: pointer;
   }
