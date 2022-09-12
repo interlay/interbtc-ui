@@ -36,7 +36,14 @@ Small.args = {
   children: 'Call to action'
 };
 
-export { FullWidth, Outlined, Primary, Secondary, Small };
+const Large = Template.bind({});
+Large.args = {
+  variant: 'primary',
+  size: 'large',
+  children: 'Call to action'
+};
+
+export { FullWidth, Large, Outlined, Primary, Secondary, Small };
 
 export default {
   title: 'Elements/CTALink',

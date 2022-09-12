@@ -103,9 +103,9 @@ const theme = {
       lineHeight: 'var(--line-height-base)'
     },
     large: {
-      padding: 'var(--spacing-3) var(--spacing-10)',
-      text: 'var(--text-base)',
-      lineHeight: 'var(--line-height-base)'
+      padding: 'var(--spacing-4) var(--spacing-12)',
+      text: 'var(--text-lg)',
+      lineHeight: 'var(--line-height-lg)'
     }
   },
   table: {
@@ -159,8 +159,18 @@ const theme = {
       bg: 'var(--colors-cta-secondary)'
     },
     indeterminate: {
-      color: 'var(--colors-indeterminate-color)',
-      bg: 'var(--colors-indeterminate-bg)'
+      primary: {
+        color: 'var(--colors-indeterminate-primary-color)',
+        bg: 'var(--colors-indeterminate-primary-bg)'
+      },
+      secondary: {
+        color: 'var(--colors-indeterminate-secondary-color)',
+        bg: 'var(--colors-indeterminate-secondary-bg)'
+      },
+      outlined: {
+        color: 'var(--colors-indeterminate-outlined-color)',
+        bg: 'var(--colors-indeterminate-outlined-bg)'
+      }
     }
   },
   progress: {

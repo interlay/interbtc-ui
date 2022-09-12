@@ -1,41 +1,25 @@
+import { chain } from '@react-aria/utils';
 import { forwardRef } from 'react';
 import { Link, LinkProps } from 'react-router-dom';
 
-import { CTAVariants, Sizes } from '../utils/prop-types';
-import { OutlinedCTA, PrimaryCTA, SecondaryCTA } from './CTA.style';
+import { BaseCTA, BaseCTAProps } from './BaseCTA';
 
-type Props = {
-  variant?: CTAVariants;
-  fullWidth?: boolean;
-  size?: Sizes;
-};
+type NativeAttrs = LinkProps;
 
-type NativeAttrs = Omit<LinkProps, keyof Props>;
+type InheritAttrs = Omit<BaseCTAProps, keyof NativeAttrs>;
 
-type CTALinkProps = Props & NativeAttrs;
+type CTALinkProps = InheritAttrs & NativeAttrs;
 
 // TODO: Does this need to be changed to a React Router link component?
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
-  ({ variant, fullWidth = false, size = 'medium', className, children, ...rest }, ref): JSX.Element => {
-    const props = {
-      as: Link,
-      $fullWidth: fullWidth,
-      ref,
-      className,
-      children,
-      $size: size,
-      ...rest
+  ({ disabled, onClick, ...props }, ref): JSX.Element => {
+    const handleClick: React.MouseEventHandler<unknown> = (e) => {
+      if (disabled) {
+        e.preventDefault();
+      }
     };
 
-    switch (variant) {
-      default:
-      case 'primary':
-        return <PrimaryCTA {...props} />;
-      case 'secondary':
-        return <SecondaryCTA {...props} />;
-      case 'outlined':
-        return <OutlinedCTA {...props} />;
-    }
+    return <BaseCTA ref={ref} as={Link} disabled={disabled} onClick={chain(handleClick, onClick)} {...props} />;
   }
 );
 
