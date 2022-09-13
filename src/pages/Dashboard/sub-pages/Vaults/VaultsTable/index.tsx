@@ -1,10 +1,4 @@
-import {
-  CollateralIdLiteral,
-  currencyIdToMonetaryCurrency,
-  isCurrencyEqual,
-  roundTwoDecimals,
-  VaultExt
-} from '@interlay/interbtc-api';
+import { CollateralIdLiteral, currencyIdToMonetaryCurrency, isCurrencyEqual, VaultExt } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -17,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatPercentage, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
@@ -33,7 +27,8 @@ import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
 import { VAULT_COLLATERAL_TOKENS } from '@/config/vaults';
 import * as constants from '@/constants';
@@ -67,14 +62,12 @@ const CollateralizationCell = ({
       <>
         <div>
           <p className={getCollateralizationColor(settledCollateralization, collateralSecureThreshold)}>
-            {settledCollateralization === undefined ? '∞' : roundTwoDecimals(settledCollateralization.toString()) + '%'}
+            {settledCollateralization === undefined ? '∞' : formatPercentage(settledCollateralization.toNumber())}
           </p>
           <p className='text-xs'>
             <span>{t('vault.pending_table_subcell')}</span>
             <span className={getCollateralizationColor(unsettledCollateralization, collateralSecureThreshold)}>
-              {unsettledCollateralization === undefined
-                ? '∞'
-                : roundTwoDecimals(unsettledCollateralization.toString()) + '%'}
+              {unsettledCollateralization === undefined ? '∞' : formatPercentage(unsettledCollateralization.toNumber())}
             </span>
           </p>
         </div>
@@ -276,7 +269,7 @@ const VaultsTable = (): JSX.Element => {
           if (vaultExt.id.currencies.collateral.isToken) {
             return true;
           }
-          console.warn("Unsupported non token collateral vault found and removed from vaults list");
+          console.warn('Unsupported non token collateral vault found and removed from vaults list');
           return false;
         })
         .map((vaultExt) => {
@@ -310,7 +303,11 @@ const VaultsTable = (): JSX.Element => {
 
           const vaultCollateral = vaultExt.backingCollateral;
           const settledTokens = vaultExt.issuedTokens;
-          const settledCollateralization = getCollateralization(vaultCollateral, settledTokens, btcToCollateralTokenRate);
+          const settledCollateralization = getCollateralization(
+            vaultCollateral,
+            settledTokens,
+            btcToCollateralTokenRate
+          );
           const unsettledTokens = vaultExt.toBeIssuedTokens;
           const unsettledCollateralization = getCollateralization(
             vaultCollateral,
@@ -322,7 +319,9 @@ const VaultsTable = (): JSX.Element => {
             [Accessor.VaultId]: vaultExt.id.accountId.toString(),
             [Accessor.Collateral]: collateralTokenSymbol,
             // TODO: fetch collateral reserved
-            [Accessor.LockedCollateralTokenAmount]: `${displayMonetaryAmount(vaultCollateral)} ${collateralTokenSymbol}`,
+            [Accessor.LockedCollateralTokenAmount]: `${displayMonetaryAmount(
+              vaultCollateral
+            )} ${collateralTokenSymbol}`,
             [Accessor.LockedBTCAmount]: settledTokens,
             [Accessor.PendingBTCAmount]: displayMonetaryAmount(unsettledTokens),
             [Accessor.CollateralizationUI]: (
@@ -334,7 +333,7 @@ const VaultsTable = (): JSX.Element => {
             ),
             [Accessor.Status]: statusLabel
           };
-      });
+        });
 
       const sortedVaults = rawVaults.sort((vaultA, vaultB) => {
         const vaultALockedBTC = vaultA[Accessor.LockedBTCAmount];
@@ -374,8 +373,12 @@ const VaultsTable = (): JSX.Element => {
       return <PrimaryColorEllipsisLoader />;
     }
 
-    const handleRowClick = (vaultId: string) => () => {
-      history.push(PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, vaultId));
+    const handleRowClick = (vaultId: string, collateralToken: string) => () => {
+      const vault = PAGES.VAULT.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, vaultId)
+        .replace(`:${URL_PARAMETERS.VAULT.COLLATERAL}`, collateralToken)
+        .replace(`:${URL_PARAMETERS.VAULT.WRAPPED}`, WRAPPED_TOKEN_SYMBOL);
+
+      history.push(vault);
     };
 
     return (
@@ -417,7 +420,7 @@ const VaultsTable = (): JSX.Element => {
                 key={key}
                 className={clsx(rowClassName, 'cursor-pointer')}
                 {...restRowProps}
-                onClick={handleRowClick(row.original[Accessor.VaultId])}
+                onClick={handleRowClick(row.original[Accessor.VaultId], row.original[Accessor.Collateral])}
               >
                 {/* TODO: should type properly */}
                 {row.cells.map((cell: any) => {

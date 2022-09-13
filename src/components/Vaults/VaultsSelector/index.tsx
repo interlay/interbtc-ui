@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { VaultApiType } from '@/common/types/vault.types';
-import { shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import Select, {
@@ -51,7 +51,7 @@ const VaultOption = ({ vault, error }: VaultOptionProps): JSX.Element => {
       <SelectText className={clsx('w-44', 'font-bold')}>{shortAddress(vault[0].accountId.toString())}</SelectText>
       <SelectText className='w-16'>{vault[0].currencies.collateral.asToken.toString()}</SelectText>
       <SelectText>
-        <strong>{vault[1].toHuman()}</strong> BTC
+        <strong>{displayMonetaryAmount(vault[1])}</strong> BTC
       </SelectText>
     </div>
   ) : (

@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useErrorHandler } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import { shortAddress } from '@/common/utils/utils';
+import { formatNumber, shortAddress } from '@/common/utils/utils';
 import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
@@ -66,10 +66,10 @@ const DefaultRedeemRequest = ({ redeem }: Props): JSX.Element => {
         <Ring48Title>{t('redeem_page.waiting_for')}</Ring48Title>
         <Ring48Title>{t('confirmations')}</Ring48Title>
         <Ring48Value className={getColorShade('green')}>
-          {`${redeem.backingPayment.confirmations || 0}/${stableBitcoinConfirmations}`}
+          {`${formatNumber(redeem.backingPayment.confirmations || 0)}/${formatNumber(stableBitcoinConfirmations)}`}
         </Ring48Value>
         <Ring48Value className={getColorShade('green')}>
-          {`${requestConfirmations}/${stableParachainConfirmations}`}
+          {`${formatNumber(requestConfirmations)}/${formatNumber(stableParachainConfirmations)}`}
         </Ring48Value>
       </Ring48>
       <p className='space-x-1'>

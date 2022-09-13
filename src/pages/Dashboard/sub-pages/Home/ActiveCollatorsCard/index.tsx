@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { getLastMidnightTimestamps } from '@/common/utils/utils';
+import { formatNumber, getLastMidnightTimestamps } from '@/common/utils/utils';
 import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
 import { INTERLAY_DENIM, KINTSUGI_APPLE } from '@/utils/constants/colors';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -34,7 +34,7 @@ const ActiveCollatorsCard = (): JSX.Element => {
         leftPart={
           <>
             <StatsDt>{t('dashboard.collators.active_collators')}</StatsDt>
-            <StatsDd>3</StatsDd>
+            <StatsDd>{formatNumber(3)}</StatsDd>
           </>
         }
       />

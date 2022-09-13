@@ -15,7 +15,6 @@ import CloseIconButton from '@/components/buttons/CloseIconButton';
 import ErrorModal from '@/components/ErrorModal';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
@@ -172,8 +171,9 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     governanceTokenBalanceIdle ||
     governanceTokenBalanceLoading
   ) {
-    return <PrimaryColorEllipsisLoader />;
+    return <></>;
   }
+
   if (governanceTokenBalance === undefined) {
     throw new Error('Something went wrong!');
   }
