@@ -2,6 +2,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './i18n';
 
 import { ChainBalance, FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
+import { Keyring } from '@polkadot/api';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -31,6 +32,7 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { CLASS_NAMES } from '@/utils/constants/styles';
 
 import * as constants from './constants';
+import { useSubstrate, useSubstrateSecureState } from './substrate-lib/substrate-context';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
@@ -153,47 +155,28 @@ const App = (): JSX.Element => {
     })();
   }, [dispatch, bridgeLoaded]);
 
-  // ray test touch <<
+  const { extensions } = useSubstrateSecureState();
+  const { setSelectedAccount } = useSubstrate();
   // Loads the address for the currently selected account
-  // ray test touch >>
-  // React.useEffect(() => {
-  //   if (!dispatch) return;
-  //   if (!bridgeLoaded) return;
-  //   const trySetDefaultAccount = () => {
-  //     if (constants.DEFAULT_ACCOUNT_SEED) {
-  //       const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
-  //       const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
-  //       window.bridge.setAccount(defaultAccountKeyring);
-  //       dispatch(changeAddressAction(defaultAccountKeyring.address));
-  //     }
-  //   };
-  //   (async () => {
-  //     try {
-  //       const theExtensions = await web3Enable(APP_NAME);
-  //       if (theExtensions.length === 0) {
-  //         trySetDefaultAccount();
-  //         return;
-  //       }
-  //       dispatch(setInstalledExtensionAction(theExtensions.map((extension) => extension.name)));
-  //       // TODO: loads accounts just once
-  //       const accounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
-  //       const matchedAccount = accounts.find((account) => account.address === address);
-  //       if (matchedAccount) {
-  //         const { signer } = await web3FromAddress(address);
-  //         window.bridge.setAccount(address, signer);
-  //       } else {
-  //         dispatch(changeAddressAction(''));
-  //         // ray test touch <
-  //         window.bridge.removeAccount();
-  //         // ray test touch >
-  //       }
-  //     } catch (error) {
-  //       // TODO: should add error handling
-  //       console.log('[App React.useEffect 3] error.message => ', error.message);
-  //     }
-  //   })();
-  // }, [address, bridgeLoaded, dispatch]);
-  // ray test touch >>
+  React.useEffect(() => {
+    if (!setSelectedAccount) return;
+
+    (async () => {
+      try {
+        if (extensions.length === 0) {
+          if (constants.DEFAULT_ACCOUNT_SEED) {
+            const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
+            const defaultAccount = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
+            setSelectedAccount(defaultAccount);
+          }
+          return;
+        }
+      } catch (error) {
+        // TODO: should add error handling
+        console.log('[App React.useEffect 3] error.message => ', error.message);
+      }
+    })();
+  }, [setSelectedAccount, extensions.length]);
 
   // Subscribes to relay-chain native token balance
   React.useEffect(() => {

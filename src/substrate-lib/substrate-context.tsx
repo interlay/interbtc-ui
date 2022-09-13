@@ -307,7 +307,6 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
 const SubstrateStateContext = React.createContext<SubstrateStateContextInterface | undefined>(undefined);
 
 const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.Element => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
   const [lsValue, setLSValue, removeLS] = useLocalStorage<KeyringPair | undefined>(
     SELECTED_ACCOUNT_LOCAL_STORAGE_KEY,
     undefined
@@ -317,9 +316,7 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     ...initialState,
     // Filtering props and merge with default param value
     socket: socket ?? initialState.socket,
-    // ray test touch <<
     selectedAccount: lsValue
-    // ray test touch >>
   });
 
   const stateRef = React.useRef(state);
@@ -349,15 +346,16 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     [reduxDispatch, setLSValue]
   );
 
-  const removeSelectedAccount = () => {
+  const removeSelectedAccount = React.useCallback(() => {
+    if (!reduxDispatch) return;
+    if (!removeLS) return;
+
     dispatch({ type: ActionType.SetSelectedAccount, payload: undefined });
-    // ray test touch <<
     removeLS();
-    // ray test touch >>
     window.bridge.removeAccount();
     // TODO: remove
     reduxDispatch(changeAddressAction(''));
-  };
+  }, [reduxDispatch, removeLS]);
 
   const value = {
     state,
