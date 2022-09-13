@@ -3,7 +3,12 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, shortAddress } from '@/common/utils/utils';
+import {
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
+  formatNumber,
+  shortAddress
+} from '@/common/utils/utils';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
@@ -145,7 +150,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             >
               {t('issue_page.parachain_block')}
             </span>
-            <span className='font-medium'>{redeem.request.height.absolute}</span>
+            <span className='font-medium'>{formatNumber(redeem.request.height.absolute)}</span>
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span

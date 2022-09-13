@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, safeRoundTwoDecimals } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
@@ -626,7 +626,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return `${safeRoundTwoDecimals(estimatedRewardAmountAndAPY.apy.toString())} %`;
+    return formatPercentage(estimatedRewardAmountAndAPY.apy.toNumber());
   };
 
   const renderEstimatedRewardAmountLabel = () => {

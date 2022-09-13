@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, formatDateTimePrecise, shortTxId } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -167,7 +167,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           const value = redeem.backingPayment.confirmations;
-          return <>{value === undefined ? t('not_applicable') : Math.max(value, 0)}</>;
+          return <>{value === undefined ? t('not_applicable') : formatNumber(Math.max(value, 0))}</>;
         }
       },
       {

@@ -66,7 +66,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
       <div className={clsx('flex', 'flex-col', 'justify-center', 'items-center')}>
         <div className='text-xl'>
           {t('send')}
-          <span className={getColorShade('yellow')}>&nbsp;{displayMonetaryAmount(amountBTCToSend)}&nbsp;</span>
+          <span className={getColorShade('yellow')}>&nbsp;{amountBTCToSend.toBig().toString()}&nbsp;</span>
           BTC
         </div>
         <span

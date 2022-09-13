@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -37,7 +37,9 @@ import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader'
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import InterlayLink from '@/components/UI/InterlayLink';
 import Vaults from '@/components/Vaults';
+import { INTERLAY_VAULT_DOCS } from '@/config/links';
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -75,6 +77,23 @@ const extraRequiredCollateralTokenAmount = newMonetaryAmount(
   GOVERNANCE_TOKEN,
   true
 );
+
+const getTokenFieldHelperText = (message?: string) => {
+  switch (message) {
+    case 'no_issuable_token_available':
+      return (
+        <Trans i18nKey='no_issuable_token_available'>
+          Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or{' '}
+          <InterlayLink className='underline' target='_blank' rel='noreferrer' href={INTERLAY_VAULT_DOCS}>
+            consider running a Vault
+          </InterlayLink>
+          !
+        </Trans>
+      );
+    default:
+      return message;
+  }
+};
 
 type IssueFormData = {
   [BTC_AMOUNT]: string;
@@ -213,6 +232,17 @@ const IssueForm = (): JSX.Element | null => {
       clearErrors(VAULT_SELECTION);
     }
   }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
+
+  const hasIssuableToken = !requestLimits?.singleVaultMaxIssuable.isZero();
+
+  React.useEffect(() => {
+    if (!hasIssuableToken) {
+      setError(BTC_AMOUNT, {
+        type: 'validate',
+        message: 'no_issuable_token_available'
+      });
+    }
+  }, [hasIssuableToken, setError]);
 
   if (
     status === STATUSES.IDLE ||
@@ -378,7 +408,8 @@ const IssueForm = (): JSX.Element | null => {
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}`}
               error={!!errors[BTC_AMOUNT]}
-              helperText={errors[BTC_AMOUNT]?.message}
+              helperText={getTokenFieldHelperText(errors[BTC_AMOUNT]?.message)}
+              helperTextClassName={clsx({ 'h-12': !hasIssuableToken })}
             />
             <AvailableBalanceUI
               label={t('issue_page.maximum_in_single_request')}
