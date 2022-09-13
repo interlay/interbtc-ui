@@ -73,7 +73,6 @@ const TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Elemen
           request={selectedTableRow.requestData}
         />
       )}
-      ;
     </>
   );
 };
