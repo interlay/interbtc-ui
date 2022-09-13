@@ -1,7 +1,7 @@
 import { useId } from '@react-aria/utils';
 import { useState } from 'react';
 
-import { H2, Modal } from '@/component-library';
+import { H3, Modal, Stack } from '@/component-library';
 import { AvailableVaultData, useGetAvailableVaults } from '@/utils/hooks/api/use-get-available-vaults';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
@@ -44,13 +44,13 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
   }));
 
   return (
-    <section>
-      <H2 id={titleId}>Create a vault</H2>
+    <Stack spacing='double'>
+      <H3 id={titleId}>Create a vault</H3>
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
       <Modal open={open} onClose={handleCloseModal}>
         <CreateVaultWizard vault={selectedVault} />
       </Modal>
-    </section>
+    </Stack>
   );
 };
 
