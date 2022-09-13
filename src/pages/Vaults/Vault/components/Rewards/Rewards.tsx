@@ -4,7 +4,7 @@ import { HTMLAttributes } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
+import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { LoadingSpinner } from '@/component-library/LoadingSpinner';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -109,7 +109,7 @@ const Rewards = ({
   );
 
   const stakingItems: InsightListItem[] = [
-    { title: 'APR', label: formatPercentage(apy.toNumber()) },
+    { title: 'APR', label: `${formatNumber(apy.toNumber(), { maximumFractionDigits: 2, minimumFractionDigits: 2 })}%` },
     {
       title: `Fees earned ${wrappedId}`,
       label: wrappedTokenRewards.amount.toString(),
