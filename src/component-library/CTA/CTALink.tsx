@@ -1,25 +1,34 @@
-import { chain } from '@react-aria/utils';
 import { forwardRef } from 'react';
 import { Link, LinkProps } from 'react-router-dom';
 
 import { BaseCTA, BaseCTAProps } from './BaseCTA';
 
-type NativeAttrs = LinkProps;
+type Props = {
+  external?: boolean;
+  disabled?: boolean;
+};
 
-type InheritAttrs = Omit<BaseCTAProps, keyof NativeAttrs>;
+type NativeAttrs = Omit<LinkProps, keyof Props | 'href'>;
 
-type CTALinkProps = InheritAttrs & NativeAttrs;
+type InheritAttrs = Omit<BaseCTAProps, keyof NativeAttrs & Props>;
+
+type CTALinkProps = Props & NativeAttrs & InheritAttrs;
 
 // TODO: Does this need to be changed to a React Router link component?
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
-  ({ disabled, onClick, ...props }, ref): JSX.Element => {
-    const handleClick: React.MouseEventHandler<unknown> = (e) => {
-      if (disabled) {
-        e.preventDefault();
-      }
-    };
+  ({ disabled, onClick, external, to, ...props }, ref): JSX.Element => {
+    const linkProps: LinkProps = external ? { to: { pathname: to }, target: '_blank', rel: 'noreferrer' } : { to };
 
-    return <BaseCTA ref={ref} as={Link} disabled={disabled} onClick={chain(handleClick, onClick)} {...props} />;
+    return (
+      <BaseCTA
+        ref={ref}
+        as={Link}
+        onClick={onClick}
+        aria-disabled={disabled ? 'true' : undefined}
+        {...props}
+        {...linkProps}
+      />
+    );
   }
 );
 

@@ -13,7 +13,6 @@ const BaseCTA = styled.button<StyledCTAProps>`
   align-items: center;
   justify-content: center;
   color: ${theme.cta.primary.text};
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border: none;
   border-radius: ${theme.rounded.md};
   font-size: ${(props) => theme.cta[props.$size].text};
@@ -22,10 +21,12 @@ const BaseCTA = styled.button<StyledCTAProps>`
   padding: ${(props) => theme.cta[props.$size].padding};
   text-decoration: none;
   width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
-  opacity: ${(props) => (props.disabled ? '50%' : '100%')};
 
+  &[aria-disabled='true'],
   &[disabled] {
     pointer-events: none;
+    cursor: not-allowed;
+    opacity: 50%;
   }
 `;
 
