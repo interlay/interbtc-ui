@@ -307,10 +307,19 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
 const SubstrateStateContext = React.createContext<SubstrateStateContextInterface | undefined>(undefined);
 
 const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.Element => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const [lsValue, setLSValue, removeLS] = useLocalStorage<KeyringPair | undefined>(
+    SELECTED_ACCOUNT_LOCAL_STORAGE_KEY,
+    undefined
+  );
+
   const [state, dispatch] = React.useReducer(substrateReducer, {
     ...initialState,
     // Filtering props and merge with default param value
-    socket: socket ?? initialState.socket
+    socket: socket ?? initialState.socket,
+    // ray test touch <<
+    selectedAccount: lsValue
+    // ray test touch >>
   });
 
   const stateRef = React.useRef(state);
@@ -324,26 +333,31 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
 
   const reduxDispatch = useDispatch();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  const [_, setValue] = useLocalStorage<KeyringPair | undefined>(SELECTED_ACCOUNT_LOCAL_STORAGE_KEY, undefined);
+  const setSelectedAccount = React.useCallback(
+    async (newAccount: KeyringPair) => {
+      if (!reduxDispatch) return;
+      if (!setLSValue) return;
 
-  async function setSelectedAccount(newAccount: KeyringPair) {
-    dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
-    setValue(newAccount);
-    // TODO: race condition might happen
-    const { signer } = await web3FromAddress(newAccount.address);
-    window.bridge.setAccount(newAccount.address, signer);
-    // TODO: remove
-    reduxDispatch(changeAddressAction(newAccount.address));
-  }
+      dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
+      setLSValue(newAccount);
+      // TODO: race condition might happen
+      const { signer } = await web3FromAddress(newAccount.address);
+      window.bridge.setAccount(newAccount.address, signer);
+      // TODO: remove
+      reduxDispatch(changeAddressAction(newAccount.address));
+    },
+    [reduxDispatch, setLSValue]
+  );
 
-  function removeSelectedAccount() {
+  const removeSelectedAccount = () => {
     dispatch({ type: ActionType.SetSelectedAccount, payload: undefined });
-    setValue(undefined);
+    // ray test touch <<
+    removeLS();
+    // ray test touch >>
     window.bridge.removeAccount();
     // TODO: remove
     reduxDispatch(changeAddressAction(''));
-  }
+  };
 
   const value = {
     state,

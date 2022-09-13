@@ -2,8 +2,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import './i18n';
 
 import { ChainBalance, FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
-import { Keyring } from '@polkadot/api';
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -11,11 +9,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 import {
-  changeAddressAction,
   initGeneralDataAction,
   isFaucetLoaded,
   isVaultClientLoaded,
-  setInstalledExtensionAction,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
   updateWrappedTokenBalanceAction,
@@ -24,7 +20,7 @@ import {
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
-import { APP_NAME, GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
@@ -159,48 +155,44 @@ const App = (): JSX.Element => {
 
   // ray test touch <<
   // Loads the address for the currently selected account
-  React.useEffect(() => {
-    if (!dispatch) return;
-    if (!bridgeLoaded) return;
-
-    const trySetDefaultAccount = () => {
-      if (constants.DEFAULT_ACCOUNT_SEED) {
-        const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
-        const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
-        window.bridge.setAccount(defaultAccountKeyring);
-        dispatch(changeAddressAction(defaultAccountKeyring.address));
-      }
-    };
-
-    (async () => {
-      try {
-        const theExtensions = await web3Enable(APP_NAME);
-        if (theExtensions.length === 0) {
-          trySetDefaultAccount();
-          return;
-        }
-
-        dispatch(setInstalledExtensionAction(theExtensions.map((extension) => extension.name)));
-
-        // TODO: loads accounts just once
-        const accounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
-        const matchedAccount = accounts.find((account) => account.address === address);
-
-        if (matchedAccount) {
-          const { signer } = await web3FromAddress(address);
-          window.bridge.setAccount(address, signer);
-        } else {
-          dispatch(changeAddressAction(''));
-          // ray test touch <
-          window.bridge.removeAccount();
-          // ray test touch >
-        }
-      } catch (error) {
-        // TODO: should add error handling
-        console.log('[App React.useEffect 3] error.message => ', error.message);
-      }
-    })();
-  }, [address, bridgeLoaded, dispatch]);
+  // ray test touch >>
+  // React.useEffect(() => {
+  //   if (!dispatch) return;
+  //   if (!bridgeLoaded) return;
+  //   const trySetDefaultAccount = () => {
+  //     if (constants.DEFAULT_ACCOUNT_SEED) {
+  //       const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
+  //       const defaultAccountKeyring = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
+  //       window.bridge.setAccount(defaultAccountKeyring);
+  //       dispatch(changeAddressAction(defaultAccountKeyring.address));
+  //     }
+  //   };
+  //   (async () => {
+  //     try {
+  //       const theExtensions = await web3Enable(APP_NAME);
+  //       if (theExtensions.length === 0) {
+  //         trySetDefaultAccount();
+  //         return;
+  //       }
+  //       dispatch(setInstalledExtensionAction(theExtensions.map((extension) => extension.name)));
+  //       // TODO: loads accounts just once
+  //       const accounts = await web3Accounts({ ss58Format: constants.SS58_FORMAT });
+  //       const matchedAccount = accounts.find((account) => account.address === address);
+  //       if (matchedAccount) {
+  //         const { signer } = await web3FromAddress(address);
+  //         window.bridge.setAccount(address, signer);
+  //       } else {
+  //         dispatch(changeAddressAction(''));
+  //         // ray test touch <
+  //         window.bridge.removeAccount();
+  //         // ray test touch >
+  //       }
+  //     } catch (error) {
+  //       // TODO: should add error handling
+  //       console.log('[App React.useEffect 3] error.message => ', error.message);
+  //     }
+  //   })();
+  // }, [address, bridgeLoaded, dispatch]);
   // ray test touch >>
 
   // Subscribes to relay-chain native token balance
