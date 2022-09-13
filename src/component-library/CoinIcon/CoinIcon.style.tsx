@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { theme } from '../theme';
 import { Sizes } from '../utils/prop-types';
 
 interface IconWrapperProps {
@@ -7,16 +8,7 @@ interface IconWrapperProps {
 }
 
 const IconWrapper = styled.div<IconWrapperProps>`
-  width: ${(props) => {
-    switch (props.$size) {
-      case 'small':
-        return '2.625rem';
-      case 'medium':
-        return '3.755rem';
-      case 'large':
-        return '5.625rem';
-    }
-  }};
+  width: ${(props) => theme.coinIcon[props.$size].width};
 `;
 
 export { IconWrapper };

@@ -185,6 +185,17 @@ const theme = {
         success: 'var(--colors-success-20)'
       }
     }
+  },
+  coinIcon: {
+    small: {
+      width: '2.625rem'
+    },
+    medium: {
+      width: '3.755rem'
+    },
+    large: {
+      width: '5.625rem'
+    }
   }
 };
 

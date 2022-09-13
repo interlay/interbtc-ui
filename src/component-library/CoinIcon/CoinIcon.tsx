@@ -5,7 +5,7 @@ import { Sizes } from '../utils/prop-types';
 import { IconWrapper } from './CoinIcon.style';
 import { BtcIcon, DotIcon, InterBtcIcon, IntrIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
 
-const elementType: Record<Tokens, FC> = {
+const coinsIcon: Record<Tokens, FC> = {
   BTC: BtcIcon,
   DOT: DotIcon,
   IBTC: InterBtcIcon,
@@ -21,7 +21,7 @@ type CoinIconProps = {
 };
 
 const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
-  const CoinIcon = elementType[coin];
+  const CoinIcon = coinsIcon[coin];
 
   return (
     <IconWrapper $size={size}>
