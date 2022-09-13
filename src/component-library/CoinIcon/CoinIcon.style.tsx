@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 
+import { theme } from '../theme';
+import { Sizes } from '../utils/prop-types';
+
 interface IconWrapperProps {
-  size: 'small' | 'large';
+  $size: Sizes;
 }
 
-export const IconWrapper = styled.div<IconWrapperProps>`
-  width: ${(props) => (props.size === 'small' ? '2.625rem' : '3.755rem')};
+const IconWrapper = styled.div<IconWrapperProps>`
+  width: ${(props) => theme.coinIcon[props.$size].width};
 `;
 
-export type { IconWrapperProps };
+export { IconWrapper };
