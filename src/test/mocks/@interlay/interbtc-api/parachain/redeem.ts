@@ -7,7 +7,7 @@ import { WRAPPED_TOKEN } from "@/config/relay-chains";
 const DEFAULT_MAX_BURNABLE_TOKENS = '100000000'; // 1 BTC
 const DEFAULT_BURN_EXCHANGE_RATE = '150000';
 
-const mockRedeemGetMaxBurnable = jest.fn((_currency: CurrencyExt) =>
+const mockRedeemGetMaxBurnableTokens = jest.fn((_currency: CurrencyExt) =>
     newMonetaryAmount(DEFAULT_MAX_BURNABLE_TOKENS, WRAPPED_TOKEN)
 );
 const mockRedeemGetBurnExchangeRate = jest.fn(
@@ -16,4 +16,4 @@ const mockRedeemGetBurnExchangeRate = jest.fn(
 );
 const mockRedeemBurn = jest.fn();
 
-export { mockRedeemBurn, mockRedeemGetBurnExchangeRate, mockRedeemGetMaxBurnable }
+export { mockRedeemBurn, mockRedeemGetBurnExchangeRate, mockRedeemGetMaxBurnableTokens }

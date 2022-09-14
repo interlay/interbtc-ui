@@ -4,7 +4,7 @@ import { InterBtcApi } from '@interlay/interbtc-api';
 import { AddressOrPair } from '@polkadot/api/types';
 import { Signer } from '@polkadot/types/types';
 
-import { mockApiCreateType, mockBtcRelayGetLatestBlockHeight, mockElectrsAPIGetLatestBlockHeight, mockFeeGetIssueFee, mockFeeGetIssueGriefingCollateralRate, mockIssueGetDustValue, mockIssueGetRequestLimits, mockOracleGetExchangeRate, mockRedeemBurn, mockRedeemGetBurnExchangeRate, mockRedeemGetMaxBurnable, mockSystemGetStatusCode, mockTokensSubscribeToBalance, mockTokensTotal, mockVaultsGet, mockVaultsGetVaultsWithIssuableTokens } from './parachain';
+import { mockApiCreateType, mockBtcRelayGetLatestBlockHeight, mockElectrsAPIGetLatestBlockHeight, mockFeeGetIssueFee, mockFeeGetIssueGriefingCollateralRate, mockIssueGetDustValue, mockIssueGetRequestLimits, mockOracleGetExchangeRate, mockRedeemBurn, mockRedeemGetBurnExchangeRate, mockRedeemGetMaxBurnableTokens, mockSystemGetStatusCode, mockTokensSubscribeToBalance, mockTokensTotal, mockVaultsGet, mockVaultsGetVaultsWithIssuableTokens } from './parachain';
 
 type RecursivePartial<T> = {
     [P in keyof T]?: RecursivePartial<T[P]>;
@@ -32,7 +32,7 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
         getExchangeRate: mockOracleGetExchangeRate
     },
     redeem: {
-        getMaxBurnableTokens: mockRedeemGetMaxBurnable,
+        getMaxBurnableTokens: mockRedeemGetMaxBurnableTokens,
         getBurnExchangeRate: mockRedeemGetBurnExchangeRate,
         burn: mockRedeemBurn
     },

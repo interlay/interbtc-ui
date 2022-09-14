@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import { render, RenderOptions } from '@testing-library/react';
+import { act, render, RenderOptions } from '@testing-library/react';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import React, { FC, ReactElement } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
@@ -34,13 +34,16 @@ const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactN
   );
 };
 
-const customRender = (ui: ReactElement, options?: CustomRenderOptions) => {
+const customRender = (ui: ReactElement, options?: CustomRenderOptions): Promise<void> => {
   const history = createMemoryHistory();
   if (options?.path) {
     history.push(options.path);
   }
 
-  return render(ui, { wrapper: ProvidersWrapper(history), ...options });
+  // Wrapped in act so async updates are awaited.
+  return act(async () => {
+    render(ui, { wrapper: ProvidersWrapper(history), ...options });
+  });
 };
 
 export * from '@testing-library/react';
