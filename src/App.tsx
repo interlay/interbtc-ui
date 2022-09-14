@@ -48,10 +48,8 @@ const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pa
 type UnsubscriptionRef = (() => void) | null;
 
 const App = (): JSX.Element => {
-  // ray test touch <<
   const { selectedAccount, extensions } = useSubstrateSecureState();
   const { setSelectedAccount } = useSubstrate();
-  // ray test touch >>
 
   const {
     bridgeLoaded,
