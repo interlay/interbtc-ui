@@ -4,7 +4,7 @@ const ctaVariants = tuple('primary', 'secondary', 'outlined');
 
 const status = tuple('error', 'warning', 'success');
 
-const sizes = tuple('small', 'medium');
+const sizes = tuple('small', 'medium', 'large');
 
 export type CTAVariants = typeof ctaVariants[number];
 

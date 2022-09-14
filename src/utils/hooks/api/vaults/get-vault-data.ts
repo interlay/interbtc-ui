@@ -61,9 +61,21 @@ interface VaultData {
   secureThreshold: Big;
   remainingCapacity: {
     amount: MonetaryAmount<CollateralCurrencyExt>;
-    percentage: number;
+    ratio: number;
   };
 }
+
+const getRemainingCapacity = (issuableTokens: Big, vaultExt: VaultExt): number => {
+  if (!issuableTokens.gt(0)) return 0;
+
+  const backedTokens = vaultExt.getBackedTokens().toBig();
+
+  if (!backedTokens.gt(0)) return 1;
+
+  const totalTokens = issuableTokens.add(backedTokens);
+
+  return issuableTokens.div(totalTokens).toNumber();
+};
 
 const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
   const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
@@ -147,11 +159,6 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
 
   const pendingRequests = issuesCount.data.issuesConnection.totalCount + redeemsCount.data.redeemsConnection.totalCount;
 
-  // Calculate remaning capacity
-  const backedTokens = vaultExt.getBackedTokens();
-  const divisor = issuableTokens.add(backedTokens).toBig();
-  const remainingCapacity = issuableTokens.div(divisor);
-
   return {
     apy,
     collateralization,
@@ -187,7 +194,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     secureThreshold,
     remainingCapacity: {
       amount: issuableTokens,
-      percentage: remainingCapacity.toBig().toNumber()
+      ratio: getRemainingCapacity(issuableTokens.toBig(), vaultExt)
     }
   };
 };
