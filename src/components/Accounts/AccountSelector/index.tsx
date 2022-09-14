@@ -1,6 +1,6 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 import clsx from 'clsx';
-import * as React from 'react';
 
 import { shortAddress } from '@/common/utils/utils';
 import Select, {
@@ -16,15 +16,15 @@ import Select, {
 
 interface Props {
   accounts: Array<InjectedAccountWithMeta>;
-  selectedAccount: InjectedAccountWithMeta;
+  selectedAccount: KeyringPair;
   label: string;
-  onChange: (account: InjectedAccountWithMeta) => void;
+  onChange: (account: KeyringPair) => void;
 }
 
 const AccountSelector = ({ accounts, selectedAccount, label, onChange }: Props): JSX.Element => (
   <Select
     variant={SELECT_VARIANTS.formField}
-    key={selectedAccount.meta.name}
+    key={selectedAccount.meta.name as string}
     value={selectedAccount}
     onChange={onChange}
   >
@@ -34,7 +34,7 @@ const AccountSelector = ({ accounts, selectedAccount, label, onChange }: Props):
         <SelectBody>
           <SelectButton variant={SELECT_VARIANTS.formField}>
             <span className={clsx('flex', 'justify-between', 'py-2')}>
-              <SelectText>{selectedAccount.meta.name}</SelectText>
+              <SelectText>{selectedAccount.meta.name as string}</SelectText>
               <SelectText>{shortAddress(selectedAccount.address.toString())}</SelectText>
             </span>
           </SelectButton>

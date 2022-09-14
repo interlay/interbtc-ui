@@ -1,5 +1,5 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { KeyringPair } from '@polkadot/keyring/types';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
@@ -54,7 +54,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   >(undefined);
   const [fromChain, setFromChain] = React.useState<ChainType | undefined>(ChainType.RelayChain);
   const [toChain, setToChain] = React.useState<ChainType | undefined>(ChainType.Parachain);
-  const [destination, setDestination] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
+  const [destination, setDestination] = React.useState<KeyringPair | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   // TODO: this could be removed form state using React hook form getValue/watch
