@@ -13,7 +13,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 
 // ray test touch <
-import DeveloperConsole from '@/substrate-lib/components/DeveloperConsole';
 import SubstrateLoadingAndErrorHandlingWrapper from '@/substrate-lib/components/SubstrateLoadingAndErrorHandlingWrapper';
 import { SubstrateProvider } from '@/substrate-lib/substrate-context';
 
@@ -21,6 +20,12 @@ import { SubstrateProvider } from '@/substrate-lib/substrate-context';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './store';
+
+// ray test touch <<
+const DeveloperConsole = React.lazy(
+  () => import(/* webpackChunkName: 'developer-console' */ '@/substrate-lib/components/DeveloperConsole')
+);
+// ray test touch >>
 
 window.isFetchingActive = false;
 
