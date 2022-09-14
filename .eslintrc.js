@@ -1,16 +1,13 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'simple-import-sort', 'import', 'cypress'],
+  plugins: ['@typescript-eslint', 'react', 'simple-import-sort', 'import'],
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'react-app',
-    // Disabled to avoid conflict with Cypress. Configuration
-    // can be changed if/when we start using Jest.
-    // 'react-app/jest',
+    'react-app/jest',
     'google',
-    'plugin:cypress/recommended',
     'prettier'
   ],
   env: {
@@ -64,15 +61,5 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off'
-  },
-  overrides: [
-    {
-      // Overrides rules for Cypress specs
-      files: ['cypress/**/*.spec.ts'],
-      rules: {
-        'no-unused-expressions': 'off',
-        '@typescript-eslint/no-unused-expressions': 0
-      }
-    }
-  ]
+  }
 };
