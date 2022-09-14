@@ -9,7 +9,7 @@ import { TransactionTableData } from '@/pages/Vaults/Vault/components/Transactio
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import issuesFetcher, { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import redeemsFetcher, { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
-import { getCurrencyEqQuery } from '@/utils/helpers/currencies';
+import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 
 import { useGetCurrencies } from '../use-get-currencies';
 
@@ -77,7 +77,7 @@ const useGetVaultTransactions = (
   useErrorHandler(currenciesError);
 
   const collateralTokenCondition = currenciesSuccess
-    ? getCurrencyEqQuery(getCurrencyFromTicker(collateralTokenTicker))
+    ? getCurrencyEqualityCondition(getCurrencyFromTicker(collateralTokenTicker))
     : '';
 
   // TODO: remove the dependency on legacy issuesFetcher and redeemFetcher

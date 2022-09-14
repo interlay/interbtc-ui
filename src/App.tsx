@@ -132,7 +132,7 @@ const App = (): JSX.Element => {
         const isVaultOperator = vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
-      onError: (error) => console.log('[App useQuery] error.message => ', error.message)
+      onError: (error) => console.log('[App useQuery 1] error.message => ', error.message)
     }
   );
   useErrorHandler(vaultsError);

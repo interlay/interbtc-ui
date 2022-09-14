@@ -23,7 +23,7 @@ import { HYDRA_URL } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
-import { getCurrencyEqQuery } from '@/utils/helpers/currencies';
+import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 interface VaultData {
@@ -115,7 +115,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
   );
 
-  const collateralTokenCondition = getCurrencyEqQuery(vault.backingCollateral.currency)
+  const collateralTokenCondition = getCurrencyEqualityCondition(vault.backingCollateral.currency);
 
   // TODO: move issues and redeems to separate hook
   const issues = await fetch(HYDRA_URL, {

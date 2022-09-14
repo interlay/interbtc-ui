@@ -14,19 +14,13 @@ type CollateralCurrencyData = {
 };
 
 const getCollateralCurrencyData = async (collateralToken: CollateralCurrencyExt): Promise<CollateralCurrencyData> => {
-  try {
-    const [liquidationThreshold, secureThreshold, exchangeRate] = await Promise.all([
-      window.bridge.vaults.getLiquidationCollateralThreshold(collateralToken),
-      window.bridge.vaults.getSecureCollateralThreshold(collateralToken),
-      window.bridge.oracle.getExchangeRate(collateralToken)
-    ]);
+  const [liquidationThreshold, secureThreshold, exchangeRate] = await Promise.all([
+    window.bridge.vaults.getLiquidationCollateralThreshold(collateralToken),
+    window.bridge.vaults.getSecureCollateralThreshold(collateralToken),
+    window.bridge.oracle.getExchangeRate(collateralToken)
+  ]);
 
-    return { liquidationThreshold, secureThreshold, exchangeRate };
-  } catch (error) {
-    throw new Error(
-      `useGetCollateralCurrenciesData: error getting data for currency ${collateralToken.ticker}: ${error.message}`
-    );
-  }
+  return { liquidationThreshold, secureThreshold, exchangeRate };
 };
 
 const getCollateralCurrenciesData = (

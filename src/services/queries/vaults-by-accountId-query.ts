@@ -4,7 +4,6 @@ const vaultsByAccountIdQuery = (accountId: string): string => `
       id
     }
   }
-  
 `;
 
 export default vaultsByAccountIdQuery;
