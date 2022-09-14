@@ -48,11 +48,13 @@ const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pa
 type UnsubscriptionRef = (() => void) | null;
 
 const App = (): JSX.Element => {
+  // ray test touch <<
+  const { selectedAccount, extensions } = useSubstrateSecureState();
+  const { setSelectedAccount } = useSubstrate();
+  // ray test touch >>
+
   const {
     bridgeLoaded,
-    // ray test touch <
-    address,
-    // ray test touch >
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
     collateralTokenBalance,
@@ -90,10 +92,10 @@ const App = (): JSX.Element => {
 
   // Detects if connected account is vault operator.
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
-    [GRAPHQL_FETCHER, vaultsByAccountIdQuery(address)],
+    [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
     graphqlFetcher<GraphqlReturn<string[]>>(),
     {
-      enabled: bridgeLoaded && !!address,
+      enabled: bridgeLoaded && !!selectedAccount,
       onSuccess: ({ data: { vaults } }) => {
         const isVaultOperator = vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
@@ -155,8 +157,6 @@ const App = (): JSX.Element => {
     })();
   }, [dispatch, bridgeLoaded]);
 
-  const { extensions } = useSubstrateSecureState();
-  const { setSelectedAccount } = useSubstrate();
   // Loads the address for the currently selected account
   React.useEffect(() => {
     if (!setSelectedAccount) return;
@@ -182,13 +182,13 @@ const App = (): JSX.Element => {
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
-    if (!address) return;
+    if (!selectedAccount) return;
 
     (async () => {
       try {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           RELAY_CHAIN_NATIVE_TOKEN,
-          address,
+          selectedAccount.address,
           (_: string, balance: ChainBalance) => {
             if (!balance.free.eq(collateralTokenBalance)) {
               dispatch(updateCollateralTokenBalanceAction(balance.free));
@@ -215,19 +215,19 @@ const App = (): JSX.Element => {
         unsubscribeCollateralTokenBalance.current = null;
       }
     };
-  }, [dispatch, bridgeLoaded, address, collateralTokenBalance, collateralTokenTransferableBalance]);
+  }, [dispatch, bridgeLoaded, selectedAccount, collateralTokenBalance, collateralTokenTransferableBalance]);
 
   // Subscribes to wrapped token balance
   React.useEffect(() => {
     if (!dispatch) return;
     if (!bridgeLoaded) return;
-    if (!address) return;
+    if (!selectedAccount) return;
 
     (async () => {
       try {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           WRAPPED_TOKEN,
-          address,
+          selectedAccount.address,
           (_: string, balance: ChainBalance) => {
             if (!balance.free.eq(wrappedTokenBalance)) {
               dispatch(updateWrappedTokenBalanceAction(balance.free));
@@ -254,21 +254,21 @@ const App = (): JSX.Element => {
         unsubscribeWrappedTokenBalance.current = null;
       }
     };
-  }, [dispatch, bridgeLoaded, address, wrappedTokenBalance, wrappedTokenTransferableBalance]);
+  }, [dispatch, bridgeLoaded, selectedAccount, wrappedTokenBalance, wrappedTokenTransferableBalance]);
 
   const governanceTokenBalanceInvalidate = useGovernanceTokenBalanceInvalidate();
 
   // Subscribes to governance token balance
   React.useEffect(() => {
     if (!bridgeLoaded) return;
-    if (!address) return;
+    if (!selectedAccount) return;
     if (!governanceTokenBalanceInvalidate) return;
 
     (async () => {
       try {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           GOVERNANCE_TOKEN,
-          address,
+          selectedAccount.address,
           // TODO: it looks like the callback is called just before the balance is updated (not after)
           () => {
             governanceTokenBalanceInvalidate();
@@ -291,7 +291,7 @@ const App = (): JSX.Element => {
         unsubscribeGovernanceTokenBalance.current = null;
       }
     };
-  }, [bridgeLoaded, address, governanceTokenBalanceInvalidate]);
+  }, [bridgeLoaded, selectedAccount, governanceTokenBalanceInvalidate]);
 
   // Color schemes according to Interlay vs. Kintsugi
   React.useEffect(() => {
