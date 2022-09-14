@@ -10,14 +10,13 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { PersistGate } from 'redux-persist/integration/react';
 
 import SubstrateLoadingAndErrorHandlingWrapper from '@/substrate-lib/components/SubstrateLoadingAndErrorHandlingWrapper';
 import { SubstrateProvider } from '@/substrate-lib/substrate-context';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { persistor, store } from './store';
+import { store } from './store';
 
 const DeveloperConsole = React.lazy(
   () => import(/* webpackChunkName: 'developer-console' */ '@/substrate-lib/components/DeveloperConsole')
@@ -33,16 +32,14 @@ ReactDOM.render(
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-              <SubstrateProvider>
-                <SubstrateLoadingAndErrorHandlingWrapper>
-                  <App />
-                </SubstrateLoadingAndErrorHandlingWrapper>
-                <React.Suspense fallback={null}>
-                  <DeveloperConsole />
-                </React.Suspense>
-              </SubstrateProvider>
-            </PersistGate>
+            <SubstrateProvider>
+              <SubstrateLoadingAndErrorHandlingWrapper>
+                <App />
+              </SubstrateLoadingAndErrorHandlingWrapper>
+              <React.Suspense fallback={null}>
+                <DeveloperConsole />
+              </React.Suspense>
+            </SubstrateProvider>
           </Provider>
         </HelmetProvider>
         <ReactQueryDevtools initialIsOpen={false} />

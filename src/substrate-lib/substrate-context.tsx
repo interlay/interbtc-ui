@@ -10,10 +10,8 @@ import { keyring } from '@polkadot/ui-keyring';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 import { isTestChain } from '@polkadot/util';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import { useLocalStorage } from 'react-use';
 
-import { changeAddressAction } from '@/common/actions/general.actions';
 import { APP_NAME } from '@/config/relay-chains';
 import config from '@/config/substrate-context';
 import { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY } from '@/config/wallets';
@@ -210,7 +208,6 @@ const connect = async (state: State, dispatch: Dispatch) => {
 
     loadAccounts(_api, dispatch);
 
-    // ray test touch <
     // Set listeners for disconnection and reconnection event.
     _api.on('connected', () => {
       console.log('[substrate-context API] on:connected');
@@ -242,7 +239,6 @@ const connect = async (state: State, dispatch: Dispatch) => {
       console.log('[substrate-context API] on:disconnected');
       dispatch({ type: ActionType.ConnectFail });
     });
-    // ray test touch >
   } catch (error) {
     dispatch({
       type: ActionType.ConnectError,
@@ -327,11 +323,8 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     connect(stateRef.current, dispatch);
   }, []);
 
-  const reduxDispatch = useDispatch();
-
   const setSelectedAccount = React.useCallback(
     async (newAccount: KeyringPair) => {
-      if (!reduxDispatch) return;
       if (!setLSValue) return;
 
       dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
@@ -339,22 +332,17 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
       // TODO: race condition might happen
       const { signer } = await web3FromAddress(newAccount.address);
       window.bridge.setAccount(newAccount.address, signer);
-      // TODO: remove
-      reduxDispatch(changeAddressAction(newAccount.address));
     },
-    [reduxDispatch, setLSValue]
+    [setLSValue]
   );
 
   const removeSelectedAccount = React.useCallback(() => {
-    if (!reduxDispatch) return;
     if (!removeLS) return;
 
     dispatch({ type: ActionType.SetSelectedAccount, payload: undefined });
     removeLS();
     window.bridge.removeAccount();
-    // TODO: remove
-    reduxDispatch(changeAddressAction(''));
-  }, [reduxDispatch, removeLS]);
+  }, [removeLS]);
 
   const value = {
     state,

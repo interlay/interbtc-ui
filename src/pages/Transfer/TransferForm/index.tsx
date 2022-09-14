@@ -17,6 +17,7 @@ import SubmitButton from '@/components/SubmitButton';
 import TextField from '@/components/TextField';
 import Tokens, { TokenOption } from '@/components/Tokens';
 import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import isValidPolkadotAddress from '@/utils/helpers/is-valid-polkadot-address';
@@ -35,7 +36,10 @@ const TransferForm = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { parachainStatus, address } = useSelector((state: StoreType) => state.general);
+  // ray test touch <<
+  const { selectedAccount } = useSubstrateSecureState();
+  const { parachainStatus } = useSelector((state: StoreType) => state.general);
+  // ray test touch >>
 
   const {
     register,
@@ -104,8 +108,8 @@ const TransferForm = (): JSX.Element => {
   const handleClickBalance = () => setValue(TRANSFER_AMOUNT, activeToken?.transferableBalance || '');
 
   React.useEffect(() => {
-    setAccountSet(!!address);
-  }, [address]);
+    setAccountSet(!!selectedAccount);
+  }, [selectedAccount]);
 
   // This ensures that triggering the notification and clearing
   // the form happen at the same time.

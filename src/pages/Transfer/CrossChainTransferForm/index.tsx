@@ -20,6 +20,7 @@ import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader'
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { ChainType } from '@/types/chains.types';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -76,12 +77,13 @@ const CrossChainTransferForm = (): JSX.Element => {
     mode: 'onChange'
   });
 
-  const { address, collateralTokenTransferableBalance, parachainStatus } = useSelector(
-    (state: StoreType) => state.general
-  );
+  // ray test touch <<
+  const { selectedAccount } = useSubstrateSecureState();
+  const { collateralTokenTransferableBalance, parachainStatus } = useSelector((state: StoreType) => state.general);
+  // ray test touch >>
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
-    if (!address) return;
+    if (!selectedAccount) return;
     if (!destination) return;
 
     try {
@@ -93,14 +95,14 @@ const CrossChainTransferForm = (): JSX.Element => {
       if (fromChain === ChainType.RelayChain) {
         await transferToParachain(
           api,
-          address,
+          selectedAccount.address,
           destination.address,
           newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true)
         );
       } else {
         await transferToRelayChain(
           window.bridge.api,
-          address,
+          selectedAccount.address,
           destination.address,
           newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true)
         );
@@ -114,7 +116,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!address) {
+    if (!selectedAccount) {
       dispatch(showAccountModalAction(true));
       event.preventDefault();
     }
@@ -207,11 +209,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   React.useEffect(() => {
     if (!api) return;
     if (!handleError) return;
-    if (!address) return;
+    if (!selectedAccount) return;
 
     const fetchRelayChainBalance = async () => {
       try {
-        const balance: any = await getRelayChainBalance(api, address);
+        const balance: any = await getRelayChainBalance(api, selectedAccount.address);
         setRelayChainBalance(balance.sub(transferFee));
       } catch (error) {
         handleError(error);
@@ -219,7 +221,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     };
 
     fetchRelayChainBalance();
-  }, [api, address, handleError]);
+  }, [api, selectedAccount, handleError]);
 
   const handleSetFromChain = (chain: ChainOption) => {
     setFromChain(chain.type);
@@ -316,7 +318,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           pending={submitStatus === STATUSES.PENDING}
           onClick={handleConfirmClick}
         >
-          {address ? t('transfer') : t('connect_wallet')}
+          {selectedAccount ? t('transfer') : t('connect_wallet')}
         </SubmitButton>
       </form>
       {submitStatus === STATUSES.REJECTED && submitError && (

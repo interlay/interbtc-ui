@@ -30,6 +30,7 @@ import {
 } from '@/config/relay-chains';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
@@ -99,9 +100,12 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+  // ray test touch <<
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
+  // ray test touch >>
 
   const {
     governanceTokenBalanceIdle,
@@ -412,7 +416,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
             <SubmitButton
               disabled={
                 // TODO: `parachainStatus` and `address` should be checked at upper levels
-                parachainStatus !== ParachainStatus.Running || !address
+                parachainStatus !== ParachainStatus.Running || !selectedAccount
               }
               pending={submitStatus === STATUSES.PENDING}
             >

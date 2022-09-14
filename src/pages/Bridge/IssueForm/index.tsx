@@ -50,6 +50,7 @@ import {
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
@@ -105,9 +106,12 @@ const IssueForm = (): JSX.Element | null => {
 
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+  // ray test touch <<
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
+  // ray test touch >>
 
   const { governanceTokenBalanceLoading, governanceTokenBalance } = useGovernanceTokenBalance();
 
@@ -370,14 +374,14 @@ const IssueForm = (): JSX.Element | null => {
     const bridgeFee = parsedBTCAmount.mul(feeRate);
     const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
-    const accountSet = !!address;
+    const accountSet = !!selectedAccount;
     const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
 
     // TODO: `parachainStatus` and `address` should be checked at upper levels
-    const isSubmitBtnDisabled = accountSet ? parachainStatus !== ParachainStatus.Running || !address : false;
+    const isSubmitBtnDisabled = accountSet ? parachainStatus !== ParachainStatus.Running || !selectedAccount : false;
 
     return (
       <>

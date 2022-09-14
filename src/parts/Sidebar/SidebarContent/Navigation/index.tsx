@@ -28,6 +28,7 @@ import {
   USE_WRAPPED_CURRENCY_LINK,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
@@ -54,7 +55,10 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
+  // ray test touch <<
+  const { selectedAccount } = useSubstrateSecureState();
+  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
+  // ray test touch >>
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
@@ -86,14 +90,14 @@ const Navigation = ({
         icon: ChartSquareBarIcon,
         hidden: false
       },
-      // ray test touch <
+      // ray test touch <<
       {
         name: 'nav_vaults',
-        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
+        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, selectedAccount?.address ?? '')}`,
         icon: ChipIcon,
         hidden: !vaultClientLoaded
       },
-      // ray test touch >
+      // ray test touch >>
       {
         name: 'nav_use_wrapped',
         link: USE_WRAPPED_CURRENCY_LINK,
@@ -156,7 +160,7 @@ const Navigation = ({
         }
       }
     ],
-    [address, vaultClientLoaded]
+    [selectedAccount, vaultClientLoaded]
   );
 
   return (

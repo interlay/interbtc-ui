@@ -23,9 +23,7 @@ import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
 const Topbar = (): JSX.Element => {
-  // ray test touch <
   const { bridgeLoaded, showAccountModal } = useSelector((state: StoreType) => state.general);
-  // ray test touch >
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
@@ -56,7 +54,6 @@ const Topbar = (): JSX.Element => {
     setIsRequestPending(false);
   };
 
-  // ray test touch <
   const handleAccountModalOpen = () => {
     dispatch(showAccountModalAction(true));
   };
@@ -64,9 +61,7 @@ const Topbar = (): JSX.Element => {
   const handleAccountModalClose = () => {
     dispatch(showAccountModalAction(false));
   };
-  // ray test touch >
 
-  // ray test touch <
   let accountLabel;
   if (!extensions.length) {
     accountLabel = t('connect_wallet');
@@ -75,7 +70,6 @@ const Topbar = (): JSX.Element => {
   } else {
     accountLabel = 'Select Wallet';
   }
-  // ray test touch >
 
   return (
     <>

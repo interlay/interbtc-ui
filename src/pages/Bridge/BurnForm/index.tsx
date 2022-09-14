@@ -31,6 +31,7 @@ import {
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
@@ -51,9 +52,12 @@ const BurnForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus, address } = useSelector(
+  // ray test touch <<
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
+  // ray test touch >>
 
   const {
     register,
@@ -172,7 +176,7 @@ const BurnForm = (): JSX.Element | null => {
     const earnedCollateralTokenAmount = burnRate.rate.eq(0)
       ? newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
       : burnRate.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
-    const accountSet = !!address;
+    const accountSet = !!selectedAccount;
 
     return (
       <>

@@ -18,6 +18,7 @@ import PrimaryColorSpan from '@/components/PrimaryColorSpan';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -31,7 +32,10 @@ interface Props {
 const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
   const prices = useGetPrices();
 
-  const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+  // ray test touch <<
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  // ray test touch >>
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
@@ -114,7 +118,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
     reimburseMutation.mutate(redeem);
   };
 
-  const isOwner = address === redeem.userParachainAddress;
+  const isOwner = selectedAccount?.address === redeem.userParachainAddress;
 
   return (
     <RequestWrapper className='lg:px-12'>
