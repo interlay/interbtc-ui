@@ -1,4 +1,4 @@
-const IntrIcon = () => (
+const IntrIcon = (): JSX.Element => (
   <svg width='100%' viewBox='0 0 114 114' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <circle cx='56.7854' cy='56.7854' r='56.7854' fill='white' />
     <circle cx='58.1575' cy='58.9624' r='10.5' fill='black' />
