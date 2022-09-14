@@ -12,11 +12,9 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { PersistGate } from 'redux-persist/integration/react';
 
-// ray test touch <
 import SubstrateLoadingAndErrorHandlingWrapper from '@/substrate-lib/components/SubstrateLoadingAndErrorHandlingWrapper';
 import { SubstrateProvider } from '@/substrate-lib/substrate-context';
 
-// ray test touch >
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './store';
@@ -36,7 +34,6 @@ ReactDOM.render(
         <HelmetProvider>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
-              {/* ray test touch < */}
               <SubstrateProvider>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <App />
@@ -45,7 +42,6 @@ ReactDOM.render(
                   <DeveloperConsole />
                 </React.Suspense>
               </SubstrateProvider>
-              {/* ray test touch > */}
             </PersistGate>
           </Provider>
         </HelmetProvider>
