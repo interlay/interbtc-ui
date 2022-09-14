@@ -23,17 +23,17 @@ import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
 const Topbar = (): JSX.Element => {
-  // ray test touch <<
-  const { address, bridgeLoaded, showAccountModal } = useSelector((state: StoreType) => state.general);
-  // ray test touch >>
+  // ray test touch <
+  const { bridgeLoaded, showAccountModal } = useSelector((state: StoreType) => state.general);
+  // ray test touch >
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const handleRequestFromFaucet = async (): Promise<void> => {
-    if (!address) return;
+    if (!selectedAccount) return;
 
     try {
-      const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, address);
+      const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedAccount.address);
       await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN);
       toast.success('Your account has been funded.');
     } catch (error) {
@@ -43,7 +43,7 @@ const Topbar = (): JSX.Element => {
 
   const [isRequestPending, setIsRequestPending] = React.useState(false);
 
-  const { accounts, extensions } = useSubstrateSecureState();
+  const { extensions, selectedAccount } = useSubstrateSecureState();
 
   const handleFundsRequest = async () => {
     if (!bridgeLoaded) return;
@@ -66,55 +66,52 @@ const Topbar = (): JSX.Element => {
   };
   // ray test touch >
 
-  // ray test touch <<
+  // ray test touch <
   let accountLabel;
   if (!extensions.length) {
     accountLabel = t('connect_wallet');
-  } else if (address) {
-    const matchedAccount = accounts.find((account) => account.address === address);
-    accountLabel = matchedAccount?.meta.name || address;
+  } else if (selectedAccount) {
+    accountLabel = selectedAccount.meta.name as string;
   } else {
     accountLabel = 'Select Wallet';
   }
-  // ray test touch >>
+  // ray test touch >
 
   return (
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
-        {address !== undefined && (
+        {selectedAccount !== undefined && (
           <>
-            {address !== '' && (
-              <>
-                {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
-                  <>
-                    <InterlayLink
-                      className='hover:no-underline'
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      href='https://bitcoinfaucet.uo1.net'
-                    >
-                      <InterlayCaliforniaOutlinedButton
-                        className={SMALL_SIZE_BUTTON_CLASSES}
-                        endIcon={<ExternalLinkIcon className={clsx('w-4', 'h-4', 'ml-1')} />}
-                      >
-                        {t('request_btc')}
-                      </InterlayCaliforniaOutlinedButton>
-                    </InterlayLink>
-                    <InterlayDenimOrKintsugiMidnightOutlinedButton
+            <>
+              {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
+                <>
+                  <InterlayLink
+                    className='hover:no-underline'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    href='https://bitcoinfaucet.uo1.net'
+                  >
+                    <InterlayCaliforniaOutlinedButton
                       className={SMALL_SIZE_BUTTON_CLASSES}
-                      pending={isRequestPending}
-                      onClick={handleFundsRequest}
+                      endIcon={<ExternalLinkIcon className={clsx('w-4', 'h-4', 'ml-1')} />}
                     >
-                      {t('request_funds', {
-                        tokenSymbol: GOVERNANCE_TOKEN_SYMBOL
-                      })}
-                    </InterlayDenimOrKintsugiMidnightOutlinedButton>
-                  </>
-                )}
-                <Tokens />
-              </>
-            )}
+                      {t('request_btc')}
+                    </InterlayCaliforniaOutlinedButton>
+                  </InterlayLink>
+                  <InterlayDenimOrKintsugiMidnightOutlinedButton
+                    className={SMALL_SIZE_BUTTON_CLASSES}
+                    pending={isRequestPending}
+                    onClick={handleFundsRequest}
+                  >
+                    {t('request_funds', {
+                      tokenSymbol: GOVERNANCE_TOKEN_SYMBOL
+                    })}
+                  </InterlayDenimOrKintsugiMidnightOutlinedButton>
+                </>
+              )}
+              <Tokens />
+            </>
             <InterlayDefaultContainedButton className={SMALL_SIZE_BUTTON_CLASSES} onClick={handleAccountModalOpen}>
               {accountLabel}
             </InterlayDefaultContainedButton>
