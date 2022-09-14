@@ -64,7 +64,7 @@ interface VaultData {
   };
 }
 
-const getRemaningCapacity = (issuableTokens: Big, vaultExt: VaultExt): number => {
+const getRemainingCapacity = (issuableTokens: Big, vaultExt: VaultExt): number => {
   if (!issuableTokens.gt(0)) return 0;
 
   const backedTokens = vaultExt.getBackedTokens().toBig();
@@ -191,7 +191,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     secureThreshold,
     remainingCapacity: {
       amount: issuableTokens,
-      ratio: getRemaningCapacity(issuableTokens.toBig(), vaultExt)
+      ratio: getRemainingCapacity(issuableTokens.toBig(), vaultExt)
     }
   };
 };

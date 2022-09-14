@@ -39,10 +39,6 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
     if (!vaults || vaults.length === 0) return;
 
     for (const vault of vaults) {
-      if (vault.data === null) {
-        setQueryError(new Error('404'));
-      }
-
       if (vault.error) {
         setQueryError(vault.error);
 
