@@ -21,11 +21,9 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { persistor, store } from './store';
 
-// ray test touch <<
 const DeveloperConsole = React.lazy(
   () => import(/* webpackChunkName: 'developer-console' */ '@/substrate-lib/components/DeveloperConsole')
 );
-// ray test touch >>
 
 window.isFetchingActive = false;
 
