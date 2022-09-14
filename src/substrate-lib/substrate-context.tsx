@@ -1,4 +1,3 @@
-// ray test touch <
 import { createInterBtcApi } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
@@ -395,4 +394,3 @@ export {
   useSubstrateSecureState,
   useSubstrateState
 };
-// ray test touch >
