@@ -3,4 +3,4 @@ const SYSTEM_STATUS_RUNNING = { isRunning: true };
 
 const mockSystemGetStatusCode = jest.fn(() => SYSTEM_STATUS_RUNNING);
 
-export { mockSystemGetStatusCode }
+export { mockSystemGetStatusCode };
