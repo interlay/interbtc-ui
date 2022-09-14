@@ -15,7 +15,6 @@ declare global {
   }
 }
 
-// TODO: do code-splitting
 const DeveloperConsole = (): null => {
   const { api, apiStatus, keyring, keyringStatus } = useSubstrateState();
 
