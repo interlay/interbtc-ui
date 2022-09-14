@@ -3,45 +3,94 @@ import { CollateralCurrencyExt, CollateralIdLiteral, CurrencyExt, newMonetaryAmo
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import Big from 'big.js';
-import { useErrorHandler } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
+import { useMutation } from 'react-query';
 import * as z from 'zod';
 
-import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { CTA, Span, Stack, TokenField } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
-import { getCurrency } from '@/utils/helpers/currencies';
-import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { getErrorMessage } from '@/utils/helpers/forms';
 
 import { StyledDd, StyledDepositTitle, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
 import { withStep } from './Step';
 import { StepComponentProps } from './types';
+import { useDepositCollateral } from './use-deposit-collateral';
+
 const DEPOSIT_COLLATERAL_AMOUNT = 'deposit-collateral-amount';
 
 type CollateralFormData = { [DEPOSIT_COLLATERAL_AMOUNT]: string };
 
-const validateDepositCollateral = ({ minAmount }: { minAmount: Big }) =>
-  z
-    .string()
-    .min(1, { message: 'Required' })
-    .refine(
-      (val) => val && new Big(val).gte(minAmount),
+const validateDepositCollateral = ({
+  minAmount,
+  balance,
+  governanceBalance,
+  transactionFee
+}: {
+  minAmount: Big;
+  balance: MonetaryAmount<CurrencyExt>;
+  governanceBalance: MonetaryAmount<CurrencyExt>;
+  transactionFee: MonetaryAmount<CurrencyExt>;
+}) =>
+  z.string().superRefine((val, ctx) => {
+    if (governanceBalance.lte(transactionFee)) {
+      return ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'insufficient_funds_governance_token'
+      });
+    }
 
-      {
+    if (!val) {
+      return ctx.addIssue({
+        code: z.ZodIssueCode.too_small,
+        minimum: 1,
+        message: 'Field is required',
+        inclusive: true,
+        type: 'string'
+      });
+    }
+
+    const inputAmount = new Big(val);
+
+    if (!inputAmount.gte(minAmount)) {
+      return ctx.addIssue({
+        code: z.ZodIssueCode.custom,
         message: 'Deposit should be equal or greater than minimum required collateral'
-      }
-    );
+      });
+    }
 
-const getCollateralSchema = ({ minAmount = new Big(0) }: { minAmount?: Big }) =>
+    if (!inputAmount.lte(balance.toBig())) {
+      return ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Insufficient funds'
+      });
+    }
+  });
+
+// .min(1, { message: 'Required' })
+// .transform((val) => new Big(val || 0))
+// .refine((val) => {
+//   console.log(val);
+//   return val.lte(balance);
+// })
+// .refine((val) => val.gte(minAmount), {
+//   message: 'Deposit should be equal or greater than minimum required collateral'
+// });
+
+const getCollateralSchema = ({
+  minAmount = new Big(0),
+  balance,
+  governanceBalance,
+  transactionFee
+}: {
+  minAmount: Big;
+  balance: MonetaryAmount<CurrencyExt>;
+  governanceBalance: MonetaryAmount<CurrencyExt>;
+  transactionFee: MonetaryAmount<CurrencyExt>;
+}) =>
   z.object({
-    [DEPOSIT_COLLATERAL_AMOUNT]: validateDepositCollateral({ minAmount })
+    [DEPOSIT_COLLATERAL_AMOUNT]: validateDepositCollateral({ minAmount, balance, governanceBalance, transactionFee })
   });
 
 type Props = {
@@ -57,24 +106,7 @@ const DepositCollateralStep = ({
   ...props
 }: DespositCollateralStepProps): JSX.Element | null => {
   const titleId = useId();
-  const { bridgeLoaded, collateralTokenBalance } = useSelector((state: StoreType) => state.general);
-  const { governanceTokenBalance } = useGovernanceTokenBalance();
-  const prices = useGetPrices();
-
-  const collateralCurrency = getCurrency(collateralToken);
-  const {
-    isIdle: minCollateralIdle,
-    isLoading: minCollateralLoading,
-    data: minCollateral,
-    error: minCollateralError
-  } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getMinimumCollateral', collateralCurrency],
-    genericFetcher<Big>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
-  useErrorHandler(minCollateralError);
+  const { collateral, fee, governance } = useDepositCollateral(collateralToken);
 
   const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
     (collateralAmount) => window.bridge.vaults.registerNewCollateralVault(collateralAmount),
@@ -87,49 +119,36 @@ const DepositCollateralStep = ({
     register,
     handleSubmit: h,
     watch,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<CollateralFormData>({
-    mode: 'onChange',
-    resolver: zodResolver(getCollateralSchema({ minAmount: minCollateral }))
+    mode: 'all',
+    resolver: zodResolver(
+      getCollateralSchema({
+        minAmount: collateral.min.raw.toBig(),
+        balance: collateral.balance.raw,
+        governanceBalance: governance.raw,
+        transactionFee: fee.raw
+      })
+    )
   });
 
   const inputCollateral = watch(DEPOSIT_COLLATERAL_AMOUNT) || '0';
   const inputCollateralAmount = newMonetaryAmount(
     inputCollateral,
-    collateralCurrency,
+    collateral.currency,
     true
   ) as MonetaryAmount<CollateralCurrencyExt>;
 
   const handleSubmit = async (data: CollateralFormData) => {
     const amount = newMonetaryAmount(
       data[DEPOSIT_COLLATERAL_AMOUNT],
-      collateralCurrency,
+      collateral.currency,
       true
     ) as MonetaryAmount<CollateralCurrencyExt>;
 
     registerNewVaultMutation.mutate(amount);
     console.log(errors, data);
   };
-
-  const minCollateralValue = minCollateral || new Big(0);
-  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd;
-  const minCollateralAmount = newMonetaryAmount(minCollateralValue, collateralCurrency);
-
-  const isMinCollateralLoading = minCollateralIdle || minCollateralLoading;
-
-  const balance =
-    getCurrency(collateralToken) === GOVERNANCE_TOKEN
-      ? {
-          value: displayMonetaryAmount(governanceTokenBalance?.free),
-          valueInUSD: displayMonetaryAmountInUSDFormat(
-            governanceTokenBalance?.free as MonetaryAmount<CurrencyExt>,
-            collateralUSDAmount
-          )
-        }
-      : {
-          value: displayMonetaryAmount(collateralTokenBalance),
-          valueInUSD: displayMonetaryAmountInUSDFormat(collateralTokenBalance, collateralUSDAmount)
-        };
 
   return (
     <form onSubmit={h(handleSubmit)} {...props}>
@@ -138,34 +157,33 @@ const DepositCollateralStep = ({
         <TokenField
           aria-labelledby={titleId}
           placeholder='0.00'
-          tokenSymbol={collateralCurrency.ticker}
-          valueInUSD={displayMonetaryAmountInUSDFormat(inputCollateralAmount, collateralUSDAmount)}
-          balance={balance}
+          tokenSymbol={collateral.currency.ticker}
+          valueInUSD={displayMonetaryAmountInUSDFormat(inputCollateralAmount, collateral.price.usd)}
+          balance={{ value: collateral.balance.amount, valueInUSD: collateral.balance.usd }}
+          errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}
           {...register(DEPOSIT_COLLATERAL_AMOUNT)}
         />
         <StyledDl>
           <StyledDItem>
             <StyledDt>Minimum Required Collateral</StyledDt>
             <StyledDd>
-              {isMinCollateralLoading ? (
-                '-'
-              ) : (
-                <>
-                  {displayMonetaryAmount(minCollateralAmount)} {collateralCurrency.ticker} (
-                  {displayMonetaryAmountInUSDFormat(minCollateralAmount, collateralUSDAmount)})
-                </>
-              )}
+              {collateral.min.isLoading
+                ? '-'
+                : `${collateral.min.amount} ${collateral.currency.ticker} (${collateral.min.usd})`}
             </StyledDd>
           </StyledDItem>
           <StyledHr />
           <StyledDItem>
             <StyledDt>Fees</StyledDt>
             <StyledDd>
-              <Span color='secondary'>0.01 KINT</Span> ({formatUSD(0.24)})
+              <Span color='secondary'>
+                {fee.amount} {GOVERNANCE_TOKEN.ticker}
+              </Span>{' '}
+              ({fee.usd})
             </StyledDd>
           </StyledDItem>
         </StyledDl>
-        <CTA type='submit' fullWidth loading={registerNewVaultMutation.isLoading}>
+        <CTA type='submit' disabled={!isValid} fullWidth loading={registerNewVaultMutation.isLoading}>
           Deposit Collateral
         </CTA>
       </Stack>
