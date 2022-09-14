@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 import { NumberInput } from '../NumberInput';
 import { theme } from '../theme';
+import { TokenBalance } from '../TokenBalance';
 
 const TokenFieldInnerWrapper = styled.div`
   position: relative;
@@ -31,4 +32,9 @@ const TokenAdornment = styled.span`
   align-items: center;
 `;
 
-export { TokenAdornment, TokenFieldInnerWrapper, TokenFieldInput, TokenFieldSymbol, TokenFieldUSD };
+const StyledTokenBalance = styled(TokenBalance)`
+  font-size: ${theme.text.s};
+  line-height: ${theme.lineHeight.s};
+`;
+
+export { StyledTokenBalance, TokenAdornment, TokenFieldInnerWrapper, TokenFieldInput, TokenFieldSymbol, TokenFieldUSD };
