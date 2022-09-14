@@ -47,9 +47,7 @@ const RedeemRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
-  // ray test touch >>
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,

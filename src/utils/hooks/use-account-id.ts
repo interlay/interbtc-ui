@@ -7,10 +7,8 @@ import { StoreType } from '@/common/types/util.types';
 import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 
 const useAccountId = (accountAddress?: string): AccountId | undefined => {
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  // ray test touch >>
 
   return React.useMemo(() => {
     // eslint-disable-next-line max-len

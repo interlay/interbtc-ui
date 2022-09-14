@@ -32,10 +32,8 @@ interface Props {
 const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
   const prices = useGetPrices();
 
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  // ray test touch >>
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );

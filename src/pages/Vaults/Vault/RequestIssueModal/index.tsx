@@ -100,12 +100,10 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
   const handleError = useErrorHandler();
 
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
-  // ray test touch >>
 
   const {
     governanceTokenBalanceIdle,

@@ -36,10 +36,8 @@ const TransferForm = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
-  // ray test touch >>
 
   const {
     register,

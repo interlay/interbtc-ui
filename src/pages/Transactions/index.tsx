@@ -9,9 +9,7 @@ import IssueRequestsTable from './IssueRequestsTable';
 import RedeemRequestsTable from './RedeemRequestsTable';
 
 const Transactions = (): JSX.Element => {
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
-  // ray test touch >>
   const { t } = useTranslation();
 
   return (

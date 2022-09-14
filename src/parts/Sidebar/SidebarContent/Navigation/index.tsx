@@ -55,10 +55,8 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
   const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
-  // ray test touch >>
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [

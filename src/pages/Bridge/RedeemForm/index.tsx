@@ -63,12 +63,10 @@ const RedeemForm = (): JSX.Element | null => {
   const handleError = useErrorHandler();
 
   const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
   const { wrappedTokenBalance, bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
-  // ray test touch >>
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
 
   const {

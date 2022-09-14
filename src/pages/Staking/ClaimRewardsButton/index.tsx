@@ -18,9 +18,7 @@ const ClaimRewardsButton = ({
   claimableRewardAmount,
   ...rest
 }: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
-  // ray test touch <<
   const { selectedAccount } = useSubstrateSecureState();
-  // ray test touch >>
 
   const queryClient = useQueryClient();
 
