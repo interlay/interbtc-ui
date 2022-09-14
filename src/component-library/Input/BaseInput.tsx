@@ -1,6 +1,7 @@
 import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
 
 import { HelperText, HelperTextProps } from '../HelperText';
+import { hasErrorMessage } from '../HelperText/HelperText';
 import { Label, LabelProps } from '../Label';
 import { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper } from './Input.style';
 
@@ -39,8 +40,8 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     },
     ref
   ): JSX.Element => {
-    const hasErrorMessage = !!errorMessage;
-    const hasHelpText = !!description || hasErrorMessage;
+    const hasError = hasErrorMessage(errorMessage);
+    const hasHelpText = !!description || hasError;
 
     return (
       <Wrapper hidden={hidden} className={className} style={style}>
@@ -48,7 +49,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
         <BaseInputWrapper
           $hasStartAdornment={!!startAdornment}
           $hasEndAdornment={!!endAdornment}
-          $hasError={hasErrorMessage}
+          $hasError={hasError}
           $isDisabled={disabled}
         >
           {startAdornment && <Adornment>{startAdornment}</Adornment>}

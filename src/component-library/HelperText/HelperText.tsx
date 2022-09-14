@@ -2,6 +2,10 @@ import { forwardRef, HTMLAttributes } from 'react';
 
 import { StyledHelperText, StyledSubHelperText } from './HelperText.style';
 
+// checks for thruthy messages both for string and string[]
+const hasErrorMessage = (errorMessage?: string | string[]): boolean =>
+  typeof errorMessage === 'string' ? !!errorMessage : !!errorMessage?.filter(Boolean).length;
+
 type Props = {
   errorMessage?: string | string[];
   errorMessageProps?: HTMLAttributes<HTMLElement>;
@@ -15,7 +19,7 @@ type HelperTextProps = Props & NativeAttrs;
 
 const HelperText = forwardRef<HTMLDivElement, HelperTextProps>(
   ({ errorMessage, errorMessageProps, description, descriptionProps, ...props }, ref): JSX.Element => {
-    const isErrorMessage = !!errorMessage;
+    const isErrorMessage = hasErrorMessage(errorMessage);
 
     const renderErrorMessage = () => {
       if (Array.isArray(errorMessage)) {
@@ -39,5 +43,5 @@ const HelperText = forwardRef<HTMLDivElement, HelperTextProps>(
 
 HelperText.displayName = 'HelperText';
 
-export { HelperText };
+export { hasErrorMessage, HelperText };
 export type { HelperTextProps };
