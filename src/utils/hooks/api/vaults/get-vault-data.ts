@@ -7,7 +7,7 @@ import {
 } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
-import { encodeAddress } from "@polkadot/util-crypto"
+import { encodeAddress } from '@polkadot/util-crypto';
 import Big from 'big.js';
 
 import { Prices } from '@/common/types/util.types';
@@ -20,7 +20,7 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenAmount
 } from '@/config/relay-chains';
-import { HYDRA_URL, SS58_FORMAT } from '@/constants';
+import { SQUID_URL, SS58_FORMAT } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -126,12 +126,12 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     wrappedTokenRewards,
     getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
   );
-  const formattedAccountId = encodeAddress(accountId, SS58_FORMAT)
+  const formattedAccountId = encodeAddress(accountId, SS58_FORMAT);
 
   const collateralTokenCondition = getCurrencyEqualityCondition(vault.backingCollateral.currency);
 
   // TODO: move issues and redeems to separate hook
-  const issues = await fetch(HYDRA_URL, {
+  const issues = await fetch(SQUID_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -143,7 +143,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     })
   });
 
-  const redeems = await fetch(HYDRA_URL, {
+  const redeems = await fetch(SQUID_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
