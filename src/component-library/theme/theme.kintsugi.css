@@ -34,8 +34,12 @@
   --colors-tabs-active-color: var(--colors-blue);
   --colors-tabs-active-bg: var(--colors-neutral-white);
   /* Loading Spinner */
-  --colors-indeterminate-color: var(--colors-neutral-white);
-  --colors-indeterminate-bg: var(--colors-neutral-black-20);
+  --colors-indeterminate-primary-color: var(--colors-neutral-white);
+  --colors-indeterminate-primary-bg: var(--colors-neutral-black-20);
+  --colors-indeterminate-secondary-color: var(--colors-neutral-black-80);
+  --colors-indeterminate-secondary-bg: var(--colors-neutral-lighter-grey);
+  --colors-indeterminate-outlined-color: var(--colors-yellow);
+  --colors-indeterminate-outlined-bg: var(--colors-mid-blue);
   /* Score Bar */
   --colors-score-bar-indicator-color: var(--colors-yellow);
   --colors-score-bar-separator-color: var(--colors-neutral-white);
