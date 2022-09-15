@@ -1,7 +1,7 @@
 import { Trans, useTranslation } from 'react-i18next';
 
 import { ReactComponent as WarningIcon } from '@/assets/img/icons/exclamation-triangle.svg';
-import { CTA, CTALink, H3, Link, Stack } from '@/component-library';
+import { CTA, CTALink, H3, Stack, TextLink } from '@/component-library';
 import {
   INTERLAY_DOS_AND_DONTS_DOCS_LINK,
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
@@ -43,18 +43,18 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element | nu
             <StyledDisclaimerListItem>
               <Trans i18nKey='vault.disclaimer.check_do_s_and_dont_s'>
                 Check the
-                <Link href={INTERLAY_DOS_AND_DONTS_DOCS_LINK} target='_blank' rel='noreferrer' color='secondary'>
+                <TextLink to={INTERLAY_DOS_AND_DONTS_DOCS_LINK} external color='secondary'>
                   do&apos;s and dont&apos;s
-                </Link>
+                </TextLink>
                 of correctly operating your vault client
               </Trans>
             </StyledDisclaimerListItem>
             <StyledDisclaimerListItem>
               <Trans i18nKey='vault.disclaimer.check_risks_involved'>
                 Please check the information about
-                <Link href={INTERLAY_VAULT_DOCS_LINK} target='_blank' rel='noreferrer' color='secondary'>
+                <TextLink to={INTERLAY_VAULT_DOCS_LINK} external color='secondary'>
                   risks involved
-                </Link>
+                </TextLink>
                 when operating a Vault on Interlay/Kintsugi
               </Trans>
             </StyledDisclaimerListItem>
@@ -63,9 +63,9 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element | nu
         <StyledDisclaimerBox>
           <Trans i18nKey='vault.disclaimer.confirm_agreement'>
             By proceeding you confirm that you have read and accepted the
-            <Link href={INTERLAY_TERMS_AND_CONDITIONS_LINK} target='_blank' rel='noreferrer' color='secondary'>
+            <TextLink to={INTERLAY_TERMS_AND_CONDITIONS_LINK} external color='secondary'>
               Terms & Conditions
-            </Link>
+            </TextLink>
           </Trans>
         </StyledDisclaimerBox>
       </Stack>
