@@ -1,5 +1,6 @@
 import { Meta, Story } from '@storybook/react';
 
+import { CTA } from '../CTA';
 import { P } from '../Text';
 import { Stack, StackProps } from '.';
 
@@ -9,7 +10,7 @@ const Default = Template.bind({});
 Default.args = {
   children: (
     <>
-      <P>Stack children</P> <P>Stack children</P>
+      <P>Stack children</P> <P>Stack children</P> <CTA>CTA</CTA>
     </>
   )
 };

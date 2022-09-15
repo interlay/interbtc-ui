@@ -14,8 +14,11 @@ import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
-import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo } from './components';
+import { InsightListItem, InsightsList, PageTitle, VaultInfo } from './components';
+import ReplaceTable from './ReplaceTable';
 import { StyledCollateralSection, StyledRewards, StyledVaultCollateral } from './VaultDashboard.styles';
+import VaultIssueRequestsTable from './VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 
 const VaultDashboard = (): JSX.Element => {
   const { vaultClientLoaded, address, bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -115,7 +118,24 @@ const VaultDashboard = (): JSX.Element => {
             hasWithdrawRewardsBtn={!isReadOnlyVault}
           />
         </StyledCollateralSection>
-        <TransactionHistory transactions={transactions} />
+        {collateralToken && (
+          <VaultIssueRequestsTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
+        {collateralToken && (
+          <VaultRedeemRequestsTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
+        {collateralToken && (
+          <ReplaceTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
       </Stack>
     </MainContainer>
   );

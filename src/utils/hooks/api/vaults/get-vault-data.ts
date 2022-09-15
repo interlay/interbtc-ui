@@ -7,6 +7,7 @@ import {
 } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
+import { encodeAddress } from "@polkadot/util-crypto"
 import Big from 'big.js';
 
 import { Prices } from '@/common/types/util.types';
@@ -19,13 +20,12 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenAmount
 } from '@/config/relay-chains';
-import { HYDRA_URL } from '@/constants';
+import { HYDRA_URL, SS58_FORMAT } from '@/constants';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
-
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
@@ -126,6 +126,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     wrappedTokenRewards,
     getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
   );
+  const formattedAccountId = encodeAddress(accountId, SS58_FORMAT)
 
   const collateralTokenCondition = getCurrencyEqualityCondition(vault.backingCollateral.currency);
 
@@ -137,7 +138,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     },
     body: JSON.stringify({
       query: issueCountQuery(
-        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending` // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
+        `vault: {accountId_eq: "${formattedAccountId}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending`
       )
     })
   });
@@ -149,7 +150,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     },
     body: JSON.stringify({
       query: redeemCountQuery(
-        `vault: {accountId_eq: "${accountId.toString()}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending` // TODO: add asset_eq, see comment above
+        `vault: {accountId_eq: "${formattedAccountId}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending` // TODO: add asset_eq, see comment above
       )
     })
   });
