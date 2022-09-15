@@ -1,5 +1,4 @@
 import {
-  CurrencyExt,
   currencyIdToMonetaryCurrency,
   GovernanceCurrency,
   InterbtcPrimitivesVaultId,
@@ -45,7 +44,6 @@ import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenLogoIcon,
-  RELAY_CHAIN_NATIVE_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
@@ -333,23 +331,21 @@ const IssueForm = (): JSX.Element | null => {
 
         const wrappedTokenAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
         const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
-
         let vaultId: InterbtcPrimitivesVaultId;
-        let collateralToken: CurrencyExt;
 
         if (selectVaultManually) {
           if (!vault) {
             throw new Error('Specific vault is not selected!');
           }
           vaultId = vault[0];
-          collateralToken = await currencyIdToMonetaryCurrency(
-            window.bridge.assetRegistry,
-            vault[0].currencies.collateral
-          );
         } else {
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
-          collateralToken = RELAY_CHAIN_NATIVE_TOKEN;
         }
+
+        const collateralToken = await currencyIdToMonetaryCurrency(
+          window.bridge.assetRegistry,
+          vaultId.currencies.collateral
+        );
 
         const result = await window.bridge.issue.request(
           wrappedTokenAmount,
