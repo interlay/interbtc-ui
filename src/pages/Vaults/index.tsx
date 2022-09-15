@@ -2,20 +2,20 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
-import { formatUSD, safeRoundTwoDecimals } from '@/common/utils/utils';
+import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Grid, GridItem, InfoBox, VaultCard } from '@/component-library';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-import { useGetVaultOverview } from '@/utils/hooks/api/use-get-vault-overview';
+import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 
 import { VaultsHeader } from './VaultsHeader';
 
 const VaultOverview = (): JSX.Element => {
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
 
-  const vaultOverview = useGetVaultOverview({ address: accountAddress });
+  const vaultOverview = useGetVaultData({ address: accountAddress });
 
   const { t } = useTranslation();
 
@@ -25,7 +25,10 @@ const VaultOverview = (): JSX.Element => {
       {vaultOverview ? (
         <Grid>
           <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 2, start: 1 }}>
-            <InfoBox title='My vaults at risk' text={`${vaultOverview.totals?.totalAtRisk}`} />
+            <InfoBox
+              title='My vaults at risk'
+              text={vaultOverview.totals ? formatNumber(vaultOverview.totals.totalAtRisk) : ''}
+            />
           </GridItem>
           <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 5, start: 3 }}>
             <InfoBox
@@ -44,9 +47,9 @@ const VaultOverview = (): JSX.Element => {
               <VaultCard
                 collateralSymbol={vault.collateralId}
                 wrappedSymbol={vault.wrappedId}
-                pendingRequests={vault.pendingRequests}
-                apy={safeRoundTwoDecimals(vault.apy.toString())}
-                collateralScore={safeRoundTwoDecimals(vault.collateralization?.mul(100).toString(), '∞')}
+                pendingRequests={formatNumber(vault.pendingRequests)}
+                apy={formatPercentage(vault.apy.toNumber() / 100)}
+                collateralScore={vault.collateralization ? formatPercentage(vault.collateralization.toNumber()) : '∞'}
                 link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`}
                 atRisk={vault.vaultAtRisk}
               />

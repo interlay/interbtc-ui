@@ -9,12 +9,13 @@ interface CustomProps {
   label: string;
   error?: boolean;
   helperText?: JSX.Element | string;
+  helperTextClassName?: string;
   required?: boolean;
   approxUSD: string;
 }
 
 const TokenField = React.forwardRef<HTMLInputElement, Props>(
-  ({ id, label, error, helperText, required, approxUSD, ...rest }, ref): JSX.Element => {
+  ({ id, label, error, helperText, helperTextClassName, required, approxUSD, ...rest }, ref): JSX.Element => {
     return (
       <div className='space-y-1.5'>
         <TextFieldContainer className='relative'>
@@ -60,7 +61,8 @@ const TokenField = React.forwardRef<HTMLInputElement, Props>(
                 { 'text-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )]: error
             },
-            'h-6'
+            'h-6',
+            helperTextClassName
           )}
         >
           {helperText}

@@ -16,6 +16,7 @@ const INTERLAY_GOVERNANCE_LINK = 'https://interlay.subsquare.io/';
 const KINTSUGI_GOVERNANCE_LINK = 'https://kintsugi.subsquare.io';
 const INTERLAY_SUBSCAN_LINK = 'https://interlay.subscan.io';
 const KINTSUGI_SUBSCAN_LINK = 'https://kintsugi.subscan.io';
+const INTERLAY_VAULT_DOCS = 'https://docs.interlay.io/#/vault/overview';
 
 export {
   INTERLAY_COMPANY_LINK,
@@ -29,6 +30,7 @@ export {
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
   INTERLAY_TWITTER_LINK,
   INTERLAY_USE_WRAPPED_CURRENCY_LINK,
+  INTERLAY_VAULT_DOCS,
   KINTSUGI_CROWDLOAN_LINK,
   KINTSUGI_GOVERNANCE_LINK,
   KINTSUGI_SUBSCAN_LINK,

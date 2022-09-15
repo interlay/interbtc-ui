@@ -14,6 +14,7 @@
   "search_vault": "Search Vault",
   "cancel": "Cancel",
   "cancelled": "Cancelled",
+  "retried": "Retried",
   "coming_soon": "Coming soon!",
   "expired": "Expired",
   "completed": "Completed",
@@ -57,6 +58,7 @@
   "app": "App",
   "last_update": "Last Update",
   "last_update_block": "Last Update Block",
+  "expiry_block": "Expiry Block",
   "exchange_rate": "Exchange Rate",
   "best_block_hash": "Best Block Hash",
   "no_oracles": "No active oracles",
@@ -185,7 +187,7 @@
     "less_than": " and less than {{maxValue}}.",
     "amount_received": "Amount received",
     "premium_redeem": "Premium redeem",
-    "earned_premium": "Earned premium ({{premium}} %)",
+    "earned_premium": "Earned premium",
     "max_premium_redeem": "Available (max)",
     "error_max_premium_redeem": "Could not find Vault below premium redeem threshold with sufficient locked {{wrappedTokenSymbol}}. Please try a different Vault. The maximum amount for premium redeem is {{maxPremiumRedeem}} {{wrappedTokenSymbol}}.",
     "compensation_success": "Compensation successful",
@@ -291,7 +293,7 @@
       "issuing_disabled": "Issuing Disabled",
       "issuing_disabled_tooltip": "Issue requests are disabled, but execution (of existing requests) will still occur if the user submits the BTC.",
       "active": "Active",
-      "secure_threshold": "Secure Threshold: {{threshold}} %",
+      "secure_threshold": "Secure Threshold: {{threshold}}",
       "total_collateral_locked": "Total Collateral Locked",
       "total_vaults_chart": "Total number of vaults",
       "capacity": "Capacity",
@@ -400,7 +402,8 @@
     "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain.",
     "manually_select_vault": "Manually Select Vault",
     "vault_must_be_selected": "Specific vault must be selected.",
-    "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity"
+    "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity",
+    "no_issuable_token_available": "Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or <1>consider running a Vault</1>!"
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
