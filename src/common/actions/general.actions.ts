@@ -87,12 +87,10 @@ export const initGeneralDataAction = (
   parachainStatus
 });
 
-// ray test touch <
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({
   type: SHOW_ACCOUNT_MODAL,
   showAccountModal
 });
-// ray test touch >
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({
   type: UPDATE_HEIGHTS,
