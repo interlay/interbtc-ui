@@ -20,24 +20,28 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
     case ApiStatus.Idle:
     case ApiStatus.ConnectInit:
     case ApiStatus.Connecting:
+      // ray test touch <
       // TODO: improve styling
       return <>Connecting to Substrate</>;
+    // ray test touch >
     case ApiStatus.Ready:
-      // ray test touch <
       // TODO: remove `isBridgeLoaded` & `bridgeLoaded` use cases via another PR
       dispatch(isBridgeLoaded(true));
-      // ray test touch >
       break;
     case ApiStatus.Error:
       if (apiError === undefined) {
         throw new Error('Something went wrong!');
       }
       toast.warn('Unable to connect to the BTC-Parachain.');
+      // ray test touch <
       // TODO: improve styling
       return <>Error Connecting to Substrate: Connection to websocket {apiError.target.url} failed.</>;
+    // ray test touch >
     case ApiStatus.Disconnected:
+      // ray test touch <
       // TODO: improve styling
       return <>Disconnected from Substrate</>;
+    // ray test touch >
     default:
       throw new Error('Invalid ApiStatus!');
   }
@@ -45,8 +49,10 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
   switch (keyringStatus) {
     case KeyringStatus.Idle:
     case KeyringStatus.Loading:
+      // ray test touch <
       // TODO: improve styling
       return <>Loading accounts (please review any extension&apos;s authorization)</>;
+    // ray test touch >
     case KeyringStatus.Ready:
       break;
     case KeyringStatus.Error:
