@@ -9,7 +9,7 @@ import {
 } from '@/config/links';
 
 import {
-  StyledDisclaimerBox,
+  StyledDisclaimerCard,
   StyledDisclaimerList,
   StyledDisclaimerListItem,
   StyledDisclaimerText
@@ -37,7 +37,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element | nu
         <StyledDisclaimerText>
           {t('vault.disclaimer.running_vault_requirments')} {t('vault.disclaimer.understand_liquidation_risks')}
         </StyledDisclaimerText>
-        <StyledDisclaimerBox>
+        <StyledDisclaimerCard color='secondary'>
           {t('vault.disclaimer.before_start_vault')}
           <StyledDisclaimerList>
             <StyledDisclaimerListItem>
@@ -59,15 +59,15 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element | nu
               </Trans>
             </StyledDisclaimerListItem>
           </StyledDisclaimerList>
-        </StyledDisclaimerBox>
-        <StyledDisclaimerBox>
+        </StyledDisclaimerCard>
+        <StyledDisclaimerCard color='secondary'>
           <Trans i18nKey='vault.disclaimer.confirm_agreement'>
             By proceeding you confirm that you have read and accepted the
             <TextLink to={INTERLAY_TERMS_AND_CONDITIONS_LINK} external color='secondary'>
               Terms & Conditions
             </TextLink>
           </Trans>
-        </StyledDisclaimerBox>
+        </StyledDisclaimerCard>
       </Stack>
       <Stack>
         <CTA size='large' fullWidth onClick={onClickAgree}>
@@ -82,7 +82,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element | nu
           size='large'
           fullWidth
         >
-          {t('vault.read_vault_documentation')}
+          {t('vault.disclaimer.read_vault_documentation')}
         </CTALink>
       </Stack>
     </Stack>

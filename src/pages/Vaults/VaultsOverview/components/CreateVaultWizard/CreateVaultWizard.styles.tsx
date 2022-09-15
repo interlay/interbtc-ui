@@ -14,12 +14,13 @@ const StyledDisclaimerText = styled(P)`
   line-height: ${theme.lineHeight.s};
 `;
 
-const StyledDisclaimerBox = styled.div`
+const StyledDisclaimerCard = styled.div`
+  color: ${theme.colors.textPrimary};
   font-size: ${theme.text.xs};
   line-height: ${theme.lineHeight.base};
-  background-color: rgba(255, 255, 255, 0.1);
   padding: ${theme.spacing.spacing3};
   border-radius: ${theme.rounded.rg};
+  background-color: ${theme.card.secondaryBg};
 `;
 
 const StyledDisclaimerList = styled.ol`
@@ -74,7 +75,7 @@ export {
   DisclaimerHeader,
   StyledDd,
   StyledDepositTitle,
-  StyledDisclaimerBox,
+  StyledDisclaimerCard,
   StyledDisclaimerList,
   StyledDisclaimerListItem,
   StyledDisclaimerText,
