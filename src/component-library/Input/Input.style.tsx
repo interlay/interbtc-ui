@@ -17,10 +17,7 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   font: inherit;
   letter-spacing: inherit;
   background: none;
-  color: ${(props) => {
-    if (props.$isDisabled) return theme.input.disabled.color;
-    return theme.input.color;
-  }};
+  color: ${(props) => (props.$isDisabled ? theme.input.disabled.color : theme.input.color)};
 
   &:focus {
     box-shadow: none;
@@ -58,11 +55,12 @@ const BaseInputWrapper = styled.div<BaseInputWrapperProps>`
   align-items: center;
   padding-left: ${(props) => props.$hasStartAdornment && theme.spacing.spacing2};
   padding-right: ${(props) => props.$hasEndAdornment && theme.spacing.spacing2};
-  border: ${(props) => {
-    if (props.$isDisabled) return theme.input.disabled.border;
-    if (props.$hasError) return theme.input.error.border;
-    return theme.border.default;
-  }};
+  border: ${(props) =>
+    props.$isDisabled
+      ? theme.input.disabled.border
+      : props.$hasError
+      ? theme.input.error.border
+      : theme.border.default};
 
   &:hover {
     border: ${(props) => !props.$isDisabled && !props.$hasError && theme.input.hover.border};

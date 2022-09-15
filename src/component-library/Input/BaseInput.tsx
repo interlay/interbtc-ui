@@ -17,9 +17,9 @@ type Props = {
 
 type NativeAttrs = Omit<InputHTMLAttributes<HTMLInputElement>, keyof Props>;
 
-type InhriteAttrs = Omit<HelperTextProps, keyof Props & NativeAttrs>;
+type InheritAttrs = Omit<HelperTextProps, keyof Props & NativeAttrs>;
 
-type BaseInputProps = Props & NativeAttrs & InhriteAttrs;
+type BaseInputProps = Props & NativeAttrs & InheritAttrs;
 
 const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
   (

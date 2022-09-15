@@ -2,7 +2,7 @@ import { forwardRef, HTMLAttributes } from 'react';
 
 import { StyledHelperText, StyledSubHelperText } from './HelperText.style';
 
-// checks for thruthy messages both for string and string[]
+// checks for truthy messages both for string and string[]
 const hasErrorMessage = (errorMessage?: string | string[]): boolean =>
   typeof errorMessage === 'string' ? !!errorMessage : !!errorMessage?.filter(Boolean).length;
 
