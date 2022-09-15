@@ -13,7 +13,6 @@ import * as React from 'react';
 import { useLocalStorage } from 'react-use';
 
 import { APP_NAME } from '@/config/relay-chains';
-import config from '@/config/substrate-context';
 import { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY } from '@/config/wallets';
 
 import * as constants from '../constants';
@@ -70,7 +69,7 @@ type Action =
   | { type: ActionType.SetExtensions; payload: Array<InjectedExtension> };
 type Dispatch = (action: Action) => void;
 type State = {
-  socket: string;
+  socket: string | undefined;
   jsonrpc: Record<string, Record<string, DefinitionRpcExt>>;
   keyring: Keyring | undefined;
   keyringStatus: KeyringStatus;
@@ -95,18 +94,12 @@ interface SubstrateStateContextInterface {
   removeSelectedAccount: () => void;
 }
 
-const parsedQuery = new URLSearchParams(window.location.search);
-const connectedSocket = parsedQuery.get('rpc') || config.PROVIDER_SOCKET;
-
 // /
 // Initial state for `React.useReducer`
 const initialState = {
   // These are the states
-  socket: connectedSocket,
-  jsonrpc: {
-    ...jsonrpc,
-    ...config.CUSTOM_RPC_METHODS
-  },
+  socket: undefined,
+  jsonrpc,
   keyring: undefined,
   keyringStatus: KeyringStatus.Idle,
   api: undefined,
