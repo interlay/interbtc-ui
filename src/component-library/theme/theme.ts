@@ -101,6 +101,11 @@ const theme = {
       padding: 'var(--spacing-3) var(--spacing-10)',
       text: 'var(--text-base)',
       lineHeight: 'var(--line-height-base)'
+    },
+    large: {
+      padding: 'var(--spacing-3) var(--spacing-10)',
+      text: 'var(--text-base)',
+      lineHeight: 'var(--line-height-base)'
     }
   },
   table: {
@@ -179,6 +184,17 @@ const theme = {
         warning: 'var(--colors-warning-light-20)',
         success: 'var(--colors-success-20)'
       }
+    }
+  },
+  coinIcon: {
+    small: {
+      width: '2.625rem'
+    },
+    medium: {
+      width: '3.755rem'
+    },
+    large: {
+      width: '5.625rem'
     }
   }
 };

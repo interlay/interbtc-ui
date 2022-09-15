@@ -11,26 +11,30 @@ import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-import { getCurrency } from '@/utils/helpers/currencies';
+import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
-import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo } from './components';
+import { InsightListItem, InsightsList, PageTitle, VaultInfo } from './components';
+import ReplaceTable from './ReplaceTable';
 import { StyledCollateralSection, StyledRewards, StyledVaultCollateral } from './VaultDashboard.styles';
+import VaultIssueRequestsTable from './VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 
 const VaultDashboard = (): JSX.Element => {
-  const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { vaultClientLoaded, address, bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const {
     [URL_PARAMETERS.VAULT.ACCOUNT]: selectedVaultAccountAddress,
     [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateral
   } = useParams<Record<string, string>>();
 
   const vaultData = useGetVaultData({ address: selectedVaultAccountAddress });
-  const transactions = useGetVaultTransactions(selectedVaultAccountAddress, vaultCollateral);
+  const transactions = useGetVaultTransactions(selectedVaultAccountAddress, vaultCollateral, bridgeLoaded);
+  const { getCurrencyFromTicker, isSuccess: currenciesSuccess } = useGetCurrencies(bridgeLoaded);
 
   const vault = vaultData?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
 
-  if (!vault || !transactions) {
+  if (!vault || !transactions || !currenciesSuccess) {
     return (
       <MainContainer>
         <Stack>
@@ -41,14 +45,14 @@ const VaultDashboard = (): JSX.Element => {
     );
   }
 
-  const collateralToken = getCurrency(vault.collateralId as CollateralIdLiteral);
+  const collateralToken = getCurrencyFromTicker(vault.collateralId);
 
   // TODO: should we leave the diameter as fixed pixels?
   const vaultCapacity = (
     <ProgressCircle
       aria-label='BTC remaining capacity'
       diameter='65'
-      value={(1 - Number(vault.remainingCapacity.percentage)) * 100}
+      value={(1 - Number(vault.remainingCapacity.ratio)) * 100}
     />
   );
 
@@ -66,7 +70,7 @@ const VaultDashboard = (): JSX.Element => {
     {
       title: 'Remaining kBTC capacity',
       label: vault.remainingCapacity.amount.toBig().toString(),
-      sublabel: formatPercentage(vault.remainingCapacity.percentage, {
+      sublabel: formatPercentage(vault.remainingCapacity.ratio, {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2
       }),
@@ -115,7 +119,24 @@ const VaultDashboard = (): JSX.Element => {
             hasWithdrawRewardsBtn={!isReadOnlyVault}
           />
         </StyledCollateralSection>
-        <TransactionHistory transactions={transactions} />
+        {collateralToken && (
+          <VaultIssueRequestsTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
+        {collateralToken && (
+          <VaultRedeemRequestsTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
+        {collateralToken && (
+          <ReplaceTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
       </Stack>
     </MainContainer>
   );

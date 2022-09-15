@@ -1,9 +1,11 @@
-import * as React from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 import { NumberInputProps } from '../NumberInput';
 import { Stack } from '../Stack';
-import { TokenBalance } from '../TokenBalance';
+import { useDOMRef } from '../utils/dom';
+import { triggerChangeEvent } from '../utils/input';
 import {
+  StyledTokenBalance,
   TokenAdornment,
   TokenFieldInnerWrapper,
   TokenFieldInput,
@@ -11,17 +13,47 @@ import {
   TokenFieldUSD
 } from './TokenField.style';
 
-interface TokenFieldProps extends NumberInputProps {
-  balance?: {
-    value: string;
-    valueInUSD: string;
-  };
+type Props = {
   tokenSymbol: string;
   valueInUSD: string;
-}
+  balance?: string | number;
+  balanceInUSD?: string | number;
+};
 
-const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
-  ({ tokenSymbol, valueInUSD, balance, ...rest }, ref): JSX.Element => {
+type InheritAttrs = Omit<NumberInputProps, keyof Props>;
+
+type TokenFieldProps = Props & InheritAttrs;
+
+const TokenField = forwardRef<HTMLInputElement, TokenFieldProps>(
+  (
+    {
+      tokenSymbol,
+      valueInUSD,
+      balance,
+      balanceInUSD,
+      value: valueProp,
+      isDisabled,
+      className,
+      style,
+      hidden,
+      ...props
+    },
+    ref
+  ): JSX.Element => {
+    const inputRef = useDOMRef(ref);
+    const [value, setValue] = useState<number | undefined>(valueProp);
+
+    const handleClickBalance = () => {
+      const newValue = Number(balance);
+      setValue(newValue);
+      triggerChangeEvent(inputRef, newValue);
+    };
+
+    useEffect(() => {
+      if (valueProp === undefined) return;
+      setValue(valueProp);
+    }, [valueProp]);
+
     const endAdornment = (
       <TokenAdornment>
         <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
@@ -30,17 +62,30 @@ const TokenField = React.forwardRef<HTMLInputElement, TokenFieldProps>(
     );
 
     return (
-      <Stack spacing='half'>
-        {balance ? (
-          <TokenBalance tokenSymbol={tokenSymbol} value={balance.value} valueInUSD={balance.valueInUSD} />
-        ) : null}
+      <Stack spacing='half' className={className} style={style} hidden={hidden}>
+        {balance && balanceInUSD && (
+          <StyledTokenBalance
+            tokenSymbol={tokenSymbol}
+            value={balance}
+            valueInUSD={balanceInUSD}
+            onClickBalance={handleClickBalance}
+            isDisabled={isDisabled}
+          />
+        )}
         <TokenFieldInnerWrapper>
-          <TokenFieldInput ref={ref} endAdornment={endAdornment} {...rest} />
+          <TokenFieldInput
+            ref={inputRef}
+            endAdornment={endAdornment}
+            value={value}
+            isDisabled={isDisabled}
+            {...props}
+          />
         </TokenFieldInnerWrapper>
       </Stack>
     );
   }
 );
+
 TokenField.displayName = 'TokenField';
 
 export { TokenField };
