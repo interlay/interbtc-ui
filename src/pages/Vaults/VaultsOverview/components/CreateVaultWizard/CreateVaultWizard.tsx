@@ -3,19 +3,23 @@ import { useState } from 'react';
 import { VaultsTableRow } from '../VaultsTable';
 import DespositCollateralStep from './DespositCollateralStep';
 import DisclaimerStep from './DisclaimerStep';
-import { Steps } from './types';
+import { Steps } from './Step';
 import VaultCreatedStep from './VaultCreatedStep';
 
 type Props = {
-  vault: VaultsTableRow;
+  vault?: VaultsTableRow;
 };
 
 type CreateVaultWizardProps = Props;
 
-const CreateVaultWizard = ({ vault }: CreateVaultWizardProps): JSX.Element => {
+const CreateVaultWizard = ({ vault }: CreateVaultWizardProps): JSX.Element | null => {
   const [step, setStep] = useState<Steps>(1);
 
   const handleNextStep = () => setStep((s) => (s + 1) as Steps);
+
+  if (!vault) {
+    return null;
+  }
 
   return (
     <>

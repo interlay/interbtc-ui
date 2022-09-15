@@ -15,11 +15,10 @@ import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { getErrorMessage } from '@/utils/helpers/forms';
 
+import { validateDepositCollateral } from '../../utils/deposit-validation';
+import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDepositTitle, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
-import { validateDepositCollateral } from './deposit-validation';
-import { withStep } from './Step';
-import { StepComponentProps } from './types';
-import { useDepositCollateral } from './use-deposit-collateral';
+import { StepComponentProps, withStep } from './Step';
 
 const DEPOSIT_COLLATERAL_AMOUNT = 'deposit-collateral-amount';
 

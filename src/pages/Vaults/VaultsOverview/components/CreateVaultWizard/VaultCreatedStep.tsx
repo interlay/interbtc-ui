@@ -6,8 +6,7 @@ import { CoinPair, CTALink, H3, H4, Stack } from '@/component-library';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 
-import { withStep } from './Step';
-import { StepComponentProps } from './types';
+import { StepComponentProps, withStep } from './Step';
 
 type Props = {
   collateralCurrency: CollateralCurrencyExt;

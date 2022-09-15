@@ -14,8 +14,7 @@ import {
   StyledDisclaimerListItem,
   StyledDisclaimerText
 } from './CreateVaultWizard.styles';
-import { withStep } from './Step';
-import { StepComponentProps } from './types';
+import { StepComponentProps, withStep } from './Step';
 
 type Props = {
   onClickAgree?: () => void;
@@ -73,15 +72,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element | nu
         <CTA size='large' fullWidth onClick={onClickAgree}>
           {t('vault.disclaimer.accept_risks_involved')}
         </CTA>
-        <CTALink
-          as='a'
-          href={INTERLAY_VAULT_DOCS_LINK}
-          target='_blank'
-          rel='noreferrer'
-          variant='secondary'
-          size='large'
-          fullWidth
-        >
+        <CTALink to={INTERLAY_VAULT_DOCS_LINK} variant='secondary' size='large' fullWidth>
           {t('vault.disclaimer.read_vault_documentation')}
         </CTALink>
       </Stack>

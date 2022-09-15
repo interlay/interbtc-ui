@@ -1,6 +1,10 @@
 import { FC, HTMLAttributes, JSXElementConstructor } from 'react';
 
-import { Steps } from './types';
+type Steps = 1 | 2 | 3;
+
+type StepComponentProps = {
+  step: Steps;
+};
 
 type Props = HTMLAttributes<unknown> & { step: Steps };
 
@@ -14,3 +18,4 @@ const withStep = <T extends Props>(Component: JSXElementConstructor<T>, componen
 };
 
 export { withStep };
+export type { StepComponentProps, Steps };

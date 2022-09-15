@@ -23,8 +23,8 @@ type CreateVaultsProps = Props & InheritAttrs;
 const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element => {
   const titleId = useId();
   const availableVaults = useGetAvailableVaults();
-  const [{ open, data: selectedVault }, setCollateralModal] = useState<{ data: VaultsTableRow; open: boolean }>({
-    data: {} as VaultsTableRow,
+  const [{ open, data: selectedVault }, setCollateralModal] = useState<{ data?: VaultsTableRow; open: boolean }>({
+    data: undefined,
     open: false
   });
 
