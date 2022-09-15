@@ -51,10 +51,9 @@ Please make use of the `.env.*` files to set build variables. The priority of th
 
 To achieve this, create a file `.env.development.local` and fill it with the following contents for either the Interlay or Kintsugi network versions:
 
-### End-to-end testing
+### Integration tests
 
-* Run `yarn start` and make sure the application is running on port 3000
-* Run `yarn cypress:e2e`
+- Run `yarn test`
 
 #### Interlay Network
 
@@ -236,5 +235,5 @@ Email: contact@interlay.io
 
 We would like to thank the following teams for their continuous support:
 
--   [Web3 Foundation](https://web3.foundation/)
--   [Parity Technologies](https://www.parity.io/)
+- [Web3 Foundation](https://web3.foundation/)
+- [Parity Technologies](https://www.parity.io/)

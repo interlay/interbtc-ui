@@ -15,8 +15,11 @@ import { getCurrency } from '@/utils/helpers/currencies';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
-import { InsightListItem, InsightsList, PageTitle, TransactionHistory, VaultInfo } from './components';
+import { InsightListItem, InsightsList, PageTitle, VaultInfo } from './components';
+import ReplaceTable from './ReplaceTable';
 import { StyledCollateralSection, StyledRewards, StyledVaultCollateral } from './VaultDashboard.styles';
+import VaultIssueRequestsTable from './VaultIssueRequestsTable';
+import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 
 const VaultDashboard = (): JSX.Element => {
   const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
@@ -48,7 +51,7 @@ const VaultDashboard = (): JSX.Element => {
     <ProgressCircle
       aria-label='BTC remaining capacity'
       diameter='65'
-      value={(1 - Number(vault.remainingCapacity.percentage)) * 100}
+      value={(1 - Number(vault.remainingCapacity.ratio)) * 100}
     />
   );
 
@@ -66,7 +69,7 @@ const VaultDashboard = (): JSX.Element => {
     {
       title: 'Remaining kBTC capacity',
       label: vault.remainingCapacity.amount.toBig().toString(),
-      sublabel: formatPercentage(vault.remainingCapacity.percentage, {
+      sublabel: formatPercentage(vault.remainingCapacity.ratio, {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2
       }),
@@ -115,7 +118,24 @@ const VaultDashboard = (): JSX.Element => {
             hasWithdrawRewardsBtn={!isReadOnlyVault}
           />
         </StyledCollateralSection>
-        <TransactionHistory transactions={transactions} />
+        {collateralToken && (
+          <VaultIssueRequestsTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
+        {collateralToken && (
+          <VaultRedeemRequestsTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
+        {collateralToken && (
+          <ReplaceTable
+            vaultAddress={selectedVaultAccountAddress}
+            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
+          />
+        )}
       </Stack>
     </MainContainer>
   );
