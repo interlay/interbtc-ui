@@ -73,6 +73,33 @@ const theme = {
     default: 'var(--box-shadow-default)'
   },
   // Components
+  input: {
+    color: 'var(--colors-input-text)',
+    background: 'var(--colors-input-background)',
+    default: {
+      border: '1px solid var(--colors-input-default-border)'
+    },
+    hover: {
+      border: '1px solid var(--colors-input-hover-border)'
+    },
+    focus: {
+      border: '1px solid var(--colors-input-focus-border)',
+      boxShadow: '0 0 0 1px var(--colors-input-focus-border)'
+    },
+    error: {
+      color: 'var(--colors-error-dark)',
+      border: '1px solid var(--colors-error-dark)'
+    },
+    disabled: {
+      color: 'var(--colors-input-disabled-text)',
+      border: '1px solid var(--colors-input-disabled-border)'
+    },
+    helperText: {
+      error: {
+        color: 'var(--colors-error-dark)'
+      }
+    }
+  },
   card: {
     bg: 'var(--colors-card-bg)',
     secondaryBg: 'var(--colors-card-secondary-bg)'

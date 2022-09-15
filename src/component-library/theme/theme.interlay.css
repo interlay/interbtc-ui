@@ -39,4 +39,12 @@
   /* Progress Circle */
   --color-progress-circle-mask: var(--colors-neutral-black-25);
   --color-progress-circle-fill: var(--colors-light-blue);
+  /* Input */
+  --colors-input-text: var(--colors-neutral-black);
+  --colors-input-default-border: var(--colors-neutral-light-grey);
+  --colors-input-hover-border: var(--colors-lighter-blue);
+  --colors-input-focus-border: var(--colors-light-blue-90);
+  --colors-input-disabled-text: var(--colors-neutral-lighter-grey);
+  --colors-input-disabled-border: var(--colors-neutral-lighter-grey);
+  --colors-input-background: var(--colors-neutral-white);
 }

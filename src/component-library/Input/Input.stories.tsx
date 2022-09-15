@@ -6,9 +6,38 @@ const Template: Story<InputProps> = (args) => <Input {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  id: 'id',
-  name: 'name',
-  placeholder: 'placeholder'
+  placeholder: 'placeholder',
+  label: 'Coin',
+  description: "What's your favorite coin?"
+};
+
+const Label = Template.bind({});
+Label.args = {
+  placeholder: 'placeholder',
+  label: 'Coin',
+  description: "What's your favorite coin?"
+};
+
+const Error = Template.bind({});
+Error.args = {
+  label: 'Coin',
+  description: "What's your favorite coin?",
+  errorMessage: 'Please enter your favorite coin!'
+};
+
+const MultipleErrors = Template.bind({});
+MultipleErrors.args = {
+  label: 'Coin',
+  description: "What's your favorite coin?",
+  errorMessage: ['Please enter your favorite coin!', 'Please enter a valid coin!']
+};
+
+const Disabled = Template.bind({});
+Disabled.args = {
+  label: 'Coin',
+  description: "What's your favorite coin?",
+  defaultValue: 'Bitcoin',
+  isDisabled: true
 };
 
 const EndAdornment = Template.bind({});
@@ -23,7 +52,7 @@ StartAdornment.args = {
   placeholder: 'placeholder'
 };
 
-export { Default, EndAdornment, StartAdornment };
+export { Default, Disabled, EndAdornment, Error, MultipleErrors, StartAdornment };
 
 export default {
   title: 'Forms/Input',
