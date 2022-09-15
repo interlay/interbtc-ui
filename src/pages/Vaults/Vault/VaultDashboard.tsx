@@ -1,4 +1,3 @@
-import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
@@ -120,22 +119,13 @@ const VaultDashboard = (): JSX.Element => {
           />
         </StyledCollateralSection>
         {collateralToken && (
-          <VaultIssueRequestsTable
-            vaultAddress={selectedVaultAccountAddress}
-            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
-          />
+          <VaultIssueRequestsTable vaultAddress={selectedVaultAccountAddress} collateralToken={collateralToken} />
         )}
         {collateralToken && (
-          <VaultRedeemRequestsTable
-            vaultAddress={selectedVaultAccountAddress}
-            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
-          />
+          <VaultRedeemRequestsTable vaultAddress={selectedVaultAccountAddress} collateralToken={collateralToken} />
         )}
         {collateralToken && (
-          <ReplaceTable
-            vaultAddress={selectedVaultAccountAddress}
-            collateralTokenIdLiteral={collateralToken.ticker as CollateralIdLiteral}
-          />
+          <ReplaceTable vaultAddress={selectedVaultAccountAddress} collateralTokenTicker={collateralToken.ticker} />
         )}
       </Stack>
     </MainContainer>
