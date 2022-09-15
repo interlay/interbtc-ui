@@ -1,8 +1,8 @@
 import { useNumberField } from '@react-aria/numberfield';
-import { chain, mergeProps } from '@react-aria/utils';
+import { mergeProps } from '@react-aria/utils';
 import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
-import { ChangeEventHandler, forwardRef, useEffect } from 'react';
+import { forwardRef, useEffect } from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
@@ -47,16 +47,13 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       return () => input?.removeEventListener('wheel', handleWheel);
     }, [inputRef]);
 
-    const handleChange: ChangeEventHandler<HTMLInputElement> = chain(inputProps.onChange, onChange);
-
     return (
       <BaseInput
         ref={inputRef}
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
         labelProps={labelProps}
-        onChange={handleChange}
-        {...mergeProps(props, inputProps)}
+        {...mergeProps(props, inputProps, { onChange })}
       />
     );
   }
