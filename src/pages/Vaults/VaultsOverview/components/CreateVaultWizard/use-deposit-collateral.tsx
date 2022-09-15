@@ -1,17 +1,13 @@
-import { CollateralIdLiteral, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CollateralIdLiteral, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { useErrorHandler } from 'react-error-boundary';
-import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import { getCurrency } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -48,7 +44,6 @@ type UseDepositCollateral = {
       raw: MonetaryAmount<CurrencyExt>;
     };
     min: {
-      isLoading: boolean;
       amount: string;
       usd: string;
       raw: MonetaryAmount<CurrencyExt>;
@@ -64,29 +59,13 @@ type UseDepositCollateral = {
   };
 };
 
-const useDepositCollateral = (collateralToken: CollateralIdLiteral): UseDepositCollateral => {
-  const { bridgeLoaded, collateralTokenBalance } = useSelector((state: StoreType) => state.general);
+const useDepositCollateral = (collateralCurrency: CollateralCurrencyExt, minCollateral: Big): UseDepositCollateral => {
+  const { collateralTokenBalance } = useSelector((state: StoreType) => state.general);
   const { governanceTokenBalance } = useGovernanceTokenBalance();
   const prices = useGetPrices();
 
-  const collateralCurrency = getCurrency(collateralToken);
-  const {
-    isIdle: minCollateralIdle,
-    isLoading: minCollateralLoading,
-    data: minCollateral,
-    error: minCollateralError
-  } = useQuery<Big, Error>(
-    [GENERIC_FETCHER, 'vaults', 'getMinimumCollateral', collateralCurrency],
-    genericFetcher<Big>(),
-    {
-      enabled: !!bridgeLoaded
-    }
-  );
-  useErrorHandler(minCollateralError);
-
-  const minCollateralValue = minCollateral || new Big(0);
-  const collateralUSDAmount = getTokenPrice(prices, collateralToken)?.usd || 0;
-  const minCollateralAmount = newMonetaryAmount(minCollateralValue, collateralCurrency);
+  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd || 0;
+  const minCollateralAmount = newMonetaryAmount(minCollateral, collateralCurrency);
 
   const isGovernanceCollateral = collateralCurrency === GOVERNANCE_TOKEN;
   const freeGovernanceBalance = governanceTokenBalance?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
@@ -107,7 +86,6 @@ const useDepositCollateral = (collateralToken: CollateralIdLiteral): UseDepositC
         raw: balanceToken
       },
       min: {
-        isLoading: minCollateralIdle || minCollateralLoading,
         amount: displayMonetaryAmount(minCollateralAmount),
         usd: displayMonetaryAmountInUSDFormat(minCollateralAmount, collateralUSDAmount),
         raw: minCollateralAmount

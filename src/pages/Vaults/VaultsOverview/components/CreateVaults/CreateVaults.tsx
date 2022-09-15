@@ -9,7 +9,7 @@ import { CreateVaultWizard } from '../CreateVaultWizard';
 import { VaultsTable, VaultsTableProps, VaultsTableRow } from '../VaultsTable/VaultsTable';
 
 const isVaultInstalled = (vaults: VaultData[], currentVault: AvailableVaultData) =>
-  vaults?.some((vault) => vault.collateralId === currentVault.collateralCurrency);
+  vaults?.some((vault) => vault.collateralId === currentVault.collateralCurrency.ticker);
 
 type Props = {
   vaults?: VaultData[];
@@ -35,7 +35,7 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
   const data: VaultsTableRow[] = availableVaults.map((vault) => ({
     collateralCurrency: vault.collateralCurrency,
     wrappedCurrency: vault.wrappedCurrency,
-    minCollateralAmount: vault.minimumCollateral.toNumber().toFixed(2),
+    minCollateralAmount: vault.minimumCollateral,
     collateralRate: vault.secureCollateralThreshold.toNumber().toFixed(2),
     isActive: true,
     // TODO: restore function

@@ -1,4 +1,5 @@
-import { CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
+import { CurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
+import Big from 'big.js';
 
 import { CoinPair, CTA, Table, TableProps } from '@/component-library';
 
@@ -12,9 +13,9 @@ const columns = [
 ];
 
 type VaultsTableRow = {
-  collateralCurrency: CollateralIdLiteral;
+  collateralCurrency: CurrencyExt;
   wrappedCurrency: CurrencyIdLiteral;
-  minCollateralAmount: string;
+  minCollateralAmount: Big;
   collateralRate: string;
   isActive: boolean;
   isInstalled: boolean;
@@ -36,13 +37,13 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
       id,
       pair: (
         <CoinPairWrapper key='coin_pair'>
-          <CoinPair size='small' coinOne={collateralCurrency} coinTwo={wrappedCurrency} /> {collateralCurrency} -{' '}
-          {wrappedCurrency}
+          <CoinPair size='small' coinOne={collateralCurrency.ticker as CurrencyIdLiteral} coinTwo={wrappedCurrency} />{' '}
+          {collateralCurrency.ticker} - {wrappedCurrency}
         </CoinPairWrapper>
       ),
       'min-collateral': (
         <NumericValue key='min_collateral'>
-          {minCollateralAmount} {collateralCurrency}
+          {minCollateralAmount.toNumber().toFixed(2)} {collateralCurrency.ticker}
         </NumericValue>
       ),
       'collateral-rate': <NumericValue key='collateral_rate'>{collateralRate}%</NumericValue>,

@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CollateralCurrencyExt, CollateralIdLiteral, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
+import Big from 'big.js';
 import { TFunction } from 'i18next';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -40,7 +41,8 @@ const getCollateralSchema = (t: TFunction) => ({
   });
 
 type Props = {
-  collateralToken: CollateralIdLiteral;
+  collateralCurrency: CollateralCurrencyExt;
+  minCollateralAmount: Big;
   onSuccessfulDeposit?: () => void;
 };
 
@@ -48,18 +50,13 @@ type DespositCollateralStepProps = Props & StepComponentProps;
 
 const DepositCollateralStep = ({
   onSuccessfulDeposit,
-  collateralToken,
+  collateralCurrency,
+  minCollateralAmount,
   ...props
 }: DespositCollateralStepProps): JSX.Element | null => {
   const titleId = useId();
-  const { collateral, fee, governance } = useDepositCollateral(collateralToken);
   const { t } = useTranslation();
-  const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
-    (collateralAmount) => window.bridge.vaults.registerNewCollateralVault(collateralAmount),
-    {
-      onSuccess: onSuccessfulDeposit
-    }
-  );
+  const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
   const {
     register,
     handleSubmit: h,
@@ -76,6 +73,13 @@ const DepositCollateralStep = ({
       })
     )
   });
+
+  const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
+    (collateralAmount) => window.bridge.vaults.registerNewCollateralVault(collateralAmount),
+    {
+      onSuccess: onSuccessfulDeposit
+    }
+  );
 
   const inputCollateral = watch(DEPOSIT_COLLATERAL_AMOUNT) || '0';
   const inputCollateralAmount = newMonetaryAmount(inputCollateral, collateral.currency, true);
@@ -105,9 +109,7 @@ const DepositCollateralStep = ({
           <StyledDItem>
             <StyledDt>{t('vault.minimum_required_collateral')}</StyledDt>
             <StyledDd>
-              {collateral.min.isLoading
-                ? '-'
-                : `${collateral.min.amount} ${collateral.currency.ticker} (${collateral.min.usd})`}
+              {collateral.min.amount} {collateral.currency.ticker} ({collateral.min.usd})
             </StyledDd>
           </StyledDItem>
           <StyledHr />

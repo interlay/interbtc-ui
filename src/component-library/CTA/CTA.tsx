@@ -1,5 +1,4 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
-import { StyledComponent } from 'styled-components';
 
 import { LoadingSpinner } from '../LoadingSpinner';
 import { Sizes, Variants } from '../utils/prop-types';

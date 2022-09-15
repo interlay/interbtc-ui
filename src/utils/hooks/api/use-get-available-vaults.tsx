@@ -1,4 +1,4 @@
-import { CollateralIdLiteral, CurrencyIdLiteral } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { Kusama } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useEffect, useState } from 'react';
@@ -8,25 +8,23 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { VAULT_COLLATERAL_TOKENS } from '@/config/vaults';
-import { getCurrency } from '@/utils/helpers/currencies';
+
+import { useGetCollateralCurrencies } from './use-get-collateral-currencies';
 
 type AvailableVaultData = {
-  collateralCurrency: CollateralIdLiteral;
+  collateralCurrency: CollateralCurrencyExt;
   wrappedCurrency: CurrencyIdLiteral;
   secureCollateralThreshold: Big;
   minimumCollateral: Big;
 };
 
-const getAvailableVaults = async (collateralIdLiteral: CollateralIdLiteral): Promise<AvailableVaultData> => {
-  const currency = getCurrency(collateralIdLiteral);
-
-  const secureCollateralThreshold = await window.bridge.vaults.getSecureCollateralThreshold(currency);
+const getAvailableVaults = async (collateralCurrency: CollateralCurrencyExt): Promise<AvailableVaultData> => {
+  const secureCollateralThreshold = await window.bridge.vaults.getSecureCollateralThreshold(collateralCurrency);
 
   const minimumCollateral = await window.bridge.vaults.getMinimumCollateral(Kusama);
 
   return {
-    collateralCurrency: collateralIdLiteral,
+    collateralCurrency,
     wrappedCurrency: WRAPPED_TOKEN_SYMBOL,
     minimumCollateral,
     secureCollateralThreshold
@@ -38,17 +36,20 @@ const useGetAvailableVaults = (): Array<AvailableVaultData> => {
   const [queryError, setQueryError] = useState<Error | undefined>(undefined);
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { data: collateralCurrencies = [], isSuccess: isGetCollateralCurrenciesSuccess } = useGetCollateralCurrencies(
+    bridgeLoaded
+  );
 
   useErrorHandler(queryError);
 
   // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const availableVaults: Array<any> = useQueries<Array<UseQueryResult<AvailableVaultData, Error>>>(
-    VAULT_COLLATERAL_TOKENS.map((token) => {
+    collateralCurrencies.map((token) => {
       return {
         queryKey: ['availableVaults', token],
-        queryFn: async () => await getAvailableVaults((token.ticker as unknown) as CollateralIdLiteral),
+        queryFn: async () => await getAvailableVaults(token),
         options: {
-          enabled: !!bridgeLoaded
+          enabled: !!bridgeLoaded && isGetCollateralCurrenciesSuccess
         }
       };
     })

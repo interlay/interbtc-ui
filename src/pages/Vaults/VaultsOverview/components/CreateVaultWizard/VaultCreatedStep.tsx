@@ -1,4 +1,4 @@
-import { CollateralIdLiteral } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CollateralIdLiteral } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
@@ -10,12 +10,12 @@ import { withStep } from './Step';
 import { StepComponentProps } from './types';
 
 type Props = {
-  collateralToken: CollateralIdLiteral;
+  collateralCurrency: CollateralCurrencyExt;
 };
 
 type VaultCreatedStepProps = StepComponentProps & Props;
 
-const VaultCreatedStep = ({ collateralToken }: VaultCreatedStepProps): JSX.Element | null => {
+const VaultCreatedStep = ({ collateralCurrency }: VaultCreatedStepProps): JSX.Element | null => {
   const { t } = useTranslation();
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
 
@@ -23,12 +23,16 @@ const VaultCreatedStep = ({ collateralToken }: VaultCreatedStepProps): JSX.Eleme
     <Stack spacing='double' alignItems='center'>
       <H3>{t('vault.vault_created')}</H3>
       <Stack alignItems='center'>
-        <CoinPair coinOne={collateralToken} coinTwo={WRAPPED_TOKEN_SYMBOL} size='large' />
+        <CoinPair
+          coinOne={collateralCurrency.ticker as CollateralIdLiteral}
+          coinTwo={WRAPPED_TOKEN_SYMBOL}
+          size='large'
+        />
         <H4 color='tertiary'>
-          {collateralToken} - {WRAPPED_TOKEN_SYMBOL}
+          {collateralCurrency.ticker} - {WRAPPED_TOKEN_SYMBOL}
         </H4>
       </Stack>
-      <CTALink size='large' fullWidth to={`${accountAddress}/${collateralToken}/${WRAPPED_TOKEN_SYMBOL}`}>
+      <CTALink size='large' fullWidth to={`${accountAddress}/${collateralCurrency.ticker}/${WRAPPED_TOKEN_SYMBOL}`}>
         {t('vault.view_vault')}
       </CTALink>
     </Stack>
