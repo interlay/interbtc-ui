@@ -27,6 +27,7 @@ const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
 const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
   const queryResult = useQuery({ queryKey: 'getCurrencies', queryFn: getCurrencies, enabled: bridgeLoaded });
 
+  // Throws when passed parameter is not ticker of any currency or currencies are not loaded yet.
   const getCurrencyFromTicker = useCallback(
     (ticker: string): CurrencyExt => {
       if (queryResult.data === undefined) {
@@ -43,6 +44,7 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
     [queryResult]
   );
 
+  // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
   const getForeignCurrencyFromId = useCallback(
     (id: number): CurrencyExt => {
       if (queryResult.data === undefined) {
@@ -59,6 +61,7 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
     [queryResult]
   );
 
+  // Throws when passed parameter is not primitiveId of any currency or currencies are not loaded yet.
   const getCurrencyFromIdPrimitive = useCallback(
     (currencyPrimitive: InterbtcPrimitivesCurrencyId) => {
       if (currencyPrimitive.isToken) {
