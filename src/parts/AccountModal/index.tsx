@@ -1,4 +1,3 @@
-// ray test touch <
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -149,4 +148,3 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
 export default AccountModal;
 
 export { ACCOUNT_MODAL_BUTTON_CLASSES, ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES };
-// ray test touch >
