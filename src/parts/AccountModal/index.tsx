@@ -8,7 +8,6 @@ import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/Interl
 import { WalletSourceName } from '@/config/wallets';
 import { useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
 
 import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';
 import ModalContentNoAccountFound from './ModalContent/ModalContentNoAccountFound';
@@ -43,17 +42,17 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 );
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
+  const { extensions, keyring, selectedAccount, accounts } = useSubstrateSecureState();
+
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
   const [selectedWallet, setSelectedWallet] = React.useState<WalletSourceName | undefined>();
 
-  const accounts = useGetAccounts();
   const accountsFromSelectedWallet = React.useMemo(
     () => accounts.filter(({ meta: { source } }) => source === selectedWallet),
     [accounts, selectedWallet]
   );
 
-  const { extensions, keyring, selectedAccount } = useSubstrateSecureState();
   const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const supportedExtensions = React.useMemo(
     () => extensions.filter((item) => Object.values(WalletSourceName).includes(item.name as WalletSourceName)),

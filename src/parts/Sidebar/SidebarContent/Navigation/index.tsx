@@ -88,14 +88,12 @@ const Navigation = ({
         icon: ChartSquareBarIcon,
         hidden: false
       },
-      // ray test touch <<
       {
         name: 'nav_vaults',
         link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, selectedAccount?.address ?? '')}`,
         icon: ChipIcon,
         hidden: !vaultClientLoaded
       },
-      // ray test touch >>
       {
         name: 'nav_use_wrapped',
         link: USE_WRAPPED_CURRENCY_LINK,

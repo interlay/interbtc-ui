@@ -2,7 +2,6 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import * as React from 'react';
 
 import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
-import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
 
 import AccountSelector from './AccountSelector';
 
@@ -12,8 +11,7 @@ interface Props {
 }
 
 const Accounts = ({ callbackFunction, label }: Props): JSX.Element => {
-  const { selectedAccount: currentAccount } = useSubstrateSecureState();
-  const accounts = useGetAccounts();
+  const { selectedAccount: currentAccount, accounts } = useSubstrateSecureState();
 
   const [selectedAccount, setSelectedAccount] = React.useState<KeyringPair | undefined>(undefined);
 
