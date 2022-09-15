@@ -7,7 +7,7 @@ import {
 } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
-import { encodeAddress } from "@polkadot/util-crypto"
+import { encodeAddress } from '@polkadot/util-crypto';
 import Big from 'big.js';
 
 import { Prices } from '@/common/types/util.types';
@@ -126,7 +126,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     wrappedTokenRewards,
     getTokenPrice(prices, WRAPPED_TOKEN_SYMBOL)?.usd
   );
-  const formattedAccountId = encodeAddress(accountId, SS58_FORMAT)
+  const formattedAccountId = encodeAddress(accountId, SS58_FORMAT);
 
   const collateralTokenCondition = getCurrencyEqualityCondition(vault.backingCollateral.currency);
 

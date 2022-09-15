@@ -30,10 +30,9 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 import issueCountQuery from '@/services/queries/issue-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
-
-import { getCurrencyEqualityCondition } from '../../../../utils/helpers/currencies';
 
 interface Props {
   vaultAddress: string;
