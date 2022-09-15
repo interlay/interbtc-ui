@@ -19,7 +19,7 @@ export const justifyContent = tuple(
 
 export const alignItems = tuple('flex-start', 'center', 'flex-end', 'stretch', 'baseline');
 
-export type CTAVariants = typeof variant[number];
+export type Variants = typeof variant[number];
 
 export type Status = typeof status[number];
 

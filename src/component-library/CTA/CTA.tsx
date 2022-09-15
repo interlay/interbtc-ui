@@ -29,7 +29,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
     const isDisabled = disabled || loading;
 
     return (
-      <BaseCTA ref={ref} as='button' disabled={isDisabled} fullWidth={fullWidth} {...props}>
+      <BaseCTA ref={ref} disabled={isDisabled} fullWidth={fullWidth} variant={variant} size={size} {...props}>
         {loading && (
           <LoadingWrapper>
             <LoadingSpinner

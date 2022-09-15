@@ -17,7 +17,9 @@ type CTALinkProps = Props & NativeAttrs & InheritAttrs;
 // TODO: Does this need to be changed to a React Router link component?
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
   ({ disabled, onClick, external, to, ...props }, ref): JSX.Element => {
-    const linkProps: LinkProps = external ? { to: { pathname: to }, target: '_blank', rel: 'noreferrer' } : { to };
+    const linkProps: LinkProps = external
+      ? { to: { pathname: to as string }, target: '_blank', rel: 'noreferrer' }
+      : { to };
 
     return (
       <BaseCTA
