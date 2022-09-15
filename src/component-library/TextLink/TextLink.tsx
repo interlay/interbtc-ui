@@ -15,7 +15,9 @@ type TextLinkProps = Props & NativeAttrs;
 
 const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
   ({ color = 'primary', external, to, ...props }, ref): JSX.Element => {
-    const linkProps: TextLinkProps = external ? { to: { pathname: to }, target: '_blank', rel: 'noreferrer' } : { to };
+    const linkProps: TextLinkProps = external
+      ? { to: { pathname: to as string }, target: '_blank', rel: 'noreferrer' }
+      : { to };
 
     return <BaseTextLink ref={ref} as={Link} $color={color} {...props} {...linkProps} />;
   }
