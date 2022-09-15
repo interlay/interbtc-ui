@@ -26,6 +26,8 @@ export type { TabsItemProps, TabsProps } from './Tabs';
 export { Tabs, TabsItem } from './Tabs';
 export type { DlProps, TextProps } from './Text';
 export { Dl, Em, H1, H2, H3, H4, H5, H6, P, Span, Strong } from './Text';
+export type { TextLinkProps } from './TextLink';
+export { TextLink } from './TextLink';
 export type { ComponentLibraryTheme } from './theme';
 export { theme } from './theme';
 export type { TokenBalanceProps } from './TokenBalance';
