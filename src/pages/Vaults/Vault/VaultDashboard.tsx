@@ -1,3 +1,4 @@
+import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
