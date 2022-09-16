@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { ReactComponent as SpinIcon } from '@/assets/img/icons/spin.svg';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
-// ray test touch <<
 interface Props extends React.ComponentPropsWithRef<'div'> {
   text?: string;
 }
@@ -38,6 +37,5 @@ const FullLoadingSpinner = ({ text, className, ...rest }: Props): JSX.Element =>
     </div>
   </div>
 );
-// ray test touch >>
 
 export default FullLoadingSpinner;

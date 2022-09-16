@@ -17,13 +17,12 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
 
   const { apiStatus, apiError, keyringStatus, keyring, api } = useSubstrateState();
 
+  // TODO: translate `FullLoadingSpinner` texts once confirmed
   switch (apiStatus) {
     case ApiStatus.Idle:
     case ApiStatus.ConnectInit:
     case ApiStatus.Connecting:
-      // ray test touch <<
       return <FullLoadingSpinner text='Connecting to Bridge' />;
-    // ray test touch >>
     case ApiStatus.Ready:
       // TODO: remove `isBridgeLoaded` & `bridgeLoaded` use cases via another PR
       dispatch(isBridgeLoaded(true));
@@ -33,19 +32,13 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
         throw new Error('Something went wrong!');
       }
       toast.warn('Unable to connect to the BTC-Parachain.');
-      // ray test touch <<
-      // TODO: improve styling
       return (
         <FullLoadingSpinner
           text={`Error Connecting to Bridge: Connection to websocket ${apiError.target.url} failed.`}
         />
       );
-    // ray test touch >>
     case ApiStatus.Disconnected:
-      // ray test touch <<
-      // TODO: improve styling
       return <FullLoadingSpinner text='Disconnected from Bridge' />;
-    // ray test touch >>
     default:
       throw new Error('Invalid ApiStatus!');
   }
@@ -53,10 +46,7 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
   switch (keyringStatus) {
     case KeyringStatus.Idle:
     case KeyringStatus.Loading:
-      // ray test touch <<
-      // TODO: improve styling
       return <FullLoadingSpinner text="Loading accounts (please review any extension's authorization)" />;
-    // ray test touch >>
     case KeyringStatus.Ready:
       break;
     case KeyringStatus.Error:
