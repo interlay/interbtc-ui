@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 
 import { isBridgeLoaded } from '@/common/actions/general.actions';
+import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import InterlayHelmet from '@/parts/InterlayHelmet';
 import { ActionType, ApiStatus, KeyringStatus, useSubstrateState } from '@/substrate-lib/substrate-context';
 
@@ -20,10 +21,9 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
     case ApiStatus.Idle:
     case ApiStatus.ConnectInit:
     case ApiStatus.Connecting:
-      // ray test touch <
-      // TODO: improve styling
-      return <>Connecting to Substrate</>;
-    // ray test touch >
+      // ray test touch <<
+      return <FullLoadingSpinner text='Connecting to Bridge' />;
+    // ray test touch >>
     case ApiStatus.Ready:
       // TODO: remove `isBridgeLoaded` & `bridgeLoaded` use cases via another PR
       dispatch(isBridgeLoaded(true));
@@ -33,15 +33,19 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
         throw new Error('Something went wrong!');
       }
       toast.warn('Unable to connect to the BTC-Parachain.');
-      // ray test touch <
+      // ray test touch <<
       // TODO: improve styling
-      return <>Error Connecting to Substrate: Connection to websocket {apiError.target.url} failed.</>;
-    // ray test touch >
+      return (
+        <FullLoadingSpinner
+          text={`Error Connecting to Bridge: Connection to websocket ${apiError.target.url} failed.`}
+        />
+      );
+    // ray test touch >>
     case ApiStatus.Disconnected:
-      // ray test touch <
+      // ray test touch <<
       // TODO: improve styling
-      return <>Disconnected from Substrate</>;
-    // ray test touch >
+      return <FullLoadingSpinner text='Disconnected from Bridge' />;
+    // ray test touch >>
     default:
       throw new Error('Invalid ApiStatus!');
   }
@@ -49,10 +53,10 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
   switch (keyringStatus) {
     case KeyringStatus.Idle:
     case KeyringStatus.Loading:
-      // ray test touch <
+      // ray test touch <<
       // TODO: improve styling
-      return <>Loading accounts (please review any extension&apos;s authorization)</>;
-    // ray test touch >
+      return <FullLoadingSpinner text="Loading accounts (please review any extension's authorization)" />;
+    // ray test touch >>
     case KeyringStatus.Ready:
       break;
     case KeyringStatus.Error:
