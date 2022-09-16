@@ -30,7 +30,7 @@ const VaultOverview = (): JSX.Element => {
     );
   }
 
-  const isReadOnlyVault = !vaultClientLoaded || address !== accountAddress;
+  const isReadOnlyOverview = !vaultClientLoaded || address !== accountAddress;
 
   return (
     <MainContainer>
@@ -68,7 +68,7 @@ const VaultOverview = (): JSX.Element => {
           </GridItem>
         ))}
       </Grid>
-      {!isReadOnlyVault && <CreateVaults vaults={vaultOverview.vaults} />}
+      {isReadOnlyOverview && <CreateVaults vaults={vaultOverview.vaults} />}
     </MainContainer>
   );
 };

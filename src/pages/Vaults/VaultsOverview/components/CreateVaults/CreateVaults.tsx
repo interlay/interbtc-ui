@@ -20,7 +20,6 @@ type InheritAttrs = Omit<VaultsTableProps, keyof Props | 'data' | 'onClickAddVau
 
 type CreateVaultsProps = Props & InheritAttrs;
 
-// TODO: should not show to read-only
 const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element => {
   const titleId = useId();
   const { t } = useTranslation();
@@ -47,7 +46,7 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
 
   return (
     <Stack spacing='double'>
-      <H3 id={titleId}>{t('create_vault')}</H3>
+      <H3 id={titleId}>{t('vault.create_vault')}</H3>
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
       <Modal open={open} onClose={handleCloseModal}>
         <CreateVaultWizard vault={selectedVault} />

@@ -59,9 +59,8 @@ const StyledDd = styled.dd`
 const StyledDepositTitle = styled(H2)`
   font-size: ${theme.text.base};
   line-height: ${theme.lineHeight.base};
-  color: #d57b33;
   padding: ${theme.spacing.spacing3};
-  border-bottom: 2px solid #feca2f;
+  border-bottom: 2px solid ${theme.colors.textSecondary};
   text-align: center;
 `;
 

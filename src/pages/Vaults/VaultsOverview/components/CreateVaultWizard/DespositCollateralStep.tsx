@@ -34,9 +34,8 @@ type DespositCollateralStepProps = Props & StepComponentProps;
 const DepositCollateralStep = ({
   onSuccessfulDeposit,
   collateralCurrency,
-  minCollateralAmount,
-  ...props
-}: DespositCollateralStepProps): JSX.Element | null => {
+  minCollateralAmount
+}: DespositCollateralStepProps): JSX.Element => {
   const titleId = useId();
   const { t } = useTranslation();
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
@@ -76,7 +75,7 @@ const DepositCollateralStep = ({
   };
 
   return (
-    <form onSubmit={h(handleSubmit)} {...props}>
+    <form onSubmit={h(handleSubmit)}>
       <Stack spacing='double'>
         <StyledDepositTitle id={titleId}>{t('vault.deposit_collateral')}</StyledDepositTitle>
         <TokenField

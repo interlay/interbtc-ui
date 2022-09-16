@@ -22,7 +22,7 @@ type Props = {
 
 type DisclaimerStepProps = Props & StepComponentProps;
 
-const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element | null => {
+const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
   const { t } = useTranslation();
 
   return (

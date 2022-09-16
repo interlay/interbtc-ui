@@ -14,7 +14,7 @@ type Props = {
 
 type VaultCreatedStepProps = StepComponentProps & Props;
 
-const VaultCreatedStep = ({ collateralCurrency }: VaultCreatedStepProps): JSX.Element | null => {
+const VaultCreatedStep = ({ collateralCurrency }: VaultCreatedStepProps): JSX.Element => {
   const { t } = useTranslation();
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
 
