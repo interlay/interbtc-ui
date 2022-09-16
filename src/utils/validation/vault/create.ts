@@ -14,13 +14,13 @@ type ValidateDepositCollateralParams = {
   transactionFee: MonetaryAmount<CurrencyExt>;
 };
 
-const validateDepositCollateral = (t: TFunction) => ({
-  minAmount,
-  balance,
-  governanceBalance,
-  transactionFee
-}: ValidateDepositCollateralParams): z.ZodEffects<z.ZodString, string, string> =>
+const validateDepositCollateral = (
+  t: TFunction,
+  params: ValidateDepositCollateralParams
+): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
+    const { balance, governanceBalance, minAmount, transactionFee } = params;
+
     if (governanceBalance.lte(transactionFee)) {
       return ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -61,3 +61,4 @@ const validateDepositCollateral = (t: TFunction) => ({
   });
 
 export { validateDepositCollateral };
+export type { ValidateDepositCollateralParams };

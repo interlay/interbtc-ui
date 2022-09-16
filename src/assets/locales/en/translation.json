@@ -462,6 +462,7 @@
     "view_vault": "View Vault",
     "vault_risks": "Vault Risks",
     "please_enter_deposit_amount": "Please enter your deposit amount.",
+    "create_vault": "Create a vault",
     "disclaimer": {
       "understand_risks": "Operating a Vault doesn't come without risks. Before making a deposit, it is best to research and understand the risks involved.",
       "running_vault_requirments": "Operating a Vault client involves running a fully automated client on a server. This client has access to hot wallets for both Bitcoin and the Interlay/Kintsugi networks.",

@@ -1,7 +1,9 @@
 import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
+import { StoreType } from '@/common/types/util.types';
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Grid, GridItem, InfoBox, VaultCard } from '@/component-library';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -15,6 +17,8 @@ import { CreateVaults, VaultsHeader } from './components';
 const VaultOverview = (): JSX.Element => {
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
   const vaultOverview = useGetVaultData({ address: accountAddress });
+  const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
+
   const { t } = useTranslation();
 
   if (!vaultOverview) {
@@ -25,6 +29,8 @@ const VaultOverview = (): JSX.Element => {
       </MainContainer>
     );
   }
+
+  const isReadOnlyVault = !vaultClientLoaded || address !== accountAddress;
 
   return (
     <MainContainer>
@@ -62,7 +68,7 @@ const VaultOverview = (): JSX.Element => {
           </GridItem>
         ))}
       </Grid>
-      <CreateVaults vaults={vaultOverview.vaults} />
+      {!isReadOnlyVault && <CreateVaults vaults={vaultOverview.vaults} />}
     </MainContainer>
   );
 };

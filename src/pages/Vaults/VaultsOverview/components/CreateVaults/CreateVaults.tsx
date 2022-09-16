@@ -1,5 +1,6 @@
 import { useId } from '@react-aria/utils';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { H3, Modal, Stack } from '@/component-library';
 import { AvailableVaultData, useGetAvailableVaults } from '@/utils/hooks/api/use-get-available-vaults';
@@ -22,6 +23,7 @@ type CreateVaultsProps = Props & InheritAttrs;
 // TODO: should not show to read-only
 const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element => {
   const titleId = useId();
+  const { t } = useTranslation();
   const availableVaults = useGetAvailableVaults();
   const [{ open, data: selectedVault }, setCollateralModal] = useState<{ data?: VaultsTableRow; open: boolean }>({
     data: undefined,
@@ -45,7 +47,7 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
 
   return (
     <Stack spacing='double'>
-      <H3 id={titleId}>Create a vault</H3>
+      <H3 id={titleId}>{t('create_vault')}</H3>
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
       <Modal open={open} onClose={handleCloseModal}>
         <CreateVaultWizard vault={selectedVault} />

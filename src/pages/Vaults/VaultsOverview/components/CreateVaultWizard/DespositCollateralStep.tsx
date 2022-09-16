@@ -1,9 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps, useId } from '@react-aria/utils';
 import Big from 'big.js';
-import { TFunction } from 'i18next';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
@@ -24,21 +23,6 @@ const DEPOSIT_COLLATERAL_AMOUNT = 'deposit-collateral-amount';
 
 type CollateralFormData = { [DEPOSIT_COLLATERAL_AMOUNT]: string };
 
-const getCollateralSchema = (t: TFunction) => ({
-  minAmount,
-  balance,
-  governanceBalance,
-  transactionFee
-}: {
-  minAmount: MonetaryAmount<CurrencyExt>;
-  balance: MonetaryAmount<CurrencyExt>;
-  governanceBalance: MonetaryAmount<CurrencyExt>;
-  transactionFee: MonetaryAmount<CurrencyExt>;
-}) =>
-  z.object({
-    [DEPOSIT_COLLATERAL_AMOUNT]: validateDepositCollateral(t)({ minAmount, balance, governanceBalance, transactionFee })
-  });
-
 type Props = {
   collateralCurrency: CollateralCurrencyExt;
   minCollateralAmount: Big;
@@ -56,6 +40,16 @@ const DepositCollateralStep = ({
   const titleId = useId();
   const { t } = useTranslation();
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
+
+  const validationParams = {
+    minAmount: collateral.min.raw,
+    balance: collateral.balance.raw,
+    governanceBalance: governance.raw,
+    transactionFee: fee.raw
+  };
+  const schema = z.object({
+    [DEPOSIT_COLLATERAL_AMOUNT]: validateDepositCollateral(t, validationParams)
+  });
   const {
     register,
     handleSubmit: h,
@@ -63,14 +57,7 @@ const DepositCollateralStep = ({
     formState: { errors, isValid }
   } = useForm<CollateralFormData>({
     mode: 'onChange',
-    resolver: zodResolver(
-      getCollateralSchema(t)({
-        minAmount: collateral.min.raw,
-        balance: collateral.balance.raw,
-        governanceBalance: governance.raw,
-        transactionFee: fee.raw
-      })
-    )
+    resolver: zodResolver(schema)
   });
 
   const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
