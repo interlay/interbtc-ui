@@ -97,7 +97,7 @@ const formatPercentage = (
     minimumFractionDigits: options?.minimumFractionDigits ?? 2
   });
 
-  return format(percentage);
+  return `${format(percentage)}%`;
 };
 
 function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, defaultValue = '0.00'): string {
