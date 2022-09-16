@@ -1,44 +1,49 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
-import { CTAVariants, Sizes } from '../utils/prop-types';
-import { OutlinedCTA, PrimaryCTA, SecondaryCTA } from './CTA.style';
+import { LoadingSpinner } from '../LoadingSpinner';
+import { Sizes, Variants } from '../utils/prop-types';
+import { BaseCTA, BaseCTAProps } from './BaseCTA';
+import { LoadingWrapper } from './CTA.style';
+
+const loadingSizes: Record<Sizes, number> = {
+  small: 16,
+  medium: 18,
+  large: 20
+};
 
 type Props = {
-  variant?: CTAVariants;
+  variant?: Variants;
   fullWidth?: boolean;
   size?: Sizes;
+  loading?: boolean;
 };
 
 type NativeAttrs = Omit<ButtonHTMLAttributes<unknown>, keyof Props>;
 
-type CTAProps = Props & NativeAttrs;
+type InheritAttrs = Omit<BaseCTAProps, keyof Props & NativeAttrs>;
+
+type CTAProps = Props & InheritAttrs & NativeAttrs;
 
 const CTA = forwardRef<HTMLButtonElement, CTAProps>(
-  (
-    { disabled = false, variant, fullWidth = false, size = 'medium', onClick, className, children, ...rest },
-    ref
-  ): JSX.Element => {
-    const props = {
-      as: 'button' as keyof JSX.IntrinsicElements,
-      disabled,
-      $fullWidth: fullWidth,
-      ref,
-      onClick,
-      className,
-      children,
-      $size: size,
-      ...rest
-    };
+  ({ children, loading, disabled, variant, fullWidth, size = 'medium', ...props }, ref): JSX.Element => {
+    const isDisabled = disabled || loading;
 
-    switch (variant) {
-      default:
-      case 'primary':
-        return <PrimaryCTA {...props} />;
-      case 'secondary':
-        return <SecondaryCTA {...props} />;
-      case 'outlined':
-        return <OutlinedCTA {...props} />;
-    }
+    return (
+      <BaseCTA ref={ref} disabled={isDisabled} fullWidth={fullWidth} variant={variant} size={size} {...props}>
+        {loading && (
+          <LoadingWrapper>
+            <LoadingSpinner
+              variant='indeterminate'
+              color={variant}
+              aria-label='Loading...'
+              thickness={2}
+              diameter={loadingSizes[size]}
+            />
+          </LoadingWrapper>
+        )}
+        {children}
+      </BaseCTA>
+    );
   }
 );
 

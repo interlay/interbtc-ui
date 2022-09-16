@@ -12,6 +12,9 @@ import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
+
+import { useGetCurrencies } from '../use-get-currencies';
 
 // TODO: Bad stuff happening here! `getIssueWithStatus` and `getRedeemWithStatus` are
 // mutating the data which is why `status` is being set like this. We need to refactor
@@ -119,9 +122,21 @@ const parseTransactionsData = (
     : [];
 };
 
-const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: string): TransactionTableData[] => {
+const useGetVaultTransactions = (
+  address: string,
+  collateralTokenTicker: string,
+  bridgeLoaded: boolean
+): TransactionTableData[] => {
   const vaultId = window.bridge?.api.createType(ACCOUNT_ID_TYPE_NAME, address);
 
+  const { getCurrencyFromTicker, isSuccess: currenciesSuccess, error: currenciesError } = useGetCurrencies(
+    bridgeLoaded
+  );
+  useErrorHandler(currenciesError);
+
+  const collateralTokenCondition = currenciesSuccess
+    ? getCurrencyEqualityCondition(getCurrencyFromTicker(collateralTokenTicker))
+    : '';
   const { data: stableBitcoinConfirmations, error: stableBitcoinConfirmationsError } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
 
@@ -140,9 +155,10 @@ const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: stri
       ISSUES_FETCHER,
       0, // offset
       10, // limit
-      `vault: {accountId_eq: "${address}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`
+      `vault: {accountId_eq: "${address}", collateralToken: {${collateralTokenCondition}}}`
     ],
-    issuesFetcher
+    issuesFetcher,
+    { enabled: currenciesSuccess }
   );
   useErrorHandler(issuesError);
 
@@ -151,9 +167,10 @@ const useGetVaultTransactions = (address: string, collateralTokenIdLiteral: stri
       REDEEMS_FETCHER,
       0, // offset
       10, // limit
-      `vault: {accountId_eq: "${address}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`
+      `vault: {accountId_eq: "${address}", collateralToken: {${collateralTokenCondition}}}`
     ],
-    redeemsFetcher
+    redeemsFetcher,
+    { enabled: currenciesSuccess }
   );
   useErrorHandler(redeemsError);
 

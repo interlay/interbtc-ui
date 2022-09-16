@@ -5,9 +5,17 @@ import { NumberInput, NumberInputProps } from '.';
 const Template: Story<NumberInputProps> = (args) => <NumberInput {...args} />;
 
 const Default = Template.bind({});
-Default.args = { defaultValue: 10 };
+Default.args = { defaultValue: 10, isDisabled: false };
 
-export { Default };
+const Disabled = Template.bind({});
+Disabled.args = {
+  label: 'Amount',
+  description: "What's your amount?",
+  defaultValue: 10,
+  isDisabled: true
+};
+
+export { Default, Disabled };
 
 export default {
   title: 'Forms/NumberInput',

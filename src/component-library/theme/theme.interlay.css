@@ -31,12 +31,24 @@
   --colors-tabs-active-color: var(--colors-light-blue);
   --colors-tabs-active-bg: var(--colors-lighter-blue);
   /* Loading Spinner */
-  --colors-indeterminate-color: var(--colors-light-blue);
-  --colors-indeterminate-bg: var(--colors-lighter-blue);
+  --colors-indeterminate-primary-color: var(--colors-lighter-blue);
+  --colors-indeterminate-primary-bg: var(--colors-neutral-black-20);
+  --colors-indeterminate-secondary-color: var(--colors-light-blue);
+  --colors-indeterminate-secondary-bg: var(--colors-light-blue-10);
+  --colors-indeterminate-outlined-color: var(--colors-neutral-black-80);
+  --colors-indeterminate-outlined-bg: var(--colors-neutral-black-20);
   /* Score Bar */
   --colors-score-bar-indicator-color: var(--colors-light-blue);
   --colors-score-bar-separator-color: var(--colors-neutral-black);
   /* Progress Circle */
   --color-progress-circle-mask: var(--colors-neutral-black-25);
   --color-progress-circle-fill: var(--colors-light-blue);
+  /* Input */
+  --colors-input-text: var(--colors-neutral-black);
+  --colors-input-default-border: var(--colors-neutral-light-grey);
+  --colors-input-hover-border: var(--colors-lighter-blue);
+  --colors-input-focus-border: var(--colors-light-blue-90);
+  --colors-input-disabled-text: var(--colors-neutral-lighter-grey);
+  --colors-input-disabled-border: var(--colors-neutral-lighter-grey);
+  --colors-input-background: var(--colors-neutral-white);
 }
