@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { useId } from '@react-aria/utils';
+import { mergeProps, useId } from '@react-aria/utils';
 import Big from 'big.js';
 import { TFunction } from 'i18next';
 import { useForm } from 'react-hook-form';
@@ -14,8 +14,8 @@ import { CTA, Span, Stack, TokenField } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { getErrorMessage } from '@/utils/helpers/forms';
+import { validateDepositCollateral } from '@/utils/validation/vault/create';
 
-import { validateDepositCollateral } from '../../utils/deposit-validation';
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDepositTitle, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
 import { StepComponentProps, withStep } from './Step';
@@ -85,9 +85,7 @@ const DepositCollateralStep = ({
 
   const handleSubmit = async (data: CollateralFormData) => {
     const amount = newMonetaryAmount(data[DEPOSIT_COLLATERAL_AMOUNT], collateral.currency, true);
-
     registerNewVaultMutation.mutate(amount);
-    console.log(errors, data);
   };
 
   return (
@@ -102,7 +100,7 @@ const DepositCollateralStep = ({
           balance={collateral.balance.amount}
           balanceInUSD={collateral.balance.usd}
           errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}
-          {...register(DEPOSIT_COLLATERAL_AMOUNT)}
+          {...mergeProps(register(DEPOSIT_COLLATERAL_AMOUNT), { onChange: console.log })}
         />
         <StyledDl>
           <StyledDItem>

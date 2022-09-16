@@ -7,17 +7,19 @@ import * as z from 'zod';
 import { displayMonetaryAmount } from '@/common/utils/utils';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 
+type ValidateDepositCollateralParams = {
+  minAmount: MonetaryAmount<CurrencyExt>;
+  balance: MonetaryAmount<CurrencyExt>;
+  governanceBalance: MonetaryAmount<CurrencyExt>;
+  transactionFee: MonetaryAmount<CurrencyExt>;
+};
+
 const validateDepositCollateral = (t: TFunction) => ({
   minAmount,
   balance,
   governanceBalance,
   transactionFee
-}: {
-  minAmount: MonetaryAmount<CurrencyExt>;
-  balance: MonetaryAmount<CurrencyExt>;
-  governanceBalance: MonetaryAmount<CurrencyExt>;
-  transactionFee: MonetaryAmount<CurrencyExt>;
-}): z.ZodEffects<z.ZodString, string, string> =>
+}: ValidateDepositCollateralParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
     if (governanceBalance.lte(transactionFee)) {
       return ctx.addIssue({
