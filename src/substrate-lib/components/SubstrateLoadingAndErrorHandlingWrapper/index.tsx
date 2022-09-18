@@ -55,7 +55,7 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
       throw new Error('Invalid KeyringStatus!');
   }
 
-  if (keyring === undefined || api === undefined) {
+  if (keyring === undefined) {
     throw new Error('Something went wrong!');
   }
   if (api === undefined) {
