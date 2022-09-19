@@ -13,7 +13,7 @@ WithBalance.args = {
   value: 100.0, // `value`
   balance: 1000.0,
   balanceInUSD: formatUSD(1000.0),
-  disabled: false
+  isDisabled: false
 };
 
 const WithoutBalance = Template.bind({});

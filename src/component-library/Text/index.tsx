@@ -10,5 +10,5 @@ export { H6 } from './H6';
 export { P } from './P';
 export { Span } from './Span';
 export { Strong } from './Strong';
-export type { TextColor, TextProps } from './types';
+export type { TextProps } from './types';
 export { resolveTextColor } from './utils';

@@ -6,7 +6,8 @@ import { useQueries, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { VAULT_COLLATERAL_TOKENS } from '@/config/vaults';
+
+import { useGetCollateralCurrencies } from '../use-get-collateral-currencies';
 
 type VaultResponse = Array<VaultExt>;
 
@@ -20,16 +21,23 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
+  const {
+    data: collateralCurrencies,
+    isSuccess: collateralCurrenciesSuccess,
+    error: collateralCurrenciesError
+  } = useGetCollateralCurrencies(bridgeLoaded);
+
+  useErrorHandler(collateralCurrenciesError);
   useErrorHandler(queryError);
 
   // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const vaults: Array<any> = useQueries<Array<UseQueryResult<VaultResponse, Error>>>(
-    VAULT_COLLATERAL_TOKENS.map((item) => {
+    (collateralCurrencies || []).map((item) => {
       return {
         queryKey: ['vaults', address, item.ticker],
         queryFn: async () => await getVaults(newAccountId(window.bridge.api, address), item),
         options: {
-          enabled: !!bridgeLoaded
+          enabled: !!bridgeLoaded && collateralCurrenciesSuccess
         }
       };
     })

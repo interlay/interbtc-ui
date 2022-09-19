@@ -1,7 +1,7 @@
 import { theme } from '../theme';
-import { TextColor } from './types';
+import { Colors } from '../utils/prop-types';
 
-const resolveTextColor = (color: TextColor | undefined): string => {
+const resolveTextColor = (color: Colors | undefined): string => {
   switch (color) {
     case 'primary':
       return theme.colors.textPrimary;
