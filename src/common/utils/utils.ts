@@ -92,12 +92,12 @@ const formatPercentage = (
   }
 ): string => {
   const { format } = new Intl.NumberFormat(undefined, {
-    style: 'decimal',
+    style: 'percent',
     maximumFractionDigits: options?.maximumFractionDigits ?? 2,
     minimumFractionDigits: options?.minimumFractionDigits ?? 2
   });
 
-  return `${format(percentage)}%`;
+  return format(percentage);
 };
 
 function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, defaultValue = '0.00'): string {
