@@ -1,23 +1,8 @@
-import { CurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
-import {
-  InterBtc, // on Polkadot
-  Interlay, // On Polkadot
-  KBtc, // on Kusama
-  Kintsugi, // On Kusama
-  Kusama, // on Kusama
-  Polkadot // on Polkadot
-} from '@interlay/monetary-js';
+import { CurrencyExt } from '@interlay/interbtc-api';
 
-const CURRENCIES: Array<CurrencyExt> = [Polkadot, InterBtc, Interlay, KBtc, Kintsugi, Kusama];
+// Squid query by currency ticker for native assets and by id for foreign assets.
+// We need to differentiate because those are handled differently on squid side.
+const getCurrencyEqualityCondition = (currency: CurrencyExt): string =>
+  'id' in currency ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
 
-const getCurrency = (idLiteral: CurrencyIdLiteral): CurrencyExt => {
-  const targetCurrency = CURRENCIES.find((currency) => currency.ticker === idLiteral);
-
-  if (targetCurrency === undefined) {
-    throw new Error('Something went wrong!');
-  }
-
-  return targetCurrency;
-};
-
-export { getCurrency };
+export { getCurrencyEqualityCondition };

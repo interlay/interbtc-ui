@@ -1,31 +1,41 @@
-import * as React from 'react';
+import { AriaTextFieldOptions, useTextField } from '@react-aria/textfield';
+import { mergeProps } from '@react-aria/utils';
+import { forwardRef } from 'react';
 
-import { Adornment, BaseInput, Wrapper } from './Input.style';
+import { useDOMRef } from '../utils/dom';
+import { BaseInput, BaseInputProps } from './BaseInput';
 
 type Props = {
-  startAdornment?: React.ReactNode;
-  endAdornment?: React.ReactNode;
+  value?: string;
+  defaultValue?: string;
 };
 
-type NativeAttrs = Omit<React.InputHTMLAttributes<unknown>, keyof Props>;
+type InheritAttrs = Omit<
+  BaseInputProps,
+  keyof Props | 'errorMessageProps' | 'descriptionProps' | 'disabled' | 'required' | 'readOnly'
+>;
 
-type InputProps = Props & NativeAttrs;
+type AriaAttrs = Omit<AriaTextFieldOptions<'input'>, (keyof Props & InheritAttrs) | 'onChange'>;
 
-// TODO: needs to be implemented with react-aria
-const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ startAdornment, endAdornment, className, style, ...props }, ref): JSX.Element => (
-    <Wrapper
-      $hasStartAdornment={!!startAdornment}
-      $hasEndAdornment={!!endAdornment}
-      className={className}
-      style={style}
-    >
-      <Adornment>{startAdornment}</Adornment>
-      <BaseInput ref={ref} type='text' {...props} />
-      <Adornment>{endAdornment}</Adornment>
-    </Wrapper>
-  )
+type InputProps = Props & InheritAttrs & AriaAttrs;
+
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ onChange, ...props }, ref): JSX.Element => {
+    const inputRef = useDOMRef(ref);
+    const { inputProps, descriptionProps, errorMessageProps, labelProps } = useTextField(props, inputRef);
+
+    return (
+      <BaseInput
+        ref={inputRef}
+        descriptionProps={descriptionProps}
+        errorMessageProps={errorMessageProps}
+        labelProps={labelProps}
+        {...mergeProps(props, inputProps, { onChange })}
+      />
+    );
+  }
 );
+
 Input.displayName = 'Input';
 
 export { Input };

@@ -1,12 +1,12 @@
 import { useNumberField } from '@react-aria/numberfield';
-import { chain, mergeProps } from '@react-aria/utils';
+import { mergeProps } from '@react-aria/utils';
 import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
-import * as React from 'react';
+import { forwardRef, useEffect } from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
-import { Input, InputProps } from '../Input';
+import { BaseInput, BaseInputProps } from '../Input';
 
 // Prevents the user from changing the input value using mouse wheel
 const handleWheel = (event: WheelEvent) => event.preventDefault();
@@ -19,16 +19,17 @@ const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFract
 const locale = 'en-US';
 
 type Props = {
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  value?: number;
+  defaultValue?: number;
 };
 
-type InheritAttrs = Omit<InputProps, keyof Props>;
+type InheritAttrs = Omit<BaseInputProps, keyof Props | 'disabled' | 'required' | 'readOnly'>;
 
-type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'locale'>;
+type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'onChange' | 'locale'>;
 
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
-const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
+const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   ({ onChange, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
     const state = useNumberFieldState({
@@ -36,9 +37,9 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       locale,
       formatOptions
     });
-    const { inputProps } = useNumberField(props, state, inputRef);
+    const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(props, state, inputRef);
 
-    React.useEffect(() => {
+    useEffect(() => {
       const input = inputRef.current;
 
       input?.addEventListener('wheel', handleWheel, { passive: false });
@@ -46,10 +47,15 @@ const NumberInput = React.forwardRef<HTMLInputElement, NumberInputProps>(
       return () => input?.removeEventListener('wheel', handleWheel);
     }, [inputRef]);
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = chain(inputProps.onChange, onChange);
-
-    // TODO: should move props into <FormField/> when added here as a wrapper
-    return <Input {...mergeProps(props, inputProps)} onChange={handleChange} ref={inputRef} />;
+    return (
+      <BaseInput
+        ref={inputRef}
+        descriptionProps={descriptionProps}
+        errorMessageProps={errorMessageProps}
+        labelProps={labelProps}
+        {...mergeProps(props, inputProps, { onChange })}
+      />
+    );
   }
 );
 

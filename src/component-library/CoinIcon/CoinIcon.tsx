@@ -21,7 +21,7 @@ type CoinIconProps = {
 };
 
 const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
-  const CoinIcon = coinsIcon[coin];
+  const CoinIcon = coinsIcon[coin] || (() => null);
 
   return (
     <IconWrapper $size={size}>

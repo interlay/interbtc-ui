@@ -43,7 +43,7 @@ module.exports = {
   darkMode: 'class',
   theme: {
     fontFamily: {
-      airbnbCereal: ['airbnb-cereal', 'ui-sans-serif']
+      inter: ['inter', 'ui-sans-serif']
     },
     extend: {
       colors: {
@@ -414,7 +414,7 @@ module.exports = {
       // MEMO: inspired by https://tailwindcss.com/docs/adding-base-styles#using-a-plugin
       addBase({
         body: {
-          fontFamily: theme('fontFamily.airbnbCereal')
+          fontFamily: theme('fontFamily.inter')
         }
       });
 

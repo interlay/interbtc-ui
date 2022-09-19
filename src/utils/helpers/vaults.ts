@@ -39,7 +39,7 @@ const getVaultStatusLabel = (
       statusLabel = t('dashboard.vault.liquidation');
     }
     if (settledCollateralization.lt(secureCollateralThreshold)) {
-      statusLabel = t('dashboard.vault.undercollateralized');
+      statusLabel = t('dashboard.vault.below_secure_threshold');
     }
   }
   // Should only display bannedUntil status if current active block number < the bannedUntil block number.

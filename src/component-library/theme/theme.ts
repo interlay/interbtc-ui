@@ -73,6 +73,33 @@ const theme = {
     default: 'var(--box-shadow-default)'
   },
   // Components
+  input: {
+    color: 'var(--colors-input-text)',
+    background: 'var(--colors-input-background)',
+    default: {
+      border: '1px solid var(--colors-input-default-border)'
+    },
+    hover: {
+      border: '1px solid var(--colors-input-hover-border)'
+    },
+    focus: {
+      border: '1px solid var(--colors-input-focus-border)',
+      boxShadow: '0 0 0 1px var(--colors-input-focus-border)'
+    },
+    error: {
+      color: 'var(--colors-error-dark)',
+      border: '1px solid var(--colors-error-dark)'
+    },
+    disabled: {
+      color: 'var(--colors-input-disabled-text)',
+      border: '1px solid var(--colors-input-disabled-border)'
+    },
+    helperText: {
+      error: {
+        color: 'var(--colors-error-dark)'
+      }
+    }
+  },
   card: {
     bg: 'var(--colors-card-bg)',
     secondaryBg: 'var(--colors-card-secondary-bg)'
@@ -103,9 +130,9 @@ const theme = {
       lineHeight: 'var(--line-height-base)'
     },
     large: {
-      padding: 'var(--spacing-3) var(--spacing-10)',
-      text: 'var(--text-base)',
-      lineHeight: 'var(--line-height-base)'
+      padding: 'var(--spacing-4) var(--spacing-12)',
+      text: 'var(--text-lg)',
+      lineHeight: 'var(--line-height-lg)'
     }
   },
   table: {
@@ -159,8 +186,18 @@ const theme = {
       bg: 'var(--colors-cta-secondary)'
     },
     indeterminate: {
-      color: 'var(--colors-indeterminate-color)',
-      bg: 'var(--colors-indeterminate-bg)'
+      primary: {
+        color: 'var(--colors-indeterminate-primary-color)',
+        bg: 'var(--colors-indeterminate-primary-bg)'
+      },
+      secondary: {
+        color: 'var(--colors-indeterminate-secondary-color)',
+        bg: 'var(--colors-indeterminate-secondary-bg)'
+      },
+      outlined: {
+        color: 'var(--colors-indeterminate-outlined-color)',
+        bg: 'var(--colors-indeterminate-outlined-bg)'
+      }
     }
   },
   progress: {
