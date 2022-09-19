@@ -3,6 +3,7 @@ import './index.css';
 import '@/component-library/theme/theme.interlay.css';
 import '@/component-library/theme/theme.kintsugi.css';
 
+import { OverlayProvider } from '@react-aria/overlays';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -37,7 +38,9 @@ ReactDOM.render(
               <ThemeWrapper>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <Subscriptions>
+                    < OverlayProvider>
                     <App />
+                    </OverlayProvider>
                   </Subscriptions>
                 </SubstrateLoadingAndErrorHandlingWrapper>
               </ThemeWrapper>

@@ -13,6 +13,8 @@ const Template: Story<ModalProps> = (args) => {
     setOpen(args.open);
   }, [args.open]);
 
+  console.log(open);
+
   return (
     <>
       <CTA onClick={handleOpenModal} variant='primary'>
@@ -27,7 +29,8 @@ const Template: Story<ModalProps> = (args) => {
 
 const Default = Template.bind({});
 Default.args = {
-  open: false
+  open: false,
+  title: 'This a title'
 };
 
 export { Default };

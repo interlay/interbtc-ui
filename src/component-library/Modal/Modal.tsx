@@ -1,55 +1,54 @@
-import { MutableRefObject, ReactNode, useEffect, useRef } from 'react';
+import { AriaDialogProps, useDialog } from '@react-aria/dialog';
+import { FocusScope } from '@react-aria/focus';
+import { AriaOverlayProps, OverlayContainer, useModal, useOverlay, usePreventScroll } from '@react-aria/overlays';
+import { ReactNode, useRef } from 'react';
 
-import Portal from '@/parts/Portal';
 import { useMountTransition } from '@/utils/hooks/use-mount-transition';
 
 import { Icon } from '../Icon';
 import { theme } from '../theme';
-import { CloseIcon, ModalContainer, ModalContent, ModalOverlay } from './Modal.style';
-interface ModalProps {
+import { CloseIcon, Dialog, Title, Underlay } from './Modal.style';
+
+type Props = {
   open: boolean;
-  onClose: () => void;
   children: ReactNode;
-  initialFocusRef?: MutableRefObject<HTMLElement | null>;
-}
+  title?: ReactNode;
+};
 
-// TODO: we have missing relevant behaviours for a Modal. Could be rewritten with react-aria.
-const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.Element | null => {
-  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration.duration100);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
+type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
 
-  useEffect(() => {
-    // If initial element to be focused is not specified, close button is focused.
-    if (initialFocusRef?.current) {
-      initialFocusRef.current.focus();
-    } else if (closeButtonRef?.current) {
-      closeButtonRef.current.focus();
-    }
-  }, [initialFocusRef, closeButtonRef, shouldRender]);
+type ModalProps = Props & InheritAttrs;
 
-  // Closes modal on escape key.
-  useEffect(() => {
-    const handleKeydown = (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleKeydown);
-    return () => document.removeEventListener('keydown', handleKeydown);
-  }, [onClose]);
+const Modal = ({ title, children, ...props }: ModalProps): JSX.Element | null => {
+  const { open, onClose } = props;
+  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration);
+  // Handle interacting outside the dialog and pressing
+  // the Escape key to close the modal.
+  const ref = useRef<HTMLDivElement>(null);
+  const { overlayProps, underlayProps } = useOverlay(props, ref);
+
+  // Prevent scrolling while the modal is open, and hide content
+  // outside the modal from screen readers.
+  usePreventScroll();
+  const { modalProps } = useModal();
+
+  // Get props for the dialog and its title
+  const { dialogProps, titleProps } = useDialog(props, ref);
 
   return open || shouldRender ? (
-    <Portal>
-      <ModalContainer role='dialog'>
-        <ModalOverlay onClick={onClose} />
-        <ModalContent transitionTrigger={transitionTrigger}>
-          <CloseIcon aria-label='Dismiss' onClick={onClose} ref={closeButtonRef}>
-            <Icon variant='close' />
-          </CloseIcon>
-          {children}
-        </ModalContent>
-      </ModalContainer>
-    </Portal>
+    <OverlayContainer>
+      <Underlay {...underlayProps}>
+        <FocusScope contain restoreFocus autoFocus>
+          <Dialog {...overlayProps} {...dialogProps} {...modalProps} $transitionTrigger={transitionTrigger} ref={ref}>
+            <CloseIcon aria-label='Dismiss' onClick={onClose}>
+              <Icon width='1.5em' height='1.5em' variant='close' />
+            </CloseIcon>
+            {title && <Title {...titleProps}>{title}</Title>}
+            {children}
+          </Dialog>
+        </FocusScope>
+      </Underlay>
+    </OverlayContainer>
   ) : null;
 };
 

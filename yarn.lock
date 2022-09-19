@@ -6283,6 +6283,7 @@
     prop-types "^15.7.2"
     tslib "^2.3.0"
 
+<<<<<<< HEAD
 "@react-aria/focus@^3.10.0":
   version "3.10.0"
   resolved "https://registry.yarnpkg.com/@react-aria/focus/-/focus-3.10.0.tgz#12d85d46f58590a915009e57bddb2d90b56f5836"
@@ -6293,6 +6294,19 @@
     "@react-aria/utils" "^3.14.1"
     "@react-types/shared" "^3.16.0"
     clsx "^1.1.1"
+=======
+"@react-aria/dialog@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/dialog/-/dialog-3.3.1.tgz#16e250ecc25ddd5da140a4b3dccb4af0d2bfacb8"
+  integrity sha512-Sz7XdzX3rRhmfIp1rYS5D90T1tqiDsAkONsbPBRqUJx7NrjKiHhx3wvG4shiK66cPhAZwBk7wuQmMugDeIDFSA==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-aria/focus" "^3.8.0"
+    "@react-aria/utils" "^3.13.3"
+    "@react-stately/overlays" "^3.4.1"
+    "@react-types/dialog" "^3.4.3"
+    "@react-types/shared" "^3.14.1"
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
 
 "@react-aria/focus@^3.6.1":
   version "3.6.1"
@@ -6384,19 +6398,32 @@
     "@react-aria/utils" "^3.13.2"
     "@react-types/shared" "^3.14.0"
 
+<<<<<<< HEAD
 "@react-aria/i18n@^3.6.2":
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/@react-aria/i18n/-/i18n-3.6.2.tgz#74fa50f4b13ca7efe7738fd1960732a076ed049d"
   integrity sha512-/G22mZQcISX6DcKLBn4j/X53y2SOnFfiD4wOEuY7sIZZDryktd+3I/QHukCnNlf0tKK3PdixQLvWa9Q1RqTSaw==
+=======
+"@react-aria/i18n@^3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@react-aria/i18n/-/i18n-3.6.0.tgz#0caf4d2173de411839ee55c1d4591aaf3919d6dc"
+  integrity sha512-FbdoBpMPgO0uldrpn43vCm8Xcveb46AklvUmh+zIUYRSIyIl2TKs5URTnwl9Sb1aloawoHQm2A5kASj5+TCxuA==
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
   dependencies:
     "@babel/runtime" "^7.6.2"
     "@internationalized/date" "^3.0.1"
     "@internationalized/message" "^3.0.9"
     "@internationalized/number" "^3.1.1"
     "@internationalized/string" "^3.0.0"
+<<<<<<< HEAD
     "@react-aria/ssr" "^3.4.0"
     "@react-aria/utils" "^3.14.1"
     "@react-types/shared" "^3.16.0"
+=======
+    "@react-aria/ssr" "^3.3.0"
+    "@react-aria/utils" "^3.13.3"
+    "@react-types/shared" "^3.14.1"
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
 
 "@react-aria/interactions@^3.10.0":
   version "3.10.0"
@@ -6515,6 +6542,7 @@
     "@react-types/shared" "^3.13.1"
     "@react-types/textfield" "^3.5.1"
 
+<<<<<<< HEAD
 "@react-aria/overlays@^3.12.0":
   version "3.12.0"
   resolved "https://registry.yarnpkg.com/@react-aria/overlays/-/overlays-3.12.0.tgz#66fc930a39771888123c6fd1b246fedd5e76ad89"
@@ -6531,6 +6559,23 @@
     "@react-types/button" "^3.7.0"
     "@react-types/overlays" "^3.6.5"
     "@react-types/shared" "^3.16.0"
+=======
+"@react-aria/overlays@^3.10.1":
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/overlays/-/overlays-3.10.1.tgz#ea7995d818030482987fbcd2f65344daf67175c2"
+  integrity sha512-6hY+3PQzFXQ2Gf656IiUy2VCwxzNohCHxHTZb7WTlOyNWDN77q8lzuHBlaoEzyh25M8CCO6NPa5DukyK3uCHSQ==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-aria/i18n" "^3.6.0"
+    "@react-aria/interactions" "^3.11.0"
+    "@react-aria/ssr" "^3.3.0"
+    "@react-aria/utils" "^3.13.3"
+    "@react-aria/visually-hidden" "^3.4.1"
+    "@react-stately/overlays" "^3.4.1"
+    "@react-types/button" "^3.6.1"
+    "@react-types/overlays" "^3.6.3"
+    "@react-types/shared" "^3.14.1"
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
 
 "@react-aria/progress@^3.2.1", "@react-aria/progress@^3.3.0":
   version "3.3.0"
@@ -6744,6 +6789,7 @@
     "@react-types/shared" "^3.14.1"
     clsx "^1.1.1"
 
+<<<<<<< HEAD
 "@react-aria/utils@^3.14.0":
   version "3.14.0"
   resolved "https://registry.yarnpkg.com/@react-aria/utils/-/utils-3.14.0.tgz#87877e89e959c8b6299da953ec3a7167de2192c3"
@@ -6775,6 +6821,17 @@
     "@react-aria/interactions" "^3.13.0"
     "@react-aria/utils" "^3.14.1"
     "@react-types/shared" "^3.16.0"
+=======
+"@react-aria/visually-hidden@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/visually-hidden/-/visually-hidden-3.4.1.tgz#cd87eece49eddc89e93b9616741d6d5a6e738785"
+  integrity sha512-dx7OSdnQvvR8awpxwiHHBdk0N3UGyGEBI17vogmO09685J+MRW8UuJuXRNl4Eg5FnWoFHxWRnmHmXin7fdGU+w==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-aria/interactions" "^3.11.0"
+    "@react-aria/utils" "^3.13.3"
+    "@react-types/shared" "^3.14.1"
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
     clsx "^1.1.1"
 
 "@react-stately/collections@^3.4.1":
@@ -6825,6 +6882,7 @@
     "@react-types/numberfield" "^3.3.1"
     "@react-types/shared" "^3.13.1"
 
+<<<<<<< HEAD
 "@react-stately/overlays@^3.4.3":
   version "3.4.3"
   resolved "https://registry.yarnpkg.com/@react-stately/overlays/-/overlays-3.4.3.tgz#2e935c404c0845ee7a7c6f001ff057d315161a16"
@@ -6833,6 +6891,16 @@
     "@babel/runtime" "^7.6.2"
     "@react-stately/utils" "^3.5.1"
     "@react-types/overlays" "^3.6.5"
+=======
+"@react-stately/overlays@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@react-stately/overlays/-/overlays-3.4.1.tgz#e6b095c7dae96b2c969ed7e029ab5d9f74149051"
+  integrity sha512-3LybriKQfpR85QAdm5soDUD4bo9W4TiZpSbxXqazXKno8zLOy9vGI3lcQHC1Gpcf4E+Q+Hq5y3qFcRFicp/j7A==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-stately/utils" "^3.5.1"
+    "@react-types/overlays" "^3.6.3"
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
 
 "@react-stately/selection@^3.10.1":
   version "3.10.1"
@@ -6927,12 +6995,21 @@
   dependencies:
     "@react-types/shared" "^3.13.1"
 
+<<<<<<< HEAD
 "@react-types/button@^3.7.0":
   version "3.7.0"
   resolved "https://registry.yarnpkg.com/@react-types/button/-/button-3.7.0.tgz#774c043d8090a505e60fdf26f026d5f0cc968f0f"
   integrity sha512-81BQO3QxSgF9PTXsVozNdNCKxBOB1lpbCWocV99dN1ws9s8uaYw8pmJJZ0LJKLiOsIECQ/3QrhQjmWTDW/qTug==
   dependencies:
     "@react-types/shared" "^3.16.0"
+=======
+"@react-types/button@^3.6.1":
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/@react-types/button/-/button-3.6.1.tgz#0bc75fe4129966673cf239df7a7aea83b6c68585"
+  integrity sha512-F7m3/MVmzChkBqD5gO7rIglPRHY6KZg/RaU8f8VqZuEOAHuQ1CtTEfpc6r9artBSs2Gdw7yNWxfCI2dP95lYow==
+  dependencies:
+    "@react-types/shared" "^3.14.1"
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
 
 "@react-types/checkbox@^3.3.2":
   version "3.3.2"
@@ -6941,12 +7018,22 @@
   dependencies:
     "@react-types/shared" "^3.14.0"
 
+<<<<<<< HEAD
 "@react-types/checkbox@^3.4.0":
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@react-types/checkbox/-/checkbox-3.4.0.tgz#f2d6acabdf953cf2f7b8b874dab9ac8ae1c020fa"
   integrity sha512-ZDqbtAYWWSGPjL4ydinaWHrD65Qft9yEGA6BCKQTxdJCgxiXxgGkA3pI7Sxwk+OulR+O0CYJ1JROExM9cSJyyQ==
   dependencies:
     "@react-types/shared" "^3.15.0"
+=======
+"@react-types/dialog@^3.4.3":
+  version "3.4.3"
+  resolved "https://registry.yarnpkg.com/@react-types/dialog/-/dialog-3.4.3.tgz#b892c0e2259cc37564127ee44d76f2ce3db87bd4"
+  integrity sha512-pSUvcp6K9ygXfD3Nf89QDCHfspBhCMMTJqCfMeGstb7qggJWUBBmplmXtpOcZ8pW0hQ86tDFQe85Ew3N+UAGsg==
+  dependencies:
+    "@react-types/overlays" "^3.6.3"
+    "@react-types/shared" "^3.14.1"
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
 
 "@react-types/grid@^3.1.2":
   version "3.1.2"
@@ -6991,12 +7078,21 @@
   dependencies:
     "@react-types/shared" "^3.13.1"
 
+<<<<<<< HEAD
 "@react-types/overlays@^3.6.5":
   version "3.6.5"
   resolved "https://registry.yarnpkg.com/@react-types/overlays/-/overlays-3.6.5.tgz#466b325d9be51f67beb98b7bec3fd9295c72efac"
   integrity sha512-IeWcF+YTucCYYHagNh8fZLH6R4YUONO1VHY57WJyIHwMy0qgEaKSQCwq72VO1fQJ0ySZgOgm31FniOyKkg6+eQ==
   dependencies:
     "@react-types/shared" "^3.16.0"
+=======
+"@react-types/overlays@^3.6.3":
+  version "3.6.3"
+  resolved "https://registry.yarnpkg.com/@react-types/overlays/-/overlays-3.6.3.tgz#ba2204dd4be1948e8d2ab38995eb51d81dfd498f"
+  integrity sha512-89gqlEiY/b8HdEK/y074Ahsfvv5DmbhZP85ln6ORG62orwX2J0UrDYBhHDLmX96fqZ9FoOCb+Dez0z22R3sxew==
+  dependencies:
+    "@react-types/shared" "^3.14.1"
+>>>>>>> e794f535 (feat(Modal): refactor with react-aria)
 
 "@react-types/progress@^3.2.2":
   version "3.2.2"
