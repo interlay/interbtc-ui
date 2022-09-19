@@ -68,7 +68,7 @@ const VaultOverview = (): JSX.Element => {
           </GridItem>
         ))}
       </Grid>
-      {isReadOnlyOverview && <CreateVaults vaults={vaultOverview.vaults} />}
+      {!isReadOnlyOverview && <CreateVaults vaults={vaultOverview.vaults} />}
     </MainContainer>
   );
 };

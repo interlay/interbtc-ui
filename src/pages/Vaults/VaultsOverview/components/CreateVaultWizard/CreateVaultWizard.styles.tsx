@@ -57,6 +57,7 @@ const StyledDd = styled.dd`
 `;
 
 const StyledDepositTitle = styled(H2)`
+  color: ${theme.modal.title.secondary.color};
   font-size: ${theme.text.base};
   line-height: ${theme.lineHeight.base};
   padding: ${theme.spacing.spacing3};
