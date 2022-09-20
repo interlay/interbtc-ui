@@ -1,3 +1,4 @@
+import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -9,7 +10,7 @@ import { useTable } from 'react-table';
 import { ReactComponent as CancelIcon } from '@/assets/img/icons/cancel.svg';
 import { ReactComponent as CheckCircleIcon } from '@/assets/img/icons/check-circle.svg';
 import { StoreType } from '@/common/types/util.types';
-import { formatDateTime } from '@/common/utils/utils';
+import { formatDateTime, formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -92,9 +93,12 @@ const OracleTable = (): JSX.Element => {
         accessor: 'exchangeRate',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: BTCToCollateralTokenRate }) {
+          const exchangeRate = new ExchangeRate(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, value.toBig(), 0, 0);
           return (
             <>
-              1 BTC = {value.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+              1 BTC ={' '}
+              {formatNumber(Number(exchangeRate.toHuman(5)), { minimumFractionDigits: 5, maximumFractionDigits: 5 })}{' '}
+              {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </>
           );
         }
