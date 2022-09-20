@@ -100,4 +100,8 @@ const Title = styled(H3)`
   margin-bottom: ${theme.spacing.spacing4};
 `;
 
+// const ModalContent = styled.section`
+//   overflow-y: auto;
+// `;
+
 export { CloseIcon, Dialog, ModalContainer, ModalContent, ModalOverlay, Title, Underlay };
