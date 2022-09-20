@@ -85,6 +85,7 @@ const CollateralScore = ({
         </StyledLabel>
         <StyledScoreWrapper isDefault={isDefault}>
           <StyledScore isDefault={isDefault} status={status}>
+            {/* TODO: This should use formatPercentage utility */}
             {infinity ? '∞' : `${meterProps['aria-valuetext']}%`}
           </StyledScore>
           <StyledSublabel isDefault={isDefault} status={isDefault ? status : undefined}>
