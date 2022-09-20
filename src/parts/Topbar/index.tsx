@@ -75,7 +75,6 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
-        {/* ray test touch < */}
         {selectedAccount !== undefined && (
           <>
             {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
@@ -110,7 +109,6 @@ const Topbar = (): JSX.Element => {
         <InterlayDefaultContainedButton className={SMALL_SIZE_BUTTON_CLASSES} onClick={handleAccountModalOpen}>
           {accountLabel}
         </InterlayDefaultContainedButton>
-        {/* ray test touch > */}
       </div>
       <AccountModal open={showAccountModal} onClose={handleAccountModalClose} />
     </>
