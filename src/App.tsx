@@ -48,8 +48,8 @@ const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pa
 type UnsubscriptionRef = (() => void) | null;
 
 const App = (): JSX.Element => {
-  const { selectedAccount, extensions } = useSubstrateSecureState();
-  const { setSelectedAccount } = useSubstrate();
+  const { selectedAccount, extensions, accounts } = useSubstrateSecureState();
+  const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
 
   const {
     bridgeLoaded,
@@ -156,25 +156,29 @@ const App = (): JSX.Element => {
   }, [dispatch, bridgeLoaded]);
 
   // Loads the address for the currently selected account
+  const selectedAccountAddress = selectedAccount?.address;
   React.useEffect(() => {
     if (!setSelectedAccount) return;
+    // ray test touch <
+    if (!selectedAccountAddress) return;
+    // ray test touch >
 
-    (async () => {
-      try {
-        if (extensions.length === 0) {
-          if (constants.DEFAULT_ACCOUNT_SEED) {
-            const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
-            const defaultAccount = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
-            setSelectedAccount(defaultAccount);
-          }
-          return;
-        }
-      } catch (error) {
-        // TODO: should add error handling
-        console.log('[App React.useEffect 3] error.message => ', error.message);
+    if (extensions.length === 0) {
+      if (constants.DEFAULT_ACCOUNT_SEED) {
+        const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
+        const defaultAccount = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
+        setSelectedAccount(defaultAccount);
       }
-    })();
-  }, [setSelectedAccount, extensions.length]);
+      // return;
+    }
+
+    // ray test touch <
+    const matchedAccount = accounts.find((item) => item.address === selectedAccountAddress);
+    if (!matchedAccount) {
+      removeSelectedAccount();
+    }
+    // ray test touch >
+  }, [setSelectedAccount, extensions.length, selectedAccountAddress, accounts, removeSelectedAccount]);
 
   // Subscribes to relay-chain native token balance
   React.useEffect(() => {

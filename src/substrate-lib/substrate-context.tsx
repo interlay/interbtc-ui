@@ -316,15 +316,33 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     connect(stateRef.current, dispatch);
   }, []);
 
+  // ray test touch <
+  const selectedAccountAddress = state.selectedAccount?.address;
+  const keyringStatus = state.keyringStatus;
+  React.useEffect(() => {
+    if (keyringStatus !== KeyringStatus.Ready) return;
+
+    if (selectedAccountAddress) {
+      (async () => {
+        try {
+          const { signer } = await web3FromAddress(selectedAccountAddress);
+          window.bridge.setAccount(selectedAccountAddress, signer);
+        } catch (error) {
+          console.error('[SubstrateProvider] error => ', error);
+        }
+      })();
+    } else {
+      window.bridge.removeAccount();
+    }
+  }, [selectedAccountAddress, keyringStatus]);
+  // ray test touch >
+
   const setSelectedAccount = React.useCallback(
     async (newAccount: KeyringPair) => {
       if (!setLSValue) return;
 
       dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
       setLSValue(newAccount);
-      // TODO: race condition might happen
-      const { signer } = await web3FromAddress(newAccount.address);
-      window.bridge.setAccount(newAccount.address, signer);
     },
     [setLSValue]
   );
@@ -334,7 +352,6 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
 
     dispatch({ type: ActionType.SetSelectedAccount, payload: undefined });
     removeLS();
-    window.bridge.removeAccount();
   }, [removeLS]);
 
   const value = {
