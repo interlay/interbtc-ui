@@ -227,7 +227,7 @@ const UpdateCollateralModal = ({
   };
 
   const renderNewCollateralizationLabel = () => {
-    if (vaultCollateralizationLoading) {
+    if (vaultCollateralizationLoading || !vaultCollateralization) {
       // TODO: should use skeleton loaders
       return '-';
     }
@@ -236,13 +236,11 @@ const UpdateCollateralModal = ({
       return '∞';
     }
 
-    // The vault API returns collateralization as a regular number rather than a percentage
-    const strVaultCollateralizationPercentage = vaultCollateralization?.mul(100).toString();
-    if (Number(strVaultCollateralizationPercentage) > 1000) {
+    if (vaultCollateralization.mul(100).gt(1000)) {
       return `more than ${formatPercentage(1000 / 100, { minimumFractionDigits: 0 })}`;
-    } else {
-      return formatPercentage(Number(strVaultCollateralizationPercentage || '0'));
     }
+
+    return formatPercentage(vaultCollateralization.toNumber());
   };
 
   const getMinRequiredCollateralTokenAmount = () => {
