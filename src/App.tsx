@@ -48,8 +48,8 @@ const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pa
 type UnsubscriptionRef = (() => void) | null;
 
 const App = (): JSX.Element => {
-  const { selectedAccount, extensions, accounts } = useSubstrateSecureState();
-  const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
+  const { selectedAccount, extensions } = useSubstrateSecureState();
+  const { setSelectedAccount } = useSubstrate();
 
   const {
     bridgeLoaded,
@@ -155,13 +155,8 @@ const App = (): JSX.Element => {
     })();
   }, [dispatch, bridgeLoaded]);
 
-  // Loads the address for the currently selected account
-  const selectedAccountAddress = selectedAccount?.address;
   React.useEffect(() => {
     if (!setSelectedAccount) return;
-    // ray test touch <
-    if (!selectedAccountAddress) return;
-    // ray test touch >
 
     if (extensions.length === 0) {
       if (constants.DEFAULT_ACCOUNT_SEED) {
@@ -169,16 +164,8 @@ const App = (): JSX.Element => {
         const defaultAccount = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
         setSelectedAccount(defaultAccount);
       }
-      // return;
     }
-
-    // ray test touch <
-    const matchedAccount = accounts.find((item) => item.address === selectedAccountAddress);
-    if (!matchedAccount) {
-      removeSelectedAccount();
-    }
-    // ray test touch >
-  }, [setSelectedAccount, extensions.length, selectedAccountAddress, accounts, removeSelectedAccount]);
+  }, [setSelectedAccount, extensions.length]);
 
   // Subscribes to relay-chain native token balance
   React.useEffect(() => {

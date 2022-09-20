@@ -319,6 +319,8 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   // ray test touch <
   const selectedAccountAddress = state.selectedAccount?.address;
   const keyringStatus = state.keyringStatus;
+  const accounts = state.accounts;
+
   React.useEffect(() => {
     if (keyringStatus !== KeyringStatus.Ready) return;
 
@@ -335,6 +337,23 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
       window.bridge.removeAccount();
     }
   }, [selectedAccountAddress, keyringStatus]);
+
+  const removeSelectedAccount = React.useCallback(() => {
+    if (!removeLS) return;
+
+    dispatch({ type: ActionType.SetSelectedAccount, payload: undefined });
+    removeLS();
+  }, [removeLS]);
+
+  React.useEffect(() => {
+    if (keyringStatus !== KeyringStatus.Ready) return;
+    if (!selectedAccountAddress) return;
+
+    const matchedAccount = accounts.find((item) => item.address === selectedAccountAddress);
+    if (!matchedAccount) {
+      removeSelectedAccount();
+    }
+  }, [selectedAccountAddress, accounts, removeSelectedAccount, keyringStatus]);
   // ray test touch >
 
   const setSelectedAccount = React.useCallback(
@@ -346,13 +365,6 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     },
     [setLSValue]
   );
-
-  const removeSelectedAccount = React.useCallback(() => {
-    if (!removeLS) return;
-
-    dispatch({ type: ActionType.SetSelectedAccount, payload: undefined });
-    removeLS();
-  }, [removeLS]);
 
   const value = {
     state,
