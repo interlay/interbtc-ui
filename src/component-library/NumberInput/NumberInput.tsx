@@ -12,7 +12,7 @@ import { BaseInput, BaseInputProps } from '../Input';
 const handleWheel = (event: WheelEvent) => event.preventDefault();
 
 // Format options for react-stately
-const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 20 };
+const defaultFormatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 20 };
 
 // Static locale for react-stately
 // TODO: To be replaced when we manage our locales
@@ -21,6 +21,7 @@ const locale = 'en-US';
 type Props = {
   value?: number;
   defaultValue?: number;
+  allowFormatting?: boolean;
 };
 
 type InheritAttrs = Omit<BaseInputProps, keyof Props | 'disabled' | 'required' | 'readOnly'>;
@@ -30,12 +31,12 @@ type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'onC
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ onChange, ...props }, ref): JSX.Element => {
+  ({ onChange, allowFormatting, formatOptions, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
     const state = useNumberFieldState({
       ...props,
       locale,
-      formatOptions
+      formatOptions: allowFormatting || formatOptions ? formatOptions || defaultFormatOptions : undefined
     });
     const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(props, state, inputRef);
 
