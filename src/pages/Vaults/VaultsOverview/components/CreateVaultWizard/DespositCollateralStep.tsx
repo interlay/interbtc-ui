@@ -1,14 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { mergeProps, useId } from '@react-aria/utils';
+import { useId } from '@react-aria/utils';
 import Big from 'big.js';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import * as z from 'zod';
 
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, parseLocaleNumber } from '@/common/utils/utils';
 import { CTA, Span, Stack, TokenField } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
@@ -66,7 +66,7 @@ const DepositCollateralStep = ({
     }
   );
 
-  const inputCollateral = watch(DEPOSIT_COLLATERAL_AMOUNT) || '0';
+  const inputCollateral = parseLocaleNumber(watch(DEPOSIT_COLLATERAL_AMOUNT) || '0');
   const inputCollateralAmount = newMonetaryAmount(inputCollateral, collateral.currency, true);
 
   const handleSubmit = async (data: CollateralFormData) => {
@@ -86,7 +86,7 @@ const DepositCollateralStep = ({
           balance={collateral.balance.amount}
           balanceInUSD={collateral.balance.usd}
           errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}
-          {...mergeProps(register(DEPOSIT_COLLATERAL_AMOUNT), { onChange: console.log })}
+          {...register(DEPOSIT_COLLATERAL_AMOUNT)}
         />
         <StyledDl>
           <StyledDItem>

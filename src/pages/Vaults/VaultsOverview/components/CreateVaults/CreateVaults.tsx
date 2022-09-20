@@ -39,9 +39,7 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
     minCollateralAmount: vault.minimumCollateral,
     collateralRate: vault.secureCollateralThreshold.toNumber().toFixed(2),
     isActive: true,
-    // TODO: restore function
-    // eslint-disable-next-line no-constant-condition
-    isInstalled: false ? isVaultInstalled(vaults, vault) : false
+    isInstalled: isVaultInstalled(vaults, vault)
   }));
 
   return (

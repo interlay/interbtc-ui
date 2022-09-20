@@ -4,7 +4,7 @@ import Big from 'big.js';
 import { TFunction } from 'i18next';
 import * as z from 'zod';
 
-import { displayMonetaryAmount } from '@/common/utils/utils';
+import { displayMonetaryAmount, parseLocaleNumber } from '@/common/utils/utils';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 
 type ValidateDepositCollateralParams = {
@@ -40,7 +40,8 @@ const validateDepositCollateral = (
       });
     }
 
-    const inputAmount = new Big(value);
+    const parsedValue = parseLocaleNumber(value);
+    const inputAmount = new Big(parsedValue);
 
     if (!inputAmount.gte(minAmount.toBig())) {
       return ctx.addIssue({

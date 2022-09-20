@@ -81,7 +81,7 @@ const useDepositCollateral = (collateralCurrency: CollateralCurrencyExt, minColl
         usd: collateralUSDAmount
       },
       balance: {
-        amount: displayMonetaryAmount(balanceToken),
+        amount: balanceToken.toString(),
         usd: displayMonetaryAmountInUSDFormat(balanceToken, collateralUSDAmount),
         raw: balanceToken
       },

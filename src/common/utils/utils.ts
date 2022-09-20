@@ -100,6 +100,8 @@ const formatPercentage = (
   return `${format(percentage)}%`;
 };
 
+const parseLocaleNumber = (number: string): number => Number(number.replaceAll(',', ''));
+
 function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, defaultValue = '0.00'): string {
   if (amount === undefined) return defaultValue;
 
@@ -148,6 +150,7 @@ export {
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
+  parseLocaleNumber,
   shortAddress,
   shortTxId
 };
