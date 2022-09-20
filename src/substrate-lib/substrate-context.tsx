@@ -316,7 +316,6 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     connect(stateRef.current, dispatch);
   }, []);
 
-  // ray test touch <
   const selectedAccountAddress = state.selectedAccount?.address;
   const keyringStatus = state.keyringStatus;
   const accounts = state.accounts;
@@ -354,7 +353,6 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
       removeSelectedAccount();
     }
   }, [selectedAccountAddress, accounts, removeSelectedAccount, keyringStatus]);
-  // ray test touch >
 
   const setSelectedAccount = React.useCallback(
     async (newAccount: KeyringPair) => {
