@@ -771,7 +771,12 @@ const Staking = (): JSX.Element => {
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
-                balance={formatNumber(Number(availableMonetaryBalance)) || '-'}
+                balance={
+                  formatNumber(Number(availableMonetaryBalance), {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 5
+                  }) || '-'
+                }
                 tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
                 onClick={handleClickBalance}
               />
