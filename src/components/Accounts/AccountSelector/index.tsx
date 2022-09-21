@@ -12,9 +12,7 @@ import Select, {
   SelectOptions,
   SelectText
 } from '@/components/Select';
-// ray test touch <
 import { _KeyringPair } from '@/substrate-lib/substrate-context';
-// ray test touch >
 
 interface Props {
   accounts: Array<InjectedAccountWithMeta>;
@@ -26,9 +24,7 @@ interface Props {
 const AccountSelector = ({ accounts, selectedAccount, label, onChange }: Props): JSX.Element => (
   <Select
     variant={SELECT_VARIANTS.formField}
-    // ray test touch <
     key={selectedAccount.meta.name}
-    // ray test touch >
     value={selectedAccount}
     onChange={onChange}
   >
@@ -38,9 +34,7 @@ const AccountSelector = ({ accounts, selectedAccount, label, onChange }: Props):
         <SelectBody>
           <SelectButton variant={SELECT_VARIANTS.formField}>
             <span className={clsx('flex', 'justify-between', 'py-2')}>
-              {/* ray test touch < */}
               <SelectText>{selectedAccount.meta.name}</SelectText>
-              {/* ray test touch > */}
               <SelectText>{shortAddress(selectedAccount.address.toString())}</SelectText>
             </span>
           </SelectButton>

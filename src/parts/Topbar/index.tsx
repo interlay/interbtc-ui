@@ -66,9 +66,7 @@ const Topbar = (): JSX.Element => {
   if (!extensions.length) {
     accountLabel = t('connect_wallet');
   } else if (selectedAccount) {
-    // ray test touch <
     accountLabel = selectedAccount.meta.name;
-    // ray test touch >
   } else {
     accountLabel = 'Select Wallet';
   }

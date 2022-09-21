@@ -26,9 +26,7 @@ import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
-// ray test touch <
 import { _KeyringPair, useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
-// ray test touch >
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';

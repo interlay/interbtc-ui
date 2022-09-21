@@ -5,9 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
 import { WalletSourceName } from '@/config/wallets';
-// ray test touch <
 import { _KeyringPair, useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
-// ray test touch >
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';

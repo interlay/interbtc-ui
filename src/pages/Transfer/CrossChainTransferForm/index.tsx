@@ -19,9 +19,7 @@ import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader'
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
-// ray test touch <
 import { _KeyringPair, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
-// ray test touch >
 import { ChainType } from '@/types/chains.types';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';

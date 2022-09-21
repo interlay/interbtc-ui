@@ -1,9 +1,7 @@
 import * as React from 'react';
 
-// ray test touch <
 import { _KeyringPair, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 
-// ray test touch >
 import AccountSelector from './AccountSelector';
 
 interface Props {

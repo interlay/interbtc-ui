@@ -2,9 +2,7 @@ import { createInterBtcApi } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
-// ray test touch <
 import { KeyringPair, KeyringPair$Meta } from '@polkadot/keyring/types';
-// ray test touch >
 import { TypeRegistry } from '@polkadot/types/create';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
@@ -57,7 +55,6 @@ interface APIError extends Error {
   };
 }
 
-// ray test touch <
 interface KeyringPairMeta extends KeyringPair$Meta {
   name: string;
 }
@@ -65,7 +62,6 @@ interface KeyringPairMeta extends KeyringPair$Meta {
 interface _KeyringPair extends KeyringPair {
   meta: KeyringPairMeta;
 }
-// ray test touch >
 
 type Action =
   | { type: ActionType.ConnectInit }
@@ -405,9 +401,7 @@ const useSubstrateSecureState = (): SecureState => {
   };
 };
 
-// ray test touch <
 export type { _KeyringPair };
-// ray test touch >
 
 export {
   ActionType,
