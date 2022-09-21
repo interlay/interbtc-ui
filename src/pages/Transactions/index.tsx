@@ -14,9 +14,11 @@ const Transactions = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <ExternalLink href={`${SUBSCAN_LINK}/account/${selectedAccount?.address ?? ''}`} className='font-medium'>
-        {t('view_all_transactions_on_subscan')}
-      </ExternalLink>
+      {selectedAccount && (
+        <ExternalLink href={`${SUBSCAN_LINK}/account/${selectedAccount.address}`} className='font-medium'>
+          {t('view_all_transactions_on_subscan')}
+        </ExternalLink>
+      )}
       <IssueRequestsTable />
       <RedeemRequestsTable />
     </MainContainer>
