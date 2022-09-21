@@ -13,6 +13,7 @@ import {
   StyledWrapper
 } from './CollateralScore.style';
 
+// TODO: move from here so we keep formatOptions config in one place
 const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 2 };
 
 const getBarPercentage = (status: CollateralStatus, value: number, ranges: CollateralStatusRanges): number => {
@@ -85,7 +86,6 @@ const CollateralScore = ({
         </StyledLabel>
         <StyledScoreWrapper isDefault={isDefault}>
           <StyledScore isDefault={isDefault} status={status}>
-            {/* TODO: This should use formatPercentage utility */}
             {infinity ? '∞' : `${meterProps['aria-valuetext']}%`}
           </StyledScore>
           <StyledSublabel isDefault={isDefault} status={isDefault ? status : undefined}>
