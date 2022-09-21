@@ -2,8 +2,8 @@
 import { ApiPromise } from '@polkadot/api';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 
-import { useSubstrateState } from '../..';
-import { ApiStatus, KeyringStatus } from '../../context/types';
+import { useSubstrateState } from '@/lib/substrate/context/hooks';
+import { ApiStatus, KeyringStatus } from '@/lib/substrate/context/types';
 
 declare global {
   interface Window {

@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import { SubstrateProvider } from '@/lib/substrate';
-import SubstrateLoadingAndErrorHandlingWrapper from '@/lib/substrate/components/SubstrateLoadingAndErrorHandlingWrapper';
+import { SubstrateLoadingAndErrorHandlingWrapper } from '@/lib/substrate';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';

@@ -1,9 +1,7 @@
+import SubstrateLoadingAndErrorHandlingWrapper from './components/SubstrateLoadingAndErrorHandlingWrapper';
 import utils from './utils';
 
-export * from './context/hooks';
-export * from './context/provider';
-export * from './context/types';
-
+export * from './context';
 // ray test touch <
-export { utils as substrateUtils };
+export { SubstrateLoadingAndErrorHandlingWrapper, utils as substrateUtils };
 // ray test touch >
