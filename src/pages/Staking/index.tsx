@@ -374,7 +374,16 @@ const Staking = (): JSX.Element => {
       throw new Error('Governance token balance value returned undefined!');
     }
 
-    return governanceTokenBalance.free.sub(stakedAmount).sub(transactionFeeReserve);
+    console.log(
+      'checking',
+      governanceTokenBalance.free.toString(),
+      stakedAmount.toHuman(),
+      transactionFeeReserve.toString()
+    );
+
+    const calculatedBalance = governanceTokenBalance.free.sub(stakedAmount).sub(transactionFeeReserve);
+
+    return calculatedBalance.toBig().gte(0) ? calculatedBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
   }, [
     governanceTokenBalanceIdle,
     governanceTokenBalanceLoading,
