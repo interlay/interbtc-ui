@@ -26,13 +26,15 @@ import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
+// ray test touch <
+import { _KeyringPair, useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
+// ray test touch >
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { CLASS_NAMES } from '@/utils/constants/styles';
 
 import * as constants from './constants';
-import { useSubstrate, useSubstrateSecureState } from './substrate-lib/substrate-context';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
@@ -162,7 +164,7 @@ const App = (): JSX.Element => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
         const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
         const defaultAccount = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
-        setSelectedAccount(defaultAccount);
+        setSelectedAccount(defaultAccount as _KeyringPair);
       }
     }
   }, [setSelectedAccount, extensions.length]);

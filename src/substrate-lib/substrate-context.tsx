@@ -2,7 +2,9 @@ import { createInterBtcApi } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
-import { KeyringPair } from '@polkadot/keyring/types';
+// ray test touch <
+import { KeyringPair, KeyringPair$Meta } from '@polkadot/keyring/types';
+// ray test touch >
 import { TypeRegistry } from '@polkadot/types/create';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
@@ -55,6 +57,16 @@ interface APIError extends Error {
   };
 }
 
+// ray test touch <
+interface KeyringPairMeta extends KeyringPair$Meta {
+  name: string;
+}
+
+interface _KeyringPair extends KeyringPair {
+  meta: KeyringPairMeta;
+}
+// ray test touch >
+
 type Action =
   | { type: ActionType.ConnectInit }
   | { type: ActionType.Connect; payload: ApiPromise }
@@ -64,7 +76,7 @@ type Action =
   | { type: ActionType.SetKeyringLoading }
   | { type: ActionType.SetKeyringReady; payload: Keyring }
   | { type: ActionType.SetKeyringError }
-  | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined }
+  | { type: ActionType.SetSelectedAccount; payload: _KeyringPair | undefined }
   | { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> }
   | { type: ActionType.SetExtensions; payload: Array<InjectedExtension> };
 type Dispatch = (action: Action) => void;
@@ -76,7 +88,7 @@ type State = {
   api: ApiPromise | undefined;
   apiError: APIError | undefined;
   apiStatus: ApiStatus;
-  selectedAccount: KeyringPair | undefined;
+  selectedAccount: _KeyringPair | undefined;
   accounts: Array<InjectedAccountWithMeta>;
   extensions: Array<InjectedExtension>;
 };
@@ -90,7 +102,7 @@ type SubstrateProviderProps = {
 };
 interface SubstrateStateContextInterface {
   state: State;
-  setSelectedAccount: (newAccount: KeyringPair) => Promise<void>;
+  setSelectedAccount: (newAccount: _KeyringPair) => Promise<void>;
   removeSelectedAccount: () => void;
 }
 
@@ -295,7 +307,7 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
 const SubstrateStateContext = React.createContext<SubstrateStateContextInterface | undefined>(undefined);
 
 const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.Element => {
-  const [lsValue, setLSValue, removeLS] = useLocalStorage<KeyringPair | undefined>(
+  const [lsValue, setLSValue, removeLS] = useLocalStorage<_KeyringPair | undefined>(
     SELECTED_ACCOUNT_LOCAL_STORAGE_KEY,
     undefined
   );
@@ -355,7 +367,7 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   }, [selectedAccountAddress, accounts, removeSelectedAccount, keyringStatus]);
 
   const setSelectedAccount = React.useCallback(
-    async (newAccount: KeyringPair) => {
+    async (newAccount: _KeyringPair) => {
       if (!setLSValue) return;
 
       dispatch({ type: ActionType.SetSelectedAccount, payload: newAccount });
@@ -392,6 +404,10 @@ const useSubstrateSecureState = (): SecureState => {
     keyring: state.keyring as Keyring
   };
 };
+
+// ray test touch <
+export type { _KeyringPair };
+// ray test touch >
 
 export {
   ActionType,
