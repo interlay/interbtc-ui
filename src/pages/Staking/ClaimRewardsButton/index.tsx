@@ -6,8 +6,8 @@ import InterlayDenimOrKintsugiSupernovaContainedButton, {
 } from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 
 interface CustomProps {
   claimableRewardAmount: string;

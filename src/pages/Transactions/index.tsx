@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 
 import ExternalLink from '@/components/ExternalLink';
 import { SUBSCAN_LINK } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
 import MainContainer from '@/parts/MainContainer';
-import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 
 import IssueRequestsTable from './IssueRequestsTable';
 import RedeemRequestsTable from './RedeemRequestsTable';

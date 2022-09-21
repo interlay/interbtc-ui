@@ -37,6 +37,7 @@ import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   VoteGovernanceTokenMonetaryAmount
 } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
 import MainContainer from '@/parts/MainContainer';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
@@ -44,7 +45,6 @@ import {
   stakingTransactionFeeReserveFetcher
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
-import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 import { KUSAMA } from '@/utils/constants/relay-chain-names';

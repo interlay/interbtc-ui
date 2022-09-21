@@ -2,7 +2,7 @@
 import { ApiPromise } from '@polkadot/api';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 
-import { useSubstrateState } from '../../';
+import { useSubstrateState } from '../..';
 import { ApiStatus, KeyringStatus } from '../../substrate-context';
 
 declare global {

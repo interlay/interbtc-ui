@@ -11,15 +11,15 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import SubstrateLoadingAndErrorHandlingWrapper from '@/substrate-lib/components/SubstrateLoadingAndErrorHandlingWrapper';
-import { SubstrateProvider } from '@/substrate-lib/substrate-context';
+import SubstrateLoadingAndErrorHandlingWrapper from '@/lib/substrate/components/SubstrateLoadingAndErrorHandlingWrapper';
+import { SubstrateProvider } from '@/lib/substrate/substrate-context';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 
 const DeveloperConsole = React.lazy(
-  () => import(/* webpackChunkName: 'developer-console' */ '@/substrate-lib/components/DeveloperConsole')
+  () => import(/* webpackChunkName: 'developer-console' */ '@/lib/substrate/components/DeveloperConsole')
 );
 
 window.isFetchingActive = false;

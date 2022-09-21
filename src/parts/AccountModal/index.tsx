@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
 import { WalletSourceName } from '@/config/wallets';
-import { useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
+import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate/substrate-context';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';

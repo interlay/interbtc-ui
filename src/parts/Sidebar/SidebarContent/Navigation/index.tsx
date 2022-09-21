@@ -28,7 +28,7 @@ import {
   USE_WRAPPED_CURRENCY_LINK,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
-import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
+import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 

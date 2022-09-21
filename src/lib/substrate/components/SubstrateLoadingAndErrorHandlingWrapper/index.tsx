@@ -3,8 +3,8 @@ import { toast, ToastContainer } from 'react-toastify';
 
 import { isBridgeLoaded } from '@/common/actions/general.actions';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
+import { ActionType, ApiStatus, KeyringStatus, useSubstrateState } from '@/lib/substrate/substrate-context';
 import InterlayHelmet from '@/parts/InterlayHelmet';
-import { ActionType, ApiStatus, KeyringStatus, useSubstrateState } from '@/substrate-lib/substrate-context';
 
 interface SubstrateLoadingAndErrorHandlingWrapperProps {
   children: React.ReactNode;

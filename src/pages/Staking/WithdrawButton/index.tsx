@@ -9,8 +9,8 @@ import ErrorModal from '@/components/ErrorModal';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import { BLOCK_TIME } from '@/config/parachain';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 
 const getFormattedUnlockDate = (remainingBlockNumbersToUnstake: number, formatPattern: string) => {
