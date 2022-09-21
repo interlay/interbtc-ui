@@ -1,10 +1,11 @@
-import { Stack, StackProps } from '../Stack';
+import { StackProps } from '../Stack';
+import { StyledModalBody } from './Modal.style';
 
 type InheritAttrs = StackProps;
 
-type ModalFooterProps = InheritAttrs;
+type ModalBodyProps = InheritAttrs;
 
-const ModalFooter = (props: ModalFooterProps): JSX.Element => <Stack {...props} />;
+const ModalBody = (props: ModalBodyProps): JSX.Element => <StyledModalBody {...props} />;
 
-export { ModalFooter };
-export type { ModalFooterProps };
+export { ModalBody };
+export type { ModalBodyProps };

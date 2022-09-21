@@ -41,7 +41,7 @@ const Modal = ({ title, children, ...props }: ModalProps): JSX.Element | null =>
         <FocusScope contain restoreFocus autoFocus>
           <Dialog {...overlayProps} {...dialogProps} {...modalProps} $transitionTrigger={transitionTrigger} ref={ref}>
             <CloseIcon aria-label='Dismiss' onClick={onClose}>
-              <Icon width='1.5em' height='1.5em' variant='close' />
+              <Icon variant='close' />
             </CloseIcon>
             {title && <Title {...titleProps}>{title}</Title>}
             {children}
