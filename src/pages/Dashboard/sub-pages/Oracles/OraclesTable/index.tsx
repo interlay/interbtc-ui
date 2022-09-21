@@ -94,7 +94,7 @@ const OracleTable = (): JSX.Element => {
         Cell: function FormattedCell({ value }: { value: BTCToCollateralTokenRate }) {
           return (
             <>
-              1 BTC = {formatNumber(Number(value.toHuman(5)), { minimumFractionDigits: 0, maximumFractionDigits: 5 })}{' '}
+              1 BTC = {formatNumber(Number(value.toHuman(5)), { minimumFractionDigits: 5, maximumFractionDigits: 5 })}{' '}
               {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </>
           );
