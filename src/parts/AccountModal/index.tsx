@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
 import { WalletSourceName } from '@/config/wallets';
-import { _KeyringPair, useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
+import { useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';
@@ -80,7 +80,9 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     };
 
     const handleAccountSelect = async (newAccount: InjectedAccountWithMeta) => {
-      setSelectedAccount(keyring.getPair(newAccount.address) as _KeyringPair);
+      // ray test touch <
+      setSelectedAccount(keyring.getPair(newAccount.address));
+      // ray test touch >
       onClose();
     };
 

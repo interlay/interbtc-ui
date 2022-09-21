@@ -26,7 +26,7 @@ import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
-import { _KeyringPair, useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
+import { useSubstrate, useSubstrateSecureState } from '@/substrate-lib/substrate-context';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -162,7 +162,9 @@ const App = (): JSX.Element => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
         const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
         const defaultAccount = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
-        setSelectedAccount(defaultAccount as _KeyringPair);
+        // ray test touch <
+        setSelectedAccount(defaultAccount);
+        // ray test touch >
       }
     }
   }, [setSelectedAccount, extensions.length]);
