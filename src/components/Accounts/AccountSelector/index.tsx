@@ -12,7 +12,7 @@ import Select, {
   SelectOptions,
   SelectText
 } from '@/components/Select';
-import { _KeyringPair } from '@/lib/substrate/substrate-context';
+import { _KeyringPair } from '@/lib/substrate';
 
 interface Props {
   accounts: Array<InjectedAccountWithMeta>;

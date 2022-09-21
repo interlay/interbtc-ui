@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { _KeyringPair, useSubstrateSecureState } from '@/lib/substrate/substrate-context';
+import { _KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 
 import AccountSelector from './AccountSelector';
 
