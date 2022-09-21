@@ -1,6 +1,6 @@
 import utils from './utils';
 
+export * from './context/provider';
 export * from './context/types';
-export * from './substrate-context';
 
 export { utils as substrateUtils };
