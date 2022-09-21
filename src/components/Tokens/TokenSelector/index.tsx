@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import { TokenType } from '@/common/types/util.types';
+import { formatNumber } from '@/common/utils/utils';
 import Select, {
   SELECT_VARIANTS,
   SelectBody,
@@ -42,7 +43,15 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                   >
                     {currentToken.icon}
                     <SelectText>
-                      {showBalances && <span>{currentToken.balance}&nbsp;</span>}
+                      {showBalances && (
+                        <span>
+                          {formatNumber(Number(currentToken.balance), {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 8
+                          })}
+                          &nbsp;
+                        </span>
+                      )}
                       {currentToken.symbol}
                     </SelectText>
                   </span>
@@ -60,7 +69,12 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                             >
                               {tokenOption.icon}
                               <SelectText selected={selected}>
-                                {showBalances && tokenOption.balance} {tokenOption.symbol}
+                                {showBalances &&
+                                  formatNumber(Number(tokenOption.balance), {
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 8
+                                  })}{' '}
+                                {tokenOption.symbol}
                               </SelectText>
                             </div>
                             {selected ? <SelectCheck active={active} /> : null}
