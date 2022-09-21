@@ -329,6 +329,4 @@ const useSubstrateSecureState = (): SecureState => {
   };
 };
 
-// ray test touch <
 export { SubstrateProvider, useSubstrate, useSubstrateSecureState, useSubstrateState };
-// ray test touch >
