@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import React from 'react';
 
+import { formatNumber } from '@/common/utils/utils';
 import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
@@ -31,7 +32,7 @@ const AvailableBalanceUI = ({ balance, label, tokenSymbol, onClick, className, .
           { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}
       >
-        {balance} {tokenSymbol}
+        {formatNumber(Number(balance))} {tokenSymbol}
       </Balance>
     </div>
   );
