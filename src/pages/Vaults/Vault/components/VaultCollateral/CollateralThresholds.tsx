@@ -25,7 +25,7 @@ const CollateralThresholds = ({
     <ThresholdItem>
       <ThresholdDt>Liquidation Threshold</ThresholdDt>
       <ThresholdDd status='error'>
-        {formatPercentage(liquidationThreshold.toNumber(), {
+        {formatPercentage(liquidationThreshold.mul(100).toNumber(), {
           maximumFractionDigits: 0,
           minimumFractionDigits: 0
         })}
@@ -34,7 +34,7 @@ const CollateralThresholds = ({
     <ThresholdItem>
       <ThresholdDt>Premium Redeem Threshold</ThresholdDt>
       <ThresholdDd status='warning'>
-        {formatPercentage(premiumRedeemThreshold.toNumber(), {
+        {formatPercentage(premiumRedeemThreshold.mul(100).toNumber(), {
           maximumFractionDigits: 0,
           minimumFractionDigits: 0
         })}
@@ -43,7 +43,7 @@ const CollateralThresholds = ({
     <ThresholdItem>
       <ThresholdDt>Secure threshold</ThresholdDt>
       <ThresholdDd status='success'>
-        {formatPercentage(secureThreshold.toNumber(), {
+        {formatPercentage(secureThreshold.mul(100).toNumber(), {
           maximumFractionDigits: 0,
           minimumFractionDigits: 0
         })}
