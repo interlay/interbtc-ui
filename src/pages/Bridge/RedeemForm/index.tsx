@@ -36,7 +36,7 @@ import {
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '@/constants';
-import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';

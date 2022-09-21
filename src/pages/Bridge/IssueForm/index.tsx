@@ -47,7 +47,7 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
-import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';

@@ -17,7 +17,7 @@ import SubmitButton from '@/components/SubmitButton';
 import TextField from '@/components/TextField';
 import Tokens, { TokenOption } from '@/components/Tokens';
 import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
-import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import isValidPolkadotAddress from '@/utils/helpers/is-valid-polkadot-address';

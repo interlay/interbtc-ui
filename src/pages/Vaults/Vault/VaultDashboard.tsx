@@ -8,7 +8,7 @@ import { Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import { useSubstrateSecureState } from '@/lib/substrate/substrate-context';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';

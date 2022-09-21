@@ -22,7 +22,7 @@ import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
-import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate/substrate-context';
+import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';

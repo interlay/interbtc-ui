@@ -330,13 +330,5 @@ const useSubstrateSecureState = (): SecureState => {
 };
 
 // ray test touch <
-export {
-  ActionType,
-  ApiStatus,
-  KeyringStatus,
-  SubstrateProvider,
-  useSubstrate,
-  useSubstrateSecureState,
-  useSubstrateState
-};
+export { SubstrateProvider, useSubstrate, useSubstrateSecureState, useSubstrateState };
 // ray test touch >

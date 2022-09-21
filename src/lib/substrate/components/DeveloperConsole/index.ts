@@ -3,7 +3,7 @@ import { ApiPromise } from '@polkadot/api';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 
 import { useSubstrateState } from '../..';
-import { ApiStatus, KeyringStatus } from '../../substrate-context';
+import { ApiStatus, KeyringStatus } from '../../context/types';
 
 declare global {
   interface Window {
