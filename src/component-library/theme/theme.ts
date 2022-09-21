@@ -338,13 +338,25 @@ const theme = {
     }
   },
   modal: {
+    maxWidth: '32rem',
+    maxHeight: 'calc(100vh - var(--spacing-12))',
+    zIndex: 2,
     title: {
       primary: {
-        color: 'var(--colors-title-primary)'
+        color: 'var(--colors-title-primary)',
+        textAlign: 'start'
       },
       secondary: {
-        color: 'var(--colors-title-secondary)'
+        color: 'var(--colors-title-secondary)',
+        textAlign: 'center'
       }
+    },
+    underlay: {
+      zIndex: 1,
+      bg: 'var(--colors-neutral-black-60)'
+    },
+    divider: {
+      border: '2px solid var(--colors-text-secondary)'
     }
   },
   switch: {

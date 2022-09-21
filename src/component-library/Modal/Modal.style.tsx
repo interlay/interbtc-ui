@@ -2,35 +2,37 @@ import styled from 'styled-components';
 
 import { TransitionTrigger } from '@/utils/hooks/use-mount-transition';
 
+import { CTA } from '../CTA';
 import { Stack } from '../Stack';
 import { H3 } from '../Text';
 import { theme } from '../theme';
+import { Variants } from '../utils/prop-types';
 
-const Underlay = styled.div`
+const StyledUnderlay = styled.div`
   position: fixed;
-  z-index: 100;
+  z-index: ${theme.modal.underlay.zIndex};
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: ${theme.modal.underlay.bg};
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
 `;
 
-type DialogProps = {
+type StyledDialogProps = {
   $transitionTrigger?: TransitionTrigger;
 };
 
-const Dialog = styled.div<DialogProps>`
+const StyledDialog = styled.div<StyledDialogProps>`
   max-height: inherit;
   width: 100vw;
-  max-height: calc(100vh - 3em);
-  z-index: 2;
-  max-width: 32em;
-  margin: 0 1.5em;
+  max-height: ${theme.modal.maxHeight};
+  z-index: ${theme.modal.zIndex};
+  max-width: ${theme.modal.maxWidth};
+  margin: 0 ${theme.spacing.spacing6};
   background: ${theme.colors.bgPrimary};
   border: ${theme.border.default};
   border-radius: ${theme.rounded.md};
@@ -42,46 +44,49 @@ const Dialog = styled.div<DialogProps>`
 
   display: grid;
   grid-template-columns: ${theme.spacing.spacing10} auto ${theme.spacing.spacing1} ${theme.spacing.spacing10};
-  grid-template-rows: ${theme.spacing.spacing10} ${theme.spacing.spacing1} auto 1fr auto ${theme.spacing.spacing8};
+  grid-template-rows: ${theme.spacing.spacing10} ${theme.spacing.spacing1} auto auto 1fr auto ${theme.spacing.spacing8};
   grid-template-areas:
     '. . close-btn close-btn'
     '. . close-btn close-btn'
     '. title title .'
+    '. divider divider .'
     '. content content .'
     '. footer cotent .';
 `;
 
-const CloseIcon = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  color: inherit;
-  border: none;
-  font: inherit;
+const StyledCloseCTA = styled(CTA)`
+  grid-area: close-btn;
   margin: ${theme.spacing.spacing3} ${theme.spacing.spacing3} 0 0;
   padding: 0;
-  cursor: pointer;
-  outline: inherit;
-  fill: ${theme.colors.textSecondary};
-  grid-area: close-btn;
 `;
 
-const Title = styled(H3)`
-  font-size: ${theme.text.xl2};
-  line-height: ${theme.lineHeight.xl};
-  margin-bottom: ${theme.spacing.spacing4};
+type StyledTitleProps = {
+  $variant: Exclude<Variants, 'outlined' | 'text'>;
+};
+
+const StyledTitle = styled(H3)<StyledTitleProps>`
   grid-area: title;
+  font-size: ${theme.text.xl};
+  line-height: ${theme.lineHeight.base};
+  color: ${({ $variant }) => theme.modal.title[$variant].color};
+  text-align: ${({ $variant }) => theme.modal.title[$variant].textAlign};
+  margin-bottom: ${theme.spacing.spacing4};
+`;
+
+const StyledHr = styled.hr`
+  grid-area: divider;
+  border-bottom: ${theme.modal.divider.border};
+  margin: 0 0 ${theme.spacing.spacing4} 0;
 `;
 
 const StyledModalBody = styled(Stack)`
-  overflow-y: auto;
   grid-area: content;
+  overflow-y: auto;
 `;
 
 const StyledModalFooter = styled(Stack)`
   grid-area: footer;
-  padding-top: ${theme.spacing.spacing4};
+  padding-top: ${theme.spacing.spacing6};
 `;
 
-export { CloseIcon, Dialog, StyledModalBody, StyledModalFooter, Title, Underlay };
+export { StyledCloseCTA, StyledDialog, StyledHr, StyledModalBody, StyledModalFooter, StyledTitle, StyledUnderlay };
