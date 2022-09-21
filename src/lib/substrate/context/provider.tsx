@@ -5,7 +5,6 @@ import { KeyringPair } from '@polkadot/keyring/types';
 import { TypeRegistry } from '@polkadot/types/create';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import { keyring } from '@polkadot/ui-keyring';
-import { Keyring } from '@polkadot/ui-keyring/Keyring';
 import { isTestChain } from '@polkadot/util';
 import * as React from 'react';
 import { useLocalStorage } from 'react-use';
@@ -21,7 +20,6 @@ import {
   ApiStatus,
   Dispatch,
   KeyringStatus,
-  SecureState,
   State,
   SubstrateProviderProps,
   SubstrateStateContextInterface
@@ -241,24 +239,4 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   return <SubstrateStateContext.Provider value={value}>{children}</SubstrateStateContext.Provider>;
 };
 
-const useSubstrate = (): SubstrateStateContextInterface => {
-  const context = React.useContext(SubstrateStateContext);
-  if (context === undefined) {
-    throw new Error('useSubstrate must be used within a SubstrateProvider!');
-  }
-  return context;
-};
-
-const useSubstrateState = (): State => useSubstrate().state; // TODO: it could be redundant in favor of useSubstrate
-
-const useSubstrateSecureState = (): SecureState => {
-  const state = useSubstrateState();
-
-  return {
-    ...state,
-    api: state.api as ApiPromise,
-    keyring: state.keyring as Keyring
-  };
-};
-
-export { SubstrateProvider, useSubstrate, useSubstrateSecureState, useSubstrateState };
+export { SubstrateProvider, SubstrateStateContext };
