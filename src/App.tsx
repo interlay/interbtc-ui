@@ -162,9 +162,7 @@ const App = (): JSX.Element => {
       if (constants.DEFAULT_ACCOUNT_SEED) {
         const keyring = new Keyring({ type: 'sr25519', ss58Format: constants.SS58_FORMAT });
         const defaultAccount = keyring.addFromUri(constants.DEFAULT_ACCOUNT_SEED as string);
-        // ray test touch <
         setSelectedAccount(defaultAccount);
-        // ray test touch >
       }
     }
   }, [setSelectedAccount, extensions.length]);

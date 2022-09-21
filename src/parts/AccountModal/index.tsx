@@ -80,9 +80,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     };
 
     const handleAccountSelect = async (newAccount: InjectedAccountWithMeta) => {
-      // ray test touch <
       setSelectedAccount(keyring.getPair(newAccount.address));
-      // ray test touch >
       onClose();
     };
 

@@ -98,9 +98,7 @@ type SubstrateProviderProps = {
 };
 interface SubstrateStateContextInterface {
   state: State;
-  // ray test touch <
   setSelectedAccount: (newAccount: KeyringPair) => Promise<void>;
-  // ray test touch >
   removeSelectedAccount: () => void;
 }
 
@@ -364,7 +362,6 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     }
   }, [selectedAccountAddress, accounts, removeSelectedAccount, keyringStatus]);
 
-  // ray test touch <
   const setSelectedAccount = React.useCallback(
     async (newAccount: KeyringPair) => {
       if (!setLSValue) return;
@@ -375,7 +372,6 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     },
     [setLSValue]
   );
-  // ray test touch >
 
   const value = {
     state,
