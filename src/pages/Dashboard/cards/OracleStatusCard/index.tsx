@@ -7,7 +7,6 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import Ring64, { Ring64Subtitle, Ring64Title, Ring64Value } from '@/components/Ring64';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
@@ -65,8 +64,6 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    const oracleOnline = oracleStatus && oracleStatus.online;
-
     const exchangeRate = oracleStatus
       ? new ExchangeRate<Bitcoin, CurrencyExt>(
           Bitcoin,
@@ -76,6 +73,8 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           0
         )
       : 0;
+
+    const oracleOnline = oracleStatus && oracleStatus.online;
 
     let statusText;
     let statusCircleText;
@@ -128,11 +127,7 @@ const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
           </Ring64Title>
           {exchangeRate && (
             <Ring64Value>
-              {formatNumber(Number(exchangeRate.toHuman(5)), {
-                minimumFractionDigits: 5,
-                maximumFractionDigits: 5
-              })}{' '}
-              {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+              {exchangeRate.toHuman(5)} {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </Ring64Value>
           )}
         </Ring64>
