@@ -29,7 +29,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
     <Stack spacing='double'>
       <Stack spacing='none' alignItems='center'>
         <WarningIcon width='2.5rem' height='2.5rem' />
-        <H3>{t('vault.vault_risks')}</H3>
+        <H3>{t('vault.disclaimer.plase_read_before_you_start')}</H3>
       </Stack>
       <Stack>
         <StyledDisclaimerText>{t('vault.disclaimer.understand_risks')}</StyledDisclaimerText>

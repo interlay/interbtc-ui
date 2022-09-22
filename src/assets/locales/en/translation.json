@@ -460,10 +460,10 @@
     "tooltip_issue_capacity_zero": "Vault issue capacity is 0.",
     "vault_created": "Vault Created",
     "view_vault": "View Vault",
-    "vault_risks": "Vault Risks",
     "please_enter_deposit_amount": "Please enter your deposit amount.",
     "create_vault": "Create a vault",
     "disclaimer": {
+      "plase_read_before_you_start": "Please read before you start",
       "understand_risks": "Operating a Vault doesn't come without risks. Before making a deposit, it is best to research and understand the risks involved.",
       "running_vault_requirments": "Operating a Vault client involves running a fully automated client on a server. This client has access to hot wallets for both Bitcoin and the Interlay/Kintsugi networks.",
       "understand_liquidation_risks": "Depositing collateral means accepting the risk of being liquidated if your collateralization rates drops, as well as the protocol risks of each collateral asset.",
