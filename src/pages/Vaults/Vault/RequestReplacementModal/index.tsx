@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { displayMonetaryAmount, formatNumber } from '@/common/utils/utils';
+import { displayMonetaryAmount } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from '@/components/buttons/InterlayMulberryOutlinedButton';
@@ -101,12 +101,7 @@ const RequestReplacementModal = ({
             {displayMonetaryAmount(collateralAmount)} {collateralToken.ticker}
           </p>
           <p>
-            {t('locked')}{' '}
-            {formatNumber(lockedBTC.toBig().toNumber(), {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 8
-            })}{' '}
-            BTC
+            {t('locked')} {lockedBTC.toHuman(8)} BTC
           </p>
           <p>{t('vault.replace_amount')}</p>
           <div>

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { displayMonetaryAmount, formatNumber } from '@/common/utils/utils';
+import { displayMonetaryAmount } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from '@/components/buttons/InterlayMulberryOutlinedButton';
@@ -95,12 +95,7 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
         <form className='space-y-4' onSubmit={onSubmit}>
           <p>{t('vault.redeem_description')}</p>
           <p>
-            {t('locked')}{' '}
-            {formatNumber(lockedBTC.toBig().toNumber(), {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 8
-            })}{' '}
-            BTC
+            {t('locked')} {lockedBTC.toHuman(8)} BTC
           </p>
           <p>{t('vault.redeem_amount')}</p>
           <div>
