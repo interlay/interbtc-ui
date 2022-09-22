@@ -53,11 +53,20 @@ const OutlinedCTA = styled(BaseCTA)`
   }
 `;
 
+const TextCTA = styled(BaseCTA)`
+  background-color: transparent;
+  color: ${theme.cta.text.text};
+
+  &:hover:not([disabled]) {
+    background-color: ${theme.cta.text.bgHover};
+  }
+`;
+
 const LoadingWrapper = styled.span`
   display: flex;
   align-items: center;
   margin-right: ${theme.spacing.spacing2};
 `;
 
-export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA };
+export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, TextCTA };
 export type { StyledCTAProps };
