@@ -8,13 +8,14 @@ import { useMountTransition } from '@/utils/hooks/use-mount-transition';
 import { Icon } from '../Icon';
 import { theme } from '../theme';
 import { useDOMRef } from '../utils/dom';
-import { Variants } from '../utils/prop-types';
+import { NormalAlignments, Variants } from '../utils/prop-types';
 import { StyledCloseCTA, StyledDialog, StyledHr, StyledTitle, StyledUnderlay } from './Modal.style';
 
 type Props = {
   children: ReactNode;
   title?: ReactNode;
   titleVariant?: Exclude<Variants, 'outlined' | 'text'>;
+  titleAlignment?: NormalAlignments;
 };
 
 type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
@@ -22,7 +23,10 @@ type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
 type ModalProps = Props & InheritAttrs;
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
-  ({ title, children, titleVariant = 'primary', isDismissable = true, ...props }, ref): JSX.Element | null => {
+  (
+    { title, children, titleVariant = 'primary', titleAlignment, isDismissable = true, ...props },
+    ref
+  ): JSX.Element | null => {
     const dialogRef = useDOMRef(ref);
     const { isOpen, onClose } = props;
     const { shouldRender, transitionTrigger } = useMountTransition(!!isOpen, theme.transition.duration);
@@ -52,7 +56,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             >
               {title && (
                 <>
-                  <StyledTitle $variant={titleVariant} {...titleProps}>
+                  <StyledTitle $variant={titleVariant} $alignment={titleAlignment} {...titleProps}>
                     {title}
                   </StyledTitle>
                   {titleVariant === 'secondary' && <StyledHr />}
@@ -73,3 +77,4 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 Modal.displayName = 'Modal';
 
 export { Modal };
+export type { ModalProps };

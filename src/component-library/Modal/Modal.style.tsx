@@ -6,7 +6,7 @@ import { CTA } from '../CTA';
 import { Stack } from '../Stack';
 import { H3 } from '../Text';
 import { theme } from '../theme';
-import { Variants } from '../utils/prop-types';
+import { NormalAlignments, Variants } from '../utils/prop-types';
 
 const StyledUnderlay = styled.div`
   position: fixed;
@@ -43,8 +43,8 @@ const StyledDialog = styled.div<StyledDialogProps>`
     $transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
 
   display: grid;
-  grid-template-columns: ${theme.spacing.spacing10} auto ${theme.spacing.spacing1} ${theme.spacing.spacing10};
-  grid-template-rows: ${theme.spacing.spacing10} ${theme.spacing.spacing1} auto auto 1fr auto ${theme.spacing.spacing8};
+  grid-template-columns: ${theme.spacing.spacing8} auto ${theme.spacing.spacing3} ${theme.spacing.spacing8};
+  grid-template-rows: ${theme.spacing.spacing8} ${theme.spacing.spacing3} auto auto 1fr auto ${theme.spacing.spacing8};
   grid-template-areas:
     '. . close-btn close-btn'
     '. . close-btn close-btn'
@@ -62,6 +62,7 @@ const StyledCloseCTA = styled(CTA)`
 
 type StyledTitleProps = {
   $variant: Exclude<Variants, 'outlined' | 'text'>;
+  $alignment?: NormalAlignments;
 };
 
 const StyledTitle = styled(H3)<StyledTitleProps>`
@@ -69,7 +70,7 @@ const StyledTitle = styled(H3)<StyledTitleProps>`
   font-size: ${theme.text.xl};
   line-height: ${theme.lineHeight.base};
   color: ${({ $variant }) => theme.modal.title[$variant].color};
-  text-align: ${({ $variant }) => theme.modal.title[$variant].textAlign};
+  text-align: ${({ $variant, $alignment }) => $alignment || theme.modal.title[$variant].textAlign};
   margin-bottom: ${theme.spacing.spacing4};
 `;
 
