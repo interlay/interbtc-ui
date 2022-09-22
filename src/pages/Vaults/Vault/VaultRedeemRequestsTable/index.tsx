@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { displayMonetaryAmount, formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
+import { formatDateTimePrecise, formatNumber, shortAddress, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -175,7 +175,14 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
         classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
-          return <>{displayMonetaryAmount(redeem.request.requestedAmountBacking)}</>;
+          return (
+            <>
+              {formatNumber(redeem.request.requestedAmountBacking.toBig().toNumber(), {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 8
+              })}
+            </>
+          );
         }
       },
       {

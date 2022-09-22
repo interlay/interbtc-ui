@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
+import { formatNumber, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -101,7 +101,14 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'amount',
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: MonetaryAmount<WrappedCurrency> }) {
-          return <>{displayMonetaryAmount(value)}</>;
+          return (
+            <>
+              {formatNumber(value.toBig().toNumber(), {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 8
+              })}
+            </>
+          );
         }
       },
       {
@@ -109,7 +116,14 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'collateral',
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: MonetaryAmount<CollateralCurrencyExt> }) {
-          return <>{displayMonetaryAmount(value)}</>;
+          return (
+            <>
+              {formatNumber(value.toBig().toNumber(), {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 5
+              })}
+            </>
+          );
         }
       },
       {

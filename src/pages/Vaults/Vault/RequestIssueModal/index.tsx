@@ -10,7 +10,7 @@ import { useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import ErrorModal from '@/components/ErrorModal';
 import Hr2 from '@/components/hrs/Hr2';
@@ -255,9 +255,8 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     setSubmittedRequest(undefined);
   };
 
-  const vaultBalance = displayMonetaryAmount(vaultCapacity);
   const handleClickVaultBalance = async () => {
-    setValue(WRAPPED_TOKEN_AMOUNT, vaultBalance);
+    setValue(WRAPPED_TOKEN_AMOUNT, vaultCapacity.toString());
     await trigger(WRAPPED_TOKEN_AMOUNT);
   };
 
@@ -282,7 +281,13 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
             <p>
               {t('vault.max_capacity')}{' '}
               <InterlayButtonBase type='button' onClick={handleClickVaultBalance}>
-                <strong>{vaultBalance} BTC</strong>
+                <strong>
+                  {formatNumber(vaultCapacity.toBig().toNumber(), {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 8
+                  })}{' '}
+                  BTC
+                </strong>
               </InterlayButtonBase>
             </p>
             <p>{t('vault.issue_amount')}</p>
