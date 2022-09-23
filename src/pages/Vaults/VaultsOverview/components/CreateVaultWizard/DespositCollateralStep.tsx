@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import * as z from 'zod';
 
-import { displayMonetaryAmountInUSDFormat, parseLocaleNumber } from '@/common/utils/utils';
-import { CTA, Span, Stack, TokenField } from '@/component-library';
+import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
+import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { getErrorMessage } from '@/utils/helpers/forms';
@@ -66,7 +66,7 @@ const DepositCollateralStep = ({
     }
   );
 
-  const inputCollateral = parseLocaleNumber(watch(DEPOSIT_COLLATERAL_AMOUNT) || '0');
+  const inputCollateral = watch(DEPOSIT_COLLATERAL_AMOUNT) || '0';
   const inputCollateralAmount = newMonetaryAmount(inputCollateral, collateral.currency, true);
 
   const handleSubmit = async (data: CollateralFormData) => {
@@ -78,14 +78,15 @@ const DepositCollateralStep = ({
     <form onSubmit={h(handleSubmit)}>
       <Stack spacing='double'>
         <StyledDepositTitle id={titleId}>{t('vault.deposit_collateral')}</StyledDepositTitle>
-        <TokenField
+        <TokenInput
           aria-labelledby={titleId}
           placeholder='0.00'
           tokenSymbol={collateral.currency.ticker}
           valueInUSD={displayMonetaryAmountInUSDFormat(inputCollateralAmount, collateral.price.usd)}
-          balance={collateral.balance.amount}
+          balance={collateral.balance.raw.toBig().toNumber()}
           balanceInUSD={collateral.balance.usd}
           errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}
+          renderBalance={(value) => formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: 5 })}
           {...register(DEPOSIT_COLLATERAL_AMOUNT)}
         />
         <StyledDl>
