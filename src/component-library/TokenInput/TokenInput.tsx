@@ -71,6 +71,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       </TokenAdornment>
     );
 
+    // TODO: how do we handle this with different sized/resized inputs
     const isOverflowing = (value?.toString().length || 0) > 9;
 
     return (
