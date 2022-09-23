@@ -12,7 +12,8 @@ WithBalance.args = {
   valueInUSD: formatUSD(100.0),
   balance: 1000.0,
   balanceInUSD: formatUSD(1000.0),
-  isDisabled: false
+  isDisabled: false,
+  renderBalance: (value) => Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 }).format(value)
 };
 
 const WithoutBalance = Template.bind({});

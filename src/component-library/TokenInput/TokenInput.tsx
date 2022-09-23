@@ -1,5 +1,5 @@
 import { chain } from '@react-aria/utils';
-import { ChangeEventHandler, forwardRef, useEffect, useState } from 'react';
+import { ChangeEventHandler, forwardRef, ReactNode, useEffect, useState } from 'react';
 
 import { NumberInputProps } from '../NumberInput';
 import { Stack } from '../Stack';
@@ -17,8 +17,9 @@ import {
 type Props = {
   tokenSymbol: string;
   valueInUSD: string;
-  balance?: string | number;
+  balance?: number;
   balanceInUSD?: string | number;
+  renderBalance?: (balance: number) => ReactNode;
 };
 
 type InheritAttrs = Omit<NumberInputProps, keyof Props>;
@@ -38,6 +39,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       hidden,
       value: valueProp,
       onChange,
+      renderBalance,
       ...props
     },
     ref
@@ -45,20 +47,16 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     const inputRef = useDOMRef(ref);
     const [value, setValue] = useState<number | undefined>(valueProp);
 
-    const handleClickBalance = () => {
-      const newValue = Number(balance);
-      triggerChangeEvent(inputRef, newValue);
-    };
+    const handleClickBalance = () => triggerChangeEvent(inputRef, balance);
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-      const unparsedValue = e.target.value;
+      const value = e.target.value;
 
-      if (!unparsedValue) {
+      if (!value) {
         return setValue(undefined);
       }
 
-      const parsedValue = Number(unparsedValue.replaceAll(',', ''));
-      setValue(parsedValue);
+      setValue(Number(value));
     };
 
     useEffect(() => {
@@ -84,6 +82,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
             valueInUSD={balanceInUSD}
             onClickBalance={handleClickBalance}
             isDisabled={isDisabled}
+            renderBalance={renderBalance}
           />
         )}
         <TokenInputInnerWrapper>
@@ -95,7 +94,6 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
             value={value}
             minValue={0}
             $isOverflowing={isOverflowing}
-            allowFormatting
             {...props}
           />
         </TokenInputInnerWrapper>
