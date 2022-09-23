@@ -167,7 +167,7 @@ const VaultsTable = (): JSX.Element => {
         accessor: Accessor.LockedBTCAmount,
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: BitcoinAmount }) {
-          return displayMonetaryAmount(value);
+          return value.toHuman(8);
         }
       },
       {

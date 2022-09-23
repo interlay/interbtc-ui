@@ -10,7 +10,7 @@ import { useTable } from 'react-table';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
+import { formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -136,7 +136,7 @@ const IssueRequestsTable = (): JSX.Element => {
             wrappedTokenAmount = issue.request.amountWrapped;
           }
 
-          return <>{displayMonetaryAmount(wrappedTokenAmount)}</>;
+          return <>{wrappedTokenAmount.toHuman(8)}</>;
         }
       },
       {

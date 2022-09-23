@@ -7,7 +7,7 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, formatPercentage } from '@/common/utils/utils';
+import { formatPercentage } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
 import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
@@ -115,9 +115,7 @@ const CollateralizationCard = ({ hasLinks }: Props): JSX.Element => {
           >
             {t('dashboard.vault.capacity')}
           </Ring64Title>
-          <Ring64Value>
-            {`${displayMonetaryAmount(requestLimits.totalMaxIssuable)} ${WRAPPED_TOKEN_SYMBOL}`}
-          </Ring64Value>
+          <Ring64Value>{`${requestLimits.totalMaxIssuable.toHuman(8)} ${WRAPPED_TOKEN_SYMBOL}`}</Ring64Value>
         </Ring64>
       </>
     );
