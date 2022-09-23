@@ -17,6 +17,7 @@ const getAvailableGovernanceBalance = (balance: MonetaryAmount<CurrencyExt>): Mo
   return availableBalance.toBig().gte(0) ? availableBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
 };
 
+// TODO: move into common hook for fees
 let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
 if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.2;

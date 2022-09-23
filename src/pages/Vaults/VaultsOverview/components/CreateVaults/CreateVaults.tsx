@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { H3, Modal, Stack } from '@/component-library';
-import { AvailableVaultData, useGetAvailableVaults } from '@/utils/hooks/api/use-get-available-vaults';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
+import { AvailableVaultData, useGetAvailableVaults } from '@/utils/hooks/api/vaults/use-get-available-vaults';
 
 import { CreateVaultWizard } from '../CreateVaultWizard';
 import { VaultsTable, VaultsTableProps, VaultsTableRow } from '../VaultsTable/VaultsTable';

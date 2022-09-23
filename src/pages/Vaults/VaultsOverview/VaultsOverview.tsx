@@ -30,6 +30,7 @@ const VaultOverview = (): JSX.Element => {
     );
   }
 
+  // TODO: remove redux dependency after account handling
   const isReadOnlyOverview = !vaultClientLoaded || address !== accountAddress;
 
   return (

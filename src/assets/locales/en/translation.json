@@ -462,6 +462,14 @@
     "view_vault": "View Vault",
     "please_enter_deposit_amount": "Please enter your deposit amount.",
     "create_vault": "Create a vault",
+    "vault_installed": "Vault installed",
+    "coming_soon": "Coming soon",
+    "add": "Add",
+    "create_table": {
+      "vault_pair": "Vault Pair",
+      "min_collateral": "Min Collateral",
+      "collateral_rate": "Collateral Rate"
+    },
     "disclaimer": {
       "plase_read_before_you_start": "Please read before you start",
       "understand_risks": "Operating a Vault doesn't come without risks. Before making a deposit, it is best to research and understand the risks involved.",

@@ -1,6 +1,5 @@
 import { Trans, useTranslation } from 'react-i18next';
 
-import { ReactComponent as WarningIcon } from '@/assets/img/icons/exclamation-triangle.svg';
 import { CTA, CTALink, H3, Stack, TextLink } from '@/component-library';
 import {
   INTERLAY_DOS_AND_DONTS_DOCS_LINK,
@@ -12,7 +11,8 @@ import {
   StyledDisclaimerCard,
   StyledDisclaimerList,
   StyledDisclaimerListItem,
-  StyledDisclaimerText
+  StyledDisclaimerText,
+  StyledWarningIcon
 } from './CreateVaultWizard.styles';
 import { StepComponentProps, withStep } from './Step';
 
@@ -28,7 +28,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
   return (
     <Stack spacing='double'>
       <Stack spacing='none' alignItems='center'>
-        <WarningIcon width='2.5rem' height='2.5rem' />
+        <StyledWarningIcon />
         <H3>{t('vault.disclaimer.plase_read_before_you_start')}</H3>
       </Stack>
       <Stack>

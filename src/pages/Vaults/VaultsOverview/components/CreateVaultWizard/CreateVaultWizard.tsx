@@ -6,12 +6,10 @@ import DisclaimerStep from './DisclaimerStep';
 import { Steps } from './Step';
 import VaultCreatedStep from './VaultCreatedStep';
 
-type Props = {
+interface CreateVaultWizardProps {
   vault?: VaultsTableRow;
-};
-
-type CreateVaultWizardProps = Props;
-
+}
+// TODO: Move this to a generic multi-step component
 const CreateVaultWizard = ({ vault }: CreateVaultWizardProps): JSX.Element | null => {
   const [step, setStep] = useState<Steps>(1);
 

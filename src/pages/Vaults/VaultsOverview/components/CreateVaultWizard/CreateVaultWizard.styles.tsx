@@ -1,17 +1,16 @@
 import styled from 'styled-components';
 
-import { H2, P, Stack, theme } from '@/component-library';
-
-const DisclaimerHeader = styled(Stack)`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
+import { ReactComponent as WarningIcon } from '@/assets/img/icons/exclamation-triangle.svg';
+import { H2, P, theme } from '@/component-library';
 
 const StyledDisclaimerText = styled(P)`
   font-size: ${theme.text.xs};
   line-height: ${theme.lineHeight.s};
+`;
+
+const StyledWarningIcon = styled(WarningIcon)`
+  width: ${theme.spacing.spacing12};
+  height: ${theme.spacing.spacing12};
 `;
 
 const StyledDisclaimerCard = styled.div`
@@ -72,7 +71,6 @@ const StyledHr = styled.hr`
 `;
 
 export {
-  DisclaimerHeader,
   StyledDd,
   StyledDepositTitle,
   StyledDisclaimerCard,
@@ -82,5 +80,6 @@ export {
   StyledDItem,
   StyledDl,
   StyledDt,
-  StyledHr
+  StyledHr,
+  StyledWarningIcon
 };

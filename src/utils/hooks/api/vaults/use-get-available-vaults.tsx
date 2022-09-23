@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 
-import { useGetCollateralCurrencies } from './use-get-collateral-currencies';
+import { useGetCollateralCurrencies } from '../use-get-collateral-currencies';
 
 type AvailableVaultData = {
   collateralCurrency: CollateralCurrencyExt;
