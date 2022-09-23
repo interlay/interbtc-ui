@@ -101,7 +101,7 @@ const RequestReplacementModal = ({
             {displayMonetaryAmount(collateralAmount)} {collateralToken.ticker}
           </p>
           <p>
-            {t('locked')} {displayMonetaryAmount(lockedBTC)} BTC
+            {t('locked')} {lockedBTC.toHuman(8)} BTC
           </p>
           <p>{t('vault.replace_amount')}</p>
           <div>
