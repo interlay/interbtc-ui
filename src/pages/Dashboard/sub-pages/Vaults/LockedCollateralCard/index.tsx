@@ -97,7 +97,7 @@ const LockedCollateralCard = ({
               }
             }
           ]}
-          datasets={[cumulativeVolumes.slice(1).map((dataPoint) => displayMonetaryAmount(dataPoint.amount))]}
+          datasets={[cumulativeVolumes.slice(1).map((dataPoint) => dataPoint.amount.toHuman(5))]}
         />
       </>
     );

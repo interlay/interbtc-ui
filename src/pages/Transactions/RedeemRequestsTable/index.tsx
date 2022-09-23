@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
+import { formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -127,7 +127,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
-          return <>{displayMonetaryAmount(redeem.request.requestedAmountBacking)}</>;
+          return <>{redeem.request.requestedAmountBacking.toHuman(8)}</>;
         }
       },
       {

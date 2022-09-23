@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import Panel from '@/components/Panel';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
@@ -61,7 +61,7 @@ const UpperContent = (): JSX.Element => {
             </StatsDt>
             <StatsDd>
               {t('dashboard.issue.total_interbtc', {
-                amount: displayMonetaryAmount(totalWrappedTokenAmount),
+                amount: totalWrappedTokenAmount.toHuman(8),
                 wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
               })}
             </StatsDd>
