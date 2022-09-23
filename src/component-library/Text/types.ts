@@ -1,9 +1,10 @@
 import { HTMLAttributes } from 'react';
 
-import { Colors } from '../utils/prop-types';
+import { Colors, Sizes } from '../utils/prop-types';
 
 type Props = {
   color?: Colors;
+  size?: Sizes;
 };
 
 type NativeAttrs<T = unknown> = Omit<HTMLAttributes<T>, keyof Props>;

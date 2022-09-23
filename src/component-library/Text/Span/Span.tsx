@@ -1,10 +1,10 @@
+import { Text } from '../style';
 import { TextProps } from '../types';
-import { SpanText } from './Span.style';
 
-const Span = ({ color, children, ...props }: TextProps<HTMLElement>): JSX.Element => (
-  <SpanText color={color} {...props}>
+const Span = ({ color, size, children, ...props }: TextProps<HTMLHeadingElement>): JSX.Element => (
+  <Text as='span' $color={color} $size={size} {...props}>
     {children}
-  </SpanText>
+  </Text>
 );
 
 Span.displayName = 'Span';

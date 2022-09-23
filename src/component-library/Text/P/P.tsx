@@ -1,10 +1,10 @@
+import { Text } from '../style';
 import { TextProps } from '../types';
-import { ParagraphText } from './P.style';
 
-const P = ({ color, children, ...props }: TextProps<HTMLParagraphElement>): JSX.Element => (
-  <ParagraphText color={color} {...props}>
+const P = ({ color, size, children, ...props }: TextProps<HTMLHeadingElement>): JSX.Element => (
+  <Text as='p' $color={color} $size={size} {...props}>
     {children}
-  </ParagraphText>
+  </Text>
 );
 
 P.displayName = 'P';

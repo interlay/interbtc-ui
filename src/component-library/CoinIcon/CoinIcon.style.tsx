@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
-import { Sizes } from '../utils/prop-types';
+import { SimpleSizes } from '../utils/prop-types';
 
 interface IconWrapperProps {
-  $size: Sizes;
+  $size: SimpleSizes;
 }
 
 const IconWrapper = styled.div<IconWrapperProps>`

@@ -1,7 +1,7 @@
 import { forwardRef, HTMLAttributes } from 'react';
 import { StyledComponent } from 'styled-components';
 
-import { Sizes, Variants } from '../utils/prop-types';
+import { SimpleSizes, Variants } from '../utils/prop-types';
 import { OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledCTAProps } from './CTA.style';
 
 const ctaElements: Record<Variants, StyledComponent<'button', any, StyledCTAProps, never>> = {
@@ -13,7 +13,7 @@ const ctaElements: Record<Variants, StyledComponent<'button', any, StyledCTAProp
 type Props = {
   variant?: Variants;
   fullWidth?: boolean;
-  size?: Sizes;
+  size?: SimpleSizes;
   disabled?: boolean;
   as?: any;
 };
