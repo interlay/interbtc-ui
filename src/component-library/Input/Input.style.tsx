@@ -10,6 +10,7 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   background-color: transparent;
   display: block;
   width: 100%;
+  height: 100%;
   line-height: ${theme.lineHeight.base};
   padding: ${theme.spacing.spacing2};
   outline: none;
@@ -47,6 +48,7 @@ type BaseInputWrapperProps = {
 };
 
 const BaseInputWrapper = styled.div<BaseInputWrapperProps>`
+  height: 100%;
   background-color: ${theme.input.background};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};
