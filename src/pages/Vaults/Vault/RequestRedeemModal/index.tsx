@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { displayMonetaryAmount } from '@/common/utils/utils';
@@ -35,6 +36,7 @@ interface Props {
 
 // TODO: share form with bridge page
 const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lockedBTC }: Props): JSX.Element => {
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -59,6 +61,8 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
 
       const vaultId = newVaultId(window.bridge.api, vaultAddress, collateralToken, WRAPPED_TOKEN);
       await window.bridge.redeem.request(amountPolkaBtc, data[BTC_ADDRESS], vaultId);
+
+      queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
 
       toast.success('Redeem request submitted');
       onClose();
@@ -91,7 +95,7 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
         <form className='space-y-4' onSubmit={onSubmit}>
           <p>{t('vault.redeem_description')}</p>
           <p>
-            {t('locked')} {displayMonetaryAmount(lockedBTC)} BTC
+            {t('locked')} {lockedBTC.toHuman(8)} BTC
           </p>
           <p>{t('vault.redeem_amount')}</p>
           <div>

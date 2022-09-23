@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { displayMonetaryAmount, formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
+import { formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -181,7 +181,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
             wrappedTokenAmount = issue.request.amountWrapped;
           }
 
-          return <>{displayMonetaryAmount(wrappedTokenAmount)}</>;
+          return <>{wrappedTokenAmount.toHuman(8)}</>;
         }
       },
       {
@@ -189,7 +189,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
         accessor: 'griefingCollateral',
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: any }) {
-          return <>{displayMonetaryAmount(value)}</>;
+          return <>{value.toHuman(5)}</>;
         }
       },
       {
