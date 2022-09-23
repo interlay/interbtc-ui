@@ -1,10 +1,10 @@
+import { Text } from '../style';
 import { TextProps } from '../types';
-import { StrongText } from './Strong.style';
 
-const Strong = ({ color, children, ...props }: TextProps<HTMLElement>): JSX.Element => (
-  <StrongText color={color} {...props}>
+const Strong = ({ color, size, children, ...props }: TextProps<HTMLHeadingElement>): JSX.Element => (
+  <Text as='strong' $color={color} $size={size} {...props}>
     {children}
-  </StrongText>
+  </Text>
 );
 
 Strong.displayName = 'Strong';

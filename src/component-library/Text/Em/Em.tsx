@@ -1,10 +1,10 @@
+import { Text } from '../style';
 import { TextProps } from '../types';
-import { EmText } from './Em.style';
 
-const Em = ({ color, children, ...props }: TextProps<HTMLElement>): JSX.Element => (
-  <EmText color={color} {...props}>
+const Em = ({ color, size, children, ...props }: TextProps<HTMLElement>): JSX.Element => (
+  <Text as='em' $color={color} $size={size} {...props}>
     {children}
-  </EmText>
+  </Text>
 );
 
 Em.displayName = 'Em';

@@ -1,11 +1,11 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
 import { LoadingSpinner } from '../LoadingSpinner';
-import { Sizes } from '../utils/prop-types';
+import { SimpleSizes } from '../utils/prop-types';
 import { BaseCTA, BaseCTAProps } from './BaseCTA';
 import { LoadingWrapper } from './CTA.style';
 
-const loadingSizes: Record<Sizes, number> = {
+const loadingSizes: Record<SimpleSizes, number> = {
   small: 16,
   medium: 18,
   large: 20
@@ -13,7 +13,7 @@ const loadingSizes: Record<Sizes, number> = {
 
 type Props = {
   fullWidth?: boolean;
-  size?: Sizes;
+  size?: SimpleSizes;
   loading?: boolean;
 };
 

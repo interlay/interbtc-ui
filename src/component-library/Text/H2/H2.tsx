@@ -1,10 +1,10 @@
+import { Text } from '../style';
 import { TextProps } from '../types';
-import { H2Text } from './H2.style';
 
-const H2 = ({ color, children, ...props }: TextProps<HTMLHeadingElement>): JSX.Element => (
-  <H2Text color={color} {...props}>
+const H2 = ({ color, size = '4xl', children, ...props }: TextProps<HTMLHeadingElement>): JSX.Element => (
+  <Text as='h2' $color={color} $size={size} {...props}>
     {children}
-  </H2Text>
+  </Text>
 );
 
 H2.displayName = 'H2';

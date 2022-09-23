@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-import { Sizes } from '../utils/prop-types';
+import { SimpleSizes } from '../utils/prop-types';
 
 interface CoinPairWrapperProps {
-  $size: Sizes;
+  $size: SimpleSizes;
 }
 
 const CoinPairWrapper = styled.div<CoinPairWrapperProps>`
