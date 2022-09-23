@@ -89,7 +89,7 @@ const UpperContent = (): JSX.Element => {
               {t('dashboard.redeem.total_redeemed')}
             </StatsDt>
             <StatsDd>
-              {totalRedeemedAmount.toString()}
+              {totalRedeemedAmount.toHuman(8)}
               &nbsp;BTC
             </StatsDd>
             <StatsDd>

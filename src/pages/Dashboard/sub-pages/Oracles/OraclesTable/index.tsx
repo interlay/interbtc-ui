@@ -1,3 +1,4 @@
+import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -92,9 +93,11 @@ const OracleTable = (): JSX.Element => {
         accessor: 'exchangeRate',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: BTCToCollateralTokenRate }) {
+          const exchangeRate = new ExchangeRate(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, value.toBig(), 0, 0);
           return (
             <>
-              1 BTC = {formatNumber(Number(value.toHuman(5)), { minimumFractionDigits: 5, maximumFractionDigits: 5 })}{' '}
+              1 BTC ={' '}
+              {formatNumber(Number(exchangeRate.toHuman(5)), { minimumFractionDigits: 5, maximumFractionDigits: 5 })}{' '}
               {RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             </>
           );

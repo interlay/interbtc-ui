@@ -3,12 +3,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import {
-  displayMonetaryAmount,
-  displayMonetaryAmountInUSDFormat,
-  formatNumber,
-  shortAddress
-} from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatNumber, shortAddress } from '@/common/utils/utils';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
@@ -51,9 +46,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
       <div className='space-y-6'>
         <div className='text-center'>
           <h4 className={clsx('font-medium', 'space-x-1')}>
-            <PrimaryColorSpan className='text-5xl'>
-              {displayMonetaryAmount(redeemedWrappedTokenAmount)}
-            </PrimaryColorSpan>
+            <PrimaryColorSpan className='text-5xl'>{redeemedWrappedTokenAmount.toHuman(8)}</PrimaryColorSpan>
             <PrimaryColorSpan className='text-2xl'>{WRAPPED_TOKEN_SYMBOL}</PrimaryColorSpan>
           </h4>
           <span
@@ -82,7 +75,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(redeem.bridgeFee)}
+            value={redeem.bridgeFee.toHuman(8)}
             unitName='BTC'
             approxUSD={displayMonetaryAmountInUSDFormat(
               redeem.bridgeFee,
@@ -101,7 +94,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(redeem.btcTransferFee)}
+            value={redeem.btcTransferFee.toHuman(8)}
             unitName='BTC'
             approxUSD={displayMonetaryAmountInUSDFormat(
               redeem.btcTransferFee,
@@ -121,7 +114,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(redeem.request.requestedAmountBacking)}
+            value={redeem.request.requestedAmountBacking.toHuman(8)}
             unitName='BTC'
             approxUSD={displayMonetaryAmountInUSDFormat(
               redeem.request.requestedAmountBacking,

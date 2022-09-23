@@ -3,16 +3,10 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import {
-  displayMonetaryAmount,
-  displayMonetaryAmountInUSDFormat,
-  formatNumber,
-  shortAddress
-} from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatNumber, shortAddress } from '@/common/utils/utils';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { WrappedTokenAmount } from '@/config/relay-chains';
+import { WRAPPED_TOKEN_SYMBOL, WrappedTokenAmount } from '@/config/relay-chains';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
@@ -69,7 +63,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
                 { 'dark:text-kintsugiSupernova': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}
             >
-              {displayMonetaryAmount(receivedWrappedTokenAmount)}
+              {receivedWrappedTokenAmount.toHuman(8)}
             </span>
             <span>{WRAPPED_TOKEN_SYMBOL}</span>
           </h4>
@@ -99,7 +93,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(bridgeFee)}
+            value={bridgeFee.toHuman(8)}
             unitName='BTC'
             approxUSD={displayMonetaryAmountInUSDFormat(
               bridgeFee,
@@ -119,7 +113,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(sentBackingTokenAmount)}
+            value={sentBackingTokenAmount.toHuman(8)}
             unitName='BTC'
             approxUSD={displayMonetaryAmountInUSDFormat(
               sentBackingTokenAmount,

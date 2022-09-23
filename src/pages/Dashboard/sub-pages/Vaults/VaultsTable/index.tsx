@@ -54,12 +54,16 @@ const CollateralizationCell = ({
       <>
         <div>
           <p className={getCollateralizationColor(settledCollateralization, collateralSecureThreshold)}>
-            {settledCollateralization === undefined ? '∞' : formatPercentage(settledCollateralization.toNumber())}
+            {settledCollateralization === undefined
+              ? '∞'
+              : formatPercentage(settledCollateralization.mul(100).toNumber())}
           </p>
           <p className='text-xs'>
             <span>{t('vault.pending_table_subcell')}</span>
             <span className={getCollateralizationColor(unsettledCollateralization, collateralSecureThreshold)}>
-              {unsettledCollateralization === undefined ? '∞' : formatPercentage(unsettledCollateralization.toNumber())}
+              {unsettledCollateralization === undefined
+                ? '∞'
+                : formatPercentage(unsettledCollateralization.mul(100).toNumber())}
             </span>
           </p>
         </div>
@@ -163,7 +167,7 @@ const VaultsTable = (): JSX.Element => {
         accessor: Accessor.LockedBTCAmount,
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: BitcoinAmount }) {
-          return displayMonetaryAmount(value);
+          return value.toHuman(8);
         }
       },
       {
