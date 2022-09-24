@@ -27,7 +27,6 @@ import {
 
 const UNABLE_TO_INITIALISE_OPTIONS_MORE_THAN_ONCE = 'Unable to initialise options more than once';
 
-// /
 // Initial state for `React.useReducer`
 const initialState = {
   // These are the states
@@ -45,7 +44,6 @@ const initialState = {
 
 const registry = new TypeRegistry();
 
-// /
 // Connecting to the Substrate node
 const connect = async (state: State, dispatch: Dispatch) => {
   try {
@@ -117,7 +115,6 @@ const retrieveChainInfo = async (api: ApiPromise) => {
   };
 };
 
-// /
 // Loading accounts from dev and polkadot-js extension
 const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> => {
   dispatch({ type: ActionType.SetKeyringLoading });

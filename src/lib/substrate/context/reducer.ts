@@ -1,6 +1,5 @@
 import { Action, ActionType, ApiStatus, KeyringStatus, State } from './types';
 
-// /
 // Reducer function for `React.useReducer`
 const substrateReducer = (state: State, action: Action): State => {
   switch (action.type) {
