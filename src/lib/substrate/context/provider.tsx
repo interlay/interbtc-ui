@@ -10,8 +10,8 @@ import { useLocalStorage } from 'react-use';
 
 import { APP_NAME } from '@/config/relay-chains';
 import { SELECTED_ACCOUNT_LOCAL_STORAGE_KEY } from '@/config/wallets';
+import * as constants from '@/constants';
 
-import * as constants from '../../../constants';
 import { substrateReducer } from './reducer';
 import {
   _KeyringPair,
