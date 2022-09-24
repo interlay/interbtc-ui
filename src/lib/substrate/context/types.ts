@@ -60,7 +60,9 @@ type Action =
   | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined }
   | { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> }
   | { type: ActionType.SetExtensions; payload: Array<InjectedExtension> };
+
 type Dispatch = (action: Action) => void;
+
 type State = {
   socket: string | undefined;
   jsonrpc: Record<string, Record<string, DefinitionRpcExt>>;
@@ -73,14 +75,17 @@ type State = {
   accounts: Array<InjectedAccountWithMeta>;
   extensions: Array<InjectedExtension>;
 };
+
 type SecureState = Omit<State, 'keyring' | 'api'> & {
   keyring: Keyring;
   api: ApiPromise;
 };
+
 type SubstrateProviderProps = {
   children: React.ReactNode;
   socket?: string;
 };
+
 interface SubstrateStateContextInterface {
   state: State;
   setSelectedAccount: (newAccount: PolkadotKeyringPair) => Promise<void>;
