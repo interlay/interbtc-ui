@@ -80,10 +80,12 @@ const connect = async (state: State, dispatch: Dispatch) => {
         loadAccounts(_api, dispatch);
       });
     });
+
     _api.on('ready', () => {
       console.log('[substrate-context API] on:ready');
       dispatch({ type: ActionType.ConnectSuccess });
     });
+
     _api.on('error', (error) => {
       console.log('[substrate-context API] on:error');
       dispatch({
@@ -91,6 +93,7 @@ const connect = async (state: State, dispatch: Dispatch) => {
         payload: error
       });
     });
+
     _api.on('disconnected', () => {
       console.log('[substrate-context API] on:disconnected');
       dispatch({ type: ActionType.ConnectFail });
