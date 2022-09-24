@@ -1,6 +1,6 @@
 import { ApiPromise } from '@polkadot/api';
 import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
-import { KeyringPair, KeyringPair$Meta } from '@polkadot/keyring/types';
+import { KeyringPair as PolkadotKeyringPair, KeyringPair$Meta } from '@polkadot/keyring/types';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 
@@ -44,7 +44,7 @@ interface KeyringPairMeta extends KeyringPair$Meta {
   name: string;
 }
 
-interface _KeyringPair extends KeyringPair {
+interface KeyringPair extends PolkadotKeyringPair {
   meta: KeyringPairMeta;
 }
 
@@ -57,7 +57,7 @@ type Action =
   | { type: ActionType.SetKeyringLoading }
   | { type: ActionType.SetKeyringReady; payload: Keyring }
   | { type: ActionType.SetKeyringError }
-  | { type: ActionType.SetSelectedAccount; payload: _KeyringPair | undefined }
+  | { type: ActionType.SetSelectedAccount; payload: KeyringPair | undefined }
   | { type: ActionType.SetAccounts; payload: Array<InjectedAccountWithMeta> }
   | { type: ActionType.SetExtensions; payload: Array<InjectedExtension> };
 type Dispatch = (action: Action) => void;
@@ -69,7 +69,7 @@ type State = {
   api: ApiPromise | undefined;
   apiError: APIError | undefined;
   apiStatus: ApiStatus;
-  selectedAccount: _KeyringPair | undefined;
+  selectedAccount: KeyringPair | undefined;
   accounts: Array<InjectedAccountWithMeta>;
   extensions: Array<InjectedExtension>;
 };
@@ -83,14 +83,15 @@ type SubstrateProviderProps = {
 };
 interface SubstrateStateContextInterface {
   state: State;
-  setSelectedAccount: (newAccount: KeyringPair) => Promise<void>;
+  setSelectedAccount: (newAccount: PolkadotKeyringPair) => Promise<void>;
   removeSelectedAccount: () => void;
 }
 
 export type {
-  _KeyringPair,
+  KeyringPair as _KeyringPair,
   Action,
   Dispatch,
+  PolkadotKeyringPair,
   SecureState,
   State,
   SubstrateProviderProps,

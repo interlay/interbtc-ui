@@ -1,7 +1,6 @@
 import { createInterBtcApi } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
-import { KeyringPair } from '@polkadot/keyring/types';
 import { TypeRegistry } from '@polkadot/types/create';
 import jsonrpc from '@polkadot/types/interfaces/jsonrpc';
 import { keyring } from '@polkadot/ui-keyring';
@@ -20,6 +19,7 @@ import {
   ApiStatus,
   Dispatch,
   KeyringStatus,
+  PolkadotKeyringPair,
   State,
   SubstrateProviderProps,
   SubstrateStateContextInterface
@@ -220,7 +220,7 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   }, [selectedAccountAddress, accounts, removeSelectedAccount, keyringStatus]);
 
   const setSelectedAccount = React.useCallback(
-    async (newAccount: KeyringPair) => {
+    async (newAccount: PolkadotKeyringPair) => {
       if (!setLSValue) return;
 
       const typedNewAccount = newAccount as _KeyringPair;
