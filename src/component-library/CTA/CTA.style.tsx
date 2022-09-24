@@ -21,6 +21,7 @@ const BaseCTA = styled.button<StyledCTAProps>`
   padding: ${(props) => theme.cta[props.$size].padding};
   text-decoration: none;
   width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
+  background: none;
 
   &[aria-disabled='true'],
   &[disabled] {
@@ -46,7 +47,6 @@ const SecondaryCTA = styled(BaseCTA)`
 const OutlinedCTA = styled(BaseCTA)`
   color: ${theme.cta.outlined.text};
   border: ${theme.cta.outlined.border};
-  background: none;
 
   &:hover:not([disabled]) {
     background-color: ${theme.cta.outlined.bgHover};
@@ -54,7 +54,6 @@ const OutlinedCTA = styled(BaseCTA)`
 `;
 
 const TextCTA = styled(BaseCTA)`
-  background-color: transparent;
   color: ${theme.cta.text.text};
 
   &:hover:not([disabled]) {
