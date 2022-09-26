@@ -9,6 +9,7 @@ import { AvailableVaultData, useGetAvailableVaults } from '@/utils/hooks/api/vau
 import { CreateVaultWizard } from '../CreateVaultWizard';
 import { VaultsTable, VaultsTableProps, VaultsTableRow } from '../VaultsTable/VaultsTable';
 
+// Can this be consolidated with the vault account check at the app level?
 const isVaultInstalled = (vaults: VaultData[], currentVault: AvailableVaultData) =>
   vaults?.some((vault) => vault.collateralId === currentVault.collateralCurrency.ticker);
 
