@@ -48,7 +48,7 @@ const VaultOverview = (): JSX.Element => {
                 collateralSymbol={vault.collateralId}
                 wrappedSymbol={vault.wrappedId}
                 pendingRequests={formatNumber(vault.pendingRequests)}
-                apy={formatPercentage(vault.apy.toNumber() / 100)}
+                apy={formatPercentage(vault.apy.toNumber())}
                 collateralScore={vault.collateralization ? formatPercentage(vault.collateralization.toNumber()) : '∞'}
                 link={`${accountAddress}/${vault.collateralId}/${vault.wrappedId}`}
                 atRisk={vault.vaultAtRisk}
