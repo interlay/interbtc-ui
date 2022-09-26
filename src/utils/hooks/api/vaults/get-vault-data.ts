@@ -161,7 +161,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
   const pendingRequests = issuesCount.data.issuesConnection.totalCount + redeemsCount.data.redeemsConnection.totalCount;
 
   return {
-    apy,
+    apy: apy.mul(100),
     collateralization: collateralization?.mul(100),
     issuableTokens,
     issuedTokens: {
