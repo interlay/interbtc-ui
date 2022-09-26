@@ -106,7 +106,7 @@ const VaultCollateral = ({
   ]);
 
   const isInfinityCollateralization = !collateralScore;
-  const score = collateralScore?.mul(100).toNumber() ?? 0;
+  const score = collateralScore?.toNumber() ?? 0;
   const collateralStatus = getCollateralStatus(score, ranges, isInfinityCollateralization);
   const collateralLabel = getVaultCollateralLabel(collateralStatus, ranges);
 
