@@ -162,7 +162,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
 
   return {
     apy,
-    collateralization,
+    collateralization: collateralization?.mul(100),
     issuableTokens,
     issuedTokens: {
       raw: vaultExt.issuedTokens,
