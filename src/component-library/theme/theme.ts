@@ -52,7 +52,6 @@ const theme = {
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)',
-    spacing24: 'var(--spacing-24)',
     spacing28: 'var(--spacing-28)'
   },
   rounded: {
@@ -233,6 +232,9 @@ const theme = {
     large: {
       width: '5.625rem'
     }
+  },
+  tokenInput: {
+    height: '4.813rem'
   }
 };
 

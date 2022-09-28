@@ -6,13 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import {
-  displayMonetaryAmount,
-  formatDateTimePrecise,
-  formatNumber,
-  shortAddress,
-  shortTxId
-} from '@/common/utils/utils';
+import { formatDateTimePrecise, formatNumber, shortAddress, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -94,7 +88,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
-          return <>{displayMonetaryAmount(redeem.request.requestedAmountBacking)}</>;
+          return <>{redeem.request.requestedAmountBacking.toHuman(8)}</>;
         }
       },
       {

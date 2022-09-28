@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import IssuedChart from '@/pages/Dashboard/IssuedChart';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -27,7 +27,7 @@ const WrappedTokenCard = (): JSX.Element => {
               <StatsDt>{t('dashboard.issue.issued')}</StatsDt>
               <StatsDd>
                 {t('dashboard.issue.total_interbtc', {
-                  amount: displayMonetaryAmount(totalWrappedTokenAmount),
+                  amount: totalWrappedTokenAmount.toHuman(8),
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                 })}
               </StatsDd>

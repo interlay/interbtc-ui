@@ -84,9 +84,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         })}
       </p>
       <p className='font-medium'>
-        <span className={getColorShade('red')}>
-          {`${displayMonetaryAmount(burnedBTCAmount)} ${WRAPPED_TOKEN_SYMBOL}`}
-        </span>
+        <span className={getColorShade('red')}>{`${burnedBTCAmount.toHuman(8)} ${WRAPPED_TOKEN_SYMBOL}`}</span>
         <span>
           &nbsp;
           {`(≈ ${displayMonetaryAmountInUSDFormat(

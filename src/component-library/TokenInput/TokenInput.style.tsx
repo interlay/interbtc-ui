@@ -4,21 +4,27 @@ import { NumberInput } from '../NumberInput';
 import { theme } from '../theme';
 import { TokenBalance } from '../TokenBalance';
 
-const TokenFieldInnerWrapper = styled.div`
+const TokenInputInnerWrapper = styled.div`
   position: relative;
 `;
 
-const TokenFieldSymbol = styled.span`
+const TokenInputSymbol = styled.span`
   font-size: ${theme.text.xl2};
   color: ${theme.colors.textTertiary};
   font-weight: ${theme.fontWeight.medium};
 `;
 
-const TokenFieldInput = styled(NumberInput)`
-  font-size: ${theme.text.xl5};
+type TokenInputInputProps = {
+  $isOverflowing?: boolean;
+};
+
+const TokenInputInput = styled(NumberInput)<TokenInputInputProps>`
+  height: ${theme.tokenInput.height};
+  max-height: ${theme.tokenInput.height};
+  font-size: ${({ $isOverflowing }) => ($isOverflowing ? theme.text.xl2 : theme.text.xl5)};
 `;
 
-const TokenFieldUSD = styled.span`
+const TokenInputUSD = styled.span`
   display: block;
   font-size: ${theme.text.lg};
   color: ${theme.colors.textTertiary};
@@ -37,4 +43,4 @@ const StyledTokenBalance = styled(TokenBalance)`
   line-height: ${theme.lineHeight.s};
 `;
 
-export { StyledTokenBalance, TokenAdornment, TokenFieldInnerWrapper, TokenFieldInput, TokenFieldSymbol, TokenFieldUSD };
+export { StyledTokenBalance, TokenAdornment, TokenInputInnerWrapper, TokenInputInput, TokenInputSymbol, TokenInputUSD };

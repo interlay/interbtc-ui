@@ -255,9 +255,8 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     setSubmittedRequest(undefined);
   };
 
-  const vaultBalance = displayMonetaryAmount(vaultCapacity);
   const handleClickVaultBalance = async () => {
-    setValue(WRAPPED_TOKEN_AMOUNT, vaultBalance);
+    setValue(WRAPPED_TOKEN_AMOUNT, vaultCapacity.toString());
     await trigger(WRAPPED_TOKEN_AMOUNT);
   };
 
@@ -282,7 +281,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
             <p>
               {t('vault.max_capacity')}{' '}
               <InterlayButtonBase type='button' onClick={handleClickVaultBalance}>
-                <strong>{vaultBalance} BTC</strong>
+                <strong>{vaultCapacity.toHuman(8)} BTC</strong>
               </InterlayButtonBase>
             </p>
             <p>{t('vault.issue_amount')}</p>

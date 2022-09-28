@@ -74,7 +74,7 @@ const getRemainingCapacity = (issuableTokens: Big, vaultExt: VaultExt): number =
 
   const totalTokens = issuableTokens.add(backedTokens);
 
-  return issuableTokens.div(totalTokens).toNumber();
+  return issuableTokens.div(totalTokens).mul(100).toNumber();
 };
 
 const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
@@ -162,7 +162,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
 
   return {
     apy,
-    collateralization,
+    collateralization: collateralization?.mul(100),
     issuableTokens,
     issuedTokens: {
       raw: vaultExt.issuedTokens,

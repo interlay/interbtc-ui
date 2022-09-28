@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
+import { formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import FormTitle from '@/components/FormTitle';
@@ -134,7 +135,12 @@ const TransferForm = (): JSX.Element => {
           >
             Transferable balance:
             <InterlayButtonBase className={clsx('ml-1')} type='button' onClick={handleClickBalance}>
-              {activeToken?.transferableBalance || 0}
+              {activeToken?.transferableBalance
+                ? formatNumber(Number(activeToken.transferableBalance), {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 5
+                  })
+                : 0}
             </InterlayButtonBase>
           </p>
           <div className={clsx('flex', 'gap-2')}>
