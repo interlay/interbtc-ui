@@ -40,7 +40,6 @@ const useTokenBalance = (token: CurrencyExt, accountAddress: string | undefined)
   };
 };
 
-// ray test touch <
 interface UseWrappedTokenBalance {
   wrappedTokenBalanceIdle: UseQueryResult<ChainBalance, Error>['isIdle'];
   wrappedTokenBalanceLoading: UseQueryResult<ChainBalance, Error>['isLoading'];
@@ -72,7 +71,6 @@ const useWrappedTokenBalanceInvalidate = (accountAddress?: string): (() => void)
       }
     : undefined;
 };
-// ray test touch >
 
 interface UseGovernanceTokenBalance {
   governanceTokenBalanceIdle: UseQueryResult<ChainBalance, Error>['isIdle'];

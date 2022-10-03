@@ -11,10 +11,6 @@ export const IS_FAUCET_LOADED = 'IS_FAUCET_LOADED';
 export const IS_VAULT_CLIENT_LOADED = 'IS_VAULT_CLIENT_LOADED';
 export const INIT_STATE = 'INIT_STATE';
 export const INIT_GENERAL_DATA_ACTION = 'INIT_GENERAL_DATA_ACTION';
-// ray test touch <
-export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
-export const UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE';
-// ray test touch >
 export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
@@ -63,18 +59,6 @@ export interface InitGeneralDataAction {
   parachainStatus: ParachainStatus;
 }
 
-// ray test touch <
-export interface UpdateBalancePolkaBTC {
-  type: typeof UPDATE_BALANCE_POLKA_BTC;
-  wrappedTokenBalance: BitcoinAmount;
-}
-
-export interface UpdateWrappedTokenTransferableBalance {
-  type: typeof UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE;
-  wrappedTokenTransferableBalance: BitcoinAmount;
-}
-// ray test touch >
-
 export interface UpdateCollateralTokenBalance {
   type: typeof UPDATE_COLLATERAL_TOKEN_BALANCE;
   collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>;
@@ -94,10 +78,6 @@ export type GeneralActions =
   | IsBridgeLoaded
   | InitGeneralDataAction
   | IsVaultClientLoaded
-  // ray test touch <
-  | UpdateBalancePolkaBTC
-  | UpdateWrappedTokenTransferableBalance
-  // ray test touch >
   | UpdateCollateralTokenBalance
   | UpdateCollateralTokenTransferableBalance
   | ShowAccountModal
