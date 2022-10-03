@@ -8,13 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  showAccountModalAction,
-  // ray test touch <
-  updateCollateralTokenBalanceAction,
-  // ray test touch >
-  updateWrappedTokenBalanceAction
-} from '@/common/actions/general.actions';
+import { showAccountModalAction, updateWrappedTokenBalanceAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -55,7 +49,7 @@ const BurnForm = (): JSX.Element | null => {
   const handleError = useErrorHandler();
 
   const { selectedAccount } = useSubstrateSecureState();
-  const { bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus } = useSelector(
+  const { bridgeLoaded, wrappedTokenBalance, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
 
@@ -124,12 +118,7 @@ const BurnForm = (): JSX.Element | null => {
         dispatch(
           updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT])))
         );
-        const earnedCollateralTokenAmount = burnRate.toCounter(
-          new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero()
-        );
-        // ray test touch <
-        dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedCollateralTokenAmount)));
-        // ray test touch >
+        burnRate.toCounter(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero());
         reset({
           [WRAPPED_TOKEN_AMOUNT]: ''
         });
