@@ -15,10 +15,6 @@ import {
   isVaultClientLoaded,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction
-  // ray test touch <
-  // updateWrappedTokenBalanceAction,
-  // updateWrappedTokenTransferableBalanceAction
-  // ray test touch >
 } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -213,9 +209,7 @@ const App = (): JSX.Element => {
     };
   }, [dispatch, bridgeLoaded, selectedAccount, collateralTokenBalance, collateralTokenTransferableBalance]);
 
-  // ray test touch <
   const wrappedTokenBalanceInvalidate = useWrappedTokenBalanceInvalidate();
-  // ray test touch >
 
   // Subscribes to wrapped token balance
   React.useEffect(() => {
@@ -259,9 +253,7 @@ const App = (): JSX.Element => {
         unsubscribeWrappedTokenBalance.current = null;
       }
     };
-    // ray test touch <
   }, [bridgeLoaded, selectedAccount, wrappedTokenBalanceInvalidate]);
-  // ray test touch >
 
   const governanceTokenBalanceInvalidate = useGovernanceTokenBalanceInvalidate();
 
