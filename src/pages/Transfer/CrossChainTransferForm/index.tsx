@@ -152,7 +152,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (relayChainNativeTokenBalance === undefined) {
       throw new Error('Something went wrong!');
     }
-
     // TODO: we need to handle and validate transfer fees properly. Implemented here initially
     // because it was an issue during testing.
     if (relayChainNativeTokenBalance.transferable.lt(transferAmount)) {
