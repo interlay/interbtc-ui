@@ -13,9 +13,6 @@ import {
   initGeneralDataAction,
   isFaucetLoaded,
   isVaultClientLoaded,
-  updateCollateralTokenBalanceAction,
-  updateCollateralTokenTransferableBalanceAction,
-  // ray test touch >
   updateWrappedTokenBalanceAction,
   updateWrappedTokenTransferableBalanceAction
 } from '@/common/actions/general.actions';
@@ -26,7 +23,10 @@ import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/con
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
+import {
+  useGovernanceTokenBalanceInvalidate,
+  useRelayChainNativeTokenBalanceInvalidate
+} from '@/services/hooks/use-token-balance';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
@@ -55,10 +55,10 @@ const App = (): JSX.Element => {
   const {
     bridgeLoaded,
     wrappedTokenBalance,
-    wrappedTokenTransferableBalance,
+    wrappedTokenTransferableBalance
     // ray test touch <
-    collateralTokenBalance,
-    collateralTokenTransferableBalance
+    // collateralTokenBalance,
+    // collateralTokenTransferableBalance
     // ray test touch >
   } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -170,26 +170,27 @@ const App = (): JSX.Element => {
     }
   }, [setSelectedAccount, extensions.length]);
 
+  const relayChainNativeTokenBalanceInvalidate = useRelayChainNativeTokenBalanceInvalidate();
+
   // Subscribes to relay-chain native token balance
   React.useEffect(() => {
-    if (!dispatch) return;
     if (!bridgeLoaded) return;
     if (!selectedAccount) return;
+    if (!relayChainNativeTokenBalanceInvalidate) return;
 
     (async () => {
       try {
-        const unsubscribe = await window.bridge.tokens.subscribeToBalance(
-          RELAY_CHAIN_NATIVE_TOKEN,
-          selectedAccount.address,
-          (_: string, balance: ChainBalance) => {
-            if (!balance.free.eq(collateralTokenBalance)) {
-              dispatch(updateCollateralTokenBalanceAction(balance.free));
-            }
-            if (!balance.transferable.eq(collateralTokenTransferableBalance)) {
-              dispatch(updateCollateralTokenTransferableBalanceAction(balance.transferable));
-            }
-          }
-        );
+        const unsubscribe = await window.bridge.tokens.subscribeToBalance(RELAY_CHAIN_NATIVE_TOKEN, selectedAccount.address, () => {
+          // ray test touch <
+          relayChainNativeTokenBalanceInvalidate();
+          // if (!balance.free.eq(collateralTokenBalance)) {
+          //   dispatch(updateCollateralTokenBalanceAction(balance.free));
+          // }
+          // if (!balance.transferable.eq(collateralTokenTransferableBalance)) {
+          //   dispatch(updateCollateralTokenTransferableBalanceAction(balance.transferable));
+          // }
+          // ray test touch >
+        });
 
         if (unsubscribeCollateralTokenBalance.current) {
           unsubscribeCollateralTokenBalance.current();
@@ -207,7 +208,8 @@ const App = (): JSX.Element => {
         unsubscribeCollateralTokenBalance.current = null;
       }
     };
-  }, [dispatch, bridgeLoaded, selectedAccount, collateralTokenBalance, collateralTokenTransferableBalance]);
+  }, [bridgeLoaded, selectedAccount, relayChainNativeTokenBalanceInvalidate]);
+  // ray test touch >
 
   // Subscribes to wrapped token balance
   React.useEffect(() => {
