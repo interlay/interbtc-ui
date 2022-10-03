@@ -18,7 +18,7 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+import { useGovernanceTokenBalance, useWrappedTokenBalance } from '@/services/hooks/use-token-balance';
 
 import TokenSelector from './TokenSelector';
 
@@ -60,12 +60,16 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 
   const {
     collateralTokenBalance,
-    collateralTokenTransferableBalance,
+    collateralTokenTransferableBalance
     // ray test touch <
-    wrappedTokenBalance,
-    wrappedTokenTransferableBalance
+    // wrappedTokenBalance,
+    // wrappedTokenTransferableBalance
     // ray test touch >
   } = useSelector((state: StoreType) => state.general);
+
+  // ray test touch <
+  const { wrappedTokenBalance } = useWrappedTokenBalance();
+  // ray test touch >
 
   const { governanceTokenBalance } = useGovernanceTokenBalance();
 
@@ -92,8 +96,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
         token: WRAPPED_TOKEN,
         type: TokenType.Wrapped,
         // ray test touch <
-        balance: wrappedTokenBalance.toHuman(8),
-        transferableBalance: wrappedTokenTransferableBalance.toHuman(8),
+        balance: wrappedTokenBalance ? wrappedTokenBalance.free.toHuman(8) : '-',
+        transferableBalance: wrappedTokenBalance ? wrappedTokenBalance.transferable.toHuman(8) : '-',
         // ray test touch >
         icon: <WrappedTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
@@ -114,7 +118,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     collateralTokenTransferableBalance,
     // ray test touch <
     wrappedTokenBalance,
-    wrappedTokenTransferableBalance,
+    // wrappedTokenTransferableBalance,
     // ray test touch >
     governanceTokenBalance,
     variant
