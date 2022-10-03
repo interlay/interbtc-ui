@@ -15,8 +15,10 @@ import {
   isVaultClientLoaded,
   updateCollateralTokenBalanceAction,
   updateCollateralTokenTransferableBalanceAction,
+  // ray test touch <
   updateWrappedTokenBalanceAction,
   updateWrappedTokenTransferableBalanceAction
+  // ray test touch >
 } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -53,8 +55,10 @@ const App = (): JSX.Element => {
 
   const {
     bridgeLoaded,
+    // ray test touch <
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
+    // ray test touch >
     collateralTokenBalance,
     collateralTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
@@ -217,6 +221,7 @@ const App = (): JSX.Element => {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(
           WRAPPED_TOKEN,
           selectedAccount.address,
+          // ray test touch <
           (_: string, balance: ChainBalance) => {
             if (!balance.free.eq(wrappedTokenBalance)) {
               dispatch(updateWrappedTokenBalanceAction(balance.free));
@@ -225,6 +230,7 @@ const App = (): JSX.Element => {
               dispatch(updateWrappedTokenTransferableBalanceAction(balance.transferable));
             }
           }
+          // ray test touch >
         );
         // Unsubscribe if previous subscription is alive
         if (unsubscribeWrappedTokenBalance.current) {
@@ -243,7 +249,9 @@ const App = (): JSX.Element => {
         unsubscribeWrappedTokenBalance.current = null;
       }
     };
+    // ray test touch <
   }, [dispatch, bridgeLoaded, selectedAccount, wrappedTokenBalance, wrappedTokenTransferableBalance]);
+  // ray test touch >
 
   const governanceTokenBalanceInvalidate = useGovernanceTokenBalanceInvalidate();
 

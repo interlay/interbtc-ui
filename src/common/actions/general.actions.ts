@@ -14,18 +14,24 @@ import {
   IsVaultClientLoaded,
   SHOW_ACCOUNT_MODAL,
   ShowAccountModal,
+  // ray test touch <
   UPDATE_BALANCE_POLKA_BTC,
+  // ray test touch >
   UPDATE_COLLATERAL_TOKEN_BALANCE,
   UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
+  // ray test touch <
   UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   UpdateBalancePolkaBTC,
+  // ray test touch >
   UpdateCollateralTokenBalance,
   UpdateCollateralTokenTransferableBalance,
   UpdateHeights,
   UpdateTotals,
+  // ray test touch <
   UpdateWrappedTokenTransferableBalance
+  // ray test touch >
 } from '../types/actions.types';
 import { ParachainStatus } from '../types/util.types';
 
@@ -44,6 +50,7 @@ export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
   isLoaded
 });
 
+// ray test touch <
 export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmount): UpdateBalancePolkaBTC => ({
   type: UPDATE_BALANCE_POLKA_BTC,
   wrappedTokenBalance
@@ -55,6 +62,7 @@ export const updateWrappedTokenTransferableBalanceAction = (
   type: UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   wrappedTokenTransferableBalance
 });
+// ray test touch >
 
 export const updateCollateralTokenBalanceAction = (
   collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>

@@ -64,9 +64,11 @@ const RedeemForm = (): JSX.Element | null => {
 
   const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
   const { selectedAccount } = useSubstrateSecureState();
+  // ray test touch <
   const { wrappedTokenBalance, bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
+  // ray test touch >
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
 
   const {
@@ -259,9 +261,11 @@ const RedeemForm = (): JSX.Element | null => {
         handleSubmittedRequestModalOpen(redeemRequest);
         setSubmitStatus(STATUSES.RESOLVED);
 
+        // ray test touch <
         dispatch(
           updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT])))
         );
+        // ray test touch >
       } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
@@ -271,9 +275,11 @@ const RedeemForm = (): JSX.Element | null => {
     const validateForm = (value: string): string | undefined => {
       const parsedValue = new BitcoinAmount(value);
 
+      // ray test touch <
       if (parsedValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
       }
+      // ray test touch >
 
       if (parsedValue.gte(maxRedeemableCapacity)) {
         return `${t('redeem_page.request_exceeds_capacity', {
