@@ -4,7 +4,7 @@ import { useQuery, useQueryClient, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -40,6 +40,40 @@ const useTokenBalance = (token: CurrencyExt, accountAddress: string | undefined)
   };
 };
 
+// ray test touch <
+interface UseWrappedTokenBalance {
+  wrappedTokenBalanceIdle: UseQueryResult<ChainBalance, Error>['isIdle'];
+  wrappedTokenBalanceLoading: UseQueryResult<ChainBalance, Error>['isLoading'];
+  wrappedTokenBalance: UseQueryResult<ChainBalance, Error>['data'];
+}
+
+const useWrappedTokenBalance = (accountAddress?: string): UseWrappedTokenBalance => {
+  const {
+    tokenBalanceIdle: wrappedTokenBalanceIdle,
+    tokenBalanceLoading: wrappedTokenBalanceLoading,
+    tokenBalance: wrappedTokenBalance
+  } = useTokenBalance(WRAPPED_TOKEN, accountAddress);
+
+  return {
+    wrappedTokenBalanceIdle,
+    wrappedTokenBalanceLoading,
+    wrappedTokenBalance
+  };
+};
+
+const useWrappedTokenBalanceInvalidate = (accountAddress?: string): (() => void) | undefined => {
+  const accountId = useAccountId(accountAddress);
+
+  const queryClient = useQueryClient();
+
+  return accountId
+    ? () => {
+        queryClient.invalidateQueries([GENERIC_FETCHER, 'tokens', 'balance', WRAPPED_TOKEN, accountId]);
+      }
+    : undefined;
+};
+// ray test touch >
+
 interface UseGovernanceTokenBalance {
   governanceTokenBalanceIdle: UseQueryResult<ChainBalance, Error>['isIdle'];
   governanceTokenBalanceLoading: UseQueryResult<ChainBalance, Error>['isLoading'];
@@ -73,6 +107,11 @@ const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => vo
 };
 
 // MEMO: should wrap components with `withErrorBoundary` from `react-error-boundary` where these hooks are placed for nearest error handling
-export { useGovernanceTokenBalance, useGovernanceTokenBalanceInvalidate };
+export {
+  useGovernanceTokenBalance,
+  useGovernanceTokenBalanceInvalidate,
+  useWrappedTokenBalance,
+  useWrappedTokenBalanceInvalidate
+};
 
 export default useTokenBalance;
