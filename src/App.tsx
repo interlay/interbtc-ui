@@ -14,10 +14,10 @@ import {
   isFaucetLoaded,
   isVaultClientLoaded,
   updateCollateralTokenBalanceAction,
-  updateCollateralTokenTransferableBalanceAction,
+  updateCollateralTokenTransferableBalanceAction
   // ray test touch <
-  updateWrappedTokenBalanceAction,
-  updateWrappedTokenTransferableBalanceAction
+  // updateWrappedTokenBalanceAction,
+  // updateWrappedTokenTransferableBalanceAction
   // ray test touch >
 } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
@@ -27,7 +27,10 @@ import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/con
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import { useGovernanceTokenBalanceInvalidate } from '@/services/hooks/use-token-balance';
+import {
+  useGovernanceTokenBalanceInvalidate,
+  useWrappedTokenBalanceInvalidate
+} from '@/services/hooks/use-token-balance';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
@@ -56,8 +59,8 @@ const App = (): JSX.Element => {
   const {
     bridgeLoaded,
     // ray test touch <
-    wrappedTokenBalance,
-    wrappedTokenTransferableBalance,
+    // wrappedTokenBalance,
+    // wrappedTokenTransferableBalance,
     // ray test touch >
     collateralTokenBalance,
     collateralTokenTransferableBalance
@@ -210,11 +213,15 @@ const App = (): JSX.Element => {
     };
   }, [dispatch, bridgeLoaded, selectedAccount, collateralTokenBalance, collateralTokenTransferableBalance]);
 
+  // ray test touch <
+  const wrappedTokenBalanceInvalidate = useWrappedTokenBalanceInvalidate();
+  // ray test touch >
+
   // Subscribes to wrapped token balance
   React.useEffect(() => {
-    if (!dispatch) return;
     if (!bridgeLoaded) return;
     if (!selectedAccount) return;
+    if (!wrappedTokenBalanceInvalidate) return;
 
     (async () => {
       try {
@@ -222,14 +229,17 @@ const App = (): JSX.Element => {
           WRAPPED_TOKEN,
           selectedAccount.address,
           // ray test touch <
-          (_: string, balance: ChainBalance) => {
-            if (!balance.free.eq(wrappedTokenBalance)) {
-              dispatch(updateWrappedTokenBalanceAction(balance.free));
-            }
-            if (!balance.transferable.eq(wrappedTokenTransferableBalance)) {
-              dispatch(updateWrappedTokenTransferableBalanceAction(balance.transferable));
-            }
+          () => {
+            wrappedTokenBalanceInvalidate();
           }
+          // (_: string, balance: ChainBalance) => {
+          //   if (!balance.free.eq(wrappedTokenBalance)) {
+          //     dispatch(updateWrappedTokenBalanceAction(balance.free));
+          //   }
+          //   if (!balance.transferable.eq(wrappedTokenTransferableBalance)) {
+          //     dispatch(updateWrappedTokenTransferableBalanceAction(balance.transferable));
+          //   }
+          // }
           // ray test touch >
         );
         // Unsubscribe if previous subscription is alive
@@ -250,7 +260,7 @@ const App = (): JSX.Element => {
       }
     };
     // ray test touch <
-  }, [dispatch, bridgeLoaded, selectedAccount, wrappedTokenBalance, wrappedTokenTransferableBalance]);
+  }, [bridgeLoaded, selectedAccount, wrappedTokenBalanceInvalidate]);
   // ray test touch >
 
   const governanceTokenBalanceInvalidate = useGovernanceTokenBalanceInvalidate();
