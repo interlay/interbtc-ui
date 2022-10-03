@@ -60,7 +60,6 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenB
   };
 };
 
-// ray test touch <
 interface UseRelayChainNativeTokenBalance {
   relayChainNativeTokenBalanceIdle: UseQueryResult<ChainBalance, Error>['isIdle'];
   relayChainNativeTokenBalanceLoading: UseQueryResult<ChainBalance, Error>['isLoading'];
@@ -80,7 +79,6 @@ const useRelayChainNativeTokenBalance = (accountAddress?: string): UseRelayChain
     relayChainNativeTokenBalance
   };
 };
-// ray test touch >
 
 const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => void) | undefined => {
   const accountId = useAccountId(accountAddress);
@@ -94,7 +92,6 @@ const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => vo
     : undefined;
 };
 
-// ray test touch <
 const useRelayChainNativeTokenBalanceInvalidate = (accountAddress?: string): (() => void) | undefined => {
   const accountId = useAccountId(accountAddress);
 
@@ -106,7 +103,6 @@ const useRelayChainNativeTokenBalanceInvalidate = (accountAddress?: string): (()
       }
     : undefined;
 };
-// ray test touch >
 
 // MEMO: should wrap components with `withErrorBoundary` from `react-error-boundary` where these hooks are placed for nearest error handling
 export {
