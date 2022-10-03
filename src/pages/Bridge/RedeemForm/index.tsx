@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { showAccountModalAction, updateWrappedTokenBalanceAction } from '@/common/actions/general.actions';
+import { showAccountModalAction } from '@/common/actions/general.actions';
 import { togglePremiumRedeemAction } from '@/common/actions/redeem.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import {
@@ -38,6 +38,7 @@ import {
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '@/constants';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
+import { useWrappedTokenBalance } from '@/services/hooks/use-token-balance';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
@@ -65,11 +66,15 @@ const RedeemForm = (): JSX.Element | null => {
   const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
   const { selectedAccount } = useSubstrateSecureState();
   // ray test touch <
-  const { wrappedTokenBalance, bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+  const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
   // ray test touch >
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
+
+  // ray test touch <
+  const { wrappedTokenBalance } = useWrappedTokenBalance();
+  // ray test touch >
 
   const {
     register,
@@ -260,12 +265,6 @@ const RedeemForm = (): JSX.Element | null => {
         const redeemRequest = result[0];
         handleSubmittedRequestModalOpen(redeemRequest);
         setSubmitStatus(STATUSES.RESOLVED);
-
-        // ray test touch <
-        dispatch(
-          updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT])))
-        );
-        // ray test touch >
       } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
@@ -276,8 +275,12 @@ const RedeemForm = (): JSX.Element | null => {
       const parsedValue = new BitcoinAmount(value);
 
       // ray test touch <
-      if (parsedValue.gt(wrappedTokenBalance)) {
-        return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
+      if (wrappedTokenBalance === undefined) {
+        throw new Error('Something went wrong!');
+      }
+
+      if (parsedValue.gt(wrappedTokenBalance.free)) {
+        return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance.free)}`;
       }
       // ray test touch >
 
