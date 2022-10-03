@@ -94,7 +94,26 @@ const useGovernanceTokenBalanceInvalidate = (accountAddress?: string): (() => vo
     : undefined;
 };
 
+// ray test touch <
+const useRelayChainNativeTokenBalanceInvalidate = (accountAddress?: string): (() => void) | undefined => {
+  const accountId = useAccountId(accountAddress);
+
+  const queryClient = useQueryClient();
+
+  return accountId
+    ? () => {
+        queryClient.invalidateQueries([GENERIC_FETCHER, 'tokens', 'balance', RELAY_CHAIN_NATIVE_TOKEN, accountId]);
+      }
+    : undefined;
+};
+// ray test touch >
+
 // MEMO: should wrap components with `withErrorBoundary` from `react-error-boundary` where these hooks are placed for nearest error handling
-export { useGovernanceTokenBalance, useGovernanceTokenBalanceInvalidate, useRelayChainNativeTokenBalance };
+export {
+  useGovernanceTokenBalance,
+  useGovernanceTokenBalanceInvalidate,
+  useRelayChainNativeTokenBalance,
+  useRelayChainNativeTokenBalanceInvalidate
+};
 
 export default useTokenBalance;
