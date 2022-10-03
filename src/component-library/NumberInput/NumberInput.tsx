@@ -2,7 +2,7 @@ import { useNumberField } from '@react-aria/numberfield';
 import { mergeProps } from '@react-aria/utils';
 import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
-import { forwardRef, useEffect } from 'react';
+import { forwardRef, KeyboardEventHandler, useEffect } from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
@@ -50,13 +50,22 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       return () => input?.removeEventListener('wheel', handleWheel);
     }, [inputRef]);
 
+    const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+      // TODO: add key codes to utils
+      if (e.code === 'Comma') {
+        e.preventDefault();
+      }
+    };
+
+    const otherProps: Partial<NumberInputProps> = { onChange, onKeyDown: handleKeyDown };
+
     return (
       <BaseInput
         ref={inputRef}
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
         labelProps={labelProps}
-        {...mergeProps(props, inputProps, { onChange })}
+        {...mergeProps(props, inputProps, otherProps)}
       />
     );
   }

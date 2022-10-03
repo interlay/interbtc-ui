@@ -16,13 +16,15 @@ const INTERLAY_GOVERNANCE_LINK = 'https://interlay.subsquare.io/';
 const KINTSUGI_GOVERNANCE_LINK = 'https://kintsugi.subsquare.io';
 const INTERLAY_SUBSCAN_LINK = 'https://interlay.subscan.io';
 const KINTSUGI_SUBSCAN_LINK = 'https://kintsugi.subscan.io';
-const INTERLAY_VAULT_DOCS = 'https://docs.interlay.io/#/vault/overview';
+const INTERLAY_VAULT_DOCS_LINK = 'https://docs.interlay.io/#/vault/overview';
+const INTERLAY_DOS_AND_DONTS_DOCS_LINK = 'https://docs.interlay.io/#/vault/installation?id=dos-and-donts';
 
 export {
   INTERLAY_COMPANY_LINK,
   INTERLAY_CROWDLOAN_LINK,
   INTERLAY_DISCORD_LINK,
   INTERLAY_DOCS_LINK,
+  INTERLAY_DOS_AND_DONTS_DOCS_LINK,
   INTERLAY_EMAIL_LINK,
   INTERLAY_GITHUB_LINK,
   INTERLAY_GOVERNANCE_LINK,
@@ -30,7 +32,7 @@ export {
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
   INTERLAY_TWITTER_LINK,
   INTERLAY_USE_WRAPPED_CURRENCY_LINK,
-  INTERLAY_VAULT_DOCS,
+  INTERLAY_VAULT_DOCS_LINK,
   KINTSUGI_CROWDLOAN_LINK,
   KINTSUGI_GOVERNANCE_LINK,
   KINTSUGI_SUBSCAN_LINK,

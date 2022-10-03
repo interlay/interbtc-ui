@@ -14,8 +14,6 @@ export type { InputProps } from './Input';
 export { Input } from './Input';
 export type { ModalProps } from './Modal';
 export { Modal } from './Modal';
-export type { NewVaultsTableProps, NewVaultsTableRow } from './NewVaultsTable';
-export { NewVaultsTable } from './NewVaultsTable';
 export type { NumberInputProps } from './NumberInput';
 export { NumberInput } from './NumberInput';
 export type { StackProps } from './Stack';
