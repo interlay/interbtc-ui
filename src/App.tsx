@@ -183,13 +183,6 @@ const App = (): JSX.Element => {
         const unsubscribe = await window.bridge.tokens.subscribeToBalance(RELAY_CHAIN_NATIVE_TOKEN, selectedAccount.address, () => {
           // ray test touch <
           relayChainNativeTokenBalanceInvalidate();
-          // if (!balance.free.eq(collateralTokenBalance)) {
-          //   dispatch(updateCollateralTokenBalanceAction(balance.free));
-          // }
-          // if (!balance.transferable.eq(collateralTokenTransferableBalance)) {
-          //   dispatch(updateCollateralTokenTransferableBalanceAction(balance.transferable));
-          // }
-          // ray test touch >
         });
 
         if (unsubscribeCollateralTokenBalance.current) {
