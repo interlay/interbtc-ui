@@ -80,9 +80,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
-  // ray test touch <
   const { relayChainNativeTokenBalance } = useRelayChainNativeTokenBalance();
-  // ray test touch >
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
@@ -151,15 +149,13 @@ const CrossChainTransferForm = (): JSX.Element => {
       ? newMonetaryAmount(getExistentialDeposit(api), RELAY_CHAIN_NATIVE_TOKEN)
       : newMonetaryAmount('0', RELAY_CHAIN_NATIVE_TOKEN);
 
-    // TODO: we need to handle and validate transfer fees properly. Implemented here initially
-    // because it was an issue during testing.
-    // ray test touch <
     if (relayChainNativeTokenBalance === undefined) {
       throw new Error('Something went wrong!');
     }
 
+    // TODO: we need to handle and validate transfer fees properly. Implemented here initially
+    // because it was an issue during testing.
     if (relayChainNativeTokenBalance.transferable.lt(transferAmount)) {
-      // ray test touch >
       return t('insufficient_funds');
       // Check transferred amount won't be below existential deposit when fees are deducted
       // This check is redundant if the relay chain balance is above zero
@@ -250,9 +246,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const isRelayChain = fromChain === ChainType.RelayChain;
-  // ray test touch <
   const chainBalance = isRelayChain ? relayChainBalance : relayChainNativeTokenBalance?.transferable;
-  // ray test touch >
   const balance = displayMonetaryAmount(chainBalance);
 
   const handleClickBalance = () => {
