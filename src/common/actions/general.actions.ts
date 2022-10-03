@@ -15,18 +15,10 @@ import {
   SHOW_ACCOUNT_MODAL,
   ShowAccountModal,
   UPDATE_BALANCE_POLKA_BTC,
-  // ray test touch <
-  UPDATE_COLLATERAL_TOKEN_BALANCE,
-  UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
-  // ray test touch >
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
   UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   UpdateBalancePolkaBTC,
-  // ray test touch <
-  UpdateCollateralTokenBalance,
-  UpdateCollateralTokenTransferableBalance,
-  // ray test touch >
   UpdateHeights,
   UpdateTotals,
   UpdateWrappedTokenTransferableBalance
@@ -59,22 +51,6 @@ export const updateWrappedTokenTransferableBalanceAction = (
   type: UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
   wrappedTokenTransferableBalance
 });
-
-// ray test touch <
-export const updateCollateralTokenBalanceAction = (
-  collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>
-): UpdateCollateralTokenBalance => ({
-  type: UPDATE_COLLATERAL_TOKEN_BALANCE,
-  collateralTokenBalance
-});
-
-export const updateCollateralTokenTransferableBalanceAction = (
-  collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>
-): UpdateCollateralTokenTransferableBalance => ({
-  type: UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
-  collateralTokenTransferableBalance
-});
-// ray test touch >
 
 export const initGeneralDataAction = (
   totalWrappedTokenAmount: BitcoinAmount,

@@ -10,10 +10,6 @@ import {
   IS_VAULT_CLIENT_LOADED,
   SHOW_ACCOUNT_MODAL,
   UPDATE_BALANCE_POLKA_BTC,
-  // ray test touch <
-  UPDATE_COLLATERAL_TOKEN_BALANCE,
-  UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
-  // ray test touch >
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
   UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE
@@ -29,9 +25,6 @@ const initialState = {
   totalLockedCollateralTokenAmount: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   wrappedTokenBalance: BitcoinAmount.zero(),
   wrappedTokenTransferableBalance: BitcoinAmount.zero(),
-  // ray test touch <
-  collateralTokenBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
-  collateralTokenTransferableBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
@@ -66,12 +59,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       };
     case IS_VAULT_CLIENT_LOADED:
       return { ...state, vaultClientLoaded: action.isLoaded };
-    // ray test touch <
-    case UPDATE_COLLATERAL_TOKEN_BALANCE:
-      return { ...state, collateralTokenBalance: action.collateralTokenBalance };
-    case UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE:
-      return { ...state, collateralTokenTransferableBalance: action.collateralTokenTransferableBalance };
-    // ray test touch >
     case UPDATE_BALANCE_POLKA_BTC:
       return { ...state, wrappedTokenBalance: action.wrappedTokenBalance };
     case UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE:

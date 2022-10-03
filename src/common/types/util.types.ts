@@ -67,9 +67,6 @@ export type GeneralState = {
   totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
   wrappedTokenBalance: BitcoinAmount;
   wrappedTokenTransferableBalance: BitcoinAmount;
-  // ray test touch <
-  collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>;
-  collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>;
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
