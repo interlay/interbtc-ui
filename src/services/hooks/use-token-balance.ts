@@ -62,9 +62,9 @@ const useGovernanceTokenBalance = (accountAddress?: string): UseGovernanceTokenB
 
 // ray test touch <
 interface UseRelayChainNativeTokenBalance {
-  relayChainNativeTokenBalanceIdle: UseQueryResult<ChainBalance<CollateralUnit>, Error>['isIdle'];
-  relayChainNativeTokenBalanceLoading: UseQueryResult<ChainBalance<CollateralUnit>, Error>['isLoading'];
-  relayChainNativeTokenBalance: UseQueryResult<ChainBalance<CollateralUnit>, Error>['data'];
+  relayChainNativeTokenBalanceIdle: UseQueryResult<ChainBalance, Error>['isIdle'];
+  relayChainNativeTokenBalanceLoading: UseQueryResult<ChainBalance, Error>['isLoading'];
+  relayChainNativeTokenBalance: UseQueryResult<ChainBalance, Error>['data'];
 }
 
 const useRelayChainNativeTokenBalance = (accountAddress?: string): UseRelayChainNativeTokenBalance => {
@@ -72,7 +72,7 @@ const useRelayChainNativeTokenBalance = (accountAddress?: string): UseRelayChain
     tokenBalanceIdle: relayChainNativeTokenBalanceIdle,
     tokenBalanceLoading: relayChainNativeTokenBalanceLoading,
     tokenBalance: relayChainNativeTokenBalance
-  } = useTokenBalance<CollateralUnit>(RELAY_CHAIN_NATIVE_TOKEN, accountAddress);
+  } = useTokenBalance(RELAY_CHAIN_NATIVE_TOKEN, accountAddress);
 
   return {
     relayChainNativeTokenBalanceIdle,
