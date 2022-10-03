@@ -58,18 +58,11 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     }
   }, [tokenOptions, currentToken, getTokenOption, callbackFunction]);
 
-  const {
-    collateralTokenBalance,
-    collateralTokenTransferableBalance
-    // ray test touch <
-    // wrappedTokenBalance,
-    // wrappedTokenTransferableBalance
-    // ray test touch >
-  } = useSelector((state: StoreType) => state.general);
+  const { collateralTokenBalance, collateralTokenTransferableBalance } = useSelector(
+    (state: StoreType) => state.general
+  );
 
-  // ray test touch <
   const { wrappedTokenBalance } = useWrappedTokenBalance();
-  // ray test touch >
 
   const { governanceTokenBalance } = useGovernanceTokenBalance();
 
@@ -95,10 +88,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       {
         token: WRAPPED_TOKEN,
         type: TokenType.Wrapped,
-        // ray test touch <
         balance: wrappedTokenBalance ? wrappedTokenBalance.free.toHuman(8) : '-',
         transferableBalance: wrappedTokenBalance ? wrappedTokenBalance.transferable.toHuman(8) : '-',
-        // ray test touch >
         icon: <WrappedTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
       },
@@ -116,10 +107,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   }, [
     collateralTokenBalance,
     collateralTokenTransferableBalance,
-    // ray test touch <
     wrappedTokenBalance,
-    // wrappedTokenTransferableBalance,
-    // ray test touch >
     governanceTokenBalance,
     variant
   ]);
