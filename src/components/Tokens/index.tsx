@@ -58,20 +58,11 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     }
   }, [tokenOptions, currentToken, getTokenOption, callbackFunction]);
 
-  const {
-    // ray test touch <
-    // collateralTokenBalance,
-    // collateralTokenTransferableBalance,
-    // ray test touch >
-    wrappedTokenBalance,
-    wrappedTokenTransferableBalance
-  } = useSelector((state: StoreType) => state.general);
+  const { wrappedTokenBalance, wrappedTokenTransferableBalance } = useSelector((state: StoreType) => state.general);
 
   const { governanceTokenBalance } = useGovernanceTokenBalance();
 
-  // ray test touch <
   const { relayChainNativeTokenBalance } = useRelayChainNativeTokenBalance();
-  // ray test touch >
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
@@ -87,10 +78,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       {
         token: RELAY_CHAIN_NATIVE_TOKEN,
         type: TokenType.RelayChainNative,
-        // ray test touch <
         balance: relayChainNativeTokenBalance ? relayChainNativeTokenBalance.free.toHuman(5) : '-',
         transferableBalance: relayChainNativeTokenBalance ? relayChainNativeTokenBalance.transferable.toHuman(5) : '-',
-        // ray test touch >
         icon: <RelayChainNativeTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
       },
@@ -114,10 +103,6 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 
     setTokenOptions(tokenOptions);
   }, [
-    // ray test touch <
-    // collateralTokenBalance,
-    // collateralTokenTransferableBalance,
-    // ray test touch >
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
     governanceTokenBalance,
