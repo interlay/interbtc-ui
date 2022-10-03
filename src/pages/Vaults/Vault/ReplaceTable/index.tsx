@@ -1,6 +1,5 @@
 import {
   CollateralCurrencyExt,
-  CollateralIdLiteral,
   InterbtcPrimitivesVaultId,
   ReplaceRequestExt,
   stripHexPrefix,
@@ -17,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
+import { shortAddress } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -35,10 +34,10 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 
 interface Props {
   vaultAddress: string;
-  collateralTokenIdLiteral: CollateralIdLiteral;
+  collateralTokenTicker: string;
 }
 
-const ReplaceTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.Element => {
+const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Element => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -52,7 +51,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.El
     [GENERIC_FETCHER, 'replace', 'mapReplaceRequests', vaultId],
     genericFetcher<Map<H256, ReplaceRequestExt>>(),
     {
-      enabled: !!bridgeLoaded && !!collateralTokenIdLiteral,
+      enabled: !!bridgeLoaded && !!collateralTokenTicker,
       refetchInterval: 10000
     }
   );
@@ -102,7 +101,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.El
         accessor: 'amount',
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: MonetaryAmount<WrappedCurrency> }) {
-          return <>{displayMonetaryAmount(value)}</>;
+          return <>{value.toHuman(8)}</>;
         }
       },
       {
@@ -110,7 +109,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.El
         accessor: 'collateral',
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: MonetaryAmount<CollateralCurrencyExt> }) {
-          return <>{displayMonetaryAmount(value)}</>;
+          return <>{value.toHuman(5)}</>;
         }
       },
       {
@@ -140,7 +139,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.El
         ...replaceRequests
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-expect-error
-          .filter((request) => request?.collateral?.currency?.ticker === collateralTokenIdLiteral)
+          .filter((request) => request?.collateral?.currency?.ticker === collateralTokenTicker)
           .entries()
       ].map(([key, value]) => ({
         id: key,

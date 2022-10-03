@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import { displayMonetaryAmount, getPolkadotLink, shortAddress } from '@/common/utils/utils';
+import { formatNumber, getPolkadotLink, shortAddress } from '@/common/utils/utils';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
 import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
@@ -27,12 +27,12 @@ const CompletedIssueRequest = ({ request }: Props): JSX.Element => {
       <p className={clsx('space-x-1', 'font-medium')}>
         <span>{t('issue_page.you_received')}</span>
         <PrimaryColorSpan>
-          {displayMonetaryAmount(receivedWrappedTokenAmount)} {WRAPPED_TOKEN_SYMBOL}
+          {receivedWrappedTokenAmount.toHuman(8)} {WRAPPED_TOKEN_SYMBOL}
         </PrimaryColorSpan>
       </p>
       <Ring48 className={getColorShade('green', 'ring')}>
         <Ring48Title>{t('issue_page.in_parachain_block')}</Ring48Title>
-        <Ring48Value className={getColorShade('green')}>{request.execution.height.absolute}</Ring48Value>
+        <Ring48Value className={getColorShade('green')}>{formatNumber(request.execution.height.absolute)}</Ring48Value>
       </Ring48>
       <ExternalLink className='text-sm' href={getPolkadotLink(request.execution.height.absolute)}>
         {t('issue_page.view_parachain_block')}

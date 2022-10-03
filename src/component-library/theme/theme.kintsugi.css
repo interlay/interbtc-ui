@@ -8,6 +8,7 @@
   --colors-yellow-05: rgba(255, 203, 0, 0.05);
   --colors-dark-yellow: #e6b700;
   --box-shadow-none: none;
+  --colors-slate-gray: #6a7994;
 }
 
 .theme-kintsugi {
@@ -33,12 +34,24 @@
   --colors-tabs-active-color: var(--colors-blue);
   --colors-tabs-active-bg: var(--colors-neutral-white);
   /* Loading Spinner */
-  --colors-indeterminate-color: var(--colors-neutral-white);
-  --colors-indeterminate-bg: var(--colors-neutral-black-20);
+  --colors-indeterminate-primary-color: var(--colors-neutral-white);
+  --colors-indeterminate-primary-bg: var(--colors-neutral-black-20);
+  --colors-indeterminate-secondary-color: var(--colors-neutral-black-80);
+  --colors-indeterminate-secondary-bg: var(--colors-neutral-lighter-grey);
+  --colors-indeterminate-outlined-color: var(--colors-yellow);
+  --colors-indeterminate-outlined-bg: var(--colors-mid-blue);
   /* Score Bar */
   --colors-score-bar-indicator-color: var(--colors-yellow);
   --colors-score-bar-separator-color: var(--colors-neutral-white);
   /* Progress Circle */
   --color-progress-circle-mask: var(--colors-mid-blue);
   --color-progress-circle-fill: var(--colors-yellow);
+  /* Input */
+  --colors-input-text: var(--colors-neutral-white);
+  --colors-input-default-border: var(--colors-neutral-white-25);
+  --colors-input-hover-border: var(--colors-slate-gray);
+  --colors-input-focus-border: var(--colors-neutral-white);
+  --colors-input-disabled-text: var(--colors-mid-blue);
+  --colors-input-disabled-border: var(--colors-mid-blue);
+  --colors-input-background: transparent;
 }

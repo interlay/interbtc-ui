@@ -32,8 +32,7 @@ const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';
 
 const PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,kintsugi,kintsugi-btc,kusama,polkadot,interlay,interlay-btc&vs_currencies=usd`;
 
-const STATS_URL = process.env.REACT_APP_STATS_SERVER_URL || 'http://localhost:3007';
-const HYDRA_URL = process.env.REACT_APP_HYDRA_URL || 'http://localhost:4000/graphql';
+const SQUID_URL = process.env.REACT_APP_SQUID_URL || 'http://localhost:4000/graphql';
 
 const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
@@ -88,12 +87,11 @@ export {
   DEFAULT_ACCOUNT_SEED,
   FAUCET_URL,
   FEEDBACK_URL,
-  HYDRA_URL,
   PARACHAIN_URL,
   PRICES_URL,
   RELAY_CHAIN_URL,
+  SQUID_URL,
   SS58_FORMAT,
-  STATS_URL,
   STORE_NAME,
   VAULT_STATUS_ACTIVE,
   VAULT_STATUS_BANNED,

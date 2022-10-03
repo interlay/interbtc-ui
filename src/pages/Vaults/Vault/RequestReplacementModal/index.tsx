@@ -1,14 +1,12 @@
 import { CollateralCurrencyExt } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
@@ -30,16 +28,23 @@ interface Props {
   open: boolean;
   collateralToken: CollateralCurrencyExt;
   vaultAddress: string;
+  lockedBTC: BitcoinAmount;
+  collateralAmount: MonetaryAmount<CollateralCurrencyExt>;
 }
 
-const RequestReplacementModal = ({ onClose, open, collateralToken, vaultAddress }: Props): JSX.Element => {
+const RequestReplacementModal = ({
+  onClose,
+  open,
+  collateralToken,
+  vaultAddress,
+  lockedBTC,
+  collateralAmount
+}: Props): JSX.Element => {
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<RequestReplacementFormData>();
-  const lockedCollateral = useSelector((state: StoreType) => state.vault.collateral);
-  const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -75,7 +80,7 @@ const RequestReplacementModal = ({ onClose, open, collateralToken, vaultAddress 
       return t('Amount must be greater than zero!');
     }
 
-    if (wrappedTokenAmount.gt(lockedBtc)) {
+    if (wrappedTokenAmount.gt(lockedBTC)) {
       return t(`Amount must be less than locked BTC balance!`);
     }
 
@@ -93,10 +98,10 @@ const RequestReplacementModal = ({ onClose, open, collateralToken, vaultAddress 
           <p>{t('vault.withdraw_your_collateral')}</p>
           <p>{t('vault.you_have')}</p>
           <p>
-            {displayMonetaryAmount(lockedCollateral)} {collateralToken.ticker}
+            {displayMonetaryAmount(collateralAmount)} {collateralToken.ticker}
           </p>
           <p>
-            {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
+            {t('locked')} {lockedBTC.toHuman(8)} BTC
           </p>
           <p>{t('vault.replace_amount')}</p>
           <div>

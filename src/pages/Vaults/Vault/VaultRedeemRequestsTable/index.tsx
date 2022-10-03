@@ -1,4 +1,4 @@
-import { CollateralIdLiteral, RedeemStatus } from '@interlay/interbtc-api';
+import { CurrencyExt, RedeemStatus } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { displayMonetaryAmount, formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
+import { formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -30,20 +30,23 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
 interface Props {
   vaultAddress: string;
-  collateralTokenIdLiteral: CollateralIdLiteral;
+  collateralToken: CurrencyExt;
 }
 
-const VaultRedeemRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Props): JSX.Element | null => {
+const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.Element | null => {
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
   const { t } = useTranslation();
+
+  const collateralTokenCondition = getCurrencyEqualityCondition(collateralToken);
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,
@@ -78,7 +81,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pr
   } = useQuery<GraphqlReturn<any>, Error>(
     [
       GRAPHQL_FETCHER,
-      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}`) // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
+      redeemCountQuery(`vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}`) // TODO: add condition for asset_eq when the page is refactored for accepting ForeignAsset currencies too (cf. e.g. issued graph in dashboard for example)
     ],
     graphqlFetcher<GraphqlReturn<any>>()
   );
@@ -95,7 +98,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pr
       REDEEMS_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}", collateralToken: {token_eq: ${collateralTokenIdLiteral}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
+      `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
     ],
     redeemsFetcher
   );
@@ -172,7 +175,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralTokenIdLiteral }: Pr
         classNames: ['text-right'],
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
-          return <>{displayMonetaryAmount(redeem.request.requestedAmountBacking)}</>;
+          return <>{redeem.request.requestedAmountBacking.toHuman(5)}</>;
         }
       },
       {

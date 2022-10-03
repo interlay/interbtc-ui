@@ -1,13 +1,13 @@
 import { HTMLAttributes } from 'react';
 
-type TextColor = 'primary' | 'secondary' | 'tertiary';
+import { Colors } from '../utils/prop-types';
 
 type Props = {
-  color?: TextColor;
+  color?: Colors;
 };
 
 type NativeAttrs<T = unknown> = Omit<HTMLAttributes<T>, keyof Props>;
 
 type TextProps<T = unknown> = Props & NativeAttrs<T>;
 
-export type { TextColor, TextProps };
+export type { TextProps };

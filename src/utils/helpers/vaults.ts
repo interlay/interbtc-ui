@@ -12,7 +12,7 @@ const getCollateralization = (
 ): Big | undefined => {
   if (tokens.gt(BitcoinAmount.zero()) && btcToCollateralTokenRate.toBig().gt(0)) {
     const tokensAsCollateral = btcToCollateralTokenRate.toCounter(tokens);
-    return collateral.toBig(0).div(tokensAsCollateral.toBig(0)).mul(100);
+    return collateral.toBig(0).div(tokensAsCollateral.toBig(0));
   } else {
     return undefined;
   }
@@ -39,7 +39,7 @@ const getVaultStatusLabel = (
       statusLabel = t('dashboard.vault.liquidation');
     }
     if (settledCollateralization.lt(secureCollateralThreshold)) {
-      statusLabel = t('dashboard.vault.undercollateralized');
+      statusLabel = t('dashboard.vault.below_secure_threshold');
     }
   }
   // Should only display bannedUntil status if current active block number < the bannedUntil block number.

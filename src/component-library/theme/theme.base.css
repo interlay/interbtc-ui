@@ -1,37 +1,37 @@
 @import url('reset.css');
 
 @font-face {
-  font-family: 'airbnb-cereal';
-  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealLight.ttf') format('truetype');
+  font-family: 'inter';
+  src: url('../../assets/fonts/inter/Inter-Light.ttf') format('truetype');
   font-weight: 300; /* light */
   font-style: normal;
 }
 @font-face {
-  font-family: 'airbnb-cereal';
-  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealBook.ttf') format('truetype');
-  font-weight: 400; /* book */
+  font-family: 'inter';
+  src: url('../../assets/fonts/inter/Inter-Regular.ttf') format('truetype');
+  font-weight: 400; /* regular */
   font-style: normal;
 }
 @font-face {
-  font-family: 'airbnb-cereal';
-  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealMedium.ttf') format('truetype');
+  font-family: 'inter';
+  src: url('../../assets/fonts/inter/Inter-Medium.ttf') format('truetype');
   font-weight: 500; /* medium */
   font-style: normal;
 }
 @font-face {
-  font-family: 'airbnb-cereal';
-  src: url('../../assets/fonts/airbnb-cereal/AirbnbCerealBold.ttf') format('truetype');
+  font-family: 'inter';
+  src: url('../../assets/fonts/inter/Inter-Bold.ttf') format('truetype');
   font-weight: 700; /* bold */
   font-style: normal;
 }
 
 * {
   box-sizing: border-box;
-  font-family: 'airbnb-cereal';
+  font-family: 'inter';
 }
 
 :root {
-  --fonts-primary: 'airbnb-cereal';
+  --fonts-primary: 'inter';
 
   --font-weights-light: 300;
   --font-weights-book: 400;
@@ -41,6 +41,7 @@
   --colors-neutral-white: #ffffff;
   --colors-neutral-white-05: rgba(255, 255, 255, 0.05);
   --colors-neutral-white-06: rgba(255, 255, 255, 0.06);
+  --colors-neutral-white-25: rgba(255, 255, 255, 0.25);
   --colors-neutral-lighter-grey: #dadada;
   --colors-neutral-light-grey: #999999;
   --colors-neutral-light-grey-50: #9999997f;
@@ -49,6 +50,7 @@
   --colors-neutral-black-20: rgba(0, 0, 0, 0.2);
   --colors-neutral-black-25: rgba(0, 0, 0, 0.25);
   --colors-neutral-black-30: rgba(0, 0, 0, 0.3);
+  --colors-neutral-black-80: rgba(0, 0, 0, 0.8);
   --colors-neutral-black-9: rgba(0, 0, 0, 0.9);
 
   --colors-shared-red: #cb5458;

@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { displayMonetaryAmount, formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
+import { formatDateTimePrecise, formatNumber, shortAddress, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -80,7 +80,7 @@ const IssueRequestsTable = (): JSX.Element => {
             height = issue.request.height.absolute;
           }
 
-          return <>{height}</>;
+          return <>{formatNumber(height)}</>;
         }
       },
       {
@@ -95,7 +95,7 @@ const IssueRequestsTable = (): JSX.Element => {
             wrappedTokenAmount = issue.request.amountWrapped;
           }
 
-          return <>{displayMonetaryAmount(wrappedTokenAmount)}</>;
+          return <>{wrappedTokenAmount.toHuman(8)}</>;
         }
       },
       {
