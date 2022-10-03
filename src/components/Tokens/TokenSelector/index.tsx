@@ -45,14 +45,12 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                     <SelectText>
                       {showBalances && (
                         <span>
-                          {/* ray test touch < */}
                           {Number.isNaN(Number(currentToken.balance))
                             ? currentToken.balance
                             : formatNumber(Number(currentToken.balance), {
                                 minimumFractionDigits: 0,
                                 maximumFractionDigits: 8
                               })}
-                          {/* ray test touch > */}
                           &nbsp;
                         </span>
                       )}
@@ -73,14 +71,12 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                             >
                               {tokenOption.icon}
                               <SelectText selected={selected}>
-                                {/* ray test touch < */}
                                 {showBalances && Number.isNaN(Number(tokenOption.balance))
                                   ? tokenOption.balance
                                   : formatNumber(Number(tokenOption.balance), {
                                       minimumFractionDigits: 0,
                                       maximumFractionDigits: 8
                                     })}{' '}
-                                {/* ray test touch > */}
                                 {tokenOption.symbol}
                               </SelectText>
                             </div>
