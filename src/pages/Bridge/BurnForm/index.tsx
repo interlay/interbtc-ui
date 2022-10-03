@@ -139,7 +139,6 @@ const BurnForm = (): JSX.Element | null => {
         Please enter a smaller amount.`;
       }
 
-      // ray test touch <
       if (wrappedTokenBalance === undefined) {
         throw new Error('Something went wrong!');
       }
@@ -147,7 +146,6 @@ const BurnForm = (): JSX.Element | null => {
       if (bitcoinAmountValue.gt(wrappedTokenBalance.free)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance.free)}`;
       }
-      // ray test touch >
 
       if (!bridgeLoaded) {
         return 'Bridge must be loaded!';
