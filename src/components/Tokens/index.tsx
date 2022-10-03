@@ -18,7 +18,7 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+import { useGovernanceTokenBalance, useRelayChainNativeTokenBalance } from '@/services/hooks/use-token-balance';
 
 import TokenSelector from './TokenSelector';
 
@@ -60,14 +60,18 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 
   const {
     // ray test touch <
-    collateralTokenBalance,
-    collateralTokenTransferableBalance,
+    // collateralTokenBalance,
+    // collateralTokenTransferableBalance,
     // ray test touch >
     wrappedTokenBalance,
     wrappedTokenTransferableBalance
   } = useSelector((state: StoreType) => state.general);
 
   const { governanceTokenBalance } = useGovernanceTokenBalance();
+
+  // ray test touch <
+  const { relayChainNativeTokenBalance } = useRelayChainNativeTokenBalance();
+  // ray test touch >
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
@@ -83,8 +87,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       {
         token: RELAY_CHAIN_NATIVE_TOKEN,
         type: TokenType.RelayChainNative,
-        balance: collateralTokenBalance.toHuman(5),
-        transferableBalance: collateralTokenTransferableBalance.toHuman(5),
+        // ray test touch <
+        balance: relayChainNativeTokenBalance ? relayChainNativeTokenBalance.free.toHuman(5) : '-',
+        transferableBalance: relayChainNativeTokenBalance ? relayChainNativeTokenBalance.transferable.toHuman(5) : '-',
+        // ray test touch >
         icon: <RelayChainNativeTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
       },
@@ -109,12 +115,13 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     setTokenOptions(tokenOptions);
   }, [
     // ray test touch <
-    collateralTokenBalance,
-    collateralTokenTransferableBalance,
+    // collateralTokenBalance,
+    // collateralTokenTransferableBalance,
     // ray test touch >
     wrappedTokenBalance,
     wrappedTokenTransferableBalance,
     governanceTokenBalance,
+    relayChainNativeTokenBalance,
     variant
   ]);
 
