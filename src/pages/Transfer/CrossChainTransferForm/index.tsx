@@ -20,6 +20,7 @@ import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
+import { useRelayChainNativeTokenBalance } from '@/services/hooks/use-token-balance';
 import { ChainType } from '@/types/chains.types';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -77,7 +78,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   const { selectedAccount } = useSubstrateSecureState();
-  const { collateralTokenTransferableBalance, parachainStatus } = useSelector((state: StoreType) => state.general);
+  const { parachainStatus } = useSelector((state: StoreType) => state.general);
+
+  // ray test touch <
+  const { relayChainNativeTokenBalance } = useRelayChainNativeTokenBalance();
+  // ray test touch >
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
@@ -149,7 +154,11 @@ const CrossChainTransferForm = (): JSX.Element => {
     // TODO: we need to handle and validate transfer fees properly. Implemented here initially
     // because it was an issue during testing.
     // ray test touch <
-    if (collateralTokenTransferableBalance.lt(transferAmount)) {
+    if (relayChainNativeTokenBalance === undefined) {
+      throw new Error('Something went wrong!');
+    }
+
+    if (relayChainNativeTokenBalance.transferable.lt(transferAmount)) {
       // ray test touch >
       return t('insufficient_funds');
       // Check transferred amount won't be below existential deposit when fees are deducted
@@ -242,7 +251,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const isRelayChain = fromChain === ChainType.RelayChain;
   // ray test touch <
-  const chainBalance = isRelayChain ? relayChainBalance : collateralTokenTransferableBalance;
+  const chainBalance = isRelayChain ? relayChainBalance : relayChainNativeTokenBalance?.transferable;
   // ray test touch >
   const balance = displayMonetaryAmount(chainBalance);
 
