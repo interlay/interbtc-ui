@@ -43,6 +43,7 @@ const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
+const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
 type UnsubscriptionRef = (() => void) | null;
@@ -337,6 +338,9 @@ const App = (): JSX.Element => {
                   </Route>
                   <Route path={PAGES.TRANSFER}>
                     <Transfer />
+                  </Route>
+                  <Route path={PAGES.LOANS}>
+                    <Loans />
                   </Route>
                   <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
                   <Route path='*'>
