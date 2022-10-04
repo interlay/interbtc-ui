@@ -44,15 +44,15 @@ const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 //      const rawSs58Format = await (await api.rpc.system.properties()).ss58Format;
 //      const ss58Format = parseInt(rawSs58Format.unwrapOr('42').toString());
 let ss58Format;
-if (BITCOIN_NETWORK === BitcoinNetwork.Mainnet) {
-  // kintsugi
+if (BITCOIN_NETWORK === BitcoinNetwork.Mainnet || BITCOIN_NETWORK === BitcoinNetwork.Testnet) {
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama') {
+    // kintsugi or kintnet
     ss58Format = 2092;
-    // interlay
   } else {
+    // interlay or interlay testnet
     ss58Format = 2032;
   }
-  // generic substrate
+// generic substrate
 } else {
   ss58Format = 42;
 }
