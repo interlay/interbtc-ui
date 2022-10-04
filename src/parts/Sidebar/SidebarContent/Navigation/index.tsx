@@ -70,8 +70,8 @@ const Navigation = ({
         icon: SwitchHorizontalIcon
       },
       {
-        name: 'nav_interlend',
-        link: PAGES.INTERLEND,
+        name: 'nav_loans',
+        link: PAGES.LOANS,
         icon: CurrencyDollarIcon
       },
       {

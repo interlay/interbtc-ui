@@ -2,13 +2,13 @@ import { withErrorBoundary } from 'react-error-boundary';
 
 import ErrorFallback from '@/components/ErrorFallback';
 
-import InterlendOverview from './InterlendOverview';
+import LoansOverview from './LoansOverview';
 
-const Vaults = (): JSX.Element => {
-  return <InterlendOverview />;
+const Loans = (): JSX.Element => {
+  return <LoansOverview />;
 };
 
-export default withErrorBoundary(Vaults, {
+export default withErrorBoundary(Loans, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();

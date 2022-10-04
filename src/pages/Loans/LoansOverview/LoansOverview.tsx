@@ -1,7 +1,7 @@
 import { H1, P } from '@/component-library';
 import MainContainer from '@/parts/MainContainer';
 
-const InterlendOverview = (): JSX.Element => {
+const LoansOverview = (): JSX.Element => {
   return (
     <MainContainer>
       <H1>Interlend</H1>
@@ -13,4 +13,4 @@ const InterlendOverview = (): JSX.Element => {
   );
 };
 
-export default InterlendOverview;
+export default LoansOverview;
