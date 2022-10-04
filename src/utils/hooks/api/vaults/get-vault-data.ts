@@ -91,6 +91,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     accountId,
     vault.backingCollateral.currency
   );
+  // This should be handled by checking for an error response from `getIssuableTokens` 
   const issuableTokens =
     vaultExt.status === VaultStatusExt.Liquidated
       ? newMonetaryAmount(0, vault.backingCollateral.currency)
