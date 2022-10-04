@@ -80,7 +80,7 @@ const Navigation = ({
       },
       {
         name: 'nav_lending',
-        link: '#',
+        link: PAGES.LOANS,
         icon: PresentationChartBarIcon,
         disabled: true
       },
