@@ -1,6 +1,7 @@
 import {
   CollateralCurrencyExt,
   CollateralIdLiteral,
+  newMonetaryAmount,
   VaultExt,
   VaultStatusExt,
   WrappedIdLiteral
@@ -90,10 +91,10 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     accountId,
     vault.backingCollateral.currency
   );
-  const issuableTokens = await window.bridge.vaults.getIssuableTokensFromVault(
-    accountId,
-    vault.backingCollateral.currency
-  );
+  const issuableTokens =
+    vaultExt.status === VaultStatusExt.Liquidated
+      ? newMonetaryAmount(0, vault.backingCollateral.currency)
+      : await window.bridge.vaults.getIssuableTokensFromVault(accountId, vault.backingCollateral.currency);
   const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(
     accountId,
     vault.backingCollateral.currency,
