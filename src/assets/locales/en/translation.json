@@ -501,5 +501,9 @@
     "connected_with": "Connected with ",
     "change_wallet": "Change Wallet",
     "disconnect": "Disconnect"
+  },
+  "loans": {
+    "withdraw": "Withdraw",
+    "supply": "Supply"
   }
 }
