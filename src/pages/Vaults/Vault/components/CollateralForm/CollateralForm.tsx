@@ -12,7 +12,7 @@ import { useParams } from 'react-router';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatNumber, formatUSD } from '@/common/utils/utils';
-import { CTA, Span, Stack, TokenField } from '@/component-library';
+import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useTokenBalance from '@/services/hooks/use-token-balance';
 import { URL_PARAMETERS } from '@/utils/constants/links';
@@ -101,8 +101,8 @@ const CollateralForm = ({
   });
   const [score, setScore] = useState(0);
 
-  const tokenFieldId = collateralInputId[variant];
-  const inputCollateral = watch(tokenFieldId) || '0';
+  const tokenInputId = collateralInputId[variant];
+  const inputCollateral = watch(tokenInputId) || '0';
   const inputCollateralAmount = newMonetaryAmount(
     inputCollateral,
     collateralToken,
@@ -160,7 +160,7 @@ const CollateralForm = ({
 
     try {
       const collateralTokenAmount = newMonetaryAmount(
-        data[tokenFieldId] || '0',
+        data[tokenInputId] || '0',
         collateralToken,
         true
       ) as MonetaryAmount<CollateralCurrencyExt>;
@@ -244,7 +244,7 @@ const CollateralForm = ({
     <form onSubmit={h(handleSubmit)} {...props}>
       <Stack spacing='double'>
         <StyledTitle id={titleId}>{title}</StyledTitle>
-        <TokenField
+        <TokenInput
           aria-labelledby={titleId}
           placeholder='0.00'
           tokenSymbol={collateralToken.ticker}
@@ -252,8 +252,8 @@ const CollateralForm = ({
             inputCollateralAmount,
             getTokenPrice(prices, collateralToken.ticker as CollateralIdLiteral)?.usd
           )}
-          id={tokenFieldId}
-          {...register(tokenFieldId, {
+          id={tokenInputId}
+          {...register(tokenInputId, {
             required: {
               value: true,
               message: t('vault.collateral_is_required')

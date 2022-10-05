@@ -27,6 +27,7 @@ import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
+
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
