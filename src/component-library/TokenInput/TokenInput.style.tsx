@@ -26,8 +26,8 @@ const TokenInputInput = styled(NumberInput)<TokenInputInputProps>`
 
 const TokenInputUSD = styled.span`
   display: block;
-  font-size: ${theme.text.lg};
-  color: ${theme.colors.textTertiary};
+  font-size: ${theme.text.s};
+  color: ${theme.colors.textPrimary};
   white-space: nowrap;
 `;
 
@@ -35,7 +35,7 @@ const TokenAdornment = styled.span`
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 `;
 
 const StyledTokenBalance = styled(TokenBalance)`

@@ -235,6 +235,16 @@ const theme = {
   },
   tokenInput: {
     height: '4.813rem'
+  },
+  modal: {
+    title: {
+      primary: {
+        color: 'var(--colors-title-primary)'
+      },
+      secondary: {
+        color: 'var(--colors-title-secondary)'
+      }
+    }
   }
 };
 
