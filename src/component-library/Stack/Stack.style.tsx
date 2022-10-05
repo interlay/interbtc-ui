@@ -1,11 +1,14 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
+import { AlignItems, JustifyContent } from '../utils/prop-types';
 import { Spacing } from './Stack';
 
 const getSpacing = (spacing?: Spacing) => {
   let result;
   switch (spacing) {
+    case 'none':
+      break;
     case 'half':
       result = theme.spacing.spacing2;
       break;
@@ -24,9 +27,16 @@ const getSpacing = (spacing?: Spacing) => {
 
 type StackContainerProps = {
   $spacing: Spacing;
+  $justifyContent?: JustifyContent;
+  $alignItems?: AlignItems;
 };
 
 const StackContainer = styled.div<StackContainerProps>`
+  display: flex;
+  flex-direction: column;
+  justify-content: ${(props) => props.$justifyContent};
+  align-items: ${(props) => props.$alignItems};
+
   > *:not(:last-child) {
     margin-bottom: ${(props) => getSpacing(props.$spacing)};
   }

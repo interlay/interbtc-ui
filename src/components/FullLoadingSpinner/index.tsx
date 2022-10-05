@@ -4,7 +4,10 @@ import { ReactComponent as SpinIcon } from '@/assets/img/icons/spin.svg';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const FullLoadingSpinner = (): JSX.Element => (
-  <div className={clsx('flex', 'justify-center', 'items-center', 'absolute', 'top-0', 'left-0', 'w-full', 'h-full')}>
+  <div
+    role='progressbar'
+    className={clsx('flex', 'justify-center', 'items-center', 'absolute', 'top-0', 'left-0', 'w-full', 'h-full')}
+  >
     <SpinIcon
       className={clsx(
         { 'text-interlayDenim': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },

@@ -40,7 +40,7 @@ const NewVaultsTable = ({ data, onClickAddVault }: NewVaultsTableProps): JSX.Ele
           {minCollateralAmount} {collateralCurrency}
         </NumericValue>
       ),
-      'collateral-rate': <NumericValue key='collateral_rate'>{collateralRate}%</NumericValue>,
+      'collateral-rate': <NumericValue key='collateral_rate'>{collateralRate}</NumericValue>,
       action: (
         <CTA key='cta' variant='secondary' disabled={!isActive} fullWidth onClick={() => onClickAddVault(row)}>
           {isActive ? 'Add' : 'Coming soon'}

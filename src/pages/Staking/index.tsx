@@ -12,7 +12,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, safeRoundTwoDecimals } from '@/common/utils/utils';
+import {
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
+  formatNumber,
+  formatPercentage
+} from '@/common/utils/utils';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
@@ -369,7 +374,9 @@ const Staking = (): JSX.Element => {
       throw new Error('Governance token balance value returned undefined!');
     }
 
-    return governanceTokenBalance.free.sub(stakedAmount).sub(transactionFeeReserve);
+    const calculatedBalance = governanceTokenBalance.free.sub(stakedAmount).sub(transactionFeeReserve);
+
+    return calculatedBalance.toBig().gte(0) ? calculatedBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
   }, [
     governanceTokenBalanceIdle,
     governanceTokenBalanceLoading,
@@ -523,7 +530,7 @@ const Staking = (): JSX.Element => {
   };
   const availableLockTime = getAvailableLockTime();
 
-  const availableMonetaryBalance = displayMonetaryAmount(availableBalance);
+  const availableMonetaryBalance = availableBalance?.toHuman(5);
 
   const renderUnlockDateLabel = () => {
     if (errors[LOCK_TIME]) {
@@ -626,7 +633,7 @@ const Staking = (): JSX.Element => {
       throw new Error('Something went wrong!');
     }
 
-    return `${safeRoundTwoDecimals(estimatedRewardAmountAndAPY.apy.toString())} %`;
+    return formatPercentage(estimatedRewardAmountAndAPY.apy.toNumber());
   };
 
   const renderEstimatedRewardAmountLabel = () => {
@@ -670,7 +677,7 @@ const Staking = (): JSX.Element => {
   );
 
   const handleClickBalance = () => {
-    setValue(LOCKING_AMOUNT, availableMonetaryBalance);
+    setValue(LOCKING_AMOUNT, availableMonetaryBalance || '0');
     trigger(LOCKING_AMOUNT);
   };
 
@@ -766,7 +773,12 @@ const Staking = (): JSX.Element => {
             <div className='space-y-2'>
               <AvailableBalanceUI
                 label='Available balance'
-                balance={availableBalance ? availableMonetaryBalance : '-'}
+                balance={
+                  formatNumber(Number(availableMonetaryBalance), {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 5
+                  }) || '-'
+                }
                 tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
                 onClick={handleClickBalance}
               />

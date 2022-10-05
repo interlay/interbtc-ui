@@ -36,7 +36,21 @@ Small.args = {
   children: 'Call to action'
 };
 
-export { FullWidth, Outlined, Primary, Secondary, Small };
+const Large = Template.bind({});
+Large.args = {
+  variant: 'primary',
+  size: 'large',
+  children: 'Call to action'
+};
+
+const Loading = Template.bind({});
+Loading.args = {
+  variant: 'primary',
+  loading: true,
+  children: 'Call to action'
+};
+
+export { FullWidth, Large, Loading, Outlined, Primary, Secondary, Small };
 
 export default {
   title: 'Elements/CTA',

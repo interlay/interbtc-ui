@@ -4,10 +4,9 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
+import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
@@ -32,16 +31,17 @@ interface Props {
   open: boolean;
   collateralToken: CollateralCurrencyExt;
   vaultAddress: string;
+  lockedBTC: BitcoinAmount;
 }
 
 // TODO: share form with bridge page
-const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress }: Props): JSX.Element => {
+const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lockedBTC }: Props): JSX.Element => {
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
     formState: { errors }
   } = useForm<RequestRedeemFormData>();
-  const lockedBtc = useSelector((state: StoreType) => state.vault.lockedBTC);
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
@@ -62,6 +62,8 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress }: Pr
       const vaultId = newVaultId(window.bridge.api, vaultAddress, collateralToken, WRAPPED_TOKEN);
       await window.bridge.redeem.request(amountPolkaBtc, data[BTC_ADDRESS], vaultId);
 
+      queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
+
       toast.success('Redeem request submitted');
       onClose();
     } catch (error) {
@@ -76,7 +78,7 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress }: Pr
       return t('Amount must be greater than zero!');
     }
 
-    if (wrappedTokenAmount.gt(lockedBtc)) {
+    if (wrappedTokenAmount.gt(lockedBTC)) {
       return t(`Amount must be less than locked BTC balance!`);
     }
 
@@ -93,7 +95,7 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress }: Pr
         <form className='space-y-4' onSubmit={onSubmit}>
           <p>{t('vault.redeem_description')}</p>
           <p>
-            {t('locked')} {displayMonetaryAmount(lockedBtc)} BTC
+            {t('locked')} {lockedBTC.toHuman(8)} BTC
           </p>
           <p>{t('vault.redeem_amount')}</p>
           <div>

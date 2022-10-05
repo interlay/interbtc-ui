@@ -1,31 +1,34 @@
-import { Tokens } from '../types';
-import { IconWrapper, IconWrapperProps } from './CoinIcon.style';
-import { BtcIcon, DotIcon, InterBtcIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
+import { FC } from 'react';
 
-interface CoinIconProps extends IconWrapperProps {
+import { Tokens } from '../types';
+import { Sizes } from '../utils/prop-types';
+import { IconWrapper } from './CoinIcon.style';
+import { BtcIcon, DotIcon, InterBtcIcon, IntrIcon, KbtcIcon, KintIcon, KsmIcon } from './icons';
+
+const coinsIcon: Record<Tokens, FC> = {
+  BTC: BtcIcon,
+  DOT: DotIcon,
+  IBTC: InterBtcIcon,
+  KBTC: KbtcIcon,
+  KSM: KsmIcon,
+  KINT: KintIcon,
+  INTR: IntrIcon
+};
+
+type CoinIconProps = {
+  size: Sizes;
   coin: Tokens;
-}
+};
 
 const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
+  const CoinIcon = coinsIcon[coin] || (() => null);
+
   return (
-    <IconWrapper size={size}>
-      {coin === 'BTC' ? (
-        <BtcIcon />
-      ) : coin === 'DOT' ? (
-        <DotIcon />
-      ) : coin === 'IBTC' ? (
-        <InterBtcIcon />
-      ) : coin === 'KBTC' ? (
-        <KbtcIcon />
-      ) : coin === 'KSM' ? (
-        <KsmIcon />
-      ) : coin === 'KINT' ? (
-        <KintIcon />
-      ) : null}
+    <IconWrapper $size={size}>
+      <CoinIcon />
     </IconWrapper>
   );
 };
 
 export { CoinIcon };
-
 export type { CoinIconProps };

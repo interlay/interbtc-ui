@@ -4,7 +4,6 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { useSelector } from 'react-redux';
 
 import { StoreType, TokenType } from '@/common/types/util.types';
-import { displayMonetaryAmount } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import { SELECT_VARIANTS, SelectVariants } from '@/components/Select';
 import {
@@ -82,24 +81,24 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       {
         token: RELAY_CHAIN_NATIVE_TOKEN,
         type: TokenType.RelayChainNative,
-        balance: displayMonetaryAmount(collateralTokenBalance),
-        transferableBalance: displayMonetaryAmount(collateralTokenTransferableBalance),
+        balance: collateralTokenBalance.toHuman(5),
+        transferableBalance: collateralTokenTransferableBalance.toHuman(5),
         icon: <RelayChainNativeTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
       },
       {
         token: WRAPPED_TOKEN,
         type: TokenType.Wrapped,
-        balance: displayMonetaryAmount(wrappedTokenBalance),
-        transferableBalance: displayMonetaryAmount(wrappedTokenTransferableBalance),
+        balance: wrappedTokenBalance.toHuman(8),
+        transferableBalance: wrappedTokenTransferableBalance.toHuman(8),
         icon: <WrappedTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: WRAPPED_TOKEN_SYMBOL
       },
       {
         token: GOVERNANCE_TOKEN,
         type: TokenType.Governance,
-        balance: governanceTokenBalance ? displayMonetaryAmount(governanceTokenBalance.free) : '-',
-        transferableBalance: governanceTokenBalance ? displayMonetaryAmount(governanceTokenBalance.transferable) : '-',
+        balance: governanceTokenBalance ? governanceTokenBalance.free.toHuman(5) : '-',
+        transferableBalance: governanceTokenBalance ? governanceTokenBalance.transferable.toHuman(5) : '-',
         icon: <GovernanceTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
         symbol: GOVERNANCE_TOKEN_SYMBOL
       }

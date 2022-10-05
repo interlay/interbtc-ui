@@ -15,7 +15,6 @@ import CloseIconButton from '@/components/buttons/CloseIconButton';
 import ErrorModal from '@/components/ErrorModal';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
@@ -172,8 +171,9 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     governanceTokenBalanceIdle ||
     governanceTokenBalanceLoading
   ) {
-    return <PrimaryColorEllipsisLoader />;
+    return <></>;
   }
+
   if (governanceTokenBalance === undefined) {
     throw new Error('Something went wrong!');
   }
@@ -255,9 +255,8 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     setSubmittedRequest(undefined);
   };
 
-  const vaultBalance = displayMonetaryAmount(vaultCapacity);
   const handleClickVaultBalance = async () => {
-    setValue(WRAPPED_TOKEN_AMOUNT, vaultBalance);
+    setValue(WRAPPED_TOKEN_AMOUNT, vaultCapacity.toString());
     await trigger(WRAPPED_TOKEN_AMOUNT);
   };
 
@@ -282,7 +281,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
             <p>
               {t('vault.max_capacity')}{' '}
               <InterlayButtonBase type='button' onClick={handleClickVaultBalance}>
-                <strong>{vaultBalance} BTC</strong>
+                <strong>{vaultCapacity.toHuman(8)} BTC</strong>
               </InterlayButtonBase>
             </p>
             <p>{t('vault.issue_amount')}</p>

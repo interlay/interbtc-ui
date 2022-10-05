@@ -2,7 +2,7 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
-import { getLastMidnightTimestamps } from '@/common/utils/utils';
+import { formatNumber, getLastMidnightTimestamps } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
@@ -78,7 +78,7 @@ const ActiveVaultsCard = ({ hasLinks }: Props): JSX.Element => {
           leftPart={
             <>
               <StatsDt>{t('dashboard.vault.vaults')}</StatsDt>
-              <StatsDd>{vaultRegistrations.length}</StatsDd>
+              <StatsDd>{formatNumber(vaultRegistrations.length)}</StatsDd>
             </>
           }
           rightPart={<>{hasLinks && <StatsRouterLink to={PAGES.DASHBOARD_VAULTS}>View vaults</StatsRouterLink>}</>}
