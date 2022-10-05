@@ -1,6 +1,8 @@
 import { useMeter } from '@react-aria/meter';
 import { HTMLAttributes, ReactNode } from 'react';
 
+import { formatPercentage } from '@/common/utils/utils';
+
 import { CollateralStatus, CollateralStatusRanges } from '../../types';
 import { getCollateralStatus } from '../../utils';
 import {
@@ -86,7 +88,7 @@ const CollateralScore = ({
         </StyledLabel>
         <StyledScoreWrapper isDefault={isDefault}>
           <StyledScore isDefault={isDefault} status={status}>
-            {infinity ? '∞' : `${meterProps['aria-valuetext']}%`}
+            {infinity ? '∞' : formatPercentage(value)}
           </StyledScore>
           <StyledSublabel isDefault={isDefault} status={isDefault ? status : undefined}>
             {sublabel}
