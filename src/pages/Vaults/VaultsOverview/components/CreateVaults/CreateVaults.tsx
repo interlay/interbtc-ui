@@ -38,7 +38,7 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
     collateralCurrency: vault.collateralCurrency,
     wrappedCurrency: vault.wrappedCurrency,
     minCollateralAmount: vault.minimumCollateral,
-    collateralRate: vault.secureCollateralThreshold.toNumber().toFixed(2),
+    collateralRate: vault.secureCollateralThreshold.mul(100).toNumber().toFixed(2),
     isActive: true,
     isInstalled: isVaultInstalled(vaults, vault)
   }));
