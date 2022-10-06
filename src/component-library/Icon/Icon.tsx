@@ -1,6 +1,6 @@
-import { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseCloseIcon } from './Icon.style';
+import { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseChevronRight, BaseCloseIcon } from './Icon.style';
 
-type IconVariant = 'close' | 'checkmark' | 'check-circle';
+type IconVariant = 'close' | 'checkmark' | 'check-circle' | 'chevron-right';
 
 interface IconProps extends React.ComponentPropsWithRef<'svg'> {
   variant: IconVariant;
@@ -14,6 +14,8 @@ const Icon = ({ variant, ...rest }: IconProps): JSX.Element => {
       return <BaseCheckmarkIcon {...rest} />;
     case 'check-circle':
       return <BaseCheckCircleIcon {...rest} />;
+    case 'chevron-right':
+      return <BaseChevronRight {...rest} />;
     default:
       throw new Error('Something went wrong!');
   }
