@@ -67,7 +67,7 @@ const VaultDashboard = (): JSX.Element => {
       sublabel: `(${formatUSD(vault.issuedTokens.usd)})`
     },
     {
-      title: 'Remaining kBTC capacity',
+      title: `Remaining ${vault.wrappedId} capacity`,
       label: vault.remainingCapacity.amount.toBig().toString(),
       sublabel: formatPercentage(vault.remainingCapacity.ratio, {
         maximumFractionDigits: 2,
@@ -107,6 +107,7 @@ const VaultDashboard = (): JSX.Element => {
             lockedAmountBTC={vault.issuedTokens.amount}
             vaultAddress={selectedVaultAccountAddress}
             hasVaultActions={!isReadOnlyVault}
+            wrappedId={vault.wrappedId}
           />
           <StyledRewards
             apy={vault.apy}
