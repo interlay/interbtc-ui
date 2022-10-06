@@ -21,9 +21,7 @@ import InterlayTable, {
 } from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
 import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
-// ray test touch <
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
-// ray test touch >
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
@@ -105,9 +103,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
     ],
     issuesFetcher,
     {
-      // ray test touch <
       refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
-      // ray test touch >
     }
   );
   useErrorHandler(issueRequestsError);
