@@ -51,4 +51,7 @@
   --colors-input-disabled-text: var(--colors-neutral-lighter-grey);
   --colors-input-disabled-border: var(--colors-neutral-lighter-grey);
   --colors-input-background: var(--colors-neutral-white);
+  /* Modal */
+  --colors-title-primary: var(--colors-neutral-black);
+  --colors-title-secondary: var(--colors-light-blue);
 }

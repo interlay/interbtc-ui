@@ -2,10 +2,17 @@ import { useId } from '@react-aria/utils';
 import { HTMLAttributes, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CTALink, TabsItem } from '@/component-library';
+import { TabsItem } from '@/component-library';
 import { PAGES } from '@/utils/constants/links';
 
-import { StyledStack, StyledTableWrapper, StyledTabs, StyledTitle, StyledWrapper } from './TransactionHistory.styles';
+import {
+  StyledCTALink,
+  StyledStack,
+  StyledTableWrapper,
+  StyledTabs,
+  StyledTitle,
+  StyledWrapper
+} from './TransactionHistory.styles';
 import { TransactionTable, TransactionTableData } from './TransactionTable';
 
 type Props = {
@@ -56,9 +63,9 @@ const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
               </TabsItem>
             ))}
           </StyledTabs>
-          <CTALink to={PAGES.TRANSACTIONS} variant='outlined' size='small'>
+          <StyledCTALink to={PAGES.TRANSACTIONS} variant='outlined' size='small'>
             {'View All >'}
-          </CTALink>
+          </StyledCTALink>
         </StyledStack>
       </StyledWrapper>
     </>
