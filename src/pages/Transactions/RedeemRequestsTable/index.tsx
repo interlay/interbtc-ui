@@ -99,7 +99,12 @@ const RedeemRequestsTable = (): JSX.Element => {
       TABLE_PAGE_LIMIT, // limit
       `userParachainAddress_eq: "${address}"` // WHERE condition
     ],
-    redeemsFetcher
+    redeemsFetcher,
+    // ray test touch <
+    {
+      refetchInterval: 10000
+    }
+    // ray test touch >
   );
   useErrorHandler(redeemRequestsError);
 

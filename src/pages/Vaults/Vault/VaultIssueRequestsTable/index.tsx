@@ -100,7 +100,12 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
       TABLE_PAGE_LIMIT, // limit
       `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
     ],
-    issuesFetcher
+    issuesFetcher,
+    // ray test touch <
+    {
+      refetchInterval: 10000
+    }
+    // ray test touch >
   );
   useErrorHandler(issueRequestsError);
 
