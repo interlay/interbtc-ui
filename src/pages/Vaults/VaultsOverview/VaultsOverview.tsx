@@ -17,7 +17,9 @@ import { CreateVaults, VaultsHeader } from './components';
 
 const VaultOverview = (): JSX.Element => {
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
+
   const vaultOverview = useGetVaultData({ address: accountAddress });
+
   const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
 
   const { selectedAccount } = useSubstrateSecureState();
