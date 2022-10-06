@@ -1,8 +1,8 @@
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
-import { ReactComponent as ChevronRight } from '@/assets/img/icons/chevron-right.svg';
 import { CoinIcon, Span, Stack } from '@/component-library';
+import { Icon } from '@/component-library/Icon';
 import { SupplyAssetData, SupplyPositionData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { SupplyModal } from '../SupplyModal';
@@ -49,6 +49,7 @@ const MarketAsset = ({ currency }: { currency: CurrencyIdLiteral }): JSX.Element
 const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => {
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
+  // TODO: subject to change in the future
   const handleAssetRowAction = (key: Key) => {
     const asset = assets[key as number];
     const position = positions.find((position) => position.currency === asset.currency);
@@ -56,6 +57,7 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
     setAsset({ data: asset, position });
   };
 
+  // TODO: subject to change in the future
   const handlePositionRowAction = (key: Key) => {
     const position = positions[key as number];
     const asset = assets.find((asset) => asset.currency === position.currency);
@@ -75,7 +77,7 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
         supplied: amount,
         'supply-apy': apy,
         'apy-earned': apyEarned,
-        'end-adornment': <ChevronRight width='1.5rem' height='1.5rem' />
+        'end-adornment': <Icon variant='chevron-right' width='1.5rem' height='1.5rem' />
       };
     }
   );
@@ -95,7 +97,7 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
       asset,
       apy: apyWithEarnedAssets,
       'wallet-balance': balance,
-      'end-adornment': <ChevronRight width='1.5rem' height='1.5rem' />
+      'end-adornment': <Icon variant='chevron-right' width='1.5rem' height='1.5rem' />
     };
   });
 
