@@ -101,11 +101,9 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
       `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
     ],
     issuesFetcher,
-    // ray test touch <
     {
       refetchInterval: 10000
     }
-    // ray test touch >
   );
   useErrorHandler(issueRequestsError);
 

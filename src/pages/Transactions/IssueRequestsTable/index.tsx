@@ -102,11 +102,9 @@ const IssueRequestsTable = (): JSX.Element => {
       `userParachainAddress_eq: "${address}"` // `WHERE` condition
     ],
     issuesFetcher,
-    // ray test touch <
     {
       refetchInterval: 10000
     }
-    // ray test touch >
   );
   useErrorHandler(issueRequestsError);
 

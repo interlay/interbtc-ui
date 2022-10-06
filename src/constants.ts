@@ -52,7 +52,7 @@ if (BITCOIN_NETWORK === BitcoinNetwork.Mainnet || BITCOIN_NETWORK === BitcoinNet
     // interlay or interlay testnet
     ss58Format = 2032;
   }
-// generic substrate
+  // generic substrate
 } else {
   ss58Format = 42;
 }

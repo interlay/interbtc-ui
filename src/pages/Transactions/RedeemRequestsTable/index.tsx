@@ -100,11 +100,9 @@ const RedeemRequestsTable = (): JSX.Element => {
       `userParachainAddress_eq: "${address}"` // WHERE condition
     ],
     redeemsFetcher,
-    // ray test touch <
     {
       refetchInterval: 10000
     }
-    // ray test touch >
   );
   useErrorHandler(redeemRequestsError);
 
