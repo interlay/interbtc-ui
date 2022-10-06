@@ -24,6 +24,9 @@ import InterlayTable, {
   InterlayTr
 } from '@/components/UI/InterlayTable';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+// ray test touch <
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
+// ray test touch >
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
@@ -103,7 +106,9 @@ const IssueRequestsTable = (): JSX.Element => {
     ],
     issuesFetcher,
     {
-      refetchInterval: 10000
+      // ray test touch <
+      refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
+      // ray test touch >
     }
   );
   useErrorHandler(issueRequestsError);
