@@ -3,6 +3,8 @@ import { ReactComponent as CheckCircleIcon } from '@material-icons/svg/svg/check
 import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
 import styled from 'styled-components';
 
+import { ReactComponent as ChevronRight } from '@/assets/img/icons/chevron-right.svg';
+
 import { theme } from '../theme';
 
 const BaseCloseIcon = styled(CloseIcon)`
@@ -19,4 +21,7 @@ const BaseCheckCircleIcon = styled(CheckCircleIcon)`
   fill: ${theme.colors.textSecondary};
 `;
 
-export { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseCloseIcon };
+// TODO: our icon component should not add a fixed width, height, fill etc..., all of that should be customizable
+const BaseChevronRight = styled(ChevronRight)``;
+
+export { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseChevronRight, BaseCloseIcon };
