@@ -58,6 +58,7 @@ type Props = {
   collateralToken: CurrencyExt;
   remainingCapacity: MonetaryAmount<CollateralCurrencyExt>;
   lockedAmountBTC: string;
+  wrappedId: string;
 };
 
 type InheritAttrs = Omit<FormHTMLAttributes<HTMLFormElement>, keyof Props | 'children'>;
@@ -70,6 +71,7 @@ const IssueRedeemForm = ({
   collateralToken,
   remainingCapacity,
   lockedAmountBTC,
+  wrappedId,
   ...props
 }: IssueRedeemFormProps): JSX.Element => {
   const { register, handleSubmit: h, watch, setError, setValue } = useForm<IssueRedeemFormData>({
@@ -169,7 +171,7 @@ const IssueRedeemForm = ({
   const amountLabelId = useId();
 
   const isIssueModal = variant === 'issue';
-  const title = isIssueModal ? 'Issue kBTC' : 'Redeem kBTC';
+  const title = isIssueModal ? `Issue ${wrappedId}` : `Redeem ${wrappedId}`;
   const label = isIssueModal ? 'Issue amount' : 'Reddem amount';
   const highlightTerm = isIssueModal ? 'Maximum vault capacity:' : 'Locked:';
 
