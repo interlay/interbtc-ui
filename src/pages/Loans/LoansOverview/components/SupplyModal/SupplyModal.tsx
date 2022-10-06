@@ -1,11 +1,11 @@
 import { Modal, ModalProps, Tabs, TabsItem } from '@/component-library';
-import { SupplyAssetData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { SupplyAssetData, SupplyPositionData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { SupplyForm } from './SupplyForm';
 
 type Props = {
-  // TODO: add this types to a common file
-  asset: SupplyAssetData | null;
+  asset?: SupplyAssetData;
+  position?: SupplyPositionData;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;

@@ -7,6 +7,18 @@ type SupplyAssetData = {
   balance: string;
 };
 
+type SupplyPositionData = {
+  currency: CurrencyIdLiteral;
+  amount: string;
+  apy: string;
+  apyEarned: string;
+};
+
+type SupplyData = {
+  positions: SupplyPositionData[];
+  assets: SupplyAssetData[];
+};
+
 type LoansData = {
   positions: {
     supply: string;
@@ -14,9 +26,7 @@ type LoansData = {
     apyEarned: string;
     loanStatus: string;
   };
-  supply: {
-    assets: SupplyAssetData[];
-  };
+  supply: SupplyData;
 };
 
 const useGetLoansData = (): LoansData => {
@@ -28,8 +38,14 @@ const useGetLoansData = (): LoansData => {
       loanStatus: 'Safe'
     },
     supply: {
+      positions: [{ currency: CurrencyIdLiteral.DOT, apy: '4.01%', amount: '1.12454', apyEarned: '1.02%' }],
       assets: [
-        { currency: CurrencyIdLiteral.DOT, apy: '4.01%', apyAssets: [CurrencyIdLiteral.KINT], balance: '1.12454' },
+        {
+          currency: CurrencyIdLiteral.DOT,
+          apy: '4.01%',
+          apyAssets: [CurrencyIdLiteral.KINT],
+          balance: '1.12454'
+        },
         {
           currency: CurrencyIdLiteral.KSM,
           apy: '16.98%',
@@ -42,4 +58,4 @@ const useGetLoansData = (): LoansData => {
 };
 
 export { useGetLoansData };
-export type { SupplyAssetData };
+export type { SupplyAssetData, SupplyData, SupplyPositionData };

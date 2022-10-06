@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
-import { Span, Stack, theme } from '@/component-library';
+import { H2, Span, Stack, theme } from '@/component-library';
 
 const StyledApyTag = styled(Span)`
   border-radius: ${theme.rounded.full};
   padding: ${theme.spacing.spacing2};
-  background-color: ${theme.colors.bgPrimary};
+  background-color: ${theme.card.secondaryBg};
   align-self: flex-start;
 `;
 
@@ -26,4 +26,8 @@ const StyledTableWrapper = styled(Stack)`
   flex: 1;
 `;
 
-export { StyledApyTag, StyledAsset, StyledTablesWrapper, StyledTableWrapper };
+const StyledMarketTitle = styled(H2)`
+  font-size: ${theme.text.xl2};
+`;
+
+export { StyledApyTag, StyledAsset, StyledMarketTitle, StyledTablesWrapper, StyledTableWrapper };

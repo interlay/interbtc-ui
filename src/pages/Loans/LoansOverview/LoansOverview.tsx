@@ -19,7 +19,7 @@ const InterlendOverview = (): JSX.Element => {
           </P>
           <LoansOverview apyEarned={apyEarned} borrow={borrowBalance} supply={supplyBalance} loanStatus={loanStatus} />
         </Stack>
-        <LoansMarkets borrow={supply.assets} supply={supply.assets} />
+        <LoansMarkets borrow={supply.assets} supply={supply} />
       </Stack>
     </MainContainer>
   );
