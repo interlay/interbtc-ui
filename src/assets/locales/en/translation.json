@@ -503,6 +503,7 @@
     "disconnect": "Disconnect"
   },
   "loans": {
+    "brand_name": "Interlend",
     "withdraw": "Withdraw",
     "supply": "Supply"
   }

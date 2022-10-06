@@ -1,15 +1,15 @@
 import { Card } from '@/component-library';
 
-import { StyledDd, StyledDItem, StyledDl, StyledDt } from './LoansOverview.style';
+import { StyledDd, StyledDItem, StyledDl, StyledDt } from './LoansInsights.style';
 
-type LoansOverviewProps = {
+type LoansInsightsProps = {
   supply: string;
   borrow: string;
   apyEarned: string;
   loanStatus: string;
 };
 
-const LoansOverview = ({ supply, apyEarned, borrow, loanStatus }: LoansOverviewProps): JSX.Element => (
+const LoansInsights = ({ supply, apyEarned, borrow, loanStatus }: LoansInsightsProps): JSX.Element => (
   <Card>
     <StyledDl>
       <StyledDItem>
@@ -32,5 +32,5 @@ const LoansOverview = ({ supply, apyEarned, borrow, loanStatus }: LoansOverviewP
   </Card>
 );
 
-export { LoansOverview };
-export type { LoansOverviewProps };
+export { LoansInsights };
+export type { LoansInsightsProps };
