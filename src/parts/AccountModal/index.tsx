@@ -1,16 +1,12 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-// ray test touch <
 import { Keyring } from '@polkadot/keyring';
-// ray test touch >
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
 import { WalletSourceName } from '@/config/wallets';
-// ray test touch <
 import { SS58_FORMAT } from '@/constants';
-// ray test touch >
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
@@ -85,11 +81,10 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     };
 
     const handleAccountSelect = async (newAccount: InjectedAccountWithMeta) => {
-      // ray test touch <
       const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
       const theSelectedAccount = keyring.addFromAddress(newAccount.address, newAccount.meta);
       setSelectedAccount(theSelectedAccount);
-      // ray test touch >
+
       onClose();
     };
 

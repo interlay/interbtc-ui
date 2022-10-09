@@ -2,7 +2,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './i18n';
 
 import { ChainBalance, FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
-import { Keyring } from '@polkadot/api';
+import { Keyring } from '@polkadot/keyring';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
