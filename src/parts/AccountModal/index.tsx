@@ -1,10 +1,16 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+// ray test touch <
+import { Keyring } from '@polkadot/keyring';
+// ray test touch >
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
 import { WalletSourceName } from '@/config/wallets';
+// ray test touch <
+import { SS58_FORMAT } from '@/constants';
+// ray test touch >
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
@@ -41,7 +47,7 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 );
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
-  const { extensions, keyring, selectedAccount, accounts } = useSubstrateSecureState();
+  const { extensions, selectedAccount, accounts } = useSubstrateSecureState();
 
   const { t } = useTranslation();
   const focusRef = React.useRef(null);
@@ -71,7 +77,6 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
 
   // State of the modal content.
   const modalContent = React.useMemo(() => {
-    if (!keyring) return;
     if (!setSelectedAccount) return;
     if (!removeSelectedAccount) return;
 
@@ -80,7 +85,11 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     };
 
     const handleAccountSelect = async (newAccount: InjectedAccountWithMeta) => {
-      setSelectedAccount(keyring.getPair(newAccount.address));
+      // ray test touch <
+      const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
+      const theSelectedAccount = keyring.addFromAddress(newAccount.address, newAccount.meta);
+      setSelectedAccount(theSelectedAccount);
+      // ray test touch >
       onClose();
     };
 
@@ -133,7 +142,6 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     onClose,
     selectedWallet,
     t,
-    keyring,
     setSelectedAccount,
     removeSelectedAccount
   ]);
