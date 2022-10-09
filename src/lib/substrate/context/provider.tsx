@@ -14,10 +14,10 @@ import * as constants from '@/constants';
 
 import { substrateReducer } from './reducer';
 import {
-  _KeyringPair,
   ActionType,
   ApiStatus,
   Dispatch,
+  KeyringPair,
   KeyringStatus,
   PolkadotKeyringPair,
   State,
@@ -160,7 +160,7 @@ const loadAccounts = async (api: ApiPromise, dispatch: Dispatch): Promise<void> 
 const SubstrateStateContext = React.createContext<SubstrateStateContextInterface | undefined>(undefined);
 
 const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.Element => {
-  const [lsValue, setLSValue, removeLS] = useLocalStorage<_KeyringPair | undefined>(
+  const [lsValue, setLSValue, removeLS] = useLocalStorage<KeyringPair | undefined>(
     SELECTED_ACCOUNT_LOCAL_STORAGE_KEY,
     undefined
   );
@@ -223,7 +223,7 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     async (newAccount: PolkadotKeyringPair) => {
       if (!setLSValue) return;
 
-      const typedNewAccount = newAccount as _KeyringPair;
+      const typedNewAccount = newAccount as KeyringPair;
       dispatch({ type: ActionType.SetSelectedAccount, payload: typedNewAccount });
       setLSValue(typedNewAccount);
     },

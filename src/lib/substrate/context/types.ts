@@ -93,9 +93,9 @@ interface SubstrateStateContextInterface {
 }
 
 export type {
-  KeyringPair as _KeyringPair,
   Action,
   Dispatch,
+  KeyringPair,
   PolkadotKeyringPair,
   SecureState,
   State,

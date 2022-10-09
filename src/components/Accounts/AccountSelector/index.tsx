@@ -12,13 +12,13 @@ import Select, {
   SelectOptions,
   SelectText
 } from '@/components/Select';
-import { _KeyringPair } from '@/lib/substrate';
+import { KeyringPair } from '@/lib/substrate';
 
 interface Props {
   accounts: Array<InjectedAccountWithMeta>;
-  selectedAccount: _KeyringPair;
+  selectedAccount: KeyringPair;
   label: string;
-  onChange: (account: _KeyringPair) => void;
+  onChange: (account: KeyringPair) => void;
 }
 
 const AccountSelector = ({ accounts, selectedAccount, label, onChange }: Props): JSX.Element => (

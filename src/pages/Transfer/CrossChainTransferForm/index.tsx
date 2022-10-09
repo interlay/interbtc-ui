@@ -19,7 +19,7 @@ import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader'
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { _KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
+import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import { ChainType } from '@/types/chains.types';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -54,7 +54,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   >(undefined);
   const [fromChain, setFromChain] = React.useState<ChainType | undefined>(ChainType.RelayChain);
   const [toChain, setToChain] = React.useState<ChainType | undefined>(ChainType.Parachain);
-  const [destination, setDestination] = React.useState<_KeyringPair | undefined>(undefined);
+  const [destination, setDestination] = React.useState<KeyringPair | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   // TODO: this could be removed form state using React hook form getValue/watch
