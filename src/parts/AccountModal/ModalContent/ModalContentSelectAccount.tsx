@@ -14,7 +14,7 @@ interface ModalContentSelectAccountProps {
   accountsFromSelectedWallet: InjectedAccountWithMeta[];
   address: string;
   selectedWallet: WalletSourceName;
-  handleAccountSelect: (address: string) => void;
+  handleAccountSelect: (address: InjectedAccountWithMeta) => void;
   handleWalletSelect: (wallet: WalletSourceName | undefined) => void;
   handleAccountDisconnect: () => void;
 }
@@ -42,7 +42,7 @@ const ModalContentSelectAccount = ({
                   { [ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES]: selected },
                   'w-full'
                 )}
-                onClick={() => handleAccountSelect(account.address)}
+                onClick={() => handleAccountSelect(account)}
               >
                 <div className={clsx('flex', 'flex-col', 'items-start')}>
                   <div className='font-medium'>{account.meta.name}</div>
