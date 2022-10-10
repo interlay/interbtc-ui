@@ -1,19 +1,21 @@
+import { useTranslation } from 'react-i18next';
+
 import { Modal, ModalProps, Tabs, TabsItem } from '@/component-library';
 import { LoanType } from '@/pages/Loans/types';
 import {
   BorrowAssetData,
   BorrowPositionData,
-  SupplyAssetData,
-  SupplyPositionData
+  LendAssetData,
+  LendPositionData
 } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { BorrowForm } from './BorrowForm';
-import { SupplyForm } from './SupplyForm';
+import { LendForm } from './LendForm';
 
 type Props = {
   variant: LoanType;
-  asset?: SupplyAssetData | BorrowAssetData;
-  position?: SupplyPositionData | BorrowPositionData;
+  asset?: LendAssetData | BorrowAssetData;
+  position?: LendPositionData | BorrowPositionData;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -21,6 +23,8 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 type LoanModalProps = Props & InheritAttrs;
 
 const LoanModal = ({ variant = 'lend', asset, ...props }: LoanModalProps): JSX.Element | null => {
+  const { t } = useTranslation();
+
   if (!asset) {
     return null;
   }
@@ -29,10 +33,10 @@ const LoanModal = ({ variant = 'lend', asset, ...props }: LoanModalProps): JSX.E
     return (
       <Modal {...props}>
         <Tabs>
-          <TabsItem title='Borrow'>
+          <TabsItem title={t('loans.borrow')}>
             <BorrowForm asset={asset as BorrowAssetData} variant='borrow' />
           </TabsItem>
-          <TabsItem title='Repay'>
+          <TabsItem title={t('loans.repay')}>
             <BorrowForm asset={asset as BorrowAssetData} variant='repay' />
           </TabsItem>
         </Tabs>
@@ -43,11 +47,11 @@ const LoanModal = ({ variant = 'lend', asset, ...props }: LoanModalProps): JSX.E
   return (
     <Modal {...props}>
       <Tabs>
-        <TabsItem title='Supply'>
-          <SupplyForm asset={asset as SupplyAssetData} variant='lend' />
+        <TabsItem title={t('loans.lend')}>
+          <LendForm asset={asset as LendAssetData} variant='lend' />
         </TabsItem>
-        <TabsItem title='Withdraw'>
-          <SupplyForm asset={asset as SupplyAssetData} variant='withdraw' />
+        <TabsItem title={t('loans.withdraw')}>
+          <LendForm asset={asset as LendAssetData} variant='withdraw' />
         </TabsItem>
       </Tabs>
     </Modal>
