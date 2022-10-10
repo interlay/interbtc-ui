@@ -4,6 +4,8 @@ import { KeyringPair as PolkadotKeyringPair, KeyringPair$Meta } from '@polkadot/
 import type { DefinitionRpcExt } from '@polkadot/types/types';
 import { Keyring } from '@polkadot/ui-keyring/Keyring';
 
+// TODO: make types name not so generic
+
 enum KeyringStatus {
   Idle = 'IDLE',
   Loading = 'LOADING',

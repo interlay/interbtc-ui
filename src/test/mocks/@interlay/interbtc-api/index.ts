@@ -7,6 +7,7 @@ import { Signer } from '@polkadot/types/types';
 import {
   mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
+  mockChainType,
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
@@ -16,6 +17,7 @@ import {
   mockRedeemBurn,
   mockRedeemGetBurnExchangeRate,
   mockRedeemGetMaxBurnableTokens,
+  mockSystemChain,
   mockSystemGetStatusCode,
   mockTokensSubscribeToBalance,
   mockTokensTotal,
@@ -31,9 +33,17 @@ const mockSetAccount = jest.fn((_account: AddressOrPair, _signer?: Signer) => un
 
 // To mock new lib methods extend this object.
 const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
+  removeAccount: jest.fn(),
   setAccount: mockSetAccount,
   api: {
-    createType: mockApiCreateType
+    createType: mockApiCreateType,
+    rpc: {
+      system: {
+        chain: mockSystemChain,
+        chainType: mockChainType
+      }
+    },
+    on: jest.fn()
   },
   btcRelay: { getLatestBlockHeight: mockBtcRelayGetLatestBlockHeight },
   electrsAPI: { getLatestBlockHeight: mockElectrsAPIGetLatestBlockHeight },
@@ -71,9 +81,10 @@ jest.mock('@interlay/interbtc-api', () => {
 
   return {
     ...actualInterBtcApi,
+    newAccountId: jest.fn().mockReturnValue('a3bS5ufTQYaWkWtiKH9urgnC81QWFArJz4TJCFXiBCj8C1oUm'),
     createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi)
   };
 });
 
-export { mockSetAccount };
+export { mockInterBtcApi, mockSetAccount };
 export * from './parachain';
