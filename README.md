@@ -53,6 +53,8 @@ To achieve this, create a file `.env.development.local` and fill it with the fol
 
 ### Integration tests
 
+Before running the tests, make sure you have created `.env.test` and filled with the necessary environment variables.
+
 - Run `yarn test`
 
 #### Interlay Network
