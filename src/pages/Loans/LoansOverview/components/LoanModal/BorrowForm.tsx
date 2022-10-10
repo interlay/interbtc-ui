@@ -2,25 +2,26 @@ import { useId } from '@react-aria/utils';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { CTA, H3, P, Stack, TokenInput } from '@/component-library';
-import { SupplyAssetData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { BorrowAction } from '@/pages/Loans/types';
+import { BorrowAssetData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
-import { StyledDItem, StyledDl } from './SupplyModal.style';
+import { StyledDItem, StyledDl } from './LoanModal.style';
 
 const getContentMap = (t: TFunction) => ({
-  supply: {
-    title: t('loans.supply')
+  borrow: {
+    title: t('loans.borrow')
   },
-  withdraw: {
-    title: t('loans.withdraw')
+  repay: {
+    title: t('loans.repay')
   }
 });
 
-type SupplyFormProps = {
-  asset: SupplyAssetData;
-  variant: 'supply' | 'withdraw';
+type BorrowFormProps = {
+  asset: BorrowAssetData;
+  variant: BorrowAction;
 };
 
-const SupplyForm = ({ asset, variant }: SupplyFormProps): JSX.Element => {
+const BorrowForm = ({ asset, variant }: BorrowFormProps): JSX.Element => {
   const titleId = useId();
   const { t } = useTranslation();
   const content = getContentMap(t)[variant];
@@ -40,7 +41,7 @@ const SupplyForm = ({ asset, variant }: SupplyFormProps): JSX.Element => {
             <dt>APY</dt>
             <dd>11.84%</dd>
           </StyledDItem>
-          {variant === 'supply' && (
+          {variant === 'borrow' && (
             <StyledDItem>
               <dt>INTR Rewards?</dt>
               <dd>14.14%</dd>
@@ -57,5 +58,5 @@ const SupplyForm = ({ asset, variant }: SupplyFormProps): JSX.Element => {
   );
 };
 
-export { SupplyForm };
-export type { SupplyFormProps };
+export { BorrowForm };
+export type { BorrowFormProps };

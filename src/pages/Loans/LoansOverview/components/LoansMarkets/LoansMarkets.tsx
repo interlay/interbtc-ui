@@ -1,18 +1,18 @@
-import { SupplyAssetData, SupplyData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { BorrowData, SupplyData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
+import { BorrowMarket } from './BorrowMarket';
 import { StyledTablesWrapper } from './LoansMarkets.style';
 import { SupplyMarket } from './SupplyMarket';
 
 type LoansMarketsProps = {
   supply: SupplyData;
-  // TODO: implement
-  borrow: SupplyAssetData[];
+  borrow: BorrowData;
 };
 
-const LoansMarkets = ({ supply }: LoansMarketsProps): JSX.Element => (
+const LoansMarkets = ({ supply, borrow }: LoansMarketsProps): JSX.Element => (
   <StyledTablesWrapper>
     <SupplyMarket assets={supply.assets} positions={supply.positions} />
-    <SupplyMarket assets={supply.assets} positions={supply.positions} />
+    <BorrowMarket assets={borrow.assets} positions={borrow.positions} />
   </StyledTablesWrapper>
 );
 

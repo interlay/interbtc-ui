@@ -533,6 +533,11 @@
   "loans": {
     "brand_name": "Interlend",
     "withdraw": "Withdraw",
-    "supply": "Supply"
+    "supply": "Supply",
+    "borrow": "Borrow",
+    "repay": "Repay",
+    "lend": "Lend",
+    "my_lend_positions": "My Lend Positions",
+    "my_borrow_positions": "My Borrow Positions"
   }
 }
