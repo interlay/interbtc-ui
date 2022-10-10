@@ -1,6 +1,5 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
-import * as React from 'react';
 
 import { shortAddress } from '@/common/utils/utils';
 import Select, {
@@ -13,12 +12,13 @@ import Select, {
   SelectOptions,
   SelectText
 } from '@/components/Select';
+import { KeyringPair } from '@/lib/substrate';
 
 interface Props {
   accounts: Array<InjectedAccountWithMeta>;
-  selectedAccount: InjectedAccountWithMeta;
+  selectedAccount: KeyringPair;
   label: string;
-  onChange: (account: InjectedAccountWithMeta) => void;
+  onChange: (account: KeyringPair) => void;
 }
 
 const AccountSelector = ({ accounts, selectedAccount, label, onChange }: Props): JSX.Element => (

@@ -28,6 +28,7 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -99,7 +100,8 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
 
@@ -412,7 +414,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
             <SubmitButton
               disabled={
                 // TODO: `parachainStatus` and `address` should be checked at upper levels
-                parachainStatus !== ParachainStatus.Running || !address
+                parachainStatus !== ParachainStatus.Running || !selectedAccount
               }
               pending={submitStatus === STATUSES.PENDING}
             >

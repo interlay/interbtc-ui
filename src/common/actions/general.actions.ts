@@ -4,8 +4,6 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
 
 import {
-  CHANGE_ADDRESS,
-  ChangeAddress,
   INIT_GENERAL_DATA_ACTION,
   InitGeneralDataAction,
   IS_BRIDGE_LOADED,
@@ -14,8 +12,6 @@ import {
   IsBridgeLoaded,
   IsFaucetLoaded,
   IsVaultClientLoaded,
-  SET_INSTALLED_EXTENSION,
-  SetInstalledExtension,
   SHOW_ACCOUNT_MODAL,
   ShowAccountModal,
   UPDATE_BALANCE_POLKA_BTC,
@@ -46,11 +42,6 @@ export const isFaucetLoaded = (isLoaded = false): IsFaucetLoaded => ({
 export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
   type: IS_VAULT_CLIENT_LOADED,
   isLoaded
-});
-
-export const changeAddressAction = (address: string): ChangeAddress => ({
-  type: CHANGE_ADDRESS,
-  address
 });
 
 export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmount): UpdateBalancePolkaBTC => ({
@@ -99,11 +90,6 @@ export const initGeneralDataAction = (
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({
   type: SHOW_ACCOUNT_MODAL,
   showAccountModal
-});
-
-export const setInstalledExtensionAction = (extensions: string[]): SetInstalledExtension => ({
-  type: SET_INSTALLED_EXTENSION,
-  extensions
 });
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({

@@ -1,13 +1,12 @@
 import clsx from 'clsx';
 import { useMutation, useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
 
-import { StoreType } from '@/common/types/util.types';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
 } from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 
 interface CustomProps {
@@ -19,7 +18,7 @@ const ClaimRewardsButton = ({
   claimableRewardAmount,
   ...rest
 }: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
-  const { address } = useSelector((state: StoreType) => state.general);
+  const { selectedAccount } = useSubstrateSecureState();
 
   const queryClient = useQueryClient();
 
@@ -29,8 +28,8 @@ const ClaimRewardsButton = ({
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewardEstimate', address]);
-        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewards', address]);
+        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccount?.address]);
+        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccount?.address]);
       }
     }
   );
