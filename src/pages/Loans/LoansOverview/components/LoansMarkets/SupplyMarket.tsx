@@ -1,12 +1,12 @@
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { CoinIcon, Span, Stack } from '@/component-library';
-import { Icon } from '@/component-library/Icon';
+import { Span, Stack } from '@/component-library';
 import { SupplyAssetData, SupplyPositionData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
-import { SupplyModal } from '../SupplyModal';
-import { StyledApyTag, StyledAsset, StyledTableWrapper } from './LoansMarkets.style';
+import { LoanModal } from '../LoanModal';
+import { StyledApyTag, StyledTableWrapper } from './LoansMarkets.style';
+import { MarketAsset } from './MarketAsset';
 import { MarketTable } from './MarketTable';
 import { SupplyAssetsColumns, SupplyAssetsTableRow, SupplyPositionColumns, SupplyPositionTableRow } from './types';
 
@@ -14,8 +14,7 @@ import { SupplyAssetsColumns, SupplyAssetsTableRow, SupplyPositionColumns, Suppl
 const supplyAssetsColumns = [
   { name: 'Asset', uid: SupplyAssetsColumns.ASSET },
   { name: 'APY', uid: SupplyAssetsColumns.APY },
-  { name: 'Wallet Balance', uid: SupplyAssetsColumns.WALLET_BALANCE },
-  { name: '', uid: SupplyAssetsColumns.END_ADORNMENT }
+  { name: 'Wallet Balance', uid: SupplyAssetsColumns.WALLET_BALANCE }
 ];
 
 // TODO: translations
@@ -23,8 +22,7 @@ const supplyPositionColumns = [
   { name: 'Asset', uid: SupplyPositionColumns.ASSET },
   { name: 'Supplied', uid: SupplyPositionColumns.SUPPLIED },
   { name: 'Supply APY', uid: SupplyPositionColumns.SUPPLY_APY },
-  { name: 'APY Earned', uid: SupplyPositionColumns.SUPPLY_APY },
-  { name: '', uid: SupplyPositionColumns.END_ADORNMENT }
+  { name: 'APY Earned', uid: SupplyPositionColumns.APY_EARNED }
 ];
 
 type UseAssetState = {
@@ -39,14 +37,8 @@ type SupplyMarketProps = {
   positions: SupplyPositionData[];
 };
 
-const MarketAsset = ({ currency }: { currency: CurrencyIdLiteral }): JSX.Element => (
-  <StyledAsset>
-    <CoinIcon coin={currency} size='small' />
-    <Span>{currency}</Span>
-  </StyledAsset>
-);
-
 const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => {
+  const { t } = useTranslation();
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
   // TODO: subject to change in the future
@@ -76,8 +68,7 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
         asset,
         supplied: amount,
         'supply-apy': apy,
-        'apy-earned': apyEarned,
-        'end-adornment': <Icon variant='chevron-right' width='1.5rem' height='1.5rem' />
+        'apy-earned': apyEarned
       };
     }
   );
@@ -96,8 +87,7 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
       id: key,
       asset,
       apy: apyWithEarnedAssets,
-      'wallet-balance': balance,
-      'end-adornment': <Icon variant='chevron-right' width='1.5rem' height='1.5rem' />
+      'wallet-balance': balance
     };
   });
 
@@ -107,19 +97,20 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
     <StyledTableWrapper spacing='double'>
       {hasSupplyPositions && (
         <MarketTable
-          title='My Lend Positions'
+          title={t('loans.my_lend_positions')}
           onRowAction={handlePositionRowAction}
           rows={supplyPositionsTableRows}
           columns={supplyPositionColumns}
         />
       )}
       <MarketTable
-        title='Lend'
+        title={t('loans.lend')}
         onRowAction={handleAssetRowAction}
         rows={supplyAssetsTableRows}
         columns={supplyAssetsColumns}
       />
-      <SupplyModal
+      <LoanModal
+        variant='lend'
         open={!!selectedAsset.data}
         asset={selectedAsset.data}
         position={selectedAsset.position}
@@ -130,4 +121,4 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
 };
 
 export { SupplyMarket };
-export type { SupplyAssetsTableRow, SupplyMarketProps, SupplyPositionTableRow };
+export type { SupplyMarketProps };
