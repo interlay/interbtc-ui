@@ -2,42 +2,42 @@ import { Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Span, Stack } from '@/component-library';
-import { SupplyAssetData, SupplyPositionData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { LendAssetData, LendPositionData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { LoanModal } from '../LoanModal';
 import { StyledApyTag, StyledTableWrapper } from './LoansMarkets.style';
 import { MarketAsset } from './MarketAsset';
 import { MarketTable } from './MarketTable';
-import { SupplyAssetsColumns, SupplyAssetsTableRow, SupplyPositionColumns, SupplyPositionTableRow } from './types';
+import { LendAssetsColumns, LendAssetsTableRow, LendPositionColumns, LendPositionTableRow } from './types';
 
 // TODO: translations
-const supplyAssetsColumns = [
-  { name: 'Asset', uid: SupplyAssetsColumns.ASSET },
-  { name: 'APY', uid: SupplyAssetsColumns.APY },
-  { name: 'Wallet Balance', uid: SupplyAssetsColumns.WALLET_BALANCE }
+const lendAssetsColumns = [
+  { name: 'Asset', uid: LendAssetsColumns.ASSET },
+  { name: 'APY', uid: LendAssetsColumns.APY },
+  { name: 'Wallet Balance', uid: LendAssetsColumns.WALLET_BALANCE }
 ];
 
 // TODO: translations
-const supplyPositionColumns = [
-  { name: 'Asset', uid: SupplyPositionColumns.ASSET },
-  { name: 'Supplied', uid: SupplyPositionColumns.SUPPLIED },
-  { name: 'Supply APY', uid: SupplyPositionColumns.SUPPLY_APY },
-  { name: 'APY Earned', uid: SupplyPositionColumns.APY_EARNED }
+const lendPositionColumns = [
+  { name: 'Asset', uid: LendPositionColumns.ASSET },
+  { name: 'Supplied', uid: LendPositionColumns.SUPPLIED },
+  { name: 'Supply APY', uid: LendPositionColumns.SUPPLY_APY },
+  { name: 'APY Earned', uid: LendPositionColumns.APY_EARNED }
 ];
 
 type UseAssetState = {
-  data?: SupplyAssetData;
-  position?: SupplyPositionData;
+  data?: LendAssetData;
+  position?: LendPositionData;
 };
 
 const defaultAssetState: UseAssetState = { data: undefined, position: undefined };
 
-type SupplyMarketProps = {
-  assets: SupplyAssetData[];
-  positions: SupplyPositionData[];
+type LendMarketProps = {
+  assets: LendAssetData[];
+  positions: LendPositionData[];
 };
 
-const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => {
+const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
   const { t } = useTranslation();
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
@@ -59,21 +59,19 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
 
   const handleClose = () => setAsset(defaultAssetState);
 
-  const supplyPositionsTableRows: SupplyPositionTableRow[] = positions.map(
-    ({ apy, amount, currency, apyEarned }, key) => {
-      const asset = <MarketAsset currency={currency} />;
+  const lendPositionsTableRows: LendPositionTableRow[] = positions.map(({ apy, amount, currency, apyEarned }, key) => {
+    const asset = <MarketAsset currency={currency} />;
 
-      return {
-        id: key,
-        asset,
-        supplied: amount,
-        'supply-apy': apy,
-        'apy-earned': apyEarned
-      };
-    }
-  );
+    return {
+      id: key,
+      asset,
+      supplied: amount,
+      'supply-apy': apy,
+      'apy-earned': apyEarned
+    };
+  });
 
-  const supplyAssetsTableRows: SupplyAssetsTableRow[] = assets.map(({ apy, apyAssets, currency, balance }, key) => {
+  const lendAssetsTableRows: LendAssetsTableRow[] = assets.map(({ apy, apyAssets, currency, balance }, key) => {
     const apyWithEarnedAssets = (
       <Stack spacing='half'>
         <Span>{apy}</Span>
@@ -91,23 +89,23 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
     };
   });
 
-  const hasSupplyPositions = !!supplyPositionsTableRows.length;
+  const hasLendPositions = !!lendPositionsTableRows.length;
 
   return (
     <StyledTableWrapper spacing='double'>
-      {hasSupplyPositions && (
+      {hasLendPositions && (
         <MarketTable
           title={t('loans.my_lend_positions')}
           onRowAction={handlePositionRowAction}
-          rows={supplyPositionsTableRows}
-          columns={supplyPositionColumns}
+          rows={lendPositionsTableRows}
+          columns={lendPositionColumns}
         />
       )}
       <MarketTable
         title={t('loans.lend')}
         onRowAction={handleAssetRowAction}
-        rows={supplyAssetsTableRows}
-        columns={supplyAssetsColumns}
+        rows={lendAssetsTableRows}
+        columns={lendAssetsColumns}
       />
       <LoanModal
         variant='lend'
@@ -120,5 +118,5 @@ const SupplyMarket = ({ assets, positions }: SupplyMarketProps): JSX.Element => 
   );
 };
 
-export { SupplyMarket };
-export type { SupplyMarketProps };
+export { LendMarket };
+export type { LendMarketProps };

@@ -1,22 +1,22 @@
 import { CurrencyIdLiteral } from '@interlay/interbtc-api';
 
-type SupplyAssetData = {
+type LendAssetData = {
   currency: CurrencyIdLiteral;
   apy: string;
   apyAssets: CurrencyIdLiteral[];
   balance: string;
 };
 
-type SupplyPositionData = {
+type LendPositionData = {
   currency: CurrencyIdLiteral;
   amount: string;
   apy: string;
   apyEarned: string;
 };
 
-type SupplyData = {
-  positions: SupplyPositionData[];
-  assets: SupplyAssetData[];
+type LendData = {
+  positions: LendPositionData[];
+  assets: LendAssetData[];
 };
 
 type BorrowAssetData = {
@@ -44,7 +44,7 @@ type LoansData = {
     apyEarned: string;
     loanStatus: string;
   };
-  supply: SupplyData;
+  lend: LendData;
   borrow: BorrowData;
 };
 
@@ -56,7 +56,7 @@ const useGetLoansData = (): LoansData => {
       apyEarned: '$0.00',
       loanStatus: 'Safe'
     },
-    supply: {
+    lend: {
       positions: [{ currency: CurrencyIdLiteral.DOT, apy: '4.01%', amount: '1.12454', apyEarned: '1.02%' }],
       assets: [
         {
@@ -94,4 +94,4 @@ const useGetLoansData = (): LoansData => {
 };
 
 export { useGetLoansData };
-export type { BorrowAssetData, BorrowData, BorrowPositionData, SupplyAssetData, SupplyData, SupplyPositionData };
+export type { BorrowAssetData, BorrowData, BorrowPositionData, LendAssetData, LendData, LendPositionData };

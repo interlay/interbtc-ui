@@ -1,33 +1,33 @@
 import { ReactNode } from 'react';
 
-// SUPPLY
+// LEND
 
-enum SupplyAssetsColumns {
+enum LendAssetsColumns {
   ASSET = 'asset',
   APY = 'apy',
   WALLET_BALANCE = 'wallet-balance'
 }
 
-type SupplyAssetsTableRow = {
+type LendAssetsTableRow = {
   id: number;
-  [SupplyAssetsColumns.ASSET]: ReactNode;
-  [SupplyAssetsColumns.APY]: ReactNode;
-  [SupplyAssetsColumns.WALLET_BALANCE]: string;
+  [LendAssetsColumns.ASSET]: ReactNode;
+  [LendAssetsColumns.APY]: ReactNode;
+  [LendAssetsColumns.WALLET_BALANCE]: string;
 };
 
-enum SupplyPositionColumns {
+enum LendPositionColumns {
   ASSET = 'asset',
   SUPPLIED = 'supplied',
   SUPPLY_APY = 'supply-apy',
   APY_EARNED = 'apy-earned'
 }
 
-type SupplyPositionTableRow = {
+type LendPositionTableRow = {
   id: number;
-  [SupplyPositionColumns.ASSET]: ReactNode;
-  [SupplyPositionColumns.SUPPLIED]: string;
-  [SupplyPositionColumns.SUPPLY_APY]: string;
-  [SupplyPositionColumns.APY_EARNED]: string;
+  [LendPositionColumns.ASSET]: ReactNode;
+  [LendPositionColumns.SUPPLIED]: string;
+  [LendPositionColumns.SUPPLY_APY]: string;
+  [LendPositionColumns.APY_EARNED]: string;
 };
 
 // BORROW
@@ -60,5 +60,5 @@ type BorrowPositionTableRow = {
   [BorrowPositionColumns.BORROW_APY]: string;
 };
 
-export { BorrowAssetsColumns, BorrowPositionColumns, SupplyAssetsColumns, SupplyPositionColumns };
-export type { BorrowAssetsTableRow, BorrowPositionTableRow, SupplyAssetsTableRow, SupplyPositionTableRow };
+export { BorrowAssetsColumns, BorrowPositionColumns, LendAssetsColumns, LendPositionColumns };
+export type { BorrowAssetsTableRow, BorrowPositionTableRow, LendAssetsTableRow, LendPositionTableRow };
