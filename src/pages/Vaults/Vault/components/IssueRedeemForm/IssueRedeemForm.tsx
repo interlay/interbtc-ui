@@ -11,7 +11,7 @@ import { useParams } from 'react-router';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { CTA, Input, Stack, TokenField } from '@/component-library';
+import { CTA, Input, Stack, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { URL_PARAMETERS } from '@/utils/constants/links';
@@ -77,11 +77,11 @@ const IssueRedeemForm = ({
   const { register, handleSubmit: h, watch, setError, setValue } = useForm<IssueRedeemFormData>({
     mode: 'onChange'
   });
-  const tokenFieldId = collateralInputId[variant];
+  const tokenInputId = collateralInputId[variant];
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: vaultAddress } = useParams<Record<string, string>>();
   const prices = useGetPrices();
 
-  const inputBTCAmount = watch(tokenFieldId) || '0';
+  const inputBTCAmount = watch(tokenInputId) || '0';
 
   // const [status, setStatus] = useState(STATUSES.IDLE);
   // const [vaultCapacity, setVaultCapacity] = useState(BitcoinAmount.zero());
@@ -155,7 +155,7 @@ const IssueRedeemForm = ({
         if (theBtcToGovernanceToken.status === 'fulfilled') {
           setBTCToGovernanceTokenRate(theBtcToGovernanceToken.value);
         } else {
-          setError(tokenFieldId, {
+          setError(tokenInputId, {
             type: 'validate',
             message: t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
           });
@@ -165,7 +165,7 @@ const IssueRedeemForm = ({
         handleError(error);
       }
     })();
-  }, [collateralToken, bridgeLoaded, handleError, vaultAccountId, setError, t, tokenFieldId]);
+  }, [collateralToken, bridgeLoaded, handleError, vaultAccountId, setError, t, tokenInputId]);
 
   const btcAddressLabelId = useId();
   const amountLabelId = useId();
@@ -194,18 +194,18 @@ const IssueRedeemForm = ({
           <Stack>
             <HighlightDescriptionItem
               clickable={!isIssueModal}
-              onClick={() => setValue(tokenFieldId, 1 as any)}
+              onClick={() => setValue(tokenInputId, 1 as any)}
               term={highlightTerm}
               detail={`${isIssueModal ? remainingCapacity : lockedAmountBTC} BTC`}
             />
             {/* This needs to be in the Input component */}
             <StyledInputLabel id={amountLabelId}>{label}</StyledInputLabel>
-            <TokenField
+            <TokenInput
               aria-labelledby={amountLabelId}
               tokenSymbol='BTC'
               placeholder='0.00'
-              id={tokenFieldId}
-              {...register(tokenFieldId, {
+              id={tokenInputId}
+              {...register(tokenInputId, {
                 required: {
                   value: true,
                   message: t('issue_page.enter_valid_amount')

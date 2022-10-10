@@ -1,14 +1,16 @@
 import { usePress } from '@react-aria/interactions';
+import { ReactNode } from 'react';
 
 import { TokenBalanceLabel, TokenBalanceValue, TokenBalanceWrapper } from './TokenBalance.style';
 
 type TokenBalanceProps = {
   tokenSymbol: string;
-  value: string | number;
+  value: number;
   valueInUSD: string | number;
   onClickBalance?: () => void;
   isDisabled?: boolean;
   className?: string;
+  renderBalance?: (balance: number) => ReactNode;
 };
 
 const TokenBalance = ({
@@ -17,7 +19,8 @@ const TokenBalance = ({
   valueInUSD,
   onClickBalance,
   className,
-  isDisabled
+  isDisabled,
+  renderBalance
 }: TokenBalanceProps): JSX.Element => {
   const isClickable = !!onClickBalance && !isDisabled;
   const { pressProps } = usePress({ onPress: onClickBalance, isDisabled: !isClickable });
@@ -35,7 +38,7 @@ const TokenBalance = ({
       <TokenBalanceLabel>Balance:</TokenBalanceLabel>
       <dd>
         <TokenBalanceValue $clickable={isClickable} {...balanceValueProps}>
-          {value} {tokenSymbol} ({valueInUSD})
+          {renderBalance?.(value) || value} {tokenSymbol} ({valueInUSD})
         </TokenBalanceValue>
       </dd>
     </TokenBalanceWrapper>

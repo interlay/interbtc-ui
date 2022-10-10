@@ -2,30 +2,29 @@ import { Meta, Story } from '@storybook/react';
 
 import { formatUSD } from '@/common/utils/utils';
 
-import { TokenField, TokenFieldProps } from '.';
+import { TokenInput, TokenInputProps } from '.';
 
-const Template: Story<TokenFieldProps> = (args) => <TokenField {...args} aria-label='token field' />;
+const Template: Story<TokenInputProps> = (args) => <TokenInput aria-label='token field' {...args} />;
 
 const WithBalance = Template.bind({});
 WithBalance.args = {
   tokenSymbol: 'KSM',
   valueInUSD: formatUSD(100.0),
-  value: 100.0, // `value`
   balance: 1000.0,
   balanceInUSD: formatUSD(1000.0),
-  isDisabled: false
+  isDisabled: false,
+  renderBalance: (value) => Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 }).format(value)
 };
 
 const WithoutBalance = Template.bind({});
 WithoutBalance.args = {
   tokenSymbol: 'KSM',
-  valueInUSD: formatUSD(100.0),
-  defaultValue: 100.0 // `value`
+  valueInUSD: formatUSD(100.0)
 };
 
 export { WithBalance, WithoutBalance };
 
 export default {
-  title: 'Forms/TokenField',
-  component: TokenField
+  title: 'Forms/TokenInput',
+  component: TokenInput
 } as Meta;

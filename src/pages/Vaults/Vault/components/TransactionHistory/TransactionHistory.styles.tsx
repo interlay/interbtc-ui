@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Card, H3, P, Stack, Strong, Table, Tabs, theme } from '@/component-library';
+import { Card, CTALink, H3, P, Stack, Strong, Table, Tabs, theme } from '@/component-library';
 import { hideScrollbar } from '@/component-library/css';
 
 const StyledWrapper = styled(Card)`
@@ -65,7 +65,12 @@ const StyledTableWrapper = styled.div`
   ${hideScrollbar()}
 `;
 
+const StyledCTALink = styled(CTALink)`
+  align-self: flex-end;
+`;
+
 export {
+  StyledCTALink,
   StyledDate,
   StyledRequest,
   StyledRequestCell,
