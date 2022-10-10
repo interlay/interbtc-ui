@@ -2,26 +2,26 @@ import { useId } from '@react-aria/utils';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { CTA, H3, P, Stack, TokenInput } from '@/component-library';
-import { SupplyAction } from '@/pages/Loans/types';
-import { SupplyAssetData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { LendAction } from '@/pages/Loans/types';
+import { LendAssetData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { StyledDItem, StyledDl } from './LoanModal.style';
 
 const getContentMap = (t: TFunction) => ({
   lend: {
-    title: t('loans.supply')
+    title: t('loans.lend')
   },
   withdraw: {
     title: t('loans.withdraw')
   }
 });
 
-type SupplyFormProps = {
-  asset: SupplyAssetData;
-  variant: SupplyAction;
+type LendFormProps = {
+  asset: LendAssetData;
+  variant: LendAction;
 };
 
-const SupplyForm = ({ asset, variant }: SupplyFormProps): JSX.Element => {
+const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
   const titleId = useId();
   const { t } = useTranslation();
   const content = getContentMap(t)[variant];
@@ -58,5 +58,5 @@ const SupplyForm = ({ asset, variant }: SupplyFormProps): JSX.Element => {
   );
 };
 
-export { SupplyForm };
-export type { SupplyFormProps };
+export { LendForm };
+export type { LendFormProps };
