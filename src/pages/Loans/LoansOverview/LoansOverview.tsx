@@ -8,7 +8,7 @@ import { LoansInsights, LoansMarkets } from './components';
 
 const LoansOverview = (): JSX.Element => {
   const { t } = useTranslation();
-  const { positions, supply } = useGetLoansData();
+  const { positions, supply, borrow } = useGetLoansData();
   const { apyEarned, borrow: borrowBalance, loanStatus, supply: supplyBalance } = positions;
 
   return (
@@ -22,7 +22,7 @@ const LoansOverview = (): JSX.Element => {
           </P>
           <LoansInsights apyEarned={apyEarned} borrow={borrowBalance} supply={supplyBalance} loanStatus={loanStatus} />
         </Stack>
-        <LoansMarkets borrow={supply.assets} supply={supply} />
+        <LoansMarkets borrow={borrow} supply={supply} />
       </Stack>
     </MainContainer>
   );
