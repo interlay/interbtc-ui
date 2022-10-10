@@ -4,10 +4,10 @@ type Borrow = 'borrow';
 
 type LoanType = Lend | Borrow;
 
-type SupplyAction = Lend | 'withdraw';
+type LendAction = Lend | 'withdraw';
 
 type BorrowAction = Borrow | 'repay';
 
-type LoanAction = SupplyAction | BorrowAction;
+type LoanAction = LendAction | BorrowAction;
 
-export type { BorrowAction, LoanAction, LoanType, SupplyAction };
+export type { BorrowAction, LendAction, LoanAction, LoanType };
