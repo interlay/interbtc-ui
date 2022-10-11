@@ -318,7 +318,7 @@ const RedeemForm = (): JSX.Element | null => {
       dispatch(togglePremiumRedeemAction(!premiumRedeemSelected));
     };
 
-    const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
+    const redeemFeeInBTC = redeemFee.toHuman(8);
     const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
       redeemFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
@@ -446,7 +446,7 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(totalBTC)}
+            value={totalBTC.toHuman(8)}
             unitName='BTC'
             approxUSD={totalBTCInUSD}
           />
