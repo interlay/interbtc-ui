@@ -44,10 +44,10 @@ import {
   STAKING_TRANSACTION_FEE_RESERVE_FETCHER,
   stakingTransactionFeeReserveFetcher
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 import { KUSAMA } from '@/utils/constants/relay-chain-names';
+import { useGetBalances } from '@/utils/contexts/balances';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -116,11 +116,8 @@ const Staking = (): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const {
-    governanceTokenBalanceIdle,
-    governanceTokenBalanceLoading,
-    governanceTokenBalance
-  } = useGovernanceTokenBalance();
+  const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
+  const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
 
   const {
     register,
@@ -365,8 +362,7 @@ const Staking = (): JSX.Element => {
 
   const availableBalance = React.useMemo(() => {
     if (
-      governanceTokenBalanceIdle ||
-      governanceTokenBalanceLoading ||
+      isBalancesLoading ||
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading ||
       transactionFeeReserveIdle ||
@@ -387,8 +383,7 @@ const Staking = (): JSX.Element => {
 
     return calculatedBalance.toBig().gte(0) ? calculatedBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
   }, [
-    governanceTokenBalanceIdle,
-    governanceTokenBalanceLoading,
+    isBalancesLoading,
     governanceTokenBalance,
     stakedAmountAndEndBlockIdle,
     stakedAmountAndEndBlockLoading,

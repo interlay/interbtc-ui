@@ -17,6 +17,7 @@ import { SubstrateLoadingAndErrorHandlingWrapper } from '@/lib/substrate';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
+import { BalancesProvider } from './utils/contexts/balances/provider';
 
 const DeveloperConsole = React.lazy(
   () => import(/* webpackChunkName: 'developer-console' */ '@/lib/substrate/components/DeveloperConsole')
@@ -34,7 +35,9 @@ ReactDOM.render(
           <Provider store={store}>
             <SubstrateProvider>
               <SubstrateLoadingAndErrorHandlingWrapper>
-                <App />
+                <BalancesProvider>
+                  <App />
+                </BalancesProvider>
               </SubstrateLoadingAndErrorHandlingWrapper>
               <React.Suspense fallback={null}>
                 <DeveloperConsole />

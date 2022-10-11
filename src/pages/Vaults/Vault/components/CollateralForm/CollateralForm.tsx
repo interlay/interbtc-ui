@@ -14,7 +14,6 @@ import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatNumber, formatUSD } from '@/common/utils/utils';
 import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import useTokenBalance from '@/services/hooks/use-token-balance';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -130,12 +129,6 @@ const CollateralForm = ({
     variant
   );
 
-  const {
-    // tokenBalanceIdle: collateralBalanceIdle,
-    // tokenBalanceLoading: collateralBalanceLoading,
-    tokenBalance: collateralBalance
-  } = useTokenBalance(collateralToken, vaultAddress);
-
   const { isLoading: isGetCollateralizationLoading, data: unparsedScore, error } = useQuery<Big, Error>(
     [GENERIC_FETCHER, 'vaults', 'getVaultCollateralization', vaultAddress, collateralToken, collateralTokenAmount],
     genericFetcher<Big>(),
@@ -220,9 +213,9 @@ const CollateralForm = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
-      return t(`Must be less than ${collateralToken.ticker} balance!`);
-    }
+    // if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
+    //   return t(`Must be less than ${collateralToken.ticker} balance!`);
+    // }
 
     if (!bridgeLoaded) {
       return 'Bridge must be loaded!';

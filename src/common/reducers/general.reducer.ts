@@ -9,12 +9,8 @@ import {
   IS_BRIDGE_LOADED,
   IS_VAULT_CLIENT_LOADED,
   SHOW_ACCOUNT_MODAL,
-  UPDATE_BALANCE_POLKA_BTC,
-  UPDATE_COLLATERAL_TOKEN_BALANCE,
-  UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_HEIGHTS,
-  UPDATE_TOTALS,
-  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE
+  UPDATE_TOTALS
 } from '../types/actions.types';
 import { GeneralState, ParachainStatus } from '../types/util.types';
 
@@ -25,10 +21,6 @@ const initialState = {
   showAccountModal: false,
   totalWrappedTokenAmount: BitcoinAmount.zero(),
   totalLockedCollateralTokenAmount: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
-  wrappedTokenBalance: BitcoinAmount.zero(),
-  wrappedTokenTransferableBalance: BitcoinAmount.zero(),
-  collateralTokenBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
-  collateralTokenTransferableBalance: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   btcRelayHeight: 0,
   bitcoinHeight: 0,
   parachainStatus: ParachainStatus.Loading,
@@ -63,14 +55,6 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       };
     case IS_VAULT_CLIENT_LOADED:
       return { ...state, vaultClientLoaded: action.isLoaded };
-    case UPDATE_COLLATERAL_TOKEN_BALANCE:
-      return { ...state, collateralTokenBalance: action.collateralTokenBalance };
-    case UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE:
-      return { ...state, collateralTokenTransferableBalance: action.collateralTokenTransferableBalance };
-    case UPDATE_BALANCE_POLKA_BTC:
-      return { ...state, wrappedTokenBalance: action.wrappedTokenBalance };
-    case UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE:
-      return { ...state, wrappedTokenTransferableBalance: action.wrappedTokenTransferableBalance };
     case SHOW_ACCOUNT_MODAL:
       return { ...state, showAccountModal: action.showAccountModal };
     default:

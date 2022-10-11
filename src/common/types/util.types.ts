@@ -65,10 +65,6 @@ export type GeneralState = {
   showAccountModal: boolean;
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
-  wrappedTokenBalance: BitcoinAmount;
-  wrappedTokenTransferableBalance: BitcoinAmount;
-  collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>;
-  collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>;
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;

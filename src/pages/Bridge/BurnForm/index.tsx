@@ -8,11 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
-import {
-  showAccountModalAction,
-  updateCollateralTokenBalanceAction,
-  updateWrappedTokenBalanceAction
-} from '@/common/actions/general.actions';
+import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -27,6 +23,7 @@ import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainNativeTokenLogoIcon,
+  WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
@@ -35,6 +32,7 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
+import { useGetBalances } from '@/utils/contexts/balances';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -53,9 +51,8 @@ const BurnForm = (): JSX.Element | null => {
   const handleError = useErrorHandler();
 
   const { selectedAccount } = useSubstrateSecureState();
-  const { bridgeLoaded, wrappedTokenBalance, collateralTokenBalance, parachainStatus } = useSelector(
-    (state: StoreType) => state.general
-  );
+  const { bridgeLoaded, parachainStatus } = useSelector((state: StoreType) => state.general);
+  const { data: balances } = useGetBalances();
 
   const {
     register,
@@ -117,15 +114,6 @@ const BurnForm = (): JSX.Element | null => {
       try {
         setSubmitStatus(STATUSES.PENDING);
         await window.bridge.redeem.burn(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), RELAY_CHAIN_NATIVE_TOKEN);
-        // TODO: should not manually update the balances everywhere
-        // - Should be able to watch the balances in one place and update the context accordingly.
-        dispatch(
-          updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT])))
-        );
-        const earnedCollateralTokenAmount = burnRate.toCounter(
-          new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]) || BitcoinAmount.zero()
-        );
-        dispatch(updateCollateralTokenBalanceAction(collateralTokenBalance.add(earnedCollateralTokenAmount)));
         reset({
           [WRAPPED_TOKEN_AMOUNT]: ''
         });
@@ -144,6 +132,8 @@ const BurnForm = (): JSX.Element | null => {
         return `Only ${displayMonetaryAmount(burnableTokens)} ${WRAPPED_TOKEN_SYMBOL} available to burn.
         Please enter a smaller amount.`;
       }
+
+      const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].free || newMonetaryAmount(0, WRAPPED_TOKEN);
 
       if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
