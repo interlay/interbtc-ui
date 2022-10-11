@@ -50,8 +50,8 @@ const StyledDialog = styled.div<StyledDialogProps>`
     '. . close-btn close-btn'
     '. title title .'
     '. divider divider .'
-    '. content content .'
-    '. footer cotent .';
+    'content content content content'
+    '. footer footer .';
 `;
 
 const StyledCloseCTA = styled(CTA)`
@@ -60,12 +60,12 @@ const StyledCloseCTA = styled(CTA)`
   padding: 0;
 `;
 
-type StyledTitleProps = {
+type StyledModalTitleProps = {
   $variant: Exclude<Variants, 'outlined' | 'text'>;
   $alignment?: NormalAlignments;
 };
 
-const StyledTitle = styled(H3)<StyledTitleProps>`
+const StyledModalTitle = styled(H3)<StyledModalTitleProps>`
   grid-area: title;
   font-size: ${theme.text.xl};
   line-height: ${theme.lineHeight.base};
@@ -83,6 +83,7 @@ const StyledHr = styled.hr`
 const StyledModalBody = styled(Stack)`
   grid-area: content;
   overflow-y: auto;
+  padding: 0 ${theme.spacing.spacing8};
 `;
 
 const StyledModalFooter = styled(Stack)`
@@ -90,4 +91,4 @@ const StyledModalFooter = styled(Stack)`
   padding-top: ${theme.spacing.spacing6};
 `;
 
-export { StyledCloseCTA, StyledDialog, StyledHr, StyledModalBody, StyledModalFooter, StyledTitle, StyledUnderlay };
+export { StyledCloseCTA, StyledDialog, StyledHr, StyledModalBody, StyledModalFooter, StyledModalTitle, StyledUnderlay };
