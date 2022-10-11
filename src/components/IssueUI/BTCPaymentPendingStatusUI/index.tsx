@@ -6,7 +6,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { copyToClipboard, displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { copyToClipboard, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import Timer from '@/components/Timer';
 import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { BLOCK_TIME } from '@/config/parachain';
@@ -132,9 +132,9 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         includeMargin
         className='mx-auto'
         // eslint-disable-next-line max-len
-        value={`bitcoin:${request.vaultWrappedAddress || request.vaultBackingAddress}?amount=${displayMonetaryAmount(
-          amountBTCToSend
-        )}`}
+        value={`bitcoin:${
+          request.vaultWrappedAddress || request.vaultBackingAddress
+        }?amount=${amountBTCToSend.toString()}`}
       />
       <div
         className={clsx(
