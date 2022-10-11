@@ -8,14 +8,11 @@ import { useMountTransition } from '@/utils/hooks/use-mount-transition';
 import { Icon } from '../Icon';
 import { theme } from '../theme';
 import { useDOMRef } from '../utils/dom';
-import { NormalAlignments, Variants } from '../utils/prop-types';
-import { StyledCloseCTA, StyledDialog, StyledHr, StyledTitle, StyledUnderlay } from './Modal.style';
+import { StyledCloseCTA, StyledDialog, StyledUnderlay } from './Modal.style';
+import { ModalContext } from './ModalContext';
 
 type Props = {
   children: ReactNode;
-  title?: ReactNode;
-  titleVariant?: Exclude<Variants, 'outlined' | 'text'>;
-  titleAlignment?: NormalAlignments;
 };
 
 type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
@@ -23,10 +20,7 @@ type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
 type ModalProps = Props & InheritAttrs;
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
-  (
-    { title, children, titleVariant = 'primary', titleAlignment, isDismissable = true, ...props },
-    ref
-  ): JSX.Element | null => {
+  ({ children, isDismissable = true, ...props }, ref): JSX.Element | null => {
     const dialogRef = useDOMRef(ref);
     const { isOpen, onClose } = props;
     const { shouldRender, transitionTrigger } = useMountTransition(!!isOpen, theme.transition.duration);
@@ -47,26 +41,20 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       <OverlayContainer>
         <StyledUnderlay {...underlayProps}>
           <FocusScope contain restoreFocus autoFocus>
-            <StyledDialog
-              $transitionTrigger={transitionTrigger}
-              ref={dialogRef}
-              {...overlayProps}
-              {...dialogProps}
-              {...modalProps}
-            >
-              {title && (
-                <>
-                  <StyledTitle $variant={titleVariant} $alignment={titleAlignment} {...titleProps}>
-                    {title}
-                  </StyledTitle>
-                  {titleVariant === 'secondary' && <StyledHr />}
-                </>
-              )}
-              <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onClick={onClose}>
-                <Icon width='1.5em' height='1.5em' variant='close' />
-              </StyledCloseCTA>
-              {children}
-            </StyledDialog>
+            <ModalContext.Provider value={{ titleProps }}>
+              <StyledDialog
+                $transitionTrigger={transitionTrigger}
+                ref={dialogRef}
+                {...overlayProps}
+                {...dialogProps}
+                {...modalProps}
+              >
+                <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onClick={onClose}>
+                  <Icon width='1.5em' height='1.5em' variant='close' />
+                </StyledCloseCTA>
+                {children}
+              </StyledDialog>
+            </ModalContext.Provider>
           </FocusScope>
         </StyledUnderlay>
       </OverlayContainer>
