@@ -1,97 +1,53 @@
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
+import { newAccountId, TickerToData } from '@interlay/interbtc-api';
+import { BorrowPosition, LendPosition, LoanAsset } from '@interlay/interbtc-api';
 
-type LendAssetData = {
-  currency: CurrencyIdLiteral;
-  apy: string;
-  apyAssets: CurrencyIdLiteral[];
-  balance: string;
-};
+import { formatPercentage, formatUSD } from '@/common/utils/utils';
+import { useSubstrateSecureState } from '@/lib/substrate';
 
-type LendPositionData = {
-  currency: CurrencyIdLiteral;
-  amount: string;
-  apy: string;
-  apyEarned: string;
-};
-
-type LendData = {
-  positions: LendPositionData[];
-  assets: LendAssetData[];
-};
-
-type BorrowAssetData = {
-  currency: CurrencyIdLiteral;
-  apy: string;
-  available: string;
-  liquidity: string;
-};
-
-type BorrowPositionData = {
-  currency: CurrencyIdLiteral;
-  amount: string;
-  apy: string;
-};
-
-type BorrowData = {
-  positions: BorrowPositionData[];
-  assets: BorrowAssetData[];
-};
+import { useGetAccountLoansOverview } from './use-get-account-loans-overview';
+import { useGetLoanAssets } from './use-get-loan-assets';
 
 type LoansData = {
-  positions: {
-    supply: string;
-    borrow: string;
-    apyEarned: string;
-    loanStatus: string;
+  overview: {
+    supplyUSDValue: string | undefined;
+    borrowUSDValue: string | undefined;
+    interestEarnedUSDValue: string | undefined;
+    collateralRatio: string | undefined;
+    loanStatus: string | undefined;
   };
-  lend: LendData;
-  borrow: BorrowData;
+  lendPositions: LendPosition[] | undefined;
+  borrowPositions: BorrowPosition[] | undefined;
+  assets: TickerToData<LoanAsset> | undefined;
 };
 
 const useGetLoansData = (): LoansData => {
+  const { selectedAccount } = useSubstrateSecureState();
+
+  const accountId = selectedAccount && newAccountId(window.bridge.api, selectedAccount.address);
+
+  const {
+    lendPositions,
+    borrowPositions,
+    lentAssetsUSDValue,
+    totalEarnedInterestUSDValue,
+    borrowedAssetsUSDValue,
+    collateralRatio
+  } = useGetAccountLoansOverview(accountId);
+  const { assets } = useGetLoanAssets();
+
   return {
-    positions: {
-      supply: '$0.00',
-      borrow: '$0.00',
-      apyEarned: '$0.00',
-      loanStatus: 'Safe'
+    overview: {
+      supplyUSDValue: lentAssetsUSDValue && formatUSD(lentAssetsUSDValue.toNumber()),
+      borrowUSDValue: borrowedAssetsUSDValue && formatUSD(borrowedAssetsUSDValue.toNumber()),
+      interestEarnedUSDValue: totalEarnedInterestUSDValue && formatUSD(totalEarnedInterestUSDValue.toNumber()),
+      collateralRatio: collateralRatio && formatPercentage(collateralRatio.toNumber()),
+      loanStatus: 'Safe' // TODO: decide loan status thresholds
     },
-    lend: {
-      positions: [{ currency: CurrencyIdLiteral.DOT, apy: '4.01%', amount: '1.12454', apyEarned: '1.02%' }],
-      assets: [
-        {
-          currency: CurrencyIdLiteral.DOT,
-          apy: '4.01%',
-          apyAssets: [CurrencyIdLiteral.KINT],
-          balance: '1.12454'
-        },
-        {
-          currency: CurrencyIdLiteral.KSM,
-          apy: '16.98%',
-          apyAssets: [CurrencyIdLiteral.KINT, CurrencyIdLiteral.DOT],
-          balance: '1.12454'
-        }
-      ]
-    },
-    borrow: {
-      positions: [{ currency: CurrencyIdLiteral.DOT, apy: '-4.01%', amount: '1.12454' }],
-      assets: [
-        {
-          currency: CurrencyIdLiteral.DOT,
-          apy: '4.01%',
-          available: '1.22',
-          liquidity: '1M'
-        },
-        {
-          currency: CurrencyIdLiteral.KSM,
-          apy: '16.98%',
-          available: '1.22',
-          liquidity: '1M'
-        }
-      ]
-    }
+    lendPositions,
+    borrowPositions,
+    assets
   };
 };
 
 export { useGetLoansData };
-export type { BorrowAssetData, BorrowData, BorrowPositionData, LendAssetData, LendData, LendPositionData };
+export type { LoansData };
