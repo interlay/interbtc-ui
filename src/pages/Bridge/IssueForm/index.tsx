@@ -448,7 +448,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(bridgeFee)}
+            value={bridgeFee.toHuman(8)}
             unitName='BTC'
             approxUSD={displayMonetaryAmountInUSDFormat(
               bridgeFee,
@@ -533,7 +533,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={displayMonetaryAmount(wrappedTokenAmount)}
+            value={wrappedTokenAmount.toHuman(8)}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
               wrappedTokenAmount,

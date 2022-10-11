@@ -127,7 +127,7 @@
   "replace": "Replace",
   "canceled": "Canceled",
   "redeem_page": {
-    "withdraw": "Withdraw",
+    "redeem": "Redeem",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
     "to_redeem_interbtc": "To redeem your {{wrappedTokenSymbol}} , you must now pick one of the two options:",
     "burn_interbtc": "Burn {{wrappedTokenSymbol}} and get",
