@@ -1,17 +1,18 @@
 import { forwardRef, HTMLAttributes } from 'react';
 import { StyledComponent } from 'styled-components';
 
-import { Sizes, Variants } from '../utils/prop-types';
-import { OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledCTAProps } from './CTA.style';
+import { CTAVariants, Sizes } from '../utils/prop-types';
+import { OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledCTAProps, TextCTA } from './CTA.style';
 
-const ctaElements: Record<Variants, StyledComponent<'button', any, StyledCTAProps, never>> = {
+const ctaElements: Record<CTAVariants, StyledComponent<'button', any, StyledCTAProps, never>> = {
   primary: PrimaryCTA,
   secondary: SecondaryCTA,
-  outlined: OutlinedCTA
+  outlined: OutlinedCTA,
+  text: TextCTA
 };
 
 type Props = {
-  variant?: Variants;
+  variant?: CTAVariants;
   fullWidth?: boolean;
   size?: Sizes;
   disabled?: boolean;

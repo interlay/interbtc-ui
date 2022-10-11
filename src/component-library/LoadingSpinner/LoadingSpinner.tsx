@@ -1,6 +1,6 @@
 import { HTMLAttributes } from 'react';
 
-import { Variants } from '../utils/prop-types';
+import { CTAVariants } from '../utils/prop-types';
 import { BaseIndeterminateLoadingSpinner, BaseLoadingSpinner, BaseLoadingSpinnerProps } from './LoadingSpinner.style';
 
 type SpinnerVariants = 'indeterminate' | 'determinate';
@@ -9,7 +9,7 @@ type Props = {
   variant?: SpinnerVariants;
   diameter?: number;
   thickness?: number;
-  color?: Variants;
+  color?: CTAVariants;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
