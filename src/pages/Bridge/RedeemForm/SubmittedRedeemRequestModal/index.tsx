@@ -40,7 +40,7 @@ const SubmittedRedeemRequestModal = ({
         <CloseIconButton ref={focusRef} onClick={onClose} />
         <div className={clsx('flex', 'flex-col', 'space-y-8')}>
           <h4 className={clsx('text-2xl', getColorShade('yellow'), 'font-medium', 'text-center')}>
-            {t('redeem_page.withdraw')}
+            {t('redeem_page.redeem')}
           </h4>
           <div className='space-y-6'>
             <div className='space-y-1'>
