@@ -59,7 +59,7 @@ const SubmittedRedeemRequestModal = ({
               </h5>
               <h1 className={clsx('text-3xl', 'font-medium', 'space-x-1', 'text-center')}>
                 <span>{t('redeem_page.will_receive_BTC')}</span>
-                <span className={getColorShade('yellow')}>{displayMonetaryAmount(request.amountBTC)} BTC</span>
+                <span className={getColorShade('yellow')}>{request.amountBTC.toHuman(8)} BTC</span>
               </h1>
               <span
                 className={clsx(
