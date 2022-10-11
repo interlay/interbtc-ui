@@ -37,6 +37,7 @@ import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   VoteGovernanceTokenMonetaryAmount
 } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
@@ -112,7 +113,8 @@ const Staking = (): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const {
     governanceTokenBalanceIdle,
@@ -155,7 +157,7 @@ const Staking = (): JSX.Element => {
     error: voteGovernanceTokenBalanceError,
     refetch: voteGovernanceTokenBalanceRefetch
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
-    [GENERIC_FETCHER, 'escrow', 'votingBalance', address],
+    [GENERIC_FETCHER, 'escrow', 'votingBalance', selectedAccount?.address],
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -171,7 +173,7 @@ const Staking = (): JSX.Element => {
     error: claimableRewardAmountError,
     refetch: claimableRewardAmountRefetch
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getRewards', address],
+    [GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccount?.address],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -187,7 +189,7 @@ const Staking = (): JSX.Element => {
     error: rewardAmountAndAPYError,
     refetch: rewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', address],
+    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccount?.address],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
@@ -203,7 +205,14 @@ const Staking = (): JSX.Element => {
     data: estimatedRewardAmountAndAPY,
     error: estimatedRewardAmountAndAPYError
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', address, monetaryLockingAmount, blockLockTimeExtension],
+    [
+      GENERIC_FETCHER,
+      'escrow',
+      'getRewardEstimate',
+      selectedAccount?.address,
+      monetaryLockingAmount,
+      blockLockTimeExtension
+    ],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
@@ -218,7 +227,7 @@ const Staking = (): JSX.Element => {
     error: stakedAmountAndEndBlockError,
     refetch: stakedAmountAndEndBlockRefetch
   } = useQuery<StakedAmountAndEndBlock, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getStakedBalance', address],
+    [GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccount?.address],
     genericFetcher<StakedAmountAndEndBlock>(),
     {
       enabled: !!bridgeLoaded
@@ -232,10 +241,10 @@ const Staking = (): JSX.Element => {
     data: transactionFeeReserve,
     error: transactionFeeReserveError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, address],
-    stakingTransactionFeeReserveFetcher(address),
+    [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, selectedAccount?.address],
+    stakingTransactionFeeReserveFetcher(selectedAccount?.address ?? ''),
     {
-      enabled: bridgeLoaded && !!address
+      enabled: bridgeLoaded && !!selectedAccount
     }
   );
   useErrorHandler(transactionFeeReserveError);
@@ -322,7 +331,7 @@ const Staking = (): JSX.Element => {
       [LOCKING_AMOUNT]: '',
       [LOCK_TIME]: ''
     });
-  }, [address, reset]);
+  }, [selectedAccount, reset]);
 
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
 
@@ -691,7 +700,7 @@ const Staking = (): JSX.Element => {
     remainingBlockNumbersToUnstake !== undefined &&
     remainingBlockNumbersToUnstake <= 0;
 
-  const accountSet = !!address;
+  const accountSet = !!selectedAccount;
 
   const lockTimeFieldDisabled =
     votingBalanceGreaterThanZero === undefined ||

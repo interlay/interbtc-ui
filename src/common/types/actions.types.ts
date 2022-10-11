@@ -10,13 +10,11 @@ export const IS_BRIDGE_LOADED = 'IS_BRIDGE_LOADED';
 export const IS_FAUCET_LOADED = 'IS_FAUCET_LOADED';
 export const IS_VAULT_CLIENT_LOADED = 'IS_VAULT_CLIENT_LOADED';
 export const INIT_STATE = 'INIT_STATE';
-export const CHANGE_ADDRESS = 'CHANGE_ADDRESS';
 export const INIT_GENERAL_DATA_ACTION = 'INIT_GENERAL_DATA_ACTION';
 export const UPDATE_BALANCE_POLKA_BTC = 'UPDATE_BALANCE_POLKA_BTC';
 export const UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE';
-export const SET_INSTALLED_EXTENSION = 'SET_INSTALLED_EXTENSION';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
 export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
@@ -46,11 +44,6 @@ export interface IsFaucetLoaded {
 export interface IsVaultClientLoaded {
   type: typeof IS_VAULT_CLIENT_LOADED;
   isLoaded: boolean;
-}
-
-export interface ChangeAddress {
-  type: typeof CHANGE_ADDRESS;
-  address: string;
 }
 
 export interface InitState {
@@ -88,11 +81,6 @@ export interface UpdateCollateralTokenTransferableBalance {
   collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>;
 }
 
-export interface SetInstalledExtension {
-  type: typeof SET_INSTALLED_EXTENSION;
-  extensions: string[];
-}
-
 export interface ShowAccountModal {
   type: typeof SHOW_ACCOUNT_MODAL;
   showAccountModal: boolean;
@@ -100,14 +88,12 @@ export interface ShowAccountModal {
 
 export type GeneralActions =
   | IsBridgeLoaded
-  | ChangeAddress
   | InitGeneralDataAction
   | IsVaultClientLoaded
   | UpdateBalancePolkaBTC
   | UpdateWrappedTokenTransferableBalance
   | UpdateCollateralTokenBalance
   | UpdateCollateralTokenTransferableBalance
-  | SetInstalledExtension
   | ShowAccountModal
   | UpdateHeights
   | UpdateTotals;

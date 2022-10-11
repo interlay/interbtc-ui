@@ -8,6 +8,7 @@ import { Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -21,7 +22,8 @@ import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 
 const VaultDashboard = (): JSX.Element => {
-  const { vaultClientLoaded, address, bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { selectedAccount } = useSubstrateSecureState();
+  const { vaultClientLoaded, bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const {
     [URL_PARAMETERS.VAULT.ACCOUNT]: selectedVaultAccountAddress,
     [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateral
@@ -67,7 +69,7 @@ const VaultDashboard = (): JSX.Element => {
       sublabel: `(${formatUSD(vault.issuedTokens.usd)})`
     },
     {
-      title: 'Remaining kBTC capacity',
+      title: `Remaining ${vault.wrappedId} capacity`,
       label: vault.remainingCapacity.amount.toBig().toString(),
       sublabel: formatPercentage(vault.remainingCapacity.ratio, {
         maximumFractionDigits: 2,
@@ -77,7 +79,7 @@ const VaultDashboard = (): JSX.Element => {
     }
   ];
 
-  const isReadOnlyVault = !vaultClientLoaded || address !== selectedVaultAccountAddress;
+  const isReadOnlyVault = !vaultClientLoaded || selectedAccount?.address !== selectedVaultAccountAddress;
 
   return (
     <MainContainer>
@@ -107,6 +109,7 @@ const VaultDashboard = (): JSX.Element => {
             lockedAmountBTC={vault.issuedTokens.amount}
             vaultAddress={selectedVaultAccountAddress}
             hasVaultActions={!isReadOnlyVault}
+            wrappedId={vault.wrappedId}
           />
           <StyledRewards
             apy={vault.apy}

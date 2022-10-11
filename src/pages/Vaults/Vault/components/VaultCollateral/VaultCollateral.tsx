@@ -71,6 +71,7 @@ type Props = {
   vaultAddress: string;
   hasVaultActions: boolean;
   collateralScore?: Big;
+  wrappedId: string;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -90,6 +91,7 @@ const VaultCollateral = ({
   // remainingCapacity,
   lockedAmountBTC,
   hasVaultActions,
+  wrappedId,
   ...props
 }: VaultCollateralProps): JSX.Element => {
   const [{ vaultAction, isModalOpen }, setVaultAction] = useState<SetVaultAction>({
@@ -151,10 +153,10 @@ const VaultCollateral = ({
             </StyledCTAGroup>
             <StyledCTAGroup>
               <CTA variant='secondary' fullWidth onClick={() => handleClickVaultAction('issue')}>
-                Issue kBTC
+                Issue {wrappedId}
               </CTA>
               <CTA variant='secondary' fullWidth onClick={() => handleClickVaultAction('redeem')}>
-                Redeem kBTC
+                Redeem {wrappedId}
               </CTA>
             </StyledCTAGroup>
           </StyledCTAGroups>

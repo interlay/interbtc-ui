@@ -1,6 +1,7 @@
 import {
   CollateralCurrencyExt,
   CollateralIdLiteral,
+  newMonetaryAmount,
   VaultExt,
   VaultStatusExt,
   WrappedIdLiteral
@@ -26,6 +27,7 @@ import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
+
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
@@ -90,10 +92,11 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
     accountId,
     vault.backingCollateral.currency
   );
-  const issuableTokens = await window.bridge.vaults.getIssuableTokensFromVault(
-    accountId,
-    vault.backingCollateral.currency
-  );
+  // This should be handled by checking for an error response from `getIssuableTokens`
+  const issuableTokens =
+    vaultExt.status === VaultStatusExt.Liquidated
+      ? newMonetaryAmount(0, vault.backingCollateral.currency)
+      : await window.bridge.vaults.getIssuableTokensFromVault(accountId, vault.backingCollateral.currency);
   const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(
     accountId,
     vault.backingCollateral.currency,

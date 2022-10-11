@@ -38,7 +38,7 @@ import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayLink from '@/components/UI/InterlayLink';
 import Vaults from '@/components/Vaults';
-import { INTERLAY_VAULT_DOCS } from '@/config/links';
+import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -47,6 +47,7 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
@@ -82,7 +83,7 @@ const getTokenFieldHelperText = (message?: string) => {
       return (
         <Trans i18nKey='no_issuable_token_available'>
           Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or{' '}
-          <InterlayLink className='underline' target='_blank' rel='noreferrer' href={INTERLAY_VAULT_DOCS}>
+          <InterlayLink className='underline' target='_blank' rel='noreferrer' href={INTERLAY_VAULT_DOCS_LINK}>
             consider running a Vault
           </InterlayLink>
           !
@@ -105,7 +106,8 @@ const IssueForm = (): JSX.Element | null => {
 
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
 
@@ -370,14 +372,14 @@ const IssueForm = (): JSX.Element | null => {
     const bridgeFee = parsedBTCAmount.mul(feeRate);
     const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
-    const accountSet = !!address;
+    const accountSet = !!selectedAccount;
     const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
 
     // TODO: `parachainStatus` and `address` should be checked at upper levels
-    const isSubmitBtnDisabled = accountSet ? parachainStatus !== ParachainStatus.Running || !address : false;
+    const isSubmitBtnDisabled = accountSet ? parachainStatus !== ParachainStatus.Running || !selectedAccount : false;
 
     return (
       <>
@@ -448,7 +450,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(bridgeFee)}
+            value={bridgeFee.toHuman(8)}
             unitName='BTC'
             approxUSD={displayMonetaryAmountInUSDFormat(
               bridgeFee,
@@ -533,7 +535,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={displayMonetaryAmount(wrappedTokenAmount)}
+            value={wrappedTokenAmount.toHuman(8)}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
               wrappedTokenAmount,

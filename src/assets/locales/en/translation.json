@@ -126,8 +126,10 @@
   "all": "All",
   "replace": "Replace",
   "canceled": "Canceled",
+  "amount_exceeds_the_available_amount": "Amount exceeds the available amount.",
+  "fees": "Fees",
   "redeem_page": {
-    "withdraw": "Withdraw",
+    "redeem": "Redeem",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
     "to_redeem_interbtc": "To redeem your {{wrappedTokenSymbol}} , you must now pick one of the two options:",
     "burn_interbtc": "Burn {{wrappedTokenSymbol}} and get",
@@ -455,7 +457,31 @@
     "max_capacity": "Maximum vault capacity:",
     "issue_description": "You are requesting to issue with this vault.",
     "tooltip_issuing_deactivated": "Issuing is deactivated for this vault.",
-    "tooltip_issue_capacity_zero": "Vault issue capacity is 0."
+    "tooltip_issue_capacity_zero": "Vault issue capacity is 0.",
+    "vault_created": "Vault Created",
+    "view_vault": "View Vault",
+    "please_enter_deposit_amount": "Please enter your deposit amount.",
+    "create_vault": "Create a vault",
+    "vault_installed": "Vault installed",
+    "coming_soon": "Coming soon",
+    "add": "Add",
+    "create_table": {
+      "vault_pair": "Vault Pair",
+      "min_collateral": "Min Collateral",
+      "collateral_rate": "Collateral Rate"
+    },
+    "disclaimer": {
+      "plase_read_before_you_start": "Please read before you start",
+      "understand_risks": "Operating a Vault doesn't come without risks. Before making a deposit, it is best to research and understand the risks involved.",
+      "running_vault_requirments": "Operating a Vault client involves running a fully automated client on a server. This client has access to hot wallets for both Bitcoin and the Interlay/Kintsugi networks.",
+      "understand_liquidation_risks": "Depositing collateral means accepting the risk of being liquidated if your collateralization rates drops, as well as the protocol risks of each collateral asset.",
+      "before_start_vault": "Before you start a Vault:",
+      "check_do_s_and_dont_s": "Check the <1>do's and dont's</1> of correctly operating your vault client",
+      "check_risks_involved": "Please check the information about <1>risks involved</1> when operating a Vault on Interlay/Kintsugi",
+      "confirm_agreement": "By proceeding you confirm that you have read and accepted the <1>Terms & Conditions</1>",
+      "accept_risks_involved": "I understand the risks involved, create a vault",
+      "read_vault_documentation": "Read the Vault Documentation"
+    }
   },
   "staking_page": {
     "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",

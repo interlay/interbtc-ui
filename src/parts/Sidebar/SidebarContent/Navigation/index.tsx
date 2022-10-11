@@ -28,6 +28,7 @@ import {
   USE_WRAPPED_CURRENCY_LINK,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
@@ -54,7 +55,8 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { selectedAccount } = useSubstrateSecureState();
+  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
@@ -88,7 +90,7 @@ const Navigation = ({
       },
       {
         name: 'nav_vaults',
-        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
+        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, selectedAccount?.address ?? '')}`,
         icon: ChipIcon,
         hidden: !vaultClientLoaded
       },
@@ -154,7 +156,7 @@ const Navigation = ({
         }
       }
     ],
-    [address, vaultClientLoaded]
+    [selectedAccount, vaultClientLoaded]
   );
 
   return (

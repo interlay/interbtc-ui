@@ -118,6 +118,10 @@ const theme = {
       border: '1px solid var(--colors-cta-outlined-border)',
       bgHover: 'var(--colors-cta-outlined-hover)'
     },
+    text: {
+      text: 'var(--colors-cta-text-text)',
+      bgHover: 'var(--colors-cta-text-hover)'
+    },
     small: {
       padding: 'var(--spacing-2)',
       text: 'var(--text-xs)',
@@ -196,6 +200,10 @@ const theme = {
       outlined: {
         color: 'var(--colors-indeterminate-outlined-color)',
         bg: 'var(--colors-indeterminate-outlined-bg)'
+      },
+      text: {
+        color: 'var(--colors-indeterminate-outlined-color)',
+        bg: 'var(--colors-indeterminate-outlined-bg)'
       }
     }
   },
@@ -235,6 +243,16 @@ const theme = {
   },
   tokenInput: {
     height: '4.813rem'
+  },
+  modal: {
+    title: {
+      primary: {
+        color: 'var(--colors-title-primary)'
+      },
+      secondary: {
+        color: 'var(--colors-title-secondary)'
+      }
+    }
   }
 };
 

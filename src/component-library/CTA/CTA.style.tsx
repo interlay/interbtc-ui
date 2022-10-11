@@ -21,6 +21,7 @@ const BaseCTA = styled.button<StyledCTAProps>`
   padding: ${(props) => theme.cta[props.$size].padding};
   text-decoration: none;
   width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
+  background: none;
 
   &[aria-disabled='true'],
   &[disabled] {
@@ -46,10 +47,17 @@ const SecondaryCTA = styled(BaseCTA)`
 const OutlinedCTA = styled(BaseCTA)`
   color: ${theme.cta.outlined.text};
   border: ${theme.cta.outlined.border};
-  background: none;
 
   &:hover:not([disabled]) {
     background-color: ${theme.cta.outlined.bgHover};
+  }
+`;
+
+const TextCTA = styled(BaseCTA)`
+  color: ${theme.cta.text.text};
+
+  &:hover:not([disabled]) {
+    background-color: ${theme.cta.text.bgHover};
   }
 `;
 
@@ -59,5 +67,5 @@ const LoadingWrapper = styled.span`
   margin-right: ${theme.spacing.spacing2};
 `;
 
-export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA };
+export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, TextCTA };
 export type { StyledCTAProps };
