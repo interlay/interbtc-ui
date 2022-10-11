@@ -340,7 +340,7 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
     );
 
-    const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
+    const bitcoinNetworkFeeInBTC = currentInclusionFee.toHuman(8);
     const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
       currentInclusionFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
