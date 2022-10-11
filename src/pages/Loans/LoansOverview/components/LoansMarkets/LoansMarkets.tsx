@@ -1,18 +1,19 @@
-import { BorrowData, LendData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { BorrowPosition, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 
 import { BorrowMarket } from './BorrowMarket';
 import { LendMarket } from './LendMarket';
 import { StyledTablesWrapper } from './LoansMarkets.style';
 
 type LoansMarketsProps = {
-  lend: LendData;
-  borrow: BorrowData;
+  lendPositions: LendPosition[];
+  borrowPositions: BorrowPosition[];
+  assets: TickerToData<LoanAsset>;
 };
 
-const LoansMarkets = ({ lend, borrow }: LoansMarketsProps): JSX.Element => (
+const LoansMarkets = ({ lendPositions, borrowPositions, assets }: LoansMarketsProps): JSX.Element => (
   <StyledTablesWrapper>
-    <LendMarket assets={lend.assets} positions={lend.positions} />
-    <BorrowMarket assets={borrow.assets} positions={borrow.positions} />
+    <LendMarket assets={assets} positions={lendPositions} />
+    <BorrowMarket assets={assets} positions={borrowPositions} />
   </StyledTablesWrapper>
 );
 

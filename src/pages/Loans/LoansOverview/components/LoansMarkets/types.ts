@@ -9,7 +9,7 @@ enum LendAssetsColumns {
 }
 
 type LendAssetsTableRow = {
-  id: number;
+  id: number | string;
   [LendAssetsColumns.ASSET]: ReactNode;
   [LendAssetsColumns.APY]: ReactNode;
   [LendAssetsColumns.WALLET_BALANCE]: string;
@@ -40,7 +40,7 @@ enum BorrowAssetsColumns {
 }
 
 type BorrowAssetsTableRow = {
-  id: number;
+  id: string;
   [BorrowAssetsColumns.ASSET]: ReactNode;
   [BorrowAssetsColumns.BORROW_APY]: string;
   [BorrowAssetsColumns.AVAILABLE]: string;
