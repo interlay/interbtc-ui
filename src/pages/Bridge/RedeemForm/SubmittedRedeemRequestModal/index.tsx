@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
 import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
@@ -40,7 +40,7 @@ const SubmittedRedeemRequestModal = ({
         <CloseIconButton ref={focusRef} onClick={onClose} />
         <div className={clsx('flex', 'flex-col', 'space-y-8')}>
           <h4 className={clsx('text-2xl', getColorShade('yellow'), 'font-medium', 'text-center')}>
-            {t('redeem_page.withdraw')}
+            {t('redeem_page.redeem')}
           </h4>
           <div className='space-y-6'>
             <div className='space-y-1'>
@@ -59,7 +59,7 @@ const SubmittedRedeemRequestModal = ({
               </h5>
               <h1 className={clsx('text-3xl', 'font-medium', 'space-x-1', 'text-center')}>
                 <span>{t('redeem_page.will_receive_BTC')}</span>
-                <span className={getColorShade('yellow')}>{displayMonetaryAmount(request.amountBTC)} BTC</span>
+                <span className={getColorShade('yellow')}>{request.amountBTC.toHuman(8)} BTC</span>
               </h1>
               <span
                 className={clsx(
