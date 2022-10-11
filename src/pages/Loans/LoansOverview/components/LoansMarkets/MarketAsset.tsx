@@ -1,16 +1,15 @@
-import { CurrencyIdLiteral } from '@interlay/interbtc-api';
-
-import { CoinIcon, Span } from '@/component-library';
+import { CoinIcon, Span, Tokens } from '@/component-library';
 
 import { StyledAsset } from './LoansMarkets.style';
 
 type MarketAssetProps = {
-  currency: CurrencyIdLiteral;
+  currency: string;
 };
 
 const MarketAsset = ({ currency }: MarketAssetProps): JSX.Element => (
   <StyledAsset>
-    <CoinIcon coin={currency} size='small' />
+    {/* TODO: Get rid of type casting - accept any string as currency ticker in CoinIcon component. */}
+    <CoinIcon coin={currency as Tokens} size='small' />
     <Span>{currency}</Span>
   </StyledAsset>
 );
