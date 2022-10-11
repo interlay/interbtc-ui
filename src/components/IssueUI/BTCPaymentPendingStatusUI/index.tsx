@@ -126,7 +126,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.warning_mbtc_wallets')}
         </span>
-        <span className={getColorShade('yellow')}>{displayMonetaryAmount(amountBTCToSend.mul(1000))}&nbsp;mBTC</span>
+        <span className={getColorShade('yellow')}>{amountBTCToSend.mul(1000).toString()}&nbsp;mBTC</span>
       </p>
       <QRCode
         includeMargin
