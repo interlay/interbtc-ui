@@ -1,9 +1,9 @@
+import { LoanAsset } from '@interlay/interbtc-api';
 import { useId } from '@react-aria/utils';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { CTA, H3, P, Stack, TokenInput } from '@/component-library';
 import { LendAction } from '@/pages/Loans/types';
-import { LendAssetData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { StyledDItem, StyledDl } from './LoanModal.style';
 
@@ -17,7 +17,7 @@ const getContentMap = (t: TFunction) => ({
 });
 
 type LendFormProps = {
-  asset: LendAssetData;
+  asset: LoanAsset;
   variant: LendAction;
 };
 
@@ -35,7 +35,7 @@ const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
         <P>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</P>
       </div>
       <Stack>
-        <TokenInput valueInUSD='$0.00' tokenSymbol={asset.currency} balance={100} balanceInUSD={100} />
+        <TokenInput valueInUSD='$0.00' tokenSymbol={asset.currency.ticker} balance={100} balanceInUSD={100} />
         <StyledDl>
           <StyledDItem>
             <dt>APY</dt>
