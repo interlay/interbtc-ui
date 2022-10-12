@@ -1,4 +1,4 @@
-import { BorrowPosition, LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { LoanAsset, LoanPosition } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 
 import { Modal, ModalProps, Tabs, TabsItem } from '@/component-library';
@@ -10,7 +10,7 @@ import { LendForm } from './LendForm';
 type Props = {
   variant: LoanType;
   asset?: LoanAsset;
-  position?: LendPosition | BorrowPosition;
+  position?: LoanPosition;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
