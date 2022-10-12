@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 
 import { H1, P, Stack } from '@/component-library';
+import { LoadingSpinner } from '@/component-library/LoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
-import { LoadingSpinner } from '../../../component-library/LoadingSpinner';
 import { LoansInsights, LoansMarkets } from './components';
 
 const LoansOverview = (): JSX.Element => {
