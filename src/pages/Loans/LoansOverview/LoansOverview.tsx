@@ -13,9 +13,9 @@ const LoansOverview = (): JSX.Element => {
   const { interestEarnedUSDValue, borrowUSDValue: borrowBalance, loanStatus, supplyUSDValue: supplyBalance } = overview;
 
   if (lendPositions === undefined || borrowPositions === undefined || assets === undefined) {
-    console.log(lendPositions, borrowPositions, assets);
     return <LoadingSpinner />;
   }
+
   return (
     <MainContainer>
       <H1>{t('loans.brand_name')}</H1>
