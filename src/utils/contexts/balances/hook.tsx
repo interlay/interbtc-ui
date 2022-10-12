@@ -1,5 +1,6 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
+import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
@@ -8,6 +9,8 @@ import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { BalanceData } from './types';
+
+const BALANCES_QUERY_KEY = 'getBalances';
 
 const getBalances = async (currencies: CurrencyExt[], accountId: AccountId): Promise<BalanceData> => {
   const chainBalances = await Promise.all(
@@ -28,12 +31,14 @@ const useGetBalances = (): UseQueryResult<BalanceData | undefined> => {
   const accountId = useAccountId();
   const { data: currencies, isSuccess } = useGetCurrencies(bridgeLoaded);
   const queryResult = useQuery({
-    queryKey: 'getBalances',
+    queryKey: BALANCES_QUERY_KEY,
     queryFn: () => (accountId && currencies ? getBalances(currencies, accountId) : undefined),
     enabled: accountId && isSuccess && bridgeLoaded
   });
 
+  useErrorHandler(queryResult.error);
+
   return queryResult;
 };
 
-export { useGetBalances };
+export { BALANCES_QUERY_KEY, useGetBalances };

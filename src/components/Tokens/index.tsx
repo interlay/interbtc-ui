@@ -40,6 +40,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
   const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(undefined);
 
+  const { data: balances } = useGetBalances();
+
   const getTokenOption = React.useCallback((type: TokenType) => tokenOptions?.find((token) => token.type === type), [
     tokenOptions
   ]);
@@ -56,8 +58,6 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       callbackFunction(currentToken);
     }
   }, [tokenOptions, currentToken, getTokenOption, callbackFunction]);
-
-  const { data: balances } = useGetBalances();
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
