@@ -44,6 +44,7 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
 
   // TODO: subject to change in the future
   const handleAssetRowAction = (key: Key) => {
+    console.log('\n\n\n\nEVENT');
     const asset = assets[key as string];
     const position = positions.find((position) => position.currency === asset.currency);
 
@@ -72,23 +73,25 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
     };
   });
 
-  const lendAssetsTableRows: LendAssetsTableRow[] = Object.values(assets).map(({ lendApy: apy, reward, currency }) => {
-    const apyWithEarnedAssets = (
-      <Stack spacing='half'>
-        <Span>{apy.toString()}%</Span>
-        <StyledApyTag>Earn: {reward?.currency.ticker}</StyledApyTag>
-      </Stack>
-    );
+  const lendAssetsTableRows: LendAssetsTableRow[] = Object.values(assets).map(
+    ({ lendApy: apy, lendReward, currency }) => {
+      const apyWithEarnedAssets = (
+        <Stack spacing='half'>
+          <Span>{apy.toString()}%</Span>
+          <StyledApyTag>Earn: {lendReward?.currency.ticker}</StyledApyTag>
+        </Stack>
+      );
 
-    const asset = <MarketAsset currency={currency.ticker} />;
+      const asset = <MarketAsset currency={currency.ticker} />;
 
-    return {
-      id: currency.ticker,
-      asset,
-      apy: apyWithEarnedAssets,
-      'wallet-balance': '1' // TODO: add balance here balance
-    };
-  });
+      return {
+        id: currency.ticker,
+        asset,
+        apy: apyWithEarnedAssets,
+        'wallet-balance': '1' // TODO: add balance here balance
+      };
+    }
+  );
 
   const hasLendPositions = !!lendPositionsTableRows.length;
 
@@ -108,7 +111,13 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
         rows={lendAssetsTableRows}
         columns={lendAssetsColumns}
       />
-      <LoanModal variant='lend' open={!!selectedAsset.data} position={selectedAsset.position} onClose={handleClose} />
+      <LoanModal
+        variant='lend'
+        open={!!selectedAsset.data}
+        asset={selectedAsset.data}
+        position={selectedAsset.position}
+        onClose={handleClose}
+      />
     </StyledTableWrapper>
   );
 };
