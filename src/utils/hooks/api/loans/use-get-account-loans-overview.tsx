@@ -1,11 +1,4 @@
-import {
-  BorrowPosition,
-  CurrencyExt,
-  CurrencyIdLiteral,
-  LendPosition,
-  newAccountId,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { BorrowPosition, CurrencyExt, CurrencyIdLiteral, LendPosition, newAccountId } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
@@ -106,10 +99,15 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
 
       // TODO: Remove type casting after useGetPrices hook is refactored.
       const currencyUSDPrice = getTokenPrice(prices, currency.ticker as CurrencyIdLiteral)?.usd;
-      const availableCollateralUSDValue = collateralAssetsUSDValue.sub(borrowedAssetsUSDValue);
-      const maxBorrowableCurrencyAmount = availableCollateralUSDValue.div(currencyUSDPrice || 0);
 
-      return newMonetaryAmount(maxBorrowableCurrencyAmount, currency);
+      if (currencyUSDPrice === undefined) {
+        return undefined;
+      }
+
+      const availableCollateralUSDValue = collateralAssetsUSDValue.sub(borrowedAssetsUSDValue);
+      const maxBorrowableCurrencyAmount = availableCollateralUSDValue.div(currencyUSDPrice);
+
+      return new MonetaryAmount(currency, maxBorrowableCurrencyAmount);
     },
     [collateralAssetsUSDValue, borrowedAssetsUSDValue, prices]
   );
