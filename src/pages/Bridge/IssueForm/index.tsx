@@ -38,7 +38,7 @@ import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayLink from '@/components/UI/InterlayLink';
 import Vaults from '@/components/Vaults';
-import { INTERLAY_VAULT_DOCS } from '@/config/links';
+import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -82,7 +82,7 @@ const getTokenFieldHelperText = (message?: string) => {
       return (
         <Trans i18nKey='no_issuable_token_available'>
           Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or{' '}
-          <InterlayLink className='underline' target='_blank' rel='noreferrer' href={INTERLAY_VAULT_DOCS}>
+          <InterlayLink className='underline' target='_blank' rel='noreferrer' href={INTERLAY_VAULT_DOCS_LINK}>
             consider running a Vault
           </InterlayLink>
           !

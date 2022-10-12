@@ -1,4 +1,5 @@
-import { forwardRef, useEffect, useState } from 'react';
+import { chain } from '@react-aria/utils';
+import { ChangeEventHandler, forwardRef, ReactNode, useEffect, useState } from 'react';
 
 import { NumberInputProps } from '../NumberInput';
 import { Stack } from '../Stack';
@@ -7,35 +8,38 @@ import { triggerChangeEvent } from '../utils/input';
 import {
   StyledTokenBalance,
   TokenAdornment,
-  TokenFieldInnerWrapper,
-  TokenFieldInput,
-  TokenFieldSymbol,
-  TokenFieldUSD
-} from './TokenField.style';
+  TokenInputInnerWrapper,
+  TokenInputInput,
+  TokenInputSymbol,
+  TokenInputUSD
+} from './TokenInput.style';
 
 type Props = {
   tokenSymbol: string;
   valueInUSD: string;
-  balance?: string | number;
+  balance?: number;
   balanceInUSD?: string | number;
+  renderBalance?: (balance: number) => ReactNode;
 };
 
 type InheritAttrs = Omit<NumberInputProps, keyof Props>;
 
-type TokenFieldProps = Props & InheritAttrs;
+type TokenInputProps = Props & InheritAttrs;
 
-const TokenField = forwardRef<HTMLInputElement, TokenFieldProps>(
+const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
       tokenSymbol,
       valueInUSD,
       balance,
       balanceInUSD,
-      value: valueProp,
       isDisabled,
       className,
       style,
       hidden,
+      value: valueProp,
+      onChange,
+      renderBalance,
       ...props
     },
     ref
@@ -43,10 +47,16 @@ const TokenField = forwardRef<HTMLInputElement, TokenFieldProps>(
     const inputRef = useDOMRef(ref);
     const [value, setValue] = useState<number | undefined>(valueProp);
 
-    const handleClickBalance = () => {
-      const newValue = Number(balance);
-      setValue(newValue);
-      triggerChangeEvent(inputRef, newValue);
+    const handleClickBalance = () => triggerChangeEvent(inputRef, balance);
+
+    const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+      const value = e.target.value;
+
+      if (!value) {
+        return setValue(undefined);
+      }
+
+      setValue(Number(value));
     };
 
     useEffect(() => {
@@ -56,10 +66,13 @@ const TokenField = forwardRef<HTMLInputElement, TokenFieldProps>(
 
     const endAdornment = (
       <TokenAdornment>
-        <TokenFieldSymbol>{tokenSymbol}</TokenFieldSymbol>
-        <TokenFieldUSD>{`≈ ${valueInUSD}`}</TokenFieldUSD>
+        <TokenInputSymbol>{tokenSymbol}</TokenInputSymbol>
+        <TokenInputUSD>{`≈ ${valueInUSD}`}</TokenInputUSD>
       </TokenAdornment>
     );
+
+    // TODO: how do we handle this with different sized/resized inputs
+    const isOverflowing = (value?.toString().length || 0) > 9;
 
     return (
       <Stack spacing='half' className={className} style={style} hidden={hidden}>
@@ -70,23 +83,27 @@ const TokenField = forwardRef<HTMLInputElement, TokenFieldProps>(
             valueInUSD={balanceInUSD}
             onClickBalance={handleClickBalance}
             isDisabled={isDisabled}
+            renderBalance={renderBalance}
           />
         )}
-        <TokenFieldInnerWrapper>
-          <TokenFieldInput
+        <TokenInputInnerWrapper>
+          <TokenInputInput
             ref={inputRef}
             endAdornment={endAdornment}
-            value={value}
             isDisabled={isDisabled}
+            onChange={chain(handleChange, onChange)}
+            value={value}
+            minValue={0}
+            $isOverflowing={isOverflowing}
             {...props}
           />
-        </TokenFieldInnerWrapper>
+        </TokenInputInnerWrapper>
       </Stack>
     );
   }
 );
 
-TokenField.displayName = 'TokenField';
+TokenInput.displayName = 'TokenInput';
 
-export { TokenField };
-export type { TokenFieldProps };
+export { TokenInput };
+export type { TokenInputProps };
