@@ -1,4 +1,4 @@
-import { BorrowPosition, LendPosition, TickerToData } from '@interlay/interbtc-api';
+import { BorrowPosition, LendPosition } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQueries } from 'react-query';
@@ -10,10 +10,10 @@ interface AccountPositionsData {
   borrowPositions: Array<BorrowPosition> | undefined;
 }
 
-const getAccountLendPositions = (accountId: AccountId): Promise<TickerToData<LendPosition>> => {
+const getAccountLendPositions = (accountId: AccountId): Promise<Array<LendPosition>> => {
   return window.bridge.loans.getLendPositionsOfAccount(accountId);
 };
-const getAccountBorrowPositions = (accountId: AccountId): Promise<TickerToData<BorrowPosition>> => {
+const getAccountBorrowPositions = (accountId: AccountId): Promise<Array<BorrowPosition>> => {
   return window.bridge.loans.getBorrowPositionsOfAccount(accountId);
 };
 
@@ -42,8 +42,8 @@ const useGetAccountPositions = (accountId: AccountId | undefined): AccountPositi
   }
 
   return {
-    lendPositions: lendPositionsData && Object.values(lendPositionsData),
-    borrowPositions: borrowPositionsData && Object.values(borrowPositionsData)
+    lendPositions: lendPositionsData && lendPositionsData,
+    borrowPositions: borrowPositionsData && borrowPositionsData
   };
 };
 

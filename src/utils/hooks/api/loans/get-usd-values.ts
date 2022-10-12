@@ -1,4 +1,4 @@
-import { BorrowPosition, CurrencyIdLiteral, LendPosition } from "@interlay/interbtc-api";
+import { CurrencyIdLiteral, LendPosition, LoanPosition } from "@interlay/interbtc-api";
 import Big from "big.js";
 
 import { Prices } from "@/common/types/util.types";
@@ -20,9 +20,8 @@ const getTotalEarnedInterestUSDValue = (lendPositions: LendPosition[], prices: P
     }, Big(0));
 };
 
-// TODO: use LoanPosition[] type instead after it's exported from the lib
-const getTotalUSDValueOfPositions = (positions: BorrowPosition[], prices: Prices): Big => {
-    return positions.reduce((totalValue: Big, position: LendPosition | BorrowPosition) => {
+const getTotalUSDValueOfPositions = (positions: LoanPosition[], prices: Prices): Big => {
+    return positions.reduce((totalValue: Big, position: LoanPosition) => {
         const { currency, amount } = position;
         // TODO: Remove type casting after useGetPrices hook is refactored
         const price = getTokenPrice(prices, currency.ticker as CurrencyIdLiteral)?.usd;
