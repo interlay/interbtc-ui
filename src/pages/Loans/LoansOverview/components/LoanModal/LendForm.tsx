@@ -70,7 +70,6 @@ const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
           <StyledDItem>
             <dt>Borrow Limit</dt>
             <dd>
-              {' '}
               {formatUSD(borrowLimitUSDValue?.toNumber() || 0)} -&gt; {formatUSD(newBorrowLimit.toNumber())}
             </dd>
           </StyledDItem>

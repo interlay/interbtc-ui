@@ -3,8 +3,6 @@ import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQueries } from 'react-query';
 
-// TODO: Check if lend and borrow positions need to be constructed as a mapping or can be used as array instead.
-
 interface AccountPositionsData {
   lendPositions: Array<LendPosition> | undefined;
   borrowPositions: Array<BorrowPosition> | undefined;
