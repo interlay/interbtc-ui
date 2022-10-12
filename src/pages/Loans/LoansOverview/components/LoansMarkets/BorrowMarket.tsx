@@ -1,4 +1,4 @@
-import { BorrowPosition, LoanAsset, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
+import { BorrowPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -77,10 +77,7 @@ const BorrowMarket = ({ assets, positions }: BorrowMarketProps): JSX.Element => 
     ({ borrowApy: apy, availableCapacity, currency, totalLiquidity }) => {
       const asset = <MarketAsset currency={currency.ticker} />;
 
-      const maxBorrowableAmountByCollateral = getMaxBorrowableAmount(currency) || newMonetaryAmount(0, currency);
-      const availableAmount = availableCapacity.gt(maxBorrowableAmountByCollateral)
-        ? maxBorrowableAmountByCollateral
-        : availableCapacity;
+      const availableAmount = getMaxBorrowableAmount(currency, availableCapacity);
 
       return {
         id: currency.ticker,
