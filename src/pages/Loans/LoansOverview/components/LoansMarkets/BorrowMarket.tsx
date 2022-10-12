@@ -1,8 +1,10 @@
-import { BorrowPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { BorrowPosition, LoanAsset, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { displayMonetaryAmount, formatNumber } from '../../../../../common/utils/utils';
+import { displayMonetaryAmount, formatNumber } from '@/common/utils/utils';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+
 import { LoanModal } from '../LoanModal';
 import { StyledTableWrapper } from './LoansMarkets.style';
 import { MarketAsset } from './MarketAsset';
@@ -40,6 +42,8 @@ const BorrowMarket = ({ assets, positions }: BorrowMarketProps): JSX.Element => 
   const { t } = useTranslation();
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
+  const { getMaxBorrowableAmount } = useGetAccountLoansOverview();
+
   // TODO: subject to change in the future
   const handleAssetRowAction = (key: Key) => {
     const asset = assets[key as string];
@@ -73,15 +77,16 @@ const BorrowMarket = ({ assets, positions }: BorrowMarketProps): JSX.Element => 
     ({ borrowApy: apy, availableCapacity, currency, totalLiquidity }) => {
       const asset = <MarketAsset currency={currency.ticker} />;
 
-      // TODO: Make this value dependent on amount of collateral user has provided,
-      // create helper function that computes it in acount-loans-overview hook.
-      const available = displayMonetaryAmount(availableCapacity);
+      const maxBorrowableAmountByCollateral = getMaxBorrowableAmount(currency) || newMonetaryAmount(0, currency);
+      const availableAmount = availableCapacity.gt(maxBorrowableAmountByCollateral)
+        ? maxBorrowableAmountByCollateral
+        : availableCapacity;
 
       return {
         id: currency.ticker,
         asset,
         'borrow-apy': formatNumber(apy.toNumber()),
-        available,
+        available: displayMonetaryAmount(availableAmount),
         liquidity: displayMonetaryAmount(totalLiquidity)
       };
     }

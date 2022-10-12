@@ -1,14 +1,21 @@
-import { BorrowPosition, CurrencyExt, CurrencyIdLiteral, LendPosition } from '@interlay/interbtc-api';
+import {
+  BorrowPosition,
+  CurrencyExt,
+  CurrencyIdLiteral,
+  LendPosition,
+  newAccountId,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
-import { Prices } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import { useGetPrices } from '../use-get-prices';
+import { getTotalEarnedInterestUSDValue, getTotalUSDValueOfPositions } from './get-usd-values';
 import { useGetAccountPositions } from './use-get-account-positions';
 
 interface AccountLoansOverview {
@@ -23,40 +30,13 @@ interface AccountLoansOverview {
     currency: CurrencyExt,
     amount: MonetaryAmount<CurrencyExt>
   ) => Big | undefined;
+  getMaxBorrowableAmount: (currency: CurrencyExt) => MonetaryAmount<CurrencyExt> | undefined;
 }
 
-const getTotalEarnedInterestUSDValue = (lendPositions: LendPosition[], prices: Prices) => {
-  return lendPositions.reduce((totalValue: Big, position: LendPosition) => {
-    const { currency, earnedInterest } = position;
-    // TODO: Remove type casting after useGetPrices hook is refactored
-    const price = getTokenPrice(prices, currency.ticker as CurrencyIdLiteral)?.usd;
+const useGetAccountLoansOverview = (): AccountLoansOverview => {
+  const { selectedAccount } = useSubstrateSecureState();
 
-    if (price === undefined) {
-      console.error(`useGetAccountCollateralization: No exchange rate found for currency: ${currency.name}`);
-    }
-
-    const positionUSDValue = convertMonetaryAmountToValueInUSD(earnedInterest, price);
-    return totalValue.add(positionUSDValue || 0);
-  }, Big(0));
-};
-
-// TODO: use LoanPosition[] type instead after it's exported from the lib
-const getTotalUSDValueOfPositions = (positions: BorrowPosition[], prices: Prices) => {
-  return positions.reduce((totalValue: Big, position: LendPosition | BorrowPosition) => {
-    const { currency, amount } = position;
-    // TODO: Remove type casting after useGetPrices hook is refactored
-    const price = getTokenPrice(prices, currency.ticker as CurrencyIdLiteral)?.usd;
-
-    if (price === undefined) {
-      console.error(`useGetAccountCollateralization: No exchange rate found for currency: ${currency.name}`);
-    }
-
-    const positionUSDValue = convertMonetaryAmountToValueInUSD(amount, price);
-    return totalValue.add(positionUSDValue || 0);
-  }, Big(0));
-};
-
-const useGetAccountLoansOverview = (accountId: AccountId | undefined): AccountLoansOverview => {
+  const accountId = selectedAccount && newAccountId(window.bridge.api, selectedAccount.address);
   const prices = useGetPrices();
   const { lendPositions, borrowPositions } = useGetAccountPositions(accountId);
 
@@ -92,7 +72,7 @@ const useGetAccountLoansOverview = (accountId: AccountId | undefined): AccountLo
    * @returns New collateral ratio after the supplying or borrowing is done.
    */
   const getNewCollateralRatio = useCallback(
-    (type: 'borrow' | 'supply', currency: CurrencyExt, amount: MonetaryAmount<CurrencyExt>) => {
+    (type: 'borrow' | 'supply', currency: CurrencyExt, amount: MonetaryAmount<CurrencyExt>): Big | undefined => {
       if (prices === undefined || borrowedAssetsUSDValue === undefined || collateralAssetsUSDValue === undefined) {
         return undefined;
       }
@@ -112,6 +92,28 @@ const useGetAccountLoansOverview = (accountId: AccountId | undefined): AccountLo
     [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue]
   );
 
+  /**
+   * Get maximum amount of currency that user can borrow with currently provided collateral.
+   * @param currency Currency
+   * @returns maximum amount of currency that user can borrow with currently provided collateral.
+   * @returns undefined if prices and assets are not loaded yet
+   */
+  const getMaxBorrowableAmount = useCallback(
+    (currency: CurrencyExt): MonetaryAmount<CurrencyExt> | undefined => {
+      if (collateralAssetsUSDValue === undefined || borrowedAssetsUSDValue === undefined || prices === undefined) {
+        return undefined;
+      }
+
+      // TODO: Remove type casting after useGetPrices hook is refactored.
+      const currencyUSDPrice = getTokenPrice(prices, currency.ticker as CurrencyIdLiteral)?.usd;
+      const availableCollateralUSDValue = collateralAssetsUSDValue.sub(borrowedAssetsUSDValue);
+      const maxBorrowableCurrencyAmount = availableCollateralUSDValue.div(currencyUSDPrice || 0);
+
+      return newMonetaryAmount(maxBorrowableCurrencyAmount, currency);
+    },
+    [collateralAssetsUSDValue, borrowedAssetsUSDValue, prices]
+  );
+
   return {
     lendPositions,
     borrowPositions,
@@ -119,7 +121,8 @@ const useGetAccountLoansOverview = (accountId: AccountId | undefined): AccountLo
     totalEarnedInterestUSDValue,
     borrowedAssetsUSDValue,
     collateralRatio,
-    getNewCollateralRatio
+    getNewCollateralRatio,
+    getMaxBorrowableAmount
   };
 };
 

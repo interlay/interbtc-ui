@@ -70,6 +70,7 @@ const LockedCollateralsCard = (): JSX.Element => {
 
         let sumValueInUSD = 0;
         for (const collateral of collaterals) {
+          console.log('\n\n\n\n mon amount: ', collateral.cumulativeVolumes[index].amount.toHuman());
           sumValueInUSD +=
             convertMonetaryAmountToValueInUSD(collateral.cumulativeVolumes[index].amount, collateral.tokenPriceInUSD) ??
             0;

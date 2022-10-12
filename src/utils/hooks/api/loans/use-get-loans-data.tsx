@@ -1,8 +1,7 @@
-import { newAccountId, TickerToData } from '@interlay/interbtc-api';
+import { TickerToData } from '@interlay/interbtc-api';
 import { BorrowPosition, LendPosition, LoanAsset } from '@interlay/interbtc-api';
 
 import { formatPercentage, formatUSD } from '@/common/utils/utils';
-import { useSubstrateSecureState } from '@/lib/substrate';
 
 import { useGetAccountLoansOverview } from './use-get-account-loans-overview';
 import { useGetLoanAssets } from './use-get-loan-assets';
@@ -21,10 +20,6 @@ type LoansData = {
 };
 
 const useGetLoansData = (): LoansData => {
-  const { selectedAccount } = useSubstrateSecureState();
-
-  const accountId = selectedAccount && newAccountId(window.bridge.api, selectedAccount.address);
-
   const {
     lendPositions,
     borrowPositions,
@@ -32,7 +27,7 @@ const useGetLoansData = (): LoansData => {
     totalEarnedInterestUSDValue,
     borrowedAssetsUSDValue,
     collateralRatio
-  } = useGetAccountLoansOverview(accountId);
+  } = useGetAccountLoansOverview();
   const { assets } = useGetLoanAssets();
 
   return {
