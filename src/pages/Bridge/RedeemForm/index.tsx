@@ -36,6 +36,7 @@ import {
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '@/constants';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -62,7 +63,8 @@ const RedeemForm = (): JSX.Element | null => {
   const handleError = useErrorHandler();
 
   const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
-  const { wrappedTokenBalance, bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+  const { selectedAccount } = useSubstrateSecureState();
+  const { wrappedTokenBalance, bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
@@ -287,7 +289,7 @@ const RedeemForm = (): JSX.Element | null => {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
 
-      if (!address) {
+      if (!selectedAccount) {
         return t('redeem_page.must_select_account_warning');
       }
 
@@ -345,7 +347,7 @@ const RedeemForm = (): JSX.Element | null => {
       currentInclusionFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
-    const accountSet = !!address;
+    const accountSet = !!selectedAccount;
 
     // `btcToDotRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToDotRate.toBig().eq(0);

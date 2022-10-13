@@ -1,34 +1,30 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import * as React from 'react';
-import { useSelector } from 'react-redux';
 
-import { StoreType } from '@/common/types/util.types';
-import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
+import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 
 import AccountSelector from './AccountSelector';
 
 interface Props {
-  callbackFunction?: (account: InjectedAccountWithMeta) => void;
+  callbackFunction?: (account: KeyringPair) => void;
   label: string;
 }
 
 const Accounts = ({ callbackFunction, label }: Props): JSX.Element => {
-  const { address } = useSelector((state: StoreType) => state.general);
-  const [selectedAccount, setSelectedAccount] = React.useState<InjectedAccountWithMeta | undefined>(undefined);
-  const accounts = useGetAccounts();
+  const { selectedAccount: currentAccount, accounts } = useSubstrateSecureState();
+
+  const [selectedAccount, setSelectedAccount] = React.useState<KeyringPair | undefined>(undefined);
 
   React.useEffect(() => {
-    if (!accounts || !address) return;
+    if (!currentAccount) return;
 
     if (!selectedAccount) {
-      const currentAccount = accounts.find((account) => account.address === address);
       setSelectedAccount(currentAccount);
     }
 
     if (callbackFunction && selectedAccount) {
       callbackFunction(selectedAccount);
     }
-  }, [accounts, callbackFunction, address, selectedAccount]);
+  }, [callbackFunction, currentAccount, selectedAccount]);
 
   return (
     <div>

@@ -63,14 +63,12 @@ export type GeneralState = {
   bridgeLoaded: boolean;
   vaultClientLoaded: boolean;
   showAccountModal: boolean;
-  address: string;
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
   wrappedTokenBalance: BitcoinAmount;
   wrappedTokenTransferableBalance: BitcoinAmount;
   collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>;
   collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>;
-  extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
