@@ -6,9 +6,7 @@ interface LoanAssetsData {
   assets: TickerToData<LoanAsset> | undefined;
 }
 
-const getLoanAssets = (): Promise<TickerToData<LoanAsset>> => {
-  return window.bridge.loans.getLoanAssets();
-};
+const getLoanAssets = (): Promise<TickerToData<LoanAsset>> => window.bridge.loans.getLoanAssets();
 
 const useGetLoanAssets = (): LoanAssetsData => {
   const { data: assets, error } = useQuery({

@@ -44,7 +44,6 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
 
   // TODO: subject to change in the future
   const handleAssetRowAction = (key: Key) => {
-    console.log('\n\n\n\nEVENT');
     const asset = assets[key as string];
     const position = positions.find((position) => position.currency === asset.currency);
 
