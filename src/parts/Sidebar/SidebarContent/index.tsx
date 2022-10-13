@@ -2,10 +2,7 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ReactComponent as InterlayLogoWithTextIcon } from '@/assets/img/interlay-logo-with-text.svg';
-import InterlayLink from '@/components/UI/InterlayLink';
 import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
-import { INTERLAY_COMPANY_LINK } from '@/config/links';
 import { GovernanceTokenLogoWithTextIcon } from '@/config/relay-chains';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
@@ -58,24 +55,6 @@ const SidebarContent = React.forwardRef<Ref, Props>(
           <Navigation onSmallScreen={onSmallScreen} className='mt-5' />
         </div>
         <SocialMediaContainer className='p-2' />
-        <div className={clsx('flex-shrink-0', 'flex', 'p-4', BORDER_CLASSES, 'border-t')}>
-          <InterlayLink
-            className={clsx('flex', 'items-center', 'justify-center', 'space-x-2', 'w-full')}
-            href={INTERLAY_COMPANY_LINK}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            <span className='font-medium'>{t('built_by')}</span>
-            <InterlayLogoWithTextIcon
-              className={clsx(
-                { 'text-interlayHaiti': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                { 'dark:text-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-              )}
-              width={130}
-              height={29.21}
-            />
-          </InterlayLink>
-        </div>
         <p className={clsx('px-4', 'pb-4', 'text-center')}>
           {t('version')} {process.env.REACT_APP_VERSION}
         </p>

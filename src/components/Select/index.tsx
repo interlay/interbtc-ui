@@ -1,6 +1,6 @@
 import { Listbox, Transition } from '@headlessui/react';
 import { Props } from '@headlessui/react/dist/types';
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid';
 import clsx from 'clsx';
 import * as React from 'react';
 
@@ -95,7 +95,7 @@ const SelectButton = ({
         'pointer-events-none'
       )}
     >
-      <SelectorIcon className={clsx('h-5', 'w-5', 'text-textSecondary')} aria-hidden='true' />
+      <ChevronUpDownIcon className={clsx('h-5', 'w-5', 'text-textSecondary')} aria-hidden='true' />
     </span>
   </Listbox.Button>
 );
