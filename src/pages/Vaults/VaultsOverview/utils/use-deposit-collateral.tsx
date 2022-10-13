@@ -1,12 +1,10 @@
 import { CollateralCurrencyExt, CollateralIdLiteral, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { useSelector } from 'react-redux';
 
-import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
+import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import { useGovernanceTokenBalance, useRelayChainNativeTokenBalance } from '@/services/hooks/use-token-balance';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -61,7 +59,7 @@ type UseDepositCollateral = {
 };
 
 const useDepositCollateral = (collateralCurrency: CollateralCurrencyExt, minCollateral: Big): UseDepositCollateral => {
-  const { collateralTokenBalance } = useSelector((state: StoreType) => state.general);
+  const { relayChainNativeTokenBalance } = useRelayChainNativeTokenBalance();
   const { governanceTokenBalance } = useGovernanceTokenBalance();
   const prices = useGetPrices();
 
@@ -70,9 +68,11 @@ const useDepositCollateral = (collateralCurrency: CollateralCurrencyExt, minColl
 
   const isGovernanceCollateral = collateralCurrency === GOVERNANCE_TOKEN;
   const freeGovernanceBalance = governanceTokenBalance?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const freeRelayChainNativeBalance =
+    relayChainNativeTokenBalance?.free || newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
   const balanceToken = isGovernanceCollateral
     ? getAvailableGovernanceBalance(freeGovernanceBalance)
-    : collateralTokenBalance;
+    : freeRelayChainNativeBalance;
 
   return {
     collateral: {

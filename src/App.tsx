@@ -52,15 +52,9 @@ const App = (): JSX.Element => {
   const { selectedAccount, extensions } = useSubstrateSecureState();
   const { setSelectedAccount } = useSubstrate();
 
-  const {
-    bridgeLoaded,
-    wrappedTokenBalance,
-    wrappedTokenTransferableBalance
-    // ray test touch <
-    // collateralTokenBalance,
-    // collateralTokenTransferableBalance
-    // ray test touch >
-  } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, wrappedTokenBalance, wrappedTokenTransferableBalance } = useSelector(
+    (state: StoreType) => state.general
+  );
   const dispatch = useDispatch();
 
   const unsubscribeCollateralTokenBalance = React.useRef<UnsubscriptionRef>(null);
@@ -180,10 +174,13 @@ const App = (): JSX.Element => {
 
     (async () => {
       try {
-        const unsubscribe = await window.bridge.tokens.subscribeToBalance(RELAY_CHAIN_NATIVE_TOKEN, selectedAccount.address, () => {
-          // ray test touch <
-          relayChainNativeTokenBalanceInvalidate();
-        });
+        const unsubscribe = await window.bridge.tokens.subscribeToBalance(
+          RELAY_CHAIN_NATIVE_TOKEN,
+          selectedAccount.address,
+          () => {
+            relayChainNativeTokenBalanceInvalidate();
+          }
+        );
 
         if (unsubscribeCollateralTokenBalance.current) {
           unsubscribeCollateralTokenBalance.current();
@@ -202,7 +199,6 @@ const App = (): JSX.Element => {
       }
     };
   }, [bridgeLoaded, selectedAccount, relayChainNativeTokenBalanceInvalidate]);
-  // ray test touch >
 
   // Subscribes to wrapped token balance
   React.useEffect(() => {
