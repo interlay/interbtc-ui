@@ -49,9 +49,7 @@ const BurnForm = (): JSX.Element | null => {
   const handleError = useErrorHandler();
 
   const { selectedAccount } = useSubstrateSecureState();
-  const { bridgeLoaded, wrappedTokenBalance, parachainStatus } = useSelector(
-    (state: StoreType) => state.general
-  );
+  const { bridgeLoaded, wrappedTokenBalance, parachainStatus } = useSelector((state: StoreType) => state.general);
 
   const {
     register,
