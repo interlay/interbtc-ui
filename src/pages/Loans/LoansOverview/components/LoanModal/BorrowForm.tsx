@@ -35,9 +35,8 @@ const BorrowForm = ({ asset, variant }: BorrowFormProps): JSX.Element => {
   const [newBorrowLimit, setNewBorrowLimit] = useState<Big>(borrowLimitUSDValue || Big(0));
 
   const handleInputAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const transactionType = variant === 'borrow' ? 'withdraw' : 'deposit';
     const monetaryAmount = new MonetaryAmount(asset.currency, event.target.value || 0);
-    const newBorrowLimit = getNewBorrowLimitUSDValue(transactionType, asset.currency, monetaryAmount);
+    const newBorrowLimit = getNewBorrowLimitUSDValue(variant, asset.currency, monetaryAmount);
     setNewBorrowLimit(newBorrowLimit || Big(0));
   };
 
