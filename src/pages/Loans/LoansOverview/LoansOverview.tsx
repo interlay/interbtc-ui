@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { H1, P, Stack } from '@/component-library';
-import { LoadingSpinner } from '@/component-library/LoadingSpinner';
+import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
@@ -13,7 +13,7 @@ const LoansOverview = (): JSX.Element => {
   const { interestEarnedUSDValue, borrowUSDValue: borrowBalance, loanStatus, supplyUSDValue: supplyBalance } = overview;
 
   if (lendPositions === undefined || borrowPositions === undefined || assets === undefined) {
-    return <LoadingSpinner />;
+    return <FullLoadingSpinner />;
   }
 
   return (

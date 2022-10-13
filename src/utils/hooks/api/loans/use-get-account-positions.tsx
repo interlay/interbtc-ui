@@ -8,12 +8,11 @@ interface AccountPositionsData {
   borrowPositions: Array<BorrowPosition> | undefined;
 }
 
-const getAccountLendPositions = (accountId: AccountId): Promise<Array<LendPosition>> => {
-  return window.bridge.loans.getLendPositionsOfAccount(accountId);
-};
-const getAccountBorrowPositions = (accountId: AccountId): Promise<Array<BorrowPosition>> => {
-  return window.bridge.loans.getBorrowPositionsOfAccount(accountId);
-};
+const getAccountLendPositions = (accountId: AccountId): Promise<Array<LendPosition>> =>
+  window.bridge.loans.getLendPositionsOfAccount(accountId);
+
+const getAccountBorrowPositions = (accountId: AccountId): Promise<Array<BorrowPosition>> =>
+  window.bridge.loans.getBorrowPositionsOfAccount(accountId);
 
 const useGetAccountPositions = (accountId: AccountId | undefined): AccountPositionsData => {
   const [
@@ -22,22 +21,20 @@ const useGetAccountPositions = (accountId: AccountId | undefined): AccountPositi
   ] = useQueries([
     {
       queryKey: ['lend-positions', accountId?.toString()],
-      queryFn: async () => accountId && (await getAccountLendPositions(accountId)),
-      enabled: !!accountId
+      queryFn: () => accountId && getAccountLendPositions(accountId),
+      enabled: !!accountId,
+      initialData: []
     },
     {
       queryKey: ['borrow-positions', accountId?.toString()],
-      queryFn: async () => accountId && (await getAccountBorrowPositions(accountId)),
-      enabled: !!accountId
+      queryFn: () => accountId && getAccountBorrowPositions(accountId),
+      enabled: !!accountId,
+      initialData: []
     }
   ]);
 
   useErrorHandler(lendPositionsError);
   useErrorHandler(borrowPositionsError);
-
-  if (accountId === undefined) {
-    return { lendPositions: undefined, borrowPositions: undefined };
-  }
 
   return {
     lendPositions: lendPositionsData && lendPositionsData,
