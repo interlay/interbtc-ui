@@ -1,12 +1,13 @@
-import { BorrowPosition, CurrencyExt, CurrencyIdLiteral, LendPosition, newAccountId } from '@interlay/interbtc-api';
+import { BorrowPosition, CurrencyExt, CurrencyIdLiteral, LendPosition } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
-import { useSubstrateSecureState } from '@/lib/substrate';
+import { BorrowAction, LendAction } from '@/pages/Loans/types';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
+import useAccountId from '../../use-account-id';
 import { useGetPrices } from '../use-get-prices';
 import { getTotalEarnedInterestUSDValue, getTotalUSDValueOfPositions } from './get-usd-values';
 import { useGetAccountPositions } from './use-get-account-positions';
@@ -20,12 +21,12 @@ interface AccountLoansOverview {
   borrowLimitUSDValue: Big | undefined;
   collateralRatio: Big | undefined;
   getNewCollateralRatio: (
-    type: 'withdraw' | 'deposit',
+    type: LendAction | BorrowAction,
     currency: CurrencyExt,
     amount: MonetaryAmount<CurrencyExt>
   ) => Big | undefined;
   getNewBorrowLimitUSDValue: (
-    type: 'withdraw' | 'deposit',
+    type: LendAction | BorrowAction,
     currency: CurrencyExt,
     amount: MonetaryAmount<CurrencyExt>
   ) => Big | undefined;
@@ -36,10 +37,10 @@ interface AccountLoansOverview {
 }
 
 const useGetAccountLoansOverview = (): AccountLoansOverview => {
-  const { selectedAccount } = useSubstrateSecureState();
+  const accountId = useAccountId();
 
-  const accountId = selectedAccount && newAccountId(window.bridge.api, selectedAccount.address);
   const prices = useGetPrices();
+
   const { lendPositions, borrowPositions } = useGetAccountPositions(accountId);
 
   let lentAssetsUSDValue: Big | undefined = undefined;
@@ -71,14 +72,14 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   /**
    * This method computes how the collateral ratio will change if
    * asset is withdrawn or deposited.
-   * @param type Type of transaction that will be done: 'deposit' or 'withdraw'.
+   * @param type Type of transaction that will be done.
    * @param currency Currency which will be deposited or withdrawn.
    * @param amount Amount of `currency` that will be used.
    * @note Call only after the prices and positions are loaded.
    * @returns New collateral ratio after the transaction is done.
    */
   const getNewCollateralRatio = useCallback(
-    (type: 'withdraw' | 'deposit', currency: CurrencyExt, amount: MonetaryAmount<CurrencyExt>): Big | undefined => {
+    (type: LendAction | BorrowAction, currency: CurrencyExt, amount: MonetaryAmount<CurrencyExt>): Big | undefined => {
       if (prices === undefined || borrowedAssetsUSDValue === undefined || collateralAssetsUSDValue === undefined) {
         return undefined;
       }
@@ -88,10 +89,10 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const amountUSDValue = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
 
       const newBorrowedAssetsUSDValue =
-        type === 'withdraw' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
+        type === 'withdraw' || type === 'borrow' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
 
       const newCollateralAssetsUSDValue =
-        type === 'deposit' ? collateralAssetsUSDValue.add(amountUSDValue) : collateralAssetsUSDValue;
+        type === 'lend' || type === 'repay' ? collateralAssetsUSDValue.add(amountUSDValue) : collateralAssetsUSDValue;
 
       return newCollateralAssetsUSDValue.gt(0) ? newCollateralAssetsUSDValue.div(newBorrowedAssetsUSDValue) : Big(0);
     },
@@ -101,14 +102,14 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   /**
    * This method computes how the borrow limit will change if
    * asset is withdrawn or deposited to protocol.
-   * @param type Type of transaction to be done: 'withdraw' or 'deposit'.
+   * @param type Type of transaction to be done.
    * @param currency Currency which will be deposited or withdrawn.
    * @param amount Amount of `currency` that will be used.
    * @note Call only after the prices and positions are loaded.
    * @returns New borrow limit in USD after the transaction is done.
    */
   const getNewBorrowLimitUSDValue = useCallback(
-    (type: 'withdraw' | 'deposit', currency: CurrencyExt, amount: MonetaryAmount<CurrencyExt>): Big | undefined => {
+    (type: LendAction | BorrowAction, currency: CurrencyExt, amount: MonetaryAmount<CurrencyExt>): Big | undefined => {
       if (prices === undefined || borrowedAssetsUSDValue === undefined || collateralAssetsUSDValue === undefined) {
         return undefined;
       }
@@ -118,10 +119,10 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const amountUSDValue = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
 
       const newBorrowedAssetsUSDValue =
-        type === 'withdraw' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
+        type === 'withdraw' || type === 'borrow' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
 
       const newCollateralAssetsUSDValue =
-        type === 'deposit' ? collateralAssetsUSDValue.add(amountUSDValue) : collateralAssetsUSDValue;
+        type === 'lend' || type === 'repay' ? collateralAssetsUSDValue.add(amountUSDValue) : collateralAssetsUSDValue;
 
       return newCollateralAssetsUSDValue.sub(newBorrowedAssetsUSDValue || 0);
     },
