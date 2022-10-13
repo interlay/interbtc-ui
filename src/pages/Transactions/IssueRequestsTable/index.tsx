@@ -23,6 +23,7 @@ import InterlayTable, {
   InterlayTr
 } from '@/components/UI/InterlayTable';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import SectionTitle from '@/parts/SectionTitle';
@@ -101,7 +102,10 @@ const IssueRequestsTable = (): JSX.Element => {
       TABLE_PAGE_LIMIT, // limit
       `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"` // `WHERE` condition
     ],
-    issuesFetcher
+    issuesFetcher,
+    {
+      refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
+    }
   );
   useErrorHandler(issueRequestsError);
 

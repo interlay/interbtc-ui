@@ -21,6 +21,7 @@ import InterlayTable, {
 } from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
 import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
@@ -100,7 +101,10 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
       TABLE_PAGE_LIMIT, // limit
       `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
     ],
-    issuesFetcher
+    issuesFetcher,
+    {
+      refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
+    }
   );
   useErrorHandler(issueRequestsError);
 
