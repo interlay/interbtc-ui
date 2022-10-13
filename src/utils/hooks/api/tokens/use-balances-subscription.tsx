@@ -1,5 +1,5 @@
 import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
-import { createContext, useEffect, useRef } from 'react';
+import { FC, Fragment, useEffect, useRef } from 'react';
 import { QueryClient, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 
@@ -7,8 +7,7 @@ import { StoreType } from '@/common/types/util.types';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 
-import { BALANCES_QUERY_KEY } from './hook';
-import { BalanceData } from './types';
+import { BalanceData, BALANCES_QUERY_KEY } from './use-get-balances';
 
 type UnsubscriptionsRef = Array<() => void> | null;
 
@@ -28,9 +27,7 @@ const unsubscribeAll = (refs: UnsubscriptionsRef) => {
   refs = null;
 };
 
-const BalanceStateContext = createContext(undefined);
-
-const BalancesProvider: React.FC = ({ children }): JSX.Element => {
+const useBalanceSubscription = (): void => {
   const queryClient = useQueryClient();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { address } = useSubstrateSecureState().selectedAccount || {};
@@ -57,8 +54,13 @@ const BalancesProvider: React.FC = ({ children }): JSX.Element => {
 
     return () => unsubscribeAll(unsubscriptionsRef.current);
   }, [address, currencies, queryClient]);
-
-  return <BalanceStateContext.Provider value={undefined}>{children}</BalanceStateContext.Provider>;
 };
 
-export { BalancesProvider, BalanceStateContext };
+// TODO: move this elsewhere, once we start handling more subscriptions
+const Subscriptions: FC = ({ children }) => {
+  useBalanceSubscription();
+
+  return <Fragment>{children}</Fragment>;
+};
+
+export { Subscriptions, useBalanceSubscription };

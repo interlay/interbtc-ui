@@ -47,8 +47,8 @@ import {
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 import { KUSAMA } from '@/utils/constants/relay-chain-names';
-import { useGetBalances } from '@/utils/contexts/balances';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import BalancesUI from './BalancesUI';

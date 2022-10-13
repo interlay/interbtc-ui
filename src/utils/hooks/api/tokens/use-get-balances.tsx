@@ -1,4 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
@@ -8,7 +8,9 @@ import { StoreType } from '@/common/types/util.types';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-import { BalanceData } from './types';
+type BalanceData = {
+  [ticker: string]: ChainBalance;
+};
 
 const BALANCES_QUERY_KEY = 'getBalances';
 
@@ -42,3 +44,4 @@ const useGetBalances = (): UseQueryResult<BalanceData | undefined> => {
 };
 
 export { BALANCES_QUERY_KEY, useGetBalances };
+export type { BalanceData };

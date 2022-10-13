@@ -17,7 +17,7 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
-import { useGetBalances } from '@/utils/contexts/balances';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 import TokenSelector from './TokenSelector';
 

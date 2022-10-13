@@ -22,8 +22,8 @@ import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
-import { useGetBalances } from '@/utils/contexts/balances';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 enum CollateralUpdateStatus {

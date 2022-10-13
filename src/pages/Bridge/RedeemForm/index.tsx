@@ -42,9 +42,9 @@ import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
-import { useGetBalances } from '@/utils/contexts/balances';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';

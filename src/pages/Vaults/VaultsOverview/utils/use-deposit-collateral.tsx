@@ -5,8 +5,8 @@ import Big from 'big.js';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import { useGetBalances } from '@/utils/contexts/balances';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const getAvailableGovernanceBalance = (balance: MonetaryAmount<CurrencyExt>): MonetaryAmount<CurrencyExt> => {
