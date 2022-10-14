@@ -21,12 +21,14 @@ type LoansData = {
 
 const useGetLoansData = (): LoansData => {
   const {
-    lendPositions,
-    borrowPositions,
-    lentAssetsUSDValue,
-    totalEarnedInterestUSDValue,
-    borrowedAssetsUSDValue,
-    collateralRatio
+    data: {
+      lendPositions,
+      borrowPositions,
+      lentAssetsUSDValue,
+      totalEarnedInterestUSDValue,
+      borrowedAssetsUSDValue,
+      collateralRatio
+    }
   } = useGetAccountLoansOverview();
   const { assets } = useGetLoanAssets();
 
