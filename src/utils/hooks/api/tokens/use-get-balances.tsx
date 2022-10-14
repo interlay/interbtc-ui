@@ -5,14 +5,13 @@ import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 type BalanceData = {
   [ticker: string]: ChainBalance;
 };
-
-const BALANCES_QUERY_KEY = 'getBalances';
 
 const getBalances = async (currencies: CurrencyExt[], accountId: AccountId): Promise<BalanceData> => {
   const chainBalances = await Promise.all(
@@ -28,14 +27,17 @@ const getBalances = async (currencies: CurrencyExt[], accountId: AccountId): Pro
   );
 };
 
+const getBalancesQueryKey = (accountAddress?: string): string => 'getBalances'.concat(accountAddress || '');
+
 const useGetBalances = (): UseQueryResult<BalanceData | undefined> => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const accountId = useAccountId();
-  const { data: currencies, isSuccess } = useGetCurrencies(bridgeLoaded);
+  const { selectedAccount } = useSubstrateSecureState();
+  const { data: currencies, isSuccess: isCurriencesSuccess } = useGetCurrencies(bridgeLoaded);
   const queryResult = useQuery({
-    queryKey: BALANCES_QUERY_KEY,
+    queryKey: getBalancesQueryKey(selectedAccount?.address),
     queryFn: () => (accountId && currencies ? getBalances(currencies, accountId) : undefined),
-    enabled: accountId && isSuccess && bridgeLoaded
+    enabled: selectedAccount && accountId && isCurriencesSuccess && bridgeLoaded
   });
 
   useErrorHandler(queryResult.error);
@@ -43,5 +45,5 @@ const useGetBalances = (): UseQueryResult<BalanceData | undefined> => {
   return queryResult;
 };
 
-export { BALANCES_QUERY_KEY, useGetBalances };
+export { getBalancesQueryKey, useGetBalances };
 export type { BalanceData };
