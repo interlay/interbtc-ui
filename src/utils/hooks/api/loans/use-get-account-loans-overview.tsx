@@ -12,7 +12,7 @@ import { useGetPrices } from '../use-get-prices';
 import { getTotalEarnedInterestUSDValue, getTotalUSDValueOfPositions } from './get-usd-values';
 import { useGetAccountPositions } from './use-get-account-positions';
 
-interface AccountLoansOverview {
+interface AccountLoansOverviewData {
   lendPositions: LendPosition[] | undefined;
   borrowPositions: BorrowPosition[] | undefined;
   lentAssetsUSDValue: Big | undefined;
@@ -20,6 +20,10 @@ interface AccountLoansOverview {
   borrowedAssetsUSDValue: Big | undefined;
   borrowLimitUSDValue: Big | undefined;
   collateralRatio: Big | undefined;
+}
+
+interface AccountLoansOverview {
+  data: AccountLoansOverviewData;
   getNewCollateralRatio: (
     type: LendAction | BorrowAction,
     currency: CurrencyExt,
@@ -165,13 +169,15 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   );
 
   return {
-    lendPositions,
-    borrowPositions,
-    lentAssetsUSDValue,
-    totalEarnedInterestUSDValue,
-    borrowedAssetsUSDValue,
-    borrowLimitUSDValue,
-    collateralRatio,
+    data: {
+      lendPositions,
+      borrowPositions,
+      lentAssetsUSDValue,
+      totalEarnedInterestUSDValue,
+      borrowedAssetsUSDValue,
+      borrowLimitUSDValue,
+      collateralRatio
+    },
     getNewCollateralRatio,
     getNewBorrowLimitUSDValue,
     getMaxBorrowableAmount
