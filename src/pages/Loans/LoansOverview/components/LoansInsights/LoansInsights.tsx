@@ -3,10 +3,10 @@ import { Card } from '@/component-library';
 import { StyledDd, StyledDItem, StyledDl, StyledDt } from './LoansInsights.style';
 
 type LoansInsightsProps = {
-  supply: string;
-  borrow: string;
-  apyEarned: string;
-  loanStatus: string;
+  supply: string | undefined;
+  borrow: string | undefined;
+  apyEarned: string | undefined;
+  loanStatus: string | undefined;
 };
 
 const LoansInsights = ({ supply, apyEarned, borrow, loanStatus }: LoansInsightsProps): JSX.Element => (

@@ -1,7 +1,9 @@
+import { BorrowPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { BorrowAssetData, BorrowPositionData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { displayMonetaryAmount, formatNumber } from '@/common/utils/utils';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 
 import { LoanModal } from '../LoanModal';
 import { StyledTableWrapper } from './LoansMarkets.style';
@@ -25,24 +27,26 @@ const borrowPositionColumns = [
 ];
 
 type UseAssetState = {
-  data?: BorrowAssetData;
-  position?: BorrowPositionData;
+  data?: LoanAsset;
+  position?: BorrowPosition;
 };
 
 const defaultAssetState: UseAssetState = { data: undefined, position: undefined };
 
 type BorrowMarketProps = {
-  assets: BorrowAssetData[];
-  positions: BorrowPositionData[];
+  assets: TickerToData<LoanAsset>;
+  positions: BorrowPosition[];
 };
 
 const BorrowMarket = ({ assets, positions }: BorrowMarketProps): JSX.Element => {
   const { t } = useTranslation();
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
+  const { getMaxBorrowableAmount } = useGetAccountLoansOverview();
+
   // TODO: subject to change in the future
   const handleAssetRowAction = (key: Key) => {
-    const asset = assets[key as number];
+    const asset = assets[key as string];
     const position = positions.find((position) => position.currency === asset.currency);
 
     setAsset({ data: asset, position });
@@ -51,35 +55,39 @@ const BorrowMarket = ({ assets, positions }: BorrowMarketProps): JSX.Element => 
   // TODO: subject to change in the future
   const handlePositionRowAction = (key: Key) => {
     const position = positions[key as number];
-    const asset = assets.find((asset) => asset.currency === position.currency);
+    const asset = assets[position.currency.ticker];
 
     setAsset({ data: asset, position });
   };
 
   const handleClose = () => setAsset(defaultAssetState);
 
-  const borrowPositionsTableRows: BorrowPositionTableRow[] = positions.map(({ currency, amount, apy }, key) => {
-    const asset = <MarketAsset currency={currency} />;
+  const borrowPositionsTableRows: BorrowPositionTableRow[] = positions.map(({ currency, amount }, key) => {
+    const asset = <MarketAsset currency={currency.ticker} />;
 
     return {
       id: key,
       asset,
-      'borrow-apy': apy,
-      borrowed: amount
+      'borrow-apy': `${formatNumber(assets[currency.ticker].borrowApy.toNumber())}%`,
+      borrowed: displayMonetaryAmount(amount)
     };
   });
 
-  const borrowAssetsTableRows: BorrowAssetsTableRow[] = assets.map(({ apy, available, currency, liquidity }, key) => {
-    const asset = <MarketAsset currency={currency} />;
+  const borrowAssetsTableRows: BorrowAssetsTableRow[] = Object.values(assets).map(
+    ({ borrowApy: apy, availableCapacity, currency, totalLiquidity }) => {
+      const asset = <MarketAsset currency={currency.ticker} />;
 
-    return {
-      id: key,
-      asset,
-      'borrow-apy': apy,
-      available,
-      liquidity
-    };
-  });
+      const availableAmount = getMaxBorrowableAmount(currency, availableCapacity);
+
+      return {
+        id: currency.ticker,
+        asset,
+        'borrow-apy': formatNumber(apy.toNumber()),
+        available: displayMonetaryAmount(availableAmount),
+        liquidity: displayMonetaryAmount(totalLiquidity)
+      };
+    }
+  );
 
   const hasBorrowPositions = !!borrowPositionsTableRows.length;
 

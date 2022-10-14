@@ -1,8 +1,9 @@
+import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { displayMonetaryAmount, formatNumber } from '@/common/utils/utils';
 import { Span, Stack } from '@/component-library';
-import { LendAssetData, LendPositionData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { LoanModal } from '../LoanModal';
 import { StyledApyTag, StyledTableWrapper } from './LoansMarkets.style';
@@ -26,15 +27,15 @@ const lendPositionColumns = [
 ];
 
 type UseAssetState = {
-  data?: LendAssetData;
-  position?: LendPositionData;
+  data?: LoanAsset;
+  position?: LendPosition;
 };
 
 const defaultAssetState: UseAssetState = { data: undefined, position: undefined };
 
 type LendMarketProps = {
-  assets: LendAssetData[];
-  positions: LendPositionData[];
+  assets: TickerToData<LoanAsset>;
+  positions: LendPosition[];
 };
 
 const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
@@ -43,7 +44,7 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
 
   // TODO: subject to change in the future
   const handleAssetRowAction = (key: Key) => {
-    const asset = assets[key as number];
+    const asset = assets[key as string];
     const position = positions.find((position) => position.currency === asset.currency);
 
     setAsset({ data: asset, position });
@@ -52,42 +53,44 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
   // TODO: subject to change in the future
   const handlePositionRowAction = (key: Key) => {
     const position = positions[key as number];
-    const asset = assets.find((asset) => asset.currency === position.currency);
+    const asset = assets[position.currency.ticker];
 
     setAsset({ data: asset, position });
   };
 
   const handleClose = () => setAsset(defaultAssetState);
 
-  const lendPositionsTableRows: LendPositionTableRow[] = positions.map(({ apy, amount, currency, apyEarned }, key) => {
-    const asset = <MarketAsset currency={currency} />;
+  const lendPositionsTableRows: LendPositionTableRow[] = positions.map(({ amount, currency, earnedInterest }, key) => {
+    const asset = <MarketAsset currency={currency.ticker} />;
 
     return {
       id: key,
       asset,
-      supplied: amount,
-      'supply-apy': apy,
-      'apy-earned': apyEarned
+      supplied: displayMonetaryAmount(amount),
+      'supply-apy': `${formatNumber(assets[currency.ticker].lendApy.toNumber())}%`,
+      'apy-earned': displayMonetaryAmount(earnedInterest)
     };
   });
 
-  const lendAssetsTableRows: LendAssetsTableRow[] = assets.map(({ apy, apyAssets, currency, balance }, key) => {
-    const apyWithEarnedAssets = (
-      <Stack spacing='half'>
-        <Span>{apy}</Span>
-        <StyledApyTag>Earn: {apyAssets.join(' / ')}</StyledApyTag>
-      </Stack>
-    );
+  const lendAssetsTableRows: LendAssetsTableRow[] = Object.values(assets).map(
+    ({ lendApy: apy, lendReward, currency }) => {
+      const apyWithEarnedAssets = (
+        <Stack spacing='half'>
+          <Span>{apy.toString()}%</Span>
+          <StyledApyTag>Earn: {lendReward?.currency.ticker}</StyledApyTag>
+        </Stack>
+      );
 
-    const asset = <MarketAsset currency={currency} />;
+      const asset = <MarketAsset currency={currency.ticker} />;
 
-    return {
-      id: key,
-      asset,
-      apy: apyWithEarnedAssets,
-      'wallet-balance': balance
-    };
-  });
+      return {
+        id: currency.ticker,
+        asset,
+        apy: apyWithEarnedAssets,
+        'wallet-balance': '1' // TODO: add balance here balance
+      };
+    }
+  );
 
   const hasLendPositions = !!lendPositionsTableRows.length;
 

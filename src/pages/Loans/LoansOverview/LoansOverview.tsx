@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { H1, P, Stack } from '@/component-library';
+import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
@@ -8,8 +9,12 @@ import { LoansInsights, LoansMarkets } from './components';
 
 const LoansOverview = (): JSX.Element => {
   const { t } = useTranslation();
-  const { positions, lend, borrow } = useGetLoansData();
-  const { apyEarned, borrow: borrowBalance, loanStatus, supply: supplyBalance } = positions;
+  const { overview, lendPositions, borrowPositions, assets } = useGetLoansData();
+  const { interestEarnedUSDValue, borrowUSDValue: borrowBalance, loanStatus, supplyUSDValue: supplyBalance } = overview;
+
+  if (lendPositions === undefined || borrowPositions === undefined || assets === undefined) {
+    return <FullLoadingSpinner />;
+  }
 
   return (
     <MainContainer>
@@ -20,9 +25,14 @@ const LoansOverview = (): JSX.Element => {
             Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
             industrys standard dummy text ever since the 1500s,{' '}
           </P>
-          <LoansInsights apyEarned={apyEarned} borrow={borrowBalance} supply={supplyBalance} loanStatus={loanStatus} />
+          <LoansInsights
+            apyEarned={interestEarnedUSDValue}
+            borrow={borrowBalance}
+            supply={supplyBalance}
+            loanStatus={loanStatus}
+          />
         </Stack>
-        <LoansMarkets borrow={borrow} lend={lend} />
+        <LoansMarkets borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
       </Stack>
     </MainContainer>
   );

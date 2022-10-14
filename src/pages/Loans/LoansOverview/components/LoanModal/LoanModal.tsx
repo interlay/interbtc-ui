@@ -1,21 +1,16 @@
+import { LoanAsset, LoanPosition } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 
 import { Modal, ModalProps, Tabs, TabsItem } from '@/component-library';
-import { LoanType } from '@/pages/Loans/types';
-import {
-  BorrowAssetData,
-  BorrowPositionData,
-  LendAssetData,
-  LendPositionData
-} from '@/utils/hooks/api/loans/use-get-loans-data';
+import { LoanType } from '@/types/loans';
 
 import { BorrowForm } from './BorrowForm';
 import { LendForm } from './LendForm';
 
 type Props = {
   variant: LoanType;
-  asset?: LendAssetData | BorrowAssetData;
-  position?: LendPositionData | BorrowPositionData;
+  asset?: LoanAsset;
+  position?: LoanPosition;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -34,10 +29,10 @@ const LoanModal = ({ variant = 'lend', asset, ...props }: LoanModalProps): JSX.E
       <Modal {...props}>
         <Tabs>
           <TabsItem title={t('loans.borrow')}>
-            <BorrowForm asset={asset as BorrowAssetData} variant='borrow' />
+            <BorrowForm asset={asset} variant='borrow' />
           </TabsItem>
           <TabsItem title={t('loans.repay')}>
-            <BorrowForm asset={asset as BorrowAssetData} variant='repay' />
+            <BorrowForm asset={asset} variant='repay' />
           </TabsItem>
         </Tabs>
       </Modal>
@@ -48,10 +43,10 @@ const LoanModal = ({ variant = 'lend', asset, ...props }: LoanModalProps): JSX.E
     <Modal {...props}>
       <Tabs>
         <TabsItem title={t('loans.lend')}>
-          <LendForm asset={asset as LendAssetData} variant='lend' />
+          <LendForm asset={asset} variant='lend' />
         </TabsItem>
         <TabsItem title={t('loans.withdraw')}>
-          <LendForm asset={asset as LendAssetData} variant='withdraw' />
+          <LendForm asset={asset} variant='withdraw' />
         </TabsItem>
       </Tabs>
     </Modal>
