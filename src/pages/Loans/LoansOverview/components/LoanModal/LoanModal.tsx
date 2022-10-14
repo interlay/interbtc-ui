@@ -2,7 +2,7 @@ import { LoanAsset, LoanPosition } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 
 import { Modal, ModalProps, Tabs, TabsItem } from '@/component-library';
-import { LoanType } from '@/pages/Loans/types';
+import { LoanType } from '@/types/loans';
 
 import { BorrowForm } from './BorrowForm';
 import { LendForm } from './LendForm';
