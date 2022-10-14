@@ -37,8 +37,8 @@ const useGetAccountPositions = (accountId: AccountId | undefined): AccountPositi
   useErrorHandler(borrowPositionsError);
 
   return {
-    lendPositions: lendPositionsData && lendPositionsData,
-    borrowPositions: borrowPositionsData && borrowPositionsData
+    lendPositions: lendPositionsData,
+    borrowPositions: borrowPositionsData
   };
 };
 
