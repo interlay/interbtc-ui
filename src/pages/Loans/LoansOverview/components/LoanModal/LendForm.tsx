@@ -7,7 +7,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { CTA, H3, P, Stack, TokenInput } from '@/component-library';
-import { LendAction } from '@/pages/Loans/types';
+import { LendAction } from '@/types/loans';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 
 import { StyledDItem, StyledDl } from './LoanModal.style';
@@ -29,7 +29,10 @@ const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
   const titleId = useId();
   const { t } = useTranslation();
   const content = getContentMap(t)[variant];
-  const { borrowLimitUSDValue, getNewBorrowLimitUSDValue } = useGetAccountLoansOverview();
+  const {
+    data: { borrowLimitUSDValue },
+    getNewBorrowLimitUSDValue
+  } = useGetAccountLoansOverview();
 
   const [newBorrowLimit, setNewBorrowLimit] = useState<Big>(borrowLimitUSDValue || Big(0));
 

@@ -4,7 +4,7 @@ import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
-import { BorrowAction, LendAction } from '@/pages/Loans/types';
+import { BorrowAction, LendAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import useAccountId from '../../use-account-id';
