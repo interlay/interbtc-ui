@@ -11,7 +11,6 @@ import { AccountId } from '@polkadot/types/interfaces';
 import { encodeAddress } from '@polkadot/util-crypto';
 import Big from 'big.js';
 
-import { Prices } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import {
   GOVERNANCE_TOKEN,
@@ -27,6 +26,8 @@ import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
+
+import { Prices } from '../use-get-prices';
 
 interface VaultData {
   apy: Big;
