@@ -58,7 +58,7 @@ class Relayer:
             }
         """
         payload = {"query": q, "variables": None}
-        resp = requests.post(KSM_URL, json=payload)
+        resp = requests.post(self.baseUrl, json=payload)
         return resp.json()["data"]["relayedBlocks"][0]
 
     def _lastChainBlock(self):
