@@ -1,7 +1,4 @@
-from datetime import datetime
-from flask import Flask
 import requests
-import json
 import dateutil.parser
 from datetime import datetime
 from dateutil.tz import tzutc
@@ -37,7 +34,9 @@ class Oracle:
         resp = requests.post(self.baseUrl, json=payload).json()
         oracles = resp["data"]["oracleUpdates"]
 
-        f = lambda x: (datetime.now(tz=tzutc()) - dateutil.parser.isoparse(x["timestamp"])).total_seconds()
+        f = lambda x: (
+            datetime.now(tz=tzutc()) - dateutil.parser.isoparse(x["timestamp"])
+        ).total_seconds()
 
         return list(map(f, oracles))
 
@@ -71,7 +70,9 @@ class Relayer:
         paraHeight = self._lastRelayedBlock()
 
         chainDiff = chainHeight - int(paraHeight["id"])
-        secDiff = (datetime.now(tz=tzutc()) - dateutil.parser.isoparse(paraHeight["timestamp"])).total_seconds()
+        secDiff = (
+            datetime.now(tz=tzutc()) - dateutil.parser.isoparse(paraHeight["timestamp"])
+        ).total_seconds()
         return {"chainHeightDiff": chainDiff, "secondsDiff": secDiff}
 
     def isHealthy(self):
