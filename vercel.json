@@ -9,6 +9,10 @@
     {
       "source": "/supply/(.*)",
       "destination": "/api/supply_info.py"
+    },
+    {
+      "source": "/_health/(.*)",
+      "destination": "/api/health.py"
     }
   ],
   "headers": [
