@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { showAccountModalAction, updateWrappedTokenBalanceAction } from '@/common/actions/general.actions';
+import { showAccountModalAction } from '@/common/actions/general.actions';
 import { togglePremiumRedeemAction } from '@/common/actions/redeem.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import {
@@ -33,6 +33,7 @@ import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainNativeTokenLogoIcon,
+  WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '@/constants';
@@ -43,6 +44,7 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
@@ -64,10 +66,11 @@ const RedeemForm = (): JSX.Element | null => {
 
   const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
   const { selectedAccount } = useSubstrateSecureState();
-  const { wrappedTokenBalance, bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+  const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
   const premiumRedeemSelected = useSelector((state: StoreType) => state.redeem.premiumRedeem);
+  const { data: balances } = useGetBalances();
 
   const {
     register,
@@ -258,10 +261,6 @@ const RedeemForm = (): JSX.Element | null => {
         const redeemRequest = result[0];
         handleSubmittedRequestModalOpen(redeemRequest);
         setSubmitStatus(STATUSES.RESOLVED);
-
-        dispatch(
-          updateWrappedTokenBalanceAction(wrappedTokenBalance.sub(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT])))
-        );
       } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
@@ -270,6 +269,8 @@ const RedeemForm = (): JSX.Element | null => {
 
     const validateForm = (value: string): string | undefined => {
       const parsedValue = new BitcoinAmount(value);
+
+      const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].free || newMonetaryAmount(0, WRAPPED_TOKEN);
 
       if (parsedValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
@@ -320,7 +321,7 @@ const RedeemForm = (): JSX.Element | null => {
       dispatch(togglePremiumRedeemAction(!premiumRedeemSelected));
     };
 
-    const redeemFeeInBTC = displayMonetaryAmount(redeemFee);
+    const redeemFeeInBTC = redeemFee.toHuman(8);
     const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
       redeemFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
@@ -342,7 +343,7 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
     );
 
-    const bitcoinNetworkFeeInBTC = displayMonetaryAmount(currentInclusionFee);
+    const bitcoinNetworkFeeInBTC = currentInclusionFee.toHuman(8);
     const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
       currentInclusionFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
@@ -448,7 +449,7 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={displayMonetaryAmount(totalBTC)}
+            value={totalBTC.toHuman(8)}
             unitName='BTC'
             approxUSD={totalBTCInUSD}
           />

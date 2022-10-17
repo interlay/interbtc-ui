@@ -118,6 +118,10 @@ const theme = {
       border: '1px solid var(--colors-cta-outlined-border)',
       bgHover: 'var(--colors-cta-outlined-hover)'
     },
+    text: {
+      text: 'var(--colors-cta-text-text)',
+      bgHover: 'var(--colors-cta-text-hover)'
+    },
     small: {
       padding: 'var(--spacing-2)',
       text: 'var(--text-xs)',
@@ -194,6 +198,10 @@ const theme = {
         bg: 'var(--colors-indeterminate-secondary-bg)'
       },
       outlined: {
+        color: 'var(--colors-indeterminate-outlined-color)',
+        bg: 'var(--colors-indeterminate-outlined-bg)'
+      },
+      text: {
         color: 'var(--colors-indeterminate-outlined-color)',
         bg: 'var(--colors-indeterminate-outlined-bg)'
       }

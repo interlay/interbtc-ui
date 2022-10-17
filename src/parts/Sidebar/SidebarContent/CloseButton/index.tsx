@@ -1,5 +1,5 @@
 import { Transition } from '@headlessui/react';
-import { XIcon } from '@heroicons/react/outline';
+import { XCircleIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import * as React from 'react';
 
@@ -35,7 +35,7 @@ const CloseButton = React.forwardRef<Ref, InterlayButtonBaseProps>(
             onClick={onClick}
           >
             <span className='sr-only'>Close sidebar</span>
-            <XIcon className={clsx('h-6', 'w-6', 'text-white')} aria-hidden='true' />
+            <XCircleIcon className={clsx('h-6', 'w-6', 'text-white')} aria-hidden='true' />
           </InterlayButtonBase>
         </div>
       </Transition.Child>

@@ -1,4 +1,4 @@
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/solid';
+import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { CurrencyExt, InterbtcPrimitivesCurrencyId } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useErrorHandler } from 'react-error-boundary';

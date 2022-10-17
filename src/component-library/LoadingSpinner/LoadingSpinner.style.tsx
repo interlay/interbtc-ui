@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
-import { Variants } from '../utils/prop-types';
+import { CTAVariants } from '../utils/prop-types';
 
 interface BaseLoadingSpinnerProps {
   $diameter: number;
   $thickness: number;
-  $color: Variants;
+  $color: CTAVariants;
 }
 
 // TODO: handle color contrast
@@ -86,5 +86,4 @@ const BaseIndeterminateLoadingSpinner = styled.span<BaseLoadingSpinnerProps>`
 `;
 
 export type { BaseLoadingSpinnerProps };
-
 export { BaseIndeterminateLoadingSpinner, BaseLoadingSpinner };
