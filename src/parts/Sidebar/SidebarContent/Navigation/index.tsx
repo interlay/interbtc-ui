@@ -1,5 +1,6 @@
 import {
   ArrowPathIcon,
+  ArrowPathRoundedSquareIcon,
   ArrowsRightLeftIcon,
   BanknotesIcon,
   BookOpenIcon,
@@ -86,7 +87,7 @@ const Navigation = ({
       {
         name: 'nav_swap',
         link: '#',
-        icon: CircleStackIcon,
+        icon: ArrowPathRoundedSquareIcon,
         disabled: true
       },
       {
@@ -98,7 +99,7 @@ const Navigation = ({
       {
         name: 'nav_staking',
         link: PAGES.STAKING,
-        icon: BanknotesIcon
+        icon: CircleStackIcon
       },
       {
         name: 'nav_stats',
