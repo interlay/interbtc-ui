@@ -1,6 +1,5 @@
 import {
   CollateralCurrencyExt,
-  CollateralIdLiteral,
   newMonetaryAmount,
   VaultExt,
   VaultStatusExt,
@@ -34,7 +33,7 @@ interface VaultData {
   collateralization: Big | undefined;
   issuableTokens: MonetaryAmount<CollateralCurrencyExt>;
   pendingRequests: number;
-  collateralId: CollateralIdLiteral;
+  collateralId: string;
   wrappedId: WrappedIdLiteral;
   issuedTokens: {
     raw: BitcoinAmount;
@@ -81,8 +80,8 @@ const getRemainingCapacity = (issuableTokens: Big, vaultExt: VaultExt): number =
 };
 
 const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
-  const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
-  const collateralTokenPrice = getTokenPrice(prices, collateralTokenIdLiteral);
+  const collateralTokenTicker = vault.backingCollateral.currency.ticker;
+  const collateralTokenPrice = getTokenPrice(prices, collateralTokenTicker);
   const bitcoinPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
@@ -174,7 +173,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
       usd: usdIssuedTokens ?? 0
     },
     pendingRequests,
-    collateralId: collateralTokenIdLiteral,
+    collateralId: collateralTokenTicker,
     wrappedId: WRAPPED_TOKEN_SYMBOL,
     collateral: {
       raw: collateral,

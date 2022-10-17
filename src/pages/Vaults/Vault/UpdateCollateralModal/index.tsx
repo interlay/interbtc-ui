@@ -1,4 +1,4 @@
-import { CollateralCurrencyExt, CollateralIdLiteral, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { chain } from '@react-aria/utils';
 import Big from 'big.js';
@@ -311,7 +311,7 @@ const UpdateCollateralModal = ({
               })}
               approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
                 collateralTokenAmount,
-                getTokenPrice(prices, collateralToken.ticker as CollateralIdLiteral)?.usd
+                getTokenPrice(prices, collateralToken.ticker)?.usd
               )}`}
               error={!!errors[COLLATERAL_TOKEN_AMOUNT]}
               helperText={errors[COLLATERAL_TOKEN_AMOUNT]?.message}

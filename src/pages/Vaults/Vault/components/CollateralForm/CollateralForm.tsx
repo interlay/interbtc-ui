@@ -1,4 +1,4 @@
-import { CollateralCurrencyExt, CollateralIdLiteral, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import Big from 'big.js';
@@ -224,7 +224,7 @@ const CollateralForm = ({
     return undefined;
   };
 
-  const collateralUSDAmount = getTokenPrice(prices, collateralToken.ticker as CollateralIdLiteral)?.usd;
+  const collateralUSDAmount = getTokenPrice(prices, collateralToken.ticker)?.usd;
   const isMinCollateralLoading = requiredCollateralTokenAmountIdle || requiredCollateralTokenAmountLoading;
 
   const titleId = useId();
@@ -243,7 +243,7 @@ const CollateralForm = ({
           tokenSymbol={collateralToken.ticker}
           valueInUSD={displayMonetaryAmountInUSDFormat(
             inputCollateralAmount,
-            getTokenPrice(prices, collateralToken.ticker as CollateralIdLiteral)?.usd
+            getTokenPrice(prices, collateralToken.ticker)?.usd
           )}
           id={tokenInputId}
           {...register(tokenInputId, {
