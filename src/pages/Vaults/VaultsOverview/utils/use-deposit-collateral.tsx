@@ -1,4 +1,4 @@
-import { CollateralCurrencyExt, CollateralIdLiteral, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
@@ -62,7 +62,7 @@ const useDepositCollateral = (collateralCurrency: CollateralCurrencyExt, minColl
   const { data: balances } = useGetBalances();
   const prices = useGetPrices();
 
-  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd || 0;
+  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker)?.usd || 0;
   const minCollateralAmount = newMonetaryAmount(minCollateral, collateralCurrency);
 
   const isGovernanceCollateral = collateralCurrency === GOVERNANCE_TOKEN;
