@@ -1,4 +1,4 @@
-import { PRICES_URL } from '@/constants';
+import { PRICES_API } from '@/utils/constants/api';
 
 const DEFAULT_PRICES = {
   bitcoin: { usd: 20306 },
@@ -14,7 +14,7 @@ const DEFAULT_PRICES = {
 const mockFetch = jest.fn((input, _init?) => {
   let result: unknown;
   switch (input) {
-    case PRICES_URL:
+    case PRICES_API.URL:
       result = DEFAULT_PRICES;
       break;
     default: {

@@ -45,20 +45,6 @@ export enum ParachainStatus {
   Shutdown
 }
 
-export type Price = {
-  usd: number;
-};
-
-export type Prices = {
-  bitcoin: Price;
-  polkadot: Price;
-  interlay: Price;
-  'interlay-btc': Price;
-  kintsugi?: Price;
-  'kintsugi-btc': Price;
-  kusama: Price;
-};
-
 export type GeneralState = {
   bridgeLoaded: boolean;
   vaultClientLoaded: boolean;
