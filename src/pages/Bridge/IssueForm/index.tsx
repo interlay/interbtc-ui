@@ -50,11 +50,11 @@ import {
 import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
@@ -110,8 +110,7 @@ const IssueForm = (): JSX.Element | null => {
   const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
-
-  const { governanceTokenBalanceLoading, governanceTokenBalance } = useGovernanceTokenBalance();
+  const { isLoading: isBalancesLoading, data: balances } = useGetBalances();
 
   const {
     register,
@@ -249,7 +248,7 @@ const IssueForm = (): JSX.Element | null => {
     status === STATUSES.PENDING ||
     requestLimitsIdle ||
     requestLimitsLoading ||
-    governanceTokenBalanceLoading
+    isBalancesLoading
   ) {
     return <PrimaryColorEllipsisLoader />;
   }
@@ -260,6 +259,8 @@ const IssueForm = (): JSX.Element | null => {
 
   if (status === STATUSES.RESOLVED) {
     const validateForm = (value: string): string | undefined => {
+      const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
+
       if (governanceTokenBalance === undefined) return;
 
       const numericValue = Number(value || '0');

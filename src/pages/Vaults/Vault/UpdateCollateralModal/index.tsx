@@ -19,10 +19,11 @@ import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefault
 import TokenField from '@/components/TokenField';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import useTokenBalance from '@/services/hooks/use-token-balance';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 enum CollateralUpdateStatus {
@@ -92,11 +93,7 @@ const UpdateCollateralModal = ({
   );
   useErrorHandler(requiredCollateralTokenAmountError);
 
-  const {
-    tokenBalanceIdle: collateralBalanceIdle,
-    tokenBalanceLoading: collateralBalanceLoading,
-    tokenBalance: collateralBalance
-  } = useTokenBalance(collateralToken, vaultAddress);
+  const { isLoading: isBalancesLoading, data: balances } = useGetBalances();
 
   const collateralTokenAmount = newMonetaryAmount(
     strCollateralTokenAmount,
@@ -196,6 +193,8 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
+    const collateralBalance = balances?.[RELAY_CHAIN_NATIVE_TOKEN.ticker];
+
     if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
       return t(`Must be less than ${collateralToken.ticker} balance!`);
     }
@@ -211,8 +210,7 @@ const UpdateCollateralModal = ({
     const initializing =
       requiredCollateralTokenAmountIdle ||
       requiredCollateralTokenAmountLoading ||
-      collateralBalanceIdle ||
-      collateralBalanceLoading ||
+      isBalancesLoading ||
       (vaultCollateralizationIdle && hasLockedBTC) ||
       vaultCollateralizationLoading;
     const buttonText = initializing ? 'Loading...' : collateralUpdateStatusText;

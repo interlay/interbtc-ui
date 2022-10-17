@@ -30,11 +30,11 @@ import {
 } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -105,11 +105,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     (state: StoreType) => state.general
   );
 
-  const {
-    governanceTokenBalanceIdle,
-    governanceTokenBalanceLoading,
-    governanceTokenBalance
-  } = useGovernanceTokenBalance();
+  const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
 
   const vaultAccountId = useAccountId(vaultAddress);
 
@@ -166,15 +162,11 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     })();
   }, [collateralToken, bridgeLoaded, handleError, vaultAccountId, setError, t]);
 
-  if (
-    status === STATUSES.IDLE ||
-    status === STATUSES.PENDING ||
-    vaultAccountId === undefined ||
-    governanceTokenBalanceIdle ||
-    governanceTokenBalanceLoading
-  ) {
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING || vaultAccountId === undefined || isBalancesLoading) {
     return <></>;
   }
+
+  const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
 
   if (governanceTokenBalance === undefined) {
     throw new Error('Something went wrong!');
