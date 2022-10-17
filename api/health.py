@@ -77,7 +77,7 @@ class Relayer:
 
     def isHealthy(self):
         status = self.latestUpdate()
-        return status["chainHeightDiff"] < 3 and status["secondsDiff"] < 3600
+        return status["chainHeightDiff"] < 3 and status["secondsDiff"] < 7200  # 2hrs
 
 
 KSM_URL = "https://api-kusama.interlay.io/graphql/graphql"
