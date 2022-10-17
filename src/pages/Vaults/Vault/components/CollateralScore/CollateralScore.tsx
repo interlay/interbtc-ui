@@ -2,11 +2,11 @@ import { useMeter } from '@react-aria/meter';
 import { HTMLAttributes, ReactNode } from 'react';
 
 import { formatPercentage } from '@/common/utils/utils';
+import { Meter } from '@/component-library';
 
 import { CollateralStatus, CollateralStatusRanges } from '../../types';
 import { getCollateralStatus } from '../../utils';
 import {
-  StyledBar,
   StyledLabel,
   StyledLabelWrapper,
   StyledScore,
@@ -95,7 +95,7 @@ const CollateralScore = ({
           </StyledSublabel>
         </StyledScoreWrapper>
       </StyledLabelWrapper>
-      <StyledBar width={barPercentage} />
+      <Meter percentage={barPercentage} />
     </StyledWrapper>
   );
 };

@@ -1,7 +1,7 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 
 import { LoadingSpinner } from '../LoadingSpinner';
-import { Sizes, Variants } from '../utils/prop-types';
+import { Sizes } from '../utils/prop-types';
 import { BaseCTA, BaseCTAProps } from './BaseCTA';
 import { LoadingWrapper } from './CTA.style';
 
@@ -12,7 +12,6 @@ const loadingSizes: Record<Sizes, number> = {
 };
 
 type Props = {
-  variant?: Variants;
   fullWidth?: boolean;
   size?: Sizes;
   loading?: boolean;
@@ -25,7 +24,7 @@ type InheritAttrs = Omit<BaseCTAProps, keyof Props & NativeAttrs>;
 type CTAProps = Props & InheritAttrs & NativeAttrs;
 
 const CTA = forwardRef<HTMLButtonElement, CTAProps>(
-  ({ children, loading, disabled, variant, fullWidth, size = 'medium', ...props }, ref): JSX.Element => {
+  ({ children, loading, disabled, variant = 'primary', fullWidth, size = 'medium', ...props }, ref): JSX.Element => {
     const isDisabled = disabled || loading;
 
     return (

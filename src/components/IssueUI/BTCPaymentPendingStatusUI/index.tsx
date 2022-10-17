@@ -6,7 +6,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { copyToClipboard, displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { copyToClipboard, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import Timer from '@/components/Timer';
 import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { BLOCK_TIME } from '@/config/parachain';
@@ -66,7 +66,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
       <div className={clsx('flex', 'flex-col', 'justify-center', 'items-center')}>
         <div className='text-xl'>
           {t('send')}
-          <span className={getColorShade('yellow')}>&nbsp;{amountBTCToSend.toBig().toString()}&nbsp;</span>
+          <span className={getColorShade('yellow')}>&nbsp;{amountBTCToSend.toHuman(8)}&nbsp;</span>
           BTC
         </div>
         <span
@@ -126,14 +126,14 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.warning_mbtc_wallets')}
         </span>
-        <span className={getColorShade('yellow')}>{displayMonetaryAmount(amountBTCToSend.mul(1000))}&nbsp;mBTC</span>
+        <span className={getColorShade('yellow')}>{amountBTCToSend.mul(1000).toHuman(8)}&nbsp;mBTC</span>
       </p>
       <QRCode
         includeMargin
         className='mx-auto'
         // eslint-disable-next-line max-len
-        value={`bitcoin:${request.vaultWrappedAddress || request.vaultBackingAddress}?amount=${displayMonetaryAmount(
-          amountBTCToSend
+        value={`bitcoin:${request.vaultWrappedAddress || request.vaultBackingAddress}?amount=${amountBTCToSend.toHuman(
+          8
         )}`}
       />
       <div

@@ -25,6 +25,13 @@ Outlined.args = {
   external: true
 };
 
+const Text = Template.bind({});
+Text.args = {
+  variant: 'text',
+  children: 'Call to action',
+  external: true
+};
+
 const FullWidth = Template.bind({});
 FullWidth.args = {
   variant: 'primary',
@@ -49,7 +56,7 @@ Large.args = {
   external: true
 };
 
-export { FullWidth, Large, Outlined, Primary, Secondary, Small };
+export { FullWidth, Large, Outlined, Primary, Secondary, Small, Text };
 
 export default {
   title: 'Elements/CTALink',

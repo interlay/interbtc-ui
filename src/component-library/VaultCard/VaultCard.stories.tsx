@@ -8,7 +8,7 @@ const Template: Story<VaultCardProps> = (args) => <VaultCard {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  collateralSymbol: 'DOT',
+  collateralTokenTicker: 'DOT',
   wrappedSymbol: 'BTC',
   pendingRequests: formatNumber(3),
   apy: formatPercentage(0.1623),
@@ -19,7 +19,7 @@ Default.args = {
 
 const AtRisk = Template.bind({});
 AtRisk.args = {
-  collateralSymbol: 'DOT',
+  collateralTokenTicker: 'DOT',
   wrappedSymbol: 'BTC',
   pendingRequests: formatNumber(3),
   apy: formatPercentage(0.1623),

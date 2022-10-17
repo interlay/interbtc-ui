@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from '@heroicons/react/outline';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -87,7 +87,7 @@ const Topbar = (): JSX.Element => {
                 >
                   <InterlayCaliforniaOutlinedButton
                     className={SMALL_SIZE_BUTTON_CLASSES}
-                    endIcon={<ExternalLinkIcon className={clsx('w-4', 'h-4', 'ml-1')} />}
+                    endIcon={<ArrowTopRightOnSquareIcon className={clsx('w-4', 'h-4', 'ml-1')} />}
                   >
                     {t('request_btc')}
                   </InterlayCaliforniaOutlinedButton>

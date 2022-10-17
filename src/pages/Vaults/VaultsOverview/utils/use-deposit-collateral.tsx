@@ -1,14 +1,12 @@
-import { CollateralCurrencyExt, CollateralIdLiteral, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { useSelector } from 'react-redux';
 
-import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const getAvailableGovernanceBalance = (balance: MonetaryAmount<CurrencyExt>): MonetaryAmount<CurrencyExt> => {
@@ -61,15 +59,15 @@ type UseDepositCollateral = {
 };
 
 const useDepositCollateral = (collateralCurrency: CollateralCurrencyExt, minCollateral: Big): UseDepositCollateral => {
-  const { collateralTokenBalance } = useSelector((state: StoreType) => state.general);
-  const { governanceTokenBalance } = useGovernanceTokenBalance();
+  const { data: balances } = useGetBalances();
   const prices = useGetPrices();
 
-  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker as CollateralIdLiteral)?.usd || 0;
+  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker)?.usd || 0;
   const minCollateralAmount = newMonetaryAmount(minCollateral, collateralCurrency);
 
   const isGovernanceCollateral = collateralCurrency === GOVERNANCE_TOKEN;
-  const freeGovernanceBalance = governanceTokenBalance?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const freeGovernanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const collateralTokenBalance = balances?.[collateralCurrency.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
   const balanceToken = isGovernanceCollateral
     ? getAvailableGovernanceBalance(freeGovernanceBalance)
     : collateralTokenBalance;

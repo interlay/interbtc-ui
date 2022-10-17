@@ -106,12 +106,6 @@ const IssueRedeemForm = ({
     // , address, bitcoinHeight, btcRelayHeight, parachainStatus
   } = useSelector((state: StoreType) => state.general);
 
-  // const {
-  //   governanceTokenBalanceIdle,
-  //   governanceTokenBalanceLoading,
-  //   governanceTokenBalance
-  // } = useGovernanceTokenBalance();
-
   const vaultAccountId = useAccountId(vaultAddress);
 
   useEffect(() => {

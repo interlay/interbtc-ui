@@ -63,7 +63,7 @@ const VaultOverview = (): JSX.Element => {
         {vaultOverview.vaults?.map((vault) => (
           <GridItem key={vault.collateralId} mobile={{ span: 4 }} desktop={{ span: 3 }}>
             <VaultCard
-              collateralSymbol={vault.collateralId}
+              collateralTokenTicker={vault.collateralId}
               wrappedSymbol={vault.wrappedId}
               pendingRequests={formatNumber(vault.pendingRequests)}
               apy={formatPercentage(vault.apy.toNumber())}

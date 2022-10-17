@@ -1,4 +1,4 @@
-import { ArrowSmRightIcon } from '@heroicons/react/outline';
+import { ArrowSmallRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { Link, LinkProps } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ const InterlayRouterLink = ({ className, children, withArrow = false, ...rest }:
     {...rest}
   >
     {children}
-    {withArrow && <ArrowSmRightIcon className={clsx('w-5', 'h-5')} />}
+    {withArrow && <ArrowSmallRightIcon className={clsx('w-5', 'h-5')} />}
   </Link>
 );
 
