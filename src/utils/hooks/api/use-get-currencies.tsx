@@ -1,16 +1,8 @@
 import { CurrencyExt, InterbtcPrimitivesCurrencyId, tokenSymbolToCurrency } from '@interlay/interbtc-api';
-import {
-  InterBtc, // on Polkadot
-  Interlay, // On Polkadot
-  KBtc, // on Kusama
-  Kintsugi, // On Kusama
-  Kusama, // on Kusama
-  Polkadot // on Polkadot
-} from '@interlay/monetary-js';
 import { useCallback } from 'react';
 import { useQuery, UseQueryResult } from 'react-query';
 
-const NATIVE_CURRENCIES: Array<CurrencyExt> = [Polkadot, InterBtc, Interlay, KBtc, Kintsugi, Kusama];
+import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 
 type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
   getCurrencyFromTicker: (ticker: string) => CurrencyExt;

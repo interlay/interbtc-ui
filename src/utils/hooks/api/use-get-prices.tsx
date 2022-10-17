@@ -1,27 +1,18 @@
 import { CurrencyExt, ForeignAsset } from '@interlay/interbtc-api';
-import { Bitcoin, InterBtc, Interlay, KBtc, Kintsugi, Kusama, Polkadot } from '@interlay/monetary-js';
+import { Bitcoin } from '@interlay/monetary-js';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { PRICES_API } from '@/utils/constants/api';
+import { COINGECKO_ID_BY_CURRENCY_TICKER } from '@/utils/constants/currency';
 
 import { useGetCurrencies } from './use-get-currencies';
 
-const coingeckoIdsByTicker: Record<string, string> = Object.freeze({
-  [Bitcoin.ticker]: 'bitcoin',
-  [Kintsugi.ticker]: 'kintsugi',
-  [KBtc.ticker]: 'bitcoin',
-  [Kusama.ticker]: 'kusama',
-  [Polkadot.ticker]: 'polkadot',
-  [Interlay.ticker]: 'interlay',
-  [InterBtc.ticker]: 'bitcoin'
-});
-
 const getCoingeckoId = (currency: CurrencyExt) => {
   const foreignAsset = currency as ForeignAsset;
-  return foreignAsset.coingeckoId || coingeckoIdsByTicker[currency.ticker];
+  return foreignAsset.coingeckoId || COINGECKO_ID_BY_CURRENCY_TICKER[currency.ticker];
 };
 
 const composeIds = (currencies: CurrencyExt[]): string =>

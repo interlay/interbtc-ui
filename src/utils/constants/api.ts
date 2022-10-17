@@ -5,4 +5,6 @@ const PRICES_API = Object.freeze({
   }
 });
 
-export { PRICES_API };
+const COINGECKO_IDS = ['bitcoin', 'kintsugi', 'kusama', 'polkadot', 'interlay'] as const;
+
+export { COINGECKO_IDS, PRICES_API };
