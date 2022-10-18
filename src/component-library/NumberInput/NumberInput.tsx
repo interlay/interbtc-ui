@@ -52,7 +52,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
     const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
       // TODO: add key codes to utils
-      if (e.code === 'Comma') {
+      if (e.code === 'Comma' || e.code === 'Space') {
         e.preventDefault();
       }
     };

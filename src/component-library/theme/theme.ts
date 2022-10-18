@@ -97,6 +97,37 @@ const theme = {
       error: {
         color: 'var(--colors-error-dark)'
       }
+    },
+    size: {
+      normal: {
+        // TODO: to be determined
+        small: {
+          text: 'var(--text-base)'
+        },
+        // TODO: to be determined
+        medium: {
+          text: 'var(--text-base)'
+        },
+        large: {
+          text: 'var(--text-5xl)'
+        }
+      },
+      overflow: {
+        // TODO: to be determined
+        small: {
+          text: 'var(--text-base)',
+          height: '2.219rem'
+        },
+        // TODO: to be determined
+        medium: {
+          text: 'var(--text-base)',
+          height: '2.219rem'
+        },
+        large: {
+          text: 'var(--text-2xl)',
+          height: '4.6875rem'
+        }
+      }
     }
   },
   card: {
@@ -240,9 +271,6 @@ const theme = {
     large: {
       width: '5.625rem'
     }
-  },
-  tokenInput: {
-    height: '4.813rem'
   },
   modal: {
     title: {
