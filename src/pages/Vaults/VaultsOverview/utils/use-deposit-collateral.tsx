@@ -3,32 +3,16 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const getAvailableGovernanceBalance = (balance: MonetaryAmount<CurrencyExt>): MonetaryAmount<CurrencyExt> => {
-  const availableBalance = balance.sub(extraRequiredCollateralTokenAmount);
+  const availableBalance = balance.sub(TRANSACTION_FEE_AMOUNT);
 
   return availableBalance.toBig().gte(0) ? availableBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
 };
-
-// TODO: move into common hook for fees
-let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
-if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.2;
-} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.01;
-} else {
-  throw new Error('Something went wrong!');
-}
-const extraRequiredCollateralTokenAmount = newMonetaryAmount(
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT,
-  GOVERNANCE_TOKEN,
-  true
-);
 
 type UseDepositCollateral = {
   collateral: {
@@ -91,12 +75,12 @@ const useDepositCollateral = (collateralCurrency: CollateralCurrencyExt, minColl
       }
     },
     fee: {
-      amount: displayMonetaryAmount(extraRequiredCollateralTokenAmount),
+      amount: displayMonetaryAmount(TRANSACTION_FEE_AMOUNT),
       usd: displayMonetaryAmountInUSDFormat(
-        extraRequiredCollateralTokenAmount,
+        TRANSACTION_FEE_AMOUNT,
         getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
       ),
-      raw: extraRequiredCollateralTokenAmount
+      raw: TRANSACTION_FEE_AMOUNT
     },
     governance: {
       raw: freeGovernanceBalance
