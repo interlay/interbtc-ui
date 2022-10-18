@@ -1,11 +1,8 @@
-// ray test touch <
 import * as React from 'react';
 
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { CLASS_NAMES } from '@/utils/constants/styles';
-// ray test touch >
 
-// ray test touch <
 interface Props {
   children: React.ReactNode;
 }
@@ -36,4 +33,3 @@ const ThemeWrapper = ({ children }: Props): JSX.Element => {
 };
 
 export default ThemeWrapper;
-// ray test touch >

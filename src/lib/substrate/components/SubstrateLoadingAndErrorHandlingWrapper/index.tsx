@@ -63,10 +63,6 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
     throw new Error('Something went wrong!');
   }
 
-  // ray test touch <
-  return <FullLoadingSpinner text='Connecting to Bridge' />;
-  // ray test touch >
-
   return (
     <>
       <InterlayHelmet />

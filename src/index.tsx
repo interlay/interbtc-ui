@@ -35,7 +35,6 @@ ReactDOM.render(
         <HelmetProvider>
           <Provider store={store}>
             <SubstrateProvider>
-              {/* ray test touch < */}
               <ThemeWrapper>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <Subscriptions>
@@ -43,7 +42,6 @@ ReactDOM.render(
                   </Subscriptions>
                 </SubstrateLoadingAndErrorHandlingWrapper>
               </ThemeWrapper>
-              {/* ray test touch > */}
               <React.Suspense fallback={null}>
                 <DeveloperConsole />
               </React.Suspense>
