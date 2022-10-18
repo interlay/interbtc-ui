@@ -1,9 +1,10 @@
 import { CurrencyIdLiteral, LendPosition, LoanPosition } from "@interlay/interbtc-api";
 import Big from "big.js";
 
-import { Prices } from "@/common/types/util.types";
 import { convertMonetaryAmountToValueInUSD } from "@/common/utils/utils";
 import { getTokenPrice } from "@/utils/helpers/prices";
+
+import { Prices } from "../use-get-prices";
 
 const getTotalEarnedInterestUSDValue = (lendPositions: LendPosition[], prices: Prices): Big =>
     lendPositions.reduce((totalValue: Big, position: LendPosition) => {
