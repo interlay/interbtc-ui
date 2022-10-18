@@ -5,7 +5,7 @@ import Big from 'big.js';
 import { useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
-import { formatNumber, formatUSD, monetaryToNumberOrZero } from '@/common/utils/utils';
+import { formatNumber, formatUSD, monetaryToNumber } from '@/common/utils/utils';
 import { CTA, H3, P, Stack, Strong, TokenInput } from '@/component-library';
 import { BorrowAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -35,15 +35,13 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const content = getContentMap(t)[variant];
   const {
     data: { borrowLimitUSDValue },
-    refreshData,
+    refetch,
     getMaxBorrowableAmount,
     getNewBorrowLimitUSDValue
   } = useGetAccountLoansOverview();
 
-  const maximumBorrowableAmount = monetaryToNumberOrZero(
-    getMaxBorrowableAmount(asset.currency, asset.availableCapacity)
-  );
-  const borrowedAmount = monetaryToNumberOrZero(position?.amount);
+  const maximumBorrowableAmount = monetaryToNumber(getMaxBorrowableAmount(asset.currency, asset.availableCapacity));
+  const borrowedAmount = monetaryToNumber(position?.amount);
 
   const prices = useGetPrices();
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
@@ -58,7 +56,7 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
 
   const handleFormSubmission = () => {
     // TODO: add additional onSubmit validation once RHF is added
-    refreshData();
+    refetch();
   };
 
   return (

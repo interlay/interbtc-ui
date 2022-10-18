@@ -1,11 +1,14 @@
 import { BorrowPosition, LendPosition } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
-import { useQueries } from 'react-query';
+import { useQueries, useQueryClient } from 'react-query';
 
 interface AccountPositionsData {
-  lendPositions: Array<LendPosition> | undefined;
-  borrowPositions: Array<BorrowPosition> | undefined;
+  data: {
+    lendPositions: Array<LendPosition> | undefined;
+    borrowPositions: Array<BorrowPosition> | undefined;
+  };
+  refetch: () => void;
 }
 
 const getAccountLendPositions = (accountId: AccountId): Promise<Array<LendPosition>> =>
@@ -36,9 +39,19 @@ const useGetAccountPositions = (accountId: AccountId | undefined): AccountPositi
   useErrorHandler(lendPositionsError);
   useErrorHandler(borrowPositionsError);
 
+  const queryClient = useQueryClient();
+
+  const refetch = () => {
+    queryClient.invalidateQueries(['lend-positions', accountId?.toString()]);
+    queryClient.invalidateQueries(['borrow-positions', accountId?.toString()]);
+  };
+
   return {
-    lendPositions: lendPositionsData,
-    borrowPositions: borrowPositionsData
+    refetch,
+    data: {
+      lendPositions: lendPositionsData,
+      borrowPositions: borrowPositionsData
+    }
   };
 };
 

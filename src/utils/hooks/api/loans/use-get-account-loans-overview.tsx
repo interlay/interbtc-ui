@@ -2,7 +2,6 @@ import { BorrowPosition, CurrencyExt, CurrencyIdLiteral, LendPosition } from '@i
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
-import { useQueryClient } from 'react-query';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { BorrowAction, LendAction } from '@/types/loans';
@@ -25,7 +24,7 @@ interface AccountLoansOverviewData {
 
 interface AccountLoansOverview {
   data: AccountLoansOverviewData;
-  refreshData: () => void;
+  refetch: () => void;
   getNewCollateralRatio: (
     type: LendAction | BorrowAction,
     currency: CurrencyExt,
@@ -47,7 +46,10 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
 
   const prices = useGetPrices();
 
-  const { lendPositions, borrowPositions } = useGetAccountPositions(accountId);
+  const {
+    data: { lendPositions, borrowPositions },
+    refetch
+  } = useGetAccountPositions(accountId);
 
   let lentAssetsUSDValue: Big | undefined = undefined;
   let totalEarnedInterestUSDValue: Big | undefined = undefined;
@@ -74,13 +76,6 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   const borrowLimitUSDValue = collateralAssetsUSDValue
     ? collateralAssetsUSDValue.sub(borrowedAssetsUSDValue || 0)
     : Big(0);
-
-  const queryClient = useQueryClient();
-
-  const refreshData = () => {
-    queryClient.invalidateQueries(['lend-positions', accountId?.toString()]);
-    queryClient.invalidateQueries(['borrow-positions', accountId?.toString()]);
-  };
 
   /**
    * This method computes how the collateral ratio will change if
@@ -187,7 +182,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       borrowLimitUSDValue,
       collateralRatio
     },
-    refreshData,
+    refetch,
     getNewCollateralRatio,
     getNewBorrowLimitUSDValue,
     getMaxBorrowableAmount
