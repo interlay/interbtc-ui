@@ -13,11 +13,12 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { SubstrateProvider } from '@/lib/substrate';
 import { SubstrateLoadingAndErrorHandlingWrapper } from '@/lib/substrate';
+import ThemeWrapper from '@/parts/ThemeWrapper';
+import { Subscriptions } from '@/utils/hooks/api/tokens/use-balances-subscription';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
-import { Subscriptions } from './utils/hooks/api/tokens/use-balances-subscription';
 
 const DeveloperConsole = React.lazy(
   () => import(/* webpackChunkName: 'developer-console' */ '@/lib/substrate/components/DeveloperConsole')
@@ -34,11 +35,15 @@ ReactDOM.render(
         <HelmetProvider>
           <Provider store={store}>
             <SubstrateProvider>
-              <SubstrateLoadingAndErrorHandlingWrapper>
-                <Subscriptions>
-                  <App />
-                </Subscriptions>
-              </SubstrateLoadingAndErrorHandlingWrapper>
+              {/* ray test touch < */}
+              <ThemeWrapper>
+                <SubstrateLoadingAndErrorHandlingWrapper>
+                  <Subscriptions>
+                    <App />
+                  </Subscriptions>
+                </SubstrateLoadingAndErrorHandlingWrapper>
+              </ThemeWrapper>
+              {/* ray test touch > */}
               <React.Suspense fallback={null}>
                 <DeveloperConsole />
               </React.Suspense>
