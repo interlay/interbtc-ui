@@ -82,7 +82,7 @@ const Navigation = ({
         name: 'nav_lending',
         link: PAGES.LOANS,
         icon: PresentationChartBarIcon,
-        disabled: true
+        disabled: false
       },
       {
         name: 'nav_swap',
