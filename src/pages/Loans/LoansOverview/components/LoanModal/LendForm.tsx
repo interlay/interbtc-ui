@@ -10,6 +10,9 @@ import { CTA, H3, P, Stack, TokenInput } from '@/component-library';
 import { LendAction } from '@/types/loans';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 
+import { getTokenPrice } from '../../../../../utils/helpers/prices';
+import { useGetBalances } from '../../../../../utils/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '../../../../../utils/hooks/api/use-get-prices';
 import { StyledDItem, StyledDl } from './LoanModal.style';
 const getContentMap = (t: TFunction) => ({
   lend: {
@@ -34,6 +37,12 @@ const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
     getNewBorrowLimitUSDValue
   } = useGetAccountLoansOverview();
 
+  const { data: balances } = useGetBalances();
+  const assetFreeBalance = balances ? balances[asset.currency.ticker].free.toBig().toNumber() : 0;
+
+  const prices = useGetPrices();
+  const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
+
   const [newBorrowLimit, setNewBorrowLimit] = useState<Big>(borrowLimitUSDValue || Big(0));
 
   const handleInputAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,10 +62,10 @@ const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
       <Stack>
         <TokenInput
           onChange={handleInputAmountChange}
-          valueInUSD='$0.00'
+          valueInUSD='$0.00' // TODO: add price computation once RHF is added
           tokenSymbol={asset.currency.ticker}
-          balance={100}
-          balanceInUSD={100}
+          balance={assetFreeBalance}
+          balanceInUSD={assetFreeBalance * assetPrice}
         />
         <StyledDl>
           <StyledDItem>
