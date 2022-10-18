@@ -1,9 +1,11 @@
 import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmount, formatNumber } from '@/common/utils/utils';
 import { Span, Stack } from '@/component-library';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 import { LoanModal } from '../LoanModal';
 import { StyledApyTag, StyledTableWrapper } from './LoansMarkets.style';
@@ -41,6 +43,7 @@ type LendMarketProps = {
 const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
   const { t } = useTranslation();
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
+  const { data: balances } = useGetBalances();
 
   // TODO: subject to change in the future
   const handleAssetRowAction = (key: Key) => {
@@ -83,11 +86,13 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
 
       const asset = <MarketAsset currency={currency.ticker} />;
 
+      const freeBalance = balances ? balances[currency.ticker].free : new MonetaryAmount(currency, 0);
+
       return {
         id: currency.ticker,
         asset,
         apy: apyWithEarnedAssets,
-        'wallet-balance': '1' // TODO: add balance here balance
+        'wallet-balance': displayMonetaryAmount(freeBalance)
       };
     }
   );
