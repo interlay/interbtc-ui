@@ -1,18 +1,18 @@
-import { LoanAsset } from '@interlay/interbtc-api';
+import { LendPosition, LoanAsset } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import Big from 'big.js';
 import { useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
-import { formatNumber, formatUSD } from '@/common/utils/utils';
-import { CTA, H3, P, Stack, TokenInput } from '@/component-library';
+import { formatNumber, formatUSD, monetaryToNumberOrZero } from '@/common/utils/utils';
+import { CTA, H3, P, Stack, Strong, TokenInput } from '@/component-library';
 import { LendAction } from '@/types/loans';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { getTokenPrice } from '../../../../../utils/helpers/prices';
-import { useGetBalances } from '../../../../../utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '../../../../../utils/hooks/api/use-get-prices';
 import { StyledDItem, StyledDl } from './LoanModal.style';
 const getContentMap = (t: TFunction) => ({
   lend: {
@@ -26,9 +26,10 @@ const getContentMap = (t: TFunction) => ({
 type LendFormProps = {
   asset: LoanAsset;
   variant: LendAction;
+  position: LendPosition | undefined;
 };
 
-const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
+const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
   const titleId = useId();
   const { t } = useTranslation();
   const content = getContentMap(t)[variant];
@@ -39,7 +40,9 @@ const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
   } = useGetAccountLoansOverview();
 
   const { data: balances } = useGetBalances();
-  const assetFreeBalance = balances ? balances[asset.currency.ticker].free.toBig().toNumber() : 0;
+  const assetFreeBalance = monetaryToNumberOrZero(balances?.[asset.currency.ticker].free);
+
+  const lentAmount = monetaryToNumberOrZero(position?.amount);
 
   const prices = useGetPrices();
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
@@ -66,12 +69,19 @@ const LendForm = ({ asset, variant }: LendFormProps): JSX.Element => {
         <P>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</P>
       </div>
       <Stack>
+        <StyledDItem>
+          <dt>
+            {variant === 'lend' ? 'Available' : 'Lent'} {asset.currency.ticker}:
+          </dt>
+          <dd>
+            <Strong>{formatNumber(variant === 'lend' ? assetFreeBalance : lentAmount)}</Strong> (
+            {formatUSD((variant === 'lend' ? assetFreeBalance : lentAmount) * assetPrice)})
+          </dd>
+        </StyledDItem>
         <TokenInput
           onChange={handleInputAmountChange}
           valueInUSD='$0.00' // TODO: add price computation once RHF is added
           tokenSymbol={asset.currency.ticker}
-          balance={assetFreeBalance}
-          balanceInUSD={assetFreeBalance * assetPrice}
         />
         <StyledDl>
           <StyledDItem>
