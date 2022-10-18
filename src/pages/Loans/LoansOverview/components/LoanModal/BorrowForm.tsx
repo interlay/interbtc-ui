@@ -32,6 +32,7 @@ const BorrowForm = ({ asset, variant }: BorrowFormProps): JSX.Element => {
   const content = getContentMap(t)[variant];
   const {
     data: { borrowLimitUSDValue },
+    refreshData,
     getNewBorrowLimitUSDValue
   } = useGetAccountLoansOverview();
 
@@ -41,6 +42,11 @@ const BorrowForm = ({ asset, variant }: BorrowFormProps): JSX.Element => {
     const monetaryAmount = new MonetaryAmount(asset.currency, event.target.value || 0);
     const newBorrowLimit = getNewBorrowLimitUSDValue(variant, asset.currency, monetaryAmount);
     setNewBorrowLimit(newBorrowLimit || Big(0));
+  };
+
+  const handleFormSubmission = () => {
+    // TODO: add additional onSubmit validation once RHF is added
+    refreshData();
   };
 
   return (
@@ -77,7 +83,9 @@ const BorrowForm = ({ asset, variant }: BorrowFormProps): JSX.Element => {
             </dd>
           </StyledDItem>
         </StyledDl>
-        <CTA size='large'>{content.title}</CTA>
+        <CTA onClick={handleFormSubmission} size='large'>
+          {content.title}
+        </CTA>
       </Stack>
     </Stack>
   );
