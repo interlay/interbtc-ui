@@ -11,7 +11,8 @@ const getLoanAssets = (): Promise<TickerToData<LoanAsset>> => window.bridge.loan
 const useGetLoanAssets = (): LoanAssetsData => {
   const { data: assets, error } = useQuery({
     queryKey: ['loan-assets'],
-    queryFn: getLoanAssets
+    queryFn: getLoanAssets,
+    refetchInterval: 60000
   });
 
   useErrorHandler(error);
