@@ -78,9 +78,10 @@ const Navigation = ({
         icon: ArrowsRightLeftIcon
       },
       {
-        name: 'nav_loans',
+        name: 'nav_lending',
         link: PAGES.LOANS,
-        icon: PresentationChartBarIcon
+        icon: PresentationChartBarIcon,
+        disabled: true
       },
       {
         name: 'nav_swap',
