@@ -1,4 +1,4 @@
-import { CollateralCurrencyExt, GovernanceCurrency, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, GovernanceCurrency, Issue } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -25,6 +25,7 @@ import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenLogoIcon,
+  TRANSACTION_FEE_AMOUNT,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
@@ -52,20 +53,6 @@ interface Props {
   collateralToken: CollateralCurrencyExt;
   vaultAddress: string;
 }
-
-let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
-if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.2;
-} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.01;
-} else {
-  throw new Error('Something went wrong!');
-}
-const extraRequiredCollateralTokenAmount = newMonetaryAmount(
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT,
-  GOVERNANCE_TOKEN,
-  true
-);
 
 // TODO: share form with bridge page
 const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Props): JSX.Element => {
@@ -203,7 +190,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     const btcAmount = new BitcoinAmount(numericValue);
 
     const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
-    const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
+    const minRequiredGovernanceTokenAmount = TRANSACTION_FEE_AMOUNT.add(securityDeposit);
     if (governanceTokenBalance.free.lte(minRequiredGovernanceTokenAmount)) {
       return t('insufficient_funds_governance_token', {
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
@@ -367,10 +354,10 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
                 </h5>
               }
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
-              value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
+              value={displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
               approxUSD={displayMonetaryAmountInUSDFormat(
-                extraRequiredCollateralTokenAmount,
+                TRANSACTION_FEE_AMOUNT,
                 getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
               )}
               tooltip={
