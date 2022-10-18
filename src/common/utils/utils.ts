@@ -135,6 +135,8 @@ function getPolkadotLink(blockHeight: number): string {
   return `https://polkadot.js.org/apps/?rpc=${PARACHAIN_URL}#/explorer/query/${blockHeight}`;
 }
 
+const monetaryToNumber = (monetaryAmount: MonetaryAmount<CurrencyExt> | undefined): number => monetaryAmount?.toBig().toNumber() || 0;
+
 export {
   convertMonetaryAmountToValueInUSD,
   copyToClipboard,
@@ -148,6 +150,7 @@ export {
   getLastMidnightTimestamps,
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
+  monetaryToNumber,
   shortAddress,
   shortTxId
 };

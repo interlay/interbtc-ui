@@ -24,6 +24,7 @@ interface AccountLoansOverviewData {
 
 interface AccountLoansOverview {
   data: AccountLoansOverviewData;
+  refetch: () => void;
   getNewCollateralRatio: (
     type: LendAction | BorrowAction,
     currency: CurrencyExt,
@@ -45,7 +46,10 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
 
   const prices = useGetPrices();
 
-  const { lendPositions, borrowPositions } = useGetAccountPositions(accountId);
+  const {
+    data: { lendPositions, borrowPositions },
+    refetch
+  } = useGetAccountPositions(accountId);
 
   let lentAssetsUSDValue: Big | undefined = undefined;
   let totalEarnedInterestUSDValue: Big | undefined = undefined;
@@ -178,6 +182,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       borrowLimitUSDValue,
       collateralRatio
     },
+    refetch,
     getNewCollateralRatio,
     getNewBorrowLimitUSDValue,
     getMaxBorrowableAmount
