@@ -5,7 +5,7 @@ import Big from 'big.js';
 import { useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
-import { formatNumber, formatUSD, monetaryToNumberOrZero } from '@/common/utils/utils';
+import { formatNumber, formatUSD, monetaryToNumber } from '@/common/utils/utils';
 import { CTA, H3, P, Stack, Strong, TokenInput } from '@/component-library';
 import { LendAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -35,14 +35,14 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
   const content = getContentMap(t)[variant];
   const {
     data: { borrowLimitUSDValue },
-    refreshData,
+    refetch,
     getNewBorrowLimitUSDValue
   } = useGetAccountLoansOverview();
 
   const { data: balances } = useGetBalances();
-  const assetFreeBalance = monetaryToNumberOrZero(balances?.[asset.currency.ticker].free);
+  const assetFreeBalance = monetaryToNumber(balances?.[asset.currency.ticker].free);
 
-  const lentAmount = monetaryToNumberOrZero(position?.amount);
+  const lentAmount = monetaryToNumber(position?.amount);
 
   const prices = useGetPrices();
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
@@ -57,7 +57,7 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
 
   const handleFormSubmission = () => {
     // TODO: add additional onSubmit validation once RHF is added
-    refreshData();
+    refetch();
   };
 
   return (
