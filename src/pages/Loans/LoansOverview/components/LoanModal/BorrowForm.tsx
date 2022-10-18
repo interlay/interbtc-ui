@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BorrowPosition, LoanAsset } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { BorrowPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { useId } from '@react-aria/utils';
 import Big from 'big.js';
 import { useForm } from 'react-hook-form';
@@ -9,12 +8,14 @@ import * as z from 'zod';
 
 import { formatNumber, formatUSD, monetaryToNumber } from '@/common/utils/utils';
 import { CTA, H3, P, Stack, Strong, TokenInput } from '@/component-library';
+import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import validate, { LoanBorrowValidationParams, LoanRepayValidationParams } from '@/lib/form-validation';
 import { BorrowAction } from '@/types/loans';
-import { getErrorMessage } from '@/utils/helpers/forms';
+import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import validate from '@/utils/validation';
 
 import { StyledDItem, StyledDl } from './LoanModal.style';
 
@@ -29,6 +30,24 @@ const getContentMap = (t: TFunction) => ({
     title: t('loans.repay')
   }
 });
+
+const getSchema = (
+  t: TFunction,
+  variant: BorrowAction,
+  params: LoanBorrowValidationParams & LoanRepayValidationParams
+) => {
+  const { governanceBalance, borrowedAssetBalance, transactionFee } = params;
+
+  if (variant === 'borrow') {
+    return z.object({
+      [BORROW_AMOUNT]: validate.loans.borrow(t, { governanceBalance, transactionFee })
+    });
+  }
+
+  return z.object({
+    [REPAY_AMOUNT]: validate.loans.repay(t, { borrowedAssetBalance, governanceBalance, transactionFee })
+  });
+};
 
 type BorrowFormData = { [BORROW_AMOUNT]: string; [REPAY_AMOUNT]: string };
 
@@ -48,6 +67,11 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
     getMaxBorrowableAmount,
     getNewBorrowLimitUSDValue
   } = useGetAccountLoansOverview();
+  const { data: balances } = useGetBalances();
+
+  const governanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const transactionFee = TRANSACTION_FEE_AMOUNT;
+  const balance = balances?.[asset.currency.ticker].free || newMonetaryAmount(0, asset.currency);
 
   const maximumBorrowableAmount = monetaryToNumber(getMaxBorrowableAmount(asset.currency, asset.availableCapacity));
   const borrowedAmount = monetaryToNumber(position?.amount);
@@ -55,16 +79,13 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const prices = useGetPrices();
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
-  const schema = z.object({
-    [BORROW_AMOUNT]: validate.loans.borrow(t, {}),
-    [REPAY_AMOUNT]: validate.loans.repay(t, {})
-  });
+  const schema = getSchema(t, variant, { borrowedAssetBalance: balance, governanceBalance, transactionFee });
 
   const {
     register,
     handleSubmit: h,
     watch,
-    formState: { errors, isValid, isDirty }
+    formState: { errors, isDirty }
   } = useForm<BorrowFormData>({
     mode: 'onChange',
     resolver: zodResolver(schema)
@@ -72,10 +93,10 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
 
   const amountFieldName = variant === 'borrow' ? BORROW_AMOUNT : REPAY_AMOUNT;
   const amount = watch(amountFieldName) || 0;
-  const monetaryAmount = new MonetaryAmount(asset.currency, amount);
+  const monetaryAmount = newMonetaryAmount(amount, asset.currency);
   const newBorrowLimit = getNewBorrowLimitUSDValue(variant, asset.currency, monetaryAmount) || Big(0);
 
-  const isBtnDisabled = !isValid && !isDirty;
+  const isBtnDisabled = !isValidForm(errors) || !isDirty;
 
   const handleSubmit = (data: BorrowFormData) => {
     console.log(data);

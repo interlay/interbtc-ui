@@ -129,6 +129,7 @@
   "replace": "Replace",
   "canceled": "Canceled",
   "fees": "Fees",
+  "please_enter_your_field": "Please enter your {{field}}",
   "redeem_page": {
     "redeem": "Redeem",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
@@ -536,7 +537,13 @@
     "repay": "Repay",
     "lend": "Lend",
     "my_lend_positions": "My Lend Positions",
-    "my_borrow_positions": "My Borrow Positions"
+    "my_borrow_positions": "My Borrow Positions",
+    "form_fields": {
+      "lend_amount": "lend amount",
+      "withdraw_amount": "withdraw amount",
+      "borrow_amount": "borrow amount",
+      "repay_amount": "repay amount"
+    }
   },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",

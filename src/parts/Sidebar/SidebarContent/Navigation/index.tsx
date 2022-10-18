@@ -91,11 +91,6 @@ const Navigation = ({
         disabled: true
       },
       {
-        name: 'nav_loans',
-        link: PAGES.LOANS,
-        icon: CurrencyDollarIcon
-      },
-      {
         name: 'nav_transactions',
         link: PAGES.TRANSACTIONS,
         icon: ClipboardDocumentListIcon,
