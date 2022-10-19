@@ -3,13 +3,9 @@ import styled from 'styled-components';
 import { theme } from '../theme';
 import { Sizes } from '../utils/prop-types';
 
-/* height: ${theme.tokenInput.height};
-  max-height: ${theme.tokenInput.height};
-  font-size: ${({ $isOverflowing }) => ($isOverflowing ? theme.text.xl2 : theme.text.xl5)}; */
-
 type BaseInputProps = {
   $size: Sizes;
-  $isOverflow: boolean;
+  $resize?: boolean;
 };
 
 const StyledBaseInput = styled.input<BaseInputProps>`
@@ -26,7 +22,7 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   background: none;
   color: ${(props) => (props.disabled ? theme.input.disabled.color : theme.input.color)};
   font-size: ${(props) =>
-    props.$isOverflow ? theme.input.size.overflow[props.$size].text : theme.input.size.normal[props.$size].text};
+    props.$resize ? theme.input.size.overflow[props.$size].text : theme.input.size.normal[props.$size].text};
 
   &:focus {
     box-shadow: none;
@@ -53,12 +49,12 @@ type BaseInputWrapperProps = {
   $hasEndAdornment?: boolean;
   $hasError?: boolean;
   $isDisabled?: boolean;
-  $fontResize: boolean;
+  $overflow: boolean;
   $size: Sizes;
 };
 
 const BaseInputWrapper = styled.div<BaseInputWrapperProps>`
-  height: ${(props) => (props.$fontResize ? theme.input.size.overflow[props.$size].height : '100%')};
+  height: ${(props) => (props.$overflow ? '100%' : theme.input.size.overflow[props.$size].height)};
   background-color: ${theme.input.background};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};

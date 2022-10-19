@@ -14,8 +14,10 @@ type Props = {
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;
   size?: Sizes;
-  fontResize: boolean;
+  // if `true` allows overflow
   overflow?: boolean;
+  // if `true` triggers input re-size (font)
+  resize?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -42,7 +44,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       disabled,
       size = 'medium',
       overflow = true,
-      fontResize,
+      resize,
       ...props
     },
     ref
@@ -58,11 +60,11 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
           $hasEndAdornment={!!endAdornment}
           $hasError={hasError}
           $isDisabled={disabled}
-          $fontResize={fontResize}
+          $overflow={overflow}
           $size={size}
         >
           {startAdornment && <Adornment>{startAdornment}</Adornment>}
-          <StyledBaseInput $size={size} $isOverflow={overflow} disabled={disabled} ref={ref} type='text' {...props} />
+          <StyledBaseInput $size={size} $resize={resize} disabled={disabled} ref={ref} type='text' {...props} />
           {endAdornment && <Adornment>{endAdornment}</Adornment>}
         </BaseInputWrapper>
         {hasHelpText && (

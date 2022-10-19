@@ -45,19 +45,19 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
     const [value, setValue] = useState<number | undefined>(valueProp);
-    const [overflow, setOverflow] = useState({ state: false, position: 0 });
+    const [resize, setResize] = useState({ state: false, position: 0 });
 
     const handleClickBalance = () => triggerChangeEvent(inputRef, balance);
 
     const handleOverflow: ChangeEventHandler<HTMLInputElement> = (e) => {
       const el = e.target as HTMLInputElement;
 
-      if (!overflow.state && el.clientWidth < el.scrollWidth) {
-        return setOverflow({ state: true, position: el.value.length });
+      if (!resize.state && el.clientWidth < el.scrollWidth) {
+        return setResize({ state: true, position: el.value.length });
       }
 
-      if (overflow.state && el.value.length < overflow.position) {
-        return setOverflow({ state: false, position: 0 });
+      if (resize.state && el.value.length < resize.position) {
+        return setResize({ state: false, position: 0 });
       }
     };
 
@@ -106,9 +106,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
             value={value}
             minValue={0}
             size='large'
+            overflow={false}
+            resize={resize.state}
             {...props}
-            fontResize
-            overflow={overflow.state}
           />
         </TokenInputInnerWrapper>
       </Stack>
