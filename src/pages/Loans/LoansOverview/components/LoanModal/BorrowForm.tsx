@@ -18,6 +18,7 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledDItem, StyledDl } from './LoanModal.style';
+import { LoanScore } from './LoanScore';
 
 const BORROW_AMOUNT = 'borrow-amount';
 const REPAY_AMOUNT = 'repay-amount';
@@ -63,7 +64,8 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
     data: { borrowLimitUSDValue },
     refetch,
     getMaxBorrowableAmount,
-    getNewBorrowLimitUSDValue
+    getNewBorrowLimitUSDValue,
+    getNewCollateralRatio
   } = useGetAccountLoansOverview();
   const { data: balances } = useGetBalances();
   const prices = useGetPrices();
@@ -104,6 +106,7 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const amount = watch(amountFieldName) || 0;
   const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
   const newBorrowLimit = getNewBorrowLimitUSDValue(variant, asset.currency, monetaryAmount) || Big(0);
+  const collateralRatio = getNewCollateralRatio(variant, asset.currency, monetaryAmount);
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty;
 
@@ -143,6 +146,7 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
             aria-label={content.fieldLabel}
             {...register(amountFieldName)}
           />
+          <LoanScore score={collateralRatio} />
           <StyledDl>
             <StyledDItem>
               <dt>APY</dt>
