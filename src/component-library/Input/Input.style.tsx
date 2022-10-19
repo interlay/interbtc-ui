@@ -21,8 +21,8 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   letter-spacing: inherit;
   background: none;
   color: ${(props) => (props.disabled ? theme.input.disabled.color : theme.input.color)};
-  font-size: ${(props) =>
-    props.$resize ? theme.input.size.overflow[props.$size].text : theme.input.size.normal[props.$size].text};
+  font-size: ${({ $size, $resize }) =>
+    $size === 'large' && $resize ? theme.input.overflow.large.text : theme.input[$size].text};
 
   &:focus {
     box-shadow: none;
@@ -54,7 +54,7 @@ type BaseInputWrapperProps = {
 };
 
 const BaseInputWrapper = styled.div<BaseInputWrapperProps>`
-  height: ${(props) => (props.$overflow ? '100%' : theme.input.size.overflow[props.$size].height)};
+  height: ${({ $overflow, $size }) => ($overflow && $size !== 'large' ? '100%' : theme.input.overflow.large.height)};
   background-color: ${theme.input.background};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};

@@ -98,35 +98,19 @@ const theme = {
         color: 'var(--colors-error-dark)'
       }
     },
-    size: {
-      normal: {
-        // TODO: to be determined
-        small: {
-          text: 'var(--text-base)'
-        },
-        // TODO: to be determined
-        medium: {
-          text: 'var(--text-base)'
-        },
-        large: {
-          text: 'var(--text-5xl)'
-        }
-      },
-      overflow: {
-        // TODO: to be determined
-        small: {
-          text: 'var(--text-base)',
-          height: '2.219rem'
-        },
-        // TODO: to be determined
-        medium: {
-          text: 'var(--text-base)',
-          height: '2.219rem'
-        },
-        large: {
-          text: 'var(--text-2xl)',
-          height: '4.6875rem'
-        }
+    small: {
+      text: 'var(--text-s)'
+    },
+    medium: {
+      text: 'var(--text-base)'
+    },
+    large: {
+      text: 'var(--text-5xl)'
+    },
+    overflow: {
+      large: {
+        text: 'var(--text-2xl)',
+        height: '4.6875rem'
       }
     }
   },

@@ -13,6 +13,7 @@ WithBalance.args = {
   balance: 1000.0,
   balanceInUSD: formatUSD(1000.0),
   isDisabled: false,
+  decimals: 8,
   renderBalance: (value) => Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 }).format(value)
 };
 
