@@ -222,6 +222,7 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   const setSelectedAccount = React.useCallback(
     async (newAccount: PolkadotKeyringPair) => {
       if (!setLSValue) return;
+
       const typedNewAccount = newAccount as KeyringPair;
       dispatch({ type: ActionType.SetSelectedAccount, payload: typedNewAccount });
       setLSValue(typedNewAccount);

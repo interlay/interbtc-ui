@@ -7,7 +7,6 @@ import { SecureState, State, SubstrateStateContextInterface } from './types';
 
 const useSubstrate = (): SubstrateStateContextInterface => {
   const context = React.useContext(SubstrateStateContext);
-
   if (context === undefined) {
     throw new Error('useSubstrate must be used within a SubstrateProvider!');
   }
