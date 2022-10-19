@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 
 import { InterBtcApi } from '@interlay/interbtc-api';
+import { Interlay, Polkadot } from "@interlay/monetary-js"
 import { AddressOrPair } from '@polkadot/api/types';
 import { Signer } from '@polkadot/types/types';
 
@@ -19,17 +20,21 @@ import {
   mockRedeemGetMaxBurnableTokens,
   mockSystemChain,
   mockSystemGetStatusCode,
+  mockTokensBalance,
   mockTokensSubscribeToBalance,
   mockTokensTotal,
   mockVaultsGet,
   mockVaultsGetVaultsWithIssuableTokens
 } from './parachain';
+import { mockGetForeignAssets } from './parachain/assetRegistry';
 
 type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
 };
 
 const mockSetAccount = jest.fn((_account: AddressOrPair, _signer?: Signer) => undefined);
+
+const mockCollateralCurrencies = [Polkadot, Interlay];
 
 // To mock new lib methods extend this object.
 const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
@@ -44,6 +49,9 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
       }
     },
     on: jest.fn()
+  },
+  assetRegistry: {
+    getForeignAssets: mockGetForeignAssets
   },
   btcRelay: { getLatestBlockHeight: mockBtcRelayGetLatestBlockHeight },
   electrsAPI: { getLatestBlockHeight: mockElectrsAPIGetLatestBlockHeight },
@@ -67,6 +75,7 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getStatusCode: mockSystemGetStatusCode
   },
   tokens: {
+    balance: mockTokensBalance,
     total: mockTokensTotal,
     subscribeToBalance: mockTokensSubscribeToBalance
   },
@@ -82,6 +91,7 @@ jest.mock('@interlay/interbtc-api', () => {
   return {
     ...actualInterBtcApi,
     newAccountId: jest.fn().mockReturnValue('a3bS5ufTQYaWkWtiKH9urgnC81QWFArJz4TJCFXiBCj8C1oUm'),
+    getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
     createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi)
   };
 });
