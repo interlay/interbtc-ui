@@ -1,5 +1,5 @@
 import { chain } from '@react-aria/utils';
-import { ChangeEventHandler, forwardRef, ReactNode, useEffect, useState } from 'react';
+import { ChangeEventHandler, forwardRef, ReactNode, useCallback, useEffect, useState } from 'react';
 
 import { NumberInput, NumberInputProps } from '../NumberInput';
 import { Stack } from '../Stack';
@@ -49,20 +49,24 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const handleClickBalance = () => triggerChangeEvent(inputRef, balance);
 
-    const handleOverflow: ChangeEventHandler<HTMLInputElement> = (e) => {
-      const el = e.target as HTMLInputElement;
+    // Sets input to resize at a certain condition
+    const handleOverflow = useCallback(
+      (element: HTMLInputElement) => {
+        // Condition is true when input text overflows available width
+        if (!resize.state && element.clientWidth < element.scrollWidth) {
+          return setResize({ state: true, position: element.value.length });
+        }
 
-      if (!resize.state && el.clientWidth < el.scrollWidth) {
-        return setResize({ state: true, position: el.value.length });
-      }
-
-      if (resize.state && el.value.length < resize.position) {
-        return setResize({ state: false, position: 0 });
-      }
-    };
+        // Checks if was are back at the position when resize happened.
+        if (resize.state && element.value.length < resize.position) {
+          return setResize({ state: false, position: 0 });
+        }
+      },
+      [resize.position, resize.state]
+    );
 
     const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-      handleOverflow(e);
+      handleOverflow(e.target);
 
       const value = e.target.value;
 
@@ -77,6 +81,12 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       if (valueProp === undefined) return;
       setValue(valueProp);
     }, [valueProp]);
+
+    useEffect(() => {
+      if (inputRef.current) {
+        handleOverflow(inputRef.current);
+      }
+    }, [handleOverflow, inputRef]);
 
     const endAdornment = (
       <TokenAdornment>

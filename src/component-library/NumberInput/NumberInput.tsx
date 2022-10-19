@@ -8,6 +8,8 @@ import { useDOMRef } from '@/component-library/utils/dom';
 
 import { BaseInput, BaseInputProps } from '../Input';
 
+const FORBIDDEN_KEY_CODES = ['Comma', 'Space'];
+
 // Prevents the user from changing the input value using mouse wheel
 const handleWheel = (event: WheelEvent) => event.preventDefault();
 
@@ -51,8 +53,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     }, [inputRef]);
 
     const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
-      // TODO: add key codes to utils
-      if (e.code === 'Comma' || e.code === 'Space') {
+      if (FORBIDDEN_KEY_CODES.includes(e.code)) {
         e.preventDefault();
       }
     };
