@@ -67,7 +67,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     return (
       <Stack spacing='half' className={className} style={style} hidden={hidden}>
-        {balance && balanceInUSD && (
+        {balance !== undefined && balanceInUSD !== undefined && (
           <StyledTokenBalance
             tokenSymbol={tokenSymbol}
             value={balance}
