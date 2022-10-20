@@ -1,7 +1,6 @@
-import { chain } from '@react-aria/utils';
-import { ChangeEventHandler, forwardRef, ReactNode, useEffect, useState } from 'react';
+import { forwardRef, ReactNode } from 'react';
 
-import { NumberInputProps } from '../NumberInput';
+import { NumberInput, NumberInputProps } from '../NumberInput';
 import { Stack } from '../Stack';
 import { useDOMRef } from '../utils/dom';
 import { triggerChangeEvent } from '../utils/input';
@@ -9,13 +8,23 @@ import {
   StyledTokenBalance,
   TokenAdornment,
   TokenInputInnerWrapper,
-  TokenInputInput,
   TokenInputSymbol,
   TokenInputUSD
 } from './TokenInput.style';
 
+const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
+  if (!decimals) return;
+
+  return {
+    style: 'decimal',
+    maximumFractionDigits: decimals,
+    useGrouping: false
+  };
+};
+
 type Props = {
   tokenSymbol: string;
+  decimals?: number;
   valueInUSD: string;
   balance?: number;
   balanceInUSD?: string | number;
@@ -30,6 +39,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
       tokenSymbol,
+      decimals,
       valueInUSD,
       balance,
       balanceInUSD,
@@ -37,32 +47,14 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       className,
       style,
       hidden,
-      value: valueProp,
-      onChange,
       renderBalance,
       ...props
     },
     ref
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
-    const [value, setValue] = useState<number | undefined>(valueProp);
 
     const handleClickBalance = () => triggerChangeEvent(inputRef, balance);
-
-    const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-      const value = e.target.value;
-
-      if (!value) {
-        return setValue(undefined);
-      }
-
-      setValue(Number(value));
-    };
-
-    useEffect(() => {
-      if (valueProp === undefined) return;
-      setValue(valueProp);
-    }, [valueProp]);
 
     const endAdornment = (
       <TokenAdornment>
@@ -71,8 +63,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       </TokenAdornment>
     );
 
-    // TODO: how do we handle this with different sized/resized inputs
-    const isOverflowing = (value?.toString().length || 0) > 9;
+    const formatOptions = getFormatOptions(decimals);
 
     return (
       <Stack spacing='half' className={className} style={style} hidden={hidden}>
@@ -87,14 +78,14 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           />
         )}
         <TokenInputInnerWrapper>
-          <TokenInputInput
+          <NumberInput
             ref={inputRef}
             endAdornment={endAdornment}
             isDisabled={isDisabled}
-            onChange={chain(handleChange, onChange)}
-            value={value}
             minValue={0}
-            $isOverflowing={isOverflowing}
+            size='large'
+            overflow={false}
+            formatOptions={formatOptions}
             {...props}
           />
         </TokenInputInnerWrapper>

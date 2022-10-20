@@ -97,6 +97,21 @@ const theme = {
       error: {
         color: 'var(--colors-error-dark)'
       }
+    },
+    small: {
+      text: 'var(--text-s)'
+    },
+    medium: {
+      text: 'var(--text-base)'
+    },
+    large: {
+      text: 'var(--text-5xl)'
+    },
+    overflow: {
+      large: {
+        text: 'var(--text-2xl)',
+        height: '4.6875rem'
+      }
     }
   },
   card: {
@@ -240,9 +255,6 @@ const theme = {
     large: {
       width: '5.625rem'
     }
-  },
-  tokenInput: {
-    height: '4.813rem'
   },
   modal: {
     title: {

@@ -3,6 +3,7 @@ import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
 import { HelperText, HelperTextProps } from '../HelperText';
 import { hasErrorMessage } from '../HelperText/HelperText';
 import { Label, LabelProps } from '../Label';
+import { Sizes } from '../utils/prop-types';
 import { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper } from './Input.style';
 
 type Props = {
@@ -12,6 +13,11 @@ type Props = {
   endAdornment?: ReactNode;
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;
+  size?: Sizes;
+  // if `true` allows overflow
+  overflow?: boolean;
+  // if `true` triggers input re-size (font)
+  resize?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -36,6 +42,9 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       description,
       descriptionProps,
       disabled,
+      size = 'medium',
+      overflow = true,
+      resize,
       ...props
     },
     ref
@@ -51,9 +60,11 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
           $hasEndAdornment={!!endAdornment}
           $hasError={hasError}
           $isDisabled={disabled}
+          $overflow={overflow}
+          $size={size}
         >
           {startAdornment && <Adornment>{startAdornment}</Adornment>}
-          <StyledBaseInput $isDisabled={disabled} disabled={disabled} ref={ref} type='text' {...props} />
+          <StyledBaseInput $size={size} $resize={resize} disabled={disabled} ref={ref} type='text' {...props} />
           {endAdornment && <Adornment>{endAdornment}</Adornment>}
         </BaseInputWrapper>
         {hasHelpText && (
