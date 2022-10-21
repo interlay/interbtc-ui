@@ -2,14 +2,11 @@ import { useNumberField } from '@react-aria/numberfield';
 import { mergeProps } from '@react-aria/utils';
 import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
-import { forwardRef, KeyboardEventHandler, useEffect, useState } from 'react';
+import { ChangeEventHandler, forwardRef, useEffect, useState } from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
 import { BaseInput, BaseInputProps } from '../Input';
-
-// TODO: exclude `Comma` when we handle locales
-const FORBIDDEN_KEY_CODES = ['Comma', 'Space'];
 
 // Prevents the user from changing the input value using mouse wheel
 const handleWheel = (event: WheelEvent) => event.preventDefault();
@@ -77,13 +74,12 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       }
     }, [inputProps.value, inputRef, resize.position, resize.state]);
 
-    const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
-      if (FORBIDDEN_KEY_CODES.includes(e.code)) {
-        e.preventDefault();
+    // Only emit event when value is valid
+    const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+      if ((e.target as HTMLInputElement).value.match(/^[0-9]*[.]?[0-9]*$/)) {
+        onChange?.(e);
       }
     };
-
-    const otherProps: Partial<NumberInputProps> = { onChange, onKeyDown: handleKeyDown };
 
     return (
       <BaseInput
@@ -92,7 +88,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         errorMessageProps={errorMessageProps}
         labelProps={labelProps}
         resize={resize.state}
-        {...mergeProps(props, inputProps, otherProps)}
+        {...mergeProps(props, inputProps, { onChange: handleChange })}
       />
     );
   }
