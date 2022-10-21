@@ -33,11 +33,11 @@ const useGetBalances = (): UseQueryResult<BalanceData | undefined> => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const accountId = useAccountId();
   const { selectedAccount } = useSubstrateSecureState();
-  const { data: currencies, isSuccess: isCurriencesSuccess } = useGetCurrencies(bridgeLoaded);
+  const { data: currencies, isSuccess: isCurrenciesSuccess } = useGetCurrencies(bridgeLoaded);
   const queryResult = useQuery({
     queryKey: getBalancesQueryKey(selectedAccount?.address),
     queryFn: () => (accountId && currencies ? getBalances(currencies, accountId) : undefined),
-    enabled: selectedAccount && accountId && isCurriencesSuccess && bridgeLoaded
+    enabled: selectedAccount && accountId && isCurrenciesSuccess && bridgeLoaded
   });
 
   useErrorHandler(queryResult.error);
