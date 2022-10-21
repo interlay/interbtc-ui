@@ -31,21 +31,19 @@ const getContentMap = (t: TFunction) => ({
   }
 });
 
-const getSchema = (
-  t: TFunction,
-  variant: LendAction,
-  params: LoanLendValidationParams & LoanWithdrawValidationParams
-) => {
-  const { governanceBalance, lendAssetBalance, transactionFee } = params;
+type LendSchemaParams = LoanLendValidationParams & LoanWithdrawValidationParams;
+
+const getSchema = (t: TFunction, variant: LendAction, params: LendSchemaParams) => {
+  const { governanceBalance, lendAssetBalance, transactionFee, minAmount } = params;
 
   if (variant === 'lend') {
     return z.object({
-      [LEND_AMOUNT]: validate.loans.lend(t, { governanceBalance, transactionFee, lendAssetBalance })
+      [LEND_AMOUNT]: validate.loans.lend(t, { governanceBalance, transactionFee, lendAssetBalance, minAmount })
     });
   }
 
   return z.object({
-    [WITHDRAW_AMOUNT]: validate.loans.withdraw(t, { governanceBalance, transactionFee })
+    [WITHDRAW_AMOUNT]: validate.loans.withdraw(t, { governanceBalance, transactionFee, minAmount })
   });
 };
 
@@ -79,7 +77,14 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
   const prices = useGetPrices();
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
-  const schema = getSchema(t, variant, { governanceBalance, lendAssetBalance: balance, transactionFee });
+  const schemaParams: LendSchemaParams = {
+    lendAssetBalance: balance,
+    governanceBalance,
+    transactionFee,
+    minAmount: newMonetaryAmount(0, balance.currency).add(newMonetaryAmount(1, balance.currency))
+  };
+
+  const schema = getSchema(t, variant, schemaParams);
 
   const {
     register,
@@ -87,7 +92,7 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
     watch,
     formState: { errors, isDirty }
   } = useForm<BorrowFormData>({
-    mode: 'onChange',
+    mode: 'onBlur',
     resolver: zodResolver(schema)
   });
 

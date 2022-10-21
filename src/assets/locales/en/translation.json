@@ -129,7 +129,6 @@
   "replace": "Replace",
   "canceled": "Canceled",
   "fees": "Fees",
-  "please_enter_your_field": "Please enter your {{field}}",
   "redeem_page": {
     "redeem": "Redeem",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
