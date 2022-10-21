@@ -12,8 +12,8 @@ import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/u
 import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import validate, { ValidateDepositParams } from '@/lib/form-validation';
 import { getErrorMessage } from '@/utils/helpers/forms';
-import { validateDepositCollateral } from '@/utils/validation/vault/create';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDepositTitle, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
@@ -40,15 +40,16 @@ const DepositCollateralStep = ({
   const { t } = useTranslation();
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
 
-  const validationParams = {
-    minAmount: collateral.min.raw,
-    balance: collateral.balance.raw,
+  const validationParams: ValidateDepositParams = {
+    minCollateralAmount: collateral.min.raw,
+    collateralBalance: collateral.balance.raw,
     governanceBalance: governance.raw,
     transactionFee: fee.raw
   };
   const schema = z.object({
-    [DEPOSIT_COLLATERAL_AMOUNT]: validateDepositCollateral(t, validationParams)
+    [DEPOSIT_COLLATERAL_AMOUNT]: validate.vaults.deposit(t, validationParams)
   });
+
   const {
     register,
     handleSubmit: h,
