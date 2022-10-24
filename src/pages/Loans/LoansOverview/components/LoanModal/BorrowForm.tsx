@@ -34,11 +34,11 @@ const getContentMap = (t: TFunction) => ({
 type BorrowSchemaParams = LoanBorrowValidationParams & LoanRepayValidationParams;
 
 const getSchema = (t: TFunction, variant: BorrowAction, params: BorrowSchemaParams) => {
-  const { governanceBalance, borrowedAssetBalance, transactionFee, minAmount } = params;
+  const { governanceBalance, borrowedAssetBalance, transactionFee, minAmount, maxAmount } = params;
 
   if (variant === 'borrow') {
     return z.object({
-      [BORROW_AMOUNT]: validate.loans.borrow(t, { governanceBalance, transactionFee, minAmount })
+      [BORROW_AMOUNT]: validate.loans.borrow(t, { governanceBalance, transactionFee, minAmount, maxAmount })
     });
   }
 
@@ -71,7 +71,8 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const transactionFee = TRANSACTION_FEE_AMOUNT;
   const balance = balances?.[asset.currency.ticker].free || newMonetaryAmount(0, asset.currency);
 
-  const maximumBorrowableAmount = monetaryToNumber(getMaxBorrowableAmount(asset.currency, asset.availableCapacity));
+  const maxBorrowableAmount = getMaxBorrowableAmount(asset.currency, asset.availableCapacity);
+  const maximumBorrowable = monetaryToNumber(maxBorrowableAmount);
   const borrowedAmount = monetaryToNumber(position?.amount);
 
   const prices = useGetPrices();
@@ -81,7 +82,8 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
     borrowedAssetBalance: balance,
     governanceBalance,
     transactionFee,
-    minAmount: newMonetaryAmount(0, balance.currency).add(newMonetaryAmount(1, balance.currency))
+    minAmount: newMonetaryAmount(0, balance.currency).add(newMonetaryAmount(1, balance.currency)),
+    maxAmount: maxBorrowableAmount
   };
 
   const schema = getSchema(t, variant, schemaParams);
@@ -92,7 +94,7 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
     watch,
     formState: { errors, isDirty }
   } = useForm<BorrowFormData>({
-    mode: 'onBlur',
+    mode: 'onChange',
     resolver: zodResolver(schema)
   });
 
@@ -125,8 +127,8 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
               {variant === 'borrow' ? 'Available' : 'Borrowed'} {asset.currency.ticker}:
             </dt>
             <dd>
-              <Strong>{formatNumber(variant === 'borrow' ? maximumBorrowableAmount : borrowedAmount)}</Strong> (
-              {formatUSD((variant === 'borrow' ? maximumBorrowableAmount : borrowedAmount) * assetPrice)})
+              <Strong>{formatNumber(variant === 'borrow' ? maximumBorrowable : borrowedAmount)}</Strong> (
+              {formatUSD((variant === 'borrow' ? maximumBorrowable : borrowedAmount) * assetPrice)})
             </dd>
           </StyledDItem>
           <TokenInput

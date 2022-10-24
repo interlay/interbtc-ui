@@ -30,7 +30,6 @@ const lend = (t: TFunction, params: LoanLendValidationParams): z.ZodEffects<z.Zo
     if (!field.min.validate({ inputAmount: inputAmount.toBig(), minAmount: minAmount.toBig() })) {
       const issueArg = field.min.issue(t, {
         action: t('loans.lend').toLowerCase(),
-        // TODO: should we display full amount or shortter version?
         amount: minAmount.toString()
       });
       return ctx.addIssue(issueArg);
@@ -41,11 +40,11 @@ const lend = (t: TFunction, params: LoanLendValidationParams): z.ZodEffects<z.Zo
     }
   });
 
-type LoanWithdrawValidationParams = CommonValidationParams;
+type LoanWithdrawValidationParams = Required<CommonValidationParams>;
 
 const withdraw = (t: TFunction, params: LoanWithdrawValidationParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
-    const { governanceBalance, transactionFee, minAmount } = params;
+    const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('loans.form_fields.withdraw_amount') });
@@ -61,8 +60,15 @@ const withdraw = (t: TFunction, params: LoanWithdrawValidationParams): z.ZodEffe
     if (!field.min.validate({ inputAmount, minAmount: minAmount.toBig() })) {
       const issueArg = field.min.issue(t, {
         action: t('loans.withdraw').toLowerCase(),
-        // TODO: should we display full amount or shortter version?
         amount: minAmount.toString()
+      });
+      return ctx.addIssue(issueArg);
+    }
+
+    if (!field.max.validate({ inputAmount, maxAmount: maxAmount.toBig() })) {
+      const issueArg = field.min.issue(t, {
+        action: t('loans.withdraw').toLowerCase(),
+        amount: maxAmount.toString()
       });
       return ctx.addIssue(issueArg);
     }

@@ -34,7 +34,7 @@ const getContentMap = (t: TFunction) => ({
 type LendSchemaParams = LoanLendValidationParams & LoanWithdrawValidationParams;
 
 const getSchema = (t: TFunction, variant: LendAction, params: LendSchemaParams) => {
-  const { governanceBalance, lendAssetBalance, transactionFee, minAmount } = params;
+  const { governanceBalance, lendAssetBalance, transactionFee, minAmount, maxAmount } = params;
 
   if (variant === 'lend') {
     return z.object({
@@ -43,7 +43,7 @@ const getSchema = (t: TFunction, variant: LendAction, params: LendSchemaParams) 
   }
 
   return z.object({
-    [WITHDRAW_AMOUNT]: validate.loans.withdraw(t, { governanceBalance, transactionFee, minAmount })
+    [WITHDRAW_AMOUNT]: validate.loans.withdraw(t, { governanceBalance, transactionFee, minAmount, maxAmount })
   });
 };
 
@@ -81,7 +81,9 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
     lendAssetBalance: balance,
     governanceBalance,
     transactionFee,
-    minAmount: newMonetaryAmount(0, balance.currency).add(newMonetaryAmount(1, balance.currency))
+    minAmount: newMonetaryAmount(0, balance.currency).add(newMonetaryAmount(1, balance.currency)),
+    // TODO: change when there is new withdraw limit calculation
+    maxAmount: newMonetaryAmount(100, balance.currency, true)
   };
 
   const schema = getSchema(t, variant, schemaParams);
@@ -92,7 +94,7 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
     watch,
     formState: { errors, isDirty }
   } = useForm<BorrowFormData>({
-    mode: 'onBlur',
+    mode: 'onChange',
     resolver: zodResolver(schema)
   });
 

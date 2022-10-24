@@ -8,11 +8,11 @@ import balance from '../common/balance';
 import field from '../common/field';
 import { CommonValidationParams } from '../common/type';
 
-type LoanBorrowValidationParams = CommonValidationParams;
+type LoanBorrowValidationParams = Required<CommonValidationParams>;
 
 const borrow = (t: TFunction, params: LoanBorrowValidationParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
-    const { governanceBalance, transactionFee, minAmount } = params;
+    const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('loans.form_fields.borrow_amount') });
@@ -28,8 +28,15 @@ const borrow = (t: TFunction, params: LoanBorrowValidationParams): z.ZodEffects<
     if (!field.min.validate({ inputAmount, minAmount: minAmount.toBig() })) {
       const issueArg = field.min.issue(t, {
         action: t('loans.borrow').toLowerCase(),
-        // TODO: should we display full amount or shortter version?
         amount: minAmount.toString()
+      });
+      return ctx.addIssue(issueArg);
+    }
+
+    if (!field.max.validate({ inputAmount, maxAmount: maxAmount.toBig() })) {
+      const issueArg = field.min.issue(t, {
+        action: t('loans.borrow').toLowerCase(),
+        amount: maxAmount.toString()
       });
       return ctx.addIssue(issueArg);
     }
@@ -57,7 +64,6 @@ const repay = (t: TFunction, params: LoanRepayValidationParams): z.ZodEffects<z.
     if (!field.min.validate({ inputAmount: inputAmount.toBig(), minAmount: minAmount.toBig() })) {
       const issueArg = field.min.issue(t, {
         action: t('loans.repay').toLowerCase(),
-        // TODO: should we display full amount or shortter version?
         amount: minAmount.toString()
       });
       return ctx.addIssue(issueArg);
@@ -70,5 +76,3 @@ const repay = (t: TFunction, params: LoanRepayValidationParams): z.ZodEffects<z.
 
 export { borrow, repay };
 export type { LoanBorrowValidationParams, LoanRepayValidationParams };
-
-// More than minimum amount and cannot put more than borrow limit for both withdraw and borrow
