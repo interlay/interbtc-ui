@@ -1,48 +1,40 @@
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { TFunction } from 'i18next';
 import * as z from 'zod';
 
-import { displayMonetaryAmount } from '@/common/utils/utils';
-
 import balance from '../common/balance';
 import field from '../common/field';
+import { CommonValidationParams } from '../common/type';
 
-type ValidateDepositParams = {
-  minCollateralAmount: MonetaryAmount<CurrencyExt>;
-  collateralBalance: MonetaryAmount<CurrencyExt>;
-  governanceBalance: MonetaryAmount<CurrencyExt>;
-  transactionFee: MonetaryAmount<CurrencyExt>;
-};
+type VaultDepositValidationParams = CommonValidationParams;
 
-const deposit = (t: TFunction, params: ValidateDepositParams): z.ZodEffects<z.ZodString, string, string> =>
+const deposit = (t: TFunction, params: VaultDepositValidationParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
-    const { collateralBalance, governanceBalance, minCollateralAmount, transactionFee } = params;
+    const { availableBalance, governanceBalance, minAmount, transactionFee } = params;
 
-    if (field.required.validate({ value })) {
-      return ctx.addIssue({ ...field.required.issue(), message: t('vault.please_enter_deposit_amount') });
+    if (!field.required.validate({ value })) {
+      const issueArg = field.required.issue(t, { fieldName: t('vault.form_fields.deposit_amount') });
+      return ctx.addIssue(issueArg);
     }
 
-    if (balance.transactionFee.validate({ availableBalance: governanceBalance, transactionFee })) {
+    if (!balance.transactionFee.validate({ availableBalance: governanceBalance, transactionFee })) {
       return ctx.addIssue(balance.transactionFee.issue(t));
     }
 
-    const inputAmount = newMonetaryAmount(value, collateralBalance.currency, true);
+    const inputAmount = newMonetaryAmount(value, availableBalance.currency, true);
 
-    if (balance.currency.validate({ availableBalance: collateralBalance, inputAmount })) {
-      return ctx.addIssue(balance.currency.issue(t));
+    if (!field.min.validate({ inputAmount: inputAmount.toBig(), minAmount: minAmount.toBig() })) {
+      const issueArg = field.min.issue(t, {
+        action: t('vault.deposit').toLowerCase(),
+        amount: minAmount.toBig().toString()
+      });
+      return ctx.addIssue(issueArg);
     }
 
-    if (inputAmount.lt(minCollateralAmount)) {
-      return ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: t('vault.minimum_required_collateral', {
-          currentCollateral: displayMonetaryAmount(inputAmount),
-          collateralTokenSymbol: inputAmount.currency.ticker
-        })
-      });
+    if (!balance.currency.validate({ availableBalance, inputAmount })) {
+      return ctx.addIssue(balance.currency.issue(t));
     }
   });
 
 export { deposit };
-export type { ValidateDepositParams };
+export type { VaultDepositValidationParams };

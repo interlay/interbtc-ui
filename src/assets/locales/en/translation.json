@@ -128,7 +128,6 @@
   "all": "All",
   "replace": "Replace",
   "canceled": "Canceled",
-  "amount_exceeds_the_available_amount": "Amount exceeds the available amount.",
   "fees": "Fees",
   "redeem_page": {
     "redeem": "Redeem",
@@ -417,6 +416,7 @@
     "feedback": "Feedback"
   },
   "vault": {
+    "deposit": "Deposit",
     "creation_block": "Creation Block",
     "collateral_is_required": "Collateral is required",
     "replace_requests": "Replace Requests",
@@ -435,7 +435,7 @@
     "successfully_updated_collateral": "Successfully updated collateral",
     "deposit_collateral": "Deposit Collateral",
     "current_total_collateral": "Current Total Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
-    "minimum_required_collateral": "Minimum Required Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
+    "minimum_required_collateral": "Minimum Required Collateral",
     "maximum_withdrawable_collateral": "Maximum Withdrawable Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
     "new_total_collateral": "New Total Collateral",
     "collateral_higher_than_0": "Collateral must be higher than 0",
@@ -462,7 +462,6 @@
     "tooltip_issue_capacity_zero": "Vault issue capacity is 0.",
     "vault_created": "Vault Created",
     "view_vault": "View Vault",
-    "please_enter_deposit_amount": "Please enter your deposit amount.",
     "create_vault": "Create a vault",
     "vault_installed": "Vault installed",
     "coming_soon": "Coming soon",
@@ -483,6 +482,9 @@
       "confirm_agreement": "By proceeding you confirm that you have read and accepted the <1>Terms & Conditions</1>",
       "accept_risks_involved": "I understand the risks involved, create a vault",
       "read_vault_documentation": "Read the Vault Documentation"
+    },
+    "form_fields": {
+      "deposit_amount": "deposit amount"
     }
   },
   "staking_page": {
@@ -538,5 +540,11 @@
     "lend": "Lend",
     "my_lend_positions": "My Lend Positions",
     "my_borrow_positions": "My Borrow Positions"
+  },
+  "forms": {
+    "please_enter_your_field": "Please enter your {{field}}",
+    "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}}",
+    "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
+    "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance"
   }
 }
