@@ -2,17 +2,23 @@ import styled from 'styled-components';
 
 import { hideScrollbar } from '../css';
 import { theme } from '../theme';
+import { Sizes } from '../utils/prop-types';
 
 const StyledTabs = styled.div`
   display: block;
   width: 100%;
 `;
 
-const TabListWrapper = styled.div`
-  display: inline-block;
+type TabListWrapperProps = {
+  $fullWith: boolean;
+  $size: Exclude<Sizes, 'small'>;
+};
+
+const TabListWrapper = styled.div<TabListWrapperProps>`
+  display: ${({ $fullWith }) => ($fullWith ? 'block' : 'inline-block')};
   position: relative;
   background-color: ${theme.tabs.bg};
-  padding: ${theme.spacing.spacing1} ${theme.spacing.spacing2};
+  padding: ${({ $size }) => theme.tabs[$size].wrapper.padding};
   border-radius: ${theme.rounded.md};
   border: ${theme.tabs.border};
   z-index: 0;
@@ -21,13 +27,23 @@ const TabListWrapper = styled.div`
   ${hideScrollbar()}
 `;
 
-const TabList = styled.div`
-  display: inline-flex;
+type TabListProps = {
+  $fullWith: boolean;
+};
+
+const TabList = styled.div<TabListProps>`
+  display: ${({ $fullWith }) => ($fullWith ? 'flex' : 'inline-flex')};
 `;
 
-const StyledTab = styled.div`
-  padding: ${theme.spacing.spacing1} ${theme.spacing.spacing4};
-  font-size: ${theme.text.xs};
+type StyledTabProps = {
+  $fullWidth: boolean;
+  $size: Exclude<Sizes, 'small'>;
+};
+
+const StyledTab = styled.div<StyledTabProps>`
+  padding: ${({ $size }) => theme.tabs[$size].tab.padding};
+  font-size: ${({ $size }) => theme.tabs[$size].tab.text};
+  text-align: center;
   cursor: default;
   outline: none;
   border-radius: ${theme.rounded.rg};
@@ -35,17 +51,24 @@ const StyledTab = styled.div`
   // TODO: have this transition into theme
   transition: color 150ms;
 
+  flex: ${({ $fullWidth }) => $fullWidth && '1'};
+
   &[aria-selected='true'] {
     color: ${theme.tabs.active.color};
   }
 `;
 
-type TabSelectionProps = { isFocusVisible: boolean; width: number; transform: string };
+type TabSelectionProps = {
+  $isFocusVisible: boolean;
+  $width: number;
+  $transform: string;
+  $size: Exclude<Sizes, 'small'>;
+};
 
 const TabSelection = styled.div<TabSelectionProps>`
   position: absolute;
-  top: ${theme.spacing.spacing1};
-  bottom: ${theme.spacing.spacing1};
+  top: ${({ $size }) => theme.tabs[$size].selection.padding};
+  bottom: ${({ $size }) => theme.tabs[$size].selection.padding};
   left: 0;
   border-radius: ${theme.rounded.rg};
   background-color: ${theme.tabs.active.bg};
@@ -54,11 +77,11 @@ const TabSelection = styled.div<TabSelectionProps>`
   transition: transform 150ms, width ${theme.transition.duration}ms;
   z-index: -1;
 
-  width: ${(props) => props.width}px;
-  transform: ${(props) => props.transform};
+  width: ${(props) => props.$width}px;
+  transform: ${(props) => props.$transform};
 
   ${(props) =>
-    props.isFocusVisible &&
+    props.$isFocusVisible &&
     `&:after {
     content: '';
     position: absolute;

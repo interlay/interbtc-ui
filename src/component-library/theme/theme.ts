@@ -173,7 +173,31 @@ const theme = {
       color: 'var(--colors-tabs-active-color)',
       bg: 'var(--colors-tabs-active-bg)'
     },
-    border: '1px solid var(--colors-border)'
+    border: '1px solid var(--colors-border)',
+    medium: {
+      wrapper: {
+        padding: 'var(--spacing-1) var(--spacing-2)'
+      },
+      tab: {
+        padding: 'var(--spacing-1) var(--spacing-4)',
+        text: 'var(--text-xs)'
+      },
+      selection: {
+        padding: 'var(--spacing-1)'
+      }
+    },
+    large: {
+      wrapper: {
+        padding: 'var(--spacing-2) var(--spacing-3)'
+      },
+      tab: {
+        padding: 'var(--spacing-2) var(--spacing-8)',
+        text: 'var(--text-base)'
+      },
+      selection: {
+        padding: 'var(--spacing-2)'
+      }
+    }
   },
   score: {
     bar: {

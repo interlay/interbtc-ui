@@ -6,6 +6,7 @@ import { CollectionChildren } from '@react-types/shared';
 import { forwardRef, HTMLAttributes, Key, useEffect, useState } from 'react';
 
 import { useDOMRef } from '../utils/dom';
+import { Sizes } from '../utils/prop-types';
 import { Tab } from './Tab';
 import { TabPanel } from './TabPanel';
 import { StyledTabs, TabList, TabListWrapper, TabSelection } from './Tabs.style';
@@ -16,6 +17,8 @@ type Props = {
   onSelectionChange?: (index: Key) => void;
   disabledKeys?: Key[];
   panel?: React.ReactNode;
+  fullWidth?: boolean;
+  size?: Exclude<Sizes, 'small'>;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -23,7 +26,7 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 type TabsProps = Props & NativeAttrs;
 
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ children, className, style, panel, ...props }, ref): JSX.Element => {
+  ({ children, className, style, panel, fullWidth = false, size = 'medium', ...props }, ref): JSX.Element => {
     const ariaProps = { children: children as CollectionChildren<Record<string, unknown>>, ...props };
     const state = useTabListState(ariaProps);
     const tabsListRef = useDOMRef<HTMLDivElement>(ref);
@@ -51,11 +54,16 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     return (
       <StyledTabs className={className} style={style}>
-        <TabListWrapper>
-          <TabSelection isFocusVisible={isFocusVisible} {...activeTabStyle} />
-          <TabList {...mergeProps(tabListProps, focusProps)} ref={tabsListRef}>
+        <TabListWrapper $size={size} $fullWith={fullWidth}>
+          <TabSelection
+            $isFocusVisible={isFocusVisible}
+            $width={activeTabStyle.width}
+            $transform={activeTabStyle.transform}
+            $size={size}
+          />
+          <TabList {...mergeProps(tabListProps, focusProps)} ref={tabsListRef} $fullWith={fullWidth}>
             {[...state.collection].map((item) => (
-              <Tab key={item.key} item={item} state={state} />
+              <Tab key={item.key} item={item} state={state} fullWidth={fullWidth} size={size} />
             ))}
           </TabList>
         </TabListWrapper>
