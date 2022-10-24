@@ -4,5 +4,5 @@ const validation = {
   vaults
 };
 
-export type { ValidateDepositParams } from './vaults';
+export type { VaultDepositValidationParams } from './vaults';
 export default validation;
