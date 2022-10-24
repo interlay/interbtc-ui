@@ -12,8 +12,8 @@ import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/u
 import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import validate, { ValidateDepositParams } from '@/lib/form-validation';
-import { getErrorMessage } from '@/utils/helpers/forms';
+import validate, { VaultDepositValidationParams } from '@/lib/form-validation';
+import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDepositTitle, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
@@ -40,9 +40,9 @@ const DepositCollateralStep = ({
   const { t } = useTranslation();
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
 
-  const validationParams: ValidateDepositParams = {
-    minCollateralAmount: collateral.min.raw,
-    collateralBalance: collateral.balance.raw,
+  const validationParams: VaultDepositValidationParams = {
+    minAmount: collateral.min.raw,
+    availableBalance: collateral.balance.raw,
     governanceBalance: governance.raw,
     transactionFee: fee.raw
   };
@@ -54,7 +54,7 @@ const DepositCollateralStep = ({
     register,
     handleSubmit: h,
     watch,
-    formState: { errors, isValid }
+    formState: { errors, isDirty }
   } = useForm<CollateralFormData>({
     mode: 'onChange',
     resolver: zodResolver(schema)
@@ -74,6 +74,8 @@ const DepositCollateralStep = ({
     const amount = newMonetaryAmount(data[DEPOSIT_COLLATERAL_AMOUNT], collateral.currency, true);
     registerNewVaultMutation.mutate(amount);
   };
+
+  const isBtnDisabled = !isValidForm(errors) || !isDirty;
 
   return (
     <form onSubmit={h(handleSubmit)}>
@@ -108,7 +110,7 @@ const DepositCollateralStep = ({
             </StyledDd>
           </StyledDItem>
         </StyledDl>
-        <CTA type='submit' disabled={!isValid} fullWidth loading={registerNewVaultMutation.isLoading}>
+        <CTA type='submit' disabled={isBtnDisabled} fullWidth loading={registerNewVaultMutation.isLoading}>
           {t('vault.deposit_collateral')}
         </CTA>
       </Stack>

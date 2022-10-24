@@ -1,9 +1,9 @@
 import { TFunction } from 'i18next';
 import * as z from 'zod';
 
-type Validation<T = unknown> = {
-  validate: (params: T) => boolean;
-  issue: (t?: TFunction) => z.IssueData;
+type Validation<V = unknown, I = unknown> = {
+  validate: (params: V) => boolean;
+  issue: (t: TFunction, params?: I) => z.IssueData;
 };
 
 export type { Validation };
