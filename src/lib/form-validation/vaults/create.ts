@@ -16,9 +16,6 @@ const deposit = (t: TFunction, params: VaultDepositValidationParams): z.ZodEffec
       const issueArg = field.required.issue(t, { fieldName: t('vault.deposit').toLowerCase(), fieldType: 'number' });
       return ctx.addIssue(issueArg);
     }
-    if (!balance.transactionFee.validate({ availableBalance: governanceBalance, transactionFee })) {
-      return ctx.addIssue(balance.transactionFee.issue(t));
-    }
 
     if (!balance.transactionFee.validate({ availableBalance: governanceBalance, transactionFee })) {
       return ctx.addIssue(balance.transactionFee.issue(t));

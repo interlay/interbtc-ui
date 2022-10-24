@@ -34,16 +34,14 @@ const getContentMap = (t: TFunction) => ({
 type LendSchemaParams = LoanLendValidationParams & LoanWithdrawValidationParams;
 
 const getSchema = (t: TFunction, variant: LendAction, params: LendSchemaParams) => {
-  const { governanceBalance, lendAssetBalance, transactionFee, minAmount, maxAmount } = params;
-
   if (variant === 'lend') {
     return z.object({
-      [LEND_AMOUNT]: validate.loans.lend(t, { governanceBalance, transactionFee, lendAssetBalance, minAmount })
+      [LEND_AMOUNT]: validate.loans.lend(t, params)
     });
   }
 
   return z.object({
-    [WITHDRAW_AMOUNT]: validate.loans.withdraw(t, { governanceBalance, transactionFee, minAmount, maxAmount })
+    [WITHDRAW_AMOUNT]: validate.loans.withdraw(t, params)
   });
 };
 
@@ -78,12 +76,12 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
   const schemaParams: LendSchemaParams = {
-    lendAssetBalance: balance,
     governanceBalance,
     transactionFee,
     minAmount: newMonetaryAmount(0, balance.currency).add(newMonetaryAmount(1, balance.currency)),
     // TODO: change when there is new withdraw limit calculation
-    maxAmount: newMonetaryAmount(100, balance.currency, true)
+    maxAmount: newMonetaryAmount(100, balance.currency, true),
+    availableBalance: balance
   };
 
   const schema = getSchema(t, variant, schemaParams);
@@ -106,9 +104,12 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
   const isBtnDisabled = !isValidForm(errors) || !isDirty;
 
   const handleSubmit = async (data: BorrowFormData) => {
-    console.log(data);
-    // TODO: add additional onSubmit validation once RHF is added
-    refetch();
+    try {
+      console.log(data);
+      refetch();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

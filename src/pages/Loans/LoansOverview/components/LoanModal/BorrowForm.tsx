@@ -34,16 +34,14 @@ const getContentMap = (t: TFunction) => ({
 type BorrowSchemaParams = LoanBorrowValidationParams & LoanRepayValidationParams;
 
 const getSchema = (t: TFunction, variant: BorrowAction, params: BorrowSchemaParams) => {
-  const { governanceBalance, borrowedAssetBalance, transactionFee, minAmount, maxAmount } = params;
-
   if (variant === 'borrow') {
     return z.object({
-      [BORROW_AMOUNT]: validate.loans.borrow(t, { governanceBalance, transactionFee, minAmount, maxAmount })
+      [BORROW_AMOUNT]: validate.loans.borrow(t, params)
     });
   }
 
   return z.object({
-    [REPAY_AMOUNT]: validate.loans.repay(t, { borrowedAssetBalance, governanceBalance, transactionFee, minAmount })
+    [REPAY_AMOUNT]: validate.loans.repay(t, params)
   });
 };
 
@@ -67,11 +65,13 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   } = useGetAccountLoansOverview();
   const { data: balances } = useGetBalances();
 
+  const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
+
   const governanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
   const transactionFee = TRANSACTION_FEE_AMOUNT;
-  const balance = balances?.[asset.currency.ticker].free || newMonetaryAmount(0, asset.currency);
+  const balance = balances?.[asset.currency.ticker].free || zeroAssetAmount;
 
-  const maxBorrowableAmount = getMaxBorrowableAmount(asset.currency, asset.availableCapacity);
+  const maxBorrowableAmount = getMaxBorrowableAmount(asset.currency, asset.availableCapacity) || zeroAssetAmount;
   const maximumBorrowable = monetaryToNumber(maxBorrowableAmount);
   const borrowedAmount = monetaryToNumber(position?.amount);
 
@@ -79,11 +79,11 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
   const schemaParams: BorrowSchemaParams = {
-    borrowedAssetBalance: balance,
     governanceBalance,
     transactionFee,
     minAmount: newMonetaryAmount(0, balance.currency).add(newMonetaryAmount(1, balance.currency)),
-    maxAmount: maxBorrowableAmount
+    maxAmount: maxBorrowableAmount,
+    availableBalance: balance
   };
 
   const schema = getSchema(t, variant, schemaParams);
@@ -106,10 +106,12 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const isBtnDisabled = !isValidForm(errors) || !isDirty;
 
   const handleSubmit = (data: BorrowFormData) => {
-    console.log(data);
-
-    // TODO: add additional onSubmit validation once RHF is added
-    refetch();
+    try {
+      console.log(data);
+      refetch();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

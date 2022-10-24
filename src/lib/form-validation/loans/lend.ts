@@ -1,5 +1,4 @@
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { TFunction } from 'i18next';
 import * as z from 'zod';
@@ -8,13 +7,11 @@ import balance from '../common/balance';
 import field from '../common/field';
 import { CommonValidationParams } from '../common/type';
 
-type LoanLendValidationParams = CommonValidationParams & {
-  lendAssetBalance: MonetaryAmount<CurrencyExt>;
-};
+type LoanLendValidationParams = CommonValidationParams;
 
 const lend = (t: TFunction, params: LoanLendValidationParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
-    const { governanceBalance, transactionFee, lendAssetBalance, minAmount } = params;
+    const { governanceBalance, transactionFee, availableBalance, minAmount } = params;
 
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('loans.form_fields.lend_amount') });
@@ -25,7 +22,7 @@ const lend = (t: TFunction, params: LoanLendValidationParams): z.ZodEffects<z.Zo
       return ctx.addIssue(balance.transactionFee.issue(t));
     }
 
-    const inputAmount = newMonetaryAmount(value, lendAssetBalance.currency, true);
+    const inputAmount = newMonetaryAmount(value, availableBalance.currency, true);
 
     if (!field.min.validate({ inputAmount: inputAmount.toBig(), minAmount: minAmount.toBig() })) {
       const issueArg = field.min.issue(t, {
@@ -35,7 +32,7 @@ const lend = (t: TFunction, params: LoanLendValidationParams): z.ZodEffects<z.Zo
       return ctx.addIssue(issueArg);
     }
 
-    if (!balance.currency.validate({ availableBalance: lendAssetBalance, inputAmount })) {
+    if (!balance.currency.validate({ availableBalance: availableBalance, inputAmount })) {
       return ctx.addIssue(balance.currency.issue(t));
     }
   });
@@ -66,7 +63,7 @@ const withdraw = (t: TFunction, params: LoanWithdrawValidationParams): z.ZodEffe
     }
 
     if (!field.max.validate({ inputAmount, maxAmount: maxAmount.toBig() })) {
-      const issueArg = field.min.issue(t, {
+      const issueArg = field.max.issue(t, {
         action: t('loans.withdraw').toLowerCase(),
         amount: maxAmount.toString()
       });

@@ -1,10 +1,4 @@
-import {
-  BorrowPosition,
-  CurrencyExt,
-  CurrencyIdLiteral,
-  LendPosition,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { BorrowPosition, CurrencyExt, CurrencyIdLiteral, LendPosition } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
@@ -44,10 +38,9 @@ interface AccountLoansOverview {
   getMaxBorrowableAmount: (
     currency: CurrencyExt,
     availableCapacity: MonetaryAmount<CurrencyExt>
-  ) => MonetaryAmount<CurrencyExt>;
+  ) => MonetaryAmount<CurrencyExt> | undefined;
 }
 
-// TODO: implement getMaxWithdrawableAmount
 const useGetAccountLoansOverview = (): AccountLoansOverview => {
   const accountId = useAccountId();
 
@@ -145,25 +138,26 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   );
 
   /**
-   * Get maximum amount of currency that user can borrow with currently provided collateral and pool liquidity.
+   * Get maximum amount of currency that user can borrow with currently provided collateral and liquidity.
    * @param currency Currency of which max borrowable amount to get.
    * @param availableCapacity Total capacity that can be borrowed from the protocol.
    * @returns maximum amount of currency that user can borrow with currently provided collateral.
    * @returns undefined if prices and assets are not loaded yet
    */
   const getMaxBorrowableAmount = useCallback(
-    (currency: CurrencyExt, availableCapacity: MonetaryAmount<CurrencyExt>): MonetaryAmount<CurrencyExt> => {
-      const defaultMaxBorroableAmount = newMonetaryAmount(0, currency);
-
+    (
+      currency: CurrencyExt,
+      availableCapacity: MonetaryAmount<CurrencyExt>
+    ): MonetaryAmount<CurrencyExt> | undefined => {
       if (collateralAssetsUSDValue === undefined || borrowedAssetsUSDValue === undefined || prices === undefined) {
-        return defaultMaxBorroableAmount;
+        return undefined;
       }
 
       // TODO: Remove type casting after useGetPrices hook is refactored.
       const currencyUSDPrice = getTokenPrice(prices, currency.ticker as CurrencyIdLiteral)?.usd;
 
       if (currencyUSDPrice === undefined) {
-        return defaultMaxBorroableAmount;
+        return undefined;
       }
 
       const availableCollateralUSDValue = collateralAssetsUSDValue.sub(borrowedAssetsUSDValue);

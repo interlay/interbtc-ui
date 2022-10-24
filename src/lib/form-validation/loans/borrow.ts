@@ -1,5 +1,4 @@
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { TFunction } from 'i18next';
 import * as z from 'zod';
@@ -34,7 +33,7 @@ const borrow = (t: TFunction, params: LoanBorrowValidationParams): z.ZodEffects<
     }
 
     if (!field.max.validate({ inputAmount, maxAmount: maxAmount.toBig() })) {
-      const issueArg = field.min.issue(t, {
+      const issueArg = field.max.issue(t, {
         action: t('loans.borrow').toLowerCase(),
         amount: maxAmount.toString()
       });
@@ -42,13 +41,11 @@ const borrow = (t: TFunction, params: LoanBorrowValidationParams): z.ZodEffects<
     }
   });
 
-type LoanRepayValidationParams = CommonValidationParams & {
-  borrowedAssetBalance: MonetaryAmount<CurrencyExt>;
-};
+type LoanRepayValidationParams = CommonValidationParams;
 
 const repay = (t: TFunction, params: LoanRepayValidationParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
-    const { governanceBalance, transactionFee, borrowedAssetBalance, minAmount } = params;
+    const { governanceBalance, transactionFee, availableBalance, minAmount } = params;
 
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('loans.form_fields.repay_amount') });
@@ -59,7 +56,7 @@ const repay = (t: TFunction, params: LoanRepayValidationParams): z.ZodEffects<z.
       return ctx.addIssue(balance.transactionFee.issue(t));
     }
 
-    const inputAmount = newMonetaryAmount(value, borrowedAssetBalance.currency, true);
+    const inputAmount = newMonetaryAmount(value, availableBalance.currency, true);
 
     if (!field.min.validate({ inputAmount: inputAmount.toBig(), minAmount: minAmount.toBig() })) {
       const issueArg = field.min.issue(t, {
@@ -69,7 +66,7 @@ const repay = (t: TFunction, params: LoanRepayValidationParams): z.ZodEffects<z.
       return ctx.addIssue(issueArg);
     }
 
-    if (!balance.currency.validate({ availableBalance: borrowedAssetBalance, inputAmount })) {
+    if (!balance.currency.validate({ availableBalance, inputAmount })) {
       return ctx.addIssue(balance.currency.issue(t));
     }
   });
