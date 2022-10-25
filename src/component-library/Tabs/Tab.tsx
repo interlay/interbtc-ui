@@ -6,19 +6,24 @@ import { ReactNode, useRef } from 'react';
 import { Sizes } from '../utils/prop-types';
 import { StyledTab } from './Tabs.style';
 
-type TabProps<T> = {
+type Props = {
+  fullWidth?: boolean;
+  size: Sizes;
+};
+
+type InheritProps<T> = {
   item: AriaTabProps & { rendered: ReactNode };
   state: TabListState<T>;
-  fullWidth?: boolean;
-  size: Exclude<Sizes, 'small'>;
 };
+
+type TabProps<T> = Props & InheritProps<T>;
 
 // @internal
 const Tab = <T extends Record<string, unknown>>({
   item,
   state,
   fullWidth = false,
-  size = 'medium'
+  size = 'small'
 }: TabProps<T>): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null);
   const { tabProps } = useTab(item, state, ref);

@@ -18,7 +18,7 @@ type Props = {
   disabledKeys?: Key[];
   panel?: React.ReactNode;
   fullWidth?: boolean;
-  size?: Exclude<Sizes, 'small'>;
+  size?: Sizes;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -26,7 +26,7 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 type TabsProps = Props & NativeAttrs;
 
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ children, className, style, panel, fullWidth = false, size = 'medium', ...props }, ref): JSX.Element => {
+  ({ children, className, style, panel, fullWidth = false, size = 'small', ...props }, ref): JSX.Element => {
     const ariaProps = { children: children as CollectionChildren<Record<string, unknown>>, ...props };
     const state = useTabListState(ariaProps);
     const tabsListRef = useDOMRef<HTMLDivElement>(ref);
@@ -54,14 +54,14 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     return (
       <StyledTabs className={className} style={style}>
-        <TabListWrapper $size={size} $fullWith={fullWidth}>
+        <TabListWrapper $size={size} $fullWidth={fullWidth}>
           <TabSelection
             $isFocusVisible={isFocusVisible}
             $width={activeTabStyle.width}
             $transform={activeTabStyle.transform}
             $size={size}
           />
-          <TabList {...mergeProps(tabListProps, focusProps)} ref={tabsListRef} $fullWith={fullWidth}>
+          <TabList {...mergeProps(tabListProps, focusProps)} ref={tabsListRef} $fullWidth={fullWidth}>
             {[...state.collection].map((item) => (
               <Tab key={item.key} item={item} state={state} fullWidth={fullWidth} size={size} />
             ))}

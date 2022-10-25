@@ -10,12 +10,12 @@ const StyledTabs = styled.div`
 `;
 
 type TabListWrapperProps = {
-  $fullWith: boolean;
-  $size: Exclude<Sizes, 'small'>;
+  $fullWidth: boolean;
+  $size: Sizes;
 };
 
 const TabListWrapper = styled.div<TabListWrapperProps>`
-  display: ${({ $fullWith }) => ($fullWith ? 'block' : 'inline-block')};
+  display: ${({ $fullWidth }) => ($fullWidth ? 'block' : 'inline-block')};
   position: relative;
   background-color: ${theme.tabs.bg};
   padding: ${({ $size }) => theme.tabs[$size].wrapper.padding};
@@ -28,21 +28,23 @@ const TabListWrapper = styled.div<TabListWrapperProps>`
 `;
 
 type TabListProps = {
-  $fullWith: boolean;
+  $fullWidth: boolean;
 };
 
 const TabList = styled.div<TabListProps>`
-  display: ${({ $fullWith }) => ($fullWith ? 'flex' : 'inline-flex')};
+  display: ${({ $fullWidth }) => ($fullWidth ? 'flex' : 'inline-flex')};
 `;
 
 type StyledTabProps = {
   $fullWidth: boolean;
-  $size: Exclude<Sizes, 'small'>;
+  $size: Sizes;
 };
 
 const StyledTab = styled.div<StyledTabProps>`
+  flex: ${({ $fullWidth }) => $fullWidth && '1'};
   padding: ${({ $size }) => theme.tabs[$size].tab.padding};
   font-size: ${({ $size }) => theme.tabs[$size].tab.text};
+  font-weight: ${({ $size }) => theme.tabs[$size].tab.fontWeight};
   text-align: center;
   cursor: default;
   outline: none;
@@ -50,8 +52,6 @@ const StyledTab = styled.div<StyledTabProps>`
   color: ${theme.tabs.color};
   // TODO: have this transition into theme
   transition: color 150ms;
-
-  flex: ${({ $fullWidth }) => $fullWidth && '1'};
 
   &[aria-selected='true'] {
     color: ${theme.tabs.active.color};
@@ -62,7 +62,7 @@ type TabSelectionProps = {
   $isFocusVisible: boolean;
   $width: number;
   $transform: string;
-  $size: Exclude<Sizes, 'small'>;
+  $size: Sizes;
 };
 
 const TabSelection = styled.div<TabSelectionProps>`

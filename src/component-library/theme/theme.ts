@@ -174,13 +174,27 @@ const theme = {
       bg: 'var(--colors-tabs-active-bg)'
     },
     border: '1px solid var(--colors-border)',
-    medium: {
+    small: {
       wrapper: {
         padding: 'var(--spacing-1) var(--spacing-2)'
       },
       tab: {
         padding: 'var(--spacing-1) var(--spacing-4)',
-        text: 'var(--text-xs)'
+        text: 'var(--text-xs)',
+        fontWeight: 'var(--font-weights-book)'
+      },
+      selection: {
+        padding: 'var(--spacing-1)'
+      }
+    },
+    medium: {
+      wrapper: {
+        padding: 'var(--spacing-1) var(--spacing-2)'
+      },
+      tab: {
+        padding: 'var(--spacing-2) var(--spacing-6)',
+        text: 'var(--text-s)',
+        fontWeight: 'var(--font-weights-book)'
       },
       selection: {
         padding: 'var(--spacing-1)'
@@ -191,8 +205,9 @@ const theme = {
         padding: 'var(--spacing-2) var(--spacing-3)'
       },
       tab: {
-        padding: 'var(--spacing-2) var(--spacing-8)',
-        text: 'var(--text-base)'
+        padding: 'var(--spacing-3) var(--spacing-8)',
+        text: 'var(--text-base)',
+        fontWeight: 'var(--font-weights-medium)'
       },
       selection: {
         padding: 'var(--spacing-2)'

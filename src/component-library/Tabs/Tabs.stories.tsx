@@ -27,7 +27,7 @@ const Default = Template.bind({});
 Default.args = {};
 
 const Simple: Story<TabsProps> = (args) => (
-  <Tabs {...args}>
+  <Tabs style={{ maxWidth: 300 }} {...args}>
     <TabsItem title='Lend'>
       <P>Lend</P>
     </TabsItem>
@@ -38,7 +38,7 @@ const Simple: Story<TabsProps> = (args) => (
 );
 
 const FullWith = Simple.bind({});
-FullWith.args = { fullWidth: true };
+FullWith.args = { fullWidth: true, size: 'large' };
 
 export { Default, FullWith };
 
