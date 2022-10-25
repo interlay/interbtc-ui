@@ -481,9 +481,6 @@
       "confirm_agreement": "By proceeding you confirm that you have read and accepted the <1>Terms & Conditions</1>",
       "accept_risks_involved": "I understand the risks involved, create a vault",
       "read_vault_documentation": "Read the Vault Documentation"
-    },
-    "form_fields": {
-      "deposit_amount": "deposit amount"
     }
   },
   "staking_page": {
@@ -533,6 +530,7 @@
   },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",
+    "please_enter_the_amount_to": "Please enter the amount to {{field}}",
     "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}}",
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
     "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance"
