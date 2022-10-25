@@ -6,7 +6,7 @@ import { CollectionChildren } from '@react-types/shared';
 import { forwardRef, HTMLAttributes, Key, useEffect, useState } from 'react';
 
 import { useDOMRef } from '../utils/dom';
-import { Sizes } from '../utils/prop-types';
+import { AlignItems, Sizes } from '../utils/prop-types';
 import { Tab } from './Tab';
 import { TabPanel } from './TabPanel';
 import { StyledTabs, TabList, TabListWrapper, TabSelection } from './Tabs.style';
@@ -19,6 +19,7 @@ type Props = {
   panel?: React.ReactNode;
   fullWidth?: boolean;
   size?: Sizes;
+  align?: AlignItems;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -26,7 +27,10 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 type TabsProps = Props & NativeAttrs;
 
 const Tabs = forwardRef<HTMLDivElement, TabsProps>(
-  ({ children, className, style, panel, fullWidth = false, size = 'small', ...props }, ref): JSX.Element => {
+  (
+    { children, className, style, panel, fullWidth = false, size = 'small', align = 'flex-start', ...props },
+    ref
+  ): JSX.Element => {
     const ariaProps = { children: children as CollectionChildren<Record<string, unknown>>, ...props };
     const state = useTabListState(ariaProps);
     const tabsListRef = useDOMRef<HTMLDivElement>(ref);
@@ -54,7 +58,7 @@ const Tabs = forwardRef<HTMLDivElement, TabsProps>(
 
     return (
       <StyledTabs className={className} style={style}>
-        <TabListWrapper $size={size} $fullWidth={fullWidth}>
+        <TabListWrapper $size={size} $fullWidth={fullWidth} $align={align}>
           <TabSelection
             $isFocusVisible={isFocusVisible}
             $width={activeTabStyle.width}

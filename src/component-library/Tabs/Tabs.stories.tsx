@@ -27,7 +27,7 @@ const Default = Template.bind({});
 Default.args = {};
 
 const Simple: Story<TabsProps> = (args) => (
-  <Tabs style={{ maxWidth: 300 }} {...args}>
+  <Tabs style={{ maxWidth: 350 }} {...args}>
     <TabsItem title='Lend'>
       <P>Lend</P>
     </TabsItem>

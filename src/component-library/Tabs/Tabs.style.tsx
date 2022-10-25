@@ -2,20 +2,23 @@ import styled from 'styled-components';
 
 import { hideScrollbar } from '../css';
 import { theme } from '../theme';
-import { Sizes } from '../utils/prop-types';
+import { AlignItems, Sizes } from '../utils/prop-types';
 
 const StyledTabs = styled.div`
-  display: block;
+  display: flex;
+  flex-direction: column;
   width: 100%;
 `;
 
 type TabListWrapperProps = {
   $fullWidth: boolean;
   $size: Sizes;
+  $align: AlignItems;
 };
 
 const TabListWrapper = styled.div<TabListWrapperProps>`
-  display: ${({ $fullWidth }) => ($fullWidth ? 'block' : 'inline-block')};
+  display: ${({ $fullWidth }) => ($fullWidth ? 'flex' : 'inline-flex')};
+  align-self: ${({ $align, $fullWidth }) => !$fullWidth && $align};
   position: relative;
   background-color: ${theme.tabs.bg};
   padding: ${({ $size }) => theme.tabs[$size].wrapper.padding};
@@ -33,6 +36,7 @@ type TabListProps = {
 
 const TabList = styled.div<TabListProps>`
   display: ${({ $fullWidth }) => ($fullWidth ? 'flex' : 'inline-flex')};
+  width: 100%;
 `;
 
 type StyledTabProps = {
