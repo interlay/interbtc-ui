@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
-// ray test touch <
 import { useMutation, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -9,32 +8,26 @@ import { toast } from 'react-toastify';
 import { StoreType } from '@/common/types/util.types';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorModal from '@/components/ErrorModal';
-// ray test touch >
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
-// ray test touch <
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
-// ray test touch >
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-// ray test touch <
 import useQueryParams from '@/utils/hooks/use-query-params';
-// ray test touch >
 
-// ray test touch <
 interface Props {
   // TODO: should type properly (`Relay`)
   request: any;
 }
 
 const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
+  // ray test touch <
   console.log('ray : ***** request => ', request);
   // ray test touch >
   const { t } = useTranslation();
 
-  // ray test touch <
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const queryParams = useQueryParams();
@@ -64,7 +57,6 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
 
     executeMutation.mutate(request);
   };
-  // ray test touch >
 
   return (
     <>
@@ -98,7 +90,6 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
             {t('issue_page.contact_team')}
           </p>
         </div>
-        {/* ray test touch < */}
         {request.backingPayment.btcTxId && (
           <InterlayDenimOrKintsugiMidnightOutlinedButton
             pending={executeMutation.isLoading}
@@ -109,9 +100,7 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
             })}
           </InterlayDenimOrKintsugiMidnightOutlinedButton>
         )}
-        {/* ray test touch > */}
       </RequestWrapper>
-      {/* ray test touch < */}
       {executeMutation.isError && executeMutation.error && (
         <ErrorModal
           open={!!executeMutation.error}
@@ -124,7 +113,6 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
           }
         />
       )}
-      {/* ray test touch > */}
     </>
   );
 };

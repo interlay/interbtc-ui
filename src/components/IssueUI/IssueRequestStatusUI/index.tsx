@@ -16,9 +16,7 @@ const IssueRequestStatusUI = ({ request }: Props): JSX.Element => {
       return <CompletedIssueRequest request={request} />;
     case IssueStatus.Cancelled:
     case IssueStatus.Expired:
-      // ray test touch <
       return <CancelledIssueRequest request={request} />;
-    // ray test touch >
     case IssueStatus.PendingWithBtcTxNotIncluded:
     case IssueStatus.PendingWithTooFewConfirmations:
       return <ReceivedIssueRequest request={request} />;
