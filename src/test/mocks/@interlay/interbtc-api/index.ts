@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
 import { InterBtcApi } from '@interlay/interbtc-api';
-import { Interlay, Polkadot } from "@interlay/monetary-js"
+import { Interlay, Polkadot } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { Signer } from '@polkadot/types/types';
 
@@ -27,6 +27,7 @@ import {
   mockVaultsGetVaultsWithIssuableTokens
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
+import { mockGetBorrowPositionsOfAccount, mockGetLendPositionsOfAccount } from './parachain/loans';
 
 type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
@@ -82,6 +83,10 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   vaults: {
     get: mockVaultsGet,
     getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens
+  },
+  loans: {
+    getLendPositionsOfAccount: mockGetLendPositionsOfAccount,
+    getBorrowPositionsOfAccount: mockGetBorrowPositionsOfAccount
   }
 };
 
