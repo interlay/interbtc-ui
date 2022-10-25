@@ -536,19 +536,14 @@
     "repay": "Repay",
     "lend": "Lend",
     "my_lend_positions": "My Lend Positions",
-    "my_borrow_positions": "My Borrow Positions",
-    "form_fields": {
-      "lend_amount": "lend amount",
-      "withdraw_amount": "withdraw amount",
-      "borrow_amount": "borrow amount",
-      "repay_amount": "repay amount"
-    }
+    "my_borrow_positions": "My Borrow Positions"
   },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",
     "please_enter_the_amount_to": "Please enter the amount to {{field}}",
     "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}}",
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
-    "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance"
+    "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance",
+    "field_amount": "{{field}} amount"
   }
 }

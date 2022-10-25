@@ -14,7 +14,7 @@ const borrow = (t: TFunction, params: LoanBorrowValidationParams): z.ZodEffects<
     const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
     if (!field.required.validate({ value })) {
-      const issueArg = field.required.issue(t, { fieldName: t('loans.form_fields.borrow_amount') });
+      const issueArg = field.required.issue(t, { fieldName: t('loans.borrow').toLowerCase(), fieldType: 'number' });
       return ctx.addIssue(issueArg);
     }
 
@@ -48,7 +48,7 @@ const repay = (t: TFunction, params: LoanRepayValidationParams): z.ZodEffects<z.
     const { governanceBalance, transactionFee, availableBalance, minAmount } = params;
 
     if (!field.required.validate({ value })) {
-      const issueArg = field.required.issue(t, { fieldName: t('loans.form_fields.repay_amount') });
+      const issueArg = field.required.issue(t, { fieldName: t('loans.repay').toLowerCase(), fieldType: 'number' });
       return ctx.addIssue(issueArg);
     }
 

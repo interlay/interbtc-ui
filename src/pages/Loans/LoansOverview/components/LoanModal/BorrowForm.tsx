@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { TFunction, useTranslation } from 'react-i18next';
 import * as z from 'zod';
 
-import { formatNumber, formatUSD, monetaryToNumber } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatNumber, formatUSD, monetaryToNumber } from '@/common/utils/utils';
 import { CTA, H3, P, Stack, Strong, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import validate, { LoanBorrowValidationParams, LoanRepayValidationParams } from '@/lib/form-validation';
@@ -24,10 +24,12 @@ const REPAY_AMOUNT = 'repay-amount';
 
 const getContentMap = (t: TFunction) => ({
   borrow: {
-    title: t('loans.borrow')
+    title: t('loans.borrow'),
+    fieldLabel: t('forms.field_amount', { field: t('loans.borrow').toLowerCase() })
   },
   repay: {
-    title: t('loans.repay')
+    title: t('loans.repay'),
+    fieldLabel: t('forms.field_amount', { field: t('loans.repay').toLowerCase() })
   }
 });
 
@@ -64,6 +66,7 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
     getNewBorrowLimitUSDValue
   } = useGetAccountLoansOverview();
   const { data: balances } = useGetBalances();
+  const prices = useGetPrices();
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 
@@ -75,7 +78,6 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const maximumBorrowable = monetaryToNumber(maxBorrowableAmount);
   const borrowedAmount = monetaryToNumber(position?.amount);
 
-  const prices = useGetPrices();
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
   const schemaParams: BorrowSchemaParams = {
@@ -100,7 +102,7 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
 
   const amountFieldName = variant === 'borrow' ? BORROW_AMOUNT : REPAY_AMOUNT;
   const amount = watch(amountFieldName) || 0;
-  const monetaryAmount = newMonetaryAmount(amount, asset.currency);
+  const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
   const newBorrowLimit = getNewBorrowLimitUSDValue(variant, asset.currency, monetaryAmount) || Big(0);
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty;
@@ -134,9 +136,11 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
             </dd>
           </StyledDItem>
           <TokenInput
-            valueInUSD='$0.00' // TODO: add price computation once RHF is added
+            placeholder='0.00'
+            valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
             tokenSymbol={asset.currency.ticker}
             errorMessage={getErrorMessage(errors[amountFieldName])}
+            aria-label={content.fieldLabel}
             {...register(amountFieldName)}
           />
           <StyledDl>
