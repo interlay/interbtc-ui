@@ -138,7 +138,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   );
 
   /**
-   * Get maximum amount of currency that user can borrow with currently provided collateral.
+   * Get maximum amount of currency that user can borrow with currently provided collateral and liquidity.
    * @param currency Currency of which max borrowable amount to get.
    * @param availableCapacity Total capacity that can be borrowed from the protocol.
    * @returns maximum amount of currency that user can borrow with currently provided collateral.

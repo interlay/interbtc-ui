@@ -543,6 +543,7 @@
     "please_enter_the_amount_to": "Please enter the amount to {{field}}",
     "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}}",
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
-    "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance"
+    "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance",
+    "field_amount": "{{field}} amount"
   }
 }
