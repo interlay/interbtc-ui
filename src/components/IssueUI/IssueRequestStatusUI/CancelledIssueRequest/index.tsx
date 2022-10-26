@@ -93,11 +93,8 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
       return await window.bridge.vaults.getIssuableTokensFromVault(vaultAccountId, collateralCurrency);
     }
   });
-  console.log('ray : ***** vaultCapacity => ', vaultCapacity);
-  console.log('ray : ***** vaultCapacityError => ', vaultCapacityError);
 
   const backingPaymentAmount = newMonetaryAmount(request.backingPayment.amount, WRAPPED_TOKEN);
-  console.log('ray : ***** backingPaymentAmount.toString() => ', backingPaymentAmount.toString());
 
   const executable = vaultCapacity?.gte(backingPaymentAmount);
   // ray test touch >
@@ -139,6 +136,11 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
                       vaultCapacity: displayMonetaryAmount(vaultCapacity),
                       wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                     })}
+              </p>
+            )}
+            {vaultCapacityError && (
+              <p className={clsx(getColorShade('red'), 'text-sm')}>
+                {vaultCapacityError instanceof Error ? vaultCapacityError.message : String(vaultCapacityError)}
               </p>
             )}
             <InterlayDenimOrKintsugiMidnightOutlinedButton
