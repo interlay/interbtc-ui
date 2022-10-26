@@ -781,10 +781,12 @@ const Staking = (): JSX.Element => {
               <AvailableBalanceUI
                 label='Available balance'
                 balance={
-                  formatNumber(Number(availableMonetaryBalance), {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 5
-                  }) || '-'
+                  availableMonetaryBalance === undefined
+                    ? '-'
+                    : formatNumber(Number(availableMonetaryBalance), {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 5
+                      })
                 }
                 tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
                 onClick={handleClickBalance}
