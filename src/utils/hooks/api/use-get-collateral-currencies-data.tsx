@@ -9,18 +9,20 @@ type CollateralCurrenciesData = { [currencyTicker: string]: CollateralCurrencyDa
 
 type CollateralCurrencyData = {
   liquidationThreshold: Big;
+  premiumThreshold: Big;
   secureThreshold: Big;
   exchangeRate: ExchangeRate<Currency, CurrencyExt>;
 };
 
 const getCollateralCurrencyData = async (collateralToken: CollateralCurrencyExt): Promise<CollateralCurrencyData> => {
-  const [liquidationThreshold, secureThreshold, exchangeRate] = await Promise.all([
+  const [liquidationThreshold, premiumThreshold, secureThreshold, exchangeRate] = await Promise.all([
     window.bridge.vaults.getLiquidationCollateralThreshold(collateralToken),
+    window.bridge.vaults.getPremiumRedeemThreshold(collateralToken),
     window.bridge.vaults.getSecureCollateralThreshold(collateralToken),
     window.bridge.oracle.getExchangeRate(collateralToken)
   ]);
 
-  return { liquidationThreshold, secureThreshold, exchangeRate };
+  return { liquidationThreshold, premiumThreshold, secureThreshold, exchangeRate };
 };
 
 const getCollateralCurrenciesData = (

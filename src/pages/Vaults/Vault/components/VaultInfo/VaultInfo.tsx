@@ -33,6 +33,7 @@ type Props = {
   collateralAmount: MonetaryAmount<CollateralCurrencyExt>;
   vaultStatus: VaultStatusExt;
   vaultAddress: string;
+  vaultDisplayName: string | undefined;
   collateralToken: CollateralCurrencyExt;
   lockedAmountBTC: Big;
   hasManageVaultBtn: boolean;
@@ -45,6 +46,7 @@ type VaultInfoProps = Props & NativeAttrs;
 const VaultInfo = ({
   vaultStatus,
   vaultAddress,
+  vaultDisplayName,
   collateralToken,
   collateralAmount,
   lockedAmountBTC,
@@ -62,6 +64,12 @@ const VaultInfo = ({
       render: (children: ReactNode) => <StatusTag status={status}>{children}</StatusTag>
     }
   ];
+
+  if (vaultDisplayName) {
+    headlineItems.push(
+      { term: 'Identity', definition: vaultDisplayName }
+    )
+  }
 
   return (
     <StyledWrapper variant='bordered' {...props}>
