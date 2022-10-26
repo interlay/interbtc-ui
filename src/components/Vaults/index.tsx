@@ -23,7 +23,6 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
   const [allVaults, setAllVaults] = React.useState<VaultApiType[]>([]);
   const [vaultsStatus, setVaultsStatus] = React.useState(STATUSES.IDLE);
 
-  // ray test touch <
   const availableVaults = React.useMemo(() => {
     // Filters out vaults with lower than required capacity and sorts by accountId
     // to have vaults with same accountId grouped together.
@@ -55,7 +54,6 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
       setVaultsStatus(STATUSES.RESOLVED);
     })();
   }, []);
-  // ray test touch >
 
   return (
     <div className='w-full'>

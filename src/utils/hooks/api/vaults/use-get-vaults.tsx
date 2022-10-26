@@ -13,9 +13,7 @@ type VaultResponse = Array<VaultExt>;
 
 // `getOrNull` returns null as a successful response if the vault does not exist
 const getVaults = async (accountId: AccountId, collateralToken: CollateralCurrencyExt) =>
-  // ray test touch <
   await window.bridge.vaults.getOrNull(accountId, collateralToken);
-// ray test touch >
 
 const useGetVaults = ({ address }: { address: string }): VaultResponse => {
   const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
@@ -37,9 +35,7 @@ const useGetVaults = ({ address }: { address: string }): VaultResponse => {
     (collateralCurrencies || []).map((item) => {
       return {
         queryKey: ['vaults', address, item.ticker],
-        // ray test touch <
         queryFn: async () => await getVaults(newAccountId(window.bridge.api, address), item),
-        // ray test touch >
         options: {
           enabled: !!bridgeLoaded && collateralCurrenciesSuccess
         }
