@@ -1,4 +1,12 @@
-import { CurrencyIdLiteral, newAccountId, newMonetaryAmount } from '@interlay/interbtc-api';
+// ray test touch <
+import {
+  CurrencyIdLiteral,
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  currencyIdToMonetaryCurrency,
+  newAccountId,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
+// ray test touch >
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -69,6 +77,12 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
     queryFn: async () => {
       const vaultAccountId = newAccountId(window.bridge.api, request.vault.accountId);
 
+      // ray test touch <
+      // const collateralToken = await currencyIdToMonetaryCurrency(
+      //   window.bridge.assetRegistry,
+      //   request.vault.currencies.collateral
+      // );
+
       let collateralCurrency;
       if (request.vault.collateralToken.token === RELAY_CHAIN_NATIVE_TOKEN_SYMBOL) {
         collateralCurrency = RELAY_CHAIN_NATIVE_TOKEN;
@@ -78,6 +92,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
         // TODO: `SDOT` will break here
         throw new Error(`Unsupported collateral token (${request.vault.collateralToken.token})!`);
       }
+      // ray test touch >
 
       return await window.bridge.vaults.getIssuableTokensFromVault(vaultAccountId, collateralCurrency);
     }

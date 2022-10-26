@@ -330,10 +330,12 @@ const IssueForm = (): JSX.Element | null => {
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
         }
 
+        // ray test touch <
         const collateralToken = await currencyIdToMonetaryCurrency(
           window.bridge.assetRegistry,
           vaultId.currencies.collateral
         );
+        // ray test touch >
 
         const result = await window.bridge.issue.request(
           wrappedTokenAmount,
