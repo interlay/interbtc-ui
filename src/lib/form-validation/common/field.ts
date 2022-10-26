@@ -9,17 +9,23 @@ type RequiredFieldValidationParams = {
 
 type RequiredFieldIssueParams = {
   fieldName: string;
+  fieldType?: 'text' | 'number';
 };
 
 const required: Validation<RequiredFieldValidationParams, RequiredFieldIssueParams> = {
   validate: ({ value }): boolean => !!value,
-  issue: (t, params) => ({
-    code: z.ZodIssueCode.too_small,
-    minimum: 1,
-    inclusive: true,
-    type: 'string',
-    message: t('forms.please_enter_your_field', { field: params?.fieldName })
-  })
+  issue: (t, params) => {
+    const translationField =
+      params?.fieldType === 'number' ? 'forms.please_enter_the_amount_to' : 'forms.please_enter_your_field';
+
+    return {
+      code: z.ZodIssueCode.too_small,
+      minimum: 1,
+      inclusive: true,
+      type: 'string',
+      message: t(translationField, { field: params?.fieldName })
+    };
+  }
 };
 
 type MinFieldValidationParams = {
