@@ -1,4 +1,3 @@
-// ray test touch <
 import { CurrencyIdLiteral, newAccountId, newMonetaryAmount } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
@@ -139,4 +138,3 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
 };
 
 export default ManualIssueExecutionUI;
-// ray test touch >

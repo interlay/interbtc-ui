@@ -17,9 +17,7 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
-// ray test touch <
 import ManualIssueExecutionUI from '../ManualIssueExecutionUI';
-// ray test touch >
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -27,9 +25,6 @@ interface Props {
 }
 
 const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
-  // ray test touch <
-  console.log('ray : ***** request => ', request);
-  // ray test touch >
   const { t } = useTranslation();
 
   const queryParams = useQueryParams();
@@ -83,9 +78,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
         </p>
-        {/* ray test touch < */}
         <ManualIssueExecutionUI request={request} />
-        {/* ray test touch > */}
       </RequestWrapper>
       {executeMutation.isError && executeMutation.error && (
         <ErrorModal

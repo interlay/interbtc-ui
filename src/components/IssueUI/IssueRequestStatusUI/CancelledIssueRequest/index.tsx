@@ -15,9 +15,6 @@ interface Props {
 }
 
 const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
-  // ray test touch <
-  console.log('ray : ***** request => ', request);
-  // ray test touch >
   const { t } = useTranslation();
 
   return (
@@ -36,9 +33,7 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
         </p>
-        {/* ray test touch < */}
         {request.backingPayment.btcTxId && <ManualIssueExecutionUI request={request} />}
-        {/* ray test touch > */}
         {/* TODO: could componentize */}
         <div>
           <h6 className={clsx('flex', 'items-center', 'justify-center', 'space-x-0.5', getColorShade('red'))}>
