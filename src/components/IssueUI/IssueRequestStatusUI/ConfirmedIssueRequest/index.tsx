@@ -2,12 +2,9 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FaCheckCircle } from 'react-icons/fa';
 import { useMutation, useQueryClient } from 'react-query';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { StoreType } from '@/common/types/util.types';
 import { shortAddress } from '@/common/utils/utils';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorModal from '@/components/ErrorModal';
 import ExternalLink from '@/components/ExternalLink';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
@@ -20,6 +17,10 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
+// ray test touch <
+import ManualIssueExecutionUI from '../ManualIssueExecutionUI';
+// ray test touch >
+
 interface Props {
   // TODO: should type properly (`Relay`)
   request: any;
@@ -30,7 +31,6 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
   console.log('ray : ***** request => ', request);
   // ray test touch >
   const { t } = useTranslation();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const queryParams = useQueryParams();
   const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
@@ -52,13 +52,6 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
       }
     }
   );
-
-  // TODO: should type properly (`Relay`)
-  const handleExecute = (request: any) => () => {
-    if (!bridgeLoaded) return;
-
-    executeMutation.mutate(request);
-  };
 
   return (
     <>
@@ -90,14 +83,9 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
         </p>
-        <InterlayDenimOrKintsugiMidnightOutlinedButton
-          pending={executeMutation.isLoading}
-          onClick={handleExecute(request)}
-        >
-          {t('issue_page.claim_interbtc', {
-            wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-          })}
-        </InterlayDenimOrKintsugiMidnightOutlinedButton>
+        {/* ray test touch < */}
+        <ManualIssueExecutionUI request={request} />
+        {/* ray test touch > */}
       </RequestWrapper>
       {executeMutation.isError && executeMutation.error && (
         <ErrorModal
