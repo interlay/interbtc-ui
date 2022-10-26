@@ -66,9 +66,7 @@ const VaultInfo = ({
   ];
 
   if (vaultDisplayName) {
-    headlineItems.push(
-      { term: 'Identity', definition: vaultDisplayName }
-    )
+    headlineItems.push({ term: 'Identity', definition: vaultDisplayName });
   }
 
   return (

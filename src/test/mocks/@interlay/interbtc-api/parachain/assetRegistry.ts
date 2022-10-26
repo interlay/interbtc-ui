@@ -1,4 +1,4 @@
-import { CurrencyExt } from "@interlay/interbtc-api";
+import { CurrencyExt } from '@interlay/interbtc-api';
 
 const DEFAULT_FOREIGN_ASSETS: CurrencyExt[] = [];
 

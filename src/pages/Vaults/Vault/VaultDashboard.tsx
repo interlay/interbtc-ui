@@ -32,11 +32,7 @@ const VaultDashboard = (): JSX.Element => {
 
   const vaultData = useGetVaultData({ address: selectedVaultAccountAddress });
   const transactions = useGetVaultTransactions(selectedVaultAccountAddress, vaultCollateral, bridgeLoaded);
-  const {
-    isIdle: identitiesIdle,
-    isLoading: identitiesLoading,
-    data: identities
-  } = useGetIdentities(bridgeLoaded);
+  const { isIdle: identitiesIdle, isLoading: identitiesLoading, data: identities } = useGetIdentities(bridgeLoaded);
 
   const { getCurrencyFromTicker, isSuccess: currenciesSuccess } = useGetCurrencies(bridgeLoaded);
 

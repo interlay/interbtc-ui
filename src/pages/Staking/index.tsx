@@ -114,6 +114,9 @@ const Staking = (): JSX.Element => {
   const prices = useGetPrices();
 
   const { selectedAccount } = useSubstrateSecureState();
+
+  const selectedAccountAddress = selectedAccount?.address ?? '';
+
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
@@ -154,7 +157,7 @@ const Staking = (): JSX.Element => {
     error: voteGovernanceTokenBalanceError,
     refetch: voteGovernanceTokenBalanceRefetch
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
-    [GENERIC_FETCHER, 'escrow', 'votingBalance', selectedAccount?.address],
+    [GENERIC_FETCHER, 'escrow', 'votingBalance', selectedAccountAddress],
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -170,7 +173,7 @@ const Staking = (): JSX.Element => {
     error: claimableRewardAmountError,
     refetch: claimableRewardAmountRefetch
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccount?.address],
+    [GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccountAddress],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -186,7 +189,7 @@ const Staking = (): JSX.Element => {
     error: rewardAmountAndAPYError,
     refetch: rewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccount?.address],
+    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccountAddress],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
@@ -206,7 +209,7 @@ const Staking = (): JSX.Element => {
       GENERIC_FETCHER,
       'escrow',
       'getRewardEstimate',
-      selectedAccount?.address,
+      selectedAccountAddress,
       monetaryLockingAmount,
       blockLockTimeExtension
     ],
@@ -224,7 +227,7 @@ const Staking = (): JSX.Element => {
     error: stakedAmountAndEndBlockError,
     refetch: stakedAmountAndEndBlockRefetch
   } = useQuery<StakedAmountAndEndBlock, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccount?.address],
+    [GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccountAddress],
     genericFetcher<StakedAmountAndEndBlock>(),
     {
       enabled: !!bridgeLoaded
@@ -238,8 +241,8 @@ const Staking = (): JSX.Element => {
     data: transactionFeeReserve,
     error: transactionFeeReserveError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, selectedAccount?.address],
-    stakingTransactionFeeReserveFetcher(selectedAccount?.address ?? ''),
+    [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, selectedAccountAddress],
+    stakingTransactionFeeReserveFetcher(selectedAccountAddress),
     {
       enabled: bridgeLoaded && !!selectedAccount
     }
@@ -778,10 +781,12 @@ const Staking = (): JSX.Element => {
               <AvailableBalanceUI
                 label='Available balance'
                 balance={
-                  formatNumber(Number(availableMonetaryBalance), {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 5
-                  }) || '-'
+                  availableMonetaryBalance === undefined
+                    ? '-'
+                    : formatNumber(Number(availableMonetaryBalance), {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 5
+                      })
                 }
                 tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
                 onClick={handleClickBalance}
