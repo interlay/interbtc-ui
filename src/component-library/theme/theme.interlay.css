@@ -40,9 +40,12 @@
   --colors-indeterminate-secondary-bg: var(--colors-light-blue-10);
   --colors-indeterminate-outlined-color: var(--colors-neutral-black-80);
   --colors-indeterminate-outlined-bg: var(--colors-neutral-black-20);
-  /* Score Bar */
-  --colors-score-bar-indicator-color: var(--colors-light-blue);
-  --colors-score-bar-separator-color: var(--colors-neutral-black);
+  /* Meter */
+  --colors-meter-bar-indicator-color: var(--colors-light-blue);
+  --colors-meter-bar-separator-color: var(--colors-neutral-black);
+  --colors-meter-bar-success-color: var(--colors-success-darker);
+  --colors-meter-bar-warning-color: var(--colors-warning-dark);
+  --colors-meter-bar-error-color: var(--colors-error-dark);
   /* Progress Circle */
   --color-progress-circle-mask: var(--colors-neutral-black-25);
   --color-progress-circle-fill: var(--colors-light-blue);

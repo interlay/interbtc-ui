@@ -175,26 +175,28 @@ const theme = {
     },
     border: '1px solid var(--colors-border)'
   },
-  score: {
+  meter: {
     bar: {
       status: {
-        error: 'var(--colors-error-dark)',
-        warning: 'var(--colors-warning-dark)',
-        success: 'var(--colors-success-dark)'
+        error: 'var(--colors-meter-bar-error-color)',
+        warning: 'var(--colors-meter-bar-warning-color)',
+        success: 'var(--colors-meter-bar-success-color)'
       },
-      bg:
-        'linear-gradient(270deg, var(--colors-success-dark) 0%, var(--colors-warning-dark) 50%, var(--colors-error-dark) 100%)',
+      bg: `linear-gradient(270deg, 
+          var(--colors-meter-bar-success-color) 0%, 
+          var(--colors-meter-bar-warning-color) 50%, 
+          var(--colors-meter-bar-error-color) 100%)`,
       height: '10px',
       radius: 'var(--rounded-full)',
       indicator: {
         border: {
           left: '10px solid transparent',
           right: '10px solid transparent',
-          bottom: '18px solid var(--colors-score-bar-indicator-color)'
+          bottom: '18px solid var(--colors-meter-bar-indicator-color)'
         }
       },
       separator: {
-        color: 'var(--colors-score-bar-separator-color)'
+        color: 'var(--colors-meter-bar-separator-color)'
       }
     }
   },
