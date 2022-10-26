@@ -43,7 +43,7 @@ const StyledSublabel = styled.span<SublabelProps>`
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
   font-size: ${theme.text.xs};
   line-height: ${theme.lineHeight.s};
-  color: ${(props) => (props.status ? theme.score.bar.status[props.status] : theme.colors.textPrimary)};
+  color: ${(props) => (props.status ? theme.meter.bar.status[props.status] : theme.colors.textPrimary)};
 `;
 
 type ScoreProps = {
@@ -53,7 +53,7 @@ type ScoreProps = {
 const StyledScore = styled.span<ScoreProps>`
   font-size: ${(props) => (props.isDefault ? theme.text.xs : theme.text.xl4)};
   line-height: ${(props) => (props.isDefault ? theme.lineHeight.lg : theme.lineHeight.xl)};
-  color: ${(props) => theme.score.bar.status[props.status]};
+  color: ${(props) => theme.meter.bar.status[props.status]};
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
   transition: color ${theme.transition.duration}ms;
   will-change: color;
