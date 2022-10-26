@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 import { StoreType } from '@/common/types/util.types';
+import { displayMonetaryAmount } from '@/common/utils/utils';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorModal from '@/components/ErrorModal';
 import {
@@ -99,7 +100,6 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
   console.log('ray : ***** backingPaymentAmount.toString() => ', backingPaymentAmount.toString());
 
   const executable = vaultCapacity?.gte(backingPaymentAmount);
-  console.log('ray : ***** executable => ', executable);
   // ray test touch >
 
   // TODO: should type properly (`Relay`)
@@ -125,6 +125,34 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
         </p>
+        {/* ray test touch < */}
+        {request.backingPayment.btcTxId && (
+          <div className={clsx('text-center', 'space-y-2')}>
+            {vaultCapacity && (
+              <p className={clsx(getColorShade('red'), 'text-sm')}>
+                {executable
+                  ? t('issue_page.vault_has_capacity_you_can_claim', {
+                      vaultCapacity: displayMonetaryAmount(vaultCapacity),
+                      wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+                    })
+                  : t('issue_page.vault_has_capacity_you_can_not_claim', {
+                      vaultCapacity: displayMonetaryAmount(vaultCapacity),
+                      wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+                    })}
+              </p>
+            )}
+            <InterlayDenimOrKintsugiMidnightOutlinedButton
+              pending={executeMutation.isLoading}
+              disabled={!executable}
+              onClick={handleExecute(request)}
+            >
+              {t('issue_page.claim_interbtc', {
+                wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
+              })}
+            </InterlayDenimOrKintsugiMidnightOutlinedButton>
+          </div>
+        )}
+        {/* ray test touch > */}
         {/* TODO: could componentize */}
         <div>
           <h6 className={clsx('flex', 'items-center', 'justify-center', 'space-x-0.5', getColorShade('red'))}>
@@ -141,19 +169,6 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
             {t('issue_page.contact_team')}
           </p>
         </div>
-        {request.backingPayment.btcTxId && (
-          <InterlayDenimOrKintsugiMidnightOutlinedButton
-            pending={executeMutation.isLoading}
-            // ray test touch <
-            disabled={!executable}
-            // ray test touch >
-            onClick={handleExecute(request)}
-          >
-            {t('issue_page.claim_interbtc', {
-              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-            })}
-          </InterlayDenimOrKintsugiMidnightOutlinedButton>
-        )}
       </RequestWrapper>
       {executeMutation.isError && executeMutation.error && (
         <ErrorModal
