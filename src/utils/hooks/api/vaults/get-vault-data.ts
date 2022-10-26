@@ -86,17 +86,21 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
   // or by extending the vaults.get (VaultExt) api call
+  // ray test touch <
   const vaultExt = await window.bridge.vaults.get(accountId, vault.backingCollateral.currency);
+  // ray test touch >
   const apy = await window.bridge.vaults.getAPY(accountId, vault.backingCollateral.currency);
   const collateralization = await window.bridge.vaults.getVaultCollateralization(
     accountId,
     vault.backingCollateral.currency
   );
+  // ray test touch <
   // This should be handled by checking for an error response from `getIssuableTokens`
   const issuableTokens =
     vaultExt.status === VaultStatusExt.Liquidated
       ? newMonetaryAmount(0, vault.backingCollateral.currency)
       : await window.bridge.vaults.getIssuableTokensFromVault(accountId, vault.backingCollateral.currency);
+  // ray test touch >
   const governanceTokenRewards = await window.bridge.vaults.getGovernanceReward(
     accountId,
     vault.backingCollateral.currency,

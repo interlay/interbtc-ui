@@ -1,14 +1,22 @@
+import { CurrencyIdLiteral, newAccountId, newMonetaryAmount } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 import { StoreType } from '@/common/types/util.types';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorModal from '@/components/ErrorModal';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import {
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  RELAY_CHAIN_NATIVE_TOKEN,
+  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+  WRAPPED_TOKEN,
+  WRAPPED_TOKEN_SYMBOL
+} from '@/config/relay-chains';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
@@ -19,7 +27,21 @@ import useQueryParams from '@/utils/hooks/use-query-params';
 
 interface Props {
   // TODO: should type properly (`Relay`)
-  request: any;
+  request: {
+    backingPayment: {
+      amount: number;
+      btcTxId: string;
+    };
+    vault: {
+      accountId: string;
+      collateralToken: {
+        token: CurrencyIdLiteral;
+      };
+      wrappedToken: {
+        token: CurrencyIdLiteral;
+      };
+    };
+  };
 }
 
 const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
@@ -50,6 +72,35 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
       }
     }
   );
+
+  // ray test touch <
+  const { data: vaultCapacity, error: vaultCapacityError } = useQuery({
+    queryKey: 'vault-capacity',
+    queryFn: async () => {
+      const vaultAccountId = newAccountId(window.bridge.api, request.vault.accountId);
+
+      let collateralCurrency;
+      if (request.vault.collateralToken.token === RELAY_CHAIN_NATIVE_TOKEN_SYMBOL) {
+        collateralCurrency = RELAY_CHAIN_NATIVE_TOKEN;
+      } else if (request.vault.collateralToken.token === GOVERNANCE_TOKEN_SYMBOL) {
+        collateralCurrency = GOVERNANCE_TOKEN;
+      } else {
+        // TODO: `SDOT` will break here
+        throw new Error(`Unsupported collateral token (${request.vault.collateralToken.token})!`);
+      }
+
+      return await window.bridge.vaults.getIssuableTokensFromVault(vaultAccountId, collateralCurrency);
+    }
+  });
+  console.log('ray : ***** vaultCapacity => ', vaultCapacity);
+  console.log('ray : ***** vaultCapacityError => ', vaultCapacityError);
+
+  const backingPaymentAmount = newMonetaryAmount(request.backingPayment.amount, WRAPPED_TOKEN);
+  console.log('ray : ***** backingPaymentAmount.toString() => ', backingPaymentAmount.toString());
+
+  const executable = vaultCapacity?.gte(backingPaymentAmount);
+  console.log('ray : ***** executable => ', executable);
+  // ray test touch >
 
   // TODO: should type properly (`Relay`)
   const handleExecute = (request: any) => () => {
@@ -93,6 +144,9 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
         {request.backingPayment.btcTxId && (
           <InterlayDenimOrKintsugiMidnightOutlinedButton
             pending={executeMutation.isLoading}
+            // ray test touch <
+            disabled={!executable}
+            // ray test touch >
             onClick={handleExecute(request)}
           >
             {t('issue_page.claim_interbtc', {
