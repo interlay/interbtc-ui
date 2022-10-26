@@ -56,14 +56,26 @@ const CollateralizationCell = ({
     return (
       <>
         <div>
-          <p className={getCollateralizationColor(settledCollateralization, collateralSecureThreshold, collateralPremiumThreshold)}>
+          <p
+            className={getCollateralizationColor(
+              settledCollateralization,
+              collateralSecureThreshold,
+              collateralPremiumThreshold
+            )}
+          >
             {settledCollateralization === undefined
               ? '∞'
               : formatPercentage(settledCollateralization.mul(100).toNumber())}
           </p>
           <p className='text-xs'>
             <span>{t('vault.pending_table_subcell')}</span>
-            <span className={getCollateralizationColor(unsettledCollateralization, collateralSecureThreshold, collateralPremiumThreshold)}>
+            <span
+              className={getCollateralizationColor(
+                unsettledCollateralization,
+                collateralSecureThreshold,
+                collateralPremiumThreshold
+              )}
+            >
               {unsettledCollateralization === undefined
                 ? '∞'
                 : formatPercentage(unsettledCollateralization.mul(100).toNumber())}
@@ -84,8 +96,7 @@ const getCollateralizationColor = (
 
   if (collateralization.gte(collateralSecureThreshold)) {
     return clsx(getColorShade('green'), 'font-medium');
-  }
-  else if (collateralization.gte(collateralPremiumThreshold)) {
+  } else if (collateralization.gte(collateralPremiumThreshold)) {
     // Below premium redeem threshold
     return clsx(getColorShade('yellow'), 'font-medium');
   } else {
@@ -225,7 +236,14 @@ const VaultsTable = (): JSX.Element => {
   );
 
   const vaults: Array<Vault> | undefined = React.useMemo(() => {
-    if (vaultsExt && collateralCurrenciesData && currentActiveBlockNumber && !currenciesIdle && !currenciesLoading && identities) {
+    if (
+      vaultsExt &&
+      collateralCurrenciesData &&
+      currentActiveBlockNumber &&
+      !currenciesIdle &&
+      !currenciesLoading &&
+      identities
+    ) {
       const rawVaults = vaultsExt.map((vaultExt) => {
         const collateral = vaultExt.id.currencies.collateral;
         const collateralTokenSymbol = getCurrencyFromIdPrimitive(collateral).ticker;

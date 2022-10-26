@@ -115,9 +115,7 @@ const Staking = (): JSX.Element => {
 
   const { selectedAccount } = useSubstrateSecureState();
 
-  // ray test touch <
   const selectedAccountAddress = selectedAccount?.address ?? '';
-  // ray test touch >
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -159,9 +157,7 @@ const Staking = (): JSX.Element => {
     error: voteGovernanceTokenBalanceError,
     refetch: voteGovernanceTokenBalanceRefetch
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
-    // ray test touch <
     [GENERIC_FETCHER, 'escrow', 'votingBalance', selectedAccountAddress],
-    // ray test touch >
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -177,9 +173,7 @@ const Staking = (): JSX.Element => {
     error: claimableRewardAmountError,
     refetch: claimableRewardAmountRefetch
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    // ray test touch <
     [GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccountAddress],
-    // ray test touch >
     genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -195,9 +189,7 @@ const Staking = (): JSX.Element => {
     error: rewardAmountAndAPYError,
     refetch: rewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
-    // ray test touch <
     [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccountAddress],
-    // ray test touch >
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
@@ -217,9 +209,7 @@ const Staking = (): JSX.Element => {
       GENERIC_FETCHER,
       'escrow',
       'getRewardEstimate',
-      // ray test touch <
       selectedAccountAddress,
-      // ray test touch >
       monetaryLockingAmount,
       blockLockTimeExtension
     ],
@@ -237,9 +227,7 @@ const Staking = (): JSX.Element => {
     error: stakedAmountAndEndBlockError,
     refetch: stakedAmountAndEndBlockRefetch
   } = useQuery<StakedAmountAndEndBlock, Error>(
-    // ray test touch <
     [GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccountAddress],
-    // ray test touch >
     genericFetcher<StakedAmountAndEndBlock>(),
     {
       enabled: !!bridgeLoaded
@@ -253,10 +241,8 @@ const Staking = (): JSX.Element => {
     data: transactionFeeReserve,
     error: transactionFeeReserveError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    // ray test touch <
     [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, selectedAccountAddress],
     stakingTransactionFeeReserveFetcher(selectedAccountAddress),
-    // ray test touch >
     {
       enabled: bridgeLoaded && !!selectedAccount
     }
