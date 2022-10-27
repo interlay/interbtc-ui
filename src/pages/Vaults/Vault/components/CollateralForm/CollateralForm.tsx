@@ -19,21 +19,19 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
-import { CollateralActions, CollateralStatus, CollateralStatusRanges } from '../../types';
-import { getCollateralStatus } from '../../utils';
-import { CollateralScore } from '../CollateralScore';
+import { CollateralActions, CollateralStatusRanges } from '../../types';
 import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr, StyledTitle } from './CollateralForm.styles';
 
-const getCollateralStatusLabel = (status: CollateralStatus) => {
-  switch (status) {
-    case 'error':
-      return '(High Risk)';
-    case 'warning':
-      return '(Medium Risk)';
-    case 'success':
-      return '(Low Risk)';
-  }
-};
+// const getCollateralStatusLabel = (status: CollateralStatus) => {
+//   switch (status) {
+//     case 'error':
+//       return '(High Risk)';
+//     case 'warning':
+//       return '(Medium Risk)';
+//     case 'success':
+//       return '(Low Risk)';
+//   }
+// };
 
 const getCollateralTokenAmount = (
   vaultCollateral: Big,
@@ -87,7 +85,6 @@ const CollateralForm = ({
   onSubmit,
   collateral,
   collateralToken,
-  ranges,
   ...props
 }: CollateralFormProps): JSX.Element => {
   const { t } = useTranslation();
@@ -98,7 +95,7 @@ const CollateralForm = ({
   const { register, handleSubmit: h, watch } = useForm<CollateralFormData>({
     mode: 'onChange'
   });
-  const [score, setScore] = useState(0);
+  // const [score, setScore] = useState(0);
 
   const tokenInputId = collateralInputId[variant];
   const inputCollateral = watch(tokenInputId) || '0';
@@ -142,7 +139,7 @@ const CollateralForm = ({
 
   useEffect(() => {
     if (!isGetCollateralizationLoading) {
-      setScore(unparsedScore?.toNumber() ?? 0);
+      // setScore(unparsedScore?.toNumber() ?? 0);
     }
   }, [isGetCollateralizationLoading, unparsedScore]);
 
@@ -231,7 +228,7 @@ const CollateralForm = ({
   const title = variant === 'deposit' ? 'Deposit Collateral' : 'Withdraw Collateral';
 
   // TODO: handle infinity collateralization in form
-  const collateralStatus = getCollateralStatus(score, ranges, false);
+  // const collateralStatus = getCollateralStatus(score, ranges, false);
 
   return (
     <form onSubmit={h(handleSubmit)} {...props}>
@@ -274,12 +271,12 @@ const CollateralForm = ({
               )}
             </StyledDd>
           </StyledDItem>
-          <CollateralScore
+          {/* <CollateralScore
             score={score}
             label={<StyledDt>New Collateralization</StyledDt>}
             sublabel={<StyledDd>{getCollateralStatusLabel(collateralStatus)}</StyledDd>}
             ranges={ranges}
-          />
+          /> */}
           <StyledDItem>
             <StyledDt>New liquidation Price</StyledDt>
             <StyledDd>
