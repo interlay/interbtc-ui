@@ -4,8 +4,6 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
 
 import {
-  CHANGE_ADDRESS,
-  ChangeAddress,
   INIT_GENERAL_DATA_ACTION,
   InitGeneralDataAction,
   IS_BRIDGE_LOADED,
@@ -14,22 +12,12 @@ import {
   IsBridgeLoaded,
   IsFaucetLoaded,
   IsVaultClientLoaded,
-  SET_INSTALLED_EXTENSION,
-  SetInstalledExtension,
   SHOW_ACCOUNT_MODAL,
   ShowAccountModal,
-  UPDATE_BALANCE_POLKA_BTC,
-  UPDATE_COLLATERAL_TOKEN_BALANCE,
-  UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
-  UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
-  UpdateBalancePolkaBTC,
-  UpdateCollateralTokenBalance,
-  UpdateCollateralTokenTransferableBalance,
   UpdateHeights,
-  UpdateTotals,
-  UpdateWrappedTokenTransferableBalance
+  UpdateTotals
 } from '../types/actions.types';
 import { ParachainStatus } from '../types/util.types';
 
@@ -46,37 +34,6 @@ export const isFaucetLoaded = (isLoaded = false): IsFaucetLoaded => ({
 export const isVaultClientLoaded = (isLoaded = false): IsVaultClientLoaded => ({
   type: IS_VAULT_CLIENT_LOADED,
   isLoaded
-});
-
-export const changeAddressAction = (address: string): ChangeAddress => ({
-  type: CHANGE_ADDRESS,
-  address
-});
-
-export const updateWrappedTokenBalanceAction = (wrappedTokenBalance: BitcoinAmount): UpdateBalancePolkaBTC => ({
-  type: UPDATE_BALANCE_POLKA_BTC,
-  wrappedTokenBalance
-});
-
-export const updateWrappedTokenTransferableBalanceAction = (
-  wrappedTokenTransferableBalance: BitcoinAmount
-): UpdateWrappedTokenTransferableBalance => ({
-  type: UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE,
-  wrappedTokenTransferableBalance
-});
-
-export const updateCollateralTokenBalanceAction = (
-  collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>
-): UpdateCollateralTokenBalance => ({
-  type: UPDATE_COLLATERAL_TOKEN_BALANCE,
-  collateralTokenBalance
-});
-
-export const updateCollateralTokenTransferableBalanceAction = (
-  collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>
-): UpdateCollateralTokenTransferableBalance => ({
-  type: UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE,
-  collateralTokenTransferableBalance
 });
 
 export const initGeneralDataAction = (
@@ -99,11 +56,6 @@ export const initGeneralDataAction = (
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({
   type: SHOW_ACCOUNT_MODAL,
   showAccountModal
-});
-
-export const setInstalledExtensionAction = (extensions: string[]): SetInstalledExtension => ({
-  type: SET_INSTALLED_EXTENSION,
-  extensions
 });
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({

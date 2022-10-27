@@ -1,16 +1,14 @@
-import { web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { Keyring } from '@polkadot/keyring';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
 
-import { changeAddressAction } from '@/common/actions/general.actions';
-import { StoreType } from '@/common/types/util.types';
 import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
-import { APP_NAME } from '@/config/relay-chains';
 import { WalletSourceName } from '@/config/wallets';
+import { SS58_FORMAT } from '@/constants';
+import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import useGetAccounts from '@/utils/hooks/api/use-get-accounts';
 
 import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';
 import ModalContentNoAccountFound from './ModalContent/ModalContentNoAccountFound';
@@ -45,61 +43,53 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
 );
 
 const AccountModal = ({ open, onClose }: Props): JSX.Element => {
-  const { bridgeLoaded, address, extensions: injectedExtensions } = useSelector((state: StoreType) => state.general);
+  const { extensions, selectedAccount, accounts } = useSubstrateSecureState();
+
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const focusRef = React.useRef(null);
   const [selectedWallet, setSelectedWallet] = React.useState<WalletSourceName | undefined>();
 
-  const accounts = useGetAccounts();
   const accountsFromSelectedWallet = React.useMemo(
     () => accounts.filter(({ meta: { source } }) => source === selectedWallet),
     [accounts, selectedWallet]
   );
 
+  const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const supportedExtensions = React.useMemo(
-    () =>
-      injectedExtensions.filter((extensionName) =>
-        Object.values(WalletSourceName).includes(extensionName as WalletSourceName)
-      ),
-    [injectedExtensions]
+    () => extensions.filter((item) => Object.values(WalletSourceName).includes(item.name as WalletSourceName)),
+    [extensions]
   );
 
   React.useEffect(() => {
     // Sets selected wallet on modal open.
     if (open) {
-      const selectedAccount = accounts.find(({ address: accountAddress }) => address === accountAddress);
       if (selectedAccount) {
         setSelectedWallet(selectedAccount.meta.source as WalletSourceName);
       } else {
         setSelectedWallet(undefined);
       }
     }
-  }, [address, accounts, open]);
+  }, [selectedAccount, open]);
 
   // State of the modal content.
   const modalContent = React.useMemo(() => {
+    if (!setSelectedAccount) return;
+    if (!removeSelectedAccount) return;
+
     const handleWalletSelect = (walletName: WalletSourceName | undefined) => {
       setSelectedWallet(walletName);
     };
 
-    const handleAccountSelect = async (newAddress: string) => {
-      if (!bridgeLoaded) {
-        return;
-      }
-
-      // TODO: should check when the app being initialized (not check everywhere)
-      await web3Enable(APP_NAME);
-      const { signer } = await web3FromAddress(newAddress);
-      window.bridge.setAccount(newAddress, signer);
-      dispatch(changeAddressAction(newAddress));
+    const handleAccountSelect = async (newAccount: InjectedAccountWithMeta) => {
+      const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
+      const theSelectedAccount = keyring.addFromAddress(newAccount.address, newAccount.meta);
+      setSelectedAccount(theSelectedAccount);
 
       onClose();
     };
 
     const handleAccountDisconnect = () => {
-      dispatch(changeAddressAction(''));
-      window.bridge.removeAccount();
+      removeSelectedAccount();
       onClose();
     };
 
@@ -116,7 +106,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
             <AccountModalContentWrapper title={t('account_modal.select_account')} focusRef={focusRef} onClose={onClose}>
               <ModalContentSelectAccount
                 accountsFromSelectedWallet={accountsFromSelectedWallet}
-                address={address}
+                address={selectedAccount ? selectedAccount.address : ''}
                 selectedWallet={selectedWallet}
                 handleAccountSelect={handleAccountSelect}
                 handleAccountDisconnect={handleAccountDisconnect}
@@ -142,13 +132,13 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
   }, [
     accounts,
     accountsFromSelectedWallet,
-    address,
-    bridgeLoaded,
-    dispatch,
+    selectedAccount,
     supportedExtensions,
     onClose,
     selectedWallet,
-    t
+    t,
+    setSelectedAccount,
+    removeSelectedAccount
   ]);
 
   return (

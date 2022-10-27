@@ -30,19 +30,17 @@ const RELAY_CHAIN_URL = process.env.REACT_APP_RELAY_CHAIN_URL;
 const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
 const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';
 
-const PRICES_URL = `https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,kintsugi,kintsugi-btc,kusama,polkadot,interlay,interlay-btc&vs_currencies=usd`;
-
 const SQUID_URL = process.env.REACT_APP_SQUID_URL || 'http://localhost:4000/graphql';
 
 const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
 // FIXME: hacky workaround to get the right ss58 prefix. Should be fetched at runtime instead
 // Possible example below:
-//       // Load the basic bridge data without depending on interbtc-api
-//      const api = await ApiPromise.create({ provider: new WsProvider(constants.PARACHAIN_URL) });
-//      // Default ss58 prefix is 42 for generic substrate chains
-//      const rawSs58Format = await (await api.rpc.system.properties()).ss58Format;
-//      const ss58Format = parseInt(rawSs58Format.unwrapOr('42').toString());
+// // Load the basic bridge data without depending on interbtc-api
+// const api = await ApiPromise.create({ provider: new WsProvider(constants.PARACHAIN_URL) });
+// // Default ss58 prefix is 42 for generic substrate chains
+// const rawSs58Format = await (await api.rpc.system.properties()).ss58Format;
+// const ss58Format = parseInt(rawSs58Format.unwrapOr('42').toString());
 let ss58Format;
 if (BITCOIN_NETWORK === BitcoinNetwork.Mainnet || BITCOIN_NETWORK === BitcoinNetwork.Testnet) {
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === 'kusama') {
@@ -88,7 +86,6 @@ export {
   FAUCET_URL,
   FEEDBACK_URL,
   PARACHAIN_URL,
-  PRICES_URL,
   RELAY_CHAIN_URL,
   SQUID_URL,
   SS58_FORMAT,

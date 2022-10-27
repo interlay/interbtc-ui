@@ -65,7 +65,7 @@ const Rewards = ({
     {
       onSuccess: () => {
         queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
-        toast.success('Your rewards were successfully withdrawed.');
+        toast.success('Your rewards were successfully withdrawn.');
       }
     }
   );

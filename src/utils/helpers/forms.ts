@@ -1,4 +1,4 @@
-import { FieldError } from 'react-hook-form';
+import { DeepRequired, FieldError, FieldErrorsImpl } from 'react-hook-form';
 
 /**
  * @param {FieldError} error - The error provided by react-hook-forms
@@ -11,4 +11,7 @@ const getErrorMessage = (error?: FieldError): undefined | string | string[] =>
         .filter((message) => typeof message === 'string') as string[])
     : error?.message;
 
-export { getErrorMessage };
+const isValidForm = <T = Record<string, unknown>>(errors: FieldErrorsImpl<DeepRequired<T>> = {}): boolean =>
+  !Object.keys(errors).length;
+
+export { getErrorMessage, isValidForm };

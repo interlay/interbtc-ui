@@ -5,10 +5,8 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { FaCheck, FaRegClock, FaRegTimesCircle } from 'react-icons/fa';
 import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
-import { StoreType } from '@/common/types/util.types';
 import { formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
@@ -23,7 +21,9 @@ import InterlayTable, {
   InterlayTr
 } from '@/components/UI/InterlayTable';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
@@ -48,7 +48,7 @@ const RedeemRequestsTable = (): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
   const updateQueryParameters = useUpdateQueryParameters();
 
-  const { address } = useSelector((state: StoreType) => state.general);
+  const { selectedAccount } = useSubstrateSecureState();
 
   const {
     isIdle: stableBitcoinConfirmationsIdle,
@@ -81,7 +81,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     error: redeemRequestsTotalCountError
     // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [GRAPHQL_FETCHER, redeemCountQuery(`userParachainAddress_eq: "${address}"`)],
+    [GRAPHQL_FETCHER, redeemCountQuery(`userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`)],
     graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(redeemRequestsTotalCountError);
@@ -97,9 +97,12 @@ const RedeemRequestsTable = (): JSX.Element => {
       REDEEMS_FETCHER,
       selectedPageIndex * TABLE_PAGE_LIMIT, // offset
       TABLE_PAGE_LIMIT, // limit
-      `userParachainAddress_eq: "${address}"` // WHERE condition
+      `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"` // WHERE condition
     ],
-    redeemsFetcher
+    redeemsFetcher,
+    {
+      refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
+    }
   );
   useErrorHandler(redeemRequestsError);
 

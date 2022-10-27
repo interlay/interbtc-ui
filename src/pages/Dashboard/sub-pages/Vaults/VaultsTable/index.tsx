@@ -33,17 +33,20 @@ import { getColorShade } from '@/utils/helpers/colors';
 import { getCollateralization, getVaultStatusLabel } from '@/utils/helpers/vaults';
 import { useGetCollateralCurrenciesData } from '@/utils/hooks/api/use-get-collateral-currencies-data';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
+import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 
 interface CollateralizationCellProps {
   settledCollateralization: Big | undefined;
   unsettledCollateralization: Big | undefined;
   collateralSecureThreshold: Big;
+  collateralPremiumThreshold: Big;
 }
 
 const CollateralizationCell = ({
   settledCollateralization,
   unsettledCollateralization,
-  collateralSecureThreshold
+  collateralSecureThreshold,
+  collateralPremiumThreshold
 }: CollateralizationCellProps) => {
   const { t } = useTranslation();
 
@@ -53,14 +56,26 @@ const CollateralizationCell = ({
     return (
       <>
         <div>
-          <p className={getCollateralizationColor(settledCollateralization, collateralSecureThreshold)}>
+          <p
+            className={getCollateralizationColor(
+              settledCollateralization,
+              collateralSecureThreshold,
+              collateralPremiumThreshold
+            )}
+          >
             {settledCollateralization === undefined
               ? '∞'
               : formatPercentage(settledCollateralization.mul(100).toNumber())}
           </p>
           <p className='text-xs'>
             <span>{t('vault.pending_table_subcell')}</span>
-            <span className={getCollateralizationColor(unsettledCollateralization, collateralSecureThreshold)}>
+            <span
+              className={getCollateralizationColor(
+                unsettledCollateralization,
+                collateralSecureThreshold,
+                collateralPremiumThreshold
+              )}
+            >
               {unsettledCollateralization === undefined
                 ? '∞'
                 : formatPercentage(unsettledCollateralization.mul(100).toNumber())}
@@ -74,12 +89,16 @@ const CollateralizationCell = ({
 
 const getCollateralizationColor = (
   collateralization: Big | undefined,
-  collateralSecureThreshold: Big
+  collateralSecureThreshold: Big,
+  collateralPremiumThreshold: Big
 ): string | undefined => {
   if (collateralization === undefined) return undefined;
 
   if (collateralization.gte(collateralSecureThreshold)) {
     return clsx(getColorShade('green'), 'font-medium');
+  } else if (collateralization.gte(collateralPremiumThreshold)) {
+    // Below premium redeem threshold
+    return clsx(getColorShade('yellow'), 'font-medium');
   } else {
     // Liquidation
     return clsx(getColorShade('red'), 'font-medium');
@@ -89,6 +108,7 @@ const getCollateralizationColor = (
 enum Accessor {
   VaultId = 'vaultId',
   Collateral = 'collateral',
+  Identity = 'identity',
   LockedCollateralTokenAmount = 'lockedCollateralTokenAmount',
   LockedBTCAmount = 'lockedBTCAmount',
   PendingBTCAmount = 'pendingBTCAmount',
@@ -98,6 +118,8 @@ enum Accessor {
 
 interface Vault {
   [Accessor.VaultId]: string;
+  [Accessor.Collateral]: string;
+  [Accessor.Identity]: string | undefined;
   [Accessor.LockedCollateralTokenAmount]: string;
   [Accessor.LockedBTCAmount]: BitcoinAmount;
   [Accessor.PendingBTCAmount]: string;
@@ -142,6 +164,14 @@ const VaultsTable = (): JSX.Element => {
   });
   useErrorHandler(vaultsExtError);
 
+  const {
+    isIdle: identitiesIdle,
+    isLoading: identitiesLoading,
+    data: identities,
+    error: identitiesError
+  } = useGetIdentities(bridgeLoaded);
+  useErrorHandler(identitiesError);
+
   const columns = React.useMemo(
     () => [
       {
@@ -153,9 +183,9 @@ const VaultsTable = (): JSX.Element => {
         }
       },
       {
-        Header: t('collateral'),
-        accessor: Accessor.Collateral,
-        classNames: ['text-center']
+        Header: t('identity'),
+        accessor: Accessor.Identity,
+        classNames: ['text-left']
       },
       {
         Header: t('locked_collateral'),
@@ -206,13 +236,21 @@ const VaultsTable = (): JSX.Element => {
   );
 
   const vaults: Array<Vault> | undefined = React.useMemo(() => {
-    if (vaultsExt && collateralCurrenciesData && currentActiveBlockNumber && !currenciesIdle && !currenciesLoading) {
+    if (
+      vaultsExt &&
+      collateralCurrenciesData &&
+      currentActiveBlockNumber &&
+      !currenciesIdle &&
+      !currenciesLoading &&
+      identities
+    ) {
       const rawVaults = vaultsExt.map((vaultExt) => {
         const collateral = vaultExt.id.currencies.collateral;
         const collateralTokenSymbol = getCurrencyFromIdPrimitive(collateral).ticker;
 
         const collateralLiquidationThreshold = collateralCurrenciesData[collateralTokenSymbol].liquidationThreshold;
         const collateralSecureThreshold = collateralCurrenciesData[collateralTokenSymbol].secureThreshold;
+        const collateralPremiumThreshold = collateralCurrenciesData[collateralTokenSymbol].premiumThreshold;
         const btcToCollateralTokenRate = collateralCurrenciesData[collateralTokenSymbol].exchangeRate;
         const statusLabel = getVaultStatusLabel(
           vaultExt,
@@ -233,9 +271,12 @@ const VaultsTable = (): JSX.Element => {
           btcToCollateralTokenRate
         );
 
+        const identity = identities.get(vaultExt.id.accountId.toString());
+
         return {
           [Accessor.VaultId]: vaultExt.id.accountId.toString(),
           [Accessor.Collateral]: collateralTokenSymbol,
+          [Accessor.Identity]: identity,
           // TODO: fetch collateral reserved
           [Accessor.LockedCollateralTokenAmount]: `${displayMonetaryAmount(vaultCollateral)} ${collateralTokenSymbol}`,
           [Accessor.LockedBTCAmount]: settledTokens,
@@ -245,6 +286,7 @@ const VaultsTable = (): JSX.Element => {
               settledCollateralization={settledCollateralization}
               unsettledCollateralization={unsettledCollateralization}
               collateralSecureThreshold={collateralSecureThreshold}
+              collateralPremiumThreshold={collateralPremiumThreshold}
             />
           ),
           [Accessor.Status]: statusLabel
@@ -266,7 +308,8 @@ const VaultsTable = (): JSX.Element => {
     vaultsExt,
     currenciesIdle,
     currenciesLoading,
-    getCurrencyFromIdPrimitive
+    getCurrencyFromIdPrimitive,
+    identities
   ]);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
@@ -281,7 +324,9 @@ const VaultsTable = (): JSX.Element => {
       collateralCurrenciesDataIdle ||
       collateralCurrenciesDataLoading ||
       vaultsExtIdle ||
-      vaultsExtLoading
+      vaultsExtLoading ||
+      identitiesIdle ||
+      identitiesLoading
     ) {
       return <PrimaryColorEllipsisLoader />;
     }

@@ -8,9 +8,11 @@ import { Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
+import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
@@ -21,7 +23,8 @@ import VaultIssueRequestsTable from './VaultIssueRequestsTable';
 import VaultRedeemRequestsTable from './VaultRedeemRequestsTable';
 
 const VaultDashboard = (): JSX.Element => {
-  const { vaultClientLoaded, address, bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { selectedAccount } = useSubstrateSecureState();
+  const { vaultClientLoaded, bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const {
     [URL_PARAMETERS.VAULT.ACCOUNT]: selectedVaultAccountAddress,
     [URL_PARAMETERS.VAULT.COLLATERAL]: vaultCollateral
@@ -29,11 +32,14 @@ const VaultDashboard = (): JSX.Element => {
 
   const vaultData = useGetVaultData({ address: selectedVaultAccountAddress });
   const transactions = useGetVaultTransactions(selectedVaultAccountAddress, vaultCollateral, bridgeLoaded);
+  const { isIdle: identitiesIdle, isLoading: identitiesLoading, data: identities } = useGetIdentities(bridgeLoaded);
+
   const { getCurrencyFromTicker, isSuccess: currenciesSuccess } = useGetCurrencies(bridgeLoaded);
 
   const vault = vaultData?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
+  const displayName = identities?.get(selectedVaultAccountAddress);
 
-  if (!vault || !transactions || !currenciesSuccess) {
+  if (!vault || !transactions || !currenciesSuccess || identitiesIdle || identitiesLoading) {
     return (
       <MainContainer>
         <Stack>
@@ -77,7 +83,7 @@ const VaultDashboard = (): JSX.Element => {
     }
   ];
 
-  const isReadOnlyVault = !vaultClientLoaded || address !== selectedVaultAccountAddress;
+  const isReadOnlyVault = !vaultClientLoaded || selectedAccount?.address !== selectedVaultAccountAddress;
 
   return (
     <MainContainer>
@@ -87,6 +93,7 @@ const VaultDashboard = (): JSX.Element => {
           collateralAmount={vault.collateral.raw}
           vaultStatus={vault?.vaultStatus}
           vaultAddress={selectedVaultAccountAddress}
+          vaultDisplayName={displayName}
           collateralToken={collateralToken}
           lockedAmountBTC={vault.issuedTokens.amount}
           hasManageVaultBtn={!isReadOnlyVault}

@@ -45,32 +45,12 @@ export enum ParachainStatus {
   Shutdown
 }
 
-export type Price = {
-  usd: number;
-};
-
-export type Prices = {
-  bitcoin: Price;
-  polkadot: Price;
-  interlay: Price;
-  'interlay-btc': Price;
-  kintsugi?: Price;
-  'kintsugi-btc': Price;
-  kusama: Price;
-};
-
 export type GeneralState = {
   bridgeLoaded: boolean;
   vaultClientLoaded: boolean;
   showAccountModal: boolean;
-  address: string;
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
-  wrappedTokenBalance: BitcoinAmount;
-  wrappedTokenTransferableBalance: BitcoinAmount;
-  collateralTokenBalance: MonetaryAmount<CollateralCurrencyExt>;
-  collateralTokenTransferableBalance: MonetaryAmount<CollateralCurrencyExt>;
-  extensions: string[];
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;

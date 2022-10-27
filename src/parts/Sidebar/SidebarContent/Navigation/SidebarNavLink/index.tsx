@@ -1,4 +1,4 @@
-import { ExternalLinkIcon } from '@heroicons/react/outline';
+import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
 import InterlayLink, { Props as InterlayLinkProps } from '@/components/UI/InterlayLink';
@@ -20,7 +20,7 @@ const SidebarNavLink = ({
     {external ? (
       <InterlayLink className={clsx('hover:no-underline', className)} href={href} {...rest}>
         {children}
-        <ExternalLinkIcon className={clsx('flex-shrink-0', 'w-4', 'h-4', 'ml-1')} />
+        <ArrowTopRightOnSquareIcon className={clsx('flex-shrink-0', 'w-4', 'h-4', 'ml-1')} />
       </InterlayLink>
     ) : (
       <InterlayRouterNavLink className={className} to={href} {...rest}>

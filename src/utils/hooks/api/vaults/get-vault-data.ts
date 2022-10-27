@@ -1,6 +1,5 @@
 import {
   CollateralCurrencyExt,
-  CollateralIdLiteral,
   newMonetaryAmount,
   VaultExt,
   VaultStatusExt,
@@ -11,7 +10,6 @@ import { AccountId } from '@polkadot/types/interfaces';
 import { encodeAddress } from '@polkadot/util-crypto';
 import Big from 'big.js';
 
-import { Prices } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import {
   GOVERNANCE_TOKEN,
@@ -28,12 +26,14 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
+import { Prices } from '../use-get-prices';
+
 interface VaultData {
   apy: Big;
   collateralization: Big | undefined;
   issuableTokens: MonetaryAmount<CollateralCurrencyExt>;
   pendingRequests: number;
-  collateralId: CollateralIdLiteral;
+  collateralId: string;
   wrappedId: WrappedIdLiteral;
   issuedTokens: {
     raw: BitcoinAmount;
@@ -80,8 +80,8 @@ const getRemainingCapacity = (issuableTokens: Big, vaultExt: VaultExt): number =
 };
 
 const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Prices | undefined): Promise<VaultData> => {
-  const collateralTokenIdLiteral = vault.backingCollateral.currency.ticker as CollateralIdLiteral;
-  const collateralTokenPrice = getTokenPrice(prices, collateralTokenIdLiteral);
+  const collateralTokenTicker = vault.backingCollateral.currency.ticker;
+  const collateralTokenPrice = getTokenPrice(prices, collateralTokenTicker);
   const bitcoinPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC);
 
   // TODO: api calls should be consolidated when vault data is available through GraphQL
@@ -173,7 +173,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
       usd: usdIssuedTokens ?? 0
     },
     pendingRequests,
-    collateralId: collateralTokenIdLiteral,
+    collateralId: collateralTokenTicker,
     wrappedId: WRAPPED_TOKEN_SYMBOL,
     collateral: {
       raw: collateral,

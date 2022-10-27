@@ -8,6 +8,7 @@ import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils'
 import { Grid, GridItem, InfoBox, VaultCard } from '@/component-library';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
@@ -16,8 +17,12 @@ import { CreateVaults, VaultsHeader } from './components';
 
 const VaultOverview = (): JSX.Element => {
   const { [URL_PARAMETERS.VAULT.ACCOUNT]: accountAddress } = useParams<Record<string, string>>();
+
   const vaultOverview = useGetVaultData({ address: accountAddress });
-  const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
+
+  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
+
+  const { selectedAccount } = useSubstrateSecureState();
 
   const { t } = useTranslation();
 
@@ -31,7 +36,7 @@ const VaultOverview = (): JSX.Element => {
   }
 
   // TODO: remove redux dependency after account handling
-  const isReadOnlyOverview = !vaultClientLoaded || address !== accountAddress;
+  const isReadOnlyOverview = !vaultClientLoaded || selectedAccount?.address !== accountAddress;
 
   return (
     <MainContainer>
@@ -58,7 +63,7 @@ const VaultOverview = (): JSX.Element => {
         {vaultOverview.vaults?.map((vault) => (
           <GridItem key={vault.collateralId} mobile={{ span: 4 }} desktop={{ span: 3 }}>
             <VaultCard
-              collateralSymbol={vault.collateralId}
+              collateralTokenTicker={vault.collateralId}
               wrappedSymbol={vault.wrappedId}
               pendingRequests={formatNumber(vault.pendingRequests)}
               apy={formatPercentage(vault.apy.toNumber())}

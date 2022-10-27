@@ -1,4 +1,4 @@
-import { CollateralCurrencyExt, GovernanceCurrency, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, GovernanceCurrency, Issue } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -25,15 +25,17 @@ import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenLogoIcon,
+  TRANSACTION_FEE_AMOUNT,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -51,20 +53,6 @@ interface Props {
   collateralToken: CollateralCurrencyExt;
   vaultAddress: string;
 }
-
-let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
-if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.2;
-} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.01;
-} else {
-  throw new Error('Something went wrong!');
-}
-const extraRequiredCollateralTokenAmount = newMonetaryAmount(
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT,
-  GOVERNANCE_TOKEN,
-  true
-);
 
 // TODO: share form with bridge page
 const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Props): JSX.Element => {
@@ -99,15 +87,12 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
   const handleError = useErrorHandler();
 
-  const { bridgeLoaded, address, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
 
-  const {
-    governanceTokenBalanceIdle,
-    governanceTokenBalanceLoading,
-    governanceTokenBalance
-  } = useGovernanceTokenBalance();
+  const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
 
   const vaultAccountId = useAccountId(vaultAddress);
 
@@ -164,15 +149,11 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     })();
   }, [collateralToken, bridgeLoaded, handleError, vaultAccountId, setError, t]);
 
-  if (
-    status === STATUSES.IDLE ||
-    status === STATUSES.PENDING ||
-    vaultAccountId === undefined ||
-    governanceTokenBalanceIdle ||
-    governanceTokenBalanceLoading
-  ) {
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING || vaultAccountId === undefined || isBalancesLoading) {
     return <></>;
   }
+
+  const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
 
   if (governanceTokenBalance === undefined) {
     throw new Error('Something went wrong!');
@@ -209,7 +190,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
     const btcAmount = new BitcoinAmount(numericValue);
 
     const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
-    const minRequiredGovernanceTokenAmount = extraRequiredCollateralTokenAmount.add(securityDeposit);
+    const minRequiredGovernanceTokenAmount = TRANSACTION_FEE_AMOUNT.add(securityDeposit);
     if (governanceTokenBalance.free.lte(minRequiredGovernanceTokenAmount)) {
       return t('insufficient_funds_governance_token', {
         governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
@@ -373,10 +354,10 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
                 </h5>
               }
               unitIcon={<GovernanceTokenLogoIcon width={20} />}
-              value={displayMonetaryAmount(extraRequiredCollateralTokenAmount)}
+              value={displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)}
               unitName={GOVERNANCE_TOKEN_SYMBOL}
               approxUSD={displayMonetaryAmountInUSDFormat(
-                extraRequiredCollateralTokenAmount,
+                TRANSACTION_FEE_AMOUNT,
                 getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
               )}
               tooltip={
@@ -412,7 +393,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
             <SubmitButton
               disabled={
                 // TODO: `parachainStatus` and `address` should be checked at upper levels
-                parachainStatus !== ParachainStatus.Running || !address
+                parachainStatus !== ParachainStatus.Running || !selectedAccount
               }
               pending={submitStatus === STATUSES.PENDING}
             >

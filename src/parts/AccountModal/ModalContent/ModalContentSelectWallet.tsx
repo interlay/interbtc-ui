@@ -1,3 +1,4 @@
+import { InjectedExtension } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 
 import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
@@ -6,19 +7,19 @@ import { WALLETS, WalletSourceName } from '@/config/wallets';
 import { ACCOUNT_MODAL_BUTTON_CLASSES } from '..';
 
 interface ModalContentSelectWalletProps {
-  extensions: string[];
+  extensions: InjectedExtension[];
   handleWalletSelect: (wallet: WalletSourceName | undefined) => void;
 }
 
 const ModalContentSelectWallet = ({ extensions, handleWalletSelect }: ModalContentSelectWalletProps): JSX.Element => (
   <ul className='space-y-4'>
-    {extensions.map((extensionName) => {
-      const { LogoIcon, name } = WALLETS[extensionName as WalletSourceName];
+    {extensions.map((item) => {
+      const { LogoIcon, name } = WALLETS[item.name as WalletSourceName];
       return (
-        <li key={extensionName}>
+        <li key={item.name}>
           <InterlayButtonBase
             className={clsx(ACCOUNT_MODAL_BUTTON_CLASSES, 'w-full')}
-            onClick={() => handleWalletSelect(extensionName as WalletSourceName)}
+            onClick={() => handleWalletSelect(item.name as WalletSourceName)}
           >
             <LogoIcon width={30} height={30} />
             <span className='pl-2'>{name}</span>

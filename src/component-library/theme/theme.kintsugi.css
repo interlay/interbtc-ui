@@ -17,6 +17,7 @@
   --colors-bg-primary: var(--colors-dark-blue);
   --colors-card-bg: var(--colors-dark-blue);
   --colors-card-secondary-bg: var(--colors-neutral-white-06);
+  /* CTA */
   --colors-cta-primary: var(--colors-yellow);
   --colors-cta-primary-hover: var(--colors-dark-yellow);
   --colors-cta-primary-text: var(--colors-neutral-black);
@@ -25,6 +26,8 @@
   --colors-cta-outlined-text: var(--colors-yellow);
   --colors-cta-outlined-border: var(--colors-yellow);
   --colors-cta-outlined-hover: var(--colors-yellow-05);
+  --colors-cta-text-text: var(--colors-neutral-white);
+  --colors-cta-text-hover: var(--colors-neutral-white-05);
   --colors-text-primary: var(--colors-neutral-white);
   --colors-text-secondary: var(--colors-yellow);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
@@ -41,9 +44,12 @@
   --colors-indeterminate-secondary-bg: var(--colors-neutral-lighter-grey);
   --colors-indeterminate-outlined-color: var(--colors-yellow);
   --colors-indeterminate-outlined-bg: var(--colors-mid-blue);
-  /* Score Bar */
-  --colors-score-bar-indicator-color: var(--colors-yellow);
-  --colors-score-bar-separator-color: var(--colors-neutral-white);
+  /* Meter */
+  --colors-meter-bar-indicator-color: var(--colors-yellow);
+  --colors-meter-bar-separator-color: var(--colors-neutral-white);
+  --colors-meter-bar-success-color: var(--colors-success-dark);
+  --colors-meter-bar-warning-color: var(--colors-warning-dark);
+  --colors-meter-bar-error-color: var(--colors-error-dark);
   /* Progress Circle */
   --color-progress-circle-mask: var(--colors-mid-blue);
   --color-progress-circle-fill: var(--colors-yellow);

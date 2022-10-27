@@ -1,15 +1,18 @@
 import {
+  ArrowPathIcon,
+  ArrowPathRoundedSquareIcon,
+  ArrowsRightLeftIcon,
+  BanknotesIcon,
   BookOpenIcon,
-  CashIcon,
-  ChartSquareBarIcon,
-  ChipIcon,
-  ClipboardListIcon,
-  CurrencyDollarIcon,
+  ChartBarSquareIcon,
+  CircleStackIcon,
+  ClipboardDocumentListIcon,
+  CpuChipIcon,
   DocumentTextIcon,
-  RefreshIcon,
-  ScaleIcon,
-  SwitchHorizontalIcon
-} from '@heroicons/react/outline';
+  HandRaisedIcon,
+  PresentationChartBarIcon,
+  ScaleIcon
+} from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +31,7 @@ import {
   USE_WRAPPED_CURRENCY_LINK,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
@@ -46,6 +50,10 @@ const TEXT_CLASSES_FOR_UNSELECTED = clsx(
   { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
+const TEXT_CLASSES_FOR_DISABLED = clsx(
+  { 'text-gray-500': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+  { 'dark:text-gray-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+);
 
 const Navigation = ({
   onSmallScreen = false,
@@ -54,54 +62,56 @@ const Navigation = ({
 }: CustomProps & React.ComponentPropsWithRef<'nav'>): JSX.Element => {
   const location = useLocation();
   const { t } = useTranslation();
-  const { vaultClientLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { selectedAccount } = useSubstrateSecureState();
+  const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
       {
         name: 'nav_bridge',
         link: PAGES.BRIDGE,
-        icon: RefreshIcon,
+        icon: ArrowPathIcon,
         hidden: false
       },
       {
         name: 'nav_transfer',
         link: PAGES.TRANSFER,
-        icon: SwitchHorizontalIcon
+        icon: ArrowsRightLeftIcon
+      },
+      {
+        name: 'nav_lending',
+        link: '#',
+        icon: PresentationChartBarIcon,
+        disabled: true
+      },
+      {
+        name: 'nav_swap',
+        link: '#',
+        icon: ArrowPathRoundedSquareIcon,
+        disabled: true
       },
       {
         name: 'nav_transactions',
         link: PAGES.TRANSACTIONS,
-        icon: ClipboardListIcon,
+        icon: ClipboardDocumentListIcon,
         hidden: false
       },
       {
         name: 'nav_staking',
         link: PAGES.STAKING,
-        icon: CashIcon
+        icon: CircleStackIcon
       },
       {
-        name: 'nav_dashboard',
+        name: 'nav_stats',
         link: PAGES.DASHBOARD,
-        icon: ChartSquareBarIcon,
+        icon: ChartBarSquareIcon,
         hidden: false
       },
       {
         name: 'nav_vaults',
-        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, address)}`,
-        icon: ChipIcon,
+        link: `${PAGES.VAULTS.replace(`:${URL_PARAMETERS.VAULT.ACCOUNT}`, selectedAccount?.address ?? '')}`,
+        icon: CpuChipIcon,
         hidden: !vaultClientLoaded
-      },
-      {
-        name: 'nav_use_wrapped',
-        link: USE_WRAPPED_CURRENCY_LINK,
-        icon: CurrencyDollarIcon,
-        hidden: !USE_WRAPPED_CURRENCY_LINK,
-        external: true,
-        rest: {
-          target: '_blank',
-          rel: 'noopener noreferrer'
-        }
       },
       {
         name: 'separator',
@@ -110,9 +120,20 @@ const Navigation = ({
         separator: true
       },
       {
+        name: 'nav_use_wrapped',
+        link: USE_WRAPPED_CURRENCY_LINK,
+        icon: HandRaisedIcon,
+        hidden: !USE_WRAPPED_CURRENCY_LINK,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
         name: 'nav_crowdloan',
         link: CROWDLOAN_LINK,
-        icon: CashIcon,
+        icon: BanknotesIcon,
         external: true,
         // This will suppress the link on testnet
         hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' || !CROWDLOAN_LINK,
@@ -154,7 +175,7 @@ const Navigation = ({
         }
       }
     ],
-    [address, vaultClientLoaded]
+    [selectedAccount, vaultClientLoaded]
   );
 
   return (
@@ -166,6 +187,37 @@ const Navigation = ({
 
         if (navigationItem.hidden) {
           return null;
+        }
+
+        if (navigationItem.disabled) {
+          return (
+            <p
+              key={navigationItem.name}
+              className={clsx(
+                TEXT_CLASSES_FOR_DISABLED,
+                'group',
+                'flex',
+                'items-center',
+                'px-2',
+                'py-2',
+                onSmallScreen ? 'text-base' : 'text-sm',
+                'font-light',
+                'rounded-md'
+              )}
+            >
+              <navigationItem.icon
+                className={clsx(
+                  TEXT_CLASSES_FOR_DISABLED,
+                  onSmallScreen ? 'mr-4' : 'mr-3',
+                  'flex-shrink-0',
+                  'w-6',
+                  'h-6'
+                )}
+                aria-hidden='true'
+              />
+              {t(navigationItem.name)} ({t('coming_soon')})
+            </p>
+          );
         }
 
         const match = matchPath(location.pathname, {

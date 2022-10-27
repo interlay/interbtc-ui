@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
+import { Sizes } from '../utils/prop-types';
 
 type BaseInputProps = {
-  $isDisabled?: boolean;
+  $size: Sizes;
+  $resize?: boolean;
 };
 
 const StyledBaseInput = styled.input<BaseInputProps>`
@@ -18,14 +20,16 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   font: inherit;
   letter-spacing: inherit;
   background: none;
-  color: ${(props) => (props.$isDisabled ? theme.input.disabled.color : theme.input.color)};
+  color: ${(props) => (props.disabled ? theme.input.disabled.color : theme.input.color)};
+  font-size: ${({ $size, $resize }) =>
+    $size === 'large' && $resize ? theme.input.overflow.large.text : theme.input[$size].text};
 
   &:focus {
     box-shadow: none;
   }
 
   &::placeholder {
-    color: ${(props) => (props.$isDisabled ? theme.input.disabled.color : theme.colors.textTertiary)};
+    color: ${(props) => (props.disabled ? theme.input.disabled.color : theme.colors.textTertiary)};
   }
 
   /* MEMO: inspired by https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp */
@@ -45,10 +49,12 @@ type BaseInputWrapperProps = {
   $hasEndAdornment?: boolean;
   $hasError?: boolean;
   $isDisabled?: boolean;
+  $overflow: boolean;
+  $size: Sizes;
 };
 
 const BaseInputWrapper = styled.div<BaseInputWrapperProps>`
-  height: 100%;
+  height: ${({ $overflow, $size }) => ($overflow && $size !== 'large' ? '100%' : theme.input.overflow.large.height)};
   background-color: ${theme.input.background};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};

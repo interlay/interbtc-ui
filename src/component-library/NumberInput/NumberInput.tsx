@@ -2,7 +2,7 @@ import { useNumberField } from '@react-aria/numberfield';
 import { mergeProps } from '@react-aria/utils';
 import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
-import { forwardRef, KeyboardEventHandler, useEffect } from 'react';
+import { ChangeEventHandler, forwardRef, useEffect, useState } from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
@@ -35,12 +35,15 @@ type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   ({ onChange, formatOptions, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
+
     const state = useNumberFieldState({
       ...props,
       formatOptions: formatOptions || defaultFormatOptions,
       locale
     });
     const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(props, state, inputRef);
+
+    const [resize, setResize] = useState({ state: false, position: 0 });
 
     useEffect(() => {
       const input = inputRef.current;
@@ -50,14 +53,33 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       return () => input?.removeEventListener('wheel', handleWheel);
     }, [inputRef]);
 
-    const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
-      // TODO: add key codes to utils
-      if (e.code === 'Comma') {
-        e.preventDefault();
+    // Sets input to resize at a certain conditions
+    useEffect(() => {
+      const inputEl = inputRef.current;
+
+      if (!inputEl) return;
+
+      // purposely used value here so it is included in
+      // the useEffect deps array
+      const value = inputProps.value as string;
+
+      // Condition is true when input text overflows available width
+      if (!resize.state && inputEl.clientWidth < inputEl.scrollWidth) {
+        return setResize({ state: true, position: value.length });
+      }
+
+      // Checks if was are back at the position when resize happened.
+      if (resize.state && value.length < resize.position) {
+        return setResize({ state: false, position: 0 });
+      }
+    }, [inputProps.value, inputRef, resize.position, resize.state]);
+
+    // Only emit event when value is valid
+    const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+      if ((e.target as HTMLInputElement).value.match(/^[0-9]*[.]?[0-9]*$/)) {
+        onChange?.(e);
       }
     };
-
-    const otherProps: Partial<NumberInputProps> = { onChange, onKeyDown: handleKeyDown };
 
     return (
       <BaseInput
@@ -65,7 +87,8 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
         labelProps={labelProps}
-        {...mergeProps(props, inputProps, otherProps)}
+        resize={resize.state}
+        {...mergeProps(props, inputProps, { onChange: handleChange })}
       />
     );
   }

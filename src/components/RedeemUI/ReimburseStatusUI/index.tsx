@@ -16,6 +16,7 @@ import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -31,7 +32,8 @@ interface Props {
 const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
   const prices = useGetPrices();
 
-  const { bridgeLoaded, address } = useSelector((state: StoreType) => state.general);
+  const { selectedAccount } = useSubstrateSecureState();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
     newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
   );
@@ -114,7 +116,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
     reimburseMutation.mutate(redeem);
   };
 
-  const isOwner = address === redeem.userParachainAddress;
+  const isOwner = selectedAccount?.address === redeem.userParachainAddress;
 
   return (
     <RequestWrapper className='lg:px-12'>

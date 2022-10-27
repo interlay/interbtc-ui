@@ -97,6 +97,21 @@ const theme = {
       error: {
         color: 'var(--colors-error-dark)'
       }
+    },
+    small: {
+      text: 'var(--text-s)'
+    },
+    medium: {
+      text: 'var(--text-base)'
+    },
+    large: {
+      text: 'var(--text-5xl)'
+    },
+    overflow: {
+      large: {
+        text: 'var(--text-2xl)',
+        height: '4.6875rem'
+      }
     }
   },
   card: {
@@ -117,6 +132,10 @@ const theme = {
       text: 'var(--colors-cta-outlined-text)',
       border: '1px solid var(--colors-cta-outlined-border)',
       bgHover: 'var(--colors-cta-outlined-hover)'
+    },
+    text: {
+      text: 'var(--colors-cta-text-text)',
+      bgHover: 'var(--colors-cta-text-hover)'
     },
     small: {
       padding: 'var(--spacing-2)',
@@ -156,26 +175,28 @@ const theme = {
     },
     border: '1px solid var(--colors-border)'
   },
-  score: {
+  meter: {
     bar: {
       status: {
-        error: 'var(--colors-error-dark)',
-        warning: 'var(--colors-warning-dark)',
-        success: 'var(--colors-success-dark)'
+        error: 'var(--colors-meter-bar-error-color)',
+        warning: 'var(--colors-meter-bar-warning-color)',
+        success: 'var(--colors-meter-bar-success-color)'
       },
-      bg:
-        'linear-gradient(270deg, var(--colors-success-dark) 0%, var(--colors-warning-dark) 50%, var(--colors-error-dark) 100%)',
+      bg: `linear-gradient(270deg, 
+          var(--colors-meter-bar-success-color) 0%, 
+          var(--colors-meter-bar-warning-color) 50%, 
+          var(--colors-meter-bar-error-color) 100%)`,
       height: '10px',
       radius: 'var(--rounded-full)',
       indicator: {
         border: {
           left: '10px solid transparent',
           right: '10px solid transparent',
-          bottom: '18px solid var(--colors-score-bar-indicator-color)'
+          bottom: '18px solid var(--colors-meter-bar-indicator-color)'
         }
       },
       separator: {
-        color: 'var(--colors-score-bar-separator-color)'
+        color: 'var(--colors-meter-bar-separator-color)'
       }
     }
   },
@@ -194,6 +215,10 @@ const theme = {
         bg: 'var(--colors-indeterminate-secondary-bg)'
       },
       outlined: {
+        color: 'var(--colors-indeterminate-outlined-color)',
+        bg: 'var(--colors-indeterminate-outlined-bg)'
+      },
+      text: {
         color: 'var(--colors-indeterminate-outlined-color)',
         bg: 'var(--colors-indeterminate-outlined-bg)'
       }
@@ -232,9 +257,6 @@ const theme = {
     large: {
       width: '5.625rem'
     }
-  },
-  tokenInput: {
-    height: '4.813rem'
   },
   modal: {
     title: {

@@ -1,4 +1,4 @@
-import { CollateralCurrencyExt, CurrencyExt, GovernanceCurrency, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralCurrencyExt, CurrencyExt, GovernanceCurrency } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate, MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import Big from 'big.js';
@@ -12,10 +12,14 @@ import { useParams } from 'react-router';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { CTA, Input, Stack, TokenInput } from '@/component-library';
-import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import {
+  GOVERNANCE_TOKEN,
+  GOVERNANCE_TOKEN_SYMBOL,
+  TRANSACTION_FEE_AMOUNT,
+  WRAPPED_TOKEN_SYMBOL
+} from '@/config/relay-chains';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import useAccountId from '@/utils/hooks/use-account-id';
@@ -24,20 +28,6 @@ import { TreasuryActions } from '../../types';
 import { HighlightDescriptionItem } from './HighlightDescriptionItem';
 import { IssueDescriptionItem } from './IssueDescriptionItem';
 import { StyledDescription, StyledDl, StyledHr, StyledInputLabel, StyledTitle } from './IssueRedeemForm.styles';
-
-let EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT: number;
-if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.2;
-} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT = 0.01;
-} else {
-  throw new Error('Something went wrong!');
-}
-const extraRequiredCollateralTokenAmount = newMonetaryAmount(
-  EXTRA_REQUIRED_COLLATERAL_TOKEN_AMOUNT,
-  GOVERNANCE_TOKEN,
-  true
-);
 
 const ISSUE_AMOUNT = 'issue-amount';
 const REDEEM_AMOUNT = 'withdraw-collateral-amount';
@@ -105,12 +95,6 @@ const IssueRedeemForm = ({
     bridgeLoaded
     // , address, bitcoinHeight, btcRelayHeight, parachainStatus
   } = useSelector((state: StoreType) => state.general);
-
-  // const {
-  //   governanceTokenBalanceIdle,
-  //   governanceTokenBalanceLoading,
-  //   governanceTokenBalance
-  // } = useGovernanceTokenBalance();
 
   const vaultAccountId = useAccountId(vaultAddress);
 
@@ -241,9 +225,9 @@ const IssueRedeemForm = ({
                 <IssueDescriptionItem
                   informative
                   term='Transaction Fee'
-                  detail={`${displayMonetaryAmount(extraRequiredCollateralTokenAmount)} ${GOVERNANCE_TOKEN_SYMBOL}`}
+                  detail={`${displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} ${GOVERNANCE_TOKEN_SYMBOL}`}
                   subdetail={`(${displayMonetaryAmountInUSDFormat(
-                    extraRequiredCollateralTokenAmount,
+                    TRANSACTION_FEE_AMOUNT,
                     getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
                   )})`}
                 />

@@ -1,4 +1,3 @@
-import { CollateralIdLiteral } from '@interlay/interbtc-api';
 import clsx from 'clsx';
 import { useErrorHandler } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -50,7 +49,7 @@ const Vaults = (): JSX.Element => {
             key={item.ticker}
             collateralToken={item}
             collateralTokenSymbol={item.ticker}
-            collateralTokenPriceInUSD={getTokenPrice(prices, item.ticker as CollateralIdLiteral)?.usd}
+            collateralTokenPriceInUSD={getTokenPrice(prices, item.ticker)?.usd}
           />
         ))}
       </div>

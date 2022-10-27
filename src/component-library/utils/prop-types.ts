@@ -1,6 +1,8 @@
 export const tuple = <T extends string[]>(...args: T): T => args;
 
-export const variant = tuple('primary', 'secondary', 'outlined');
+export const variant = tuple('primary', 'secondary');
+
+export const ctaVariant = tuple(...variant, 'outlined', 'text');
 
 export const status = tuple('error', 'warning', 'success');
 
@@ -20,6 +22,8 @@ export const justifyContent = tuple(
 export const alignItems = tuple('flex-start', 'center', 'flex-end', 'stretch', 'baseline');
 
 export type Variants = typeof variant[number];
+
+export type CTAVariants = typeof ctaVariant[number];
 
 export type Status = typeof status[number];
 
