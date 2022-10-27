@@ -8,6 +8,8 @@ import { Provider } from 'react-redux';
 import { Route, Router } from 'react-router-dom';
 import { createStore } from 'redux';
 
+import { SubstrateLoadingAndErrorHandlingWrapper, SubstrateProvider } from '@/lib/substrate';
+
 import { rootReducer } from '../common/reducers';
 
 const queryClient = new QueryClient();
@@ -26,7 +28,11 @@ const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactN
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <Provider store={testStore}>
-            <Route> {children} </Route>
+            <Route>
+              <SubstrateProvider>
+                <SubstrateLoadingAndErrorHandlingWrapper>{children}</SubstrateLoadingAndErrorHandlingWrapper>
+              </SubstrateProvider>
+            </Route>
           </Provider>
         </HelmetProvider>
       </QueryClientProvider>

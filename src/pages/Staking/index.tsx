@@ -44,11 +44,11 @@ import {
   STAKING_TRANSACTION_FEE_RESERVE_FETCHER,
   stakingTransactionFeeReserveFetcher
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
-import { useGovernanceTokenBalance } from '@/services/hooks/use-token-balance';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
 import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import BalancesUI from './BalancesUI';
@@ -114,13 +114,13 @@ const Staking = (): JSX.Element => {
   const prices = useGetPrices();
 
   const { selectedAccount } = useSubstrateSecureState();
+
+  const selectedAccountAddress = selectedAccount?.address ?? '';
+
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
-  const {
-    governanceTokenBalanceIdle,
-    governanceTokenBalanceLoading,
-    governanceTokenBalance
-  } = useGovernanceTokenBalance();
+  const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
+  const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
 
   const {
     register,
@@ -157,7 +157,7 @@ const Staking = (): JSX.Element => {
     error: voteGovernanceTokenBalanceError,
     refetch: voteGovernanceTokenBalanceRefetch
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
-    [GENERIC_FETCHER, 'escrow', 'votingBalance', selectedAccount?.address],
+    [GENERIC_FETCHER, 'escrow', 'votingBalance', selectedAccountAddress],
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -173,7 +173,7 @@ const Staking = (): JSX.Element => {
     error: claimableRewardAmountError,
     refetch: claimableRewardAmountRefetch
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccount?.address],
+    [GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccountAddress],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
     {
       enabled: !!bridgeLoaded
@@ -189,7 +189,7 @@ const Staking = (): JSX.Element => {
     error: rewardAmountAndAPYError,
     refetch: rewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccount?.address],
+    [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccountAddress],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
       enabled: !!bridgeLoaded
@@ -209,7 +209,7 @@ const Staking = (): JSX.Element => {
       GENERIC_FETCHER,
       'escrow',
       'getRewardEstimate',
-      selectedAccount?.address,
+      selectedAccountAddress,
       monetaryLockingAmount,
       blockLockTimeExtension
     ],
@@ -227,7 +227,7 @@ const Staking = (): JSX.Element => {
     error: stakedAmountAndEndBlockError,
     refetch: stakedAmountAndEndBlockRefetch
   } = useQuery<StakedAmountAndEndBlock, Error>(
-    [GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccount?.address],
+    [GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccountAddress],
     genericFetcher<StakedAmountAndEndBlock>(),
     {
       enabled: !!bridgeLoaded
@@ -241,8 +241,8 @@ const Staking = (): JSX.Element => {
     data: transactionFeeReserve,
     error: transactionFeeReserveError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
-    [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, selectedAccount?.address],
-    stakingTransactionFeeReserveFetcher(selectedAccount?.address ?? ''),
+    [STAKING_TRANSACTION_FEE_RESERVE_FETCHER, selectedAccountAddress],
+    stakingTransactionFeeReserveFetcher(selectedAccountAddress),
     {
       enabled: bridgeLoaded && !!selectedAccount
     }
@@ -365,8 +365,7 @@ const Staking = (): JSX.Element => {
 
   const availableBalance = React.useMemo(() => {
     if (
-      governanceTokenBalanceIdle ||
-      governanceTokenBalanceLoading ||
+      isBalancesLoading ||
       stakedAmountAndEndBlockIdle ||
       stakedAmountAndEndBlockLoading ||
       transactionFeeReserveIdle ||
@@ -387,8 +386,7 @@ const Staking = (): JSX.Element => {
 
     return calculatedBalance.toBig().gte(0) ? calculatedBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
   }, [
-    governanceTokenBalanceIdle,
-    governanceTokenBalanceLoading,
+    isBalancesLoading,
     governanceTokenBalance,
     stakedAmountAndEndBlockIdle,
     stakedAmountAndEndBlockLoading,
@@ -783,10 +781,12 @@ const Staking = (): JSX.Element => {
               <AvailableBalanceUI
                 label='Available balance'
                 balance={
-                  formatNumber(Number(availableMonetaryBalance), {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 5
-                  }) || '-'
+                  availableMonetaryBalance === undefined
+                    ? '-'
+                    : formatNumber(Number(availableMonetaryBalance), {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 5
+                      })
                 }
                 tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
                 onClick={handleClickBalance}

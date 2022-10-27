@@ -21,6 +21,7 @@ import InterlayTable, {
 } from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
 import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
@@ -100,7 +101,10 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
       TABLE_PAGE_LIMIT, // limit
       `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
     ],
-    redeemsFetcher
+    redeemsFetcher,
+    {
+      refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
+    }
   );
   useErrorHandler(redeemRequestsError);
 

@@ -1,4 +1,4 @@
-import { PRICES_URL } from '@/constants';
+import { PRICES_API } from '@/utils/constants/api';
 
 const DEFAULT_PRICES = {
   bitcoin: { usd: 20306 },
@@ -14,11 +14,11 @@ const DEFAULT_PRICES = {
 const mockFetch = jest.fn((input, _init?) => {
   let result: unknown;
   switch (input) {
-    case PRICES_URL:
+    case input.includes(PRICES_API.URL):
       result = DEFAULT_PRICES;
       break;
     default: {
-      throw new Error(`mockFetch: provided input [${input.toString()}] is not mocked`);
+      throw new Error(`mockFetch: provided input [${input}] is not mocked`);
     }
   }
   return Promise.resolve({

@@ -1,7 +1,9 @@
 import {
+  CurrencyExt,
   CurrencyIdLiteral,
   GovernanceCurrency,
   GovernanceIdLiteral,
+  newMonetaryAmount,
   VotingCurrency,
   WrappedCurrency,
   WrappedIdLiteral
@@ -106,6 +108,8 @@ let STAKE_LOCK_TIME: {
   MAX: number;
 };
 
+let TRANSACTION_FEE_AMOUNT: MonetaryAmount<CurrencyExt>;
+
 type WrappedTokenAmount = InterBtcAmount | KBtcAmount;
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
@@ -140,6 +144,8 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       MIN: 1,
       MAX: 192
     };
+    // TODO: temporary
+    TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
     break;
   }
   // Kintsugi
@@ -173,6 +179,8 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       MIN: 1,
       MAX: 96
     };
+    // TODO: temporary
+    TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
     break;
   }
   default: {
@@ -208,6 +216,7 @@ export {
   STAKE_LOCK_TIME,
   SUBSCAN_LINK,
   TERMS_AND_CONDITIONS_LINK,
+  TRANSACTION_FEE_AMOUNT,
   USE_WRAPPED_CURRENCY_LINK,
   VOTE_GOVERNANCE_TOKEN,
   VOTE_GOVERNANCE_TOKEN_SYMBOL,

@@ -47,6 +47,6 @@ describe('Burn page', () => {
     });
 
     // Check that burn method was called.
-    expect(mockRedeemBurn).toHaveBeenCalledTimes(1);
+    await waitFor(() => expect(mockRedeemBurn).toHaveBeenCalledTimes(1));
   });
 });

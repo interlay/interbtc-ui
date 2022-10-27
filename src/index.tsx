@@ -13,6 +13,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { SubstrateProvider } from '@/lib/substrate';
 import { SubstrateLoadingAndErrorHandlingWrapper } from '@/lib/substrate';
+import ThemeWrapper from '@/parts/ThemeWrapper';
+import { Subscriptions } from '@/utils/hooks/api/tokens/use-balances-subscription';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -33,9 +35,13 @@ ReactDOM.render(
         <HelmetProvider>
           <Provider store={store}>
             <SubstrateProvider>
-              <SubstrateLoadingAndErrorHandlingWrapper>
-                <App />
-              </SubstrateLoadingAndErrorHandlingWrapper>
+              <ThemeWrapper>
+                <SubstrateLoadingAndErrorHandlingWrapper>
+                  <Subscriptions>
+                    <App />
+                  </Subscriptions>
+                </SubstrateLoadingAndErrorHandlingWrapper>
+              </ThemeWrapper>
               <React.Suspense fallback={null}>
                 <DeveloperConsole />
               </React.Suspense>

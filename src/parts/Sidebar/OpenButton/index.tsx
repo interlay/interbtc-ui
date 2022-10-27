@@ -1,4 +1,4 @@
-import { MenuIcon } from '@heroicons/react/outline';
+import { Bars3Icon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
@@ -29,7 +29,7 @@ const OpenButton = ({ onClick }: InterlayButtonBaseProps): JSX.Element => (
     onClick={onClick}
   >
     <span className='sr-only'>Open sidebar</span>
-    <MenuIcon className={clsx('h-6', 'w-6')} aria-hidden='true' />
+    <Bars3Icon className={clsx('h-6', 'w-6')} aria-hidden='true' />
   </InterlayButtonBase>
 );
 

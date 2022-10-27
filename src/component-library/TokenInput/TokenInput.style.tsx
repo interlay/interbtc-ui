@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import { NumberInput } from '../NumberInput';
 import { theme } from '../theme';
 import { TokenBalance } from '../TokenBalance';
 
@@ -12,16 +11,6 @@ const TokenInputSymbol = styled.span`
   font-size: ${theme.text.xl2};
   color: ${theme.colors.textTertiary};
   font-weight: ${theme.fontWeight.medium};
-`;
-
-type TokenInputInputProps = {
-  $isOverflowing?: boolean;
-};
-
-const TokenInputInput = styled(NumberInput)<TokenInputInputProps>`
-  height: ${theme.tokenInput.height};
-  max-height: ${theme.tokenInput.height};
-  font-size: ${({ $isOverflowing }) => ($isOverflowing ? theme.text.xl2 : theme.text.xl5)};
 `;
 
 const TokenInputUSD = styled.span`
@@ -43,4 +32,4 @@ const StyledTokenBalance = styled(TokenBalance)`
   line-height: ${theme.lineHeight.s};
 `;
 
-export { StyledTokenBalance, TokenAdornment, TokenInputInnerWrapper, TokenInputInput, TokenInputSymbol, TokenInputUSD };
+export { StyledTokenBalance, TokenAdornment, TokenInputInnerWrapper, TokenInputSymbol, TokenInputUSD };

@@ -13,7 +13,7 @@ import {
 } from './VaultCard.style';
 
 interface VaultCardProps {
-  collateralSymbol: Tokens;
+  collateralTokenTicker: string;
   wrappedSymbol: Tokens;
   pendingRequests: string;
   apy: string;
@@ -23,7 +23,7 @@ interface VaultCardProps {
 }
 
 const VaultCard = ({
-  collateralSymbol,
+  collateralTokenTicker,
   wrappedSymbol,
   pendingRequests,
   apy,
@@ -33,9 +33,9 @@ const VaultCard = ({
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
-      <CoinPair coinOne={collateralSymbol} coinTwo={wrappedSymbol} size='medium' />
+      <CoinPair coinOne={collateralTokenTicker as Tokens} coinTwo={wrappedSymbol} size='medium' />
       <CardTitle>
-        {collateralSymbol} - {wrappedSymbol}
+        {collateralTokenTicker} - {wrappedSymbol}
       </CardTitle>
     </CardHeader>
     <CardBody>
