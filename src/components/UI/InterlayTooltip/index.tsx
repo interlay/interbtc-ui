@@ -1,4 +1,4 @@
-import '@reach/tooltip/styles.css';
+import './interlay-tooltip.css';
 
 import Tooltip, { TooltipProps } from '@reach/tooltip';
 import clsx from 'clsx';
