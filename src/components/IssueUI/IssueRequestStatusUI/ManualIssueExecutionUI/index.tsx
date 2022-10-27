@@ -68,24 +68,12 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
     queryFn: async () => {
       const vaultAccountId = newAccountId(window.bridge.api, request.vault.accountId);
 
-      // ray test touch <
       const issue = await window.bridge.issue.getRequestById(request.id);
 
       const collateralToken = await currencyIdToMonetaryCurrency(
         window.bridge.assetRegistry,
         issue.vaultId.currencies.collateral
       );
-
-      // let collateralCurrency;
-      // if (request.vault.collateralToken.token === RELAY_CHAIN_NATIVE_TOKEN_SYMBOL) {
-      //   collateralCurrency = RELAY_CHAIN_NATIVE_TOKEN;
-      // } else if (request.vault.collateralToken.token === GOVERNANCE_TOKEN_SYMBOL) {
-      //   collateralCurrency = GOVERNANCE_TOKEN;
-      // } else {
-      //   // TODO: `SDOT` will break here
-      //   throw new Error(`Unsupported collateral token (${request.vault.collateralToken.token})!`);
-      // }
-      // ray test touch >
 
       return await window.bridge.vaults.getIssuableTokensFromVault(vaultAccountId, collateralToken);
     }
