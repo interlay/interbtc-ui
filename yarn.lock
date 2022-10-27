@@ -2017,13 +2017,13 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@1.17.3":
-  version "1.17.3"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-1.17.3.tgz#e60e19be0e02f6406fd66d5cb87e4129ce20642f"
-  integrity sha512-flRkKNyq/AfO4wOQ4gs4Vo3PweQGl9H3QuHgQs6AKUApggpqZQfyKqoBm7UCw1yYCITs7MWe64466F14fqJiig==
+"@interlay/interbtc-api@0.30.0":
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-0.30.0.tgz#6b81e77e4bf66125f847247442e218c119bb8fd5"
+  integrity sha512-cfHoj1iHFrn2DA++cmUEZMr+pPjOxc8rPQuFbf1ZKEYemxBtqDzJ5FjdJIyDOeBs0rQopU+8/LhUocpbLb37cw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/interbtc-types" "1.9.0"
+    "@interlay/interbtc-types" "0.30.0"
     "@interlay/monetary-js" "0.7.0"
     "@polkadot/api" "9.4.1"
     "@types/big.js" "6.1.2"
@@ -2035,10 +2035,10 @@
     isomorphic-fetch "^3.0.0"
     regtest-client "^0.2.0"
 
-"@interlay/interbtc-types@1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.9.0.tgz#beffd3b04bc1d9dba49f3ddc338b5867b81dec3d"
-  integrity sha512-G/jOHXM6lqoFAPquESAxsjt5ETrmcPTDC36WFRWYpoRUfFxcjq6TkWGxUC5/RS6jIoWMQ6lEJZupmlm/QNdbAg==
+"@interlay/interbtc-types@0.30.0":
+  version "0.30.0"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.30.0.tgz#53e2260f324ceb613da7f7ebe9b048ba091cd887"
+  integrity sha512-q04wscdLiX8nP8OEX2lGfGWG0lazZ+CVzmorGc9/HKW/nFe+pOWwf8bwP7JhiT0rLrfeKli324JoYpyWLe8wtw==
 
 "@interlay/monetary-js@0.7.0":
   version "0.7.0"
