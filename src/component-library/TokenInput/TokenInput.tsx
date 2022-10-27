@@ -48,6 +48,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       style,
       hidden,
       renderBalance,
+      label,
       ...props
     },
     ref
@@ -65,6 +66,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const formatOptions = getFormatOptions(decimals);
 
+    const hasBalance = balance !== undefined && balanceInUSD !== undefined;
+
     return (
       <Stack spacing='half' className={className} style={style} hidden={hidden}>
         {balance !== undefined && balanceInUSD !== undefined && (
@@ -75,6 +78,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
             onClickBalance={handleClickBalance}
             isDisabled={isDisabled}
             renderBalance={renderBalance}
+            label={label}
           />
         )}
         <TokenInputInnerWrapper>
@@ -86,6 +90,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
             size='large'
             overflow={false}
             formatOptions={formatOptions}
+            label={!hasBalance && label}
             {...props}
           />
         </TokenInputInnerWrapper>

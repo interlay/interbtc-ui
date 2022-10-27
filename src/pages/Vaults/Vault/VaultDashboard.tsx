@@ -12,6 +12,7 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
+import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
@@ -31,11 +32,14 @@ const VaultDashboard = (): JSX.Element => {
 
   const vaultData = useGetVaultData({ address: selectedVaultAccountAddress });
   const transactions = useGetVaultTransactions(selectedVaultAccountAddress, vaultCollateral, bridgeLoaded);
+  const { isIdle: identitiesIdle, isLoading: identitiesLoading, data: identities } = useGetIdentities(bridgeLoaded);
+
   const { getCurrencyFromTicker, isSuccess: currenciesSuccess } = useGetCurrencies(bridgeLoaded);
 
   const vault = vaultData?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
+  const displayName = identities?.get(selectedVaultAccountAddress);
 
-  if (!vault || !transactions || !currenciesSuccess) {
+  if (!vault || !transactions || !currenciesSuccess || identitiesIdle || identitiesLoading) {
     return (
       <MainContainer>
         <Stack>
@@ -89,6 +93,7 @@ const VaultDashboard = (): JSX.Element => {
           collateralAmount={vault.collateral.raw}
           vaultStatus={vault?.vaultStatus}
           vaultAddress={selectedVaultAccountAddress}
+          vaultDisplayName={displayName}
           collateralToken={collateralToken}
           lockedAmountBTC={vault.issuedTokens.amount}
           hasManageVaultBtn={!isReadOnlyVault}

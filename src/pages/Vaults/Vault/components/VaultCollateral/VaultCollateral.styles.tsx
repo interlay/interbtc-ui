@@ -127,7 +127,7 @@ type ThresholdDdProps = {
 };
 
 const ThresholdDd = styled.dd<ThresholdDdProps>`
-  color: ${(props) => theme.score.bar.status[props.status]};
+  color: ${(props) => theme.meter.bar.status[props.status]};
   font-weight: ${theme.fontWeight.bold};
 `;
 

@@ -19,7 +19,6 @@ import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefault
 import TokenField from '@/components/TokenField';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -193,7 +192,7 @@ const UpdateCollateralModal = ({
       return 'Please enter an amount greater than 1 Planck';
     }
 
-    const collateralBalance = balances?.[RELAY_CHAIN_NATIVE_TOKEN.ticker];
+    const collateralBalance = balances?.[collateralToken.ticker];
 
     if (collateralBalance && collateralTokenAmount.gt(collateralBalance.transferable)) {
       return t(`Must be less than ${collateralToken.ticker} balance!`);

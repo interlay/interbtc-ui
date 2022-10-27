@@ -13,9 +13,9 @@ type MeterProps = {
 
 const StyledMeter = styled.div<MeterProps>`
   position: relative;
-  height: ${theme.score.bar.height};
-  background: ${theme.score.bar.bg};
-  border-radius: ${theme.score.bar.radius};
+  height: ${theme.meter.bar.height};
+  background: ${theme.meter.bar.bg};
+  border-radius: ${theme.meter.bar.radius};
 
   &::before {
     content: '';
@@ -25,8 +25,8 @@ const StyledMeter = styled.div<MeterProps>`
     bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    border-left: 1px dashed ${theme.score.bar.separator.color};
-    border-right: 1px dashed ${theme.score.bar.separator.color};
+    border-left: 1px dashed ${theme.meter.bar.separator.color};
+    border-right: 1px dashed ${theme.meter.bar.separator.color};
     z-index: 1;
   }
 
@@ -34,9 +34,9 @@ const StyledMeter = styled.div<MeterProps>`
     content: '';
     width: 0;
     height: 0;
-    border-left: ${theme.score.bar.indicator.border.left};
-    border-right: ${theme.score.bar.indicator.border.right};
-    border-bottom: ${theme.score.bar.indicator.border.bottom};
+    border-left: ${theme.meter.bar.indicator.border.left};
+    border-right: ${theme.meter.bar.indicator.border.right};
+    border-bottom: ${theme.meter.bar.indicator.border.bottom};
     position: absolute;
     left: ${(props) => props.$width}%;
     top: 100%;

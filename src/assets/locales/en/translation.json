@@ -38,6 +38,7 @@
   "parachain_block": "Parachain Block",
   "user": "User",
   "account_id": "Account ID",
+  "identity": "Identity",
   "btc_address": "BTC Address",
   "enter_btc_address": "Enter your BTC address",
   "register": "Register",
@@ -406,7 +407,9 @@
     "manually_select_vault": "Manually Select Vault",
     "vault_must_be_selected": "Specific vault must be selected.",
     "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity",
-    "no_issuable_token_available": "Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or <1>consider running a Vault</1>!"
+    "no_issuable_token_available": "Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or <1>consider running a Vault</1>!",
+    "vault_has_capacity_you_can_claim": "Vault has {{vaultCapacity}} {{wrappedTokenSymbol}} capacity. You can claim your {{wrappedTokenSymbol}}.",
+    "vault_has_capacity_you_can_not_claim": "Vault has {{vaultCapacity}} {{wrappedTokenSymbol}} capacity. You cannot claim your {{wrappedTokenSymbol}} at the moment."
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
@@ -435,7 +438,7 @@
     "successfully_updated_collateral": "Successfully updated collateral",
     "deposit_collateral": "Deposit Collateral",
     "current_total_collateral": "Current Total Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
-    "minimum_required_collateral": "Minimum Required Collateral",
+    "minimum_required_collateral": "Minimum Required Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
     "maximum_withdrawable_collateral": "Maximum Withdrawable Collateral {{currentCollateral}} {{collateralTokenSymbol}}",
     "new_total_collateral": "New Total Collateral",
     "collateral_higher_than_0": "Collateral must be higher than 0",
