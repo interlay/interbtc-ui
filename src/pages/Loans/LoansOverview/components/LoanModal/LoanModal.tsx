@@ -1,11 +1,12 @@
 import { LendPosition, LoanAsset, LoanPosition } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 
-import { Modal, ModalProps, Tabs, TabsItem } from '@/component-library';
+import { Modal, ModalProps, TabsItem } from '@/component-library';
 import { LoanType } from '@/types/loans';
 
 import { BorrowForm } from './BorrowForm';
 import { LendForm } from './LendForm';
+import { StyledTabs, StyledWrapper } from './LoanModal.style';
 
 type Props = {
   variant: LoanType;
@@ -27,28 +28,36 @@ const LoanModal = ({ variant = 'lend', asset, position, ...props }: LoanModalPro
   if (variant === 'borrow') {
     return (
       <Modal {...props}>
-        <Tabs>
+        <StyledTabs size='large' fullWidth>
           <TabsItem title={t('loans.borrow')}>
-            <BorrowForm asset={asset} variant='borrow' position={position} />
+            <StyledWrapper>
+              <BorrowForm asset={asset} variant='borrow' position={position} />
+            </StyledWrapper>
           </TabsItem>
           <TabsItem title={t('loans.repay')}>
-            <BorrowForm asset={asset} variant='repay' position={position} />
+            <StyledWrapper>
+              <BorrowForm asset={asset} variant='repay' position={position} />
+            </StyledWrapper>
           </TabsItem>
-        </Tabs>
+        </StyledTabs>
       </Modal>
     );
   }
 
   return (
     <Modal {...props}>
-      <Tabs>
+      <StyledTabs size='large' fullWidth>
         <TabsItem title={t('loans.lend')}>
-          <LendForm asset={asset} variant='lend' position={position as LendPosition} />
+          <StyledWrapper>
+            <LendForm asset={asset} variant='lend' position={position as LendPosition} />
+          </StyledWrapper>
         </TabsItem>
         <TabsItem title={t('loans.withdraw')}>
-          <LendForm asset={asset} variant='withdraw' position={position as LendPosition} />
+          <StyledWrapper>
+            <LendForm asset={asset} variant='withdraw' position={position as LendPosition} />
+          </StyledWrapper>
         </TabsItem>
-      </Tabs>
+      </StyledTabs>
     </Modal>
   );
 };

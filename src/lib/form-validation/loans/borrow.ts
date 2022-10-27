@@ -5,11 +5,11 @@ import * as z from 'zod';
 
 import balance from '../common/balance';
 import field from '../common/field';
-import { CommonValidationParams } from '../common/type';
+import { AvailableBalanceSchemaParams, CommonSchemaParams, MaxAmountSchemaParams } from '../types';
 
-type LoanBorrowValidationParams = Required<CommonValidationParams>;
+type LoanBorrowSchemaParams = CommonSchemaParams & MaxAmountSchemaParams;
 
-const borrow = (t: TFunction, params: LoanBorrowValidationParams): z.ZodEffects<z.ZodString, string, string> =>
+const borrow = (t: TFunction, params: LoanBorrowSchemaParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
     const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
@@ -41,9 +41,9 @@ const borrow = (t: TFunction, params: LoanBorrowValidationParams): z.ZodEffects<
     }
   });
 
-type LoanRepayValidationParams = CommonValidationParams;
+type LoanRepaySchemaParams = CommonSchemaParams & AvailableBalanceSchemaParams;
 
-const repay = (t: TFunction, params: LoanRepayValidationParams): z.ZodEffects<z.ZodString, string, string> =>
+const repay = (t: TFunction, params: LoanRepaySchemaParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
     const { governanceBalance, transactionFee, availableBalance, minAmount } = params;
 
@@ -72,4 +72,4 @@ const repay = (t: TFunction, params: LoanRepayValidationParams): z.ZodEffects<z.
   });
 
 export { borrow, repay };
-export type { LoanBorrowValidationParams, LoanRepayValidationParams };
+export type { LoanBorrowSchemaParams, LoanRepaySchemaParams };
