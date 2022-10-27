@@ -1,12 +1,9 @@
-// ray test touch <
 import {
   CurrencyIdLiteral,
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   currencyIdToMonetaryCurrency,
   newAccountId,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
-// ray test touch >
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -15,14 +12,7 @@ import { toast } from 'react-toastify';
 import { displayMonetaryAmount } from '@/common/utils/utils';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorModal from '@/components/ErrorModal';
-import {
-  GOVERNANCE_TOKEN,
-  GOVERNANCE_TOKEN_SYMBOL,
-  RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-  WRAPPED_TOKEN,
-  WRAPPED_TOKEN_SYMBOL
-} from '@/config/relay-chains';
+import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -31,6 +21,7 @@ import useQueryParams from '@/utils/hooks/use-query-params';
 
 interface Props {
   request: {
+    id: string;
     backingPayment: {
       amount: number;
       btcTxId: string;
@@ -78,23 +69,25 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
       const vaultAccountId = newAccountId(window.bridge.api, request.vault.accountId);
 
       // ray test touch <
-      // const collateralToken = await currencyIdToMonetaryCurrency(
-      //   window.bridge.assetRegistry,
-      //   request.vault.currencies.collateral
-      // );
+      const issue = await window.bridge.issue.getRequestById(request.id);
 
-      let collateralCurrency;
-      if (request.vault.collateralToken.token === RELAY_CHAIN_NATIVE_TOKEN_SYMBOL) {
-        collateralCurrency = RELAY_CHAIN_NATIVE_TOKEN;
-      } else if (request.vault.collateralToken.token === GOVERNANCE_TOKEN_SYMBOL) {
-        collateralCurrency = GOVERNANCE_TOKEN;
-      } else {
-        // TODO: `SDOT` will break here
-        throw new Error(`Unsupported collateral token (${request.vault.collateralToken.token})!`);
-      }
+      const collateralToken = await currencyIdToMonetaryCurrency(
+        window.bridge.assetRegistry,
+        issue.vaultId.currencies.collateral
+      );
+
+      // let collateralCurrency;
+      // if (request.vault.collateralToken.token === RELAY_CHAIN_NATIVE_TOKEN_SYMBOL) {
+      //   collateralCurrency = RELAY_CHAIN_NATIVE_TOKEN;
+      // } else if (request.vault.collateralToken.token === GOVERNANCE_TOKEN_SYMBOL) {
+      //   collateralCurrency = GOVERNANCE_TOKEN;
+      // } else {
+      //   // TODO: `SDOT` will break here
+      //   throw new Error(`Unsupported collateral token (${request.vault.collateralToken.token})!`);
+      // }
       // ray test touch >
 
-      return await window.bridge.vaults.getIssuableTokensFromVault(vaultAccountId, collateralCurrency);
+      return await window.bridge.vaults.getIssuableTokensFromVault(vaultAccountId, collateralToken);
     }
   });
 
