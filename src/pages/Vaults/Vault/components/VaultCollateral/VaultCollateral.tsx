@@ -3,14 +3,13 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { HTMLAttributes, useMemo, useState } from 'react';
 
-import { CTA } from '@/component-library';
+import { CTA, MeterRanges } from '@/component-library';
 import RequestIssueModal from '@/pages/Vaults/Vault/RequestIssueModal';
 import RequestRedeemModal from '@/pages/Vaults/Vault/RequestRedeemModal';
 import UpdateCollateralModal, { CollateralUpdateStatus } from '@/pages/Vaults/Vault/UpdateCollateralModal';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 
-import { CollateralStatus, CollateralStatusRanges, VaultActions } from '../../types';
-import { getCollateralStatus } from '../../utils';
+import { VaultActions } from '../../types';
 import { CollateralThresholds } from './CollateralThresholds';
 import {
   StyledCoinPairs,
@@ -23,33 +22,12 @@ import {
   StyledWrapper
 } from './VaultCollateral.styles';
 
-const getRanges = (liquidationThreshold: Big, premiumRedeemThreshold: Big, secureThreshold: Big) => {
+const getRanges = (liquidationThreshold: Big, premiumRedeemThreshold: Big, secureThreshold: Big): MeterRanges => {
   const formattedLiquidationThreshold = Math.trunc(liquidationThreshold.mul(100).toNumber());
   const formattedPremiumRedeemThreshold = Math.trunc(premiumRedeemThreshold.mul(100).toNumber());
   const formattedSecureThreshold = Math.trunc(secureThreshold.mul(100).toNumber());
 
-  return {
-    error: { min: 0, max: formattedLiquidationThreshold },
-    warning: {
-      min: formattedLiquidationThreshold,
-      max: formattedPremiumRedeemThreshold
-    },
-    success: {
-      min: formattedPremiumRedeemThreshold,
-      max: formattedSecureThreshold
-    }
-  };
-};
-
-const getVaultCollateralLabel = (status: CollateralStatus, ranges: CollateralStatusRanges) => {
-  switch (status) {
-    case 'error':
-      return `High Risk: ${ranges.error.min}-${ranges.error.max}%`;
-    case 'warning':
-      return `Medium Risk: ${ranges.warning.min}-${ranges.warning.max}%`;
-    case 'success':
-      return `Low Risk: ${ranges.success.min}-${ranges.success.max}%`;
-  }
+  return [0, formattedLiquidationThreshold, formattedPremiumRedeemThreshold, formattedSecureThreshold];
 };
 
 // TODO: commented code belongs the next dashboard iteration
@@ -107,11 +85,6 @@ const VaultCollateral = ({
     secureThreshold
   ]);
 
-  const isInfinityCollateralization = !collateralScore;
-  const score = collateralScore?.toNumber() ?? 0;
-  const collateralStatus = getCollateralStatus(score, ranges, isInfinityCollateralization);
-  const collateralLabel = getVaultCollateralLabel(collateralStatus, ranges);
-
   const lockedBTC = new BitcoinAmount(lockedAmountBTC);
 
   return (
@@ -119,12 +92,10 @@ const VaultCollateral = ({
       <StyledWrapper variant='bordered' {...props}>
         <StyledCollateralWrapper>
           <StyledCollateralScore
-            score={score}
+            score={collateralScore?.toNumber()}
             ranges={ranges}
             variant='highlight'
             label='Collateral Score'
-            sublabel={collateralLabel}
-            infinity={isInfinityCollateralization}
           />
           <CollateralThresholds
             liquidationThreshold={liquidationThreshold}

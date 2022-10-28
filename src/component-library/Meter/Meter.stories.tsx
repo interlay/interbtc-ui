@@ -6,7 +6,8 @@ const Template: Story<MeterProps> = (args) => <Meter {...args} />;
 
 const Default = Template.bind({});
 Default.args = {
-  percentage: 20
+  value: 20,
+  ranges: [0, 20, 40, 60]
 };
 
 export { Default };
