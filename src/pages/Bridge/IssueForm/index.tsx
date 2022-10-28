@@ -53,6 +53,9 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
+// ray test touch <
+import { getExchangeRate } from '@/utils/helpers/oracle';
+// ray test touch >
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -155,7 +158,10 @@ const IssueForm = (): JSX.Element | null => {
           window.bridge.fee.getIssueFee(),
           window.bridge.fee.getIssueGriefingCollateralRate(),
           window.bridge.issue.getDustValue(),
-          window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN)
+          // ray test touch <
+          getExchangeRate(GOVERNANCE_TOKEN)
+          // window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN)
+          // ray test touch >
         ]);
         setStatus(STATUSES.RESOLVED);
 
