@@ -46,9 +46,7 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
   return (
     <Stack spacing='double'>
       <H3 id={titleId}>{t('vault.create_vault')}</H3>
-      {/* ray test touch < */}
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
-      {/* ray test touch > */}
       <Modal open={open} onClose={handleCloseModal}>
         <CreateVaultWizard vault={selectedVault} />
       </Modal>
