@@ -4,7 +4,7 @@ import * as z from 'zod';
 
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 
-import { Validation } from '../types';
+import { Validation } from './types';
 
 type TransactionFeeBalanceValidationParams = {
   availableBalance: MonetaryAmount<CurrencyExt>;

@@ -1,7 +1,7 @@
 import Big from 'big.js';
 import * as z from 'zod';
 
-import { Validation } from '../types';
+import { Validation } from './types';
 
 type RequiredFieldValidationParams = {
   value: string;
