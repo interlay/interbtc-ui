@@ -3,17 +3,13 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
-// ray test touch <<
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
-// ray test touch >>
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, getPolkadotLink } from '@/common/utils/utils';
-// ray test touch <<
 import ErrorFallback from '@/components/ErrorFallback';
-// ray test touch >>
 import ExternalLink from '@/components/ExternalLink';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
@@ -44,9 +40,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
 
   const prices = useGetPrices();
 
-  // ray test touch <<
   const handleError = useErrorHandler();
-  // ray test touch >>
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const [burnedBTCAmount, setBurnedBTCAmount] = React.useState(BitcoinAmount.zero());
@@ -63,9 +57,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!redeem) return;
-    // ray test touch <<
     if (!handleError) return;
-    // ray test touch >>
 
     // TODO: should add loading UX
     (async () => {
@@ -88,11 +80,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
         setCollateralTokenAmount(theDOTAmount);
       } catch (error) {
-        // ray test touch <<
         handleError(error);
-        // TODO: should add error handling UX
-        console.log('[ReimbursedRedeemRequest useEffect] error.message => ', error.message);
-        // ray test touch >>
       }
     })();
   }, [redeem, bridgeLoaded, handleError]);
@@ -203,11 +191,9 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   );
 };
 
-// ray test touch <<
 export default withErrorBoundary(ReimbursedRedeemRequest, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();
   }
 });
-// ray test touch >>
