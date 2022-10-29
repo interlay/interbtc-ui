@@ -2,12 +2,18 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
+// ray test touch <<
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+// ray test touch >>
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, getPolkadotLink } from '@/common/utils/utils';
+// ray test touch <<
+import ErrorFallback from '@/components/ErrorFallback';
+// ray test touch >>
 import ExternalLink from '@/components/ExternalLink';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
@@ -33,7 +39,12 @@ interface Props {
 
 const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
+
   const prices = useGetPrices();
+
+  // ray test touch <<
+  const handleError = useErrorHandler();
+  // ray test touch >>
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
@@ -43,6 +54,9 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!redeem) return;
+    // ray test touch <<
+    if (!handleError) return;
+    // ray test touch >>
 
     // TODO: should add loading UX
     (async () => {
@@ -60,11 +74,14 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
       } catch (error) {
+        // ray test touch <<
+        handleError(error);
         // TODO: should add error handling UX
         console.log('[RetriedRedeemRequest useEffect] error.message => ', error.message);
+        // ray test touch >>
       }
     })();
-  }, [redeem, bridgeLoaded]);
+  }, [redeem, bridgeLoaded, handleError]);
 
   return (
     <RequestWrapper>
@@ -151,4 +168,11 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   );
 };
 
-export default RetriedRedeemRequest;
+// ray test touch <<
+export default withErrorBoundary(RetriedRedeemRequest, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});
+// ray test touch >>
