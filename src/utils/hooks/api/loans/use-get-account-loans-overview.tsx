@@ -19,7 +19,7 @@ interface AccountLoansOverviewData {
   totalEarnedInterestUSDValue: Big | undefined;
   borrowedAssetsUSDValue: Big | undefined;
   borrowLimitUSDValue: Big | undefined;
-  collateralRatio: Big | undefined;
+  collateralRatio: number | undefined;
 }
 
 interface AccountLoansOverview {
@@ -29,7 +29,7 @@ interface AccountLoansOverview {
     type: LendAction | BorrowAction,
     currency: CurrencyExt,
     amount: MonetaryAmount<CurrencyExt>
-  ) => Big | undefined;
+  ) => number | undefined;
   getNewBorrowLimitUSDValue: (
     type: LendAction | BorrowAction,
     currency: CurrencyExt,
@@ -55,7 +55,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   let totalEarnedInterestUSDValue: Big | undefined = undefined;
   let borrowedAssetsUSDValue: Big | undefined = undefined;
   let collateralAssetsUSDValue: Big | undefined = undefined;
-  let collateralRatio: Big | undefined = undefined;
+  let collateralRatio: number | undefined = undefined;
 
   if (lendPositions !== undefined && prices !== undefined) {
     lentAssetsUSDValue = getTotalUSDValueOfPositions(lendPositions, prices);
@@ -70,7 +70,9 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   }
 
   if (borrowedAssetsUSDValue !== undefined && collateralAssetsUSDValue !== undefined) {
-    collateralRatio = collateralAssetsUSDValue.gt(0) ? borrowedAssetsUSDValue.div(collateralAssetsUSDValue) : Big(0);
+    collateralRatio = borrowedAssetsUSDValue.gt(0)
+      ? collateralAssetsUSDValue.div(borrowedAssetsUSDValue).toNumber()
+      : Infinity;
   }
 
   const borrowLimitUSDValue = collateralAssetsUSDValue
@@ -87,7 +89,11 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
    * @returns New collateral ratio after the transaction is done.
    */
   const getNewCollateralRatio = useCallback(
-    (type: LendAction | BorrowAction, currency: CurrencyExt, amount: MonetaryAmount<CurrencyExt>): Big | undefined => {
+    (
+      type: LendAction | BorrowAction,
+      currency: CurrencyExt,
+      amount: MonetaryAmount<CurrencyExt>
+    ): number | undefined => {
       if (prices === undefined || borrowedAssetsUSDValue === undefined || collateralAssetsUSDValue === undefined) {
         return undefined;
       }
@@ -102,7 +108,9 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const newCollateralAssetsUSDValue =
         type === 'lend' || type === 'repay' ? collateralAssetsUSDValue.add(amountUSDValue) : collateralAssetsUSDValue;
 
-      return newCollateralAssetsUSDValue.gt(0) ? newCollateralAssetsUSDValue.div(newBorrowedAssetsUSDValue) : Big(0);
+      return newBorrowedAssetsUSDValue.gt(0)
+        ? newCollateralAssetsUSDValue.div(newBorrowedAssetsUSDValue).toNumber()
+        : Infinity;
     },
     [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue]
   );
