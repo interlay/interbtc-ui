@@ -5,4 +5,4 @@ const vaults = {
 };
 
 export default vaults;
-export type { VaultDepositValidationParams } from './create';
+export type { VaultDepositSchemaParams } from './create';

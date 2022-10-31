@@ -4,11 +4,11 @@ import * as z from 'zod';
 
 import balance from '../common/balance';
 import field from '../common/field';
-import { CommonValidationParams } from '../common/type';
+import { AvailableBalanceSchemaParams, CommonSchemaParams } from '../types';
 
-type VaultDepositValidationParams = CommonValidationParams;
+type VaultDepositSchemaParams = CommonSchemaParams & AvailableBalanceSchemaParams;
 
-const deposit = (t: TFunction, params: VaultDepositValidationParams): z.ZodEffects<z.ZodString, string, string> =>
+const deposit = (t: TFunction, params: VaultDepositSchemaParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
     const { availableBalance, governanceBalance, minAmount, transactionFee } = params;
 
@@ -37,4 +37,4 @@ const deposit = (t: TFunction, params: VaultDepositValidationParams): z.ZodEffec
   });
 
 export { deposit };
-export type { VaultDepositValidationParams };
+export type { VaultDepositSchemaParams };
