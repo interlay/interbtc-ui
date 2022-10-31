@@ -1,7 +1,6 @@
-import { TickerToData } from '@interlay/interbtc-api';
-import { BorrowPosition, LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { BorrowPosition, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 
-import { formatPercentage, formatUSD } from '@/common/utils/utils';
+import { formatUSD } from '@/common/utils/utils';
 
 import { useGetAccountLoansOverview } from './use-get-account-loans-overview';
 import { useGetLoanAssets } from './use-get-loan-assets';
@@ -11,7 +10,6 @@ type LoansData = {
     supplyUSDValue: string | undefined;
     borrowUSDValue: string | undefined;
     interestEarnedUSDValue: string | undefined;
-    collateralRatio: string | undefined;
     loanStatus: string | undefined;
   };
   lendPositions: LendPosition[] | undefined;
@@ -21,14 +19,7 @@ type LoansData = {
 
 const useGetLoansData = (): LoansData => {
   const {
-    data: {
-      lendPositions,
-      borrowPositions,
-      lentAssetsUSDValue,
-      totalEarnedInterestUSDValue,
-      borrowedAssetsUSDValue,
-      collateralRatio
-    }
+    data: { lendPositions, borrowPositions, lentAssetsUSDValue, totalEarnedInterestUSDValue, borrowedAssetsUSDValue }
   } = useGetAccountLoansOverview();
   const { assets } = useGetLoanAssets();
 
@@ -37,7 +28,6 @@ const useGetLoansData = (): LoansData => {
       supplyUSDValue: lentAssetsUSDValue && formatUSD(lentAssetsUSDValue.toNumber()),
       borrowUSDValue: borrowedAssetsUSDValue && formatUSD(borrowedAssetsUSDValue.toNumber()),
       interestEarnedUSDValue: totalEarnedInterestUSDValue && formatUSD(totalEarnedInterestUSDValue.toNumber()),
-      collateralRatio: collateralRatio && formatPercentage(collateralRatio.toNumber()),
       loanStatus: 'Safe' // TODO: decide loan status thresholds
     },
     lendPositions,

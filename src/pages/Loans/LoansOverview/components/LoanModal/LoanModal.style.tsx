@@ -17,4 +17,9 @@ const StyledDItem = styled.div`
   gap: ${theme.spacing.spacing2};
 `;
 
-export { StyledDItem, StyledDl };
+const StyledMeterWrapper = styled.div`
+  display: flex;
+  gap: ${theme.spacing.spacing4};
+`;
+
+export { StyledDItem, StyledDl, StyledMeterWrapper };
