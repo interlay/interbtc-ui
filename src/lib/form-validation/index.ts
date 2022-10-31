@@ -12,5 +12,5 @@ export type {
   LoanRepayValidationParams,
   LoanWithdrawValidationParams
 } from './loans';
-export type { VaultDepositValidationParams } from './vaults';
+export type { VaultDepositSchemaParams } from './vaults';
 export default validation;
