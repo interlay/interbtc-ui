@@ -43,9 +43,7 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getColorShade } from '@/utils/helpers/colors';
-// ray test touch <
 import { getExchangeRate } from '@/utils/helpers/oracle';
-// ray test touch >
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -130,10 +128,7 @@ const RedeemForm = (): JSX.Element | null => {
           window.bridge.redeem.getDustValue(),
           window.bridge.vaults.getPremiumRedeemVaults(),
           window.bridge.redeem.getPremiumRedeemFeeRate(),
-          // ray test touch <
           getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN),
-          // window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN),
-          // ray test touch >
           window.bridge.redeem.getFeeRate(),
           window.bridge.redeem.getCurrentInclusionFee(),
           window.bridge.vaults.getVaultsWithRedeemableTokens()

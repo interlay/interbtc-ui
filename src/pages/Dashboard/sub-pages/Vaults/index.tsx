@@ -53,9 +53,7 @@ const Vaults = (): JSX.Element => {
           />
         ))}
       </div>
-      {/* ray test touch < */}
       <VaultsTable />
-      {/* ray test touch > */}
     </>
   );
 };

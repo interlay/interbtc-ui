@@ -132,7 +132,6 @@ const VaultsTable = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const history = useHistory();
 
-  // ray test touch <
   const {
     isIdle: collateralCurrenciesDataIdle,
     isLoading: collateralCurrenciesDataLoading,
@@ -140,7 +139,6 @@ const VaultsTable = (): JSX.Element => {
     error: collateralCurrenciesDataError
   } = useGetCollateralCurrenciesData(bridgeLoaded);
   useErrorHandler(collateralCurrenciesDataError);
-  // ray test touch >
 
   const {
     isIdle: currentActiveBlockNumberIdle,

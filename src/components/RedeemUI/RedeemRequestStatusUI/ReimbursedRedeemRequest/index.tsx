@@ -24,9 +24,7 @@ import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-// ray test touch <
 import { getExchangeRate } from '@/utils/helpers/oracle';
-// ray test touch >
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -64,10 +62,7 @@ const ReimbursedRedeemRequest = ({ redeem }: Props): JSX.Element => {
       try {
         const [punishmentFee, btcDotRate] = await Promise.all([
           window.bridge.vaults.getPunishmentFee(),
-          // ray test touch <
           getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
-          // window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
-          // ray test touch >
         ]);
 
         const burnedBTCAmount = redeem.request.requestedAmountBacking.add(redeem.bridgeFee);

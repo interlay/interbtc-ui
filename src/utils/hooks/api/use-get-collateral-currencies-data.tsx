@@ -3,10 +3,8 @@ import { Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useQuery, UseQueryResult } from 'react-query';
 
-// ray test touch <
 import { getExchangeRate } from '@/utils/helpers/oracle';
 
-// ray test touch >
 import { useGetCollateralCurrencies } from './use-get-collateral-currencies';
 
 type CollateralCurrenciesData = { [currencyTicker: string]: CollateralCurrencyData };
@@ -23,10 +21,7 @@ const getCollateralCurrencyData = async (collateralToken: CollateralCurrencyExt)
     window.bridge.vaults.getLiquidationCollateralThreshold(collateralToken),
     window.bridge.vaults.getPremiumRedeemThreshold(collateralToken),
     window.bridge.vaults.getSecureCollateralThreshold(collateralToken),
-    // ray test touch <
     getExchangeRate(collateralToken)
-    // window.bridge.oracle.getExchangeRate(collateralToken)
-    // ray test touch >
   ]);
 
   return { liquidationThreshold, premiumThreshold, secureThreshold, exchangeRate };
