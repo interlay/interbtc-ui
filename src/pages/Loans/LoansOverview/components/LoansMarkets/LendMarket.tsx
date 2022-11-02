@@ -1,31 +1,33 @@
 import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
 import { Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { displayMonetaryAmount, formatNumber } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import { Span, Stack } from '@/component-library';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { LoanModal } from '../LoanModal';
+import { AssetCell } from './AssetCell';
 import { StyledApyTag, StyledTableWrapper } from './LoansMarkets.style';
-import { MarketAsset } from './MarketAsset';
 import { MarketTable } from './MarketTable';
+import { MonetaryCell } from './MonetaryCell';
 import { LendAssetsColumns, LendAssetsTableRow, LendPositionColumns, LendPositionTableRow } from './types';
 
 // TODO: translations
 const lendAssetsColumns = [
   { name: 'Asset', uid: LendAssetsColumns.ASSET },
   { name: 'APY', uid: LendAssetsColumns.APY },
-  { name: 'Wallet Balance', uid: LendAssetsColumns.WALLET_BALANCE }
+  { name: 'Wallet', uid: LendAssetsColumns.WALLET },
+  { name: 'Collateral', uid: LendAssetsColumns.COLLATERAL }
 ];
 
 // TODO: translations
 const lendPositionColumns = [
   { name: 'Asset', uid: LendPositionColumns.ASSET },
-  { name: 'Supplied', uid: LendPositionColumns.SUPPLIED },
-  { name: 'Supply APY', uid: LendPositionColumns.SUPPLY_APY },
-  { name: 'APY Earned', uid: LendPositionColumns.APY_EARNED }
+  { name: 'APY / Earned', uid: LendPositionColumns.APY_EARNED },
+  { name: 'Balance', uid: LendPositionColumns.BALANCE },
+  { name: 'Collateral', uid: LendAssetsColumns.COLLATERAL }
 ];
 
 type UseAssetState = {
@@ -44,6 +46,7 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
   const { t } = useTranslation();
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
   const { data: balances } = useGetBalances();
+  const prices = useGetPrices();
 
   // TODO: subject to change in the future
   const handleAssetRowAction = (key: Key) => {
@@ -64,38 +67,53 @@ const LendMarket = ({ assets, positions }: LendMarketProps): JSX.Element => {
   const handleClose = () => setAsset(defaultAssetState);
 
   const lendPositionsTableRows: LendPositionTableRow[] = positions.map(({ amount, currency, earnedInterest }, key) => {
-    const asset = <MarketAsset currency={currency.ticker} />;
+    const asset = <AssetCell currency={currency.ticker} />;
+
+    const apyPercentage = formatPercentage(assets[currency.ticker].lendApy.toNumber());
+    const apyEarned = `${displayMonetaryAmount(earnedInterest)} ${earnedInterest.currency.ticker}`;
+
+    const apy = <MonetaryCell label={apyPercentage} sublabel={apyEarned} />;
+
+    const assetBalanceUSD = displayMonetaryAmountInUSDFormat(amount, prices?.[amount.currency.ticker].usd);
+    const assetBalance = `${displayMonetaryAmount(amount)} ${amount.currency.ticker}`;
+
+    const balance = <MonetaryCell label={assetBalanceUSD} sublabel={assetBalance} />;
 
     return {
       id: key,
       asset,
-      supplied: displayMonetaryAmount(amount),
-      'supply-apy': `${formatNumber(assets[currency.ticker].lendApy.toNumber())}%`,
-      'apy-earned': displayMonetaryAmount(earnedInterest)
+      'apy-earned': apy,
+      balance,
+      // TODO: implement when switch is added
+      collateral: null
     };
   });
 
-  const lendAssetsTableRows: LendAssetsTableRow[] = Object.values(assets).map(
-    ({ lendApy: apy, lendReward, currency }) => {
-      const apyWithEarnedAssets = (
-        <Stack spacing='half'>
-          <Span>{apy.toString()}%</Span>
-          <StyledApyTag>Earn: {lendReward?.currency.ticker}</StyledApyTag>
-        </Stack>
-      );
-
-      const asset = <MarketAsset currency={currency.ticker} />;
-
-      const freeBalance = balances ? balances[currency.ticker].free : new MonetaryAmount(currency, 0);
-
-      return {
-        id: currency.ticker,
-        asset,
-        apy: apyWithEarnedAssets,
-        'wallet-balance': displayMonetaryAmount(freeBalance)
-      };
-    }
+  const availableAssets = Object.values(assets).filter(
+    (asset) => !positions.find((position) => position.currency.ticker === asset.currency.ticker)
   );
+
+  const lendAssetsTableRows: LendAssetsTableRow[] = availableAssets.map(({ lendApy: apy, lendReward, currency }) => {
+    const apyWithEarnedAssets = (
+      <Stack spacing='none'>
+        <Span>{formatPercentage(apy.toNumber())}</Span>
+        {lendReward && <StyledApyTag>Earn: {lendReward.currency.ticker}</StyledApyTag>}
+      </Stack>
+    );
+
+    const asset = <AssetCell currency={currency.ticker} />;
+
+    const walletBalance = balances ? displayMonetaryAmount(balances[currency.ticker].free) : '0';
+    const wallet = `${walletBalance} ${currency.ticker}`;
+
+    return {
+      id: currency.ticker,
+      asset,
+      apy: apyWithEarnedAssets,
+      wallet,
+      collateral: null
+    };
+  });
 
   const hasLendPositions = !!lendPositionsTableRows.length;
 

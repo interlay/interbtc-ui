@@ -1,7 +1,7 @@
 import { formatNumber } from '@/common/utils/utils';
-import { Meter, MeterRanges, Stack, useMeter } from '@/component-library';
+import { MeterRanges, Stack, useMeter } from '@/component-library';
 
-import { StyledMeterWrapper } from './LoanModal.style';
+import { StyledMeter, StyledMeterScore, StyledMeterWrapper } from './LoanModal.style';
 
 const ranges: MeterRanges = [0, 3.3, 6.6, 10];
 
@@ -24,8 +24,8 @@ const LoanScore = ({ score = 0 }: LoanScoreProps): JSX.Element => {
     <Stack {...meterProps}>
       <span {...labelProps}>{label}</span>
       <StyledMeterWrapper>
-        <span>{isOverMaxValue ? '10+' : formatNumber(value, formatOptions)}</span>
-        <Meter value={value} ranges={ranges} />
+        <StyledMeterScore>{isOverMaxValue ? '10+' : formatNumber(value, formatOptions)}</StyledMeterScore>
+        <StyledMeter value={value} ranges={ranges} />
       </StyledMeterWrapper>
     </Stack>
   );

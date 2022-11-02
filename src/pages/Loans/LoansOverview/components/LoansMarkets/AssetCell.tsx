@@ -2,11 +2,11 @@ import { CoinIcon, Span, Tokens } from '@/component-library';
 
 import { StyledAsset } from './LoansMarkets.style';
 
-type MarketAssetProps = {
+type AssetCellProps = {
   currency: string;
 };
 
-const MarketAsset = ({ currency }: MarketAssetProps): JSX.Element => (
+const AssetCell = ({ currency }: AssetCellProps): JSX.Element => (
   <StyledAsset>
     {/* TODO: Get rid of type casting - accept any string as currency ticker in CoinIcon component. */}
     <CoinIcon coin={currency as Tokens} size='small' />
@@ -14,5 +14,5 @@ const MarketAsset = ({ currency }: MarketAssetProps): JSX.Element => (
   </StyledAsset>
 );
 
-export { MarketAsset };
-export type { MarketAssetProps };
+export { AssetCell };
+export type { AssetCellProps };

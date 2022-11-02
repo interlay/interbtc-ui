@@ -18,8 +18,12 @@ const StyledAsset = styled.div`
 
 const StyledTablesWrapper = styled.section`
   display: flex;
-  flex-direction: row;
   gap: ${theme.spacing.spacing6};
+  flex-direction: column;
+
+  @media (min-width: 80em) {
+    flex-direction: row;
+  }
 `;
 
 const StyledTableWrapper = styled(Stack)`
@@ -30,4 +34,8 @@ const StyledMarketTitle = styled(H2)`
   font-size: ${theme.text.xl2};
 `;
 
-export { StyledApyTag, StyledAsset, StyledMarketTitle, StyledTablesWrapper, StyledTableWrapper };
+const StyledSubLabel = styled(Span)`
+  font-size: ${theme.text.s};
+`;
+
+export { StyledApyTag, StyledAsset, StyledMarketTitle, StyledSubLabel, StyledTablesWrapper, StyledTableWrapper };
