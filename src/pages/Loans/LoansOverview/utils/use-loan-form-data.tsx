@@ -9,8 +9,8 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 type UseLoanFormData = {
-  governance: MonetaryAmount<CurrencyExt>;
-  transaction: MonetaryAmount<CurrencyExt>;
+  governanceBalance: MonetaryAmount<CurrencyExt>;
+  transactionFee: MonetaryAmount<CurrencyExt>;
   assetPrice: number;
   assetAmount: {
     available: MonetaryAmount<CurrencyExt>;
@@ -30,8 +30,8 @@ const useLoanFormData = (
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 
-  const governance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const transaction = TRANSACTION_FEE_AMOUNT;
+  const governanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const transactionFee = TRANSACTION_FEE_AMOUNT;
   const assetBalance = balances?.[asset.currency.ticker].free || zeroAssetAmount;
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
@@ -52,11 +52,11 @@ const useLoanFormData = (
       break;
   }
 
-  const minAmount = newMonetaryAmount(0, assetBalance.currency).add(newMonetaryAmount(1, assetBalance.currency));
+  const minAmount = newMonetaryAmount(1, assetBalance.currency);
 
   return {
-    governance,
-    transaction,
+    governanceBalance,
+    transactionFee,
     assetPrice,
     assetAmount: {
       available: assetBalance,

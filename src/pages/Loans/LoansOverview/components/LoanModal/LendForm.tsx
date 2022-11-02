@@ -66,11 +66,11 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
     getNewCollateralRatio
   } = useGetAccountLoansOverview();
 
-  const { governance, assetAmount, assetPrice, transaction } = useLoanFormData(variant, asset, position);
+  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
 
   const schemaParams: LendSchemaParams = {
-    governanceBalance: governance,
-    transactionFee: transaction,
+    governanceBalance,
+    transactionFee,
     minAmount: assetAmount.min,
     maxAmount: assetAmount.max,
     availableBalance: assetAmount.available
