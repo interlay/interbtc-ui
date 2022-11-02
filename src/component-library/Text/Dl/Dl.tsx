@@ -1,36 +1,10 @@
-import { ReactNode } from 'react';
+import { Flex, FlexProps } from '@/component-library/Flex';
 
-import { TextProps } from '../types';
-import { Dd, DefinitionList, Dt, ListItem } from './Dl.style';
+type DlProps = FlexProps;
 
-type DlItem = {
-  term: string;
-  definition: ReactNode;
-  render?: (children: ReactNode) => ReactNode;
-};
+const Dl = (props: DlProps): JSX.Element => <Flex {...props} as='dl' />;
 
-interface DlProps extends TextProps<HTMLDListElement> {
-  listItems: Array<DlItem>;
-}
-
-const Dl = ({ listItems, ...props }: DlProps): JSX.Element => {
-  return (
-    <DefinitionList {...props}>
-      {listItems.map((listItem) => {
-        const content = (
-          <>
-            <Dt>{listItem.term}:</Dt>
-            <Dd>{listItem.definition}</Dd>
-          </>
-        );
-
-        return <ListItem key={listItem.term}>{listItem.render?.(content) || content}</ListItem>;
-      })}
-    </DefinitionList>
-  );
-};
-
-Dl.displayName = 'P';
+Dl.displayName = 'Dl';
 
 export { Dl };
 export type { DlProps };
