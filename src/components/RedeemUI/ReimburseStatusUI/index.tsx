@@ -21,6 +21,7 @@ import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
+import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -53,7 +54,7 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
       try {
         const [punishment, btcDotRate] = await Promise.all([
           window.bridge.vaults.getPunishmentFee(),
-          window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
+          getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
         ]);
         const wrappedTokenAmount = redeem.request.requestedAmountBacking;
         setCollateralTokenAmount(btcDotRate.toCounter(wrappedTokenAmount));
