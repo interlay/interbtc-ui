@@ -91,7 +91,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
   return (
     <div className={clsx('text-center', 'space-y-2')}>
       {vaultCapacity && (
-        <p className={clsx(getColorShade('red'), 'text-sm')}>
+        <p className={clsx(getColorShade('red'))}>
           {executable
             ? t('issue_page.vault_has_capacity_you_can_claim', {
                 vaultCapacity: displayMonetaryAmount(vaultCapacity),
@@ -104,7 +104,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
         </p>
       )}
       {vaultCapacityError && (
-        <p className={clsx(getColorShade('red'), 'text-sm')}>
+        <p className={clsx(getColorShade('red'))}>
           {vaultCapacityError instanceof Error ? vaultCapacityError.message : String(vaultCapacityError)}
         </p>
       )}
