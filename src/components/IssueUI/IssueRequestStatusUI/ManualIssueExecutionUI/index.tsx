@@ -16,6 +16,7 @@ import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
 interface Props {
@@ -90,7 +91,13 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
   return (
     <div className={clsx('text-center', 'space-y-2')}>
       {vaultCapacity && (
-        <p>
+        <p
+          className={clsx(
+            { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+            { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+            'text-justify'
+          )}
+        >
           {executable
             ? t('issue_page.vault_has_capacity_you_can_claim', {
                 vaultCapacity: displayMonetaryAmount(vaultCapacity),
