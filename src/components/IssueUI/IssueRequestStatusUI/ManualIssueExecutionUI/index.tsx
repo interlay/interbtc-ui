@@ -17,6 +17,7 @@ import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { getColorShade } from '@/utils/helpers/colors';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
 interface Props {
@@ -110,7 +111,9 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
         </p>
       )}
       {vaultCapacityError && (
-        <p>{vaultCapacityError instanceof Error ? vaultCapacityError.message : String(vaultCapacityError)}</p>
+        <p className={clsx(getColorShade('red'), 'text-sm')}>
+          {vaultCapacityError instanceof Error ? vaultCapacityError.message : String(vaultCapacityError)}
+        </p>
       )}
       <InterlayDenimOrKintsugiMidnightOutlinedButton
         className='w-full'
