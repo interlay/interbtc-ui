@@ -16,7 +16,6 @@ import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
-import { getColorShade } from '@/utils/helpers/colors';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
 interface Props {
@@ -107,6 +106,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
         <p>{vaultCapacityError instanceof Error ? vaultCapacityError.message : String(vaultCapacityError)}</p>
       )}
       <InterlayDenimOrKintsugiMidnightOutlinedButton
+        className='w-full'
         pending={executeMutation.isLoading}
         disabled={!executable}
         onClick={handleExecute(request)}
