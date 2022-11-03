@@ -192,20 +192,11 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    // ray test touch <
     data: issueRequests ?? []
-    // ray test touch >
   });
 
   const renderContent = () => {
-    if (
-      // ray test touch <
-      issueRequestsIdle ||
-      issueRequestsLoading ||
-      // ray test touch >
-      issuesCountIdle ||
-      issuesCountLoading
-    ) {
+    if (issueRequestsIdle || issueRequestsLoading || issuesCountIdle || issuesCountLoading) {
       return <PrimaryColorEllipsisLoader />;
     }
     if (issuesCount === undefined) {
