@@ -1,4 +1,3 @@
-// ray test touch <
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
@@ -9,10 +8,8 @@ import issuesFetcher, {
   // getIssueWithStatus,
   ISSUES_FETCHER
 } from '@/services/fetchers/issues-fetcher';
-// ray test touch >
 
 const Actions = (): JSX.Element => {
-  // ray test touch <
   const { selectedAccount } = useSubstrateSecureState();
   const {
     // isIdle: issueRequestsIdle,
@@ -33,6 +30,7 @@ const Actions = (): JSX.Element => {
     }
   );
   useErrorHandler(issueRequestsError);
+  // ray test touch <
   console.log('ray : ***** issueRequests => ', issueRequests);
   // ray test touch >
 
