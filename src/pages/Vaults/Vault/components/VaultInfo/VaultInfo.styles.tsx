@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Card, Dl, theme } from '@/component-library';
+import { Card, Dl, DlGroup, theme } from '@/component-library';
 
 const StyledWrapper = styled(Card)`
   flex-direction: column;
@@ -15,10 +15,34 @@ const StyledWrapper = styled(Card)`
 `;
 
 const StyledDl = styled(Dl)`
+  display: flex;
+  flex-direction: column;
+  font-size: ${theme.text.s};
+  gap: ${theme.spacing.spacing5};
+
   @media (min-width: 64em) {
-    padding-right: ${theme.spacing.spacing10};
-    border-right: 1px solid ${theme.colors.textTertiary};
+    flex-direction: row;
+    gap: ${theme.spacing.spacing8};
   }
 `;
 
-export { StyledDl, StyledWrapper };
+const StyledDlGroup = styled(DlGroup)`
+  display: flex;
+  align-items: center;
+
+  &:not(:last-of-type) {
+    padding-bottom: ${theme.spacing.spacing5};
+    border-bottom: ${theme.border.default};
+  }
+
+  @media (min-width: 64em) {
+    &:not(:last-of-type) {
+      padding-right: ${theme.spacing.spacing8};
+      border-right: ${theme.border.default};
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+`;
+
+export { StyledDl, StyledDlGroup, StyledWrapper };

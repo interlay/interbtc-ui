@@ -1,15 +1,15 @@
 import { CollateralCurrencyExt, VaultStatusExt } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import React, { HTMLAttributes, ReactNode, useState } from 'react';
+import React, { HTMLAttributes, useState } from 'react';
 
 import { shortAddress } from '@/common/utils/utils';
-import { CTA, DlProps } from '@/component-library';
+import { CTA, Dd, Dt } from '@/component-library';
 import { Status } from '@/component-library/utils/prop-types';
 import RequestReplacementModal from '@/pages/Vaults/Vault/RequestReplacementModal';
 
 import { StatusTag } from '../StatusTag';
-import { StyledDl, StyledWrapper } from './VaultInfo.styles';
+import { StyledDl, StyledDlGroup, StyledWrapper } from './VaultInfo.styles';
 
 // TODO: move these to dictionary file
 const getVaultStatus = (vaultStatus: VaultStatusExt): { children: React.ReactNode; status: Status } => {
@@ -54,24 +54,28 @@ const VaultInfo = ({
   ...props
 }: VaultInfoProps): JSX.Element => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const { children: definition, status } = getVaultStatus(vaultStatus);
-
-  const headlineItems: DlProps['listItems'] = [
-    { term: 'Vault ID', definition: shortAddress(vaultAddress) },
-    {
-      term: 'Vault Status',
-      definition,
-      render: (children: ReactNode) => <StatusTag status={status}>{children}</StatusTag>
-    }
-  ];
-
-  if (vaultDisplayName) {
-    headlineItems.push({ term: 'Identity', definition: vaultDisplayName });
-  }
+  const { children: vaultStatusDefinition, status } = getVaultStatus(vaultStatus);
 
   return (
     <StyledWrapper variant='bordered' {...props}>
-      <StyledDl listItems={headlineItems} />
+      <StyledDl>
+        <StyledDlGroup gap='2'>
+          <Dt>Vault ID:</Dt>
+          <Dd>{shortAddress(vaultAddress)}</Dd>
+        </StyledDlGroup>
+        <StyledDlGroup gap='2'>
+          <StatusTag status={status}>
+            <Dt>Vault Status:</Dt>
+            <Dd>{vaultStatusDefinition}</Dd>
+          </StatusTag>
+        </StyledDlGroup>
+        {vaultDisplayName && (
+          <StyledDlGroup gap='2'>
+            <Dt>Identity</Dt>
+            <Dd>{vaultDisplayName}</Dd>
+          </StyledDlGroup>
+        )}
+      </StyledDl>
       {hasManageVaultBtn && (
         <CTA size='small' variant='outlined' onClick={() => setModalOpen(true)}>
           Replace Vault

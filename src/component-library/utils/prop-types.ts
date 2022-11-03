@@ -23,6 +23,10 @@ export const alignItems = tuple('flex-start', 'center', 'flex-end', 'stretch', '
 
 export const normalAlignments = tuple('start', 'center', 'end');
 
+export const direction = tuple('row', 'row-reverse', 'column', 'column-reverse');
+
+export const spacing = tuple('1', '2', '3', '4', '5', '6', '8', '10', '12', '28');
+
 export type Variants = typeof variant[number];
 
 export type CTAVariants = typeof ctaVariant[number];
@@ -38,3 +42,7 @@ export type JustifyContent = typeof justifyContent[number];
 export type AlignItems = typeof alignItems[number];
 
 export type NormalAlignments = typeof normalAlignments[number];
+
+export type Direction = typeof direction[number];
+
+export type Spacing = typeof spacing[number];
