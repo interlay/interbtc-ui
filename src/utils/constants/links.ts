@@ -25,9 +25,7 @@ const PAGES = Object.freeze({
   // eslint-disable-next-line max-len
   VAULT: `/vaults/:${URL_PARAMETERS.VAULT.ACCOUNT}/:${URL_PARAMETERS.VAULT.COLLATERAL}/:${URL_PARAMETERS.VAULT.WRAPPED}`,
   FEEDBACK: '/feedback',
-  // ray test touch <
   ACTIONS: '/actions'
-  // ray test touch >
 });
 
 const QUERY_PARAMETERS = Object.freeze({
