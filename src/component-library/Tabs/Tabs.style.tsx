@@ -77,8 +77,7 @@ const TabSelection = styled.div<TabSelectionProps>`
   border-radius: ${theme.rounded.rg};
   background-color: ${theme.tabs.active.bg};
   will-change: transform, width;
-  // TODO: have this transition into theme
-  transition: transform 150ms, width ${theme.transition.duration}ms;
+  transition: transform ${theme.transition.duration.duration150}ms, width ${theme.transition.duration.duration100}ms;
   z-index: -1;
 
   width: ${(props) => props.$width}px;
