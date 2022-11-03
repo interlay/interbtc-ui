@@ -16,6 +16,7 @@ const queryClient = new QueryClient();
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   path?: `/${string}`;
+  hasLayout?: boolean;
 }
 
 const testStore = createStore(rootReducer);
@@ -44,6 +45,14 @@ const customRender = (ui: ReactElement, options?: CustomRenderOptions): Promise<
   const history = createMemoryHistory();
   if (options?.path) {
     history.push(options.path);
+  }
+
+  if (!options?.hasLayout) {
+    jest.mock('../parts/Layout', () => {
+      const MockedLayout: React.FC = ({ children }: any) => children;
+      MockedLayout.displayName = 'MockedLayout';
+      return MockedLayout;
+    });
   }
 
   // Wrapped in act so async updates are awaited.

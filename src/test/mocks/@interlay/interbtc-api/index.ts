@@ -27,6 +27,7 @@ import {
   mockVaultsGetVaultsWithIssuableTokens
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
+import { mockGetBorrowPositionsOfAccount, mockGetLendPositionsOfAccount, mockGetLoanAssets } from './parachain/loans';
 
 type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
@@ -82,6 +83,11 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   vaults: {
     get: mockVaultsGet,
     getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens
+  },
+  loans: {
+    getLendPositionsOfAccount: mockGetLendPositionsOfAccount,
+    getBorrowPositionsOfAccount: mockGetBorrowPositionsOfAccount,
+    getLoanAssets: mockGetLoanAssets
   }
 };
 
