@@ -21,12 +21,10 @@ import InterlayTable, {
 } from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
 import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
-import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
-import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+import useIssueRequests from '@/services/hooks/use-issue-requests';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -168,47 +166,20 @@ const IssueRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const {
-    isIdle: stableBitcoinConfirmationsIdle,
-    isLoading: stableBitcoinConfirmationsLoading,
-    data: stableBitcoinConfirmations,
-    error: stableBitcoinConfirmationsError
-  } = useStableBitcoinConfirmations();
-  useErrorHandler(stableBitcoinConfirmationsError);
-
-  const {
-    isIdle: currentActiveBlockNumberIdle,
-    isLoading: currentActiveBlockNumberLoading,
-    data: currentActiveBlockNumber,
-    error: currentActiveBlockNumberError
-  } = useCurrentActiveBlockNumber();
-  useErrorHandler(currentActiveBlockNumberError);
-
-  const {
-    isIdle: stableParachainConfirmationsIdle,
-    isLoading: stableParachainConfirmationsLoading,
-    data: stableParachainConfirmations,
-    error: stableParachainConfirmationsError
-  } = useStableParachainConfirmations();
-  useErrorHandler(stableParachainConfirmationsError);
-
   const selectedPageIndex = selectedPage - 1;
 
   const {
-    isIdle: issuesIdle,
-    isLoading: issuesLoading,
-    data: issues,
-    error: issuesError
-    // TODO: should type properly (`Relay`)
-  } = useQuery<any, Error>(
-    [
-      ISSUES_FETCHER,
-      selectedPageIndex * TABLE_PAGE_LIMIT, // offset
-      TABLE_PAGE_LIMIT // limit
-    ],
-    issuesFetcher
+    isIdle: issueRequestsIdle,
+    isLoading: issueRequestsLoading,
+    data: issueRequests,
+    error: issueRequestsError
+  } = useIssueRequests(
+    undefined,
+    selectedPageIndex * TABLE_PAGE_LIMIT,
+    TABLE_PAGE_LIMIT,
+    ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
-  useErrorHandler(issuesError);
+  useErrorHandler(issueRequestsError);
 
   const {
     isIdle: issuesCountIdle,
@@ -219,40 +190,19 @@ const IssueRequestsTable = (): JSX.Element => {
   } = useQuery<GraphqlReturn<any>, Error>([GRAPHQL_FETCHER, issueCountQuery()], graphqlFetcher<GraphqlReturn<any>>());
   useErrorHandler(issuesCountError);
 
-  // ray test touch <
-  const data =
-    issues === undefined ||
-    stableBitcoinConfirmations === undefined ||
-    stableParachainConfirmations === undefined ||
-    currentActiveBlockNumber === undefined
-      ? []
-      : issues.map(
-          // TODO: should type properly (`Relay`)
-          (issue: any) =>
-            getIssueWithStatus(
-              issue,
-              stableBitcoinConfirmations,
-              stableParachainConfirmations,
-              currentActiveBlockNumber
-            )
-        );
-  // ray test touch >
-
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    data
+    // ray test touch <
+    data: issueRequests ?? []
+    // ray test touch >
   });
 
   const renderContent = () => {
     if (
-      stableBitcoinConfirmationsIdle ||
-      stableBitcoinConfirmationsLoading ||
-      stableParachainConfirmationsIdle ||
-      stableParachainConfirmationsLoading ||
-      currentActiveBlockNumberIdle ||
-      currentActiveBlockNumberLoading ||
-      issuesIdle ||
-      issuesLoading ||
+      // ray test touch <
+      issueRequestsIdle ||
+      issueRequestsLoading ||
+      // ray test touch >
       issuesCountIdle ||
       issuesCountLoading
     ) {

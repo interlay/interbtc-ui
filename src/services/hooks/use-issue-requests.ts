@@ -6,7 +6,7 @@ import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-c
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 
 const useIssueRequests = (
-  accountAddress: string,
+  accountAddress: string | undefined,
   offset: number,
   limit: number,
   refetchInterval?: number | false | undefined
@@ -44,12 +44,14 @@ const useIssueRequests = (
     error: issueRequestsError
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
-    [
-      ISSUES_FETCHER,
-      offset, // offset
-      limit, // limit
-      `userParachainAddress_eq: "${accountAddress}"` // `WHERE` condition
-    ],
+    accountAddress === undefined
+      ? [ISSUES_FETCHER, offset, limit]
+      : [
+          ISSUES_FETCHER,
+          offset,
+          limit,
+          `userParachainAddress_eq: "${accountAddress}"` // `WHERE` condition
+        ],
     issuesFetcher,
     {
       refetchInterval

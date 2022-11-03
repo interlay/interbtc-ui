@@ -242,7 +242,9 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
+    // ray test touch <
     data
+    // ray test touch >
   });
 
   if (

@@ -246,7 +246,9 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
+    // ray test touch <
     data
+    // ray test touch >
   });
 
   if (
