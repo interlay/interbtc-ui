@@ -9,5 +9,5 @@ const loans = {
 };
 
 export default loans;
-export type { LoanBorrowValidationParams, LoanRepayValidationParams } from './borrow';
-export type { LoanLendValidationParams, LoanWithdrawValidationParams } from './lend';
+export type { LoanBorrowSchemaParams, LoanRepaySchemaParams } from './borrow';
+export type { LoanLendSchemaParams, LoanWithdrawSchemaParams } from './lend';

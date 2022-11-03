@@ -6,17 +6,14 @@ import { useForm } from 'react-hook-form';
 import { TFunction, useTranslation } from 'react-i18next';
 import * as z from 'zod';
 
-import { displayMonetaryAmountInUSDFormat, formatNumber, formatUSD, monetaryToNumber } from '@/common/utils/utils';
-import { CTA, H3, P, Stack, Strong, TokenInput } from '@/component-library';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import validate, { LoanBorrowValidationParams, LoanRepayValidationParams } from '@/lib/form-validation';
+import { displayMonetaryAmountInUSDFormat, formatNumber, formatUSD } from '@/common/utils/utils';
+import { CTA, H3, P, Stack, TokenInput } from '@/component-library';
+import validate, { LoanBorrowSchemaParams, LoanRepaySchemaParams } from '@/lib/form-validation';
 import { BorrowAction } from '@/types/loans';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
-import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { useLoanFormData } from '../../utils/use-loan-form-data';
 import { StyledDItem, StyledDl } from './LoanModal.style';
 import { LoanScore } from './LoanScore';
 
@@ -26,15 +23,17 @@ const REPAY_AMOUNT = 'repay-amount';
 const getContentMap = (t: TFunction) => ({
   borrow: {
     title: t('loans.borrow'),
-    fieldLabel: t('forms.field_amount', { field: t('loans.borrow').toLowerCase() })
+    label: 'Available',
+    fieldAriaLabel: t('forms.field_amount', { field: t('loans.borrow').toLowerCase() })
   },
   repay: {
     title: t('loans.repay'),
-    fieldLabel: t('forms.field_amount', { field: t('loans.repay').toLowerCase() })
+    label: 'Borrowed',
+    fieldAriaLabel: t('forms.field_amount', { field: t('loans.repay').toLowerCase() })
   }
 });
 
-type BorrowSchemaParams = LoanBorrowValidationParams & LoanRepayValidationParams;
+type BorrowSchemaParams = LoanBorrowSchemaParams & LoanRepaySchemaParams;
 
 const getSchema = (t: TFunction, variant: BorrowAction, params: BorrowSchemaParams) => {
   if (variant === 'borrow') {
@@ -63,31 +62,18 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const {
     data: { borrowLimitUSDValue },
     refetch,
-    getMaxBorrowableAmount,
     getNewBorrowLimitUSDValue,
     getNewCollateralRatio
   } = useGetAccountLoansOverview();
-  const { data: balances } = useGetBalances();
-  const prices = useGetPrices();
 
-  const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
-
-  const governanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const transactionFee = TRANSACTION_FEE_AMOUNT;
-  const balance = balances?.[asset.currency.ticker].free || zeroAssetAmount;
-
-  const maxBorrowableAmount = getMaxBorrowableAmount(asset.currency, asset.availableCapacity) || zeroAssetAmount;
-  const maximumBorrowable = monetaryToNumber(maxBorrowableAmount);
-  const borrowedAmount = monetaryToNumber(position?.amount);
-
-  const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
+  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
 
   const schemaParams: BorrowSchemaParams = {
     governanceBalance,
     transactionFee,
-    minAmount: newMonetaryAmount(0, balance.currency).add(newMonetaryAmount(1, balance.currency)),
-    maxAmount: maxBorrowableAmount,
-    availableBalance: balance
+    minAmount: assetAmount.min,
+    maxAmount: assetAmount.max,
+    availableBalance: assetAmount.available
   };
 
   const schema = getSchema(t, variant, schemaParams);
@@ -129,21 +115,22 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
           <P>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</P>
         </div>
         <Stack>
-          <StyledDItem>
-            <dt>
-              {variant === 'borrow' ? 'Available' : 'Borrowed'} {asset.currency.ticker}:
-            </dt>
-            <dd>
-              <Strong>{formatNumber(variant === 'borrow' ? maximumBorrowable : borrowedAmount)}</Strong> (
-              {formatUSD((variant === 'borrow' ? maximumBorrowable : borrowedAmount) * assetPrice)})
-            </dd>
-          </StyledDItem>
           <TokenInput
             placeholder='0.00'
-            valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
             tokenSymbol={asset.currency.ticker}
             errorMessage={getErrorMessage(errors[amountFieldName])}
-            aria-label={content.fieldLabel}
+            label={content.label}
+            aria-label={content.fieldAriaLabel}
+            balance={assetAmount.max.toBig().toNumber()}
+            balanceInUSD={displayMonetaryAmountInUSDFormat(assetAmount.max, assetPrice)}
+            valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
+            // TODO: we need a more generic way to know how many digits to show
+            renderBalance={(value) =>
+              formatNumber(value, {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 5
+              })
+            }
             {...register(amountFieldName)}
           />
           <LoanScore score={collateralRatio} />

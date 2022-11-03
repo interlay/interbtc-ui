@@ -5,11 +5,11 @@ import * as z from 'zod';
 
 import balance from '../common/balance';
 import field from '../common/field';
-import { CommonValidationParams } from '../common/type';
+import { AvailableBalanceSchemaParams, CommonSchemaParams, MaxAmountSchemaParams } from '../types';
 
-type LoanLendValidationParams = CommonValidationParams;
+type LoanLendSchemaParams = CommonSchemaParams & AvailableBalanceSchemaParams;
 
-const lend = (t: TFunction, params: LoanLendValidationParams): z.ZodEffects<z.ZodString, string, string> =>
+const lend = (t: TFunction, params: LoanLendSchemaParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
     const { governanceBalance, transactionFee, availableBalance, minAmount } = params;
 
@@ -37,9 +37,9 @@ const lend = (t: TFunction, params: LoanLendValidationParams): z.ZodEffects<z.Zo
     }
   });
 
-type LoanWithdrawValidationParams = Required<CommonValidationParams>;
+type LoanWithdrawSchemaParams = CommonSchemaParams & MaxAmountSchemaParams;
 
-const withdraw = (t: TFunction, params: LoanWithdrawValidationParams): z.ZodEffects<z.ZodString, string, string> =>
+const withdraw = (t: TFunction, params: LoanWithdrawSchemaParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
     const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
@@ -72,4 +72,4 @@ const withdraw = (t: TFunction, params: LoanWithdrawValidationParams): z.ZodEffe
   });
 
 export { lend, withdraw };
-export type { LoanLendValidationParams, LoanWithdrawValidationParams };
+export type { LoanLendSchemaParams, LoanWithdrawSchemaParams };

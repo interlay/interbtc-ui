@@ -7,10 +7,10 @@ const validation = {
 };
 
 export type {
-  LoanBorrowValidationParams,
-  LoanLendValidationParams,
-  LoanRepayValidationParams,
-  LoanWithdrawValidationParams
+  LoanBorrowSchemaParams,
+  LoanLendSchemaParams,
+  LoanRepaySchemaParams,
+  LoanWithdrawSchemaParams
 } from './loans';
 export type { VaultDepositSchemaParams } from './vaults';
 export default validation;

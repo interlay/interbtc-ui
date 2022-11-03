@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { theme } from '@/component-library';
+import { Tabs, theme } from '@/component-library';
 
 const StyledDl = styled.dl`
   display: flex;
@@ -22,4 +22,12 @@ const StyledMeterWrapper = styled.div`
   gap: ${theme.spacing.spacing4};
 `;
 
-export { StyledDItem, StyledDl, StyledMeterWrapper };
+const StyledTabs = styled(Tabs)`
+  margin-top: ${theme.spacing.spacing6};
+`;
+
+const StyledWrapper = styled.div`
+  margin-top: ${theme.spacing.spacing6};
+`;
+
+export { StyledDItem, StyledDl, StyledMeterWrapper, StyledTabs, StyledWrapper };
