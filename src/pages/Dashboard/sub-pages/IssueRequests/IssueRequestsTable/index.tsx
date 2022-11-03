@@ -219,6 +219,7 @@ const IssueRequestsTable = (): JSX.Element => {
   } = useQuery<GraphqlReturn<any>, Error>([GRAPHQL_FETCHER, issueCountQuery()], graphqlFetcher<GraphqlReturn<any>>());
   useErrorHandler(issuesCountError);
 
+  // ray test touch <
   const data =
     issues === undefined ||
     stableBitcoinConfirmations === undefined ||
@@ -235,6 +236,7 @@ const IssueRequestsTable = (): JSX.Element => {
               currentActiveBlockNumber
             )
         );
+  // ray test touch >
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
