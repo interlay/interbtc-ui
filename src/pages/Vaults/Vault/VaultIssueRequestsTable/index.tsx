@@ -225,6 +225,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
     [t]
   );
 
+  // ray test touch <
   const data =
     issueRequests === undefined ||
     stableBitcoinConfirmations === undefined ||
@@ -241,6 +242,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
               currentActiveBlockNumber
             )
         );
+  // ray test touch >
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,

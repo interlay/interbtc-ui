@@ -223,6 +223,7 @@ const IssueRequestsTable = (): JSX.Element => {
     [t]
   );
 
+  // ray test touch <
   const data =
     issueRequests === undefined ||
     stableBitcoinConfirmations === undefined ||
@@ -239,6 +240,7 @@ const IssueRequestsTable = (): JSX.Element => {
               currentActiveBlockNumber
             )
         );
+  // ray test touch >
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
