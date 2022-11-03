@@ -1,4 +1,3 @@
-// ray test touch <
 import { useQuery } from 'react-query';
 
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
@@ -95,4 +94,3 @@ const useIssueRequests = (
 };
 
 export default useIssueRequests;
-// ray test touch >
