@@ -14,7 +14,12 @@ const Actions = (): JSX.Element => {
     isLoading: issueRequestsLoading,
     data: issueRequests,
     error: issueRequestsError
-  } = useIssueRequests(selectedAccount?.address ?? '', 0, 0, ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL);
+  } = useIssueRequests(
+    0,
+    0,
+    `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
+    ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
+  );
   useErrorHandler(issueRequestsError);
 
   if (issueRequestsIdle || issueRequestsLoading) {

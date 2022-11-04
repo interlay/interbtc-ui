@@ -68,9 +68,9 @@ const IssueRequestsTable = (): JSX.Element => {
     data: issueRequests,
     error: issueRequestsError
   } = useIssueRequests(
-    selectedAccount?.address ?? '',
     selectedPageIndex * TABLE_PAGE_LIMIT,
     TABLE_PAGE_LIMIT,
+    `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
   useErrorHandler(issueRequestsError);

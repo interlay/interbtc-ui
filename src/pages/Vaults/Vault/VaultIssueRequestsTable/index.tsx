@@ -24,10 +24,9 @@ import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
-import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
-import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+// ray test touch <
+import useIssueRequests from '@/services/hooks/use-issue-requests';
+// ray test touch >
 import issueCountQuery from '@/services/queries/issue-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -50,30 +49,6 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
   const collateralTokenCondition = getCurrencyEqualityCondition(collateralToken);
 
   const {
-    isIdle: stableBitcoinConfirmationsIdle,
-    isLoading: stableBitcoinConfirmationsLoading,
-    data: stableBitcoinConfirmations,
-    error: stableBitcoinConfirmationsError
-  } = useStableBitcoinConfirmations();
-  useErrorHandler(stableBitcoinConfirmationsError);
-
-  const {
-    isIdle: currentActiveBlockNumberIdle,
-    isLoading: currentActiveBlockNumberLoading,
-    data: currentActiveBlockNumber,
-    error: currentActiveBlockNumberError
-  } = useCurrentActiveBlockNumber();
-  useErrorHandler(currentActiveBlockNumberError);
-
-  const {
-    isIdle: stableParachainConfirmationsIdle,
-    isLoading: stableParachainConfirmationsLoading,
-    data: stableParachainConfirmations,
-    error: stableParachainConfirmationsError
-  } = useStableParachainConfirmations();
-  useErrorHandler(stableParachainConfirmationsError);
-
-  const {
     isIdle: issueRequestsTotalCountIdle,
     isLoading: issueRequestsTotalCountLoading,
     data: issueRequestsTotalCount,
@@ -88,25 +63,20 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
   );
   useErrorHandler(issueRequestsTotalCountError);
 
+  // ray test touch <
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: issueRequests,
     error: issueRequestsError
-    // TODO: should type properly (`Relay`)
-  } = useQuery<any, Error>(
-    [
-      ISSUES_FETCHER,
-      selectedPageIndex * TABLE_PAGE_LIMIT, // offset
-      TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
-    ],
-    issuesFetcher,
-    {
-      refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
-    }
+  } = useIssueRequests(
+    selectedPageIndex * TABLE_PAGE_LIMIT,
+    TABLE_PAGE_LIMIT,
+    `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}`, // `WHERE` condition // TODO: add asset_eq, see comment above
+    ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
   useErrorHandler(issueRequestsError);
+  // ray test touch >
 
   const columns = React.useMemo(
     () => [
@@ -225,44 +195,14 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
     [t]
   );
 
-  // ray test touch <
-  const data =
-    issueRequests === undefined ||
-    stableBitcoinConfirmations === undefined ||
-    stableParachainConfirmations === undefined ||
-    currentActiveBlockNumber === undefined
-      ? []
-      : issueRequests.map(
-          // TODO: should type properly (`Relay`)
-          (issueRequest: any) =>
-            getIssueWithStatus(
-              issueRequest,
-              stableBitcoinConfirmations,
-              stableParachainConfirmations,
-              currentActiveBlockNumber
-            )
-        );
-  // ray test touch >
-
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
     // ray test touch <
-    data
+    data: issueRequests ?? []
     // ray test touch >
   });
 
-  if (
-    stableBitcoinConfirmationsIdle ||
-    stableBitcoinConfirmationsLoading ||
-    stableParachainConfirmationsIdle ||
-    stableParachainConfirmationsLoading ||
-    currentActiveBlockNumberIdle ||
-    currentActiveBlockNumberLoading ||
-    issueRequestsTotalCountIdle ||
-    issueRequestsTotalCountLoading ||
-    issueRequestsIdle ||
-    issueRequestsLoading
-  ) {
+  if (issueRequestsTotalCountIdle || issueRequestsTotalCountLoading || issueRequestsIdle || issueRequestsLoading) {
     return <PrimaryColorEllipsisLoader />;
   }
   if (issueRequestsTotalCount === undefined) {

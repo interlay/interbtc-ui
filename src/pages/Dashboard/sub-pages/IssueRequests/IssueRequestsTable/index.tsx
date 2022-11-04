@@ -174,9 +174,9 @@ const IssueRequestsTable = (): JSX.Element => {
     data: issueRequests,
     error: issueRequestsError
   } = useIssueRequests(
-    undefined,
     selectedPageIndex * TABLE_PAGE_LIMIT,
     TABLE_PAGE_LIMIT,
+    undefined,
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
   useErrorHandler(issueRequestsError);
