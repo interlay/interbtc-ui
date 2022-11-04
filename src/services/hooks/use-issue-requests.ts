@@ -5,12 +5,10 @@ import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-blo
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 
-// ray test touch <
 // TODO: bare minimum for now
 interface IssueRequest {
   id: string;
 }
-// ray test touch >
 
 const useIssueRequests = (
   offset: number,
@@ -20,9 +18,7 @@ const useIssueRequests = (
 ): {
   isIdle: boolean;
   isLoading: boolean;
-  // ray test touch <
   data: Array<IssueRequest> | undefined;
-  // ray test touch >
   error: Error | null;
 } => {
   const {
