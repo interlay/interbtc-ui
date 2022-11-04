@@ -5,6 +5,13 @@ import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-blo
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 
+// ray test touch <
+// TODO: bare minimum for now
+interface IssueRequest {
+  id: string;
+}
+// ray test touch >
+
 const useIssueRequests = (
   offset: number,
   limit: number,
@@ -14,7 +21,7 @@ const useIssueRequests = (
   isIdle: boolean;
   isLoading: boolean;
   // ray test touch <
-  data: any | undefined; // TODO: should type properly (`Relay`)
+  data: Array<IssueRequest> | undefined;
   // ray test touch >
   error: Error | null;
 } => {
@@ -44,8 +51,7 @@ const useIssueRequests = (
     isLoading: issueRequestsLoading,
     data: issueRequests,
     error: issueRequestsError
-    // TODO: should type properly (`Relay`)
-  } = useQuery<any, Error>(
+  } = useQuery<Array<IssueRequest>, Error>(
     whereCondition === undefined ? [ISSUES_FETCHER, offset, limit] : [ISSUES_FETCHER, offset, limit, whereCondition],
     issuesFetcher,
     {
@@ -53,21 +59,14 @@ const useIssueRequests = (
     }
   );
 
-  const data =
+  const data: Array<IssueRequest> | undefined =
     issueRequests === undefined ||
     stableBitcoinConfirmations === undefined ||
     stableParachainConfirmations === undefined ||
     currentActiveBlockNumber === undefined
       ? undefined
-      : issueRequests.map(
-          // TODO: should type properly (`Relay`)
-          (issueRequest: any) =>
-            getIssueWithStatus(
-              issueRequest,
-              stableBitcoinConfirmations,
-              stableParachainConfirmations,
-              currentActiveBlockNumber
-            )
+      : issueRequests.map((item) =>
+          getIssueWithStatus(item, stableBitcoinConfirmations, stableParachainConfirmations, currentActiveBlockNumber)
         );
 
   return {
