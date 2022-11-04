@@ -13,7 +13,9 @@ const useIssueRequests = (
 ): {
   isIdle: boolean;
   isLoading: boolean;
-  data: any; // TODO: should type properly (`Relay`)
+  // ray test touch <
+  data: any | undefined; // TODO: should type properly (`Relay`)
+  // ray test touch >
   error: Error | null;
 } => {
   const {
