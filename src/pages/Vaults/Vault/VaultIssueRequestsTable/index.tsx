@@ -24,9 +24,7 @@ import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-// ray test touch <
 import useIssueRequests from '@/services/hooks/use-issue-requests';
-// ray test touch >
 import issueCountQuery from '@/services/queries/issue-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -63,7 +61,6 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
   );
   useErrorHandler(issueRequestsTotalCountError);
 
-  // ray test touch <
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
@@ -76,7 +73,6 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
   useErrorHandler(issueRequestsError);
-  // ray test touch >
 
   const columns = React.useMemo(
     () => [
@@ -197,9 +193,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    // ray test touch <
     data: issueRequests ?? []
-    // ray test touch >
   });
 
   if (issueRequestsTotalCountIdle || issueRequestsTotalCountLoading || issueRequestsIdle || issueRequestsLoading) {

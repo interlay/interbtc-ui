@@ -8,9 +8,7 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 const useIssueRequests = (
   offset: number,
   limit: number,
-  // ray test touch <
   whereCondition: string | undefined,
-  // ray test touch >
   refetchInterval?: number | false | undefined
 ): {
   isIdle: boolean;
@@ -48,9 +46,7 @@ const useIssueRequests = (
     error: issueRequestsError
     // TODO: should type properly (`Relay`)
   } = useQuery<any, Error>(
-    // ray test touch <
     whereCondition === undefined ? [ISSUES_FETCHER, offset, limit] : [ISSUES_FETCHER, offset, limit, whereCondition],
-    // ray test touch >
     issuesFetcher,
     {
       refetchInterval
