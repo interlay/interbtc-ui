@@ -1,20 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BorrowPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
-import Big from 'big.js';
 import { useForm } from 'react-hook-form';
 import { TFunction, useTranslation } from 'react-i18next';
 import * as z from 'zod';
 
-import { displayMonetaryAmountInUSDFormat, formatNumber, formatUSD } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import { CTA, TokenInput } from '@/component-library';
 import validate, { LoanBorrowSchemaParams, LoanRepaySchemaParams } from '@/lib/form-validation';
 import { BorrowAction } from '@/types/loans';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useLoanFormData } from '../../utils/use-loan-form-data';
-import { StyledDItem, StyledDl, StyledFormWrapper } from './LoanModal.style';
-import { LoanScore } from './LoanScore';
+import { BorrowLimit } from '../BorrowLimit';
+import { LoanActionInfo } from '../LoanActionInfo';
+import { StyledFormWrapper } from './LoanModal.style';
 
 const BORROW_AMOUNT = 'borrow-amount';
 const REPAY_AMOUNT = 'repay-amount';
@@ -22,12 +24,12 @@ const REPAY_AMOUNT = 'repay-amount';
 const getContentMap = (t: TFunction) => ({
   borrow: {
     title: t('loans.borrow'),
-    label: 'Available',
+    label: 'Limit',
     fieldAriaLabel: t('forms.field_amount', { field: t('loans.borrow').toLowerCase() })
   },
   repay: {
     title: t('loans.repay'),
-    label: 'Borrowed',
+    label: t('loans.borrowing'),
     fieldAriaLabel: t('forms.field_amount', { field: t('loans.repay').toLowerCase() })
   }
 });
@@ -57,13 +59,9 @@ type BorrowFormProps = {
 const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element => {
   const { t } = useTranslation();
   const content = getContentMap(t)[variant];
-  const {
-    data: { borrowLimitUSDValue },
-    refetch,
-    getNewBorrowLimitUSDValue,
-    getNewCollateralRatio
-  } = useGetAccountLoansOverview();
-
+  const { refetch } = useGetAccountLoansOverview();
+  const { thresholds } = useGetLoansData();
+  const prices = useGetPrices();
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
 
   const schemaParams: BorrowSchemaParams = {
@@ -89,8 +87,6 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
   const amountFieldName = variant === 'borrow' ? BORROW_AMOUNT : REPAY_AMOUNT;
   const amount = watch(amountFieldName) || 0;
   const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
-  const newBorrowLimit = getNewBorrowLimitUSDValue(variant, asset.currency, monetaryAmount) || Big(0);
-  const collateralRatio = getNewCollateralRatio(variant, asset.currency, monetaryAmount);
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty;
 
@@ -124,27 +120,8 @@ const BorrowForm = ({ asset, variant, position }: BorrowFormProps): JSX.Element 
           }
           {...register(amountFieldName)}
         />
-        <LoanScore score={collateralRatio} />
-        <StyledDl>
-          <StyledDItem>
-            <dt>APY</dt>
-            <dd>{formatNumber(asset.borrowApy.toNumber())}%</dd>
-          </StyledDItem>
-          {variant === 'borrow' && asset.borrowReward && (
-            <StyledDItem>
-              <dt>Borrow Limit</dt>
-              <dd>
-                {formatUSD(borrowLimitUSDValue?.toNumber() || 0)} -&gt; {formatUSD(newBorrowLimit.toNumber())}
-              </dd>
-            </StyledDItem>
-          )}
-          <StyledDItem>
-            <dt>Borrow Limit</dt>
-            <dd>
-              {formatUSD(borrowLimitUSDValue?.toNumber() || 0)} -&gt; {formatUSD(newBorrowLimit.toNumber())}
-            </dd>
-          </StyledDItem>
-        </StyledDl>
+        <BorrowLimit shouldDisplayLiquidationAlert variant={variant} asset={monetaryAmount} thresholds={thresholds} />
+        <LoanActionInfo variant={variant} asset={asset} prices={prices} />
         <CTA type='submit' disabled={isBtnDisabled} size='large'>
           {content.title}
         </CTA>

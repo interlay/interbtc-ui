@@ -1,21 +1,17 @@
 import { AlignItems, Colors, Flex } from '@/component-library';
 
-import { StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel } from './LoansBaseTable.style';
+import { StyledCellLabel, StyledCellSubLabel } from './LoansBaseTable.style';
 
 type MonetaryCellProps = {
   label?: string;
-  labelCurrency?: string;
   sublabel?: string;
   labelColor?: Colors;
   alignItems?: AlignItems;
 };
 
-const MonetaryCell = ({ label, sublabel, labelColor, labelCurrency, alignItems }: MonetaryCellProps): JSX.Element => (
+const MonetaryCell = ({ label, sublabel, labelColor, alignItems }: MonetaryCellProps): JSX.Element => (
   <Flex direction='column' alignItems={alignItems}>
-    <StyledCellLabel color={labelColor}>
-      {label}
-      {labelCurrency && <StyledCellTickerLabel color={labelColor}>{labelCurrency}</StyledCellTickerLabel>}
-    </StyledCellLabel>
+    <StyledCellLabel color={labelColor}>{label}</StyledCellLabel>
     {sublabel && <StyledCellSubLabel>{sublabel}</StyledCellSubLabel>}
   </Flex>
 );

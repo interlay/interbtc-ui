@@ -1,6 +1,7 @@
 import { BorrowPosition, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 
 import { displayMonetaryAmount, formatUSD } from '@/common/utils/utils';
+import { Status } from '@/component-library/utils/prop-types';
 
 import { useGetAccountLoansOverview } from './use-get-account-loans-overview';
 import { useGetLoanAssets } from './use-get-loan-assets';
@@ -16,6 +17,7 @@ type LoansData = {
   lendPositions: LendPosition[] | undefined;
   borrowPositions: BorrowPosition[] | undefined;
   assets: TickerToData<LoanAsset> | undefined;
+  thresholds: Record<Status, number>;
 };
 
 const useGetLoansData = (): LoansData => {
@@ -43,7 +45,13 @@ const useGetLoansData = (): LoansData => {
     },
     lendPositions,
     borrowPositions,
-    assets
+    assets,
+    // TODO: get this from the lib
+    thresholds: {
+      error: 1,
+      warning: 2,
+      success: 10
+    }
   };
 };
 

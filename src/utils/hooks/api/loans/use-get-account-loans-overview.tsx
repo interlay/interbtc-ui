@@ -22,6 +22,7 @@ interface AccountLoansOverviewData {
   collateralRatio: number | undefined;
   earnedRewards: MonetaryAmount<CurrencyExt>;
   netYieldUSDValue: Big | undefined;
+  collateralAssetsUSDValue: Big | undefined;
 }
 
 interface AccountLoansOverview {
@@ -218,7 +219,8 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       borrowLimitUSDValue,
       collateralRatio,
       earnedRewards,
-      netYieldUSDValue
+      netYieldUSDValue,
+      collateralAssetsUSDValue
     },
     refetch,
     getNewCollateralRatio,

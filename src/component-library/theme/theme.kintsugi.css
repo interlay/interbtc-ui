@@ -68,4 +68,7 @@
   --colors-switch-unchecked-bg: var(--colors-dark-blue);
   --colors-switch-checked-bg: var(--colors-yellow);
   --colors-switch-indicator-bg: var(--colors-mid-blue);
+  /* Status */
+  --colors-bg-info: var(--colors-warning-light-20);
+  --colors-info: var(--colors-yellow);
 }
