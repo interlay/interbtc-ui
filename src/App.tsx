@@ -66,14 +66,14 @@ const App = (): JSX.Element => {
     })();
   }, [bridgeLoaded, loadFaucet]);
 
-  // Detects if connected account is vault operator.
+  // Detects if the connected account is a vault operator
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
     [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
     graphqlFetcher<GraphqlReturn<string[]>>(),
     {
       enabled: bridgeLoaded && !!selectedAccount,
-      onSuccess: ({ data: { vaults } }) => {
-        const isVaultOperator = vaults.length > 0;
+      onSuccess: ({ data }) => {
+        const isVaultOperator = data?.vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
       onError: (error) => console.log('[App useQuery 1] error.message => ', error.message)
