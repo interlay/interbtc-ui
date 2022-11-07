@@ -101,4 +101,6 @@
   --rounded-lg: 8px;
   --rounded-xl: 12px;
   --rounded-full: 9999px;
+
+  --transitions-default: all 250ms ease;
 }

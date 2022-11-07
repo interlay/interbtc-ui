@@ -55,7 +55,7 @@ const StyledScore = styled.span<ScoreProps>`
   line-height: ${(props) => (props.isDefault ? theme.lineHeight.lg : theme.lineHeight.xl)};
   color: ${(props) => theme.meter.bar.status[props.status]};
   font-weight: ${(props) => (props.isDefault ? theme.fontWeight.medium : theme.fontWeight.bold)};
-  transition: color ${theme.transition.duration}ms;
+  transition: color ${theme.transition.duration.duration100}ms;
   will-change: color;
 `;
 
