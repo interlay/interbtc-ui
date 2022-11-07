@@ -7,7 +7,7 @@ import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import useIssueRequests from '@/services/hooks/use-issue-requests';
 
-const FAKE_UNLIMITED_NUMBER = 1e9;
+const FAKE_UNLIMITED_NUMBER = 1e9; // TODO: a temporary solution for now
 
 const Actions = (): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
