@@ -6,6 +6,8 @@ import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import useIssueRequests from '@/services/hooks/use-issue-requests';
 
+const FAKE_UNLIMITED_NUMBER = 1e9;
+
 const Actions = (): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
 
@@ -16,7 +18,7 @@ const Actions = (): JSX.Element => {
     error: issueRequestsError
   } = useIssueRequests(
     0,
-    0,
+    FAKE_UNLIMITED_NUMBER,
     `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
