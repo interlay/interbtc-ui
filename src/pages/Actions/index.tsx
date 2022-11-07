@@ -1,3 +1,4 @@
+import { IssueStatus } from '@interlay/interbtc-api';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
 import ErrorFallback from '@/components/ErrorFallback';
@@ -27,8 +28,24 @@ const Actions = (): JSX.Element => {
   if (issueRequestsIdle || issueRequestsLoading) {
     return <PrimaryColorEllipsisLoader />;
   }
+  if (issueRequests === undefined) {
+    throw new Error('Something went wrong!');
+  }
+
   // ray test touch <
-  console.log('ray : ***** issueRequests => ', issueRequests);
+  const actionableIssueRequests = issueRequests.filter((item) => {
+    switch (item.status) {
+      case IssueStatus.Cancelled:
+      case IssueStatus.Expired: {
+        return item.backingPayment.btcTxId ? true : false;
+      }
+      case IssueStatus.PendingWithEnoughConfirmations:
+        return true;
+      default:
+        return false;
+    }
+  });
+  console.log('ray : ***** test => ', actionableIssueRequests);
   // ray test touch >
 
   return <>Actions</>;

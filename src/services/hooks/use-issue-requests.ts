@@ -1,3 +1,6 @@
+// ray test touch <
+import { IssueStatus } from '@interlay/interbtc-api';
+// ray test touch >
 import { useQuery } from 'react-query';
 
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
@@ -8,7 +11,18 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 // TODO: bare minimum for now
 interface IssueRequest {
   id: string;
+  // ray test touch <
+  backingPayment: {
+    btcTxId: string;
+  };
+  // ray test touch >
 }
+
+// ray test touch <
+interface IssueRequestWithStatusDecoded extends IssueRequest {
+  status: IssueStatus;
+}
+// ray test touch >
 
 const useIssueRequests = (
   offset: number,
@@ -18,7 +32,7 @@ const useIssueRequests = (
 ): {
   isIdle: boolean;
   isLoading: boolean;
-  data: Array<IssueRequest> | undefined;
+  data: Array<IssueRequestWithStatusDecoded> | undefined;
   error: Error | null;
 } => {
   const {
@@ -55,7 +69,7 @@ const useIssueRequests = (
     }
   );
 
-  const data: Array<IssueRequest> | undefined =
+  const data: Array<IssueRequestWithStatusDecoded> | undefined =
     issueRequests === undefined ||
     stableBitcoinConfirmations === undefined ||
     stableParachainConfirmations === undefined ||
