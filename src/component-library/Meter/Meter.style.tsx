@@ -46,7 +46,7 @@ const StyledMeter = styled.div<MeterProps>`
           left: ${$width}%;
           top: 100%;
           transform: translate(-50%);
-          transition: left ${theme.transition.duration}ms;
+          transition: left ${theme.transition.duration.duration100}ms;
           will-change: left;
           margin-top: 16px;
         }`;

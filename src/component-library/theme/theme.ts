@@ -164,7 +164,12 @@ const theme = {
     }
   },
   transition: {
-    duration: 100
+    default: 'var(--transitions-default)',
+    duration: {
+      duration100: 100,
+      duration150: 150,
+      duration250: 250
+    }
   },
   tabs: {
     bg: 'var(--colors-tabs-bg)',
@@ -305,6 +310,17 @@ const theme = {
       secondary: {
         color: 'var(--colors-title-secondary)'
       }
+    }
+  },
+  switch: {
+    unchecked: {
+      bg: 'var(--colors-switch-unchecked-bg)'
+    },
+    checked: {
+      bg: 'var(--colors-switch-checked-bg)'
+    },
+    indicator: {
+      bg: 'var(--colors-switch-indicator-bg)'
     }
   }
 };
