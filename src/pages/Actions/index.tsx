@@ -32,7 +32,6 @@ const Actions = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  // ray test touch <
   const actionableIssueRequests = issueRequests.filter((item) => {
     switch (item.status) {
       case IssueStatus.Cancelled:
@@ -45,7 +44,8 @@ const Actions = (): JSX.Element => {
         return false;
     }
   });
-  console.log('ray : ***** test => ', actionableIssueRequests);
+  // ray test touch <
+  console.log('ray : ***** actionableIssueRequests => ', actionableIssueRequests);
   // ray test touch >
 
   return <>Actions</>;
