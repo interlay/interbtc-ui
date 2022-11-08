@@ -77,11 +77,13 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
     };
   });
 
+  // ray test touch <
   return (
     <Wrapper variant='bordered' className={className} style={style}>
       <Table columns={columns} rows={rows} {...props} />
     </Wrapper>
   );
+  // ray test touch >
 };
 
 export { VaultsTable };
