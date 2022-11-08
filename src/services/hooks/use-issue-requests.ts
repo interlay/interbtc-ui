@@ -1,22 +1,12 @@
-import { IssueStatus } from '@interlay/interbtc-api';
 import { useQuery } from 'react-query';
 
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
-
-// TODO: bare minimum for now
-interface IssueRequest {
-  id: string;
-  backingPayment: {
-    btcTxId: string;
-  };
-}
-
-interface IssueRequestWithStatusDecoded extends IssueRequest {
-  status: IssueStatus;
-}
+// ray test touch <
+import { IssueRequest, IssueRequestWithStatusDecoded } from '@/types/issues.d';
+// ray test touch >
 
 const useIssueRequests = (
   offset: number,

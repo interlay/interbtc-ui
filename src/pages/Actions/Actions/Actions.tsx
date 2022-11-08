@@ -5,7 +5,15 @@ import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
+// ray test touch <
+import MainContainer from '@/parts/MainContainer';
+// ray test touch >
 import useIssueRequests from '@/services/hooks/use-issue-requests';
+// ray test touch <
+import { IssueRequestWithStatusDecoded } from '@/types/issues';
+
+import { ActionsTable } from './components/ActionsTable';
+// ray test touch >
 
 const FAKE_UNLIMITED_NUMBER = 1e9; // TODO: a temporary solution for now
 
@@ -48,12 +56,24 @@ const Actions = (): JSX.Element => {
   console.log('ray : ***** actionableIssueRequests => ', actionableIssueRequests);
   // ray test touch >
 
-  return <>Actions</>;
+  // ray test touch <
+  const handleVisitIssueRequestClick = (issueRequest: IssueRequestWithStatusDecoded) => {
+    console.log('ray : ***** issueRequest => ', issueRequest);
+  };
+
+  return (
+    <MainContainer>
+      <ActionsTable data={actionableIssueRequests} onClickVisitIssueRequest={handleVisitIssueRequestClick} />
+    </MainContainer>
+  );
+  // ray test touch >
 };
 
-export default withErrorBoundary(Actions, {
+const ActionsWithErrorBoundary = withErrorBoundary(Actions, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();
   }
 });
+
+export { ActionsWithErrorBoundary as Actions };

@@ -1,1 +1,3 @@
-export { default } from './Actions';
+import { Actions } from './Actions';
+
+export default Actions;
