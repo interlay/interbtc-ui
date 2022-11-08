@@ -4,23 +4,17 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
 import { shortAddress } from '@/common/utils/utils';
 import { Table, TableProps } from '@/component-library';
-// ray test touch <
 import { CTALink } from '@/component-library';
-// ray test touch >
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import useIssueRequests from '@/services/hooks/use-issue-requests';
-// ray test touch <
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
-// ray test touch >
 import { Wrapper } from './ManualIssueActionsTable.style';
 
-// ray test touch <
 const queryString = require('query-string');
-// ray test touch >
 
 const FAKE_UNLIMITED_NUMBER = 2147483647; // TODO: a temporary solution for now
 
@@ -77,7 +71,6 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
     return manualIssueRequests.map((item) => {
       return {
         id: item.id,
-        // ray test touch <
         [ManualIssueActionsTableKeys.VaultAccountID]: shortAddress(item.vault.accountId),
         [ManualIssueActionsTableKeys.Action]: (
           <CTALink
@@ -94,7 +87,6 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
             Visit Issue Request
           </CTALink>
         )
-        // ray test touch >
       };
     });
   }, [issueRequests]);
@@ -105,7 +97,6 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
   if (issueRequests === undefined) {
     throw new Error('Something went wrong!');
   }
-  // ray test touch >
 
   return <Wrapper variant='bordered'>{rows && <Table columns={columns} rows={rows} {...props} />}</Wrapper>;
 };

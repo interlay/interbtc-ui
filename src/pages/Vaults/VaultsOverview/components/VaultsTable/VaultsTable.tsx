@@ -1,4 +1,3 @@
-// ray test touch <
 import { CurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
@@ -87,4 +86,3 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
 
 export { VaultsTable };
 export type { VaultsTableProps, VaultsTableRow };
-// ray test touch >
