@@ -1,37 +1,42 @@
 import { useTranslation } from 'react-i18next';
 
-import { H1, P, Stack } from '@/component-library';
+import { Stack } from '@/component-library';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { LoansInsights, LoansMarkets } from './components';
+import { StyledTitle } from './LoansOverview.style';
 
 const LoansOverview = (): JSX.Element => {
   const { t } = useTranslation();
   const { overview, lendPositions, borrowPositions, assets } = useGetLoansData();
-  const { interestEarnedUSDValue, borrowUSDValue: borrowBalance, loanStatus, supplyUSDValue: supplyBalance } = overview;
+  const {
+    interestEarnedUSDValue,
+    borrowUSDValue: borrowBalance,
+    supplyUSDValue: supplyBalance,
+    earnedRewardsAmount,
+    hasEarnedRewards
+  } = overview;
 
   if (lendPositions === undefined || borrowPositions === undefined || assets === undefined) {
     return <FullLoadingSpinner />;
   }
 
+  const handleClaimRewards = () => console.log('claiming rewards');
+
   return (
     <MainContainer>
-      <H1>{t('loans.brand_name')}</H1>
+      <StyledTitle>{t('loans.brand_name')}</StyledTitle>
       <Stack spacing='double'>
-        <Stack>
-          <P>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-            industrys standard dummy text ever since the 1500s,{' '}
-          </P>
-          <LoansInsights
-            apyEarned={interestEarnedUSDValue}
-            borrow={borrowBalance}
-            supply={supplyBalance}
-            loanStatus={loanStatus}
-          />
-        </Stack>
+        <LoansInsights
+          apyEarned={interestEarnedUSDValue}
+          borrow={borrowBalance}
+          supply={supplyBalance}
+          rewards={earnedRewardsAmount}
+          hasEarnedRewards={hasEarnedRewards}
+          onClaimRewards={handleClaimRewards}
+        />
         <LoansMarkets borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
       </Stack>
     </MainContainer>

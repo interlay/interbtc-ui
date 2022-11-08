@@ -4,13 +4,20 @@ import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { BorrowAction, LendAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import useAccountId from '../../use-account-id';
 import { useGetPrices } from '../use-get-prices';
-import { getTotalEarnedInterestUSDValue, getTotalUSDValueOfPositions } from './get-usd-values';
+import { getPositionsTotalUSDField } from './get-usd-values';
 import { useGetAccountPositions } from './use-get-account-positions';
+
+const getTotalEarnedRewards = (lendPositions: LendPosition[] = [], borrowPositions: BorrowPosition[] = []) =>
+  [...lendPositions, ...borrowPositions].reduce(
+    (total, position) => (position.earnedReward ? total.add(position.earnedReward) : total),
+    newMonetaryAmount(0, GOVERNANCE_TOKEN)
+  );
 
 interface AccountLoansOverviewData {
   lendPositions: LendPosition[] | undefined;
@@ -20,6 +27,7 @@ interface AccountLoansOverviewData {
   borrowedAssetsUSDValue: Big | undefined;
   borrowLimitUSDValue: Big | undefined;
   collateralRatio: number | undefined;
+  earnedRewards: MonetaryAmount<CurrencyExt>;
 }
 
 interface AccountLoansOverview {
@@ -59,15 +67,15 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   let collateralRatio: number | undefined = undefined;
 
   if (lendPositions !== undefined && prices !== undefined) {
-    lentAssetsUSDValue = getTotalUSDValueOfPositions(lendPositions, prices);
-    totalEarnedInterestUSDValue = getTotalEarnedInterestUSDValue(lendPositions, prices);
+    lentAssetsUSDValue = getPositionsTotalUSDField('amount', lendPositions, prices);
+    totalEarnedInterestUSDValue = getPositionsTotalUSDField<LendPosition>('earnedInterest', lendPositions, prices);
 
     const collateralLendPositions = lendPositions.filter(({ isCollateral }) => isCollateral);
-    collateralAssetsUSDValue = getTotalUSDValueOfPositions(collateralLendPositions, prices);
+    collateralAssetsUSDValue = getPositionsTotalUSDField('amount', collateralLendPositions, prices);
   }
 
   if (borrowPositions !== undefined && prices !== undefined) {
-    borrowedAssetsUSDValue = getTotalUSDValueOfPositions(borrowPositions, prices);
+    borrowedAssetsUSDValue = getPositionsTotalUSDField('amount', borrowPositions, prices);
   }
 
   if (borrowedAssetsUSDValue !== undefined && collateralAssetsUSDValue !== undefined) {
@@ -79,6 +87,8 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   const borrowLimitUSDValue = collateralAssetsUSDValue
     ? collateralAssetsUSDValue.sub(borrowedAssetsUSDValue || 0)
     : Big(0);
+
+  const earnedRewards = getTotalEarnedRewards(lendPositions, borrowPositions);
 
   /**
    * This method computes how the collateral ratio will change if
@@ -204,7 +214,8 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       totalEarnedInterestUSDValue,
       borrowedAssetsUSDValue,
       borrowLimitUSDValue,
-      collateralRatio
+      collateralRatio,
+      earnedRewards
     },
     refetch,
     getNewCollateralRatio,
