@@ -11,7 +11,7 @@ import { IssueRequestWithStatusDecoded } from '@/types/issues';
 
 import { ActionsTable } from './components/ActionsTable';
 
-const FAKE_UNLIMITED_NUMBER = 1e9; // TODO: a temporary solution for now
+const FAKE_UNLIMITED_NUMBER = 2147483647; // TODO: a temporary solution for now
 
 const Actions = (): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
@@ -48,21 +48,18 @@ const Actions = (): JSX.Element => {
         return false;
     }
   });
-  // ray test touch <
-  console.log('ray : ***** actionableIssueRequests => ', actionableIssueRequests);
-  // ray test touch >
 
   // ray test touch <
   const handleVisitIssueRequestClick = (issueRequest: IssueRequestWithStatusDecoded) => {
     console.log('ray : ***** issueRequest => ', issueRequest);
   };
+  // ray test touch >
 
   return (
     <MainContainer>
       <ActionsTable data={actionableIssueRequests} onClickVisitIssueRequest={handleVisitIssueRequestClick} />
     </MainContainer>
   );
-  // ray test touch >
 };
 
 const ActionsWithErrorBoundary = withErrorBoundary(Actions, {
