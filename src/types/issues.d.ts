@@ -6,6 +6,9 @@ interface IssueRequest {
   backingPayment: {
     btcTxId: string;
   };
+  vault: {
+    accountId: string;
+  };
 }
 
 interface IssueRequestWithStatusDecoded extends IssueRequest {
