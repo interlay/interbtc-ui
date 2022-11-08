@@ -1,4 +1,3 @@
-// ray test touch <
 import styled from 'styled-components';
 
 import { Card, theme } from '@/component-library';
@@ -11,4 +10,3 @@ const Wrapper = styled(Card)`
 `;
 
 export { Wrapper };
-// ray test touch >

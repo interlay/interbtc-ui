@@ -4,9 +4,7 @@ import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fe
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
-// ray test touch <
 import { IssueRequest, IssueRequestWithStatusDecoded } from '@/types/issues.d';
-// ray test touch >
 
 const useIssueRequests = (
   offset: number,

@@ -1,4 +1,3 @@
-// ray test touch <
 import { IssueStatus } from '@interlay/interbtc-api';
 
 // TODO: bare minimum for now
@@ -14,4 +13,3 @@ interface IssueRequestWithStatusDecoded extends IssueRequest {
 }
 
 export type { IssueRequest, IssueRequestWithStatusDecoded };
-// ray test touch >

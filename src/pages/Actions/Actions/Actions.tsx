@@ -5,15 +5,11 @@ import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
-// ray test touch <
 import MainContainer from '@/parts/MainContainer';
-// ray test touch >
 import useIssueRequests from '@/services/hooks/use-issue-requests';
-// ray test touch <
 import { IssueRequestWithStatusDecoded } from '@/types/issues';
 
 import { ActionsTable } from './components/ActionsTable';
-// ray test touch >
 
 const FAKE_UNLIMITED_NUMBER = 1e9; // TODO: a temporary solution for now
 
