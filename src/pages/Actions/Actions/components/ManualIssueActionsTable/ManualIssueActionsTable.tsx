@@ -2,14 +2,25 @@ import { IssueStatus } from '@interlay/interbtc-api';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
+import { shortAddress } from '@/common/utils/utils';
 import { Table, TableProps } from '@/component-library';
+// ray test touch <
+import { CTALink } from '@/component-library';
+// ray test touch >
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import useIssueRequests from '@/services/hooks/use-issue-requests';
+// ray test touch <
+import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
+// ray test touch >
 import { Wrapper } from './ManualIssueActionsTable.style';
+
+// ray test touch <
+const queryString = require('query-string');
+// ray test touch >
 
 const FAKE_UNLIMITED_NUMBER = 2147483647; // TODO: a temporary solution for now
 
@@ -67,8 +78,22 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
       return {
         id: item.id,
         // ray test touch <
-        [ManualIssueActionsTableKeys.VaultAccountID]: item.vault.accountId,
-        [ManualIssueActionsTableKeys.Action]: item.id
+        [ManualIssueActionsTableKeys.VaultAccountID]: shortAddress(item.vault.accountId),
+        [ManualIssueActionsTableKeys.Action]: (
+          <CTALink
+            to={{
+              pathname: PAGES.TRANSACTIONS,
+              search: queryString.stringify({
+                [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: item.id
+              })
+            }}
+            variant='primary'
+            fullWidth={false}
+          >
+            {/* TODO: translate */}
+            Visit Issue Request
+          </CTALink>
+        )
         // ray test touch >
       };
     });
@@ -80,9 +105,6 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
   if (issueRequests === undefined) {
     throw new Error('Something went wrong!');
   }
-  // const handleVisitIssueRequestClick = (issueRequest: IssueRequestWithStatusDecoded) => {
-  //   console.log('ray : ***** issueRequest => ', issueRequest);
-  // };
   // ray test touch >
 
   return <Wrapper variant='bordered'>{rows && <Table columns={columns} rows={rows} {...props} />}</Wrapper>;
