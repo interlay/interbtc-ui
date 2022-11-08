@@ -1,6 +1,6 @@
 import { HTMLAttributes } from 'react';
 
-import { AlignItems, Direction, JustifyContent, Spacing } from '../utils/prop-types';
+import { AlignItems, Direction, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
 import { StyledFlex } from './Flex.style';
 
 type Props = {
@@ -8,6 +8,8 @@ type Props = {
   justifyContent?: JustifyContent;
   alignItems?: AlignItems;
   direction?: Direction;
+  flex?: string | number;
+  wrap?: Wrap | boolean;
   as?: any;
 };
 
@@ -22,6 +24,8 @@ const Flex = ({
   alignItems,
   direction = 'column',
   as,
+  flex,
+  wrap,
   ...props
 }: FlexProps): JSX.Element => (
   <StyledFlex
@@ -29,6 +33,8 @@ const Flex = ({
     $justifyContent={justifyContent}
     $alignItems={alignItems}
     $direction={direction}
+    $flex={flex}
+    $wrap={wrap}
     as={as}
     {...props}
   >
