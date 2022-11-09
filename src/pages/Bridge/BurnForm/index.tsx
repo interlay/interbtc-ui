@@ -129,7 +129,7 @@ const BurnForm = (): JSX.Element | null => {
       const bitcoinAmountValue = new BitcoinAmount(value);
 
       if (bitcoinAmountValue.gt(burnableTokens)) {
-        return `Only ${displayMonetaryAmount(burnableTokens)} ${WRAPPED_TOKEN_SYMBOL} available to burn.
+        return `Only ${burnableTokens.toHuman(8)} ${WRAPPED_TOKEN_SYMBOL} available to burn.
         Please enter a smaller amount.`;
       }
 
@@ -189,7 +189,7 @@ const BurnForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={displayMonetaryAmount(burnableTokens)}
+            value={burnableTokens.toHuman(8)}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
               burnableTokens,
