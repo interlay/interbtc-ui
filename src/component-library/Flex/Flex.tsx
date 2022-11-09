@@ -1,6 +1,6 @@
 import { HTMLAttributes } from 'react';
 
-import { AlignItems, Direction, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
+import { AlignItems, AlignSelf, Direction, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
 import { StyledFlex } from './Flex.style';
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
   direction?: Direction;
   flex?: string | number;
   wrap?: Wrap | boolean;
+  alignSelf?: AlignSelf;
   as?: any;
 };
 
@@ -19,13 +20,14 @@ type FlexProps = Props & NativeAttrs;
 
 const Flex = ({
   children,
-  gap = '4',
+  gap,
   justifyContent,
   alignItems,
-  direction = 'column',
-  as,
+  direction,
   flex,
   wrap,
+  alignSelf,
+  as,
   ...props
 }: FlexProps): JSX.Element => (
   <StyledFlex
@@ -35,6 +37,7 @@ const Flex = ({
     $direction={direction}
     $flex={flex}
     $wrap={wrap}
+    $alignSelf={alignSelf}
     as={as}
     {...props}
   >

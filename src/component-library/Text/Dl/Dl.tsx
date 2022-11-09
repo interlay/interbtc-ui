@@ -2,7 +2,7 @@ import { Flex, FlexProps } from '@/component-library/Flex';
 
 type DlProps = FlexProps;
 
-const Dl = (props: DlProps): JSX.Element => <Flex {...props} as='dl' />;
+const Dl = ({ gap = 'spacing4', as = 'dl', ...props }: DlProps): JSX.Element => <Flex gap={gap} as={as} {...props} />;
 
 Dl.displayName = 'Dl';
 
