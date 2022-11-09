@@ -22,7 +22,9 @@ const theme = {
     light: 'var(--font-weights-light)',
     book: 'var(--font-weights-book)',
     medium: 'var(--font-weights-medium)',
-    bold: 'var(--font-weights-bold)'
+    semibold: 'var(--font-weights-semibold)',
+    bold: 'var(--font-weights-bold)',
+    extrabold: 'var(--font-weights-extrabold)'
   },
   text: {
     xs: 'var(--text-xs)',
