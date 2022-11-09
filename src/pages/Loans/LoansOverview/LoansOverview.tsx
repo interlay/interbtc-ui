@@ -5,7 +5,7 @@ import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
-import { LoansInsights, LoansMarkets } from './components';
+import { LoansInsights, LoansTables } from './components';
 import { StyledTitle } from './LoansOverview.style';
 
 const LoansOverview = (): JSX.Element => {
@@ -37,7 +37,7 @@ const LoansOverview = (): JSX.Element => {
           hasEarnedRewards={hasEarnedRewards}
           onClaimRewards={handleClaimRewards}
         />
-        <LoansMarkets borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
+        <LoansTables borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
       </Stack>
     </MainContainer>
   );

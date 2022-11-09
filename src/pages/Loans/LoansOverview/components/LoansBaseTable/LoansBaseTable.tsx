@@ -2,7 +2,7 @@ import { useId } from '@react-aria/utils';
 
 import { Card, Stack, Table, TableProps } from '@/component-library';
 
-import { StyledMarketTitle } from './LoansMarkets.style';
+import { StyledMarketTitle } from './LoansBaseTable.style';
 
 type Props = {
   title: string;
@@ -10,9 +10,9 @@ type Props = {
 
 type InheritAttrs = Omit<TableProps, keyof Props>;
 
-type MarketTableProps = Props & InheritAttrs;
+type LoansBaseTableProps = Props & InheritAttrs;
 
-const MarketTable = ({ title, rows, columns, ...props }: MarketTableProps): JSX.Element => {
+const LoansBaseTable = ({ title, rows, columns, ...props }: LoansBaseTableProps): JSX.Element => {
   const titleId = useId();
 
   return (
@@ -25,5 +25,5 @@ const MarketTable = ({ title, rows, columns, ...props }: MarketTableProps): JSX.
   );
 };
 
-export { MarketTable };
-export type { MarketTableProps };
+export { LoansBaseTable };
+export type { LoansBaseTableProps };

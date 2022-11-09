@@ -44,7 +44,7 @@ enum BorrowAssetsColumns {
 type BorrowAssetsTableRow = {
   id: string;
   [BorrowAssetsColumns.ASSET]: ReactNode;
-  [BorrowAssetsColumns.APY]: string;
+  [BorrowAssetsColumns.APY]: ReactNode;
   [BorrowAssetsColumns.WALLET]: ReactNode;
   [BorrowAssetsColumns.LIQUIDITY]: string;
 };
@@ -61,7 +61,7 @@ type BorrowPositionTableRow = {
   [BorrowPositionColumns.ASSET]: ReactNode;
   [BorrowPositionColumns.APY_ACCRUED]: ReactNode;
   [BorrowPositionColumns.BALANCE]: ReactNode;
-  [BorrowPositionColumns.STATUS]: string;
+  [BorrowPositionColumns.STATUS]: ReactNode;
 };
 
 export { BorrowAssetsColumns, BorrowPositionColumns, LendAssetsColumns, LendPositionColumns };
