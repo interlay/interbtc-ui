@@ -1,5 +1,5 @@
-export type { DlProps } from './Dl';
-export { Dl } from './Dl';
+export type { DdProps, DlGroupProps, DlProps, DtProps } from './Dl';
+export { Dd, Dl, DlGroup, Dt } from './Dl';
 export { Em } from './Em';
 export { H1 } from './H1';
 export { H2 } from './H2';

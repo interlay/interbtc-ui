@@ -20,6 +20,7 @@ import {
 } from '@/config/relay-chains';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { URL_PARAMETERS } from '@/utils/constants/links';
+import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import useAccountId from '@/utils/hooks/use-account-id';
@@ -119,7 +120,7 @@ const IssueRedeemForm = ({
           window.bridge.fee.getIssueFee(),
           window.bridge.fee.getIssueGriefingCollateralRate(),
           window.bridge.issue.getDustValue(),
-          window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
+          getExchangeRate(GOVERNANCE_TOKEN),
           // MEMO: this always uses KSM as collateral token
           window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralToken)
         ]);

@@ -10,6 +10,10 @@ const TokenBalanceWrapper = styled.dl`
 
 const TokenBalanceLabel = styled.dt`
   color: ${theme.colors.textPrimary};
+
+  &:after {
+    content: ':';
+  }
 `;
 
 type TokenBalanceValueProps = {
