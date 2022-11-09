@@ -34,6 +34,7 @@ import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueR
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
+import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -117,7 +118,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
           window.bridge.fee.getIssueFee(),
           window.bridge.fee.getIssueGriefingCollateralRate(),
           window.bridge.issue.getDustValue(),
-          window.bridge.oracle.getExchangeRate(GOVERNANCE_TOKEN),
+          getExchangeRate(GOVERNANCE_TOKEN),
           // MEMO: this always uses KSM as collateral token
           window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralToken)
         ]);

@@ -64,7 +64,7 @@ const PendingWithBtcTxNotFoundRedeemRequest = ({ redeem }: Props): JSX.Element =
       </p>
       <Ring48 className='ring-interlayPaleSky'>
         <Ring48Title>{t('redeem_page.waiting_for')}</Ring48Title>
-        <Ring48Value>{t('nav_vaults')}</Ring48Value>
+        <Ring48Value>{t('redeem_page.vault')}</Ring48Value>
       </Ring48>
     </RequestWrapper>
   );

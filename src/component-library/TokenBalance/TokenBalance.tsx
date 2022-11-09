@@ -11,6 +11,7 @@ type TokenBalanceProps = {
   isDisabled?: boolean;
   className?: string;
   renderBalance?: (balance: number) => ReactNode;
+  label?: ReactNode;
 };
 
 const TokenBalance = ({
@@ -20,7 +21,8 @@ const TokenBalance = ({
   onClickBalance,
   className,
   isDisabled,
-  renderBalance
+  renderBalance,
+  label = 'Balance'
 }: TokenBalanceProps): JSX.Element => {
   const isClickable = !!onClickBalance && !isDisabled;
   const { pressProps } = usePress({ onPress: onClickBalance, isDisabled: !isClickable });
@@ -35,7 +37,7 @@ const TokenBalance = ({
 
   return (
     <TokenBalanceWrapper className={className}>
-      <TokenBalanceLabel>Balance:</TokenBalanceLabel>
+      <TokenBalanceLabel>{label}</TokenBalanceLabel>
       <dd>
         <TokenBalanceValue $clickable={isClickable} {...balanceValueProps}>
           {renderBalance?.(value) || value} {tokenSymbol} ({valueInUSD})

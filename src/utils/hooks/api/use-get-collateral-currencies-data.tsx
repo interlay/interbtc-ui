@@ -3,6 +3,8 @@ import { Currency, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useQuery, UseQueryResult } from 'react-query';
 
+import { getExchangeRate } from '@/utils/helpers/oracle';
+
 import { useGetCollateralCurrencies } from './use-get-collateral-currencies';
 
 type CollateralCurrenciesData = { [currencyTicker: string]: CollateralCurrencyData };
@@ -19,7 +21,7 @@ const getCollateralCurrencyData = async (collateralToken: CollateralCurrencyExt)
     window.bridge.vaults.getLiquidationCollateralThreshold(collateralToken),
     window.bridge.vaults.getPremiumRedeemThreshold(collateralToken),
     window.bridge.vaults.getSecureCollateralThreshold(collateralToken),
-    window.bridge.oracle.getExchangeRate(collateralToken)
+    getExchangeRate(collateralToken)
   ]);
 
   return { liquidationThreshold, premiumThreshold, secureThreshold, exchangeRate };

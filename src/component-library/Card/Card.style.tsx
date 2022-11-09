@@ -1,14 +1,13 @@
 import styled from 'styled-components';
 
+import { Flex } from '../Flex';
 import { theme } from '../theme';
 
 type CardVariants = 'default' | 'bordered';
 
 type WrapperProps = { variant: CardVariants };
 
-const Wrapper = styled.div<WrapperProps>`
-  display: flex;
-  flex-direction: column;
+const Wrapper = styled(Flex)<WrapperProps>`
   box-shadow: ${theme.boxShadow.default};
   color: ${theme.colors.textSecondary};
   background-color: ${theme.card.bg};

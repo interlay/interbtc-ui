@@ -1,11 +1,11 @@
-import { useMeter } from '@react-aria/meter';
-import { HTMLAttributes, ReactNode } from 'react';
+import { mergeProps } from '@react-aria/utils';
+import { ReactNode, useState } from 'react';
 
 import { formatPercentage } from '@/common/utils/utils';
-import { Meter } from '@/component-library';
+import { Meter, MeterRanges, useMeter } from '@/component-library';
+import { Status } from '@/component-library/utils/prop-types';
 
-import { CollateralStatus, CollateralStatusRanges } from '../../types';
-import { getCollateralStatus } from '../../utils';
+import { CollateralStatus } from '../../types';
 import {
   StyledLabel,
   StyledLabelWrapper,
@@ -18,84 +18,70 @@ import {
 // TODO: move from here so we keep formatOptions config in one place
 const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFractionDigits: 2 };
 
-const getBarPercentage = (status: CollateralStatus, value: number, ranges: CollateralStatusRanges): number => {
-  // We need the percentage against each segment range and we get by
-  // subtracting the start of segment from the current value
-  const segmentValue = (value > ranges[status].max ? ranges[status].max : value) - ranges[status].min;
-
-  // Same approach but now for the max value
-  const segmentMaxValue = ranges[status].max - ranges[status].min;
-
-  // We calculate against the percentage that each segment occupies from the parent
+const getSublabel = (status: CollateralStatus, ranges: MeterRanges) => {
   switch (status) {
     case 'error':
-      return (segmentValue / segmentMaxValue) * 25;
+      return `High Risk: ${ranges[0]}-${ranges[1]}%`;
     case 'warning':
-      // error + (current segment percentage)
-      return 25 + (segmentValue / segmentMaxValue) * 50;
+      return `Medium Risk: ${ranges[1]}-${ranges[2]}%`;
     case 'success':
-      // error + warning + (current segment percentage)
-      return 75 + (segmentValue / segmentMaxValue) * 25;
+      return `Low Risk: ${ranges[2]}-${ranges[3]}%`;
   }
 };
 
-type Props = {
-  ranges: CollateralStatusRanges;
-  variant?: 'default' | 'highlight';
+type CollateralScoreProps = {
+  ranges: MeterRanges;
   score?: number;
+  variant?: 'default' | 'highlight';
   label?: ReactNode;
-  sublabel?: ReactNode;
-  infinity?: boolean;
+  className?: string;
 };
 
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
-
-type CollateralScoreProps = Props & NativeAttrs;
-
 const CollateralScore = ({
-  score = 0,
+  score,
   label,
-  sublabel,
   variant = 'default',
   ranges,
-  infinity = false,
   ...props
 }: CollateralScoreProps): JSX.Element => {
-  // Makes sure we always have the correct aria-valuemax
-  const maxValue = !infinity && score > ranges.success.max ? score : ranges.success.max;
+  const [status, setStatus] = useState<Status>('error');
 
-  const { meterProps, labelProps } = useMeter({
-    minValue: ranges.error.min,
-    maxValue,
-    value: infinity ? maxValue : score,
-    formatOptions,
+  const isInfinity = score === undefined;
+
+  const { labelProps, meterProps } = useMeter({
     label,
-    ...props
+    value: isInfinity ? 999999999 : score,
+    formatOptions,
+    ranges
   });
 
   // Does not allow negative numbers
   const value = meterProps['aria-valuenow'] || 0;
-  const status = getCollateralStatus(value, ranges, infinity);
-  const barPercentage = getBarPercentage(status, value, ranges);
 
   const isDefault = variant === 'default';
 
+  const sublabel = getSublabel(status, ranges);
+
+  const handleChange = (status: Status) => {
+    setStatus(status);
+  };
+
   return (
-    <StyledWrapper {...meterProps} {...props}>
+    <StyledWrapper {...mergeProps(meterProps, props)}>
       <StyledLabelWrapper isDefault={isDefault}>
         <StyledLabel {...labelProps} isDefault={isDefault}>
           {label}
         </StyledLabel>
         <StyledScoreWrapper isDefault={isDefault}>
           <StyledScore isDefault={isDefault} status={status}>
-            {infinity ? '∞' : formatPercentage(value)}
+            {isInfinity ? '∞' : formatPercentage(value)}
           </StyledScore>
           <StyledSublabel isDefault={isDefault} status={isDefault ? status : undefined}>
             {sublabel}
           </StyledSublabel>
         </StyledScoreWrapper>
       </StyledLabelWrapper>
-      <Meter percentage={barPercentage} />
+      <Meter value={value} ranges={ranges} onChange={handleChange} />
     </StyledWrapper>
   );
 };

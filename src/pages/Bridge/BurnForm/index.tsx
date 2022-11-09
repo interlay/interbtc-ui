@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import FormTitle from '@/components/FormTitle';
@@ -124,19 +124,21 @@ const BurnForm = (): JSX.Element | null => {
       }
     };
 
+    console.log('burnable tokens', burnableTokens.toString());
+
     const validateForm = (value: string): string | undefined => {
       // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
       const bitcoinAmountValue = new BitcoinAmount(value);
 
       if (bitcoinAmountValue.gt(burnableTokens)) {
-        return `Only ${displayMonetaryAmount(burnableTokens)} ${WRAPPED_TOKEN_SYMBOL} available to burn.
+        return `Only ${burnableTokens.toString()} ${WRAPPED_TOKEN_SYMBOL} available to burn.
         Please enter a smaller amount.`;
       }
 
       const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].free || newMonetaryAmount(0, WRAPPED_TOKEN);
 
       if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
-        return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
+        return `${t('redeem_page.current_balance')}${wrappedTokenBalance.toString()}`;
       }
 
       if (!bridgeLoaded) {
@@ -189,7 +191,7 @@ const BurnForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={displayMonetaryAmount(burnableTokens)}
+            value={burnableTokens.toString()}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
               burnableTokens,
@@ -226,7 +228,7 @@ const BurnForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
-            value={displayMonetaryAmount(earnedCollateralTokenAmount)}
+            value={earnedCollateralTokenAmount.toString()}
             unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
               earnedCollateralTokenAmount,
