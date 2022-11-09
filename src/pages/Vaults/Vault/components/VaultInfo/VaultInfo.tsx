@@ -59,18 +59,18 @@ const VaultInfo = ({
   return (
     <StyledWrapper variant='bordered' {...props}>
       <StyledDl>
-        <StyledDlGroup gap='2'>
+        <StyledDlGroup gap='spacing2'>
           <Dt>Vault ID:</Dt>
           <Dd>{shortAddress(vaultAddress)}</Dd>
         </StyledDlGroup>
-        <StyledDlGroup gap='2'>
+        <StyledDlGroup gap='spacing2'>
           <StatusTag status={status}>
             <Dt>Vault Status:</Dt>
             <Dd>{vaultStatusDefinition}</Dd>
           </StatusTag>
         </StyledDlGroup>
         {vaultDisplayName && (
-          <StyledDlGroup gap='2'>
+          <StyledDlGroup gap='spacing2'>
             <Dt>Identity</Dt>
             <Dd>{vaultDisplayName}</Dd>
           </StyledDlGroup>
