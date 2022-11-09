@@ -1,3 +1,5 @@
+import { theme } from '../theme';
+
 export const tuple = <T extends string[]>(...args: T): T => args;
 
 export const variant = tuple('primary', 'secondary');
@@ -27,7 +29,18 @@ export const direction = tuple('row', 'row-reverse', 'column', 'column-reverse')
 
 export const wrap = tuple('wrap', 'nowrap', 'wrap-reverse');
 
-export const spacing = tuple('1', '2', '3', '4', '5', '6', '8', '10', '12', '28');
+export const alignSelf = tuple(
+  'auto',
+  'normal',
+  'start',
+  'end',
+  'center',
+  'flex-start',
+  'flex-end',
+  'self-start',
+  'self-end',
+  'stretch'
+);
 
 export type Variants = typeof variant[number];
 
@@ -45,8 +58,10 @@ export type AlignItems = typeof alignItems[number];
 
 export type Wrap = typeof wrap[number];
 
+export type AlignSelf = typeof alignSelf[number];
+
 export type NormalAlignments = typeof normalAlignments[number];
 
 export type Direction = typeof direction[number];
 
-export type Spacing = typeof spacing[number];
+export type Spacing = keyof typeof theme.spacing;

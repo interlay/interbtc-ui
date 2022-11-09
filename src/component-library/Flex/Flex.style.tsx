@@ -1,12 +1,7 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
-import { AlignItems, Direction, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
-
-const getSpacing = (number?: Spacing) => {
-  const spacing = `spacing${number}` as keyof typeof theme.spacing;
-  return theme.spacing[spacing];
-};
+import { AlignItems, AlignSelf, Direction, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
 
 type StyledFlexProps = {
   $gap: Spacing;
@@ -15,6 +10,7 @@ type StyledFlexProps = {
   $direction?: Direction;
   $flex?: string | number;
   $wrap?: Wrap;
+  $alignSelf?: AlignSelf;
 };
 
 const StyledFlex = styled.div<StyledFlexProps>`
@@ -22,9 +18,10 @@ const StyledFlex = styled.div<StyledFlexProps>`
   flex-direction: ${(props) => props.$direction};
   justify-content: ${(props) => props.$justifyContent};
   align-items: ${(props) => props.$alignItems};
-  gap: ${(props) => getSpacing(props.$gap)};
+  gap: ${(props) => theme.spacing[props.$gap]};
   flex: ${(props) => props.$flex};
   flex-wrap: ${(props) => (typeof props.$wrap === 'boolean' ? 'wrap' : props.$wrap)};
+  align-self: ${(props) => props.$alignSelf};
 `;
 
 export { StyledFlex };
