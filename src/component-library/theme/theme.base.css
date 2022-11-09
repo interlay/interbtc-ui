@@ -36,7 +36,9 @@
   --font-weights-light: 300;
   --font-weights-book: 400;
   --font-weights-medium: 500;
+  --font-weights-semibold: 600;
   --font-weights-bold: 700;
+  --font-weights-extrabold: 800;
 
   --colors-neutral-white: #ffffff;
   --colors-neutral-white-05: rgba(255, 255, 255, 0.05);
