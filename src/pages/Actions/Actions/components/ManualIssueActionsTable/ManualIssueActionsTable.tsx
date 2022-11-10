@@ -1,13 +1,9 @@
 import { IssueStatus } from '@interlay/interbtc-api';
-// ray test touch <
 import { useId } from '@react-aria/utils';
-// ray test touch >
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
-// ray test touch <
 import { H3, Stack, Table, TableProps } from '@/component-library';
-// ray test touch >
 import { CTALink } from '@/component-library';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -32,9 +28,7 @@ type InheritAttrs = Omit<TableProps, 'columns' | 'rows'>;
 type ManualIssueActionsTableProps = InheritAttrs;
 
 const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Element => {
-  // ray test touch <
   const titleId = useId();
-  // ray test touch >
 
   const { selectedAccount } = useSubstrateSecureState();
 
@@ -108,9 +102,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
 
   return (
     <Stack spacing='double'>
-      {/* ray test touch < */}
       <H3 id={titleId}>Manual Issue Execution Actions Needed</H3>
-      {/* ray test touch > */}
       <Wrapper variant='bordered'>
         {rows && <Table aria-labelledby={titleId} columns={columns} rows={rows} {...props} />}
       </Wrapper>
