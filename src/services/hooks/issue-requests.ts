@@ -1,3 +1,4 @@
+import { IssueStatus } from '@interlay/interbtc-api';
 import * as React from 'react';
 import { useQuery } from 'react-query';
 
@@ -8,7 +9,23 @@ import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-blo
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import { IssueRequest, IssueRequestWithStatusDecoded } from '@/types/issues.d';
-import { getManualIssueRequests } from '@/utils/helpers/issues';
+
+const getManualIssueRequests = (
+  issueRequests: Array<IssueRequestWithStatusDecoded>
+): Array<IssueRequestWithStatusDecoded> => {
+  return issueRequests.filter((item) => {
+    switch (item.status) {
+      case IssueStatus.Cancelled:
+      case IssueStatus.Expired: {
+        return item.backingPayment.btcTxId ? true : false;
+      }
+      case IssueStatus.PendingWithEnoughConfirmations:
+        return true;
+      default:
+        return false;
+    }
+  });
+};
 
 const useIssueRequests = (
   offset: number,
