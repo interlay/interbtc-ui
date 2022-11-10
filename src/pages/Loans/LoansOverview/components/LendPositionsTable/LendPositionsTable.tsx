@@ -9,7 +9,7 @@ import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { LendPositionColumns, LendPositionTableRow } from '../types';
 
-const getAmountEarnedUSDI = (
+const getAmountEarnedUSD = (
   earnedInterest: MonetaryAmount<CurrencyExt>,
   earnedReward: MonetaryAmount<CurrencyExt> | null,
   prices?: Prices
@@ -47,9 +47,9 @@ const LendPositionsTable = ({ assets, positions, onRowAction }: LendPositionsTab
         const { lendApy, lendReward } = assets[currency.ticker];
 
         const accumulativeApy = lendApy.add(lendReward?.apy || 0);
-        const amountEarnedUSD = getAmountEarnedUSDI(earnedInterest, earnedReward, prices);
+        const accumulativeEarnedUSD = getAmountEarnedUSD(earnedInterest, earnedReward, prices);
 
-        const apy = <ApyCell apy={accumulativeApy} amount={amountEarnedUSD} />;
+        const apy = <ApyCell apy={accumulativeApy} amount={accumulativeEarnedUSD} />;
 
         const balance = <BalanceCell amount={amount} prices={prices} />;
 
