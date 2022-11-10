@@ -1,10 +1,14 @@
+import * as React from 'react';
 import { useQuery } from 'react-query';
 
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import { IssueRequest, IssueRequestWithStatusDecoded } from '@/types/issues.d';
+import { getManualIssueRequests } from '@/utils/helpers/issues';
 
 const useIssueRequests = (
   offset: number,
@@ -81,4 +85,42 @@ const useIssueRequests = (
   };
 };
 
-export { useIssueRequests };
+// ray test touch <
+const FAKE_UNLIMITED_NUMBER = 2147483647; // TODO: a temporary solution for now
+
+const useManualIssueRequests = (): {
+  isIdle: boolean;
+  isLoading: boolean;
+  data: Array<IssueRequestWithStatusDecoded> | undefined;
+  error: Error | null;
+} => {
+  const { selectedAccount } = useSubstrateSecureState();
+
+  const {
+    isIdle: issueRequestsIdle,
+    isLoading: issueRequestsLoading,
+    data: issueRequests,
+    error: issueRequestsError
+  } = useIssueRequests(
+    0,
+    FAKE_UNLIMITED_NUMBER,
+    `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
+    ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
+  );
+
+  const manualIssueRequests = React.useMemo(() => {
+    if (issueRequests === undefined) return undefined;
+
+    return getManualIssueRequests(issueRequests);
+  }, [issueRequests]);
+
+  return {
+    isIdle: issueRequestsIdle,
+    isLoading: issueRequestsLoading,
+    data: manualIssueRequests,
+    error: issueRequestsError
+  };
+};
+// ray test touch >
+
+export { useIssueRequests, useManualIssueRequests };

@@ -6,17 +6,12 @@ import { H3, Stack, Table, TableProps } from '@/component-library';
 import { CTALink } from '@/component-library';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
-import { useSubstrateSecureState } from '@/lib/substrate';
-import { useIssueRequests } from '@/services/hooks/issue-requests';
+import { useManualIssueRequests } from '@/services/hooks/issue-requests';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
-import { getManualIssueRequests } from '@/utils/helpers/issues';
 
 import { Wrapper } from './ManualIssueExecutionActionsTable.style';
 
 const queryString = require('query-string');
-
-const FAKE_UNLIMITED_NUMBER = 2147483647; // TODO: a temporary solution for now
 
 enum ManualIssueExecutionActionsTableKeys {
   VaultAccountID = 'vault-account-id',
@@ -30,20 +25,13 @@ type ManualIssueExecutionActionsTableProps = InheritAttrs;
 const ManualIssueExecutionActionsTable = (props: ManualIssueExecutionActionsTableProps): JSX.Element => {
   const titleId = useId();
 
-  const { selectedAccount } = useSubstrateSecureState();
-
   const {
-    isIdle: issueRequestsIdle,
-    isLoading: issueRequestsLoading,
-    data: issueRequests,
-    error: issueRequestsError
-  } = useIssueRequests(
-    0,
-    FAKE_UNLIMITED_NUMBER,
-    `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
-    ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
-  );
-  useErrorHandler(issueRequestsError);
+    isIdle: manualIssueRequestsIdle,
+    isLoading: manualIssueRequestsLoading,
+    data: manualIssueRequests,
+    error: manualIssueRequestsError
+  } = useManualIssueRequests();
+  useErrorHandler(manualIssueRequestsError);
 
   const columns = React.useMemo(
     () => [
@@ -55,9 +43,7 @@ const ManualIssueExecutionActionsTable = (props: ManualIssueExecutionActionsTabl
   );
 
   const rows = React.useMemo(() => {
-    if (issueRequests === undefined) return undefined;
-
-    const manualIssueRequests = getManualIssueRequests(issueRequests);
+    if (manualIssueRequests === undefined) return undefined;
 
     return manualIssueRequests.map((item) => {
       return {
@@ -80,12 +66,12 @@ const ManualIssueExecutionActionsTable = (props: ManualIssueExecutionActionsTabl
         )
       };
     });
-  }, [issueRequests]);
+  }, [manualIssueRequests]);
 
-  if (issueRequestsIdle || issueRequestsLoading) {
+  if (manualIssueRequestsIdle || manualIssueRequestsLoading) {
     return <PrimaryColorEllipsisLoader />;
   }
-  if (issueRequests === undefined) {
+  if (manualIssueRequests === undefined) {
     throw new Error('Something went wrong!');
   }
 
