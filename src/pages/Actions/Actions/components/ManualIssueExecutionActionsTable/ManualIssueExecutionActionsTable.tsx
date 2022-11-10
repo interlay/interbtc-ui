@@ -12,22 +12,22 @@ import useIssueRequests from '@/services/hooks/use-issue-requests';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getManualIssueRequests } from '@/utils/helpers/issues';
 
-import { Wrapper } from './ManualIssueActionsTable.style';
+import { Wrapper } from './ManualIssueExecutionActionsTable.style';
 
 const queryString = require('query-string');
 
 const FAKE_UNLIMITED_NUMBER = 2147483647; // TODO: a temporary solution for now
 
-enum ManualIssueActionsTableKeys {
+enum ManualIssueExecutionActionsTableKeys {
   VaultAccountID = 'vault-account-id',
   Action = 'action'
 }
 
 type InheritAttrs = Omit<TableProps, 'columns' | 'rows'>;
 
-type ManualIssueActionsTableProps = InheritAttrs;
+type ManualIssueExecutionActionsTableProps = InheritAttrs;
 
-const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Element => {
+const ManualIssueExecutionActionsTable = (props: ManualIssueExecutionActionsTableProps): JSX.Element => {
   const titleId = useId();
 
   const { selectedAccount } = useSubstrateSecureState();
@@ -48,8 +48,8 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
   const columns = React.useMemo(
     () => [
       // TODO: translate
-      { name: 'Notification', uid: ManualIssueActionsTableKeys.VaultAccountID },
-      { name: 'Link', uid: ManualIssueActionsTableKeys.Action }
+      { name: 'Notification', uid: ManualIssueExecutionActionsTableKeys.VaultAccountID },
+      { name: 'Link', uid: ManualIssueExecutionActionsTableKeys.Action }
     ],
     []
   );
@@ -62,8 +62,8 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
     return manualIssueRequests.map((item) => {
       return {
         id: item.id,
-        [ManualIssueActionsTableKeys.VaultAccountID]: 'Execute issue request', // TODO: translate
-        [ManualIssueActionsTableKeys.Action]: (
+        [ManualIssueExecutionActionsTableKeys.VaultAccountID]: 'Execute issue request', // TODO: translate
+        [ManualIssueExecutionActionsTableKeys.Action]: (
           <CTALink
             to={{
               pathname: PAGES.TRANSACTIONS,
@@ -100,12 +100,12 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
   );
 };
 
-const ManualIssueActionsTableWithErrorBoundary = withErrorBoundary(ManualIssueActionsTable, {
+const ManualIssueActionsTableWithErrorBoundary = withErrorBoundary(ManualIssueExecutionActionsTable, {
   FallbackComponent: ErrorFallback,
   onReset: () => {
     window.location.reload();
   }
 });
 
-export { ManualIssueActionsTableWithErrorBoundary as ManualIssueActionsTable };
-export type { ManualIssueActionsTableProps };
+export { ManualIssueActionsTableWithErrorBoundary as ManualIssueExecutionActionsTable };
+export type { ManualIssueExecutionActionsTableProps };

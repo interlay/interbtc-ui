@@ -1,11 +1,11 @@
 import MainContainer from '@/parts/MainContainer';
 
-import { ManualIssueActionsTable } from './components/ManualIssueActionsTable';
+import { ManualIssueExecutionActionsTable } from './components/ManualIssueExecutionActionsTable';
 
 const Actions = (): JSX.Element => {
   return (
     <MainContainer>
-      <ManualIssueActionsTable />
+      <ManualIssueExecutionActionsTable />
     </MainContainer>
   );
 };
