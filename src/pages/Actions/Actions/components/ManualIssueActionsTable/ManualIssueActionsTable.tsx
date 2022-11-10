@@ -1,8 +1,13 @@
 import { IssueStatus } from '@interlay/interbtc-api';
+// ray test touch <
+import { useId } from '@react-aria/utils';
+// ray test touch >
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
-import { Table, TableProps } from '@/component-library';
+// ray test touch <
+import { H3, Stack, Table, TableProps } from '@/component-library';
+// ray test touch >
 import { CTALink } from '@/component-library';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -27,6 +32,10 @@ type InheritAttrs = Omit<TableProps, 'columns' | 'rows'>;
 type ManualIssueActionsTableProps = InheritAttrs;
 
 const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Element => {
+  // ray test touch <
+  const titleId = useId();
+  // ray test touch >
+
   const { selectedAccount } = useSubstrateSecureState();
 
   const {
@@ -45,8 +54,8 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
   const columns = React.useMemo(
     () => [
       // TODO: translate
-      { name: 'Vault Account ID', uid: ManualIssueActionsTableKeys.VaultAccountID },
-      { name: 'Action', uid: ManualIssueActionsTableKeys.Action }
+      { name: 'Notification', uid: ManualIssueActionsTableKeys.VaultAccountID },
+      { name: 'Link', uid: ManualIssueActionsTableKeys.Action }
     ],
     []
   );
@@ -83,7 +92,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
             fullWidth={false}
           >
             {/* TODO: translate */}
-            Link
+            Go to Request
           </CTALink>
         )
       };
@@ -97,7 +106,16 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
     throw new Error('Something went wrong!');
   }
 
-  return <Wrapper variant='bordered'>{rows && <Table columns={columns} rows={rows} {...props} />}</Wrapper>;
+  return (
+    <Stack spacing='double'>
+      {/* ray test touch < */}
+      <H3 id={titleId}>Manual Issue Execution Actions Needed</H3>
+      {/* ray test touch > */}
+      <Wrapper variant='bordered'>
+        {rows && <Table aria-labelledby={titleId} columns={columns} rows={rows} {...props} />}
+      </Wrapper>
+    </Stack>
+  );
 };
 
 const ManualIssueActionsTableWithErrorBoundary = withErrorBoundary(ManualIssueActionsTable, {
