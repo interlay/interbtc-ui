@@ -57,6 +57,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
   const rows = React.useMemo(() => {
     if (issueRequests === undefined) return undefined;
 
+    // ray test touch <
     const manualIssueRequests = issueRequests.filter((item) => {
       switch (item.status) {
         case IssueStatus.Cancelled:
@@ -69,6 +70,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
           return false;
       }
     });
+    // ray test touch >
 
     return manualIssueRequests.map((item) => {
       return {
