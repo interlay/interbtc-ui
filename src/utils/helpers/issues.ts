@@ -2,7 +2,7 @@ import { IssueStatus } from '@interlay/interbtc-api';
 
 import { IssueRequestWithStatusDecoded } from '@/types/issues.d';
 
-const getManuallyIssuableRequests = (
+const getManualIssueRequests = (
   issueRequests: Array<IssueRequestWithStatusDecoded>
 ): Array<IssueRequestWithStatusDecoded> => {
   return issueRequests.filter((item) => {
@@ -19,4 +19,4 @@ const getManuallyIssuableRequests = (
   });
 };
 
-export { getManuallyIssuableRequests };
+export { getManualIssueRequests };

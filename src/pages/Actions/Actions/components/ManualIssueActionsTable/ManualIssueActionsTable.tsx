@@ -10,7 +10,7 @@ import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import useIssueRequests from '@/services/hooks/use-issue-requests';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
-import { getManuallyIssuableRequests } from '@/utils/helpers/issues';
+import { getManualIssueRequests } from '@/utils/helpers/issues';
 
 import { Wrapper } from './ManualIssueActionsTable.style';
 
@@ -57,9 +57,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
   const rows = React.useMemo(() => {
     if (issueRequests === undefined) return undefined;
 
-    // ray test touch <
-    const manualIssueRequests = getManuallyIssuableRequests(issueRequests);
-    // ray test touch >
+    const manualIssueRequests = getManualIssueRequests(issueRequests);
 
     return manualIssueRequests.map((item) => {
       return {
