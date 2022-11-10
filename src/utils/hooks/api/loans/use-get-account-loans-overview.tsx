@@ -21,6 +21,7 @@ interface AccountLoansOverviewData {
   borrowLimitUSDValue: Big | undefined;
   collateralRatio: number | undefined;
   earnedRewards: MonetaryAmount<CurrencyExt>;
+  netYieldUSDValue: Big | undefined;
 }
 
 interface AccountLoansOverview {
@@ -77,11 +78,19 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       : Infinity;
   }
 
+  const earnedRewards = getTotalEarnedRewards(lendPositions, borrowPositions);
+
+  // TODO: waiting on lib
+  const totalAccruedUSDValue = new Big(0);
+
+  const totalEarnedRewardsUSDValue =
+    convertMonetaryAmountToValueInUSD(earnedRewards, getTokenPrice(prices, earnedRewards.currency.ticker)?.usd) || 0;
+
+  const netYieldUSDValue = totalEarnedInterestUSDValue?.add(totalEarnedRewardsUSDValue).sub(totalAccruedUSDValue);
+
   const borrowLimitUSDValue = collateralAssetsUSDValue
     ? collateralAssetsUSDValue.sub(borrowedAssetsUSDValue || 0)
     : Big(0);
-
-  const earnedRewards = getTotalEarnedRewards(lendPositions, borrowPositions);
 
   /**
    * This method computes how the collateral ratio will change if
@@ -208,7 +217,8 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       borrowedAssetsUSDValue,
       borrowLimitUSDValue,
       collateralRatio,
-      earnedRewards
+      earnedRewards,
+      netYieldUSDValue
     },
     refetch,
     getNewCollateralRatio,

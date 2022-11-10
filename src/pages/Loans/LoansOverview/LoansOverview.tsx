@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { Stack } from '@/component-library';
+import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
@@ -12,7 +12,7 @@ const LoansOverview = (): JSX.Element => {
   const { t } = useTranslation();
   const { overview, lendPositions, borrowPositions, assets } = useGetLoansData();
   const {
-    interestEarnedUSDValue,
+    netYieldUSDValue,
     borrowUSDValue: borrowBalance,
     supplyUSDValue: supplyBalance,
     earnedRewardsAmount,
@@ -28,9 +28,9 @@ const LoansOverview = (): JSX.Element => {
   return (
     <MainContainer>
       <StyledTitle>{t('loans.brand_name')}</StyledTitle>
-      <Stack spacing='double'>
+      <Flex direction='column' gap='spacing12'>
         <LoansInsights
-          apyEarned={interestEarnedUSDValue}
+          netYield={netYieldUSDValue}
           borrow={borrowBalance}
           supply={supplyBalance}
           rewards={earnedRewardsAmount}
@@ -38,7 +38,7 @@ const LoansOverview = (): JSX.Element => {
           onClaimRewards={handleClaimRewards}
         />
         <LoansTables borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
-      </Stack>
+      </Flex>
     </MainContainer>
   );
 };

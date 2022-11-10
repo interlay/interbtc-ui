@@ -1,10 +1,8 @@
 import styled from 'styled-components';
 
-import { Stack, theme } from '@/component-library';
+import { Flex } from '@/component-library';
 
-const StyledTablesWrapper = styled.section`
-  display: flex;
-  gap: ${theme.spacing.spacing6};
+const StyledTablesWrapper = styled(Flex)`
   flex-direction: column;
 
   @media (min-width: 80em) {
@@ -12,8 +10,4 @@ const StyledTablesWrapper = styled.section`
   }
 `;
 
-const StyledTableWrapper = styled(Stack)`
-  flex: 1;
-`;
-
-export { StyledTablesWrapper, StyledTableWrapper };
+export { StyledTablesWrapper };

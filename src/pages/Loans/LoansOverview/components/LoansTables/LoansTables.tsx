@@ -11,7 +11,7 @@ type LoansTablesProps = {
 };
 
 const LoansTables = ({ lendPositions, borrowPositions, assets }: LoansTablesProps): JSX.Element => (
-  <StyledTablesWrapper>
+  <StyledTablesWrapper gap='spacing6'>
     <LendTables assets={assets} positions={lendPositions} />
     <BorrowTables assets={assets} positions={borrowPositions} />
   </StyledTablesWrapper>

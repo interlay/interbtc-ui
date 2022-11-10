@@ -2,11 +2,12 @@ import { LoanAsset, LoanPosition, newMonetaryAmount, TickerToData } from '@inter
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
+import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
 import { BorrowAssetsColumns, BorrowAssetsTableRow } from '../types';
 
 // TODO: translations
@@ -46,12 +47,19 @@ const BorrowAssetsTable = ({ assets, positions, onRowAction }: BorrowAssetsTable
         const amount = balances ? balances[currency.ticker].free : newMonetaryAmount(0, currency);
         const wallet = <BalanceCell amount={amount} prices={prices} />;
 
+        const liquidityUSDValue = convertMonetaryAmountToValueInUSD(
+          totalLiquidity,
+          prices?.[totalLiquidity.currency.ticker].usd
+        );
+        const liquidityLabel = liquidityUSDValue || 0;
+        const liquidity = <MonetaryCell label={formatUSD(liquidityLabel, { compact: true })} alignItems='flex-end' />;
+
         return {
           id: currency.ticker,
           asset,
           apy,
           wallet,
-          liquidity: displayMonetaryAmountInUSDFormat(totalLiquidity, prices?.[totalLiquidity.currency.ticker].usd)
+          liquidity
         };
       }),
     [availableAssets, balances, prices]
@@ -59,7 +67,7 @@ const BorrowAssetsTable = ({ assets, positions, onRowAction }: BorrowAssetsTable
 
   return (
     <LoansBaseTable
-      title={t('loans.borrow')}
+      title={t('loans.borrow_markets')}
       onRowAction={onRowAction}
       rows={borrowAssetsTableRows}
       columns={borrowAssetsColumns}

@@ -1,30 +1,17 @@
-import { CurrencyExt, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatUSD } from '@/common/utils/utils';
-import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { formatPercentage } from '@/common/utils/utils';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { LendPositionColumns, LendPositionTableRow } from '../types';
 
-const getAmountEarnedUSD = (
-  earnedInterest: MonetaryAmount<CurrencyExt>,
-  earnedReward: MonetaryAmount<CurrencyExt> | null,
-  prices?: Prices
-) => {
-  const earnedInterestUSD = earnedInterest.toBig().mul(prices?.[earnedInterest.currency.ticker].usd || 0);
-  const earnedRewards = earnedReward?.toBig().mul(prices?.[earnedReward.currency.ticker].usd || 0) || 0;
-  const accumulativeEarnedApy = earnedInterestUSD.add(earnedRewards);
-
-  return formatUSD(accumulativeEarnedApy.toNumber());
-};
-
 // TODO: translations
 const lendPositionColumns = [
   { name: 'Asset', uid: LendPositionColumns.ASSET },
-  { name: 'APY / Earned', uid: LendPositionColumns.APY_EARNED },
+  { name: 'APY', uid: LendPositionColumns.APY_EARNED },
   { name: 'Balance', uid: LendPositionColumns.BALANCE },
   { name: 'Collateral', uid: LendPositionColumns.COLLATERAL }
 ];
@@ -41,15 +28,18 @@ const LendPositionsTable = ({ assets, positions, onRowAction }: LendPositionsTab
 
   const lendPositionsTableRows: LendPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ amount, currency, earnedInterest, earnedReward }, key) => {
+      positions.map(({ amount, currency }, key) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
         const { lendApy, lendReward } = assets[currency.ticker];
 
-        const accumulativeApy = lendApy.add(lendReward?.apy || 0);
-        const accumulativeEarnedUSD = getAmountEarnedUSD(earnedInterest, earnedReward, prices);
+        const rewardsApy = lendReward
+          ? `${lendReward.currency.ticker}: ${formatPercentage(lendReward.apy.toNumber() || 0, {
+              maximumFractionDigits: 2
+            })}`
+          : undefined;
 
-        const apy = <ApyCell apy={accumulativeApy} amount={accumulativeEarnedUSD} />;
+        const apy = <ApyCell apy={lendApy} amount={rewardsApy} />;
 
         const balance = <BalanceCell amount={amount} prices={prices} />;
 

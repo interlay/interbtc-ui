@@ -5,7 +5,7 @@ import { StyledDd, StyledDt } from './LoansInsights.style';
 type LoansInsightsProps = {
   supply: string | undefined;
   borrow: string | undefined;
-  apyEarned: string | undefined;
+  netYield: string | undefined;
   rewards: string | undefined;
   hasEarnedRewards: boolean;
   onClaimRewards: () => void;
@@ -13,7 +13,7 @@ type LoansInsightsProps = {
 
 const LoansInsights = ({
   supply = '-',
-  apyEarned = '-',
+  netYield = '-',
   borrow = '-',
   rewards = '-',
   hasEarnedRewards,
@@ -34,11 +34,17 @@ const LoansInsights = ({
     </Card>
     <Card flex='1'>
       <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-        <StyledDt color='primary'>Net Yeild</StyledDt>
-        <StyledDd color='secondary'>{apyEarned}</StyledDd>
+        <StyledDt color='primary'>Net Yield</StyledDt>
+        <StyledDd color='secondary'>{netYield}</StyledDd>
       </DlGroup>
     </Card>
-    <Card direction='row' flex={hasEarnedRewards ? '1.5' : '1'} alignItems='center' justifyContent='space-between'>
+    <Card
+      direction='row'
+      flex={hasEarnedRewards ? '1.5' : '1'}
+      gap='spacing2'
+      alignItems='center'
+      justifyContent='space-between'
+    >
       <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
         <StyledDt color='primary'>Rewards</StyledDt>
         <StyledDd color='secondary'>{rewards}</StyledDd>

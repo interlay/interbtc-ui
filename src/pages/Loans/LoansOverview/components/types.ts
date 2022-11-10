@@ -6,7 +6,7 @@ enum LendAssetsColumns {
   ASSET = 'asset',
   APY = 'apy',
   WALLET = 'wallet',
-  COLLATERAL = 'collateral'
+  LIQUIDITY = 'liquidity'
 }
 
 type LendAssetsTableRow = {
@@ -14,7 +14,7 @@ type LendAssetsTableRow = {
   [LendAssetsColumns.ASSET]: ReactNode;
   [LendAssetsColumns.APY]: ReactNode;
   [LendAssetsColumns.WALLET]: ReactNode;
-  [LendPositionColumns.COLLATERAL]: ReactNode;
+  [LendAssetsColumns.LIQUIDITY]: ReactNode;
 };
 
 enum LendPositionColumns {
@@ -46,7 +46,7 @@ type BorrowAssetsTableRow = {
   [BorrowAssetsColumns.ASSET]: ReactNode;
   [BorrowAssetsColumns.APY]: ReactNode;
   [BorrowAssetsColumns.WALLET]: ReactNode;
-  [BorrowAssetsColumns.LIQUIDITY]: string;
+  [BorrowAssetsColumns.LIQUIDITY]: ReactNode;
 };
 
 enum BorrowPositionColumns {
