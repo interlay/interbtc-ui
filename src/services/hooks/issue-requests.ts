@@ -85,7 +85,6 @@ const useIssueRequests = (
   };
 };
 
-// ray test touch <
 const FAKE_UNLIMITED_NUMBER = 2147483647; // TODO: a temporary solution for now
 
 const useManualIssueRequests = (): {
@@ -121,6 +120,5 @@ const useManualIssueRequests = (): {
     error: issueRequestsError
   };
 };
-// ray test touch >
 
 export { useIssueRequests, useManualIssueRequests };
