@@ -7,9 +7,6 @@ import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-// ray test touch <
-import { CTALink } from '@/component-library';
-// ray test touch >
 import InterlayCaliforniaOutlinedButton from '@/components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
@@ -20,9 +17,11 @@ import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains
 import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
-import { PAGES } from '@/utils/constants/links';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
+// ray test touch <
+import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
+// ray test touch >
 
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
@@ -79,10 +78,7 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         {/* ray test touch < */}
-        <CTALink variant='outlined' to={PAGES.ACTIONS}>
-          {/* TODO: translate */}
-          Actions Needed
-        </CTALink>
+        <ManualIssueExecutionActionsBadge />
         {/* ray test touch > */}
         <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
         {selectedAccount !== undefined && (
