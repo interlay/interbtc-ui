@@ -28,7 +28,7 @@ import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import useIssueRequests from '@/services/hooks/use-issue-requests';
+import { useIssueRequests } from '@/services/hooks/issue-requests';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';

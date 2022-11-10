@@ -24,7 +24,7 @@ import { BTC_EXPLORER_ADDRESS_API } from '@/config/blockstream-explorer-links';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import useIssueRequests from '@/services/hooks/use-issue-requests';
+import { useIssueRequests } from '@/services/hooks/issue-requests';
 import issueCountQuery from '@/services/queries/issue-count-query';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';

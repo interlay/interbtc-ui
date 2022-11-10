@@ -81,4 +81,4 @@ const useIssueRequests = (
   };
 };
 
-export default useIssueRequests;
+export { useIssueRequests };

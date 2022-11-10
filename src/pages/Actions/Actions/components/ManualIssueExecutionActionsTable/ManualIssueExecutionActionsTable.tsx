@@ -8,7 +8,7 @@ import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import useIssueRequests from '@/services/hooks/use-issue-requests';
+import { useIssueRequests } from '@/services/hooks/issue-requests';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getManualIssueRequests } from '@/utils/helpers/issues';
 
