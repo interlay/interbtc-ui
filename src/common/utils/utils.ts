@@ -45,10 +45,17 @@ const convertMonetaryAmountToValueInUSD = <T extends CurrencyExt>(
   return amount.toBig().mul(new Big(rate)).toNumber();
 };
 
-const formatUSD = (amount: number): string => {
+const getFormatUSDNotation = (amount: number) => {
+  const amountLength = amount.toFixed(0).length;
+
+  return amountLength >= 6 ? 'compact' : 'standard';
+};
+
+const formatUSD = (amount: number, options?: { compact?: boolean }): string => {
   const { format } = new Intl.NumberFormat(undefined, {
     style: 'currency',
-    currency: 'USD'
+    currency: 'USD',
+    notation: options?.compact ? getFormatUSDNotation(amount) : undefined
   });
 
   return format(amount);
@@ -135,7 +142,8 @@ function getPolkadotLink(blockHeight: number): string {
   return `https://polkadot.js.org/apps/?rpc=${PARACHAIN_URL}#/explorer/query/${blockHeight}`;
 }
 
-const monetaryToNumber = (monetaryAmount: MonetaryAmount<CurrencyExt> | undefined): number => monetaryAmount?.toBig().toNumber() || 0;
+const monetaryToNumber = (monetaryAmount: MonetaryAmount<CurrencyExt> | undefined): number =>
+  monetaryAmount?.toBig().toNumber() || 0;
 
 export {
   convertMonetaryAmountToValueInUSD,
