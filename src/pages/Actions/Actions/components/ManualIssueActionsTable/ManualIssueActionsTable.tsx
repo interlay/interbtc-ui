@@ -102,6 +102,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
 
   return (
     <Stack spacing='double'>
+      {/* TODO: translate */}
       <H3 id={titleId}>Manual Issue Execution Actions Needed</H3>
       <Wrapper variant='bordered'>
         {rows && <Table aria-labelledby={titleId} columns={columns} rows={rows} {...props} />}
