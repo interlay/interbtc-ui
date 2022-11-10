@@ -40,7 +40,10 @@ interface AccountLoansOverview {
     currency: CurrencyExt,
     availableCapacity: MonetaryAmount<CurrencyExt>
   ) => MonetaryAmount<CurrencyExt> | undefined;
-  getMaxWithdrawableAmount: (currency: CurrencyExt) => MonetaryAmount<CurrencyExt> | undefined;
+  getMaxWithdrawableAmount: (
+    currency: CurrencyExt,
+    lendPosition?: LendPosition
+  ) => MonetaryAmount<CurrencyExt> | undefined;
 }
 
 const useGetAccountLoansOverview = (): AccountLoansOverview => {
@@ -189,14 +192,20 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
    */
   // TODO: needs to be implemented
   const getMaxWithdrawableAmount = useCallback(
-    (currency: CurrencyExt): MonetaryAmount<CurrencyExt> | undefined => {
-      if (collateralAssetsUSDValue === undefined || borrowedAssetsUSDValue === undefined || prices === undefined) {
+    (currency: CurrencyExt, lendPosition?: LendPosition): MonetaryAmount<CurrencyExt> | undefined => {
+      if (collateralRatio === undefined || lendPosition === undefined) {
         return undefined;
       }
 
-      return newMonetaryAmount(100, currency, true);
+      const minimunCollateral = collateralRatio - 1;
+
+      if (minimunCollateral <= 1) {
+        return newMonetaryAmount(0, currency);
+      }
+
+      return lendPosition.amount.mul(minimunCollateral).div(collateralRatio);
     },
-    [collateralAssetsUSDValue, borrowedAssetsUSDValue, prices]
+    [collateralRatio]
   );
 
   return {

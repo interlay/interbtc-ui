@@ -1,4 +1,4 @@
-import { BorrowPosition, CurrencyExt, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { BorrowPosition, CurrencyExt, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -22,7 +22,7 @@ type UseLoanFormData = {
 const useLoanFormData = (
   variant: BorrowAction | LendAction,
   asset: LoanAsset,
-  position?: BorrowPosition
+  position?: LendPosition | BorrowPosition
 ): UseLoanFormData => {
   const { data: balances } = useGetBalances();
   const prices = useGetPrices();
@@ -42,7 +42,7 @@ const useLoanFormData = (
       maxAmount = getMaxBorrowableAmount(asset.currency, asset.availableCapacity) || zeroAssetAmount;
       break;
     case 'withdraw':
-      maxAmount = getMaxWithdrawableAmount(asset.currency) || zeroAssetAmount;
+      maxAmount = getMaxWithdrawableAmount(asset.currency, position) || zeroAssetAmount;
       break;
     case 'lend':
       maxAmount = assetBalance;
