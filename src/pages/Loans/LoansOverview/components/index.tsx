@@ -1,5 +1,5 @@
 import { LoansInsights, LoansInsightsProps } from './LoansInsights';
-import { LoansMarkets, LoansMarketsProps } from './LoansMarkets';
+import { LoansTables, LoansTablesProps } from './LoansTables';
 
-export { LoansInsights, LoansMarkets };
-export type { LoansInsightsProps, LoansMarketsProps };
+export { LoansInsights, LoansTables };
+export type { LoansInsightsProps, LoansTablesProps };

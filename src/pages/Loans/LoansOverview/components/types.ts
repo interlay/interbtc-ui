@@ -5,59 +5,63 @@ import { ReactNode } from 'react';
 enum LendAssetsColumns {
   ASSET = 'asset',
   APY = 'apy',
-  WALLET_BALANCE = 'wallet-balance'
+  WALLET = 'wallet',
+  COLLATERAL = 'collateral'
 }
 
 type LendAssetsTableRow = {
   id: number | string;
   [LendAssetsColumns.ASSET]: ReactNode;
   [LendAssetsColumns.APY]: ReactNode;
-  [LendAssetsColumns.WALLET_BALANCE]: string;
+  [LendAssetsColumns.WALLET]: ReactNode;
+  [LendPositionColumns.COLLATERAL]: ReactNode;
 };
 
 enum LendPositionColumns {
   ASSET = 'asset',
-  SUPPLIED = 'supplied',
-  SUPPLY_APY = 'supply-apy',
-  APY_EARNED = 'apy-earned'
+  APY_EARNED = 'apy-earned',
+  BALANCE = 'balance',
+  COLLATERAL = 'collateral'
 }
 
 type LendPositionTableRow = {
   id: number;
   [LendPositionColumns.ASSET]: ReactNode;
-  [LendPositionColumns.SUPPLIED]: string;
-  [LendPositionColumns.SUPPLY_APY]: string;
-  [LendPositionColumns.APY_EARNED]: string;
+  [LendPositionColumns.APY_EARNED]: ReactNode;
+  [LendPositionColumns.BALANCE]: ReactNode;
+  [LendPositionColumns.COLLATERAL]: ReactNode;
 };
 
 // BORROW
 
 enum BorrowAssetsColumns {
   ASSET = 'asset',
-  BORROW_APY = 'borrow-apy',
-  AVAILABLE = 'available',
+  APY = 'apy',
+  WALLET = 'wallet',
   LIQUIDITY = 'liquidity'
 }
 
 type BorrowAssetsTableRow = {
   id: string;
   [BorrowAssetsColumns.ASSET]: ReactNode;
-  [BorrowAssetsColumns.BORROW_APY]: string;
-  [BorrowAssetsColumns.AVAILABLE]: string;
+  [BorrowAssetsColumns.APY]: ReactNode;
+  [BorrowAssetsColumns.WALLET]: ReactNode;
   [BorrowAssetsColumns.LIQUIDITY]: string;
 };
 
 enum BorrowPositionColumns {
   ASSET = 'asset',
-  BORROWED = 'borrowed',
-  BORROW_APY = 'borrow-apy'
+  APY_ACCRUED = 'apy-accrued',
+  BALANCE = 'balance',
+  STATUS = 'status'
 }
 
 type BorrowPositionTableRow = {
   id: number;
   [BorrowPositionColumns.ASSET]: ReactNode;
-  [BorrowPositionColumns.BORROWED]: string;
-  [BorrowPositionColumns.BORROW_APY]: string;
+  [BorrowPositionColumns.APY_ACCRUED]: ReactNode;
+  [BorrowPositionColumns.BALANCE]: ReactNode;
+  [BorrowPositionColumns.STATUS]: ReactNode;
 };
 
 export { BorrowAssetsColumns, BorrowPositionColumns, LendAssetsColumns, LendPositionColumns };

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Tabs, theme } from '@/component-library';
+import { Meter, Span, Tabs, theme } from '@/component-library';
 
 const StyledDl = styled.dl`
   display: flex;
@@ -30,4 +30,12 @@ const StyledWrapper = styled.div`
   margin-top: ${theme.spacing.spacing6};
 `;
 
-export { StyledDItem, StyledDl, StyledMeterWrapper, StyledTabs, StyledWrapper };
+const StyledMeterScore = styled(Span)`
+  flex: 0 0 ${theme.spacing.spacing4};
+`;
+
+const StyledMeter = styled(Meter)`
+  flex: 1 1 auto;
+`;
+
+export { StyledDItem, StyledDl, StyledMeter, StyledMeterScore, StyledMeterWrapper, StyledTabs, StyledWrapper };
