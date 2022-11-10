@@ -2,7 +2,6 @@ import { IssueStatus } from '@interlay/interbtc-api';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
-import { shortAddress } from '@/common/utils/utils';
 import { Table, TableProps } from '@/component-library';
 import { CTALink } from '@/component-library';
 import ErrorFallback from '@/components/ErrorFallback';
@@ -71,7 +70,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
     return manualIssueRequests.map((item) => {
       return {
         id: item.id,
-        [ManualIssueActionsTableKeys.VaultAccountID]: shortAddress(item.vault.accountId),
+        [ManualIssueActionsTableKeys.VaultAccountID]: 'Execute issue request', // TODO: translate
         [ManualIssueActionsTableKeys.Action]: (
           <CTALink
             to={{
@@ -84,7 +83,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
             fullWidth={false}
           >
             {/* TODO: translate */}
-            Visit Issue Request
+            Link
           </CTALink>
         )
       };
