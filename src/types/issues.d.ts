@@ -1,6 +1,6 @@
 import { IssueStatus } from '@interlay/interbtc-api';
 
-// TODO: bare minimum for now
+// Bare minimum for now
 interface IssueRequest {
   id: string;
   backingPayment: {
