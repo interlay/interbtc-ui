@@ -5,9 +5,6 @@ import ErrorFallback from '@/components/ErrorFallback';
 import { useManualIssueRequests } from '@/services/hooks/issue-requests';
 import { PAGES } from '@/utils/constants/links';
 
-// TODO:
-// - Follow the same folder structures as `component-library`.
-// - Make it close to its design.
 const ManualIssueExecutionActionsBadge = (): JSX.Element => {
   const {
     isIdle: manualIssueRequestsIdle,
