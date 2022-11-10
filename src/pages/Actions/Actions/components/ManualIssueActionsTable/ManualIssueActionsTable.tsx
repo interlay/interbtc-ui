@@ -1,4 +1,3 @@
-import { IssueStatus } from '@interlay/interbtc-api';
 import { useId } from '@react-aria/utils';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -11,6 +10,7 @@ import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import useIssueRequests from '@/services/hooks/use-issue-requests';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
+import { getManuallyIssuableRequests } from '@/utils/helpers/issues';
 
 import { Wrapper } from './ManualIssueActionsTable.style';
 
@@ -58,18 +58,7 @@ const ManualIssueActionsTable = (props: ManualIssueActionsTableProps): JSX.Eleme
     if (issueRequests === undefined) return undefined;
 
     // ray test touch <
-    const manualIssueRequests = issueRequests.filter((item) => {
-      switch (item.status) {
-        case IssueStatus.Cancelled:
-        case IssueStatus.Expired: {
-          return item.backingPayment.btcTxId ? true : false;
-        }
-        case IssueStatus.PendingWithEnoughConfirmations:
-          return true;
-        default:
-          return false;
-      }
-    });
+    const manualIssueRequests = getManuallyIssuableRequests(issueRequests);
     // ray test touch >
 
     return manualIssueRequests.map((item) => {
