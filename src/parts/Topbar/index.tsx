@@ -19,9 +19,7 @@ import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
-// ray test touch <
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
-// ray test touch >
 
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
@@ -77,9 +75,7 @@ const Topbar = (): JSX.Element => {
   return (
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
-        {/* ray test touch < */}
         <ManualIssueExecutionActionsBadge />
-        {/* ray test touch > */}
         <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
         {selectedAccount !== undefined && (
           <>

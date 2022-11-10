@@ -1,4 +1,3 @@
-// ray test touch <
 import { CTALink } from '@/component-library';
 import { PAGES } from '@/utils/constants/links';
 
@@ -13,4 +12,3 @@ const ManualIssueExecutionActionsBadge = (): JSX.Element => {
 };
 
 export default ManualIssueExecutionActionsBadge;
-// ray test touch >
