@@ -537,6 +537,8 @@
     "brand_name": "Interlend",
     "withdraw": "Withdraw",
     "borrow": "Borrow",
+    "borrow_markets": "Borrow Markets",
+    "lend_markets": "Lend Markets",
     "repay": "Repay",
     "lend": "Lend",
     "my_lend_positions": "My Lend Positions",

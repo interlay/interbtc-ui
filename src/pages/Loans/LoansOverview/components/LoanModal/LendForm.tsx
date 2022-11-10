@@ -1,20 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
-import { useId } from '@react-aria/utils';
 import Big from 'big.js';
 import { useForm } from 'react-hook-form';
 import { TFunction, useTranslation } from 'react-i18next';
 import * as z from 'zod';
 
 import { displayMonetaryAmountInUSDFormat, formatNumber, formatUSD } from '@/common/utils/utils';
-import { CTA, H3, P, Stack, TokenInput } from '@/component-library';
+import { CTA, TokenInput } from '@/component-library';
 import validate, { LoanLendSchemaParams, LoanWithdrawSchemaParams } from '@/lib/form-validation';
 import { LendAction } from '@/types/loans';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 
 import { useLoanFormData } from '../../utils/use-loan-form-data';
-import { StyledDItem, StyledDl } from './LoanModal.style';
+import { StyledDItem, StyledDl, StyledFormWrapper } from './LoanModal.style';
 import { LoanScore } from './LoanScore';
 
 const LEND_AMOUNT = 'lend-amount';
@@ -56,7 +55,6 @@ type LendFormProps = {
 };
 
 const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
-  const titleId = useId();
   const { t } = useTranslation();
   const content = getContentMap(t)[variant];
   const {
@@ -107,58 +105,44 @@ const LendForm = ({ asset, variant, position }: LendFormProps): JSX.Element => {
 
   return (
     <form onSubmit={h(handleSubmit)}>
-      <Stack spacing='double'>
-        <div>
-          <H3 id={titleId}>
-            {content.title} {asset.currency.name}
-          </H3>
-          <P>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</P>
-        </div>
-        <Stack>
-          <TokenInput
-            placeholder='0.00'
-            tokenSymbol={asset.currency.ticker}
-            errorMessage={getErrorMessage(errors[amountFieldName])}
-            label={content.label}
-            aria-label={content.fieldAriaLabel}
-            balance={assetAmount.max.toBig().toNumber()}
-            balanceInUSD={displayMonetaryAmountInUSDFormat(assetAmount.max, assetPrice)}
-            valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
-            // TODO: we need a more generic way to know how many digits to show
-            renderBalance={(value) =>
-              formatNumber(value, {
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 5
-              })
-            }
-            {...register(amountFieldName)}
-          />
-          <LoanScore score={collateralRatio} />
-          <StyledDl>
-            <StyledDItem>
-              <dt>APY</dt>
-              <dd>{formatNumber(asset.lendApy.toNumber())}%</dd>
-            </StyledDItem>
-            {variant === 'lend' && asset.lendReward && (
-              <StyledDItem>
-                <dt>Borrow Limit</dt>
-                <dd>
-                  {formatUSD(borrowLimitUSDValue?.toNumber() || 0)} -&gt; {formatUSD(newBorrowLimit.toNumber())}
-                </dd>
-              </StyledDItem>
-            )}
+      <StyledFormWrapper direction='column' gap='spacing4'>
+        <TokenInput
+          placeholder='0.00'
+          tokenSymbol={asset.currency.ticker}
+          errorMessage={getErrorMessage(errors[amountFieldName])}
+          label={content.label}
+          aria-label={content.fieldAriaLabel}
+          balance={assetAmount.max.toBig().toNumber()}
+          balanceInUSD={displayMonetaryAmountInUSDFormat(assetAmount.max, assetPrice)}
+          valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
+          // TODO: we need a more generic way to know how many digits to show
+          renderBalance={(value) =>
+            formatNumber(value, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 5
+            })
+          }
+          {...register(amountFieldName)}
+        />
+        <LoanScore score={collateralRatio} />
+        <StyledDl>
+          <StyledDItem>
+            <dt>APY</dt>
+            <dd>{formatNumber(asset.lendApy.toNumber())}%</dd>
+          </StyledDItem>
+          {variant === 'lend' && asset.lendReward && (
             <StyledDItem>
               <dt>Borrow Limit</dt>
               <dd>
                 {formatUSD(borrowLimitUSDValue?.toNumber() || 0)} -&gt; {formatUSD(newBorrowLimit.toNumber())}
               </dd>
             </StyledDItem>
-          </StyledDl>
-          <CTA type='submit' size='large' disabled={isBtnDisabled}>
-            {content.title}
-          </CTA>
-        </Stack>
-      </Stack>
+          )}
+        </StyledDl>
+        <CTA type='submit' size='large' disabled={isBtnDisabled}>
+          {content.title}
+        </CTA>
+      </StyledFormWrapper>
     </form>
   );
 };

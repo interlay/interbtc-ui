@@ -1,10 +1,11 @@
 import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
+import { Flex } from '@/component-library';
+
 import { LendAssetsTable } from '../LendAssetsTable/LendAssetsTable';
 import { LendPositionsTable } from '../LendPositionsTable';
 import { LoanModal } from '../LoanModal';
-import { StyledTableWrapper } from './LoansTables.style';
 
 type UseAssetState = {
   data?: LoanAsset;
@@ -40,7 +41,7 @@ const LendTables = ({ assets, positions }: LendTablesProps): JSX.Element => {
   const handleClose = () => setAsset(defaultAssetState);
 
   return (
-    <StyledTableWrapper spacing='double'>
+    <Flex direction='column' flex='1' gap='spacing12'>
       <LendPositionsTable assets={assets} positions={positions} onRowAction={handlePositionRowAction} />
       <LendAssetsTable assets={assets} positions={positions} onRowAction={handleAssetRowAction} />
       <LoanModal
@@ -50,7 +51,7 @@ const LendTables = ({ assets, positions }: LendTablesProps): JSX.Element => {
         position={selectedAsset.position}
         onClose={handleClose}
       />
-    </StyledTableWrapper>
+    </Flex>
   );
 };
 

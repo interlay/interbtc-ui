@@ -9,7 +9,7 @@ type LoansData = {
   overview: {
     supplyUSDValue: string | undefined;
     borrowUSDValue: string | undefined;
-    interestEarnedUSDValue: string | undefined;
+    netYieldUSDValue: string | undefined;
     earnedRewardsAmount: string | undefined;
     hasEarnedRewards: boolean;
   };
@@ -24,9 +24,9 @@ const useGetLoansData = (): LoansData => {
       lendPositions,
       borrowPositions,
       lentAssetsUSDValue,
-      totalEarnedInterestUSDValue,
       borrowedAssetsUSDValue,
-      earnedRewards
+      earnedRewards,
+      netYieldUSDValue
     }
   } = useGetAccountLoansOverview();
   const { assets } = useGetLoanAssets();
@@ -35,7 +35,7 @@ const useGetLoansData = (): LoansData => {
     overview: {
       supplyUSDValue: lentAssetsUSDValue && formatUSD(lentAssetsUSDValue.toNumber()),
       borrowUSDValue: borrowedAssetsUSDValue && formatUSD(borrowedAssetsUSDValue.toNumber()),
-      interestEarnedUSDValue: totalEarnedInterestUSDValue && formatUSD(totalEarnedInterestUSDValue.toNumber()),
+      netYieldUSDValue: netYieldUSDValue && formatUSD(netYieldUSDValue.toNumber()),
       earnedRewardsAmount: earnedRewards
         ? `${displayMonetaryAmount(earnedRewards)} ${earnedRewards.currency.ticker}`
         : undefined,

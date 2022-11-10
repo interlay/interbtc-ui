@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { H2, Span, theme } from '@/component-library';
 
 const StyledMarketTitle = styled(H2)`
-  font-size: ${theme.text.xl2};
+  font-size: ${theme.text.xl};
+  font-weight: ${theme.fontWeight.bold};
 `;
 
 const StyledCellLabel = styled(Span)`
