@@ -14,7 +14,7 @@ import { Wrapper } from './ManualIssueExecutionActionsTable.style';
 const queryString = require('query-string');
 
 enum ManualIssueExecutionActionsTableKeys {
-  VaultAccountID = 'vault-account-id',
+  Notification = 'notification',
   Action = 'action'
 }
 
@@ -36,7 +36,7 @@ const ManualIssueExecutionActionsTable = (props: ManualIssueExecutionActionsTabl
   const columns = React.useMemo(
     () => [
       // TODO: translate
-      { name: 'Notification', uid: ManualIssueExecutionActionsTableKeys.VaultAccountID },
+      { name: 'Notification', uid: ManualIssueExecutionActionsTableKeys.Notification },
       { name: 'Link', uid: ManualIssueExecutionActionsTableKeys.Action }
     ],
     []
@@ -48,7 +48,7 @@ const ManualIssueExecutionActionsTable = (props: ManualIssueExecutionActionsTabl
     return manualIssueRequests.map((item) => {
       return {
         id: item.id,
-        [ManualIssueExecutionActionsTableKeys.VaultAccountID]: 'Execute issue request', // TODO: translate
+        [ManualIssueExecutionActionsTableKeys.Notification]: 'Execute issue request', // TODO: translate
         [ManualIssueExecutionActionsTableKeys.Action]: (
           <CTALink
             to={{
