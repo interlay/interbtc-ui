@@ -64,4 +64,8 @@
   /* Modal */
   --colors-title-primary: var(--colors-neutral-white);
   --colors-title-secondary: var(--colors-bronze);
+  /* Switch */
+  --colors-switch-unchecked-bg: var(--colors-dark-blue);
+  --colors-switch-checked-bg: var(--colors-yellow);
+  --colors-switch-indicator-bg: var(--colors-mid-blue);
 }

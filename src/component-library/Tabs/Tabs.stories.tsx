@@ -26,7 +26,21 @@ const Template: Story<TabsProps> = (args) => (
 const Default = Template.bind({});
 Default.args = {};
 
-export { Default };
+const Simple: Story<TabsProps> = (args) => (
+  <Tabs style={{ maxWidth: 350 }} {...args}>
+    <TabsItem title='Lend'>
+      <P>Lend</P>
+    </TabsItem>
+    <TabsItem title='Withdraw'>
+      <P>Withdraw</P>
+    </TabsItem>
+  </Tabs>
+);
+
+const FullWith = Simple.bind({});
+FullWith.args = { fullWidth: true, size: 'large' };
+
+export { Default, FullWith };
 
 export default {
   title: 'Components/Tabs',

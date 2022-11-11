@@ -14,13 +14,15 @@ WithBalance.args = {
   balanceInUSD: formatUSD(1000.0),
   isDisabled: false,
   decimals: 8,
-  renderBalance: (value) => Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 }).format(value)
+  renderBalance: (value) => Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 }).format(value),
+  label: 'Available Balance'
 };
 
 const WithoutBalance = Template.bind({});
 WithoutBalance.args = {
   tokenSymbol: 'KSM',
-  valueInUSD: formatUSD(100.0)
+  valueInUSD: formatUSD(100.0),
+  label: 'Collateral Deposit'
 };
 
 export { WithBalance, WithoutBalance };

@@ -1,0 +1,9 @@
+:root {
+  --reach-tooltip: 1;
+}
+
+[data-reach-tooltip] {
+  pointer-events: none;
+  position: absolute;
+  border: solid 1px #ccc;
+}

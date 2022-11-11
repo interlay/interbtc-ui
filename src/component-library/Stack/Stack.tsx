@@ -15,6 +15,7 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
 type StackProps = Props & NativeAttrs;
 
+// TODO: to be replaced by Flex component
 const Stack = ({ children, spacing = 'single', justifyContent, alignItems, ...props }: StackProps): JSX.Element => (
   <StackContainer $spacing={spacing} $justifyContent={justifyContent} $alignItems={alignItems} {...props}>
     {children}
