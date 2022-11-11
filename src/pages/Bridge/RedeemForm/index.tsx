@@ -409,6 +409,23 @@ const RedeemForm = (): JSX.Element | null => {
             title={
               <h5
                 className={clsx(
+                  { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}
+              >
+                {t('you_will_receive')}
+              </h5>
+            }
+            unitIcon={<BitcoinLogoIcon width={23} height={23} />}
+            value={totalBTC.toHuman(8)}
+            unitName='BTC'
+            approxUSD={totalBTCInUSD}
+          />
+          <Hr2 className={clsx('border-t-2', 'my-2.5')} />
+          <PriceInfo
+            title={
+              <h5
+                className={clsx(
                   { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
@@ -436,23 +453,6 @@ const RedeemForm = (): JSX.Element | null => {
             value={bitcoinNetworkFeeInBTC}
             unitName='BTC'
             approxUSD={bitcoinNetworkFeeInUSD}
-          />
-          <Hr2 className={clsx('border-t-2', 'my-2.5')} />
-          <PriceInfo
-            title={
-              <h5
-                className={clsx(
-                  { 'text-interlayTextPrimaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-                  { 'dark:text-kintsugiTextPrimaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
-                )}
-              >
-                {t('you_will_receive')}
-              </h5>
-            }
-            unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={totalBTC.toHuman(8)}
-            unitName='BTC'
-            approxUSD={totalBTCInUSD}
           />
           {premiumRedeemSelected && (
             <PriceInfo
