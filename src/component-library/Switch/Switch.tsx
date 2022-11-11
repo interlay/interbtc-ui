@@ -1,13 +1,18 @@
 import { useFocusRing } from '@react-aria/focus';
+import { usePress } from '@react-aria/interactions';
 import { AriaSwitchProps, useSwitch } from '@react-aria/switch';
 import { mergeProps } from '@react-aria/utils';
 import { useToggleState } from '@react-stately/toggle';
-import { forwardRef, HTMLAttributes, useRef } from 'react';
+import { PressEvent } from '@react-types/shared';
+import React, { forwardRef, HTMLAttributes, useRef } from 'react';
 
 import { useDOMRef } from '../utils/dom';
 import { StyledInput, StyledLabel, StyledSwitch, StyledWrapper } from './Switch.style';
 
-type Props = { onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void };
+type Props = {
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onPress?: (e: PressEvent) => void;
+};
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
@@ -27,9 +32,11 @@ const Switch = forwardRef<HTMLLabelElement, SwitchProps>(
       autoFocus: inputProps.autoFocus
     });
 
+    const { pressProps } = usePress(props);
+
     return (
       <StyledWrapper ref={labelRef} className={className} style={style} hidden={hidden}>
-        <StyledInput {...mergeProps(inputProps, focusProps, { onChange })} ref={inputRef} />
+        <StyledInput {...mergeProps(inputProps, focusProps, pressProps, { onChange })} ref={inputRef} />
         <StyledSwitch $isChecked={inputProps.checked} $isFocusVisible={isFocusVisible} />
         {children && <StyledLabel>{children}</StyledLabel>}
       </StyledWrapper>
