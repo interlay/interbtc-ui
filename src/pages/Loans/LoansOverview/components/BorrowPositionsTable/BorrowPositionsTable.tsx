@@ -6,6 +6,7 @@ import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-acco
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
+import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
 import { BorrowPositionColumns, BorrowPositionTableRow } from '../types';
 
 // TODO: translations
@@ -39,13 +40,16 @@ const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPosition
         const balance = <BalanceCell amount={amount} prices={prices} />;
 
         const score = getNewCollateralRatio('borrow', currency, amount);
+        const scoreLabel = score ? (score > 10 ? '+10' : score.toString()) : '-';
+
+        const status = <MonetaryCell label={scoreLabel} alignItems='flex-end' />;
 
         return {
           id: key,
           asset,
           'apy-accrued': apy,
           balance,
-          status: score ? (score > 10 ? '+10' : score.toString()) : '-'
+          status
         };
       }),
     [assets, getNewCollateralRatio, positions, prices]

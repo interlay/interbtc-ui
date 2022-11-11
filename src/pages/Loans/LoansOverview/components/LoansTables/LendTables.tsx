@@ -3,16 +3,18 @@ import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
 
+import { CollateralModal } from '../CollateralModal';
 import { LendAssetsTable } from '../LendAssetsTable/LendAssetsTable';
 import { LendPositionsTable } from '../LendPositionsTable';
 import { LoanModal } from '../LoanModal';
 
 type UseAssetState = {
+  type?: 'toggle-collateral' | 'change-loan';
   data?: LoanAsset;
   position?: LendPosition;
 };
 
-const defaultAssetState: UseAssetState = { data: undefined, position: undefined };
+const defaultAssetState: UseAssetState = { type: undefined, data: undefined, position: undefined };
 
 type LendTablesProps = {
   assets: TickerToData<LoanAsset>;
@@ -27,7 +29,7 @@ const LendTables = ({ assets, positions }: LendTablesProps): JSX.Element => {
     const asset = assets[key as string];
     const position = positions.find((position) => position.currency === asset.currency);
 
-    setAsset({ data: asset, position });
+    setAsset({ type: 'change-loan', data: asset, position });
   };
 
   // TODO: subject to change in the future
@@ -35,18 +37,33 @@ const LendTables = ({ assets, positions }: LendTablesProps): JSX.Element => {
     const position = positions[key as number];
     const asset = assets[position.currency.ticker];
 
-    setAsset({ data: asset, position });
+    setAsset({ type: 'change-loan', data: asset, position });
+  };
+
+  const handlePressCollateralSwitch = (loanData: LoanAsset, position: LendPosition) => {
+    setAsset({ type: 'toggle-collateral', data: loanData, position });
   };
 
   const handleClose = () => setAsset(defaultAssetState);
 
   return (
     <Flex direction='column' flex='1' gap='spacing12'>
-      <LendPositionsTable assets={assets} positions={positions} onRowAction={handlePositionRowAction} />
+      <LendPositionsTable
+        assets={assets}
+        positions={positions}
+        onRowAction={handlePositionRowAction}
+        onPressCollateralSwitch={handlePressCollateralSwitch}
+      />
       <LendAssetsTable assets={assets} positions={positions} onRowAction={handleAssetRowAction} />
       <LoanModal
         variant='lend'
-        open={!!selectedAsset.data}
+        open={selectedAsset.type === 'change-loan'}
+        asset={selectedAsset.data}
+        position={selectedAsset.position}
+        onClose={handleClose}
+      />
+      <CollateralModal
+        open={selectedAsset.type === 'toggle-collateral'}
         asset={selectedAsset.data}
         position={selectedAsset.position}
         onClose={handleClose}

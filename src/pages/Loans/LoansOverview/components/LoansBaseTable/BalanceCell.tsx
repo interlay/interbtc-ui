@@ -16,16 +16,8 @@ const BalanceCell = ({ amount, prices }: BalanceCellProps): JSX.Element => {
   const assetBalance = formatNumber(amount.toBig().toNumber(), {
     maximumFractionDigits: amount.currency.humanDecimals
   });
-  const assetBalanceTicker = amount.currency.ticker;
 
-  return (
-    <MonetaryCell
-      label={assetBalance}
-      labelCurrency={assetBalanceTicker}
-      sublabel={assetBalanceUSD}
-      labelColor='secondary'
-    />
-  );
+  return <MonetaryCell label={assetBalance} sublabel={assetBalanceUSD} labelColor='secondary' />;
 };
 
 export { BalanceCell };

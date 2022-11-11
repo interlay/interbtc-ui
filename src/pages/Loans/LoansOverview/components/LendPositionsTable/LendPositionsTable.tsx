@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatPercentage } from '@/common/utils/utils';
+import { Switch } from '@/component-library';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
@@ -20,15 +21,21 @@ type LendPositionsTableProps = {
   assets: TickerToData<LoanAsset>;
   positions: LendPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
+  onPressCollateralSwitch: (loanData: LoanAsset, position: LendPosition) => void;
 };
 
-const LendPositionsTable = ({ assets, positions, onRowAction }: LendPositionsTableProps): JSX.Element | null => {
+const LendPositionsTable = ({
+  assets,
+  positions,
+  onRowAction,
+  onPressCollateralSwitch
+}: LendPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
   const lendPositionsTableRows: LendPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ amount, currency }, key) => {
+      positions.map(({ amount, currency, isCollateral }, key) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
         const { lendApy, lendReward } = assets[currency.ticker];
@@ -43,16 +50,23 @@ const LendPositionsTable = ({ assets, positions, onRowAction }: LendPositionsTab
 
         const balance = <BalanceCell amount={amount} prices={prices} />;
 
+        const collateral = (
+          <Switch
+            onPress={() => onPressCollateralSwitch(assets[currency.ticker], positions[key])}
+            isSelected={isCollateral}
+            aria-label={`toggle ${currency.ticker} collateral`}
+          />
+        );
+
         return {
           id: key,
           asset,
           'apy-earned': apy,
           balance,
-          // TODO: implement when switch is added
-          collateral: null
+          collateral
         };
       }),
-    [assets, positions, prices]
+    [assets, onPressCollateralSwitch, positions, prices]
   );
 
   if (!lendPositionsTableRows.length) {

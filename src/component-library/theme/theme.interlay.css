@@ -64,4 +64,7 @@
   --colors-switch-unchecked-bg: var(--colors-neutral-lighter-grey);
   --colors-switch-checked-bg: var(--colors-light-blue);
   --colors-switch-indicator-bg: var(--colors-neutral-white);
+  /* Status */
+  --colors-bg-info: var(--colors-lighter-blue);
+  --colors-info: var(--colors-light-blue);
 }
