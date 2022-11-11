@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { H2, Span, theme } from '@/component-library';
 
-const StyledMarketTitle = styled(H2)`
+const StyledTitle = styled(H2)`
   font-size: ${theme.text.xl};
   font-weight: ${theme.fontWeight.bold};
 `;
@@ -23,4 +23,4 @@ const StyledCellSubLabel = styled(Span)`
   font-size: ${theme.text.xs};
 `;
 
-export { StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel, StyledMarketTitle };
+export { StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel, StyledTitle };
