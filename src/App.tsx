@@ -32,6 +32,7 @@ const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
+const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
 const App = (): JSX.Element => {
@@ -65,14 +66,14 @@ const App = (): JSX.Element => {
     })();
   }, [bridgeLoaded, loadFaucet]);
 
-  // Detects if connected account is vault operator.
+  // Detects if the connected account is a vault operator
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
     [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
     graphqlFetcher<GraphqlReturn<string[]>>(),
     {
       enabled: bridgeLoaded && !!selectedAccount,
-      onSuccess: ({ data: { vaults } }) => {
-        const isVaultOperator = vaults.length > 0;
+      onSuccess: ({ data }) => {
+        const isVaultOperator = data?.vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
       onError: (error) => console.log('[App useQuery 1] error.message => ', error.message)
@@ -178,6 +179,9 @@ const App = (): JSX.Element => {
                   </Route>
                   <Route path={PAGES.TRANSFER}>
                     <Transfer />
+                  </Route>
+                  <Route path={PAGES.ACTIONS}>
+                    <Actions />
                   </Route>
                   <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
                   <Route path='*'>
