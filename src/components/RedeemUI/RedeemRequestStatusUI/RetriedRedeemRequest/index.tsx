@@ -2,12 +2,14 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, getPolkadotLink } from '@/common/utils/utils';
+import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
@@ -20,6 +22,7 @@ import {
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
+import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -30,7 +33,10 @@ interface Props {
 
 const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   const { t } = useTranslation();
+
   const prices = useGetPrices();
+
+  const handleError = useErrorHandler();
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const [punishmentCollateralTokenAmount, setPunishmentCollateralTokenAmount] = React.useState(
@@ -40,13 +46,14 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!redeem) return;
+    if (!handleError) return;
 
     // TODO: should add loading UX
     (async () => {
       try {
         const [punishmentFee, btcDotRate] = await Promise.all([
           window.bridge.vaults.getPunishmentFee(),
-          window.bridge.oracle.getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
+          getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN)
         ]);
 
         const btcAmount = redeem.request.requestedAmountBacking;
@@ -54,11 +61,10 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         const thePunishmentDOTAmount = theBurnDOTAmount.mul(new Big(punishmentFee));
         setPunishmentCollateralTokenAmount(thePunishmentDOTAmount);
       } catch (error) {
-        // TODO: should add error handling UX
-        console.log('[RetriedRedeemRequest useEffect] error.message => ', error.message);
+        handleError(error);
       }
     })();
-  }, [redeem, bridgeLoaded]);
+  }, [redeem, bridgeLoaded, handleError]);
 
   return (
     <RequestWrapper>
@@ -145,4 +151,9 @@ const RetriedRedeemRequest = ({ redeem }: Props): JSX.Element => {
   );
 };
 
-export default RetriedRedeemRequest;
+export default withErrorBoundary(RetriedRedeemRequest, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

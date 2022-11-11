@@ -1,17 +1,22 @@
-import { HTMLAttributes } from 'react';
-
+import { FlexProps } from '../Flex';
 import { CardVariants, Wrapper } from './Card.style';
 
 type Props = {
   variant?: CardVariants;
 };
 
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
+type InheritAttrs = Omit<FlexProps, keyof Props>;
 
-type CardProps = Props & NativeAttrs;
+type CardProps = Props & InheritAttrs;
 
-const Card = ({ variant = 'default', role = 'section', children, ...props }: CardProps): JSX.Element => (
-  <Wrapper role={role} variant={variant} {...props}>
+const Card = ({
+  variant = 'default',
+  role = 'section',
+  direction = 'column',
+  children,
+  ...props
+}: CardProps): JSX.Element => (
+  <Wrapper role={role} variant={variant} direction={direction} {...props}>
     {children}
   </Wrapper>
 );

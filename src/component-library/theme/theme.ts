@@ -22,7 +22,9 @@ const theme = {
     light: 'var(--font-weights-light)',
     book: 'var(--font-weights-book)',
     medium: 'var(--font-weights-medium)',
-    bold: 'var(--font-weights-bold)'
+    semibold: 'var(--font-weights-semibold)',
+    bold: 'var(--font-weights-bold)',
+    extrabold: 'var(--font-weights-extrabold)'
   },
   text: {
     xs: 'var(--text-xs)',
@@ -164,7 +166,12 @@ const theme = {
     }
   },
   transition: {
-    duration: 100
+    default: 'var(--transitions-default)',
+    duration: {
+      duration100: 100,
+      duration150: 150,
+      duration250: 250
+    }
   },
   tabs: {
     bg: 'var(--colors-tabs-bg)',
@@ -173,7 +180,46 @@ const theme = {
       color: 'var(--colors-tabs-active-color)',
       bg: 'var(--colors-tabs-active-bg)'
     },
-    border: '1px solid var(--colors-border)'
+    border: '1px solid var(--colors-border)',
+    small: {
+      wrapper: {
+        padding: 'var(--spacing-1) var(--spacing-2)'
+      },
+      tab: {
+        padding: 'var(--spacing-1) var(--spacing-4)',
+        text: 'var(--text-xs)',
+        fontWeight: 'var(--font-weights-book)'
+      },
+      selection: {
+        padding: 'var(--spacing-1)'
+      }
+    },
+    medium: {
+      wrapper: {
+        padding: 'var(--spacing-1) var(--spacing-2)'
+      },
+      tab: {
+        padding: 'var(--spacing-2) var(--spacing-6)',
+        text: 'var(--text-s)',
+        fontWeight: 'var(--font-weights-book)'
+      },
+      selection: {
+        padding: 'var(--spacing-1)'
+      }
+    },
+    large: {
+      wrapper: {
+        padding: 'var(--spacing-2) var(--spacing-3)'
+      },
+      tab: {
+        padding: 'var(--spacing-3) var(--spacing-8)',
+        text: 'var(--text-base)',
+        fontWeight: 'var(--font-weights-medium)'
+      },
+      selection: {
+        padding: 'var(--spacing-2)'
+      }
+    }
   },
   meter: {
     bar: {
@@ -266,6 +312,17 @@ const theme = {
       secondary: {
         color: 'var(--colors-title-secondary)'
       }
+    }
+  },
+  switch: {
+    unchecked: {
+      bg: 'var(--colors-switch-unchecked-bg)'
+    },
+    checked: {
+      bg: 'var(--colors-switch-checked-bg)'
+    },
+    indicator: {
+      bg: 'var(--colors-switch-indicator-bg)'
     }
   }
 };

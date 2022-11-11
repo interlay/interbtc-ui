@@ -15,7 +15,7 @@ interface ModalProps {
 
 // TODO: we have missing relevant behaviours for a Modal. Could be rewritten with react-aria.
 const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.Element | null => {
-  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration);
+  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration.duration100);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

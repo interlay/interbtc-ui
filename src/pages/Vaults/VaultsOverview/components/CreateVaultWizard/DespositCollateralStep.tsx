@@ -12,7 +12,7 @@ import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/u
 import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import validate, { VaultDepositValidationParams } from '@/lib/form-validation';
+import validate, { VaultDepositSchemaParams } from '@/lib/form-validation';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
@@ -40,7 +40,7 @@ const DepositCollateralStep = ({
   const { t } = useTranslation();
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
 
-  const validationParams: VaultDepositValidationParams = {
+  const validationParams: VaultDepositSchemaParams = {
     minAmount: collateral.min.raw,
     availableBalance: collateral.balance.raw,
     governanceBalance: governance.raw,

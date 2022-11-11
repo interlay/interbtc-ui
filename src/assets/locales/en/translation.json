@@ -143,6 +143,7 @@
     "you_will_receive": "Redeem {{wrappedTokenSymbol}} 1:1 for BTC",
     "must_select_account_warning": "No account selected. Please select an account to redeem.",
     "waiting_for": "Waiting for",
+    "vault": "Vault",
     "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
     "from_vault": "from Vault",
     "we_will_inform_you_btc": "We will inform you when the BTC payment is executed.",
@@ -406,7 +407,9 @@
     "manually_select_vault": "Manually Select Vault",
     "vault_must_be_selected": "Specific vault must be selected.",
     "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity",
-    "no_issuable_token_available": "Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or <1>consider running a Vault</1>!"
+    "no_issuable_token_available": "Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or <1>consider running a Vault</1>!",
+    "vault_has_capacity_you_can_claim": "Vault has {{vaultCapacity}} {{wrappedTokenSymbol}} capacity. You can claim your {{wrappedTokenSymbol}}.",
+    "vault_has_capacity_you_can_not_claim": "Vault has {{vaultCapacity}} {{wrappedTokenSymbol}} capacity. You cannot claim your {{wrappedTokenSymbol}} at the moment."
   },
   "feedback": {
     "would_like_to_hear": "We want to build the best-possible solution and would like to hear your feedback!",
