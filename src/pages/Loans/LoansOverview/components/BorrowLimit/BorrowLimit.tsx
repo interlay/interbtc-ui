@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import { formatUSD } from '@/common/utils/utils';
 import { DlGroup, Dt } from '@/component-library';
-import { Status } from '@/component-library/utils/prop-types';
 import { LoanAction } from '@/types/loans';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 
@@ -12,15 +11,16 @@ import { getStatus, getStatusLabel } from '../../utils/get-status';
 import { LoanScore } from '../LoanScore';
 import { StyledAlert, StyledDd, StyledDl, StyledWarningIcon } from './BorrowLimit.style';
 
+const LIQUIDATION_ALERT_SCORE = 1.5;
+
 // TODO: needs to be verified after lib integration
 type BorrowLimitProps = {
   variant: LoanAction;
-  thresholds: Record<Status, number>;
   asset: MonetaryAmount<CurrencyExt>;
   shouldDisplayLiquidationAlert?: boolean;
 };
 
-const BorrowLimit = ({ variant, thresholds, asset, shouldDisplayLiquidationAlert }: BorrowLimitProps): JSX.Element => {
+const BorrowLimit = ({ variant, asset, shouldDisplayLiquidationAlert }: BorrowLimitProps): JSX.Element => {
   const { t } = useTranslation();
   const {
     getNewCollateralRatio,
@@ -30,13 +30,13 @@ const BorrowLimit = ({ variant, thresholds, asset, shouldDisplayLiquidationAlert
 
   const newBorrowLimit = getNewBorrowLimitUSDValue(variant, asset.currency, asset)?.toNumber() || 0;
   const newCollateralRatio = getNewCollateralRatio(variant, asset.currency, asset) || 0;
-  const status = getStatus(newCollateralRatio, thresholds);
+  const status = getStatus(newCollateralRatio);
   const statusLabel = getStatusLabel(status);
 
   const hasLiquidationAlert =
     shouldDisplayLiquidationAlert &&
     (variant === 'borrow' || variant === 'withdraw') &&
-    newCollateralRatio < (thresholds.error + thresholds.warning) / 2;
+    newCollateralRatio < LIQUIDATION_ALERT_SCORE;
 
   return (
     <StyledDl direction='column'>
@@ -56,7 +56,7 @@ const BorrowLimit = ({ variant, thresholds, asset, shouldDisplayLiquidationAlert
         <Dt>Health Status</Dt>
         <StyledDd $status={status}>{statusLabel}</StyledDd>
       </DlGroup>
-      <LoanScore ranges={thresholds} score={newCollateralRatio} aria-label='loan score' />
+      <LoanScore score={newCollateralRatio} aria-label='loan score' />
       {/* TODO: replace with Alert component */}
       {hasLiquidationAlert && (
         <StyledAlert role='alert' gap='spacing4' alignItems='center'>

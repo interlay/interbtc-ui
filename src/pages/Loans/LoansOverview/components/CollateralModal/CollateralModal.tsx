@@ -1,15 +1,26 @@
-import { LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { CurrencyExt, LendPosition, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
+import { useMutation } from 'react-query';
 
 import { CTA, Flex, Modal, ModalProps } from '@/component-library';
+import ErrorModal from '@/components/ErrorModal';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
-import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { isLiquidation } from '../../utils/is-liquidation';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
 import { StyledDescription, StyledTitle } from './CollateralModal.style';
+
+type ToggleCollateralVariables = { isEnabling: boolean; underlyingCurrency: CurrencyExt };
+
+const toggleCollateral = ({ isEnabling, underlyingCurrency }: ToggleCollateralVariables) => {
+  if (isEnabling) {
+    return window.bridge.loans.enableAsCollateral(underlyingCurrency);
+  } else {
+    return window.bridge.loans.disableAsCollateral(underlyingCurrency);
+  }
+};
 
 type CollateralModalVariant = 'enable' | 'disable' | 'disable-error';
 
@@ -35,14 +46,10 @@ const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: Loa
     }
   }[variant]);
 
-const getModalVariant = (
-  isCollateralActive: boolean,
-  newCollateralRatio: number,
-  liquidationScore: number
-): CollateralModalVariant => {
+const getModalVariant = (isCollateralActive: boolean, newCollateralRatio: number): CollateralModalVariant => {
   if (!isCollateralActive) return 'enable';
   // User is trying switching off collateral
-  if (isLiquidation(newCollateralRatio, liquidationScore)) return 'disable-error';
+  if (isLiquidation(newCollateralRatio)) return 'disable-error';
 
   return 'disable';
 };
@@ -58,9 +65,18 @@ type CollateralModalProps = Props & InheritAttrs;
 
 const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
-  const { thresholds } = useGetLoansData();
-  const { getNewCollateralRatio } = useGetAccountLoansOverview();
+  const { refetch, getNewCollateralRatio } = useGetAccountLoansOverview();
+
   const prices = useGetPrices();
+
+  const handleSuccess = () => {
+    onClose();
+    refetch();
+  };
+
+  const toggleCollateralMutation = useMutation<void, Error, ToggleCollateralVariables>(toggleCollateral, {
+    onSuccess: handleSuccess
+  });
 
   if (!asset || !position) {
     return null;
@@ -72,38 +88,44 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
   const newCollateralRatio = getNewCollateralRatio(borrowLimitVariant, asset.currency, lendPositionAmount) || 0;
 
-  const variant = getModalVariant(isCollateralActive, newCollateralRatio, thresholds.error);
+  const variant = getModalVariant(isCollateralActive, newCollateralRatio);
 
   const content = getContentMap(t, variant, asset);
 
-  // TODO: connext with the lib
   const handleClickBtn = () => {
-    onClose();
-
-    switch (variant) {
-      case 'enable':
-        return console.log('enabling');
-      case 'disable':
-        return console.log('disabling');
-      default:
-        return;
+    if (variant === 'disable-error') {
+      return onClose();
     }
+
+    const isEnabling = variant === 'enable';
+
+    return toggleCollateralMutation.mutate({ isEnabling, underlyingCurrency: position.currency });
   };
 
   return (
-    <Modal onClose={onClose} {...props}>
-      <Flex direction='column' gap='spacing8'>
-        <Flex direction='column' gap='spacing4' alignItems='center'>
-          <StyledTitle>{content.title}</StyledTitle>
-          <StyledDescription color='tertiary'>{content.description}</StyledDescription>
+    <>
+      <Modal onClose={onClose} {...props}>
+        <Flex direction='column' gap='spacing8'>
+          <Flex direction='column' gap='spacing4' alignItems='center'>
+            <StyledTitle>{content.title}</StyledTitle>
+            <StyledDescription color='tertiary'>{content.description}</StyledDescription>
+          </Flex>
+          <BorrowLimit variant={borrowLimitVariant} asset={lendPositionAmount} />
+          {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
+          <CTA size='large' onClick={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
+            {content.buttonLabel}
+          </CTA>
         </Flex>
-        <BorrowLimit variant={borrowLimitVariant} asset={lendPositionAmount} thresholds={thresholds} />
-        {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
-        <CTA size='large' onClick={handleClickBtn}>
-          {content.buttonLabel}
-        </CTA>
-      </Flex>
-    </Modal>
+      </Modal>
+      {toggleCollateralMutation.isError && (
+        <ErrorModal
+          open={toggleCollateralMutation.isError}
+          onClose={() => toggleCollateralMutation.reset()}
+          title='Error'
+          description={toggleCollateralMutation.error?.message || ''}
+        />
+      )}
+    </>
   );
 };
 

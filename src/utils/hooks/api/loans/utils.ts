@@ -1,16 +1,15 @@
-import { BorrowPosition, CurrencyExt, LendPosition, newMonetaryAmount } from '@interlay/interbtc-api';
+import { BorrowPosition, CurrencyExt, LendPosition } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import { Prices } from '../use-get-prices';
 
 type Field<T> = T extends LendPosition
   ? Extract<keyof LendPosition, 'earnedInterest' | 'earnedReward' | 'amount'>
-  : Extract<keyof BorrowPosition, 'earnedReward' | 'amount'>;
+  : Extract<keyof BorrowPosition, 'earnedReward' | 'amount' | 'earnedDebt'>;
 
 /**
  * This function uses the value specified in the object key `field` param
@@ -36,14 +35,18 @@ const getPositionsSumOfFieldsInUSD = <T extends LendPosition | BorrowPosition>(
     return positionUSDValue === null ? totalValue : totalValue.add(positionUSDValue);
   }, Big(0));
 
-// MEMO: sums all the earned rewards for both lend and borrow positions
+// MEMO: each position has total rewards
 const getTotalEarnedRewards = (
   lendPositions: LendPosition[] = [],
   borrowPositions: BorrowPosition[] = []
-): MonetaryAmount<CurrencyExt> =>
-  [...lendPositions, ...borrowPositions].reduce(
-    (total, position) => (position.earnedReward ? total.add(position.earnedReward) : total),
-    newMonetaryAmount(0, GOVERNANCE_TOKEN)
-  );
+): MonetaryAmount<CurrencyExt> | undefined => {
+  if (!lendPositions?.length && !borrowPositions?.length) {
+    return undefined;
+  }
+
+  const [firstPosition] = [...lendPositions, ...borrowPositions];
+
+  return firstPosition.earnedReward || undefined;
+};
 
 export { getPositionsSumOfFieldsInUSD, getTotalEarnedRewards };

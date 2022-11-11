@@ -41,7 +41,7 @@ const useGetLoansData = (): LoansData => {
       earnedRewardsAmount: earnedRewards
         ? `${displayMonetaryAmount(earnedRewards)} ${earnedRewards.currency.ticker}`
         : undefined,
-      hasEarnedRewards: !earnedRewards.isZero()
+      hasEarnedRewards: !!earnedRewards?.isZero()
     },
     lendPositions,
     borrowPositions,

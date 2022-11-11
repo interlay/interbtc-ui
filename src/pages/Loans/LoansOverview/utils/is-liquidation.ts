@@ -1,3 +1,5 @@
-const isLiquidation = (score: number, liquidationScore: number): boolean => score < liquidationScore;
+import { borrowStatus } from './get-status';
+
+const isLiquidation = (score: number): boolean => score < borrowStatus.error;
 
 export { isLiquidation };

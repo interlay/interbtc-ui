@@ -3,7 +3,6 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
-import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { getStatus, getStatusLabel } from '../../utils/get-status';
@@ -28,7 +27,6 @@ type BorrowPositionsTableProps = {
 const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { thresholds } = useGetLoansData();
   const { getNewCollateralRatio } = useGetAccountLoansOverview();
 
   const borrowPositionsTableRows: BorrowPositionTableRow[] = useMemo(
@@ -43,7 +41,7 @@ const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPosition
         const balance = <BalanceCell amount={amount} prices={prices} />;
 
         const score = getNewCollateralRatio('borrow', currency, amount);
-        const status = getStatus(score, thresholds);
+        const status = getStatus(score);
         const statusLabel = getStatusLabel(status);
         const statusTag = <StatusTag status={status}>{statusLabel}</StatusTag>;
 
@@ -55,7 +53,7 @@ const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPosition
           status: statusTag
         };
       }),
-    [assets, getNewCollateralRatio, positions, prices, thresholds]
+    [assets, getNewCollateralRatio, positions, prices]
   );
 
   if (!borrowPositionsTableRows.length) {
