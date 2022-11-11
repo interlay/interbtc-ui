@@ -22,6 +22,7 @@ import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
 import * as constants from './constants';
+import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
@@ -38,6 +39,7 @@ const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pa
 const App = (): JSX.Element => {
   const { selectedAccount, extensions } = useSubstrateSecureState();
   const { setSelectedAccount } = useSubstrate();
+  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
@@ -180,9 +182,11 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.TRANSFER}>
                     <Transfer />
                   </Route>
-                  <Route path={PAGES.LOANS}>
-                    <Loans />
-                  </Route>
+                  {isLendingEnabled && (
+                    <Route path={PAGES.LOANS}>
+                      <Loans />
+                    </Route>
+                  )}
                   <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
                   <Route path='*'>
                     <NoMatch />
