@@ -163,6 +163,11 @@ const theme = {
       error: 'var(--colors-error)',
       warning: 'var(--colors-warning)',
       success: 'var(--colors-success)'
+    },
+    bg: {
+      error: 'var(--colors-error-20)',
+      warning: 'var(--colors-warning-light-20)',
+      success: 'var(--colors-success-20)'
     }
   },
   transition: {
