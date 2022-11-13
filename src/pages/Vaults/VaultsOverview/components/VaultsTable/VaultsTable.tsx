@@ -40,9 +40,6 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
     { name: t('vault.create_table.collateral_rate'), uid: VaultsTableKeys.COLLATERAL_RATE },
     { name: '', uid: VaultsTableKeys.ACTION }
   ];
-  // ray test touch <
-  console.log('ray : ***** data => ', data);
-  // ray test touch >
 
   const rows = data.map((row, id) => {
     const { collateralCurrency, collateralRate, isActive, isInstalled, minCollateralAmount, wrappedCurrency } = row;
