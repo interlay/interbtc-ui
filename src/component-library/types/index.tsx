@@ -1,5 +1,5 @@
-// ray test touch <
-type Tokens = 'BTC' | 'DOT' | 'IBTC' | 'INTR' | 'KBTC' | 'KINT' | 'KSM' | 'LKSM';
-// ray test touch >
+import { CurrencyIdLiteral } from '@interlay/interbtc-api';
+
+type Tokens = 'BTC' | `${CurrencyIdLiteral}` | 'LKSM';
 
 export type { Tokens };
