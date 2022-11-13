@@ -47,17 +47,13 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
       id,
       [VaultsTableKeys.COIN_PAIR]: (
         <CoinPairWrapper key={VaultsTableKeys.COIN_PAIR}>
-          {/* ray test touch < */}
           <CoinPair size='small' coinOne={collateralCurrency.ticker as Tokens} coinTwo={wrappedCurrency} />{' '}
-          {/* ray test touch > */}
           {collateralCurrency.ticker} - {wrappedCurrency}
         </CoinPairWrapper>
       ),
       [VaultsTableKeys.MIN_COLLATERAL]: (
         <NumericValue key={VaultsTableKeys.MIN_COLLATERAL}>
-          {/* ray test touch < */}
           {minCollateralAmount.toNumber().toFixed(2)} {collateralCurrency.ticker}
-          {/* ray test touch > */}
         </NumericValue>
       ),
       [VaultsTableKeys.COLLATERAL_RATE]: (
