@@ -1,3 +1,4 @@
+// ray test touch <
 const LksmIcon = (): JSX.Element => (
   <svg role='img' width='100%' viewBox='0 0 60 60' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <title>LKSM</title>
@@ -22,3 +23,4 @@ const LksmIcon = (): JSX.Element => (
 );
 
 export { LksmIcon };
+// ray test touch >

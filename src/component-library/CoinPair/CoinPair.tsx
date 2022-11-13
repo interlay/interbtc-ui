@@ -9,12 +9,14 @@ type CoinPairProps = {
   coinTwo: Tokens;
 };
 
+// ray test touch <
 const CoinPair = ({ coinOne, coinTwo, size }: CoinPairProps): JSX.Element => (
   <CoinPairWrapper $size={size}>
     <CoinIcon size={size} coin={coinOne} />
     <CoinIcon size={size} coin={coinTwo} />
   </CoinPairWrapper>
 );
+// ray test touch >
 
 export { CoinPair };
 export type { CoinPairProps };

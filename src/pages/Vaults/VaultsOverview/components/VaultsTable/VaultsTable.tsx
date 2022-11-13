@@ -2,7 +2,7 @@ import { CurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 
-import { CoinPair, CTA, Table, TableProps } from '@/component-library';
+import { CoinPair, CTA, Table, TableProps, Tokens } from '@/component-library';
 
 import { CoinPairWrapper, NumericValue, Wrapper } from './VaultsTable.style';
 
@@ -40,6 +40,9 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
     { name: t('vault.create_table.collateral_rate'), uid: VaultsTableKeys.COLLATERAL_RATE },
     { name: '', uid: VaultsTableKeys.ACTION }
   ];
+  // ray test touch <
+  console.log('ray : ***** data => ', data);
+  // ray test touch >
 
   const rows = data.map((row, id) => {
     const { collateralCurrency, collateralRate, isActive, isInstalled, minCollateralAmount, wrappedCurrency } = row;
@@ -47,13 +50,17 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
       id,
       [VaultsTableKeys.COIN_PAIR]: (
         <CoinPairWrapper key={VaultsTableKeys.COIN_PAIR}>
-          <CoinPair size='small' coinOne={collateralCurrency.ticker as CurrencyIdLiteral} coinTwo={wrappedCurrency} />{' '}
+          {/* ray test touch < */}
+          <CoinPair size='small' coinOne={collateralCurrency.ticker as Tokens} coinTwo={wrappedCurrency} />{' '}
+          {/* ray test touch > */}
           {collateralCurrency.ticker} - {wrappedCurrency}
         </CoinPairWrapper>
       ),
       [VaultsTableKeys.MIN_COLLATERAL]: (
         <NumericValue key={VaultsTableKeys.MIN_COLLATERAL}>
+          {/* ray test touch < */}
           {minCollateralAmount.toNumber().toFixed(2)} {collateralCurrency.ticker}
+          {/* ray test touch > */}
         </NumericValue>
       ),
       [VaultsTableKeys.COLLATERAL_RATE]: (
