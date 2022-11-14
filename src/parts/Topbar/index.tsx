@@ -19,6 +19,7 @@ import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
+import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
 
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
@@ -74,6 +75,7 @@ const Topbar = (): JSX.Element => {
   return (
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
+        <ManualIssueExecutionActionsBadge />
         <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
         {selectedAccount !== undefined && (
           <>
