@@ -1,15 +1,11 @@
-import { useTranslation } from 'react-i18next';
-
 import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 
 import { LoansInsights, LoansTables } from './components';
-import { StyledTitle } from './LoansOverview.style';
 
 const LoansOverview = (): JSX.Element => {
-  const { t } = useTranslation();
   const { overview, lendPositions, borrowPositions, assets } = useGetLoansData();
   const {
     netYieldUSDValue,
@@ -27,7 +23,6 @@ const LoansOverview = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <StyledTitle>{t('loans.brand_name')}</StyledTitle>
       <Flex direction='column' gap='spacing12'>
         <LoansInsights
           netYield={netYieldUSDValue}

@@ -3,10 +3,12 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { getStatus, getStatusLabel } from '../../utils/get-status';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
-import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
+import { StatusTag } from '../LoansBaseTable/LoanStatusTag';
 import { BorrowPositionColumns, BorrowPositionTableRow } from '../types';
 
 // TODO: translations
@@ -26,6 +28,7 @@ type BorrowPositionsTableProps = {
 const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
+  const { thresholds } = useGetLoansData();
   const { getNewCollateralRatio } = useGetAccountLoansOverview();
 
   const borrowPositionsTableRows: BorrowPositionTableRow[] = useMemo(
@@ -40,19 +43,19 @@ const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPosition
         const balance = <BalanceCell amount={amount} prices={prices} />;
 
         const score = getNewCollateralRatio('borrow', currency, amount);
-        const scoreLabel = score ? (score > 10 ? '+10' : score.toString()) : '-';
-
-        const status = <MonetaryCell label={scoreLabel} alignItems='flex-end' />;
+        const status = getStatus(score, thresholds);
+        const statusLabel = getStatusLabel(status);
+        const statusTag = <StatusTag status={status}>{statusLabel}</StatusTag>;
 
         return {
           id: key,
           asset,
           'apy-accrued': apy,
           balance,
-          status
+          status: statusTag
         };
       }),
-    [assets, getNewCollateralRatio, positions, prices]
+    [assets, getNewCollateralRatio, positions, prices, thresholds]
   );
 
   if (!borrowPositionsTableRows.length) {
