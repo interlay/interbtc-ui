@@ -82,8 +82,9 @@ const cumulativeVolumesFetcher = async (
   {
     ${cutoffTimestamps.map((date) => {
       let col;
+      // TODO: Need to refactor when we want to support lend tokens as collateral for vaults.
       if (collateralCurrency) {
-        col = 'id' in collateralCurrency ? collateralCurrency.id : collateralCurrency.ticker;
+        col = 'foreignAsset' in collateralCurrency ? collateralCurrency.foreignAsset.id : collateralCurrency.ticker;
       }
       return queryFragment(type, date, col, wrappedCurrency?.ticker);
     })}

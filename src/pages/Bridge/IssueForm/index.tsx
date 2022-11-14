@@ -333,6 +333,7 @@ const IssueForm = (): JSX.Element | null => {
 
         const collateralToken = await currencyIdToMonetaryCurrency(
           window.bridge.assetRegistry,
+          window.bridge.loans,
           vaultId.currencies.collateral
         );
 
