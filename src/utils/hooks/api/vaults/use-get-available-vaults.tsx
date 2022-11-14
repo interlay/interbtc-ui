@@ -20,7 +20,11 @@ type AvailableVaultData = {
 const getAvailableVaults = async (collateralCurrency: CollateralCurrencyExt): Promise<AvailableVaultData> => {
   const secureCollateralThreshold = await window.bridge.vaults.getSecureCollateralThreshold(collateralCurrency);
 
+  // ray test touch <
   const minimumCollateral = await window.bridge.vaults.getMinimumCollateral(collateralCurrency);
+  console.log('ray : ***** collateralCurrency.ticker => ', collateralCurrency.ticker);
+  console.log('ray : ***** minimumCollateral.toString() => ', minimumCollateral.toString());
+  // ray test touch >
 
   return {
     collateralCurrency,

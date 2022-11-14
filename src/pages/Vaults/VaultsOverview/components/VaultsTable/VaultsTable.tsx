@@ -43,6 +43,9 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
 
   const rows = data.map((row, id) => {
     const { collateralCurrency, collateralRate, isActive, isInstalled, minCollateralAmount, wrappedCurrency } = row;
+    // ray test touch <
+    console.log('ray : ***** minCollateralAmount.toString() => ', minCollateralAmount.toString());
+    // ray test touch >
     return {
       id,
       [VaultsTableKeys.COIN_PAIR]: (
@@ -53,7 +56,9 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
       ),
       [VaultsTableKeys.MIN_COLLATERAL]: (
         <NumericValue key={VaultsTableKeys.MIN_COLLATERAL}>
+          {/* ray test touch < */}
           {minCollateralAmount.toNumber().toFixed(2)} {collateralCurrency.ticker}
+          {/* ray test touch > */}
         </NumericValue>
       ),
       [VaultsTableKeys.COLLATERAL_RATE]: (
