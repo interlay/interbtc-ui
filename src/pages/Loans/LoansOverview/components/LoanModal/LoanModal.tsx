@@ -1,17 +1,39 @@
-import { LendPosition, LoanAsset, LoanPosition } from '@interlay/interbtc-api';
-import { useTranslation } from 'react-i18next';
+import { BorrowPosition, LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { TFunction, useTranslation } from 'react-i18next';
 
 import { Modal, ModalProps, TabsItem } from '@/component-library';
-import { LoanType } from '@/types/loans';
+import { LoanAction, LoanType } from '@/types/loans';
 
-import { BorrowForm } from './BorrowForm';
-import { LendForm } from './LendForm';
+import { LoanForm } from './LoanForm';
 import { StyledTabs, StyledWrapper } from './LoanModal.style';
+
+type TabData = { variant: LoanAction; title: string };
+
+type LoanTypeData = { tabs: TabData[] };
+
+const getData = (t: TFunction, variant: LoanType): LoanTypeData => {
+  const data: Record<LoanType, LoanTypeData> = {
+    lend: {
+      tabs: [
+        { variant: 'lend', title: t('loans.lend') },
+        { variant: 'withdraw', title: t('loans.withdraw') }
+      ]
+    },
+    borrow: {
+      tabs: [
+        { variant: 'borrow', title: t('loans.borrow') },
+        { variant: 'repay', title: t('loans.repay') }
+      ]
+    }
+  };
+
+  return data[variant];
+};
 
 type Props = {
   variant: LoanType;
   asset?: LoanAsset;
-  position: LoanPosition | undefined;
+  position?: LendPosition | BorrowPosition;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -25,38 +47,18 @@ const LoanModal = ({ variant = 'lend', asset, position, ...props }: LoanModalPro
     return null;
   }
 
-  if (variant === 'borrow') {
-    return (
-      <Modal {...props}>
-        <StyledTabs size='large' fullWidth>
-          <TabsItem title={t('loans.borrow')}>
-            <StyledWrapper>
-              <BorrowForm asset={asset} variant='borrow' position={position} />
-            </StyledWrapper>
-          </TabsItem>
-          <TabsItem title={t('loans.repay')}>
-            <StyledWrapper>
-              <BorrowForm asset={asset} variant='repay' position={position} />
-            </StyledWrapper>
-          </TabsItem>
-        </StyledTabs>
-      </Modal>
-    );
-  }
+  const { tabs } = getData(t, variant);
 
   return (
     <Modal {...props}>
       <StyledTabs size='large' fullWidth>
-        <TabsItem title={t('loans.lend')}>
-          <StyledWrapper>
-            <LendForm asset={asset} variant='lend' position={position as LendPosition} />
-          </StyledWrapper>
-        </TabsItem>
-        <TabsItem title={t('loans.withdraw')}>
-          <StyledWrapper>
-            <LendForm asset={asset} variant='withdraw' position={position as LendPosition} />
-          </StyledWrapper>
-        </TabsItem>
+        {tabs.map((tab) => (
+          <TabsItem title={tab.title} key={tab.variant}>
+            <StyledWrapper>
+              <LoanForm asset={asset} variant={tab.variant} position={position} />
+            </StyledWrapper>
+          </TabsItem>
+        ))}
       </StyledTabs>
     </Modal>
   );
