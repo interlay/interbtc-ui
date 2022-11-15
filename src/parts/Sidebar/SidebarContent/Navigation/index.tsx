@@ -34,6 +34,7 @@ import {
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 
 import SidebarNavLink from './SidebarNavLink';
 
@@ -64,6 +65,7 @@ const Navigation = ({
   const { t } = useTranslation();
   const { selectedAccount } = useSubstrateSecureState();
   const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
+  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
@@ -80,9 +82,9 @@ const Navigation = ({
       },
       {
         name: 'nav_lending',
-        link: '#',
+        link: PAGES.LOANS,
         icon: PresentationChartBarIcon,
-        disabled: true
+        disabled: !isLendingEnabled
       },
       {
         name: 'nav_swap',
@@ -175,7 +177,7 @@ const Navigation = ({
         }
       }
     ],
-    [selectedAccount, vaultClientLoaded]
+    [isLendingEnabled, selectedAccount?.address, vaultClientLoaded]
   );
 
   return (

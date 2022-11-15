@@ -22,6 +22,7 @@ import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
 import * as constants from './constants';
+import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
@@ -41,6 +42,7 @@ const App = (): JSX.Element => {
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
+  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -180,6 +182,7 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.TRANSFER}>
                     <Transfer />
                   </Route>
+                  {isLendingEnabled && <Route path={PAGES.LOANS}>{/* TODO: add loans page */}</Route>}
                   <Route path={PAGES.ACTIONS}>
                     <Actions />
                   </Route>
