@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { VaultsTableRow } from '../VaultsTable';
-import DespositCollateralStep from './DespositCollateralStep';
+import DepositCollateralStep from './DepositCollateralStep';
 import DisclaimerStep from './DisclaimerStep';
 import { Steps } from './Step';
 import VaultCreatedStep from './VaultCreatedStep';
@@ -22,7 +22,7 @@ const CreateVaultWizard = ({ vault }: CreateVaultWizardProps): JSX.Element | nul
   return (
     <>
       <DisclaimerStep step={step} onClickAgree={handleNextStep} />
-      <DespositCollateralStep
+      <DepositCollateralStep
         step={step}
         onSuccessfulDeposit={handleNextStep}
         collateralCurrency={vault.collateralCurrency}
