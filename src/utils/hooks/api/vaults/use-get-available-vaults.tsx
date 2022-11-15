@@ -1,4 +1,5 @@
 import { CollateralCurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useEffect, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -14,7 +15,7 @@ type AvailableVaultData = {
   collateralCurrency: CollateralCurrencyExt;
   wrappedCurrency: CurrencyIdLiteral;
   secureCollateralThreshold: Big;
-  minimumCollateral: Big;
+  minimumCollateral: MonetaryAmount<CollateralCurrencyExt>;
 };
 
 const getAvailableVaults = async (collateralCurrency: CollateralCurrencyExt): Promise<AvailableVaultData> => {
