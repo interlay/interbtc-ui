@@ -11,8 +11,11 @@ type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
 };
 
 const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
-  const foreignCurrencies = await window.bridge.assetRegistry.getForeignAssets();
-  return [...NATIVE_CURRENCIES, ...foreignCurrencies];
+  const [foreignCurrencies, lendCurrencies] = await Promise.all([
+    window.bridge.assetRegistry.getForeignAssets(),
+    window.bridge.loans.getLendTokens()
+  ]);
+  return [...NATIVE_CURRENCIES, ...foreignCurrencies, ...lendCurrencies];
 };
 
 // Returns all currencies, both native and foreign and helping utils to get CurrencyExt object.
@@ -43,7 +46,29 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
         throw new Error('useGetCurrencies: Cannot call `getForeignCurrencyFromId` before currencies are loaded.');
       }
 
-      const foreignCurrency = queryResult.data.find((currency) => 'id' in currency && currency.id === id);
+      const foreignCurrency = queryResult.data.find(
+        (currency) => 'foreignAsset' in currency && currency.foreignAsset.id === id
+      );
+      if (foreignCurrency === undefined) {
+        throw new Error(`useGetCurrencies: getForeignCurrencyFromId: Foreign currency with id ${id} not found.`);
+      }
+
+      return foreignCurrency;
+    },
+    [queryResult]
+  );
+
+  // TODO: add `getLendTokenFromId` or similar to be able to synchronously obtain lend tokens from id primitive
+  // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
+  const getLendCurrencyFromId = useCallback(
+    (id: number): CurrencyExt => {
+      if (queryResult.data === undefined) {
+        throw new Error('useGetCurrencies: Cannot call `getForeignCurrencyFromId` before currencies are loaded.');
+      }
+
+      const foreignCurrency = queryResult.data.find(
+        (currency) => 'lendToken' in currency && currency.lendToken.id === id
+      );
       if (foreignCurrency === undefined) {
         throw new Error(`useGetCurrencies: getForeignCurrencyFromId: Foreign currency with id ${id} not found.`);
       }
@@ -54,16 +79,21 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
   );
 
   // Throws when passed parameter is not primitiveId of any currency or currencies are not loaded yet.
+  // Synchronous function which has the same functionality as async `currencyIdToMonetaryCurrency` in lib.
   const getCurrencyFromIdPrimitive = useCallback(
     (currencyPrimitive: InterbtcPrimitivesCurrencyId) => {
-      if (currencyPrimitive.isToken) {
-        return tokenSymbolToCurrency(currencyPrimitive.asToken);
-      } else if (currencyPrimitive.isForeignAsset) {
-        return getForeignCurrencyFromId(currencyPrimitive.asForeignAsset.toNumber());
+      switch (true) {
+        case currencyPrimitive.isToken:
+          return tokenSymbolToCurrency(currencyPrimitive.asToken);
+        case currencyPrimitive.isForeignAsset:
+          return getForeignCurrencyFromId(currencyPrimitive.asForeignAsset.toNumber());
+        case currencyPrimitive.isLendToken:
+          return getLendCurrencyFromId(currencyPrimitive.asLendToken.toNumber());
+        default:
+          throw new Error(`No handling implemented for currencyId type of ${currencyPrimitive.type}`);
       }
-      throw new Error(`No handling implemented for currencyId type of ${currencyPrimitive.type}`);
     },
-    [getForeignCurrencyFromId]
+    [getForeignCurrencyFromId, getLendCurrencyFromId]
   );
 
   return { ...queryResult, getCurrencyFromTicker, getForeignCurrencyFromId, getCurrencyFromIdPrimitive };

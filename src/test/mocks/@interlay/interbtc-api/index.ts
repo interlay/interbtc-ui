@@ -27,6 +27,7 @@ import {
   mockVaultsGetVaultsWithIssuableTokens
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
+import { mockGetLendTokens } from './parachain/loans';
 
 type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
@@ -62,6 +63,9 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   issue: {
     getDustValue: mockIssueGetDustValue,
     getRequestLimits: mockIssueGetRequestLimits
+  },
+  loans: {
+    getLendTokens: mockGetLendTokens
   },
   oracle: {
     getExchangeRate: mockOracleGetExchangeRate
