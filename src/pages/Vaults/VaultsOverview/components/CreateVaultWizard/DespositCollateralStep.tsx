@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
-import Big from 'big.js';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
@@ -25,7 +24,7 @@ type CollateralFormData = { [DEPOSIT_COLLATERAL_AMOUNT]: string };
 
 type Props = {
   collateralCurrency: CollateralCurrencyExt;
-  minCollateralAmount: Big;
+  minCollateralAmount: MonetaryAmount<CollateralCurrencyExt>;
   onSuccessfulDeposit?: () => void;
 };
 
