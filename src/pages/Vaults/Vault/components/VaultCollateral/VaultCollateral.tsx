@@ -161,25 +161,6 @@ const VaultCollateral = ({
           />
         </>
       )}
-      {/* <Modal open={isModalOpen} )}>
-        {(vaultAction === 'deposit' || vaultAction === 'withdraw') && (
-          <CollateralForm
-            ranges={ranges}
-            score={collateralScore}
-            collateral={collateral}
-            collateralToken={collateralToken}
-            variant={vaultAction}
-          />
-        )}
-        {(vaultAction === 'issue' || vaultAction === 'redeem') && (
-          <IssueRedeemForm
-            variant={vaultAction}
-            collateralToken={collateralToken}
-            remainingCapacity={remainingCapacity}
-            lockedAmountBTC={lockedAmountBTC}
-          />
-        )}
-      </Modal> */}
     </>
   );
 };
