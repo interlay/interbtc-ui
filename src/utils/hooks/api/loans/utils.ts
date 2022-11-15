@@ -9,7 +9,7 @@ import { Prices } from '../use-get-prices';
 
 type Field<T> = T extends LendPosition
   ? Extract<keyof LendPosition, 'earnedInterest' | 'earnedReward' | 'amount'>
-  : Extract<keyof BorrowPosition, 'earnedReward' | 'amount' | 'earnedDebt'>;
+  : Extract<keyof BorrowPosition, 'earnedReward' | 'amount' | 'accumulatedDebt'>;
 
 /**
  * This function uses the value specified in the object key `field` param

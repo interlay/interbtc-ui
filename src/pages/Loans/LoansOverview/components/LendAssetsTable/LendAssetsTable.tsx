@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatPercentage, formatUSD } from '@/common/utils/utils';
+import { getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -42,13 +43,14 @@ const LendAssetsTable = ({ assets, positions, onRowAction }: LendAssetsTableProp
       availableAssets.map(({ lendApy, lendReward, currency, totalLiquidity }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
-        const rewardsApy = lendReward
-          ? `${lendReward?.currency.ticker}: ${formatPercentage(lendReward?.apy.toNumber() || 0, {
+        const rewardsApy = getSubsidyRewardApy(currency, lendReward, prices);
+        const formattedRewardsApy = lendReward
+          ? `${lendReward?.currency.ticker}: ${formatPercentage(rewardsApy || 0, {
               maximumFractionDigits: 2
             })}`
           : undefined;
 
-        const apy = <ApyCell apy={lendApy} amount={rewardsApy} />;
+        const apy = <ApyCell apy={lendApy} amount={formattedRewardsApy} />;
 
         const amount = balances ? balances[currency.ticker].free : newMonetaryAmount(0, currency);
         const wallet = <BalanceCell amount={amount} prices={prices} />;

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { formatPercentage } from '@/common/utils/utils';
 import { Switch } from '@/component-library';
+import { getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
@@ -40,13 +41,14 @@ const LendPositionsTable = ({
 
         const { lendApy, lendReward } = assets[currency.ticker];
 
-        const rewardsApy = lendReward
-          ? `${lendReward.currency.ticker}: ${formatPercentage(lendReward.apy.toNumber() || 0, {
+        const rewardsApy = getSubsidyRewardApy(currency, lendReward, prices);
+        const formattedRewardsApy = lendReward
+          ? `${lendReward?.currency.ticker}: ${formatPercentage(rewardsApy || 0, {
               maximumFractionDigits: 2
             })}`
           : undefined;
 
-        const apy = <ApyCell apy={lendApy} amount={rewardsApy} />;
+        const apy = <ApyCell apy={lendApy} amount={formattedRewardsApy} />;
 
         const balance = <BalanceCell amount={amount} prices={prices} />;
 

@@ -93,7 +93,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   }
 
   if (borrowPositions !== undefined && prices !== undefined) {
-    totalAccruedUSDValue = getPositionsSumOfFieldsInUSD('earnedDebt', borrowPositions, prices);
+    totalAccruedUSDValue = getPositionsSumOfFieldsInUSD('accumulatedDebt', borrowPositions, prices);
   }
 
   if (lendPositions !== undefined && borrowPositions !== undefined) {
