@@ -3,11 +3,10 @@ import { useMutation } from 'react-query';
 
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
 
-const mutateClaimRewards = () => window.bridge.loans.claimSubsidyReward(GOVERNANCE_TOKEN);
+const mutateClaimRewards = () => window.bridge.loans.claimAllSubsidyRewards();
 
 type LoansInsightsProps = {
   supply: string | undefined;

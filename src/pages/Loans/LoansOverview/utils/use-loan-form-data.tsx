@@ -42,7 +42,7 @@ const useLoanFormData = (
       maxAmount = getMaxBorrowableAmount(asset.currency, asset.availableCapacity) || zeroAssetAmount;
       break;
     case 'withdraw':
-      maxAmount = getMaxWithdrawableAmount(asset.currency, position as LendPosition) || zeroAssetAmount;
+      maxAmount = (position && getMaxWithdrawableAmount(asset.currency, position as LendPosition)) || zeroAssetAmount;
       break;
     case 'lend':
       maxAmount = assetBalance;
