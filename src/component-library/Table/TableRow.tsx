@@ -1,9 +1,12 @@
+import { useHover } from '@react-aria/interactions';
 import { useTableRow } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
 import { TableState } from '@react-stately/table';
 import { GridNode } from '@react-types/grid';
 import { FocusableElement } from '@react-types/shared';
 import { HTMLAttributes, MouseEventHandler, PointerEventHandler, useRef } from 'react';
+
+import { StyledTableRow } from './Table.style';
 
 // TODO: improve solution
 const interactiveElements = ['button', 'input'];
@@ -23,13 +26,14 @@ const shouldEmitInheritedEvent = (ref: React.RefObject<HTMLTableRowElement>, tar
 type Props = {
   state: TableState<Record<string, any>>;
   item: GridNode<Record<string, any>>;
+  clickable: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>;
 
 type TableRowProps = Props & NativeAttrs;
 
-const TableRow = ({ item, children, state, ...props }: TableRowProps): JSX.Element => {
+const TableRow = ({ item, children, state, clickable, ...props }: TableRowProps): JSX.Element => {
   const ref = useRef<HTMLTableRowElement>(null);
   const {
     rowProps: { onPointerDown, onPointerUp, onClick, ...otherRowProps }
@@ -40,6 +44,7 @@ const TableRow = ({ item, children, state, ...props }: TableRowProps): JSX.Eleme
     state,
     ref
   );
+  const { isHovered, hoverProps } = useHover({ isDisabled: !clickable });
 
   const handlePointerUp: PointerEventHandler<FocusableElement> = (e) => {
     if (shouldEmitInheritedEvent(ref, e.target as HTMLElement)) {
@@ -60,16 +65,17 @@ const TableRow = ({ item, children, state, ...props }: TableRowProps): JSX.Eleme
   };
 
   return (
-    <tr
+    <StyledTableRow
       ref={ref}
-      {...mergeProps(props, otherRowProps, {
+      {...mergeProps(props, otherRowProps, hoverProps, {
         onPointerDown: handlePointerDown,
         onPointerUp: handlePointerUp,
         onClick: handleClick
       })}
+      $isHovered={isHovered}
     >
       {children}
-    </tr>
+    </StyledTableRow>
   );
 };
 

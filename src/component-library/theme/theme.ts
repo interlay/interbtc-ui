@@ -156,13 +156,25 @@ const theme = {
     }
   },
   table: {
-    border: '1px var(--colors-neutral-light-grey-50) solid'
+    border: '1px solid var(--colors-table-border)',
+    header: {
+      bg: 'var(--color-table-header-row-bg)'
+    },
+    row: {
+      odd: {
+        bg: 'var(--colors-table-odd-row-bg)'
+      },
+      even: {
+        bg: 'var(--colors-table-even-row-bg)'
+      },
+      bgHover: 'var(--colors-table-row-hover-bg)'
+    }
   },
   alert: {
     status: {
       error: 'var(--colors-error)',
       warning: 'var(--colors-warning)',
-      success: 'var(--colors-success)'
+      success: 'var(--colors-success-darker)'
     },
     bg: {
       error: 'var(--colors-error-20)',
