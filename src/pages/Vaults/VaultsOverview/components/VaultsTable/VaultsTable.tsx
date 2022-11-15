@@ -1,5 +1,5 @@
-import { CurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
-import Big from 'big.js';
+import { CollateralCurrencyExt, CurrencyExt, CurrencyIdLiteral } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 
 import { CoinPair, CTA, Table, TableProps } from '@/component-library';
@@ -16,7 +16,7 @@ enum VaultsTableKeys {
 type VaultsTableRow = {
   collateralCurrency: CurrencyExt;
   wrappedCurrency: CurrencyIdLiteral;
-  minCollateralAmount: Big;
+  minCollateralAmount: MonetaryAmount<CollateralCurrencyExt>;
   collateralRate: string;
   isActive: boolean;
   isInstalled: boolean;
@@ -53,7 +53,7 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
       ),
       [VaultsTableKeys.MIN_COLLATERAL]: (
         <NumericValue key={VaultsTableKeys.MIN_COLLATERAL}>
-          {minCollateralAmount.toNumber().toFixed(2)} {collateralCurrency.ticker}
+          {minCollateralAmount.toString()} {collateralCurrency.ticker}
         </NumericValue>
       ),
       [VaultsTableKeys.COLLATERAL_RATE]: (
