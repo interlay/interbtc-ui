@@ -10,7 +10,14 @@ Default.args = {
   ranges: [0, 20, 40, 60]
 };
 
-export { Default };
+const WithRanges = Template.bind({});
+WithRanges.args = {
+  value: 20,
+  ranges: [0, 20, 40, 60],
+  showRanges: true
+};
+
+export { Default, WithRanges };
 
 export default {
   title: 'Elements/Meter',

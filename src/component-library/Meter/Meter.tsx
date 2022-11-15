@@ -1,7 +1,7 @@
 import { HTMLAttributes, useEffect, useState } from 'react';
 
 import { Status } from '../utils/prop-types';
-import { StyledMeter, StyledWrapper } from './Meter.style';
+import { StyledIndicator, StyledMeter, StyledWrapper } from './Meter.style';
 
 // [min-error (0), max-error, max-warning, max-success]
 type MeterRanges = [number, number, number, number];
@@ -58,16 +58,18 @@ type Props = {
   value: number;
   ranges: MeterRanges;
   onChange?: (status: Status) => void;
+  showRanges?: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
 type MeterProps = Props & NativeAttrs;
 
-const Meter = ({ value = 0, ranges, onChange, ...props }: MeterProps): JSX.Element => {
+const Meter = ({ value = 0, ranges, onChange, showRanges, ...props }: MeterProps): JSX.Element => {
   const [status, setStatus] = useState<Status>();
   const percentage = getBarPercentage(value, ranges, status);
   const width = getWidth(percentage);
+  const [min, error, warning, max] = ranges;
 
   useEffect(() => {
     const newStatus = getStatus(value, ranges);
@@ -79,8 +81,16 @@ const Meter = ({ value = 0, ranges, onChange, ...props }: MeterProps): JSX.Eleme
   }, [onChange, ranges, status, value]);
 
   return (
-    <StyledWrapper>
+    <StyledWrapper $showRanges={showRanges}>
       <StyledMeter $width={width} $hasIndicator={!!status} {...props} />
+      {showRanges && (
+        <>
+          <StyledIndicator $variant='min'>{min}</StyledIndicator>
+          <StyledIndicator $variant='warning'>{error}</StyledIndicator>
+          <StyledIndicator $variant='error'>{warning}</StyledIndicator>
+          <StyledIndicator $variant='max'>{max}</StyledIndicator>
+        </>
+      )}
     </StyledWrapper>
   );
 };

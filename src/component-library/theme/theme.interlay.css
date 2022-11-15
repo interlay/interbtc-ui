@@ -64,7 +64,10 @@
   --colors-switch-unchecked-bg: var(--colors-neutral-lighter-grey);
   --colors-switch-checked-bg: var(--colors-light-blue);
   --colors-switch-indicator-bg: var(--colors-neutral-white);
-  /* Status */
-  --colors-bg-info: var(--colors-lighter-blue);
-  --colors-info: var(--colors-light-blue);
+  /* Table */
+  --colors-table-odd-row-bg: var(--colors-neutral-white);
+  --colors-table-even-row-bg: #fbfbfc;
+  --colors-table-row-hover-bg: #f0f1f2;
+  --color-table-header-row-bg: #f4f3f5;
+  --colors-table-border: #f4f3f5;
 }

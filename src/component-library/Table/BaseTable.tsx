@@ -42,7 +42,7 @@ const BaseTable = forwardRef<HTMLTableElement, BaseTableProps>(
         </TableRowGroup>
         <TableRowGroup as='tbody'>
           {[...collection.body.childNodes].map((row) => (
-            <TableRow key={row.key} item={row} state={state}>
+            <TableRow key={row.key} item={row} state={state} clickable={!!onRowAction}>
               {[...row.childNodes].map((cell) => (
                 <TableCell key={cell.key} cell={cell} state={state} />
               ))}
