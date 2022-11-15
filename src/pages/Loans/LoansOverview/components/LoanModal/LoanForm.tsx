@@ -5,7 +5,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 import * as z from 'zod';
 
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
-import { CTA, TokenInput } from '@/component-library';
+import { CTA, Flex, TokenInput } from '@/component-library';
 import validate, {
   LoanBorrowSchemaParams,
   LoanLendSchemaParams,
@@ -144,36 +144,47 @@ const LoanForm = ({ asset, variant, position }: LoanFormProps): JSX.Element => {
 
   return (
     <form onSubmit={h(handleSubmit)}>
-      <StyledFormWrapper direction='column' gap='spacing4'>
-        <TokenInput
-          placeholder='0.00'
-          tokenSymbol={asset.currency.ticker}
-          errorMessage={getErrorMessage(errors[formField])}
-          label={content.label}
-          aria-label={content.fieldAriaLabel}
-          balance={assetAmount.max.toBig().toNumber()}
-          balanceInUSD={displayMonetaryAmountInUSDFormat(assetAmount.max, assetPrice)}
-          valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
-          // TODO: we need a more generic way to know how many digits to show
-          renderBalance={(value) =>
-            formatNumber(value, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 5
-            })
-          }
-          {...register(formField)}
-        />
-        {hasBorrowPositions && (
+      <StyledFormWrapper
+        $hasBorrowPositions={hasBorrowPositions}
+        direction='column'
+        justifyContent='space-between'
+        gap='spacing4'
+      >
+        <Flex direction='column' gap='spacing4'>
+          <TokenInput
+            placeholder='0.00'
+            tokenSymbol={asset.currency.ticker}
+            errorMessage={getErrorMessage(errors[formField])}
+            label={content.label}
+            aria-label={content.fieldAriaLabel}
+            balance={assetAmount.max.toBig().toNumber()}
+            balanceInUSD={displayMonetaryAmountInUSDFormat(assetAmount.max, assetPrice)}
+            valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
+            // TODO: we need a more generic way to know how many digits to show
+            renderBalance={(value) =>
+              formatNumber(value, {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 5
+              })
+            }
+            {...register(formField)}
+          />
+          {/* {hasBorrowPositions && ( */}
           <BorrowLimit shouldDisplayLiquidationAlert variant={variant} asset={monetaryAmount} thresholds={thresholds} />
-        )}
-        <LoanActionInfo variant={variant} asset={asset} prices={prices} />
-        <CTA type='submit' disabled={isBtnDisabled} size='large'>
-          {content.title}
-        </CTA>
+          {/* )} */}
+        </Flex>
+        <Flex direction='column' gap='spacing4'>
+          <LoanActionInfo variant={variant} asset={asset} prices={prices} />
+          <CTA type='submit' disabled={isBtnDisabled} size='large'>
+            {content.title}
+          </CTA>
+        </Flex>
       </StyledFormWrapper>
     </form>
   );
 };
+
+LoanForm.displayName = 'LoanForm';
 
 export { LoanForm };
 export type { LoanFormProps };

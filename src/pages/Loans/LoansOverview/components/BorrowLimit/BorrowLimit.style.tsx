@@ -11,6 +11,7 @@ type StyledDdProps = {
 const StyledDd = styled(Dd)<StyledDdProps>`
   background-color: ${({ $status }) => theme.alert.bg[$status]};
   color: ${({ $status }) => theme.alert.status[$status]};
+  font-weight: ${theme.fontWeight.medium};
   padding: ${theme.spacing.spacing1};
   border-radius: ${theme.rounded.md};
   display: flex;
