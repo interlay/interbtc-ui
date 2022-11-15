@@ -22,6 +22,7 @@ import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
 import * as constants from './constants';
+import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
@@ -33,6 +34,7 @@ const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
+const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
 const App = (): JSX.Element => {
@@ -41,6 +43,7 @@ const App = (): JSX.Element => {
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
+  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -66,14 +69,14 @@ const App = (): JSX.Element => {
     })();
   }, [bridgeLoaded, loadFaucet]);
 
-  // Detects if connected account is vault operator.
+  // Detects if the connected account is a vault operator
   const { error: vaultsError } = useQuery<GraphqlReturn<any>, Error>(
     [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
     graphqlFetcher<GraphqlReturn<string[]>>(),
     {
       enabled: bridgeLoaded && !!selectedAccount,
-      onSuccess: ({ data: { vaults } }) => {
-        const isVaultOperator = vaults.length > 0;
+      onSuccess: ({ data }) => {
+        const isVaultOperator = data?.vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
       onError: (error) => console.log('[App useQuery 1] error.message => ', error.message)
@@ -180,8 +183,13 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.TRANSFER}>
                     <Transfer />
                   </Route>
-                  <Route path={PAGES.LOANS}>
-                    <Loans />
+                  {isLendingEnabled && (
+                    <Route path={PAGES.LOANS}>
+                      <Loans />
+                    </Route>
+                  )}
+                  <Route path={PAGES.ACTIONS}>
+                    <Actions />
                   </Route>
                   <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
                   <Route path='*'>
