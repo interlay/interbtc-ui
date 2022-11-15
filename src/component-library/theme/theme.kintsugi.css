@@ -68,4 +68,10 @@
   --colors-switch-unchecked-bg: var(--colors-dark-blue);
   --colors-switch-checked-bg: var(--colors-yellow);
   --colors-switch-indicator-bg: var(--colors-mid-blue);
+  /* Table */
+  --colors-table-odd-row-bg: var(--colors-blue);
+  --colors-table-even-row-bg: #101e3d;
+  --colors-table-row-hover-bg: #1c2c46;
+  --color-table-header-row-bg: #080e28;
+  --colors-table-border: #080e28;
 }
