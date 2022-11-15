@@ -1,14 +1,15 @@
 import { LoanAsset } from '@interlay/interbtc-api';
+import { useMemo } from 'react';
 
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt } from '@/component-library';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { LoanAction } from '@/types/loans';
-import { getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledDl } from './LoanActionInfo.style';
+import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 
 type LoanActionInfoProps = {
   variant?: LoanAction;
@@ -17,8 +18,17 @@ type LoanActionInfoProps = {
 };
 
 const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.Element => {
-  const lendRewardsApy = getSubsidyRewardApy(asset?.currency, asset?.lendReward || null, prices);
-  const borrowRewardsApy = getSubsidyRewardApy(asset?.currency, asset?.borrowReward || null, prices);
+  const lendRewardsApy = useMemo(() => getSubsidyRewardApy(asset?.currency, asset?.lendReward || null, prices), [
+    asset?.currency,
+    asset?.lendReward,
+    prices
+  ]);
+  const borrowRewardsApy = useMemo(() => getSubsidyRewardApy(asset?.currency, asset?.borrowReward || null, prices), [
+    asset?.borrowReward,
+    asset?.currency,
+    prices
+  ]);
+
   return (
     <StyledDl direction='column' gap='spacing2'>
       {asset && (

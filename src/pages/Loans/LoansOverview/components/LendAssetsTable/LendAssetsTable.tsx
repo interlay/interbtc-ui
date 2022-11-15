@@ -7,6 +7,7 @@ import { getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
 import { LendAssetsColumns, LendAssetsTableRow } from '../types';

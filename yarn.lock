@@ -2022,10 +2022,17 @@
   dependencies:
     axios "^0.21.1"
 
+<<<<<<< HEAD
 "@interlay/interbtc-api@0.30.6":
   version "0.30.6"
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-0.30.6.tgz#c13759e8537c2b48cda3f158d3173328af2c6b7d"
   integrity sha512-pEi6FRFDuXOBx8ODcPl/c0aaCxShGOFH2ylgZ1WA7mT4ikpyB5pKUSUFdxK7EnVRE4p8oifCXYQCIQtCDKsbCA==
+=======
+"@interlay/interbtc-api@0.30.3":
+  version "0.30.3"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-0.30.3.tgz#0db2d19f443ea1b832c0893c6c7c269431095447"
+  integrity sha512-QccCEAJ6XtJGFmkq1VfvcNc9Rxi6nJNLxSY4/x4ye6gi070PEoMLJDdOvJLAwYPGT7kRDCkIrT6gzN7XEKQq2w==
+>>>>>>> 01c049b4 (fix: resolve 0.30.3 breaking changes, add apr computation)
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "0.30.4"

@@ -7,6 +7,7 @@ import { Switch } from '@/component-library';
 import { getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { LendPositionColumns, LendPositionTableRow } from '../types';
 

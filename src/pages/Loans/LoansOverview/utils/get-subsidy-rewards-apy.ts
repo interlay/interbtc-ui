@@ -2,8 +2,8 @@ import { CurrencyExt, SubsidyReward } from '@interlay/interbtc-api';
 
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
-import { Prices } from '../hooks/api/use-get-prices';
-import { getTokenPrice } from './prices';
+import { getTokenPrice } from '../../../../utils/helpers/prices';
+import { Prices } from '../../../../utils/hooks/api/use-get-prices';
 
 const getSubsidyRewardApy = (
   positionCurrency: CurrencyExt | undefined,

@@ -67,9 +67,11 @@ const LoansInsights = ({
             <StyledDt color='primary'>Rewards</StyledDt>
             <StyledDd color='secondary'>{rewards}</StyledDd>
           </DlGroup>
-          <CTA onClick={handleClickClaimRewards} disabled={!hasEarnedRewards} loading={claimRewardsMutation.isLoading}>
-            Claim
-          </CTA>
+          {hasEarnedRewards && (
+            <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
+              Claim
+            </CTA>
+          )}
         </Card>
       </Dl>
       {claimRewardsMutation.isError && (
