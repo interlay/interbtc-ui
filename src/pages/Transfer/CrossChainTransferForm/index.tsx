@@ -301,7 +301,6 @@ const CrossChainTransferForm = (): JSX.Element => {
             tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             onClick={handleClickBalance}
           />
-
           <TokenField
             id={TRANSFER_AMOUNT}
             {...register(TRANSFER_AMOUNT, {
@@ -319,10 +318,12 @@ const CrossChainTransferForm = (): JSX.Element => {
             approxUSD={`≈ ${approxUsdValue}`}
           />
         </div>
-        <Accounts
-          label={t('transfer_page.cross_chain_transfer_form.target_account')}
-          callbackFunction={setDestination}
-        />
+        <div style={{ marginTop: 0 }}>
+          <Accounts
+            label={t('transfer_page.cross_chain_transfer_form.target_account')}
+            callbackFunction={setDestination}
+          />
+        </div>
         <SubmitButton
           disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
           pending={submitStatus === STATUSES.PENDING}
