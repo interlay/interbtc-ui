@@ -67,6 +67,8 @@ const TableRow = ({ item, children, state, ...props }: TableRowProps): JSX.Eleme
     }
   };
 
+  console.log(otherRowProps);
+
   return (
     <StyledTableRow
       ref={ref}
