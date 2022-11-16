@@ -285,16 +285,15 @@ const CrossChainTransferForm = (): JSX.Element => {
           selectedChain={toChain}
           onChange={handleSetToChain}
         />
-        <div>
-          <Tokens
-            variant='formField'
-            fullWidth={true}
-            showBalances={false}
-            callbackFunction={() => {
-              console.log('change token');
-            }}
-          />
-        </div>
+        <Tokens
+          variant='formField'
+          label='Asset'
+          fullWidth={true}
+          showBalances={false}
+          callbackFunction={() => {
+            console.log('change token');
+          }}
+        />
         <div>
           <AvailableBalanceUI
             label={availableBalanceLabel}

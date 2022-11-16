@@ -33,6 +33,7 @@ interface TokenOption {
 interface Props {
   variant?: SelectVariants;
   fullWidth?: boolean;
+  label?: string;
   callbackFunction?: (token: TokenOption) => void;
   showBalances?: boolean;
 }
@@ -40,6 +41,7 @@ interface Props {
 const Tokens = ({
   variant = 'optionSelector',
   fullWidth = false,
+  label,
   callbackFunction,
   showBalances = true
 }: Props): JSX.Element => {
@@ -121,6 +123,7 @@ const Tokens = ({
       {tokenOptions && currentToken ? (
         <TokenSelector
           fullWidth={fullWidth}
+          label={label}
           variant={variant}
           showBalances={showBalances}
           tokenOptions={tokenOptions}

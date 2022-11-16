@@ -7,6 +7,7 @@ import Select, {
   SelectBody,
   SelectButton,
   SelectCheck,
+  SelectLabel,
   SelectOption,
   SelectOptions,
   SelectText
@@ -21,6 +22,7 @@ interface TokenOption {
 
 interface Props {
   variant: string;
+  label?: string;
   fullWidth: boolean;
   tokenOptions: Array<TokenOption>;
   showBalances: boolean;
@@ -30,6 +32,7 @@ interface Props {
 
 const TokenSelector = ({
   variant,
+  label,
   fullWidth,
   tokenOptions,
   currentToken,
@@ -41,7 +44,8 @@ const TokenSelector = ({
       {currentToken && (
         <Select variant={variant} key={currentToken.type} value={currentToken.type} onChange={onChange}>
           {({ open }) => (
-            <>
+            <div>
+              <SelectLabel>{label}</SelectLabel>
               <SelectBody className={clsx(fullWidth ? '' : 'w-52')}>
                 <SelectButton variant={variant}>
                   <span
@@ -93,7 +97,7 @@ const TokenSelector = ({
                   })}
                 </SelectOptions>
               </SelectBody>
-            </>
+            </div>
           )}
         </Select>
       )}
