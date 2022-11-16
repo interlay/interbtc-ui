@@ -247,12 +247,13 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
 
   const getMaxWithdrawableAmount = useCallback(
     (currency: CurrencyExt, position: LendPosition): MonetaryAmount<CurrencyExt> | undefined => {
-      if (borrowedAssetsUSDValue === undefined || prices === undefined || assets === undefined) {
+      if (
+        collateralAssetsUSDValue === undefined ||
+        borrowedAssetsUSDValue === undefined ||
+        prices === undefined ||
+        assets === undefined
+      ) {
         return undefined;
-      }
-
-      if (!position.isCollateral) {
-        return position.amount;
       }
 
       const currencyUSDPrice = getTokenPrice(prices, currency.ticker)?.usd;
@@ -261,17 +262,20 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
         return undefined;
       }
 
+      const positionInUSD = position.amount.toBig().mul(currencyUSDPrice);
+
+      if (!position.isCollateral || positionInUSD.lt(collateralAssetsUSDValue.sub(borrowedAssetsUSDValue))) {
+        return position.amount;
+      }
+
       const collateralThreshold = assets[currency.ticker].collateralThreshold;
-      const totalWithdrawableAmount = borrowLimitUSDValue.div(currencyUSDPrice).div(collateralThreshold);
-      const totalWithdrawableMonetary = newMonetaryAmount(totalWithdrawableAmount, currency, true);
+      const minCollateralNeeded = borrowedAssetsUSDValue.div(collateralThreshold);
 
-      const withdrawableAmount = position.amount.lt(totalWithdrawableMonetary)
-        ? position.amount
-        : totalWithdrawableMonetary;
+      const maxWithdrawable = positionInUSD.sub(minCollateralNeeded).div(currencyUSDPrice);
 
-      return withdrawableAmount;
+      return newMonetaryAmount(maxWithdrawable, currency, true);
     },
-    [borrowedAssetsUSDValue, prices, assets, borrowLimitUSDValue]
+    [borrowedAssetsUSDValue, prices, assets, collateralAssetsUSDValue]
   );
 
   return {

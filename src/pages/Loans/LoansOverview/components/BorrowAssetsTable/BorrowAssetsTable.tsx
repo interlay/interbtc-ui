@@ -48,7 +48,6 @@ const BorrowAssetsTable = ({ assets, positions, onRowAction, disabledKeys }: Bor
         const amount = balances ? balances[currency.ticker].free : newMonetaryAmount(0, currency);
         const wallet = <BalanceCell amount={amount} prices={prices} />;
 
-        console.log('liq', totalLiquidity.toBig().toString());
         const liquidityUSDValue = convertMonetaryAmountToValueInUSD(
           totalLiquidity,
           prices?.[totalLiquidity.currency.ticker].usd

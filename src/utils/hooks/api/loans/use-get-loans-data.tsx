@@ -37,9 +37,9 @@ const useGetLoansData = (): LoansData => {
       borrowUSDValue: borrowedAssetsUSDValue && formatUSD(borrowedAssetsUSDValue.toNumber()),
       netYieldUSDValue: netYieldUSDValue && formatUSD(netYieldUSDValue.toNumber()),
       earnedRewardsAmount: earnedRewards
-        ? `${formatNumber(earnedRewards.toBig().toNumber(), { maximumFractionDigits: 5 })} ${
-            earnedRewards.currency.ticker
-          }`
+        ? `${formatNumber(earnedRewards.toBig().toNumber(), {
+            maximumFractionDigits: earnedRewards.currency.humanDecimals || 5
+          })} ${earnedRewards.currency.ticker}`
         : undefined,
       hasEarnedRewards: !earnedRewards?.isZero()
     },

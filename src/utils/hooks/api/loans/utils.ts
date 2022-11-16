@@ -45,7 +45,6 @@ const getTotalEarnedRewards = (
   }
 
   const [firstPosition] = [...lendPositions, ...borrowPositions];
-
   return firstPosition.earnedReward || undefined;
 };
 
