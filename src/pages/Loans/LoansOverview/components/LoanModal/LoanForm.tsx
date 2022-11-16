@@ -146,9 +146,6 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     try {
       const submittedAmount = data[formField];
       const submittedMonetaryAmount = newMonetaryAmount(submittedAmount, asset.currency, true);
-
-      // const isReallyMaxAmount = isMaxAmount && !!position && position.amount.gte(submittedMonetaryAmount);
-
       loanMutation.mutate({ amount: submittedMonetaryAmount, loanType: variant, isMaxAmount });
     } catch (err: any) {
       toast.error(err.toString());

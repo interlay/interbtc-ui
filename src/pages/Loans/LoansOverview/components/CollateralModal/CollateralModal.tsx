@@ -7,7 +7,7 @@ import ErrorModal from '@/components/ErrorModal';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { isLiquidationRisk } from '../../utils/is-liquidation';
+import { isLiquidationRisk } from '../../utils/is-liquidation-risk';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
 import { StyledDescription, StyledTitle } from './CollateralModal.style';
