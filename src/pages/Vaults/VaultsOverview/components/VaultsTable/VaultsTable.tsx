@@ -2,7 +2,7 @@ import { CollateralCurrencyExt, CurrencyExt, CurrencyIdLiteral } from '@interlay
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 
-import { CoinPair, CTA, Table, TableProps } from '@/component-library';
+import { CoinPair, CTA, Table, TableProps, Tokens } from '@/component-library';
 
 import { CoinPairWrapper, NumericValue, Wrapper } from './VaultsTable.style';
 
@@ -47,7 +47,7 @@ const VaultsTable = ({ data, onClickAddVault, className, style, ...props }: Vaul
       id,
       [VaultsTableKeys.COIN_PAIR]: (
         <CoinPairWrapper key={VaultsTableKeys.COIN_PAIR}>
-          <CoinPair size='small' coinOne={collateralCurrency.ticker as CurrencyIdLiteral} coinTwo={wrappedCurrency} />{' '}
+          <CoinPair size='small' coinOne={collateralCurrency.ticker as Tokens} coinTwo={wrappedCurrency} />{' '}
           {collateralCurrency.ticker} - {wrappedCurrency}
         </CoinPairWrapper>
       ),

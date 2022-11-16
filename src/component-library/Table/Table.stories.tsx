@@ -15,13 +15,16 @@ const Template: Story<TableProps> = (args) => {
     { id: 3, coin: 'KINT', price: '$2.80', 'market-cap': '$2,397,911' },
     { id: 4, coin: 'kBTC', price: '$23,074.29', 'market-cap': '-' }
   ];
-  return <Table {...args} columns={columns} rows={rows} aria-label='story table' style={{ padding: 20 }} />;
+  return <Table {...args} columns={columns} rows={rows} aria-label='story table' />;
 };
 
 const Default = Template.bind({});
 Default.args = {};
 
-export { Default };
+const RowAction = Template.bind({});
+RowAction.args = { onRowAction: (key) => console.log(key) };
+
+export { Default, RowAction };
 
 export default {
   title: 'Components/Table',
