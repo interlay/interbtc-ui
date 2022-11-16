@@ -1,7 +1,8 @@
-import { LoanAsset, LoanPosition, TickerToData } from '@interlay/interbtc-api';
+import { BorrowPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { formatNumber } from '@/common/utils/utils';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -20,7 +21,7 @@ const borrowPositionColumns = [
 
 type BorrowPositionsTableProps = {
   assets: TickerToData<LoanAsset>;
-  positions: LoanPosition[];
+  positions: BorrowPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
 };
 
@@ -31,12 +32,14 @@ const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPosition
 
   const borrowPositionsTableRows: BorrowPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ currency, amount }, key) => {
+      positions.map(({ currency, amount, accumulatedDebt }, key) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
-        // TODO: add when lib implents
-        const apyEarned = `${0} ${currency.ticker}`;
-        const apy = <ApyCell apy={assets[currency.ticker].borrowApy} amount={apyEarned} />;
+        const accrued = formatNumber(accumulatedDebt.toBig().toNumber(), {
+          maximumFractionDigits: accumulatedDebt.currency.humanDecimals || 5
+        });
+        const accruedLabel = `${accrued} ${currency.ticker}`;
+        const apy = <ApyCell apy={assets[currency.ticker].borrowApy} amount={accruedLabel} />;
 
         const balance = <BalanceCell amount={amount} prices={prices} />;
 

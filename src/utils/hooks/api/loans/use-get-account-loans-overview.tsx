@@ -74,7 +74,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       .filter(({ isCollateral }) => isCollateral)
       .map(({ amount, currency, ...rest }) => ({
         // MEMO: compute total value based on collateral threshold (not full lend amount value)
-        amount: amount.mul(assets[currency.ticker].collateralThreshold),
+        amount: amount.mul(assets[currency.ticker].collateralThreshold).div(100),
         currency,
         ...rest
       }));
@@ -140,7 +140,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const newBorrowedAssetsUSDValue =
         type === 'withdraw' || type === 'borrow' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
 
-      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold);
+      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold).div(100);
 
       const newCollateralAssetsUSDValue =
         type === 'lend' || type === 'repay'
@@ -180,7 +180,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const newBorrowedAssetsUSDValue =
         type === 'withdraw' || type === 'borrow' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
 
-      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold);
+      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold).div(100);
 
       const newCollateralAssetsUSDValue =
         type === 'lend' || type === 'repay'

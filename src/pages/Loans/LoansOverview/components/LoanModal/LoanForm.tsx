@@ -171,11 +171,10 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
               balance={assetAmount.max.toBig().toNumber()}
               balanceInUSD={displayMonetaryAmountInUSDFormat(assetAmount.max, assetPrice)}
               valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
-              // TODO: we need a more generic way to know how many digits to show
               renderBalance={(value) =>
                 formatNumber(value, {
                   minimumFractionDigits: 0,
-                  maximumFractionDigits: 5
+                  maximumFractionDigits: asset.currency.humanDecimals || 5
                 })
               }
               {...register(formField)}
@@ -186,7 +185,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <LoanActionInfo variant={variant} asset={asset} prices={prices} />
-            <CTA type='submit' disabled={isBtnDisabled} size='large'>
+            <CTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
               {content.title}
             </CTA>
           </Flex>
