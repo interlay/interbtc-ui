@@ -32,11 +32,17 @@ interface TokenOption {
 
 interface Props {
   variant?: SelectVariants;
+  fullWidth?: boolean;
   callbackFunction?: (token: TokenOption) => void;
   showBalances?: boolean;
 }
 
-const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = true }: Props): JSX.Element => {
+const Tokens = ({
+  variant = 'optionSelector',
+  fullWidth = false,
+  callbackFunction,
+  showBalances = true
+}: Props): JSX.Element => {
   const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
   const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(undefined);
 
@@ -114,6 +120,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     <>
       {tokenOptions && currentToken ? (
         <TokenSelector
+          fullWidth={fullWidth}
           variant={variant}
           showBalances={showBalances}
           tokenOptions={tokenOptions}

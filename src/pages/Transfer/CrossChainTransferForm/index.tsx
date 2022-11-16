@@ -18,6 +18,7 @@ import FormTitle from '@/components/FormTitle';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
+import Tokens from '@/components/Tokens';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import { ChainType } from '@/types/chains.types';
@@ -274,6 +275,26 @@ const CrossChainTransferForm = (): JSX.Element => {
     <>
       <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
         <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
+        <Chains
+          label={t('transfer_page.cross_chain_transfer_form.from_chain')}
+          selectedChain={fromChain}
+          onChange={handleSetFromChain}
+        />
+        <Chains
+          label={t('transfer_page.cross_chain_transfer_form.to_chain')}
+          selectedChain={toChain}
+          onChange={handleSetToChain}
+        />
+        <div>
+          <Tokens
+            variant='formField'
+            fullWidth={true}
+            showBalances={false}
+            callbackFunction={() => {
+              console.log('change token');
+            }}
+          />
+        </div>
         <div>
           <AvailableBalanceUI
             label={availableBalanceLabel}
@@ -281,6 +302,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             onClick={handleClickBalance}
           />
+
           <TokenField
             id={TRANSFER_AMOUNT}
             {...register(TRANSFER_AMOUNT, {
@@ -298,16 +320,6 @@ const CrossChainTransferForm = (): JSX.Element => {
             approxUSD={`≈ ${approxUsdValue}`}
           />
         </div>
-        <Chains
-          label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-          selectedChain={fromChain}
-          onChange={handleSetFromChain}
-        />
-        <Chains
-          label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-          selectedChain={toChain}
-          onChange={handleSetToChain}
-        />
         <Accounts
           label={t('transfer_page.cross_chain_transfer_form.target_account')}
           callbackFunction={setDestination}

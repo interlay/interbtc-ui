@@ -21,20 +21,28 @@ interface TokenOption {
 
 interface Props {
   variant: string;
+  fullWidth: boolean;
   tokenOptions: Array<TokenOption>;
   showBalances: boolean;
   currentToken: TokenOption;
   onChange: (type: TokenType) => void;
 }
 
-const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBalances }: Props): JSX.Element => {
+const TokenSelector = ({
+  variant,
+  fullWidth,
+  tokenOptions,
+  currentToken,
+  onChange,
+  showBalances
+}: Props): JSX.Element => {
   return (
     <>
       {currentToken && (
         <Select variant={variant} key={currentToken.type} value={currentToken.type} onChange={onChange}>
           {({ open }) => (
             <>
-              <SelectBody className={clsx('w-52')}>
+              <SelectBody className={clsx(fullWidth ? '' : 'w-52')}>
                 <SelectButton variant={variant}>
                   <span
                     className={clsx('flex', 'items-center', 'space-x-3', {
