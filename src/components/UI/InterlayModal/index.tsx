@@ -43,7 +43,7 @@ const InterlayModal = ({ open = false, onClose, children, initialFocus }: Props)
         onClose={onClose}
         initialFocus={initialFocus}
       >
-        <div className={clsx('px-4', 'text-center')}>
+        <div className={clsx('px-4', 'text-center', 'bg-black', 'bg-opacity-30')}>
           <Transition.Child
             as={React.Fragment}
             enter='ease-out duration-300'
@@ -53,9 +53,7 @@ const InterlayModal = ({ open = false, onClose, children, initialFocus }: Props)
             leaveFrom='opacity-100'
             leaveTo='opacity-0'
           >
-            <Dialog.Overlay
-              className={clsx('absolute', 'inset-0', 'bg-black', 'bg-opacity-30', 'transition-opacity')}
-            />
+            <Dialog.Overlay className={clsx('absolute', 'inset-0', 'transition-opacity')} />
           </Transition.Child>
           {/* MEMO: this element is to trick the browser into centering the modal contents. */}
           <span className={clsx('hidden', 'sm:inline-block', 'sm:align-middle', 'sm:h-screen')} aria-hidden='true'>
