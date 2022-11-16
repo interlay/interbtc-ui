@@ -140,9 +140,11 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const newBorrowedAssetsUSDValue =
         type === 'withdraw' || type === 'borrow' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
 
+      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold);
+
       const newCollateralAssetsUSDValue =
         type === 'lend' || type === 'repay'
-          ? collateralAssetsUSDValue.mul(assets[currency.ticker].collateralThreshold).add(amountUSDValue)
+          ? collateralAssetsUSDValue.add(baseAmountUSDValue)
           : collateralAssetsUSDValue;
 
       return newBorrowedAssetsUSDValue.gt(0)
@@ -178,9 +180,11 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const newBorrowedAssetsUSDValue =
         type === 'withdraw' || type === 'borrow' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
 
+      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold);
+
       const newCollateralAssetsUSDValue =
         type === 'lend' || type === 'repay'
-          ? collateralAssetsUSDValue.mul(assets[currency.ticker].collateralThreshold).add(amountUSDValue)
+          ? collateralAssetsUSDValue.add(baseAmountUSDValue)
           : collateralAssetsUSDValue;
 
       return newCollateralAssetsUSDValue.sub(newBorrowedAssetsUSDValue || 0);

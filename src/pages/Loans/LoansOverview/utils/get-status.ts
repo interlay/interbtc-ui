@@ -13,7 +13,7 @@ const getStatus = (score = 0): Status => {
 };
 
 const statusLabel: Record<Status, string> = {
-  error: 'Liquidated',
+  error: 'Liquidation Risk',
   warning: 'High Risk',
   success: 'Low Risk'
 };

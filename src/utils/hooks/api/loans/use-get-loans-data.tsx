@@ -1,7 +1,6 @@
 import { BorrowPosition, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 
-import { displayMonetaryAmount, formatUSD } from '@/common/utils/utils';
-import { Status } from '@/component-library/utils/prop-types';
+import { formatNumber, formatUSD } from '@/common/utils/utils';
 
 import { useGetAccountLoansOverview } from './use-get-account-loans-overview';
 import { useGetLoanAssets } from './use-get-loan-assets';
@@ -17,7 +16,6 @@ type LoansData = {
   lendPositions: LendPosition[] | undefined;
   borrowPositions: BorrowPosition[] | undefined;
   assets: TickerToData<LoanAsset> | undefined;
-  thresholds: Record<Status, number>;
 };
 
 const useGetLoansData = (): LoansData => {
@@ -39,19 +37,15 @@ const useGetLoansData = (): LoansData => {
       borrowUSDValue: borrowedAssetsUSDValue && formatUSD(borrowedAssetsUSDValue.toNumber()),
       netYieldUSDValue: netYieldUSDValue && formatUSD(netYieldUSDValue.toNumber()),
       earnedRewardsAmount: earnedRewards
-        ? `${displayMonetaryAmount(earnedRewards)} ${earnedRewards.currency.ticker}`
+        ? `${formatNumber(earnedRewards.toBig().toNumber(), { maximumFractionDigits: 5 })} ${
+            earnedRewards.currency.ticker
+          }`
         : undefined,
-      hasEarnedRewards: !!earnedRewards?.isZero()
+      hasEarnedRewards: !earnedRewards?.isZero()
     },
     lendPositions,
     borrowPositions,
-    assets,
-    // TODO: get this from the lib
-    thresholds: {
-      error: 1,
-      warning: 2,
-      success: 10
-    }
+    assets
   };
 };
 

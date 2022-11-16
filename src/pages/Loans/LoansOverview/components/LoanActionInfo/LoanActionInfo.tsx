@@ -39,7 +39,7 @@ const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.El
                 <Dt>Lend APY {asset.currency.ticker}</Dt>
                 <Dd>{formatPercentage(asset.lendApy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
               </DlGroup>
-              {asset.lendReward && lendRewardsApy && (
+              {!!asset.lendReward && !!lendRewardsApy && (
                 <DlGroup justifyContent='space-between'>
                   <Dt>Rewards APY {asset.lendReward.currency.ticker}</Dt>
                   <Dd>{formatPercentage(lendRewardsApy, { maximumFractionDigits: 2 })}</Dd>
@@ -53,7 +53,7 @@ const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.El
                 <Dt>Borrow APY {asset.currency.ticker}</Dt>
                 <Dd>{formatPercentage(asset.borrowApy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
               </DlGroup>
-              {asset.borrowReward && borrowRewardsApy && (
+              {!!asset.borrowReward && !!borrowRewardsApy && (
                 <DlGroup justifyContent='space-between'>
                   <Dt>Rewards APY {asset.borrowReward.currency.ticker}</Dt>
                   <Dd>{formatPercentage(borrowRewardsApy, { maximumFractionDigits: 2 })}</Dd>

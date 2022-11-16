@@ -17,7 +17,7 @@ type StyledFormWrapperProps = {
 const StyledFormWrapper = styled(Flex)<StyledFormWrapperProps>`
   margin-top: ${theme.spacing.spacing8};
   // MEMO: keep the same height across each tab
-  min-height: ${({ $hasBorrowPositions }) => ($hasBorrowPositions ? '30rem' : '20rem')};
+  min-height: ${({ $hasBorrowPositions }) => ($hasBorrowPositions ? '32rem' : '20rem')};
 `;
 
 export { StyledFormWrapper, StyledTabs, StyledWrapper };
