@@ -17,10 +17,10 @@ type LoansInsightsProps = {
 };
 
 const LoansInsights = ({
-  supply = '-',
-  netYield = '-',
-  borrow = '-',
-  rewards = '-',
+  supply,
+  netYield,
+  borrow,
+  rewards,
   hasEarnedRewards: hasEarnedRewardsProp
 }: LoansInsightsProps): JSX.Element => {
   const [hasEarnedRewards, setEarnedRewards] = useState(hasEarnedRewardsProp);
