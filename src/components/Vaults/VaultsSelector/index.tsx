@@ -8,6 +8,7 @@ import { VaultApiType } from '@/common/types/vault.types';
 import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
+import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 
 import Select, {
   SELECT_VARIANTS,
@@ -80,7 +81,19 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
   } = useGetCurrencies(true);
   useErrorHandler(currenciesError);
 
-  const isLoading = isPending || currenciesIdle || currenciesLoading;
+  // No need to check that bridge is loaded because this component
+  // will only render if it has
+  const {
+    isIdle: identitiesIdle,
+    isLoading: identitiesLoading,
+    data: identities,
+    error: identitiesError
+  } = useGetIdentities(true);
+  useErrorHandler(identitiesError);
+
+  console.log('identities', identities);
+
+  const isLoading = isPending || currenciesIdle || currenciesLoading || identitiesIdle || identitiesLoading;
   return (
     <Select variant={SELECT_VARIANTS.formField} value={selectedVault} onChange={onChange}>
       {({ open }) => (
@@ -105,6 +118,9 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
             <SelectOptions className='h-28' open={open}>
               {!isLoading &&
                 vaults.map((vault: VaultApiType) => {
+                  console.log('vault', vault[0].accountId.toString());
+                  const identity = identities?.get(vault[0].accountId.toString());
+                  console.log(identity);
                   return (
                     <SelectOption key={vault[0].toString()} value={vault}>
                       {({ selected, active }) => (
