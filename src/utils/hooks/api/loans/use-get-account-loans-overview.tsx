@@ -74,7 +74,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       .filter(({ isCollateral }) => isCollateral)
       .map(({ amount, currency, ...rest }) => ({
         // MEMO: compute total value based on collateral threshold (not full lend amount value)
-        amount: amount.mul(assets[currency.ticker].collateralThreshold).div(100),
+        amount: amount.mul(assets[currency.ticker].collateralThreshold),
         currency,
         ...rest
       }));
@@ -138,13 +138,19 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const amountUSDValue = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
 
       const newBorrowedAssetsUSDValue =
-        type === 'withdraw' || type === 'borrow' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
+        type === 'borrow'
+          ? borrowedAssetsUSDValue.add(amountUSDValue)
+          : type === 'repay'
+          ? borrowedAssetsUSDValue.sub(amountUSDValue)
+          : borrowedAssetsUSDValue;
 
-      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold).div(100);
+      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold);
 
       const newCollateralAssetsUSDValue =
-        type === 'lend' || type === 'repay'
+        type === 'lend'
           ? collateralAssetsUSDValue.add(baseAmountUSDValue)
+          : type === 'withdraw'
+          ? collateralAssetsUSDValue.sub(baseAmountUSDValue)
           : collateralAssetsUSDValue;
 
       return newBorrowedAssetsUSDValue.gt(0)
@@ -178,16 +184,22 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       const amountUSDValue = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
 
       const newBorrowedAssetsUSDValue =
-        type === 'withdraw' || type === 'borrow' ? borrowedAssetsUSDValue.add(amountUSDValue) : borrowedAssetsUSDValue;
+        type === 'borrow'
+          ? borrowedAssetsUSDValue.add(amountUSDValue)
+          : type === 'repay'
+          ? borrowedAssetsUSDValue.sub(amountUSDValue)
+          : borrowedAssetsUSDValue;
 
-      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold).div(100);
+      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold);
 
       const newCollateralAssetsUSDValue =
-        type === 'lend' || type === 'repay'
+        type === 'lend'
           ? collateralAssetsUSDValue.add(baseAmountUSDValue)
+          : type === 'withdraw'
+          ? collateralAssetsUSDValue.sub(baseAmountUSDValue)
           : collateralAssetsUSDValue;
 
-      return newCollateralAssetsUSDValue.sub(newBorrowedAssetsUSDValue || 0);
+      return newCollateralAssetsUSDValue.sub(newBorrowedAssetsUSDValue);
     },
     [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue, assets]
   );
@@ -249,9 +261,15 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
         return undefined;
       }
 
-      const withdrawableAmount = borrowLimitUSDValue.div(currencyUSDPrice);
+      const collateralThreshold = assets[currency.ticker].collateralThreshold;
+      const totalWithdrawableAmount = borrowLimitUSDValue.div(currencyUSDPrice).div(collateralThreshold);
+      const totalWithdrawableMonetary = newMonetaryAmount(totalWithdrawableAmount, currency, true);
 
-      return newMonetaryAmount(withdrawableAmount, currency, true);
+      const withdrawableAmount = position.amount.lt(totalWithdrawableMonetary)
+        ? position.amount
+        : totalWithdrawableMonetary;
+
+      return withdrawableAmount;
     },
     [borrowedAssetsUSDValue, prices, assets, borrowLimitUSDValue]
   );

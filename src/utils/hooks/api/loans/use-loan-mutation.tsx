@@ -4,18 +4,26 @@ import { useMutation, UseMutationResult } from 'react-query';
 
 import { LoanAction } from '@/types/loans';
 
-type CreateLoanVariables = { loanType: LoanAction; amount: MonetaryAmount<CurrencyExt> };
+type CreateLoanVariables = { loanType: LoanAction; amount: MonetaryAmount<CurrencyExt>; isMaxAmount: boolean };
 
-const mutateLoan = ({ loanType, amount }: CreateLoanVariables) => {
+const mutateLoan = ({ loanType, amount, isMaxAmount }: CreateLoanVariables) => {
   switch (loanType) {
     case 'lend':
-      return window.bridge.loans.borrow(amount.currency, amount);
+      return window.bridge.loans.lend(amount.currency, amount);
     case 'withdraw':
-      return window.bridge.loans.withdraw(amount.currency, amount);
+      if (isMaxAmount) {
+        return window.bridge.loans.withdrawAll(amount.currency);
+      } else {
+        return window.bridge.loans.withdraw(amount.currency, amount);
+      }
     case 'borrow':
       return window.bridge.loans.borrow(amount.currency, amount);
     case 'repay':
-      return window.bridge.loans.repay(amount.currency, amount);
+      if (isMaxAmount) {
+        return window.bridge.loans.repayAll(amount.currency);
+      } else {
+        return window.bridge.loans.repay(amount.currency, amount);
+      }
   }
 };
 

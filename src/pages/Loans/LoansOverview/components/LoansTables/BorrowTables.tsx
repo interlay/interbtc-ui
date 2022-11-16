@@ -3,6 +3,7 @@ import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
 
+import { getPosition } from '../../utils/get-position';
 import { BorrowAssetsTable } from '../BorrowAssetsTable';
 import { BorrowPositionsTable } from '../BorrowPositionsTable';
 import { LoanModal } from '../LoanModal';
@@ -17,23 +18,15 @@ const defaultAssetState: UseAssetState = { data: undefined, position: undefined 
 type BorrowTablesProps = {
   assets: TickerToData<LoanAsset>;
   positions: BorrowPosition[];
+  disabledAssets: string[];
 };
 
-const BorrowTables = ({ assets, positions }: BorrowTablesProps): JSX.Element => {
+const BorrowTables = ({ assets, positions, disabledAssets }: BorrowTablesProps): JSX.Element => {
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
-  // TODO: subject to change in the future
-  const handleAssetRowAction = (key: Key) => {
-    const asset = assets[key as string];
-    const position = positions.find((position) => position.currency === asset.currency);
-
-    setAsset({ data: asset, position });
-  };
-
-  // TODO: subject to change in the future
-  const handlePositionRowAction = (key: Key) => {
-    const position = positions[key as number];
-    const asset = assets[position.currency.ticker];
+  const handleRowAction = (ticker: Key) => {
+    const asset = assets[ticker as string];
+    const position = getPosition(positions, ticker as string);
 
     setAsset({ data: asset, position });
   };
@@ -42,8 +35,18 @@ const BorrowTables = ({ assets, positions }: BorrowTablesProps): JSX.Element => 
 
   return (
     <Flex direction='column' flex='1' gap='spacing12'>
-      <BorrowPositionsTable assets={assets} positions={positions} onRowAction={handlePositionRowAction} />
-      <BorrowAssetsTable assets={assets} positions={positions} onRowAction={handleAssetRowAction} />
+      <BorrowPositionsTable
+        assets={assets}
+        positions={positions}
+        onRowAction={handleRowAction}
+        disabledKeys={disabledAssets}
+      />
+      <BorrowAssetsTable
+        assets={assets}
+        positions={positions}
+        onRowAction={handleRowAction}
+        disabledKeys={disabledAssets}
+      />
       <LoanModal
         variant='borrow'
         open={!!selectedAsset.data}

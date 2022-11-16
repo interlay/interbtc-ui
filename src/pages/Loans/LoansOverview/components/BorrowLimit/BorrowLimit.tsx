@@ -2,7 +2,7 @@ import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 
-import { formatUSD } from '@/common/utils/utils';
+import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { DlGroup, Dt } from '@/component-library';
 import { LoanAction } from '@/types/loans';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
@@ -13,7 +13,6 @@ import { StyledAlert, StyledDd, StyledDl, StyledWarningIcon } from './BorrowLimi
 
 const LIQUIDATION_ALERT_SCORE = 1.5;
 
-// TODO: needs to be verified after lib integration
 type BorrowLimitProps = {
   variant: LoanAction;
   asset: MonetaryAmount<CurrencyExt>;
@@ -38,6 +37,9 @@ const BorrowLimit = ({ variant, asset, shouldDisplayLiquidationAlert }: BorrowLi
     (variant === 'borrow' || variant === 'withdraw') &&
     newCollateralRatio < LIQUIDATION_ALERT_SCORE;
 
+  const collateralRatio =
+    newCollateralRatio > 10 ? '10+' : formatNumber(newCollateralRatio, { maximumFractionDigits: 2 });
+
   return (
     <StyledDl direction='column'>
       <DlGroup justifyContent='space-between'>
@@ -54,7 +56,9 @@ const BorrowLimit = ({ variant, asset, shouldDisplayLiquidationAlert }: BorrowLi
       </DlGroup>
       <DlGroup justifyContent='space-between'>
         <Dt>Health Status</Dt>
-        <StyledDd $status={status}>{statusLabel}</StyledDd>
+        <StyledDd $status={status}>
+          {statusLabel} ({collateralRatio})
+        </StyledDd>
       </DlGroup>
       <LoanScore score={newCollateralRatio} aria-label='loan score' />
       {/* TODO: replace with Alert component */}

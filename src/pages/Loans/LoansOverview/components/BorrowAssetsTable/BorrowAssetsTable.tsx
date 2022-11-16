@@ -22,9 +22,10 @@ type BorrowAssetsTableProps = {
   assets: TickerToData<LoanAsset>;
   positions: LoanPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
+  disabledKeys: LoansBaseTableProps['disabledKeys'];
 };
 
-const BorrowAssetsTable = ({ assets, positions, onRowAction }: BorrowAssetsTableProps): JSX.Element => {
+const BorrowAssetsTable = ({ assets, positions, onRowAction, disabledKeys }: BorrowAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { data: balances } = useGetBalances();
@@ -47,6 +48,7 @@ const BorrowAssetsTable = ({ assets, positions, onRowAction }: BorrowAssetsTable
         const amount = balances ? balances[currency.ticker].free : newMonetaryAmount(0, currency);
         const wallet = <BalanceCell amount={amount} prices={prices} />;
 
+        console.log('liq', totalLiquidity.toBig().toString());
         const liquidityUSDValue = convertMonetaryAmountToValueInUSD(
           totalLiquidity,
           prices?.[totalLiquidity.currency.ticker].usd
@@ -71,6 +73,7 @@ const BorrowAssetsTable = ({ assets, positions, onRowAction }: BorrowAssetsTable
       onRowAction={onRowAction}
       rows={borrowAssetsTableRows}
       columns={borrowAssetsColumns}
+      disabledKeys={disabledKeys}
     />
   );
 };

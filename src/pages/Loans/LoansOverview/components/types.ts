@@ -25,7 +25,7 @@ enum LendPositionColumns {
 }
 
 type LendPositionTableRow = {
-  id: number;
+  id: string;
   [LendPositionColumns.ASSET]: ReactNode;
   [LendPositionColumns.APY_EARNED]: ReactNode;
   [LendPositionColumns.BALANCE]: ReactNode;
@@ -57,7 +57,7 @@ enum BorrowPositionColumns {
 }
 
 type BorrowPositionTableRow = {
-  id: number;
+  id: string;
   [BorrowPositionColumns.ASSET]: ReactNode;
   [BorrowPositionColumns.APY_ACCRUED]: ReactNode;
   [BorrowPositionColumns.BALANCE]: ReactNode;

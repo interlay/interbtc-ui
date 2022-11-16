@@ -7,7 +7,7 @@ import ErrorModal from '@/components/ErrorModal';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { isLiquidation } from '../../utils/is-liquidation';
+import { isLiquidationRisk } from '../../utils/is-liquidation';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
 import { StyledDescription, StyledTitle } from './CollateralModal.style';
@@ -49,7 +49,7 @@ const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: Loa
 const getModalVariant = (isCollateralActive: boolean, newCollateralRatio: number): CollateralModalVariant => {
   if (!isCollateralActive) return 'enable';
   // User is trying switching off collateral
-  if (isLiquidation(newCollateralRatio)) return 'disable-error';
+  if (isLiquidationRisk(newCollateralRatio)) return 'disable-error';
 
   return 'disable';
 };
@@ -84,7 +84,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
   const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
 
-  const borrowLimitVariant = isCollateralActive ? 'borrow' : 'lend';
+  const borrowLimitVariant = isCollateralActive ? 'withdraw' : 'lend';
 
   const newCollateralRatio = getNewCollateralRatio(borrowLimitVariant, asset.currency, lendPositionAmount) || 0;
 

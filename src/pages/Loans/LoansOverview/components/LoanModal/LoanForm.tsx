@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BorrowPosition, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TFunction, useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -57,7 +58,7 @@ const getData = (t: TFunction, variant: LoanAction, params: LoanSchemaParams) =>
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.withdraw').toLowerCase() })
       },
       schema: z.object({
-        [FormFields.LEND_AMOUNT]: validate.loans.withdraw(t, params)
+        [FormFields.WITHDRAW_AMOUNT]: validate.loans.withdraw(t, params)
       }),
       formField: FormFields.WITHDRAW_AMOUNT
     },
@@ -68,7 +69,7 @@ const getData = (t: TFunction, variant: LoanAction, params: LoanSchemaParams) =>
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.borrow').toLowerCase() })
       },
       schema: z.object({
-        [FormFields.LEND_AMOUNT]: validate.loans.borrow(t, params)
+        [FormFields.BORROW_AMOUNT]: validate.loans.borrow(t, params)
       }),
       formField: FormFields.BORROW_AMOUNT
     },
@@ -79,7 +80,7 @@ const getData = (t: TFunction, variant: LoanAction, params: LoanSchemaParams) =>
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.repay').toLowerCase() })
       },
       schema: z.object({
-        [FormFields.LEND_AMOUNT]: validate.loans.repay(t, params)
+        [FormFields.REPAY_AMOUNT]: validate.loans.repay(t, params)
       }),
       formField: FormFields.REPAY_AMOUNT
     }
@@ -107,6 +108,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   } = useGetAccountLoansOverview();
   const prices = useGetPrices();
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
+  const [isMaxAmount, setMaxAmount] = useState(false);
 
   const handleSuccess = () => {
     onChangeLoan();
@@ -144,11 +146,15 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     try {
       const submittedAmount = data[formField];
       const submittedMonetaryAmount = newMonetaryAmount(submittedAmount, asset.currency, true);
-      loanMutation.mutate({ amount: submittedMonetaryAmount, loanType: variant });
+      loanMutation.mutate({ amount: submittedMonetaryAmount, loanType: variant, isMaxAmount });
     } catch (err: any) {
       toast.error(err.toString());
     }
   };
+
+  const handleClickBalance = () => setMaxAmount(true);
+
+  const handleChange = () => setMaxAmount(false);
 
   const hasBorrowPositions = !!borrowPositions?.length;
 
@@ -177,7 +183,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
                   maximumFractionDigits: asset.currency.humanDecimals || 5
                 })
               }
-              {...register(formField)}
+              onClickBalance={handleClickBalance}
+              {...register(formField, { onChange: handleChange })}
             />
             {hasBorrowPositions && (
               <BorrowLimit shouldDisplayLiquidationAlert variant={variant} asset={monetaryAmount} />

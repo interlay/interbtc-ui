@@ -10,12 +10,19 @@ type LoansTablesProps = {
   assets: TickerToData<LoanAsset>;
 };
 
-const LoansTables = ({ lendPositions, borrowPositions, assets }: LoansTablesProps): JSX.Element => (
-  <StyledTablesWrapper gap='spacing6'>
-    <LendTables assets={assets} positions={lendPositions} />
-    <BorrowTables assets={assets} positions={borrowPositions} />
-  </StyledTablesWrapper>
-);
+const LoansTables = ({ lendPositions, borrowPositions, assets }: LoansTablesProps): JSX.Element => {
+  const disabledAssets = Object.values(assets).reduce(
+    (keys: string[], asset) => (asset.isActive ? keys : [...keys, asset.currency.ticker]),
+    []
+  );
+
+  return (
+    <StyledTablesWrapper gap='spacing6'>
+      <LendTables assets={assets} positions={lendPositions} disabledAssets={disabledAssets} />
+      <BorrowTables assets={assets} positions={borrowPositions} disabledAssets={disabledAssets} />
+    </StyledTablesWrapper>
+  );
+};
 
 export { LoansTables };
 export type { LoansTablesProps };

@@ -8,8 +8,8 @@ import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { StyledDl } from './LoanActionInfo.style';
 import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
+import { StyledDl } from './LoanActionInfo.style';
 
 type LoanActionInfoProps = {
   variant?: LoanAction;

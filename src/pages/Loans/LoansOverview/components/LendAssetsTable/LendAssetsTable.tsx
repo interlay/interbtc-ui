@@ -24,9 +24,10 @@ type LendAssetsTableProps = {
   assets: TickerToData<LoanAsset>;
   positions: LendPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
+  disabledKeys: LoansBaseTableProps['disabledKeys'];
 };
 
-const LendAssetsTable = ({ assets, positions, onRowAction }: LendAssetsTableProps): JSX.Element => {
+const LendAssetsTable = ({ assets, positions, onRowAction, disabledKeys }: LendAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { data: balances } = useGetBalances();
@@ -80,6 +81,7 @@ const LendAssetsTable = ({ assets, positions, onRowAction }: LendAssetsTableProp
       onRowAction={onRowAction}
       rows={lendAssetsTableRows}
       columns={lendAssetsColumns}
+      disabledKeys={disabledKeys}
     />
   );
 };

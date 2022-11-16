@@ -23,16 +23,24 @@ type BorrowPositionsTableProps = {
   assets: TickerToData<LoanAsset>;
   positions: BorrowPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
+  disabledKeys: LoansBaseTableProps['disabledKeys'];
 };
 
-const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPositionsTableProps): JSX.Element | null => {
+const BorrowPositionsTable = ({
+  assets,
+  positions,
+  onRowAction,
+  disabledKeys
+}: BorrowPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { getNewCollateralRatio } = useGetAccountLoansOverview();
+  const {
+    data: { collateralRatio }
+  } = useGetAccountLoansOverview();
 
   const borrowPositionsTableRows: BorrowPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ currency, amount, accumulatedDebt }, key) => {
+      positions.map(({ currency, amount, accumulatedDebt }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
         const accrued = formatNumber(accumulatedDebt.toBig().toNumber(), {
@@ -43,20 +51,19 @@ const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPosition
 
         const balance = <BalanceCell amount={amount} prices={prices} />;
 
-        const score = getNewCollateralRatio('borrow', currency, amount);
-        const status = getStatus(score);
+        const status = getStatus(collateralRatio);
         const statusLabel = getStatusLabel(status);
         const statusTag = <StatusTag status={status}>{statusLabel}</StatusTag>;
 
         return {
-          id: key,
+          id: currency.ticker,
           asset,
           'apy-accrued': apy,
           balance,
           status: statusTag
         };
       }),
-    [assets, getNewCollateralRatio, positions, prices]
+    [assets, collateralRatio, positions, prices]
   );
 
   if (!borrowPositionsTableRows.length) {
@@ -69,6 +76,7 @@ const BorrowPositionsTable = ({ assets, positions, onRowAction }: BorrowPosition
       onRowAction={onRowAction}
       rows={borrowPositionsTableRows}
       columns={borrowPositionColumns}
+      disabledKeys={disabledKeys}
     />
   );
 };

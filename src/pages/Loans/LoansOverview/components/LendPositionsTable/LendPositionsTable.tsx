@@ -23,25 +23,26 @@ type LendPositionsTableProps = {
   assets: TickerToData<LoanAsset>;
   positions: LendPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
-  onPressCollateralSwitch: (loanData: LoanAsset, position: LendPosition) => void;
+  onPressCollateralSwitch: (ticker: string) => void;
+  disabledKeys: LoansBaseTableProps['disabledKeys'];
 };
 
 const LendPositionsTable = ({
   assets,
   positions,
   onRowAction,
-  onPressCollateralSwitch
+  onPressCollateralSwitch,
+  disabledKeys
 }: LendPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
   const lendPositionsTableRows: LendPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ amount, currency, isCollateral }, key) => {
+      positions.map(({ amount, currency, isCollateral }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
         const { lendApy, lendReward } = assets[currency.ticker];
-
         const rewardsApy = getSubsidyRewardApy(currency, lendReward, prices);
         const formattedRewardsApy = lendReward
           ? `${lendReward?.currency.ticker}: ${formatPercentage(rewardsApy || 0, {
@@ -55,14 +56,14 @@ const LendPositionsTable = ({
 
         const collateral = (
           <Switch
-            onPress={() => onPressCollateralSwitch(assets[currency.ticker], positions[key])}
+            onPress={() => onPressCollateralSwitch(currency.ticker)}
             isSelected={isCollateral}
             aria-label={`toggle ${currency.ticker} collateral`}
           />
         );
 
         return {
-          id: key,
+          id: currency.ticker,
           asset,
           'apy-earned': apy,
           balance,
@@ -82,6 +83,7 @@ const LendPositionsTable = ({
       onRowAction={onRowAction}
       rows={lendPositionsTableRows}
       columns={lendPositionColumns}
+      disabledKeys={disabledKeys}
     />
   );
 };
