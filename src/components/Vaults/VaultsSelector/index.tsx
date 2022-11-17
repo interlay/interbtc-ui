@@ -1,6 +1,5 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { CurrencyExt, InterbtcPrimitivesCurrencyId } from '@interlay/interbtc-api';
-import { identity } from '@polkadot/types/interfaces/definitions';
 import clsx from 'clsx';
 import { useErrorHandler } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +36,7 @@ interface VaultOptionProps {
   error?: boolean;
   getCurrencyFromIdPrimitive: (idPrimitive: InterbtcPrimitivesCurrencyId) => CurrencyExt;
 }
-const VaultOption = ({ vault, error, getCurrencyFromIdPrimitive }: VaultOptionProps): JSX.Element => {
+const VaultOption = ({ vault, error, identity, getCurrencyFromIdPrimitive }: VaultOptionProps): JSX.Element => {
   const { t } = useTranslation();
 
   if (!vault) {
@@ -65,7 +64,7 @@ const VaultOption = ({ vault, error, getCurrencyFromIdPrimitive }: VaultOptionPr
       )}
       <SelectText className={clsx('w-64', 'font-bold')}>
         {shortAddress(vault[0].accountId.toString())}
-        {identity && typeof identity === 'string' && shortAddress(identity)}
+        {identity && typeof identity === 'string' && <div>{shortAddress(identity)}</div>}
       </SelectText>
       <SelectText className='w-16'>{getCurrencyTicker(vault)}</SelectText>
       <SelectText>
@@ -96,6 +95,8 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
   } = useGetIdentities(true);
   useErrorHandler(identitiesError);
 
+  console.log('identities', identities);
+
   const isLoading = isPending || currenciesIdle || currenciesLoading || identitiesIdle || identitiesLoading;
   return (
     <Select variant={SELECT_VARIANTS.formField} value={selectedVault} onChange={onChange}>
@@ -110,6 +111,9 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
                 ) : vaults.length > 0 ? (
                   <VaultOption
                     vault={selectedVault}
+                    identity={
+                      selectedVault && identities ? identities.get(selectedVault[0].accountId.toString()) : undefined
+                    }
                     error={error}
                     getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive}
                   />
