@@ -64,7 +64,7 @@ const VaultOption = ({ vault, error, identity, getCurrencyFromIdPrimitive }: Vau
       )}
       <SelectText className={clsx('w-64', 'font-bold')}>
         {shortAddress(vault[0].accountId.toString())}
-        {identity && typeof identity === 'string' && <div>{shortAddress(identity)}</div>}
+        {identity && <div>{shortAddress(identity)}</div>}
       </SelectText>
       <SelectText className='w-16'>{getCurrencyTicker(vault)}</SelectText>
       <SelectText>
