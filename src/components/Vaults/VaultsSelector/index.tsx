@@ -1,5 +1,6 @@
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 import { CurrencyExt, InterbtcPrimitivesCurrencyId } from '@interlay/interbtc-api';
+import { identity } from '@polkadot/types/interfaces/definitions';
 import clsx from 'clsx';
 import { useErrorHandler } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +33,7 @@ interface Props {
 
 interface VaultOptionProps {
   vault: VaultApiType | undefined;
+  identity?: string;
   error?: boolean;
   getCurrencyFromIdPrimitive: (idPrimitive: InterbtcPrimitivesCurrencyId) => CurrencyExt;
 }
@@ -61,7 +63,10 @@ const VaultOption = ({ vault, error, getCurrencyFromIdPrimitive }: VaultOptionPr
       ) : (
         <CheckCircleIcon className={clsx('flex-shrink-0', 'w-4', 'h-4', 'mr-2', 'text-interlayConifer-600')} />
       )}
-      <SelectText className={clsx('w-44', 'font-bold')}>{shortAddress(vault[0].accountId.toString())}</SelectText>
+      <SelectText className={clsx('w-64', 'font-bold')}>
+        {shortAddress(vault[0].accountId.toString())}
+        {identity && typeof identity === 'string' && shortAddress(identity)}
+      </SelectText>
       <SelectText className='w-16'>{getCurrencyTicker(vault)}</SelectText>
       <SelectText>
         <strong>{displayMonetaryAmount(vault[1])}</strong> BTC
@@ -91,8 +96,6 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
   } = useGetIdentities(true);
   useErrorHandler(identitiesError);
 
-  console.log('identities', identities);
-
   const isLoading = isPending || currenciesIdle || currenciesLoading || identitiesIdle || identitiesLoading;
   return (
     <Select variant={SELECT_VARIANTS.formField} value={selectedVault} onChange={onChange}>
@@ -118,14 +121,15 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
             <SelectOptions className='h-28' open={open}>
               {!isLoading &&
                 vaults.map((vault: VaultApiType) => {
-                  console.log('vault', vault[0].accountId.toString());
-                  const identity = identities?.get(vault[0].accountId.toString());
-                  console.log(identity);
                   return (
                     <SelectOption key={vault[0].toString()} value={vault}>
                       {({ selected, active }) => (
                         <span className={clsx('flex', 'justify-between', 'mr-4')}>
-                          <VaultOption vault={vault} getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive} />
+                          <VaultOption
+                            vault={vault}
+                            identity={identities?.get(vault[0].accountId.toString())}
+                            getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive}
+                          />
                           {selected ? <SelectCheck active={active} /> : null}
                         </span>
                       )}
