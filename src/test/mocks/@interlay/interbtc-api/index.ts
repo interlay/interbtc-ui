@@ -14,9 +14,7 @@ import {
   mockFeeGetIssueGriefingCollateralRate,
   mockIssueGetDustValue,
   mockIssueGetRequestLimits,
-  // ray test touch <
   mockIssueRequest,
-  // ray test touch >
   mockOracleGetExchangeRate,
   mockRedeemBurn,
   mockRedeemGetBurnExchangeRate,
@@ -66,9 +64,7 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   issue: {
     getDustValue: mockIssueGetDustValue,
     getRequestLimits: mockIssueGetRequestLimits,
-    // ray test touch <
     request: mockIssueRequest
-    // ray test touch >
   },
   loans: {
     getLendTokens: mockGetLendTokens

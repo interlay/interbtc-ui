@@ -28,9 +28,7 @@ describe('Issue page', () => {
     });
 
     const submitButton = screen.getByRole('button', { name: /confirm/i });
-    // ray test touch <
     // expect(submitButton).toBeEnabled();
-    // ray test touch >
 
     // Issue IBTC
     await act(async () => {
@@ -38,8 +36,6 @@ describe('Issue page', () => {
     });
 
     // Check that the issue method was called
-    // ray test touch <
     await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(1));
-    // ray test touch >
   });
 });
