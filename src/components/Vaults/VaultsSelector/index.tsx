@@ -85,8 +85,6 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
   } = useGetCurrencies(true);
   useErrorHandler(currenciesError);
 
-  // No need to check that bridge is loaded because this component
-  // will only render if it has
   const {
     isIdle: identitiesIdle,
     isLoading: identitiesLoading,
