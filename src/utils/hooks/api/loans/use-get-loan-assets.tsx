@@ -12,8 +12,7 @@ const useGetLoanAssets = (): LoanAssetsData => {
   const { data: assets, error } = useQuery({
     queryKey: ['loan-assets'],
     queryFn: getLoanAssets,
-    // MEMO: block time is 15s
-    refetchInterval: 15000
+    refetchInterval: 12000
   });
 
   useErrorHandler(error);

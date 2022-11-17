@@ -1,6 +1,8 @@
 import { ReactNode } from 'react';
 
-// LEND
+type LoanTableRow = {
+  id: string;
+};
 
 enum LendAssetsColumns {
   ASSET = 'asset',
@@ -9,8 +11,7 @@ enum LendAssetsColumns {
   LIQUIDITY = 'liquidity'
 }
 
-type LendAssetsTableRow = {
-  id: number | string;
+type LendAssetsTableRow = LoanTableRow & {
   [LendAssetsColumns.ASSET]: ReactNode;
   [LendAssetsColumns.APY]: ReactNode;
   [LendAssetsColumns.WALLET]: ReactNode;
@@ -24,15 +25,12 @@ enum LendPositionColumns {
   COLLATERAL = 'collateral'
 }
 
-type LendPositionTableRow = {
-  id: number;
+type LendPositionTableRow = LoanTableRow & {
   [LendPositionColumns.ASSET]: ReactNode;
   [LendPositionColumns.APY_EARNED]: ReactNode;
   [LendPositionColumns.BALANCE]: ReactNode;
   [LendPositionColumns.COLLATERAL]: ReactNode;
 };
-
-// BORROW
 
 enum BorrowAssetsColumns {
   ASSET = 'asset',
@@ -41,8 +39,7 @@ enum BorrowAssetsColumns {
   LIQUIDITY = 'liquidity'
 }
 
-type BorrowAssetsTableRow = {
-  id: string;
+type BorrowAssetsTableRow = LoanTableRow & {
   [BorrowAssetsColumns.ASSET]: ReactNode;
   [BorrowAssetsColumns.APY]: ReactNode;
   [BorrowAssetsColumns.WALLET]: ReactNode;
@@ -56,8 +53,7 @@ enum BorrowPositionColumns {
   STATUS = 'status'
 }
 
-type BorrowPositionTableRow = {
-  id: number;
+type BorrowPositionTableRow = LoanTableRow & {
   [BorrowPositionColumns.ASSET]: ReactNode;
   [BorrowPositionColumns.APY_ACCRUED]: ReactNode;
   [BorrowPositionColumns.BALANCE]: ReactNode;

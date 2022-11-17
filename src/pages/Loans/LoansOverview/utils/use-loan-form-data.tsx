@@ -42,14 +42,13 @@ const useLoanFormData = (
       maxAmount = getMaxBorrowableAmount(asset.currency, asset.availableCapacity) || zeroAssetAmount;
       break;
     case 'withdraw':
-      maxAmount = getMaxWithdrawableAmount(asset.currency) || zeroAssetAmount;
+      maxAmount = (position && getMaxWithdrawableAmount(asset.currency, position as LendPosition)) || zeroAssetAmount;
       break;
     case 'lend':
       maxAmount = assetBalance;
       break;
-    default:
-      maxAmount = position?.amount || zeroAssetAmount;
-      break;
+    case 'repay':
+      maxAmount = position ? position.amount.add((position as BorrowPosition).accumulatedDebt || 0) : zeroAssetAmount;
   }
 
   const minAmount = newMonetaryAmount(1, assetBalance.currency);

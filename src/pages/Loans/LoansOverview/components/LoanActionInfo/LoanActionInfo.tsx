@@ -1,4 +1,5 @@
 import { LoanAsset } from '@interlay/interbtc-api';
+import { useMemo } from 'react';
 
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt } from '@/component-library';
@@ -7,6 +8,7 @@ import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
+import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { StyledDl } from './LoanActionInfo.style';
 
 type LoanActionInfoProps = {
@@ -15,53 +17,65 @@ type LoanActionInfoProps = {
   prices?: Prices;
 };
 
-const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.Element => (
-  <StyledDl direction='column' gap='spacing2'>
-    {asset && (
-      <>
-        {variant === 'lend' && (
-          <>
-            <DlGroup justifyContent='space-between'>
-              <Dt>Lend APY {asset.currency.ticker}</Dt>
-              <Dd>{formatPercentage(asset.lendApy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
-            </DlGroup>
-            {asset.lendReward?.apy && (
-              <DlGroup justifyContent='space-between'>
-                <Dt>Rewards APY {asset.lendReward.currency.ticker}</Dt>
-                <Dd>{formatPercentage(asset.lendReward.apy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
-              </DlGroup>
-            )}
-          </>
-        )}
-        {variant === 'borrow' && (
-          <>
-            <DlGroup justifyContent='space-between'>
-              <Dt>Borrow APY {asset.currency.ticker}</Dt>
-              <Dd>{formatPercentage(asset.borrowApy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
-            </DlGroup>
-            {asset.borrowReward?.apy && (
-              <DlGroup justifyContent='space-between'>
-                <Dt>Rewards APY {asset.borrowReward.currency.ticker}</Dt>
-                <Dd>{formatPercentage(asset.borrowReward.apy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
-              </DlGroup>
-            )}
-          </>
-        )}
-      </>
-    )}
-    <DlGroup justifyContent='space-between'>
-      <Dt>Fees</Dt>
-      <Dd>
-        {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
-        {displayMonetaryAmountInUSDFormat(
-          TRANSACTION_FEE_AMOUNT,
-          getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
-        )}
-        )
-      </Dd>
-    </DlGroup>
-  </StyledDl>
-);
+const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.Element => {
+  const lendRewardsApy = useMemo(() => getSubsidyRewardApy(asset?.currency, asset?.lendReward || null, prices), [
+    asset?.currency,
+    asset?.lendReward,
+    prices
+  ]);
+  const borrowRewardsApy = useMemo(() => getSubsidyRewardApy(asset?.currency, asset?.borrowReward || null, prices), [
+    asset?.borrowReward,
+    asset?.currency,
+    prices
+  ]);
 
+  return (
+    <StyledDl direction='column' gap='spacing2'>
+      {asset && (
+        <>
+          {variant === 'lend' && (
+            <>
+              <DlGroup justifyContent='space-between'>
+                <Dt>Lend APY {asset.currency.ticker}</Dt>
+                <Dd>{formatPercentage(asset.lendApy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
+              </DlGroup>
+              {!!asset.lendReward && !!lendRewardsApy && (
+                <DlGroup justifyContent='space-between'>
+                  <Dt>Rewards APY {asset.lendReward.currency.ticker}</Dt>
+                  <Dd>{formatPercentage(lendRewardsApy, { maximumFractionDigits: 2 })}</Dd>
+                </DlGroup>
+              )}
+            </>
+          )}
+          {variant === 'borrow' && (
+            <>
+              <DlGroup justifyContent='space-between'>
+                <Dt>Borrow APY {asset.currency.ticker}</Dt>
+                <Dd>{formatPercentage(asset.borrowApy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
+              </DlGroup>
+              {!!asset.borrowReward && !!borrowRewardsApy && (
+                <DlGroup justifyContent='space-between'>
+                  <Dt>Rewards APY {asset.borrowReward.currency.ticker}</Dt>
+                  <Dd>{formatPercentage(borrowRewardsApy, { maximumFractionDigits: 2 })}</Dd>
+                </DlGroup>
+              )}
+            </>
+          )}
+        </>
+      )}
+      <DlGroup justifyContent='space-between'>
+        <Dt>Fees</Dt>
+        <Dd>
+          {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
+          {displayMonetaryAmountInUSDFormat(
+            TRANSACTION_FEE_AMOUNT,
+            getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
+          )}
+          )
+        </Dd>
+      </DlGroup>
+    </StyledDl>
+  );
+};
 export { LoanActionInfo };
 export type { LoanActionInfoProps };

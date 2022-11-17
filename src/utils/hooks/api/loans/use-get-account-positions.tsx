@@ -27,16 +27,14 @@ const useGetAccountPositions = (accountId: AccountId | undefined): AccountPositi
       queryFn: () => accountId && getAccountLendPositions(accountId),
       enabled: !!accountId,
       initialData: [],
-      // MEMO: block time is 15s
-      refetchInterval: 15000
+      refetchInterval: 12000
     },
     {
       queryKey: ['borrow-positions', accountId?.toString()],
       queryFn: () => accountId && getAccountBorrowPositions(accountId),
       enabled: !!accountId,
       initialData: [],
-      // MEMO: block time is 15s
-      refetchInterval: 15000
+      refetchInterval: 12000
     }
   ]);
 

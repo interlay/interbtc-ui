@@ -40,7 +40,7 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type LoanModalProps = Props & InheritAttrs;
 
-const LoanModal = ({ variant = 'lend', asset, position, ...props }: LoanModalProps): JSX.Element | null => {
+const LoanModal = ({ variant = 'lend', asset, position, onClose, ...props }: LoanModalProps): JSX.Element | null => {
   const { t } = useTranslation();
 
   if (!asset) {
@@ -50,12 +50,12 @@ const LoanModal = ({ variant = 'lend', asset, position, ...props }: LoanModalPro
   const { tabs } = getData(t, variant);
 
   return (
-    <Modal {...props}>
+    <Modal onClose={onClose} {...props}>
       <StyledTabs size='large' fullWidth>
         {tabs.map((tab) => (
           <TabsItem title={tab.title} key={tab.variant}>
             <StyledWrapper>
-              <LoanForm asset={asset} variant={tab.variant} position={position} />
+              <LoanForm asset={asset} variant={tab.variant} position={position} onChangeLoan={onClose} />
             </StyledWrapper>
           </TabsItem>
         ))}

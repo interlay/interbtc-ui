@@ -3,6 +3,7 @@ import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
 
+import { getPosition } from '../../utils/get-position';
 import { CollateralModal } from '../CollateralModal';
 import { LendAssetsTable } from '../LendAssetsTable/LendAssetsTable';
 import { LendPositionsTable } from '../LendPositionsTable';
@@ -19,29 +20,24 @@ const defaultAssetState: UseAssetState = { type: undefined, data: undefined, pos
 type LendTablesProps = {
   assets: TickerToData<LoanAsset>;
   positions: LendPosition[];
+  disabledAssets: string[];
 };
 
-const LendTables = ({ assets, positions }: LendTablesProps): JSX.Element => {
+const LendTables = ({ assets, positions, disabledAssets }: LendTablesProps): JSX.Element => {
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
-  // TODO: subject to change in the future
-  const handleAssetRowAction = (key: Key) => {
-    const asset = assets[key as string];
-    const position = positions.find((position) => position.currency === asset.currency);
+  const handleRowAction = (ticker: Key) => {
+    const asset = assets[ticker as string];
+    const position = getPosition(positions, ticker as string);
 
     setAsset({ type: 'change-loan', data: asset, position });
   };
 
-  // TODO: subject to change in the future
-  const handlePositionRowAction = (key: Key) => {
-    const position = positions[key as number];
-    const asset = assets[position.currency.ticker];
+  const handlePressCollateralSwitch = (ticker: string) => {
+    const asset = assets[ticker];
+    const position = getPosition(positions, ticker);
 
-    setAsset({ type: 'change-loan', data: asset, position });
-  };
-
-  const handlePressCollateralSwitch = (loanData: LoanAsset, position: LendPosition) => {
-    setAsset({ type: 'toggle-collateral', data: loanData, position });
+    setAsset({ type: 'toggle-collateral', data: asset, position });
   };
 
   const handleClose = () => setAsset(defaultAssetState);
@@ -51,10 +47,16 @@ const LendTables = ({ assets, positions }: LendTablesProps): JSX.Element => {
       <LendPositionsTable
         assets={assets}
         positions={positions}
-        onRowAction={handlePositionRowAction}
+        onRowAction={handleRowAction}
         onPressCollateralSwitch={handlePressCollateralSwitch}
+        disabledKeys={disabledAssets}
       />
-      <LendAssetsTable assets={assets} positions={positions} onRowAction={handleAssetRowAction} />
+      <LendAssetsTable
+        assets={assets}
+        positions={positions}
+        onRowAction={handleRowAction}
+        disabledKeys={disabledAssets}
+      />
       <LoanModal
         variant='lend'
         open={selectedAsset.type === 'change-loan'}

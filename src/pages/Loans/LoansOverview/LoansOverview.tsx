@@ -19,8 +19,6 @@ const LoansOverview = (): JSX.Element => {
     return <FullLoadingSpinner />;
   }
 
-  const handleClaimRewards = () => console.log('claiming rewards');
-
   return (
     <MainContainer>
       <Flex direction='column' gap='spacing12'>
@@ -30,7 +28,6 @@ const LoansOverview = (): JSX.Element => {
           supply={supplyBalance}
           rewards={earnedRewardsAmount}
           hasEarnedRewards={hasEarnedRewards}
-          onClaimRewards={handleClaimRewards}
         />
         <LoansTables borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
       </Flex>

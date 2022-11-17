@@ -6,6 +6,7 @@ import { convertMonetaryAmountToValueInUSD, formatPercentage, formatUSD } from '
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
 import { LendAssetsColumns, LendAssetsTableRow } from '../types';
@@ -22,9 +23,10 @@ type LendAssetsTableProps = {
   assets: TickerToData<LoanAsset>;
   positions: LendPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
+  disabledKeys: LoansBaseTableProps['disabledKeys'];
 };
 
-const LendAssetsTable = ({ assets, positions, onRowAction }: LendAssetsTableProps): JSX.Element => {
+const LendAssetsTable = ({ assets, positions, onRowAction, disabledKeys }: LendAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { data: balances } = useGetBalances();
@@ -42,13 +44,14 @@ const LendAssetsTable = ({ assets, positions, onRowAction }: LendAssetsTableProp
       availableAssets.map(({ lendApy, lendReward, currency, totalLiquidity }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
-        const rewardsApy = lendReward
-          ? `${lendReward?.currency.ticker}: ${formatPercentage(lendReward?.apy.toNumber() || 0, {
+        const rewardsApy = getSubsidyRewardApy(currency, lendReward, prices);
+        const formattedRewardsApy = lendReward
+          ? `${lendReward?.currency.ticker}: ${formatPercentage(rewardsApy || 0, {
               maximumFractionDigits: 2
             })}`
           : undefined;
 
-        const apy = <ApyCell apy={lendApy} amount={rewardsApy} />;
+        const apy = <ApyCell apy={lendApy} amount={formattedRewardsApy} />;
 
         const amount = balances ? balances[currency.ticker].free : newMonetaryAmount(0, currency);
         const wallet = <BalanceCell amount={amount} prices={prices} />;
@@ -77,6 +80,7 @@ const LendAssetsTable = ({ assets, positions, onRowAction }: LendAssetsTableProp
       onRowAction={onRowAction}
       rows={lendAssetsTableRows}
       columns={lendAssetsColumns}
+      disabledKeys={disabledKeys}
     />
   );
 };

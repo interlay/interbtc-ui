@@ -1,17 +1,23 @@
 import { Status } from '@/component-library';
 
-const getStatus = (score = 0, thresholds: Record<Status, number>): Status => {
-  if (score <= thresholds.error) return 'error';
-  if (score <= thresholds.warning) return 'warning';
+const borrowStatus: Record<Status, number> = {
+  error: 1,
+  warning: 3,
+  success: 10
+};
+
+const getStatus = (score = 0): Status => {
+  if (score <= borrowStatus.error) return 'error';
+  if (score <= borrowStatus.warning) return 'warning';
   return 'success';
 };
 
 const statusLabel: Record<Status, string> = {
-  error: 'Liquidated',
+  error: 'Liquidation Risk',
   warning: 'High Risk',
   success: 'Low Risk'
 };
 
 const getStatusLabel = (status: Status): string => statusLabel[status];
 
-export { getStatus, getStatusLabel };
+export { borrowStatus, getStatus, getStatusLabel };
