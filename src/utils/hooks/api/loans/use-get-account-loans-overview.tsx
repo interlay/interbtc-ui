@@ -50,7 +50,6 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   let collateralAssetsUSDValue: Big | undefined = undefined;
   let totalAccruedUSDValue: Big | undefined = undefined;
   let netYieldUSDValue: Big | undefined = undefined;
-
   let earnedRewards: MonetaryAmount<CurrencyExt> | undefined = undefined;
 
   if (lendPositions !== undefined && prices !== undefined && assets !== undefined) {
