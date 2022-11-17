@@ -39,7 +39,7 @@ describe('Issue page', () => {
 
     // Check that the issue method was called
     // ray test touch <
-    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(1));
     // ray test touch >
   });
 });
