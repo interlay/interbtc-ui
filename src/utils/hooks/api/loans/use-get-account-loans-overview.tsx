@@ -4,7 +4,6 @@ import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
-import { BorrowAction, LendAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import useAccountId from '../../use-account-id';
@@ -19,7 +18,6 @@ interface AccountLoansOverviewData {
   lentAssetsUSDValue: Big | undefined;
   totalEarnedInterestUSDValue: Big | undefined;
   borrowedAssetsUSDValue: Big | undefined;
-  borrowLimitUSDValue: Big | undefined;
   earnedRewards: MonetaryAmount<CurrencyExt> | undefined;
   netYieldUSDValue: Big | undefined;
   collateralAssetsUSDValue: Big | undefined;
@@ -28,11 +26,7 @@ interface AccountLoansOverviewData {
 interface AccountLoansOverview {
   data: AccountLoansOverviewData;
   refetch: () => void;
-  getNewBorrowLimitUSDValue: (
-    type: LendAction | BorrowAction,
-    currency: CurrencyExt,
-    amount: MonetaryAmount<CurrencyExt>
-  ) => Big | undefined;
+
   getMaxBorrowableAmount: (
     currency: CurrencyExt,
     availableCapacity: MonetaryAmount<CurrencyExt>
@@ -92,54 +86,6 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       convertMonetaryAmountToValueInUSD(earnedRewards, getTokenPrice(prices, earnedRewards.currency.ticker)?.usd) || 0;
     netYieldUSDValue = totalEarnedInterestUSDValue.add(totalEarnedRewardsUSDValue).sub(totalAccruedUSDValue);
   }
-
-  const borrowLimitUSDValue = collateralAssetsUSDValue
-    ? collateralAssetsUSDValue.sub(borrowedAssetsUSDValue || 0)
-    : Big(0);
-
-  /**
-   * This method computes how the borrow limit will change if
-   * asset is withdrawn or deposited to protocol.
-   * @param type Type of transaction to be done.
-   * @param currency Currency which will be deposited or withdrawn.
-   * @param amount Amount of `currency` that will be used.
-   * @note Call only after the prices and positions are loaded.
-   * @returns New borrow limit in USD after the transaction is done.
-   */
-  const getNewBorrowLimitUSDValue = useCallback(
-    (type: LendAction | BorrowAction, currency: CurrencyExt, amount: MonetaryAmount<CurrencyExt>): Big | undefined => {
-      if (
-        prices === undefined ||
-        borrowedAssetsUSDValue === undefined ||
-        collateralAssetsUSDValue === undefined ||
-        assets === undefined
-      ) {
-        return undefined;
-      }
-
-      const currencyPrice = getTokenPrice(prices, currency.ticker)?.usd;
-      const amountUSDValue = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
-
-      const newBorrowedAssetsUSDValue =
-        type === 'borrow'
-          ? borrowedAssetsUSDValue.add(amountUSDValue)
-          : type === 'repay'
-          ? borrowedAssetsUSDValue.sub(amountUSDValue)
-          : borrowedAssetsUSDValue;
-
-      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold);
-
-      const newCollateralAssetsUSDValue =
-        type === 'lend'
-          ? collateralAssetsUSDValue.add(baseAmountUSDValue)
-          : type === 'withdraw'
-          ? collateralAssetsUSDValue.sub(baseAmountUSDValue)
-          : collateralAssetsUSDValue;
-
-      return newCollateralAssetsUSDValue.sub(newBorrowedAssetsUSDValue);
-    },
-    [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue, assets]
-  );
 
   /**
    * Get maximum amount of currency that user can borrow with currently provided collateral and liquidity.
@@ -222,13 +168,11 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       lentAssetsUSDValue,
       totalEarnedInterestUSDValue,
       borrowedAssetsUSDValue,
-      borrowLimitUSDValue,
       earnedRewards,
       netYieldUSDValue,
       collateralAssetsUSDValue
     },
     refetch,
-    getNewBorrowLimitUSDValue,
     getMaxBorrowableAmount,
     getMaxWithdrawableAmount
   };

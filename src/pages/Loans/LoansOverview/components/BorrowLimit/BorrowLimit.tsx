@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { DlGroup, Dt } from '@/component-library';
 import { LoanAction } from '@/types/loans';
+import { useAccountBorrowLimit } from '@/utils/hooks/api/loans/use-get-account-borrow-limit';
 import { useLoansHealthFactor } from '@/utils/hooks/api/loans/use-get-account-health-factor';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 
 import { getStatus, getStatusLabel } from '../../utils/get-status';
 import { isBorrowAsset } from '../../utils/is-loan-asset';
@@ -23,13 +23,11 @@ type BorrowLimitProps = {
 
 const BorrowLimit = ({ variant, assetAmount, shouldDisplayLiquidationAlert }: BorrowLimitProps): JSX.Element => {
   const { t } = useTranslation();
-  const {
-    getNewBorrowLimitUSDValue,
-    data: { borrowLimitUSDValue }
-  } = useGetAccountLoansOverview();
+
+  const { data: borrowLimitUSD, getBorrowLimitUSD } = useAccountBorrowLimit();
   const { getHealthFactor } = useLoansHealthFactor();
 
-  const newBorrowLimit = getNewBorrowLimitUSDValue(variant, assetAmount.currency, assetAmount)?.toNumber() || 0;
+  const newBorrowLimit = getBorrowLimitUSD({ type: variant, amount: assetAmount });
   const newHealthFactor = getHealthFactor({ type: variant, amount: assetAmount }) || 0;
   const status = getStatus(newHealthFactor);
 
@@ -38,19 +36,21 @@ const BorrowLimit = ({ variant, assetAmount, shouldDisplayLiquidationAlert }: Bo
 
   const statusLabel = getStatusLabel(status);
   const healthFactorLabel = newHealthFactor > 10 ? '10+' : formatNumber(newHealthFactor, { maximumFractionDigits: 2 });
+  const currentBorrowLimitLabel = formatUSD(borrowLimitUSD?.toNumber() || 0, { compact: true });
+  const newBorrowLimitLabel = formatUSD(newBorrowLimit?.toNumber() || 0, { compact: true });
 
   return (
     <StyledDl direction='column'>
       <DlGroup justifyContent='space-between'>
         <Dt>Borrow Limit</Dt>
         <StyledDd $status={status}>
-          {borrowLimitUSDValue && (
+          {borrowLimitUSD && (
             <>
-              <span>{formatUSD(borrowLimitUSDValue.toNumber(), { compact: true })}</span>
+              <span>{currentBorrowLimitLabel}</span>
               <span>--&gt;</span>
             </>
           )}
-          <span>{formatUSD(newBorrowLimit, { compact: true })}</span>
+          <span>{newBorrowLimitLabel}</span>
         </StyledDd>
       </DlGroup>
       <DlGroup justifyContent='space-between'>
