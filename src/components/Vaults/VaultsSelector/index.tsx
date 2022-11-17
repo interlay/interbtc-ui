@@ -95,6 +95,8 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
   } = useGetIdentities(true);
   useErrorHandler(identitiesError);
 
+  console.log('identities', identities);
+
   const isLoading = isPending || currenciesIdle || currenciesLoading || identitiesIdle || identitiesLoading;
   return (
     <Select variant={SELECT_VARIANTS.formField} value={selectedVault} onChange={onChange}>
@@ -109,9 +111,7 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
                 ) : vaults.length > 0 ? (
                   <VaultOption
                     vault={selectedVault}
-                    identity={
-                      selectedVault && identities ? identities.get(selectedVault[0].accountId.toString()) : undefined
-                    }
+                    identity={selectedVault && identities?.get(selectedVault[0].accountId.toString())}
                     error={error}
                     getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive}
                   />
