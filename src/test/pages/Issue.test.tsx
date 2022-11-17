@@ -1,4 +1,3 @@
-// ray test touch <
 import '@testing-library/jest-dom';
 
 import App from '@/App';
@@ -13,4 +12,3 @@ describe('Issue page', () => {
     expect(issueTab).toBeVisible();
   });
 });
-// ray test touch >
