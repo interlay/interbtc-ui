@@ -3,6 +3,7 @@ import { useMutation } from 'react-query';
 
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
 
@@ -25,8 +26,15 @@ const LoansInsights = ({
 }: LoansInsightsProps): JSX.Element => {
   const [hasEarnedRewards, setEarnedRewards] = useState(hasEarnedRewardsProp);
 
+  const { refetch } = useGetAccountLoansOverview();
+
+  const handleSuccess = () => {
+    setEarnedRewards(false);
+    refetch();
+  };
+
   const claimRewardsMutation = useMutation<void, Error, void>(mutateClaimRewards, {
-    onSuccess: () => setEarnedRewards(false)
+    onSuccess: handleSuccess
   });
 
   useEffect(() => {
