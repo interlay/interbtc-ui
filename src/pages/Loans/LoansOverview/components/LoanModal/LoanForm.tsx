@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BorrowPosition, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TFunction, useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -21,6 +21,7 @@ import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-acco
 import { useLoanMutation } from '@/utils/hooks/api/loans/use-loan-mutation';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { isLendAsset } from '../../utils/is-loan-asset';
 import { useLoanFormData } from '../../utils/use-loan-form-data';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
@@ -156,9 +157,14 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
 
   const handleChange = () => setMaxAmount(false);
 
-  const hasBorrowPositions = !!borrowPositions?.length;
+  const showBorrowLimit = useMemo(() => {
+    const hasBorrowPositions = !!borrowPositions?.length;
+    const isLendingAsset = isLendAsset(variant);
+    const isBorrowingAsset = !isLendingAsset;
+    const isCollateralAsset = isLendAsset(variant) && (position as LendPosition)?.isCollateral;
 
-  const showBorrowLimit = hasBorrowPositions && (position as LendPosition)?.isCollateral;
+    return (hasBorrowPositions && isCollateralAsset) || isBorrowingAsset;
+  }, [borrowPositions?.length, position, variant]);
 
   return (
     <>
