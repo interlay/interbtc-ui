@@ -8,6 +8,7 @@ import { VaultApiType } from '@/common/types/vault.types';
 import { displayMonetaryAmount, shortAddress } from '@/common/utils/utils';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
+import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 
 import Select, {
   SELECT_VARIANTS,
@@ -31,10 +32,11 @@ interface Props {
 
 interface VaultOptionProps {
   vault: VaultApiType | undefined;
+  identity?: string;
   error?: boolean;
   getCurrencyFromIdPrimitive: (idPrimitive: InterbtcPrimitivesCurrencyId) => CurrencyExt;
 }
-const VaultOption = ({ vault, error, getCurrencyFromIdPrimitive }: VaultOptionProps): JSX.Element => {
+const VaultOption = ({ vault, error, identity, getCurrencyFromIdPrimitive }: VaultOptionProps): JSX.Element => {
   const { t } = useTranslation();
 
   if (!vault) {
@@ -60,7 +62,10 @@ const VaultOption = ({ vault, error, getCurrencyFromIdPrimitive }: VaultOptionPr
       ) : (
         <CheckCircleIcon className={clsx('flex-shrink-0', 'w-4', 'h-4', 'mr-2', 'text-interlayConifer-600')} />
       )}
-      <SelectText className={clsx('w-44', 'font-bold')}>{shortAddress(vault[0].accountId.toString())}</SelectText>
+      <SelectText className={clsx('w-64', 'font-bold')}>
+        {shortAddress(vault[0].accountId.toString())}
+        {identity && <div>{shortAddress(identity)}</div>}
+      </SelectText>
       <SelectText className='w-16'>{getCurrencyTicker(vault)}</SelectText>
       <SelectText>
         <strong>{displayMonetaryAmount(vault[1])}</strong> BTC
@@ -80,7 +85,15 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
   } = useGetCurrencies(true);
   useErrorHandler(currenciesError);
 
-  const isLoading = isPending || currenciesIdle || currenciesLoading;
+  const {
+    isIdle: identitiesIdle,
+    isLoading: identitiesLoading,
+    data: identities,
+    error: identitiesError
+  } = useGetIdentities(true);
+  useErrorHandler(identitiesError);
+
+  const isLoading = isPending || currenciesIdle || currenciesLoading || identitiesIdle || identitiesLoading;
   return (
     <Select variant={SELECT_VARIANTS.formField} value={selectedVault} onChange={onChange}>
       {({ open }) => (
@@ -94,6 +107,7 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
                 ) : vaults.length > 0 ? (
                   <VaultOption
                     vault={selectedVault}
+                    identity={selectedVault && identities?.get(selectedVault[0].accountId.toString())}
                     error={error}
                     getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive}
                   />
@@ -109,7 +123,11 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
                     <SelectOption key={vault[0].toString()} value={vault}>
                       {({ selected, active }) => (
                         <span className={clsx('flex', 'justify-between', 'mr-4')}>
-                          <VaultOption vault={vault} getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive} />
+                          <VaultOption
+                            vault={vault}
+                            identity={identities?.get(vault[0].accountId.toString())}
+                            getCurrencyFromIdPrimitive={getCurrencyFromIdPrimitive}
+                          />
                           {selected ? <SelectCheck active={active} /> : null}
                         </span>
                       )}
