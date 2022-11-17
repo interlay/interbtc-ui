@@ -1,5 +1,4 @@
 import { LoanAsset } from '@interlay/interbtc-api';
-import { useMemo } from 'react';
 
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt } from '@/component-library';
@@ -18,16 +17,8 @@ type LoanActionInfoProps = {
 };
 
 const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.Element => {
-  const lendRewardsApy = useMemo(() => getSubsidyRewardApy(asset?.currency, asset?.lendReward || null, prices), [
-    asset?.currency,
-    asset?.lendReward,
-    prices
-  ]);
-  const borrowRewardsApy = useMemo(() => getSubsidyRewardApy(asset?.currency, asset?.borrowReward || null, prices), [
-    asset?.borrowReward,
-    asset?.currency,
-    prices
-  ]);
+  const lendRewardsApy = getSubsidyRewardApy(asset?.currency, asset?.lendReward || null, prices);
+  const borrowRewardsApy = getSubsidyRewardApy(asset?.currency, asset?.borrowReward || null, prices);
 
   return (
     <StyledDl direction='column' gap='spacing2'>

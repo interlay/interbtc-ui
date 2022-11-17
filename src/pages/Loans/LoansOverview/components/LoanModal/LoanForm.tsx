@@ -21,10 +21,24 @@ import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-acco
 import { useLoanMutation } from '@/utils/hooks/api/loans/use-loan-mutation';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { isLendAsset } from '../../utils/is-loan-asset';
 import { useLoanFormData } from '../../utils/use-loan-form-data';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
 import { StyledFormWrapper } from './LoanModal.style';
+
+const shouldShowBorrowLimit = (
+  variant: LoanAction,
+  borrowPostions?: BorrowPosition[],
+  position?: LendPosition | BorrowPosition
+) => {
+  const hasBorrowPositions = !!borrowPostions?.length;
+  const isLendingAsset = isLendAsset(variant);
+  const isBorrowingAsset = !isLendingAsset;
+  const isCollateralAsset = isLendAsset(variant) && (position as LendPosition)?.isCollateral;
+
+  return (hasBorrowPositions && isCollateralAsset) || isBorrowingAsset;
+};
 
 type LoanSchemaParams = LoanBorrowSchemaParams &
   LoanRepaySchemaParams &
@@ -156,9 +170,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
 
   const handleChange = () => setMaxAmount(false);
 
-  const hasBorrowPositions = !!borrowPositions?.length;
-
-  const showBorrowLimit = hasBorrowPositions && (position as LendPosition)?.isCollateral;
+  const showBorrowLimit = shouldShowBorrowLimit(variant, borrowPositions, position);
 
   return (
     <>

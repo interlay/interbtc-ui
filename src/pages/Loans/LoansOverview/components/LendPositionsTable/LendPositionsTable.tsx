@@ -43,11 +43,12 @@ const LendPositionsTable = ({
 
         const { lendApy, lendReward } = assets[currency.ticker];
         const rewardsApy = getSubsidyRewardApy(currency, lendReward, prices);
-        const formattedRewardsApy = lendReward
-          ? `${lendReward?.currency.ticker}: ${formatPercentage(rewardsApy || 0, {
-              maximumFractionDigits: 2
-            })}`
-          : undefined;
+        const formattedRewardsApy =
+          !!lendReward && !!rewardsApy
+            ? `${lendReward?.currency.ticker}: ${formatPercentage(rewardsApy || 0, {
+                maximumFractionDigits: 2
+              })}`
+            : undefined;
 
         const apy = <ApyCell apy={lendApy} amount={formattedRewardsApy} />;
 
