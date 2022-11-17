@@ -93,8 +93,6 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
   } = useGetIdentities(true);
   useErrorHandler(identitiesError);
 
-  console.log('identities', identities);
-
   const isLoading = isPending || currenciesIdle || currenciesLoading || identitiesIdle || identitiesLoading;
   return (
     <Select variant={SELECT_VARIANTS.formField} value={selectedVault} onChange={onChange}>
