@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 
 import { formatPercentage } from '@/common/utils/utils';
 import { Switch } from '@/component-library';
-import { getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
