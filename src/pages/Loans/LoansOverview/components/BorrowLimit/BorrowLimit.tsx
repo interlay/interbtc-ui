@@ -5,9 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { DlGroup, Dt } from '@/component-library';
 import { LoanAction } from '@/types/loans';
+import { useLoansHealthFactor } from '@/utils/hooks/api/loans/use-get-account-health-factor';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 
 import { getStatus, getStatusLabel } from '../../utils/get-status';
+import { isBorrowAsset } from '../../utils/is-loan-asset';
 import { LoanScore } from '../LoanScore';
 import { StyledAlert, StyledDd, StyledDl, StyledWarningIcon } from './BorrowLimit.style';
 
@@ -15,30 +17,27 @@ const LIQUIDATION_ALERT_SCORE = 1.5;
 
 type BorrowLimitProps = {
   variant: LoanAction;
-  asset: MonetaryAmount<CurrencyExt>;
+  assetAmount: MonetaryAmount<CurrencyExt>;
   shouldDisplayLiquidationAlert?: boolean;
 };
 
-const BorrowLimit = ({ variant, asset, shouldDisplayLiquidationAlert }: BorrowLimitProps): JSX.Element => {
+const BorrowLimit = ({ variant, assetAmount, shouldDisplayLiquidationAlert }: BorrowLimitProps): JSX.Element => {
   const { t } = useTranslation();
   const {
-    getNewCollateralRatio,
     getNewBorrowLimitUSDValue,
     data: { borrowLimitUSDValue }
   } = useGetAccountLoansOverview();
+  const { getHealthFactor } = useLoansHealthFactor();
 
-  const newBorrowLimit = getNewBorrowLimitUSDValue(variant, asset.currency, asset)?.toNumber() || 0;
-  const newCollateralRatio = getNewCollateralRatio(variant, asset.currency, asset) || 0;
-  const status = getStatus(newCollateralRatio);
-  const statusLabel = getStatusLabel(status);
+  const newBorrowLimit = getNewBorrowLimitUSDValue(variant, assetAmount.currency, assetAmount)?.toNumber() || 0;
+  const newHealthFactor = getHealthFactor({ type: variant, amount: assetAmount }) || 0;
+  const status = getStatus(newHealthFactor);
 
   const hasLiquidationAlert =
-    shouldDisplayLiquidationAlert &&
-    (variant === 'borrow' || variant === 'withdraw') &&
-    newCollateralRatio < LIQUIDATION_ALERT_SCORE;
+    shouldDisplayLiquidationAlert && isBorrowAsset(variant) && newHealthFactor < LIQUIDATION_ALERT_SCORE;
 
-  const collateralRatio =
-    newCollateralRatio > 10 ? '10+' : formatNumber(newCollateralRatio, { maximumFractionDigits: 2 });
+  const statusLabel = getStatusLabel(status);
+  const healthFactorLabel = newHealthFactor > 10 ? '10+' : formatNumber(newHealthFactor, { maximumFractionDigits: 2 });
 
   return (
     <StyledDl direction='column'>
@@ -57,10 +56,10 @@ const BorrowLimit = ({ variant, asset, shouldDisplayLiquidationAlert }: BorrowLi
       <DlGroup justifyContent='space-between'>
         <Dt>Health Status</Dt>
         <StyledDd $status={status}>
-          {statusLabel} ({collateralRatio})
+          {statusLabel} ({healthFactorLabel})
         </StyledDd>
       </DlGroup>
-      <LoanScore score={newCollateralRatio} aria-label='loan score' />
+      <LoanScore score={newHealthFactor} aria-label='loan score' />
       {/* TODO: replace with Alert component */}
       {hasLiquidationAlert && (
         <StyledAlert role='alert' gap='spacing4' alignItems='center'>

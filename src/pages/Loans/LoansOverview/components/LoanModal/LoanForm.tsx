@@ -200,7 +200,9 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
               onClickBalance={handleClickBalance}
               {...register(formField, { onChange: handleChange })}
             />
-            {showBorrowLimit && <BorrowLimit shouldDisplayLiquidationAlert variant={variant} asset={monetaryAmount} />}
+            {showBorrowLimit && (
+              <BorrowLimit shouldDisplayLiquidationAlert variant={variant} assetAmount={monetaryAmount} />
+            )}
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <LoanActionInfo variant={variant} asset={asset} prices={prices} />

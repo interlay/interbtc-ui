@@ -3,6 +3,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import { Prices } from '../use-get-prices';
@@ -48,4 +49,43 @@ const getTotalEarnedRewards = (
   return firstPosition.earnedReward || undefined;
 };
 
-export { getPositionsSumOfFieldsInUSD, getTotalEarnedRewards };
+const calculateAssetMinCollateralUSD = (amountUSD: Big, collateralThreshold: Big): Big =>
+  amountUSD.mul(collateralThreshold);
+
+const calculateBorrowedAmountUSD = (
+  loanAction: LoanAction,
+  currentBorrowedAmountUSD: Big,
+  actionAmountUSD: Big
+): Big => {
+  switch (loanAction) {
+    case 'borrow':
+      return currentBorrowedAmountUSD.add(actionAmountUSD);
+    case 'repay':
+      return currentBorrowedAmountUSD.sub(actionAmountUSD);
+    default:
+      return currentBorrowedAmountUSD;
+  }
+};
+
+const calculateCollateralAmountUSD = (
+  loanAction: LoanAction,
+  currentCollateralAmountUSD: Big,
+  actionAmountUSD: Big
+): Big => {
+  switch (loanAction) {
+    case 'lend':
+      return currentCollateralAmountUSD.add(actionAmountUSD);
+    case 'withdraw':
+      return currentCollateralAmountUSD.sub(actionAmountUSD);
+    default:
+      return currentCollateralAmountUSD;
+  }
+};
+
+export {
+  calculateAssetMinCollateralUSD,
+  calculateBorrowedAmountUSD,
+  calculateCollateralAmountUSD,
+  getPositionsSumOfFieldsInUSD,
+  getTotalEarnedRewards
+};

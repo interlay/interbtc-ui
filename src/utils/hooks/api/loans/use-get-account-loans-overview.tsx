@@ -20,7 +20,6 @@ interface AccountLoansOverviewData {
   totalEarnedInterestUSDValue: Big | undefined;
   borrowedAssetsUSDValue: Big | undefined;
   borrowLimitUSDValue: Big | undefined;
-  collateralRatio: number | undefined;
   earnedRewards: MonetaryAmount<CurrencyExt> | undefined;
   netYieldUSDValue: Big | undefined;
   collateralAssetsUSDValue: Big | undefined;
@@ -29,11 +28,6 @@ interface AccountLoansOverviewData {
 interface AccountLoansOverview {
   data: AccountLoansOverviewData;
   refetch: () => void;
-  getNewCollateralRatio: (
-    type: LendAction | BorrowAction,
-    currency: CurrencyExt,
-    amount: MonetaryAmount<CurrencyExt>
-  ) => number | undefined;
   getNewBorrowLimitUSDValue: (
     type: LendAction | BorrowAction,
     currency: CurrencyExt,
@@ -63,7 +57,6 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   let collateralAssetsUSDValue: Big | undefined = undefined;
   let totalAccruedUSDValue: Big | undefined = undefined;
   let netYieldUSDValue: Big | undefined = undefined;
-  let collateralRatio: number | undefined = undefined;
   let earnedRewards: MonetaryAmount<CurrencyExt> | undefined = undefined;
 
   if (lendPositions !== undefined && prices !== undefined && assets !== undefined) {
@@ -86,12 +79,6 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
     borrowedAssetsUSDValue = getPositionsSumOfFieldsInUSD('amount', borrowPositions, prices);
   }
 
-  if (borrowedAssetsUSDValue !== undefined && collateralAssetsUSDValue !== undefined) {
-    collateralRatio = borrowedAssetsUSDValue.gt(0)
-      ? collateralAssetsUSDValue.div(borrowedAssetsUSDValue).toNumber()
-      : Infinity;
-  }
-
   if (borrowPositions !== undefined && prices !== undefined) {
     totalAccruedUSDValue = getPositionsSumOfFieldsInUSD('accumulatedDebt', borrowPositions, prices);
   }
@@ -109,56 +96,6 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   const borrowLimitUSDValue = collateralAssetsUSDValue
     ? collateralAssetsUSDValue.sub(borrowedAssetsUSDValue || 0)
     : Big(0);
-
-  /**
-   * This method computes how the collateral ratio will change if
-   * asset is withdrawn or deposited.
-   * @param type Type of transaction that will be done.
-   * @param currency Currency which will be deposited or withdrawn.
-   * @param amount Amount of `currency` that will be used.
-   * @note Call only after the prices and positions are loaded.
-   * @returns New collateral ratio after the transaction is done.
-   */
-  const getNewCollateralRatio = useCallback(
-    (
-      type: LendAction | BorrowAction,
-      currency: CurrencyExt,
-      amount: MonetaryAmount<CurrencyExt>
-    ): number | undefined => {
-      if (
-        prices === undefined ||
-        borrowedAssetsUSDValue === undefined ||
-        collateralAssetsUSDValue === undefined ||
-        assets === undefined
-      ) {
-        return undefined;
-      }
-
-      const currencyPrice = getTokenPrice(prices, currency.ticker)?.usd;
-      const amountUSDValue = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
-
-      const newBorrowedAssetsUSDValue =
-        type === 'borrow'
-          ? borrowedAssetsUSDValue.add(amountUSDValue)
-          : type === 'repay'
-          ? borrowedAssetsUSDValue.sub(amountUSDValue)
-          : borrowedAssetsUSDValue;
-
-      const baseAmountUSDValue = amountUSDValue.mul(assets[currency.ticker].collateralThreshold);
-
-      const newCollateralAssetsUSDValue =
-        type === 'lend'
-          ? collateralAssetsUSDValue.add(baseAmountUSDValue)
-          : type === 'withdraw'
-          ? collateralAssetsUSDValue.sub(baseAmountUSDValue)
-          : collateralAssetsUSDValue;
-
-      return newBorrowedAssetsUSDValue.gt(0)
-        ? newCollateralAssetsUSDValue.div(newBorrowedAssetsUSDValue).toNumber()
-        : Infinity;
-    },
-    [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue, assets]
-  );
 
   /**
    * This method computes how the borrow limit will change if
@@ -286,13 +223,11 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       totalEarnedInterestUSDValue,
       borrowedAssetsUSDValue,
       borrowLimitUSDValue,
-      collateralRatio,
       earnedRewards,
       netYieldUSDValue,
       collateralAssetsUSDValue
     },
     refetch,
-    getNewCollateralRatio,
     getNewBorrowLimitUSDValue,
     getMaxBorrowableAmount,
     getMaxWithdrawableAmount
