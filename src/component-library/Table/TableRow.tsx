@@ -26,14 +26,13 @@ const shouldEmitInheritedEvent = (ref: React.RefObject<HTMLTableRowElement>, tar
 type Props = {
   state: TableState<Record<string, any>>;
   item: GridNode<Record<string, any>>;
-  clickable: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<HTMLTableRowElement>, keyof Props>;
 
 type TableRowProps = Props & NativeAttrs;
 
-const TableRow = ({ item, children, state, clickable, ...props }: TableRowProps): JSX.Element => {
+const TableRow = ({ item, children, state, ...props }: TableRowProps): JSX.Element => {
   const ref = useRef<HTMLTableRowElement>(null);
   const {
     rowProps: { onPointerDown, onPointerUp, onClick, ...otherRowProps }
@@ -44,7 +43,11 @@ const TableRow = ({ item, children, state, clickable, ...props }: TableRowProps)
     state,
     ref
   );
-  const { isHovered, hoverProps } = useHover({ isDisabled: !clickable });
+
+  const { onKeyDown, onKeyUp, onMouseDown } = otherRowProps;
+  const isClickable = !!onKeyDown || !!onKeyUp || !!onMouseDown;
+
+  const { isHovered, hoverProps } = useHover({ isDisabled: !isClickable });
 
   const handlePointerUp: PointerEventHandler<FocusableElement> = (e) => {
     if (shouldEmitInheritedEvent(ref, e.target as HTMLElement)) {
