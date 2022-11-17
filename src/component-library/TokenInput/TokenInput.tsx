@@ -29,6 +29,7 @@ type Props = {
   balance?: number;
   balanceInUSD?: string | number;
   renderBalance?: (balance: number) => ReactNode;
+  onClickBalance?: (balance?: number) => void;
 };
 
 type InheritAttrs = Omit<NumberInputProps, keyof Props>;
@@ -49,13 +50,17 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       hidden,
       renderBalance,
       label,
+      onClickBalance,
       ...props
     },
     ref
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
-    const handleClickBalance = () => triggerChangeEvent(inputRef, balance);
+    const handleClickBalance = () => {
+      triggerChangeEvent(inputRef, balance);
+      onClickBalance?.(balance);
+    };
 
     const endAdornment = (
       <TokenAdornment>
