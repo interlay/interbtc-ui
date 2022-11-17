@@ -158,11 +158,13 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
 
   const hasBorrowPositions = !!borrowPositions?.length;
 
+  const showBorrowLimit = hasBorrowPositions && (position as LendPosition)?.isCollateral;
+
   return (
     <>
       <form onSubmit={h(handleSubmit)}>
         <StyledFormWrapper
-          $hasBorrowPositions={hasBorrowPositions}
+          $showBorrowLimit={showBorrowLimit}
           direction='column'
           justifyContent='space-between'
           gap='spacing4'
@@ -186,9 +188,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
               onClickBalance={handleClickBalance}
               {...register(formField, { onChange: handleChange })}
             />
-            {hasBorrowPositions && (
-              <BorrowLimit shouldDisplayLiquidationAlert variant={variant} asset={monetaryAmount} />
-            )}
+            {showBorrowLimit && <BorrowLimit shouldDisplayLiquidationAlert variant={variant} asset={monetaryAmount} />}
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <LoanActionInfo variant={variant} asset={asset} prices={prices} />

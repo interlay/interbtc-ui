@@ -11,13 +11,13 @@ const StyledWrapper = styled.div`
 `;
 
 type StyledFormWrapperProps = {
-  $hasBorrowPositions: boolean;
+  $showBorrowLimit: boolean;
 };
 
 const StyledFormWrapper = styled(Flex)<StyledFormWrapperProps>`
   margin-top: ${theme.spacing.spacing8};
   // MEMO: keep the same height across each tab
-  min-height: ${({ $hasBorrowPositions }) => ($hasBorrowPositions ? '32rem' : '20rem')};
+  min-height: ${({ $showBorrowLimit }) => ($showBorrowLimit ? '32rem' : '20rem')};
 `;
 
 export { StyledFormWrapper, StyledTabs, StyledWrapper };
