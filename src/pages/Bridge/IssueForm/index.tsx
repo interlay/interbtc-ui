@@ -328,7 +328,9 @@ const IssueForm = (): JSX.Element | null => {
           }
           vaultId = vault[0];
         } else {
+          // ray test touch <
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
+          // ray test touch >
         }
 
         const collateralToken = await currencyIdToMonetaryCurrency(

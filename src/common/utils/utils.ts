@@ -123,6 +123,7 @@ const copyToClipboard = (text: string): void => {
   navigator.clipboard.writeText(text);
 };
 
+// ray test touch <
 const getRandomVaultIdWithCapacity = (
   vaults: [InterbtcPrimitivesVaultId, BitcoinAmount][],
   requiredCapacity: BitcoinAmount
@@ -133,6 +134,7 @@ const getRandomVaultIdWithCapacity = (
   }
   return getRandomArrayElement(filteredVaults)[0];
 };
+// ray test touch >
 
 function getRandomArrayElement<T>(array: Array<T>): T {
   return array[Math.floor(Math.random() * array.length)];

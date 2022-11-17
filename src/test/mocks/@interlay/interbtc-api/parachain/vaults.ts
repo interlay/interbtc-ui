@@ -10,6 +10,8 @@ const DEFAULT_VAULT_WITH_ISSUABLE_TOKENS = (_accountId: AccountId, collateralCur
 });
 
 const mockVaultsGet = jest.fn((accountId, currency) => DEFAULT_VAULT_WITH_ISSUABLE_TOKENS(accountId, currency));
+// ray test touch <
 const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => []);
+// ray test touch >
 
 export { mockVaultsGet, mockVaultsGetVaultsWithIssuableTokens };
