@@ -201,7 +201,12 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
               {...register(formField, { onChange: handleChange })}
             />
             {showBorrowLimit && (
-              <BorrowLimit shouldDisplayLiquidationAlert variant={variant} assetAmount={monetaryAmount} />
+              <BorrowLimit
+                shouldDisplayLiquidationAlert
+                loanAction={variant}
+                asset={asset}
+                actionAmount={monetaryAmount}
+              />
             )}
           </Flex>
           <Flex direction='column' gap='spacing4'>

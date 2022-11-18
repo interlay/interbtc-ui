@@ -1,86 +1,112 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
+import { formatNumber } from '@/common/utils/utils';
+import { Status } from '@/component-library';
 import { LoanAction } from '@/types/loans';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
-import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { calcutateCollateralBorrowedAmountUSD } from '../utils/math';
+import { calculateCollateralBorrowedAmountUSD } from '../utils/math';
+
+const healthFactorRanges: Record<Status, number> = {
+  error: 1,
+  warning: 3,
+  success: 10
+};
 
 const calculateHealthFactor = (borrowAmountUSD: Big, collateralAmountUSD: Big) =>
   borrowAmountUSD.gt(0) ? collateralAmountUSD.div(borrowAmountUSD).toNumber() : Infinity;
 
-const getCurrencyHealthFactor = (borrowAmountUSD?: Big, collateralAmountUSD?: Big): number | undefined => {
-  if (borrowAmountUSD === undefined || collateralAmountUSD === undefined) {
-    return undefined;
-  }
-
-  return calculateHealthFactor(borrowAmountUSD, collateralAmountUSD);
+const getStatus = (score: number): Status => {
+  if (score <= healthFactorRanges.error) return 'error';
+  if (score <= healthFactorRanges.warning) return 'warning';
+  return 'success';
 };
 
-type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt> };
+const statusLabel: Record<Status, string> = {
+  error: 'Liquidation Risk',
+  warning: 'High Risk',
+  success: 'Low Risk'
+};
 
-interface UseLoansHealthFactor {
-  healthFactor: number | undefined;
-  getHealthFactor: (loanAction: LoanActionData) => number | undefined;
+const getStatusLabel = (status: Status): string => statusLabel[status];
+
+const getData = (borrowAmountUSD: Big, collateralAmountUSD: Big) => {
+  const value = calculateHealthFactor(borrowAmountUSD, collateralAmountUSD);
+  const valueLabel = value > 10 ? '10+' : formatNumber(value, { maximumFractionDigits: 2 });
+  const status = getStatus(value);
+  const statusLabel = getStatusLabel(status);
+
+  return {
+    value,
+    valueLabel,
+    status,
+    statusLabel
+  };
+};
+
+type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt>; asset: LoanAsset };
+
+type AccountHealthFactorData = {
+  value: number;
+  valueLabel: string;
+  status: Status;
+  statusLabel: string;
+};
+
+interface UseAccountHealthFactor {
+  data: AccountHealthFactorData | undefined;
+  getHealthFactor: (loanAction: LoanActionData) => AccountHealthFactorData | undefined;
 }
 
-const useLoansHealthFactor = (): UseLoansHealthFactor => {
+const useGetAccountHealthFactor = (): UseAccountHealthFactor => {
   const prices = useGetPrices();
   const {
     data: { borrowedAssetsUSDValue, collateralAssetsUSDValue }
   } = useGetAccountLoansOverview();
-  const { assets } = useGetLoanAssets();
 
   /**
-   * This method computes how the health factor will change if
-   * asset is withdrawn or deposited.
-   * @param type Type of transaction that will be done.
-   * @param amount Amount of `currency` that will be used.
-   * @note Call only after the prices and positions are loaded.
+   * This method computes how the health factor will
+   * change if asset is withdrawn or deposited.
+   * @param {LoanActionData} loanAction The data related to loan action
+   * @note Call only after the prices and positions stats are loaded.
    * @returns {number} Health Factor after the transaction is done.
    */
   const getHealthFactor = useCallback(
-    ({ type, amount }: LoanActionData): number | undefined => {
-      if (
-        prices === undefined ||
-        borrowedAssetsUSDValue === undefined ||
-        collateralAssetsUSDValue === undefined ||
-        assets === undefined
-      ) {
+    ({ type, amount, asset }: LoanActionData): AccountHealthFactorData | undefined => {
+      if (prices === undefined || borrowedAssetsUSDValue === undefined || collateralAssetsUSDValue === undefined) {
         return undefined;
       }
 
       const {
-        currency: { ticker }
-      } = amount;
-
-      const { collateralThreshold } = assets[ticker];
-
-      const {
         collateralAssetsUSD: newCollateralAssetsUSD,
         totalBorrowedAmountUSD: newTotalBorrowedAmountUSD
-      } = calcutateCollateralBorrowedAmountUSD(
+      } = calculateCollateralBorrowedAmountUSD(
         type,
         prices,
         borrowedAssetsUSDValue,
         collateralAssetsUSDValue,
         amount,
-        collateralThreshold
+        asset.collateralThreshold
       );
 
-      return calculateHealthFactor(newTotalBorrowedAmountUSD, newCollateralAssetsUSD);
+      return getData(newTotalBorrowedAmountUSD, newCollateralAssetsUSD);
     },
-    [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue, assets]
+    [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue]
   );
 
+  const data =
+    borrowedAssetsUSDValue !== undefined && collateralAssetsUSDValue !== undefined
+      ? getData(borrowedAssetsUSDValue, collateralAssetsUSDValue)
+      : undefined;
+
   return {
-    healthFactor: getCurrencyHealthFactor(borrowedAssetsUSDValue, collateralAssetsUSDValue),
+    data,
     getHealthFactor
   };
 };
 
-export { useLoansHealthFactor };
+export { healthFactorRanges, useGetAccountHealthFactor };

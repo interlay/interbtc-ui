@@ -1,87 +1,70 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { LoanAction } from '@/types/loans';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
-import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { calcutateCollateralBorrowedAmountUSD } from '../utils/math';
+import { calculateCollateralBorrowedAmountUSD } from '../utils/math';
 
 const calculateBorrowLimitUSD = (borrowAmountUSD: Big, collateralAmountUSD: Big): Big =>
   collateralAmountUSD.sub(borrowAmountUSD);
 
-const getCurrenctBorrowLimitUSD = (borrowAmountUSD?: Big, collateralAmountUSD?: Big): Big | undefined => {
-  if (borrowAmountUSD === undefined || collateralAmountUSD === undefined) {
-    return undefined;
-  }
+type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt>; asset: LoanAsset };
 
-  return calculateBorrowLimitUSD(borrowAmountUSD, collateralAmountUSD);
-};
-
-type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt> };
-
-interface UseLoansHealthFactor {
+interface UseAccountBorrowLimit {
   data: Big | undefined;
   getBorrowLimitUSD: (loanAction: LoanActionData) => Big | undefined;
 }
 
-const useAccountBorrowLimit = (): UseLoansHealthFactor => {
+const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
   const prices = useGetPrices();
   const {
     data: { borrowedAssetsUSDValue, collateralAssetsUSDValue }
   } = useGetAccountLoansOverview();
-  const { assets } = useGetLoanAssets();
 
   /**
    * This method computes how the borrow limit will change if
    * asset is withdrawn or deposited to protocol.
-   * @param type Type of transaction to be done.
-   * @param currency Currency which will be deposited or withdrawn.
-   * @param amount Amount of `currency` that will be used.
-   * @note Call only after the prices and positions are loaded.
+   * @param {LoanActionData} loanAction The data related to loan action
+   * @note Call only after the prices and positions stats are loaded.
    * @returns New borrow limit in USD after the transaction is done.
    */
   const getBorrowLimitUSD = useCallback(
-    ({ type, amount }: LoanActionData): Big | undefined => {
-      if (
-        prices === undefined ||
-        borrowedAssetsUSDValue === undefined ||
-        collateralAssetsUSDValue === undefined ||
-        assets === undefined
-      ) {
+    ({ type, amount, asset }: LoanActionData): Big | undefined => {
+      if (prices === undefined || borrowedAssetsUSDValue === undefined || collateralAssetsUSDValue === undefined) {
         return undefined;
       }
 
       const {
-        currency: { ticker }
-      } = amount;
-
-      const { collateralThreshold } = assets[ticker];
-
-      const {
         collateralAssetsUSD: newCollateralAssetsUSD,
         totalBorrowedAmountUSD: newTotalBorrowedAmountUSD
-      } = calcutateCollateralBorrowedAmountUSD(
+      } = calculateCollateralBorrowedAmountUSD(
         type,
         prices,
         borrowedAssetsUSDValue,
         collateralAssetsUSDValue,
         amount,
-        collateralThreshold
+        asset.collateralThreshold
       );
 
-      return newCollateralAssetsUSD.sub(newTotalBorrowedAmountUSD);
+      return calculateBorrowLimitUSD(newTotalBorrowedAmountUSD, newCollateralAssetsUSD);
     },
-    [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue, assets]
+    [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue]
   );
 
+  const data =
+    borrowedAssetsUSDValue !== undefined && collateralAssetsUSDValue !== undefined
+      ? calculateBorrowLimitUSD(borrowedAssetsUSDValue, collateralAssetsUSDValue)
+      : undefined;
+
   return {
-    data: getCurrenctBorrowLimitUSD(borrowedAssetsUSDValue, collateralAssetsUSDValue),
+    data,
     getBorrowLimitUSD
   };
 };
 
 export { useAccountBorrowLimit };
+export type { UseAccountBorrowLimit };

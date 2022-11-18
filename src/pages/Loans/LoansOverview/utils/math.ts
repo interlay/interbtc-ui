@@ -39,7 +39,7 @@ const calculateCollateralAmountUSD = (
   }
 };
 
-const calcutateCollateralBorrowedAmountUSD = (
+const calculateCollateralBorrowedAmountUSD = (
   actionType: LoanAction,
   prices: Prices,
   borrowedAssetsUSD: Big,
@@ -68,6 +68,6 @@ const calcutateCollateralBorrowedAmountUSD = (
 export {
   calculateBorrowedAmountUSD,
   calculateCollateralAmountUSD,
-  calculateCollateralUSD,
-  calcutateCollateralBorrowedAmountUSD
+  calculateCollateralBorrowedAmountUSD,
+  calculateCollateralUSD
 };

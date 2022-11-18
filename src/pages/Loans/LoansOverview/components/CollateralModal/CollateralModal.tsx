@@ -7,8 +7,7 @@ import ErrorModal from '@/components/ErrorModal';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { useLoansHealthFactor } from '../../hooks/use-get-account-health-factor';
-import { isLiquidationRisk } from '../../utils/is-liquidation-risk';
+import { healthFactorRanges, useGetAccountHealthFactor } from '../../hooks/use-get-account-health-factor';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
 import { StyledDescription, StyledTitle } from './CollateralModal.style';
@@ -50,7 +49,7 @@ const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: Loa
 const getModalVariant = (isCollateralActive: boolean, healthFactor: number): CollateralModalVariant => {
   if (!isCollateralActive) return 'enable';
   // User is trying switching off collateral
-  if (isLiquidationRisk(healthFactor)) return 'disable-error';
+  if (healthFactor < healthFactorRanges.error) return 'disable-error';
 
   return 'disable';
 };
@@ -67,7 +66,7 @@ type CollateralModalProps = Props & InheritAttrs;
 const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
   const { refetch } = useGetAccountLoansOverview();
-  const { getHealthFactor } = useLoansHealthFactor();
+  const { getHealthFactor } = useGetAccountHealthFactor();
   const prices = useGetPrices();
 
   const handleSuccess = () => {
@@ -86,8 +85,8 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
 
   const borrowLimitVariant = isCollateralActive ? 'withdraw' : 'lend';
-  const newHealthFactor = getHealthFactor({ type: borrowLimitVariant, amount: lendPositionAmount }) || 0;
-  const variant = getModalVariant(isCollateralActive, newHealthFactor);
+  const newHealthFactor = getHealthFactor({ type: borrowLimitVariant, amount: lendPositionAmount, asset });
+  const variant = getModalVariant(isCollateralActive, newHealthFactor?.value || 0);
 
   const content = getContentMap(t, variant, asset);
 
@@ -109,7 +108,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
             <StyledTitle>{content.title}</StyledTitle>
             <StyledDescription color='tertiary'>{content.description}</StyledDescription>
           </Flex>
-          <BorrowLimit variant={borrowLimitVariant} assetAmount={lendPositionAmount} />
+          <BorrowLimit loanAction={borrowLimitVariant} asset={asset} actionAmount={lendPositionAmount} />
           {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
           <CTA size='large' onClick={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
             {content.buttonLabel}
