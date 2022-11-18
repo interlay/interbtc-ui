@@ -21,10 +21,10 @@ describe('Issue page', () => {
     const issueTab = screen.getByRole('tab', { name: /issue/i });
     userEvent.click(issueTab);
 
-    const amountToBurnInput = await screen.findByRole('textbox');
+    const amountToIssueInput = await screen.findByRole('textbox');
     // Input 0.0001 IBTC
     await act(async () => {
-      userEvent.type(amountToBurnInput, '0.0001');
+      userEvent.type(amountToIssueInput, '0.0001');
     });
 
     const submitButton = screen.getByRole('button', { name: /confirm/i });
