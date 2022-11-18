@@ -96,6 +96,9 @@ jest.mock('@interlay/interbtc-api', () => {
 
   return {
     ...actualInterBtcApi,
+    // ray test touch <
+    currencyIdToMonetaryCurrency: jest.fn(),
+    // ray test touch >
     newAccountId: jest.fn().mockReturnValue('a3bS5ufTQYaWkWtiKH9urgnC81QWFArJz4TJCFXiBCj8C1oUm'),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
     createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi)

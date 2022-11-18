@@ -3,12 +3,12 @@ import '@testing-library/jest-dom';
 import {
   CollateralCurrencyExt,
   // ray test touch <
-  getAPITypes,
+  CurrencyExt,
   // ray test touch >
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 // ray test touch <
-import { TypeRegistry } from '@polkadot/types';
+import { BitcoinAmount } from '@interlay/monetary-js';
 // ray test touch >
 import { AccountId } from '@polkadot/types/interfaces';
 
@@ -23,31 +23,21 @@ const DEFAULT_VAULT_WITH_ISSUABLE_TOKENS = (_accountId: AccountId, collateralCur
 });
 
 const mockVaultsGet = jest.fn((accountId, currency) => DEFAULT_VAULT_WITH_ISSUABLE_TOKENS(accountId, currency));
+
 // ray test touch <
-const registry = new TypeRegistry();
-registry.register(getAPITypes());
-
-const collateralCurrencyId = registry.createType('InterbtcPrimitivesCurrencyId', {
-  token: RELAY_CHAIN_NATIVE_TOKEN.ticker
-});
-const wrappedCurrencyId = registry.createType('InterbtcPrimitivesCurrencyId', {
-  token: WRAPPED_TOKEN.ticker
+const mockNewVaultId = (vaultAddress: string, collateralToken: CurrencyExt) => ({
+  accountId: vaultAddress,
+  currencies: {
+    collateral: collateralToken,
+    wrapped: WRAPPED_TOKEN
+  }
 });
 
-const vaultAccountId = registry.createType('AccountId', '5GQoBrhX3mfnmKnw2qz2vGvHG8yvf6xT15gGM54865g6qEfE');
-const vaultCurrencyPair = registry.createType('InterbtcPrimitivesVaultCurrencyPair', {
-  collateral: collateralCurrencyId,
-  wrapped: wrappedCurrencyId
-});
-
-const vaultId = registry.createType('InterbtcPrimitivesVaultId', {
-  account_id: vaultAccountId,
-  currencies: vaultCurrencyPair
-});
-
-console.log('ray : ***** vaultId => ', vaultId);
-
-const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => []);
+const mockVaultsWithIssuableTokens = new Map().set(
+  mockNewVaultId('5GQoBrhX3mfnmKnw2qz2vGvHG8yvf6xT15gGM54865g6qEfE', RELAY_CHAIN_NATIVE_TOKEN),
+  new BitcoinAmount(100)
+);
+const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => mockVaultsWithIssuableTokens);
 // ray test touch >
 
 export { mockVaultsGet, mockVaultsGetVaultsWithIssuableTokens };

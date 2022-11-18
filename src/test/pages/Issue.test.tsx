@@ -36,6 +36,6 @@ describe('Issue page', () => {
     });
 
     // Check that the issue method was called
-    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(1));
   });
 });
