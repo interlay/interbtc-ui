@@ -1,35 +1,23 @@
-import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 
+import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { AccountPositionsStatsData } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
 
 const mutateClaimRewards = () => window.bridge.loans.claimAllSubsidyRewards();
 
 type LoansInsightsProps = {
-  supply: string | undefined;
-  borrow: string | undefined;
-  netYield: string | undefined;
-  rewards: string | undefined;
-  hasSubsidyRewards: boolean;
+  stats: AccountPositionsStatsData;
 };
 
-const LoansInsights = ({
-  supply,
-  netYield,
-  borrow,
-  rewards,
-  hasSubsidyRewards: hasSubsidyRewardsProp
-}: LoansInsightsProps): JSX.Element => {
-  const [hasSubsidyRewards, setSubsidyRewards] = useState(hasSubsidyRewardsProp);
-
-  const { refetch } = useGetAccountLoansOverview();
+const LoansInsights = ({ stats }: LoansInsightsProps): JSX.Element => {
+  const { data: subsidyRewards, refetch } = useGetAccountSubsidyRewards();
 
   const handleSuccess = () => {
-    setSubsidyRewards(false);
     refetch();
   };
 
@@ -37,11 +25,20 @@ const LoansInsights = ({
     onSuccess: handleSuccess
   });
 
-  useEffect(() => {
-    setSubsidyRewards(hasSubsidyRewards);
-  }, [hasSubsidyRewards]);
-
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
+
+  const { borrowAmountUSD, supplyAmountUSD, netYieldAmountUSD } = stats;
+
+  const supplyBalanceLabel = formatUSD(supplyAmountUSD.toNumber());
+  const borrowBalanceLabel = formatUSD(borrowAmountUSD.toNumber());
+  const netYieldBalanceLabel = formatUSD(netYieldAmountUSD.toNumber());
+
+  const subsidyRewardsAmountLabel = subsidyRewards
+    ? `${formatNumber(subsidyRewards.toBig().toNumber(), {
+        maximumFractionDigits: subsidyRewards.currency.humanDecimals || 5
+      })} ${subsidyRewards.currency.ticker}`
+    : formatUSD(0);
+  const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.isZero();
 
   return (
     <>
@@ -49,19 +46,19 @@ const LoansInsights = ({
         <Card flex='1'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
             <StyledDt color='primary'>Supply Balance</StyledDt>
-            <StyledDd color='secondary'>{supply}</StyledDd>
+            <StyledDd color='secondary'>{supplyBalanceLabel}</StyledDd>
           </DlGroup>
         </Card>
         <Card flex='1'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
             <StyledDt color='primary'>Borrow Balance</StyledDt>
-            <StyledDd color='secondary'>{borrow}</StyledDd>
+            <StyledDd color='secondary'>{borrowBalanceLabel}</StyledDd>
           </DlGroup>
         </Card>
         <Card flex='1'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
             <StyledDt color='primary'>Net Yield</StyledDt>
-            <StyledDd color='secondary'>{netYield}</StyledDd>
+            <StyledDd color='secondary'>{netYieldBalanceLabel}</StyledDd>
           </DlGroup>
         </Card>
         <Card
@@ -73,7 +70,7 @@ const LoansInsights = ({
         >
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
             <StyledDt color='primary'>Rewards</StyledDt>
-            <StyledDd color='secondary'>{rewards}</StyledDd>
+            <StyledDd color='secondary'>{subsidyRewardsAmountLabel}</StyledDd>
           </DlGroup>
           {hasSubsidyRewards && (
             <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>

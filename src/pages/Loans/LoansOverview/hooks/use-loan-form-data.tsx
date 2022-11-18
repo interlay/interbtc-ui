@@ -5,7 +5,7 @@ import Big from 'big.js';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { BorrowAction, LendAction, LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -68,8 +68,9 @@ const useLoanFormData = (
   const { data: balances } = useGetBalances();
   const prices = useGetPrices();
   const {
-    data: { borrowedAssetsUSDValue, collateralAssetsUSDValue }
-  } = useGetAccountLoansOverview();
+    data: { stats }
+  } = useGetAccountPositions();
+  const { borrowAmountUSD, collateralAmountUSD } = stats || {};
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 
@@ -84,8 +85,8 @@ const useLoanFormData = (
     assetPrice,
     assetBalance,
     position,
-    totalBorrowedAmountUSD: borrowedAssetsUSDValue,
-    totalCollateralAmountUSD: collateralAssetsUSDValue
+    totalBorrowedAmountUSD: borrowAmountUSD,
+    totalCollateralAmountUSD: collateralAmountUSD
   };
 
   const maxAmount = getMaxAmount(maxAmountParams) || zeroAssetAmount;

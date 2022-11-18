@@ -4,7 +4,7 @@ import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { LoanAction } from '@/types/loans';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { calculateCollateralBorrowedAmountUSD } from '../utils/math';
@@ -22,8 +22,9 @@ interface UseAccountBorrowLimit {
 const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
   const prices = useGetPrices();
   const {
-    data: { borrowedAssetsUSDValue, collateralAssetsUSDValue }
-  } = useGetAccountLoansOverview();
+    data: { stats }
+  } = useGetAccountPositions();
+  const { borrowAmountUSD, collateralAmountUSD } = stats || {};
 
   /**
    * This method computes how the borrow limit will change if
@@ -34,7 +35,7 @@ const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
    */
   const getBorrowLimitUSD = useCallback(
     ({ type, amount, asset }: LoanActionData): Big | undefined => {
-      if (prices === undefined || borrowedAssetsUSDValue === undefined || collateralAssetsUSDValue === undefined) {
+      if (prices === undefined || borrowAmountUSD === undefined || collateralAmountUSD === undefined) {
         return undefined;
       }
 
@@ -44,20 +45,20 @@ const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
       } = calculateCollateralBorrowedAmountUSD(
         type,
         prices,
-        borrowedAssetsUSDValue,
-        collateralAssetsUSDValue,
+        borrowAmountUSD,
+        collateralAmountUSD,
         amount,
         asset.collateralThreshold
       );
 
       return calculateBorrowLimitUSD(newTotalBorrowedAmountUSD, newCollateralAssetsUSD);
     },
-    [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue]
+    [borrowAmountUSD, collateralAmountUSD, prices]
   );
 
   const data =
-    borrowedAssetsUSDValue !== undefined && collateralAssetsUSDValue !== undefined
-      ? calculateBorrowLimitUSD(borrowedAssetsUSDValue, collateralAssetsUSDValue)
+    borrowAmountUSD !== undefined && collateralAmountUSD !== undefined
+      ? calculateBorrowLimitUSD(borrowAmountUSD, collateralAmountUSD)
       : undefined;
 
   return {

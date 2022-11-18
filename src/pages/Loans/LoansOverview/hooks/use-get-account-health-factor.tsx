@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { formatNumber } from '@/common/utils/utils';
 import { Status } from '@/component-library';
 import { LoanAction } from '@/types/loans';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { calculateCollateralBorrowedAmountUSD } from '../utils/math';
@@ -65,8 +65,9 @@ interface UseAccountHealthFactor {
 const useGetAccountHealthFactor = (): UseAccountHealthFactor => {
   const prices = useGetPrices();
   const {
-    data: { borrowedAssetsUSDValue, collateralAssetsUSDValue }
-  } = useGetAccountLoansOverview();
+    data: { stats }
+  } = useGetAccountPositions();
+  const { borrowAmountUSD, collateralAmountUSD } = stats || {};
 
   /**
    * This method computes how the health factor will
@@ -77,7 +78,7 @@ const useGetAccountHealthFactor = (): UseAccountHealthFactor => {
    */
   const getHealthFactor = useCallback(
     ({ type, amount, asset }: LoanActionData): AccountHealthFactorData | undefined => {
-      if (prices === undefined || borrowedAssetsUSDValue === undefined || collateralAssetsUSDValue === undefined) {
+      if (prices === undefined || borrowAmountUSD === undefined || collateralAmountUSD === undefined) {
         return undefined;
       }
 
@@ -87,20 +88,20 @@ const useGetAccountHealthFactor = (): UseAccountHealthFactor => {
       } = calculateCollateralBorrowedAmountUSD(
         type,
         prices,
-        borrowedAssetsUSDValue,
-        collateralAssetsUSDValue,
+        borrowAmountUSD,
+        collateralAmountUSD,
         amount,
         asset.collateralThreshold
       );
 
       return getData(newTotalBorrowedAmountUSD, newCollateralAssetsUSD);
     },
-    [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue]
+    [prices, borrowAmountUSD, collateralAmountUSD]
   );
 
   const data =
-    borrowedAssetsUSDValue !== undefined && collateralAssetsUSDValue !== undefined
-      ? getData(borrowedAssetsUSDValue, collateralAssetsUSDValue)
+    borrowAmountUSD !== undefined && collateralAmountUSD !== undefined
+      ? getData(borrowAmountUSD, collateralAmountUSD)
       : undefined;
 
   return {

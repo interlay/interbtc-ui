@@ -17,7 +17,7 @@ import validate, {
 } from '@/lib/form-validation';
 import { LoanAction } from '@/types/loans';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useLoanMutation } from '@/utils/hooks/api/loans/use-loan-mutation';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -119,7 +119,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const {
     refetch,
     data: { borrowPositions }
-  } = useGetAccountLoansOverview();
+  } = useGetAccountPositions();
   const prices = useGetPrices();
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
   const [isMaxAmount, setMaxAmount] = useState(false);
