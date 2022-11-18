@@ -9,6 +9,7 @@ const DEFAULT_PRICES = {
   kintsugi: { usd: 1.84 }
 };
 
+// ray test touch <
 // Can mock all fetch calls here based on URL and input.
 // This function can be also changed inside the test.
 const mockFetch = jest.fn((input, _init?) => {
@@ -25,6 +26,7 @@ const mockFetch = jest.fn((input, _init?) => {
     json: () => Promise.resolve(result)
   });
 });
+// ray test touch >
 
 global.fetch = mockFetch as any;
 
