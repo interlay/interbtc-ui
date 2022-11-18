@@ -1,7 +1,6 @@
-import { BorrowPosition, CurrencyExt, LendPosition, newMonetaryAmount } from '@interlay/interbtc-api';
+import { BorrowPosition, CurrencyExt, LendPosition } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { useCallback } from 'react';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -27,11 +26,6 @@ interface AccountLoansOverviewData {
 interface AccountLoansOverview {
   data: AccountLoansOverviewData;
   refetch: () => void;
-  getMaxBorrowableAmount: (
-    currency: CurrencyExt,
-    availableCapacity: MonetaryAmount<CurrencyExt>
-  ) => MonetaryAmount<CurrencyExt> | undefined;
-  getMaxWithdrawableAmount: (currency: CurrencyExt, position: LendPosition) => MonetaryAmount<CurrencyExt> | undefined;
 }
 
 const useGetAccountLoansOverview = (): AccountLoansOverview => {
@@ -85,80 +79,6 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
     netYieldUSDValue = totalEarnedInterestUSDValue.add(totalSubsidyRewardsUSDValue).sub(totalAccruedUSDValue);
   }
 
-  /**
-   * Get maximum amount of currency that user can borrow with currently provided collateral and liquidity.
-   * @param currency Currency of which max borrowable amount to get.
-   * @param availableCapacity Total capacity that can be borrowed from the protocol.
-   * @returns maximum amount of currency that user can borrow with currently provided collateral.
-   * @returns undefined if prices and assets are not loaded yet
-   */
-  const getMaxBorrowableAmount = useCallback(
-    (
-      currency: CurrencyExt,
-      availableCapacity: MonetaryAmount<CurrencyExt>
-    ): MonetaryAmount<CurrencyExt> | undefined => {
-      if (collateralAssetsUSDValue === undefined || borrowedAssetsUSDValue === undefined || prices === undefined) {
-        return undefined;
-      }
-
-      const currencyUSDPrice = getTokenPrice(prices, currency.ticker)?.usd;
-
-      if (currencyUSDPrice === undefined) {
-        return undefined;
-      }
-
-      const availableCollateralUSDValue = collateralAssetsUSDValue.sub(borrowedAssetsUSDValue);
-      const maxBorrowableCurrencyAmount = availableCollateralUSDValue.div(currencyUSDPrice);
-
-      const maxBorrowableAmountByCollateral =
-        new MonetaryAmount(currency, maxBorrowableCurrencyAmount) || new MonetaryAmount(currency, 0);
-      return availableCapacity.gt(maxBorrowableAmountByCollateral)
-        ? maxBorrowableAmountByCollateral
-        : availableCapacity;
-    },
-    [collateralAssetsUSDValue, borrowedAssetsUSDValue, prices]
-  );
-
-  /**
-   * Get maximum amount of currency that user can withdraw with currently provided collateral and liquidity.
-   * @param currency Currency of which max borrowable amount to get.
-   * @returns maximum amount of currency that user can withdraw with currently provided collateral.
-   * @returns undefined if prices and assets are not loaded yet
-   */
-
-  const getMaxWithdrawableAmount = useCallback(
-    (currency: CurrencyExt, position: LendPosition): MonetaryAmount<CurrencyExt> | undefined => {
-      if (
-        collateralAssetsUSDValue === undefined ||
-        borrowedAssetsUSDValue === undefined ||
-        prices === undefined ||
-        assets === undefined
-      ) {
-        return undefined;
-      }
-
-      const currencyUSDPrice = getTokenPrice(prices, currency.ticker)?.usd;
-
-      if (currencyUSDPrice === undefined) {
-        return undefined;
-      }
-
-      const positionInUSD = position.amount.toBig().mul(currencyUSDPrice);
-
-      if (!position.isCollateral || positionInUSD.lt(collateralAssetsUSDValue.sub(borrowedAssetsUSDValue))) {
-        return position.amount;
-      }
-
-      const collateralThreshold = assets[currency.ticker].collateralThreshold;
-      const minCollateralNeeded = borrowedAssetsUSDValue.div(collateralThreshold);
-
-      const maxWithdrawable = positionInUSD.sub(minCollateralNeeded).div(currencyUSDPrice);
-
-      return newMonetaryAmount(maxWithdrawable, currency, true);
-    },
-    [borrowedAssetsUSDValue, prices, assets, collateralAssetsUSDValue]
-  );
-
   const refetch = () => {
     refetchPositions();
     refetchLoanAssets();
@@ -176,9 +96,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       netYieldUSDValue,
       collateralAssetsUSDValue
     },
-    refetch,
-    getMaxBorrowableAmount,
-    getMaxWithdrawableAmount
+    refetch
   };
 };
 
