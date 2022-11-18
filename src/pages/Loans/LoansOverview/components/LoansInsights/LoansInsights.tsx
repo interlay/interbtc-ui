@@ -3,7 +3,7 @@ import { useMutation } from 'react-query';
 
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-positions-stats';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
 

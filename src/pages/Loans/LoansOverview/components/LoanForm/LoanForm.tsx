@@ -17,7 +17,7 @@ import validate, {
 } from '@/lib/form-validation';
 import { LoanAction } from '@/types/loans';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-positions-stats';
 import { useLoanMutation } from '@/utils/hooks/api/loans/use-loan-mutation';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 

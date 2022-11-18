@@ -37,10 +37,10 @@ const getPositionsSumOfFieldsInUSD = <T extends LendPosition | BorrowPosition>(
 
 // MEMO: each position has total rewards
 const getTotalEarnedRewards = (
-  lendPositions: LendPosition[] = [],
-  borrowPositions: BorrowPosition[] = []
+  lendPositions: LendPosition[],
+  borrowPositions: BorrowPosition[]
 ): MonetaryAmount<CurrencyExt> | undefined => {
-  if (!lendPositions?.length && !borrowPositions?.length) {
+  if (!lendPositions.length && !borrowPositions.length) {
     return undefined;
   }
 

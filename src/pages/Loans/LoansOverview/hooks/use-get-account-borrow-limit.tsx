@@ -4,7 +4,7 @@ import Big from 'big.js';
 import { useCallback } from 'react';
 
 import { LoanAction } from '@/types/loans';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-positions-stats';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { calculateCollateralBorrowedAmountUSD } from '../utils/math';

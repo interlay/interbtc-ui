@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 
 import { CTA, Flex, Modal, ModalProps } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-positions-stats';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { healthFactorRanges, useGetAccountHealthFactor } from '../../hooks/use-get-account-health-factor';

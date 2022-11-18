@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { formatNumber } from '@/common/utils/utils';
 import { Status } from '@/component-library';
 import { LoanAction } from '@/types/loans';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-positions-stats';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { calculateCollateralBorrowedAmountUSD } from '../utils/math';

@@ -2,7 +2,7 @@ import { BorrowPosition, LendPosition, LoanAsset, TickerToData } from '@interlay
 
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 
-import { useGetAccountLoansOverview } from './use-get-account-loans-overview';
+import { useGetAccountLoansOverview } from './use-get-account-positions-stats';
 import { useGetLoanAssets } from './use-get-loan-assets';
 
 type LoansData = {
