@@ -30,13 +30,11 @@ registry.register(getAPITypes());
 const collateralCurrencyId = registry.createType('InterbtcPrimitivesCurrencyId', {
   token: RELAY_CHAIN_NATIVE_TOKEN.ticker
 });
-
 const wrappedCurrencyId = registry.createType('InterbtcPrimitivesCurrencyId', {
   token: WRAPPED_TOKEN.ticker
 });
 
 const vaultAccountId = registry.createType('AccountId', '5GQoBrhX3mfnmKnw2qz2vGvHG8yvf6xT15gGM54865g6qEfE');
-
 const vaultCurrencyPair = registry.createType('InterbtcPrimitivesVaultCurrencyPair', {
   collateral: collateralCurrencyId,
   wrapped: wrappedCurrencyId
