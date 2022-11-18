@@ -21,11 +21,11 @@ import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-acco
 import { useLoanMutation } from '@/utils/hooks/api/loans/use-loan-mutation';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { useLoanFormData } from '../../hooks/use-loan-form-data';
 import { isLendAsset } from '../../utils/is-loan-asset';
-import { useLoanFormData } from '../../utils/use-loan-form-data';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
-import { StyledFormWrapper } from './LoanModal.style';
+import { StyledFormWrapper } from './LoanForm.style';
 
 const shouldShowBorrowLimit = (
   variant: LoanAction,

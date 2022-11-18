@@ -6,31 +6,31 @@ import { useCallback } from 'react';
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
+import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { useGetPrices } from '../use-get-prices';
-import { useGetAccountLoansOverview } from './use-get-account-loans-overview';
-import { useGetLoanAssets } from './use-get-loan-assets';
-import { calculateAssetMinCollateralUSD, calculateBorrowedAmountUSD, calculateCollateralAmountUSD } from './utils';
+import { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateCollateralUSD } from '../utils/math';
 
-const calculateBorrowLimitUSD = (borrowAmountUSD: Big, collateralAmountUSD: Big): Big =>
-  collateralAmountUSD.sub(borrowAmountUSD);
+const calculateHealthFactor = (borrowAmountUSD: Big, collateralAmountUSD: Big) =>
+  borrowAmountUSD.gt(0) ? collateralAmountUSD.div(borrowAmountUSD).toNumber() : Infinity;
 
-const getCurrenctBorrowLimitUSD = (borrowAmountUSD?: Big, collateralAmountUSD?: Big): Big | undefined => {
+const getCurrencyHealthFactor = (borrowAmountUSD?: Big, collateralAmountUSD?: Big): number | undefined => {
   if (borrowAmountUSD === undefined || collateralAmountUSD === undefined) {
     return undefined;
   }
 
-  return calculateBorrowLimitUSD(borrowAmountUSD, collateralAmountUSD);
+  return calculateHealthFactor(borrowAmountUSD, collateralAmountUSD);
 };
 
 type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt> };
 
 interface UseLoansHealthFactor {
-  data: Big | undefined;
-  getBorrowLimitUSD: (loanAction: LoanActionData) => Big | undefined;
+  healthFactor: number | undefined;
+  getHealthFactor: (loanAction: LoanActionData) => number | undefined;
 }
 
-const useAccountBorrowLimit = (): UseLoansHealthFactor => {
+const useLoansHealthFactor = (): UseLoansHealthFactor => {
   const prices = useGetPrices();
   const {
     data: { borrowedAssetsUSDValue, collateralAssetsUSDValue }
@@ -38,16 +38,15 @@ const useAccountBorrowLimit = (): UseLoansHealthFactor => {
   const { assets } = useGetLoanAssets();
 
   /**
-   * This method computes how the borrow limit will change if
-   * asset is withdrawn or deposited to protocol.
-   * @param type Type of transaction to be done.
-   * @param currency Currency which will be deposited or withdrawn.
+   * This method computes how the health factor will change if
+   * asset is withdrawn or deposited.
+   * @param type Type of transaction that will be done.
    * @param amount Amount of `currency` that will be used.
    * @note Call only after the prices and positions are loaded.
-   * @returns New borrow limit in USD after the transaction is done.
+   * @returns {number} Health Factor after the transaction is done.
    */
-  const getBorrowLimitUSD = useCallback(
-    ({ type, amount }: LoanActionData): Big | undefined => {
+  const getHealthFactor = useCallback(
+    ({ type, amount }: LoanActionData): number | undefined => {
       if (
         prices === undefined ||
         borrowedAssetsUSDValue === undefined ||
@@ -56,6 +55,7 @@ const useAccountBorrowLimit = (): UseLoansHealthFactor => {
       ) {
         return undefined;
       }
+
       const {
         currency: { ticker }
       } = amount;
@@ -65,22 +65,22 @@ const useAccountBorrowLimit = (): UseLoansHealthFactor => {
 
       const newTotalBorrowedAmountUSD = calculateBorrowedAmountUSD(type, borrowedAssetsUSDValue, actionAmountUSD);
 
-      const assetMinCollateralUSD = calculateAssetMinCollateralUSD(actionAmountUSD, assets[ticker].collateralThreshold);
+      const assetMinCollateralUSD = calculateCollateralUSD(actionAmountUSD, assets[ticker].collateralThreshold);
       const newCollateralAssetsUSDValue = calculateCollateralAmountUSD(
         type,
         collateralAssetsUSDValue,
         assetMinCollateralUSD
       );
 
-      return newCollateralAssetsUSDValue.sub(newTotalBorrowedAmountUSD);
+      return calculateHealthFactor(newTotalBorrowedAmountUSD, newCollateralAssetsUSDValue);
     },
     [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue, assets]
   );
 
   return {
-    data: getCurrenctBorrowLimitUSD(borrowedAssetsUSDValue, collateralAssetsUSDValue),
-    getBorrowLimitUSD
+    healthFactor: getCurrencyHealthFactor(borrowedAssetsUSDValue, collateralAssetsUSDValue),
+    getHealthFactor
   };
 };
 
-export { useAccountBorrowLimit };
+export { useLoansHealthFactor };

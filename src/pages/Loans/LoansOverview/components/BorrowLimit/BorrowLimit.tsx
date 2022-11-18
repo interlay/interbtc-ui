@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { DlGroup, Dt } from '@/component-library';
+import { useAccountBorrowLimit } from '@/pages/Loans/LoansOverview/hooks/use-get-account-borrow-limit';
 import { LoanAction } from '@/types/loans';
-import { useAccountBorrowLimit } from '@/utils/hooks/api/loans/use-get-account-borrow-limit';
-import { useLoansHealthFactor } from '@/utils/hooks/api/loans/use-get-account-health-factor';
 
+import { useLoansHealthFactor } from '../../hooks/use-get-account-health-factor';
 import { getStatus, getStatusLabel } from '../../utils/get-status';
 import { isBorrowAsset } from '../../utils/is-loan-asset';
 import { LoanScore } from '../LoanScore';

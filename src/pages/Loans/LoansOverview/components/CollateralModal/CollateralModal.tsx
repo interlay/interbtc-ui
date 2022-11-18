@@ -4,10 +4,10 @@ import { useMutation } from 'react-query';
 
 import { CTA, Flex, Modal, ModalProps } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
-import { useLoansHealthFactor } from '@/utils/hooks/api/loans/use-get-account-health-factor';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { useLoansHealthFactor } from '../../hooks/use-get-account-health-factor';
 import { isLiquidationRisk } from '../../utils/is-liquidation-risk';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';

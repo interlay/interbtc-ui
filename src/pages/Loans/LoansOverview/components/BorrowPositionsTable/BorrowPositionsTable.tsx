@@ -3,9 +3,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatNumber } from '@/common/utils/utils';
-import { useLoansHealthFactor } from '@/utils/hooks/api/loans/use-get-account-health-factor';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { useLoansHealthFactor } from '../../hooks/use-get-account-health-factor';
 import { getStatus, getStatusLabel } from '../../utils/get-status';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { StatusTag } from '../LoansBaseTable/LoanStatusTag';
@@ -34,7 +34,7 @@ const BorrowPositionsTable = ({
 }: BorrowPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { data: healthFactor } = useLoansHealthFactor();
+  const { healthFactor } = useLoansHealthFactor();
 
   const borrowPositionsTableRows: BorrowPositionTableRow[] = useMemo(
     () =>
