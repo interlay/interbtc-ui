@@ -3,14 +3,12 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
-import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { LoanAction } from '@/types/loans';
-import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateCollateralUSD } from '../utils/math';
+import { calcutateCollateralBorrowedAmountUSD } from '../utils/math';
 
 const calculateHealthFactor = (borrowAmountUSD: Big, collateralAmountUSD: Big) =>
   borrowAmountUSD.gt(0) ? collateralAmountUSD.div(borrowAmountUSD).toNumber() : Infinity;
@@ -60,19 +58,21 @@ const useLoansHealthFactor = (): UseLoansHealthFactor => {
         currency: { ticker }
       } = amount;
 
-      const currencyPrice = getTokenPrice(prices, ticker)?.usd;
-      const actionAmountUSD = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
+      const { collateralThreshold } = assets[ticker];
 
-      const newTotalBorrowedAmountUSD = calculateBorrowedAmountUSD(type, borrowedAssetsUSDValue, actionAmountUSD);
-
-      const assetMinCollateralUSD = calculateCollateralUSD(actionAmountUSD, assets[ticker].collateralThreshold);
-      const newCollateralAssetsUSDValue = calculateCollateralAmountUSD(
+      const {
+        collateralAssetsUSD: newCollateralAssetsUSD,
+        totalBorrowedAmountUSD: newTotalBorrowedAmountUSD
+      } = calcutateCollateralBorrowedAmountUSD(
         type,
+        prices,
+        borrowedAssetsUSDValue,
         collateralAssetsUSDValue,
-        assetMinCollateralUSD
+        amount,
+        collateralThreshold
       );
 
-      return calculateHealthFactor(newTotalBorrowedAmountUSD, newCollateralAssetsUSDValue);
+      return calculateHealthFactor(newTotalBorrowedAmountUSD, newCollateralAssetsUSD);
     },
     [prices, borrowedAssetsUSDValue, collateralAssetsUSDValue, assets]
   );
