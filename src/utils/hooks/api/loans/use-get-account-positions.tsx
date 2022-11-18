@@ -3,6 +3,8 @@ import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQueries, useQueryClient } from 'react-query';
 
+import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
+
 interface AccountPositionsData {
   data: {
     lendPositions: Array<LendPosition> | undefined;
@@ -27,14 +29,14 @@ const useGetAccountPositions = (accountId: AccountId | undefined): AccountPositi
       queryFn: () => accountId && getAccountLendPositions(accountId),
       enabled: !!accountId,
       initialData: [],
-      refetchInterval: 12000
+      refetchInterval: BLOCKTIME_REFETCH_INTERVAL
     },
     {
       queryKey: ['borrow-positions', accountId?.toString()],
       queryFn: () => accountId && getAccountBorrowPositions(accountId),
       enabled: !!accountId,
       initialData: [],
-      refetchInterval: 12000
+      refetchInterval: BLOCKTIME_REFETCH_INTERVAL
     }
   ]);
 

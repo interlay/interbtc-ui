@@ -10,8 +10,8 @@ type LoansData = {
     supplyUSDValue: string | undefined;
     borrowUSDValue: string | undefined;
     netYieldUSDValue: string | undefined;
-    earnedRewardsAmount: string | undefined;
-    hasEarnedRewards: boolean;
+    subsidyRewardsAmount: string | undefined;
+    hasSubsidyRewards: boolean;
   };
   lendPositions: LendPosition[] | undefined;
   borrowPositions: BorrowPosition[] | undefined;
@@ -25,23 +25,23 @@ const useGetLoansData = (): LoansData => {
       borrowPositions,
       lentAssetsUSDValue,
       borrowedAssetsUSDValue,
-      earnedRewards,
+      subsidyRewards,
       netYieldUSDValue
     }
   } = useGetAccountLoansOverview();
-  const { assets } = useGetLoanAssets();
+  const { data: assets } = useGetLoanAssets();
 
   return {
     overview: {
       supplyUSDValue: lentAssetsUSDValue && formatUSD(lentAssetsUSDValue.toNumber()),
       borrowUSDValue: borrowedAssetsUSDValue && formatUSD(borrowedAssetsUSDValue.toNumber()),
       netYieldUSDValue: netYieldUSDValue ? formatUSD(netYieldUSDValue.toNumber()) : formatUSD(0),
-      earnedRewardsAmount: earnedRewards
-        ? `${formatNumber(earnedRewards.toBig().toNumber(), {
-            maximumFractionDigits: earnedRewards.currency.humanDecimals || 5
-          })} ${earnedRewards.currency.ticker}`
+      subsidyRewardsAmount: subsidyRewards
+        ? `${formatNumber(subsidyRewards.toBig().toNumber(), {
+            maximumFractionDigits: subsidyRewards.currency.humanDecimals || 5
+          })} ${subsidyRewards.currency.ticker}`
         : formatUSD(0),
-      hasEarnedRewards: !!earnedRewards && !earnedRewards?.isZero()
+      hasSubsidyRewards: !!subsidyRewards && !subsidyRewards?.isZero()
     },
     lendPositions,
     borrowPositions,

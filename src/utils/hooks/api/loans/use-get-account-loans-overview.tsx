@@ -9,8 +9,9 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import useAccountId from '../../use-account-id';
 import { useGetPrices } from '../use-get-prices';
 import { useGetAccountPositions } from './use-get-account-positions';
+import { useGetAccountSubsidyRewards } from './use-get-account-subsidy-rewards';
 import { useGetLoanAssets } from './use-get-loan-assets';
-import { getPositionsSumOfFieldsInUSD, getTotalEarnedRewards } from './utils';
+import { getPositionsSumOfFieldsInUSD } from './utils';
 
 interface AccountLoansOverviewData {
   lendPositions: LendPosition[] | undefined;
@@ -18,7 +19,7 @@ interface AccountLoansOverviewData {
   lentAssetsUSDValue: Big | undefined;
   totalEarnedInterestUSDValue: Big | undefined;
   borrowedAssetsUSDValue: Big | undefined;
-  earnedRewards: MonetaryAmount<CurrencyExt> | undefined;
+  subsidyRewards: MonetaryAmount<CurrencyExt> | undefined;
   netYieldUSDValue: Big | undefined;
   collateralAssetsUSDValue: Big | undefined;
 }
@@ -35,14 +36,16 @@ interface AccountLoansOverview {
 
 const useGetAccountLoansOverview = (): AccountLoansOverview => {
   const accountId = useAccountId();
-  const { assets } = useGetLoanAssets();
+  const { data: assets, refetch: refetchLoanAssets } = useGetLoanAssets();
 
   const prices = useGetPrices();
 
   const {
     data: { lendPositions, borrowPositions },
-    refetch
+    refetch: refetchPositions
   } = useGetAccountPositions(accountId);
+
+  const { data: subsidyRewards, refetch: refetchSubsidyRewards } = useGetAccountSubsidyRewards(accountId);
 
   let lentAssetsUSDValue: Big | undefined = undefined;
   let totalEarnedInterestUSDValue: Big | undefined = undefined;
@@ -50,8 +53,6 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
   let collateralAssetsUSDValue: Big | undefined = undefined;
   let totalAccruedUSDValue: Big | undefined = undefined;
   let netYieldUSDValue: Big | undefined = undefined;
-
-  let earnedRewards: MonetaryAmount<CurrencyExt> | undefined = undefined;
 
   if (lendPositions !== undefined && prices !== undefined && assets !== undefined) {
     lentAssetsUSDValue = getPositionsSumOfFieldsInUSD('amount', lendPositions, prices);
@@ -77,14 +78,11 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
     totalAccruedUSDValue = getPositionsSumOfFieldsInUSD('accumulatedDebt', borrowPositions, prices);
   }
 
-  if (lendPositions !== undefined && borrowPositions !== undefined) {
-    earnedRewards = getTotalEarnedRewards(lendPositions, borrowPositions);
-  }
-
-  if (totalEarnedInterestUSDValue !== undefined && earnedRewards !== undefined && totalAccruedUSDValue !== undefined) {
-    const totalEarnedRewardsUSDValue =
-      convertMonetaryAmountToValueInUSD(earnedRewards, getTokenPrice(prices, earnedRewards.currency.ticker)?.usd) || 0;
-    netYieldUSDValue = totalEarnedInterestUSDValue.add(totalEarnedRewardsUSDValue).sub(totalAccruedUSDValue);
+  if (totalEarnedInterestUSDValue !== undefined && subsidyRewards !== undefined && totalAccruedUSDValue !== undefined) {
+    const totalSubsidyRewardsUSDValue =
+      convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) ||
+      0;
+    netYieldUSDValue = totalEarnedInterestUSDValue.add(totalSubsidyRewardsUSDValue).sub(totalAccruedUSDValue);
   }
 
   /**
@@ -161,6 +159,12 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
     [borrowedAssetsUSDValue, prices, assets, collateralAssetsUSDValue]
   );
 
+  const refetch = () => {
+    refetchPositions();
+    refetchLoanAssets();
+    refetchSubsidyRewards();
+  };
+
   return {
     data: {
       lendPositions,
@@ -168,7 +172,7 @@ const useGetAccountLoansOverview = (): AccountLoansOverview => {
       lentAssetsUSDValue,
       totalEarnedInterestUSDValue,
       borrowedAssetsUSDValue,
-      earnedRewards,
+      subsidyRewards,
       netYieldUSDValue,
       collateralAssetsUSDValue
     },

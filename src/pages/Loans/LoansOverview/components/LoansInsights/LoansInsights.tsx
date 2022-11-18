@@ -14,7 +14,7 @@ type LoansInsightsProps = {
   borrow: string | undefined;
   netYield: string | undefined;
   rewards: string | undefined;
-  hasEarnedRewards: boolean;
+  hasSubsidyRewards: boolean;
 };
 
 const LoansInsights = ({
@@ -22,14 +22,14 @@ const LoansInsights = ({
   netYield,
   borrow,
   rewards,
-  hasEarnedRewards: hasEarnedRewardsProp
+  hasSubsidyRewards: hasSubsidyRewardsProp
 }: LoansInsightsProps): JSX.Element => {
-  const [hasEarnedRewards, setEarnedRewards] = useState(hasEarnedRewardsProp);
+  const [hasSubsidyRewards, setSubsidyRewards] = useState(hasSubsidyRewardsProp);
 
   const { refetch } = useGetAccountLoansOverview();
 
   const handleSuccess = () => {
-    setEarnedRewards(false);
+    setSubsidyRewards(false);
     refetch();
   };
 
@@ -38,8 +38,8 @@ const LoansInsights = ({
   });
 
   useEffect(() => {
-    setEarnedRewards(hasEarnedRewardsProp);
-  }, [hasEarnedRewardsProp]);
+    setSubsidyRewards(hasSubsidyRewards);
+  }, [hasSubsidyRewards]);
 
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
@@ -66,7 +66,7 @@ const LoansInsights = ({
         </Card>
         <Card
           direction='row'
-          flex={hasEarnedRewards ? '1.5' : '1'}
+          flex={hasSubsidyRewards ? '1.5' : '1'}
           gap='spacing2'
           alignItems='center'
           justifyContent='space-between'
@@ -75,7 +75,7 @@ const LoansInsights = ({
             <StyledDt color='primary'>Rewards</StyledDt>
             <StyledDd color='secondary'>{rewards}</StyledDd>
           </DlGroup>
-          {hasEarnedRewards && (
+          {hasSubsidyRewards && (
             <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
               Claim
             </CTA>

@@ -11,8 +11,8 @@ const LoansOverview = (): JSX.Element => {
     netYieldUSDValue,
     borrowUSDValue: borrowBalance,
     supplyUSDValue: supplyBalance,
-    earnedRewardsAmount,
-    hasEarnedRewards
+    subsidyRewardsAmount,
+    hasSubsidyRewards
   } = overview;
 
   if (lendPositions === undefined || borrowPositions === undefined || assets === undefined) {
@@ -26,8 +26,8 @@ const LoansOverview = (): JSX.Element => {
           netYield={netYieldUSDValue}
           borrow={borrowBalance}
           supply={supplyBalance}
-          rewards={earnedRewardsAmount}
-          hasEarnedRewards={hasEarnedRewards}
+          rewards={subsidyRewardsAmount}
+          hasSubsidyRewards={hasSubsidyRewards}
         />
         <LoansTables borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
       </Flex>
