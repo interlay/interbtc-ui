@@ -1,5 +1,4 @@
-import { BorrowPosition, CurrencyExt, LendPosition } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { BorrowPosition, LendPosition } from '@interlay/interbtc-api';
 import Big from 'big.js';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
@@ -8,8 +7,8 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '../use-get-prices';
 
 type Field<T> = T extends LendPosition
-  ? Extract<keyof LendPosition, 'earnedInterest' | 'earnedReward' | 'amount'>
-  : Extract<keyof BorrowPosition, 'earnedReward' | 'amount' | 'accumulatedDebt'>;
+  ? Extract<keyof LendPosition, 'earnedInterest' | 'amount'>
+  : Extract<keyof BorrowPosition, 'accumulatedDebt' | 'amount'>;
 
 /**
  * This function uses the value specified in the object key `field` param
@@ -35,17 +34,4 @@ const getPositionsSumOfFieldsInUSD = <T extends LendPosition | BorrowPosition>(
     return positionUSDValue === null ? totalValue : totalValue.add(positionUSDValue);
   }, Big(0));
 
-// MEMO: each position has total rewards
-const getTotalEarnedRewards = (
-  lendPositions: LendPosition[] = [],
-  borrowPositions: BorrowPosition[] = []
-): MonetaryAmount<CurrencyExt> | undefined => {
-  if (!lendPositions?.length && !borrowPositions?.length) {
-    return undefined;
-  }
-
-  const [firstPosition] = [...lendPositions, ...borrowPositions];
-  return firstPosition.earnedReward || undefined;
-};
-
-export { getPositionsSumOfFieldsInUSD, getTotalEarnedRewards };
+export { getPositionsSumOfFieldsInUSD };
