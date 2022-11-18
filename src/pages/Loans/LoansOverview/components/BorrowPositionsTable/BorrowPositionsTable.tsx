@@ -3,10 +3,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatNumber } from '@/common/utils/utils';
-import { useGetAccountLoansOverview } from '@/utils/hooks/api/loans/use-get-account-loans-overview';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { getStatus, getStatusLabel } from '../../utils/get-status';
+import { useGetAccountHealthFactor } from '../../hooks/use-get-account-health-factor';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { StatusTag } from '../LoansBaseTable/LoanStatusTag';
 import { BorrowPositionColumns, BorrowPositionTableRow } from '../types';
@@ -34,9 +33,7 @@ const BorrowPositionsTable = ({
 }: BorrowPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const {
-    data: { collateralRatio }
-  } = useGetAccountLoansOverview();
+  const { data: healthFactorData } = useGetAccountHealthFactor();
 
   const borrowPositionsTableRows: BorrowPositionTableRow[] = useMemo(
     () =>
@@ -51,9 +48,9 @@ const BorrowPositionsTable = ({
 
         const balance = <BalanceCell amount={amount} prices={prices} />;
 
-        const status = getStatus(collateralRatio);
-        const statusLabel = getStatusLabel(status);
-        const statusTag = <StatusTag status={status}>{statusLabel}</StatusTag>;
+        const statusTag = healthFactorData ? (
+          <StatusTag status={healthFactorData.status}>{healthFactorData.statusLabel}</StatusTag>
+        ) : null;
 
         return {
           id: currency.ticker,
@@ -63,7 +60,7 @@ const BorrowPositionsTable = ({
           status: statusTag
         };
       }),
-    [assets, collateralRatio, positions, prices]
+    [assets, healthFactorData, positions, prices]
   );
 
   if (!borrowPositionsTableRows.length) {

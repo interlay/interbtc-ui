@@ -4,7 +4,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { Modal, ModalProps, TabsItem } from '@/component-library';
 import { LoanAction, LoanType } from '@/types/loans';
 
-import { LoanForm } from './LoanForm';
+import { LoanForm } from '../LoanForm';
 import { StyledTabs, StyledWrapper } from './LoanModal.style';
 
 type TabData = { variant: LoanAction; title: string };
