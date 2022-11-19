@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 
 import App from '@/App';
 
-import { render, screen, userEvent } from '../test-utils';
+import { act, render, screen, userEvent } from '../test-utils';
 
 const path = '/bridge?tab=redeem';
 
@@ -22,10 +22,10 @@ describe('redeemTab page', () => {
 
     // ray test touch <
     // Input 0.0001 IBTC
-    // const amountToRedeemInput = await screen.findByRole('textbox');
-    // await act(async () => {
-    //   userEvent.type(amountToRedeemInput, '0.0001');
-    // });
+    const amountToRedeemInput = await screen.findByRole('textbox');
+    await act(async () => {
+      userEvent.type(amountToRedeemInput, '0.0001');
+    });
     // ray test touch >
   });
 });
