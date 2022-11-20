@@ -22,13 +22,11 @@ const mockNewVaultId = (vaultAddress: string, collateralToken: CurrencyExt) => (
   }
 });
 
-// ray test touch <
 const DEFAULT_VAULT_ADDRESS = '5GQoBrhX3mfnmKnw2qz2vGvHG8yvf6xT15gGM54865g6qEfE';
 
 const DEFAULT_COLLATERAL_TOKEN = RELAY_CHAIN_NATIVE_TOKEN;
 
 const DEFAULT_BITCOIN_AMOUNT = 100;
-// ray test touch >
 
 const mockVaults = new Map().set(
   mockNewVaultId(DEFAULT_VAULT_ADDRESS, DEFAULT_COLLATERAL_TOKEN),
@@ -36,9 +34,7 @@ const mockVaults = new Map().set(
 );
 const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => mockVaults);
 
-// ray test touch <
 const mockVaultsGetPremiumRedeemVaults = jest.fn(() => mockVaults);
-// ray test touch >
 
 const mockVaultsGetVaultsWithRedeemableTokens = jest.fn(() => mockVaults);
 
