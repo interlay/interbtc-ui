@@ -16,7 +16,6 @@ const mockRedeemGetBurnExchangeRate = jest.fn(
 );
 const mockRedeemBurn = jest.fn();
 
-// ray test touch <
 const mockRedeemGetDustValue = jest.fn();
 
 const mockRedeemGetPremiumRedeemFeeRate = jest.fn();
@@ -24,7 +23,6 @@ const mockRedeemGetPremiumRedeemFeeRate = jest.fn();
 const mockRedeemGetFeeRate = jest.fn();
 
 const mockRedeemGetCurrentInclusionFee = jest.fn();
-// ray test touch >
 
 export {
   mockRedeemBurn,

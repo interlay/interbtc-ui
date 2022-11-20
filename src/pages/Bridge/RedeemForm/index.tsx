@@ -169,6 +169,9 @@ const RedeemForm = (): JSX.Element | null => {
         if (btcToDotRateResult.status === 'fulfilled') {
           setBtcToDotRate(btcToDotRateResult.value);
         }
+        // ray test touch <
+        console.log('ray : ***** dustValueResult.value => ', dustValueResult.value);
+        // ray test touch >
 
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
