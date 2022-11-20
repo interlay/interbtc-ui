@@ -16,11 +16,11 @@ const mockRedeemGetBurnExchangeRate = jest.fn(
 );
 const mockRedeemBurn = jest.fn();
 
-// ray test touch <
 const mockRedeemGetDustValue = jest.fn(() => newMonetaryAmount(0, WRAPPED_TOKEN));
-// ray test touch >
 
+// ray test touch <
 const mockRedeemGetPremiumRedeemFeeRate = jest.fn();
+// ray test touch >
 
 const mockRedeemGetFeeRate = jest.fn();
 
