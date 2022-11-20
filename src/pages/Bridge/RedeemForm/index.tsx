@@ -171,9 +171,7 @@ const RedeemForm = (): JSX.Element | null => {
         }
 
         setDustValue(dustValueResult.value);
-        // ray test touch <
-        setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
-        // ray test touch >
+        setPremiumRedeemFee(premiumRedeemFeeResult.value);
         setRedeemFeeRate(redeemFeeRateResult.value);
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);

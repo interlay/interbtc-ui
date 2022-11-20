@@ -18,9 +18,7 @@ const mockRedeemBurn = jest.fn();
 
 const mockRedeemGetDustValue = jest.fn(() => newMonetaryAmount(0, WRAPPED_TOKEN));
 
-// ray test touch <
-const mockRedeemGetPremiumRedeemFeeRate = jest.fn();
-// ray test touch >
+const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => new Big(0));
 
 const mockRedeemGetFeeRate = jest.fn();
 
