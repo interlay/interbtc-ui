@@ -30,4 +30,15 @@ const mockVaultsWithIssuableTokens = new Map().set(
 );
 const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => mockVaultsWithIssuableTokens);
 
-export { mockVaultsGet, mockVaultsGetVaultsWithIssuableTokens };
+// ray test touch <
+const mockVaultsGetPremiumRedeemVaults = jest.fn();
+
+const mockVaultsGetVaultsWithRedeemableTokens = jest.fn();
+// ray test touch >
+
+export {
+  mockVaultsGet,
+  mockVaultsGetPremiumRedeemVaults,
+  mockVaultsGetVaultsWithIssuableTokens,
+  mockVaultsGetVaultsWithRedeemableTokens
+};

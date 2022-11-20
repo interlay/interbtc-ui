@@ -18,14 +18,28 @@ import {
   mockOracleGetExchangeRate,
   mockRedeemBurn,
   mockRedeemGetBurnExchangeRate,
+  // ray test touch <
+  mockRedeemGetCurrentInclusionFee,
+  mockRedeemGetDustValue,
+  mockRedeemGetFeeRate,
+  // ray test touch >
   mockRedeemGetMaxBurnableTokens,
+  // ray test touch <
+  mockRedeemGetPremiumRedeemFeeRate,
+  // ray test touch >
   mockSystemChain,
   mockSystemGetStatusCode,
   mockTokensBalance,
   mockTokensSubscribeToBalance,
   mockTokensTotal,
   mockVaultsGet,
-  mockVaultsGetVaultsWithIssuableTokens
+  // ray test touch <
+  mockVaultsGetPremiumRedeemVaults,
+  // ray test touch >
+  mockVaultsGetVaultsWithIssuableTokens,
+  // ray test touch <
+  mockVaultsGetVaultsWithRedeemableTokens
+  // ray test touch >
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import { mockGetLendTokens } from './parachain/loans';
@@ -75,7 +89,13 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   redeem: {
     getMaxBurnableTokens: mockRedeemGetMaxBurnableTokens,
     getBurnExchangeRate: mockRedeemGetBurnExchangeRate,
-    burn: mockRedeemBurn
+    burn: mockRedeemBurn,
+    // ray test touch <
+    getDustValue: mockRedeemGetDustValue,
+    getPremiumRedeemFeeRate: mockRedeemGetPremiumRedeemFeeRate,
+    getFeeRate: mockRedeemGetFeeRate,
+    getCurrentInclusionFee: mockRedeemGetCurrentInclusionFee
+    // ray test touch >
   },
   system: {
     getStatusCode: mockSystemGetStatusCode
@@ -87,7 +107,11 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   },
   vaults: {
     get: mockVaultsGet,
-    getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens
+    getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens,
+    // ray test touch <
+    getPremiumRedeemVaults: mockVaultsGetPremiumRedeemVaults,
+    getVaultsWithRedeemableTokens: mockVaultsGetVaultsWithRedeemableTokens
+    // ray test touch >
   }
 };
 

@@ -125,6 +125,7 @@ const RedeemForm = (): JSX.Element | null => {
           currentInclusionFeeResult,
           vaultsWithRedeemableTokens
         ] = await Promise.allSettled([
+          // ray test touch <
           window.bridge.redeem.getDustValue(),
           window.bridge.vaults.getPremiumRedeemVaults(),
           window.bridge.redeem.getPremiumRedeemFeeRate(),
@@ -132,6 +133,7 @@ const RedeemForm = (): JSX.Element | null => {
           window.bridge.redeem.getFeeRate(),
           window.bridge.redeem.getCurrentInclusionFee(),
           window.bridge.vaults.getVaultsWithRedeemableTokens()
+          // ray test touch >
         ]);
 
         if (dustValueResult.status === 'rejected') {
