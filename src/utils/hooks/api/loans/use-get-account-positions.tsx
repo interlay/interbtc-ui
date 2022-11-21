@@ -1,8 +1,8 @@
 import { BorrowPosition, CurrencyExt, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
-import { chain } from '@react-aria/utils';
 import Big from 'big.js';
+import { useMemo } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
@@ -109,20 +109,18 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
 
   const { data: subsidyRewards } = useGetAccountSubsidyRewards();
 
-  const { data: stats, error: statsError, refetch: refetchStats } = useQuery({
-    queryKey: ['positions-stats', accountId],
-    queryFn: () =>
-      assets &&
-      positions &&
-      subsidyRewards &&
-      prices &&
-      getAccountPositionsStats(assets, positions.lendPositions, positions.borrowPositions, subsidyRewards, prices),
-    enabled: !!assets && !!positions && !!subsidyRewards && !!prices,
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL
-  });
+  // MEMO: we dont need assets as a dependency, since we only use the collateral threshold and
+  // it's value is very unlikely to change
+  const stats = useMemo(() => {
+    if (!assets || !positions || !subsidyRewards || !prices) {
+      return undefined;
+    }
+
+    return getAccountPositionsStats(assets, positions.lendPositions, positions.borrowPositions, subsidyRewards, prices);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positions, prices, subsidyRewards]);
 
   useErrorHandler(positionsError);
-  useErrorHandler(statsError);
 
   return {
     data: {
@@ -130,7 +128,7 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
       lendPositions: positions?.lendPositions,
       stats
     },
-    refetch: chain(refetchPositions, refetchStats)
+    refetch: refetchPositions
   };
 };
 

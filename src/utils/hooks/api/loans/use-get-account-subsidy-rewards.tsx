@@ -2,32 +2,37 @@ import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
-import { useQuery, UseQueryResult } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import useAccountId from '../../use-account-id';
 
-type AccountAccruedRewardsData = MonetaryAmount<CurrencyExt>;
+interface AccountAccruedRewards {
+  data: MonetaryAmount<CurrencyExt> | undefined;
+  refetch: () => void;
+}
 
-const getAccountSubsidyRewards = (accountId: AccountId): Promise<AccountAccruedRewardsData> =>
-  window.bridge.loans.getAccruedRewardsOfAccount(accountId);
+const getAccountSubsidyRewards = (accountId: AccountId) => window.bridge.loans.getAccruedRewardsOfAccount(accountId);
 
-const useGetAccountSubsidyRewards = (): UseQueryResult<AccountAccruedRewardsData | undefined, unknown> => {
+const useGetAccountSubsidyRewards = (): AccountAccruedRewards => {
   const accountId = useAccountId();
   const queryKey = ['accruedRewards', accountId?.toString()];
 
-  const query = useQuery({
+  const { data, error } = useQuery({
     queryKey,
     queryFn: () => accountId && getAccountSubsidyRewards(accountId),
     enabled: !!accountId,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
-  useErrorHandler(query.error);
+  useErrorHandler(error);
 
-  return query;
+  const queryClient = useQueryClient();
+
+  const refetch = () => queryClient.invalidateQueries(queryKey);
+
+  return { data, refetch };
 };
 
 export { useGetAccountSubsidyRewards };
-export type { AccountAccruedRewardsData };
