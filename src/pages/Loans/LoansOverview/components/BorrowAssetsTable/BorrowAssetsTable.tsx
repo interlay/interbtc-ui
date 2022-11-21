@@ -1,76 +1,83 @@
-import { LoanAsset, LoanPosition, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
-import { useMemo } from 'react';
+import { LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { ApyCell, AssetCell, BalanceCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
+import { ApyCell, AssetCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
-import { BorrowAssetsColumns, BorrowAssetsTableRow } from '../types';
+
+enum BorrowAssetsColumns {
+  ASSET = 'asset',
+  APY = 'apy',
+  CAPACITY = 'capacity',
+  TOTAL_BORROWED = 'totalBorrowed'
+}
+
+type BorrowAssetsTableRow = {
+  id: string;
+  [BorrowAssetsColumns.ASSET]: ReactNode;
+  [BorrowAssetsColumns.APY]: ReactNode;
+  [BorrowAssetsColumns.CAPACITY]: ReactNode;
+  [BorrowAssetsColumns.TOTAL_BORROWED]: ReactNode;
+};
 
 // TODO: translations
 const borrowAssetsColumns = [
   { name: 'Asset', uid: BorrowAssetsColumns.ASSET },
   { name: 'APY', uid: BorrowAssetsColumns.APY },
-  { name: 'Wallet', uid: BorrowAssetsColumns.WALLET },
-  { name: 'Liquidity', uid: BorrowAssetsColumns.LIQUIDITY }
+  { name: 'Capacity', uid: BorrowAssetsColumns.CAPACITY },
+  { name: 'Total Borrowed', uid: BorrowAssetsColumns.TOTAL_BORROWED }
 ];
 
 type BorrowAssetsTableProps = {
   assets: TickerToData<LoanAsset>;
-  positions: LoanPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
   disabledKeys: LoansBaseTableProps['disabledKeys'];
 };
 
-const BorrowAssetsTable = ({ assets, positions, onRowAction, disabledKeys }: BorrowAssetsTableProps): JSX.Element => {
+const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { data: balances } = useGetBalances();
 
-  const availableAssets = useMemo(
+  const rows: BorrowAssetsTableRow[] = useMemo(
     () =>
-      Object.values(assets).filter(
-        (asset) => !positions.find((position) => position.currency.ticker === asset.currency.ticker)
-      ),
-    [assets, positions]
-  );
-
-  const borrowAssetsTableRows: BorrowAssetsTableRow[] = useMemo(
-    () =>
-      availableAssets.map(({ borrowApy, currency, totalLiquidity }) => {
+      Object.values(assets).map(({ borrowApy, currency, availableCapacity, totalBorrows }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
         const apy = <ApyCell apy={borrowApy} />;
 
-        const amount = balances ? balances[currency.ticker].free : newMonetaryAmount(0, currency);
-        const wallet = <BalanceCell amount={amount} prices={prices} />;
-
-        const liquidityUSDValue = convertMonetaryAmountToValueInUSD(
-          totalLiquidity,
-          prices?.[totalLiquidity.currency.ticker].usd
+        const availableCapacityUSD = convertMonetaryAmountToValueInUSD(
+          availableCapacity,
+          prices?.[availableCapacity.currency.ticker].usd
         );
-        const liquidityLabel = liquidityUSDValue || 0;
-        const liquidity = <MonetaryCell label={formatUSD(liquidityLabel, { compact: true })} alignItems='flex-end' />;
+        const capacity = <MonetaryCell label={formatUSD(availableCapacityUSD || 0, { compact: true })} />;
+
+        const totalBorrowsUSD = convertMonetaryAmountToValueInUSD(
+          totalBorrows,
+          prices?.[totalBorrows.currency.ticker].usd
+        );
+        const totalBorrowed = (
+          <MonetaryCell label={formatUSD(totalBorrowsUSD || 0, { compact: true })} alignItems='flex-end' />
+        );
 
         return {
           id: currency.ticker,
           asset,
           apy,
-          wallet,
-          liquidity
+          capacity,
+          totalBorrowed
         };
       }),
-    [availableAssets, balances, prices]
+    [assets, prices]
   );
 
   return (
     <LoansBaseTable
       title={t('loans.borrow_markets')}
       onRowAction={onRowAction}
-      rows={borrowAssetsTableRows}
+      rows={rows}
       columns={borrowAssetsColumns}
       disabledKeys={disabledKeys}
     />

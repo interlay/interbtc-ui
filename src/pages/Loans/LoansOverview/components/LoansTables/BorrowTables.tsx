@@ -1,8 +1,6 @@
 import { BorrowPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
-import { Flex } from '@/component-library';
-
 import { getPosition } from '../../utils/get-position';
 import { BorrowAssetsTable } from '../BorrowAssetsTable';
 import { BorrowPositionsTable } from '../BorrowPositionsTable';
@@ -19,9 +17,10 @@ type BorrowTablesProps = {
   assets: TickerToData<LoanAsset>;
   positions: BorrowPosition[];
   disabledAssets: string[];
+  hasPositions: boolean;
 };
 
-const BorrowTables = ({ assets, positions, disabledAssets }: BorrowTablesProps): JSX.Element => {
+const BorrowTables = ({ assets, positions, disabledAssets, hasPositions }: BorrowTablesProps): JSX.Element => {
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
   const handleRowAction = (ticker: Key) => {
@@ -34,19 +33,16 @@ const BorrowTables = ({ assets, positions, disabledAssets }: BorrowTablesProps):
   const handleClose = () => setAsset(defaultAssetState);
 
   return (
-    <Flex direction='column' flex='1' gap='spacing12'>
-      <BorrowPositionsTable
-        assets={assets}
-        positions={positions}
-        onRowAction={handleRowAction}
-        disabledKeys={disabledAssets}
-      />
-      <BorrowAssetsTable
-        assets={assets}
-        positions={positions}
-        onRowAction={handleRowAction}
-        disabledKeys={disabledAssets}
-      />
+    <>
+      {hasPositions && (
+        <BorrowPositionsTable
+          assets={assets}
+          positions={positions}
+          onRowAction={handleRowAction}
+          disabledKeys={disabledAssets}
+        />
+      )}
+      <BorrowAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
       <LoanModal
         variant='borrow'
         open={!!selectedAsset.data}
@@ -54,7 +50,7 @@ const BorrowTables = ({ assets, positions, disabledAssets }: BorrowTablesProps):
         position={selectedAsset.position}
         onClose={handleClose}
       />
-    </Flex>
+    </>
   );
 };
 

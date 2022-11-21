@@ -29,10 +29,10 @@ import { StyledFormWrapper } from './LoanForm.style';
 
 const shouldShowBorrowLimit = (
   variant: LoanAction,
-  borrowPostions?: BorrowPosition[],
+  borrowPositions?: BorrowPosition[],
   position?: LendPosition | BorrowPosition
 ) => {
-  const hasBorrowPositions = !!borrowPostions?.length;
+  const hasBorrowPositions = !!borrowPositions?.length;
   const isLendingAsset = isLendAsset(variant);
   const isBorrowingAsset = !isLendingAsset;
   const isCollateralAsset = isLendAsset(variant) && (position as LendPosition)?.isCollateral;
