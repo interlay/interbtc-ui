@@ -1,6 +1,7 @@
 import {
   CurrencyIdLiteral,
   currencyIdToMonetaryCurrency,
+  IssueStatus,
   newAccountId,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
@@ -20,6 +21,7 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
+// TODO: issue requests should not be typed here but further above in the app
 interface Props {
   request: {
     id: string;
@@ -36,6 +38,7 @@ interface Props {
         token: CurrencyIdLiteral;
       };
     };
+    status: any;
   };
 }
 
@@ -87,7 +90,14 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
 
   const backingPaymentAmount = newMonetaryAmount(request.backingPayment.amount, WRAPPED_TOKEN);
 
-  const executable = vaultCapacity?.gte(backingPaymentAmount);
+  let executable;
+  // If status is Cancelled or Expired, vault needs to have sufficient capacity
+  if (request.status === IssueStatus.Cancelled || request.status === IssueStatus.Expired) {
+    executable = vaultCapacity?.gte(backingPaymentAmount);
+  } else {
+    // Confirmed == PendingWithEnoughConfirmations is always executable
+    executable = true;
+  };
 
   return (
     <div className={clsx('text-center', 'space-y-2')}>
