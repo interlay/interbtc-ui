@@ -6,6 +6,8 @@ import { useQuery, useQueryClient } from 'react-query';
 
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
+import useAccountId from '../../use-account-id';
+
 interface AccountAccruedRewards {
   data: MonetaryAmount<CurrencyExt> | undefined;
   refetch: () => void;
@@ -13,7 +15,8 @@ interface AccountAccruedRewards {
 
 const getAccountSubsidyRewards = (accountId: AccountId) => window.bridge.loans.getAccruedRewardsOfAccount(accountId);
 
-const useGetAccountSubsidyRewards = (accountId: AccountId | undefined): AccountAccruedRewards => {
+const useGetAccountSubsidyRewards = (): AccountAccruedRewards => {
+  const accountId = useAccountId();
   const queryKey = ['accruedRewards', accountId?.toString()];
 
   const { data, error } = useQuery({

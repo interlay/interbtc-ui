@@ -1,34 +1,30 @@
 import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
-import { useGetLoansData } from '@/utils/hooks/api/loans/use-get-loans-data';
+import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 
 import { LoansInsights, LoansTables } from './components';
 
 const LoansOverview = (): JSX.Element => {
-  const { overview, lendPositions, borrowPositions, assets } = useGetLoansData();
+  const { data: assets } = useGetLoanAssets();
   const {
-    netYieldUSDValue,
-    borrowUSDValue: borrowBalance,
-    supplyUSDValue: supplyBalance,
-    subsidyRewardsAmount,
-    hasSubsidyRewards
-  } = overview;
+    data: { borrowPositions, lendPositions, statistics }
+  } = useGetAccountPositions();
 
-  if (lendPositions === undefined || borrowPositions === undefined || assets === undefined) {
+  if (
+    lendPositions === undefined ||
+    borrowPositions === undefined ||
+    assets === undefined ||
+    statistics === undefined
+  ) {
     return <FullLoadingSpinner />;
   }
 
   return (
     <MainContainer>
       <Flex direction='column' gap='spacing12'>
-        <LoansInsights
-          netYield={netYieldUSDValue}
-          borrow={borrowBalance}
-          supply={supplyBalance}
-          rewards={subsidyRewardsAmount}
-          hasSubsidyRewards={hasSubsidyRewards}
-        />
+        <LoansInsights statistics={statistics} />
         <LoansTables borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
       </Flex>
     </MainContainer>
