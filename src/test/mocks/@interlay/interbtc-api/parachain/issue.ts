@@ -8,10 +8,10 @@ const DEFAULT_REQUEST_LIMITS = {
   totalMaxIssuable: newMonetaryAmount('493817337', WRAPPED_TOKEN)
 };
 
-// ray test touch <
 const mockIssueGetDustValue = jest.fn(() => BitcoinAmount.zero());
+
 const mockIssueGetRequestLimits = jest.fn(() => DEFAULT_REQUEST_LIMITS);
-// ray test touch >
+
 const mockIssueRequest = jest.fn();
 
 export { mockIssueGetDustValue, mockIssueGetRequestLimits, mockIssueRequest };
