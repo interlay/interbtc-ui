@@ -22,15 +22,15 @@ interface UseAccountBorrowLimit {
 const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
   const prices = useGetPrices();
   const {
-    data: { stats }
+    data: { statistics }
   } = useGetAccountPositions();
-  const { borrowAmountUSD, collateralAmountUSD } = stats || {};
+  const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 
   /**
    * This method computes how the borrow limit will change if
    * asset is withdrawn or deposited to protocol.
    * @param {LoanActionData} loanAction The data related to loan action
-   * @note Call only after the prices and positions stats are loaded.
+   * @note Call only after the prices and positions statistics are loaded.
    * @returns New borrow limit in USD after the transaction is done.
    */
   const getBorrowLimitUSD = useCallback(

@@ -68,9 +68,9 @@ const useLoanFormData = (
   const { data: balances } = useGetBalances();
   const prices = useGetPrices();
   const {
-    data: { stats }
+    data: { statistics }
   } = useGetAccountPositions();
-  const { borrowAmountUSD, collateralAmountUSD } = stats || {};
+  const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 

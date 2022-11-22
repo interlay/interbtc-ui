@@ -65,15 +65,15 @@ interface UseAccountHealthFactor {
 const useGetAccountHealthFactor = (): UseAccountHealthFactor => {
   const prices = useGetPrices();
   const {
-    data: { stats }
+    data: { statistics }
   } = useGetAccountPositions();
-  const { borrowAmountUSD, collateralAmountUSD } = stats || {};
+  const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 
   /**
    * This method computes how the health factor will
    * change if asset is withdrawn or deposited.
    * @param {LoanActionData} loanAction The data related to loan action
-   * @note Call only after the prices and positions stats are loaded.
+   * @note Call only after the prices and positions statistics are loaded.
    * @returns {number} Health Factor after the transaction is done.
    */
   const getHealthFactor = useCallback(

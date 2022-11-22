@@ -3,7 +3,7 @@ import { useMutation } from 'react-query';
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
-import { AccountPositionsStatsData } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
@@ -11,10 +11,10 @@ import { StyledDd, StyledDt } from './LoansInsights.style';
 const mutateClaimRewards = () => window.bridge.loans.claimAllSubsidyRewards();
 
 type LoansInsightsProps = {
-  stats: AccountPositionsStatsData;
+  statistics: AccountPositionsStatisticsData;
 };
 
-const LoansInsights = ({ stats }: LoansInsightsProps): JSX.Element => {
+const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
   const { data: subsidyRewards, refetch } = useGetAccountSubsidyRewards();
 
   const handleSuccess = () => {
@@ -27,17 +27,16 @@ const LoansInsights = ({ stats }: LoansInsightsProps): JSX.Element => {
 
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
-  const { borrowAmountUSD, supplyAmountUSD, netYieldAmountUSD } = stats;
+  const { borrowAmountUSD, supplyAmountUSD, netYieldAmountUSD } = statistics;
 
   const supplyBalanceLabel = formatUSD(supplyAmountUSD.toNumber());
   const borrowBalanceLabel = formatUSD(borrowAmountUSD.toNumber());
   const netYieldBalanceLabel = formatUSD(netYieldAmountUSD.toNumber());
 
-  const subsidyRewardsAmountLabel = subsidyRewards
-    ? `${formatNumber(subsidyRewards.toBig().toNumber(), {
-        maximumFractionDigits: subsidyRewards.currency.humanDecimals || 5
-      })} ${subsidyRewards.currency.ticker}`
-    : formatUSD(0);
+  const subsidyRewardsAmount = formatNumber(subsidyRewards?.toBig().toNumber() || 0, {
+    maximumFractionDigits: subsidyRewards?.currency.humanDecimals || 5
+  });
+  const subsidyRewardsAmountLabel = `${subsidyRewardsAmount} ${subsidyRewards?.currency.ticker || ''}`;
   const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.isZero();
 
   return (

@@ -39,7 +39,7 @@ const getAccountPositionsQuery = async (accountId: AccountId): Promise<AccountPo
   };
 };
 
-interface AccountPositionsStatsData {
+interface AccountPositionsStatisticsData {
   supplyAmountUSD: Big;
   borrowAmountUSD: Big;
   collateralAmountUSD: Big;
@@ -54,7 +54,7 @@ const getAccountPositionsStats = (
   borrowPositions: BorrowPosition[],
   subsidyRewards: MonetaryAmount<CurrencyExt>,
   prices: Prices
-): AccountPositionsStatsData => {
+): AccountPositionsStatisticsData => {
   const supplyAmountUSD = getPositionsSumOfFieldsInUSD('amount', lendPositions, prices);
 
   const borrowAmountUSD = getPositionsSumOfFieldsInUSD('amount', borrowPositions, prices);
@@ -89,7 +89,7 @@ const getAccountPositionsStats = (
 
 type UseGetAccountPositions = {
   data: Partial<AccountPositionsData> & {
-    stats: AccountPositionsStatsData | undefined;
+    statistics: AccountPositionsStatisticsData | undefined;
   };
   refetch: () => void;
 };
@@ -111,7 +111,7 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
 
   // MEMO: we dont need assets as a dependency, since we only use the collateral threshold and
   // it's value is very unlikely to change
-  const stats = useMemo(() => {
+  const statistics = useMemo(() => {
     if (!assets || !positions || !subsidyRewards || !prices) {
       return undefined;
     }
@@ -126,11 +126,11 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
     data: {
       borrowPositions: positions?.borrowPositions,
       lendPositions: positions?.lendPositions,
-      stats
+      statistics
     },
     refetch: refetchPositions
   };
 };
 
 export { useGetAccountPositions };
-export type { AccountPositionsData, AccountPositionsStatsData };
+export type { AccountPositionsData, AccountPositionsStatisticsData };

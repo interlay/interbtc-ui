@@ -9,17 +9,22 @@ import { LoansInsights, LoansTables } from './components';
 const LoansOverview = (): JSX.Element => {
   const { data: assets } = useGetLoanAssets();
   const {
-    data: { borrowPositions, lendPositions, stats }
+    data: { borrowPositions, lendPositions, statistics }
   } = useGetAccountPositions();
 
-  if (lendPositions === undefined || borrowPositions === undefined || assets === undefined || stats === undefined) {
+  if (
+    lendPositions === undefined ||
+    borrowPositions === undefined ||
+    assets === undefined ||
+    statistics === undefined
+  ) {
     return <FullLoadingSpinner />;
   }
 
   return (
     <MainContainer>
       <Flex direction='column' gap='spacing12'>
-        <LoansInsights stats={stats} />
+        <LoansInsights statistics={statistics} />
         <LoansTables borrowPositions={borrowPositions} lendPositions={lendPositions} assets={assets} />
       </Flex>
     </MainContainer>
