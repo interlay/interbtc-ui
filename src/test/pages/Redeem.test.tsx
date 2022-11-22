@@ -2,7 +2,8 @@ import '@testing-library/jest-dom';
 
 import App from '@/App';
 
-import { act, render, screen, userEvent } from '../test-utils';
+import { mockRedeemRequest } from '../mocks/@interlay/interbtc-api';
+import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 const path = '/bridge?tab=redeem';
 
@@ -34,5 +35,17 @@ describe('redeemTab page', () => {
     await act(async () => {
       userEvent.type(btcAddressToSendInput, 'tb1q3f6lu0g92q0d5jdng6m367uwpw7lnt7x3n0nqf');
     });
+
+    // ray test touch <
+    const submitButton = screen.getByRole('button', { name: /confirm/i });
+
+    // Redeem IBTC
+    await act(async () => {
+      userEvent.click(submitButton);
+    });
+
+    // Check that the redeem method was called
+    await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
+    // ray test touch >
   });
 });

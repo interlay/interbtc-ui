@@ -23,6 +23,9 @@ import {
   mockRedeemGetFeeRate,
   mockRedeemGetMaxBurnableTokens,
   mockRedeemGetPremiumRedeemFeeRate,
+  // ray test touch <
+  mockRedeemRequest,
+  // ray test touch >
   mockSystemChain,
   mockSystemGetStatusCode,
   mockTokensBalance,
@@ -85,7 +88,10 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getDustValue: mockRedeemGetDustValue,
     getPremiumRedeemFeeRate: mockRedeemGetPremiumRedeemFeeRate,
     getFeeRate: mockRedeemGetFeeRate,
-    getCurrentInclusionFee: mockRedeemGetCurrentInclusionFee
+    getCurrentInclusionFee: mockRedeemGetCurrentInclusionFee,
+    // ray test touch <
+    request: mockRedeemRequest
+    // ray test touch >
   },
   system: {
     getStatusCode: mockSystemGetStatusCode
