@@ -169,7 +169,7 @@ const RedeemForm = (): JSX.Element | null => {
         }
 
         setDustValue(dustValueResult.value);
-        setPremiumRedeemFee(premiumRedeemFeeResult.value);
+        setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
         setRedeemFeeRate(redeemFeeRateResult.value);
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
