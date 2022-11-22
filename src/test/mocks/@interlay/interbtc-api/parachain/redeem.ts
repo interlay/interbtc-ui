@@ -22,7 +22,7 @@ const mockRedeemGetDustValue = jest.fn(() => zeroWrappedTokenAmount);
 
 const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => new Big(0));
 
-const mockRedeemGetFeeRate = jest.fn();
+const mockRedeemGetFeeRate = jest.fn(() => new Big(0.005));
 
 const mockRedeemGetCurrentInclusionFee = jest.fn(() => zeroWrappedTokenAmount);
 
