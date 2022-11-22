@@ -36,7 +36,6 @@ describe('redeemTab page', () => {
       userEvent.type(btcAddressToSendInput, 'tb1q3f6lu0g92q0d5jdng6m367uwpw7lnt7x3n0nqf');
     });
 
-    // ray test touch <
     const submitButton = screen.getByRole('button', { name: /confirm/i });
 
     // Redeem IBTC
@@ -46,6 +45,5 @@ describe('redeemTab page', () => {
 
     // Check that the redeem method was called
     await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
-    // ray test touch >
   });
 });

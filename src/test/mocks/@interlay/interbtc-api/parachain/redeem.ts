@@ -26,9 +26,7 @@ const mockRedeemGetFeeRate = jest.fn(() => new Big(0.005));
 
 const mockRedeemGetCurrentInclusionFee = jest.fn(() => zeroWrappedTokenAmount);
 
-// ray test touch <
 const mockRedeemRequest = jest.fn();
-// ray test touch >
 
 export {
   mockRedeemBurn,
