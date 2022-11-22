@@ -28,7 +28,6 @@ describe('Issue page', () => {
     });
 
     const submitButton = screen.getByRole('button', { name: /confirm/i });
-    // expect(submitButton).toBeEnabled();
 
     // Issue IBTC
     await act(async () => {
