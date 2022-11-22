@@ -28,5 +28,11 @@ describe('redeemTab page', () => {
     await act(async () => {
       userEvent.type(amountToRedeemInput, '0.0001');
     });
+
+    const btcAddressToSendInput = textboxElements[1];
+
+    await act(async () => {
+      userEvent.type(btcAddressToSendInput, 'tb1q3f6lu0g92q0d5jdng6m367uwpw7lnt7x3n0nqf');
+    });
   });
 });
