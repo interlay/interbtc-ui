@@ -21,7 +21,7 @@ describe('Issue page', () => {
     const issueTab = screen.getByRole('tab', { name: /issue/i });
     userEvent.click(issueTab);
 
-    const amountToIssueInput = await screen.findByRole('textbox');
+    const amountToIssueInput = screen.getByRole('textbox');
     // Input 0.0001 IBTC
     await act(async () => {
       userEvent.type(amountToIssueInput, '0.0001');
