@@ -20,12 +20,13 @@ describe('redeemTab page', () => {
     const redeemTab = screen.getByRole('tab', { name: /redeem/i });
     userEvent.click(redeemTab);
 
-    // ray test touch <
     // Input 0.0001 IBTC
-    const amountToRedeemInput = await screen.findByRole('textbox');
+    const textboxElements = screen.getAllByRole('textbox');
+
+    const amountToRedeemInput = textboxElements[0];
+
     await act(async () => {
       userEvent.type(amountToRedeemInput, '0.0001');
     });
-    // ray test touch >
   });
 });
