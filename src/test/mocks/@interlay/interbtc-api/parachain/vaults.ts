@@ -25,6 +25,7 @@ const mockNewVaultId = (vaultAddress: string, collateralToken: CurrencyExt) => (
 const mockVaultsWithIssuableTokens = new Map().set(
   // Dummy `vaultAddress` & dummy `collateralToken`
   mockNewVaultId('5GQoBrhX3mfnmKnw2qz2vGvHG8yvf6xT15gGM54865g6qEfE', RELAY_CHAIN_NATIVE_TOKEN),
+  // Dummy Bitcoin amount
   new BitcoinAmount(100)
 );
 const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => mockVaultsWithIssuableTokens);
