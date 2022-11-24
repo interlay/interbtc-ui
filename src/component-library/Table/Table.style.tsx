@@ -53,6 +53,7 @@ const StyledTableRow = styled.tr<StyledTableRowProps>`
   outline: none;
   font-size: ${theme.text.s};
   line-height: ${theme.lineHeight.s};
+  cursor: ${({ $isHovered }) => $isHovered && 'pointer'};
 
   &:nth-child(odd) {
     background-color: ${({ $isHovered }) => ($isHovered ? theme.table.row.bgHover : theme.table.row.odd.bg)};
