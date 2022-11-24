@@ -70,4 +70,7 @@
   --colors-table-row-hover-bg: #f0f1f2;
   --color-table-header-row-bg: #f4f3f5;
   --colors-table-border: #f4f3f5;
+  /* Table */
+  --colors-tooltip-bg: var(--colors-neutral-white);
+  --colors-tooltip-tip-bg: var(--colors-neutral-white);
 }

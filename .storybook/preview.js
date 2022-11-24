@@ -26,7 +26,7 @@ const parameters = {
   },
 };
 
-addDecorator(story =><OverlayContainer><MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter></OverlayContainer>);
+addDecorator(story =><MemoryRouter initialEntries={['/']}>{story()}</MemoryRouter>);
 
 export {
   parameters
