@@ -1,4 +1,4 @@
-import { Overlay, PositionAria, useOverlayPosition } from '@react-aria/overlays';
+import { Overlay, OverlayContainer, PositionAria, useOverlayPosition } from '@react-aria/overlays';
 import { useTooltip, useTooltipTrigger } from '@react-aria/tooltip';
 import { mergeProps } from '@react-aria/utils';
 import { useTooltipTriggerState } from '@react-stately/tooltip';
@@ -93,22 +93,25 @@ const Tooltip = (props: TooltipProps): JSX.Element => {
     trigger = cloneElement(child, mergeProps(child.props, triggerProps, { ref: tooltipTriggerRef }));
   }
 
+  /* TODO: Move OverlayContainer out when new modal added */
   return (
     <>
       {trigger}
       {state.isOpen && (
-        <Overlay>
-          <StyledTooltip
-            {...mergeProps(ariaTooltipProps, overlayProps)}
-            className={props.className}
-            ref={overlayRef}
-            $isOpen={state.isOpen}
-            $placement={placement}
-          >
-            <StyledTooltipLabel>{label}</StyledTooltipLabel>
-            <StyledTooltipTip $placement={placement} {...arrowProps} />
-          </StyledTooltip>
-        </Overlay>
+        <OverlayContainer>
+          <Overlay>
+            <StyledTooltip
+              {...mergeProps(ariaTooltipProps, overlayProps)}
+              className={props.className}
+              ref={overlayRef}
+              $isOpen={state.isOpen}
+              $placement={placement}
+            >
+              <StyledTooltipLabel>{label}</StyledTooltipLabel>
+              <StyledTooltipTip $placement={placement} {...arrowProps} />
+            </StyledTooltip>
+          </Overlay>
+        </OverlayContainer>
       )}
     </>
   );
