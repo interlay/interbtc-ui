@@ -1,5 +1,7 @@
 import { BitcoinNetwork } from '@/types/bitcoin';
 
+const ANALYTICS_CODE = process.env.REACT_APP_ANALYTICS_CODE;
+
 const BALANCE_MAX_INTEGER_LENGTH = 13;
 
 const BTC_DECIMALS = 8;
@@ -74,6 +76,7 @@ const BTC_RELAY_DELAY_WARNING = 6;
 const BTC_RELAY_DELAY_CRITICAL = 12;
 
 export {
+  ANALYTICS_CODE,
   BALANCE_MAX_INTEGER_LENGTH,
   BITCOIN_NETWORK,
   BITCOIN_REGTEST_URL,
