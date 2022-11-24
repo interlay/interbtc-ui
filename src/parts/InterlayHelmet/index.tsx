@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 
 import { APP_DOMAIN, APP_NAME, OPEN_GRAPH_IMAGE_FILE_NAME, PUBLIC_ASSETS_FOLDER_NAME } from '@/config/relay-chains';
+import { ANALYTICS_CODE } from '@/constants';
 
 const InterlayHelmet = (): JSX.Element => (
   <Helmet>
@@ -36,6 +37,7 @@ const InterlayHelmet = (): JSX.Element => (
       property='twitter:image'
       content={`${APP_DOMAIN}/${PUBLIC_ASSETS_FOLDER_NAME}/${OPEN_GRAPH_IMAGE_FILE_NAME}`}
     />
+    {ANALYTICS_CODE && <script src='https://cdn.usefathom.com/script.js' data-site={ANALYTICS_CODE} defer></script>}
   </Helmet>
 );
 
