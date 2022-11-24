@@ -294,6 +294,9 @@ const theme = {
     }
   },
   overlay: {
+    placement: {
+      transform: '6px'
+    },
     bg: 'var(--colors-neutral-black-30)'
   },
   transaction: {
@@ -340,6 +343,12 @@ const theme = {
     },
     indicator: {
       bg: 'var(--colors-switch-indicator-bg)'
+    }
+  },
+  tooltip: {
+    offset: '3px',
+    tip: {
+      width: '5px'
     }
   }
 };

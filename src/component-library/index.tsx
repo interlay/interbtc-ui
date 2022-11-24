@@ -40,6 +40,8 @@ export type { TokenBalanceProps } from './TokenBalance';
 export { TokenBalance } from './TokenBalance';
 export type { TokenInputProps } from './TokenInput';
 export { TokenInput } from './TokenInput';
+export type { TooltipProps } from './Tooltip';
+export { Tooltip } from './Tooltip';
 export * from './types';
 export * from './utils/prop-types';
 export type { VaultCardProps } from './VaultCard';
