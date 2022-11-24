@@ -11,7 +11,7 @@ import { StyledDd, StyledDt } from './LoansInsights.style';
 const mutateClaimRewards = () => window.bridge.loans.claimAllSubsidyRewards();
 
 type LoansInsightsProps = {
-  statistics: AccountPositionsStatisticsData;
+  statistics?: AccountPositionsStatisticsData;
 };
 
 const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
@@ -27,11 +27,11 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
 
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
-  const { borrowAmountUSD, supplyAmountUSD, netYieldAmountUSD } = statistics;
+  const { borrowAmountUSD, supplyAmountUSD, netYieldAmountUSD } = statistics || {};
 
-  const supplyBalanceLabel = formatUSD(supplyAmountUSD.toNumber());
-  const borrowBalanceLabel = formatUSD(borrowAmountUSD.toNumber());
-  const netYieldBalanceLabel = formatUSD(netYieldAmountUSD.toNumber());
+  const supplyBalanceLabel = formatUSD(supplyAmountUSD?.toNumber() || 0);
+  const borrowBalanceLabel = formatUSD(borrowAmountUSD?.toNumber() || 0);
+  const netYieldBalanceLabel = formatUSD(netYieldAmountUSD?.toNumber() || 0);
 
   const subsidyRewardsAmount = formatNumber(subsidyRewards?.toBig().toNumber() || 0, {
     maximumFractionDigits: subsidyRewards?.currency.humanDecimals || 5

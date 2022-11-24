@@ -12,12 +12,7 @@ const LoansOverview = (): JSX.Element => {
     data: { borrowPositions, lendPositions, statistics }
   } = useGetAccountPositions();
 
-  if (
-    lendPositions === undefined ||
-    borrowPositions === undefined ||
-    assets === undefined ||
-    statistics === undefined
-  ) {
+  if (lendPositions === undefined || borrowPositions === undefined || assets === undefined) {
     return <FullLoadingSpinner />;
   }
 
