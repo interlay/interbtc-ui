@@ -19,10 +19,24 @@ type LoansTablesProps = {
 const LoansTables = ({ lendPositions, borrowPositions, assets }: LoansTablesProps): JSX.Element => {
   const disabledAssets = useMemo(() => getDisabledAssetsTicker(assets), [assets]);
 
+  const hasBorrowPositions = !!borrowPositions.length;
+  const hasLendPositions = !!lendPositions.length;
+  const hasPositions = hasBorrowPositions || hasLendPositions;
+
   return (
-    <StyledTablesWrapper gap='spacing6'>
-      <LendTables assets={assets} positions={lendPositions} disabledAssets={disabledAssets} />
-      <BorrowTables assets={assets} positions={borrowPositions} disabledAssets={disabledAssets} />
+    <StyledTablesWrapper $hasPositions={hasPositions}>
+      <LendTables
+        assets={assets}
+        positions={lendPositions}
+        disabledAssets={disabledAssets}
+        hasPositions={hasPositions}
+      />
+      <BorrowTables
+        assets={assets}
+        positions={borrowPositions}
+        disabledAssets={disabledAssets}
+        hasPositions={hasPositions}
+      />
     </StyledTablesWrapper>
   );
 };

@@ -1,8 +1,6 @@
 import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
-import { Flex } from '@/component-library';
-
 import { getPosition } from '../../utils/get-position';
 import { CollateralModal } from '../CollateralModal';
 import { LendAssetsTable } from '../LendAssetsTable/LendAssetsTable';
@@ -21,9 +19,10 @@ type LendTablesProps = {
   assets: TickerToData<LoanAsset>;
   positions: LendPosition[];
   disabledAssets: string[];
+  hasPositions: boolean;
 };
 
-const LendTables = ({ assets, positions, disabledAssets }: LendTablesProps): JSX.Element => {
+const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTablesProps): JSX.Element => {
   const [selectedAsset, setAsset] = useState<UseAssetState>(defaultAssetState);
 
   const handleRowAction = (ticker: Key) => {
@@ -43,20 +42,17 @@ const LendTables = ({ assets, positions, disabledAssets }: LendTablesProps): JSX
   const handleClose = () => setAsset(defaultAssetState);
 
   return (
-    <Flex direction='column' flex='1' gap='spacing12'>
-      <LendPositionsTable
-        assets={assets}
-        positions={positions}
-        onRowAction={handleRowAction}
-        onPressCollateralSwitch={handlePressCollateralSwitch}
-        disabledKeys={disabledAssets}
-      />
-      <LendAssetsTable
-        assets={assets}
-        positions={positions}
-        onRowAction={handleRowAction}
-        disabledKeys={disabledAssets}
-      />
+    <>
+      {hasPositions && (
+        <LendPositionsTable
+          assets={assets}
+          positions={positions}
+          onRowAction={handleRowAction}
+          onPressCollateralSwitch={handlePressCollateralSwitch}
+          disabledKeys={disabledAssets}
+        />
+      )}
+      <LendAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
       <LoanModal
         variant='lend'
         open={selectedAsset.type === 'change-loan'}
@@ -70,7 +66,7 @@ const LendTables = ({ assets, positions, disabledAssets }: LendTablesProps): JSX
         position={selectedAsset.position}
         onClose={handleClose}
       />
-    </Flex>
+    </>
   );
 };
 

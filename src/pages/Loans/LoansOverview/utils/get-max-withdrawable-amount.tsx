@@ -34,9 +34,13 @@ const getMaxWithdrawableAmount = (
   const { amount, isCollateral } = position;
   const { collateralThreshold } = asset;
 
+  if (!isCollateral) {
+    return amount;
+  }
+
   const positionAmountUSD = amount.toBig().mul(assetPrice);
 
-  if (!isCollateral || positionAmountUSD.lt(totalCollateralAmountUSD.sub(totalBorrowedAmountUSD))) {
+  if (positionAmountUSD.lt(totalCollateralAmountUSD.sub(totalBorrowedAmountUSD))) {
     return amount;
   }
 
