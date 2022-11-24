@@ -1,12 +1,11 @@
 import { LoanAsset, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
-import { ReactNode, useMemo } from 'react';
+import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { convertMonetaryAmountToValueInUSD, formatPercentage, formatUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTableProps } from '../LoansBaseTable';
 import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
 import { StyledLendAssetsTable } from './LendAssetsTable.style';
@@ -50,14 +49,16 @@ const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableP
       Object.values(assets).map(({ lendApy, lendReward, currency, totalLiquidity }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
-        const rewardsApy = getSubsidyRewardApy(currency, lendReward, prices);
-        const formattedRewardsApy = lendReward
-          ? `${lendReward?.currency.ticker}: ${formatPercentage(rewardsApy || 0, {
-              maximumFractionDigits: 2
-            })}`
-          : undefined;
-
-        const apy = <ApyCell apy={lendApy} amount={formattedRewardsApy} />;
+        const apy = (
+          <ApyCell
+            assetApy={lendApy}
+            assetCurrency={currency}
+            rewards={lendReward}
+            prices={prices}
+            // TODO: temporary until we find why row click is being ignored
+            onClick={() => onRowAction?.(currency.ticker as Key)}
+          />
+        );
 
         const amount = balances ? balances[currency.ticker].free : newMonetaryAmount(0, currency);
         const wallet = <BalanceCell amount={amount} prices={prices} />;
@@ -77,7 +78,7 @@ const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableP
           totalSupply
         };
       }),
-    [assets, balances, prices]
+    [assets, balances, onRowAction, prices]
   );
 
   return (

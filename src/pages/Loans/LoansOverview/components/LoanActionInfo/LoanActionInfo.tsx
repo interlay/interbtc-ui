@@ -1,12 +1,13 @@
 import { LoanAsset } from '@interlay/interbtc-api';
 
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt } from '@/component-library';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
+import { getApyLabel } from '../../utils/apy';
 import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { StyledDl } from './LoanActionInfo.style';
 
@@ -18,7 +19,7 @@ type LoanActionInfoProps = {
 
 const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.Element => {
   const lendRewardsApy = getSubsidyRewardApy(asset?.currency, asset?.lendReward || null, prices);
-  const borrowRewardsApy = getSubsidyRewardApy(asset?.currency, asset?.borrowReward || null, prices);
+  const borrowRewardsApy = getSubsidyRewardApy(asset?.borrowReward?.currency, asset?.borrowReward || null, prices);
 
   return (
     <StyledDl direction='column' gap='spacing2'>
@@ -28,13 +29,19 @@ const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.El
             <>
               <DlGroup justifyContent='space-between'>
                 <Dt>Lend APY {asset.currency.ticker}</Dt>
-                <Dd>{formatPercentage(asset.lendApy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
+                <Dd>{getApyLabel(asset.lendApy)}</Dd>
               </DlGroup>
               {!!asset.lendReward && !!lendRewardsApy && (
-                <DlGroup justifyContent='space-between'>
-                  <Dt>Rewards APY {asset.lendReward.currency.ticker}</Dt>
-                  <Dd>{formatPercentage(lendRewardsApy, { maximumFractionDigits: 2 })}</Dd>
-                </DlGroup>
+                <>
+                  <DlGroup justifyContent='space-between'>
+                    <Dt>Rewards APY {asset.lendReward.currency.ticker}</Dt>
+                    <Dd>{getApyLabel(lendRewardsApy)}</Dd>
+                  </DlGroup>
+                  <DlGroup justifyContent='space-between'>
+                    <Dt>Total APY</Dt>
+                    <Dd>{getApyLabel(asset.lendApy.add(lendRewardsApy))}</Dd>
+                  </DlGroup>
+                </>
               )}
             </>
           )}
@@ -42,13 +49,19 @@ const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.El
             <>
               <DlGroup justifyContent='space-between'>
                 <Dt>Borrow APY {asset.currency.ticker}</Dt>
-                <Dd>{formatPercentage(asset.borrowApy.toNumber(), { maximumFractionDigits: 2 })}</Dd>
+                <Dd>{getApyLabel(asset.borrowApy.mul(-1))}</Dd>
               </DlGroup>
               {!!asset.borrowReward && !!borrowRewardsApy && (
-                <DlGroup justifyContent='space-between'>
-                  <Dt>Rewards APY {asset.borrowReward.currency.ticker}</Dt>
-                  <Dd>{formatPercentage(borrowRewardsApy, { maximumFractionDigits: 2 })}</Dd>
-                </DlGroup>
+                <>
+                  <DlGroup justifyContent='space-between'>
+                    <Dt>Rewards APY {asset.borrowReward.currency.ticker}</Dt>
+                    <Dd>{getApyLabel(borrowRewardsApy)}</Dd>
+                  </DlGroup>
+                  <DlGroup justifyContent='space-between'>
+                    <Dt>Total APY</Dt>
+                    <Dd>{getApyLabel(asset.borrowApy.mul(-1).add(borrowRewardsApy))}</Dd>
+                  </DlGroup>
+                </>
               )}
             </>
           )}
