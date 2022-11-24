@@ -346,8 +346,10 @@ const theme = {
     }
   },
   tooltip: {
+    bg: 'var(--colors-tooltip-bg)',
     offset: '3px',
     tip: {
+      bg: 'var(--colors-tooltip-tip-bg)',
       width: '5px'
     }
   }

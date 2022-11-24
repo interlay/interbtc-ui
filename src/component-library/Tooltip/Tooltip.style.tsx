@@ -20,14 +20,15 @@ const StyledTooltip = styled.div<StyledTooltipProps>`
   align-items: center;
   box-sizing: border-box;
   vertical-align: top;
-  background-color: ${theme.colors.textPrimary};
-  padding: ${theme.spacing.spacing2};
+  background-color: ${theme.tooltip.bg};
+  padding: ${theme.spacing.spacing3};
   border-radius: ${theme.rounded.rg};
   // TODO: add box-shadow to theme
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.21);
   font-weight: ${theme.fontWeight.book};
   font-size: ${theme.text.s};
   line-height: ${theme.lineHeight.s};
+  color: ${theme.colors.textPrimary};
   word-break: break-word;
   -webkit-font-smoothing: antialiased;
   cursor: default;
@@ -64,7 +65,7 @@ const StyledTooltipTip = styled.span<StyledTooltipTipProps>`
   width: 0;
   border-style: solid;
   border-width: ${theme.tooltip.tip.width};
-  border-top-color: ${theme.colors.textPrimary};
+  border-top-color: ${theme.tooltip.tip.bg};
   border-left-color: transparent;
   border-right-color: transparent;
   border-bottom-color: transparent;
