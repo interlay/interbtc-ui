@@ -39,9 +39,7 @@ ReactDOM.render(
               <ThemeWrapper>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <Subscriptions>
-                    <OverlayContainer>
-                      <App />
-                    </OverlayContainer>
+                    <App />
                   </Subscriptions>
                 </SubstrateLoadingAndErrorHandlingWrapper>
               </ThemeWrapper>
