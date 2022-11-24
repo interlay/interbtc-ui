@@ -3,7 +3,6 @@ import './index.css';
 import '@/component-library/theme/theme.interlay.css';
 import '@/component-library/theme/theme.kintsugi.css';
 
-import { OverlayContainer } from '@react-aria/overlays';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -12,8 +11,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Provider } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { SubstrateProvider } from '@/lib/substrate';
-import { SubstrateLoadingAndErrorHandlingWrapper } from '@/lib/substrate';
+import { SubstrateLoadingAndErrorHandlingWrapper, SubstrateProvider } from '@/lib/substrate';
 import ThemeWrapper from '@/parts/ThemeWrapper';
 import { Subscriptions } from '@/utils/hooks/api/tokens/use-balances-subscription';
 
@@ -39,9 +37,7 @@ ReactDOM.render(
               <ThemeWrapper>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <Subscriptions>
-                    <OverlayContainer>
-                      <App />
-                    </OverlayContainer>
+                    <App />
                   </Subscriptions>
                 </SubstrateLoadingAndErrorHandlingWrapper>
               </ThemeWrapper>
