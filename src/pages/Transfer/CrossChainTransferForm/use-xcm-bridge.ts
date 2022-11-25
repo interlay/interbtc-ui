@@ -14,7 +14,6 @@ const bridge = new Bridge({
 const useXcmBridge = (): { xcmProvider: any; xcmBridge: any } => {
   const [xcmBridge, setXcmBridge] = useState<any>();
 
-  // TODO: Replace with useQuery instance
   useEffect(() => {
     const handleConnections = async () => {
       const chains = Object.keys(XCM_ADAPTERS) as ChainName[];

@@ -50,27 +50,6 @@ type CrossChainTransferFormData = {
 
 const CrossChainTransferForm = (): JSX.Element => {
   const { xcmProvider, xcmBridge } = useXcmBridge();
-  console.log('provider, xcmBridge', xcmProvider, xcmBridge);
-
-  useEffect(() => {
-    if (!xcmBridge) return;
-
-    const testAccount = 'a3btHGrr9Zr51KNDu4nx4QhnQYbAtPMEE7D7j6ntRn5W6K9Yq';
-    const logBalances = async () => {
-      const interlayBalance: any = await firstValueFrom(
-        xcmBridge.findAdapter('interlay').subscribeTokenBalance('DOT', testAccount)
-      );
-
-      const polkadotBalance: any = await firstValueFrom(
-        xcmBridge.findAdapter('polkadot').subscribeTokenBalance('DOT', testAccount)
-      );
-
-      console.log('interlayBalance.free.toString', interlayBalance.free.toString());
-      console.log('polkadotBalance.free.toString', polkadotBalance.free.toString());
-    };
-
-    logBalances();
-  }, [xcmBridge]);
 
   // TODO: review how we're handling the relay chain api - for now it can
   // be scoped to this component, but long term it needs to be handled at
@@ -107,6 +86,28 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
   const { data: balances } = useGetBalances();
+
+  useEffect(() => {
+    if (!xcmBridge) return;
+    if (!selectedAccount) return;
+
+    console.log(xcmProvider);
+
+    const logBalances = async () => {
+      const interlayBalance: any = await firstValueFrom(
+        xcmBridge.findAdapter('interlay').subscribeTokenBalance('DOT', selectedAccount.address)
+      );
+
+      const polkadotBalance: any = await firstValueFrom(
+        xcmBridge.findAdapter('polkadot').subscribeTokenBalance('DOT', selectedAccount.address)
+      );
+
+      console.log('interlayBalance.free.toString', interlayBalance.free.toString());
+      console.log('polkadotBalance.free.toString', polkadotBalance.free.toString());
+    };
+
+    logBalances();
+  }, [selectedAccount, xcmBridge, xcmProvider]);
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
