@@ -1,3 +1,8 @@
+import { InterlayAdapter } from '@interlay/bridge/build/adapters/interlay';
+import { KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
+import { PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
+import { KusamaAdapter } from '@interlay/bridge/build/adapters/polkadot';
+import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import {
   CurrencyExt,
   CurrencyIdLiteral,
@@ -107,6 +112,7 @@ let STAKE_LOCK_TIME: {
   MIN: number;
   MAX: number;
 };
+let XCM_BRIDGE_CONFIG: Record<string, BaseCrossChainAdapter>;
 
 let TRANSACTION_FEE_AMOUNT: MonetaryAmount<CurrencyExt>;
 
@@ -146,6 +152,11 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     };
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
+    XCM_BRIDGE_CONFIG = {
+      interlay: new InterlayAdapter(),
+      polkadot: new PolkadotAdapter()
+    };
+
     break;
   }
   // Kintsugi
@@ -181,6 +192,10 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     };
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
+    XCM_BRIDGE_CONFIG = {
+      kintsugi: new KintsugiAdapter(),
+      kusama: new KusamaAdapter()
+    };
     break;
   }
   default: {
@@ -222,5 +237,6 @@ export {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon
+  WrappedTokenLogoIcon,
+  XCM_BRIDGE_CONFIG
 };

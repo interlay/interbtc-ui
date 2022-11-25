@@ -36,6 +36,8 @@ import {
   transferToRelayChain
 } from '@/utils/relay-chain-api';
 
+import { useXcmBridge } from './use-xcm-bridge';
+
 const TRANSFER_AMOUNT = 'transfer-amount';
 
 const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, RELAY_CHAIN_NATIVE_TOKEN);
@@ -45,6 +47,8 @@ type CrossChainTransferFormData = {
 };
 
 const CrossChainTransferForm = (): JSX.Element => {
+  useXcmBridge();
+
   // TODO: review how we're handling the relay chain api - for now it can
   // be scoped to this component, but long term it needs to be handled at
   // the application level.
