@@ -112,7 +112,7 @@ let STAKE_LOCK_TIME: {
   MIN: number;
   MAX: number;
 };
-let XCM_BRIDGE_CONFIG: Record<string, BaseCrossChainAdapter>;
+let XCM_ADAPTERS: Record<string, BaseCrossChainAdapter>;
 
 let TRANSACTION_FEE_AMOUNT: MonetaryAmount<CurrencyExt>;
 
@@ -152,7 +152,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     };
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
-    XCM_BRIDGE_CONFIG = {
+    XCM_ADAPTERS = {
       interlay: new InterlayAdapter(),
       polkadot: new PolkadotAdapter()
     };
@@ -192,7 +192,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     };
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
-    XCM_BRIDGE_CONFIG = {
+    XCM_ADAPTERS = {
       kintsugi: new KintsugiAdapter(),
       kusama: new KusamaAdapter()
     };
@@ -238,5 +238,5 @@ export {
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon,
-  XCM_BRIDGE_CONFIG
+  XCM_ADAPTERS
 };
