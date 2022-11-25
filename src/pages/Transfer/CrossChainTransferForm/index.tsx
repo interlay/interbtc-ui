@@ -1,10 +1,12 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import * as React from 'react';
+import { useEffect } from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { firstValueFrom } from 'rxjs';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
@@ -47,7 +49,28 @@ type CrossChainTransferFormData = {
 };
 
 const CrossChainTransferForm = (): JSX.Element => {
-  useXcmBridge();
+  const { xcmProvider, xcmBridge } = useXcmBridge();
+  console.log('provider, xcmBridge', xcmProvider, xcmBridge);
+
+  useEffect(() => {
+    if (!xcmBridge) return;
+
+    const testAccount = 'a3btHGrr9Zr51KNDu4nx4QhnQYbAtPMEE7D7j6ntRn5W6K9Yq';
+    const logBalances = async () => {
+      const interlayBalance: any = await firstValueFrom(
+        xcmBridge.findAdapter('interlay').subscribeTokenBalance('DOT', testAccount)
+      );
+
+      const polkadotBalance: any = await firstValueFrom(
+        xcmBridge.findAdapter('polkadot').subscribeTokenBalance('DOT', testAccount)
+      );
+
+      console.log('interlayBalance.free.toString', interlayBalance.free.toString());
+      console.log('polkadotBalance.free.toString', polkadotBalance.free.toString());
+    };
+
+    logBalances();
+  }, [xcmBridge]);
 
   // TODO: review how we're handling the relay chain api - for now it can
   // be scoped to this component, but long term it needs to be handled at

@@ -1,38 +1,37 @@
-import { ApiProvider, Bridge } from '@interlay/bridge/build';
-import { useEffect } from 'react';
+import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
+import { useEffect, useState } from 'react';
 import { firstValueFrom } from 'rxjs';
 
 import { XCM_ADAPTERS } from '@/config/relay-chains';
 import { BITCOIN_NETWORK } from '@/constants';
 
-const provider = new ApiProvider(BITCOIN_NETWORK);
-const testAccount = 'a3btHGrr9Zr51KNDu4nx4QhnQYbAtPMEE7D7j6ntRn5W6K9Yq';
+const xcmProvider = new ApiProvider(BITCOIN_NETWORK);
 
 const bridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
 });
 
-const useXcmBridge = (): void => {
+const useXcmBridge = (): { xcmProvider: any; xcmBridge: any } => {
+  const [xcmBridge, setXcmBridge] = useState<any>();
+
+  // TODO: Replace with useQuery instance
   useEffect(() => {
     const handleConnections = async () => {
-      await firstValueFrom(provider.connectFromChain(['interlay', 'polkadot'], undefined));
-      await bridge.findAdapter('interlay').setApi(provider.getApi('interlay'));
-      await bridge.findAdapter('polkadot').setApi(provider.getApi('polkadot'));
+      const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
-      const interlayBalance = await firstValueFrom(
-        bridge.findAdapter('interlay').subscribeTokenBalance('DOT', testAccount)
-      );
+      // Check connection
+      await firstValueFrom(xcmProvider.connectFromChain(chains, undefined));
 
-      const polkadotBalance = await firstValueFrom(
-        bridge.findAdapter('polkadot').subscribeTokenBalance('DOT', testAccount)
-      );
+      // Set Apis
+      await Promise.all(chains.map((chain) => bridge.findAdapter(chain).setApi(xcmProvider.getApi(chain))));
 
-      console.log('interlayBalance.free.toString', interlayBalance.free.toString());
-      console.log('polkadotBalance.free.toString', polkadotBalance.free.toString());
+      setXcmBridge(bridge);
     };
 
     handleConnections();
   }, []);
+
+  return { xcmProvider, xcmBridge };
 };
 
 export { useXcmBridge };
