@@ -74,4 +74,7 @@
   --colors-table-row-hover-bg: #1c2c46;
   --color-table-header-row-bg: #080e28;
   --colors-table-border: #080e28;
+  /* Table */
+  --colors-tooltip-bg: var(--colors-blue);
+  --colors-tooltip-tip-bg: var(--colors-blue);
 }
