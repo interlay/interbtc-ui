@@ -65,3 +65,5 @@ export type NormalAlignments = typeof normalAlignments[number];
 export type Direction = typeof direction[number];
 
 export type Spacing = keyof typeof theme.spacing;
+
+export type Placement = 'top' | 'right' | 'bottom' | 'left';
