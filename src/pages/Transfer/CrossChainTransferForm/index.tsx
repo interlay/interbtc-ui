@@ -1,7 +1,7 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
@@ -27,15 +27,7 @@ import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import {
-  createRelayChainApi,
-  getExistentialDeposit,
-  RELAY_CHAIN_TRANSFER_FEE,
-  RelayChainApi,
-  RelayChainMonetaryAmount,
-  transferToParachain,
-  transferToRelayChain
-} from '@/utils/relay-chain-api';
+import { RELAY_CHAIN_TRANSFER_FEE, RelayChainMonetaryAmount } from '@/utils/relay-chain-api';
 
 import { useXcmBridge } from './use-xcm-bridge';
 
@@ -53,7 +45,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   // TODO: review how we're handling the relay chain api - for now it can
   // be scoped to this component, but long term it needs to be handled at
   // the application level.
-  const [api, setApi] = React.useState<RelayChainApi | undefined>(undefined);
   const [relayChainBalance, setRelayChainBalance] = React.useState<RelayChainMonetaryAmount | undefined>(undefined);
   const [destinationRelayChainBalance, setDestinationRelayChainBalance] = React.useState<
     RelayChainMonetaryAmount | undefined
@@ -69,7 +60,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const handleError = useErrorHandler();
+  // const handleError = useErrorHandler();
 
   const {
     register,
@@ -115,27 +106,17 @@ const CrossChainTransferForm = (): JSX.Element => {
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
     if (!destination) return;
+    if (!xcmBridge) return;
 
     try {
       setSubmitStatus(STATUSES.PENDING);
-
-      if (!api) return;
+      console.log(data);
 
       // We can use if else here as we only support two chains
       if (fromChain === ChainType.RelayChain) {
-        await transferToParachain(
-          api,
-          selectedAccount.address,
-          destination.address,
-          newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true)
-        );
+        // Transfer call
       } else {
-        await transferToRelayChain(
-          window.bridge.api,
-          selectedAccount.address,
-          destination.address,
-          newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true)
-        );
+        // Transfer call
       }
 
       setSubmitStatus(STATUSES.RESOLVED);
@@ -175,9 +156,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     // TODO: this api check won't be necessary when the api call is moved out of
     // the component
-    const existentialDeposit = api
-      ? newMonetaryAmount(getExistentialDeposit(api), RELAY_CHAIN_NATIVE_TOKEN)
-      : newMonetaryAmount('0', RELAY_CHAIN_NATIVE_TOKEN);
+    const existentialDeposit = newMonetaryAmount('0', RELAY_CHAIN_NATIVE_TOKEN);
 
     // TODO: we need to handle and validate transfer fees properly. Implemented here initially
     // because it was an issue during testing.
@@ -202,22 +181,6 @@ const CrossChainTransferForm = (): JSX.Element => {
       return undefined;
     }
   };
-
-  React.useEffect(() => {
-    if (api) return;
-    if (!handleError) return;
-
-    const initialiseApi = async () => {
-      try {
-        const api = await createRelayChainApi();
-        setApi(api);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    initialiseApi();
-  }, [api, handleError]);
 
   const handleSetFromChain = (chain: ChainOption) => {
     setFromChain(chain.type);
@@ -259,7 +222,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     });
   }, [submitStatus, reset, t]);
 
-  if (!api) {
+  if (!xcmBridge) {
     return <PrimaryColorEllipsisLoader />;
   }
 
