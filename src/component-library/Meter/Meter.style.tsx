@@ -1,105 +1,111 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
+import { Flex } from '../Flex';
 import { Span } from '../Text';
 import { theme } from '../theme';
+import { Status, Variants } from '../utils/prop-types';
 
 type StyledWrapperProps = {
-  $showRanges?: boolean;
+  $variant: Variants;
 };
 
-type StyledIndicatorProps = {
-  $variant: 'min' | 'error' | 'warning' | 'max';
+type StyledMeterProps = {
+  $position: number;
+  $variant: Variants;
 };
 
-type MeterProps = {
-  $width: number;
-  $hasIndicator: boolean;
+type StyledRangeIndicatorProps = {
+  $position: number;
+  $status: Exclude<Status, 'success'>;
 };
 
 const StyledWrapper = styled.div<StyledWrapperProps>`
   position: relative;
-  padding-top: ${({ $showRanges }) => ($showRanges ? theme.spacing.spacing8 : '8px')};
+  padding-top: ${({ $variant }) => ($variant === 'secondary' ? theme.spacing.spacing5 : '8px')};
   padding-bottom: 36px;
   width: 100%;
 `;
 
-const StyledIndicator = styled(Span)<StyledIndicatorProps>`
-  position: absolute;
-  left: ${({ $variant }) => {
-    switch ($variant) {
-      case 'min':
-        return 0;
-      case 'warning':
-        return '25%';
-      case 'error':
-        return '75%';
-      default:
-        return;
-    }
-  }};
-  right: ${({ $variant }) => {
-    switch ($variant) {
-      case 'max':
-        return '0';
-      default:
-        return;
-    }
-  }};
-  transform: ${({ $variant }) => {
-    switch ($variant) {
-      case 'warning':
-        return 'translateX(-50%)';
-      case 'error':
-        return 'translateX(-50%)';
-      default:
-        return;
-    }
-  }};
-
-  top: ${theme.spacing.spacing1};
-  font-size: ${theme.text.xs};
-  font-weight: ${theme.fontWeight.medium};
-`;
-
-const StyledMeter = styled.div<MeterProps>`
+const StyledMeter = styled.div<StyledMeterProps>`
   position: relative;
   height: ${theme.meter.bar.height};
-  background: ${theme.meter.bar.bg};
+  background: ${({ $variant }) => theme.meter.bar[$variant].bg};
   border-radius: ${theme.meter.bar.radius};
 
-  &::before {
-    content: '';
-    position: absolute;
-    width: 50%;
-    top: -8px;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 1px dashed ${theme.meter.bar.separator.color};
-    border-right: 1px dashed ${theme.meter.bar.separator.color};
-    z-index: 1;
-  }
+  // Progress bar for secondary Meter
+  ${({ $variant, $position }) =>
+    $variant === 'secondary' &&
+    css`
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        right: calc(100% - ${$position}%);
+        background-color: ${theme.meter.bar.indicator.color};
+        border-radius: inherit;
+        transition: right ${theme.transition.duration.duration100}ms;
+        will-change: right;
+      }
+    `}
 
-  ${({ $hasIndicator, $width }) => {
-    if ($hasIndicator) {
-      return `       
-        &:after {
-          content: '';
-          width: 0;
-          height: 0;
-          border-left: ${theme.meter.bar.indicator.border.left};
-          border-right: ${theme.meter.bar.indicator.border.right};
-          border-bottom: ${theme.meter.bar.indicator.border.bottom};
-          position: absolute;
-          left: ${$width}%;
-          top: 100%;
-          transform: translate(-50%);
-          transition: left ${theme.transition.duration.duration100}ms;
-          will-change: left;
-          margin-top: 16px;
-        }`;
-    }
-  }}
+  // Ranges indicators for primary meter
+  ${({ $variant }) =>
+    $variant === 'primary' &&
+    css`
+      &::before {
+        content: '';
+        position: absolute;
+        // need for a correct placement
+        width: calc(50% - 1px);
+        top: -8px;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 1px dashed ${theme.meter.bar.separator.color};
+        border-right: 1px dashed ${theme.meter.bar.separator.color};
+        z-index: 1;
+      }
+    `}
 `;
 
-export { StyledIndicator, StyledMeter, StyledWrapper };
+const StyledContainer = styled.div`
+  position: relative;
+`;
+
+const StyledIndicatorWrapper = styled(Flex)<StyledMeterProps>`
+  position: absolute;
+  left: ${({ $position }) => $position}%;
+  top: 100%;
+  transform: translateX(-50%);
+  transition: left ${theme.transition.duration.duration100}ms;
+  will-change: left;
+  margin-top: ${({ $variant }) => theme.meter.bar.indicator[$variant].marginTop};
+  color: ${theme.meter.bar.indicator.color};
+  font-size: ${theme.text.xs};
+  font-weight: ${theme.fontWeight.bold};
+`;
+
+const StyledRangeIndicator = styled(Span)<StyledRangeIndicatorProps>`
+  position: absolute;
+  width: 0;
+  top: -2px;
+  bottom: -2px;
+  left: ${({ $position }) => $position}%;
+  transform: translateX(-50%);
+  border: 2px solid ${({ $status }) => theme.alert.status[$status]};
+  border-radius: ${theme.rounded.full};
+  z-index: 1;
+
+  &::after {
+    content: '${({ $position }) => $position}%';
+    position: absolute;
+    transform: translate(-45%, -120%);
+    font-size: ${theme.text.xs};
+    font-weight: ${theme.fontWeight.bold};
+  }
+`;
+
+export { StyledContainer, StyledIndicatorWrapper, StyledMeter, StyledRangeIndicator, StyledWrapper };
