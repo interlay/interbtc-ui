@@ -90,16 +90,26 @@ const CrossChainTransferForm = (): JSX.Element => {
         xcmBridge.findAdapter('interlay').subscribeTokenBalance('DOT', selectedAccount.address)
       );
 
-      const polkadotBalance: any = await firstValueFrom(
-        xcmBridge.findAdapter('polkadot').subscribeTokenBalance('DOT', selectedAccount.address)
-      );
-
       setRelayChainBalance(newMonetaryAmount(interlayBalance.free, RELAY_CHAIN_NATIVE_TOKEN, true));
-      setDestinationRelayChainBalance(newMonetaryAmount(polkadotBalance.free, RELAY_CHAIN_NATIVE_TOKEN, true));
     };
 
     logBalances();
   }, [selectedAccount, xcmBridge, xcmProvider]);
+
+  useEffect(() => {
+    if (!xcmBridge) return;
+    if (!destination) return;
+
+    const setRelayChainBalance = async () => {
+      const polkadotBalance: any = await firstValueFrom(
+        xcmBridge.findAdapter('polkadot').subscribeTokenBalance('DOT', destination.address)
+      );
+
+      setDestinationRelayChainBalance(newMonetaryAmount(polkadotBalance.free, RELAY_CHAIN_NATIVE_TOKEN, true));
+    };
+
+    setRelayChainBalance();
+  }, [destination, xcmBridge]);
 
   // *************************
 
