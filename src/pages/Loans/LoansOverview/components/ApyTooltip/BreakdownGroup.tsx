@@ -2,7 +2,7 @@ import Big from 'big.js';
 
 import { Dd, Dl, DlGroup, Dt } from '@/component-library';
 
-import { getApyLabel, getLoanApy } from '../../utils/apy';
+import { getApyLabel } from '../../utils/apy';
 import { StyledApyTooltipGroup, StyledApyTooltipTitle } from './ApyTooltip.style';
 
 type BreakdownGroupProps = {
@@ -20,8 +20,7 @@ const BreakdownGroup = ({
   rewardsTicker,
   isBorrow
 }: BreakdownGroupProps): JSX.Element => {
-  const loanApy = getLoanApy(assetApy, isBorrow);
-  const loanApyLabel = getApyLabel(loanApy);
+  const assetApyLabel = getApyLabel(assetApy);
 
   return (
     <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
@@ -32,7 +31,7 @@ const BreakdownGroup = ({
             <Dd color='tertiary'>
               {isBorrow ? 'Borrow' : 'Lend'} APY {assetTicker}:
             </Dd>
-            <Dt color='primary'>{loanApyLabel}</Dt>
+            <Dt color='primary'>{assetApyLabel}</Dt>
           </StyledApyTooltipGroup>
           {!!rewardsApy && (
             <StyledApyTooltipGroup gap='spacing1' wrap>

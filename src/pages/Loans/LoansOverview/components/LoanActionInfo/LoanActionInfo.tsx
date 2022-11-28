@@ -49,7 +49,7 @@ const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.El
             <>
               <DlGroup justifyContent='space-between'>
                 <Dt>Borrow APY {asset.currency.ticker}</Dt>
-                <Dd>{getApyLabel(asset.borrowApy.mul(-1))}</Dd>
+                <Dd>{getApyLabel(asset.borrowApy)}</Dd>
               </DlGroup>
               {!!asset.borrowReward && !!borrowRewardsApy && (
                 <>
@@ -59,7 +59,7 @@ const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.El
                   </DlGroup>
                   <DlGroup justifyContent='space-between'>
                     <Dt>Total APY</Dt>
-                    <Dd>{getApyLabel(asset.borrowApy.mul(-1).add(borrowRewardsApy))}</Dd>
+                    <Dd>{getApyLabel(asset.borrowApy.sub(borrowRewardsApy))}</Dd>
                   </DlGroup>
                 </>
               )}

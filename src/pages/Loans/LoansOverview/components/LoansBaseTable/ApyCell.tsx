@@ -6,7 +6,7 @@ import { formatNumber } from '@/common/utils/utils';
 import { Flex } from '@/component-library';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { getApyLabel, getLoanApy } from '../../utils/apy';
+import { getApyLabel } from '../../utils/apy';
 import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { ApyTooltip } from '../ApyTooltip';
 import { MonetaryCell } from './MonetaryCell';
@@ -32,7 +32,7 @@ const ApyCell = ({
 }: ApyCellProps): JSX.Element => {
   const rewardsApy = getSubsidyRewardApy(rewards?.currency, rewards, prices);
 
-  const totalApy = getLoanApy(assetApy, isBorrow).add(rewardsApy || 0);
+  const totalApy = isBorrow ? assetApy.sub(rewardsApy || 0) : assetApy.add(rewardsApy || 0);
   const totalApyLabel = getApyLabel(totalApy);
 
   const earnedAssetAmount = earnedAsset
