@@ -30,7 +30,6 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import {
   createRelayChainApi,
   getExistentialDeposit,
-  getRelayChainBalance,
   RELAY_CHAIN_TRANSFER_FEE,
   RelayChainApi,
   RelayChainMonetaryAmount,
@@ -87,6 +86,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
   const { data: balances } = useGetBalances();
 
+  // *************************
+
   useEffect(() => {
     if (!xcmBridge) return;
     if (!selectedAccount) return;
@@ -102,12 +103,14 @@ const CrossChainTransferForm = (): JSX.Element => {
         xcmBridge.findAdapter('polkadot').subscribeTokenBalance('DOT', selectedAccount.address)
       );
 
-      console.log('interlayBalance.free.toString', interlayBalance.free.toString());
-      console.log('polkadotBalance.free.toString', polkadotBalance.free.toString());
+      setRelayChainBalance(newMonetaryAmount(interlayBalance.free, RELAY_CHAIN_NATIVE_TOKEN, true));
+      setDestinationRelayChainBalance(newMonetaryAmount(polkadotBalance.free, RELAY_CHAIN_NATIVE_TOKEN, true));
     };
 
     logBalances();
   }, [selectedAccount, xcmBridge, xcmProvider]);
+
+  // *************************
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
@@ -216,40 +219,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     initialiseApi();
   }, [api, handleError]);
 
-  React.useEffect(() => {
-    if (!api) return;
-    if (!handleError) return;
-    if (!destination) return;
-
-    const fetchDestinationRelayChainBalance = async () => {
-      try {
-        const balance: any = await getRelayChainBalance(api, destination?.address);
-        setDestinationRelayChainBalance(balance);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    fetchDestinationRelayChainBalance();
-  }, [api, destination, handleError]);
-
-  React.useEffect(() => {
-    if (!api) return;
-    if (!handleError) return;
-    if (!selectedAccount) return;
-
-    const fetchRelayChainBalance = async () => {
-      try {
-        const balance: any = await getRelayChainBalance(api, selectedAccount.address);
-        setRelayChainBalance(balance.sub(transferFee));
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    fetchRelayChainBalance();
-  }, [api, selectedAccount, handleError]);
-
   const handleSetFromChain = (chain: ChainOption) => {
     setFromChain(chain.type);
 
@@ -269,7 +238,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const isRelayChain = fromChain === ChainType.RelayChain;
-  const chainBalance = isRelayChain ? relayChainBalance : balances?.[RELAY_CHAIN_NATIVE_TOKEN.ticker].transferable;
+  const chainBalance = isRelayChain ? relayChainBalance : destinationRelayChainBalance;
   const balance = displayMonetaryAmount(chainBalance);
 
   const handleClickBalance = () => {
