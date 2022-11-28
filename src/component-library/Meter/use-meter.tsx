@@ -5,6 +5,7 @@ import { MeterRanges } from './Meter';
 
 type UseMeterProps = Omit<AriaMeterProps, 'minValue' | 'maxValue'> & { ranges: MeterRanges };
 
+// TODO: stop exporting hook
 const useMeter = ({ ranges, value: valueProp = 0, ...props }: UseMeterProps): ReturnType<typeof useAriaMeter> => {
   const [minRange, , , maxRange] = ranges;
 
