@@ -4,20 +4,21 @@ import { Meter, MeterProps } from '.';
 
 const Template: Story<MeterProps> = (args) => <Meter {...args} />;
 
-const Default = Template.bind({});
-Default.args = {
-  value: 20,
-  ranges: [0, 20, 40, 60]
-};
-
-const WithRanges = Template.bind({});
-WithRanges.args = {
+const StaticMeter = Template.bind({});
+StaticMeter.args = {
   value: 20,
   ranges: [0, 20, 40, 60],
-  showRanges: true
+  variant: 'primary'
 };
 
-export { Default, WithRanges };
+const DynamicMeter = Template.bind({});
+DynamicMeter.args = {
+  value: 20,
+  ranges: [0, 60, 80, 100],
+  variant: 'secondary'
+};
+
+export { DynamicMeter, StaticMeter };
 
 export default {
   title: 'Elements/Meter',
