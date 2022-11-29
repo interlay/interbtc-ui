@@ -39,6 +39,33 @@ const getAccountPositionsQuery = async (accountId: AccountId): Promise<AccountPo
   };
 };
 
+interface PositionsThresholdsData {
+  collateral: Big;
+  liquidation: Big;
+}
+
+const getPositionsThresholds = (
+  lendPositions: LendPosition[],
+  assets: TickerToData<LoanAsset>
+): PositionsThresholdsData => {
+  const collateralPositions = lendPositions.filter(({ isCollateral }) => isCollateral);
+
+  const totalCollateralThreshold = collateralPositions.reduce(
+    (total, position) => total.add(assets[position.currency.ticker].collateralThreshold),
+    new Big(0)
+  );
+
+  const totalLiquidationThreshold = collateralPositions.reduce(
+    (total, position) => total.add(assets[position.currency.ticker].liquidationThreshold),
+    new Big(0)
+  );
+
+  return {
+    collateral: totalCollateralThreshold.div(collateralPositions.length),
+    liquidation: totalLiquidationThreshold.div(collateralPositions.length)
+  };
+};
+
 interface AccountPositionsStatisticsData {
   supplyAmountUSD: Big;
   borrowAmountUSD: Big;
@@ -90,6 +117,7 @@ const getAccountPositionsStats = (
 type UseGetAccountPositions = {
   data: Partial<AccountPositionsData> & {
     statistics: AccountPositionsStatisticsData | undefined;
+    thresholds: PositionsThresholdsData | undefined;
   };
   refetch: () => void;
 };
@@ -120,12 +148,21 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positions, prices, subsidyRewards]);
 
+  const thresholds = useMemo(() => {
+    if (!positions || !assets) {
+      return undefined;
+    }
+
+    return getPositionsThresholds(positions.lendPositions, assets);
+  }, [assets, positions]);
+
   useErrorHandler(positionsError);
 
   return {
     data: {
       borrowPositions: positions?.borrowPositions,
       lendPositions: positions?.lendPositions,
+      thresholds,
       statistics
     },
     refetch: refetchPositions
@@ -133,4 +170,4 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
 };
 
 export { useGetAccountPositions };
-export type { AccountPositionsData, AccountPositionsStatisticsData };
+export type { AccountPositionsData, AccountPositionsStatisticsData, PositionsThresholdsData };

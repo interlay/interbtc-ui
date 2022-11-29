@@ -1,7 +1,10 @@
 import { formatUSD } from '@/common/utils/utils';
-import { Card, Dd, Dl, DlGroup, Dt, Flex, Meter, P } from '@/component-library';
+import { Card, Dd, Dl, DlGroup, Dt, Flex, Meter } from '@/component-library';
 import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
+
+import { LTVLegend } from '../LTVMeter.tsx/LTVLegend';
+import { StyledDlGroup } from './LTVSection.style';
 
 type LTVSectionProps = {
   prices?: Prices;
@@ -17,20 +20,20 @@ const LTVSection = ({ statistics }: LTVSectionProps): JSX.Element => {
   return (
     <Card direction='column' justifyContent='center' alignItems='center'>
       <Dl>
-        <DlGroup>
+        <StyledDlGroup>
           <Dt>Borrow Balance</Dt>
           <Dd>{borrowBalanceLabel}</Dd>
-        </DlGroup>
+        </StyledDlGroup>
         <DlGroup>
           <Dt>Collateral Value</Dt>
           <Dd>{collateralValueLabel}</Dd>
         </DlGroup>
       </Dl>
       <Meter variant='secondary' value={ltv} ranges={[0, 86, 95, 100]} />
-      <Flex>
-        <P>Current LTV</P>
-        <P>Max LTV</P>
-        <P>Liquidation Limit</P>
+      <Flex gap='spacing2'>
+        <LTVLegend label='Current LTV' description='Current LTV' status='info' />
+        <LTVLegend label='Max LTV' description='Max LTV' status='warning' />
+        <LTVLegend label='Liquidation LTV' description='Liquidation LTV' status='error' />
       </Flex>
     </Card>
   );
