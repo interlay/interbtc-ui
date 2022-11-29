@@ -50,7 +50,6 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const { extensions, selectedAccount } = useSubstrateSecureState();
 
-  // ray test touch <
   const {
     isIdle: issueRequestsTotalCountIdle,
     isLoading: issueRequestsTotalCountLoading,
@@ -61,7 +60,6 @@ const IssueRequestsTable = (): JSX.Element => {
     [GRAPHQL_FETCHER, issuesCountQuery(`userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`)],
     graphqlFetcher<GraphqlReturn<any>>()
   );
-  // ray test touch >
   useErrorHandler(issueRequestsTotalCountError);
 
   const {

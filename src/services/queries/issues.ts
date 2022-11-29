@@ -87,12 +87,10 @@ const issuesCountQuery = (where?: string): string => `{
 }
 `;
 
-// ray test touch <
 const issueIdsQuery = (where?: string): string => `{
   issues(orderBy: request_timestamp_DESC, where: {${where ? `, ${where}` : ''}}) {
     id
   }
 }`;
-// ray test touch >
 
 export { issueIdsQuery, issuesCountQuery, issuesQuery };
