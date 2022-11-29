@@ -19,7 +19,7 @@ const StyledTablesWrapper = styled.div<StyledTablesWrapperProps>`
             'borrow-assets-table'`};
 
   @media (min-width: 80em) {
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
     grid-template-areas: ${({ $hasPositions }) =>
       $hasPositions
