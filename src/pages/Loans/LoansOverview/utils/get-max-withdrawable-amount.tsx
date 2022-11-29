@@ -39,14 +39,14 @@ const getMaxWithdrawableAmount = (
   }
 
   const positionAmountUSD = amount.toBig().mul(assetPrice);
+  const positionCollateralValueUSD = positionAmountUSD.mul(collateralThreshold);
+  const borrowLimit = totalCollateralAmountUSD.sub(totalBorrowedAmountUSD);
 
-  if (positionAmountUSD.lt(totalCollateralAmountUSD.sub(totalBorrowedAmountUSD))) {
+  if (positionCollateralValueUSD.lt(borrowLimit)) {
     return amount;
   }
 
-  const minCollateralNeeded = totalBorrowedAmountUSD.div(collateralThreshold);
-
-  const maxWithdrawable = positionAmountUSD.sub(minCollateralNeeded).div(assetPrice);
+  const maxWithdrawable = borrowLimit.div(assetPrice).div(collateralThreshold);
 
   return newMonetaryAmount(maxWithdrawable, currency, true);
 };

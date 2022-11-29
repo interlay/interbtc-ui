@@ -89,7 +89,7 @@
   "nav_use_wrapped": "Use {{wrappedTokenSymbol}}",
   "nav_governance": "Governance",
   "report_bug": "Report a bug:",
-  "request_funds": "{{tokenSymbol}} Faucet",
+  "request_funds": "Token Faucet",
   "request_btc": "BTC Faucet",
   "no_pending_status": "No pending status updates",
   "bridge_fee": "Bridge Fee",

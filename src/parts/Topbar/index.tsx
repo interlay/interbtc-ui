@@ -13,7 +13,7 @@ import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/
 import Tokens from '@/components/Tokens';
 import InterlayLink from '@/components/UI/InterlayLink';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
@@ -99,9 +99,7 @@ const Topbar = (): JSX.Element => {
                   pending={isRequestPending}
                   onClick={handleFundsRequest}
                 >
-                  {t('request_funds', {
-                    tokenSymbol: GOVERNANCE_TOKEN_SYMBOL
-                  })}
+                  {t('request_funds')}
                 </InterlayDenimOrKintsugiMidnightOutlinedButton>
               </>
             )}
