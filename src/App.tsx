@@ -33,6 +33,7 @@ const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@
 const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages/Vaults'));
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
+const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
 const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
@@ -182,7 +183,11 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.TRANSFER}>
                     <Transfer />
                   </Route>
-                  {isLendingEnabled && <Route path={PAGES.LOANS}>{/* TODO: add loans page */}</Route>}
+                  {isLendingEnabled && (
+                    <Route path={PAGES.LOANS}>
+                      <Loans />
+                    </Route>
+                  )}
                   <Route path={PAGES.ACTIONS}>
                     <Actions />
                   </Route>
