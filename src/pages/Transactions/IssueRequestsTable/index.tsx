@@ -50,6 +50,7 @@ const IssueRequestsTable = (): JSX.Element => {
 
   const { extensions, selectedAccount } = useSubstrateSecureState();
 
+  // ray test touch <
   const {
     isIdle: issueRequestsTotalCountIdle,
     isLoading: issueRequestsTotalCountLoading,
@@ -60,9 +61,9 @@ const IssueRequestsTable = (): JSX.Element => {
     [GRAPHQL_FETCHER, issuesCountQuery(`userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`)],
     graphqlFetcher<GraphqlReturn<any>>()
   );
+  // ray test touch >
   useErrorHandler(issueRequestsTotalCountError);
 
-  // ray test touch <
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
@@ -74,7 +75,6 @@ const IssueRequestsTable = (): JSX.Element => {
     `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
-  // ray test touch >
   useErrorHandler(issueRequestsError);
 
   const columns = React.useMemo(
