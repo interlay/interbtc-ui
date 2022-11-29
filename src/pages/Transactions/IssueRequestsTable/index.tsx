@@ -29,7 +29,7 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useIssueRequests } from '@/services/hooks/issue-requests';
-import issueCountQuery from '@/services/queries/issue-count-query';
+import { issuesCountQuery } from '@/services/queries/issues';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
@@ -57,11 +57,12 @@ const IssueRequestsTable = (): JSX.Element => {
     error: issueRequestsTotalCountError
     // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [GRAPHQL_FETCHER, issueCountQuery(`userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`)],
+    [GRAPHQL_FETCHER, issuesCountQuery(`userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`)],
     graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(issueRequestsTotalCountError);
 
+  // ray test touch <
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
@@ -73,6 +74,7 @@ const IssueRequestsTable = (): JSX.Element => {
     `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
+  // ray test touch >
   useErrorHandler(issueRequestsError);
 
   const columns = React.useMemo(

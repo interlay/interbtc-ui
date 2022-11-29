@@ -25,7 +25,7 @@ import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useIssueRequests } from '@/services/hooks/issue-requests';
-import issueCountQuery from '@/services/queries/issue-count-query';
+import { issuesCountQuery } from '@/services/queries/issues';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import useQueryParams from '@/utils/hooks/use-query-params';
@@ -187,7 +187,7 @@ const IssueRequestsTable = (): JSX.Element => {
     data: issuesCount,
     error: issuesCountError
     // TODO: should type properly (`Relay`)
-  } = useQuery<GraphqlReturn<any>, Error>([GRAPHQL_FETCHER, issueCountQuery()], graphqlFetcher<GraphqlReturn<any>>());
+  } = useQuery<GraphqlReturn<any>, Error>([GRAPHQL_FETCHER, issuesCountQuery()], graphqlFetcher<GraphqlReturn<any>>());
   useErrorHandler(issuesCountError);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({

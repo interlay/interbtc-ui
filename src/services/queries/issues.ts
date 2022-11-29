@@ -1,3 +1,4 @@
+// ray test touch <
 const issuesQuery = (where?: string): string => `
   query ($limit: Int!, $offset: Int) {
     issues(orderBy: request_timestamp_DESC, limit: $limit, offset: $offset, where:{${where ? `, ${where}` : ''}}) {
@@ -80,4 +81,12 @@ const issuesQuery = (where?: string): string => `
   }
 `;
 
-export default issuesQuery;
+const issuesCountQuery = (where?: string): string => `{
+  issuesConnection(orderBy: id_ASC, where: {${where ? `, ${where}` : ''}}) {
+    totalCount
+  }
+}
+`;
+
+export { issuesCountQuery, issuesQuery };
+// ray test touch >
