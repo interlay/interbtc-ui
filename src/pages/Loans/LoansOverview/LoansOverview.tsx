@@ -5,7 +5,7 @@ import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-import { LoansInsights, LoansTables } from './components';
+import { LoansInsights, LoansTables, LTVSection } from './components';
 
 const LoansOverview = (): JSX.Element => {
   const accountId = useAccountId();
@@ -24,6 +24,7 @@ const LoansOverview = (): JSX.Element => {
     <MainContainer>
       <Flex direction='column' gap='spacing12'>
         <LoansInsights statistics={statistics} />
+        <LTVSection statistics={statistics} />
         <LoansTables borrowPositions={borrowPositions || []} lendPositions={lendPositions || []} assets={assets} />
       </Flex>
     </MainContainer>
