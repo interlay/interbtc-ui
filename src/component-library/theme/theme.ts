@@ -45,7 +45,7 @@ const theme = {
     xl: 'var(--line-height-xl)'
   },
   spacing: {
-    spacing0: '',
+    spacing0: 'var(--spacing-0)',
     spacing1: 'var(--spacing-1)',
     spacing2: 'var(--spacing-2)',
     spacing3: 'var(--spacing-3)',
