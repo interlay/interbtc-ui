@@ -3,15 +3,21 @@ import { AriaMeterProps } from '@react-types/meter';
 
 import { MeterRanges } from './Meter';
 
-type UseMeterProps = Omit<AriaMeterProps, 'minValue' | 'maxValue'> & { ranges: MeterRanges };
+const getMaxRange = (value: number, maxRange?: number): number => {
+  if (!maxRange) return 100;
 
-// TODO: stop exporting hook
+  const isOverMaxValue = !!maxRange && value > maxRange;
+  return isOverMaxValue ? value : maxRange;
+};
+
+type UseMeterProps = Omit<AriaMeterProps, 'minValue' | 'maxValue'> & { ranges?: MeterRanges };
+
 const useMeter = ({ ranges, value: valueProp = 0, ...props }: UseMeterProps): ReturnType<typeof useAriaMeter> => {
-  const [minRange, , , maxRange] = ranges;
+  const [minRange, , , maxRange] = ranges || [];
 
-  const isOverMaxValue = valueProp > maxRange;
-  const maxValue = isOverMaxValue ? valueProp : maxRange;
-  const value = isOverMaxValue ? maxValue : valueProp;
+  const maxValue = getMaxRange(valueProp, maxRange);
+
+  const value = valueProp > maxValue ? maxValue : valueProp;
 
   const aria = useAriaMeter({
     minValue: minRange,
