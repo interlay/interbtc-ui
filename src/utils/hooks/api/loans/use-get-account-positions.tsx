@@ -47,8 +47,12 @@ interface PositionsThresholdsData {
 const getPositionsThresholds = (
   lendPositions: LendPosition[],
   assets: TickerToData<LoanAsset>
-): PositionsThresholdsData => {
+): PositionsThresholdsData | undefined => {
   const collateralPositions = lendPositions.filter(({ isCollateral }) => isCollateral);
+
+  if (!collateralPositions.length) {
+    return undefined;
+  }
 
   const totalCollateralThreshold = collateralPositions.reduce(
     (total, position) => total.add(assets[position.currency.ticker].collateralThreshold),
