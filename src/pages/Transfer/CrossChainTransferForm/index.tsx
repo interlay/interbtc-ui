@@ -88,7 +88,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           .subscribeTokenBalance(RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, selectedAccount.address)
       );
 
-      setTransferableBalance(balance.free.toString());
+      setTransferableBalance(balance.free);
     };
 
     getBalance();
@@ -152,7 +152,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
       };
 
-      sendTransaction();
+      await sendTransaction();
 
       setSubmitStatus(STATUSES.RESOLVED);
     } catch (error) {
@@ -172,6 +172,9 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!value) return;
 
     const tokenAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
+
+    console.log(tokenAmount);
+
     const usd = displayMonetaryAmountInUSDFormat(
       tokenAmount,
       getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
@@ -181,8 +184,10 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const validateTransferAmount = (value: string) => {
-    console.log('validate transfer amount', value);
-    return undefined;
+    const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, RELAY_CHAIN_NATIVE_TOKEN, true);
+    const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
+
+    return balanceMonetaryAmount.lt(transferAmount) ? t('insufficient_funds') : undefined;
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
@@ -224,7 +229,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         <div>
           <AvailableBalanceUI
             label={availableBalanceLabel}
-            balance={transferableBalance}
+            balance={transferableBalance?.toString() || '0'}
             tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
             onClick={handleClickBalance}
           />
