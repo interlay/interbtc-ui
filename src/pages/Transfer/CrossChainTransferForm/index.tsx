@@ -24,6 +24,7 @@ import FormTitle from '@/components/FormTitle';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
+// TODO: Pull tokens from xcmBridge response. This needs to be done to support USDT
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import STATUSES from '@/utils/constants/statuses';
@@ -166,8 +167,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!value) return;
 
     const tokenAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
-
-    console.log(tokenAmount);
 
     const usd = displayMonetaryAmountInUSDFormat(
       tokenAmount,
