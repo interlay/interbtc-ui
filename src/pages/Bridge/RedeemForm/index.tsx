@@ -119,11 +119,11 @@ const RedeemForm = (): JSX.Element | null => {
         const [
           dustValueResult,
           premiumRedeemVaultsResult,
-          premiumRedeemFeeResult,
-          btcToDotRateResult,
-          redeemFeeRateResult,
+          premiumRedeemFeeRateResult,
+          btcToRelayChainNativeTokenRateResult,
+          feeRateResult,
           currentInclusionFeeResult,
-          vaultsWithRedeemableTokens
+          vaultsWithRedeemableTokensResult
         ] = await Promise.allSettled([
           window.bridge.redeem.getDustValue(),
           window.bridge.vaults.getPremiumRedeemVaults(),
@@ -137,16 +137,16 @@ const RedeemForm = (): JSX.Element | null => {
         if (dustValueResult.status === 'rejected') {
           throw new Error(dustValueResult.reason);
         }
-        if (premiumRedeemFeeResult.status === 'rejected') {
-          throw new Error(premiumRedeemFeeResult.reason);
+        if (premiumRedeemFeeRateResult.status === 'rejected') {
+          throw new Error(premiumRedeemFeeRateResult.reason);
         }
-        if (redeemFeeRateResult.status === 'rejected') {
-          throw new Error(redeemFeeRateResult.reason);
+        if (feeRateResult.status === 'rejected') {
+          throw new Error(feeRateResult.reason);
         }
         if (currentInclusionFeeResult.status === 'rejected') {
           throw new Error(currentInclusionFeeResult.reason);
         }
-        if (btcToDotRateResult.status === 'rejected') {
+        if (btcToRelayChainNativeTokenRateResult.status === 'rejected') {
           setFormError(WRAPPED_TOKEN_AMOUNT, {
             type: 'validate',
             message: t('error_oracle_offline', { action: 'redeem', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
@@ -159,18 +159,18 @@ const RedeemForm = (): JSX.Element | null => {
           // set as a default on render.
           setHasPremiumRedeemVaults(true);
         }
-        if (vaultsWithRedeemableTokens.status === 'fulfilled') {
+        if (vaultsWithRedeemableTokensResult.status === 'fulfilled') {
           // Find the vault with the largest capacity
-          const initialMaxCapacity = vaultsWithRedeemableTokens.value.values().next().value;
+          const initialMaxCapacity = vaultsWithRedeemableTokensResult.value.values().next().value;
           setMaxRedeemableCapacity(initialMaxCapacity);
         }
-        if (btcToDotRateResult.status === 'fulfilled') {
-          setBtcToDotRate(btcToDotRateResult.value);
+        if (btcToRelayChainNativeTokenRateResult.status === 'fulfilled') {
+          setBtcToDotRate(btcToRelayChainNativeTokenRateResult.value);
         }
 
         setDustValue(dustValueResult.value);
-        setPremiumRedeemFee(new Big(premiumRedeemFeeResult.value));
-        setRedeemFeeRate(redeemFeeRateResult.value);
+        setPremiumRedeemFee(new Big(premiumRedeemFeeRateResult.value));
+        setRedeemFeeRate(feeRateResult.value);
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
