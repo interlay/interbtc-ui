@@ -1,6 +1,7 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { DefaultTransactionAPI } from '@interlay/interbtc-api';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import * as React from 'react';
 import { useEffect } from 'react';
@@ -118,34 +119,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     setToChain(availableToChains[0]);
   }, [fromChain, xcmBridge]);
 
-  useEffect(() => {
-    if (!xcmBridge || !xcmProvider || !selectedAccount || !fromChain || !toChain || !destination) return;
-
-    const sendTransaction = async () => {
-      const { signer } = await web3FromAddress(selectedAccount.address.toString());
-
-      const adapter = xcmBridge.findAdapter(fromChain.type);
-      adapter.setApi(xcmProvider.getApiPromise(fromChain.type));
-
-      const apiPromise = xcmProvider.getApiPromise(fromChain.type);
-
-      apiPromise.setSigner(signer);
-
-      const tx = adapter.createTx({
-        amount: FixedPointNumber.fromInner('10000000000', 10),
-        to: toChain.type,
-        token: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-        address: destination.address
-      });
-
-      console.log(DefaultTransactionAPI, tx);
-
-      // await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
-    };
-
-    sendTransaction();
-  }, [destination, fromChain, selectedAccount, toChain, xcmBridge, xcmProvider]);
-
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
     if (!destination) return;
@@ -153,10 +126,33 @@ const CrossChainTransferForm = (): JSX.Element => {
     try {
       setSubmitStatus(STATUSES.PENDING);
 
-      if (!xcmBridge) return;
+      if (!xcmBridge || !fromChain || !toChain) return;
 
-      // TODO: submit method
-      console.log(newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true));
+      const sendTransaction = async () => {
+        const { signer } = await web3FromAddress(selectedAccount.address.toString());
+
+        const adapter = xcmBridge.findAdapter(fromChain.type);
+        adapter.setApi(xcmProvider.getApiPromise(fromChain.type));
+
+        const apiPromise = xcmProvider.getApiPromise(fromChain.type);
+
+        apiPromise.setSigner(signer);
+
+        const transferAmount = new MonetaryAmount(RELAY_CHAIN_NATIVE_TOKEN, data[TRANSFER_AMOUNT]);
+        const transferAmountString = transferAmount.toString(true);
+        const transferAmountDecimals = transferAmount.currency.decimals;
+
+        const tx = adapter.createTx({
+          amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
+          to: toChain.type,
+          token: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+          address: destination.address
+        });
+
+        await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
+      };
+
+      sendTransaction();
 
       setSubmitStatus(STATUSES.RESOLVED);
     } catch (error) {
@@ -186,7 +182,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const validateTransferAmount = (value: string) => {
     console.log('validate transfer amount', value);
-    return 'validating transfer amount';
+    return undefined;
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
