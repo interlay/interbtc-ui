@@ -39,19 +39,17 @@ type CrossChainTransferFormData = {
 };
 
 const CrossChainTransferForm = (): JSX.Element => {
-  const { xcmBridge, xcmProvider } = useXcmBridge();
-  // TODO: review how we're handling the relay chain api - for now it can
-  // be scoped to this component, but long term it needs to be handled at
-  // the application level.
+  const [fromChains, setFromChains] = React.useState<Array<ChainOption> | undefined>(undefined);
   const [destination, setDestination] = React.useState<KeyringPair | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
-  // TODO: this could be removed form state using React hook form getValue/watch
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
+
+  const { xcmBridge, xcmProvider } = useXcmBridge();
 
   const {
     register,
@@ -70,9 +68,18 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   // **************************
 
-  // const onStatusChangeCallback = () => {
-  //   console.log('onStatusChangeCallback');
-  // };
+  useEffect(() => {
+    if (!xcmBridge) return;
+    if (!xcmProvider) return;
+
+    const availableFromChains: Array<ChainOption> = xcmBridge.adapters.map((adapter: any) => {
+      return { type: adapter.chain.id, name: adapter.chain.id };
+    });
+
+    setFromChains(availableFromChains);
+  }, [xcmBridge, xcmProvider]);
+
+  // **************************
 
   useEffect(() => {
     if (!xcmBridge || !xcmProvider || !selectedAccount) return;
@@ -209,6 +216,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           />
         </div>
         <Chains
+          chainOptions={fromChains}
           label={t('transfer_page.cross_chain_transfer_form.from_chain')}
           selectedChain={ChainType.Parachain}
           onChange={handleSetFromChain}

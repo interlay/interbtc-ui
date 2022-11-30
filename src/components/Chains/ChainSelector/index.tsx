@@ -10,12 +10,12 @@ import Select, {
   SelectOptions,
   SelectText
 } from '@/components/Select';
-import { ChainType } from '@/types/chains.types';
+import { ChainType, XcmChains } from '@/types/chains.types';
 
 interface ChainOption {
-  type: ChainType;
+  type: ChainType | XcmChains;
   name: string;
-  icon: JSX.Element;
+  icon?: JSX.Element;
 }
 
 interface Props {
@@ -44,7 +44,7 @@ const ChainSelector = ({ chainOptions, selectedChain, label, onChange }: Props):
                   {({ selected, active }) => (
                     <>
                       <div className={clsx('flex', 'items-center', 'space-x-3', 'text-xl')}>
-                        {chainOption.icon}
+                        {chainOption.icon && chainOption.icon}
                         <SelectText className='capitalize'>{chainOption.name}</SelectText>
                       </div>
                       {selected ? <SelectCheck active={active} /> : null}

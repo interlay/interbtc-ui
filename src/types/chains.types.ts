@@ -3,4 +3,7 @@ enum ChainType {
   RelayChain = 'relayChain'
 }
 
+type XcmChains = 'polkadot' | 'interlay';
+
+export type { XcmChains };
 export { ChainType };
