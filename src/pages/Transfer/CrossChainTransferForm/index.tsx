@@ -70,13 +70,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   useEffect(() => {
-    if (!fromChains) return;
-    if (fromChain) return;
-
-    setFromChain(fromChains[0]);
-  }, [fromChains, fromChain]);
-
-  useEffect(() => {
     if (!xcmBridge) return;
     if (!fromChain) return;
     if (!selectedAccount) return;
@@ -103,6 +96,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     });
 
     setFromChains(availableFromChains);
+    setFromChain(availableFromChains[0]);
   }, [xcmBridge, xcmProvider]);
 
   useEffect(() => {
