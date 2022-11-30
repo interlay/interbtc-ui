@@ -1,8 +1,15 @@
 import { formatNumber } from '@/common/utils/utils';
-import { Flex, Meter, MeterRanges, useMeter, UseMeterProps } from '@/component-library';
+import { Flex, Meter, MeterProps, MeterRanges, useMeter, UseMeterProps } from '@/component-library';
 import { PositionsThresholdsData } from '@/utils/hooks/api/loans/use-get-account-positions';
 
 import { LTVLegend } from './LTVLegend';
+
+const legendDescriptions = {
+  currentLTV: 'Your Current Loan to Value position ratio.',
+  maxLTV: 'Max Loan to Value limit - Your Max Borrow position You can borrow up to that ratio.',
+  liquidationLTV:
+    'Liquiditation threshold? Loan to Value ratio at which your position gets liquidated. may get liquidated.'
+};
 
 const getRanges = (thresholds?: PositionsThresholdsData): MeterRanges | undefined => {
   if (!thresholds) return undefined;
@@ -17,13 +24,14 @@ const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFract
 
 type Props = {
   thresholds?: PositionsThresholdsData;
+  onChange?: MeterProps['onChange'];
 };
 
 type InheritAttrs = Omit<UseMeterProps, keyof Props | 'ranges' | 'value'>;
 
 type LTVMeterProps = Props & InheritAttrs;
 
-const LTVMeter = ({ label, thresholds, ...props }: LTVMeterProps): JSX.Element => {
+const LTVMeter = ({ label, thresholds, onChange, ...props }: LTVMeterProps): JSX.Element => {
   const ranges = getRanges(thresholds);
   const { meterProps } = useMeter({ label, value: 0, formatOptions, ranges, ...props });
 
@@ -32,12 +40,12 @@ const LTVMeter = ({ label, thresholds, ...props }: LTVMeterProps): JSX.Element =
 
   // TODO: add tooltips
   return (
-    <Flex>
-      <Meter variant='secondary' value={value} ranges={ranges} />
-      <Flex gap='spacing2'>
-        <LTVLegend label='Current LTV' description='Current LTV' status='info' />
-        <LTVLegend label='Max LTV' description='Max LTV' status='warning' />
-        <LTVLegend label='Liquidation LTV' description='Liquidation LTV' status='error' />
+    <Flex direction='column'>
+      <Meter {...meterProps} variant='secondary' value={value} ranges={ranges} onChange={onChange} />
+      <Flex gap='spacing4' justifyContent='center' wrap>
+        <LTVLegend label='Current LTV' description={legendDescriptions.currentLTV} status='info' />
+        <LTVLegend label='Max LTV' description={legendDescriptions.maxLTV} status='warning' />
+        <LTVLegend label='Liquidation LTV' description={legendDescriptions.liquidationLTV} status='error' />
       </Flex>
     </Flex>
   );

@@ -9,7 +9,7 @@ import { LoanAction } from '@/types/loans';
 
 import { useGetAccountHealthFactor } from '../../hooks/use-get-account-health-factor';
 import { isBorrowAsset } from '../../utils/is-loan-asset';
-import { LoanScore } from '../LTVMeter.tsx';
+// import { LoanScore } from '../LTVMeter.tsx';
 import { StyledAlert, StyledDd, StyledDl, StyledWarningIcon } from './BorrowLimit.style';
 
 const LIQUIDATION_ALERT_SCORE = 1.5;
@@ -67,7 +67,7 @@ const BorrowLimit = ({
           {statusLabel} ({valueLabel})
         </StyledDd>
       </DlGroup>
-      <LoanScore score={value} aria-label='loan score' />
+      {/* <LoanScore score={value} aria-label='loan score' /> */}
       {/* TODO: replace with Alert component */}
       {hasLiquidationAlert && (
         <StyledAlert role='alert' gap='spacing4' alignItems='center'>

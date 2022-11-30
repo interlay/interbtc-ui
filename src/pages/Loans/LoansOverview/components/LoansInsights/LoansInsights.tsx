@@ -27,10 +27,9 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
 
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
-  const { borrowAmountUSD, supplyAmountUSD, netYieldAmountUSD } = statistics || {};
+  const { supplyAmountUSD, netYieldAmountUSD } = statistics || {};
 
   const supplyBalanceLabel = formatUSD(supplyAmountUSD?.toNumber() || 0);
-  const borrowBalanceLabel = formatUSD(borrowAmountUSD?.toNumber() || 0);
   const netYieldBalanceLabel = formatUSD(netYieldAmountUSD?.toNumber() || 0);
 
   const subsidyRewardsAmount = formatNumber(subsidyRewards?.toBig().toNumber() || 0, {
@@ -50,13 +49,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
         </Card>
         <Card flex='1'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <StyledDt color='primary'>Borrow Balance</StyledDt>
-            <StyledDd color='secondary'>{borrowBalanceLabel}</StyledDd>
-          </DlGroup>
-        </Card>
-        <Card flex='1'>
-          <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <StyledDt color='primary'>Net Yield</StyledDt>
+            <StyledDt color='primary'>Net APY</StyledDt>
             <StyledDd color='secondary'>{netYieldBalanceLabel}</StyledDd>
           </DlGroup>
         </Card>

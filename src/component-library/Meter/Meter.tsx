@@ -43,7 +43,6 @@ const Meter = ({
   const isPrimary = variant === 'primary';
   const positionValue = isPrimary ? getBarPercentage(value, ranges, status) : value;
   const position = getPosition(positionValue);
-  const hasRanges = !!ranges;
 
   useEffect(() => {
     const newStatus = getStatus(value, ranges, !isPrimary);
@@ -57,7 +56,7 @@ const Meter = ({
   return (
     <StyledWrapper $variant={variant} className={className} style={style} hidden={hidden}>
       <StyledContainer>
-        <StyledMeter $hasRanges={hasRanges} $position={position} $variant={variant} {...props} />
+        <StyledMeter $hasRanges={!!ranges} $position={position} $variant={variant} {...props} />
         <StyledIndicatorWrapper
           direction='column'
           justifyContent='center'
@@ -69,7 +68,7 @@ const Meter = ({
           <Indicator />
           {!isPrimary && <Span>{position}%</Span>}
         </StyledIndicatorWrapper>
-        {!isPrimary && hasRanges && (
+        {!isPrimary && !!ranges && (
           <>
             <StyledRangeIndicator $position={getMaxRange(ranges, 'warning', true)} $status='warning' />
             <StyledRangeIndicator $position={getMaxRange(ranges, 'error', true)} $status='error' />

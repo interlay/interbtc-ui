@@ -1,7 +1,6 @@
-import { ReactComponent as InformationCircleIcon } from '@/assets/img/hero-icons/information-circle.svg';
-import { Flex, Span, Tooltip } from '@/component-library';
+import { Flex, Tooltip } from '@/component-library';
 
-import { LTVLegendStatus, StyledLegend } from './LTVMeter.style';
+import { LTVLegendStatus, StyledIcon, StyledLabel, StyledLegend } from './LTVMeter.style';
 
 type LTVLegendProps = {
   status: LTVLegendStatus;
@@ -10,11 +9,11 @@ type LTVLegendProps = {
 };
 
 const LTVLegend = ({ status, label, description }: LTVLegendProps): JSX.Element => (
-  <Flex gap='spacing2'>
+  <Flex gap='spacing2' alignItems='center'>
     <StyledLegend $status={status} />
-    <Span>{label}</Span>
+    <StyledLabel>{label}</StyledLabel>
     <Tooltip label={description}>
-      <InformationCircleIcon />
+      <StyledIcon />
     </Tooltip>
   </Flex>
 );

@@ -1,10 +1,10 @@
 import { formatUSD } from '@/common/utils/utils';
-import { Card, Dd, Dl, DlGroup, Dt, Flex, Meter } from '@/component-library';
+import { Card, Dl } from '@/component-library';
 import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { LTVLegend } from '../LTVMeter.tsx/LTVLegend';
-import { StyledDlGroup } from './LTVSection.style';
+import { LTVMeter } from '../LTVMeter.tsx';
+import { StyledDd, StyledDlGroup, StyledDt } from './LTVSection.style';
 
 type LTVSectionProps = {
   prices?: Prices;
@@ -15,26 +15,20 @@ const LTVSection = ({ statistics }: LTVSectionProps): JSX.Element => {
   const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
   const borrowBalanceLabel = formatUSD(borrowAmountUSD?.toNumber() || 0);
   const collateralValueLabel = formatUSD(collateralAmountUSD?.toNumber() || 0);
-  const ltv = 0;
 
   return (
-    <Card direction='column' justifyContent='center' alignItems='center'>
-      <Dl>
-        <StyledDlGroup>
-          <Dt>Borrow Balance</Dt>
-          <Dd>{borrowBalanceLabel}</Dd>
+    <Card direction='column' justifyContent='center' gap='spacing6'>
+      <Dl justifyContent='center' gap='spacing6'>
+        <StyledDlGroup direction='column' gap='spacing1' justifyContent='center' alignItems='center'>
+          <StyledDt color='primary'>Borrow Balance</StyledDt>
+          <StyledDd color='secondary'>{borrowBalanceLabel}</StyledDd>
         </StyledDlGroup>
-        <DlGroup>
-          <Dt>Collateral Value</Dt>
-          <Dd>{collateralValueLabel}</Dd>
-        </DlGroup>
+        <StyledDlGroup direction='column' gap='spacing1'>
+          <StyledDt color='primary'>Collateral Balance</StyledDt>
+          <StyledDd color='secondary'>{collateralValueLabel}</StyledDd>
+        </StyledDlGroup>
       </Dl>
-      <Meter variant='secondary' value={ltv} ranges={[0, 86, 95, 100]} />
-      <Flex gap='spacing2'>
-        <LTVLegend label='Current LTV' description='Current LTV' status='info' />
-        <LTVLegend label='Max LTV' description='Max LTV' status='warning' />
-        <LTVLegend label='Liquidation LTV' description='Liquidation LTV' status='error' />
-      </Flex>
+      <LTVMeter />
     </Card>
   );
 };
