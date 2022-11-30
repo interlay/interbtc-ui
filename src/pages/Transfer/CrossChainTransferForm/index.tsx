@@ -82,7 +82,9 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     const getBalance = async () => {
       const balance: any = await firstValueFrom(
-        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(RELAY_CHAIN_NATIVE_TOKEN, selectedAccount.address)
+        xcmBridge
+          .findAdapter(fromChain.type)
+          .subscribeTokenBalance(RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, selectedAccount.address)
       );
 
       setTransferableBalance(balance.free.toString());
