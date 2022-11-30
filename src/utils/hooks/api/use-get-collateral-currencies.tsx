@@ -2,7 +2,7 @@ import { CollateralCurrencyExt, getCollateralCurrencies } from '@interlay/interb
 import { useQuery, UseQueryResult } from 'react-query';
 
 const getCurrencies = async (): Promise<Array<CollateralCurrencyExt>> =>
-  getCollateralCurrencies(window.bridge.api, window.bridge.assetRegistry);
+  getCollateralCurrencies(window.bridge.api, window.bridge.assetRegistry, window.bridge.loans);
 
 const useGetCollateralCurrencies = (bridgeLoaded: boolean): UseQueryResult<Array<CollateralCurrencyExt>> => {
   return useQuery({ queryKey: 'getCollateralCurrencies', queryFn: getCurrencies, enabled: bridgeLoaded });

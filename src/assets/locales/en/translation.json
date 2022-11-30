@@ -80,7 +80,8 @@
   "nav_transactions": "My Transactions",
   "nav_staking": "Staking",
   "nav_stats": "Stats",
-  "nav_vaults": "My Vaults",
+  "nav_dashboard": "Dashboard",
+  "nav_vaults": "Vaults",
   "nav_crowdloan": "Claim {{governanceTokenSymbol}}",
   "nav_feedback": "Feedback",
   "nav_docs": "Docs",
@@ -88,7 +89,7 @@
   "nav_use_wrapped": "Use {{wrappedTokenSymbol}}",
   "nav_governance": "Governance",
   "report_bug": "Report a bug:",
-  "request_funds": "{{tokenSymbol}} Faucet",
+  "request_funds": "Token Faucet",
   "request_btc": "BTC Faucet",
   "no_pending_status": "No pending status updates",
   "bridge_fee": "Bridge Fee",
@@ -532,11 +533,26 @@
     "change_wallet": "Change Wallet",
     "disconnect": "Disconnect"
   },
+  "loans": {
+    "brand_name": "Interlend",
+    "withdraw": "Withdraw",
+    "withdrawing": "Withdrawing",
+    "borrow": "Borrow",
+    "borrowing": "Borrowing",
+    "borrow_markets": "Borrow Markets",
+    "lend_markets": "Lend Markets",
+    "repay": "Repay",
+    "lend": "Lend",
+    "my_lend_positions": "My Lend Positions",
+    "my_borrow_positions": "My Borrow Positions",
+    "action_will_recude_health_score": "{{action}} this amount will reduce your health score and increase risk of liquidation."
+  },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",
     "please_enter_the_amount_to": "Please enter the amount to {{field}}",
     "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}}",
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
-    "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance"
+    "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance",
+    "field_amount": "{{field}} amount"
   }
 }
