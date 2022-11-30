@@ -27,21 +27,14 @@ interface Props {
   label: string;
   chainOptions?: Array<ChainOption>;
   onChange: (chain: ChainOption) => void;
-  selectedChain: ChainType | undefined;
+  selectedChain: ChainOption | undefined;
 }
-
-const getChain = (type: ChainType): ChainOption | undefined => CHAIN_OPTIONS.find((chain) => chain.type === type);
 
 const Chains = ({ onChange, chainOptions = CHAIN_OPTIONS, label, selectedChain }: Props): JSX.Element => {
   return (
     <div>
       {selectedChain && (
-        <ChainSelector
-          label={label}
-          chainOptions={chainOptions}
-          selectedChain={getChain(selectedChain)}
-          onChange={onChange}
-        />
+        <ChainSelector label={label} chainOptions={chainOptions} selectedChain={selectedChain} onChange={onChange} />
       )}
     </div>
   );
@@ -49,6 +42,6 @@ const Chains = ({ onChange, chainOptions = CHAIN_OPTIONS, label, selectedChain }
 
 export type { ChainOption };
 
-export { CHAIN_OPTIONS, getChain };
+export { CHAIN_OPTIONS };
 
 export default Chains;

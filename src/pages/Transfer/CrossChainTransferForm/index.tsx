@@ -1,7 +1,7 @@
-import { FixedPointNumber } from '@acala-network/sdk-core';
-import { DefaultTransactionAPI } from '@interlay/interbtc-api';
+// import { FixedPointNumber } from '@acala-network/sdk-core';
+// import { DefaultTransactionAPI } from '@interlay/interbtc-api';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { web3FromAddress } from '@polkadot/extension-dapp';
+// import { web3FromAddress } from '@polkadot/extension-dapp';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
@@ -24,7 +24,7 @@ import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
-import { ChainType } from '@/types/chains.types';
+// import { ChainType } from '@/types/chains.types';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -40,6 +40,9 @@ type CrossChainTransferFormData = {
 
 const CrossChainTransferForm = (): JSX.Element => {
   const [fromChains, setFromChains] = React.useState<Array<ChainOption> | undefined>(undefined);
+  const [fromChain, setFromChain] = React.useState<ChainOption | undefined>(undefined);
+  const [toChains, setToChains] = React.useState<Array<ChainOption> | undefined>(undefined);
+  const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
   const [destination, setDestination] = React.useState<KeyringPair | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -69,6 +72,13 @@ const CrossChainTransferForm = (): JSX.Element => {
   // **************************
 
   useEffect(() => {
+    if (!fromChains) return;
+    if (fromChain) return;
+
+    setFromChain(fromChains[0]);
+  }, [fromChains, fromChain]);
+
+  useEffect(() => {
     if (!xcmBridge) return;
     if (!xcmProvider) return;
 
@@ -79,35 +89,50 @@ const CrossChainTransferForm = (): JSX.Element => {
     setFromChains(availableFromChains);
   }, [xcmBridge, xcmProvider]);
 
+  useEffect(() => {
+    if (!xcmBridge) return;
+    if (!fromChain) return;
+
+    const destinationChains = xcmBridge.router.getDestinationChains({ from: fromChain.type });
+    console.log('destinationChains', destinationChains);
+
+    const availableToChains = destinationChains.map((chain: any) => {
+      return { type: chain.id, name: chain.id };
+    });
+
+    setToChains(availableToChains);
+    setToChain(availableToChains[0]);
+  }, [fromChain, xcmBridge]);
+
   // **************************
 
-  useEffect(() => {
-    if (!xcmBridge || !xcmProvider || !selectedAccount) return;
+  // useEffect(() => {
+  //   if (!xcmBridge || !xcmProvider || !selectedAccount) return;
 
-    const sendTransaction = async () => {
-      const { signer } = await web3FromAddress(selectedAccount.address.toString());
+  //   const sendTransaction = async () => {
+  //     const { signer } = await web3FromAddress(selectedAccount.address.toString());
 
-      const adapter = xcmBridge.findAdapter('polkadot');
-      adapter.setApi(xcmProvider.getApiPromise('polkadot'));
+  //     const adapter = xcmBridge.findAdapter('polkadot');
+  //     adapter.setApi(xcmProvider.getApiPromise('polkadot'));
 
-      const apiPromise = xcmProvider.getApiPromise('polkadot');
+  //     const apiPromise = xcmProvider.getApiPromise('polkadot');
 
-      apiPromise.setSigner(signer);
+  //     apiPromise.setSigner(signer);
 
-      const tx = adapter.createTx({
-        amount: FixedPointNumber.fromInner('10000000000', 10),
-        to: 'interlay',
-        token: 'DOT',
-        address: selectedAccount.address
-      });
+  //     const tx = adapter.createTx({
+  //       amount: FixedPointNumber.fromInner('10000000000', 10),
+  //       to: 'interlay',
+  //       token: 'DOT',
+  //       address: selectedAccount.address
+  //     });
 
-      console.log(DefaultTransactionAPI, tx);
+  //     console.log(DefaultTransactionAPI, tx);
 
-      // await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
-    };
+  //     await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
+  //   };
 
-    sendTransaction();
-  }, [selectedAccount, xcmBridge, xcmProvider]);
+  //   sendTransaction();
+  // }, [selectedAccount, xcmBridge, xcmProvider]);
 
   // **************************
 
@@ -155,11 +180,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
-    console.log(chain);
+    setFromChain(chain);
   };
 
   const handleSetToChain = (chain: ChainOption) => {
-    console.log(chain);
+    setToChain(chain);
   };
 
   const balance = displayMonetaryAmount(balances?.[RELAY_CHAIN_NATIVE_TOKEN.ticker].transferable);
@@ -218,12 +243,13 @@ const CrossChainTransferForm = (): JSX.Element => {
         <Chains
           chainOptions={fromChains}
           label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-          selectedChain={ChainType.Parachain}
+          selectedChain={fromChain}
           onChange={handleSetFromChain}
         />
         <Chains
+          chainOptions={toChains}
           label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-          selectedChain={ChainType.RelayChain}
+          selectedChain={toChain}
           onChange={handleSetToChain}
         />
         <Accounts
