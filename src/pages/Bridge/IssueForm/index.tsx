@@ -123,8 +123,10 @@ const IssueForm = (): JSX.Element | null => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
+  // ray test touch <
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
   const [vault, setVault] = React.useState<VaultApiType | undefined>();
+  // ray test touch >
 
   const {
     isIdle: requestLimitsIdle,
@@ -193,8 +195,9 @@ const IssueForm = (): JSX.Element | null => {
     })();
   }, [bridgeLoaded, dispatch, handleError, setError, t]);
 
+  // ray test touch <
   React.useEffect(() => {
-    // deselect checkbox when required btcAmount exceeds capacity
+    // Deselect checkbox when required btcAmount exceeds capacity
     if (requestLimits) {
       const parsedBTCAmount = new BitcoinAmount(btcAmount);
       const requiredTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
@@ -203,7 +206,9 @@ const IssueForm = (): JSX.Element | null => {
       }
     }
   }, [btcAmount, feeRate, requestLimits]);
+  // ray test touch >
 
+  // ray test touch <
   React.useEffect(() => {
     // Vault selection validation
     const parsedBTCAmount = new BitcoinAmount(btcAmount);
@@ -217,6 +222,7 @@ const IssueForm = (): JSX.Element | null => {
       clearErrors(VAULT_SELECTION);
     }
   }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
+  // ray test touch >
 
   const hasIssuableToken = !requestLimits?.singleVaultMaxIssuable.isZero();
 
@@ -306,15 +312,18 @@ const IssueForm = (): JSX.Element | null => {
       }
     };
 
+    // ray test touch <
     const handleSelectVaultCheckboxChange = () => {
       if (!isSelectVaultCheckboxDisabled) {
         setSelectVaultManually((currentState) => !currentState);
       }
     };
+    // ray test touch >
 
     const onSubmit = async (data: IssueFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
+        // ray test touch <
         await requestLimitsRefetch();
         await trigger(BTC_AMOUNT);
 
@@ -330,6 +339,7 @@ const IssueForm = (): JSX.Element | null => {
         } else {
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
         }
+        // ray test touch >
 
         const collateralToken = await currencyIdToMonetaryCurrency(
           window.bridge.assetRegistry,
@@ -361,7 +371,9 @@ const IssueForm = (): JSX.Element | null => {
     const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
     const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
+    // ray test touch <
     const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
+    // ray test touch >
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
@@ -410,6 +422,7 @@ const IssueForm = (): JSX.Element | null => {
           </div>
           <ParachainStatusInfo status={parachainStatus} />
           <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
+            {/* ray test touch < */}
             <Checkbox
               label={t('issue_page.manually_select_vault')}
               labelSide={CheckboxLabelSide.LEFT}
@@ -425,6 +438,7 @@ const IssueForm = (): JSX.Element | null => {
               onSelectionCallback={setVault}
               error={errors[VAULT_SELECTION]}
             />
+            {/* ray test touch > */}
           </div>
           <PriceInfo
             title={

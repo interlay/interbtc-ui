@@ -18,6 +18,7 @@ interface Props {
   error?: FieldError;
 }
 
+// ray test touch <
 const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }: Props): JSX.Element => {
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>(undefined);
   const [allVaults, setAllVaults] = React.useState<VaultApiType[]>([]);
@@ -84,5 +85,6 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
     </div>
   );
 };
+// ray test touch >
 
 export default Vaults;
