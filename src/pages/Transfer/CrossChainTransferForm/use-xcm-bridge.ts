@@ -5,18 +5,18 @@ import { firstValueFrom } from 'rxjs';
 import { XCM_ADAPTERS } from '@/config/relay-chains';
 import { BITCOIN_NETWORK } from '@/constants';
 
-const xcmProvider = new ApiProvider(BITCOIN_NETWORK);
-
 const bridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
 });
 
 const useXcmBridge = (): { xcmProvider: any; xcmBridge: any } => {
   const [xcmBridge, setXcmBridge] = useState<any>();
+  const [xcmProvider, setXcmProvider] = useState<any>();
 
   // TODO: This would be better in context
   useEffect(() => {
     const handleConnections = async () => {
+      const xcmProvider = new ApiProvider(BITCOIN_NETWORK) as any;
       const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
       // Check connection
@@ -25,6 +25,7 @@ const useXcmBridge = (): { xcmProvider: any; xcmBridge: any } => {
       // Set Apis
       await Promise.all(chains.map((chain) => bridge.findAdapter(chain).setApi(xcmProvider.getApi(chain))));
 
+      setXcmProvider(xcmProvider);
       setXcmBridge(bridge);
     };
 
