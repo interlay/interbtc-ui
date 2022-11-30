@@ -7,8 +7,7 @@ import { LTVLegend } from './LTVLegend';
 const legendDescriptions = {
   currentLTV: 'Your Current Loan to Value position ratio.',
   maxLTV: 'Max Loan to Value limit - Your Max Borrow position You can borrow up to that ratio.',
-  liquidationLTV:
-    'Liquiditation threshold? Loan to Value ratio at which your position gets liquidated. may get liquidated.'
+  liquidationLTV: 'Loan to Value ratio at which your position gets liquidated.'
 };
 
 const getRanges = (thresholds?: PositionsThresholdsData): MeterRanges | undefined => {
@@ -25,22 +24,30 @@ const formatOptions: Intl.NumberFormatOptions = { style: 'decimal', maximumFract
 type Props = {
   thresholds?: PositionsThresholdsData;
   onChange?: MeterProps['onChange'];
+  className?: string;
 };
 
-type InheritAttrs = Omit<UseMeterProps, keyof Props | 'ranges' | 'value'>;
+type InheritAttrs = Omit<UseMeterProps, keyof Props | 'ranges'>;
 
 type LTVMeterProps = Props & InheritAttrs;
 
-const LTVMeter = ({ label, thresholds, onChange, ...props }: LTVMeterProps): JSX.Element => {
+const LTVMeter = ({
+  label,
+  thresholds,
+  onChange,
+  className,
+  value: valueProp,
+  ...props
+}: LTVMeterProps): JSX.Element => {
   const ranges = getRanges(thresholds);
-  const { meterProps } = useMeter({ label, value: 0, formatOptions, ranges, ...props });
+  const { meterProps } = useMeter({ label, value: valueProp, formatOptions, ranges, ...props });
 
   // Does not allow negative numbers
   const value = meterProps['aria-valuenow'] || 0;
 
   // TODO: add tooltips
   return (
-    <Flex direction='column'>
+    <Flex direction='column' gap='spacing3' className={className}>
       <Meter {...meterProps} variant='secondary' value={value} ranges={ranges} onChange={onChange} />
       <Flex gap='spacing4' justifyContent='center' wrap>
         <LTVLegend label='Current LTV' description={legendDescriptions.currentLTV} status='info' />

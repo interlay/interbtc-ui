@@ -22,9 +22,11 @@ const LoansOverview = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <Flex direction='column' gap='spacing12'>
-        <LoansInsights statistics={statistics} />
-        <LTVSection statistics={statistics} />
+      <Flex direction='column' gap='spacing8'>
+        <Flex direction='column' gap='spacing4'>
+          <LoansInsights statistics={statistics} />
+          <LTVSection statistics={statistics} />
+        </Flex>
         <LoansTables borrowPositions={borrowPositions || []} lendPositions={lendPositions || []} assets={assets} />
       </Flex>
     </MainContainer>

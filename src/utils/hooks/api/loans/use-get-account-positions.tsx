@@ -44,39 +44,15 @@ interface PositionsThresholdsData {
   liquidation: Big;
 }
 
-const getPositionsThresholds = (
-  lendPositions: LendPosition[],
-  assets: TickerToData<LoanAsset>
-): PositionsThresholdsData | undefined => {
-  const collateralPositions = lendPositions.filter(({ isCollateral }) => isCollateral);
-
-  if (!collateralPositions.length) {
-    return undefined;
-  }
-
-  const totalCollateralThreshold = collateralPositions.reduce(
-    (total, position) => total.add(assets[position.currency.ticker].collateralThreshold),
-    new Big(0)
-  );
-
-  const totalLiquidationThreshold = collateralPositions.reduce(
-    (total, position) => total.add(assets[position.currency.ticker].liquidationThreshold),
-    new Big(0)
-  );
-
-  return {
-    collateral: totalCollateralThreshold.div(collateralPositions.length),
-    liquidation: totalLiquidationThreshold.div(collateralPositions.length)
-  };
-};
-
 interface AccountPositionsStatisticsData {
   supplyAmountUSD: Big;
   borrowAmountUSD: Big;
   collateralAmountUSD: Big;
+  collateralizedAmountUSD: Big;
   earnedInterestAmountUSD: Big;
   earnedDeptAmountUSD: Big;
   netYieldAmountUSD: Big;
+  thresholds: PositionsThresholdsData;
 }
 
 const getAccountPositionsStats = (
@@ -90,17 +66,26 @@ const getAccountPositionsStats = (
 
   const borrowAmountUSD = getPositionsSumOfFieldsInUSD('amount', borrowPositions, prices);
 
-  const collateralLendPositions = lendPositions
-    .filter(({ isCollateral }) => isCollateral)
-    .map(({ amount, currency, ...rest }) => ({
-      // MEMO: compute total value based on collateral threshold (not full lend amount value)
-      amount: amount.mul(assets[currency.ticker].collateralThreshold),
-      currency,
-      ...rest
-    }));
+  const collateralLendPositions = lendPositions.filter(({ isCollateral }) => isCollateral);
 
-  const collateralAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositions, prices);
+  const collateralLendPositionsss = collateralLendPositions.map(({ amount, currency, ...rest }) => ({
+    // MEMO: compute total value based on collateral threshold (not full lend amount value)
+    amount: amount.mul(assets[currency.ticker].collateralThreshold),
+    currency,
+    ...rest
+  }));
 
+  const liquidationLendPositions = collateralLendPositions.map(({ amount, currency, ...rest }) => ({
+    // MEMO: compute total value based on collateral threshold (not full lend amount value)
+    amount: amount.mul(assets[currency.ticker].liquidationThreshold),
+    currency,
+    ...rest
+  }));
+
+  const collateralAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositionsss, prices);
+  const liquidationAmountUSD = getPositionsSumOfFieldsInUSD('amount', liquidationLendPositions, prices);
+
+  const collateralizedAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositions, prices);
   const earnedInterestAmountUSD = getPositionsSumOfFieldsInUSD<LendPosition>('earnedInterest', lendPositions, prices);
   const earnedDeptAmountUSD = getPositionsSumOfFieldsInUSD('accumulatedDebt', borrowPositions, prices);
 
@@ -108,20 +93,26 @@ const getAccountPositionsStats = (
     convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) || 0;
   const netYieldAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
 
+  const thresholds = {
+    collateral: collateralAmountUSD.div(collateralizedAmountUSD).mul(100),
+    liquidation: liquidationAmountUSD.div(collateralizedAmountUSD).mul(100)
+  };
+
   return {
     supplyAmountUSD,
     borrowAmountUSD,
     earnedInterestAmountUSD,
     collateralAmountUSD,
+    collateralizedAmountUSD,
     earnedDeptAmountUSD,
-    netYieldAmountUSD
+    netYieldAmountUSD,
+    thresholds
   };
 };
 
 type UseGetAccountPositions = {
   data: Partial<AccountPositionsData> & {
     statistics: AccountPositionsStatisticsData | undefined;
-    thresholds: PositionsThresholdsData | undefined;
   };
   refetch: () => void;
 };
@@ -152,21 +143,12 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positions, prices, subsidyRewards]);
 
-  const thresholds = useMemo(() => {
-    if (!positions || !assets) {
-      return undefined;
-    }
-
-    return getPositionsThresholds(positions.lendPositions, assets);
-  }, [assets, positions]);
-
   useErrorHandler(positionsError);
 
   return {
     data: {
       borrowPositions: positions?.borrowPositions,
       lendPositions: positions?.lendPositions,
-      thresholds,
       statistics
     },
     refetch: refetchPositions
