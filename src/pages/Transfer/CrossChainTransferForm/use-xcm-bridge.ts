@@ -16,7 +16,6 @@ const useXcmBridge = (): { xcmProvider: any; xcmBridge: any } => {
   const [xcmBridge, setXcmBridge] = useState<any>();
   const [xcmProvider, setXcmProvider] = useState<any>();
 
-  // TODO: This would be better in context
   useEffect(() => {
     const handleConnections = async () => {
       const xcmProvider = new ApiProvider(xcmNetwork);
