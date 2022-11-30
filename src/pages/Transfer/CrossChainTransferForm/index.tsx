@@ -82,7 +82,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     const getBalance = async () => {
       const balance: any = await firstValueFrom(
-        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance('DOT', selectedAccount.address)
+        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(RELAY_CHAIN_NATIVE_TOKEN, selectedAccount.address)
       );
 
       setTransferableBalance(balance.free.toString());
@@ -117,23 +117,23 @@ const CrossChainTransferForm = (): JSX.Element => {
   }, [fromChain, xcmBridge]);
 
   useEffect(() => {
-    if (!xcmBridge || !xcmProvider || !selectedAccount) return;
+    if (!xcmBridge || !xcmProvider || !selectedAccount || !fromChain || !toChain || !destination) return;
 
     const sendTransaction = async () => {
       const { signer } = await web3FromAddress(selectedAccount.address.toString());
 
-      const adapter = xcmBridge.findAdapter('polkadot');
-      adapter.setApi(xcmProvider.getApiPromise('polkadot'));
+      const adapter = xcmBridge.findAdapter(fromChain.type);
+      adapter.setApi(xcmProvider.getApiPromise(fromChain.type));
 
-      const apiPromise = xcmProvider.getApiPromise('polkadot');
+      const apiPromise = xcmProvider.getApiPromise(fromChain.type);
 
       apiPromise.setSigner(signer);
 
       const tx = adapter.createTx({
         amount: FixedPointNumber.fromInner('10000000000', 10),
-        to: 'interlay',
-        token: 'DOT',
-        address: selectedAccount.address
+        to: toChain.type,
+        token: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+        address: destination.address
       });
 
       console.log(DefaultTransactionAPI, tx);
@@ -142,7 +142,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     };
 
     sendTransaction();
-  }, [selectedAccount, xcmBridge, xcmProvider]);
+  }, [destination, fromChain, selectedAccount, toChain, xcmBridge, xcmProvider]);
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
