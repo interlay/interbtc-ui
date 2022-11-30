@@ -37,7 +37,7 @@ const LoanScore = ({ score = 0, displayScore, label, ...props }: LoanScoreProps)
         {displayScore && (
           <StyledMeterScore>{isOverMaxValue ? '10+' : formatNumber(value, formatOptions)}</StyledMeterScore>
         )}
-        <StyledMeter showRanges value={value} ranges={meterRanges} />
+        <StyledMeter value={value} ranges={meterRanges} />
       </StyledMeterWrapper>
     </Stack>
   );

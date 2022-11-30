@@ -12,6 +12,7 @@ type StyledWrapperProps = {
 type StyledMeterProps = {
   $position: number;
   $variant: Variants;
+  $hasRanges: boolean;
 };
 
 type StyledRangeIndicatorProps = {
@@ -52,8 +53,9 @@ const StyledMeter = styled.div<StyledMeterProps>`
     `}
 
   // Ranges indicators for primary meter
-  ${({ $variant }) =>
+  ${({ $variant, $hasRanges }) =>
     $variant === 'primary' &&
+    $hasRanges &&
     css`
       &::before {
         content: '';
@@ -75,7 +77,7 @@ const StyledContainer = styled.div`
   position: relative;
 `;
 
-const StyledIndicatorWrapper = styled(Flex)<StyledMeterProps>`
+const StyledIndicatorWrapper = styled(Flex)<Omit<StyledMeterProps, '$hasRanges'>>`
   position: absolute;
   left: ${({ $position }) => $position}%;
   top: 100%;

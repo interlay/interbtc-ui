@@ -33,7 +33,11 @@ const getMaxRange = (ranges: MeterRanges, status: Status, reverse?: boolean): nu
  * and without [min-error, max-error, max-warning, max-error].
  * @return {Status} - the current status of the meter: error | warning | success
  */
-const getStatus = (value: number, ranges: MeterRanges, reverse?: boolean): Status => {
+const getStatus = (value: number, ranges?: MeterRanges, reverse?: boolean): Status | undefined => {
+  if (!ranges) {
+    return undefined;
+  }
+
   if (reverse ? value >= getMaxRange(ranges, 'error', reverse) : value <= getMaxRange(ranges, 'error', reverse)) {
     return 'error';
   }
@@ -45,7 +49,10 @@ const getStatus = (value: number, ranges: MeterRanges, reverse?: boolean): Statu
   return 'success';
 };
 
-const getBarPercentage = (value: number, ranges: MeterRanges, status?: Status): number => {
+const getBarPercentage = (value: number, ranges?: MeterRanges, status?: Status): number => {
+  // Without ranges, the bar defaults to be based on value
+  if (!ranges) return value;
+
   if (!status) return 0;
 
   const currentMaxRange = getMaxRange(ranges, status);
