@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
+import { ChainNotProducingBlocks } from '@/components/ChainNotProducingBlocks';
 import Hr1 from '@/components/hrs/Hr1';
 import Panel from '@/components/Panel';
 import InterlayTabGroup, {
@@ -16,6 +17,7 @@ import InterlayTabGroup, {
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import MainContainer from '@/parts/MainContainer';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import TAB_IDS from '@/utils/constants/tab-ids';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
@@ -102,6 +104,7 @@ const Bridge = (): JSX.Element | null => {
 
   return (
     <MainContainer>
+      {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
       <Panel className={clsx('mx-auto', 'w-full', 'md:max-w-xl', 'p-10')}>
         <InterlayTabGroup
           defaultIndex={selectedTabIndex}

@@ -19,6 +19,7 @@ import {
   formatPercentage
 } from '@/common/utils/utils';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
+import { ChainNotProducingBlocks } from '@/components/ChainNotProducingBlocks';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import Panel from '@/components/Panel';
@@ -26,7 +27,7 @@ import SubmitButton from '@/components/SubmitButton';
 import TitleWithUnderline from '@/components/TitleWithUnderline';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import WarningBanner from '@/components/WarningBanner';
+// import WarningBanner from '@/components/WarningBanner';
 import { BLOCK_TIME } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -751,11 +752,13 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
-        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
+        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
+
+        {/* {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
           <WarningBanner className={SHARED_CLASSES} severity='alert'>
             <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
           </WarningBanner>
-        )}
+        )} */}
         <Panel className={SHARED_CLASSES}>
           <form className={clsx('p-8', 'space-y-8')} onSubmit={handleSubmit(onSubmit)}>
             <TitleWithUnderline text={`Stake ${GOVERNANCE_TOKEN_SYMBOL}`} />
