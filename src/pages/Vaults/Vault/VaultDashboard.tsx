@@ -44,7 +44,6 @@ const VaultDashboard = (): JSX.Element => {
   if (!vault || !transactions || !currenciesSuccess || identitiesIdle || identitiesLoading) {
     return (
       <MainContainer>
-        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
         <Stack>
           <PageTitle />
           <PrimaryColorEllipsisLoader />
@@ -90,6 +89,7 @@ const VaultDashboard = (): JSX.Element => {
 
   return (
     <MainContainer>
+      {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
       <Stack>
         <PageTitle />
         <VaultInfo
