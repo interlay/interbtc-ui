@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ChainNotProducingBlocks } from '@/components/ChainNotProducingBlocks';
 import Hr1 from '@/components/hrs/Hr1';
 import Panel from '@/components/Panel';
 import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
@@ -14,7 +15,7 @@ import InterlayTabGroup, {
 import WarningBanner from '@/components/WarningBanner';
 import MainContainer from '@/parts/MainContainer';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
-import { POLKADOT } from '@/utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
 
@@ -73,6 +74,7 @@ const Transfer = (): JSX.Element | null => {
 
   return (
     <MainContainer>
+      {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
       {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
         <WarningBanner className={clsx('mx-auto', 'md:max-w-xl')} severity='info'>
           <p>
