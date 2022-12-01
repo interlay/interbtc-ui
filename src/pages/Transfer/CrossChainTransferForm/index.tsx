@@ -204,15 +204,13 @@ const CrossChainTransferForm = (): JSX.Element => {
     const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, RELAY_CHAIN_NATIVE_TOKEN, true);
     const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
 
-    if (true === true) {
-      // If destination balance > 0 just check that we have an amount to send
+    // If destination balance > 0 just check that we have an amount to send
 
-      // If balance === 0 Check amount > existential deposit + fees destination but otherwise ignore
+    // If balance === 0 Check amount > existential deposit + fees destination but otherwise ignore
 
-      // Transfer amount leaves you with less than the existential deposit
+    // Transfer amount leaves you with less than the existential deposit
 
-      return undefined;
-    } else if (balanceMonetaryAmount.lt(transferAmount)) {
+    if (balanceMonetaryAmount.lt(transferAmount)) {
       return t('insufficient_funds');
     } else {
       return undefined;
