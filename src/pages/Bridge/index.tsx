@@ -16,6 +16,7 @@ import InterlayTabGroup, {
 } from '@/legacy-components/UI/InterlayTabGroup';
 import MainContainer from '@/parts/MainContainer';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import TAB_IDS from '@/utils/constants/tab-ids';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
@@ -102,6 +103,7 @@ const Bridge = (): JSX.Element | null => {
 
   return (
     <MainContainer>
+      {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
       <Panel className={clsx('mx-auto', 'w-full', 'md:max-w-xl', 'p-10')}>
         <InterlayTabGroup
           defaultIndex={selectedTabIndex}

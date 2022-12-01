@@ -14,7 +14,7 @@ import InterlayTabGroup, {
 import WarningBanner from '@/legacy-components/WarningBanner';
 import MainContainer from '@/parts/MainContainer';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
-import { POLKADOT } from '@/utils/constants/relay-chain-names';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
 
@@ -73,6 +73,7 @@ const Transfer = (): JSX.Element | null => {
 
   return (
     <MainContainer>
+      {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
       {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
         <WarningBanner className={clsx('mx-auto', 'md:max-w-xl')} severity='info'>
           <p>

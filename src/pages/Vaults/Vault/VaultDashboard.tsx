@@ -11,6 +11,7 @@ import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsis
 import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
+import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
@@ -42,6 +43,7 @@ const VaultDashboard = (): JSX.Element => {
   if (!vault || !transactions || !currenciesSuccess || identitiesIdle || identitiesLoading) {
     return (
       <MainContainer>
+        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
         <Stack>
           <PageTitle />
           <PrimaryColorEllipsisLoader />

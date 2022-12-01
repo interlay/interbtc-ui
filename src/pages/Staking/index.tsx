@@ -36,7 +36,6 @@ import SubmitButton from '@/legacy-components/SubmitButton';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
-import WarningBanner from '@/legacy-components/WarningBanner';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
@@ -751,11 +750,13 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
-        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
+        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
+
+        {/* {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
           <WarningBanner className={SHARED_CLASSES} severity='alert'>
             <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
           </WarningBanner>
-        )}
+        )} */}
         <Panel className={SHARED_CLASSES}>
           <form className={clsx('p-8', 'space-y-8')} onSubmit={handleSubmit(onSubmit)}>
             <TitleWithUnderline text={`Stake ${GOVERNANCE_TOKEN_SYMBOL}`} />
