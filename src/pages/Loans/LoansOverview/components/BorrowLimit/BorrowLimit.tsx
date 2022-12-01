@@ -2,7 +2,7 @@ import { CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 
-import { formatUSD } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatUSD } from '@/common/utils/utils';
 import { DlGroup, Dt } from '@/component-library';
 import { useAccountBorrowLimit } from '@/pages/Loans/LoansOverview/hooks/use-get-account-borrow-limit';
 import { LoanAction } from '@/types/loans';
@@ -47,6 +47,8 @@ const BorrowLimit = ({
   const currentBorrowLimitLabel = formatUSD(borrowLimitUSD.toNumber(), { compact: true });
   const newBorrowLimitLabel = formatUSD(newBorrowLimit.toNumber(), { compact: true });
 
+  const isExceedingBorrowingLiquidity = loanAction === 'borrow' && asset.availableCapacity.lt(actionAmount);
+
   return (
     <StyledDl direction='column'>
       <DlGroup justifyContent='space-between'>
@@ -69,6 +71,15 @@ const BorrowLimit = ({
       </DlGroup>
       <LoanScore score={value} aria-label='loan score' />
       {/* TODO: replace with Alert component */}
+      {isExceedingBorrowingLiquidity && (
+        <StyledAlert role='warining' gap='spacing4' alignItems='center'>
+          <StyledWarningIcon />
+          <div>
+            The available liquidity to borrow {asset.currency.ticker} has exceed. Please borrow at most{' '}
+            {displayMonetaryAmount(asset.availableCapacity)}
+          </div>
+        </StyledAlert>
+      )}
       {hasLiquidationAlert && (
         <StyledAlert role='alert' gap='spacing4' alignItems='center'>
           <StyledWarningIcon />
