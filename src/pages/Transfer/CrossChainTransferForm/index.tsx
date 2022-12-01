@@ -46,6 +46,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
   const [transferableBalance, setTransferableBalance] = React.useState<any>(undefined);
   const [destination, setDestination] = React.useState<KeyringPair | undefined>(undefined);
+  const [destinationBalance, setDestinationBalance] = React.useState<any>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
@@ -71,28 +72,20 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   useEffect(() => {
-    if (destination === selectedAccount) return;
+    if (!destination || !fromChain || !xcmBridge) return;
 
-    console.log('different destination');
-  }, [destination, selectedAccount]);
+    const getDestinationBalance = async () => {
+      const balance: any = await firstValueFrom(
+        xcmBridge
+          .findAdapter(fromChain.type)
+          .subscribeTokenBalance(RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, destination.address)
+      );
 
-  // Destination relay chain balance
-  // React.useEffect(() => {
-  //   if (!api) return;
-  //   if (!handleError) return;
-  //   if (!destination) return;
+      setDestinationBalance(balance.free);
+    };
 
-  //   const fetchDestinationRelayChainBalance = async () => {
-  //     try {
-  //       const balance: any = await getRelayChainBalance(api, destination?.address);
-  //       setDestinationRelayChainBalance(balance);
-  //     } catch (error) {
-  //       handleError(error);
-  //     }
-  //   };
-
-  //   fetchDestinationRelayChainBalance();
-  // }, [api, destination, handleError]);
+    getDestinationBalance();
+  }, [destination, fromChain, xcmBridge]);
 
   useEffect(() => {
     if (!xcmBridge) return;
@@ -200,7 +193,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     setApproxUsdValue(usd);
   };
 
-  const validateTransferAmount = (value: string) => {
+  const validateTransferAmount = async (value: string) => {
     const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, RELAY_CHAIN_NATIVE_TOKEN, true);
     const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
 
