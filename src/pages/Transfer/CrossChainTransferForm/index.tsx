@@ -198,7 +198,21 @@ const CrossChainTransferForm = (): JSX.Element => {
     const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
 
     if (destinationBalance.isZero()) {
-      console.log('get existential deposit and fees');
+      const ed = xcmBridge.findAdapter(toChain?.type).balanceAdapter.ed;
+      const edAmount = newMonetaryAmount(ed.toString(), RELAY_CHAIN_NATIVE_TOKEN, true);
+
+      const inputConfig = await firstValueFrom(
+        xcmBridge.findAdapter(fromChain?.type).subscribeInputConfigs({
+          to: toChain?.type,
+          token: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+          address: destination?.address,
+          signer: selectedAccount?.address
+        })
+      );
+
+      console.log('inputConfig', inputConfig);
+
+      return edAmount.gt(transferAmount) ? 'Existential deposit problem' : undefined;
     } else if (balanceMonetaryAmount.lt(transferAmount)) {
       return t('insufficient_funds');
     } else {

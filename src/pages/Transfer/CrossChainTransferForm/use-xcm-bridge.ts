@@ -18,7 +18,7 @@ const useXcmBridge = (): { xcmProvider: any; xcmBridge: any } => {
 
   useEffect(() => {
     const handleConnections = async () => {
-      const xcmProvider = new ApiProvider(xcmNetwork);
+      const xcmProvider = new ApiProvider(xcmNetwork) as any;
       const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
       // Check connection
