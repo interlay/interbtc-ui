@@ -71,6 +71,30 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   useEffect(() => {
+    if (destination === selectedAccount) return;
+
+    console.log('different destination');
+  }, [destination, selectedAccount]);
+
+  // Destination relay chain balance
+  // React.useEffect(() => {
+  //   if (!api) return;
+  //   if (!handleError) return;
+  //   if (!destination) return;
+
+  //   const fetchDestinationRelayChainBalance = async () => {
+  //     try {
+  //       const balance: any = await getRelayChainBalance(api, destination?.address);
+  //       setDestinationRelayChainBalance(balance);
+  //     } catch (error) {
+  //       handleError(error);
+  //     }
+  //   };
+
+  //   fetchDestinationRelayChainBalance();
+  // }, [api, destination, handleError]);
+
+  useEffect(() => {
     if (!xcmBridge) return;
     if (!fromChain) return;
     if (!selectedAccount) return;
@@ -180,7 +204,19 @@ const CrossChainTransferForm = (): JSX.Element => {
     const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, RELAY_CHAIN_NATIVE_TOKEN, true);
     const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
 
-    return balanceMonetaryAmount.lt(transferAmount) ? t('insufficient_funds') : undefined;
+    if (true === true) {
+      // If destination balance > 0 just check that we have an amount to send
+
+      // If balance === 0 Check amount > existential deposit + fees destination but otherwise ignore
+
+      // Transfer amount leaves you with less than the existential deposit
+
+      return undefined;
+    } else if (balanceMonetaryAmount.lt(transferAmount)) {
+      return t('insufficient_funds');
+    } else {
+      return undefined;
+    }
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
