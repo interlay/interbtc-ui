@@ -18,7 +18,6 @@ interface Props {
   error?: FieldError;
 }
 
-// ray test touch <
 const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }: Props): JSX.Element => {
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>(undefined);
   const [allVaults, setAllVaults] = React.useState<VaultApiType[]>([]);
@@ -50,7 +49,9 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
   React.useEffect(() => {
     (async () => {
       setVaultsStatus(STATUSES.PENDING);
+      // ray test touch <
       const availableVaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
+      // ray test touch >
       setAllVaults(Array.from(availableVaults));
       setVaultsStatus(STATUSES.RESOLVED);
     })();
@@ -85,6 +86,5 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
     </div>
   );
 };
-// ray test touch >
 
 export default Vaults;

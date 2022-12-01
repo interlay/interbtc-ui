@@ -199,8 +199,8 @@ const IssueForm = (): JSX.Element | null => {
   React.useEffect(() => {
     // Deselect checkbox when required btcAmount exceeds capacity
     if (requestLimits) {
-      const parsedBTCAmount = new BitcoinAmount(btcAmount);
-      const requiredTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
+      const monetaryBtcAmount = new BitcoinAmount(btcAmount);
+      const requiredTokenAmount = monetaryBtcAmount.sub(monetaryBtcAmount.mul(feeRate));
       if (requiredTokenAmount.gt(requestLimits.singleVaultMaxIssuable)) {
         setSelectVaultManually(false);
       }
@@ -211,8 +211,8 @@ const IssueForm = (): JSX.Element | null => {
   // ray test touch <
   React.useEffect(() => {
     // Vault selection validation
-    const parsedBTCAmount = new BitcoinAmount(btcAmount);
-    const wrappedTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
+    const monetaryBtcAmount = new BitcoinAmount(btcAmount);
+    const wrappedTokenAmount = monetaryBtcAmount.sub(monetaryBtcAmount.mul(feeRate));
 
     if (selectVaultManually && vault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
@@ -366,10 +366,10 @@ const IssueForm = (): JSX.Element | null => {
       }
     };
 
-    const parsedBTCAmount = new BitcoinAmount(btcAmount);
-    const bridgeFee = parsedBTCAmount.mul(feeRate);
-    const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
-    const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
+    const monetaryBtcAmount = new BitcoinAmount(btcAmount);
+    const bridgeFee = monetaryBtcAmount.mul(feeRate);
+    const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
+    const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
     // ray test touch <
     const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
@@ -402,7 +402,7 @@ const IssueForm = (): JSX.Element | null => {
                 validate: (value) => validateForm(value)
               })}
               approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
-                parsedBTCAmount || BitcoinAmount.zero(),
+                monetaryBtcAmount || BitcoinAmount.zero(),
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}`}
               error={!!errors[BTC_AMOUNT]}
