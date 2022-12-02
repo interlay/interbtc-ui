@@ -25,7 +25,7 @@ const LoansOverview = (): JSX.Element => {
       <Flex direction='column' gap='spacing8'>
         <Flex direction='column' gap='spacing4'>
           <LoansInsights statistics={statistics} />
-          <LTVSection statistics={statistics} />
+          {!!borrowPositions?.length && <LTVSection statistics={statistics} />}
         </Flex>
         <LoansTables borrowPositions={borrowPositions || []} lendPositions={lendPositions || []} assets={assets} />
       </Flex>

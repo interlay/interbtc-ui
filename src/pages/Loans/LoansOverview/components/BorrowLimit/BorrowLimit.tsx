@@ -84,7 +84,7 @@ const BorrowLimit = ({
         <StyledAlert role='alert' gap='spacing4' alignItems='center'>
           <StyledWarningIcon />
           <div>
-            {t('loans.action_will_recude_health_score', {
+            {t('loans.action_liquidation_risk', {
               action: loanAction === 'borrow' ? t('loans.borrowing') : t('loans.withdrawing')
             })}
           </div>

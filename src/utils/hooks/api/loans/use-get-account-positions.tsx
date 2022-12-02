@@ -7,6 +7,7 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { getSubsidyRewardApy } from '@/pages/Loans/LoansOverview/utils/get-subsidy-rewards-apy';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
@@ -51,7 +52,8 @@ interface AccountPositionsStatisticsData {
   collateralizedAmountUSD: Big;
   earnedInterestAmountUSD: Big;
   earnedDeptAmountUSD: Big;
-  netYieldAmountUSD: Big;
+  netAmountUSD: Big;
+  netAPY: Big;
   thresholds: PositionsThresholdsData;
 }
 
@@ -68,7 +70,7 @@ const getAccountPositionsStats = (
 
   const collateralLendPositions = lendPositions.filter(({ isCollateral }) => isCollateral);
 
-  const collateralLendPositionsss = collateralLendPositions.map(({ amount, currency, ...rest }) => ({
+  const collaterAmountPositions = collateralLendPositions.map(({ amount, currency, ...rest }) => ({
     // MEMO: compute total value based on collateral threshold (not full lend amount value)
     amount: amount.mul(assets[currency.ticker].collateralThreshold),
     currency,
@@ -82,7 +84,7 @@ const getAccountPositionsStats = (
     ...rest
   }));
 
-  const collateralAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositionsss, prices);
+  const collateralAmountUSD = getPositionsSumOfFieldsInUSD('amount', collaterAmountPositions, prices);
   const liquidationAmountUSD = getPositionsSumOfFieldsInUSD('amount', liquidationLendPositions, prices);
 
   const collateralizedAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositions, prices);
@@ -91,7 +93,23 @@ const getAccountPositionsStats = (
 
   const totalEarnedRewardsUSDValue =
     convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) || 0;
-  const netYieldAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
+  const netAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
+
+  const totalLendApy = lendPositions.reduce((total, position) => {
+    const { lendApy, lendReward } = assets[position.currency.ticker];
+    const rewardsApy = getSubsidyRewardApy(position.currency, lendReward, prices);
+
+    return total.add(lendApy).add(rewardsApy || 0);
+  }, new Big(0));
+
+  const totalBorrowApy = lendPositions.reduce((total, position) => {
+    const { borrowApy, borrowReward } = assets[position.currency.ticker];
+    const rewardsApy = getSubsidyRewardApy(position.currency, borrowReward, prices);
+
+    return total.add(borrowApy).sub(rewardsApy || 0);
+  }, new Big(0));
+
+  const netAPY = totalLendApy.sub(totalBorrowApy);
 
   const thresholds = {
     collateral: collateralAmountUSD.div(collateralizedAmountUSD).mul(100),
@@ -105,7 +123,8 @@ const getAccountPositionsStats = (
     collateralAmountUSD,
     collateralizedAmountUSD,
     earnedDeptAmountUSD,
-    netYieldAmountUSD,
+    netAmountUSD,
+    netAPY,
     thresholds
   };
 };
