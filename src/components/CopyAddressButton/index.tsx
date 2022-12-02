@@ -1,11 +1,8 @@
 import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import * as React from 'react';
-// ray test touch <
 import { useCopyToClipboard, useTimeoutFn } from 'react-use';
 
-// import { copyToClipboard } from '@/common/utils/utils';
-// ray test touch >
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
 
 interface CustomProps {
@@ -25,23 +22,11 @@ const CopyAddressButton = ({ address, className }: CustomProps & InterlayButtonB
   // ray test touch >
 
   // ray test touch <
-  // const [addressCopied, setAddressCopied] = React.useState<boolean>(false);
   const handleCopyToClipboard = (text: string) => {
     copyToClipboard(text);
     setShowCopied(true);
     reset();
   };
-  // const handleCopyAddress = (address: string) => {
-  //   copyToClipboard(address);
-  //   setAddressCopied(true);
-  // };
-  // React.useEffect(() => {
-  //   if (!addressCopied) return;
-  //   const resetAddressCopied = setTimeout(() => {
-  //     setAddressCopied(false);
-  //   }, 1000);
-  //   return () => clearTimeout(resetAddressCopied);
-  // }, [addressCopied]);
   // ray test touch >
 
   // ray test touch <
