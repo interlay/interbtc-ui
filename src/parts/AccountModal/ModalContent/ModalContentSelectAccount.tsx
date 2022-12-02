@@ -49,7 +49,9 @@ const ModalContentSelectAccount = ({
                   <div>{`(${shortAddress(account.address)})`}</div>
                 </div>
               </InterlayButtonBase>
+              {/* ray test touch < */}
               <CopyAddressButton className={ACCOUNT_MODAL_BUTTON_CLASSES} address={account.address} />
+              {/* ray test touch > */}
             </li>
           );
         })}

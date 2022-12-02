@@ -131,7 +131,9 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
             'text-center',
             'w-full'
           )}
+          // ray test touch <
           onClick={() => copyToClipboard('1')}
+          // ray test touch >
         >
           {request.refund.btcAddress}
         </span>

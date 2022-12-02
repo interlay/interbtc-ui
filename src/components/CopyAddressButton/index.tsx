@@ -11,6 +11,7 @@ interface CustomProps {
 
 const COPY_ADDRESS_ICON_CLASSES = clsx('w-6', 'h-6');
 
+// ray test touch <
 const CopyAddressButton = ({ address, className }: CustomProps & InterlayButtonBaseProps): JSX.Element => {
   const [addressCopied, setAddressCopied] = React.useState<boolean>(false);
 
@@ -39,5 +40,6 @@ const CopyAddressButton = ({ address, className }: CustomProps & InterlayButtonB
     </InterlayButtonBase>
   );
 };
+// ray test touch >
 
 export default CopyAddressButton;

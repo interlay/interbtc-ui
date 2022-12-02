@@ -96,7 +96,9 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         <InterlayTooltip label={t('click_to_copy')}>
           <span
             className={clsx('block', 'p-2.5', 'border-2', 'font-medium', 'rounded-lg', 'cursor-pointer', 'text-center')}
+            // ray test touch <
             onClick={() => copyToClipboard(request.vaultWrappedAddress || request.vaultBackingAddress)}
+            // ray test touch >
           >
             {request.vaultWrappedAddress || request.vaultBackingAddress}
           </span>
