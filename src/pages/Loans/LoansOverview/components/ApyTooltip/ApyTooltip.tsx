@@ -3,17 +3,19 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { TooltipProps } from '@reach/tooltip';
 import Big from 'big.js';
 
-import { Dl } from '@/component-library';
+import { Dd, Dl, DlGroup } from '@/component-library';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { StyledTooltip } from './ApyTooltip.style';
+import { StyledApyTooltipTitle, StyledTooltip } from './ApyTooltip.style';
+import { AssetGroup } from './AssetGroup';
 import { BreakdownGroup } from './BreakdownGroup';
-import { EarnedGroup } from './EarnedGroup';
+import { RewardsGroup } from './RewardsGroup';
 
 type Props = {
-  assetApy: Big;
-  assetCurrency: CurrencyExt;
-  earnedAsset?: MonetaryAmount<CurrencyExt>;
+  apy: Big;
+  currency: CurrencyExt;
+  earnedInterest?: MonetaryAmount<CurrencyExt>;
+  accumulatedDebt?: MonetaryAmount<CurrencyExt>;
   rewardsApy?: Big;
   rewards: MonetaryAmount<CurrencyExt> | null;
   prices: Prices;
@@ -25,32 +27,48 @@ type InheritAttrs = Omit<TooltipProps, keyof Props | 'label'>;
 type ApyTooltipProps = Props & InheritAttrs;
 
 const ApyTooltip = ({
-  assetApy,
-  assetCurrency,
-  earnedAsset,
+  apy,
+  currency,
+  earnedInterest,
+  accumulatedDebt,
   rewardsApy,
   rewards,
   prices,
   isBorrow,
   ...props
 }: ApyTooltipProps): JSX.Element => {
+  // MEMO: in assets table there is no earn or debt asset to be shown
+  const showEarnedRewards = !!accumulatedDebt || !!earnedInterest;
+
   const label = (
     <Dl direction='column' gap='spacing2'>
       <BreakdownGroup
-        assetApy={assetApy}
+        apy={apy}
         isBorrow={isBorrow}
         rewardsApy={rewardsApy}
         rewardsTicker={rewards?.currency.ticker}
-        assetTicker={assetCurrency.ticker}
+        ticker={currency.ticker}
       />
-      {earnedAsset && (
-        <EarnedGroup
-          assetCurrency={assetCurrency}
-          earnedAsset={earnedAsset}
-          isBorrow={isBorrow}
-          prices={prices}
-          rewards={rewards}
-        />
+      {accumulatedDebt && (
+        <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
+          <StyledApyTooltipTitle color='primary'>Owed</StyledApyTooltipTitle>
+          <Dd>
+            <Dl direction='column' alignItems='flex-start' gap='spacing0'>
+              <AssetGroup amount={accumulatedDebt} prices={prices} />
+            </Dl>
+          </Dd>
+        </DlGroup>
+      )}
+      {showEarnedRewards && (
+        <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
+          <StyledApyTooltipTitle color='primary'>Earned</StyledApyTooltipTitle>
+          <Dd>
+            <Dl direction='column' alignItems='flex-start' gap='spacing0'>
+              {earnedInterest && <AssetGroup amount={earnedInterest} prices={prices} />}
+              {!!rewards && <RewardsGroup rewards={rewards} prices={prices} />}
+            </Dl>
+          </Dd>
+        </DlGroup>
       )}
     </Dl>
   );

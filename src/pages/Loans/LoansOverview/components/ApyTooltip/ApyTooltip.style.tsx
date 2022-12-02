@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-import { Dd, DlGroup, theme, Tooltip } from '@/component-library';
+import { DlGroup, Dt, theme, Tooltip } from '@/component-library';
 
-const StyledApyTooltipTitle = styled(Dd)`
+const StyledApyTooltipTitle = styled(Dt)`
   font-weight: ${theme.fontWeight.bold};
 `;
 

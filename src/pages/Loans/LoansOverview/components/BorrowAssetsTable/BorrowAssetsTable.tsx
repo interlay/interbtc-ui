@@ -48,8 +48,8 @@ const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTa
 
         const apy = (
           <ApyCell
-            assetApy={borrowApy}
-            assetCurrency={currency}
+            apy={borrowApy}
+            currency={currency}
             rewards={borrowReward}
             prices={prices}
             isBorrow

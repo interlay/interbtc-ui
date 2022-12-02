@@ -51,8 +51,8 @@ const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableP
 
         const apy = (
           <ApyCell
-            assetApy={lendApy}
-            assetCurrency={currency}
+            apy={lendApy}
+            currency={currency}
             rewards={lendReward}
             prices={prices}
             // TODO: temporary until we find why row click is being ignored

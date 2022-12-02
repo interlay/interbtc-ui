@@ -58,11 +58,11 @@ const LendPositionsTable = ({
 
         const apy = (
           <ApyCell
-            assetApy={lendApy}
-            assetCurrency={currency}
+            apy={lendApy}
+            currency={currency}
             prices={prices}
             rewards={lendReward}
-            earnedAsset={earnedInterest}
+            earnedInterest={earnedInterest}
             // TODO: temporary until we find why row click is being ignored
             onClick={() => onRowAction?.(currency.ticker as Key)}
           />

@@ -6,32 +6,26 @@ import { getApyLabel } from '../../utils/apy';
 import { StyledApyTooltipGroup, StyledApyTooltipTitle } from './ApyTooltip.style';
 
 type BreakdownGroupProps = {
-  assetApy: Big;
-  assetTicker: string;
+  apy: Big;
+  ticker: string;
   rewardsApy?: Big;
   rewardsTicker?: string;
   isBorrow: boolean;
 };
 
-const BreakdownGroup = ({
-  assetApy,
-  rewardsApy,
-  assetTicker,
-  rewardsTicker,
-  isBorrow
-}: BreakdownGroupProps): JSX.Element => {
-  const assetApyLabel = getApyLabel(assetApy);
+const BreakdownGroup = ({ apy, rewardsApy, ticker, rewardsTicker, isBorrow }: BreakdownGroupProps): JSX.Element => {
+  const apyLabel = getApyLabel(apy);
 
   return (
     <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-      <StyledApyTooltipTitle>APY Breakdown</StyledApyTooltipTitle>
+      <StyledApyTooltipTitle color='primary'>APY Breakdown</StyledApyTooltipTitle>
       <Dt>
         <Dl direction='column' alignItems='flex-start' gap='spacing0'>
           <StyledApyTooltipGroup gap='spacing1' wrap>
             <Dd color='tertiary'>
-              {isBorrow ? 'Borrow' : 'Lend'} APY {assetTicker}:
+              {isBorrow ? 'Borrow' : 'Lend'} APY {ticker}:
             </Dd>
-            <Dt color='primary'>{assetApyLabel}</Dt>
+            <Dt color='primary'>{apyLabel}</Dt>
           </StyledApyTooltipGroup>
           {!!rewardsApy && (
             <StyledApyTooltipGroup gap='spacing1' wrap>

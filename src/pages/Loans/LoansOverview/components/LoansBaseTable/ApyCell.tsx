@@ -12,9 +12,10 @@ import { ApyTooltip } from '../ApyTooltip';
 import { MonetaryCell } from './MonetaryCell';
 
 type ApyCellProps = {
-  assetApy: Big;
-  assetCurrency: CurrencyExt;
-  earnedAsset?: MonetaryAmount<CurrencyExt>;
+  apy: Big;
+  currency: CurrencyExt;
+  earnedInterest?: MonetaryAmount<CurrencyExt>;
+  accumulatedDebt?: MonetaryAmount<CurrencyExt>;
   rewards: MonetaryAmount<CurrencyExt> | null;
   prices?: Prices;
   isBorrow?: boolean;
@@ -22,18 +23,21 @@ type ApyCellProps = {
 };
 
 const ApyCell = ({
-  assetApy,
-  assetCurrency,
+  apy,
+  currency,
   rewards,
-  earnedAsset,
+  accumulatedDebt,
+  earnedInterest,
   prices,
   isBorrow = false,
   onClick
 }: ApyCellProps): JSX.Element => {
   const rewardsApy = getSubsidyRewardApy(rewards?.currency, rewards, prices);
 
-  const totalApy = isBorrow ? assetApy.sub(rewardsApy || 0) : assetApy.add(rewardsApy || 0);
+  const totalApy = isBorrow ? apy.sub(rewardsApy || 0) : apy.add(rewardsApy || 0);
   const totalApyLabel = getApyLabel(totalApy);
+
+  const earnedAsset = accumulatedDebt || earnedInterest;
 
   const earnedAssetAmount = earnedAsset
     ? formatNumber(earnedAsset?.toBig().toNumber(), {
@@ -55,13 +59,14 @@ const ApyCell = ({
   return (
     <Flex>
       <ApyTooltip
-        assetApy={assetApy}
-        assetCurrency={assetCurrency}
+        apy={apy}
+        currency={currency}
         prices={prices}
         rewards={rewards}
         rewardsApy={rewardsApy}
         isBorrow={isBorrow}
-        earnedAsset={earnedAsset}
+        accumulatedDebt={accumulatedDebt}
+        earnedInterest={earnedInterest}
       >
         {children}
       </ApyTooltip>

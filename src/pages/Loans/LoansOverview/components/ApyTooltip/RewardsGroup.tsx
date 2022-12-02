@@ -21,8 +21,8 @@ const RewardsGroup = ({ rewards, prices }: RewardsGroupProps): JSX.Element => {
 
   return (
     <StyledApyTooltipGroup gap='spacing1' wrap>
-      <Dd color='tertiary'>{rewards?.currency.ticker}:</Dd>
-      <Dt color='primary'>{rewardsLabel}</Dt>
+      <Dt color='tertiary'>{rewards.currency.ticker}:</Dt>
+      <Dd color='primary'>{rewardsLabel}</Dd>
     </StyledApyTooltipGroup>
   );
 };

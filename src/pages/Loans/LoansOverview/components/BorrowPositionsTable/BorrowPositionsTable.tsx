@@ -58,10 +58,10 @@ const BorrowPositionsTable = ({
 
         const apy = (
           <ApyCell
-            assetApy={borrowApy}
-            assetCurrency={currency}
+            apy={borrowApy}
+            currency={currency}
             rewards={borrowReward}
-            earnedAsset={accumulatedDebt}
+            accumulatedDebt={accumulatedDebt}
             prices={prices}
             isBorrow
             // TODO: temporary until we find why row click is being ignored
