@@ -7,9 +7,8 @@ import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { BorrowGroup } from './BorrowGroup';
-import { LendGroup } from './LendGroup';
 import { StyledDl } from './LoanActionInfo.style';
+import { LoanGroup } from './LoanGroup';
 
 type LoanActionInfoProps = {
   variant?: LoanAction;
@@ -17,26 +16,29 @@ type LoanActionInfoProps = {
   prices?: Prices;
 };
 
-const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.Element => (
-  <StyledDl direction='column' gap='spacing2'>
-    {asset && (
-      <>
-        {variant === 'lend' && <LendGroup asset={asset} prices={prices} />}
-        {variant === 'borrow' && <BorrowGroup asset={asset} prices={prices} />}
-      </>
-    )}
-    <DlGroup justifyContent='space-between'>
-      <Dt>Fees</Dt>
-      <Dd>
-        {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
-        {displayMonetaryAmountInUSDFormat(
-          TRANSACTION_FEE_AMOUNT,
-          getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
-        )}
-        )
-      </Dd>
-    </DlGroup>
-  </StyledDl>
-);
+const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.Element => {
+  const isBorrow = variant === 'borrow';
+  const apy = isBorrow ? asset?.borrowApy : asset?.lendApy;
+  const rewards = isBorrow ? asset?.borrowReward : asset?.lendReward;
+
+  return (
+    <StyledDl direction='column' gap='spacing2'>
+      {asset && apy && (
+        <LoanGroup isBorrow={isBorrow} ticker={asset.currency.ticker} apy={apy} rewards={rewards} prices={prices} />
+      )}
+      <DlGroup justifyContent='space-between'>
+        <Dt>Fees</Dt>
+        <Dd>
+          {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
+          {displayMonetaryAmountInUSDFormat(
+            TRANSACTION_FEE_AMOUNT,
+            getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
+          )}
+          )
+        </Dd>
+      </DlGroup>
+    </StyledDl>
+  );
+};
 export { LoanActionInfo };
 export type { LoanActionInfoProps };
