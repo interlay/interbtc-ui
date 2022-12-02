@@ -206,6 +206,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
                 loanAction={variant}
                 asset={asset}
                 actionAmount={monetaryAmount}
+                prices={prices}
               />
             )}
           </Flex>
