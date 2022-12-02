@@ -11,9 +11,10 @@ type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
 };
 
 const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
+  const isLendingEnabled = process.env.REACT_APP_FEATURE_FLAG_LENDING === 'enabled';
   const [foreignCurrencies, lendCurrencies] = await Promise.all([
     window.bridge.assetRegistry.getForeignAssets(),
-    window.bridge.loans.getLendTokens()
+    isLendingEnabled ? window.bridge.loans.getLendTokens() : []
   ]);
   return [...NATIVE_CURRENCIES, ...foreignCurrencies, ...lendCurrencies];
 };
@@ -58,19 +59,18 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
     [queryResult]
   );
 
-  // TODO: add `getLendTokenFromId` or similar to be able to synchronously obtain lend tokens from id primitive
   // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
   const getLendCurrencyFromId = useCallback(
     (id: number): CurrencyExt => {
       if (queryResult.data === undefined) {
-        throw new Error('useGetCurrencies: Cannot call `getForeignCurrencyFromId` before currencies are loaded.');
+        throw new Error('useGetCurrencies: Cannot call `getLendCurrencyFromId` before currencies are loaded.');
       }
 
       const foreignCurrency = queryResult.data.find(
         (currency) => 'lendToken' in currency && currency.lendToken.id === id
       );
       if (foreignCurrency === undefined) {
-        throw new Error(`useGetCurrencies: getForeignCurrencyFromId: Foreign currency with id ${id} not found.`);
+        throw new Error(`useGetCurrencies: getLendCurrencyFromId: Lend token with id ${id} not found.`);
       }
 
       return foreignCurrency;

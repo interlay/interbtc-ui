@@ -1,5 +1,6 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
 
 import { getTokenPrice } from '../../../../utils/helpers/prices';
 import { Prices } from '../../../../utils/hooks/api/use-get-prices';
@@ -8,7 +9,7 @@ const getSubsidyRewardApy = (
   positionCurrency: CurrencyExt | undefined,
   reward: MonetaryAmount<CurrencyExt> | null,
   prices: Prices | undefined
-): number | undefined => {
+): Big | undefined => {
   if (reward === null || prices === undefined || positionCurrency === undefined) {
     return undefined;
   }
@@ -21,7 +22,7 @@ const getSubsidyRewardApy = (
   }
 
   const exchangeRate = rewardCurrencyPriceUSD / positionCurrencyPriceUSD;
-  const apy = reward.toBig().toNumber() * exchangeRate;
+  const apy = reward.toBig().mul(exchangeRate);
 
   return apy;
 };
