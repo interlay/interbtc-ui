@@ -50,7 +50,7 @@ const useGetLTV = (): UseAccountHealthFactor => {
   const { borrowAmountUSD, collateralizedAmountUSD, thresholds } = statistics || {};
 
   /**
-   * This method computes how the health factor will
+   * This method computes how the LTV will
    * change if asset is withdrawn or deposited.
    * @param {LoanActionData} loanAction The data related to loan action
    * @note Call only after the prices and positions statistics are loaded.

@@ -99,6 +99,7 @@ const useLoanFormData = (
     assetAmount: {
       available: assetBalance,
       min: minAmount,
+      // MEMO: checks for negative values
       max: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount
     }
   };

@@ -4,7 +4,15 @@ import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
-import { StyledDd, StyledDl, StyledDlGroup, StyledDt, StyledLTVMeter } from './LTVSection.style';
+import {
+  StyledDd,
+  StyledDivider,
+  StyledDl,
+  StyledDlGroup,
+  StyledDt,
+  StyledLTVMeter,
+  StyledStatus
+} from './LTVSection.style';
 
 const status = {
   success: 'Low Risk',
@@ -16,8 +24,6 @@ type LTVSectionProps = {
   prices?: Prices;
   statistics: AccountPositionsStatisticsData | undefined;
 };
-
-// TODO: dont allow negative balance
 
 const LTVSection = ({ statistics }: LTVSectionProps): JSX.Element => {
   const { data: currentLTV } = useGetLTV();
@@ -32,13 +38,17 @@ const LTVSection = ({ statistics }: LTVSectionProps): JSX.Element => {
           <StyledDt color='primary'>Borrow Balance</StyledDt>
           <StyledDd color='secondary'>{borrowBalanceLabel}</StyledDd>
         </StyledDlGroup>
+        <StyledDivider />
         <StyledDlGroup direction='column' gap='spacing1'>
           <StyledDt color='primary'>Collateral Balance</StyledDt>
           <StyledDd color='secondary'>{collateralValueLabel}</StyledDd>
         </StyledDlGroup>
+        <StyledDivider />
         <StyledDlGroup direction='column' gap='spacing1'>
           <StyledDt color='primary'>Loan Status</StyledDt>
-          <StyledDd color='secondary'>{currentLTV?.status ? status[currentLTV.status] : '-'}</StyledDd>
+          <StyledStatus $status={currentLTV?.status}>
+            {currentLTV?.status ? status[currentLTV.status] : '-'}
+          </StyledStatus>
         </StyledDlGroup>
       </StyledDl>
       <StyledLTVMeter value={currentLTV?.value} thresholds={statistics?.thresholds} />

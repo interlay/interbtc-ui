@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 
-import { Dd, Dl, DlGroup, Dt, theme } from '@/component-library';
+import { Dd, Dl, DlGroup, Dt, Status, theme } from '@/component-library';
 
 import { LTVMeter } from '../LTVMeter.tsx';
+
+type StyledStatusProps = {
+  $status?: Status;
+};
 
 const StyledDl = styled(Dl)`
   flex-direction: column;
@@ -15,18 +19,6 @@ const StyledDl = styled(Dl)`
 
 const StyledDlGroup = styled(DlGroup)`
   text-align: center;
-
-  &:not(:last-of-type) {
-    border-bottom: ${theme.border.default};
-    padding-bottom: ${theme.spacing.spacing6};
-
-    @media (min-width: 64em) {
-      border-bottom: 0;
-      padding-bottom: 0;
-      border-right: ${theme.border.default};
-      padding-right: ${theme.spacing.spacing6};
-    }
-  }
 `;
 
 const StyledDt = styled(Dt)`
@@ -37,8 +29,25 @@ const StyledDd = styled(Dd)`
   font-weight: ${theme.fontWeight.bold};
 `;
 
+const StyledStatus = styled(StyledDd)<StyledStatusProps>`
+  color: ${({ $status }) => $status && theme.alert.status[$status]};
+`;
+
 const StyledLTVMeter = styled(LTVMeter)`
   padding: ${theme.spacing.spacing2};
 `;
 
-export { StyledDd, StyledDl, StyledDlGroup, StyledDt, StyledLTVMeter };
+const StyledDivider = styled.div`
+  height: 1px;
+  width: auto;
+  background-color: ${theme.divider.bg};
+  margin: 0 ${theme.spacing.spacing2};
+
+  @media (min-width: 64em) {
+    height: auto;
+    width: 1px;
+    margin: ${theme.spacing.spacing2} 0;
+  }
+`;
+
+export { StyledDd, StyledDivider, StyledDl, StyledDlGroup, StyledDt, StyledLTVMeter, StyledStatus };

@@ -77,7 +77,6 @@ const BorrowLimit = ({
           <span>{currentLTVLabel}</span>
         </StyledDd>
       </DlGroup>
-      {/* <LoanScore score={value} aria-label='loan score' /> */}
       <LTVMeter value={currentLTV.value} thresholds={thresholds} />
       {/* TODO: replace with Alert component */}
       {hasLiquidationAlert && (
