@@ -1,4 +1,3 @@
-// ray test touch <
 import { CheckIcon, DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 import * as React from 'react';
 import { useCopyToClipboard as useLibCopyToClipboard, useTimeoutFn } from 'react-use';
@@ -45,4 +44,3 @@ const useCopyToClipboard = (
 };
 
 export default useCopyToClipboard;
-// ray test touch >
