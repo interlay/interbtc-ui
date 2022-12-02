@@ -11,7 +11,6 @@ import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsis
 import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
 
 import { CreateVaults, InfoBox, VaultCard, VaultsHeader } from './components';
@@ -41,7 +40,6 @@ const VaultOverview = (): JSX.Element => {
 
   return (
     <MainContainer>
-      {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
       <VaultsHeader title={t('vault.vault_overview')} accountAddress={accountAddress} />
       <Grid>
         <GridItem mobile={{ span: 4, start: 1 }} desktop={{ span: 2, start: 1 }}>
