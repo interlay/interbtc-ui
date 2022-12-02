@@ -4,11 +4,11 @@
 
 > Add a brief description
 
-## Current behavior (updates)
+## Current behaviour (updates)
 
 > Please describe the current behaviour that you are modifying
 
-## New behavior
+## New behaviour
 
 > Please describe the behaviour or changes this PR adds
 
