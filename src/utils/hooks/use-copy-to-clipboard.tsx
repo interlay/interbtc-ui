@@ -19,23 +19,26 @@ const useCopyToClipboard = (
     setShowCopied(false);
   }, 1000);
 
-  const handleCopyToClipboard = () => {
+  const handleCopyToClipboard = React.useCallback(() => {
     copyToClipboard(text);
     setShowCopied(true);
     reset();
-  };
+  }, [copyToClipboard, reset, text]);
 
-  const CopyToClipboardUI = ({ className }: CopyToClipboardUIProps): JSX.Element => {
-    return (
-      <>
-        {state.value === text && showCopied ? (
-          <CheckIcon className={className} />
-        ) : (
-          <DocumentDuplicateIcon className={className} />
-        )}
-      </>
-    );
-  };
+  const CopyToClipboardUI = React.useMemo(() => {
+    // eslint-disable-next-line react/display-name
+    return ({ className }: CopyToClipboardUIProps): JSX.Element => {
+      return (
+        <>
+          {state.value === text && showCopied ? (
+            <CheckIcon className={className} />
+          ) : (
+            <DocumentDuplicateIcon className={className} />
+          )}
+        </>
+      );
+    };
+  }, [showCopied, state.value, text]);
 
   return {
     handleCopyToClipboard,
