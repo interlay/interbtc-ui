@@ -72,7 +72,7 @@ const BorrowLimit = ({
       <LoanScore score={value} aria-label='loan score' />
       {/* TODO: replace with Alert component */}
       {isExceedingBorrowingLiquidity && (
-        <StyledAlert role='warining' gap='spacing4' alignItems='center'>
+        <StyledAlert role='alert' gap='spacing4' alignItems='center'>
           <StyledWarningIcon />
           <div>
             The available liquidity to borrow {asset.currency.ticker} has exceed. Please borrow at most{' '}
