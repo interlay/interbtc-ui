@@ -10,13 +10,14 @@ import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 
 type RewardsGroupProps = {
   apy: Big;
-  isBorrow: boolean;
   rewards: MonetaryAmount<CurrencyExt>;
+  assetCurrency: CurrencyExt;
+  isBorrow: boolean;
   prices?: Prices;
 };
 
-const RewardsGroup = ({ isBorrow, apy, rewards, prices }: RewardsGroupProps): JSX.Element | null => {
-  const subsidyRewardApy = getSubsidyRewardApy(rewards?.currency, rewards, prices);
+const RewardsGroup = ({ isBorrow, apy, assetCurrency, rewards, prices }: RewardsGroupProps): JSX.Element | null => {
+  const subsidyRewardApy = getSubsidyRewardApy(assetCurrency, rewards, prices);
 
   if (!subsidyRewardApy) {
     return null;
