@@ -1,5 +1,5 @@
 import { LoanAsset, TickerToData } from '@interlay/interbtc-api';
-import { ReactNode, useMemo } from 'react';
+import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
@@ -43,10 +43,20 @@ const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTa
 
   const rows: BorrowAssetsTableRow[] = useMemo(
     () =>
-      Object.values(assets).map(({ borrowApy, currency, availableCapacity, totalBorrows }) => {
+      Object.values(assets).map(({ borrowApy, currency, availableCapacity, borrowReward, totalBorrows }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
-        const apy = <ApyCell apy={borrowApy} />;
+        const apy = (
+          <ApyCell
+            apy={borrowApy}
+            currency={currency}
+            rewards={borrowReward}
+            prices={prices}
+            isBorrow
+            // TODO: temporary until we find why row click is being ignored
+            onClick={() => onRowAction?.(currency.ticker as Key)}
+          />
+        );
 
         const availableCapacityUSD = convertMonetaryAmountToValueInUSD(
           availableCapacity,
@@ -70,7 +80,7 @@ const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTa
           totalBorrowed
         };
       }),
-    [assets, prices]
+    [assets, prices, onRowAction]
   );
 
   return (

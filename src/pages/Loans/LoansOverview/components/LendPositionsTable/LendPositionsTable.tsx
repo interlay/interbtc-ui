@@ -1,12 +1,10 @@
 import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
-import { ReactNode, useMemo } from 'react';
+import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatPercentage } from '@/common/utils/utils';
 import { Switch } from '@/component-library';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTableProps } from '../LoansBaseTable';
 import { StyledLendPositionsTable } from './LendPositionsTable.style';
 
@@ -28,7 +26,7 @@ type LendPositionTableRow = {
 // TODO: translations
 const lendPositionColumns = [
   { name: 'Asset', uid: LendPositionColumns.ASSET },
-  { name: 'APY', uid: LendPositionColumns.APY_EARNED },
+  { name: 'APY / Earned', uid: LendPositionColumns.APY_EARNED },
   { name: 'Supplied', uid: LendPositionColumns.SUPPLIED },
   { name: 'Collateral', uid: LendPositionColumns.COLLATERAL }
 ];
@@ -53,19 +51,22 @@ const LendPositionsTable = ({
 
   const rows: LendPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ amount, currency, isCollateral }) => {
+      positions.map(({ amount, currency, earnedInterest, isCollateral }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
         const { lendApy, lendReward } = assets[currency.ticker];
-        const rewardsApy = getSubsidyRewardApy(currency, lendReward, prices);
-        const formattedRewardsApy =
-          !!lendReward && !!rewardsApy
-            ? `${lendReward?.currency.ticker}: ${formatPercentage(rewardsApy || 0, {
-                maximumFractionDigits: 2
-              })}`
-            : undefined;
 
-        const apy = <ApyCell apy={lendApy} amount={formattedRewardsApy} />;
+        const apy = (
+          <ApyCell
+            apy={lendApy}
+            currency={currency}
+            prices={prices}
+            rewards={lendReward}
+            earnedInterest={earnedInterest}
+            // TODO: temporary until we find why row click is being ignored
+            onClick={() => onRowAction?.(currency.ticker as Key)}
+          />
+        );
 
         const supplied = <BalanceCell amount={amount} prices={prices} />;
 
@@ -85,7 +86,7 @@ const LendPositionsTable = ({
           collateral
         };
       }),
-    [assets, onPressCollateralSwitch, positions, prices]
+    [assets, onPressCollateralSwitch, onRowAction, positions, prices]
   );
 
   return (
