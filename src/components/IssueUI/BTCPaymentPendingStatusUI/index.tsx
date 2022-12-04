@@ -8,19 +8,14 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat, shortAddress } from '@/common/utils/utils';
 import Timer from '@/components/Timer';
-// ray test touch <
 import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
-// import InterlayTooltip from '@/components/UI/InterlayTooltip';
-// ray test touch >
 import { BLOCK_TIME } from '@/config/parachain';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-// ray test touch <
 import useCopyToClipboard from '@/utils/hooks/use-copy-to-clipboard';
-// ray test touch >
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -69,9 +64,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
 
   const bitcoinRecipientAddress = request.vaultWrappedAddress || request.vaultBackingAddress;
 
-  // ray test touch <
   const { handleCopyToClipboard, CopyToClipboardUI } = useCopyToClipboard(bitcoinRecipientAddress);
-  // ray test touch >
 
   return (
     <div className='space-y-8'>
@@ -104,23 +97,14 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.single_transaction')}
         </p>
-        {/* ray test touch < */}
         <div className={clsx('flex', 'items-center', 'justify-center', 'space-x-1', 'p-2.5', 'font-medium')}>
           <span>{shortAddress(bitcoinRecipientAddress)}</span>
+          {/* ray test touch < */}
           <InterlayButtonBase onClick={handleCopyToClipboard}>
             <CopyToClipboardUI className={clsx('w-6', 'h-6')} />
           </InterlayButtonBase>
+          {/* ray test touch > */}
         </div>
-        {/* TODO: should improve UX */}
-        {/* <InterlayTooltip label={t('click_to_copy')}>
-          <span
-            className={clsx('block', 'p-2.5', 'border-2', 'font-medium', 'rounded-lg', 'cursor-pointer', 'text-center')}
-            onClick={() => copyToClipboard(bitcoinRecipientAddress)}
-          >
-            {bitcoinRecipientAddress}
-          </span>
-        </InterlayTooltip> */}
-        {/* ray test touch > */}
         {initialLeftSeconds && (
           <p className={clsx('flex', 'justify-center', 'items-center', 'space-x-1')}>
             <span
