@@ -94,12 +94,12 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.single_transaction')}
         </p>
+        {/* ray test touch < */}
         <div className={clsx('flex', 'items-center', 'justify-center', 'space-x-1', 'p-2.5', 'font-medium')}>
           <span>{shortAddress(bitcoinRecipientAddress)}</span>
-          {/* ray test touch < */}
           <CopyToClipboardButton text={bitcoinRecipientAddress} />
-          {/* ray test touch > */}
         </div>
+        {/* ray test touch > */}
         {initialLeftSeconds && (
           <p className={clsx('flex', 'justify-center', 'items-center', 'space-x-1')}>
             <span
