@@ -7,15 +7,14 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat, shortAddress } from '@/common/utils/utils';
+import CopyToClipboardButton from '@/components/CopyToClipboardButton';
 import Timer from '@/components/Timer';
-import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
 import { BLOCK_TIME } from '@/config/parachain';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import useCopyToClipboard from '@/utils/hooks/use-copy-to-clipboard';
 
 interface Props {
   // TODO: should type properly (`Relay`)
@@ -64,8 +63,6 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
 
   const bitcoinRecipientAddress = request.vaultWrappedAddress || request.vaultBackingAddress;
 
-  const { handleCopyToClipboard, CopyToClipboardUI } = useCopyToClipboard(bitcoinRecipientAddress);
-
   return (
     <div className='space-y-8'>
       <div className={clsx('flex', 'flex-col', 'justify-center', 'items-center')}>
@@ -100,9 +97,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         <div className={clsx('flex', 'items-center', 'justify-center', 'space-x-1', 'p-2.5', 'font-medium')}>
           <span>{shortAddress(bitcoinRecipientAddress)}</span>
           {/* ray test touch < */}
-          <InterlayButtonBase onClick={handleCopyToClipboard}>
-            <CopyToClipboardUI className={clsx('w-6', 'h-6')} />
-          </InterlayButtonBase>
+          <CopyToClipboardButton text={bitcoinRecipientAddress} />
           {/* ray test touch > */}
         </div>
         {initialLeftSeconds && (
