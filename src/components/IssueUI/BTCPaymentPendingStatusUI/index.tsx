@@ -61,6 +61,8 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
     })();
   }, [request, bridgeLoaded]);
 
+  const bitcoinRecipientAddress = request.vaultWrappedAddress || request.vaultBackingAddress;
+
   return (
     <div className='space-y-8'>
       <div className={clsx('flex', 'flex-col', 'justify-center', 'items-center')}>
@@ -92,17 +94,19 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.single_transaction')}
         </p>
+        {/* ray test touch < */}
         {/* TODO: should improve UX */}
         <InterlayTooltip label={t('click_to_copy')}>
           <span
             className={clsx('block', 'p-2.5', 'border-2', 'font-medium', 'rounded-lg', 'cursor-pointer', 'text-center')}
             // ray test touch <
-            onClick={() => copyToClipboard(request.vaultWrappedAddress || request.vaultBackingAddress)}
+            onClick={() => copyToClipboard(bitcoinRecipientAddress)}
             // ray test touch >
           >
-            {request.vaultWrappedAddress || request.vaultBackingAddress}
+            {bitcoinRecipientAddress}
           </span>
         </InterlayTooltip>
+        {/* ray test touch > */}
         {initialLeftSeconds && (
           <p className={clsx('flex', 'justify-center', 'items-center', 'space-x-1')}>
             <span
@@ -133,10 +137,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
       <QRCode
         includeMargin
         className='mx-auto'
-        // eslint-disable-next-line max-len
-        value={`bitcoin:${request.vaultWrappedAddress || request.vaultBackingAddress}?amount=${amountBTCToSend.toHuman(
-          8
-        )}`}
+        value={`bitcoin:${bitcoinRecipientAddress}?amount=${amountBTCToSend.toHuman(8)}`}
       />
       <div
         className={clsx(
