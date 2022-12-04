@@ -7,15 +7,13 @@ interface CustomProps {
   address: string;
 }
 
-const COPY_ADDRESS_ICON_CLASSES = clsx('w-6', 'h-6');
-
 // ray test touch <
 const CopyAddressButton = ({ address, className }: CustomProps & InterlayButtonBaseProps): JSX.Element => {
   const { handleCopyToClipboard, CopyToClipboardUI } = useCopyToClipboard(address);
 
   return (
     <InterlayButtonBase className={className} onClick={handleCopyToClipboard}>
-      <CopyToClipboardUI className={COPY_ADDRESS_ICON_CLASSES} />
+      <CopyToClipboardUI className={clsx('w-6', 'h-6')} />
     </InterlayButtonBase>
   );
 };
