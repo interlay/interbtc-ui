@@ -148,11 +148,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     formState: { errors, isDirty }
   } = useForm<LoanFormData>({
     mode: 'onChange',
-    // ray test touch <
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-nocheck
     resolver: zodResolver(schema)
-    // ray test touch >
   });
 
   const amount = watch(formField) || 0;
