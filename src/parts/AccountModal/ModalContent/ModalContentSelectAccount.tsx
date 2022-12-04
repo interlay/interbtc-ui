@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { shortAddress } from '@/common/utils/utils';
-import CopyAddressButton from '@/components/CopyAddressButton';
+import CopyToClipboardButton from '@/components/CopyToClipboardButton';
 import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
 import { WALLETS, WalletSourceName } from '@/config/wallets';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -50,7 +50,7 @@ const ModalContentSelectAccount = ({
                 </div>
               </InterlayButtonBase>
               {/* ray test touch < */}
-              <CopyAddressButton className={ACCOUNT_MODAL_BUTTON_CLASSES} address={account.address} />
+              <CopyToClipboardButton className={ACCOUNT_MODAL_BUTTON_CLASSES} text={account.address} />
               {/* ray test touch > */}
             </li>
           );
