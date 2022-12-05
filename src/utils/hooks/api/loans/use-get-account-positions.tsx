@@ -7,11 +7,13 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { getSubsidyRewardApy } from '@/pages/Loans/LoansOverview/utils/get-subsidy-rewards-apy';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import useAccountId from '../../use-account-id';
 import { Prices, useGetPrices } from '../use-get-prices';
+import { BorrowPositionExt, LendPositionExt } from './type';
 import { useGetAccountSubsidyRewards } from './use-get-account-subsidy-rewards';
 import { useGetLoanAssets } from './use-get-loan-assets';
 import { getPositionsSumOfFieldsInUSD } from './utils';
@@ -19,6 +21,11 @@ import { getPositionsSumOfFieldsInUSD } from './utils';
 interface AccountPositionsData {
   lendPositions: LendPosition[];
   borrowPositions: BorrowPosition[];
+}
+
+interface AccountPositionsExtData {
+  lendPositions: LendPositionExt[];
+  borrowPositions: BorrowPositionExt[];
 }
 
 const getAccountLendPositions = (accountId: AccountId): Promise<Array<LendPosition>> =>
@@ -32,6 +39,52 @@ const getAccountPositionsQuery = async (accountId: AccountId): Promise<AccountPo
     getAccountLendPositions(accountId),
     getAccountBorrowPositions(accountId)
   ]);
+
+  return {
+    borrowPositions,
+    lendPositions
+  };
+};
+
+const getPositionAmountUSD = (position: LendPosition | BorrowPosition, prices: Prices): Big | undefined => {
+  const price = getTokenPrice(prices, position.currency.ticker);
+  return price?.usd ? position.amount.toBig().mul(price.usd) : undefined;
+};
+
+const getExtendedPositions = async (
+  accountId: AccountId,
+  assets: TickerToData<LoanAsset>,
+  prices: Prices
+): Promise<AccountPositionsExtData> => {
+  const positions = await getAccountPositionsQuery(accountId);
+
+  const borrowPositions: BorrowPositionExt[] = positions.borrowPositions.map((position) => {
+    const amountUSD = getPositionAmountUSD(position, prices);
+    const { borrowReward, borrowApy } = assets[position.currency.ticker];
+
+    const rewardsApy = getSubsidyRewardApy(position.currency, borrowReward, prices);
+
+    return {
+      ...position,
+      amountUSD,
+      rewardsApy,
+      totalApy: borrowApy.sub(rewardsApy || 0)
+    };
+  });
+
+  const lendPositions: LendPositionExt[] = positions.lendPositions.map((position) => {
+    const amountUSD = getPositionAmountUSD(position, prices);
+    const { lendReward, lendApy } = assets[position.currency.ticker];
+
+    const rewardsApy = getSubsidyRewardApy(position.currency, lendReward, prices);
+
+    return {
+      ...position,
+      amountUSD,
+      rewardsApy,
+      totalApy: lendApy.add(rewardsApy || 0)
+    };
+  });
 
   return {
     borrowPositions,
@@ -88,7 +141,7 @@ const getAccountPositionsStats = (
 };
 
 type UseGetAccountPositions = {
-  data: Partial<AccountPositionsData> & {
+  data: Partial<AccountPositionsExtData> & {
     statistics: AccountPositionsStatisticsData | undefined;
   };
   refetch: () => void;
@@ -102,12 +155,14 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
 
   const { data: positions, error: positionsError, refetch: refetchPositions } = useQuery({
     queryKey: ['positions', accountId],
-    queryFn: () => accountId && getAccountPositionsQuery(accountId),
-    enabled: !!accountId,
+    queryFn: () => accountId && assets && prices && getExtendedPositions(accountId, assets, prices),
+    enabled: !!accountId && !!prices && !!assets,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
   const { data: subsidyRewards } = useGetAccountSubsidyRewards();
+
+  // const extendedPositions = useMemo(() => {}, []);
 
   // MEMO: we dont need assets as a dependency, since we only use the collateral threshold and
   // it's value is very unlikely to change
