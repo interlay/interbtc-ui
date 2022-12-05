@@ -35,7 +35,22 @@ import {
   mockVaultsGetVaultsWithRedeemableTokens
 } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
-import { mockGetLendTokens } from './parachain/loans';
+import {
+  mockBorrow,
+  mockClaimAllSubsidyRewards,
+  mockDisableAsCollateral,
+  mockEnableAsCollateral,
+  mockGetAccountSubsidyRewards,
+  mockGetBorrowPositionsOfAccount,
+  mockGetLendPositionsOfAccount,
+  mockGetLendTokens,
+  mockGetLoanAssets,
+  mockLend,
+  mockRepay,
+  mockRepayAll,
+  mockWithdraw,
+  mockWithdrawAll
+} from './parachain/loans';
 
 type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
@@ -74,7 +89,20 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     request: mockIssueRequest
   },
   loans: {
-    getLendTokens: mockGetLendTokens
+    getLendTokens: mockGetLendTokens,
+    getLendPositionsOfAccount: mockGetLendPositionsOfAccount,
+    getBorrowPositionsOfAccount: mockGetBorrowPositionsOfAccount,
+    getLoanAssets: mockGetLoanAssets,
+    getAccruedRewardsOfAccount: mockGetAccountSubsidyRewards,
+    lend: mockLend,
+    withdraw: mockWithdraw,
+    withdrawAll: mockWithdrawAll,
+    borrow: mockBorrow,
+    repay: mockRepay,
+    repayAll: mockRepayAll,
+    enableAsCollateral: mockEnableAsCollateral,
+    disableAsCollateral: mockDisableAsCollateral,
+    claimAllSubsidyRewards: mockClaimAllSubsidyRewards
   },
   oracle: {
     getExchangeRate: mockOracleGetExchangeRate

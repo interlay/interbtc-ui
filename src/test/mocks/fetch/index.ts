@@ -31,6 +31,7 @@ const mockFetch = jest.fn((input, _init?) => {
       throw new Error(`mockFetch: provided input [${input}] is not mocked`);
     }
   }
+
   return Promise.resolve({
     json: () => Promise.resolve(result)
   });

@@ -6,6 +6,7 @@ env:
   REACT_APP_RELAY_CHAIN_NAME: polkadot
   REACT_APP_PARACHAIN_ID: 2032
   DOCKER_RELAY_CHAIN_CURRENCY: DOT
+  REACT_APP_FEATURE_FLAG_LENDING: enabled
 
 jobs:
   # MEMO: how to run a GitHub action locally
