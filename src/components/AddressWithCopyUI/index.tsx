@@ -1,4 +1,3 @@
-// ray test touch <
 import clsx from 'clsx';
 
 import { shortAddress } from '@/common/utils/utils';
@@ -19,4 +18,3 @@ const AddressWithCopyUI = ({ address, className }: Props): JSX.Element => {
 };
 
 export default AddressWithCopyUI;
-// ray test touch >

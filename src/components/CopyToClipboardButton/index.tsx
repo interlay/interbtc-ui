@@ -1,4 +1,3 @@
-// ray test touch <
 import clsx from 'clsx';
 
 import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
@@ -20,4 +19,3 @@ const CopyToClipboardButton = ({ text, className, innerClassName, ...rest }: Pro
 };
 
 export default CopyToClipboardButton;
-// ray test touch >

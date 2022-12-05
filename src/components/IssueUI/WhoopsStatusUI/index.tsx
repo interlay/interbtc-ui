@@ -1,15 +1,11 @@
-// ray test touch <
 import { atomicToBaseAmount } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
-// ray test touch >
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-// ray test touch <
 import AddressWithCopyUI from '@/components/AddressWithCopyUI';
-// ray test touch >
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
@@ -36,11 +32,9 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  // ray test touch <
   const monetaryBackingPaymentAmount = new BitcoinAmount(atomicToBaseAmount(request.backingPayment.amount, Bitcoin));
 
   const refundBtcAddress = request.refund.btcAddress;
-  // ray test touch >
 
   return (
     <RequestWrapper className='px-12'>
@@ -131,9 +125,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
       </p>
-      {/* ray test touch < */}
       <AddressWithCopyUI className={clsx('justify-center', 'p-2.5')} address={refundBtcAddress} />
-      {/* ray test touch > */}
     </RequestWrapper>
   );
 };
