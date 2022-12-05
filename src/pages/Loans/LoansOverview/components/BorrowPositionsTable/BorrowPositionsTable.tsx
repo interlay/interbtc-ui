@@ -1,8 +1,7 @@
 import { BorrowPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
-import { ReactNode, useMemo } from 'react';
+import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber } from '@/common/utils/utils';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetAccountHealthFactor } from '../../hooks/use-get-account-health-factor';
@@ -55,11 +54,20 @@ const BorrowPositionsTable = ({
       positions.map(({ currency, amount, accumulatedDebt }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
-        const accrued = formatNumber(accumulatedDebt.toBig().toNumber(), {
-          maximumFractionDigits: accumulatedDebt.currency.humanDecimals || 5
-        });
-        const accruedLabel = `${accrued} ${currency.ticker}`;
-        const apy = <ApyCell apy={assets[currency.ticker].borrowApy} amount={accruedLabel} />;
+        const { borrowApy, borrowReward } = assets[currency.ticker];
+
+        const apy = (
+          <ApyCell
+            apy={borrowApy}
+            currency={currency}
+            rewards={borrowReward}
+            accumulatedDebt={accumulatedDebt}
+            prices={prices}
+            isBorrow
+            // TODO: temporary until we find why row click is being ignored
+            onClick={() => onRowAction?.(currency.ticker as Key)}
+          />
+        );
 
         const borrowed = <BalanceCell amount={amount} prices={prices} />;
 
@@ -75,7 +83,7 @@ const BorrowPositionsTable = ({
           status: statusTag
         };
       }),
-    [assets, healthFactorData, positions, prices]
+    [assets, healthFactorData, onRowAction, positions, prices]
   );
 
   return (

@@ -108,7 +108,12 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
             <StyledTitle>{content.title}</StyledTitle>
             <StyledDescription color='tertiary'>{content.description}</StyledDescription>
           </Flex>
-          <BorrowLimit loanAction={borrowLimitVariant} asset={asset} actionAmount={lendPositionAmount} />
+          <BorrowLimit
+            loanAction={borrowLimitVariant}
+            asset={asset}
+            actionAmount={lendPositionAmount}
+            prices={prices}
+          />
           {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
           <CTA size='large' onClick={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
             {content.buttonLabel}

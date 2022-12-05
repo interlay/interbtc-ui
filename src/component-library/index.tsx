@@ -1,3 +1,5 @@
+export type { AlertProps } from './Alert';
+export { Alert } from './Alert';
 export type { CardProps } from './Card';
 export { Card } from './Card';
 export type { CoinIconProps } from './CoinIcon';
