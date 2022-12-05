@@ -32,7 +32,7 @@ const ApyCell = ({
   isBorrow = false,
   onClick
 }: ApyCellProps): JSX.Element => {
-  const rewardsApy = getSubsidyRewardApy(rewards?.currency, rewards, prices);
+  const rewardsApy = getSubsidyRewardApy(currency, rewards, prices);
 
   const totalApy = isBorrow ? apy.sub(rewardsApy || 0) : apy.add(rewardsApy || 0);
   const totalApyLabel = getApyLabel(totalApy);

@@ -61,7 +61,7 @@ const LTVMeter = ({
       {showLegend && (
         <Flex gap='spacing4' justifyContent='center' wrap>
           <LTVLegend label='Current LTV' description={legendDescriptions.currentLTV} status='info' />
-          <LTVLegend label='Max LTV' description={legendDescriptions.maxLTV} status='warning' />
+          <LTVLegend label='Secure LTV' description={legendDescriptions.maxLTV} status='warning' />
           <LTVLegend label='Liquidation LTV' description={legendDescriptions.liquidationLTV} status='error' />
         </Flex>
       )}

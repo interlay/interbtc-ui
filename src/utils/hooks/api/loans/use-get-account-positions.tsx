@@ -102,12 +102,12 @@ const getAccountPositionsStats = (
     const positionUSDValue = convertMonetaryAmountToValueInUSD(
       position.amount,
       getTokenPrice(prices, position.currency.ticker)?.usd
-    );
+    ) as any;
 
-    return positionUSDValue ? positionApy.mul(positionUSDValue) : total;
+    return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
   }, new Big(0));
 
-  const totalBorrowApy = lendPositions.reduce((total, position) => {
+  const totalBorrowApy = borrowPositions.reduce((total, position) => {
     const { borrowApy, borrowReward } = assets[position.currency.ticker];
     const rewardsApy = getSubsidyRewardApy(position.currency, borrowReward, prices);
     const positionApy = borrowApy.sub(rewardsApy || 0);
@@ -116,7 +116,7 @@ const getAccountPositionsStats = (
       getTokenPrice(prices, position.currency.ticker)?.usd
     );
 
-    return positionUSDValue ? positionApy.mul(positionUSDValue) : total;
+    return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
   }, new Big(0));
 
   const netAPY = totalLendApy.sub(totalBorrowApy).div(supplyAmountUSD);

@@ -2,21 +2,24 @@ import { CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 
-import { formatPercentage, formatUSD } from '@/common/utils/utils';
-import { DlGroup, Dt } from '@/component-library';
+import { displayMonetaryAmount, formatPercentage, formatUSD } from '@/common/utils/utils';
+import { Alert, DlGroup, Dt } from '@/component-library';
 import { useAccountBorrowLimit } from '@/pages/Loans/LoansOverview/hooks/use-get-account-borrow-limit';
 import { LoanAction } from '@/types/loans';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { isBorrowAsset } from '../../utils/is-loan-asset';
 import { LTVMeter } from '../LTVMeter.tsx';
-import { StyledAlert, StyledDd, StyledDl, StyledWarningIcon } from './BorrowLimit.style';
+import { StyledDd, StyledDl } from './BorrowLimit.style';
 
 type BorrowLimitProps = {
   loanAction: LoanAction;
   asset: LoanAsset;
   actionAmount: MonetaryAmount<CurrencyExt>;
+  prices: Prices | undefined;
   shouldDisplayLiquidationAlert?: boolean;
 };
 
@@ -24,6 +27,7 @@ const BorrowLimit = ({
   loanAction,
   asset,
   actionAmount,
+  prices,
   shouldDisplayLiquidationAlert
 }: BorrowLimitProps): JSX.Element | null => {
   const { t } = useTranslation();
@@ -32,13 +36,13 @@ const BorrowLimit = ({
     data: { statistics }
   } = useGetAccountPositions();
   const { thresholds } = statistics || {};
-  const { data: previousBorrowLimit, getBorrowLimitUSD } = useAccountBorrowLimit();
+  const { data: prevBorrowLimit, getBorrowLimitUSD } = useAccountBorrowLimit();
   const { data: prevLTV, getLTV } = useGetLTV();
 
   const currenBorrowLimit = getBorrowLimitUSD({ type: loanAction, amount: actionAmount, asset });
   const currentLTV = getLTV({ type: loanAction, amount: actionAmount, asset });
 
-  if (!prevLTV || !currentLTV || !previousBorrowLimit || !currenBorrowLimit) {
+  if (!prevLTV || !currentLTV || !prevBorrowLimit || !currenBorrowLimit) {
     return null;
   }
 
@@ -48,17 +52,27 @@ const BorrowLimit = ({
   const prevLTVtLabel = formatPercentage(prevLTV.value);
   const currentLTVLabel = formatPercentage(currentLTV.value);
 
-  const previousBorrowLimitLabel = formatUSD(previousBorrowLimit.toNumber(), { compact: true });
+  const prevBorrowLimitLabel = formatUSD(prevBorrowLimit.toNumber(), { compact: true });
   const currenBorrowLimitLabel = formatUSD(currenBorrowLimit.toNumber(), { compact: true });
+
+  const assetPrice = getTokenPrice(prices, asset.currency.ticker);
+  const capacityUSD = asset.availableCapacity.toBig().mul(assetPrice?.usd || 0);
+  const isExceedingBorrowingLiquidity = loanAction === 'borrow' && currenBorrowLimit.gt(capacityUSD);
 
   return (
     <StyledDl direction='column'>
+      {isExceedingBorrowingLiquidity && (
+        <Alert status='warning'>
+          The available liquidity to borrow {asset.currency.ticker} is lower than your borrow limit. You can borrow at
+          most {displayMonetaryAmount(asset.availableCapacity)} {asset.currency.ticker}.
+        </Alert>
+      )}
       <DlGroup justifyContent='space-between'>
         <Dt>Borrow Limit</Dt>
         <StyledDd $status={currentLTV.status}>
-          {previousBorrowLimit && (
+          {prevBorrowLimit && (
             <>
-              <span>{previousBorrowLimitLabel}</span>
+              <span>{prevBorrowLimitLabel}</span>
               <span>--&gt;</span>
             </>
           )}
@@ -78,16 +92,12 @@ const BorrowLimit = ({
         </StyledDd>
       </DlGroup>
       <LTVMeter value={currentLTV.value} thresholds={thresholds} />
-      {/* TODO: replace with Alert component */}
       {hasLiquidationAlert && (
-        <StyledAlert role='alert' gap='spacing4' alignItems='center'>
-          <StyledWarningIcon />
-          <div>
-            {t('loans.action_liquidation_risk', {
-              action: loanAction === 'borrow' ? t('loans.borrowing') : t('loans.withdrawing')
-            })}
-          </div>
-        </StyledAlert>
+        <Alert status='error'>
+          {t('loans.action_will_recude_health_score', {
+            action: loanAction === 'borrow' ? t('loans.borrowing') : t('loans.withdrawing')
+          })}
+        </Alert>
       )}
     </StyledDl>
   );
