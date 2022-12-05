@@ -32,7 +32,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { useXcmBridge } from './use-xcm-bridge';
+import { useXcmBridge } from '../../../utils/hooks/api/xcm/use-xcm-bridge';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
