@@ -98,18 +98,28 @@ const getAccountPositionsStats = (
   const totalLendApy = lendPositions.reduce((total, position) => {
     const { lendApy, lendReward } = assets[position.currency.ticker];
     const rewardsApy = getSubsidyRewardApy(position.currency, lendReward, prices);
+    const positionApy = lendApy.add(rewardsApy || 0);
+    const positionUSDValue = convertMonetaryAmountToValueInUSD(
+      position.amount,
+      getTokenPrice(prices, position.currency.ticker)?.usd
+    );
 
-    return total.add(lendApy).add(rewardsApy || 0);
+    return positionUSDValue ? positionApy.mul(positionUSDValue) : total;
   }, new Big(0));
 
   const totalBorrowApy = lendPositions.reduce((total, position) => {
     const { borrowApy, borrowReward } = assets[position.currency.ticker];
     const rewardsApy = getSubsidyRewardApy(position.currency, borrowReward, prices);
+    const positionApy = borrowApy.sub(rewardsApy || 0);
+    const positionUSDValue = convertMonetaryAmountToValueInUSD(
+      position.amount,
+      getTokenPrice(prices, position.currency.ticker)?.usd
+    );
 
-    return total.add(borrowApy).sub(rewardsApy || 0);
+    return positionUSDValue ? positionApy.mul(positionUSDValue) : total;
   }, new Big(0));
 
-  const netAPY = totalLendApy.sub(totalBorrowApy);
+  const netAPY = totalLendApy.sub(totalBorrowApy).div(supplyAmountUSD);
 
   const thresholds = {
     collateral: collateralAmountUSD.div(collateralizedAmountUSD).mul(100),

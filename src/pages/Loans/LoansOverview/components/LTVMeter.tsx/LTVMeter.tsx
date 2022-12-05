@@ -25,6 +25,7 @@ type Props = {
   thresholds?: PositionsThresholdsData;
   onChange?: MeterProps['onChange'];
   className?: string;
+  showLegend?: boolean;
 };
 
 type InheritAttrs = Omit<UseMeterProps, keyof Props | 'ranges'>;
@@ -37,10 +38,18 @@ const LTVMeter = ({
   onChange,
   className,
   value: valueProp,
+  showLegend,
   ...props
 }: LTVMeterProps): JSX.Element => {
   const ranges = getRanges(thresholds);
-  const { meterProps } = useMeter({ label, value: valueProp, formatOptions, ranges, ...props });
+  const { meterProps } = useMeter({
+    label,
+    value: valueProp,
+    formatOptions,
+    ranges,
+    'aria-label': 'ltv meter',
+    ...props
+  });
 
   // Does not allow negative numbers
   const value = meterProps['aria-valuenow'] || 0;
@@ -49,11 +58,13 @@ const LTVMeter = ({
   return (
     <Flex direction='column' gap='spacing3' className={className}>
       <Meter {...meterProps} variant='secondary' value={value} ranges={ranges} onChange={onChange} />
-      <Flex gap='spacing4' justifyContent='center' wrap>
-        <LTVLegend label='Current LTV' description={legendDescriptions.currentLTV} status='info' />
-        <LTVLegend label='Max LTV' description={legendDescriptions.maxLTV} status='warning' />
-        <LTVLegend label='Liquidation LTV' description={legendDescriptions.liquidationLTV} status='error' />
-      </Flex>
+      {showLegend && (
+        <Flex gap='spacing4' justifyContent='center' wrap>
+          <LTVLegend label='Current LTV' description={legendDescriptions.currentLTV} status='info' />
+          <LTVLegend label='Max LTV' description={legendDescriptions.maxLTV} status='warning' />
+          <LTVLegend label='Liquidation LTV' description={legendDescriptions.liquidationLTV} status='error' />
+        </Flex>
+      )}
     </Flex>
   );
 };
