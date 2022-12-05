@@ -3,7 +3,10 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { displayMonetaryAmountInUSDFormat, formatNumber, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
+// ray test touch <
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
+// ray test touch >
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import { WRAPPED_TOKEN_SYMBOL, WrappedTokenAmount } from '@/config/relay-chains';
@@ -132,7 +135,10 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.destination_address')}
             </span>
-            <span className='font-medium'>{shortAddress(destinationAddress)}</span>
+            {/* ray test touch < */}
+            <AddressWithCopyUI address={destinationAddress} />
+            {/* <span className='font-medium'>{shortAddress(destinationAddress)}</span>\ */}
+            {/* ray test touch > */}
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
@@ -154,7 +160,10 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.vault_dot_address')}
             </span>
-            <span className='font-medium'>{shortAddress(issue.vault.accountId)}</span>
+            {/* ray test touch < */}
+            <AddressWithCopyUI address={issue.vault.accountId} />
+            {/* <span className='font-medium'>{shortAddress(issue.vault.accountId)}</span> */}
+            {/* ray test touch > */}
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
@@ -165,7 +174,10 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.vault_btc_address')}
             </span>
-            <span className='font-medium'>{shortAddress(issue.vaultBackingAddress)}</span>
+            {/* ray test touch < */}
+            <AddressWithCopyUI address={issue.vaultBackingAddress} />
+            {/* <span className='font-medium'>{shortAddress(issue.vaultBackingAddress)}</span> */}
+            {/* ray test touch > */}
           </div>
         </div>
         <p className='space-x-1'>
