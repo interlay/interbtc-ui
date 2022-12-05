@@ -6,9 +6,9 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 // ray test touch <
-import CopyToClipboardButton from '@/components/CopyToClipboardButton';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 // ray test touch >
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
@@ -135,27 +135,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
       </p> */}
       {/* ray test touch > */}
       {/* ray test touch < */}
-      <div className={clsx('flex', 'items-center', 'justify-center', 'space-x-1', 'p-2.5', 'font-medium')}>
-        <span>{shortAddress(refundBtcAddress)}</span>
-        <CopyToClipboardButton text={refundBtcAddress} />
-      </div>
-      {/* <InterlayTooltip label={t('click_to_copy')}>
-        <span
-          className={clsx(
-            'block',
-            'p-2.5',
-            'border-2',
-            'font-medium',
-            'rounded-lg',
-            'cursor-pointer',
-            'text-center',
-            'w-full'
-          )}
-          onClick={() => copyToClipboard('1')}
-        >
-          {refundBtcAddress}
-        </span>
-      </InterlayTooltip> */}
+      <AddressWithCopyUI className={clsx('justify-center', 'p-2.5')} address={refundBtcAddress} />
       {/* ray test touch > */}
     </RequestWrapper>
   );

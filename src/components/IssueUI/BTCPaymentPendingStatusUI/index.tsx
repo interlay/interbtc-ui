@@ -6,8 +6,8 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmountInUSDFormat, shortAddress } from '@/common/utils/utils';
-import CopyToClipboardButton from '@/components/CopyToClipboardButton';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import Timer from '@/components/Timer';
 import { BLOCK_TIME } from '@/config/parachain';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -95,10 +95,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
           {t('issue_page.single_transaction')}
         </p>
         {/* ray test touch < */}
-        <div className={clsx('flex', 'items-center', 'justify-center', 'space-x-1', 'p-2.5', 'font-medium')}>
-          <span>{shortAddress(bitcoinRecipientAddress)}</span>
-          <CopyToClipboardButton text={bitcoinRecipientAddress} />
-        </div>
+        <AddressWithCopyUI className={clsx('justify-center', 'p-2.5')} address={bitcoinRecipientAddress} />
         {/* ray test touch > */}
         {initialLeftSeconds && (
           <p className={clsx('flex', 'justify-center', 'items-center', 'space-x-1')}>
