@@ -133,9 +133,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             >
               {t('issue_page.destination_address')}
             </span>
-            {/* ray test touch < */}
             <AddressWithCopyUI address={redeem.userBackingAddress || ''} />
-            {/* ray test touch > */}
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
