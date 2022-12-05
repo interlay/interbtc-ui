@@ -39,8 +39,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
   // ray test touch <
   const monetaryBackingPaymentAmount = new BitcoinAmount(atomicToBaseAmount(request.backingPayment.amount, Bitcoin));
 
-  // const refundBtcAddress = request.refund.btcAddress;
-  const refundBtcAddress = 'tb1q3f6lu0g92q0d5jdng6m367uwpw7lnt7x3n0nqf';
+  const refundBtcAddress = request.refund.btcAddress;
   // ray test touch >
 
   return (
@@ -100,8 +99,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         )}
       />
       <Hr2 className={clsx('border-t-2', 'my-2.5', 'w-full')} />
-      {/* ray test touch < */}
-      {/* <PriceInfo
+      <PriceInfo
         className='w-full'
         title={
           <h5
@@ -132,8 +130,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         <span className={getColorShade('red')}>&nbsp;{displayMonetaryAmount(request.refund.amountPaid)}</span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
-      </p> */}
-      {/* ray test touch > */}
+      </p>
       {/* ray test touch < */}
       <AddressWithCopyUI className={clsx('justify-center', 'p-2.5')} address={refundBtcAddress} />
       {/* ray test touch > */}

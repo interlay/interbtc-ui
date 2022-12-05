@@ -119,12 +119,6 @@ function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, 
   return defaultValue;
 }
 
-// ray test touch <
-const copyToClipboard = (text: string): void => {
-  navigator.clipboard.writeText(text);
-};
-// ray test touch >
-
 const getRandomVaultIdWithCapacity = (
   vaults: [InterbtcPrimitivesVaultId, BitcoinAmount][],
   requiredCapacity: BitcoinAmount
@@ -149,7 +143,6 @@ const monetaryToNumber = (monetaryAmount: MonetaryAmount<CurrencyExt> | undefine
 
 export {
   convertMonetaryAmountToValueInUSD,
-  copyToClipboard,
   displayMonetaryAmount,
   displayMonetaryAmountInUSDFormat,
   formatDateTime,
