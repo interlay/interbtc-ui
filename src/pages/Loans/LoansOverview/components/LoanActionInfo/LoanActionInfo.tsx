@@ -24,7 +24,7 @@ const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.El
   return (
     <StyledDl direction='column' gap='spacing2'>
       {asset && apy && (
-        <LoanGroup isBorrow={isBorrow} ticker={asset.currency.ticker} apy={apy} rewards={rewards} prices={prices} />
+        <LoanGroup isBorrow={isBorrow} currency={asset.currency} apy={apy} rewards={rewards} prices={prices} />
       )}
       <DlGroup justifyContent='space-between'>
         <Dt>Fees</Dt>
