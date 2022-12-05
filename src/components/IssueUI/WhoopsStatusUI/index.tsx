@@ -1,11 +1,17 @@
+// ray test touch <
+import { atomicToBaseAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
+// ray test touch >
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { copyToClipboard, displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, shortAddress } from '@/common/utils/utils';
+// ray test touch <
+import CopyToClipboardButton from '@/components/CopyToClipboardButton';
+// ray test touch >
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
-import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -29,6 +35,13 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
   if (!request.execution?.amountWrapped) {
     throw new Error('Something went wrong!');
   }
+
+  // ray test touch <
+  const monetaryBackingPaymentAmount = new BitcoinAmount(atomicToBaseAmount(request.backingPayment.amount, Bitcoin));
+
+  // const refundBtcAddress = request.refund.btcAddress;
+  const refundBtcAddress = 'tb1q3f6lu0g92q0d5jdng6m367uwpw7lnt7x3n0nqf';
+  // ray test touch >
 
   return (
     <RequestWrapper className='px-12'>
@@ -68,10 +81,10 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         className='w-full'
         title={<h5 className={getColorShade('yellow')}>{t('issue_page.refund_deposited')}</h5>}
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-        value={displayMonetaryAmount(request.backingPayment.amount)}
+        value={displayMonetaryAmount(monetaryBackingPaymentAmount)}
         unitName='BTC'
         approxUSD={displayMonetaryAmountInUSDFormat(
-          request.backingPayment.amount,
+          monetaryBackingPaymentAmount,
           getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
         )}
       />
@@ -87,7 +100,8 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         )}
       />
       <Hr2 className={clsx('border-t-2', 'my-2.5', 'w-full')} />
-      <PriceInfo
+      {/* ray test touch < */}
+      {/* <PriceInfo
         className='w-full'
         title={
           <h5
@@ -118,8 +132,14 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         <span className={getColorShade('red')}>&nbsp;{displayMonetaryAmount(request.refund.amountPaid)}</span>
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
-      </p>
-      <InterlayTooltip label={t('click_to_copy')}>
+      </p> */}
+      {/* ray test touch > */}
+      {/* ray test touch < */}
+      <div className={clsx('flex', 'items-center', 'justify-center', 'space-x-1', 'p-2.5', 'font-medium')}>
+        <span>{shortAddress(refundBtcAddress)}</span>
+        <CopyToClipboardButton text={refundBtcAddress} />
+      </div>
+      {/* <InterlayTooltip label={t('click_to_copy')}>
         <span
           className={clsx(
             'block',
@@ -131,13 +151,12 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
             'text-center',
             'w-full'
           )}
-          // ray test touch <
           onClick={() => copyToClipboard('1')}
-          // ray test touch >
         >
-          {request.refund.btcAddress}
+          {refundBtcAddress}
         </span>
-      </InterlayTooltip>
+      </InterlayTooltip> */}
+      {/* ray test touch > */}
     </RequestWrapper>
   );
 };

@@ -19,6 +19,9 @@ import WhoopsStatusUI from './WhoopsStatusUI';
 
 // TODO: should type properly (`Relay`)
 const renderModalStatusPanel = (request: any) => {
+  // ray test touch <
+  return <WhoopsStatusUI request={request} />;
+  // ray test touch >
   switch (request.status) {
     case IssueStatus.PendingWithBtcTxNotFound: {
       return <BTCPaymentPendingStatusUI request={request} />;
