@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber, getPolkadotLink, shortAddress } from '@/common/utils/utils';
+import { formatNumber, getPolkadotLink } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
 import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
@@ -37,7 +38,7 @@ const CompletedIssueRequest = ({ request }: Props): JSX.Element => {
       <ExternalLink className='text-sm' href={getPolkadotLink(request.execution.height.absolute)}>
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
-      <p className='space-x-1'>
+      <div className={clsx('space-x-1', 'flex', 'items-center')}>
         <span
           className={clsx(
             { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -46,8 +47,8 @@ const CompletedIssueRequest = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
-      </p>
+        <AddressWithCopyUI address={request.backingPayment.btcTxId || ''} />
+      </div>
       <ExternalLink className='text-sm' href={`${BTC_EXPLORER_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
         {t('issue_page.view_on_block_explorer')}
       </ExternalLink>
