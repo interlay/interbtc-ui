@@ -136,7 +136,9 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
         accessor: 'userParachainAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
+          // ray test touch <
           return <>{shortAddress(value)}</>;
+          // ray test touch >
         }
       },
       {

@@ -61,7 +61,9 @@ const VaultInfo = ({
       <StyledDl>
         <StyledDlGroup gap='spacing2'>
           <Dt>Vault ID:</Dt>
+          {/* ray test touch < */}
           <Dd>{shortAddress(vaultAddress)}</Dd>
+          {/* ray test touch > */}
         </StyledDlGroup>
         <StyledDlGroup gap='spacing2'>
           <StatusTag status={status}>
