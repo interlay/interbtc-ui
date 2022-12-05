@@ -102,9 +102,7 @@ const IssueRequestsTable = (): JSX.Element => {
         accessor: 'userParachainAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          // ray test touch <
           return <AddressWithCopyUI address={value} />;
-          // ray test touch >
         }
       },
       {
@@ -112,9 +110,7 @@ const IssueRequestsTable = (): JSX.Element => {
         accessor: 'vault',
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: any }) {
-          // ray test touch <
           return <AddressWithCopyUI address={value.accountId} />;
-          // ray test touch >
         }
       },
       {
