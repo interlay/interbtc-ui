@@ -7,6 +7,7 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, formatNumber, shortAddress, shortTxId } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -101,7 +102,9 @@ const IssueRequestsTable = (): JSX.Element => {
         accessor: 'userParachainAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          return <>{value}</>;
+          // ray test touch <
+          return <AddressWithCopyUI address={value} />;
+          // ray test touch >
         }
       },
       {
@@ -109,7 +112,9 @@ const IssueRequestsTable = (): JSX.Element => {
         accessor: 'vault',
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: any }) {
-          return <>{value.accountId}</>;
+          // ray test touch <
+          return <AddressWithCopyUI address={value.accountId} />;
+          // ray test touch >
         }
       },
       {
