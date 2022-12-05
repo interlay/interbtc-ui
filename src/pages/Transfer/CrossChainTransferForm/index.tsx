@@ -25,10 +25,11 @@ import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader'
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 // TODO: Pull tokens from xcmBridge response. This needs to be done to support USDT
-import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
+// import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useXcmBridge } from './use-xcm-bridge';
@@ -51,11 +52,21 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
 
+  // TODO: this will need to be refactored when we support multiple currencies
+  // per channel, but so will the UI so better to handle this then.
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
 
   const { xcmBridge, xcmProvider } = useXcmBridge();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+
+  const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
+
+  const USDTSymbol = 'USDT';
+  const USDTCurrency = getCurrencyFromTicker(USDTSymbol);
+
+  console.log(USDTCurrency);
 
   const {
     register,
@@ -72,20 +83,20 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   useEffect(() => {
-    if (!destination || !fromChain || !xcmBridge) return;
+    if (!destination || !fromChain || !xcmBridge || !selectedAccount) return;
 
     const getDestinationBalance = async () => {
       const balance: any = await firstValueFrom(
-        xcmBridge
-          .findAdapter(fromChain.type)
-          .subscribeTokenBalance(RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, destination.address)
+        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(USDTSymbol, destination.address)
       );
 
-      setDestinationBalance(newMonetaryAmount(balance.free.toString(), RELAY_CHAIN_NATIVE_TOKEN, true));
+      console.log('balance.free.toString()', balance.free.toString());
+
+      setDestinationBalance(newMonetaryAmount(balance.free.toString(), USDTCurrency, true));
     };
 
     getDestinationBalance();
-  }, [destination, fromChain, xcmBridge]);
+  }, [USDTCurrency, destination, fromChain, xcmBridge, selectedAccount]);
 
   useEffect(() => {
     if (!xcmBridge) return;
@@ -94,9 +105,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     const getBalance = async () => {
       const balance: any = await firstValueFrom(
-        xcmBridge
-          .findAdapter(fromChain.type)
-          .subscribeTokenBalance(RELAY_CHAIN_NATIVE_TOKEN_SYMBOL, selectedAccount.address)
+        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(USDTSymbol, selectedAccount.address)
       );
 
       setTransferableBalance(balance.free);
@@ -127,6 +136,8 @@ const CrossChainTransferForm = (): JSX.Element => {
       return { type: chain.id, name: chain.id };
     });
 
+    console.log('fromChainfromChain', fromChain);
+
     setToChains(availableToChains);
     setToChain(availableToChains[0]);
   }, [fromChain, xcmBridge]);
@@ -143,6 +154,8 @@ const CrossChainTransferForm = (): JSX.Element => {
       const sendTransaction = async () => {
         const { signer } = await web3FromAddress(selectedAccount.address.toString());
 
+        console.log('fromChain.type, toChain.type', fromChain.type, toChain.type);
+
         const adapter = xcmBridge.findAdapter(fromChain.type);
         adapter.setApi(xcmProvider.getApiPromise(fromChain.type));
 
@@ -150,16 +163,18 @@ const CrossChainTransferForm = (): JSX.Element => {
 
         apiPromise.setSigner(signer);
 
-        const transferAmount = new MonetaryAmount(RELAY_CHAIN_NATIVE_TOKEN, data[TRANSFER_AMOUNT]);
+        const transferAmount = new MonetaryAmount(USDTCurrency, data[TRANSFER_AMOUNT]);
         const transferAmountString = transferAmount.toString(true);
         const transferAmountDecimals = transferAmount.currency.decimals;
 
         const tx = adapter.createTx({
           amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
           to: toChain.type,
-          token: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
+          token: USDTSymbol,
           address: destination.address
         });
+
+        console.log('txtx', tx);
 
         await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
       };
@@ -183,41 +198,41 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleUpdateUsdAmount = (value: string) => {
     if (!value) return;
 
-    const tokenAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
+    const tokenAmount = newMonetaryAmount(value, USDTCurrency, true);
 
-    const usd = displayMonetaryAmountInUSDFormat(
-      tokenAmount,
-      getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
-    );
+    const usd = displayMonetaryAmountInUSDFormat(tokenAmount, getTokenPrice(prices, USDTSymbol)?.usd);
 
     setApproxUsdValue(usd);
   };
 
   const validateTransferAmount = async (value: string) => {
-    const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, RELAY_CHAIN_NATIVE_TOKEN, true);
-    const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
+    console.log(value, destinationBalance);
+    return undefined;
+    // const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, USDTCurrency, true);
+    // const transferAmount = newMonetaryAmount(value, USDTCurrency, true);
 
-    if (destinationBalance.isZero()) {
-      const ed = xcmBridge.findAdapter(toChain?.type).balanceAdapter.ed;
-      const edAmount = newMonetaryAmount(ed.toString(), RELAY_CHAIN_NATIVE_TOKEN, true);
+    // if (destinationBalance.isZero()) {
+    //   const ed = xcmBridge.findAdapter(toChain?.type).balanceAdapter.ed;
+    //   const edAmount = newMonetaryAmount(ed.toString(), USDTCurrency, true);
 
-      const inputConfig = await firstValueFrom(
-        xcmBridge.findAdapter(fromChain?.type).subscribeInputConfigs({
-          to: toChain?.type,
-          token: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-          address: destination?.address,
-          signer: selectedAccount?.address
-        })
-      );
+    //   const inputConfig: any = await firstValueFrom(
+    //     xcmBridge.findAdapter(fromChain?.type).subscribeInputConfigs({
+    //       to: toChain?.type,
+    //       token: USDTSymbol,
+    //       address: destination?.address,
+    //       signer: selectedAccount?.address
+    //     })
+    //   );
 
-      console.log('inputConfig', inputConfig);
+    //   const estimatedFee = newMonetaryAmount(inputConfig.estimateFee, USDTCurrency, true).toHuman();
+    //   console.log(estimatedFee);
 
-      return edAmount.gt(transferAmount) ? 'Existential deposit problem' : undefined;
-    } else if (balanceMonetaryAmount.lt(transferAmount)) {
-      return t('insufficient_funds');
-    } else {
-      return undefined;
-    }
+    //   return edAmount.gt(transferAmount) ? 'Existential deposit problem' : undefined;
+    // } else if (balanceMonetaryAmount.lt(transferAmount)) {
+    //   return t('insufficient_funds');
+    // } else {
+    //   return undefined;
+    // }
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
@@ -260,7 +275,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <AvailableBalanceUI
             label={availableBalanceLabel}
             balance={transferableBalance?.toString() || '0'}
-            tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+            tokenSymbol={USDTSymbol}
             onClick={handleClickBalance}
           />
           <TokenField
@@ -275,7 +290,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             })}
             error={!!errors[TRANSFER_AMOUNT]}
             helperText={errors[TRANSFER_AMOUNT]?.message}
-            label={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+            label={USDTSymbol}
             approxUSD={`≈ ${approxUsdValue}`}
           />
         </div>
