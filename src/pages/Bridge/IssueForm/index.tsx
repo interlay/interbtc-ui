@@ -270,12 +270,14 @@ const IssueForm = (): JSX.Element | null => {
         return `${t('issue_page.validation_min_value')}${displayMonetaryAmount(dustValue)} BTC).`;
       }
 
+      // ray test touch <
       if (btcAmount.gt(requestLimits.singleVaultMaxIssuable)) {
         return t('issue_page.maximum_in_single_request_error', {
           maxAmount: displayMonetaryAmount(requestLimits.singleVaultMaxIssuable),
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
       }
+      // ray test touch >
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
         return t('issue_page.error_more_than_6_blocks_behind', {
