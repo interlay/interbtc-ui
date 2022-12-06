@@ -6,13 +6,11 @@ import { StoreType } from '@/common/types/util.types';
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
-import { ChainNotProducingBlocks } from '@/components/ChainNotProducingBlocks';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
@@ -89,7 +87,6 @@ const VaultDashboard = (): JSX.Element => {
 
   return (
     <MainContainer>
-      {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <ChainNotProducingBlocks />}
       <Stack>
         <PageTitle />
         <VaultInfo
