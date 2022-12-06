@@ -87,9 +87,7 @@ const BlocksTable = (): JSX.Element => {
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: string }) {
           const hash = stripHexPrefix(value);
-          // ray test touch <
           return <ExternalLink href={`${BTC_EXPLORER_BLOCK_API}${hash}`}>{shortAddress(hash)}</ExternalLink>;
-          // ray test touch >
         }
       },
       {
@@ -112,11 +110,9 @@ const BlocksTable = (): JSX.Element => {
         Header: t('dashboard.relay.relayed_by'),
         accessor: 'relayer',
         classNames: ['text-right'],
-        // ray test touch <
         Cell: function FormattedCell({ value }: { value: string }) {
           return <AddressWithCopyUI className='justify-end' address={value} />;
         }
-        // ray test touch >
       }
     ],
     [t]
