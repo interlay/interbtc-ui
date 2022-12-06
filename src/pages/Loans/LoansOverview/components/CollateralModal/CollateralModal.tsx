@@ -49,7 +49,7 @@ const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: Loa
 const getModalVariant = (isCollateralActive: boolean, ltvStatus?: Status): CollateralModalVariant => {
   if (!isCollateralActive) return 'enable';
   // User is trying switching off collateral
-  if (!ltvStatus && ltvStatus !== 'success') return 'disable-error';
+  if (!ltvStatus || ltvStatus !== 'success') return 'disable-error';
 
   return 'disable';
 };
@@ -84,8 +84,8 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
   const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
 
-  const borrowLimitVariant = isCollateralActive ? 'withdraw' : 'lend';
-  const currentLTV = getLTV({ type: borrowLimitVariant, amount: lendPositionAmount, asset });
+  const loanAction = isCollateralActive ? 'withdraw' : 'lend';
+  const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount, asset });
   const variant = getModalVariant(isCollateralActive, currentLTV?.status);
 
   const content = getContentMap(t, variant, asset);
@@ -108,12 +108,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
             <StyledTitle>{content.title}</StyledTitle>
             <StyledDescription color='tertiary'>{content.description}</StyledDescription>
           </Flex>
-          <BorrowLimit
-            loanAction={borrowLimitVariant}
-            asset={asset}
-            actionAmount={lendPositionAmount}
-            prices={prices}
-          />
+          <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
           {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
           <CTA size='large' onClick={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
             {content.buttonLabel}

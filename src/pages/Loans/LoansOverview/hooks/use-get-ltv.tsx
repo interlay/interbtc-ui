@@ -3,51 +3,93 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
-import { Status } from '@/component-library';
+import { convertMonetaryAmountToValueInUSD, formatNumber } from '@/common/utils/utils';
+import { MeterRanges, Status } from '@/component-library';
 import { LoanAction } from '@/types/loans';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { PositionsThresholdsData, useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { calculateCollateralBorrowedAmountUSD } from '../utils/math';
-
-const calculateLTV = (borrowAmountUSD: Big, collateralAmountUSD: Big): Big =>
-  borrowAmountUSD.div(collateralAmountUSD).mul(100);
+import { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateThresholdAmountUSD } from '../utils/math';
 
 type LTVData = {
   value: number;
+  ranges?: MeterRanges;
   status: Status;
 };
 
-const getData = (borrowAmountUSD: Big, collateralAmountUSD: Big, threshold: PositionsThresholdsData): LTVData => {
-  const value = calculateLTV(borrowAmountUSD, collateralAmountUSD);
+type GetDataParams = {
+  borrowAmountUSD: Big;
+  collateralAmountUSD: Big;
+  collateralizedAmountUSD: Big;
+  liquidationAmountUSD: Big;
+};
 
-  let status: Status = 'success';
+const getRanges = (thresholds: PositionsThresholdsData): MeterRanges => {
+  const collateral = formatNumber(thresholds.collateral.toNumber(), { maximumFractionDigits: 2 });
+  const liquidation = formatNumber(thresholds.liquidation.toNumber(), { maximumFractionDigits: 2 });
 
-  if (value.gte(threshold.liquidation)) {
-    status = 'error';
-  } else if (value.gte(threshold.collateral)) {
-    status = 'warning';
+  return [0, Number(collateral), Number(liquidation), 100];
+};
+
+const getStatus = (value: Big, thresholds: PositionsThresholdsData): Status => {
+  if (value.gte(thresholds.liquidation)) {
+    return 'error';
   }
 
+  if (value.gte(thresholds.collateral)) {
+    return 'warning';
+  }
+
+  return 'success';
+};
+
+const getData = (data: GetDataParams): LTVData => {
+  const { borrowAmountUSD, collateralAmountUSD, collateralizedAmountUSD, liquidationAmountUSD } = data;
+
+  // if collateral is 0:
+  // 1. and there are still assets being
+  // borrowed then status is error, meaning that the user
+  // should not be able to apply action
+  // 2. and there are no assets being borrowed then
+  // the user should successfuly apply action
+  if (!collateralAmountUSD.gt(0)) {
+    const hasBorrowedAssets = borrowAmountUSD.gt(0);
+
+    return {
+      status: hasBorrowedAssets ? 'error' : 'success',
+      ranges: undefined,
+      value: hasBorrowedAssets ? 100 : 0
+    };
+  }
+
+  const value = borrowAmountUSD.div(collateralizedAmountUSD).mul(100);
+
+  const thresholds = {
+    collateral: collateralAmountUSD.div(collateralizedAmountUSD).mul(100),
+    liquidation: liquidationAmountUSD.div(collateralizedAmountUSD).mul(100)
+  };
+
   return {
-    value: value.gte(0) ? Math.floor(value.toNumber() * 100) / 100 : 0,
-    status
+    value: value.toNumber(),
+    status: getStatus(value, thresholds),
+    ranges: getRanges(thresholds)
   };
 };
 
 type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt>; asset: LoanAsset };
 
-interface UseAccountHealthFactor {
+interface UserGetLTV {
   data: LTVData | undefined;
   getLTV: (loanAction: LoanActionData) => LTVData | undefined;
 }
 
-const useGetLTV = (): UseAccountHealthFactor => {
+const useGetLTV = (): UserGetLTV => {
   const prices = useGetPrices();
   const {
     data: { statistics }
   } = useGetAccountPositions();
-  const { borrowAmountUSD, collateralizedAmountUSD, thresholds } = statistics || {};
+  const { borrowAmountUSD, collateralizedAmountUSD, collateralAmountUSD, liquidationAmountUSD } = statistics || {};
 
   /**
    * This method computes how the LTV will
@@ -62,31 +104,38 @@ const useGetLTV = (): UseAccountHealthFactor => {
         prices === undefined ||
         borrowAmountUSD === undefined ||
         collateralizedAmountUSD === undefined ||
-        thresholds === undefined
+        collateralAmountUSD === undefined ||
+        liquidationAmountUSD === undefined
       ) {
         return undefined;
       }
 
-      const {
-        collateralAssetsUSD: newCollateralAssetsUSD,
-        totalBorrowedAmountUSD: newTotalBorrowedAmountUSD
-      } = calculateCollateralBorrowedAmountUSD(
-        type,
-        prices,
-        borrowAmountUSD,
-        collateralizedAmountUSD,
-        amount,
-        asset.collateralThreshold
-      );
+      const { currency, collateralThreshold, liquidationThreshold } = asset;
 
-      return getData(newTotalBorrowedAmountUSD, newCollateralAssetsUSD, thresholds);
+      const currencyPrice = getTokenPrice(prices, currency.ticker)?.usd;
+      const actionAmountUSD = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
+
+      const collateralThresholdAmountUSD = calculateThresholdAmountUSD(actionAmountUSD, collateralThreshold);
+      const liquidationThresholdAmountUSD = calculateThresholdAmountUSD(actionAmountUSD, liquidationThreshold);
+
+      const data = {
+        borrowAmountUSD: calculateBorrowedAmountUSD(type, borrowAmountUSD, actionAmountUSD),
+        collateralAmountUSD: calculateCollateralAmountUSD(type, collateralAmountUSD, collateralThresholdAmountUSD),
+        collateralizedAmountUSD: calculateCollateralAmountUSD(type, collateralizedAmountUSD, actionAmountUSD),
+        liquidationAmountUSD: calculateCollateralAmountUSD(type, liquidationAmountUSD, liquidationThresholdAmountUSD)
+      };
+
+      return getData(data);
     },
-    [prices, borrowAmountUSD, collateralizedAmountUSD, thresholds]
+    [prices, borrowAmountUSD, collateralizedAmountUSD, collateralAmountUSD, liquidationAmountUSD]
   );
 
   const data =
-    borrowAmountUSD !== undefined && collateralizedAmountUSD !== undefined && thresholds !== undefined
-      ? getData(borrowAmountUSD, collateralizedAmountUSD, thresholds)
+    borrowAmountUSD !== undefined &&
+    collateralAmountUSD !== undefined &&
+    collateralizedAmountUSD !== undefined &&
+    liquidationAmountUSD !== undefined
+      ? getData({ borrowAmountUSD, collateralAmountUSD, collateralizedAmountUSD, liquidationAmountUSD })
       : undefined;
 
   return {

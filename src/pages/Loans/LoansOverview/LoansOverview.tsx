@@ -11,7 +11,7 @@ const LoansOverview = (): JSX.Element => {
   const accountId = useAccountId();
   const { data: assets } = useGetLoanAssets();
   const {
-    data: { borrowPositions, lendPositions, statistics }
+    data: { borrowPositions, lendPositions, hasCollateral, statistics }
   } = useGetAccountPositions();
 
   const isLoadingPositions = accountId !== undefined && (lendPositions === undefined || borrowPositions === undefined);
@@ -25,7 +25,7 @@ const LoansOverview = (): JSX.Element => {
       <Flex direction='column' gap='spacing8'>
         <Flex direction='column' gap='spacing4'>
           <LoansInsights statistics={statistics} />
-          {!!borrowPositions?.length && <LTVSection statistics={statistics} />}
+          {hasCollateral && <LTVSection statistics={statistics} />}
         </Flex>
         <LoansTables borrowPositions={borrowPositions || []} lendPositions={lendPositions || []} assets={assets} />
       </Flex>

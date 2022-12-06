@@ -51,7 +51,7 @@ const LTVSection = ({ statistics }: LTVSectionProps): JSX.Element => {
           </StyledStatus>
         </StyledDlGroup>
       </StyledDl>
-      <StyledLTVMeter showLegend value={currentLTV?.value} thresholds={statistics?.thresholds} />
+      <StyledLTVMeter showLegend value={currentLTV?.value} ranges={currentLTV?.ranges} />
     </Card>
   );
 };
