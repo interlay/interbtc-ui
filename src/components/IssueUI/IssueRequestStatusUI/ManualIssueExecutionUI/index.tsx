@@ -98,7 +98,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
   } else {
     // Confirmed == PendingWithEnoughConfirmations is always executable
     executable = true;
-  };
+  }
 
   return (
     <div className={clsx('text-center', 'space-y-2')}>
