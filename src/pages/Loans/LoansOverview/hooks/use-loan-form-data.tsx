@@ -60,6 +60,7 @@ type UseLoanFormData = {
   };
 };
 
+// TODO: reduce GOVERNANCE for fees from max amount
 const useLoanFormData = (
   loanAction: BorrowAction | LendAction,
   asset: LoanAsset,
