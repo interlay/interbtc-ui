@@ -7,6 +7,7 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, shortAddress } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -79,7 +80,12 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
       {
         Header: t('id'),
         accessor: 'id',
-        classNames: ['text-center']
+        classNames: ['text-center'],
+        // ray test touch <
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <AddressWithCopyUI address={value} />;
+        }
+        // ray test touch >
       },
       {
         Header: t('date_created'),
@@ -137,7 +143,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
           // ray test touch <
-          return <>{shortAddress(value)}</>;
+          return <AddressWithCopyUI address={value} />;
           // ray test touch >
         }
       },
