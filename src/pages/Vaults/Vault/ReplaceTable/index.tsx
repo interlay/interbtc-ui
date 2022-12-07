@@ -78,9 +78,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'oldVault',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId }) {
-          // ray test touch <
           return <AddressWithCopyUI address={value.accountId.toString()} />;
-          // ray test touch >
         }
       },
       {
@@ -88,9 +86,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'newVault',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId }) {
-          // ray test touch <
           return <AddressWithCopyUI address={value.accountId.toString()} />;
-          // ray test touch >
         }
       },
       {
@@ -98,9 +94,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'btcAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          // ray test touch <
           return <AddressWithCopyUI address={value} />;
-          // ray test touch >
         }
       },
       {
