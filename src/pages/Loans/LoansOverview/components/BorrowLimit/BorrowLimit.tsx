@@ -35,16 +35,16 @@ const BorrowLimit = ({
   const { data: currentLTV, getLTV } = useGetLTV();
 
   const newBorrowLimit = getBorrowLimitUSD({ type: loanAction, amount: actionAmount, asset });
-  const newLtV = getLTV({ type: loanAction, amount: actionAmount, asset });
+  const newLTV = getLTV({ type: loanAction, amount: actionAmount, asset });
 
-  if (!currentLTV || !newLtV || !currentBorrowLimit || !newBorrowLimit) {
+  if (!currentLTV || !newLTV || !currentBorrowLimit || !newBorrowLimit) {
     return null;
   }
 
-  const hasLiquidationAlert = shouldDisplayLiquidationAlert && isBorrowAsset(loanAction) && newLtV.status === 'error';
+  const hasLiquidationAlert = shouldDisplayLiquidationAlert && isBorrowAsset(loanAction) && newLTV.status === 'error';
 
-  const currentLTVtLabel = formatPercentage(currentLTV.value);
-  const newLtVLabel = formatPercentage(newLtV.value);
+  const currentLTVLabel = formatPercentage(currentLTV.value);
+  const newLTVLabel = formatPercentage(newLTV.value);
 
   const currentBorrowLimitLabel = formatUSD(currentBorrowLimit.toNumber(), { compact: true });
   const newBorrowLimitLabel = formatUSD(newBorrowLimit.toNumber(), { compact: true });
@@ -63,7 +63,7 @@ const BorrowLimit = ({
       )}
       <DlGroup justifyContent='space-between'>
         <Dt>Borrow Limit</Dt>
-        <StyledDd $status={newLtV.status}>
+        <StyledDd $status={newLTV.status}>
           {currentBorrowLimit && (
             <>
               <span>{currentBorrowLimitLabel}</span>
@@ -75,17 +75,17 @@ const BorrowLimit = ({
       </DlGroup>
       <DlGroup justifyContent='space-between'>
         <Dt>LTV</Dt>
-        <StyledDd $status={newLtV.status}>
+        <StyledDd $status={newLTV.status}>
           {currentLTV && (
             <>
-              <span>{currentLTVtLabel}</span>
+              <span>{currentLTVLabel}</span>
               <span>--&gt;</span>
             </>
           )}
-          <span>{newLtVLabel}</span>
+          <span>{newLTVLabel}</span>
         </StyledDd>
       </DlGroup>
-      <LTVMeter value={newLtV.value} ranges={newLtV.ranges} />
+      <LTVMeter value={newLTV.value} ranges={newLTV.ranges} />
       {hasLiquidationAlert && (
         <Alert status='error'>
           {t('loans.action_liquidation_risk', {
