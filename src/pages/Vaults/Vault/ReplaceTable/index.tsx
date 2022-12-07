@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { shortAddress } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -79,7 +79,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId }) {
           // ray test touch <
-          return <>{shortAddress(value.accountId.toString())}</>;
+          return <AddressWithCopyUI address={value.accountId.toString()} />;
           // ray test touch >
         }
       },
@@ -89,7 +89,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId }) {
           // ray test touch <
-          return <>{shortAddress(value.accountId.toString())}</>;
+          return <AddressWithCopyUI address={value.accountId.toString()} />;
           // ray test touch >
         }
       },
@@ -99,7 +99,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
           // ray test touch <
-          return <>{shortAddress(value)}</>;
+          return <AddressWithCopyUI address={value} />;
           // ray test touch >
         }
       },
