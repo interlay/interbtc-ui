@@ -53,7 +53,7 @@ const getData = (data: GetDataParams): LTVData => {
   // should not be able to apply action
   // 2. and there are no assets being borrowed then
   // the user should successfuly apply action
-  if (!collateralAmountUSD.gt(0)) {
+  if (!collateralAmountUSD.gt(0) || !liquidationAmountUSD.gte(0) || !collateralizedAmountUSD.gt(0)) {
     const hasBorrowedAssets = borrowAmountUSD.gt(0);
 
     return {
