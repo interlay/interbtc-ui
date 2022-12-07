@@ -65,7 +65,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'id',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: H256 }) {
-          return <>{stripHexPrefix(value.toString())}</>;
+          return <AddressWithCopyUI address={stripHexPrefix(value.toString())} />;
         }
       },
       {
