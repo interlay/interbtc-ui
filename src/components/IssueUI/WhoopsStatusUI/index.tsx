@@ -1,11 +1,13 @@
+import { atomicToBaseAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { copyToClipboard, displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
-import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -29,6 +31,10 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
   if (!request.execution?.amountWrapped) {
     throw new Error('Something went wrong!');
   }
+
+  const monetaryBackingPaymentAmount = new BitcoinAmount(atomicToBaseAmount(request.backingPayment.amount, Bitcoin));
+
+  const refundBtcAddress = request.refund.btcAddress;
 
   return (
     <RequestWrapper className='px-12'>
@@ -68,10 +74,10 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         className='w-full'
         title={<h5 className={getColorShade('yellow')}>{t('issue_page.refund_deposited')}</h5>}
         unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-        value={displayMonetaryAmount(request.backingPayment.amount)}
+        value={displayMonetaryAmount(monetaryBackingPaymentAmount)}
         unitName='BTC'
         approxUSD={displayMonetaryAmountInUSDFormat(
-          request.backingPayment.amount,
+          monetaryBackingPaymentAmount,
           getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
         )}
       />
@@ -119,23 +125,7 @@ const WhoopsStatusUI = ({ request }: Props): JSX.Element => {
         &nbsp;BTC&nbsp;
         {t('issue_page.refund_vault_to_address')}.
       </p>
-      <InterlayTooltip label={t('click_to_copy')}>
-        <span
-          className={clsx(
-            'block',
-            'p-2.5',
-            'border-2',
-            'font-medium',
-            'rounded-lg',
-            'cursor-pointer',
-            'text-center',
-            'w-full'
-          )}
-          onClick={() => copyToClipboard('1')}
-        >
-          {request.refund.btcAddress}
-        </span>
-      </InterlayTooltip>
+      <AddressWithCopyUI className={clsx('justify-center', 'p-2.5')} address={refundBtcAddress} />
     </RequestWrapper>
   );
 };

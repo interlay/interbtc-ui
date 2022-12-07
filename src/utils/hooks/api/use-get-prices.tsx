@@ -11,8 +11,8 @@ import { COINGECKO_ID_BY_CURRENCY_TICKER } from '@/utils/constants/currency';
 import { useGetCurrencies } from './use-get-currencies';
 
 const getCoingeckoId = (currency: CurrencyExt) => {
-  const foreignAsset = currency as ForeignAsset;
-  return foreignAsset.coingeckoId || COINGECKO_ID_BY_CURRENCY_TICKER[currency.ticker];
+  const asForeignAsset = currency as ForeignAsset;
+  return asForeignAsset.foreignAsset?.coingeckoId || COINGECKO_ID_BY_CURRENCY_TICKER[currency.ticker];
 };
 
 const composeIds = (currencies: CurrencyExt[]): string =>

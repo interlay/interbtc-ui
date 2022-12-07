@@ -8,7 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
-import { formatDateTimePrecise, formatNumber } from '@/common/utils/utils';
+import { formatDateTimePrecise, formatNumber, shortAddress } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -86,7 +87,7 @@ const BlocksTable = (): JSX.Element => {
         classNames: ['text-right'],
         Cell: function FormattedCell({ value }: { value: string }) {
           const hash = stripHexPrefix(value);
-          return <ExternalLink href={`${BTC_EXPLORER_BLOCK_API}${hash}`}>{hash}</ExternalLink>;
+          return <ExternalLink href={`${BTC_EXPLORER_BLOCK_API}${hash}`}>{shortAddress(hash)}</ExternalLink>;
         }
       },
       {
@@ -108,7 +109,10 @@ const BlocksTable = (): JSX.Element => {
       {
         Header: t('dashboard.relay.relayed_by'),
         accessor: 'relayer',
-        classNames: ['text-right']
+        classNames: ['text-right'],
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <AddressWithCopyUI className='justify-end' address={value} />;
+        }
       }
     ],
     [t]

@@ -11,7 +11,7 @@ import Panel from '@/components/Panel';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import IssuedChart from '@/pages/Dashboard/IssuedChart';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import issueCountQuery from '@/services/queries/issue-count-query';
+import { issuesCountQuery } from '@/services/queries/issues';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
@@ -32,7 +32,7 @@ const UpperContent = (): JSX.Element => {
     error: totalSuccessfulIssuesError
     // TODO: should type properly (`Relay`)
   } = useQuery<GraphqlReturn<any>, Error>(
-    [GRAPHQL_FETCHER, issueCountQuery('status_eq: Completed')],
+    [GRAPHQL_FETCHER, issuesCountQuery('status_eq: Completed')],
     graphqlFetcher<GraphqlReturn<any>>()
   );
   useErrorHandler(totalSuccessfulIssuesError);

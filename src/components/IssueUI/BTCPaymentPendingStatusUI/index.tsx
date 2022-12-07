@@ -6,9 +6,9 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { copyToClipboard, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import Timer from '@/components/Timer';
-import InterlayTooltip from '@/components/UI/InterlayTooltip';
 import { BLOCK_TIME } from '@/config/parachain';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -61,6 +61,8 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
     })();
   }, [request, bridgeLoaded]);
 
+  const bitcoinRecipientAddress = request.vaultWrappedAddress || request.vaultBackingAddress;
+
   return (
     <div className='space-y-8'>
       <div className={clsx('flex', 'flex-col', 'justify-center', 'items-center')}>
@@ -92,15 +94,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.single_transaction')}
         </p>
-        {/* TODO: should improve UX */}
-        <InterlayTooltip label={t('click_to_copy')}>
-          <span
-            className={clsx('block', 'p-2.5', 'border-2', 'font-medium', 'rounded-lg', 'cursor-pointer', 'text-center')}
-            onClick={() => copyToClipboard(request.vaultWrappedAddress || request.vaultBackingAddress)}
-          >
-            {request.vaultWrappedAddress || request.vaultBackingAddress}
-          </span>
-        </InterlayTooltip>
+        <AddressWithCopyUI className={clsx('justify-center', 'p-2.5')} address={bitcoinRecipientAddress} />
         {initialLeftSeconds && (
           <p className={clsx('flex', 'justify-center', 'items-center', 'space-x-1')}>
             <span
@@ -131,10 +125,7 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
       <QRCode
         includeMargin
         className='mx-auto'
-        // eslint-disable-next-line max-len
-        value={`bitcoin:${request.vaultWrappedAddress || request.vaultBackingAddress}?amount=${amountBTCToSend.toHuman(
-          8
-        )}`}
+        value={`bitcoin:${bitcoinRecipientAddress}?amount=${amountBTCToSend.toHuman(8)}`}
       />
       <div
         className={clsx(

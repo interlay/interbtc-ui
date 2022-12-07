@@ -4,7 +4,7 @@ import { FaCheckCircle } from 'react-icons/fa';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { shortAddress } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorModal from '@/components/ErrorModal';
 import ExternalLink from '@/components/ExternalLink';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
@@ -53,7 +53,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
       <RequestWrapper className='px-12'>
         <h2 className={clsx('text-3xl', 'font-medium', getColorShade('green'))}>{t('confirmed')}</h2>
         <FaCheckCircle className={clsx('w-40', 'h-40', getColorShade('green'))} />
-        <p className='space-x-1'>
+        <div className={clsx('space-x-1', 'flex', 'items-center')}>
           <span
             className={clsx(
               { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -62,8 +62,8 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
           >
             {t('issue_page.btc_transaction')}:
           </span>
-          <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
-        </p>
+          <AddressWithCopyUI address={request.backingPayment.btcTxId || ''} />
+        </div>
         <ExternalLink className='text-sm' href={`${BTC_EXPLORER_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
           {t('issue_page.view_on_block_explorer')}
         </ExternalLink>
