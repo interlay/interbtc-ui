@@ -7,6 +7,7 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, formatNumber, shortAddress, shortTxId } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -25,7 +26,7 @@ import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useIssueRequests } from '@/services/hooks/issue-requests';
-import issueCountQuery from '@/services/queries/issue-count-query';
+import { issuesCountQuery } from '@/services/queries/issues';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import useQueryParams from '@/utils/hooks/use-query-params';
@@ -101,7 +102,7 @@ const IssueRequestsTable = (): JSX.Element => {
         accessor: 'userParachainAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          return <>{value}</>;
+          return <AddressWithCopyUI address={value} />;
         }
       },
       {
@@ -109,7 +110,7 @@ const IssueRequestsTable = (): JSX.Element => {
         accessor: 'vault',
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: any }) {
-          return <>{value.accountId}</>;
+          return <AddressWithCopyUI address={value.accountId} />;
         }
       },
       {
@@ -187,7 +188,7 @@ const IssueRequestsTable = (): JSX.Element => {
     data: issuesCount,
     error: issuesCountError
     // TODO: should type properly (`Relay`)
-  } = useQuery<GraphqlReturn<any>, Error>([GRAPHQL_FETCHER, issueCountQuery()], graphqlFetcher<GraphqlReturn<any>>());
+  } = useQuery<GraphqlReturn<any>, Error>([GRAPHQL_FETCHER, issuesCountQuery()], graphqlFetcher<GraphqlReturn<any>>());
   useErrorHandler(issuesCountError);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({

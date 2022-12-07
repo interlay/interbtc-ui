@@ -16,7 +16,7 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { shortAddress } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
@@ -65,7 +65,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'id',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: H256 }) {
-          return <>{stripHexPrefix(value.toString())}</>;
+          return <AddressWithCopyUI address={stripHexPrefix(value.toString())} />;
         }
       },
       {
@@ -78,7 +78,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'oldVault',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId }) {
-          return <>{shortAddress(value.accountId.toString())}</>;
+          return <AddressWithCopyUI address={value.accountId.toString()} />;
         }
       },
       {
@@ -86,7 +86,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'newVault',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: InterbtcPrimitivesVaultId }) {
-          return <>{shortAddress(value.accountId.toString())}</>;
+          return <AddressWithCopyUI address={value.accountId.toString()} />;
         }
       },
       {
@@ -94,7 +94,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
         accessor: 'btcAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          return <>{shortAddress(value)}</>;
+          return <AddressWithCopyUI address={value} />;
         }
       },
       {
