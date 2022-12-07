@@ -7,9 +7,7 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
-// ray test touch <
 import AddressWithCopyUI from '@/components/AddressWithCopyUI';
-// ray test touch >
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -117,11 +115,9 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
         Header: t('id'),
         accessor: 'id',
         classNames: ['text-center'],
-        // ray test touch <
         Cell: function FormattedCell({ value }: { value: string }) {
           return <AddressWithCopyUI address={value} />;
         }
-        // ray test touch >
       },
       {
         Header: t('date_created'),
@@ -178,9 +174,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
         accessor: 'userParachainAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          // ray test touch <
           return <AddressWithCopyUI address={value} />;
-          // ray test touch >
         }
       },
       {
