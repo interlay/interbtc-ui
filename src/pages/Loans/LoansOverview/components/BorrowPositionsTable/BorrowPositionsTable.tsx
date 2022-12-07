@@ -10,8 +10,7 @@ import { StyledBorrowPositionsTable } from './BorrowPositionsTable.style';
 enum BorrowPositionColumns {
   ASSET = 'asset',
   APY_ACCRUED = 'apy-accrued',
-  BORROWED = 'borrowed',
-  EMPTY = 'empty'
+  BORROWED = 'borrowed'
 }
 
 type BorrowPositionTableRow = {
@@ -19,15 +18,13 @@ type BorrowPositionTableRow = {
   [BorrowPositionColumns.ASSET]: ReactNode;
   [BorrowPositionColumns.APY_ACCRUED]: ReactNode;
   [BorrowPositionColumns.BORROWED]: ReactNode;
-  [BorrowPositionColumns.EMPTY]: ReactNode;
 };
 
 // TODO: translations
 const borrowPositionColumns = [
   { name: 'Asset', uid: BorrowPositionColumns.ASSET },
   { name: 'APY / Accrued', uid: BorrowPositionColumns.APY_ACCRUED },
-  { name: 'Borrowed', uid: BorrowPositionColumns.BORROWED },
-  { name: '', uid: BorrowPositionColumns.EMPTY }
+  { name: 'Borrowed', uid: BorrowPositionColumns.BORROWED }
 ];
 
 type BorrowPositionsTableProps = {
@@ -66,14 +63,13 @@ const BorrowPositionsTable = ({
           />
         );
 
-        const borrowed = <BalanceCell amount={amount} prices={prices} />;
+        const borrowed = <BalanceCell alignItems='flex-end' amount={amount} prices={prices} />;
 
         return {
           id: currency.ticker,
           asset,
           'apy-accrued': apy,
-          borrowed,
-          empty: null
+          borrowed
         };
       }),
     [assets, onRowAction, positions, prices]
