@@ -58,6 +58,44 @@ interface AccountPositionsStatisticsData {
   thresholds?: PositionsThresholdsData;
 }
 
+const getNetAPY = (
+  lendPositions: LendPosition[],
+  borrowPositions: BorrowPosition[],
+  assets: TickerToData<LoanAsset>,
+  supplyAmountUSD: Big,
+  prices: Prices
+): Big => {
+  if (!supplyAmountUSD.gt(0)) {
+    return new Big(0);
+  }
+
+  const totalLendApy = lendPositions.reduce((total, position) => {
+    const { lendApy, lendReward } = assets[position.currency.ticker];
+    const rewardsApy = getSubsidyRewardApy(position.currency, lendReward, prices);
+    const positionApy = lendApy.add(rewardsApy || 0);
+    const positionUSDValue = convertMonetaryAmountToValueInUSD(
+      position.amount,
+      getTokenPrice(prices, position.currency.ticker)?.usd
+    );
+
+    return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
+  }, new Big(0));
+
+  const totalBorrowApy = borrowPositions.reduce((total, position) => {
+    const { borrowApy, borrowReward } = assets[position.currency.ticker];
+    const rewardsApy = getSubsidyRewardApy(position.currency, borrowReward, prices);
+    const positionApy = borrowApy.sub(rewardsApy || 0);
+    const positionUSDValue = convertMonetaryAmountToValueInUSD(
+      position.amount,
+      getTokenPrice(prices, position.currency.ticker)?.usd
+    );
+
+    return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
+  }, new Big(0));
+
+  return totalLendApy.sub(totalBorrowApy).div(supplyAmountUSD);
+};
+
 const getAccountPositionsStats = (
   assets: TickerToData<LoanAsset>,
   lendPositions: LendPosition[],
@@ -108,31 +146,7 @@ const getAccountPositionsStats = (
     convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) || 0;
   const netAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
 
-  const totalLendApy = lendPositions.reduce((total, position) => {
-    const { lendApy, lendReward } = assets[position.currency.ticker];
-    const rewardsApy = getSubsidyRewardApy(position.currency, lendReward, prices);
-    const positionApy = lendApy.add(rewardsApy || 0);
-    const positionUSDValue = convertMonetaryAmountToValueInUSD(
-      position.amount,
-      getTokenPrice(prices, position.currency.ticker)?.usd
-    ) as any;
-
-    return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
-  }, new Big(0));
-
-  const totalBorrowApy = borrowPositions.reduce((total, position) => {
-    const { borrowApy, borrowReward } = assets[position.currency.ticker];
-    const rewardsApy = getSubsidyRewardApy(position.currency, borrowReward, prices);
-    const positionApy = borrowApy.sub(rewardsApy || 0);
-    const positionUSDValue = convertMonetaryAmountToValueInUSD(
-      position.amount,
-      getTokenPrice(prices, position.currency.ticker)?.usd
-    );
-
-    return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
-  }, new Big(0));
-
-  const netAPY = totalLendApy.sub(totalBorrowApy).div(supplyAmountUSD);
+  const netAPY = getNetAPY(lendPositions, borrowPositions, assets, supplyAmountUSD, prices);
 
   return {
     supplyAmountUSD,
