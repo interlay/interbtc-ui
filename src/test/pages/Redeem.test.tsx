@@ -5,18 +5,9 @@ import App from '@/App';
 import { mockRedeemRequest } from '../mocks/@interlay/interbtc-api';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
-const path = '/bridge?tab=redeem';
-
 describe('redeemTab page', () => {
-  it('should display the redeem tab', async () => {
-    await render(<App />, { path });
-
-    const redeemTab = screen.getByRole('tab', { name: /redeem/i });
-    expect(redeemTab).toBeVisible();
-  });
-
   it('should redeem the IBTC', async () => {
-    await render(<App />, { path });
+    await render(<App />, { path: '/bridge?tab=redeem' });
 
     const redeemTab = screen.getByRole('tab', { name: /redeem/i });
     userEvent.click(redeemTab);
