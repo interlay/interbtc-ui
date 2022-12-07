@@ -3,9 +3,9 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import React, { HTMLAttributes, useState } from 'react';
 
-import { shortAddress } from '@/common/utils/utils';
 import { CTA, Dd, Dt } from '@/component-library';
 import { Status } from '@/component-library/utils/prop-types';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import RequestReplacementModal from '@/pages/Vaults/Vault/RequestReplacementModal';
 
 import { StatusTag } from '../StatusTag';
@@ -61,7 +61,9 @@ const VaultInfo = ({
       <StyledDl>
         <StyledDlGroup gap='spacing2'>
           <Dt>Vault ID:</Dt>
-          <Dd>{shortAddress(vaultAddress)}</Dd>
+          <Dd>
+            <AddressWithCopyUI address={vaultAddress} />
+          </Dd>
         </StyledDlGroup>
         <StyledDlGroup gap='spacing2'>
           <StatusTag status={status}>

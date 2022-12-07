@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { displayMonetaryAmountInUSDFormat, formatNumber, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
@@ -123,7 +124,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
           />
         </div>
         <div className='space-y-4'>
-          <div className={clsx('flex', 'justify-between')}>
+          <div className={clsx('flex', 'justify-between', 'items-center')}>
             <span
               className={clsx(
                 { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -132,7 +133,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             >
               {t('issue_page.destination_address')}
             </span>
-            <span className='font-medium'>{shortAddress(redeem.userBackingAddress || '')}</span>
+            <AddressWithCopyUI address={redeem.userBackingAddress || ''} />
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
@@ -145,7 +146,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             </span>
             <span className='font-medium'>{formatNumber(redeem.request.height.absolute)}</span>
           </div>
-          <div className={clsx('flex', 'justify-between')}>
+          <div className={clsx('flex', 'justify-between', 'items-center')}>
             <span
               className={clsx(
                 { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -154,7 +155,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             >
               {t('issue_page.vault_dot_address')}
             </span>
-            <span className='font-medium'>{shortAddress(redeem.vault.accountId || '')}</span>
+            <AddressWithCopyUI address={redeem.vault.accountId || ''} />
           </div>
         </div>
       </div>

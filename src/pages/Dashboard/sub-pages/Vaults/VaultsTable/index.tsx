@@ -11,7 +11,8 @@ import { useHistory } from 'react-router-dom';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, formatPercentage, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatPercentage } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
@@ -179,7 +180,7 @@ const VaultsTable = (): JSX.Element => {
         accessor: Accessor.VaultId,
         classNames: ['text-left'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          return <>{shortAddress(value)}</>;
+          return <AddressWithCopyUI address={value} />;
         }
       },
       {
