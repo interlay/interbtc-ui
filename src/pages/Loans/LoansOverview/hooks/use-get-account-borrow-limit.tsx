@@ -3,11 +3,13 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
+import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { LoanAction } from '@/types/loans';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { calculateCollateralBorrowedAmountUSD } from '../utils/math';
+import { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateThresholdAmountUSD } from '../utils/math';
 
 const calculateBorrowLimitUSD = (borrowAmountUSD: Big, collateralAmountUSD: Big): Big =>
   collateralAmountUSD.sub(borrowAmountUSD);
@@ -38,17 +40,18 @@ const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
       if (prices === undefined || borrowAmountUSD === undefined || collateralAmountUSD === undefined) {
         return undefined;
       }
+      const { currency, collateralThreshold } = asset;
 
-      const {
-        collateralAssetsUSD: newCollateralAssetsUSD,
-        totalBorrowedAmountUSD: newTotalBorrowedAmountUSD
-      } = calculateCollateralBorrowedAmountUSD(
+      const currencyPrice = getTokenPrice(prices, currency.ticker)?.usd;
+      const actionAmountUSD = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
+
+      const newTotalBorrowedAmountUSD = calculateBorrowedAmountUSD(type, borrowAmountUSD, actionAmountUSD);
+
+      const collateralThresholdAmountUSD = calculateThresholdAmountUSD(actionAmountUSD, collateralThreshold);
+      const newCollateralAssetsUSD = calculateCollateralAmountUSD(
         type,
-        prices,
-        borrowAmountUSD,
         collateralAmountUSD,
-        amount,
-        asset.collateralThreshold
+        collateralThresholdAmountUSD
       );
 
       return calculateBorrowLimitUSD(newTotalBorrowedAmountUSD, newCollateralAssetsUSD);
