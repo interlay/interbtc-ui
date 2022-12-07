@@ -81,11 +81,9 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
         Header: t('id'),
         accessor: 'id',
         classNames: ['text-center'],
-        // ray test touch <
         Cell: function FormattedCell({ value }: { value: string }) {
           return <AddressWithCopyUI address={value} />;
         }
-        // ray test touch >
       },
       {
         Header: t('date_created'),
@@ -142,9 +140,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
         accessor: 'userParachainAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          // ray test touch <
           return <AddressWithCopyUI address={value} />;
-          // ray test touch >
         }
       },
       {
