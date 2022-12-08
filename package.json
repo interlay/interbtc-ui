@@ -1,14 +1,14 @@
 {
   "name": "interbtc-ui",
-  "version": "2.20.1",
+  "version": "2.22.0",
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^2.0.0",
+    "@interlay/interbtc-api": "1.19.0",
     "@hookform/resolvers": "^2.9.7",
     "@interlay/bridge": "^0.1.0",
-    "@interlay/interbtc-api": "1.18.1",
     "@material-icons/svg": "^1.0.28",
     "@polkadot/api": "9.8.1",
     "@polkadot/extension-dapp": "0.44.1",

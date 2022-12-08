@@ -3,6 +3,7 @@ import { OracleStatus } from '@interlay/interbtc-api/build/src/types/oracleTypes
 import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 
 import graphqlFetcher, { GRAPHQL_FETCHER } from '@/services/fetchers/graphql-fetcher';
+import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 
 import oracleExchangeRatesQuery, { composableExchangeRateSubquery } from '../queries/oracle-exchange-rates-query';
 
@@ -49,7 +50,8 @@ const latestExchangeRateFetcher = async (
   if (key !== ORACLE_LATEST_EXCHANGE_RATE_FETCHER) throw new Error('Invalid key!');
 
   // TODO: should type properly (`Relay`)
-  const cond = 'id' in currency ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
+  // TODO: Need to refactor when we want to support lend tokens as collateral for vaults.
+  const cond = 'foreignAsset' in currency ? `asset_eq: ${currency.foreignAsset.id}` : `token_eq: ${currency.ticker}`;
   const latestOracleData = await graphqlFetcher<Array<any>>()({
     queryKey: [GRAPHQL_FETCHER, oracleExchangeRatesQuery(`typeKey: {${cond}}`)]
   });
@@ -76,7 +78,7 @@ const allLatestSubmissionsFetcher = async (
 
   const query =
     [...namesMap.keys()].reduce((queryStr, oracleId) => {
-      const cond = 'id' in currency ? `asset_eq: ${currency.id}` : `token_eq: ${currency.ticker}`;
+      const cond = getCurrencyEqualityCondition(currency);
       return (
         queryStr + composableExchangeRateSubquery(`ID${oracleId}`, `typeKey: {${cond}}, oracleId_eq: "${oracleId}"`)
       );

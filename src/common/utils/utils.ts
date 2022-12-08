@@ -119,10 +119,6 @@ function displayMonetaryAmount(amount: MonetaryAmount<CurrencyExt> | undefined, 
   return defaultValue;
 }
 
-const copyToClipboard = (text: string): void => {
-  navigator.clipboard.writeText(text);
-};
-
 const getRandomVaultIdWithCapacity = (
   vaults: [InterbtcPrimitivesVaultId, BitcoinAmount][],
   requiredCapacity: BitcoinAmount
@@ -147,7 +143,6 @@ const monetaryToNumber = (monetaryAmount: MonetaryAmount<CurrencyExt> | undefine
 
 export {
   convertMonetaryAmountToValueInUSD,
-  copyToClipboard,
   displayMonetaryAmount,
   displayMonetaryAmountInUSDFormat,
   formatDateTime,
