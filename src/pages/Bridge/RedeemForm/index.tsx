@@ -463,7 +463,7 @@ const RedeemForm = (): JSX.Element | null => {
               />
               <Vaults
                 label={t('select_vault')}
-                requiredCapacity={monetaryWrappedTokenAmount.toString(true)}
+                requiredCapacity={monetaryWrappedTokenAmount}
                 isShown={selectVaultManually}
                 onSelectionCallback={setVault}
                 error={errors[VAULT_SELECTION]}

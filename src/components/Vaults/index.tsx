@@ -1,5 +1,4 @@
-import { atomicToBaseAmount } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { FieldError } from 'react-hook-form';
@@ -13,7 +12,7 @@ import VaultSelector from './VaultsSelector';
 interface Props {
   label: string;
   // ray test touch <
-  requiredCapacity: string;
+  requiredCapacity: BitcoinAmount;
   // ray test touch >
   isShown: boolean;
   onSelectionCallback: (vault: VaultApiType | undefined) => void;
@@ -30,7 +29,7 @@ const Vaults = ({ label, requiredCapacity, isShown, onSelectionCallback, error }
     // to have vaults with same accountId grouped together.
     const vaultsWithEnoughCapacity = allVaults
       .filter((vault) => vault[1].gt(BitcoinAmount.zero())) // TODO: redundant check
-      .filter((vault) => vault[1].gte(new BitcoinAmount(atomicToBaseAmount(requiredCapacity, Bitcoin))))
+      .filter((vault) => vault[1].gte(requiredCapacity))
       .sort((vaultA, vaultB) => {
         const vaultAId = vaultA[0].accountId.toString();
         const vaultBId = vaultB[0].accountId.toString();

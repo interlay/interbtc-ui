@@ -433,7 +433,7 @@ const IssueForm = (): JSX.Element | null => {
             />
             <Vaults
               label={t('select_vault')}
-              requiredCapacity={monetaryBtcAmount.toString(true)}
+              requiredCapacity={monetaryBtcAmount}
               isShown={selectVaultManually}
               onSelectionCallback={setVault}
               error={errors[VAULT_SELECTION]}
