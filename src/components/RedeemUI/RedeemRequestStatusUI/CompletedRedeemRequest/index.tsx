@@ -1,7 +1,8 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber, getPolkadotLink, shortAddress } from '@/common/utils/utils';
+import { formatNumber, getPolkadotLink } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorSpan from '@/components/PrimaryColorSpan';
 import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
@@ -34,7 +35,7 @@ const CompletedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         {t('issue_page.view_parachain_block')}
       </ExternalLink>
       {/* TODO: could componentize */}
-      <p className='space-x-1'>
+      <div className={clsx('space-x-1', 'flex', 'items-center')}>
         <span
           className={clsx(
             { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -43,8 +44,8 @@ const CompletedRedeemRequest = ({ redeem }: Props): JSX.Element => {
         >
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(redeem.backingPayment.btcTxId || '')}</span>
-      </p>
+        <AddressWithCopyUI address={redeem.backingPayment.btcTxId || ''} />
+      </div>
       <ExternalLink className='text-sm' href={`${BTC_EXPLORER_TRANSACTION_API}${redeem.backingPayment.btcTxId}`}>
         {t('issue_page.view_on_block_explorer')}
       </ExternalLink>

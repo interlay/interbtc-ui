@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { displayMonetaryAmountInUSDFormat, formatNumber, shortAddress } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import Hr2 from '@/components/hrs/Hr2';
 import PriceInfo from '@/components/PriceInfo';
 import { WRAPPED_TOKEN_SYMBOL, WrappedTokenAmount } from '@/config/relay-chains';
@@ -132,7 +133,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.destination_address')}
             </span>
-            <span className='font-medium'>{shortAddress(destinationAddress)}</span>
+            <AddressWithCopyUI address={destinationAddress} />
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
@@ -154,7 +155,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.vault_dot_address')}
             </span>
-            <span className='font-medium'>{shortAddress(issue.vault.accountId)}</span>
+            <AddressWithCopyUI address={issue.vault.accountId} />
           </div>
           <div className={clsx('flex', 'justify-between')}>
             <span
@@ -165,7 +166,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             >
               {t('issue_page.vault_btc_address')}
             </span>
-            <span className='font-medium'>{shortAddress(issue.vaultBackingAddress)}</span>
+            <AddressWithCopyUI address={issue.vaultBackingAddress} />
           </div>
         </div>
         <p className='space-x-1'>

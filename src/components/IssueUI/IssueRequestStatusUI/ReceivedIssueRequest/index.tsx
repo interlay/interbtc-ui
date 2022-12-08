@@ -2,7 +2,8 @@ import clsx from 'clsx';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber, shortAddress } from '@/common/utils/utils';
+import { formatNumber } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import Ring48, { Ring48Title, Ring48Value } from '@/components/Ring48';
@@ -74,7 +75,7 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
           {`${formatNumber(requestConfirmations)}/${formatNumber(stableParachainConfirmations)}`}
         </Ring48Value>
       </Ring48>
-      <p className='space-x-1'>
+      <div className={clsx('space-x-1', 'flex', 'items-center')}>
         <span
           className={clsx(
             { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -83,8 +84,8 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.btc_transaction')}:
         </span>
-        <span className='font-medium'>{shortAddress(request.backingPayment.btcTxId || '')}</span>
-      </p>
+        <AddressWithCopyUI address={request.backingPayment.btcTxId || ''} />
+      </div>
       <ExternalLink className='text-sm' href={`${BTC_EXPLORER_TRANSACTION_API}${request.backingPayment.btcTxId}`}>
         {t('issue_page.view_on_block_explorer')}
       </ExternalLink>

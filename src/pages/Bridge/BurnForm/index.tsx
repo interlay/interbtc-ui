@@ -124,8 +124,6 @@ const BurnForm = (): JSX.Element | null => {
       }
     };
 
-    console.log('burnable tokens', burnableTokens.toString());
-
     const validateForm = (value: string): string | undefined => {
       // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
       const bitcoinAmountValue = new BitcoinAmount(value);

@@ -20,7 +20,7 @@ import {
   WrappedTokenAmount
 } from '@/config/relay-chains';
 import { SQUID_URL, SS58_FORMAT } from '@/constants';
-import issueCountQuery from '@/services/queries/issue-count-query';
+import { issuesCountQuery } from '@/services/queries/issues';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
@@ -140,7 +140,7 @@ const getVaultData = async (vault: VaultExt, accountId: AccountId, prices: Price
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: issueCountQuery(
+      query: issuesCountQuery(
         `vault: {accountId_eq: "${formattedAccountId}", collateralToken: {${collateralTokenCondition}}}, status_eq: Pending`
       )
     })

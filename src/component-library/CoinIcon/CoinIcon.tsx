@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { Tokens } from '../types';
 import { Sizes } from '../utils/prop-types';
 import { IconWrapper } from './CoinIcon.style';
-import { BtcIcon, DotIcon, InterBtcIcon, IntrIcon, KbtcIcon, KintIcon, KsmIcon, LksmIcon } from './icons';
+import { BtcIcon, DotIcon, InterBtcIcon, IntrIcon, KbtcIcon, KintIcon, KsmIcon, LksmIcon, USDTIcon } from './icons';
 
 const coinsIcon: Record<Tokens, FC> = {
   BTC: BtcIcon,
@@ -13,7 +13,8 @@ const coinsIcon: Record<Tokens, FC> = {
   KBTC: KbtcIcon,
   KINT: KintIcon,
   KSM: KsmIcon,
-  LKSM: LksmIcon
+  LKSM: LksmIcon,
+  USDT: USDTIcon
 };
 
 type CoinIconProps = {
