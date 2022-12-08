@@ -11,9 +11,7 @@ import VaultSelector from './VaultsSelector';
 
 interface Props {
   label: string;
-  // ray test touch <
   requiredCapacity: BitcoinAmount;
-  // ray test touch >
   isShown: boolean;
   onSelectionCallback: (vault: VaultApiType | undefined) => void;
   error?: FieldError;

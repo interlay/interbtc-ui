@@ -403,11 +403,11 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
 
-    const totalDOT = wrappedTokenAmount
+    const totalRelayChainNativeToken = wrappedTokenAmount
       ? btcToRelayChainNativeTokenRate.toCounter(monetaryWrappedTokenAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
-    const totalDOTInUSD = displayMonetaryAmountInUSDFormat(
-      totalDOT,
+    const totalRelayChainNativeTokenInUSD = displayMonetaryAmountInUSDFormat(
+      totalRelayChainNativeToken,
       getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
     );
 
@@ -551,9 +551,9 @@ const RedeemForm = (): JSX.Element | null => {
             <PriceInfo
               title={<h5 className={getColorShade('green')}>{t('redeem_page.earned_premium')}</h5>}
               unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
-              value={displayMonetaryAmount(totalDOT)}
+              value={displayMonetaryAmount(totalRelayChainNativeToken)}
               unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
-              approxUSD={totalDOTInUSD}
+              approxUSD={totalRelayChainNativeTokenInUSD}
             />
           )}
           <SubmitButton
