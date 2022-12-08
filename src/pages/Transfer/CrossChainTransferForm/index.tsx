@@ -24,12 +24,9 @@ import FormTitle from '@/components/FormTitle';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
-// TODO: Pull tokens from xcmBridge response. This needs to be done to support USDT
-// import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useXcmBridge } from '../../../utils/hooks/api/xcm/use-xcm-bridge';
@@ -52,6 +49,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
 
+  const [currency, setCurrency] = React.useState<any>(undefined);
+
   // TODO: this will need to be refactored when we support multiple currencies
   // per channel, but so will the UI so better to handle this then.
   const dispatch = useDispatch();
@@ -59,14 +58,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   const prices = useGetPrices();
 
   const { xcmBridge, xcmProvider } = useXcmBridge();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-
-  const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-
-  const USDTSymbol = 'USDT';
-  const USDTCurrency = getCurrencyFromTicker(USDTSymbol);
-
-  console.log(USDTCurrency);
 
   const {
     register,
@@ -83,20 +74,31 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   useEffect(() => {
-    if (!destination || !fromChain || !xcmBridge || !selectedAccount) return;
+    if (!fromChain || !toChain || !xcmBridge) return;
+
+    const tokens = xcmBridge.router.getAvailableTokens({ from: fromChain.type, to: toChain.type });
+    const supportedCurrency = xcmBridge.findAdapter(fromChain.type).tokens[tokens[0]];
+
+    console.log('tokens, supportedCurrency', tokens, supportedCurrency);
+
+    setCurrency(supportedCurrency);
+  }, [fromChain, toChain, xcmBridge]);
+
+  useEffect(() => {
+    if (!currency || !destination || !fromChain || !xcmBridge || !selectedAccount) return;
 
     const getDestinationBalance = async () => {
       const balance: any = await firstValueFrom(
-        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(USDTSymbol, destination.address)
+        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, destination.address)
       );
 
-      console.log('balance.free.toString()', balance.free.toString());
+      console.log('destination balance', balance);
 
-      setDestinationBalance(newMonetaryAmount(balance.free.toString(), USDTCurrency, true));
+      setDestinationBalance(newMonetaryAmount(balance.free.toString(), currency, true));
     };
 
     getDestinationBalance();
-  }, [USDTCurrency, destination, fromChain, xcmBridge, selectedAccount]);
+  }, [currency, destination, fromChain, xcmBridge, selectedAccount]);
 
   useEffect(() => {
     if (!xcmBridge) return;
@@ -104,15 +106,17 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!selectedAccount) return;
 
     const getBalance = async () => {
+      if (!currency || !fromChain || !selectedAccount || !xcmBridge) return;
+
       const balance: any = await firstValueFrom(
-        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(USDTSymbol, selectedAccount.address)
+        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, selectedAccount.address)
       );
 
       setTransferableBalance(balance.free);
     };
 
     getBalance();
-  }, [fromChain, selectedAccount, xcmBridge]);
+  }, [currency, fromChain, selectedAccount, xcmBridge]);
 
   useEffect(() => {
     if (!xcmBridge) return;
@@ -136,8 +140,6 @@ const CrossChainTransferForm = (): JSX.Element => {
       return { type: chain.id, name: chain.id };
     });
 
-    console.log('fromChainfromChain', fromChain);
-
     setToChains(availableToChains);
     setToChain(availableToChains[0]);
   }, [fromChain, xcmBridge]);
@@ -154,8 +156,6 @@ const CrossChainTransferForm = (): JSX.Element => {
       const sendTransaction = async () => {
         const { signer } = await web3FromAddress(selectedAccount.address.toString());
 
-        console.log('fromChain.type, toChain.type', fromChain.type, toChain.type);
-
         const adapter = xcmBridge.findAdapter(fromChain.type);
         adapter.setApi(xcmProvider.getApiPromise(fromChain.type));
 
@@ -163,18 +163,16 @@ const CrossChainTransferForm = (): JSX.Element => {
 
         apiPromise.setSigner(signer);
 
-        const transferAmount = new MonetaryAmount(USDTCurrency, data[TRANSFER_AMOUNT]);
+        const transferAmount = new MonetaryAmount(currency, data[TRANSFER_AMOUNT]);
         const transferAmountString = transferAmount.toString(true);
         const transferAmountDecimals = transferAmount.currency.decimals;
 
         const tx = adapter.createTx({
           amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
           to: toChain.type,
-          token: USDTSymbol,
+          token: currency.symbol,
           address: destination.address
         });
-
-        console.log('txtx', tx);
 
         await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
       };
@@ -198,41 +196,38 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleUpdateUsdAmount = (value: string) => {
     if (!value) return;
 
-    const tokenAmount = newMonetaryAmount(value, USDTCurrency, true);
+    const tokenAmount = newMonetaryAmount(value, currency, true);
 
-    const usd = displayMonetaryAmountInUSDFormat(tokenAmount, getTokenPrice(prices, USDTSymbol)?.usd);
+    const usd = displayMonetaryAmountInUSDFormat(tokenAmount, getTokenPrice(prices, currency.symbol)?.usd);
 
     setApproxUsdValue(usd);
   };
 
   const validateTransferAmount = async (value: string) => {
-    console.log(value, destinationBalance);
-    return undefined;
-    // const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, USDTCurrency, true);
-    // const transferAmount = newMonetaryAmount(value, USDTCurrency, true);
+    const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, currency, true);
+    const transferAmount = newMonetaryAmount(value, currency, true);
 
-    // if (destinationBalance.isZero()) {
-    //   const ed = xcmBridge.findAdapter(toChain?.type).balanceAdapter.ed;
-    //   const edAmount = newMonetaryAmount(ed.toString(), USDTCurrency, true);
+    if (destinationBalance.isZero()) {
+      const ed = xcmBridge.findAdapter(toChain?.type).balanceAdapter.ed;
+      const edAmount = newMonetaryAmount(ed.toString(), currency, true);
 
-    //   const inputConfig: any = await firstValueFrom(
-    //     xcmBridge.findAdapter(fromChain?.type).subscribeInputConfigs({
-    //       to: toChain?.type,
-    //       token: USDTSymbol,
-    //       address: destination?.address,
-    //       signer: selectedAccount?.address
-    //     })
-    //   );
+      // const inputConfig: any = await firstValueFrom(
+      //   xcmBridge.findAdapter(fromChain?.type).subscribeInputConfigs({
+      //     to: toChain?.type,
+      //     token: currency.symbol,
+      //     address: destination?.address,
+      //     signer: selectedAccount?.address
+      //   })
+      // );
 
-    //   const estimatedFee = newMonetaryAmount(inputConfig.estimateFee, USDTCurrency, true).toHuman();
-    //   console.log(estimatedFee);
+      // const estimatedFee = newMonetaryAmount(inputConfig.estimateFee, currency, true).toHuman();
 
-    //   return edAmount.gt(transferAmount) ? 'Existential deposit problem' : undefined;
-    // } else if (balanceMonetaryAmount.lt(transferAmount)) {
-    //   return t('insufficient_funds');
-    // } else {
-    //   return undefined;
-    // }
+      return edAmount.gt(transferAmount) ? 'Existential deposit problem' : undefined;
+    } else if (balanceMonetaryAmount.lt(transferAmount)) {
+      return t('insufficient_funds');
+    } else {
+      return undefined;
+    }
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
@@ -269,55 +264,57 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   return (
     <>
-      <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
-        <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
-        <div>
-          <AvailableBalanceUI
-            label={availableBalanceLabel}
-            balance={transferableBalance?.toString() || '0'}
-            tokenSymbol={USDTSymbol}
-            onClick={handleClickBalance}
+      {currency && (
+        <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
+          <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
+          <div>
+            <AvailableBalanceUI
+              label={availableBalanceLabel}
+              balance={transferableBalance?.toString() || '0'}
+              tokenSymbol={currency.symbol}
+              onClick={handleClickBalance}
+            />
+            <TokenField
+              id={TRANSFER_AMOUNT}
+              {...register(TRANSFER_AMOUNT, {
+                onChange: (e) => handleUpdateUsdAmount(e.target.value),
+                required: {
+                  value: true,
+                  message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
+                },
+                validate: (value) => validateTransferAmount(value)
+              })}
+              error={!!errors[TRANSFER_AMOUNT]}
+              helperText={errors[TRANSFER_AMOUNT]?.message}
+              label={currency.symbol}
+              approxUSD={`≈ ${approxUsdValue}`}
+            />
+          </div>
+          <Chains
+            chainOptions={fromChains}
+            label={t('transfer_page.cross_chain_transfer_form.from_chain')}
+            selectedChain={fromChain}
+            onChange={handleSetFromChain}
           />
-          <TokenField
-            id={TRANSFER_AMOUNT}
-            {...register(TRANSFER_AMOUNT, {
-              onChange: (e) => handleUpdateUsdAmount(e.target.value),
-              required: {
-                value: true,
-                message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
-              },
-              validate: (value) => validateTransferAmount(value)
-            })}
-            error={!!errors[TRANSFER_AMOUNT]}
-            helperText={errors[TRANSFER_AMOUNT]?.message}
-            label={USDTSymbol}
-            approxUSD={`≈ ${approxUsdValue}`}
+          <Chains
+            chainOptions={toChains}
+            label={t('transfer_page.cross_chain_transfer_form.to_chain')}
+            selectedChain={toChain}
+            onChange={handleSetToChain}
           />
-        </div>
-        <Chains
-          chainOptions={fromChains}
-          label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-          selectedChain={fromChain}
-          onChange={handleSetFromChain}
-        />
-        <Chains
-          chainOptions={toChains}
-          label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-          selectedChain={toChain}
-          onChange={handleSetToChain}
-        />
-        <Accounts
-          label={t('transfer_page.cross_chain_transfer_form.target_account')}
-          callbackFunction={setDestination}
-        />
-        <SubmitButton
-          disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
-          pending={submitStatus === STATUSES.PENDING}
-          onClick={handleConfirmClick}
-        >
-          {selectedAccount ? t('transfer') : t('connect_wallet')}
-        </SubmitButton>
-      </form>
+          <Accounts
+            label={t('transfer_page.cross_chain_transfer_form.target_account')}
+            callbackFunction={setDestination}
+          />
+          <SubmitButton
+            disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
+            pending={submitStatus === STATUSES.PENDING}
+            onClick={handleConfirmClick}
+          >
+            {selectedAccount ? t('transfer') : t('connect_wallet')}
+          </SubmitButton>
+        </form>
+      )}
       {submitStatus === STATUSES.REJECTED && submitError && (
         <ErrorModal
           open={!!submitError}
