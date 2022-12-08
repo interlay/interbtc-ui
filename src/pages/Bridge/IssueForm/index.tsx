@@ -200,28 +200,26 @@ const IssueForm = (): JSX.Element | null => {
     // Deselect checkbox when required btcAmount exceeds capacity
     if (requestLimits) {
       const monetaryBtcAmount = new BitcoinAmount(btcAmount);
-      const requiredTokenAmount = monetaryBtcAmount.sub(monetaryBtcAmount.mul(feeRate));
-      if (requiredTokenAmount.gt(requestLimits.singleVaultMaxIssuable)) {
+      if (monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable)) {
         setSelectVaultManually(false);
       }
     }
-  }, [btcAmount, feeRate, requestLimits]);
+  }, [btcAmount, requestLimits]);
   // ray test touch >
 
   // ray test touch <
   React.useEffect(() => {
     // Vault selection validation
     const monetaryBtcAmount = new BitcoinAmount(btcAmount);
-    const wrappedTokenAmount = monetaryBtcAmount.sub(monetaryBtcAmount.mul(feeRate));
 
     if (selectVaultManually && vault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
-    } else if (selectVaultManually && vault?.[1].lt(wrappedTokenAmount)) {
+    } else if (selectVaultManually && vault?.[1].lt(monetaryBtcAmount)) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
     } else {
       clearErrors(VAULT_SELECTION);
     }
-  }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
+  }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount]);
   // ray test touch >
 
   const hasIssuableToken = !requestLimits?.singleVaultMaxIssuable.isZero();
@@ -329,7 +327,7 @@ const IssueForm = (): JSX.Element | null => {
         await requestLimitsRefetch();
         await trigger(BTC_AMOUNT);
 
-        const wrappedTokenAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
+        const monetaryBtcAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
         const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
         let vaultId: InterbtcPrimitivesVaultId;
 
@@ -339,7 +337,7 @@ const IssueForm = (): JSX.Element | null => {
           }
           vaultId = vault[0];
         } else {
-          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
+          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), monetaryBtcAmount);
         }
         // ray test touch >
 
@@ -350,7 +348,7 @@ const IssueForm = (): JSX.Element | null => {
         );
 
         const result = await window.bridge.issue.request(
-          wrappedTokenAmount,
+          monetaryBtcAmount,
           vaultId.accountId,
           collateralToken,
           false, // default
@@ -374,7 +372,7 @@ const IssueForm = (): JSX.Element | null => {
     const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
     // ray test touch <
-    const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
+    const isSelectVaultCheckboxDisabled = monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable);
     // ray test touch >
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
@@ -435,7 +433,7 @@ const IssueForm = (): JSX.Element | null => {
             />
             <Vaults
               label={t('select_vault')}
-              requiredCapacity={wrappedTokenAmount.toString(true)}
+              requiredCapacity={monetaryBtcAmount.toString(true)}
               isShown={selectVaultManually}
               onSelectionCallback={setVault}
               error={errors[VAULT_SELECTION]}
