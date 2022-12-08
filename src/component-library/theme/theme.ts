@@ -246,17 +246,29 @@ const theme = {
         warning: 'var(--colors-meter-bar-warning-color)',
         success: 'var(--colors-meter-bar-success-color)'
       },
-      bg: `linear-gradient(270deg, 
+      primary: {
+        bg: `linear-gradient(270deg, 
           var(--colors-meter-bar-success-color) 0%, 
           var(--colors-meter-bar-warning-color) 50%, 
-          var(--colors-meter-bar-error-color) 100%)`,
+          var(--colors-meter-bar-error-color) 100%)`
+      },
+      secondary: {
+        bg: 'var(--colors-neutral-lighter-grey)'
+      },
       height: '10px',
       radius: 'var(--rounded-full)',
       indicator: {
         border: {
-          left: '10px solid transparent',
-          right: '10px solid transparent',
-          bottom: '18px solid var(--colors-meter-bar-indicator-color)'
+          left: '8px solid transparent',
+          right: '8px solid transparent',
+          bottom: '8px solid var(--colors-meter-bar-indicator-color)'
+        },
+        color: 'var(--colors-meter-bar-indicator-color)',
+        primary: {
+          marginTop: '12px'
+        },
+        secondary: {
+          marginTop: '4px'
         }
       },
       separator: {
@@ -353,6 +365,9 @@ const theme = {
       bg: 'var(--colors-tooltip-tip-bg)',
       width: '5px'
     }
+  },
+  divider: {
+    bg: 'var(--colors-border)'
   }
 };
 

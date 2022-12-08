@@ -60,6 +60,7 @@ type UseLoanFormData = {
   };
 };
 
+// TODO: reduce GOVERNANCE for fees from max amount
 const useLoanFormData = (
   loanAction: BorrowAction | LendAction,
   asset: LoanAsset,
@@ -99,7 +100,8 @@ const useLoanFormData = (
     assetAmount: {
       available: assetBalance,
       min: minAmount,
-      max: maxAmount
+      // MEMO: checks for negative values
+      max: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount
     }
   };
 };

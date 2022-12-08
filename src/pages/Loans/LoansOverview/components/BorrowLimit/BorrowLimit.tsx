@@ -2,19 +2,17 @@ import { CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 
-import { displayMonetaryAmount, formatUSD } from '@/common/utils/utils';
+import { displayMonetaryAmount, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Alert, DlGroup, Dt } from '@/component-library';
 import { useAccountBorrowLimit } from '@/pages/Loans/LoansOverview/hooks/use-get-account-borrow-limit';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { useGetAccountHealthFactor } from '../../hooks/use-get-account-health-factor';
+import { useGetLTV } from '../../hooks/use-get-ltv';
 import { isBorrowAsset } from '../../utils/is-loan-asset';
-import { LoanScore } from '../LoanScore';
+import { LTVMeter } from '../LTVMeter.tsx';
 import { StyledDd, StyledDl } from './BorrowLimit.style';
-
-const LIQUIDATION_ALERT_SCORE = 1.5;
 
 type BorrowLimitProps = {
   loanAction: LoanAction;
@@ -33,27 +31,27 @@ const BorrowLimit = ({
 }: BorrowLimitProps): JSX.Element | null => {
   const { t } = useTranslation();
 
-  const { data: borrowLimitUSD, getBorrowLimitUSD } = useAccountBorrowLimit();
-  const { getHealthFactor } = useGetAccountHealthFactor();
+  const { data: currentBorrowLimit, getBorrowLimitUSD } = useAccountBorrowLimit();
+  const { data: currentLTV, getLTV } = useGetLTV();
 
   const newBorrowLimit = getBorrowLimitUSD({ type: loanAction, amount: actionAmount, asset });
-  const healthFactor = getHealthFactor({ type: loanAction, amount: actionAmount, asset });
+  const newLTV = getLTV({ type: loanAction, amount: actionAmount, asset });
 
-  if (!healthFactor || !borrowLimitUSD || !newBorrowLimit) {
+  if (!currentLTV || !newLTV || !currentBorrowLimit || !newBorrowLimit) {
     return null;
   }
 
-  const { status, statusLabel, value, valueLabel } = healthFactor;
+  const hasLiquidationAlert = shouldDisplayLiquidationAlert && isBorrowAsset(loanAction) && newLTV.status === 'error';
 
-  const hasLiquidationAlert =
-    shouldDisplayLiquidationAlert && isBorrowAsset(loanAction) && value < LIQUIDATION_ALERT_SCORE;
+  const currentLTVLabel = formatPercentage(currentLTV.value);
+  const newLTVLabel = formatPercentage(newLTV.value);
 
-  const currentBorrowLimitLabel = formatUSD(borrowLimitUSD.toNumber(), { compact: true });
+  const currentBorrowLimitLabel = formatUSD(currentBorrowLimit.toNumber(), { compact: true });
   const newBorrowLimitLabel = formatUSD(newBorrowLimit.toNumber(), { compact: true });
 
   const assetPrice = getTokenPrice(prices, asset.currency.ticker);
   const capacityUSD = asset.availableCapacity.toBig().mul(assetPrice?.usd || 0);
-  const isExceedingBorrowingLiquidity = loanAction === 'borrow' && borrowLimitUSD.gt(capacityUSD);
+  const isExceedingBorrowingLiquidity = loanAction === 'borrow' && newBorrowLimit.gt(capacityUSD);
 
   return (
     <StyledDl direction='column'>
@@ -65,8 +63,8 @@ const BorrowLimit = ({
       )}
       <DlGroup justifyContent='space-between'>
         <Dt>Borrow Limit</Dt>
-        <StyledDd $status={status}>
-          {borrowLimitUSD && (
+        <StyledDd $status={newLTV.status}>
+          {currentBorrowLimit && (
             <>
               <span>{currentBorrowLimitLabel}</span>
               <span>--&gt;</span>
@@ -76,16 +74,21 @@ const BorrowLimit = ({
         </StyledDd>
       </DlGroup>
       <DlGroup justifyContent='space-between'>
-        <Dt>Health Status</Dt>
-        <StyledDd $status={status}>
-          {statusLabel} ({valueLabel})
+        <Dt>LTV</Dt>
+        <StyledDd $status={newLTV.status}>
+          {currentLTV && (
+            <>
+              <span>{currentLTVLabel}</span>
+              <span>--&gt;</span>
+            </>
+          )}
+          <span>{newLTVLabel}</span>
         </StyledDd>
       </DlGroup>
-      <LoanScore score={value} aria-label='loan score' />
-
+      <LTVMeter value={newLTV.value} ranges={newLTV.ranges} />
       {hasLiquidationAlert && (
         <Alert status='error'>
-          {t('loans.action_will_recude_health_score', {
+          {t('loans.action_liquidation_risk', {
             action: loanAction === 'borrow' ? t('loans.borrowing') : t('loans.withdrawing')
           })}
         </Alert>

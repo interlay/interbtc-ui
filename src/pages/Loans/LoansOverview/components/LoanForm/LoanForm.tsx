@@ -27,17 +27,20 @@ import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
 import { StyledFormWrapper } from './LoanForm.style';
 
+// The borrow limit component is only displayed when
+// loan form is openned while lending an asset that is
+// being used as collateral or while borrowing an asset
+// when there are assets added as collateral
 const shouldShowBorrowLimit = (
   variant: LoanAction,
-  borrowPositions?: BorrowPosition[],
+  hasCollateral: boolean,
   position?: LendPosition | BorrowPosition
 ) => {
-  const hasBorrowPositions = !!borrowPositions?.length;
   const isLendingAsset = isLendAsset(variant);
   const isBorrowingAsset = !isLendingAsset;
-  const isCollateralAsset = isLendAsset(variant) && (position as LendPosition)?.isCollateral;
+  const isCollateralAsset = isLendingAsset && (position as LendPosition)?.isCollateral;
 
-  return (hasBorrowPositions && isCollateralAsset) || isBorrowingAsset;
+  return isCollateralAsset || (isBorrowingAsset && hasCollateral);
 };
 
 type LoanSchemaParams = LoanBorrowSchemaParams &
@@ -118,7 +121,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const { t } = useTranslation();
   const {
     refetch,
-    data: { borrowPositions }
+    data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
@@ -170,7 +173,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
 
   const handleChange = () => setMaxAmount(false);
 
-  const showBorrowLimit = shouldShowBorrowLimit(variant, borrowPositions, position);
+  const showBorrowLimit = shouldShowBorrowLimit(variant, hasCollateral, position);
 
   return (
     <>

@@ -80,4 +80,17 @@ const issuesQuery = (where?: string): string => `
   }
 `;
 
-export default issuesQuery;
+const issuesCountQuery = (where?: string): string => `{
+  issuesConnection(orderBy: id_ASC, where: {${where ? `, ${where}` : ''}}) {
+    totalCount
+  }
+}
+`;
+
+const issueIdsQuery = (where?: string): string => `{
+  issues(orderBy: request_timestamp_DESC, where: {${where ? `, ${where}` : ''}}) {
+    id
+  }
+}`;
+
+export { issueIdsQuery, issuesCountQuery, issuesQuery };

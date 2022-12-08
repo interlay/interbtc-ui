@@ -7,6 +7,7 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
@@ -113,7 +114,10 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
       {
         Header: t('id'),
         accessor: 'id',
-        classNames: ['text-center']
+        classNames: ['text-center'],
+        Cell: function FormattedCell({ value }: { value: string }) {
+          return <AddressWithCopyUI address={value} />;
+        }
       },
       {
         Header: t('date_created'),
@@ -170,7 +174,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
         accessor: 'userParachainAddress',
         classNames: ['text-center'],
         Cell: function FormattedCell({ value }: { value: string }) {
-          return <>{shortAddress(value)}</>;
+          return <AddressWithCopyUI address={value} />;
         }
       },
       {
