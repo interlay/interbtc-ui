@@ -8,7 +8,7 @@ import { TreasuryAction } from '@/types/general';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 
-import VaultSelector from './VaultsSelector';
+import VaultSelect from './VaultSelect';
 
 interface Props {
   label: string;
@@ -21,7 +21,7 @@ interface Props {
   // ray test touch >
 }
 
-const Vaults = ({
+const VaultsSelector = ({
   label,
   requiredCapacity,
   isShown,
@@ -77,7 +77,7 @@ const Vaults = ({
       {/* Keeping the component mounted at all times to prevent refetching of the vaults */}
       {isShown && (
         <>
-          <VaultSelector
+          <VaultSelect
             isPending={vaultsStatus === STATUSES.PENDING}
             label={label}
             selectedVault={selectedVault}
@@ -102,4 +102,4 @@ const Vaults = ({
   );
 };
 
-export default Vaults;
+export default VaultsSelector;

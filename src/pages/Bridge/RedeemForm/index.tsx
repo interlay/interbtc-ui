@@ -35,7 +35,7 @@ import Toggle from '@/components/Toggle';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 // ray test touch <
-import Vaults from '@/components/Vaults';
+import VaultsSelector from '@/components/VaultsSelector';
 // ray test touch >
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
@@ -460,7 +460,7 @@ const RedeemForm = (): JSX.Element | null => {
                 checked={selectVaultManually}
                 onChange={handleSelectVaultCheckboxChange}
               />
-              <Vaults
+              <VaultsSelector
                 label={t('select_vault')}
                 requiredCapacity={monetaryWrappedTokenAmount}
                 isShown={selectVaultManually}

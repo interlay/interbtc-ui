@@ -36,7 +36,7 @@ import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayLink from '@/components/UI/InterlayLink';
-import Vaults from '@/components/Vaults';
+import VaultsSelector from '@/components/VaultsSelector';
 import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
@@ -428,7 +428,7 @@ const IssueForm = (): JSX.Element | null => {
               checked={selectVaultManually}
               onChange={handleSelectVaultCheckboxChange}
             />
-            <Vaults
+            <VaultsSelector
               label={t('select_vault')}
               requiredCapacity={monetaryBtcAmount}
               isShown={selectVaultManually}
