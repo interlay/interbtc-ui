@@ -15,6 +15,7 @@ import { firstValueFrom } from 'rxjs';
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { CoinIcon } from '@/component-library';
 import Accounts from '@/components/Accounts';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
 import Chains, { ChainOption } from '@/components/Chains';
@@ -79,8 +80,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     const tokens = xcmBridge.router.getAvailableTokens({ from: fromChain.type, to: toChain.type });
     const supportedCurrency = xcmBridge.findAdapter(fromChain.type).tokens[tokens[0]];
 
-    console.log('tokens, supportedCurrency', tokens, supportedCurrency);
-
     setCurrency(supportedCurrency);
   }, [fromChain, toChain, xcmBridge]);
 
@@ -91,8 +90,6 @@ const CrossChainTransferForm = (): JSX.Element => {
       const balance: any = await firstValueFrom(
         xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, destination.address)
       );
-
-      console.log('destination balance', balance);
 
       setDestinationBalance(newMonetaryAmount(balance.free.toString(), currency, true));
     };
@@ -123,7 +120,11 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!xcmProvider) return;
 
     const availableFromChains: Array<ChainOption> = xcmBridge.adapters.map((adapter: any) => {
-      return { type: adapter.chain.id, name: adapter.chain.id };
+      return {
+        type: adapter.chain.id,
+        name: adapter.chain.id,
+        icon: <CoinIcon coin={adapter.chain.id === 'interlay' ? 'INTR' : 'DOT'} size='small' />
+      };
     });
 
     setFromChains(availableFromChains);
@@ -137,7 +138,11 @@ const CrossChainTransferForm = (): JSX.Element => {
     const destinationChains = xcmBridge.router.getDestinationChains({ from: fromChain.type });
 
     const availableToChains = destinationChains.map((chain: any) => {
-      return { type: chain.id, name: chain.id };
+      return {
+        type: chain.id,
+        name: chain.id,
+        icon: <CoinIcon coin={chain.id === 'interlay' ? 'INTR' : 'DOT'} size='small' />
+      };
     });
 
     setToChains(availableToChains);
