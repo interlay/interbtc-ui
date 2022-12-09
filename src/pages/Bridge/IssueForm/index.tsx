@@ -434,9 +434,7 @@ const IssueForm = (): JSX.Element | null => {
               isShown={selectVaultManually}
               onSelectionCallback={setSelectedVault}
               error={errors[VAULT_SELECTION]}
-              // ray test touch <
               treasuryAction='issue'
-              // ray test touch >
             />
           </div>
           <PriceInfo

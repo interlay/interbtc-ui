@@ -16,9 +16,7 @@ interface Props {
   isShown: boolean;
   onSelectionCallback: (vault: VaultApiType | undefined) => void;
   error?: FieldError;
-  // ray test touch <
   treasuryAction: TreasuryAction;
-  // ray test touch >
 }
 
 const VaultsSelector = ({
@@ -57,7 +55,6 @@ const VaultsSelector = ({
   React.useEffect(() => {
     (async () => {
       setVaultsStatus(STATUSES.PENDING);
-      // ray test touch <
       let theAllVaults;
       if (treasuryAction === 'issue') {
         theAllVaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
@@ -66,7 +63,6 @@ const VaultsSelector = ({
       } else {
         throw new Error(`Invalid treasuryAction (${treasuryAction})`);
       }
-      // ray test touch >
       setAllVaults(Array.from(theAllVaults));
       setVaultsStatus(STATUSES.RESOLVED);
     })();

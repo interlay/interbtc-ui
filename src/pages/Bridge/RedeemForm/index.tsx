@@ -466,9 +466,7 @@ const RedeemForm = (): JSX.Element | null => {
                 isShown={selectVaultManually}
                 onSelectionCallback={setSelectedVault}
                 error={errors[VAULT_SELECTION]}
-                // ray test touch <
                 treasuryAction='redeem'
-                // ray test touch >
               />
             </div>
           )}
