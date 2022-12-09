@@ -120,7 +120,7 @@ const RedeemForm = (): JSX.Element | null => {
   // ray test touch <
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
 
-  const [vault, setVault] = React.useState<VaultApiType | undefined>();
+  const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
 
   React.useEffect(() => {
     if (!wrappedTokenAmount) return;
@@ -141,14 +141,14 @@ const RedeemForm = (): JSX.Element | null => {
     // Vault selection validation
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
 
-    if (selectVaultManually && vault === undefined) {
+    if (selectVaultManually && selectedVault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
-    } else if (selectVaultManually && vault?.[1].lt(monetaryWrappedTokenAmount)) {
+    } else if (selectVaultManually && selectedVault?.[1].lt(monetaryWrappedTokenAmount)) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
     } else {
       clearErrors(VAULT_SELECTION);
     }
-  }, [selectVaultManually, vault, setError, clearErrors, t, wrappedTokenAmount]);
+  }, [selectVaultManually, selectedVault, setError, clearErrors, t, wrappedTokenAmount]);
   // ray test touch >
 
   React.useEffect(() => {
@@ -465,7 +465,7 @@ const RedeemForm = (): JSX.Element | null => {
                 label={t('select_vault')}
                 requiredCapacity={monetaryWrappedTokenAmount}
                 isShown={selectVaultManually}
-                onSelectionCallback={setVault}
+                onSelectionCallback={setSelectedVault}
                 error={errors[VAULT_SELECTION]}
               />
             </div>

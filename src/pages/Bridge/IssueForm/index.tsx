@@ -125,7 +125,7 @@ const IssueForm = (): JSX.Element | null => {
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
   // ray test touch <
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
-  const [vault, setVault] = React.useState<VaultApiType | undefined>();
+  const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
   // ray test touch >
 
   const {
@@ -212,14 +212,14 @@ const IssueForm = (): JSX.Element | null => {
     // Vault selection validation
     const monetaryBtcAmount = new BitcoinAmount(btcAmount);
 
-    if (selectVaultManually && vault === undefined) {
+    if (selectVaultManually && selectedVault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
-    } else if (selectVaultManually && vault?.[1].lt(monetaryBtcAmount)) {
+    } else if (selectVaultManually && selectedVault?.[1].lt(monetaryBtcAmount)) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
     } else {
       clearErrors(VAULT_SELECTION);
     }
-  }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount]);
+  }, [selectVaultManually, selectedVault, setError, clearErrors, t, btcAmount]);
   // ray test touch >
 
   const hasIssuableToken = !requestLimits?.singleVaultMaxIssuable.isZero();
@@ -330,10 +330,10 @@ const IssueForm = (): JSX.Element | null => {
         let vaultId: InterbtcPrimitivesVaultId;
 
         if (selectVaultManually) {
-          if (!vault) {
+          if (!selectedVault) {
             throw new Error('Specific vault is not selected!');
           }
-          vaultId = vault[0];
+          vaultId = selectedVault[0];
         } else {
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), monetaryBtcAmount);
         }
@@ -433,7 +433,7 @@ const IssueForm = (): JSX.Element | null => {
               label={t('select_vault')}
               requiredCapacity={monetaryBtcAmount}
               isShown={selectVaultManually}
-              onSelectionCallback={setVault}
+              onSelectionCallback={setSelectedVault}
               error={errors[VAULT_SELECTION]}
             />
             {/* ray test touch > */}
