@@ -450,7 +450,6 @@ const RedeemForm = (): JSX.Element | null => {
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />
           <ParachainStatusInfo status={parachainStatus} />
-          {/* ray test touch < */}
           {!premiumRedeemSelected && (
             <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
               <Checkbox
@@ -467,10 +466,12 @@ const RedeemForm = (): JSX.Element | null => {
                 isShown={selectVaultManually}
                 onSelectionCallback={setSelectedVault}
                 error={errors[VAULT_SELECTION]}
+                // ray test touch <
+                treasuryAction='redeem'
+                // ray test touch >
               />
             </div>
           )}
-          {/* ray test touch > */}
           <TextField
             id={BTC_ADDRESS}
             type='text'

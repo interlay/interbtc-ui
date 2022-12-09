@@ -420,7 +420,6 @@ const IssueForm = (): JSX.Element | null => {
           </div>
           <ParachainStatusInfo status={parachainStatus} />
           <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
-            {/* ray test touch < */}
             <Checkbox
               label={t('issue_page.manually_select_vault')}
               labelSide={CheckboxLabelSide.LEFT}
@@ -435,8 +434,10 @@ const IssueForm = (): JSX.Element | null => {
               isShown={selectVaultManually}
               onSelectionCallback={setSelectedVault}
               error={errors[VAULT_SELECTION]}
+              // ray test touch <
+              treasuryAction='issue'
+              // ray test touch >
             />
-            {/* ray test touch > */}
           </div>
           <PriceInfo
             title={
