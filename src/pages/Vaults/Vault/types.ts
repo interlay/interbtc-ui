@@ -1,13 +1,12 @@
 import { Status } from '@/component-library/utils/prop-types';
+import { TreasuryAction } from '@/types/general.d';
 
 type CollateralActions = 'deposit' | 'withdraw';
 
-type TreasuryActions = 'issue' | 'redeem';
-
-type VaultActions = CollateralActions | TreasuryActions;
+type VaultActions = CollateralActions | TreasuryAction;
 
 type CollateralStatus = Status;
 
 type CollateralStatusRanges = Record<CollateralStatus, { min: number; max: number }>;
 
-export type { CollateralActions, CollateralStatus, CollateralStatusRanges, TreasuryActions, VaultActions };
+export type { CollateralActions, CollateralStatus, CollateralStatusRanges, VaultActions };
