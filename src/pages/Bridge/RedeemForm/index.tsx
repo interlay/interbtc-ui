@@ -20,8 +20,8 @@ import {
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
-// ray test touch <
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
+// ray test touch <
 import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
 // ray test touch >
 import ErrorFallback from '@/components/ErrorFallback';
@@ -432,7 +432,6 @@ const RedeemForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          {/* ray test touch < */}
           <div>
             <AvailableBalanceUI
               label={t('redeem_page.maximum_in_single_request')}
@@ -458,7 +457,6 @@ const RedeemForm = (): JSX.Element | null => {
               helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
             />
           </div>
-          {/* ray test touch > */}
           <ParachainStatusInfo status={parachainStatus} />
           {!premiumRedeemSelected && (
             <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
