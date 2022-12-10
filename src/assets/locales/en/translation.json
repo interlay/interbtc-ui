@@ -130,6 +130,7 @@
   "canceled": "Canceled",
   "fees": "Fees",
   "redeem_page": {
+    "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
     "to_redeem_interbtc": "To redeem your {{wrappedTokenSymbol}} , you must now pick one of the two options:",

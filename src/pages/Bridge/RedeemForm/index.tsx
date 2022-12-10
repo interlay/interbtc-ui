@@ -21,6 +21,7 @@ import {
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
 // ray test touch <
+import AvailableBalanceUI from '@/components/AvailableBalanceUI';
 import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
 // ray test touch >
 import ErrorFallback from '@/components/ErrorFallback';
@@ -431,24 +432,33 @@ const RedeemForm = (): JSX.Element | null => {
               wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
             })}
           </FormTitle>
-          <TokenField
-            id={WRAPPED_TOKEN_AMOUNT}
-            label={WRAPPED_TOKEN_SYMBOL}
-            min={0}
-            {...register(WRAPPED_TOKEN_AMOUNT, {
-              required: {
-                value: true,
-                message: t('redeem_page.please_enter_amount')
-              },
-              validate: (value) => validateForm(value)
-            })}
-            approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
-              monetaryWrappedTokenAmount || BitcoinAmount.zero(),
-              usdPrice
-            )}`}
-            error={!!errors[WRAPPED_TOKEN_AMOUNT]}
-            helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
-          />
+          {/* ray test touch < */}
+          <div>
+            <AvailableBalanceUI
+              label={t('redeem_page.maximum_in_single_request')}
+              balance={displayMonetaryAmount(maxRedeemableCapacity)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
+            />
+            <TokenField
+              id={WRAPPED_TOKEN_AMOUNT}
+              label={WRAPPED_TOKEN_SYMBOL}
+              min={0}
+              {...register(WRAPPED_TOKEN_AMOUNT, {
+                required: {
+                  value: true,
+                  message: t('redeem_page.please_enter_amount')
+                },
+                validate: (value) => validateForm(value)
+              })}
+              approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
+                monetaryWrappedTokenAmount || BitcoinAmount.zero(),
+                usdPrice
+              )}`}
+              error={!!errors[WRAPPED_TOKEN_AMOUNT]}
+              helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
+            />
+          </div>
+          {/* ray test touch > */}
           <ParachainStatusInfo status={parachainStatus} />
           {!premiumRedeemSelected && (
             <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
