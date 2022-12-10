@@ -388,6 +388,16 @@ const IssueForm = (): JSX.Element | null => {
             })}
           </FormTitle>
           <div>
+            <AvailableBalanceUI
+              label={t('issue_page.maximum_in_single_request')}
+              balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
+            />
+            <AvailableBalanceUI
+              label={t('issue_page.maximum_total_request')}
+              balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
+            />
             <TokenField
               id={BTC_AMOUNT}
               label='BTC'
@@ -406,16 +416,6 @@ const IssueForm = (): JSX.Element | null => {
               error={!!errors[BTC_AMOUNT]}
               helperText={getTokenFieldHelperText(errors[BTC_AMOUNT]?.message)}
               helperTextClassName={clsx({ 'h-12': !hasIssuableToken })}
-            />
-            <AvailableBalanceUI
-              label={t('issue_page.maximum_in_single_request')}
-              balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
-              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
-            />
-            <AvailableBalanceUI
-              label={t('issue_page.maximum_total_request')}
-              balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
-              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
             />
           </div>
           <ParachainStatusInfo status={parachainStatus} />
