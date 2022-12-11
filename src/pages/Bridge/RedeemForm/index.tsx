@@ -240,11 +240,7 @@ const RedeemForm = (): JSX.Element | null => {
     };
 
     const handleSelectVaultCheckboxChange = () => {
-      // ray test touch <
-      if (!isSelectVaultCheckboxDisabled) {
-        // ray test touch >
-        setSelectVaultManually((prev) => !prev);
-      }
+      setSelectVaultManually((prev) => !prev);
     };
 
     const onSubmit = async (data: RedeemFormData) => {
@@ -388,11 +384,9 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount || 0);
-    // ray test touch <
     const totalBTC = wrappedTokenAmount
       ? monetaryWrappedTokenAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero();
-    // ray test touch >
     const totalBTCInUSD = displayMonetaryAmountInUSDFormat(
       totalBTC,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd

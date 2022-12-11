@@ -305,11 +305,7 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const handleSelectVaultCheckboxChange = () => {
-      // ray test touch <
-      if (!isSelectVaultCheckboxDisabled) {
-        // ray test touch >
-        setSelectVaultManually((currentState) => !currentState);
-      }
+      setSelectVaultManually((prev) => !prev);
     };
 
     const onSubmit = async (data: IssueFormData) => {
