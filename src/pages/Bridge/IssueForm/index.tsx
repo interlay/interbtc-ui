@@ -321,23 +321,23 @@ const IssueForm = (): JSX.Element | null => {
     const onSubmit = async (data: IssueFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        // ray test touch <
         await requestLimitsRefetch();
         await trigger(BTC_AMOUNT);
 
         const monetaryBtcAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
         const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
-        let vaultId: InterbtcPrimitivesVaultId;
 
+        let vaultId: InterbtcPrimitivesVaultId;
         if (selectVaultManually) {
           if (!selectedVault) {
             throw new Error('Specific vault is not selected!');
           }
+          // ray test touch <
           vaultId = selectedVault[0];
+          // ray test touch >
         } else {
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), monetaryBtcAmount);
         }
-        // ray test touch >
 
         const collateralToken = await currencyIdToMonetaryCurrency(
           window.bridge.assetRegistry,

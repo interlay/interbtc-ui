@@ -266,24 +266,27 @@ const RedeemForm = (): JSX.Element | null => {
     const onSubmit = async (data: RedeemFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        const wrappedTokenAmount = new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]);
+        const monetaryWrappedTokenAmount = new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]);
 
         // Differentiate between premium and regular redeem
         let vaultId: InterbtcPrimitivesVaultId;
         if (premiumRedeemSelected) {
           const premiumRedeemVaults = await window.bridge.vaults.getPremiumRedeemVaults();
           // Select a vault from the premium redeem vault list
-          for (const [id, redeemableTokens] of premiumRedeemVaults) {
-            if (redeemableTokens.gte(wrappedTokenAmount)) {
+          for (const [id, redeemableTokenAmount] of premiumRedeemVaults) {
+            if (redeemableTokenAmount.gte(monetaryWrappedTokenAmount)) {
+              // ray test touch <
+              // TODO: the vault selection feature excludes the premium redeem case
               vaultId = id;
+              // ray test touch >
               break;
             }
           }
           if (vaultId === undefined) {
             let maxAmount = BitcoinAmount.zero();
-            for (const redeemableTokens of premiumRedeemVaults.values()) {
-              if (maxAmount.lt(redeemableTokens)) {
-                maxAmount = redeemableTokens;
+            for (const redeemableTokenAmount of premiumRedeemVaults.values()) {
+              if (maxAmount.lt(redeemableTokenAmount)) {
+                maxAmount = redeemableTokenAmount;
               }
             }
             setError(WRAPPED_TOKEN_AMOUNT, {
@@ -300,7 +303,7 @@ const RedeemForm = (): JSX.Element | null => {
           const updatedVaults = await window.bridge.vaults.getVaultsWithRedeemableTokens();
           const updatedMaxCapacity = updatedVaults.values().next().value;
 
-          if (wrappedTokenAmount.gte(updatedMaxCapacity)) {
+          if (monetaryWrappedTokenAmount.gte(updatedMaxCapacity)) {
             setError(WRAPPED_TOKEN_AMOUNT, {
               type: 'manual',
               message: t('redeem_page.request_exceeds_capacity', {
@@ -313,14 +316,16 @@ const RedeemForm = (): JSX.Element | null => {
             return;
           }
 
-          vaultId = getRandomVaultIdWithCapacity(Array.from(updatedVaults || new Map()), wrappedTokenAmount);
+          // ray test touch <
+          vaultId = getRandomVaultIdWithCapacity(Array.from(updatedVaults || new Map()), monetaryWrappedTokenAmount);
+          // ray test touch >
         }
 
         // FIXME: workaround to make premium redeem still possible
         const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
         // FIXME: a bit of a dirty workaround with the capacity
-        relevantVaults.set(vaultId, wrappedTokenAmount.mul(2));
-        const result = await window.bridge.redeem.request(wrappedTokenAmount, data[BTC_ADDRESS], vaultId);
+        relevantVaults.set(vaultId, monetaryWrappedTokenAmount.mul(2));
+        const result = await window.bridge.redeem.request(monetaryWrappedTokenAmount, data[BTC_ADDRESS], vaultId);
 
         // TODO: handle redeem aggregator
         const redeemRequest = result[0];

@@ -61,7 +61,7 @@ const VaultsSelector = ({
       } else if (treasuryAction === 'redeem') {
         theAllVaults = await window.bridge.vaults.getVaultsWithRedeemableTokens();
       } else {
-        throw new Error(`Invalid treasuryAction (${treasuryAction})`);
+        throw new Error(`Invalid treasuryAction (${treasuryAction})!`);
       }
       setAllVaults(Array.from(theAllVaults));
       setVaultsStatus(STATUSES.RESOLVED);

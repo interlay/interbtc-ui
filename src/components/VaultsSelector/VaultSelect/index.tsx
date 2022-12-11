@@ -119,6 +119,10 @@ const VaultSelect = ({ label, vaults, onChange, selectedVault, isPending, error 
             <SelectOptions className='h-28' open={open}>
               {!isLoading &&
                 vaults.map((vault: VaultApiType) => {
+                  // ray test touch <
+                  console.log('ray : ***** vault[0].toString() => ', vault[0].toString());
+                  console.log('ray : ***** vault[1].toString() => ', vault[1].toString());
+                  // ray test touch >
                   return (
                     <SelectOption key={vault[0].toString()} value={vault}>
                       {({ selected, active }) => (
