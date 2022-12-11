@@ -110,35 +110,27 @@ const RedeemForm = (): JSX.Element | null => {
 
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
 
-  // ray test touch <
   React.useEffect(() => {
     if (!wrappedTokenAmount) return;
     if (!maxRedeemableCapacity) return;
 
-    // Deselect the checkbox when the required wrapped token amount exceeds the capacity
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
     if (monetaryWrappedTokenAmount.gt(maxRedeemableCapacity)) {
       setSelectVaultManually(false);
     }
   }, [wrappedTokenAmount, maxRedeemableCapacity]);
-  // ray test touch >
 
   React.useEffect(() => {
     if (!wrappedTokenAmount) return;
     if (!setError) return;
     if (!clearErrors) return;
 
-    // Vault selection validation
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
 
     if (selectVaultManually && selectedVault === undefined) {
-      // ray test touch <
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
-      // ray test touch >
     } else if (selectVaultManually && selectedVault?.[1].lt(monetaryWrappedTokenAmount)) {
-      // ray test touch <
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
-      // ray test touch >
     } else {
       clearErrors(VAULT_SELECTION);
     }
@@ -308,7 +300,6 @@ const RedeemForm = (): JSX.Element | null => {
             return;
           }
 
-          // ray test touch <
           if (selectVaultManually) {
             if (!selectedVault) {
               throw new Error('Specific vault is not selected!');
@@ -317,7 +308,6 @@ const RedeemForm = (): JSX.Element | null => {
           } else {
             vaultId = getRandomVaultIdWithCapacity(Array.from(updatedVaults || new Map()), monetaryWrappedTokenAmount);
           }
-          // ray test touch >
         }
 
         // FIXME: workaround to make premium redeem still possible

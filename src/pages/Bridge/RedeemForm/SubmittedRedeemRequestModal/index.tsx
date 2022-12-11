@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import CloseIconButton from '@/components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
 import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
@@ -76,7 +77,7 @@ const SubmittedRedeemRequestModal = ({
                 )}`}
               </span>
             </div>
-            <div>
+            <div className={clsx('flex', 'items-center', 'justify-center', 'space-x-2')}>
               <label
                 htmlFor={USER_BTC_ADDRESS}
                 className={clsx(
@@ -84,15 +85,18 @@ const SubmittedRedeemRequestModal = ({
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
               >
-                {t('redeem_page.btc_destination_address')}
+                {t('redeem_page.btc_destination_address')}:
               </label>
-              <span
+              {/* ray test touch < */}
+              {/* <span
                 id={USER_BTC_ADDRESS}
                 // TODO: could componentize
                 className={clsx('block', 'p-2.5', 'border-2', 'font-medium', 'rounded-lg', 'text-center')}
               >
                 {request.userBTCAddress}
-              </span>
+              </span> */}
+              <AddressWithCopyUI id={USER_BTC_ADDRESS} address={request.userBTCAddress} />
+              {/* ray test touch > */}
             </div>
             <div>
               <p>{t('redeem_page.we_will_inform_you_btc')}</p>
