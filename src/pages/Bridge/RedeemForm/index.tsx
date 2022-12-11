@@ -61,9 +61,7 @@ const VAULT_SELECTION = 'vault-selection';
 type RedeemFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
   [BTC_ADDRESS]: string;
-  // ray test touch <
   [VAULT_SELECTION]: string;
-  // ray test touch >
 };
 
 const RedeemForm = (): JSX.Element | null => {
@@ -87,9 +85,7 @@ const RedeemForm = (): JSX.Element | null => {
     formState: { errors },
     watch,
     setError,
-    // ray test touch <
     clearErrors
-    // ray test touch >
   } = useForm<RedeemFormData>({
     mode: 'onChange'
   });
@@ -110,11 +106,11 @@ const RedeemForm = (): JSX.Element | null => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Redeem>();
 
-  // ray test touch <
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
 
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
 
+  // ray test touch <
   React.useEffect(() => {
     if (!wrappedTokenAmount) return;
     if (!maxRedeemableCapacity) return;
@@ -125,6 +121,7 @@ const RedeemForm = (): JSX.Element | null => {
       setSelectVaultManually(false);
     }
   }, [wrappedTokenAmount, maxRedeemableCapacity]);
+  // ray test touch >
 
   React.useEffect(() => {
     if (!wrappedTokenAmount) return;
@@ -135,14 +132,17 @@ const RedeemForm = (): JSX.Element | null => {
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
 
     if (selectVaultManually && selectedVault === undefined) {
+      // ray test touch <
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
+      // ray test touch >
     } else if (selectVaultManually && selectedVault?.[1].lt(monetaryWrappedTokenAmount)) {
+      // ray test touch <
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
+      // ray test touch >
     } else {
       clearErrors(VAULT_SELECTION);
     }
   }, [selectVaultManually, selectedVault, setError, clearErrors, t, wrappedTokenAmount]);
-  // ray test touch >
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -247,13 +247,13 @@ const RedeemForm = (): JSX.Element | null => {
       }
     };
 
-    // ray test touch <
     const handleSelectVaultCheckboxChange = () => {
+      // ray test touch <
       if (!isSelectVaultCheckboxDisabled) {
+        // ray test touch >
         setSelectVaultManually((prev) => !prev);
       }
     };
-    // ray test touch >
 
     const onSubmit = async (data: RedeemFormData) => {
       try {

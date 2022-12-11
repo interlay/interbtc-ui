@@ -123,10 +123,8 @@ const IssueForm = (): JSX.Element | null => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
-  // ray test touch <
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
-  // ray test touch >
 
   const {
     isIdle: requestLimitsIdle,
@@ -195,7 +193,6 @@ const IssueForm = (): JSX.Element | null => {
     })();
   }, [bridgeLoaded, dispatch, handleError, setError, t]);
 
-  // ray test touch <
   React.useEffect(() => {
     // Deselect checkbox when required btcAmount exceeds capacity
     if (requestLimits) {
@@ -205,9 +202,7 @@ const IssueForm = (): JSX.Element | null => {
       }
     }
   }, [btcAmount, requestLimits]);
-  // ray test touch >
 
-  // ray test touch <
   React.useEffect(() => {
     // Vault selection validation
     const monetaryBtcAmount = new BitcoinAmount(btcAmount);
@@ -220,7 +215,6 @@ const IssueForm = (): JSX.Element | null => {
       clearErrors(VAULT_SELECTION);
     }
   }, [selectVaultManually, selectedVault, setError, clearErrors, t, btcAmount]);
-  // ray test touch >
 
   const hasIssuableToken = !requestLimits?.singleVaultMaxIssuable.isZero();
 
@@ -310,13 +304,13 @@ const IssueForm = (): JSX.Element | null => {
       }
     };
 
-    // ray test touch <
     const handleSelectVaultCheckboxChange = () => {
+      // ray test touch <
       if (!isSelectVaultCheckboxDisabled) {
+        // ray test touch >
         setSelectVaultManually((currentState) => !currentState);
       }
     };
-    // ray test touch >
 
     const onSubmit = async (data: IssueFormData) => {
       try {
@@ -332,9 +326,7 @@ const IssueForm = (): JSX.Element | null => {
           if (!selectedVault) {
             throw new Error('Specific vault is not selected!');
           }
-          // ray test touch <
           vaultId = selectedVault[0];
-          // ray test touch >
         } else {
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), monetaryBtcAmount);
         }
@@ -369,9 +361,7 @@ const IssueForm = (): JSX.Element | null => {
     const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
     const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
-    // ray test touch <
     const isSelectVaultCheckboxDisabled = monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable);
-    // ray test touch >
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
