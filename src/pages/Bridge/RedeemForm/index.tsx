@@ -255,10 +255,7 @@ const RedeemForm = (): JSX.Element | null => {
           // Select a vault from the premium redeem vault list
           for (const [id, redeemableTokenAmount] of premiumRedeemVaults) {
             if (redeemableTokenAmount.gte(monetaryWrappedTokenAmount)) {
-              // ray test touch <
-              // TODO: the vault selection feature excludes the premium redeem case
               vaultId = id;
-              // ray test touch >
               break;
             }
           }
