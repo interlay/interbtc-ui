@@ -12,18 +12,14 @@ import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { togglePremiumRedeemAction } from '@/common/actions/redeem.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-// ray test touch <
 import { VaultApiType } from '@/common/types/vault.types';
-// ray test touch >
 import {
   displayMonetaryAmount,
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
-// ray test touch <
 import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
-// ray test touch >
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import FormTitle from '@/components/FormTitle';
@@ -35,9 +31,7 @@ import TextField from '@/components/TextField';
 import Toggle from '@/components/Toggle';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
-// ray test touch <
 import VaultsSelector from '@/components/VaultsSelector';
-// ray test touch >
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
@@ -62,9 +56,7 @@ import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
-// ray test touch <
 const VAULT_SELECTION = 'vault-selection';
-// ray test touch >
 
 type RedeemFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
@@ -317,7 +309,14 @@ const RedeemForm = (): JSX.Element | null => {
           }
 
           // ray test touch <
-          vaultId = getRandomVaultIdWithCapacity(Array.from(updatedVaults || new Map()), monetaryWrappedTokenAmount);
+          if (selectVaultManually) {
+            if (!selectedVault) {
+              throw new Error('Specific vault is not selected!');
+            }
+            vaultId = selectedVault[0];
+          } else {
+            vaultId = getRandomVaultIdWithCapacity(Array.from(updatedVaults || new Map()), monetaryWrappedTokenAmount);
+          }
           // ray test touch >
         }
 
