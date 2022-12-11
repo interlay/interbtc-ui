@@ -87,16 +87,7 @@ const SubmittedRedeemRequestModal = ({
               >
                 {t('redeem_page.btc_destination_address')}:
               </label>
-              {/* ray test touch < */}
-              {/* <span
-                id={USER_BTC_ADDRESS}
-                // TODO: could componentize
-                className={clsx('block', 'p-2.5', 'border-2', 'font-medium', 'rounded-lg', 'text-center')}
-              >
-                {request.userBTCAddress}
-              </span> */}
               <AddressWithCopyUI id={USER_BTC_ADDRESS} address={request.userBTCAddress} />
-              {/* ray test touch > */}
             </div>
             <div>
               <p>{t('redeem_page.we_will_inform_you_btc')}</p>
