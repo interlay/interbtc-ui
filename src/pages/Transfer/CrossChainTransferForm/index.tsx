@@ -29,8 +29,7 @@ import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-
-import { useXcmBridge } from '../../../utils/hooks/api/xcm/use-xcm-bridge';
+import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
@@ -58,7 +57,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const { xcmBridge, xcmProvider } = useXcmBridge();
+  const { XCMBridge, XCMProvider } = useXCMBridge();
 
   const {
     register,
@@ -77,55 +76,55 @@ const CrossChainTransferForm = (): JSX.Element => {
   useEffect(() => {
     if (!fromChain) return;
     if (!toChain) return;
-    if (!xcmBridge) return;
+    if (!XCMBridge) return;
 
-    const tokens = xcmBridge.router.getAvailableTokens({ from: fromChain.type, to: toChain.type });
-    const supportedCurrency = xcmBridge.findAdapter(fromChain.type).tokens[tokens[0]];
+    const tokens = XCMBridge.router.getAvailableTokens({ from: fromChain.type, to: toChain.type });
+    const supportedCurrency = XCMBridge.findAdapter(fromChain.type).tokens[tokens[0]];
 
     setCurrency(supportedCurrency);
-  }, [fromChain, toChain, xcmBridge]);
+  }, [fromChain, toChain, XCMBridge]);
 
   useEffect(() => {
     if (!currency) return;
     if (!destination) return;
     if (!fromChain) return;
-    if (!xcmBridge) return;
+    if (!XCMBridge) return;
     if (!selectedAccount) return;
 
     const getDestinationBalance = async () => {
       const balance: any = await firstValueFrom(
-        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, destination.address)
+        XCMBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, destination.address)
       );
 
       setDestinationBalance(newMonetaryAmount(balance.free.toString(), currency, true));
     };
 
     getDestinationBalance();
-  }, [currency, destination, fromChain, xcmBridge, selectedAccount]);
+  }, [currency, destination, fromChain, XCMBridge, selectedAccount]);
 
   useEffect(() => {
-    if (!xcmBridge) return;
+    if (!XCMBridge) return;
     if (!fromChain) return;
     if (!selectedAccount) return;
 
     const getBalance = async () => {
-      if (!currency || !fromChain || !selectedAccount || !xcmBridge) return;
+      if (!currency || !fromChain || !selectedAccount || !XCMBridge) return;
 
       const balance: any = await firstValueFrom(
-        xcmBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, selectedAccount.address)
+        XCMBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, selectedAccount.address)
       );
 
       setTransferableBalance(balance.free);
     };
 
     getBalance();
-  }, [currency, fromChain, selectedAccount, xcmBridge]);
+  }, [currency, fromChain, selectedAccount, XCMBridge]);
 
   useEffect(() => {
-    if (!xcmBridge) return;
-    if (!xcmProvider) return;
+    if (!XCMBridge) return;
+    if (!XCMProvider) return;
 
-    const availableFromChains: Array<ChainOption> = xcmBridge.adapters.map((adapter: any) => {
+    const availableFromChains: Array<ChainOption> = XCMBridge.adapters.map((adapter: any) => {
       return {
         type: adapter.chain.id,
         name: adapter.chain.id,
@@ -135,13 +134,13 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     setFromChains(availableFromChains);
     setFromChain(availableFromChains[0]);
-  }, [xcmBridge, xcmProvider]);
+  }, [XCMBridge, XCMProvider]);
 
   useEffect(() => {
-    if (!xcmBridge) return;
+    if (!XCMBridge) return;
     if (!fromChain) return;
 
-    const destinationChains = xcmBridge.router.getDestinationChains({ from: fromChain.type });
+    const destinationChains = XCMBridge.router.getDestinationChains({ from: fromChain.type });
 
     const availableToChains = destinationChains.map((chain: any) => {
       return {
@@ -153,7 +152,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     setToChains(availableToChains);
     setToChain(availableToChains[0]);
-  }, [fromChain, xcmBridge]);
+  }, [fromChain, XCMBridge]);
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
@@ -162,15 +161,15 @@ const CrossChainTransferForm = (): JSX.Element => {
     try {
       setSubmitStatus(STATUSES.PENDING);
 
-      if (!xcmBridge || !fromChain || !toChain) return;
+      if (!XCMBridge || !fromChain || !toChain) return;
 
       const sendTransaction = async () => {
         const { signer } = await web3FromAddress(selectedAccount.address.toString());
 
-        const adapter = xcmBridge.findAdapter(fromChain.type);
-        adapter.setApi(xcmProvider.getApiPromise(fromChain.type));
+        const adapter = XCMBridge.findAdapter(fromChain.type);
+        adapter.setApi(XCMProvider.getApiPromise(fromChain.type));
 
-        const apiPromise = xcmProvider.getApiPromise(fromChain.type);
+        const apiPromise = XCMProvider.getApiPromise(fromChain.type);
 
         apiPromise.setSigner(signer);
 
@@ -219,7 +218,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const transferAmount = newMonetaryAmount(value, currency, true);
 
     if (destinationBalance.isZero()) {
-      const ed = xcmBridge.findAdapter(toChain?.type).balanceAdapter.ed;
+      const ed = XCMBridge.findAdapter(toChain?.type).balanceAdapter.ed;
       const edAmount = newMonetaryAmount(ed.toString(), currency, true);
 
       return edAmount.gt(transferAmount) ? 'Existential deposit problem' : undefined;
@@ -256,7 +255,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     });
   }, [submitStatus, reset, t]);
 
-  if (!xcmBridge) {
+  if (!XCMBridge) {
     return <PrimaryColorEllipsisLoader />;
   }
 

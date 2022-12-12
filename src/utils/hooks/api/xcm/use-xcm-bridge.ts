@@ -5,34 +5,34 @@ import { firstValueFrom } from 'rxjs';
 import { XCM_ADAPTERS } from '@/config/relay-chains';
 import { BITCOIN_NETWORK } from '@/constants';
 
-const xcmBridge = new Bridge({
+const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
 });
 
-// MEMO: BitcoinNetwork type is not available on xcm bridge
-const xcmNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
+// MEMO: BitcoinNetwork type is not available on XCM bridge
+const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
 
-const useXcmBridge = (): { xcmProvider: any; xcmBridge: any } => {
-  const [xcmProvider, setXcmProvider] = useState<any>();
+const useXCMBridge = (): { XCMProvider: any; XCMBridge: any } => {
+  const [XCMProvider, setXCMProvider] = useState<any>();
 
   useEffect(() => {
     const createBridge = async () => {
-      const xcmProvider = new ApiProvider(xcmNetwork) as any;
+      const XCMProvider = new ApiProvider(XCMNetwork) as any;
       const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
       // Check connection
-      await firstValueFrom(xcmProvider.connectFromChain(chains, undefined));
+      await firstValueFrom(XCMProvider.connectFromChain(chains, undefined));
 
       // Set Apis
-      await Promise.all(chains.map((chain) => xcmBridge.findAdapter(chain).setApi(xcmProvider.getApi(chain))));
+      await Promise.all(chains.map((chain) => XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain))));
 
-      setXcmProvider(xcmProvider);
+      setXCMProvider(XCMProvider);
     };
 
     createBridge();
   }, []);
 
-  return { xcmProvider, xcmBridge };
+  return { XCMProvider, XCMBridge };
 };
 
-export { useXcmBridge };
+export { useXCMBridge };
