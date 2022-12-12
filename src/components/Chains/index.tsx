@@ -7,12 +7,14 @@ interface Props {
   selectedChain: ChainOption | undefined;
 }
 
-const Chains = ({ onChange, chainOptions, label, selectedChain }: Props): JSX.Element => {
+const Chains = ({ onChange, chainOptions, label, selectedChain }: Props): JSX.Element | null => {
+  if (!selectedChain || !chainOptions) {
+    return null;
+  }
+
   return (
     <div>
-      {selectedChain && chainOptions && (
-        <ChainSelector label={label} chainOptions={chainOptions} selectedChain={selectedChain} onChange={onChange} />
-      )}
+      <ChainSelector label={label} chainOptions={chainOptions} selectedChain={selectedChain} onChange={onChange} />
     </div>
   );
 };
