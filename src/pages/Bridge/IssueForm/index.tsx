@@ -25,7 +25,6 @@ import {
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
-import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import FormTitle from '@/components/FormTitle';
@@ -36,7 +35,6 @@ import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayLink from '@/components/UI/InterlayLink';
-import VaultsSelector from '@/components/VaultsSelector';
 import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
@@ -58,6 +56,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import ManualVaultSelectUI from '../ManualVaultSelectUI';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 
 const BTC_AMOUNT = 'btc-amount';
@@ -405,24 +404,15 @@ const IssueForm = (): JSX.Element | null => {
             />
           </div>
           <ParachainStatusInfo status={parachainStatus} />
-          <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
-            <Checkbox
-              label={t('issue_page.manually_select_vault')}
-              labelSide={CheckboxLabelSide.LEFT}
-              disabled={isSelectVaultCheckboxDisabled}
-              type='checkbox'
-              checked={selectVaultManually}
-              onChange={handleSelectVaultCheckboxChange}
-            />
-            <VaultsSelector
-              label={t('select_vault')}
-              requiredCapacity={monetaryBtcAmount}
-              isShown={selectVaultManually}
-              onSelectionCallback={setSelectedVault}
-              error={errors[VAULT_SELECTION]}
-              treasuryAction='issue'
-            />
-          </div>
+          <ManualVaultSelectUI
+            disabled={isSelectVaultCheckboxDisabled}
+            checked={selectVaultManually}
+            treasuryAction='issue'
+            requiredCapacity={monetaryBtcAmount}
+            error={errors[VAULT_SELECTION]}
+            onSelectionCallback={setSelectedVault}
+            onCheckboxChange={handleSelectVaultCheckboxChange}
+          />
           <PriceInfo
             title={
               <h5
