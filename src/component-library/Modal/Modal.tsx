@@ -1,6 +1,7 @@
 import { AriaDialogProps, useDialog } from '@react-aria/dialog';
 import { FocusScope } from '@react-aria/focus';
-import { AriaOverlayProps, OverlayContainer, useModal, useOverlay, usePreventScroll } from '@react-aria/overlays';
+import { AriaOverlayProps, OverlayContainer, useModalOverlay, usePreventScroll } from '@react-aria/overlays';
+import { useOverlayTriggerState } from '@react-stately/overlays';
 import { forwardRef, ReactNode } from 'react';
 
 import { useMountTransition } from '@/utils/hooks/use-mount-transition';
@@ -22,20 +23,23 @@ type ModalProps = Props & InheritAttrs;
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
   ({ children, isDismissable = true, ...props }, ref): JSX.Element | null => {
     const dialogRef = useDOMRef(ref);
+    const state = useOverlayTriggerState(props);
+
     const { isOpen, onClose } = props;
-    const { shouldRender, transitionTrigger } = useMountTransition(!!isOpen, theme.transition.duration);
+    const { shouldRender, transitionTrigger } = useMountTransition(!!isOpen, theme.transition.duration.duration100);
 
     // Handle interacting outside the dialog and pressing
     // the Escape key to close the modal.
-    const { overlayProps, underlayProps } = useOverlay({ isDismissable, ...props }, dialogRef);
+    const { modalProps, underlayProps } = useModalOverlay({ isDismissable, ...props }, state, dialogRef);
 
     // Prevent scrolling while the modal is open, and hide content
     // outside the modal from screen readers.
     usePreventScroll();
-    const { modalProps } = useModal();
 
     // Get props for the dialog and its title
     const { dialogProps, titleProps } = useDialog(props, dialogRef);
+
+    console.log(isOpen, transitionTrigger);
 
     return isOpen || shouldRender ? (
       <OverlayContainer>
@@ -45,7 +49,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               <StyledDialog
                 $transitionTrigger={transitionTrigger}
                 ref={dialogRef}
-                {...overlayProps}
+                {...modalProps}
                 {...dialogProps}
                 {...modalProps}
               >
