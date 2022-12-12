@@ -19,7 +19,6 @@ import {
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
-import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import FormTitle from '@/components/FormTitle';
@@ -31,7 +30,6 @@ import TextField from '@/components/TextField';
 import Toggle from '@/components/Toggle';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import VaultsSelector from '@/components/VaultsSelector';
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
@@ -52,6 +50,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import ManualVaultSelectUI from '../ManualVaultSelectUI';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
@@ -444,24 +443,15 @@ const RedeemForm = (): JSX.Element | null => {
           </div>
           <ParachainStatusInfo status={parachainStatus} />
           {!premiumRedeemSelected && (
-            <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
-              <Checkbox
-                label={t('issue_page.manually_select_vault')}
-                labelSide={CheckboxLabelSide.LEFT}
-                disabled={isSelectVaultCheckboxDisabled}
-                type='checkbox'
-                checked={selectVaultManually}
-                onChange={handleSelectVaultCheckboxChange}
-              />
-              <VaultsSelector
-                label={t('select_vault')}
-                requiredCapacity={monetaryWrappedTokenAmount}
-                isShown={selectVaultManually}
-                onSelectionCallback={setSelectedVault}
-                error={errors[VAULT_SELECTION]}
-                treasuryAction='redeem'
-              />
-            </div>
+            <ManualVaultSelectUI
+              disabled={isSelectVaultCheckboxDisabled}
+              checked={selectVaultManually}
+              treasuryAction='redeem'
+              requiredCapacity={monetaryWrappedTokenAmount}
+              error={errors[VAULT_SELECTION]}
+              onSelectionCallback={setSelectedVault}
+              onCheckboxChange={handleSelectVaultCheckboxChange}
+            />
           )}
           <TextField
             id={BTC_ADDRESS}
