@@ -6,12 +6,7 @@ import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, TRANSACTION_FEE_AMOUNT } fro
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-
-const getAvailableGovernanceBalance = (balance: MonetaryAmount<CurrencyExt>): MonetaryAmount<CurrencyExt> => {
-  const availableBalance = balance.sub(TRANSACTION_FEE_AMOUNT);
-
-  return availableBalance.toBig().gte(0) ? availableBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
-};
+import { useAvailableBalance } from '@/utils/hooks/use-available-balance';
 
 type UseDepositCollateral = {
   collateral: {
@@ -48,30 +43,26 @@ const useDepositCollateral = (
   const { data: balances } = useGetBalances();
   const prices = useGetPrices();
 
-  const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker)?.usd || 0;
+  const { price: collateralPrice, amount: collateralBalance } = useAvailableBalance(collateralCurrency);
 
   const isGovernanceCollateral = collateralCurrency === GOVERNANCE_TOKEN;
   const freeGovernanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const collateralTokenBalance = balances?.[collateralCurrency.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const balanceToken = isGovernanceCollateral
-    ? getAvailableGovernanceBalance(freeGovernanceBalance)
-    : collateralTokenBalance;
 
   return {
     collateral: {
       currency: collateralCurrency,
       isGovernanceToken: isGovernanceCollateral,
       price: {
-        usd: collateralUSDAmount
+        usd: collateralPrice
       },
       balance: {
-        amount: balanceToken.toString(),
-        usd: displayMonetaryAmountInUSDFormat(balanceToken, collateralUSDAmount),
-        raw: balanceToken
+        amount: collateralBalance.toString(),
+        usd: displayMonetaryAmountInUSDFormat(collateralBalance, collateralPrice),
+        raw: collateralBalance
       },
       min: {
         amount: displayMonetaryAmount(minCollateral),
-        usd: displayMonetaryAmountInUSDFormat(minCollateral, collateralUSDAmount),
+        usd: displayMonetaryAmountInUSDFormat(minCollateral, collateralPrice),
         raw: minCollateral
       }
     },

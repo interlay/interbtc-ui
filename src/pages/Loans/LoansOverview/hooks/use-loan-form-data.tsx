@@ -4,10 +4,9 @@ import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { BorrowAction, LendAction, LoanAction } from '@/types/loans';
-import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { useAvailableBalance } from '@/utils/hooks/use-available-balance';
 
 import { getMaxBorrowableAmount } from '../utils/get-max-borrowable-amount';
 import { getMaxWithdrawableAmount } from '../utils/get-max-withdrawable-amount';
@@ -67,18 +66,17 @@ const useLoanFormData = (
   position?: LendPosition | BorrowPosition
 ): UseLoanFormData => {
   const { data: balances } = useGetBalances();
-  const prices = useGetPrices();
   const {
     data: { statistics }
   } = useGetAccountPositions();
+  const { price: assetPrice, amount: assetBalance } = useAvailableBalance(asset.currency);
+
   const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 
   const governanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
   const transactionFee = TRANSACTION_FEE_AMOUNT;
-  const assetBalance = balances?.[asset.currency.ticker].free || zeroAssetAmount;
-  const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
   const maxAmountParams: GetMaxAmountParams = {
     loanAction,
