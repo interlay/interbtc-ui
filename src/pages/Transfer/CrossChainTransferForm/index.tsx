@@ -222,17 +222,6 @@ const CrossChainTransferForm = (): JSX.Element => {
       const ed = xcmBridge.findAdapter(toChain?.type).balanceAdapter.ed;
       const edAmount = newMonetaryAmount(ed.toString(), currency, true);
 
-      // const inputConfig: any = await firstValueFrom(
-      //   xcmBridge.findAdapter(fromChain?.type).subscribeInputConfigs({
-      //     to: toChain?.type,
-      //     token: currency.symbol,
-      //     address: destination?.address,
-      //     signer: selectedAccount?.address
-      //   })
-      // );
-
-      // const estimatedFee = newMonetaryAmount(inputConfig.estimateFee, currency, true).toHuman();
-
       return edAmount.gt(transferAmount) ? 'Existential deposit problem' : undefined;
     } else if (balanceMonetaryAmount.lt(transferAmount)) {
       return t('insufficient_funds');
