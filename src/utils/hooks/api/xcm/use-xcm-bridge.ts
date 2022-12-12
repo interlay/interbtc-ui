@@ -26,7 +26,9 @@ const useXCMBridge = (): { XCMProvider: any; XCMBridge: any } => {
       // Set Apis
       await Promise.all(chains.map((chain) => XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain))));
 
-      setXCMProvider(XCMProvider);
+      if (!XCMProvider) {
+        setXCMProvider(XCMProvider);
+      }
     };
 
     createBridge();
