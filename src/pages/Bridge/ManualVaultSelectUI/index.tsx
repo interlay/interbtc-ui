@@ -1,4 +1,3 @@
-// ray test touch <
 import { BitcoinAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import { FieldError } from 'react-hook-form';
@@ -53,4 +52,3 @@ const ManualVaultSelectUI = ({
 };
 
 export default ManualVaultSelectUI;
-// ray test touch >
