@@ -75,7 +75,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   useEffect(() => {
-    if (!fromChain || !toChain || !xcmBridge) return;
+    if (!fromChain) return;
+    if (!toChain) return;
+    if (!xcmBridge) return;
 
     const tokens = xcmBridge.router.getAvailableTokens({ from: fromChain.type, to: toChain.type });
     const supportedCurrency = xcmBridge.findAdapter(fromChain.type).tokens[tokens[0]];
@@ -84,7 +86,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   }, [fromChain, toChain, xcmBridge]);
 
   useEffect(() => {
-    if (!currency || !destination || !fromChain || !xcmBridge || !selectedAccount) return;
+    if (!currency) return;
+    if (!destination) return;
+    if (!fromChain) return;
+    if (!xcmBridge) return;
+    if (!selectedAccount) return;
 
     const getDestinationBalance = async () => {
       const balance: any = await firstValueFrom(
@@ -123,7 +129,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       return {
         type: adapter.chain.id,
         name: adapter.chain.id,
-        icon: <CoinIcon coin={adapter.chain.id === 'interlay' ? 'INTR' : 'DOT'} size='small' />
+        icon: <CoinIcon coin={adapter.balanceAdapter.nativeToken} size='small' />
       };
     });
 
