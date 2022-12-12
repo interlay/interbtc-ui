@@ -110,6 +110,7 @@ let STAKE_LOCK_TIME: {
   MIN: number;
   MAX: number;
 };
+
 let XCM_ADAPTERS: Record<string, BaseCrossChainAdapter>;
 
 let TRANSACTION_FEE_AMOUNT: MonetaryAmount<CurrencyExt>;
