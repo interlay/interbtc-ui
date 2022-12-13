@@ -304,7 +304,9 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const handleSelectVaultCheckboxChange = () => {
-      setSelectVaultManually((prev) => !prev);
+      if (!isSelectVaultCheckboxDisabled) {
+        setSelectVaultManually((prev) => !prev);
+      }
     };
 
     const onSubmit = async (data: IssueFormData) => {
