@@ -238,11 +238,11 @@ const CrossChainTransferForm = (): JSX.Element => {
     const maxInputToBig = Big(inputConfigs.maxInput.toString());
 
     if (minInputToBig.gt(transferableBalance)) {
-      return 'No transfer possible';
+      return 'Transferable balance is lower than minimum';
     } else if (minInputToBig.gt(transferAmount.toBig())) {
-      return 'Must transfer more than [minInput] more: ed, fees etc';
+      return 'Must transfer more than [minInput] (taking into account ed, fees)';
     } else if (maxInputToBig.lt(transferAmount.toBig())) {
-      return 'Must be less than [maxInput]';
+      return 'Must transfer less than maximum';
     } else if (balanceMonetaryAmount.lt(transferAmount)) {
       return t('insufficient_funds');
     } else {
@@ -272,64 +272,60 @@ const CrossChainTransferForm = (): JSX.Element => {
     });
   }, [submitStatus, reset, t]);
 
-  if (!XCMBridge) {
+  if (!XCMBridge || !toChain || !fromChain || !currency) {
     return <PrimaryColorEllipsisLoader />;
   }
 
-  const availableBalanceLabel = 'Available balance';
-
   return (
     <>
-      {currency && (
-        <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
-          <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
-          <div>
-            <AvailableBalanceUI
-              label={availableBalanceLabel}
-              balance={transferableBalance?.toString() || '0'}
-              tokenSymbol={currency.symbol}
-              onClick={handleClickBalance}
-            />
-            <TokenField
-              id={TRANSFER_AMOUNT}
-              {...register(TRANSFER_AMOUNT, {
-                onChange: (e) => handleUpdateUsdAmount(e.target.value),
-                required: {
-                  value: true,
-                  message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
-                },
-                validate: (value) => validateTransferAmount(value)
-              })}
-              error={!!errors[TRANSFER_AMOUNT]}
-              helperText={errors[TRANSFER_AMOUNT]?.message}
-              label={currency.symbol}
-              approxUSD={`≈ ${approxUsdValue}`}
-            />
-          </div>
-          <Chains
-            chainOptions={fromChains}
-            label={t('transfer_page.cross_chain_transfer_form.from_chain')}
-            selectedChain={fromChain}
-            onChange={handleSetFromChain}
+      <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
+        <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
+        <div>
+          <AvailableBalanceUI
+            label='Transferable balance'
+            balance={transferableBalance?.toString() || '0'}
+            tokenSymbol={currency.symbol}
+            onClick={handleClickBalance}
           />
-          <Chains
-            chainOptions={toChains}
-            label={t('transfer_page.cross_chain_transfer_form.to_chain')}
-            selectedChain={toChain}
+          <TokenField
+            id={TRANSFER_AMOUNT}
+            {...register(TRANSFER_AMOUNT, {
+              onChange: (e) => handleUpdateUsdAmount(e.target.value),
+              required: {
+                value: true,
+                message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
+              },
+              validate: (value) => validateTransferAmount(value)
+            })}
+            error={!!errors[TRANSFER_AMOUNT]}
+            helperText={errors[TRANSFER_AMOUNT]?.message}
+            label={currency.symbol}
+            approxUSD={`≈ ${approxUsdValue}`}
           />
-          <Accounts
-            label={t('transfer_page.cross_chain_transfer_form.target_account')}
-            callbackFunction={setDestination}
-          />
-          <SubmitButton
-            disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
-            pending={submitStatus === STATUSES.PENDING}
-            onClick={handleConfirmClick}
-          >
-            {selectedAccount ? t('transfer') : t('connect_wallet')}
-          </SubmitButton>
-        </form>
-      )}
+        </div>
+        <Chains
+          chainOptions={fromChains}
+          label={t('transfer_page.cross_chain_transfer_form.from_chain')}
+          selectedChain={fromChain}
+          onChange={handleSetFromChain}
+        />
+        <Chains
+          chainOptions={toChains}
+          label={t('transfer_page.cross_chain_transfer_form.to_chain')}
+          selectedChain={toChain}
+        />
+        <Accounts
+          label={t('transfer_page.cross_chain_transfer_form.target_account')}
+          callbackFunction={setDestination}
+        />
+        <SubmitButton
+          disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
+          pending={submitStatus === STATUSES.PENDING}
+          onClick={handleConfirmClick}
+        >
+          {selectedAccount ? t('transfer') : t('connect_wallet')}
+        </SubmitButton>
+      </form>
       {submitStatus === STATUSES.REJECTED && submitError && (
         <ErrorModal
           open={!!submitError}
