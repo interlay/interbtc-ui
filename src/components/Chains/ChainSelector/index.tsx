@@ -22,7 +22,7 @@ interface Props {
   chainOptions: Array<ChainOption>;
   selectedChain: ChainOption | undefined;
   label: string;
-  onChange: (chain: ChainOption) => void;
+  onChange?: (chain: ChainOption) => void;
 }
 
 const ChainSelector = ({ chainOptions, selectedChain, label, onChange }: Props): JSX.Element => (

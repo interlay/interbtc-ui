@@ -1,8 +1,11 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
+import { CrossChainTransferParams } from '@interlay/bridge';
 import { DefaultTransactionAPI } from '@interlay/interbtc-api';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { ApiPromise } from '@polkadot/api';
 import { web3FromAddress } from '@polkadot/extension-dapp';
+import Big from 'big.js';
 import * as React from 'react';
 import { useEffect } from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
@@ -44,7 +47,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
   const [transferableBalance, setTransferableBalance] = React.useState<any>(undefined);
   const [destination, setDestination] = React.useState<KeyringPair | undefined>(undefined);
-  const [destinationBalance, setDestinationBalance] = React.useState<any>(undefined);
+  // const [destinationBalance, setDestinationBalance] = React.useState<any>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
@@ -74,42 +77,27 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   useEffect(() => {
+    if (!XCMBridge) return;
     if (!fromChain) return;
     if (!toChain) return;
-    if (!XCMBridge) return;
+    // TODO: This handles a race condition. Will need to be fixed properly
+    // when supporting USDT
+    if (fromChain.name === toChain.name) return;
 
     const tokens = XCMBridge.router.getAvailableTokens({ from: fromChain.type, to: toChain.type });
-    const supportedCurrency = XCMBridge.findAdapter(fromChain.type).tokens[tokens[0]];
+
+    const supportedCurrency = XCMBridge.findAdapter(fromChain.type).getToken(tokens[0], fromChain.type);
 
     setCurrency(supportedCurrency);
   }, [fromChain, toChain, XCMBridge]);
 
   useEffect(() => {
+    if (!XCMBridge) return;
+    if (!fromChain) return;
+    if (!selectedAccount) return;
     if (!currency) return;
-    if (!destination) return;
-    if (!fromChain) return;
-    if (!XCMBridge) return;
-    if (!selectedAccount) return;
-
-    const getDestinationBalance = async () => {
-      const balance: any = await firstValueFrom(
-        XCMBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, destination.address)
-      );
-
-      setDestinationBalance(newMonetaryAmount(balance.free.toString(), currency, true));
-    };
-
-    getDestinationBalance();
-  }, [currency, destination, fromChain, XCMBridge, selectedAccount]);
-
-  useEffect(() => {
-    if (!XCMBridge) return;
-    if (!fromChain) return;
-    if (!selectedAccount) return;
 
     const getBalance = async () => {
-      if (!currency || !fromChain || !selectedAccount || !XCMBridge) return;
-
       const balance: any = await firstValueFrom(
         XCMBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, selectedAccount.address)
       );
@@ -143,10 +131,12 @@ const CrossChainTransferForm = (): JSX.Element => {
     const destinationChains = XCMBridge.router.getDestinationChains({ from: fromChain.type });
 
     const availableToChains = destinationChains.map((chain: any) => {
+      const adapter = XCMBridge.findAdapter(chain.id) as any;
+
       return {
         type: chain.id,
         name: chain.id,
-        icon: <CoinIcon coin={chain.id === 'interlay' ? 'INTR' : 'DOT'} size='small' />
+        icon: <CoinIcon coin={adapter.balanceAdapter.nativeToken} size='small' />
       };
     });
 
@@ -167,22 +157,25 @@ const CrossChainTransferForm = (): JSX.Element => {
         const { signer } = await web3FromAddress(selectedAccount.address.toString());
 
         const adapter = XCMBridge.findAdapter(fromChain.type);
-        adapter.setApi(XCMProvider.getApiPromise(fromChain.type));
 
-        const apiPromise = XCMProvider.getApiPromise(fromChain.type);
+        const apiPromise = (XCMProvider.getApiPromise(fromChain.type) as unknown) as ApiPromise;
 
         apiPromise.setSigner(signer);
+
+        // TODO: Version mismatch with ApiPromise type. This should be inferred.
+        adapter.setApi(apiPromise as any);
 
         const transferAmount = new MonetaryAmount(currency, data[TRANSFER_AMOUNT]);
         const transferAmountString = transferAmount.toString(true);
         const transferAmountDecimals = transferAmount.currency.decimals;
 
-        const tx = adapter.createTx({
+        // TODO: Transaction is in promise form
+        const tx: any = adapter.createTx({
           amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
           to: toChain.type,
           token: currency.symbol,
           address: destination.address
-        });
+        } as CrossChainTransferParams);
 
         await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
       };
@@ -214,14 +207,29 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const validateTransferAmount = async (value: string) => {
+    if (!toChain) return;
+    if (!destination) return;
+    if (!selectedAccount) return;
+
     const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, currency, true);
     const transferAmount = newMonetaryAmount(value, currency, true);
 
-    if (destinationBalance.isZero()) {
-      const ed = XCMBridge.findAdapter(toChain?.type).balanceAdapter.ed;
-      const edAmount = newMonetaryAmount(ed.toString(), currency, true);
+    const inputConfigs = await firstValueFrom(
+      XCMBridge.findAdapter(toChain.type).subscribeInputConfigs({
+        to: toChain?.type,
+        token: currency.symbol,
+        address: destination.address,
+        signer: selectedAccount.address
+      })
+    );
 
-      return edAmount.gt(transferAmount) ? 'Existential deposit problem' : undefined;
+    const minInputToBig = Big(inputConfigs.minInput.toString());
+    const maxInputToBig = Big(inputConfigs.maxInput.toString());
+
+    if (minInputToBig.gt(transferAmount.toBig())) {
+      return 'Must transfer more than [minInput] more: ed, fees etc';
+    } else if (maxInputToBig.lt(transferAmount.toBig())) {
+      return 'Must be less than [maxInput]';
     } else if (balanceMonetaryAmount.lt(transferAmount)) {
       return t('insufficient_funds');
     } else {
@@ -231,10 +239,6 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const handleSetFromChain = (chain: ChainOption) => {
     setFromChain(chain);
-  };
-
-  const handleSetToChain = (chain: ChainOption) => {
-    setToChain(chain);
   };
 
   const handleClickBalance = () => {
@@ -299,7 +303,6 @@ const CrossChainTransferForm = (): JSX.Element => {
             chainOptions={toChains}
             label={t('transfer_page.cross_chain_transfer_form.to_chain')}
             selectedChain={toChain}
-            onChange={handleSetToChain}
           />
           <Accounts
             label={t('transfer_page.cross_chain_transfer_form.target_account')}

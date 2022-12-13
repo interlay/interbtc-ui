@@ -3,7 +3,7 @@ import ChainSelector, { ChainOption } from './ChainSelector';
 interface Props {
   label: string;
   chainOptions: Array<ChainOption> | undefined;
-  onChange: (chain: ChainOption) => void;
+  onChange?: (chain: ChainOption) => void;
   selectedChain: ChainOption | undefined;
 }
 
