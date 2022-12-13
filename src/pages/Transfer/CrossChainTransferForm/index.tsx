@@ -237,7 +237,9 @@ const CrossChainTransferForm = (): JSX.Element => {
     const minInputToBig = Big(inputConfigs.minInput.toString());
     const maxInputToBig = Big(inputConfigs.maxInput.toString());
 
-    if (minInputToBig.gt(transferAmount.toBig())) {
+    if (minInputToBig.gt(transferableBalance)) {
+      return 'No transfer possible';
+    } else if (minInputToBig.gt(transferAmount.toBig())) {
       return 'Must transfer more than [minInput] more: ed, fees etc';
     } else if (maxInputToBig.lt(transferAmount.toBig())) {
       return 'Must be less than [maxInput]';
