@@ -55,15 +55,15 @@ const VaultsSelector = ({
   React.useEffect(() => {
     (async () => {
       setVaultsStatus(STATUSES.PENDING);
-      let theAllVaults;
+      let availableVaults;
       if (treasuryAction === 'issue') {
-        theAllVaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
+        availableVaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
       } else if (treasuryAction === 'redeem') {
-        theAllVaults = await window.bridge.vaults.getVaultsWithRedeemableTokens();
+        availableVaults = await window.bridge.vaults.getVaultsWithRedeemableTokens();
       } else {
         throw new Error(`Invalid treasuryAction (${treasuryAction})!`);
       }
-      setAllVaults(Array.from(theAllVaults));
+      setAllVaults(Array.from(availableVaults));
       setVaultsStatus(STATUSES.RESOLVED);
     })();
   }, [treasuryAction]);
