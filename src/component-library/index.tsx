@@ -8,6 +8,8 @@ export type { CoinPairProps } from './CoinPair';
 export { CoinPair } from './CoinPair';
 export type { CTALinkProps, CTAProps } from './CTA';
 export { CTA, CTALink } from './CTA';
+export type { DividerProps } from './Divider';
+export { Divider } from './Divider';
 export type { FlexProps } from './Flex';
 export { Flex } from './Flex';
 export type { GridItemProps, GridProps } from './Grid';
