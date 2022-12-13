@@ -66,7 +66,7 @@ const useLoanFormData = (
   asset: LoanAsset,
   position?: LendPosition | BorrowPosition
 ): UseLoanFormData => {
-  const { data: balances } = useGetBalances();
+  const { getBalance, getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
   const {
     data: { statistics }
@@ -75,9 +75,9 @@ const useLoanFormData = (
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 
-  const governanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
   const transactionFee = TRANSACTION_FEE_AMOUNT;
-  const assetBalance = balances?.[asset.currency.ticker].free || zeroAssetAmount;
+  const assetBalance = getAvailableBalance(asset.currency.ticker) || zeroAssetAmount;
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
   const maxAmountParams: GetMaxAmountParams = {
