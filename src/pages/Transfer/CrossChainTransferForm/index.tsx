@@ -47,7 +47,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
   const [transferableBalance, setTransferableBalance] = React.useState<any>(undefined);
   const [destination, setDestination] = React.useState<KeyringPair | undefined>(undefined);
-  // const [destinationBalance, setDestinationBalance] = React.useState<any>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
@@ -94,19 +93,30 @@ const CrossChainTransferForm = (): JSX.Element => {
   useEffect(() => {
     if (!XCMBridge) return;
     if (!fromChain) return;
+    if (!toChain) return;
     if (!selectedAccount) return;
     if (!currency) return;
+    if (!destination) return;
+    // TODO: This handles a race condition. Will need to be fixed properly
+    // when supporting USDT
+    if (toChain.type === fromChain.type) return;
 
     const getBalance = async () => {
-      const balance: any = await firstValueFrom(
-        XCMBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, selectedAccount.address)
+      const inputConfigs = await firstValueFrom(
+        XCMBridge.findAdapter(fromChain.type).subscribeInputConfigs({
+          to: toChain?.type,
+          token: currency.symbol,
+          address: destination.address,
+          signer: selectedAccount.address
+        })
       );
 
-      setTransferableBalance(balance.free);
+      const maxInputToBig = Big(inputConfigs.maxInput.toString());
+      setTransferableBalance(newMonetaryAmount(maxInputToBig, currency, true));
     };
 
     getBalance();
-  }, [currency, fromChain, selectedAccount, XCMBridge]);
+  }, [currency, fromChain, toChain, selectedAccount, destination, XCMBridge]);
 
   useEffect(() => {
     if (!XCMBridge) return;
@@ -208,6 +218,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const validateTransferAmount = async (value: string) => {
     if (!toChain) return;
+    if (!fromChain) return;
     if (!destination) return;
     if (!selectedAccount) return;
 
@@ -215,7 +226,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const transferAmount = newMonetaryAmount(value, currency, true);
 
     const inputConfigs = await firstValueFrom(
-      XCMBridge.findAdapter(toChain.type).subscribeInputConfigs({
+      XCMBridge.findAdapter(fromChain.type).subscribeInputConfigs({
         to: toChain?.type,
         token: currency.symbol,
         address: destination.address,
