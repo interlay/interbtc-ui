@@ -148,7 +148,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     register,
     handleSubmit: h,
     watch,
-    formState: { errors, isDirty }
+    formState: { errors, isDirty, isValid }
   } = useForm<LoanFormData>({
     mode: 'onChange',
     resolver: zodResolver(schema)
@@ -157,7 +157,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const amount = watch(formField) || 0;
   const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
 
-  const isBtnDisabled = !isValidForm(errors) || !isDirty;
+  const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
 
   const handleSubmit = (data: LoanFormData) => {
     try {
