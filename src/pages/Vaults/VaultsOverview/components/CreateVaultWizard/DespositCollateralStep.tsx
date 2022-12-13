@@ -9,7 +9,7 @@ import * as z from 'zod';
 
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import { CTA, Span, Stack, TokenInput } from '@/component-library';
-import { ModalBody, ModalFooter, ModalTitle } from '@/component-library/Modal';
+import { ModalBody, ModalDivider, ModalFooter, ModalTitle } from '@/component-library/Modal';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import validate, { VaultDepositSchemaParams } from '@/lib/form-validation';
@@ -79,7 +79,8 @@ const DepositCollateralStep = ({
 
   return (
     <>
-      <ModalTitle variant='secondary'>{t('vault.deposit_collateral')}</ModalTitle>
+      <ModalTitle color='secondary'>{t('vault.deposit_collateral')}</ModalTitle>
+      <ModalDivider color='secondary' />
       <ModalBody>
         <form onSubmit={h(handleSubmit)}>
           <Stack spacing='double'>

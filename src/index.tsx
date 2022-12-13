@@ -38,8 +38,8 @@ ReactDOM.render(
               <ThemeWrapper>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <Subscriptions>
-                    < OverlayProvider>
-                    <App />
+                    <OverlayProvider>
+                      <App />
                     </OverlayProvider>
                   </Subscriptions>
                 </SubstrateLoadingAndErrorHandlingWrapper>

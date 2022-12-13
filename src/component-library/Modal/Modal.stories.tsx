@@ -1,35 +1,36 @@
+import { useOverlayTriggerState } from '@react-stately/overlays';
 import { Meta, Story } from '@storybook/react';
-import { useEffect, useState } from 'react';
 
 import { CTA } from '../CTA';
-import { Modal, ModalBody, ModalFooter, ModalProps, ModalTitle, ModalTitleProps } from '.';
+import { Modal, ModalBody, ModalDivider, ModalFooter, ModalProps, ModalTitle } from '.';
 
-const Template: Story<
-  ModalProps & { hasFooter: boolean; hasTitle: boolean; titleVariant: ModalTitleProps['variant'] }
-> = ({ isOpen: open, children, hasFooter, hasTitle, titleVariant, ...args }) => {
-  const [isOpen, setOpen] = useState<boolean>(false);
-  const onClose = () => setOpen(false);
-  const handleOpenModal = () => setOpen(true);
-
-  useEffect(() => {
-    setOpen(!!open);
-  }, [open]);
+const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = ({
+  isOpen,
+  children,
+  hasFooter,
+  hasTitle,
+  ...args
+}) => {
+  const state = useOverlayTriggerState({ defaultOpen: isOpen });
 
   return (
     <>
-      <CTA onClick={handleOpenModal} variant='primary'>
+      <CTA onClick={state.open} variant='primary'>
         Open modal
       </CTA>
-      <Modal {...args} isOpen={isOpen} onClose={onClose}>
+      <Modal {...args} isOpen={state.isOpen} onClose={state.close}>
         {hasTitle && (
-          <ModalTitle as='h1' variant={titleVariant}>
-            Title
-          </ModalTitle>
+          <>
+            <ModalTitle color='secondary' alignment='center'>
+              Title
+            </ModalTitle>
+            <ModalDivider color='secondary' />
+          </>
         )}
         <ModalBody>{children}</ModalBody>
         {hasFooter && (
           <ModalFooter>
-            <CTA onClick={onClose}>Procced</CTA>
+            <CTA onClick={state.close}>Procced</CTA>
           </ModalFooter>
         )}
       </Modal>
@@ -58,7 +59,6 @@ const WithTitle = Template.bind({});
 WithTitle.args = {
   isOpen: false,
   hasTitle: true,
-  titleVariant: 'primary',
   children: (
     <>
       Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.
@@ -214,6 +214,6 @@ LargeContent.args = {
 export { Default, LargeContent, WithFooter, WithTitle };
 
 export default {
-  title: 'Components/Modal',
+  title: 'Overlays/Modal',
   component: Modal
 } as Meta;
