@@ -21,6 +21,7 @@ import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
+import TestnetBanner from './components/TestnetBanner';
 import * as constants from './constants';
 import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
@@ -151,6 +152,7 @@ const App = (): JSX.Element => {
   return (
     <>
       <Layout>
+        <TestnetBanner />
         <Route
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
