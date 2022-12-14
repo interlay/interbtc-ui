@@ -1,13 +1,13 @@
 import { forwardRef, HTMLAttributes } from 'react';
 
 import { AlignItems, AlignSelf, Direction, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
-import { StyledFlex } from './Flex.style';
+import { Responsive, StyledFlex } from './Flex.style';
 
 type Props = {
   gap?: Spacing;
   justifyContent?: JustifyContent;
   alignItems?: AlignItems;
-  direction?: Direction;
+  direction?: Responsive<Direction>;
   flex?: string | number;
   wrap?: Wrap | boolean;
   alignSelf?: AlignSelf;

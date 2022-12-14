@@ -4,7 +4,7 @@ import { CTA } from '../CTA';
 import { P } from '../Text';
 import { Flex, FlexProps } from '.';
 
-const Template: Story<FlexProps> = (args) => <Flex {...args} />;
+const Template: Story<FlexProps> = (args) => <Flex {...args} direction={{ S: 'column', M: 'row' }} />;
 
 const Default = Template.bind({});
 Default.args = {
