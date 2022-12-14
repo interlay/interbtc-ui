@@ -2,12 +2,12 @@ import { CurrencyExt, LendPosition, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 
-import { CTA, Flex, Modal, ModalProps } from '@/component-library';
+import { CTA, Flex, Modal, ModalProps, Status } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { healthFactorRanges, useGetAccountHealthFactor } from '../../hooks/use-get-account-health-factor';
+import { useGetLTV } from '../../hooks/use-get-ltv';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
 import { StyledDescription, StyledTitle } from './CollateralModal.style';
@@ -46,10 +46,10 @@ const getContentMap = (t: TFunction, variant: CollateralModalVariant, asset: Loa
     }
   }[variant]);
 
-const getModalVariant = (isCollateralActive: boolean, healthFactor: number): CollateralModalVariant => {
+const getModalVariant = (isCollateralActive: boolean, ltvStatus?: Status): CollateralModalVariant => {
   if (!isCollateralActive) return 'enable';
   // User is trying switching off collateral
-  if (healthFactor < healthFactorRanges.error) return 'disable-error';
+  if (!ltvStatus || ltvStatus !== 'success') return 'disable-error';
 
   return 'disable';
 };
@@ -66,7 +66,7 @@ type CollateralModalProps = Props & InheritAttrs;
 const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
   const { refetch } = useGetAccountPositions();
-  const { getHealthFactor } = useGetAccountHealthFactor();
+  const { getLTV } = useGetLTV();
   const prices = useGetPrices();
 
   const handleSuccess = () => {
@@ -84,9 +84,9 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
   const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
 
-  const borrowLimitVariant = isCollateralActive ? 'withdraw' : 'lend';
-  const newHealthFactor = getHealthFactor({ type: borrowLimitVariant, amount: lendPositionAmount, asset });
-  const variant = getModalVariant(isCollateralActive, newHealthFactor?.value || 0);
+  const loanAction = isCollateralActive ? 'withdraw' : 'lend';
+  const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount, asset });
+  const variant = getModalVariant(isCollateralActive, currentLTV?.status);
 
   const content = getContentMap(t, variant, asset);
 
@@ -108,12 +108,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
             <StyledTitle>{content.title}</StyledTitle>
             <StyledDescription color='tertiary'>{content.description}</StyledDescription>
           </Flex>
-          <BorrowLimit
-            loanAction={borrowLimitVariant}
-            asset={asset}
-            actionAmount={lendPositionAmount}
-            prices={prices}
-          />
+          <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
           {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
           <CTA size='large' onClick={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
             {content.buttonLabel}
