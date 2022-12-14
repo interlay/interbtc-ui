@@ -152,7 +152,7 @@ const App = (): JSX.Element => {
   return (
     <>
       <Layout>
-        <TestnetBanner />
+        {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
         <Route
           render={({ location }) => (
             <React.Suspense fallback={<FullLoadingSpinner />}>
