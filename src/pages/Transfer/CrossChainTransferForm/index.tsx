@@ -101,7 +101,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     // when supporting USDT
     if (toChain.type === fromChain.type) return;
 
-    const getBalance = async () => {
+    const getMaxTransferrable = async () => {
       const inputConfigs = await firstValueFrom(
         XCMBridge.findAdapter(fromChain.type).subscribeInputConfigs({
           to: toChain?.type,
@@ -115,7 +115,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       setTransferableBalance(newMonetaryAmount(maxInputToBig, currency, true));
     };
 
-    getBalance();
+    getMaxTransferrable();
   }, [currency, fromChain, toChain, selectedAccount, destination, XCMBridge]);
 
   useEffect(() => {
