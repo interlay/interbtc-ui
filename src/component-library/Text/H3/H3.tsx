@@ -7,7 +7,7 @@ import { mapTextProps } from '../utils';
 type H3Props = TextProps<HTMLHeadingElement>;
 
 const H3 = forwardRef<HTMLHeadingElement, H3Props>(
-  ({ size = '3xl', ...props }, ref): JSX.Element => <Text ref={ref} as='h3' {...mapTextProps({ size, ...props })} />
+  ({ size = 'xl3', ...props }, ref): JSX.Element => <Text ref={ref} as='h3' {...mapTextProps({ size, ...props })} />
 );
 
 H3.displayName = 'H3';

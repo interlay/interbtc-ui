@@ -1,10 +1,10 @@
 import { HTMLAttributes } from 'react';
 
-import { Colors, FontWeight, NormalAlignments, Sizes } from '../utils/prop-types';
+import { Colors, FontSize, FontWeight, NormalAlignments } from '../utils/prop-types';
 
 type Props = {
   color?: Colors;
-  size?: Sizes;
+  size?: FontSize;
   align?: NormalAlignments;
   weight?: FontWeight;
 };

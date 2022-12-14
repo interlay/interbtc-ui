@@ -7,7 +7,7 @@ import { mapTextProps } from '../utils';
 type H1Props = TextProps<HTMLHeadingElement>;
 
 const H1 = forwardRef<HTMLHeadingElement, H1Props>(
-  ({ size = '5xl', ...props }, ref): JSX.Element => <Text ref={ref} as='h1' {...mapTextProps({ size, ...props })} />
+  ({ size = 'xl5', ...props }, ref): JSX.Element => <Text ref={ref} as='h1' {...mapTextProps({ size, ...props })} />
 );
 
 H1.displayName = 'H1';

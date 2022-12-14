@@ -1,10 +1,10 @@
 import { CoinIcon } from '../CoinIcon';
 import { Tokens } from '../types';
-import { SimpleSizes } from '../utils/prop-types';
+import { Sizes } from '../utils/prop-types';
 import { CoinPairWrapper } from './CoinPair.style';
 
 type CoinPairProps = {
-  size: SimpleSizes;
+  size: Sizes;
   coinOne: Tokens;
   coinTwo: Tokens;
 };

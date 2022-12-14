@@ -10,9 +10,7 @@ export const ctaVariant = tuple(...variant, 'outlined', 'text');
 
 export const status = tuple('error', 'warning', 'success');
 
-export const simpleSizes = tuple('small', 'medium', 'large');
-
-export const sizes = tuple('xs', 's', 'base', 'lg', 'xl', '2xl', '3xl', '4xl', '5xl', '6xl');
+export const sizes = tuple('small', 'medium', 'large');
 
 export const colors = tuple('primary', 'secondary', 'tertiary');
 
@@ -52,8 +50,6 @@ export type CTAVariants = typeof ctaVariant[number];
 
 export type Status = typeof status[number];
 
-export type SimpleSizes = typeof simpleSizes[number];
-
 export type Sizes = typeof sizes[number];
 
 export type Colors = typeof colors[number];
@@ -69,6 +65,8 @@ export type AlignSelf = typeof alignSelf[number];
 export type NormalAlignments = typeof normalAlignments[number];
 
 export type Direction = typeof direction[number];
+
+export type FontSize = keyof typeof theme.text;
 
 export type Spacing = keyof typeof theme.spacing;
 

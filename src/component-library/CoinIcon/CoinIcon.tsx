@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 import { Tokens } from '../types';
-import { SimpleSizes } from '../utils/prop-types';
+import { Sizes } from '../utils/prop-types';
 import { IconWrapper } from './CoinIcon.style';
 import { BtcIcon, DotIcon, InterBtcIcon, IntrIcon, KbtcIcon, KintIcon, KsmIcon, LksmIcon, USDTIcon } from './icons';
 
@@ -18,7 +18,7 @@ const coinsIcon: Record<Tokens, FC> = {
 };
 
 type CoinIconProps = {
-  size: SimpleSizes;
+  size: Sizes;
   coin: Tokens;
 };
 

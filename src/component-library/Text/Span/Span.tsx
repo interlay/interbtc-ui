@@ -2,6 +2,7 @@ import { forwardRef } from 'react';
 
 import { Text } from '../style';
 import { TextProps } from '../types';
+import { mapTextProps } from '../utils';
 
 type SpanProps = TextProps<HTMLSpanElement>;
 
