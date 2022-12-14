@@ -12,7 +12,7 @@ describe('Burn page', () => {
   it('should display burn tab when there is liquidated vault', async () => {
     await render(<App />, { path: '/bridge?tab=burn' });
 
-    const burnTab = await screen.findByText(/Burn/i);
+    const burnTab = screen.getByRole('tab', { name: /burn/i });
     expect(burnTab).toBeVisible();
   });
 
@@ -29,7 +29,7 @@ describe('Burn page', () => {
   it('should burn the IBTC', async () => {
     await render(<App />, { path: '/bridge?tab=burn' });
 
-    const burnTab = await screen.findByText(/Burn/i);
+    const burnTab = screen.getByRole('tab', { name: /burn/i });
     userEvent.click(burnTab);
 
     const amountToBurnInput = await screen.findByRole('textbox');

@@ -1,5 +1,7 @@
 import { HTMLAttributes, useEffect, useState } from 'react';
 
+import { formatPercentage } from '@/common/utils/utils';
+
 import { Span } from '../Text';
 import { Status, Variants } from '../utils/prop-types';
 import { Indicator } from './Indicator';
@@ -23,6 +25,7 @@ type Props = {
   showIndicator?: boolean;
   showValue?: boolean;
   onChange?: (status: Status) => void;
+  formatOptions?: Intl.NumberFormatOptions;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -37,6 +40,7 @@ const Meter = ({
   className,
   style,
   hidden,
+  formatOptions,
   ...props
 }: MeterProps): JSX.Element => {
   const [status, setStatus] = useState<Status>();
@@ -66,7 +70,7 @@ const Meter = ({
           $variant={variant}
         >
           <Indicator />
-          {!isPrimary && <Span>{position}%</Span>}
+          {!isPrimary && <Span>{formatPercentage(position, formatOptions)}</Span>}
         </StyledIndicatorWrapper>
         {!isPrimary && !!ranges && (
           <>
