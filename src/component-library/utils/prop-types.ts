@@ -1,3 +1,5 @@
+import { ElementType } from 'react';
+
 import { theme } from '../theme';
 
 export const tuple = <T extends string[]>(...args: T): T => args;
@@ -71,3 +73,9 @@ export type Direction = typeof direction[number];
 export type Spacing = keyof typeof theme.spacing;
 
 export type Placement = 'top' | 'right' | 'bottom' | 'left';
+
+export interface AsProp<As extends ElementType = ElementType> {
+  as?: As;
+}
+
+export type FontWeight = keyof typeof theme.fontWeight;
