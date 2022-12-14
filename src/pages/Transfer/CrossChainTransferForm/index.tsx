@@ -130,7 +130,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       const maxInputToBig = Big(inputConfigs.maxInput.toString());
 
       // Never show less than zero
-      const transferableBalance = maxInputToBig.lte(0) ? 0 : maxInputToBig;
+      const transferableBalance = inputConfigs.maxInput < inputConfigs.minInput ? 0 : maxInputToBig;
 
       setTransferableBalance(newMonetaryAmount(transferableBalance, currency, true));
     };
