@@ -4,16 +4,13 @@ import { useTranslation } from 'react-i18next';
 
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { useGetAccountHealthFactor } from '../../hooks/use-get-account-health-factor';
 import { ApyCell, AssetCell, BalanceCell, LoansBaseTableProps } from '../LoansBaseTable';
-import { StatusTag } from '../LoansBaseTable/LoanStatusTag';
 import { StyledBorrowPositionsTable } from './BorrowPositionsTable.style';
 
 enum BorrowPositionColumns {
   ASSET = 'asset',
   APY_ACCRUED = 'apy-accrued',
-  BORROWED = 'borrowed',
-  STATUS = 'status'
+  BORROWED = 'borrowed'
 }
 
 type BorrowPositionTableRow = {
@@ -21,15 +18,13 @@ type BorrowPositionTableRow = {
   [BorrowPositionColumns.ASSET]: ReactNode;
   [BorrowPositionColumns.APY_ACCRUED]: ReactNode;
   [BorrowPositionColumns.BORROWED]: ReactNode;
-  [BorrowPositionColumns.STATUS]: ReactNode;
 };
 
 // TODO: translations
 const borrowPositionColumns = [
   { name: 'Asset', uid: BorrowPositionColumns.ASSET },
   { name: 'APY / Accrued', uid: BorrowPositionColumns.APY_ACCRUED },
-  { name: 'Borrowed', uid: BorrowPositionColumns.BORROWED },
-  { name: 'Status', uid: BorrowPositionColumns.STATUS }
+  { name: 'Borrowed', uid: BorrowPositionColumns.BORROWED }
 ];
 
 type BorrowPositionsTableProps = {
@@ -47,7 +42,6 @@ const BorrowPositionsTable = ({
 }: BorrowPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { data: healthFactorData } = useGetAccountHealthFactor();
 
   const rows: BorrowPositionTableRow[] = useMemo(
     () =>
@@ -69,21 +63,16 @@ const BorrowPositionsTable = ({
           />
         );
 
-        const borrowed = <BalanceCell amount={amount} prices={prices} />;
-
-        const statusTag = healthFactorData ? (
-          <StatusTag status={healthFactorData.status}>{healthFactorData.statusLabel}</StatusTag>
-        ) : null;
+        const borrowed = <BalanceCell alignItems='flex-end' amount={amount} prices={prices} />;
 
         return {
           id: currency.ticker,
           asset,
           'apy-accrued': apy,
-          borrowed,
-          status: statusTag
+          borrowed
         };
       }),
-    [assets, healthFactorData, onRowAction, positions, prices]
+    [assets, onRowAction, positions, prices]
   );
 
   return (

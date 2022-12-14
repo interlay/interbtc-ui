@@ -41,11 +41,11 @@ const borrow = (t: TFunction, params: LoanBorrowSchemaParams): z.ZodEffects<z.Zo
     }
   });
 
-type LoanRepaySchemaParams = CommonSchemaParams & AvailableBalanceSchemaParams;
+type LoanRepaySchemaParams = CommonSchemaParams & MaxAmountSchemaParams & AvailableBalanceSchemaParams;
 
 const repay = (t: TFunction, params: LoanRepaySchemaParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
-    const { governanceBalance, transactionFee, availableBalance, minAmount } = params;
+    const { governanceBalance, transactionFee, availableBalance, minAmount, maxAmount } = params;
 
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('loans.repay').toLowerCase(), fieldType: 'number' });
@@ -62,6 +62,14 @@ const repay = (t: TFunction, params: LoanRepaySchemaParams): z.ZodEffects<z.ZodS
       const issueArg = field.min.issue(t, {
         action: t('loans.repay').toLowerCase(),
         amount: minAmount.toString()
+      });
+      return ctx.addIssue(issueArg);
+    }
+
+    if (!field.max.validate({ inputAmount: inputAmount.toBig(), maxAmount: maxAmount.toBig() })) {
+      const issueArg = field.max.issue(t, {
+        action: t('loans.repay').toLowerCase(),
+        amount: maxAmount.toString()
       });
       return ctx.addIssue(issueArg);
     }

@@ -9,6 +9,8 @@ const DEFAULT_REQUEST_LIMITS = {
 };
 
 const mockIssueGetDustValue = jest.fn(() => BitcoinAmount.zero());
-const mockIssueGetRequestLimits = jest.fn(() => DEFAULT_REQUEST_LIMITS);
 
-export { mockIssueGetDustValue, mockIssueGetRequestLimits };
+const mockIssueGetRequestLimits = jest.fn(() => DEFAULT_REQUEST_LIMITS);
+const mockIssueRequest = jest.fn();
+
+export { mockIssueGetDustValue, mockIssueGetRequestLimits, mockIssueRequest };

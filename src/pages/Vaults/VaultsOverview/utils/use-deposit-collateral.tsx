@@ -7,12 +7,6 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-const getAvailableGovernanceBalance = (balance: MonetaryAmount<CurrencyExt>): MonetaryAmount<CurrencyExt> => {
-  const availableBalance = balance.sub(TRANSACTION_FEE_AMOUNT);
-
-  return availableBalance.toBig().gte(0) ? availableBalance : newMonetaryAmount(0, GOVERNANCE_TOKEN);
-};
-
 type UseDepositCollateral = {
   collateral: {
     currency: CurrencyExt;
@@ -45,17 +39,15 @@ const useDepositCollateral = (
   collateralCurrency: CollateralCurrencyExt,
   minCollateral: MonetaryAmount<CollateralCurrencyExt>
 ): UseDepositCollateral => {
-  const { data: balances } = useGetBalances();
+  const { getAvailableBalance, getBalance } = useGetBalances();
   const prices = useGetPrices();
 
   const collateralUSDAmount = getTokenPrice(prices, collateralCurrency.ticker)?.usd || 0;
 
   const isGovernanceCollateral = collateralCurrency === GOVERNANCE_TOKEN;
-  const freeGovernanceBalance = balances?.[GOVERNANCE_TOKEN.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const collateralTokenBalance = balances?.[collateralCurrency.ticker].free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const balanceToken = isGovernanceCollateral
-    ? getAvailableGovernanceBalance(freeGovernanceBalance)
-    : collateralTokenBalance;
+  const freeGovernanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const collateralTokenBalance =
+    getAvailableBalance(collateralCurrency.ticker) || newMonetaryAmount(0, collateralCurrency);
 
   return {
     collateral: {
@@ -65,9 +57,9 @@ const useDepositCollateral = (
         usd: collateralUSDAmount
       },
       balance: {
-        amount: balanceToken.toString(),
-        usd: displayMonetaryAmountInUSDFormat(balanceToken, collateralUSDAmount),
-        raw: balanceToken
+        amount: collateralTokenBalance.toString(),
+        usd: displayMonetaryAmountInUSDFormat(collateralTokenBalance, collateralUSDAmount),
+        raw: collateralTokenBalance
       },
       min: {
         amount: displayMonetaryAmount(minCollateral),
