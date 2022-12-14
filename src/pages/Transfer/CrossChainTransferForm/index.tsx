@@ -102,6 +102,22 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (toChain.type === fromChain.type) return;
 
     const getMaxTransferrable = async () => {
+      const balance = await firstValueFrom(
+        XCMBridge.findAdapter(fromChain.type).subscribeTokenBalance(currency.symbol, selectedAccount.address)
+      );
+
+      console.log(
+        'subscribe to balance',
+        'free',
+        balance.free.toString(),
+        'available',
+        balance.available.toString(),
+        'locked',
+        balance.locked.toString(),
+        'reserved',
+        balance.reserved.toString()
+      );
+
       const inputConfigs = await firstValueFrom(
         XCMBridge.findAdapter(fromChain.type).subscribeInputConfigs({
           to: toChain?.type,
@@ -112,7 +128,11 @@ const CrossChainTransferForm = (): JSX.Element => {
       );
 
       const maxInputToBig = Big(inputConfigs.maxInput.toString());
-      setTransferableBalance(newMonetaryAmount(maxInputToBig, currency, true));
+
+      // Never show less than zero
+      const transferableBalance = maxInputToBig.lte(0) ? 0 : maxInputToBig;
+
+      setTransferableBalance(newMonetaryAmount(transferableBalance, currency, true));
     };
 
     getMaxTransferrable();
