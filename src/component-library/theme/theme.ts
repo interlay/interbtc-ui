@@ -365,6 +365,9 @@ const theme = {
       bg: 'var(--colors-tooltip-tip-bg)',
       width: '5px'
     }
+  },
+  divider: {
+    bg: 'var(--colors-border)'
   }
 };
 

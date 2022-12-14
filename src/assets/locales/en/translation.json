@@ -544,7 +544,7 @@
     "lend": "Lend",
     "my_lend_positions": "My Lend Positions",
     "my_borrow_positions": "My Borrow Positions",
-    "action_will_recude_health_score": "{{action}} this amount will reduce your health score and increase risk of liquidation."
+    "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation."
   },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",

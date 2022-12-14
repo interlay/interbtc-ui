@@ -1,6 +1,6 @@
 import { useMutation } from 'react-query';
 
-import { formatNumber, formatUSD } from '@/common/utils/utils';
+import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-account-positions';
@@ -27,11 +27,12 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
 
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
-  const { borrowAmountUSD, supplyAmountUSD, netYieldAmountUSD } = statistics || {};
+  const { supplyAmountUSD, netAmountUSD, netAPY } = statistics || {};
 
   const supplyBalanceLabel = formatUSD(supplyAmountUSD?.toNumber() || 0);
-  const borrowBalanceLabel = formatUSD(borrowAmountUSD?.toNumber() || 0);
-  const netYieldBalanceLabel = formatUSD(netYieldAmountUSD?.toNumber() || 0);
+  const netBalanceLabel = formatUSD(netAmountUSD?.toNumber() || 0);
+  const netPercentage = formatPercentage(netAPY?.toNumber() || 0);
+  const netPercentageLabel = `${netAPY?.gt(0) ? '+' : ''}${netPercentage}`;
 
   const subsidyRewardsAmount = formatNumber(subsidyRewards?.toBig().toNumber() || 0, {
     maximumFractionDigits: subsidyRewards?.currency.humanDecimals || 5
@@ -50,14 +51,10 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
         </Card>
         <Card flex='1'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <StyledDt color='primary'>Borrow Balance</StyledDt>
-            <StyledDd color='secondary'>{borrowBalanceLabel}</StyledDd>
-          </DlGroup>
-        </Card>
-        <Card flex='1'>
-          <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <StyledDt color='primary'>Net Yield</StyledDt>
-            <StyledDd color='secondary'>{netYieldBalanceLabel}</StyledDd>
+            <StyledDt color='primary'>Net APY</StyledDt>
+            <StyledDd color='secondary'>
+              {netPercentageLabel} ({netBalanceLabel})
+            </StyledDd>
           </DlGroup>
         </Card>
         <Card

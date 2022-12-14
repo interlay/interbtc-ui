@@ -13,7 +13,7 @@ const DEFAULT_PRICES = {
 // This function can be also changed inside the test.
 const mockFetch = jest.fn((input, _init?) => {
   let result: unknown;
-  switch (input) {
+  switch (true) {
     case input.includes(PRICES_API.URL):
       result = DEFAULT_PRICES;
       break;

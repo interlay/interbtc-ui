@@ -7,6 +7,7 @@ import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { getSubsidyRewardApy } from '@/pages/Loans/LoansOverview/utils/get-subsidy-rewards-apy';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
@@ -39,14 +40,61 @@ const getAccountPositionsQuery = async (accountId: AccountId): Promise<AccountPo
   };
 };
 
+interface PositionsThresholdsData {
+  collateral: Big;
+  liquidation: Big;
+}
+
 interface AccountPositionsStatisticsData {
   supplyAmountUSD: Big;
   borrowAmountUSD: Big;
   collateralAmountUSD: Big;
+  liquidationAmountUSD: Big;
+  collateralizedAmountUSD: Big;
   earnedInterestAmountUSD: Big;
   earnedDeptAmountUSD: Big;
-  netYieldAmountUSD: Big;
+  netAmountUSD: Big;
+  netAPY: Big;
+  thresholds?: PositionsThresholdsData;
 }
+
+const getNetAPY = (
+  lendPositions: LendPosition[],
+  borrowPositions: BorrowPosition[],
+  assets: TickerToData<LoanAsset>,
+  supplyAmountUSD: Big,
+  prices: Prices
+): Big => {
+  if (!supplyAmountUSD.gt(0)) {
+    return new Big(0);
+  }
+
+  const totalLendApy = lendPositions.reduce((total, position) => {
+    const { lendApy, lendReward } = assets[position.currency.ticker];
+    const rewardsApy = getSubsidyRewardApy(position.currency, lendReward, prices);
+    const positionApy = lendApy.add(rewardsApy || 0);
+    const positionUSDValue = convertMonetaryAmountToValueInUSD(
+      position.amount,
+      getTokenPrice(prices, position.currency.ticker)?.usd
+    );
+
+    return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
+  }, new Big(0));
+
+  const totalBorrowApy = borrowPositions.reduce((total, position) => {
+    const { borrowApy, borrowReward } = assets[position.currency.ticker];
+    const rewardsApy = getSubsidyRewardApy(position.currency, borrowReward, prices);
+    const positionApy = borrowApy.sub(rewardsApy || 0);
+    const positionUSDValue = convertMonetaryAmountToValueInUSD(
+      position.amount,
+      getTokenPrice(prices, position.currency.ticker)?.usd
+    );
+
+    return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
+  }, new Big(0));
+
+  return totalLendApy.sub(totalBorrowApy).div(supplyAmountUSD);
+};
 
 const getAccountPositionsStats = (
   assets: TickerToData<LoanAsset>,
@@ -59,37 +107,64 @@ const getAccountPositionsStats = (
 
   const borrowAmountUSD = getPositionsSumOfFieldsInUSD('amount', borrowPositions, prices);
 
-  const collateralLendPositions = lendPositions
-    .filter(({ isCollateral }) => isCollateral)
-    .map(({ amount, currency, ...rest }) => ({
+  const collateralLendPositions = lendPositions.filter(({ isCollateral }) => isCollateral);
+
+  const collateralPositionsWithAppliedCollateralThreshold = collateralLendPositions.map(
+    ({ amount, currency, ...rest }) => ({
       // MEMO: compute total value based on collateral threshold (not full lend amount value)
       amount: amount.mul(assets[currency.ticker].collateralThreshold),
       currency,
       ...rest
-    }));
+    })
+  );
 
-  const collateralAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositions, prices);
+  const collateralPositionsWithAppliedLiquidationThreshold = collateralLendPositions.map(
+    ({ amount, currency, ...rest }) => ({
+      // MEMO: compute total value based on collateral threshold (not full lend amount value)
+      amount: amount.mul(assets[currency.ticker].liquidationThreshold),
+      currency,
+      ...rest
+    })
+  );
 
+  const collateralAmountUSD = getPositionsSumOfFieldsInUSD(
+    'amount',
+    collateralPositionsWithAppliedCollateralThreshold,
+    prices
+  );
+  const liquidationAmountUSD = getPositionsSumOfFieldsInUSD(
+    'amount',
+    collateralPositionsWithAppliedLiquidationThreshold,
+    prices
+  );
+
+  const collateralizedAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositions, prices);
   const earnedInterestAmountUSD = getPositionsSumOfFieldsInUSD<LendPosition>('earnedInterest', lendPositions, prices);
   const earnedDeptAmountUSD = getPositionsSumOfFieldsInUSD('accumulatedDebt', borrowPositions, prices);
 
   const totalEarnedRewardsUSDValue =
     convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) || 0;
-  const netYieldAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
+  const netAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
+
+  const netAPY = getNetAPY(lendPositions, borrowPositions, assets, supplyAmountUSD, prices);
 
   return {
     supplyAmountUSD,
     borrowAmountUSD,
     earnedInterestAmountUSD,
     collateralAmountUSD,
+    liquidationAmountUSD,
+    collateralizedAmountUSD,
     earnedDeptAmountUSD,
-    netYieldAmountUSD
+    netAmountUSD,
+    netAPY
   };
 };
 
 type UseGetAccountPositions = {
   data: Partial<AccountPositionsData> & {
     statistics: AccountPositionsStatisticsData | undefined;
+    hasCollateral: boolean;
   };
   refetch: () => void;
 };
@@ -126,6 +201,7 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
     data: {
       borrowPositions: positions?.borrowPositions,
       lendPositions: positions?.lendPositions,
+      hasCollateral: !!positions?.lendPositions.find((position) => position.isCollateral),
       statistics
     },
     refetch: refetchPositions
@@ -133,4 +209,4 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
 };
 
 export { useGetAccountPositions };
-export type { AccountPositionsData, AccountPositionsStatisticsData };
+export type { AccountPositionsData, AccountPositionsStatisticsData, PositionsThresholdsData };

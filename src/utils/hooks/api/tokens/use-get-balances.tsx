@@ -1,10 +1,12 @@
-import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
+import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
+import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
+import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
@@ -27,9 +29,14 @@ const getBalances = async (currencies: CurrencyExt[], accountId: AccountId): Pro
   );
 };
 
+type UseGetBalances = UseQueryResult<BalanceData | undefined> & {
+  getBalance: (ticker: string) => ChainBalance | undefined;
+  getAvailableBalance: (ticker: string) => ChainBalance['free'] | undefined;
+};
+
 const getBalancesQueryKey = (accountAddress?: string): string => 'getBalances'.concat(accountAddress || '');
 
-const useGetBalances = (): UseQueryResult<BalanceData | undefined> => {
+const useGetBalances = (): UseGetBalances => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const accountId = useAccountId();
   const { selectedAccount } = useSubstrateSecureState();
@@ -40,9 +47,33 @@ const useGetBalances = (): UseQueryResult<BalanceData | undefined> => {
     enabled: selectedAccount && accountId && isCurrenciesSuccess && bridgeLoaded
   });
 
-  useErrorHandler(queryResult.error);
+  const { data, error } = queryResult;
 
-  return queryResult;
+  useErrorHandler(error);
+
+  const getBalance = useCallback((ticker: string) => data?.[ticker], [data]);
+
+  // return available balance as well known as free field (ChainBalance).
+  // if the ticker is governance, the necessary for fees will be deducted
+  // from the return value
+  const getAvailableBalance = useCallback(
+    (ticker: string) => {
+      const { free } = getBalance(ticker) || {};
+
+      if (ticker === GOVERNANCE_TOKEN.ticker) {
+        if (!free) return undefined;
+
+        const governanceBalance = free.sub(TRANSACTION_FEE_AMOUNT);
+
+        return governanceBalance.toBig().gte(0) ? governanceBalance : newMonetaryAmount(0, governanceBalance.currency);
+      }
+
+      return free;
+    },
+    [getBalance]
+  );
+
+  return { ...queryResult, getBalance, getAvailableBalance };
 };
 
 export { getBalancesQueryKey, useGetBalances };
