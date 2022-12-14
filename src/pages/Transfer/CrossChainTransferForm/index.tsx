@@ -187,7 +187,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           address: destination.address
         } as CrossChainTransferParams);
 
-        await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx);
+        await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx, undefined, true);
       };
 
       await sendTransaction();
