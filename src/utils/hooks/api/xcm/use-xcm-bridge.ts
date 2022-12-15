@@ -12,12 +12,13 @@ const XCMBridge = new Bridge({
 // MEMO: BitcoinNetwork type is not available on XCM bridge
 const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
 
-const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
+// const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
+const useXCMBridge = (): { XCMProvider: any; XCMBridge: any } => {
   const [XCMProvider, setXCMProvider] = useState<any>();
 
   useEffect(() => {
     const createBridge = async () => {
-      const XCMProvider = new ApiProvider(XCMNetwork);
+      const XCMProvider = new ApiProvider(XCMNetwork) as any;
       const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
       // Check connection
