@@ -58,6 +58,8 @@
   --colors-input-disabled-text: var(--colors-neutral-lighter-grey);
   --colors-input-disabled-border: var(--colors-neutral-lighter-grey);
   --colors-input-background: var(--colors-neutral-white);
+  /* Token Input */
+  --colors-token-input-end-adornment-bg: var(--colors-neutral-lighter-grey);
   /* Modal */
   --colors-title-primary: var(--colors-neutral-black);
   --colors-title-secondary: var(--colors-light-blue);

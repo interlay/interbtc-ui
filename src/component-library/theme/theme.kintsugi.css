@@ -61,6 +61,8 @@
   --colors-input-disabled-text: var(--colors-mid-blue);
   --colors-input-disabled-border: var(--colors-mid-blue);
   --colors-input-background: transparent;
+  /* Token Input */
+  --colors-token-input-end-adornment-bg: var(--colors-neutral-white-25);
   /* Modal */
   --colors-title-primary: var(--colors-neutral-white);
   --colors-title-secondary: var(--colors-bronze);

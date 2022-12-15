@@ -78,6 +78,7 @@ const theme = {
   input: {
     color: 'var(--colors-input-text)',
     background: 'var(--colors-input-background)',
+    height: '4rem',
     default: {
       border: '1px solid var(--colors-input-default-border)'
     },
@@ -108,13 +109,17 @@ const theme = {
       text: 'var(--text-base)'
     },
     large: {
-      text: 'var(--text-5xl)'
+      text: 'var(--text-4xl)'
     },
     overflow: {
       large: {
-        text: 'var(--text-2xl)',
-        height: '4.6875rem'
+        text: 'var(--text-2xl)'
       }
+    }
+  },
+  tokenInput: {
+    endAdornment: {
+      bg: 'var(--colors-token-input-end-adornment-bg)'
     }
   },
   card: {

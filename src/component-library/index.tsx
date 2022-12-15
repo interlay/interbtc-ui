@@ -44,8 +44,6 @@ export type { TextLinkProps } from './TextLink';
 export { TextLink } from './TextLink';
 export type { ComponentLibraryTheme } from './theme';
 export { theme } from './theme';
-export type { TokenBalanceProps } from './TokenBalance';
-export { TokenBalance } from './TokenBalance';
 export type { TokenInputProps } from './TokenInput';
 export { TokenInput } from './TokenInput';
 export type { TooltipProps } from './Tooltip';

@@ -1,21 +1,35 @@
 import { Meta, Story } from '@storybook/react';
+import { useState } from 'react';
 
 import { formatUSD } from '@/common/utils/utils';
 
 import { TokenInput, TokenInputProps } from '.';
 
-const Template: Story<TokenInputProps> = (args) => <TokenInput aria-label='token field' {...args} />;
+const Template: Story<TokenInputProps> = (args) => {
+  const [value, setValue] = useState<number>();
+
+  return (
+    <TokenInput
+      {...args}
+      value={value}
+      onChange={(e) => setValue(Number(e.target.value || 0))}
+      aria-label='token field'
+      valueInUSD={`$${(value || 0) * 10}`}
+      onPressToken={console.log}
+    />
+  );
+};
 
 const WithBalance = Template.bind({});
 WithBalance.args = {
   tokenSymbol: 'KSM',
-  valueInUSD: formatUSD(100.0),
   balance: 1000.0,
-  balanceInUSD: formatUSD(1000.0),
   isDisabled: false,
   decimals: 8,
   renderBalance: (value) => Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 }).format(value),
-  label: 'Available Balance'
+  balanceLabel: 'Balance',
+  placeholder: '0.00',
+  label: 'From'
 };
 
 const WithoutBalance = Template.bind({});
