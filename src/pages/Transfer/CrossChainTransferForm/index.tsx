@@ -1,14 +1,24 @@
+import { FixedPointNumber } from '@acala-network/sdk-core';
+import { BasicToken, CrossChainTransferParams } from '@interlay/bridge';
+import { CurrencyExt, DefaultTransactionAPI } from '@interlay/interbtc-api';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
+import { ApiPromise } from '@polkadot/api';
+import { web3FromAddress } from '@polkadot/extension-dapp';
+import Big from 'big.js';
 import * as React from 'react';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useEffect } from 'react';
+import { withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { firstValueFrom } from 'rxjs';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { CoinIcon } from '@/component-library';
 import Accounts from '@/components/Accounts';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
 import Chains, { ChainOption } from '@/components/Chains';
@@ -18,53 +28,37 @@ import FormTitle from '@/components/FormTitle';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
-import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
-import { ChainType } from '@/types/chains.types';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import {
-  createRelayChainApi,
-  getExistentialDeposit,
-  getRelayChainBalance,
-  RELAY_CHAIN_TRANSFER_FEE,
-  RelayChainApi,
-  RelayChainMonetaryAmount,
-  transferToParachain,
-  transferToRelayChain
-} from '@/utils/relay-chain-api';
+import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
-
-const transferFee = newMonetaryAmount(RELAY_CHAIN_TRANSFER_FEE, RELAY_CHAIN_NATIVE_TOKEN);
 
 type CrossChainTransferFormData = {
   [TRANSFER_AMOUNT]: string;
 };
 
 const CrossChainTransferForm = (): JSX.Element => {
-  // TODO: review how we're handling the relay chain api - for now it can
-  // be scoped to this component, but long term it needs to be handled at
-  // the application level.
-  const [api, setApi] = React.useState<RelayChainApi | undefined>(undefined);
-  const [relayChainBalance, setRelayChainBalance] = React.useState<RelayChainMonetaryAmount | undefined>(undefined);
-  const [destinationRelayChainBalance, setDestinationRelayChainBalance] = React.useState<
-    RelayChainMonetaryAmount | undefined
-  >(undefined);
-  const [fromChain, setFromChain] = React.useState<ChainType | undefined>(ChainType.RelayChain);
-  const [toChain, setToChain] = React.useState<ChainType | undefined>(ChainType.Parachain);
+  const [fromChains, setFromChains] = React.useState<Array<ChainOption> | undefined>(undefined);
+  const [fromChain, setFromChain] = React.useState<ChainOption | undefined>(undefined);
+  const [toChains, setToChains] = React.useState<Array<ChainOption> | undefined>(undefined);
+  const [toChain, setToChain] = React.useState<ChainOption | undefined>(undefined);
+  const [transferableBalance, setTransferableBalance] = React.useState<any>(undefined);
   const [destination, setDestination] = React.useState<KeyringPair | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
-  // TODO: this could be removed form state using React hook form getValue/watch
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
+  const [currency, setCurrency] = React.useState<BasicToken | undefined>(undefined);
 
+  // TODO: this will need to be refactored when we support multiple currencies
+  // per channel, but so will the UI so better to handle this then.
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const handleError = useErrorHandler();
+
+  const { XCMBridge, XCMProvider } = useXCMBridge();
 
   const {
     register,
@@ -79,7 +73,91 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const { selectedAccount } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
-  const { data: balances } = useGetBalances();
+
+  useEffect(() => {
+    if (!XCMBridge) return;
+    if (!fromChain) return;
+    if (!toChain) return;
+    // TODO: This handles a race condition. Will need to be fixed properly
+    // when supporting USDT
+    if (fromChain.name === toChain.name) return;
+
+    const tokens = XCMBridge.router.getAvailableTokens({ from: fromChain.type, to: toChain.type });
+
+    const supportedCurrency = XCMBridge.findAdapter(fromChain.type).getToken(tokens[0], fromChain.type);
+
+    setCurrency(supportedCurrency);
+  }, [fromChain, toChain, XCMBridge]);
+
+  useEffect(() => {
+    if (!XCMBridge) return;
+    if (!fromChain) return;
+    if (!toChain) return;
+    if (!selectedAccount) return;
+    if (!currency) return;
+    if (!destination) return;
+    // TODO: This handles a race condition. Will need to be fixed properly
+    // when supporting USDT
+    if (toChain.type === fromChain.type) return;
+
+    const getMaxTransferrable = async () => {
+      // TODO: Resolve type issue caused by version mismatch
+      // and remove casting to `any`
+      const inputConfigs: any = await firstValueFrom(
+        XCMBridge.findAdapter(fromChain.type).subscribeInputConfigs({
+          to: toChain?.type,
+          token: currency.symbol,
+          address: destination.address,
+          signer: selectedAccount.address
+        }) as any
+      );
+
+      const maxInputToBig = Big(inputConfigs.maxInput.toString());
+
+      // Never show less than zero
+      const transferableBalance = inputConfigs.maxInput < inputConfigs.minInput ? 0 : maxInputToBig;
+
+      setTransferableBalance(newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true));
+    };
+
+    getMaxTransferrable();
+  }, [currency, fromChain, toChain, selectedAccount, destination, XCMBridge]);
+
+  useEffect(() => {
+    if (!XCMBridge) return;
+    if (!XCMProvider) return;
+
+    const availableFromChains: Array<ChainOption> = XCMBridge.adapters.map((adapter: any) => {
+      return {
+        type: adapter.chain.id,
+        name: adapter.chain.id,
+        icon: <CoinIcon coin={adapter.balanceAdapter.nativeToken} size='small' />
+      };
+    });
+
+    setFromChains(availableFromChains);
+    setFromChain(availableFromChains[0]);
+  }, [XCMBridge, XCMProvider]);
+
+  useEffect(() => {
+    if (!XCMBridge) return;
+    if (!fromChain) return;
+
+    const destinationChains = XCMBridge.router.getDestinationChains({ from: fromChain.type });
+
+    const availableToChains = destinationChains.map((chain: any) => {
+      const adapter = XCMBridge.findAdapter(chain.id) as any;
+
+      return {
+        type: chain.id,
+        name: chain.id,
+        icon: <CoinIcon coin={adapter.balanceAdapter.nativeToken} size='small' />
+      };
+    });
+
+    setToChains(availableToChains);
+    setToChain(availableToChains[0]);
+  }, [fromChain, XCMBridge]);
 
   const onSubmit = async (data: CrossChainTransferFormData) => {
     if (!selectedAccount) return;
@@ -88,24 +166,36 @@ const CrossChainTransferForm = (): JSX.Element => {
     try {
       setSubmitStatus(STATUSES.PENDING);
 
-      if (!api) return;
+      if (!XCMBridge || !fromChain || !toChain) return;
 
-      // We can use if else here as we only support two chains
-      if (fromChain === ChainType.RelayChain) {
-        await transferToParachain(
-          api,
-          selectedAccount.address,
-          destination.address,
-          newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true)
-        );
-      } else {
-        await transferToRelayChain(
-          window.bridge.api,
-          selectedAccount.address,
-          destination.address,
-          newMonetaryAmount(data[TRANSFER_AMOUNT], RELAY_CHAIN_NATIVE_TOKEN, true)
-        );
-      }
+      const sendTransaction = async () => {
+        const { signer } = await web3FromAddress(selectedAccount.address.toString());
+
+        const adapter = XCMBridge.findAdapter(fromChain.type);
+
+        const apiPromise = (XCMProvider.getApiPromise(fromChain.type) as unknown) as ApiPromise;
+
+        apiPromise.setSigner(signer);
+
+        // TODO: Version mismatch with ApiPromise type. This should be inferred.
+        adapter.setApi(apiPromise as any);
+
+        const transferAmount = new MonetaryAmount((currency as unknown) as CurrencyExt, data[TRANSFER_AMOUNT]);
+        const transferAmountString = transferAmount.toString(true);
+        const transferAmountDecimals = transferAmount.currency.decimals;
+
+        // TODO: Transaction is in promise form
+        const tx: any = adapter.createTx({
+          amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
+          to: toChain.type,
+          token: currency?.symbol,
+          address: destination.address
+        } as CrossChainTransferParams);
+
+        await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx, undefined, true);
+      };
+
+      await sendTransaction();
 
       setSubmitStatus(STATUSES.RESOLVED);
     } catch (error) {
@@ -124,129 +214,59 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleUpdateUsdAmount = (value: string) => {
     if (!value) return;
 
-    const tokenAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
-    const usd = displayMonetaryAmountInUSDFormat(
-      tokenAmount,
-      getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
-    );
+    const tokenAmount = newMonetaryAmount(value, (currency as unknown) as CurrencyExt, true);
+
+    const usd = currency
+      ? displayMonetaryAmountInUSDFormat(tokenAmount, getTokenPrice(prices, currency.symbol)?.usd)
+      : '0';
 
     setApproxUsdValue(usd);
   };
 
-  const validateRelayChainTransferAmount = (value: string): string | undefined => {
-    const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
+  const validateTransferAmount = async (value: string) => {
+    if (!toChain) return;
+    if (!fromChain) return;
+    if (!destination) return;
+    if (!selectedAccount) return;
+    if (!currency) return;
 
-    return relayChainBalance?.lt(transferAmount) ? t('insufficient_funds') : undefined;
-  };
+    const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
+    const transferAmount = newMonetaryAmount(value, (currency as unknown) as CurrencyExt, true);
 
-  const validateParachainTransferAmount = (value: string): string | undefined => {
-    const transferAmount = newMonetaryAmount(value, RELAY_CHAIN_NATIVE_TOKEN, true);
+    // TODO: Resolve type issue caused by version mismatch
+    // and remove casting to `any`
+    const inputConfigs: any = await firstValueFrom(
+      XCMBridge.findAdapter(fromChain.type).subscribeInputConfigs({
+        to: toChain?.type,
+        token: currency?.symbol,
+        address: destination.address,
+        signer: selectedAccount.address
+      }) as any
+    );
 
-    // TODO: this api check won't be necessary when the api call is moved out of
-    // the component
-    const existentialDeposit = api
-      ? newMonetaryAmount(getExistentialDeposit(api), RELAY_CHAIN_NATIVE_TOKEN)
-      : newMonetaryAmount('0', RELAY_CHAIN_NATIVE_TOKEN);
+    const minInputToBig = Big(inputConfigs.minInput.toString());
+    const maxInputToBig = Big(inputConfigs.maxInput.toString());
 
-    // TODO: we need to handle and validate transfer fees properly. Implemented here initially
-    // because it was an issue during testing.
-    if (balances?.[RELAY_CHAIN_NATIVE_TOKEN.ticker].transferable.lt(transferAmount)) {
+    if (balanceMonetaryAmount.lt(transferAmount)) {
       return t('insufficient_funds');
-      // Check transferred amount won't be below existential deposit when fees are deducted
-      // This check is redundant if the relay chain balance is above zero
-    } else if (
-      destinationRelayChainBalance &&
-      transferAmount.add(destinationRelayChainBalance).sub(transferFee).lt(existentialDeposit)
-    ) {
-      return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_maintain_existential_deposit', {
-        transferFee: `${displayMonetaryAmount(transferFee)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`,
-        existentialDeposit: `${displayMonetaryAmount(existentialDeposit)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`
-      });
-      // Check the transfer amount is more than the fee
-    } else if (transferAmount.lte(transferFee)) {
-      return t('transfer_page.cross_chain_transfer_form.insufficient_funds_to_pay_fees', {
-        transferFee: `${displayMonetaryAmount(transferFee)} ${RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}`
-      });
+    } else if (minInputToBig.gt(transferableBalance)) {
+      return 'Transferable balance is lower than minimum';
+    } else if (minInputToBig.gt(transferAmount.toBig())) {
+      return 'Must transfer more than [minInput] (taking into account ed, fees)';
+    } else if (maxInputToBig.lt(transferAmount.toBig())) {
+      return 'Must transfer less than maximum';
     } else {
       return undefined;
     }
   };
 
-  React.useEffect(() => {
-    if (api) return;
-    if (!handleError) return;
-
-    const initialiseApi = async () => {
-      try {
-        const api = await createRelayChainApi();
-        setApi(api);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    initialiseApi();
-  }, [api, handleError]);
-
-  React.useEffect(() => {
-    if (!api) return;
-    if (!handleError) return;
-    if (!destination) return;
-
-    const fetchDestinationRelayChainBalance = async () => {
-      try {
-        const balance: any = await getRelayChainBalance(api, destination?.address);
-        setDestinationRelayChainBalance(balance);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    fetchDestinationRelayChainBalance();
-  }, [api, destination, handleError]);
-
-  React.useEffect(() => {
-    if (!api) return;
-    if (!handleError) return;
-    if (!selectedAccount) return;
-
-    const fetchRelayChainBalance = async () => {
-      try {
-        const balance: any = await getRelayChainBalance(api, selectedAccount.address);
-        setRelayChainBalance(balance.sub(transferFee));
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    fetchRelayChainBalance();
-  }, [api, selectedAccount, handleError]);
-
   const handleSetFromChain = (chain: ChainOption) => {
-    setFromChain(chain.type);
-
-    // prevent toChain having the same value as fromChain
-    if (chain.type === toChain) {
-      setToChain(chain.type === ChainType.Parachain ? ChainType.RelayChain : ChainType.Parachain);
-    }
+    setFromChain(chain);
   };
-
-  const handleSetToChain = (chain: ChainOption) => {
-    setToChain(chain.type);
-
-    // prevent fromChain having the same value as toChain
-    if (chain.type === fromChain) {
-      setFromChain(chain.type === ChainType.Parachain ? ChainType.RelayChain : ChainType.Parachain);
-    }
-  };
-
-  const isRelayChain = fromChain === ChainType.RelayChain;
-  const chainBalance = isRelayChain ? relayChainBalance : balances?.[RELAY_CHAIN_NATIVE_TOKEN.ticker].transferable;
-  const balance = displayMonetaryAmount(chainBalance);
 
   const handleClickBalance = () => {
-    setValue(TRANSFER_AMOUNT, balance);
-    handleUpdateUsdAmount(balance);
+    setValue(TRANSFER_AMOUNT, transferableBalance);
+    handleUpdateUsdAmount(transferableBalance);
     trigger(TRANSFER_AMOUNT);
   };
 
@@ -262,13 +282,9 @@ const CrossChainTransferForm = (): JSX.Element => {
     });
   }, [submitStatus, reset, t]);
 
-  if (!api) {
+  if (!XCMBridge || !toChain || !fromChain || !currency) {
     return <PrimaryColorEllipsisLoader />;
   }
-
-  const availableBalanceLabel = isRelayChain
-    ? t('transfer_page.cross_chain_transfer_form.relay_chain_balance')
-    : t('transfer_page.cross_chain_transfer_form.parachain_balance');
 
   return (
     <>
@@ -276,9 +292,9 @@ const CrossChainTransferForm = (): JSX.Element => {
         <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
         <div>
           <AvailableBalanceUI
-            label={availableBalanceLabel}
-            balance={balance}
-            tokenSymbol={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+            label='Transferable balance'
+            balance={transferableBalance?.toString() || '0'}
+            tokenSymbol={currency.symbol}
             onClick={handleClickBalance}
           />
           <TokenField
@@ -289,24 +305,24 @@ const CrossChainTransferForm = (): JSX.Element => {
                 value: true,
                 message: t('transfer_page.cross_chain_transfer_form.please_enter_amount')
               },
-              validate: (value) =>
-                isRelayChain ? validateRelayChainTransferAmount(value) : validateParachainTransferAmount(value)
+              validate: (value) => validateTransferAmount(value)
             })}
             error={!!errors[TRANSFER_AMOUNT]}
             helperText={errors[TRANSFER_AMOUNT]?.message}
-            label={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+            label={currency.symbol}
             approxUSD={`≈ ${approxUsdValue}`}
           />
         </div>
         <Chains
+          chainOptions={fromChains}
           label={t('transfer_page.cross_chain_transfer_form.from_chain')}
           selectedChain={fromChain}
           onChange={handleSetFromChain}
         />
         <Chains
+          chainOptions={toChains}
           label={t('transfer_page.cross_chain_transfer_form.to_chain')}
           selectedChain={toChain}
-          onChange={handleSetToChain}
         />
         <Accounts
           label={t('transfer_page.cross_chain_transfer_form.target_account')}
