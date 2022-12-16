@@ -1,6 +1,6 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { CrossChainTransferParams } from '@interlay/bridge';
-import { DefaultTransactionAPI } from '@interlay/interbtc-api';
+import { BasicToken, CrossChainTransferParams } from '@interlay/bridge';
+import { CurrencyExt, DefaultTransactionAPI } from '@interlay/interbtc-api';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { ApiPromise } from '@polkadot/api';
@@ -50,8 +50,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [approxUsdValue, setApproxUsdValue] = React.useState<string>('0');
-
-  const [currency, setCurrency] = React.useState<any>(undefined);
+  const [currency, setCurrency] = React.useState<BasicToken | undefined>(undefined);
 
   // TODO: this will need to be refactored when we support multiple currencies
   // per channel, but so will the UI so better to handle this then.
@@ -102,13 +101,15 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (toChain.type === fromChain.type) return;
 
     const getMaxTransferrable = async () => {
+      // TODO: Resolve type issue caused by version mismatch
+      // and remove casting to `any`
       const inputConfigs: any = await firstValueFrom(
         XCMBridge.findAdapter(fromChain.type).subscribeInputConfigs({
           to: toChain?.type,
           token: currency.symbol,
           address: destination.address,
           signer: selectedAccount.address
-        })
+        }) as any
       );
 
       const maxInputToBig = Big(inputConfigs.maxInput.toString());
@@ -116,7 +117,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       // Never show less than zero
       const transferableBalance = inputConfigs.maxInput < inputConfigs.minInput ? 0 : maxInputToBig;
 
-      setTransferableBalance(newMonetaryAmount(transferableBalance, currency, true));
+      setTransferableBalance(newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true));
     };
 
     getMaxTransferrable();
@@ -179,7 +180,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         // TODO: Version mismatch with ApiPromise type. This should be inferred.
         adapter.setApi(apiPromise as any);
 
-        const transferAmount = new MonetaryAmount(currency, data[TRANSFER_AMOUNT]);
+        const transferAmount = new MonetaryAmount((currency as unknown) as CurrencyExt, data[TRANSFER_AMOUNT]);
         const transferAmountString = transferAmount.toString(true);
         const transferAmountDecimals = transferAmount.currency.decimals;
 
@@ -187,7 +188,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         const tx: any = adapter.createTx({
           amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
           to: toChain.type,
-          token: currency.symbol,
+          token: currency?.symbol,
           address: destination.address
         } as CrossChainTransferParams);
 
@@ -213,9 +214,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleUpdateUsdAmount = (value: string) => {
     if (!value) return;
 
-    const tokenAmount = newMonetaryAmount(value, currency, true);
+    const tokenAmount = newMonetaryAmount(value, (currency as unknown) as CurrencyExt, true);
 
-    const usd = displayMonetaryAmountInUSDFormat(tokenAmount, getTokenPrice(prices, currency.symbol)?.usd);
+    const usd = currency
+      ? displayMonetaryAmountInUSDFormat(tokenAmount, getTokenPrice(prices, currency.symbol)?.usd)
+      : '0';
 
     setApproxUsdValue(usd);
   };
@@ -225,17 +228,20 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!fromChain) return;
     if (!destination) return;
     if (!selectedAccount) return;
+    if (!currency) return;
 
-    const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, currency, true);
-    const transferAmount = newMonetaryAmount(value, currency, true);
+    const balanceMonetaryAmount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
+    const transferAmount = newMonetaryAmount(value, (currency as unknown) as CurrencyExt, true);
 
+    // TODO: Resolve type issue caused by version mismatch
+    // and remove casting to `any`
     const inputConfigs: any = await firstValueFrom(
       XCMBridge.findAdapter(fromChain.type).subscribeInputConfigs({
         to: toChain?.type,
-        token: currency.symbol,
+        token: currency?.symbol,
         address: destination.address,
         signer: selectedAccount.address
-      })
+      }) as any
     );
 
     const minInputToBig = Big(inputConfigs.minInput.toString());

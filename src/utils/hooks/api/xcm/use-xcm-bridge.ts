@@ -38,16 +38,17 @@ const getEndpoints = (chains: ChainName[]) => {
 };
 
 // const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
-const useXCMBridge = (): { XCMProvider: any; XCMBridge: any } => {
+const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
   const [XCMProvider, setXCMProvider] = useState<any>();
 
   useEffect(() => {
     const createBridge = async () => {
-      const XCMProvider = new ApiProvider(XCMNetwork) as any;
+      const XCMProvider = new ApiProvider(XCMNetwork);
       const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
       // Check connection
-      await firstValueFrom(XCMProvider.connectFromChain(chains, getEndpoints(chains)));
+      // TODO: Get rid of any casting - mismatch between ApiRx types
+      await firstValueFrom(XCMProvider.connectFromChain(chains, getEndpoints(chains)) as any);
 
       // Set Apis
       await Promise.all(
