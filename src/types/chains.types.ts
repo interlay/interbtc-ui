@@ -1,6 +1,3 @@
-enum ChainType {
-  Parachain = 'parachain',
-  RelayChain = 'relayChain'
-}
+type XCMChains = 'polkadot' | 'interlay';
 
-export { ChainType };
+export type { XCMChains };
