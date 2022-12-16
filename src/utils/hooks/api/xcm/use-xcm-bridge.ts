@@ -13,7 +13,7 @@ const XCMBridge = new Bridge({
 const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
 
 // TODO: This config needs to be pushed higher up the app.
-// Not sure how this will look: something to decided when
+// Not sure how this will look: something to decide when
 // adding USDT support.
 const getEndpoints = (chains: ChainName[]) => {
   switch (true) {
