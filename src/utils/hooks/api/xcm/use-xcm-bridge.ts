@@ -12,6 +12,31 @@ const XCMBridge = new Bridge({
 // MEMO: BitcoinNetwork type is not available on XCM bridge
 const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
 
+// TODO: This config needs to be pushed higher up the app.
+// Not sure how this will look: something to decided when
+// adding USDT support.
+const getEndpoints = (chains: ChainName[]) => {
+  switch (true) {
+    case chains.includes('kusama'):
+      return {
+        kusama: [
+          'wss://kusama-rpc.polkadot.io',
+          'wss://kusama.api.onfinality.io/public-ws',
+          'wss://kusama-rpc.dwellir.com'
+        ],
+        kintsugi: ['wss://api-kusama.interlay.io/parachain', 'wss://kintsugi.api.onfinality.io/public-ws']
+      };
+    case chains.includes('polkadot'):
+      return {
+        polkadot: ['wss://rpc.polkadot.io', 'wss://polkadot.api.onfinality.io/public-ws'],
+        interlay: ['wss://api.interlay.io/parachain', 'wss://interlay.api.onfinality.io/public-ws']
+      };
+
+    default:
+      return undefined;
+  }
+};
+
 // const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
 const useXCMBridge = (): { XCMProvider: any; XCMBridge: any } => {
   const [XCMProvider, setXCMProvider] = useState<any>();
@@ -22,7 +47,7 @@ const useXCMBridge = (): { XCMProvider: any; XCMBridge: any } => {
       const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
       // Check connection
-      await firstValueFrom(XCMProvider.connectFromChain(chains, undefined));
+      await firstValueFrom(XCMProvider.connectFromChain(chains, getEndpoints(chains)));
 
       // Set Apis
       await Promise.all(
