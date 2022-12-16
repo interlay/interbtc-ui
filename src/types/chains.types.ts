@@ -1,3 +1,3 @@
-type XcmChains = 'polkadot' | 'interlay';
+type XCMChains = 'polkadot' | 'interlay';
 
-export type { XcmChains };
+export type { XCMChains };

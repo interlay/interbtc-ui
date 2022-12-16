@@ -10,10 +10,10 @@ import Select, {
   SelectOptions,
   SelectText
 } from '@/components/Select';
-import { XcmChains } from '@/types/chains.types';
+import { XCMChains } from '@/types/chains.types';
 
 interface ChainOption {
-  type: XcmChains;
+  type: XCMChains;
   name: string;
   icon: JSX.Element;
 }
