@@ -1,3 +1,6 @@
+import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
+import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
+import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import {
   CurrencyExt,
   CurrencyIdLiteral,
@@ -108,6 +111,8 @@ let STAKE_LOCK_TIME: {
   MAX: number;
 };
 
+let XCM_ADAPTERS: Record<string, BaseCrossChainAdapter>;
+
 let TRANSACTION_FEE_AMOUNT: MonetaryAmount<CurrencyExt>;
 
 type WrappedTokenAmount = InterBtcAmount | KBtcAmount;
@@ -146,6 +151,11 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     };
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
+    XCM_ADAPTERS = {
+      interlay: new InterlayAdapter(),
+      polkadot: new PolkadotAdapter()
+    };
+
     break;
   }
   // Kintsugi
@@ -181,6 +191,10 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     };
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
+    XCM_ADAPTERS = {
+      kintsugi: new KintsugiAdapter(),
+      kusama: new KusamaAdapter()
+    };
     break;
   }
   default: {
@@ -222,5 +236,6 @@ export {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon
+  WrappedTokenLogoIcon,
+  XCM_ADAPTERS
 };

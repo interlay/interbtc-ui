@@ -10,10 +10,10 @@ import Select, {
   SelectOptions,
   SelectText
 } from '@/components/Select';
-import { ChainType } from '@/types/chains.types';
+import { XCMChains } from '@/types/chains.types';
 
 interface ChainOption {
-  type: ChainType;
+  type: XCMChains;
   name: string;
   icon: JSX.Element;
 }
@@ -22,7 +22,7 @@ interface Props {
   chainOptions: Array<ChainOption>;
   selectedChain: ChainOption | undefined;
   label: string;
-  onChange: (chain: ChainOption) => void;
+  onChange?: (chain: ChainOption) => void;
 }
 
 const ChainSelector = ({ chainOptions, selectedChain, label, onChange }: Props): JSX.Element => (
