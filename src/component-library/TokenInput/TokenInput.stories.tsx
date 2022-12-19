@@ -15,7 +15,8 @@ const Template: Story<TokenInputProps> = (args) => {
       onChange={(e) => setValue(Number(e.target.value || 0))}
       aria-label='token field'
       valueInUSD={`$${(value || 0) * 10}`}
-      onPressToken={console.log}
+      onSelectToken={console.log}
+      currencies={[{ balance: 200, currency: 'KSM', usd: '$200' }]}
     />
   );
 };
@@ -26,7 +27,6 @@ WithBalance.args = {
   balance: 1000.0,
   isDisabled: false,
   decimals: 8,
-  renderBalance: (value) => Intl.NumberFormat(undefined, { minimumIntegerDigits: 2 }).format(value),
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'From'
