@@ -248,13 +248,17 @@ const CrossChainTransferForm = (): JSX.Element => {
     const maxInputToBig = Big(inputConfigs.maxInput.toString());
 
     if (balanceMonetaryAmount.lt(transferAmount)) {
-      return t('insufficient_funds');
+      return t('xcm_transfer.validation.insufficient_funds');
     } else if (minInputToBig.gt(transferableBalance)) {
-      return 'Transferable balance is lower than minimum';
+      return t('xcm_transfer.validation.balance_lower_minimum');
     } else if (minInputToBig.gt(transferAmount.toBig())) {
-      return 'Must transfer more than [minInput] (taking into account ed, fees)';
+      return t('xcm_transfer.validation.transfer_more_than_minimum', {
+        amount: `${inputConfigs.minInput.toString()} ${currency.symbol}`
+      });
     } else if (maxInputToBig.lt(transferAmount.toBig())) {
-      return 'Must transfer less than maximum';
+      return t('xcm_transfer.validation.transfer_less_than_maximum', {
+        amount: `${inputConfigs.maxInput.toString()} ${currency.symbol}`
+      });
     } else {
       return undefined;
     }

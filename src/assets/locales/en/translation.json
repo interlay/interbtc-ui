@@ -553,5 +553,13 @@
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
     "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance",
     "field_amount": "{{field}} amount"
+  },
+  "xcm_transfer": {
+    "validation": {
+      "insufficient_funds": "Insufficient balance to transfer",
+      "balance_lower_minimum": "Transferable balance is lower than the minimum",
+      "transfer_more_than_minimum": "Must transfer more than the minimum amount of {{ amount }}",
+      "transfer_less_than_maximum": "Must transfer less than the maximum amount of {{ amount }}"
+    }
   }
 }
