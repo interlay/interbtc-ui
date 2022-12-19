@@ -252,9 +252,13 @@ const CrossChainTransferForm = (): JSX.Element => {
     } else if (minInputToBig.gt(transferableBalance)) {
       return t('xcm_transfer.validation.balance_lower_minimum');
     } else if (minInputToBig.gt(transferAmount.toBig())) {
-      return t('xcm_transfer.validation.transfer_more_than_minimum');
+      return t('xcm_transfer.validation.transfer_more_than_minimum', {
+        amount: `${inputConfigs.minInput.toString()} ${currency.symbol}`
+      });
     } else if (maxInputToBig.lt(transferAmount.toBig())) {
-      return t('xcm_transfer.validation.transfer_less_than_maximum');
+      return t('xcm_transfer.validation.transfer_less_than_maximum', {
+        amount: `${inputConfigs.maxInput.toString()} ${currency.symbol}`
+      });
     } else {
       return undefined;
     }
