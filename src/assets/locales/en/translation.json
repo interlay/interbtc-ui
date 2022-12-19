@@ -557,9 +557,9 @@
   "xcm_transfer": {
     "validation": {
       "insufficient_funds": "Insufficient balance to transfer",
-      "balance_lower_minimum": "Transferable balance is lower than minimum",
-      "transfer_more_than_minimum": "Must transfer more than [minInput] (taking into account ed, fees)",
-      "transfer_less_than_maximum": "Must transfer less than maximum"
+      "balance_lower_minimum": "Transferable balance is lower than the minimum",
+      "transfer_more_than_minimum": "Must transfer more than the minimum amount of {{ minimumTransferableAmount }}",
+      "transfer_less_than_maximum": "Must transfer less than the maximum amount of {{ maximumTransferableAmount }}"
     }
   }
 }
