@@ -25,7 +25,6 @@ import {
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
 import AvailableBalanceUI from '@/components/AvailableBalanceUI';
-import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
 import FormTitle from '@/components/FormTitle';
@@ -36,7 +35,6 @@ import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayLink from '@/components/UI/InterlayLink';
-import Vaults from '@/components/Vaults';
 import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
 import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import {
@@ -58,6 +56,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import ManualVaultSelectUI from '../ManualVaultSelectUI';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
 
 const BTC_AMOUNT = 'btc-amount';
@@ -124,7 +123,7 @@ const IssueForm = (): JSX.Element | null => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
-  const [vault, setVault] = React.useState<VaultApiType | undefined>();
+  const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
 
   const {
     isIdle: requestLimitsIdle,
@@ -194,29 +193,27 @@ const IssueForm = (): JSX.Element | null => {
   }, [bridgeLoaded, dispatch, handleError, setError, t]);
 
   React.useEffect(() => {
-    // deselect checkbox when required btcAmount exceeds capacity
+    // Deselect checkbox when required btcAmount exceeds capacity
     if (requestLimits) {
-      const parsedBTCAmount = new BitcoinAmount(btcAmount);
-      const requiredTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
-      if (requiredTokenAmount.gt(requestLimits.singleVaultMaxIssuable)) {
+      const monetaryBtcAmount = new BitcoinAmount(btcAmount);
+      if (monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable)) {
         setSelectVaultManually(false);
       }
     }
-  }, [btcAmount, feeRate, requestLimits]);
+  }, [btcAmount, requestLimits]);
 
   React.useEffect(() => {
     // Vault selection validation
-    const parsedBTCAmount = new BitcoinAmount(btcAmount);
-    const wrappedTokenAmount = parsedBTCAmount.sub(parsedBTCAmount.mul(feeRate));
+    const monetaryBtcAmount = new BitcoinAmount(btcAmount);
 
-    if (selectVaultManually && vault === undefined) {
+    if (selectVaultManually && selectedVault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
-    } else if (selectVaultManually && vault?.[1].lt(wrappedTokenAmount)) {
+    } else if (selectVaultManually && selectedVault?.[1].lt(monetaryBtcAmount)) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
     } else {
       clearErrors(VAULT_SELECTION);
     }
-  }, [selectVaultManually, vault, setError, clearErrors, t, btcAmount, feeRate]);
+  }, [selectVaultManually, selectedVault, setError, clearErrors, t, btcAmount]);
 
   const hasIssuableToken = !requestLimits?.singleVaultMaxIssuable.isZero();
 
@@ -308,7 +305,7 @@ const IssueForm = (): JSX.Element | null => {
 
     const handleSelectVaultCheckboxChange = () => {
       if (!isSelectVaultCheckboxDisabled) {
-        setSelectVaultManually((currentState) => !currentState);
+        setSelectVaultManually((prev) => !prev);
       }
     };
 
@@ -318,17 +315,17 @@ const IssueForm = (): JSX.Element | null => {
         await requestLimitsRefetch();
         await trigger(BTC_AMOUNT);
 
-        const wrappedTokenAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
+        const monetaryBtcAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
         const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
-        let vaultId: InterbtcPrimitivesVaultId;
 
+        let vaultId: InterbtcPrimitivesVaultId;
         if (selectVaultManually) {
-          if (!vault) {
+          if (!selectedVault) {
             throw new Error('Specific vault is not selected!');
           }
-          vaultId = vault[0];
+          vaultId = selectedVault[0];
         } else {
-          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), wrappedTokenAmount);
+          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), monetaryBtcAmount);
         }
 
         const collateralToken = await currencyIdToMonetaryCurrency(
@@ -338,7 +335,7 @@ const IssueForm = (): JSX.Element | null => {
         );
 
         const result = await window.bridge.issue.request(
-          wrappedTokenAmount,
+          monetaryBtcAmount,
           vaultId.accountId,
           collateralToken,
           false, // default
@@ -356,12 +353,12 @@ const IssueForm = (): JSX.Element | null => {
       }
     };
 
-    const parsedBTCAmount = new BitcoinAmount(btcAmount);
-    const bridgeFee = parsedBTCAmount.mul(feeRate);
-    const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
-    const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
+    const monetaryBtcAmount = new BitcoinAmount(btcAmount);
+    const bridgeFee = monetaryBtcAmount.mul(feeRate);
+    const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
+    const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
-    const isSelectVaultCheckboxDisabled = wrappedTokenAmount.gt(requestLimits.singleVaultMaxIssuable);
+    const isSelectVaultCheckboxDisabled = monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable);
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToGovernanceTokenRate.toBig().eq(0);
@@ -378,6 +375,16 @@ const IssueForm = (): JSX.Element | null => {
             })}
           </FormTitle>
           <div>
+            <AvailableBalanceUI
+              label={t('issue_page.maximum_in_single_request')}
+              balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
+            />
+            <AvailableBalanceUI
+              label={t('issue_page.maximum_total_request')}
+              balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
+              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
+            />
             <TokenField
               id={BTC_AMOUNT}
               label='BTC'
@@ -390,42 +397,24 @@ const IssueForm = (): JSX.Element | null => {
                 validate: (value) => validateForm(value)
               })}
               approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
-                parsedBTCAmount || BitcoinAmount.zero(),
+                monetaryBtcAmount || BitcoinAmount.zero(),
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}`}
               error={!!errors[BTC_AMOUNT]}
               helperText={getTokenFieldHelperText(errors[BTC_AMOUNT]?.message)}
               helperTextClassName={clsx({ 'h-12': !hasIssuableToken })}
             />
-            <AvailableBalanceUI
-              label={t('issue_page.maximum_in_single_request')}
-              balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
-              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
-            />
-            <AvailableBalanceUI
-              label={t('issue_page.maximum_total_request')}
-              balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
-              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
-            />
           </div>
           <ParachainStatusInfo status={parachainStatus} />
-          <div className={clsx('flex', 'flex-col', 'items-end', 'gap-2')}>
-            <Checkbox
-              label={t('issue_page.manually_select_vault')}
-              labelSide={CheckboxLabelSide.LEFT}
-              disabled={isSelectVaultCheckboxDisabled}
-              type='checkbox'
-              checked={selectVaultManually}
-              onChange={handleSelectVaultCheckboxChange}
-            />
-            <Vaults
-              label={t('select_vault')}
-              requiredCapacity={wrappedTokenAmount.toString(true)}
-              isShown={selectVaultManually}
-              onSelectionCallback={setVault}
-              error={errors[VAULT_SELECTION]}
-            />
-          </div>
+          <ManualVaultSelectUI
+            disabled={isSelectVaultCheckboxDisabled}
+            checked={selectVaultManually}
+            treasuryAction='issue'
+            requiredCapacity={monetaryBtcAmount}
+            error={errors[VAULT_SELECTION]}
+            onSelectionCallback={setSelectedVault}
+            onCheckboxChange={handleSelectVaultCheckboxChange}
+          />
           <PriceInfo
             title={
               <h5

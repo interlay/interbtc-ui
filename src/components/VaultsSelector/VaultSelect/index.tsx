@@ -74,7 +74,7 @@ const VaultOption = ({ vault, error, identity, getCurrencyFromIdPrimitive }: Vau
   );
 };
 
-const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, error }: Props): JSX.Element => {
+const VaultSelect = ({ label, vaults, onChange, selectedVault, isPending, error }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   const {
@@ -142,4 +142,4 @@ const VaultSelector = ({ label, vaults, onChange, selectedVault, isPending, erro
   );
 };
 
-export default VaultSelector;
+export default VaultSelect;
