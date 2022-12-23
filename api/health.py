@@ -2,7 +2,7 @@ import requests
 import dateutil.parser
 from datetime import datetime
 from dateutil.tz import tzutc
-from flask import Flask, jsonify
+from flask import Flask, jsonify, abort
 
 
 class Oracle:
@@ -122,7 +122,7 @@ def get_oracle_health(chain):
         elif chain == "testnet_intr":
             return Oracle(TESTNET_INTR, "DOT")
         else:
-            raise KeyError()
+            abort(404)
 
     return jsonify(oracle().isHealthy())
 
@@ -139,7 +139,7 @@ def get_relay_health(chain):
         elif chain == "testnet_intr":
             return Relayer(TESTNET_INTR)
         else:
-            raise KeyError()
+            abort(404)
 
     return jsonify(relay().isHealthy())
 
@@ -156,7 +156,7 @@ def get_vault_health(chain):
         elif chain == "testnet_intr":
             return Vault(TESTNET_INTR)
         else:
-            raise KeyError()
+            abort(404)
 
     return jsonify(vault().isHealthy())
 
