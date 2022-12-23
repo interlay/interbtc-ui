@@ -113,7 +113,7 @@ app = Flask(__name__)
 @app.route("/_health/<chain>/oracle", methods=["GET"])
 def get_oracle_health(chain):
     def oracle():
-        if chain == "ksm":
+        if chain == "kint":
             return Oracle(KSM_URL, "KSM")
         elif chain == "intr":
             return Oracle(INTR_URL, "DOT")
@@ -130,7 +130,7 @@ def get_oracle_health(chain):
 @app.route("/_health/<chain>/relay", methods=["GET"])
 def get_relay_health(chain):
     def relay():
-        if chain == "ksm":
+        if chain == "kint":
             return Relayer(KSM_URL)
         elif chain == "intr":
             return Relayer(INTR_URL)
@@ -147,7 +147,7 @@ def get_relay_health(chain):
 @app.route("/_health/<chain>/vault", methods=["GET"])
 def get_vault_health(chain):
     def vault():
-        if chain == "ksm":
+        if chain == "kint":
             return Vault(KSM_URL)
         elif chain == "intr":
             return Vault(INTR_URL)
