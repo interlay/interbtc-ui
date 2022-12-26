@@ -6572,6 +6572,15 @@
     "@react-stately/selection" "^3.10.1"
     "@react-types/shared" "^3.13.1"
 
+"@react-aria/separator@^3.2.5":
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/@react-aria/separator/-/separator-3.2.5.tgz#4c004023eb8c31ac36ddacaf938d776c1e04c50c"
+  integrity sha512-WJhqvUqMxxs18Qn8kGIdx7NCe/yoHev6w0TCxxcZMf/crJKWdSunv3YpbcQW67loBTRo1093RqhacPtXoRzQvg==
+  dependencies:
+    "@babel/runtime" "^7.6.2"
+    "@react-aria/utils" "^3.14.1"
+    "@react-types/shared" "^3.16.0"
+
 "@react-aria/spinbutton@^3.1.1":
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/@react-aria/spinbutton/-/spinbutton-3.1.1.tgz#17a06c4254e51b4ccc0cedc6137375124abdacc1"
