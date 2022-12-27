@@ -2,6 +2,7 @@ import { BorrowPosition, LendPosition, LoanAsset } from '@interlay/interbtc-api'
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { Modal, ModalProps, TabsItem } from '@/component-library';
+import { ModalBody } from '@/component-library/Modal';
 import { LoanAction, LoanType } from '@/types/loans';
 
 import { LoanForm } from '../LoanForm';
@@ -50,16 +51,18 @@ const LoanModal = ({ variant = 'lend', asset, position, onClose, ...props }: Loa
   const { tabs } = getData(t, variant);
 
   return (
-    <Modal onClose={onClose} {...props}>
-      <StyledTabs size='large' fullWidth>
-        {tabs.map((tab) => (
-          <TabsItem title={tab.title} key={tab.variant}>
-            <StyledWrapper>
-              <LoanForm asset={asset} variant={tab.variant} position={position} onChangeLoan={onClose} />
-            </StyledWrapper>
-          </TabsItem>
-        ))}
-      </StyledTabs>
+    <Modal aria-label={`${variant} ${asset.currency.ticker}`} onClose={onClose} {...props}>
+      <ModalBody>
+        <StyledTabs size='large' fullWidth>
+          {tabs.map((tab) => (
+            <TabsItem title={tab.title} key={tab.variant}>
+              <StyledWrapper>
+                <LoanForm asset={asset} variant={tab.variant} position={position} onChangeLoan={onClose} />
+              </StyledWrapper>
+            </TabsItem>
+          ))}
+        </StyledTabs>
+      </ModalBody>
     </Modal>
   );
 };

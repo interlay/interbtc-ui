@@ -338,13 +338,12 @@ const theme = {
     }
   },
   modal: {
-    title: {
-      primary: {
-        color: 'var(--colors-title-primary)'
-      },
-      secondary: {
-        color: 'var(--colors-title-secondary)'
-      }
+    maxWidth: '32rem',
+    maxHeight: 'calc(100vh - var(--spacing-12))',
+    zIndex: 2,
+    underlay: {
+      zIndex: 1,
+      bg: 'var(--colors-neutral-black-60)'
     }
   },
   switch: {

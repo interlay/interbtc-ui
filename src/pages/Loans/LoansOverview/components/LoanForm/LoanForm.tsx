@@ -114,7 +114,7 @@ type LoanFormProps = {
   asset: LoanAsset;
   variant: LoanAction;
   position?: BorrowPosition | LendPosition;
-  onChangeLoan: () => void;
+  onChangeLoan?: () => void;
 };
 
 const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JSX.Element => {
@@ -128,7 +128,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const [isMaxAmount, setMaxAmount] = useState(false);
 
   const handleSuccess = () => {
-    onChangeLoan();
+    onChangeLoan?.();
     refetch();
   };
 

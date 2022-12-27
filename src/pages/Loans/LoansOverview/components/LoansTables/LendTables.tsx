@@ -55,13 +55,13 @@ const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTab
       <LendAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
       <LoanModal
         variant='lend'
-        open={selectedAsset.type === 'change-loan'}
+        isOpen={selectedAsset.type === 'change-loan'}
         asset={selectedAsset.data}
         position={selectedAsset.position}
         onClose={handleClose}
       />
       <CollateralModal
-        open={selectedAsset.type === 'toggle-collateral'}
+        isOpen={selectedAsset.type === 'toggle-collateral'}
         asset={selectedAsset.data}
         position={selectedAsset.position}
         onClose={handleClose}
