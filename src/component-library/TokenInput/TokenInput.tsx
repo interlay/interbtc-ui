@@ -57,11 +57,12 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     },
     ref
   ): JSX.Element => {
+    const [currency, setCurrency] = useState(tokenSymbol);
     const [isOpen, setOpen] = useState(false);
     const inputRef = useDOMRef(ref);
     const { labelProps, fieldProps } = useLabel({ label });
 
-    const isTokenDynamic = !!onSelectToken && currencies?.length;
+    const hasSelect = !!onSelectToken && currencies?.length;
 
     const handleClickBalance = () => {
       triggerChangeEvent(inputRef, balance);
@@ -72,14 +73,19 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       setOpen(true);
     };
 
-    const endAdornment = <TokenAdornment currency={tokenSymbol} onPress={handlePressToken} />;
+    const handleSelectToken = (currency: string) => {
+      setCurrency(currency);
+      setOpen(false);
+    };
+
+    const endAdornment = <TokenAdornment currency={currency} onPress={handlePressToken} />;
 
     const formatOptions = getFormatOptions(decimals);
 
     return (
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
         <TokenLabel
-          currency={tokenSymbol}
+          currency={currency}
           balance={balance}
           balanceLabel={balanceLabel}
           decimals={decimals}
@@ -96,11 +102,19 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           isDisabled={isDisabled}
           formatOptions={formatOptions}
           endAdornment={endAdornment}
-          endAdornmentSize={isTokenDynamic ? 'extra-large' : 'large'}
+          endAdornmentSize={hasSelect ? 'extra-large' : 'large'}
           bottomAdornment={<StyledUSDAdornment>{valueInUSD}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}
         />
-        {isTokenDynamic && <TokenModal open={isOpen} onClose={() => setOpen(false)} currencies={currencies} />}
+        {hasSelect && (
+          <TokenModal
+            selectedCurrency={currency}
+            onSelectToken={handleSelectToken}
+            open={isOpen}
+            onClose={() => setOpen(false)}
+            currencies={currencies}
+          />
+        )}
       </Flex>
     );
   }

@@ -120,6 +120,16 @@ const theme = {
   tokenInput: {
     endAdornment: {
       bg: 'var(--colors-token-input-end-adornment-bg)'
+    },
+    list: {
+      item: {
+        default: {
+          text: 'var(--colors-token-list-item-text)'
+        },
+        selected: {
+          text: 'var(--colors-token-list-item-select-text)'
+        }
+      }
     }
   },
   card: {

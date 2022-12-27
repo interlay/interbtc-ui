@@ -25,6 +25,7 @@
   --colors-cta-outlined-hover: var(--colors-neutral-black-05);
   --colors-cta-text-text: var(--colors-neutral-black);
   --colors-cta-text-hover: var(--colors-neutral-black-05);
+  /* Text */
   --colors-text-primary: var(--colors-neutral-black);
   --colors-text-secondary: var(--colors-light-blue);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
@@ -60,6 +61,9 @@
   --colors-input-background: var(--colors-neutral-white);
   /* Token Input */
   --colors-token-input-end-adornment-bg: var(--colors-neutral-lighter-grey);
+  /* Token List */
+  --colors-token-list-item-text: var(--colors-neutral-black);
+  --colors-token-list-item-select-text: var(--colors-neutral-white);
   /* Modal */
   --colors-title-primary: var(--colors-neutral-black);
   --colors-title-secondary: var(--colors-light-blue);

@@ -16,7 +16,10 @@ const Template: Story<TokenInputProps> = (args) => {
       aria-label='token field'
       valueInUSD={`$${(value || 0) * 10}`}
       onSelectToken={console.log}
-      currencies={[{ balance: 200, currency: 'KSM', usd: '$200' }]}
+      currencies={[
+        { balance: 200, currency: 'KSM', usd: '$200' },
+        { balance: 200, currency: 'BTC', usd: '$200' }
+      ]}
     />
   );
 };

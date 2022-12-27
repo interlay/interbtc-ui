@@ -4,10 +4,19 @@ import { ReactComponent as ChevronDown } from '@/assets/img/icons/chevron-down.s
 
 import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
+import { Span } from '../Text';
 import { theme } from '../theme';
 
 type StyledTokenAdornmentProps = {
   $isClickable: boolean;
+};
+
+type TokenBalanceValueProps = {
+  $clickable?: boolean;
+};
+
+type StyledListItemSelectedLabelProps = {
+  $isSelected: boolean;
 };
 
 const StyledTicker = styled.span`
@@ -63,19 +72,21 @@ const TokenBalanceLabel = styled.dt`
   }
 `;
 
-type TokenBalanceValueProps = {
-  $clickable?: boolean;
-};
-
 const TokenBalanceValue = styled.span<TokenBalanceValueProps>`
   display: block;
   color: ${theme.colors.textSecondary};
   cursor: ${(props) => props.$clickable && 'pointer'};
 `;
 
+const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
+  color: ${({ $isSelected }) =>
+    $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
+`;
+
 export {
   StyledChevronDown,
   StyledCoinIcon,
+  StyledListItemLabel,
   StyledTicker,
   StyledTokenAdornment,
   StyledUSDAdornment,
