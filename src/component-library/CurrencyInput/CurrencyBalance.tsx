@@ -3,9 +3,13 @@ import { ReactNode } from 'react';
 
 import { formatNumber } from '@/common/utils/utils';
 
-import { TokenBalanceLabel, TokenBalanceValue, TokenBalanceWrapper } from './TokenInput.style';
+import {
+  StyledCurrencyBalanceLabel,
+  StyledCurrencyBalanceValue,
+  StyledCurrencyBalanceWrapper
+} from './CurrencyInput.style';
 
-type TokenBalanceProps = {
+type CurrencyBalanceProps = {
   currency: string;
   value: number;
   onClickBalance?: () => void;
@@ -15,7 +19,7 @@ type TokenBalanceProps = {
   decimals?: number;
 };
 
-const TokenBalance = ({
+const CurrencyBalance = ({
   currency,
   value,
   onClickBalance,
@@ -23,7 +27,7 @@ const TokenBalance = ({
   isDisabled,
   decimals,
   label = 'Balance'
-}: TokenBalanceProps): JSX.Element => {
+}: CurrencyBalanceProps): JSX.Element => {
   const isClickable = !!onClickBalance && !isDisabled;
   const { pressProps } = usePress({ onPress: onClickBalance, isDisabled: !isClickable });
   const balanceValueProps = isClickable
@@ -36,16 +40,16 @@ const TokenBalance = ({
     : {};
 
   return (
-    <TokenBalanceWrapper className={className}>
-      <TokenBalanceLabel>{label}</TokenBalanceLabel>
+    <StyledCurrencyBalanceWrapper className={className}>
+      <StyledCurrencyBalanceLabel>{label}</StyledCurrencyBalanceLabel>
       <dd>
-        <TokenBalanceValue $clickable={isClickable} {...balanceValueProps}>
+        <StyledCurrencyBalanceValue $isClickable={isClickable} {...balanceValueProps}>
           {formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20 })} {currency}
-        </TokenBalanceValue>
+        </StyledCurrencyBalanceValue>
       </dd>
-    </TokenBalanceWrapper>
+    </StyledCurrencyBalanceWrapper>
   );
 };
 
-export { TokenBalance };
-export type { TokenBalanceProps };
+export { CurrencyBalance };
+export type { CurrencyBalanceProps };

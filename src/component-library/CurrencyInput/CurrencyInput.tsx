@@ -1,15 +1,16 @@
 import { useLabel } from '@react-aria/label';
 import { mergeProps } from '@react-aria/utils';
-import { forwardRef, ReactNode, useState } from 'react';
+import { forwardRef, ReactNode, useEffect, useState } from 'react';
 
 import { Flex } from '../Flex';
 import { NumberInput, NumberInputProps } from '../NumberInput';
 import { useDOMRef } from '../utils/dom';
 import { triggerChangeEvent } from '../utils/input';
-import { TokenAdornment } from './TokenAdornment';
-import { StyledUSDAdornment } from './TokenInput.style';
-import { TokenLabel } from './TokenLabel';
-import { CurrencyItem, TokenModal } from './TokenModal';
+import { CurrencyAdornment } from './CurrencyAdornment';
+import { StyledUSDAdornment } from './CurrencyInput.style';
+import { CurrencyLabel } from './CurrencyLabel';
+import { CurrencyData } from './CurrencyList';
+import { CurrencyModal } from './CurrencyModal';
 
 const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
   if (!decimals) return;
@@ -22,69 +23,76 @@ const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefin
 };
 
 type Props = {
-  tokenSymbol: string;
   decimals?: number;
-  valueInUSD: string;
+  valueUSD: string;
   balance?: number;
   balanceLabel?: ReactNode;
-  renderBalance?: (balance: number) => ReactNode;
+  currency: string;
+  currencies?: CurrencyData[];
   onClickBalance?: (balance?: number) => void;
-  onSelectToken?: (token: string) => void;
-  currencies?: CurrencyItem[];
+  onChangeCurrency?: (token: string) => void;
 };
 
 type InheritAttrs = Omit<NumberInputProps, keyof Props>;
 
-type TokenInputProps = Props & InheritAttrs;
+type CurrencyInputProps = Props & InheritAttrs;
 
-const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
+const CurrencyInput = forwardRef<HTMLInputElement, CurrencyInputProps>(
   (
     {
-      tokenSymbol,
       decimals,
-      valueInUSD,
+      valueUSD,
       balance,
       balanceLabel,
       isDisabled,
-      className,
+      label,
+      currency: currencyProp,
+      currencies,
       style,
       hidden,
-      label,
+      className,
       onClickBalance,
-      onSelectToken,
-      currencies,
+      onChangeCurrency,
       ...props
     },
     ref
   ): JSX.Element => {
-    const [currency, setCurrency] = useState(tokenSymbol);
-    const [isOpen, setOpen] = useState(false);
     const inputRef = useDOMRef(ref);
+
+    const [currency, setCurrency] = useState(currencyProp);
+    const [isOpen, setOpen] = useState(false);
+
     const { labelProps, fieldProps } = useLabel({ label });
 
-    const hasSelect = !!onSelectToken && currencies?.length;
+    useEffect(() => {
+      if (!currencyProp) return;
+
+      setCurrency(currencyProp);
+    }, [currencyProp]);
 
     const handleClickBalance = () => {
       triggerChangeEvent(inputRef, balance);
       onClickBalance?.(balance);
     };
 
-    const handlePressToken = () => {
-      setOpen(true);
-    };
+    const handlePressToken = () => setOpen(true);
+
+    const handleClose = () => setOpen(false);
 
     const handleSelectToken = (currency: string) => {
       setCurrency(currency);
-      setOpen(false);
+      handleClose();
     };
 
-    const endAdornment = <TokenAdornment currency={currency} onPress={handlePressToken} />;
+    const hasSelect = !!onChangeCurrency && currencies?.length;
+
+    const endAdornment = <CurrencyAdornment currency={currency} onPress={hasSelect ? handlePressToken : undefined} />;
 
     const formatOptions = getFormatOptions(decimals);
 
     return (
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
-        <TokenLabel
+        <CurrencyLabel
           currency={currency}
           balance={balance}
           balanceLabel={balanceLabel}
@@ -94,7 +102,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           {...labelProps}
         >
           {label}
-        </TokenLabel>
+        </CurrencyLabel>
         <NumberInput
           ref={inputRef}
           minValue={0}
@@ -103,16 +111,16 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           formatOptions={formatOptions}
           endAdornment={endAdornment}
           endAdornmentSize={hasSelect ? 'extra-large' : 'large'}
-          bottomAdornment={<StyledUSDAdornment>{valueInUSD}</StyledUSDAdornment>}
+          bottomAdornment={<StyledUSDAdornment>{valueUSD}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}
         />
         {hasSelect && (
-          <TokenModal
-            selectedCurrency={currency}
-            onSelectToken={handleSelectToken}
-            open={isOpen}
-            onClose={() => setOpen(false)}
+          <CurrencyModal
+            isOpen={isOpen}
             currencies={currencies}
+            selectedCurrency={currency}
+            onClose={handleClose}
+            onSelect={handleSelectToken}
           />
         )}
       </Flex>
@@ -120,7 +128,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   }
 );
 
-TokenInput.displayName = 'TokenInput';
+CurrencyInput.displayName = 'CurrencyInput';
 
-export { TokenInput };
-export type { TokenInputProps };
+export { CurrencyInput };
+export type { CurrencyInputProps };

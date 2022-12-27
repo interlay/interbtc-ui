@@ -51,7 +51,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     const hasHelpText = !!description || hasError;
 
     return (
-      <Wrapper hidden={hidden} className={className} style={style}>
+      <Wrapper hidden={hidden} className={className} style={style} $isDisabled={!!disabled}>
         {label && <Label {...labelProps}>{label}</Label>}
         <BaseInputWrapper>
           {startAdornment && <Adornment $position='left'>{startAdornment}</Adornment>}
@@ -64,6 +64,8 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
             $hasRightAdornment={!!endAdornment}
             $endAdornmentSize={endAdornmentSize}
             $hasLeftAdornment={!!startAdornment}
+            $hasError={hasError}
+            $isDisabled={!!disabled}
             {...props}
           />
           {bottomAdornment && <Adornment $position='bottom'>{bottomAdornment}</Adornment>}

@@ -9,8 +9,8 @@ type BaseInputProps = {
   $hasRightAdornment?: boolean;
   $endAdornmentSize?: Sizes | 'extra-large';
   $hasLeftAdornment?: boolean;
-  $isDisabled?: boolean;
-  $hasError?: boolean;
+  $isDisabled: boolean;
+  $hasError: boolean;
 };
 
 type AdornmentProps = {
@@ -58,7 +58,7 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   transition: border-color ${theme.transition.duration.duration150}ms ease-in-out,
     box-shadow ${theme.transition.duration.duration150}ms ease-in-out;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border: ${(props) => !props.$isDisabled && !props.$hasError && theme.input.hover.border};
   }
 
@@ -78,6 +78,7 @@ const StyledBaseInput = styled.input<BaseInputProps>`
     -webkit-appearance: none;
     margin: 0;
   }
+
   &[type='number'] {
     -moz-appearance: textfield;
   }
@@ -102,9 +103,10 @@ const Adornment = styled.div<AdornmentProps>`
   bottom: ${({ $position }) => $position === 'bottom' && theme.spacing.spacing1};
 `;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<Pick<BaseInputProps, '$isDisabled'>>`
   display: flex;
   flex-direction: column;
+  opacity: ${({ $isDisabled }) => $isDisabled && 0.5};
 `;
 
 export { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper };

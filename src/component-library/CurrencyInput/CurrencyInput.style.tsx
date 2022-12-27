@@ -7,12 +7,8 @@ import { Flex } from '../Flex';
 import { Span } from '../Text';
 import { theme } from '../theme';
 
-type StyledTokenAdornmentProps = {
+type StyledClickableProps = {
   $isClickable: boolean;
-};
-
-type TokenBalanceValueProps = {
-  $clickable?: boolean;
 };
 
 type StyledListItemSelectedLabelProps = {
@@ -34,13 +30,13 @@ const StyledUSDAdornment = styled.span`
   align-self: flex-start;
 `;
 
-const StyledTokenAdornment = styled(Flex)<StyledTokenAdornmentProps>`
+const StyledCurrencyAdornment = styled(Flex)<StyledClickableProps>`
   background-color: ${theme.tokenInput.endAdornment.bg};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.xl2};
   padding: ${theme.spacing.spacing3};
   cursor: ${({ $isClickable }) => $isClickable && 'pointer'};
-  max-width: ${({ $isClickable }) => ($isClickable ? '7rem' : '5.25rem')};
+  width: ${({ $isClickable }) => ($isClickable ? '7rem' : '5.25rem')};
 `;
 
 const StyledChevronDown = styled(ChevronDown)`
@@ -55,7 +51,7 @@ const StyledCoinIcon = styled(CoinIcon)`
   flex: 1 0 auto;
 `;
 
-const TokenBalanceWrapper = styled.dl`
+const StyledCurrencyBalanceWrapper = styled.dl`
   display: inline-flex;
   gap: ${theme.spacing.spacing1};
   font-weight: ${theme.fontWeight.medium};
@@ -64,7 +60,7 @@ const TokenBalanceWrapper = styled.dl`
   padding: ${theme.spacing.spacing1} 0;
 `;
 
-const TokenBalanceLabel = styled.dt`
+const StyledCurrencyBalanceLabel = styled.dt`
   color: ${theme.colors.textTertiary};
 
   &:after {
@@ -72,10 +68,10 @@ const TokenBalanceLabel = styled.dt`
   }
 `;
 
-const TokenBalanceValue = styled.span<TokenBalanceValueProps>`
+const StyledCurrencyBalanceValue = styled.span<StyledClickableProps>`
   display: block;
   color: ${theme.colors.textSecondary};
-  cursor: ${(props) => props.$clickable && 'pointer'};
+  cursor: ${(props) => props.$isClickable && 'pointer'};
 `;
 
 const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
@@ -86,11 +82,11 @@ const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
 export {
   StyledChevronDown,
   StyledCoinIcon,
+  StyledCurrencyAdornment,
+  StyledCurrencyBalanceLabel,
+  StyledCurrencyBalanceValue,
+  StyledCurrencyBalanceWrapper,
   StyledListItemLabel,
   StyledTicker,
-  StyledTokenAdornment,
-  StyledUSDAdornment,
-  TokenBalanceLabel,
-  TokenBalanceValue,
-  TokenBalanceWrapper
+  StyledUSDAdornment
 };

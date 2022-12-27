@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { Flex } from '../Flex';
 import { Label, LabelProps } from '../Label';
-import { TokenBalance } from './TokenBalance';
+import { CurrencyBalance } from './CurrencyBalance';
 
 type Props = {
   currency: string;
@@ -15,9 +15,9 @@ type Props = {
 
 type InheritAttrs = Omit<LabelProps, keyof Props>;
 
-type TokenLabelProps = Props & InheritAttrs;
+type CurrencyLabelProps = Props & InheritAttrs;
 
-const TokenLabel = ({
+const CurrencyLabel = ({
   balance,
   balanceLabel,
   isDisabled,
@@ -26,11 +26,11 @@ const TokenLabel = ({
   currency,
   children,
   ...props
-}: TokenLabelProps): JSX.Element => (
+}: CurrencyLabelProps): JSX.Element => (
   <Flex gap='spacing0' justifyContent='space-between'>
     <Label {...props}>{children}</Label>
     {balance !== undefined && (
-      <TokenBalance
+      <CurrencyBalance
         currency={currency}
         value={balance}
         onClickBalance={onClickBalance}
@@ -42,5 +42,5 @@ const TokenLabel = ({
   </Flex>
 );
 
-export { TokenLabel };
-export type { TokenLabelProps };
+export { CurrencyLabel };
+export type { CurrencyLabelProps };
