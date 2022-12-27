@@ -58,13 +58,6 @@ const StyledDialog = styled.section`
   display: grid;
   grid-template-columns: ${theme.spacing.spacing6} auto ${theme.spacing.spacing3} ${theme.spacing.spacing6};
   grid-template-rows: ${theme.spacing.spacing6} ${theme.spacing.spacing3} auto auto 1fr auto ${theme.spacing.spacing6};
-  grid-template-areas:
-    '. . close-btn close-btn'
-    '. . close-btn close-btn'
-    '. title title .'
-    '. divider divider .'
-    'content content content content'
-    '. footer footer .';
 
   @media (min-width: ${theme.layout.breakpoints.lg}) {
     grid-template-columns: ${theme.spacing.spacing8} auto ${theme.spacing.spacing3} ${theme.spacing.spacing8};
@@ -73,9 +66,11 @@ const StyledDialog = styled.section`
 `;
 
 const StyledCloseCTA = styled(CTA)`
-  grid-area: close-btn;
   margin: ${theme.spacing.spacing3} ${theme.spacing.spacing3} 0 0;
   padding: 0;
+
+  grid-column: 3 / span 2;
+  grid-row: 1 / span 2;
 `;
 
 type StyledModalTitleProps = {
@@ -83,22 +78,28 @@ type StyledModalTitleProps = {
 };
 
 const StyledModalTitle = styled(H3)<StyledModalTitleProps>`
-  grid-area: title;
   font-size: ${theme.text.xl};
   line-height: ${theme.lineHeight.base};
   text-align: ${({ $alignment }) => $alignment};
   margin-bottom: ${theme.spacing.spacing3};
+
+  grid-column: 2 / span 2;
+  grid-row: 3 / span 1;
 `;
 
 const StyledModalDivider = styled(Divider)`
-  grid-area: divider;
   margin: 0 0 ${theme.spacing.spacing4} 0;
+
+  grid-column: 2 / span 2;
+  grid-row: 4 / span 1;
 `;
 
 const StyledModalBody = styled(Stack)`
-  grid-area: content;
   overflow-y: auto;
   padding: 0 ${theme.spacing.spacing6};
+
+  grid-column: 1 / span 4;
+  grid-row: 5 / span 1;
 
   @media (min-width: ${theme.layout.breakpoints.lg}) {
     padding: 0 ${theme.spacing.spacing8};
@@ -106,8 +107,10 @@ const StyledModalBody = styled(Stack)`
 `;
 
 const StyledModalFooter = styled(Stack)`
-  grid-area: footer;
   padding-top: ${theme.spacing.spacing6};
+
+  grid-column: 2 / span 2;
+  grid-row: 6 / span 1;
 `;
 
 export {
