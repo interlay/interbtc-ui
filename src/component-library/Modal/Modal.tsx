@@ -4,9 +4,9 @@ import { AriaOverlayProps, OverlayContainer, useModalOverlay } from '@react-aria
 import { OverlayTriggerState } from '@react-stately/overlays';
 import { forwardRef, ReactNode } from 'react';
 
+import { XMark } from '@/assets/icons';
 import { useMountTransition } from '@/utils/hooks/use-mount-transition';
 
-import { Icon } from '../Icon';
 import { theme } from '../theme';
 import { useDOMRef } from '../utils/dom';
 import { StyledCloseCTA, StyledDialog, StyledDialogWrapper, StyledUnderlay } from './Modal.style';
@@ -47,7 +47,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             <ModalContext.Provider value={{ titleProps }}>
               <StyledDialog {...dialogProps}>
                 <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onClick={onClose}>
-                  <Icon width='1.5em' height='1.5em' variant='close' />
+                  <XMark />
                 </StyledCloseCTA>
                 {children}
               </StyledDialog>

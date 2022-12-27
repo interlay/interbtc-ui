@@ -1,5 +1,9 @@
-const KintIcon = (): JSX.Element => (
-  <svg role='img' width='100%' viewBox='0 0 60 60' fill='none' xmlns='http://www.w3.org/2000/svg'>
+import { forwardRef } from 'react';
+
+import { Icon, IconProps } from '@/component-library/Icon';
+
+const KINT = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <Icon {...props} ref={ref} viewBox='0 0 60 60' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <title>KINT</title>
     <circle cx='30' cy='30' r='29.5' fill='#000' stroke='#fff' />
     <path
@@ -32,7 +36,9 @@ const KintIcon = (): JSX.Element => (
         <stop offset='1' stopColor='#603211' />
       </linearGradient>
     </defs>
-  </svg>
-);
+  </Icon>
+));
 
-export { KintIcon };
+KINT.displayName = 'KINT';
+
+export { KINT };

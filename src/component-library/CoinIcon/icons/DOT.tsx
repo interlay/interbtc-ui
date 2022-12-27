@@ -1,5 +1,9 @@
-const DotIcon = (): JSX.Element => (
-  <svg role='image' width='100%' viewBox='0 0 45 45' fill='none' xmlns='http://www.w3.org/2000/svg'>
+import { forwardRef } from 'react';
+
+import { Icon, IconProps } from '@/component-library/Icon';
+
+const DOT = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <Icon {...props} ref={ref} viewBox='0 0 45 45' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <title>DOT</title>
     <rect x='.5' y='.5' width='44' height='44' rx='22' fill='#000' />
     <g clipPath='url(#a)' fill='#E6007A'>
@@ -11,7 +15,9 @@ const DotIcon = (): JSX.Element => (
         <path fill='#fff' transform='translate(10 10)' d='M0 0h25v25H0z' />
       </clipPath>
     </defs>
-  </svg>
-);
+  </Icon>
+));
 
-export { DotIcon };
+DOT.displayName = 'DOT';
+
+export { DOT };

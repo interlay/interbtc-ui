@@ -1,5 +1,9 @@
-const LksmIcon = (): JSX.Element => (
-  <svg role='img' width='100%' viewBox='0 0 60 60' fill='none' xmlns='http://www.w3.org/2000/svg'>
+import { forwardRef } from 'react';
+
+import { Icon, IconProps } from '@/component-library/Icon';
+
+const LKSM = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <Icon {...props} ref={ref} viewBox='0 0 60 60' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <title>LKSM</title>
     <path
       d='M59 30c0 16.016-12.984 29-29 29S1 46.016 1 30 13.984 1 30 1s29 12.984 29 29Z'
@@ -18,7 +22,9 @@ const LksmIcon = (): JSX.Element => (
         fill='#EC1F52'
       />
     </g>
-  </svg>
-);
+  </Icon>
+));
 
-export { LksmIcon };
+LKSM.displayName = 'LKSM';
+
+export { LKSM };

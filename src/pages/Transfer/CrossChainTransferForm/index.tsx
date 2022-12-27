@@ -131,7 +131,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       return {
         type: adapter.chain.id,
         name: adapter.chain.id,
-        icon: <CoinIcon coin={adapter.balanceAdapter.nativeToken} size='small' />
+        icon: <CoinIcon ticker={adapter.balanceAdapter.nativeToken} size='xl3' />
       };
     });
 
@@ -151,7 +151,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       return {
         type: chain.id,
         name: chain.id,
-        icon: <CoinIcon coin={adapter.balanceAdapter.nativeToken} size='small' />
+        icon: <CoinIcon ticker={adapter.balanceAdapter.nativeToken} size='xl3' />
       };
     });
 

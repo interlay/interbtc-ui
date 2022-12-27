@@ -1,6 +1,10 @@
-const KbtcIcon = (): JSX.Element => (
-  <svg role='img' width='100%' viewBox='0 0 64 62' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <title>kBTC</title>
+import { forwardRef } from 'react';
+
+import { Icon, IconProps } from '@/component-library/Icon';
+
+const KBTC = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
+  <Icon {...props} ref={ref} viewBox='0 0 64 62' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <title>KBTC</title>
     <path
       d='M63.5 31C63.5 47.8298 49.4121 61.5 32 61.5C14.5879 61.5 0.5 47.8298 0.5 31C0.5 14.1702 14.5879 0.5 32 0.5C49.4121 0.5 63.5 14.1702 63.5 31Z'
       fill='black'
@@ -51,7 +55,9 @@ const KbtcIcon = (): JSX.Element => (
         <stop offset='1' stopColor='#603211' />
       </linearGradient>
     </defs>
-  </svg>
-);
+  </Icon>
+));
 
-export { KbtcIcon };
+KBTC.displayName = 'KBTC';
+
+export { KBTC };

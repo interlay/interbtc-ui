@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-import { resolveTextColor } from '../Text';
 import { Colors, Orientation } from '../utils/prop-types';
+import { resolveColor } from '../utils/theme';
 
 type StyledDividerProps = {
   $color: Colors;
@@ -9,7 +9,7 @@ type StyledDividerProps = {
 };
 
 const StyledDivider = styled.hr<StyledDividerProps>`
-  background-color: ${({ $color }) => resolveTextColor($color)};
+  background-color: ${({ $color }) => resolveColor($color)};
   height: ${({ $orientation }) => ($orientation === 'horizontal' ? '2px' : 'auto')};
   width: ${({ $orientation }) => ($orientation === 'horizontal' ? '' : '2px')};
   border: 0;

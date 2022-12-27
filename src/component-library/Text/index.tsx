@@ -21,4 +21,3 @@ export { Span } from './Span';
 export type { StrongProps } from './Strong';
 export { Strong } from './Strong';
 export type { TextProps } from './types';
-export { resolveTextColor } from './utils';

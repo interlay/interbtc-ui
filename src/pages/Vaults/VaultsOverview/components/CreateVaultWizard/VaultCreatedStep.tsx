@@ -2,7 +2,7 @@ import { CollateralCurrencyExt } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
 
-import { CoinPair, CTALink, H4, Stack, Tokens } from '@/component-library';
+import { CoinPair, CTALink, H4, Stack } from '@/component-library';
 import { ModalBody, ModalFooter, ModalTitle } from '@/component-library/Modal';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { URL_PARAMETERS } from '@/utils/constants/links';
@@ -25,7 +25,7 @@ const VaultCreatedStep = ({ collateralCurrency }: VaultCreatedStepProps): JSX.El
       <ModalBody>
         <Stack spacing='double' alignItems='center'>
           <Stack alignItems='center'>
-            <CoinPair coinOne={collateralCurrency.ticker as Tokens} coinTwo={WRAPPED_TOKEN_SYMBOL} size='large' />
+            <CoinPair coinOne={collateralCurrency.ticker} coinTwo={WRAPPED_TOKEN_SYMBOL} size='xl5' />
             <H4 color='tertiary'>
               {collateralCurrency.ticker} - {WRAPPED_TOKEN_SYMBOL}
             </H4>
