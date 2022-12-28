@@ -6857,6 +6857,14 @@
     "@babel/runtime" "^7.6.2"
     "@react-types/shared" "^3.14.0"
 
+"@react-stately/collections@^3.5.1":
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/@react-stately/collections/-/collections-3.5.1.tgz#502a56658e4859aa7d31bd4b9189879b5b5a0255"
+  integrity sha512-egzVrZC5eFc5RJBpqUkzxd2aJOHZ2T1o7horEi8tAWZkg4YI+AmKrqela4ijVrrB9l1GO9z06qPT1UoPkFrC1w==
+  dependencies:
+    "@react-types/shared" "^3.16.0"
+    "@swc/helpers" "^0.4.14"
+
 "@react-stately/grid@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@react-stately/grid/-/grid-3.3.0.tgz#f55d6bd74b74a81d35282cd2b552ee2ae2b9bbbf"
@@ -6918,6 +6926,16 @@
     "@react-stately/utils" "^3.5.1"
     "@react-types/shared" "^3.14.0"
 
+"@react-stately/selection@^3.11.2":
+  version "3.11.2"
+  resolved "https://registry.yarnpkg.com/@react-stately/selection/-/selection-3.11.2.tgz#15c35dfb386e5218b8106070137a8b3ecded5a8b"
+  integrity sha512-g21Y36xhYkXO3yzz0BYSBqnD38olvEwsJUqBXGZfx//bshMC2FNmI5sRYMAi36stxWbwzBvB01OytxfLLxCXCA==
+  dependencies:
+    "@react-stately/collections" "^3.5.1"
+    "@react-stately/utils" "^3.5.2"
+    "@react-types/shared" "^3.16.0"
+    "@swc/helpers" "^0.4.14"
+
 "@react-stately/table@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@react-stately/table/-/table-3.3.0.tgz#87f2b69e323e5f805705d6a722b6ef3d6389319c"
@@ -6970,6 +6988,17 @@
     "@react-stately/overlays" "^3.4.3"
     "@react-stately/utils" "^3.5.1"
     "@react-types/tooltip" "^3.2.5"
+
+"@react-stately/tree@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@react-stately/tree/-/tree-3.4.1.tgz#bb267784000b22c7c1aa6415103ad1b9f3566677"
+  integrity sha512-kIXeJOHgGGaUFnAD2wyRIiOwOw/+PN1OXo46n8+dPTFIYwR4+IWFNG8OMjVlIiSLPYWMCzzxZBE9a5grmbmNWQ==
+  dependencies:
+    "@react-stately/collections" "^3.5.1"
+    "@react-stately/selection" "^3.11.2"
+    "@react-stately/utils" "^3.5.2"
+    "@react-types/shared" "^3.16.0"
+    "@swc/helpers" "^0.4.14"
 
 "@react-stately/utils@^3.5.0":
   version "3.5.0"
