@@ -5,7 +5,7 @@ import { Dd, DlGroup, Dt } from '@/component-library';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledDl } from './LoanActionInfo.style';
 import { LoanGroup } from './LoanGroup';
@@ -13,10 +13,10 @@ import { LoanGroup } from './LoanGroup';
 type LoanActionInfoProps = {
   variant?: LoanAction;
   asset?: LoanAsset;
-  prices?: Prices;
 };
 
-const LoanActionInfo = ({ variant, asset, prices }: LoanActionInfoProps): JSX.Element => {
+const LoanActionInfo = ({ variant, asset }: LoanActionInfoProps): JSX.Element => {
+  const prices = useGetPrices();
   const isBorrow = variant === 'borrow';
   const apy = isBorrow ? asset?.borrowApy : asset?.lendApy;
   const rewards = isBorrow ? asset?.borrowReward : asset?.lendReward;

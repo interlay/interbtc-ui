@@ -7,7 +7,7 @@ import { Alert, DlGroup, Dt } from '@/component-library';
 import { useAccountBorrowLimit } from '@/pages/Loans/LoansOverview/hooks/use-get-account-borrow-limit';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { Prices } from '@/utils/hooks/api/use-get-prices';
+import { PriceSource, useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { isBorrowAsset } from '../../utils/is-loan-asset';
@@ -18,7 +18,6 @@ type BorrowLimitProps = {
   loanAction: LoanAction;
   asset: LoanAsset;
   actionAmount: MonetaryAmount<CurrencyExt>;
-  prices: Prices | undefined;
   shouldDisplayLiquidationAlert?: boolean;
 };
 
@@ -26,10 +25,10 @@ const BorrowLimit = ({
   loanAction,
   asset,
   actionAmount,
-  prices,
   shouldDisplayLiquidationAlert
 }: BorrowLimitProps): JSX.Element | null => {
   const { t } = useTranslation();
+  const prices = useGetPrices({ source: PriceSource.ORACLE });
 
   const { data: currentBorrowLimit, getBorrowLimitUSD } = useAccountBorrowLimit();
   const { data: currentLTV, getLTV } = useGetLTV();

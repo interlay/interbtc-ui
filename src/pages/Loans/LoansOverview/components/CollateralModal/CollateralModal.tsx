@@ -4,9 +4,7 @@ import { useMutation } from 'react-query';
 
 import { CTA, Flex, Modal, ModalProps, Status } from '@/component-library';
 import { ModalBody, ModalTitle } from '@/component-library/Modal';
-import ErrorModal from '@/components/ErrorModal';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { BorrowLimit } from '../BorrowLimit';
@@ -68,7 +66,6 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const { t } = useTranslation();
   const { refetch } = useGetAccountPositions();
   const { getLTV } = useGetLTV();
-  const prices = useGetPrices();
 
   const handleSuccess = () => {
     onClose?.();
@@ -108,8 +105,8 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
         <ModalBody>
           <Flex direction='column' gap='spacing8'>
             <StyledDescription color='tertiary'>{content.description}</StyledDescription>
-            <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
-            {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
+            <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} />
+            {variant !== 'disable-error' && <LoanActionInfo />}
             <CTA size='large' onClick={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
               {content.buttonLabel}
             </CTA>
@@ -117,12 +114,10 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
         </ModalBody>
       </Modal>
       {toggleCollateralMutation.isError && (
-        <ErrorModal
-          open={toggleCollateralMutation.isError}
-          onClose={() => toggleCollateralMutation.reset()}
-          title='Error'
-          description={toggleCollateralMutation.error?.message || ''}
-        />
+        <Modal isOpen={toggleCollateralMutation.isError} onClose={() => toggleCollateralMutation.reset()}>
+          <ModalTitle>Error</ModalTitle>
+          <ModalBody>{toggleCollateralMutation.error?.message || ''}</ModalBody>
+        </Modal>
       )}
     </>
   );

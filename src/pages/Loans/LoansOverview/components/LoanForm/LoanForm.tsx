@@ -7,8 +7,8 @@ import { toast } from 'react-toastify';
 import * as z from 'zod';
 
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
-import { CTA, Flex, TokenInput } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
+import { CTA, Flex, Modal, TokenInput } from '@/component-library';
+import { ModalBody, ModalTitle } from '@/component-library/Modal';
 import validate, {
   LoanBorrowSchemaParams,
   LoanLendSchemaParams,
@@ -19,7 +19,6 @@ import { LoanAction } from '@/types/loans';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useLoanMutation } from '@/utils/hooks/api/loans/use-loan-mutation';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useLoanFormData } from '../../hooks/use-loan-form-data';
 import { isLendAsset } from '../../utils/is-loan-asset';
@@ -123,7 +122,6 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     refetch,
     data: { hasCollateral }
   } = useGetAccountPositions();
-  const prices = useGetPrices();
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
   const [isMaxAmount, setMaxAmount] = useState(false);
 
@@ -209,12 +207,11 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
                 loanAction={variant}
                 asset={asset}
                 actionAmount={monetaryAmount}
-                prices={prices}
               />
             )}
           </Flex>
           <Flex direction='column' gap='spacing4'>
-            <LoanActionInfo variant={variant} asset={asset} prices={prices} />
+            <LoanActionInfo variant={variant} asset={asset} />
             <CTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
               {content.title}
             </CTA>
@@ -222,12 +219,10 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
         </StyledFormWrapper>
       </form>
       {loanMutation.isError && (
-        <ErrorModal
-          open={loanMutation.isError}
-          onClose={() => loanMutation.reset()}
-          title='Error'
-          description={loanMutation.error?.message || ''}
-        />
+        <Modal isOpen={loanMutation.isError} onClose={() => loanMutation.reset()}>
+          <ModalTitle>Error</ModalTitle>
+          <ModalBody>{loanMutation.error?.message || ''}</ModalBody>
+        </Modal>
       )}
     </>
   );

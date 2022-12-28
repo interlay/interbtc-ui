@@ -7,7 +7,7 @@ import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { PriceSource, useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateThresholdAmountUSD } from '../utils/math';
 
@@ -22,7 +22,7 @@ interface UseAccountBorrowLimit {
 }
 
 const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
-  const prices = useGetPrices();
+  const prices = useGetPrices({ source: PriceSource.ORACLE });
   const {
     data: { statistics }
   } = useGetAccountPositions();

@@ -12,7 +12,7 @@ import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 
 import useAccountId from '../../use-account-id';
-import { Prices, useGetPrices } from '../use-get-prices';
+import { Prices, PriceSource, useGetPrices } from '../use-get-prices';
 import { useGetAccountSubsidyRewards } from './use-get-account-subsidy-rewards';
 import { useGetLoanAssets } from './use-get-loan-assets';
 import { getPositionsSumOfFieldsInUSD } from './utils';
@@ -172,7 +172,8 @@ type UseGetAccountPositions = {
 const useGetAccountPositions = (): UseGetAccountPositions => {
   const accountId = useAccountId();
 
-  const prices = useGetPrices();
+  const prices = useGetPrices({ source: PriceSource.ORACLE });
+
   const { data: assets } = useGetLoanAssets();
 
   const { data: positions, error: positionsError, refetch: refetchPositions } = useQuery({
