@@ -1,17 +1,22 @@
 import { Meta, Story } from '@storybook/react';
 
-import { Label, LabelProps } from '.';
+import { P } from '../Text';
+import { Accordion, AccordionItem, AccordionProps } from '.';
 
-const Template: Story<LabelProps> = (args) => <Label {...args} />;
+const Template: Story<AccordionProps> = (args) => (
+  <Accordion {...args}>
+    <AccordionItem key='1' title='test1'>
+      <P>Hello</P>
+    </AccordionItem>
+  </Accordion>
+);
 
 const Default = Template.bind({});
-Default.args = {
-  children: 'Label'
-};
+Default.args = {};
 
 export { Default };
 
 export default {
-  title: 'Forms/Label',
-  component: Label
+  title: 'Components/Accordion',
+  component: Accordion
 } as Meta;

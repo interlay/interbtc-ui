@@ -7,10 +7,11 @@ import { Node } from '@react-types/shared';
 import { useRef } from 'react';
 
 import {
-  StyledAccordionItemBtn,
   StyledAccordionItemButton,
   StyledAccordionItemHeading,
-  StyledAccordionItemWrapper
+  StyledAccordionItemRegion,
+  StyledAccordionItemWrapper,
+  StyledChevronDown
 } from './Accordion.style';
 
 type AccordionItemProps<T> = {
@@ -31,24 +32,12 @@ const AccordionItem = <T extends Record<string, unknown>>(props: AccordionItemPr
       <StyledAccordionItemHeading>
         <FocusRing within>
           <StyledAccordionItemButton {...mergeProps(buttonProps, hoverProps)} ref={ref} $isHovered={isHovered}>
-            {direction === 'ltr' ? (
-              <ChevronRightMedium
-                aria-hidden='true'
-                UNSAFE_className={classNames(styles, 'spectrum-AccordionItem-itemIndicator')}
-              />
-            ) : (
-              <ChevronLeftMedium
-                aria-hidden='true'
-                UNSAFE_className={classNames(styles, 'spectrum-AccordionItem-itemIndicator')}
-              />
-            )}
-            {item.props.title}
+            {isOpen ? item.props.title : undefined}
+            <StyledChevronDown $isOpen={isOpen} />
           </StyledAccordionItemButton>
         </FocusRing>
       </StyledAccordionItemHeading>
-      <div {...regionProps} className={classNames(styles, 'spectrum-AccordionItem-itemContent')}>
-        {item.props.children}
-      </div>
+      <StyledAccordionItemRegion {...regionProps}>{item.props.children}</StyledAccordionItemRegion>
     </StyledAccordionItemWrapper>
   );
 };
