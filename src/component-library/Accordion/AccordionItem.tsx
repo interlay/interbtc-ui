@@ -1,10 +1,7 @@
-import { useAccordionItem } from '@react-aria/accordion';
+import { useButton } from '@react-aria/button';
 import { FocusRing } from '@react-aria/focus';
-import { useHover } from '@react-aria/interactions';
-import { mergeProps } from '@react-aria/utils';
-import { TreeState } from '@react-stately/tree';
-import { Node } from '@react-types/shared';
-import { useRef } from 'react';
+import { mergeProps, useId } from '@react-aria/utils';
+import { ButtonHTMLAttributes, Key, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 
 import {
   StyledAccordionItemButton,
@@ -13,31 +10,84 @@ import {
   StyledAccordionItemWrapper,
   StyledChevronDown
 } from './Accordion.style';
+import { useAccordionContext } from './AccordionContext';
 
-type AccordionItemProps<T> = {
-  item: Node<T>;
-  state: TreeState<T>;
+// Gets the component key from collection
+const useKey = (ref: RefObject<HTMLDivElement>): Key => {
+  const { collection } = useAccordionContext();
+
+  const [key, setKey] = useState<Key>(-1);
+
+  useEffect(() => {
+    if (!collection || !ref.current) return;
+
+    const elementKey = collection.get(ref.current);
+
+    if (!elementKey) return;
+
+    setKey(elementKey);
+  }, [collection, key, ref]);
+
+  return key;
 };
 
-const AccordionItem = <T extends Record<string, unknown>>(props: AccordionItemProps<T>): JSX.Element => {
-  const ref = useRef<HTMLButtonElement>(null);
-  const { state, item } = props;
-  const { buttonProps, regionProps } = useAccordionItem<T>(props, state, ref);
-  const isOpen = state.expandedKeys.has(item.key);
-  const isDisabled = state.disabledKeys.has(item.key);
-  const { isHovered, hoverProps } = useHover({ isDisabled });
+type Props = {
+  title: ReactNode;
+};
+
+type NativeAttrs = Omit<ButtonHTMLAttributes<unknown>, keyof Props>;
+
+type AccordionItemProps = Props & NativeAttrs;
+
+const AccordionItem = ({ className, style, title, children, ...props }: AccordionItemProps): JSX.Element => {
+  const { disabledKeys, expandedKeys, updateKeys } = useAccordionContext();
+
+  const accordionItemRef = useRef<HTMLDivElement>(null);
+  const key = useKey(accordionItemRef);
+
+  const isDisabled = !!disabledKeys?.has(key);
+  const isExpanded = !!expandedKeys?.has(key);
+
+  const buttonId = useId();
+  const regionId = useId();
+
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  const { buttonProps: ariaButtonProps } = useButton(
+    mergeProps(props as any, {
+      id: buttonId,
+      elementType: 'button',
+      isDisabled,
+      onPress: () => updateKeys?.(key)
+    }),
+    btnRef
+  );
+
+  const buttonProps: ButtonHTMLAttributes<unknown> = {
+    ...ariaButtonProps,
+    'aria-expanded': isExpanded,
+    'aria-controls': isExpanded ? regionId : undefined
+  };
+
+  const regionProps = {
+    id: regionId,
+    role: 'region',
+    'aria-labelledby': buttonId
+  };
 
   return (
-    <StyledAccordionItemWrapper $isOpen={isOpen} $isDisabled={isDisabled}>
-      <StyledAccordionItemHeading>
+    <StyledAccordionItemWrapper $isDisabled={isDisabled} className={className} style={style} ref={accordionItemRef}>
+      <StyledAccordionItemHeading size='base'>
         <FocusRing within>
-          <StyledAccordionItemButton {...mergeProps(buttonProps, hoverProps)} ref={ref} $isHovered={isHovered}>
-            {isOpen ? item.props.title : undefined}
-            <StyledChevronDown $isOpen={isOpen} />
+          <StyledAccordionItemButton {...buttonProps} ref={btnRef} $isDisabled={isDisabled}>
+            {title}
+            <StyledChevronDown role='img' $isExpanded={isExpanded} />
           </StyledAccordionItemButton>
         </FocusRing>
       </StyledAccordionItemHeading>
-      <StyledAccordionItemRegion {...regionProps}>{item.props.children}</StyledAccordionItemRegion>
+      <StyledAccordionItemRegion {...regionProps} $isExpanded={isExpanded}>
+        {children}
+      </StyledAccordionItemRegion>
     </StyledAccordionItemWrapper>
   );
 };
