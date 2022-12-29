@@ -51,6 +51,7 @@ const StyledDialog = styled.section`
   color: ${theme.colors.textPrimary};
 
   max-width: ${theme.modal.maxWidth};
+  width: 100%;
   max-height: ${theme.modal.maxHeight};
   margin: 0 ${theme.spacing.spacing6};
   pointer-events: auto;
