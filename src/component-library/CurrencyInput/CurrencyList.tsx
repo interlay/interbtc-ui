@@ -1,8 +1,8 @@
 import { Coin } from '../Coin';
 import { Flex } from '../Flex';
-import { List, ListItem, ListProps } from '../List';
+import { ListItem, ListProps } from '../List';
 import { Span } from '../Text';
-import { StyledListItemLabel } from './CurrencyInput.style';
+import { StyledList, StyledListItemLabel } from './CurrencyInput.style';
 
 type CurrencyData = {
   ticker: string;
@@ -27,7 +27,12 @@ const CurrencyList = ({ items, selectedCurrency, onSelect, ...props }: CurrencyL
   };
 
   return (
-    <List selectionMode='single' onSelectionChange={handleSelectionChange} selectedKeys={[selectedCurrency]} {...props}>
+    <StyledList
+      selectionMode='single'
+      onSelectionChange={handleSelectionChange}
+      selectedKeys={[selectedCurrency]}
+      {...props}
+    >
       {items.map((currency) => {
         const isSelected = selectedCurrency === currency.ticker;
 
@@ -52,7 +57,7 @@ const CurrencyList = ({ items, selectedCurrency, onSelect, ...props }: CurrencyL
           </ListItem>
         );
       })}
-    </List>
+    </StyledList>
   );
 };
 

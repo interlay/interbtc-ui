@@ -4,6 +4,7 @@ import { ReactComponent as ChevronDown } from '@/assets/img/icons/chevron-down.s
 
 import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
+import { List } from '../List';
 import { Span } from '../Text';
 import { theme } from '../theme';
 
@@ -79,6 +80,11 @@ const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
     $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
 `;
 
+const StyledList = styled(List)`
+  overflow: auto;
+  padding: 0 ${theme.spacing.spacing6};
+`;
+
 export {
   StyledChevronDown,
   StyledCoinIcon,
@@ -86,6 +92,7 @@ export {
   StyledCurrencyBalanceLabel,
   StyledCurrencyBalanceValue,
   StyledCurrencyBalanceWrapper,
+  StyledList,
   StyledListItemLabel,
   StyledTicker,
   StyledUSDAdornment

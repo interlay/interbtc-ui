@@ -51,7 +51,9 @@ WithCurrencySelect.args = {
     { balance: 200, ticker: 'BTC', blanceUSD: '$200' },
     { balance: 200, ticker: 'IBTC', blanceUSD: '$200' },
     { balance: 200, ticker: 'KBTC', blanceUSD: '$200' },
-    { balance: 200, ticker: 'DOT', blanceUSD: '$200' }
+    { balance: 200, ticker: 'DOT', blanceUSD: '$200' },
+    { balance: 200, ticker: 'INTR', blanceUSD: '$200' },
+    { balance: 200, ticker: 'LKSM', blanceUSD: '$200' }
   ]
 };
 

@@ -14,7 +14,7 @@ const CurrencyModal = ({ selectedCurrency, currencies, onSelect, ...props }: Cur
     <ModalTitle size='lg' weight='medium' color='secondary'>
       Select Token
     </ModalTitle>
-    <ModalBody>
+    <ModalBody overflow='hidden' noPadding>
       {/* <Flex justifyContent='space-between'>
         <Span weight='light'>Name</Span>
         <Span weight='light'>Balance</Span>
