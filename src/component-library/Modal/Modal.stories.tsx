@@ -2,7 +2,7 @@ import { useOverlayTriggerState } from '@react-stately/overlays';
 import { Meta, Story } from '@storybook/react';
 
 import { CTA } from '../CTA';
-import { Modal, ModalBody, ModalDivider, ModalFooter, ModalProps, ModalTitle } from '.';
+import { Modal, ModalBody, ModalDivider, ModalFooter, ModalHeader, ModalProps } from '.';
 
 const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = ({
   isOpen,
@@ -21,9 +21,9 @@ const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = 
       <Modal {...args} isOpen={state.isOpen} onClose={state.close}>
         {hasTitle && (
           <>
-            <ModalTitle color='secondary' alignment='center'>
+            <ModalHeader color='secondary' alignment='center'>
               Title
-            </ModalTitle>
+            </ModalHeader>
             <ModalDivider color='secondary' />
           </>
         )}

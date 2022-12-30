@@ -1,7 +1,6 @@
 import { Trans, useTranslation } from 'react-i18next';
 
-import { CTA, CTALink, Stack, TextLink } from '@/component-library';
-import { ModalBody, ModalFooter } from '@/component-library/Modal';
+import { CTA, CTALink, ModalBody, ModalFooter, Stack, TextLink } from '@/component-library';
 import {
   INTERLAY_DOS_AND_DONTS_DOCS_LINK,
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
@@ -13,7 +12,7 @@ import {
   StyledDisclaimerList,
   StyledDisclaimerListItem,
   StyledDisclaimerText,
-  StyledModalTitle,
+  StyledModalHeader,
   StyledWarningIcon
 } from './CreateVaultWizard.styles';
 import { StepComponentProps, withStep } from './Step';
@@ -29,11 +28,11 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
 
   return (
     <>
-      <StyledModalTitle alignment='center'>
+      <StyledModalHeader alignment='center'>
         <StyledWarningIcon />
         {t('vault.disclaimer.plase_read_before_you_start')}
-      </StyledModalTitle>
-      <ModalBody spacing='double'>
+      </StyledModalHeader>
+      <ModalBody gap='spacing4'>
         <Stack>
           <StyledDisclaimerText>{t('vault.disclaimer.understand_risks')}</StyledDisclaimerText>
           <StyledDisclaimerText>

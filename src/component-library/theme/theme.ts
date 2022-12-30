@@ -344,6 +344,23 @@ const theme = {
     underlay: {
       zIndex: 1,
       bg: 'var(--colors-neutral-black-60)'
+    },
+    header: {
+      paddingY: 'var(--spacing-4)',
+      paddingX: 'var(--spacing-6)'
+    },
+    divider: {
+      marginX: 'var(--spacing-6)',
+      marginBottom: 'var(--spacing-2)'
+    },
+    body: {
+      paddingY: 'var(--spacing-3)',
+      paddingX: 'var(--spacing-6)'
+    },
+    footer: {
+      paddingTop: 'var(--spacing-4)',
+      paddingBottom: 'var(--spacing-6)',
+      paddingX: 'var(--spacing-6)'
     }
   },
   switch: {

@@ -2,8 +2,7 @@ import { CurrencyExt, LendPosition, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 
-import { CTA, Flex, Modal, ModalProps, Status } from '@/component-library';
-import { ModalBody, ModalTitle } from '@/component-library/Modal';
+import { CTA, Flex, Modal, ModalBody, ModalHeader, ModalProps, Status } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -104,7 +103,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   return (
     <>
       <Modal onClose={onClose} {...props}>
-        <ModalTitle>{content.title}</ModalTitle>
+        <ModalHeader>{content.title}</ModalHeader>
         <ModalBody>
           <Flex direction='column' gap='spacing8'>
             <StyledDescription color='tertiary'>{content.description}</StyledDescription>

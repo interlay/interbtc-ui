@@ -6,5 +6,5 @@ export type { ModalDividerProps } from './ModalDivider';
 export { ModalDivider } from './ModalDivider';
 export type { ModalFooterProps } from './ModalFooter';
 export { ModalFooter } from './ModalFooter';
-export type { ModalTitleProps } from './ModalTitle';
-export { ModalTitle } from './ModalTitle';
+export type { ModalHeaderProps } from './ModalHeader';
+export { ModalHeader } from './ModalHeader';
