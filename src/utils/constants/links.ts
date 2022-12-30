@@ -26,7 +26,8 @@ const PAGES = Object.freeze({
   VAULT: `/vaults/:${URL_PARAMETERS.VAULT.ACCOUNT}/:${URL_PARAMETERS.VAULT.COLLATERAL}/:${URL_PARAMETERS.VAULT.WRAPPED}`,
   FEEDBACK: '/feedback',
   ACTIONS: '/actions',
-  LOANS: '/lending'
+  LOANS: '/lending',
+  SWAP: '/swap'
 });
 
 const QUERY_PARAMETERS = Object.freeze({

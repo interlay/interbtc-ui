@@ -66,6 +66,7 @@ const Navigation = ({
   const { selectedAccount } = useSubstrateSecureState();
   const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
+  const isSwapEnabled = useFeatureFlag(FeatureFlags.SWAP);
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
@@ -88,9 +89,9 @@ const Navigation = ({
       },
       {
         name: 'nav_swap',
-        link: '#',
+        link: PAGES.SWAP,
         icon: ArrowPathRoundedSquareIcon,
-        disabled: true
+        disabled: !isSwapEnabled
       },
       {
         name: 'nav_transactions',
@@ -177,7 +178,7 @@ const Navigation = ({
         }
       }
     ],
-    [isLendingEnabled, selectedAccount?.address, vaultClientLoaded]
+    [isLendingEnabled, isSwapEnabled, selectedAccount?.address, vaultClientLoaded]
   );
 
   return (
