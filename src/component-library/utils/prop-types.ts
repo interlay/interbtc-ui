@@ -72,8 +72,8 @@ export type Spacing = keyof typeof theme.spacing;
 
 export type Placement = 'top' | 'right' | 'bottom' | 'left';
 
-export interface AsProp<As extends ElementType = ElementType> {
-  as?: As;
+export interface ElementTypeProp {
+  elementType?: ElementType;
 }
 
 export type FontWeight = keyof typeof theme.fontWeight;
