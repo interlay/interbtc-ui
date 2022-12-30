@@ -19,7 +19,7 @@ const Template: Story<TokenInputProps> = (args) => {
 
 const WithBalance = Template.bind({});
 WithBalance.args = {
-  currency: 'KSM',
+  token: 'KSM',
   balance: 1000.0,
   decimals: 8,
   balanceLabel: 'Balance',
@@ -30,7 +30,7 @@ WithBalance.args = {
 
 const WithoutBalance = Template.bind({});
 WithoutBalance.args = {
-  currency: 'KSM',
+  token: 'KSM',
   label: 'Amount',
   placeholder: '0.00',
   isDisabled: false
@@ -38,7 +38,7 @@ WithoutBalance.args = {
 
 const WithCurrencySelect = Template.bind({});
 WithCurrencySelect.args = {
-  currency: 'KSM',
+  token: 'KSM',
   balance: 1000.0,
   isDisabled: false,
   decimals: 8,
@@ -46,7 +46,7 @@ WithCurrencySelect.args = {
   placeholder: '0.00',
   label: 'From',
   onChangeCurrency: console.log,
-  currencies: [
+  tokens: [
     { balance: 200, ticker: 'KSM', blanceUSD: '$200' },
     { balance: 200, ticker: 'BTC', blanceUSD: '$200' },
     { balance: 200, ticker: 'IBTC', blanceUSD: '$200' },
@@ -60,6 +60,6 @@ WithCurrencySelect.args = {
 export { WithBalance, WithCurrencySelect, WithoutBalance };
 
 export default {
-  title: 'Forms/CurrencyInput',
+  title: 'Forms/TokenInput',
   component: TokenInput
 } as Meta;

@@ -4,13 +4,13 @@ import { ReactNode } from 'react';
 import { formatNumber } from '@/common/utils/utils';
 
 import {
-  StyledCurrencyBalanceLabel,
-  StyledCurrencyBalanceValue,
-  StyledCurrencyBalanceWrapper
-} from './CurrencyInput.style';
+  StyledTokenInputBalanceLabel,
+  StyledTokenInputBalanceValue,
+  StyledTokenInputBalanceWrapper
+} from './TokenInput.style';
 
-type CurrencyBalanceProps = {
-  currency: string;
+type TokenInputBalanceProps = {
+  token: string;
   value: number;
   onClickBalance?: () => void;
   isDisabled?: boolean;
@@ -19,15 +19,15 @@ type CurrencyBalanceProps = {
   decimals?: number;
 };
 
-const CurrencyBalance = ({
-  currency,
+const TokenInputBalance = ({
+  token,
   value,
   onClickBalance,
   className,
   isDisabled,
   decimals,
   label = 'Balance'
-}: CurrencyBalanceProps): JSX.Element => {
+}: TokenInputBalanceProps): JSX.Element => {
   const isClickable = !!onClickBalance && !isDisabled;
   const { pressProps } = usePress({ onPress: onClickBalance, isDisabled: !isClickable });
   const balanceValueProps = isClickable
@@ -40,16 +40,16 @@ const CurrencyBalance = ({
     : {};
 
   return (
-    <StyledCurrencyBalanceWrapper className={className}>
-      <StyledCurrencyBalanceLabel>{label}</StyledCurrencyBalanceLabel>
+    <StyledTokenInputBalanceWrapper className={className}>
+      <StyledTokenInputBalanceLabel>{label}</StyledTokenInputBalanceLabel>
       <dd>
-        <StyledCurrencyBalanceValue $isClickable={isClickable} {...balanceValueProps}>
-          {formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20 })} {currency}
-        </StyledCurrencyBalanceValue>
+        <StyledTokenInputBalanceValue $isClickable={isClickable} {...balanceValueProps}>
+          {formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20 })} {token}
+        </StyledTokenInputBalanceValue>
       </dd>
-    </StyledCurrencyBalanceWrapper>
+    </StyledTokenInputBalanceWrapper>
   );
 };
 
-export { CurrencyBalance };
-export type { CurrencyBalanceProps };
+export { TokenInputBalance };
+export type { TokenInputBalanceProps };

@@ -187,7 +187,7 @@ const IssueRedeemForm = ({
             <StyledInputLabel id={amountLabelId}>{label}</StyledInputLabel>
             <TokenInput
               aria-labelledby={amountLabelId}
-              tokenSymbol='BTC'
+              token='BTC'
               placeholder='0.00'
               id={tokenInputId}
               {...register(tokenInputId, {
@@ -197,7 +197,7 @@ const IssueRedeemForm = ({
                 }
                 // validate: (value) => validateForm(value)
               })}
-              valueInUSD={displayMonetaryAmountInUSDFormat(
+              valueUSD={displayMonetaryAmountInUSDFormat(
                 parsedBTCAmount || BitcoinAmount.zero(),
                 getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
               )}

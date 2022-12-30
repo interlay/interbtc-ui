@@ -3,14 +3,14 @@ import { PressEvent } from '@react-types/shared';
 import { useRef } from 'react';
 
 import { Tokens } from '../types';
-import { StyledChevronDown, StyledCoinIcon, StyledCurrencyAdornment, StyledTicker } from './CurrencyInput.style';
+import { StyledChevronDown, StyledCoinIcon, StyledTicker, StyledTokenInputAdornment } from './TokenInput.style';
 
-type CurrencyAdornmentProps = {
-  currency: string;
+type TokenInputAdornmentProps = {
+  token: string;
   onPress?: (e: PressEvent) => void;
 };
 
-const CurrencyAdornment = ({ currency, onPress }: CurrencyAdornmentProps): JSX.Element => {
+const TokenInputAdornment = ({ token, onPress }: TokenInputAdornmentProps): JSX.Element => {
   const tokenButtonRef = useRef<HTMLDivElement>(null);
 
   const isTokenClickable = !!onPress;
@@ -24,7 +24,7 @@ const CurrencyAdornment = ({ currency, onPress }: CurrencyAdornmentProps): JSX.E
   );
 
   return (
-    <StyledCurrencyAdornment
+    <StyledTokenInputAdornment
       {...(onPress && buttonProps)}
       ref={tokenButtonRef}
       alignItems='center'
@@ -32,12 +32,12 @@ const CurrencyAdornment = ({ currency, onPress }: CurrencyAdornmentProps): JSX.E
       gap='spacing1'
       $isClickable={isTokenClickable}
     >
-      <StyledCoinIcon size='inherit' coin={currency as Tokens} />
-      <StyledTicker>{currency}</StyledTicker>
+      <StyledCoinIcon size='inherit' coin={token as Tokens} />
+      <StyledTicker>{token}</StyledTicker>
       {isTokenClickable && <StyledChevronDown />}
-    </StyledCurrencyAdornment>
+    </StyledTokenInputAdornment>
   );
 };
 
-export { CurrencyAdornment };
-export type { CurrencyAdornmentProps };
+export { TokenInputAdornment };
+export type { TokenInputAdornmentProps };

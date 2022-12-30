@@ -31,7 +31,7 @@ const StyledUSDAdornment = styled.span`
   align-self: flex-start;
 `;
 
-const StyledCurrencyAdornment = styled(Flex)<StyledClickableProps>`
+const StyledTokenInputAdornment = styled(Flex)<StyledClickableProps>`
   background-color: ${theme.tokenInput.endAdornment.bg};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.xl2};
@@ -52,7 +52,7 @@ const StyledCoinIcon = styled(CoinIcon)`
   flex: 1 0 auto;
 `;
 
-const StyledCurrencyBalanceWrapper = styled.dl`
+const StyledTokenInputBalanceWrapper = styled.dl`
   display: inline-flex;
   gap: ${theme.spacing.spacing1};
   font-weight: ${theme.fontWeight.medium};
@@ -61,7 +61,7 @@ const StyledCurrencyBalanceWrapper = styled.dl`
   padding: ${theme.spacing.spacing1} 0;
 `;
 
-const StyledCurrencyBalanceLabel = styled.dt`
+const StyledTokenInputBalanceLabel = styled.dt`
   color: ${theme.colors.textTertiary};
 
   &:after {
@@ -69,7 +69,7 @@ const StyledCurrencyBalanceLabel = styled.dt`
   }
 `;
 
-const StyledCurrencyBalanceValue = styled.span<StyledClickableProps>`
+const StyledTokenInputBalanceValue = styled.span<StyledClickableProps>`
   display: block;
   color: ${theme.colors.textSecondary};
   cursor: ${(props) => props.$isClickable && 'pointer'};
@@ -82,18 +82,23 @@ const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
 
 const StyledList = styled(List)`
   overflow: auto;
-  padding: 0 ${theme.spacing.spacing6};
+  padding: 0 ${theme.modal.body.paddingX} ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
+`;
+
+const StyledListHeader = styled(Flex)`
+  padding: ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
 `;
 
 export {
   StyledChevronDown,
   StyledCoinIcon,
-  StyledCurrencyAdornment,
-  StyledCurrencyBalanceLabel,
-  StyledCurrencyBalanceValue,
-  StyledCurrencyBalanceWrapper,
   StyledList,
+  StyledListHeader,
   StyledListItemLabel,
   StyledTicker,
+  StyledTokenInputAdornment,
+  StyledTokenInputBalanceLabel,
+  StyledTokenInputBalanceValue,
+  StyledTokenInputBalanceWrapper,
   StyledUSDAdornment
 };
