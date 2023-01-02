@@ -7,6 +7,7 @@ interface StyledCTAProps {
   $fullWidth: boolean;
   $size: Sizes;
   $isFocusVisible?: boolean;
+  $hasIcon: boolean;
 }
 
 const BaseCTA = styled.button<StyledCTAProps>`
@@ -19,7 +20,7 @@ const BaseCTA = styled.button<StyledCTAProps>`
   font-size: ${(props) => theme.cta[props.$size].text};
   font-weight: ${theme.fontWeight.medium};
   line-height: ${(props) => theme.cta[props.$size].lineHeight};
-  padding: ${(props) => theme.cta[props.$size].padding};
+  padding: ${({ $size, $hasIcon }) => ($hasIcon ? theme.cta.icon[$size].padding : theme.cta[$size].padding)};
   text-decoration: none;
   width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
   background: none;

@@ -31,12 +31,36 @@ type CTAProps = Props & InheritAttrs & NativeAttrs;
 
 const CTA = forwardRef<HTMLButtonElement, CTAProps>(
   (
-    { children, loading, disabled, variant = 'primary', fullWidth, size = 'medium', onPress, onClick, ...props },
+    {
+      children,
+      loading,
+      disabled,
+      variant = 'primary',
+      fullWidth,
+      size = 'medium',
+      onPress,
+      onClick,
+      icon: iconProp,
+      ...props
+    },
     ref
   ): JSX.Element => {
     const domRef = useDOMRef(ref);
 
     const isDisabled = disabled || loading;
+
+    // TODO: block by Icon change that will affect as well LoadingSpinner
+    const icon = loading ? (
+      <LoadingSpinner
+        variant='indeterminate'
+        color={variant}
+        aria-label='Loading...'
+        thickness={2}
+        diameter={loadingSizes[size]}
+      />
+    ) : (
+      iconProp
+    );
 
     const { buttonProps } = useButton({ isDisabled, onPress, ...props }, domRef);
     const { focusProps, isFocusVisible } = useFocusRing(props);
@@ -49,6 +73,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
         variant={variant}
         size={size}
         isFocusVisible={isFocusVisible}
+        icon={icon}
         {...mergeProps(props, buttonProps, focusProps, { onClick })}
       >
         {loading && (

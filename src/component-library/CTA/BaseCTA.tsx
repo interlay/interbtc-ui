@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributes } from 'react';
+import { forwardRef, HTMLAttributes, ReactNode } from 'react';
 import { StyledComponent } from 'styled-components';
 
 import { CTAVariants, ElementTypeProp, Sizes } from '../utils/prop-types';
@@ -17,6 +17,7 @@ type Props = {
   size?: Sizes;
   disabled?: boolean;
   isFocusVisible?: boolean;
+  icon?: ReactNode;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -29,7 +30,8 @@ const BaseCTA = forwardRef<HTMLElement, BaseCTAProps>(
       variant = 'primary',
       fullWidth = false,
       size = 'medium',
-      children,
+      children: childrenProp,
+      icon,
       disabled,
       elementType,
       isFocusVisible,
@@ -39,6 +41,8 @@ const BaseCTA = forwardRef<HTMLElement, BaseCTAProps>(
   ): JSX.Element => {
     const StyledCTA = ctaElements[variant];
 
+    const children = icon || childrenProp;
+
     return (
       <StyledCTA
         ref={ref}
@@ -47,6 +51,7 @@ const BaseCTA = forwardRef<HTMLElement, BaseCTAProps>(
         $size={size}
         disabled={disabled}
         $isFocusVisible={isFocusVisible}
+        $hasIcon={!!icon}
         {...props}
       >
         {children}

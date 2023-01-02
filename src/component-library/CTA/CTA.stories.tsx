@@ -1,5 +1,7 @@
 import { Meta, Story } from '@storybook/react';
 
+import { ReactComponent as Close } from '@/assets/img/icons/close.svg';
+
 import { CTA, CTAProps } from '.';
 
 const Template: Story<CTAProps> = (args) => <CTA {...args} />;
@@ -56,7 +58,12 @@ Loading.args = {
   children: 'Call to action'
 };
 
-export { FullWidth, Large, Loading, Outlined, Primary, Secondary, Small, Text };
+const Icon = Template.bind({});
+Icon.args = {
+  icon: <Close width='1.5em' height='1.5em' />
+};
+
+export { FullWidth, Icon, Large, Loading, Outlined, Primary, Secondary, Small, Text };
 
 export default {
   title: 'Elements/CTA',

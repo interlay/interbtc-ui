@@ -177,6 +177,17 @@ const theme = {
       padding: 'var(--spacing-4) var(--spacing-12)',
       text: 'var(--text-lg)',
       lineHeight: 'var(--line-height-lg)'
+    },
+    icon: {
+      small: {
+        padding: 'var(--spacing-1)'
+      },
+      medium: {
+        padding: 'var(--spacing-2)'
+      },
+      large: {
+        padding: 'var(--spacing-3)'
+      }
     }
   },
   table: {
