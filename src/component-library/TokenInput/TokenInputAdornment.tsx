@@ -6,7 +6,7 @@ import { Tokens } from '../types';
 import { StyledChevronDown, StyledCoinIcon, StyledTicker, StyledTokenInputAdornment } from './TokenInput.style';
 
 type TokenInputAdornmentProps = {
-  token: string;
+  token?: string;
   onPress?: (e: PressEvent) => void;
 };
 
@@ -31,9 +31,10 @@ const TokenInputAdornment = ({ token, onPress }: TokenInputAdornmentProps): JSX.
       justifyContent='center'
       gap='spacing1'
       $isClickable={isTokenClickable}
+      $hasToken={!!token}
     >
-      <StyledCoinIcon size='inherit' coin={token as Tokens} />
-      <StyledTicker>{token}</StyledTicker>
+      {token && <StyledCoinIcon size='inherit' coin={token as Tokens} />}
+      <StyledTicker>{token || 'Select Token'}</StyledTicker>
       {isTokenClickable && <StyledChevronDown />}
     </StyledTokenInputAdornment>
   );

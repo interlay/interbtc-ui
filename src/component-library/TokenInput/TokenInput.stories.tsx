@@ -38,7 +38,6 @@ WithoutBalance.args = {
 
 const WithCurrencySelect = Template.bind({});
 WithCurrencySelect.args = {
-  token: 'KSM',
   balance: 1000.0,
   isDisabled: false,
   decimals: 8,

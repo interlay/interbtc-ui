@@ -10,6 +10,11 @@ import { theme } from '../theme';
 
 type StyledClickableProps = {
   $isClickable: boolean;
+  $hasToken: boolean;
+};
+
+type StyledTokenInputBalanceValueProps = {
+  $isClickable: boolean;
 };
 
 type StyledListItemSelectedLabelProps = {
@@ -37,7 +42,12 @@ const StyledTokenInputAdornment = styled(Flex)<StyledClickableProps>`
   font-size: ${theme.text.xl2};
   padding: ${theme.spacing.spacing3};
   cursor: ${({ $isClickable }) => $isClickable && 'pointer'};
-  width: ${({ $isClickable }) => ($isClickable ? '7rem' : '5.25rem')};
+  height: 3rem;
+  width: ${({ $hasToken, $isClickable }) => {
+    if (!$hasToken) return '8.5rem';
+
+    return $isClickable ? '7rem' : '5.25rem';
+  }};
 `;
 
 const StyledChevronDown = styled(ChevronDown)`
@@ -69,7 +79,7 @@ const StyledTokenInputBalanceLabel = styled.dt`
   }
 `;
 
-const StyledTokenInputBalanceValue = styled.span<StyledClickableProps>`
+const StyledTokenInputBalanceValue = styled.span<StyledTokenInputBalanceValueProps>`
   display: block;
   color: ${theme.colors.textSecondary};
   cursor: ${(props) => props.$isClickable && 'pointer'};

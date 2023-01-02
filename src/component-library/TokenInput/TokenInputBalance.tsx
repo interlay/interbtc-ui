@@ -10,7 +10,7 @@ import {
 } from './TokenInput.style';
 
 type TokenInputBalanceProps = {
-  token: string;
+  token?: string;
   value: number;
   onClickBalance?: () => void;
   isDisabled?: boolean;
@@ -39,12 +39,16 @@ const TokenInputBalance = ({
       }
     : {};
 
+  const balanceLabel = token
+    ? `${formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20 })} ${token}`
+    : '-';
+
   return (
     <StyledTokenInputBalanceWrapper className={className}>
       <StyledTokenInputBalanceLabel>{label}</StyledTokenInputBalanceLabel>
       <dd>
         <StyledTokenInputBalanceValue $isClickable={isClickable} {...balanceValueProps}>
-          {formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20 })} {token}
+          {balanceLabel}
         </StyledTokenInputBalanceValue>
       </dd>
     </StyledTokenInputBalanceWrapper>

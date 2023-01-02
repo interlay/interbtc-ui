@@ -11,7 +11,7 @@ type Props = {
   labelProps?: LabelProps;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
-  endAdornmentSize?: Sizes | 'extra-large';
+  endAdornmentSize?: Sizes | 'x-large' | '2x-large';
   bottomAdornment?: ReactNode;
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;

@@ -1,3 +1,5 @@
+import { FocusScope } from '@react-aria/focus';
+
 import { Modal, ModalBody, ModalHeader, ModalProps } from '../Modal';
 import { Span } from '../Text';
 import { StyledListHeader } from './TokenInput.style';
@@ -21,7 +23,9 @@ const TokenListModal = ({ selectedToken, tokens, onSelect, ...props }: TokenList
         <Span weight='light'>Name</Span>
         <Span weight='light'>Balance</Span>
       </StyledListHeader>
-      <TokenList items={tokens} selectedToken={selectedToken} onSelect={onSelect} />
+      <FocusScope autoFocus>
+        <TokenList items={tokens} selectedToken={selectedToken} onSelect={onSelect} />
+      </FocusScope>
     </ModalBody>
   </Modal>
 );

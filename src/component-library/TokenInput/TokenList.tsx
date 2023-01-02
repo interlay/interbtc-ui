@@ -12,7 +12,7 @@ type TokenData = {
 
 type Props = {
   items: TokenData[];
-  selectedToken: string;
+  selectedToken?: string;
   onSelect?: (ticker: string) => void;
 };
 
@@ -30,7 +30,7 @@ const TokenList = ({ items, selectedToken, onSelect, ...props }: TokenListProps)
     <StyledList
       selectionMode='single'
       onSelectionChange={handleSelectionChange}
-      selectedKeys={[selectedToken]}
+      selectedKeys={selectedToken ? [selectedToken] : undefined}
       {...props}
     >
       {items.map((item) => {

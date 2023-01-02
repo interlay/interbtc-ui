@@ -5,7 +5,7 @@ import { Label, LabelProps } from '../Label';
 import { TokenInputBalance } from './TokenInputBalance';
 
 type Props = {
-  token: string;
+  token?: string;
   balance?: number;
   balanceLabel?: ReactNode;
   balanceDecimals?: number;

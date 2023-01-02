@@ -28,7 +28,7 @@ type Props = {
   balance?: number;
   balanceLabel?: ReactNode;
   balanceDecimals?: number;
-  token: string;
+  token?: string;
   tokens?: TokenData[];
   onClickBalance?: (balance?: number) => void;
   onChangeCurrency?: (token: string) => void;
@@ -112,7 +112,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           isDisabled={isDisabled}
           formatOptions={formatOptions}
           endAdornment={endAdornment}
-          endAdornmentSize={hasSelect ? 'extra-large' : 'large'}
+          endAdornmentSize={hasSelect ? (token ? 'x-large' : '2x-large') : 'large'}
           bottomAdornment={<StyledUSDAdornment>{valueUSD}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}
         />

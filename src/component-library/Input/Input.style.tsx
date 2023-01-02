@@ -7,7 +7,7 @@ type BaseInputProps = {
   $size: Sizes;
   $hasBottomAdornment?: boolean;
   $hasRightAdornment?: boolean;
-  $endAdornmentSize?: Sizes | 'extra-large';
+  $endAdornmentSize?: Sizes | 'x-large' | '2x-large';
   $hasLeftAdornment?: boolean;
   $isDisabled: boolean;
   $hasError: boolean;
@@ -26,10 +26,12 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   padding-left: ${({ $hasLeftAdornment }) => ($hasLeftAdornment ? '4rem' : theme.spacing.spacing2)};
   padding-right: ${({ $endAdornmentSize }) => {
     switch ($endAdornmentSize) {
-      case 'extra-large':
-        return '7.75rem';
+      case '2x-large':
+        return '9.5rem';
+      case 'x-large':
+        return '8rem';
       case 'large':
-        return '6rem';
+        return '6.25rem';
       case 'medium':
       default:
         return theme.spacing.spacing2;
