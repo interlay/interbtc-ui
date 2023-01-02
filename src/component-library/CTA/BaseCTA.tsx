@@ -17,6 +17,7 @@ type Props = {
   size?: Sizes;
   disabled?: boolean;
   as?: any;
+  isFocusVisible?: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -24,11 +25,21 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 type BaseCTAProps = Props & NativeAttrs;
 
 const BaseCTA = forwardRef<HTMLElement, BaseCTAProps>(
-  ({ variant = 'primary', fullWidth = false, size = 'medium', children, disabled, ...props }, ref): JSX.Element => {
+  (
+    { variant = 'primary', fullWidth = false, size = 'medium', children, disabled, isFocusVisible, ...props },
+    ref
+  ): JSX.Element => {
     const StyledCTA = ctaElements[variant];
 
     return (
-      <StyledCTA ref={ref} $fullWidth={fullWidth} $size={size} disabled={disabled} {...props}>
+      <StyledCTA
+        ref={ref}
+        $fullWidth={fullWidth}
+        $size={size}
+        disabled={disabled}
+        $isFocusVisible={isFocusVisible}
+        {...props}
+      >
         {children}
       </StyledCTA>
     );
