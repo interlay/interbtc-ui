@@ -13,17 +13,20 @@ type TokenData = {
 type Props = {
   items: TokenData[];
   selectedToken?: string;
-  onSelect?: (ticker: string) => void;
+  onSelectionChange?: (ticker: string) => void;
 };
 
 type InheritAttrs = Omit<ListProps, keyof Props | 'children'>;
 
 type TokenListProps = Props & InheritAttrs;
 
-const TokenList = ({ items, selectedToken, onSelect, ...props }: TokenListProps): JSX.Element => {
+const TokenList = ({ items, selectedToken, onSelectionChange, ...props }: TokenListProps): JSX.Element => {
   const handleSelectionChange: ListProps['onSelectionChange'] = (key) => {
     const [selectedKey] = [...key];
-    onSelect?.(selectedKey as string);
+
+    if (!selectedKey) return;
+
+    onSelectionChange?.(selectedKey as string);
   };
 
   return (

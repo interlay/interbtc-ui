@@ -1,6 +1,6 @@
 import { useLabel } from '@react-aria/label';
 import { mergeProps } from '@react-aria/utils';
-import { forwardRef, ReactNode, useEffect, useState } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useState } from 'react';
 
 import { formatUSD } from '@/common/utils/utils';
 
@@ -9,10 +9,9 @@ import { NumberInput, NumberInputProps } from '../NumberInput';
 import { useDOMRef } from '../utils/dom';
 import { triggerChangeEvent } from '../utils/input';
 import { StyledUSDAdornment } from './TokenInput.style';
-import { TokenInputAdornment } from './TokenInputAdornment';
 import { TokenInputLabel } from './TokenInputLabel';
 import { TokenData } from './TokenList';
-import { TokenListModal } from './TokenListModal';
+import { TokenSelect } from './TokenSelect';
 
 const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
   if (!decimals) return;
@@ -33,7 +32,7 @@ type Props = {
   token?: string;
   tokens?: TokenData[];
   onClickBalance?: (balance?: number) => void;
-  onChangeCurrency?: (token: string) => void;
+  selectProps?: InputHTMLAttributes<HTMLInputElement>;
 };
 
 type InheritAttrs = Omit<NumberInputProps, keyof Props>;
@@ -56,22 +55,21 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       hidden,
       className,
       onClickBalance,
-      onChangeCurrency,
+      selectProps,
       ...props
     },
     ref
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
-    const [token, setCurrency] = useState(tokenProp);
-    const [isOpen, setOpen] = useState(false);
+    const [token, setToken] = useState((selectProps?.value as string) || tokenProp);
 
     const { labelProps, fieldProps } = useLabel({ label });
 
     useEffect(() => {
       if (!tokenProp) return;
 
-      setCurrency(tokenProp);
+      setToken(tokenProp);
     }, [tokenProp]);
 
     const handleClickBalance = () => {
@@ -79,18 +77,19 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       onClickBalance?.(balance);
     };
 
-    const handlePressToken = () => setOpen(true);
+    const handleTokenChange = (token: string) => setToken(token);
 
-    const handleClose = () => setOpen(false);
-
-    const handleSelectToken = (token: string) => {
-      setCurrency(token);
-      handleClose();
-    };
-
-    const hasSelect = !!onChangeCurrency && tokens?.length;
-
-    const endAdornment = <TokenInputAdornment token={token} onPress={hasSelect ? handlePressToken : undefined} />;
+    const isSelectDisabled = !selectProps || !tokens?.length;
+    const endAdornment = (
+      <TokenSelect
+        token={token}
+        isDisabled={isSelectDisabled}
+        tokens={tokens}
+        onChange={handleTokenChange}
+        // Allows seamingless integration with form lib
+        selectProps={selectProps}
+      />
+    );
 
     const formatOptions = getFormatOptions(decimals);
 
@@ -114,19 +113,10 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           isDisabled={isDisabled}
           formatOptions={formatOptions}
           endAdornment={endAdornment}
-          endAdornmentSize={hasSelect ? (token ? 'x-large' : '2x-large') : 'large'}
+          endAdornmentSize={isSelectDisabled ? 'large' : token ? 'x-large' : '2x-large'}
           bottomAdornment={<StyledUSDAdornment>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}
         />
-        {hasSelect && (
-          <TokenListModal
-            isOpen={isOpen}
-            tokens={tokens}
-            selectedToken={token}
-            onClose={handleClose}
-            onSelect={handleSelectToken}
-          />
-        )}
       </Flex>
     );
   }

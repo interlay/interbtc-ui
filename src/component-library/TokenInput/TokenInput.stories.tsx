@@ -44,7 +44,7 @@ WithCurrencySelect.args = {
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'From',
-  onChangeCurrency: console.log,
+  selectProps: {},
   tokens: [
     { balance: 200, ticker: 'KSM', blanceUSD: '$200' },
     { balance: 200, ticker: 'BTC', blanceUSD: '$200' },

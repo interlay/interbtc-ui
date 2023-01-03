@@ -1,19 +1,19 @@
-import { FocusScope } from '@react-aria/focus';
-
 import { Modal, ModalBody, ModalHeader, ModalProps } from '../Modal';
 import { Span } from '../Text';
 import { StyledListHeader } from './TokenInput.style';
-import { TokenData, TokenList, TokenListProps } from './TokenList';
+import { TokenData, TokenList } from './TokenList';
 
 type Props = {
   tokens: TokenData[];
+  onSelectionChange?: (ticker: string) => void;
+  selectedToken?: string;
 };
 
-type InheritAttrs = Omit<ModalProps & TokenListProps, keyof Props | 'children' | 'items'>;
+type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type TokenListModalProps = Props & InheritAttrs;
 
-const TokenListModal = ({ selectedToken, tokens, onSelect, ...props }: TokenListModalProps): JSX.Element => (
+const TokenListModal = ({ selectedToken, tokens, onSelectionChange, ...props }: TokenListModalProps): JSX.Element => (
   <Modal {...props}>
     <ModalHeader size='lg' weight='medium' color='secondary'>
       Select Token
@@ -23,9 +23,7 @@ const TokenListModal = ({ selectedToken, tokens, onSelect, ...props }: TokenList
         <Span weight='light'>Name</Span>
         <Span weight='light'>Balance</Span>
       </StyledListHeader>
-      <FocusScope autoFocus>
-        <TokenList items={tokens} selectedToken={selectedToken} onSelect={onSelect} />
-      </FocusScope>
+      <TokenList items={tokens} selectedToken={selectedToken} onSelectionChange={onSelectionChange} />
     </ModalBody>
   </Modal>
 );

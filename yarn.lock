@@ -6312,7 +6312,7 @@
     prop-types "^15.7.2"
     tslib "^2.3.0"
 
-"@react-aria/button@^3.6.3":
+"@react-aria/button@^3.6.4":
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/@react-aria/button/-/button-3.6.4.tgz#51927c9d968d0c1f741ee2081ca7f2e244abbc12"
   integrity sha512-OEs5fNGiuZzyC5y0cNl96+6pRf/3ZhI1i2m6LlRYhJLsWXPhHt21UHEnlSchE/XGtgKojJEeTsXottoBFTBi5w==
@@ -6948,6 +6948,17 @@
     "@react-aria/interactions" "^3.13.0"
     "@react-aria/utils" "^3.14.1"
     "@react-types/shared" "^3.16.0"
+    clsx "^1.1.1"
+
+"@react-aria/visually-hidden@^3.6.1":
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/@react-aria/visually-hidden/-/visually-hidden-3.6.1.tgz#b0a94b1531b9a8942d0d9a5cc6ed88109b8f5487"
+  integrity sha512-7rUbiaIiR1nok9HAHPn/WcyQlvuldUqxnvh81V4dlI3NtXOgMw7/QaNc5Xo5FFWlsSVpbyK3UVJgzIui0Ns0Xg==
+  dependencies:
+    "@react-aria/interactions" "^3.13.1"
+    "@react-aria/utils" "^3.14.2"
+    "@react-types/shared" "^3.16.0"
+    "@swc/helpers" "^0.4.14"
     clsx "^1.1.1"
 
 "@react-stately/collections@^3.4.1":

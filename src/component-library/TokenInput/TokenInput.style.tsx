@@ -36,7 +36,7 @@ const StyledUSDAdornment = styled.span`
   align-self: flex-start;
 `;
 
-const StyledTokenInputAdornment = styled(Flex)<StyledClickableProps>`
+const StyledTokenSelect = styled(Flex)<StyledClickableProps>`
   background-color: ${theme.tokenInput.endAdornment.bg};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.xl2};
@@ -106,9 +106,9 @@ export {
   StyledListHeader,
   StyledListItemLabel,
   StyledTicker,
-  StyledTokenInputAdornment,
   StyledTokenInputBalanceLabel,
   StyledTokenInputBalanceValue,
   StyledTokenInputBalanceWrapper,
+  StyledTokenSelect,
   StyledUSDAdornment
 };
