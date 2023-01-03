@@ -6,7 +6,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
 
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, Flex, TokenInput } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import validate, {
@@ -193,7 +193,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
               aria-label={content.fieldAriaLabel}
               balance={assetAmount.max.toBig().toNumber()}
               balanceDecimals={asset.currency.humanDecimals}
-              valueUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
+              valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
               onClickBalance={handleClickBalance}
               {...register(formField, { onChange: handleChange })}
             />

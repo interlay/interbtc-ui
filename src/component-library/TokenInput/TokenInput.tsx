@@ -2,6 +2,8 @@ import { useLabel } from '@react-aria/label';
 import { mergeProps } from '@react-aria/utils';
 import { forwardRef, ReactNode, useEffect, useState } from 'react';
 
+import { formatUSD } from '@/common/utils/utils';
+
 import { Flex } from '../Flex';
 import { NumberInput, NumberInputProps } from '../NumberInput';
 import { useDOMRef } from '../utils/dom';
@@ -24,7 +26,7 @@ const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefin
 
 type Props = {
   decimals?: number;
-  valueUSD: string;
+  valueUSD: number;
   balance?: number;
   balanceLabel?: ReactNode;
   balanceDecimals?: number;
@@ -113,7 +115,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           formatOptions={formatOptions}
           endAdornment={endAdornment}
           endAdornmentSize={hasSelect ? (token ? 'x-large' : '2x-large') : 'large'}
-          bottomAdornment={<StyledUSDAdornment>{valueUSD}</StyledUSDAdornment>}
+          bottomAdornment={<StyledUSDAdornment>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}
         />
         {hasSelect && (

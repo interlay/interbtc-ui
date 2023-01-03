@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import * as z from 'zod';
 
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
@@ -87,7 +87,7 @@ const DepositCollateralStep = ({
               aria-labelledby={titleId}
               placeholder='0.00'
               token={collateral.currency.ticker}
-              valueUSD={displayMonetaryAmountInUSDFormat(inputCollateralAmount, collateral.price.usd)}
+              valueUSD={convertMonetaryAmountToValueInUSD(inputCollateralAmount, collateral.price.usd) ?? 0}
               balance={collateral.balance.raw.toBig().toNumber()}
               errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}
               balanceDecimals={collateral.currency.humanDecimals}

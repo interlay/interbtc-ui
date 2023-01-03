@@ -12,7 +12,7 @@ const Template: Story<TokenInputProps> = (args) => {
       value={value}
       onChange={(e) => setValue(Number(e.target.value || 0))}
       aria-label='token field'
-      valueUSD={`$${(value || 0) * 10}`}
+      valueUSD={(value || 0) * 10}
     />
   );
 };

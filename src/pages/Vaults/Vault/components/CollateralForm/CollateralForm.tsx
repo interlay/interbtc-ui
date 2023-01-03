@@ -11,7 +11,13 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatNumber, formatUSD } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
+  formatNumber,
+  formatUSD
+} from '@/common/utils/utils';
 import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { URL_PARAMETERS } from '@/utils/constants/links';
@@ -238,10 +244,12 @@ const CollateralForm = ({
           aria-labelledby={titleId}
           placeholder='0.00'
           token={collateralToken.ticker}
-          valueUSD={displayMonetaryAmountInUSDFormat(
-            inputCollateralAmount,
-            getTokenPrice(prices, collateralToken.ticker)?.usd
-          )}
+          valueUSD={
+            convertMonetaryAmountToValueInUSD(
+              inputCollateralAmount,
+              getTokenPrice(prices, collateralToken.ticker)?.usd
+            ) ?? 0
+          }
           id={tokenInputId}
           {...register(tokenInputId, {
             required: {
