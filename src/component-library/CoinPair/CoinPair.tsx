@@ -1,11 +1,11 @@
 import { CoinIcon } from '../CoinIcon';
-import { FontSize } from '../utils/prop-types';
+import { IconSize } from '../utils/prop-types';
 import { CoinPairWrapper } from './CoinPair.style';
 
 type CoinPairProps = {
   coinOne: string;
   coinTwo: string;
-  size: FontSize;
+  size: IconSize;
 };
 
 const CoinPair = ({ coinOne, coinTwo, size }: CoinPairProps): JSX.Element => (

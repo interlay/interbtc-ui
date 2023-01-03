@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
-import { FontSize } from '../utils/prop-types';
+import { IconSize } from '../utils/prop-types';
 
 interface CoinPairWrapperProps {
-  $size: FontSize;
+  $size: IconSize;
 }
 
 const CoinPairWrapper = styled.div<CoinPairWrapperProps>`
@@ -12,7 +12,7 @@ const CoinPairWrapper = styled.div<CoinPairWrapperProps>`
 
   & :first-child {
     // Coin one covers 30% of coin two
-    margin-right: ${({ $size }) => `calc(${theme.text[$size]} * -0.3)`};
+    margin-right: ${({ $size }) => `calc(${theme.icon.sizes[$size]} * -0.3)`};
     z-index: 1;
   }
 `;

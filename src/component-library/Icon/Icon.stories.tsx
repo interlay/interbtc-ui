@@ -18,7 +18,7 @@ const Template: Story<IconProps> = (args) => (
 const Default = Template.bind({});
 Default.args = {
   color: 'primary',
-  size: 'base'
+  size: 'md'
 };
 
 export { Default };

@@ -25,7 +25,7 @@ const VaultCreatedStep = ({ collateralCurrency }: VaultCreatedStepProps): JSX.El
       <ModalBody>
         <Stack spacing='double' alignItems='center'>
           <Stack alignItems='center'>
-            <CoinPair coinOne={collateralCurrency.ticker} coinTwo={WRAPPED_TOKEN_SYMBOL} size='xl5' />
+            <CoinPair coinOne={collateralCurrency.ticker} coinTwo={WRAPPED_TOKEN_SYMBOL} size='xl2' />
             <H4 color='tertiary'>
               {collateralCurrency.ticker} - {WRAPPED_TOKEN_SYMBOL}
             </H4>

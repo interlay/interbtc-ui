@@ -8,7 +8,7 @@ const Default = Template.bind({});
 Default.args = {
   coinOne: 'IBTC',
   coinTwo: 'KBTC',
-  size: 'xl3'
+  size: 'xl2'
 };
 
 export { Default };

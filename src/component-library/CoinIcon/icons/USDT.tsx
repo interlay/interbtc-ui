@@ -4,6 +4,7 @@ import { Icon, IconProps } from '@/component-library/Icon';
 
 const USDT = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <Icon {...props} ref={ref} viewBox='0 0 64 64' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <title>USDT</title>
     <circle cx='32' cy='32' r='32' fill='#50AF95' />
     <path
       fillRule='evenodd'

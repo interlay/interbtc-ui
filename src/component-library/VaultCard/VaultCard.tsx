@@ -33,7 +33,7 @@ const VaultCard = ({
 }: VaultCardProps): JSX.Element => (
   <Card>
     <CardHeader>
-      <CoinPair coinOne={collateralTokenTicker as Tokens} coinTwo={wrappedSymbol} size='xl4' />
+      <CoinPair coinOne={collateralTokenTicker as Tokens} coinTwo={wrappedSymbol} size='xl2' />
       <CardTitle>
         {collateralTokenTicker} - {wrappedSymbol}
       </CardTitle>
