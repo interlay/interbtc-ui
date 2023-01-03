@@ -91,7 +91,7 @@ const RedeemForm = (): JSX.Element | null => {
   const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
-  const [status, setStatus] = React.useState(STATUSES.IDLE);
+  const [status, setStatus] = React.useState<any>(STATUSES.IDLE);
   const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
@@ -101,7 +101,7 @@ const RedeemForm = (): JSX.Element | null => {
   const [maxRedeemableCapacity, setMaxRedeemableCapacity] = React.useState(BitcoinAmount.zero());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
   const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero());
-  const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
+  const [submitStatus, setSubmitStatus] = React.useState<any>(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Redeem>();
 
@@ -304,17 +304,13 @@ const RedeemForm = (): JSX.Element | null => {
           }
         }
 
-        // FIXME: workaround to make premium redeem still possible
-        const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
-        // FIXME: a bit of a dirty workaround with the capacity
-        relevantVaults.set(vaultId, monetaryWrappedTokenAmount.mul(2));
         const result = await window.bridge.redeem.request(monetaryWrappedTokenAmount, data[BTC_ADDRESS], vaultId);
 
         // TODO: handle redeem aggregator
         const redeemRequest = result[0];
         handleSubmittedRequestModalOpen(redeemRequest);
         setSubmitStatus(STATUSES.RESOLVED);
-      } catch (error) {
+      } catch (error: any) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
       }
