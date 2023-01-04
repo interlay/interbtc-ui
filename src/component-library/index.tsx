@@ -1,3 +1,5 @@
+export type { AccordionItemProps, AccordionProps } from './Accordion';
+export { Accordion, AccordionItem } from './Accordion';
 export type { AlertProps } from './Alert';
 export { Alert } from './Alert';
 export type { CardProps } from './Card';
