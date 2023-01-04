@@ -376,6 +376,23 @@ const theme = {
       xl: 'var(--spacing-10)',
       xl2: 'var(--spacing-12)'
     }
+  },
+  list: {
+    text: 'var(--color-list-selected-text)',
+    primary: {
+      bg: 'var(--color-list-primary-bg)',
+      border: '1px solid var(--colors-border)',
+      hover: {
+        bg: 'var(--color-list-primary-hover-bg)'
+      }
+    },
+    secondary: {
+      bg: 'var(--color-list-secondary-bg)',
+      border: 'none',
+      hover: {
+        bg: 'var(--color-list-secondary-hover-bg)'
+      }
+    }
   }
 };
 

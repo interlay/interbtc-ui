@@ -18,6 +18,8 @@ export type { InfoBoxProps } from './InfoBox';
 export { InfoBox } from './InfoBox';
 export type { InputProps } from './Input';
 export { Input } from './Input';
+export type { ListItemProps, ListProps } from './List';
+export { List, ListItem } from './List';
 export type { LoadingSpinnerProps } from './LoadingSpinner';
 export { LoadingSpinner } from './LoadingSpinner';
 export type { MeterProps, MeterRanges, UseMeterProps } from './Meter';
