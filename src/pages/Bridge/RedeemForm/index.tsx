@@ -97,10 +97,9 @@ const RedeemForm = (): JSX.Element | null => {
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  // ray test touch <<
-  // const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
+  // ray test touch <
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
-  // ray test touch >>
+  // ray test touch >
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
   );
@@ -139,16 +138,7 @@ const RedeemForm = (): JSX.Element | null => {
     }
   }, [selectVaultManually, selectedVault, setError, clearErrors, t, monetaryWrappedTokenAmount]);
 
-  // ray test touch <<
   const redeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
-  // React.useEffect(() => {
-  //   if (!bridgeLoaded) return;
-  //   if (!monetaryWrappedTokenAmount) return;
-  //   if (!redeemFeeRate) return;
-  //   const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
-  //   setRedeemFee(theRedeemFee);
-  // }, [bridgeLoaded, monetaryWrappedTokenAmount, redeemFeeRate]);
-  // ray test touch >>
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
