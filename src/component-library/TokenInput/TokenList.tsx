@@ -1,4 +1,4 @@
-import { Coin } from '../Coin';
+import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
 import { ListItem, ListProps } from '../List';
 import { Span } from '../Text';
@@ -49,7 +49,7 @@ const TokenList = ({ items, selectedToken, onSelectionChange, ...props }: TokenL
             gap='spacing4'
           >
             <Flex alignItems='center' gap='spacing2'>
-              <Coin ticker={item.ticker} />
+              <CoinIcon ticker={item.ticker} />
               <StyledListItemLabel $isSelected={isSelected}>{item.ticker}</StyledListItemLabel>
             </Flex>
             <Flex direction='column' alignItems='center' gap='spacing2'>

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { ReactComponent as ChevronDown } from '@/assets/img/icons/chevron-down.svg';
+import { ChevronDown } from '@/assets/icons';
 
 import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
@@ -52,10 +52,7 @@ const StyledTokenSelect = styled(Flex)<StyledClickableProps>`
 
 const StyledChevronDown = styled(ChevronDown)`
   margin-left: ${theme.spacing.spacing1};
-  font-size: ${theme.text.lg};
   flex: 1 0 auto;
-  width: 1em;
-  height: 1em;
 `;
 
 const StyledCoinIcon = styled(CoinIcon)`

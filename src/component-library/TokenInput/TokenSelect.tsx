@@ -56,7 +56,7 @@ const TokenSelect = ({ token, tokens, isDisabled, onChange, selectProps }: Token
         <StyledTicker>{token || 'Select Token'}</StyledTicker>
         {!isDisabled && (
           <>
-            <StyledChevronDown />
+            <StyledChevronDown size='s' />
             <VisuallyHidden>
               <input
                 ref={assignFormRef(selectRef, inputRef)}

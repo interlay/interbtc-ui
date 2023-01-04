@@ -1,9 +1,0 @@
-export { BTC } from './BTC';
-export { DOT } from './DOT';
-export { IBTC } from './IBTC';
-export { INTR } from './INTR';
-export { KBTC } from './KBTC';
-export { KINT } from './KINT';
-export { KSM } from './KSM';
-export { LKSM } from './LKSM';
-export { USDT } from './USDT';
