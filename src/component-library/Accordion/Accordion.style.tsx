@@ -1,12 +1,22 @@
 import styled from 'styled-components';
 
-import { ReactComponent as ChevronDown } from '@/assets/img/icons/chevron-down.svg';
+import { ChevronDown } from '@/assets/icons';
 
 import { H3 } from '../Text';
 import { theme } from '../theme';
 
 type StyledAccordionProps = {
   $isDisabled: boolean;
+  $isExpanded: boolean;
+};
+
+type StyledAccordionItemButtonProps = {
+  $isDisabled: boolean;
+  $isFocusVisible: boolean;
+};
+
+type StyledAccordionItemRegionProps = {
+  $height: number;
   $isExpanded: boolean;
 };
 
@@ -21,7 +31,7 @@ const StyledAccordionItemHeading = styled(H3)`
   font-weight: ${theme.fontWeight.bold};
 `;
 
-const StyledAccordionItemButton = styled.button<Pick<StyledAccordionProps, '$isDisabled'>>`
+const StyledAccordionItemButton = styled.button<StyledAccordionItemButtonProps>`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,23 +45,28 @@ const StyledAccordionItemButton = styled.button<Pick<StyledAccordionProps, '$isD
   width: 100%;
   color: inherit;
   font: inherit;
+  outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};
 `;
 
 const StyledChevronDown = styled(ChevronDown)<Pick<StyledAccordionProps, '$isExpanded'>>`
-  width: 1.5em;
-  height: 1.5em;
-  display: inline-block;
   transform: ${({ $isExpanded }) => $isExpanded && 'rotate(-90deg)'};
   transition: transform ${theme.transition.duration.duration150}ms ease;
 `;
 
-const StyledAccordionItemRegion = styled.div<Pick<StyledAccordionProps, '$isExpanded'>>`
+const StyledAccordionItemRegion = styled.div<StyledAccordionItemRegionProps>`
+  overflow: hidden;
+  opacity: ${({ $isExpanded }) => ($isExpanded ? 1 : 0)};
+  height: ${({ $isExpanded, $height }) => ($isExpanded ? `${$height}px` : 0)};
+  transition: height 200ms ease 0ms, opacity 300ms ease 0ms;
+`;
+
+const StyledAccordionItemContent = styled.div`
   padding: 0 ${theme.spacing.spacing4} ${theme.spacing.spacing4} ${theme.spacing.spacing4};
-  display: ${({ $isExpanded }) => ($isExpanded ? 'block' : 'none')};
 `;
 
 export {
   StyledAccordionItemButton,
+  StyledAccordionItemContent,
   StyledAccordionItemHeading,
   StyledAccordionItemRegion,
   StyledAccordionItemWrapper,

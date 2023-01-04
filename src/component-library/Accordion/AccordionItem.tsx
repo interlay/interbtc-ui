@@ -1,22 +1,24 @@
 import { useButton } from '@react-aria/button';
-import { FocusRing } from '@react-aria/focus';
+import { FocusRing, useFocusRing } from '@react-aria/focus';
 import { mergeProps, useId } from '@react-aria/utils';
 import { ButtonHTMLAttributes, Key, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
 
 import {
   StyledAccordionItemButton,
   StyledAccordionItemHeading,
-  StyledAccordionItemRegion,
   StyledAccordionItemWrapper,
   StyledChevronDown
 } from './Accordion.style';
 import { useAccordionContext } from './AccordionContext';
+import { AccordionItemRegion } from './AccordionItemRegion';
 
-// Gets the component key from collection
-const useKey = (ref: RefObject<HTMLDivElement>): Key => {
+// The `collection` variables contains a set o Keys mapped to
+// elements references. Each component gets their identitiy from
+// getting their key using their ref object.
+const useKey = (ref: RefObject<HTMLDivElement>): Key | undefined => {
   const { collection } = useAccordionContext();
 
-  const [key, setKey] = useState<Key>(-1);
+  const [key, setKey] = useState<Key>();
 
   useEffect(() => {
     if (!collection || !ref.current) return;
@@ -45,8 +47,8 @@ const AccordionItem = ({ className, style, title, children, ...props }: Accordio
   const accordionItemRef = useRef<HTMLDivElement>(null);
   const key = useKey(accordionItemRef);
 
-  const isDisabled = !!disabledKeys?.has(key);
-  const isExpanded = !!expandedKeys?.has(key);
+  const isDisabled = !!key && !!disabledKeys?.has(key);
+  const isExpanded = !!key && !!expandedKeys?.has(key);
 
   const buttonId = useId();
   const regionId = useId();
@@ -58,13 +60,15 @@ const AccordionItem = ({ className, style, title, children, ...props }: Accordio
       id: buttonId,
       elementType: 'button',
       isDisabled,
-      onPress: () => updateKeys?.(key)
+      onPress: () => key && updateKeys?.(key)
     }),
     btnRef
   );
 
+  const { focusProps, isFocusVisible } = useFocusRing(props);
+
   const buttonProps: ButtonHTMLAttributes<unknown> = {
-    ...ariaButtonProps,
+    ...mergeProps(ariaButtonProps, focusProps),
     'aria-expanded': isExpanded,
     'aria-controls': isExpanded ? regionId : undefined
   };
@@ -79,15 +83,20 @@ const AccordionItem = ({ className, style, title, children, ...props }: Accordio
     <StyledAccordionItemWrapper $isDisabled={isDisabled} className={className} style={style} ref={accordionItemRef}>
       <StyledAccordionItemHeading size='base'>
         <FocusRing within>
-          <StyledAccordionItemButton {...buttonProps} ref={btnRef} $isDisabled={isDisabled}>
+          <StyledAccordionItemButton
+            {...buttonProps}
+            ref={btnRef}
+            $isFocusVisible={isFocusVisible}
+            $isDisabled={isDisabled}
+          >
             {title}
             <StyledChevronDown role='img' $isExpanded={isExpanded} />
           </StyledAccordionItemButton>
         </FocusRing>
       </StyledAccordionItemHeading>
-      <StyledAccordionItemRegion {...regionProps} $isExpanded={isExpanded}>
+      <AccordionItemRegion {...regionProps} isExpanded={isExpanded}>
         {children}
-      </StyledAccordionItemRegion>
+      </AccordionItemRegion>
     </StyledAccordionItemWrapper>
   );
 };

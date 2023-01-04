@@ -43,6 +43,8 @@ const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
     const accordionRef = useDOMRef<HTMLDivElement>(ref);
     const collection = useCollection(props, accordionRef);
 
+    // Checks for updates in expandedKeysProp, just in
+    // case the prop is being controlled from outside
     useEffect(() => {
       if (!expandedKeysProp) return;
 
