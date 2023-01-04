@@ -92,8 +92,8 @@ const RedeemForm = (): JSX.Element | null => {
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
   // ray test touch <
+  const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
   // ray test touch >
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
@@ -145,8 +145,8 @@ const RedeemForm = (): JSX.Element | null => {
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
     // ray test touch <
     const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
-    // ray test touch >
     setRedeemFee(theRedeemFee);
+    // ray test touch >
   }, [bridgeLoaded, wrappedTokenAmount, redeemFeeRate]);
 
   React.useEffect(() => {
@@ -214,6 +214,7 @@ const RedeemForm = (): JSX.Element | null => {
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeRateResult.value));
         // ray test touch <
+        console.log('ray : ***** feeRateResult.value.toString() => ', feeRateResult.value.toString());
         setRedeemFeeRate(feeRateResult.value);
         // ray test touch >
         setCurrentInclusionFee(currentInclusionFeeResult.value);
@@ -343,9 +344,8 @@ const RedeemForm = (): JSX.Element | null => {
         })}`;
       }
 
-      const monetaryWrappedTokenAmount = new BitcoinAmount(value);
       // ray test touch <
-      const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
+      const theRedeemFee = monetaryValue.mul(redeemFeeRate);
       // ray test touch >
       const minValue = dustValue.add(currentInclusionFee).add(theRedeemFee);
 
@@ -384,6 +384,7 @@ const RedeemForm = (): JSX.Element | null => {
       dispatch(togglePremiumRedeemAction(!premiumRedeemSelected));
     };
 
+    // ray test touch <
     const redeemFeeInBTC = redeemFee.toHuman(8);
     const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
       redeemFee,
@@ -397,6 +398,7 @@ const RedeemForm = (): JSX.Element | null => {
       totalBTC,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
+    // ray test touch >
 
     const totalRelayChainNativeToken = wrappedTokenAmount
       ? btcToRelayChainNativeTokenRate.toCounter(monetaryWrappedTokenAmount).mul(premiumRedeemFee)
