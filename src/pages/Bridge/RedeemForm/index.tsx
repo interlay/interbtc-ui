@@ -93,7 +93,9 @@ const RedeemForm = (): JSX.Element | null => {
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
+  // ray test touch <
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
+  // ray test touch >
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
   );
@@ -141,7 +143,9 @@ const RedeemForm = (): JSX.Element | null => {
     if (!redeemFeeRate) return;
 
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
+    // ray test touch <
     const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
+    // ray test touch >
     setRedeemFee(theRedeemFee);
   }, [bridgeLoaded, wrappedTokenAmount, redeemFeeRate]);
 
@@ -209,7 +213,9 @@ const RedeemForm = (): JSX.Element | null => {
 
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeRateResult.value));
+        // ray test touch <
         setRedeemFeeRate(feeRateResult.value);
+        // ray test touch >
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -338,7 +344,9 @@ const RedeemForm = (): JSX.Element | null => {
       }
 
       const monetaryWrappedTokenAmount = new BitcoinAmount(value);
+      // ray test touch <
       const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
+      // ray test touch >
       const minValue = dustValue.add(currentInclusionFee).add(theRedeemFee);
 
       if (monetaryValue.lte(minValue)) {
