@@ -115,6 +115,13 @@ const theme = {
       large: {
         text: 'var(--text-2xl)'
       }
+    },
+    paddingX: {
+      s: '2rem',
+      md: '4rem',
+      lg: '6.25rem',
+      xl: '8rem',
+      xl2: '9.5rem'
     }
   },
   tokenInput: {

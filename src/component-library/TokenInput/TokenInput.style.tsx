@@ -14,7 +14,8 @@ type StyledClickableProps = {
 };
 
 type StyledTokenInputBalanceValueProps = {
-  $isClickable: boolean;
+  $isDisabled?: boolean;
+  $isFocusVisible: boolean;
 };
 
 type StyledListItemSelectedLabelProps = {
@@ -79,7 +80,8 @@ const StyledTokenInputBalanceLabel = styled.dt`
 const StyledTokenInputBalanceValue = styled.span<StyledTokenInputBalanceValueProps>`
   display: block;
   color: ${theme.colors.textSecondary};
-  cursor: ${(props) => props.$isClickable && 'pointer'};
+  cursor: ${({ $isDisabled }) => !$isDisabled && 'pointer'};
+  outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};
 `;
 
 const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`

@@ -100,7 +100,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           balance={balance}
           balanceLabel={balanceLabel}
           balanceDecimals={balanceDecimals}
-          isDisabled={isDisabled}
+          isDisabled={isDisabled || !token}
           onClickBalance={handleClickBalance}
           {...labelProps}
         >
@@ -112,8 +112,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           size='large'
           isDisabled={isDisabled}
           formatOptions={formatOptions}
+          paddingX={{ right: isSelectDisabled ? 'lg' : token ? 'xl' : 'xl2' }}
           endAdornment={endAdornment}
-          endAdornmentSize={isSelectDisabled ? 'large' : token ? 'x-large' : '2x-large'}
           bottomAdornment={<StyledUSDAdornment>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}
         />

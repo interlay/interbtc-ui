@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { theme } from '../theme';
 import { Placement, Sizes } from '../utils/prop-types';
 
+type PaddingX = { left?: keyof typeof theme.input.paddingX; right?: keyof typeof theme.input.paddingX };
+
 type BaseInputProps = {
   $size: Sizes;
-  $hasBottomAdornment?: boolean;
-  $hasRightAdornment?: boolean;
-  $endAdornmentSize?: Sizes | 'x-large' | '2x-large';
-  $hasLeftAdornment?: boolean;
+  $paddingX?: PaddingX;
+  $adornments: { bottom: boolean; left: boolean; right: boolean };
   $isDisabled: boolean;
   $hasError: boolean;
 };
@@ -21,46 +21,44 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   display: block;
   width: 100%;
   height: 100%;
-  line-height: ${theme.lineHeight.base};
-  padding-top: ${theme.spacing.spacing2};
-  padding-left: ${({ $hasLeftAdornment }) => ($hasLeftAdornment ? '4rem' : theme.spacing.spacing2)};
-  padding-right: ${({ $endAdornmentSize }) => {
-    switch ($endAdornmentSize) {
-      case '2x-large':
-        return '9.5rem';
-      case 'x-large':
-        return '8rem';
-      case 'large':
-        return '6.25rem';
-      case 'medium':
-      default:
-        return theme.spacing.spacing2;
-      case 'small':
-        return theme.spacing.spacing1;
-    }
-  }};
-  padding-bottom: ${({ $hasBottomAdornment }) =>
-    $hasBottomAdornment ? theme.spacing.spacing6 : theme.spacing.spacing2};
+
   outline: none;
   font: inherit;
   letter-spacing: inherit;
   background: none;
+
   color: ${(props) => (props.disabled ? theme.input.disabled.color : theme.input.color)};
-  font-size: ${({ $size, $hasBottomAdornment }) =>
-    $hasBottomAdornment ? theme.input.overflow.large.text : theme.input[$size].text};
+  font-size: ${({ $size, $adornments }) =>
+    $adornments.bottom ? theme.input.overflow.large.text : theme.input[$size].text};
+  line-height: ${theme.lineHeight.base};
+
   background-color: ${theme.input.background};
-  border-radius: ${theme.rounded.md};
   overflow: hidden;
+
   border: ${(props) =>
     props.$isDisabled
       ? theme.input.disabled.border
       : props.$hasError
       ? theme.input.error.border
       : theme.border.default};
+  border-radius: ${theme.rounded.md};
   transition: border-color ${theme.transition.duration.duration150}ms ease-in-out,
     box-shadow ${theme.transition.duration.duration150}ms ease-in-out;
 
-  &:hover:not(:disabled) {
+  padding-top: ${theme.spacing.spacing2};
+  padding-left: ${({ $adornments, $paddingX }) => {
+    if (!$adornments.left) return theme.spacing.spacing2;
+
+    return $paddingX?.left ? theme.input.paddingX[$paddingX.left] : theme.input.paddingX.md;
+  }};
+  padding-right: ${({ $adornments, $paddingX }) => {
+    if (!$adornments.right) return theme.spacing.spacing2;
+
+    return $paddingX?.right ? theme.input.paddingX[$paddingX.right] : theme.input.paddingX.md;
+  }};
+  padding-bottom: ${({ $adornments }) => ($adornments.bottom ? theme.spacing.spacing6 : theme.spacing.spacing2)};
+
+  &:hover:not(:disabled):not(:focus) {
     border: ${(props) => !props.$isDisabled && !props.$hasError && theme.input.hover.border};
   }
 
@@ -94,6 +92,7 @@ const BaseInputWrapper = styled.div`
   align-items: center;
 `;
 
+// TODO: simplify this (put into theme)
 const Adornment = styled.div<AdornmentProps>`
   display: inline-flex;
   align-items: center;
@@ -112,3 +111,4 @@ const Wrapper = styled.div<Pick<BaseInputProps, '$isDisabled'>>`
 `;
 
 export { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper };
+export type { PaddingX };
