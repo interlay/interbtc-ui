@@ -4,10 +4,23 @@ import { TransitionTrigger } from '@/utils/hooks/use-mount-transition';
 
 import { CTA } from '../CTA';
 import { Divider } from '../Divider';
-import { Stack } from '../Stack';
+import { Flex } from '../Flex';
 import { H3 } from '../Text';
 import { theme } from '../theme';
-import { NormalAlignments } from '../utils/prop-types';
+import { NormalAlignments, Overflow } from '../utils/prop-types';
+
+type StyledDialogWrapperProps = {
+  $transitionTrigger?: TransitionTrigger;
+};
+
+type StyledModalHeaderProps = {
+  $alignment?: NormalAlignments;
+};
+
+type StyledModalBodyProps = {
+  $overflow?: Overflow;
+  $noPadding?: boolean;
+};
 
 const StyledUnderlay = styled.div`
   position: fixed;
@@ -21,10 +34,6 @@ const StyledUnderlay = styled.div`
   overflow: hidden;
   pointer-events: auto;
 `;
-
-type StyledDialogWrapperProps = {
-  $transitionTrigger?: TransitionTrigger;
-};
 
 const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
   width: 100vw;
@@ -55,63 +64,41 @@ const StyledDialog = styled.section`
   max-height: ${theme.modal.maxHeight};
   margin: 0 ${theme.spacing.spacing6};
   pointer-events: auto;
+  overflow: hidden;
 
-  display: grid;
-  grid-template-columns: ${theme.spacing.spacing6} auto ${theme.spacing.spacing3} ${theme.spacing.spacing6};
-  grid-template-rows: ${theme.spacing.spacing6} ${theme.spacing.spacing3} auto auto 1fr auto ${theme.spacing.spacing6};
-
-  @media (min-width: ${theme.layout.breakpoints.lg}) {
-    grid-template-columns: ${theme.spacing.spacing8} auto ${theme.spacing.spacing3} ${theme.spacing.spacing8};
-    grid-template-rows: ${theme.spacing.spacing8} ${theme.spacing.spacing3} auto auto 1fr auto ${theme.spacing.spacing8};
-  }
+  display: flex;
+  flex-direction: column;
+  position: relative;
 `;
 
 const StyledCloseCTA = styled(CTA)`
-  margin: ${theme.spacing.spacing3} ${theme.spacing.spacing3} 0 0;
-  padding: 0;
-
-  grid-column: 3 / span 2;
-  grid-row: 1 / span 2;
+  position: absolute;
+  top: ${theme.spacing.spacing2};
+  right: ${theme.spacing.spacing2};
 `;
 
-type StyledModalTitleProps = {
-  $alignment?: NormalAlignments;
-};
-
-const StyledModalTitle = styled(H3)<StyledModalTitleProps>`
+const StyledModalHeader = styled(H3)<StyledModalHeaderProps>`
   font-size: ${theme.text.xl};
   line-height: ${theme.lineHeight.base};
   text-align: ${({ $alignment }) => $alignment};
-  margin-bottom: ${theme.spacing.spacing3};
-
-  grid-column: 2 / span 2;
-  grid-row: 3 / span 1;
+  padding: ${theme.modal.header.paddingY} ${theme.modal.header.paddingX};
+  flex-shrink: 0;
 `;
 
 const StyledModalDivider = styled(Divider)`
-  margin: 0 0 ${theme.spacing.spacing4} 0;
-
-  grid-column: 2 / span 2;
-  grid-row: 4 / span 1;
+  margin: 0 ${theme.modal.divider.marginX} ${theme.modal.divider.marginBottom};
+  flex-shrink: 0;
 `;
 
-const StyledModalBody = styled(Stack)`
-  overflow-y: auto;
-  padding: 0 ${theme.spacing.spacing6};
-
-  grid-column: 1 / span 4;
-  grid-row: 5 / span 1;
-
-  @media (min-width: ${theme.layout.breakpoints.lg}) {
-    padding: 0 ${theme.spacing.spacing8};
-  }
+const StyledModalBody = styled(Flex)<StyledModalBodyProps>`
+  flex: 1 1 auto;
+  overflow-y: ${({ $overflow }) => $overflow};
+  position: relative;
+  padding: ${({ $noPadding }) => !$noPadding && `${theme.modal.body.paddingY} ${theme.modal.body.paddingX}`};
 `;
 
-const StyledModalFooter = styled(Stack)`
-  padding-top: ${theme.spacing.spacing6};
-
-  grid-column: 2 / span 2;
-  grid-row: 6 / span 1;
+const StyledModalFooter = styled(Flex)`
+  padding: ${theme.modal.footer.paddingTop} ${theme.modal.footer.paddingX} ${theme.modal.footer.paddingBottom};
 `;
 
 export {
@@ -121,6 +108,6 @@ export {
   StyledModalBody,
   StyledModalDivider,
   StyledModalFooter,
-  StyledModalTitle,
+  StyledModalHeader,
   StyledUnderlay
 };

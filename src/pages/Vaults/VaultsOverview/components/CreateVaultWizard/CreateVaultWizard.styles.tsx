@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
 import { ReactComponent as WarningIcon } from '@/assets/img/icons/exclamation-triangle.svg';
-import { P, theme } from '@/component-library';
-import { ModalTitle } from '@/component-library/Modal';
+import { ModalHeader, P, theme } from '@/component-library';
 
-const StyledModalTitle = styled(ModalTitle)`
+const StyledModalHeader = styled(ModalHeader)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -79,6 +78,6 @@ export {
   StyledDl,
   StyledDt,
   StyledHr,
-  StyledModalTitle,
+  StyledModalHeader,
   StyledWarningIcon
 };

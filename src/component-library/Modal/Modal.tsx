@@ -20,7 +20,6 @@ type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
 
 type ModalProps = Props & InheritAttrs;
 
-// TODO: handle better title + divider spacing
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
   ({ children, isDismissable = true, ...props }, ref): JSX.Element | null => {
     const dialogRef = useDOMRef(ref);

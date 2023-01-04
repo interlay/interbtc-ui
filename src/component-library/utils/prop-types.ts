@@ -81,3 +81,5 @@ export type FontWeight = keyof typeof theme.fontWeight;
 export type Orientation = 'horizontal' | 'vertical';
 
 export type IconSize = keyof typeof theme.icon.sizes;
+
+export type Overflow = 'auto' | 'hidden' | 'scroll' | 'visible' | 'inherit';

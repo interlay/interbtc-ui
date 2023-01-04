@@ -1,4 +1,4 @@
-import { forwardRef, HTMLAttributes } from 'react';
+import { ElementType, forwardRef, HTMLAttributes } from 'react';
 
 import { AlignItems, AlignSelf, Direction, ElementTypeProp, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
 import { StyledFlex } from './Flex.style';
@@ -11,6 +11,7 @@ type Props = {
   flex?: string | number;
   wrap?: Wrap | boolean;
   alignSelf?: AlignSelf;
+  elementType?: ElementType;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
