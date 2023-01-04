@@ -18,7 +18,10 @@ describe('redeemTab page', () => {
     const amountToRedeemInput = textboxElements[0];
 
     await act(async () => {
+      // ray test touch <
+      // TODO: input a random value using `fake`
       userEvent.type(amountToRedeemInput, '0.0001');
+      // ray test touch >
     });
 
     const btcAddressToSendInput = textboxElements[1];

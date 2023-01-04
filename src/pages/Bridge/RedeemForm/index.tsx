@@ -89,11 +89,9 @@ const RedeemForm = (): JSX.Element | null => {
     mode: 'onChange'
   });
 
-  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
 
   const monetaryWrappedTokenAmount = React.useMemo(() => {
-    if (!wrappedTokenAmount) return;
-
     return new BitcoinAmount(wrappedTokenAmount);
   }, [wrappedTokenAmount]);
 
@@ -393,7 +391,7 @@ const RedeemForm = (): JSX.Element | null => {
       redeemFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
-    const totalBTC = monetaryWrappedTokenAmount
+    const totalBTC = monetaryWrappedTokenAmount.gt(BitcoinAmount.zero())
       ? monetaryWrappedTokenAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero();
     const totalBTCInUSD = displayMonetaryAmountInUSDFormat(
@@ -402,7 +400,7 @@ const RedeemForm = (): JSX.Element | null => {
     );
     // ray test touch >
 
-    const totalRelayChainNativeToken = monetaryWrappedTokenAmount
+    const totalRelayChainNativeToken = monetaryWrappedTokenAmount.gt(BitcoinAmount.zero())
       ? btcToRelayChainNativeTokenRate.toCounter(monetaryWrappedTokenAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
     const totalRelayChainNativeTokenInUSD = displayMonetaryAmountInUSDFormat(
@@ -420,7 +418,7 @@ const RedeemForm = (): JSX.Element | null => {
     // `btcToDotRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToRelayChainNativeTokenRate.toBig().eq(0);
 
-    const isSelectVaultCheckboxDisabled = Boolean(monetaryWrappedTokenAmount?.gt(maxRedeemableCapacity));
+    const isSelectVaultCheckboxDisabled = monetaryWrappedTokenAmount.gt(maxRedeemableCapacity);
 
     return (
       <>
@@ -447,10 +445,7 @@ const RedeemForm = (): JSX.Element | null => {
                 },
                 validate: (value) => validateForm(value)
               })}
-              approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
-                monetaryWrappedTokenAmount || BitcoinAmount.zero(),
-                usdPrice
-              )}`}
+              approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(monetaryWrappedTokenAmount, usdPrice)}`}
               error={!!errors[WRAPPED_TOKEN_AMOUNT]}
               helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
             />
@@ -461,7 +456,7 @@ const RedeemForm = (): JSX.Element | null => {
               disabled={isSelectVaultCheckboxDisabled}
               checked={selectVaultManually}
               treasuryAction='redeem'
-              requiredCapacity={monetaryWrappedTokenAmount || BitcoinAmount.zero()}
+              requiredCapacity={monetaryWrappedTokenAmount}
               error={errors[VAULT_SELECTION]}
               onSelectionCallback={setSelectedVault}
               onCheckboxChange={handleSelectVaultCheckboxChange}
