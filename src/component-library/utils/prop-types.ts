@@ -79,3 +79,5 @@ export interface AsProp<As extends ElementType = ElementType> {
 export type FontWeight = keyof typeof theme.fontWeight;
 
 export type Orientation = 'horizontal' | 'vertical';
+
+export type IconSize = keyof typeof theme.icon.sizes;

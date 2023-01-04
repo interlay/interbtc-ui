@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { theme } from '../theme';
 import { Colors, FontSize, FontWeight, NormalAlignments } from '../utils/prop-types';
-import { resolveHeight, resolveTextColor } from './utils';
+import { resolveColor, resolveHeight } from '../utils/theme';
 
 type StyledTextProps = {
   $color?: Colors;
@@ -12,7 +12,7 @@ type StyledTextProps = {
 };
 
 const Text = styled.p<StyledTextProps>`
-  color: ${({ $color }) => resolveTextColor($color)};
+  color: ${({ $color }) => resolveColor($color)};
   font-size: ${({ $size }) => $size && theme.text[$size]};
   line-height: ${({ $size }) => resolveHeight($size)};
   font-weight: ${({ $weight }) => $weight && theme.fontWeight[$weight]};

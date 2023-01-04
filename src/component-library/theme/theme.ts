@@ -367,6 +367,15 @@ const theme = {
   },
   divider: {
     bg: 'var(--colors-border)'
+  },
+  icon: {
+    sizes: {
+      s: 'var(--spacing-4)',
+      md: 'var(--spacing-6)',
+      lg: 'var(--spacing-8)',
+      xl: 'var(--spacing-10)',
+      xl2: 'var(--spacing-12)'
+    }
   }
 };
 

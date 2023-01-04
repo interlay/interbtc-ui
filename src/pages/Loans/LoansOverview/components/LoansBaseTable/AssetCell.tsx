@@ -1,17 +1,17 @@
-import { CoinIcon, Flex, Tokens } from '@/component-library';
+import { CoinIcon } from '@/component-library';
 
-import { StyledCellLabel } from './LoansBaseTable.style';
+import { StyledAssetCellWrapper, StyledCellLabel } from './LoansBaseTable.style';
 
 type AssetCellProps = {
   currency: string;
+  hasPadding?: boolean;
 };
 
-const AssetCell = ({ currency }: AssetCellProps): JSX.Element => (
-  <Flex gap='spacing2' alignItems='center'>
-    {/* TODO: Get rid of type casting - accept any string as currency ticker in CoinIcon component. */}
-    <CoinIcon coin={currency as Tokens} size='small' />
+const AssetCell = ({ currency, hasPadding }: AssetCellProps): JSX.Element => (
+  <StyledAssetCellWrapper $hasPadding={hasPadding} gap='spacing2' alignItems='center'>
+    <CoinIcon ticker={currency} />
     <StyledCellLabel>{currency}</StyledCellLabel>
-  </Flex>
+  </StyledAssetCellWrapper>
 );
 
 export { AssetCell };
