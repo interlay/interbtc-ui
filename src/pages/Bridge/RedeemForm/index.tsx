@@ -91,7 +91,7 @@ const RedeemForm = (): JSX.Element | null => {
   const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
-  const [status, setStatus] = React.useState<any>(STATUSES.IDLE);
+  const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
@@ -101,7 +101,7 @@ const RedeemForm = (): JSX.Element | null => {
   const [maxRedeemableCapacity, setMaxRedeemableCapacity] = React.useState(BitcoinAmount.zero());
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
   const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero());
-  const [submitStatus, setSubmitStatus] = React.useState<any>(STATUSES.IDLE);
+  const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Redeem>();
 
@@ -129,7 +129,7 @@ const RedeemForm = (): JSX.Element | null => {
     if (selectVaultManually && selectedVault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
     } else if (selectVaultManually && selectedVault?.[1].lt(monetaryWrappedTokenAmount)) {
-      setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_no_enough_capacity') });
+      setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.selected_vault_has_not_enough_capacity') });
     } else {
       clearErrors(VAULT_SELECTION);
     }
@@ -310,7 +310,7 @@ const RedeemForm = (): JSX.Element | null => {
         const redeemRequest = result[0];
         handleSubmittedRequestModalOpen(redeemRequest);
         setSubmitStatus(STATUSES.RESOLVED);
-      } catch (error: any) {
+      } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
         setSubmitError(error);
       }
