@@ -97,10 +97,10 @@ const RedeemForm = (): JSX.Element | null => {
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  // ray test touch <
-  const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
+  // ray test touch <<
+  // const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
-  // ray test touch >
+  // ray test touch >>
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
   );
@@ -139,16 +139,16 @@ const RedeemForm = (): JSX.Element | null => {
     }
   }, [selectVaultManually, selectedVault, setError, clearErrors, t, monetaryWrappedTokenAmount]);
 
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
-    if (!monetaryWrappedTokenAmount) return;
-    if (!redeemFeeRate) return;
-
-    // ray test touch <
-    const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
-    setRedeemFee(theRedeemFee);
-    // ray test touch >
-  }, [bridgeLoaded, monetaryWrappedTokenAmount, redeemFeeRate]);
+  // ray test touch <<
+  const redeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
+  // React.useEffect(() => {
+  //   if (!bridgeLoaded) return;
+  //   if (!monetaryWrappedTokenAmount) return;
+  //   if (!redeemFeeRate) return;
+  //   const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
+  //   setRedeemFee(theRedeemFee);
+  // }, [bridgeLoaded, monetaryWrappedTokenAmount, redeemFeeRate]);
+  // ray test touch >>
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -346,9 +346,9 @@ const RedeemForm = (): JSX.Element | null => {
       }
 
       // ray test touch <
-      const theRedeemFee = monetaryValue.mul(redeemFeeRate);
+      const redeemFee = monetaryValue.mul(redeemFeeRate);
       // ray test touch >
-      const minValue = dustValue.add(currentInclusionFee).add(theRedeemFee);
+      const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
 
       if (monetaryValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
