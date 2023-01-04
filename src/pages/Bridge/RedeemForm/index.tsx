@@ -88,7 +88,9 @@ const RedeemForm = (): JSX.Element | null => {
   } = useForm<RedeemFormData>({
     mode: 'onChange'
   });
+  // ray test touch <<
   const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
+  // ray test touch >>
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
@@ -115,7 +117,9 @@ const RedeemForm = (): JSX.Element | null => {
     if (!wrappedTokenAmount) return;
     if (!maxRedeemableCapacity) return;
 
+    // ray test touch <<
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
+    // ray test touch >>
     if (monetaryWrappedTokenAmount.gt(maxRedeemableCapacity)) {
       setSelectVaultManually(false);
     }
@@ -126,7 +130,9 @@ const RedeemForm = (): JSX.Element | null => {
     if (!setError) return;
     if (!clearErrors) return;
 
+    // ray test touch <<
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
+    // ray test touch >>
 
     if (selectVaultManually && selectedVault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
@@ -142,7 +148,9 @@ const RedeemForm = (): JSX.Element | null => {
     if (!wrappedTokenAmount) return;
     if (!redeemFeeRate) return;
 
+    // ray test touch <<
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
+    // ray test touch >>
     // ray test touch <
     const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
     setRedeemFee(theRedeemFee);
@@ -390,19 +398,23 @@ const RedeemForm = (): JSX.Element | null => {
       redeemFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
+    // ray test touch <<
     const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount || 0);
     const totalBTC = wrappedTokenAmount
       ? monetaryWrappedTokenAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero();
+    // ray test touch >>
     const totalBTCInUSD = displayMonetaryAmountInUSDFormat(
       totalBTC,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
     // ray test touch >
 
+    // ray test touch <<
     const totalRelayChainNativeToken = wrappedTokenAmount
       ? btcToRelayChainNativeTokenRate.toCounter(monetaryWrappedTokenAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
+    // ray test touch >>
     const totalRelayChainNativeTokenInUSD = displayMonetaryAmountInUSDFormat(
       totalRelayChainNativeToken,
       getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
