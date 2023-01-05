@@ -75,6 +75,7 @@ const StyledCloseCTA = styled(CTA)`
   position: absolute;
   top: ${theme.spacing.spacing2};
   right: ${theme.spacing.spacing2};
+  z-index: ${theme.modal.closeBtn.zIndex};
 `;
 
 const StyledModalHeader = styled(H3)<StyledModalHeaderProps>`

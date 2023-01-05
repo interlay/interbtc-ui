@@ -45,7 +45,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
           <StyledDialogWrapper ref={dialogRef} {...modalProps} $transitionTrigger={transitionTrigger}>
             <ModalContext.Provider value={{ titleProps }}>
               <StyledDialog {...dialogProps}>
-                <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onClick={onClose}>
+                <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onPress={onClose}>
                   <XMark />
                 </StyledCloseCTA>
                 {children}

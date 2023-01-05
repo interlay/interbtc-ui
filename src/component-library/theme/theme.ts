@@ -55,6 +55,7 @@ const theme = {
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)',
+    spacing14: 'var(--spacing-14)',
     spacing28: 'var(--spacing-28)'
   },
   rounded: {
@@ -340,6 +341,7 @@ const theme = {
   modal: {
     maxWidth: '32rem',
     maxHeight: 'calc(100vh - var(--spacing-12))',
+    // TODO: z-index needs to be higher
     zIndex: 2,
     underlay: {
       zIndex: 1,
@@ -361,6 +363,9 @@ const theme = {
       paddingTop: 'var(--spacing-4)',
       paddingBottom: 'var(--spacing-6)',
       paddingX: 'var(--spacing-6)'
+    },
+    closeBtn: {
+      zIndex: 100
     }
   },
   switch: {
