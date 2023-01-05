@@ -548,6 +548,9 @@
     "my_borrow_positions": "My Borrow Positions",
     "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation."
   },
+  "amm": {
+    "swap": "Swap"
+  },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",
     "please_enter_the_amount_to": "Please enter the amount to {{field}}",
