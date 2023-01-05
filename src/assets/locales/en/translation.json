@@ -563,7 +563,8 @@
       "add_liquidity": "Add Liquidity",
       "remove_liquidity": "Remove Liquidity",
       "receivable_assets": "Receivable Assets"
-    }
+    },
+    "swap": "Swap"
   },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",
