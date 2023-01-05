@@ -35,6 +35,8 @@ const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
+const Swap = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/AMM'));
+const Pools = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/AMM/Pools'));
 const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
@@ -45,6 +47,7 @@ const App = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
+  const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -188,6 +191,16 @@ const App = (): JSX.Element => {
                   {isLendingEnabled && (
                     <Route path={PAGES.LOANS}>
                       <Loans />
+                    </Route>
+                  )}
+                  {isAMMEnabled && (
+                    <Route path={PAGES.SWAP}>
+                      <Swap />
+                    </Route>
+                  )}
+                  {isAMMEnabled && (
+                    <Route path={PAGES.POOLS}>
+                      <Pools />
                     </Route>
                   )}
                   <Route path={PAGES.ACTIONS}>
