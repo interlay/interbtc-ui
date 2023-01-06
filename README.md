@@ -21,9 +21,11 @@ It is implemented as a collection of open-source Substrate modules using Rust: <
 - [TypeScript](https://github.com/Microsoft/TypeScript)
 - [polkadot-js](https://polkadot.js.org/)
 - [yarn](https://github.com/yarnpkg/yarn)
+
 ### Interlay
 
 You can visit the Interlay application at [app.interlay.io](https://app.interlay.io).
+
 ### Kintsugi
 
 You can visit the Kintsugi application at [kintsugi.interlay.io](https://kintsugi.interlay.io).
