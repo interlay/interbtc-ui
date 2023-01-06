@@ -243,7 +243,7 @@ const CollateralForm = ({
         <TokenInput
           aria-labelledby={titleId}
           placeholder='0.00'
-          token={collateralToken.ticker}
+          ticker={collateralToken.ticker}
           valueUSD={
             convertMonetaryAmountToValueInUSD(
               inputCollateralAmount,

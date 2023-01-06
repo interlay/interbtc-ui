@@ -5,7 +5,7 @@ import { Label, LabelProps } from '../Label';
 import { TokenInputBalance } from './TokenInputBalance';
 
 type Props = {
-  token?: string;
+  ticker?: string;
   balance?: number;
   balanceLabel?: ReactNode;
   balanceDecimals?: number;
@@ -23,7 +23,7 @@ const TokenInputLabel = ({
   isDisabled,
   onClickBalance,
   balanceDecimals,
-  token,
+  ticker,
   children,
   ...props
 }: TokenInputLabelProps): JSX.Element => (
@@ -31,7 +31,7 @@ const TokenInputLabel = ({
     <Label {...props}>{children}</Label>
     {balance !== undefined && (
       <TokenInputBalance
-        token={token}
+        ticker={ticker}
         value={balance}
         onClickBalance={onClickBalance}
         isDisabled={isDisabled}

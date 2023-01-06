@@ -191,7 +191,7 @@ const IssueRedeemForm = ({
             <StyledInputLabel id={amountLabelId}>{label}</StyledInputLabel>
             <TokenInput
               aria-labelledby={amountLabelId}
-              token='BTC'
+              ticker='BTC'
               placeholder='0.00'
               id={tokenInputId}
               {...register(tokenInputId, {

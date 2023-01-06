@@ -19,7 +19,7 @@ const Template: Story<TokenInputProps> = (args) => {
 
 const WithBalance = Template.bind({});
 WithBalance.args = {
-  token: 'KSM',
+  ticker: 'KSM',
   balance: 1000.0,
   decimals: 8,
   balanceLabel: 'Balance',
@@ -30,7 +30,7 @@ WithBalance.args = {
 
 const WithoutBalance = Template.bind({});
 WithoutBalance.args = {
-  token: 'KSM',
+  ticker: 'KSM',
   label: 'Amount',
   placeholder: '0.00',
   isDisabled: false
@@ -46,13 +46,13 @@ WithCurrencySelect.args = {
   label: 'From',
   selectProps: {},
   tokens: [
-    { balance: 200, ticker: 'KSM', blanceUSD: '$200' },
-    { balance: 200, ticker: 'BTC', blanceUSD: '$200' },
-    { balance: 200, ticker: 'IBTC', blanceUSD: '$200' },
-    { balance: 200, ticker: 'KBTC', blanceUSD: '$200' },
-    { balance: 200, ticker: 'DOT', blanceUSD: '$200' },
-    { balance: 200, ticker: 'INTR', blanceUSD: '$200' },
-    { balance: 200, ticker: 'LKSM', blanceUSD: '$200' }
+    { balance: 200, ticker: 'KSM', balanceUSD: '$200' },
+    { balance: 200, ticker: 'BTC', balanceUSD: '$200' },
+    { balance: 200, ticker: 'IBTC', balanceUSD: '$200' },
+    { balance: 200, ticker: 'KBTC', balanceUSD: '$200' },
+    { balance: 200, ticker: 'DOT', balanceUSD: '$200' },
+    { balance: 200, ticker: 'INTR', balanceUSD: '$200' },
+    { balance: 200, ticker: 'LKSM', balanceUSD: '$200' }
   ]
 };
 

@@ -12,7 +12,7 @@ import {
 } from './TokenInput.style';
 
 type TokenInputBalanceProps = {
-  token?: string;
+  ticker?: string;
   value: number;
   onClickBalance?: () => void;
   isDisabled?: boolean;
@@ -22,7 +22,7 @@ type TokenInputBalanceProps = {
 };
 
 const TokenInputBalance = ({
-  token,
+  ticker,
   value,
   onClickBalance,
   className,
@@ -41,7 +41,7 @@ const TokenInputBalance = ({
         ...mergeProps(pressProps, focusProps)
       };
 
-  const balanceLabel = token
+  const balanceLabel = ticker
     ? formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20 })
     : 0;
 

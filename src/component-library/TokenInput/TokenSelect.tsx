@@ -11,14 +11,14 @@ import { TokenListModal } from './TokenListModal';
 type SelectProps = InputHTMLAttributes<HTMLInputElement> & { ref?: any };
 
 type TokenSelectProps = {
-  token?: string;
+  ticker?: string;
   isDisabled: boolean;
   tokens: TokenData[];
   onChange: (ticker: string) => void;
   selectProps?: SelectProps;
 };
 
-const TokenSelect = ({ token, tokens, isDisabled, onChange, selectProps }: TokenSelectProps): JSX.Element => {
+const TokenSelect = ({ ticker, tokens, isDisabled, onChange, selectProps }: TokenSelectProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
 
   const tokenButtonRef = useRef<HTMLDivElement>(null);
@@ -50,10 +50,10 @@ const TokenSelect = ({ token, tokens, isDisabled, onChange, selectProps }: Token
         justifyContent='center'
         gap='spacing1'
         $isClickable={!isDisabled}
-        $hasToken={!!token}
+        $hasToken={!!ticker}
       >
-        {token && <StyledCoinIcon ticker={token} />}
-        <StyledTicker>{token || 'Select Token'}</StyledTicker>
+        {ticker && <StyledCoinIcon ticker={ticker} />}
+        <StyledTicker>{ticker || 'Select Token'}</StyledTicker>
         {!isDisabled && (
           <>
             <StyledChevronDown size='s' />
@@ -61,7 +61,7 @@ const TokenSelect = ({ token, tokens, isDisabled, onChange, selectProps }: Token
               <input
                 ref={assignFormRef(selectRef, inputRef)}
                 tabIndex={-1}
-                value={token}
+                value={ticker}
                 {...mergeProps(inputProps, { onChange: handleChange })}
               />
             </VisuallyHidden>
@@ -72,7 +72,7 @@ const TokenSelect = ({ token, tokens, isDisabled, onChange, selectProps }: Token
         <TokenListModal
           isOpen={isOpen}
           tokens={tokens}
-          selectedToken={token}
+          selectedTicker={ticker}
           onClose={handleClose}
           onSelectionChange={chain(onChange, handleSelectionChange, handleClose)}
         />

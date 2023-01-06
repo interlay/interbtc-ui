@@ -86,7 +86,7 @@ const DepositCollateralStep = ({
             <TokenInput
               aria-labelledby={titleId}
               placeholder='0.00'
-              token={collateral.currency.ticker}
+              ticker={collateral.currency.ticker}
               valueUSD={convertMonetaryAmountToValueInUSD(inputCollateralAmount, collateral.price.usd) ?? 0}
               balance={collateral.balance.raw.toBig().toNumber()}
               errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}

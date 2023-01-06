@@ -29,7 +29,7 @@ type Props = {
   balance?: number;
   balanceLabel?: ReactNode;
   balanceDecimals?: number;
-  token?: string;
+  ticker?: string;
   tokens?: TokenData[];
   onClickBalance?: (balance?: number) => void;
   selectProps?: InputHTMLAttributes<HTMLInputElement>;
@@ -49,7 +49,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       balanceDecimals,
       isDisabled,
       label,
-      token: tokenProp,
+      ticker: tickerProp,
       tokens = [],
       style,
       hidden,
@@ -62,27 +62,27 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
-    const [token, setToken] = useState((selectProps?.value as string) || tokenProp);
+    const [ticker, setTicker] = useState((selectProps?.value as string) || tickerProp);
 
     const { labelProps, fieldProps } = useLabel({ label });
 
     useEffect(() => {
-      if (!tokenProp) return;
+      if (!tickerProp) return;
 
-      setToken(tokenProp);
-    }, [tokenProp]);
+      setTicker(tickerProp);
+    }, [tickerProp]);
 
     const handleClickBalance = () => {
       triggerChangeEvent(inputRef, balance);
       onClickBalance?.(balance);
     };
 
-    const handleTokenChange = (token: string) => setToken(token);
+    const handleTokenChange = (ticker: string) => setTicker(ticker);
 
     const isSelectDisabled = !selectProps || !tokens?.length;
     const endAdornment = (
       <TokenSelect
-        token={token}
+        ticker={ticker}
         isDisabled={isSelectDisabled}
         tokens={tokens}
         onChange={handleTokenChange}
@@ -96,11 +96,11 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     return (
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
         <TokenInputLabel
-          token={token}
+          ticker={ticker}
           balance={balance}
           balanceLabel={balanceLabel}
           balanceDecimals={balanceDecimals}
-          isDisabled={isDisabled || !token}
+          isDisabled={isDisabled || !ticker}
           onClickBalance={handleClickBalance}
           {...labelProps}
         >
@@ -112,7 +112,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           size='large'
           isDisabled={isDisabled}
           formatOptions={formatOptions}
-          paddingX={{ right: isSelectDisabled ? 'lg' : token ? 'xl' : 'xl2' }}
+          paddingX={{ right: isSelectDisabled ? 'lg' : ticker ? 'xl' : 'xl2' }}
           endAdornment={endAdornment}
           bottomAdornment={<StyledUSDAdornment>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}

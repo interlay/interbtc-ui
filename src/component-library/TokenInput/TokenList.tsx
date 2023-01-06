@@ -7,12 +7,12 @@ import { StyledList, StyledListItemLabel } from './TokenInput.style';
 type TokenData = {
   ticker: string;
   balance: number;
-  blanceUSD: string;
+  balanceUSD: string;
 };
 
 type Props = {
   items: TokenData[];
-  selectedToken?: string;
+  selectedTicker?: string;
   onSelectionChange?: (ticker: string) => void;
 };
 
@@ -20,7 +20,7 @@ type InheritAttrs = Omit<ListProps, keyof Props | 'children'>;
 
 type TokenListProps = Props & InheritAttrs;
 
-const TokenList = ({ items, selectedToken, onSelectionChange, ...props }: TokenListProps): JSX.Element => {
+const TokenList = ({ items, selectedTicker, onSelectionChange, ...props }: TokenListProps): JSX.Element => {
   const handleSelectionChange: ListProps['onSelectionChange'] = (key) => {
     const [selectedKey] = [...key];
 
@@ -33,11 +33,11 @@ const TokenList = ({ items, selectedToken, onSelectionChange, ...props }: TokenL
     <StyledList
       selectionMode='single'
       onSelectionChange={handleSelectionChange}
-      selectedKeys={selectedToken ? [selectedToken] : undefined}
+      selectedKeys={selectedTicker ? [selectedTicker] : undefined}
       {...props}
     >
       {items.map((item) => {
-        const isSelected = selectedToken === item.ticker;
+        const isSelected = selectedTicker === item.ticker;
 
         return (
           <ListItem
@@ -55,7 +55,7 @@ const TokenList = ({ items, selectedToken, onSelectionChange, ...props }: TokenL
             <Flex direction='column' alignItems='center' gap='spacing2'>
               <StyledListItemLabel $isSelected={isSelected}>{item.balance}</StyledListItemLabel>
               <Span size='s' color='tertiary'>
-                {item.blanceUSD}
+                {item.balanceUSD}
               </Span>
             </Flex>
           </ListItem>

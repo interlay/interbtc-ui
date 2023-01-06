@@ -24,7 +24,6 @@ const locale = 'en-US';
 type Props = {
   value?: number;
   defaultValue?: number;
-  resize?: boolean;
 };
 
 type InheritAttrs = Omit<BaseInputProps, keyof Props | 'disabled' | 'required' | 'readOnly'>;

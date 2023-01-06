@@ -187,7 +187,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
           <Flex direction='column' gap='spacing4'>
             <TokenInput
               placeholder='0.00'
-              token={asset.currency.ticker}
+              ticker={asset.currency.ticker}
               errorMessage={getErrorMessage(errors[formField])}
               label={content.label}
               aria-label={content.fieldAriaLabel}
