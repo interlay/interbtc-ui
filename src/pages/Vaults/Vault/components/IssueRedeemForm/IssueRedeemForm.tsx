@@ -10,7 +10,11 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat
+} from '@/common/utils/utils';
 import { CTA, Input, Stack, TokenInput } from '@/component-library';
 import {
   GOVERNANCE_TOKEN,
@@ -187,7 +191,7 @@ const IssueRedeemForm = ({
             <StyledInputLabel id={amountLabelId}>{label}</StyledInputLabel>
             <TokenInput
               aria-labelledby={amountLabelId}
-              tokenSymbol='BTC'
+              ticker='BTC'
               placeholder='0.00'
               id={tokenInputId}
               {...register(tokenInputId, {
@@ -197,10 +201,12 @@ const IssueRedeemForm = ({
                 }
                 // validate: (value) => validateForm(value)
               })}
-              valueInUSD={displayMonetaryAmountInUSDFormat(
-                parsedBTCAmount || BitcoinAmount.zero(),
-                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-              )}
+              valueUSD={
+                convertMonetaryAmountToValueInUSD(
+                  parsedBTCAmount || BitcoinAmount.zero(),
+                  getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+                ) ?? 0
+              }
             />
 
             {isIssueModal && (

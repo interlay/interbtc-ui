@@ -79,6 +79,7 @@ const theme = {
   input: {
     color: 'var(--colors-input-text)',
     background: 'var(--colors-input-background)',
+    height: '4rem',
     default: {
       border: '1px solid var(--colors-input-default-border)'
     },
@@ -109,12 +110,33 @@ const theme = {
       text: 'var(--text-base)'
     },
     large: {
-      text: 'var(--text-5xl)'
+      text: 'var(--text-4xl)'
     },
     overflow: {
       large: {
-        text: 'var(--text-2xl)',
-        height: '4.6875rem'
+        text: 'var(--text-2xl)'
+      }
+    },
+    paddingX: {
+      s: '2rem',
+      md: '4rem',
+      lg: '6.25rem',
+      xl: '8rem',
+      xl2: '9.5rem'
+    }
+  },
+  tokenInput: {
+    endAdornment: {
+      bg: 'var(--colors-token-input-end-adornment-bg)'
+    },
+    list: {
+      item: {
+        default: {
+          text: 'var(--colors-token-list-item-text)'
+        },
+        selected: {
+          text: 'var(--colors-token-list-item-select-text)'
+        }
       }
     }
   },

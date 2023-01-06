@@ -4,20 +4,18 @@ import { HelperText, HelperTextProps } from '../HelperText';
 import { hasErrorMessage } from '../HelperText/HelperText';
 import { Label, LabelProps } from '../Label';
 import { Sizes } from '../utils/prop-types';
-import { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper } from './Input.style';
+import { Adornment, BaseInputWrapper, PaddingX, StyledBaseInput, Wrapper } from './Input.style';
 
 type Props = {
   label?: ReactNode;
   labelProps?: LabelProps;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
+  paddingX?: PaddingX;
+  bottomAdornment?: ReactNode;
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;
   size?: Sizes;
-  // if `true` allows overflow
-  overflow?: boolean;
-  // if `true` triggers input re-size (font)
-  resize?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -35,6 +33,8 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       hidden,
       startAdornment,
       endAdornment,
+      paddingX,
+      bottomAdornment,
       label,
       labelProps,
       errorMessage,
@@ -43,8 +43,6 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       descriptionProps,
       disabled,
       size = 'medium',
-      overflow = true,
-      resize,
       ...props
     },
     ref
@@ -53,19 +51,23 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     const hasHelpText = !!description || hasError;
 
     return (
-      <Wrapper hidden={hidden} className={className} style={style}>
+      <Wrapper hidden={hidden} className={className} style={style} $isDisabled={!!disabled}>
         {label && <Label {...labelProps}>{label}</Label>}
-        <BaseInputWrapper
-          $hasStartAdornment={!!startAdornment}
-          $hasEndAdornment={!!endAdornment}
-          $hasError={hasError}
-          $isDisabled={disabled}
-          $overflow={overflow}
-          $size={size}
-        >
-          {startAdornment && <Adornment>{startAdornment}</Adornment>}
-          <StyledBaseInput $size={size} $resize={resize} disabled={disabled} ref={ref} type='text' {...props} />
-          {endAdornment && <Adornment>{endAdornment}</Adornment>}
+        <BaseInputWrapper>
+          {startAdornment && <Adornment $position='left'>{startAdornment}</Adornment>}
+          <StyledBaseInput
+            $size={size}
+            disabled={disabled}
+            ref={ref}
+            type='text'
+            $adornments={{ bottom: !!bottomAdornment, left: !!startAdornment, right: !!endAdornment }}
+            $paddingX={paddingX}
+            $hasError={hasError}
+            $isDisabled={!!disabled}
+            {...props}
+          />
+          {bottomAdornment && <Adornment $position='bottom'>{bottomAdornment}</Adornment>}
+          {endAdornment && <Adornment $position='right'>{endAdornment}</Adornment>}
         </BaseInputWrapper>
         {hasHelpText && (
           <HelperText

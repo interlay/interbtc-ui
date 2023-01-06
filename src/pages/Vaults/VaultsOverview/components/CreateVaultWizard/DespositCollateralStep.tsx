@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import * as z from 'zod';
 
-import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
@@ -86,12 +86,11 @@ const DepositCollateralStep = ({
             <TokenInput
               aria-labelledby={titleId}
               placeholder='0.00'
-              tokenSymbol={collateral.currency.ticker}
-              valueInUSD={displayMonetaryAmountInUSDFormat(inputCollateralAmount, collateral.price.usd)}
+              ticker={collateral.currency.ticker}
+              valueUSD={convertMonetaryAmountToValueInUSD(inputCollateralAmount, collateral.price.usd) ?? 0}
               balance={collateral.balance.raw.toBig().toNumber()}
-              balanceInUSD={collateral.balance.usd}
               errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}
-              renderBalance={(value) => formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: 5 })}
+              balanceDecimals={collateral.currency.humanDecimals}
               {...register(DEPOSIT_COLLATERAL_AMOUNT)}
             />
             <StyledDl>

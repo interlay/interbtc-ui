@@ -2,7 +2,7 @@ import { useNumberField } from '@react-aria/numberfield';
 import { mergeProps } from '@react-aria/utils';
 import type { NumberFieldStateProps } from '@react-stately/numberfield';
 import { useNumberFieldState } from '@react-stately/numberfield';
-import { ChangeEventHandler, forwardRef, useEffect, useState } from 'react';
+import { ChangeEventHandler, forwardRef, useEffect } from 'react';
 
 import { useDOMRef } from '@/component-library/utils/dom';
 
@@ -43,8 +43,6 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
     });
     const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(props, state, inputRef);
 
-    const [resize, setResize] = useState({ state: false, position: 0 });
-
     useEffect(() => {
       const input = inputRef.current;
 
@@ -52,27 +50,6 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
 
       return () => input?.removeEventListener('wheel', handleWheel);
     }, [inputRef]);
-
-    // Sets input to resize at a certain conditions
-    useEffect(() => {
-      const inputEl = inputRef.current;
-
-      if (!inputEl) return;
-
-      // purposely used value here so it is included in
-      // the useEffect deps array
-      const value = inputProps.value as string;
-
-      // Condition is true when input text overflows available width
-      if (!resize.state && inputEl.clientWidth < inputEl.scrollWidth) {
-        return setResize({ state: true, position: value.length });
-      }
-
-      // Checks if was are back at the position when resize happened.
-      if (resize.state && value.length < resize.position) {
-        return setResize({ state: false, position: 0 });
-      }
-    }, [inputProps.value, inputRef, resize.position, resize.state]);
 
     // Only emit event when value is valid
     const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -87,7 +64,6 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
         descriptionProps={descriptionProps}
         errorMessageProps={errorMessageProps}
         labelProps={labelProps}
-        resize={resize.state}
         {...mergeProps(props, inputProps, { onChange: handleChange })}
       />
     );
