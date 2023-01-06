@@ -4,7 +4,7 @@ import { Flex } from '../Flex';
 import { theme } from '../theme';
 import { IconSize } from '../utils/prop-types';
 
-type TokenOffset = 'none' | '1/2' | '1/3' | '1/4' | '1/5';
+type TokenOffset = 'none' | '1/2' | '1/3' | '1/4';
 
 type StyledWrapperProps = {
   $size: IconSize;
