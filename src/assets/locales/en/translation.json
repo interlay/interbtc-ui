@@ -48,6 +48,7 @@
   "collateralization": "Collateralization",
   "fees_earned": "Fees earned",
   "apy": "APR",
+  "apr": "APR",
   "here": "here",
   "refresh_page.": "Once you create a new account please refresh the page.",
   "btc_relay_status": "BTC Relay Status:",
@@ -98,6 +99,7 @@
   "you_received": "You received",
   "total_deposit": "Total Deposit",
   "deposit": "Deposit",
+  "withdraw": "Withdraw",
   "received": "Received",
   "balances": "Account Balances",
   "destination": "Destination",
@@ -130,6 +132,11 @@
   "replace": "Replace",
   "canceled": "Canceled",
   "fees": "Fees",
+  "total_liquidity": "Total Liquidity",
+  "my_liquidity": "My Liquidity",
+  "7_day_volume": "7 Day Volume",
+  "rewards": "Rewards",
+  "supply_balance": "Supply Balance",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -547,6 +554,15 @@
     "my_lend_positions": "My Lend Positions",
     "my_borrow_positions": "My Borrow Positions",
     "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation."
+  },
+  "amm": {
+    "pools": {
+      "my_pools": "My Pools",
+      "other_pools": "Other Pools",
+      "pool_name": "Pool Name",
+      "add_liquidity": "Add Liquidity",
+      "remove_liquidity": "Remove Liquidity"
+    }
   },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",
