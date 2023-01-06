@@ -30,7 +30,7 @@ You can visit the Kintsugi application at [kintsugi.interlay.io](https://kintsug
 
 ### Testnets
 
-You can visit [testnet.interlay.io](https://kintnet.interlay.io/) or [testnet.interlay.io](https://kintnet.interlay.io/) for the latest testnets.
+You can visit [testnet.interlay.io](https://testnet.interlay.io/) or [kintnet.interlay.io](https://kintnet.interlay.io/) for the latest testnets.
 
 ## Local development
 
