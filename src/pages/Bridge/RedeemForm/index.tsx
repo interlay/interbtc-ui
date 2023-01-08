@@ -368,13 +368,13 @@ const RedeemForm = (): JSX.Element | null => {
       dispatch(togglePremiumRedeemAction(!premiumRedeemSelected));
     };
 
-    // ray test touch <
     const redeemFeeInBTC = redeemFee.toHuman(8);
     const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
       redeemFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
 
+    // ray test touch <
     const total = monetaryWrappedTokenAmount.gt(redeemFee.add(currentInclusionFee))
       ? monetaryWrappedTokenAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero();
@@ -507,9 +507,7 @@ const RedeemForm = (): JSX.Element | null => {
             role='redeem-bridge-fee'
             value={redeemFeeInBTC}
             unitName='BTC'
-            // ray test touch <
             approxUSD={redeemFeeInUSD}
-            // ray test touch >
           />
           <PriceInfo
             title={
