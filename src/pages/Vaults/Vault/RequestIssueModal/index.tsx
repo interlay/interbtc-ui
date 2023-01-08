@@ -20,7 +20,7 @@ import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
-import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, ISSUE_BRIDGE_FEE_RATE } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -72,7 +72,9 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [vaultCapacity, setVaultCapacity] = React.useState(BitcoinAmount.zero());
-  const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
+  // ray test touch <<
+  const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
+  // ray test touch >>
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
@@ -107,11 +109,11 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
       try {
         setStatus(STATUSES.PENDING);
         const [
-          theFeeRate,
-          theDepositRate,
-          theDustValue,
-          theBtcToGovernanceToken,
-          issuableAmount
+          feeRateResult,
+          depositRateResult,
+          dustValueResult,
+          btcToGovernanceTokenResult,
+          vaultIssuableAmountResult
         ] = await Promise.allSettled([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
@@ -123,20 +125,20 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
           window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralToken)
         ]);
         setStatus(STATUSES.RESOLVED);
-        if (theFeeRate.status === 'fulfilled') {
-          setFeeRate(theFeeRate.value);
+        if (feeRateResult.status === 'fulfilled') {
+          setIssueFeeRate(feeRateResult.value);
         }
-        if (theDepositRate.status === 'fulfilled') {
-          setDepositRate(theDepositRate.value);
+        if (depositRateResult.status === 'fulfilled') {
+          setDepositRate(depositRateResult.value);
         }
-        if (theDustValue.status === 'fulfilled') {
-          setDustValue(theDustValue.value);
+        if (dustValueResult.status === 'fulfilled') {
+          setDustValue(dustValueResult.value);
         }
-        if (issuableAmount.status === 'fulfilled') {
-          setVaultCapacity(issuableAmount.value);
+        if (vaultIssuableAmountResult.status === 'fulfilled') {
+          setVaultCapacity(vaultIssuableAmountResult.value);
         }
-        if (theBtcToGovernanceToken.status === 'fulfilled') {
-          setBTCToGovernanceTokenRate(theBtcToGovernanceToken.value);
+        if (btcToGovernanceTokenResult.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(btcToGovernanceTokenResult.value);
         } else {
           setError(WRAPPED_TOKEN_AMOUNT, {
             type: 'validate',
@@ -243,7 +245,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
   };
 
   const parsedBTCAmount = new BitcoinAmount(btcAmount);
-  const bridgeFee = parsedBTCAmount.mul(feeRate);
+  const bridgeFee = parsedBTCAmount.mul(issueFeeRate);
   const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
   const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
 

@@ -136,7 +136,7 @@ const RedeemForm = (): JSX.Element | null => {
     }
   }, [selectVaultManually, selectedVault, setError, clearErrors, t, monetaryWrappedTokenAmount]);
 
-  const redeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
+  const bridgeFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -330,8 +330,8 @@ const RedeemForm = (): JSX.Element | null => {
         })}`;
       }
 
-      const redeemFee = monetaryValue.mul(redeemFeeRate);
-      const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
+      const bridgeFee = monetaryValue.mul(redeemFeeRate);
+      const minValue = dustValue.add(currentInclusionFee).add(bridgeFee);
 
       if (monetaryValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
@@ -368,14 +368,14 @@ const RedeemForm = (): JSX.Element | null => {
       dispatch(togglePremiumRedeemAction(!premiumRedeemSelected));
     };
 
-    const redeemFeeInBTC = redeemFee.toHuman(8);
-    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
-      redeemFee,
+    const bridgeFeeInBTC = bridgeFee.toHuman(8);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(
+      bridgeFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
 
-    const total = monetaryWrappedTokenAmount.gt(redeemFee.add(currentInclusionFee))
-      ? monetaryWrappedTokenAmount.sub(redeemFee).sub(currentInclusionFee)
+    const total = monetaryWrappedTokenAmount.gt(bridgeFee.add(currentInclusionFee))
+      ? monetaryWrappedTokenAmount.sub(bridgeFee).sub(currentInclusionFee)
       : BitcoinAmount.zero();
     const totalInBTC = total.toHuman(8);
     const totalInUSD = displayMonetaryAmountInUSDFormat(total, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
@@ -501,9 +501,9 @@ const RedeemForm = (): JSX.Element | null => {
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             role='redeem-bridge-fee'
-            value={redeemFeeInBTC}
+            value={bridgeFeeInBTC}
             unitName='BTC'
-            approxUSD={redeemFeeInUSD}
+            approxUSD={bridgeFeeInUSD}
           />
           <PriceInfo
             title={

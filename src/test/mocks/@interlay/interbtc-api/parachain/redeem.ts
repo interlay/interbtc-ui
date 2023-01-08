@@ -23,11 +23,13 @@ const mockRedeemBurn = jest.fn();
 
 const mockRedeemGetDustValue = jest.fn(() => zeroWrappedTokenAmount);
 
+// ray test touch <<
 const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => Big(0));
 
 const mockRedeemGetFeeRate = jest.fn(() => Big(REDEEM_BRIDGE_FEE_RATE));
 
 const mockRedeemGetCurrentInclusionFee = jest.fn(() => CURRENT_INCLUSION_FEE);
+// ray test touch >>
 
 const mockRedeemRequest = jest.fn();
 

@@ -36,7 +36,7 @@ import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayLink from '@/components/UI/InterlayLink';
 import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
-import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, ISSUE_BRIDGE_FEE_RATE } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -114,7 +114,7 @@ const IssueForm = (): JSX.Element | null => {
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
   // ray test touch <
-  const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
+  const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
   // ray test touch >
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
@@ -147,10 +147,10 @@ const IssueForm = (): JSX.Element | null => {
       try {
         setStatus(STATUSES.PENDING);
         const [
-          theFeeRateResult,
-          theDepositRateResult,
-          theDustValueResult,
-          theBtcToGovernanceTokenResult
+          feeRateResult,
+          depositRateResult,
+          dustValueResult,
+          btcToGovernanceTokenResult
         ] = await Promise.allSettled([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
@@ -161,34 +161,34 @@ const IssueForm = (): JSX.Element | null => {
         ]);
         setStatus(STATUSES.RESOLVED);
 
-        if (theFeeRateResult.status === 'rejected') {
-          throw new Error(theFeeRateResult.reason);
+        if (feeRateResult.status === 'rejected') {
+          throw new Error(feeRateResult.reason);
         }
 
-        if (theDepositRateResult.status === 'rejected') {
-          throw new Error(theDepositRateResult.reason);
+        if (depositRateResult.status === 'rejected') {
+          throw new Error(depositRateResult.reason);
         }
 
-        if (theDustValueResult.status === 'rejected') {
-          throw new Error(theDustValueResult.reason);
+        if (dustValueResult.status === 'rejected') {
+          throw new Error(dustValueResult.reason);
         }
 
-        if (theBtcToGovernanceTokenResult.status === 'rejected') {
+        if (btcToGovernanceTokenResult.status === 'rejected') {
           setError(BTC_AMOUNT, {
             type: 'validate',
             message: t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
           });
         }
 
-        if (theBtcToGovernanceTokenResult.status === 'fulfilled') {
-          setBTCToGovernanceTokenRate(theBtcToGovernanceTokenResult.value);
+        if (btcToGovernanceTokenResult.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(btcToGovernanceTokenResult.value);
         }
 
         // ray test touch <
-        setFeeRate(theFeeRateResult.value);
+        setIssueFeeRate(feeRateResult.value);
         // ray test touch >
-        setDepositRate(theDepositRateResult.value);
-        setDustValue(theDustValueResult.value);
+        setDepositRate(depositRateResult.value);
+        setDustValue(dustValueResult.value);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
@@ -360,7 +360,7 @@ const IssueForm = (): JSX.Element | null => {
     const monetaryBtcAmount = new BitcoinAmount(btcAmount);
 
     // ray test touch <
-    const bridgeFee = monetaryBtcAmount.mul(feeRate);
+    const bridgeFee = monetaryBtcAmount.mul(issueFeeRate);
     const bridgeFeeInBTC = bridgeFee.toHuman(8);
     const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(
       bridgeFee,
