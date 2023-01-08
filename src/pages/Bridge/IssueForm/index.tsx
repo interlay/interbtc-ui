@@ -358,9 +358,16 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const monetaryBtcAmount = new BitcoinAmount(btcAmount);
+
     // ray test touch <
     const bridgeFee = monetaryBtcAmount.mul(feeRate);
+    const bridgeFeeInBTC = bridgeFee.toHuman(8);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(
+      bridgeFee,
+      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+    );
     // ray test touch >
+
     const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
     const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
@@ -454,14 +461,11 @@ const IssueForm = (): JSX.Element | null => {
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             // ray test touch <
-            value={bridgeFee.toHuman(8)}
+            value={bridgeFeeInBTC}
             // ray test touch >
             unitName='BTC'
             // ray test touch <
-            approxUSD={displayMonetaryAmountInUSDFormat(
-              bridgeFee,
-              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-            )}
+            approxUSD={bridgeFeeInUSD}
             // ray test touch >
             tooltip={
               <InformationTooltip
