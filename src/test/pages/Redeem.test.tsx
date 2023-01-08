@@ -1,27 +1,30 @@
 import '@testing-library/jest-dom';
 
+import Big from 'big.js';
+
 import App from '@/App';
+import { REDEEM_FEE_RATE } from '@/config/parachain';
 
 import { mockRedeemRequest } from '../mocks/@interlay/interbtc-api';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 describe('redeemTab page', () => {
-  it('should redeem the IBTC', async () => {
+  it('redeeming calls `redeem.request` method', async () => {
     await render(<App />, { path: '/bridge?tab=redeem' });
 
     const redeemTab = screen.getByRole('tab', { name: /redeem/i });
     userEvent.click(redeemTab);
 
-    // Input 0.0001 IBTC
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
 
+    // ray test touch <<
+    const inputAmount = 0.0001;
+    // ray test touch >>
+
     await act(async () => {
-      // ray test touch <
-      // TODO: input a random value using `fake`
-      userEvent.type(amountToRedeemInput, '0.0001');
-      // ray test touch >
+      userEvent.type(amountToRedeemInput, inputAmount.toString());
     });
 
     const btcAddressToSendInput = textboxElements[1];
@@ -29,9 +32,6 @@ describe('redeemTab page', () => {
     await act(async () => {
       userEvent.type(btcAddressToSendInput, 'tb1q3f6lu0g92q0d5jdng6m367uwpw7lnt7x3n0nqf');
     });
-
-    // ray test touch <
-    // ray test touch >
 
     const submitButton = screen.getByRole('button', { name: /confirm/i });
 
@@ -42,5 +42,33 @@ describe('redeemTab page', () => {
 
     // Check that the redeem method was called
     await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
+  });
+
+  it('the redeem fee is correctly displayed', async () => {
+    // ray test touch <<
+    // TODO: duplicated
+    // ray test touch >>
+    await render(<App />, { path: '/bridge?tab=redeem' });
+
+    const redeemTab = screen.getByRole('tab', { name: /redeem/i });
+    userEvent.click(redeemTab);
+
+    // ray test touch <<
+    const textboxElements = screen.getAllByRole('textbox');
+
+    const amountToRedeemInput = textboxElements[0];
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToRedeemInput, inputAmount.toString());
+    });
+
+    const redeemFee = Big(inputAmount).mul(REDEEM_FEE_RATE);
+
+    const redeemFeeElement = screen.getByRole(/redeem-bridge-fee/i);
+
+    expect(redeemFeeElement).toHaveTextContent(redeemFee.toString());
+    // ray test touch >>
   });
 });

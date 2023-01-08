@@ -10,10 +10,13 @@ interface Props {
   approxUSD: string; // TODO: should be number
   tooltip?: JSX.Element;
   className?: string;
+  // ray test touch <<
+  role?: string;
+  // ray test touch >>
 }
 
-const PriceInfo = ({ title, unitIcon, value, unitName, approxUSD, tooltip, className }: Props): JSX.Element => (
-  <div className={clsx('flex', 'justify-between', className)}>
+const PriceInfo = ({ title, unitIcon, value, unitName, approxUSD, tooltip, className, role }: Props): JSX.Element => (
+  <div className={clsx('flex', 'justify-between', className)} role={role}>
     <div className={clsx('flex', 'items-center', 'space-x-1')}>
       {title}
       {tooltip}

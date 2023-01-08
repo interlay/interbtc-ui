@@ -6,7 +6,7 @@ import { mockIssueRequest } from '../mocks/@interlay/interbtc-api';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 describe('Issue page', () => {
-  it('should issue the IBTC', async () => {
+  it('issue IBTC', async () => {
     await render(<App />, { path: '/bridge?tab=issue' });
 
     const issueTab = screen.getByRole('tab', { name: /issue/i });
