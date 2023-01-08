@@ -10,11 +10,9 @@ import { CURRENT_INCLUSION_FEE, mockRedeemRequest } from '../mocks/@interlay/int
 import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
-// ray test touch <<
 const getBridgeFee = (inputAmount: number) => {
   return new BitcoinAmount(inputAmount).mul(REDEEM_BRIDGE_FEE_RATE);
 };
-// ray test touch >>
 
 describe('redeem form', () => {
   beforeEach(async () => {
@@ -63,9 +61,7 @@ describe('redeem form', () => {
       userEvent.type(amountToRedeemInput, inputAmount.toString());
     });
 
-    // ray test touch <<
     const bridgeFee = getBridgeFee(inputAmount);
-    // ray test touch >>
 
     const bridgeFeeElement = screen.getByRole(/redeem-bridge-fee/i);
 
@@ -100,7 +96,6 @@ describe('redeem form', () => {
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
   });
 
-  // ray test touch <<
   it('the total receiving amount is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
@@ -130,5 +125,4 @@ describe('redeem form', () => {
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
-  // ray test touch >>
 });
