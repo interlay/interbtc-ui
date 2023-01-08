@@ -5,7 +5,7 @@ import App from '@/App';
 import { mockIssueRequest } from '../mocks/@interlay/interbtc-api';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
-describe('Issue page', () => {
+describe('issue form', () => {
   it('issue IBTC', async () => {
     await render(<App />, { path: '/bridge?tab=issue' });
 

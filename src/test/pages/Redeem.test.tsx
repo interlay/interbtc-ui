@@ -8,13 +8,17 @@ import { REDEEM_FEE_RATE } from '@/config/parachain';
 import { mockRedeemRequest } from '../mocks/@interlay/interbtc-api';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
-describe('redeemTab page', () => {
-  it('redeeming calls `redeem.request` method', async () => {
+describe('redeem form', () => {
+  // ray test touch <<
+  beforeEach(async () => {
     await render(<App />, { path: '/bridge?tab=redeem' });
 
     const redeemTab = screen.getByRole('tab', { name: /redeem/i });
     userEvent.click(redeemTab);
+  });
+  // ray test touch >>
 
+  it('redeeming calls `redeem.request` method', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -45,14 +49,6 @@ describe('redeemTab page', () => {
   });
 
   it('the redeem fee is correctly displayed', async () => {
-    // ray test touch <<
-    // TODO: duplicated
-    // ray test touch >>
-    await render(<App />, { path: '/bridge?tab=redeem' });
-
-    const redeemTab = screen.getByRole('tab', { name: /redeem/i });
-    userEvent.click(redeemTab);
-
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
