@@ -41,12 +41,10 @@ describe('redeem form', () => {
 
     const submitButton = screen.getByRole('button', { name: /confirm/i });
 
-    // Redeem IBTC
     await act(async () => {
       userEvent.click(submitButton);
     });
 
-    // Check that the redeem method was called
     await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
   });
 
