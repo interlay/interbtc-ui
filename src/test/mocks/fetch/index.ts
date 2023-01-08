@@ -1,7 +1,11 @@
 import { PRICES_API } from '@/utils/constants/api';
 
+const MOCK_BITCOIN_PRICE_IN_USD = 20306;
+
 const DEFAULT_PRICES = {
-  bitcoin: { usd: 20306 },
+  // ray test touch <<
+  bitcoin: { usd: MOCK_BITCOIN_PRICE_IN_USD },
+  // ray test touch >>
   polkadot: { usd: 7.19 },
   'kintsugi-btc': { usd: 20128 },
   kusama: { usd: 48.74 },
@@ -28,4 +32,4 @@ const mockFetch = jest.fn((input, _init?) => {
 
 global.fetch = mockFetch as any;
 
-export { mockFetch };
+export { MOCK_BITCOIN_PRICE_IN_USD, mockFetch };

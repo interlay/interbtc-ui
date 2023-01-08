@@ -1,11 +1,17 @@
 import '@testing-library/jest-dom';
 
-import Big from 'big.js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 
 import App from '@/App';
+// ray test touch <<
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { REDEEM_FEE_RATE } from '@/config/parachain';
 
+// ray test touch >>
 import { mockRedeemRequest } from '../mocks/@interlay/interbtc-api';
+// ray test touch <<
+import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
+// ray test touch >>
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 describe('redeem form', () => {
@@ -55,10 +61,20 @@ describe('redeem form', () => {
       userEvent.type(amountToRedeemInput, inputAmount.toString());
     });
 
-    const redeemFee = Big(inputAmount).mul(REDEEM_FEE_RATE);
+    const redeemFee = new BitcoinAmount(inputAmount).mul(REDEEM_FEE_RATE);
 
     const redeemFeeElement = screen.getByRole(/redeem-bridge-fee/i);
 
-    expect(redeemFeeElement).toHaveTextContent(redeemFee.toString());
+    // ray test touch <<
+    const redeemFeeInBTC = redeemFee.toHuman(8);
+    // ray test touch >>
+
+    // ray test touch <<
+    expect(redeemFeeElement).toHaveTextContent(redeemFeeInBTC);
+
+    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(redeemFee, MOCK_BITCOIN_PRICE_IN_USD);
+
+    expect(redeemFeeElement).toHaveTextContent(redeemFeeInUSD.toString());
+    // ray test touch >>
   });
 });
