@@ -10,6 +10,12 @@ import { CURRENT_INCLUSION_FEE, mockRedeemRequest } from '../mocks/@interlay/int
 import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
+// ray test touch <<
+const getBridgeFee = (inputAmount: number) => {
+  return new BitcoinAmount(inputAmount).mul(REDEEM_BRIDGE_FEE_RATE);
+};
+// ray test touch >>
+
 describe('redeem form', () => {
   beforeEach(async () => {
     await render(<App />, { path: '/bridge?tab=redeem' });
@@ -57,7 +63,9 @@ describe('redeem form', () => {
       userEvent.type(amountToRedeemInput, inputAmount.toString());
     });
 
-    const bridgeFee = new BitcoinAmount(inputAmount).mul(REDEEM_BRIDGE_FEE_RATE);
+    // ray test touch <<
+    const bridgeFee = getBridgeFee(inputAmount);
+    // ray test touch >>
 
     const bridgeFeeElement = screen.getByRole(/redeem-bridge-fee/i);
 
@@ -91,4 +99,36 @@ describe('redeem form', () => {
 
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
   });
+
+  // ray test touch <<
+  it('the total receiving amount is correctly displayed', async () => {
+    const textboxElements = screen.getAllByRole('textbox');
+
+    const amountToRedeemInput = textboxElements[0];
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToRedeemInput, inputAmount.toString());
+    });
+
+    const totalElement = screen.getByRole(/total-receiving-amount/i);
+
+    const bridgeFee = getBridgeFee(inputAmount);
+
+    const monetaryWrappedTokenAmount = new BitcoinAmount(inputAmount);
+
+    const total = monetaryWrappedTokenAmount.gt(bridgeFee.add(CURRENT_INCLUSION_FEE))
+      ? monetaryWrappedTokenAmount.sub(bridgeFee).sub(CURRENT_INCLUSION_FEE)
+      : BitcoinAmount.zero();
+
+    const totalInBTC = total.toHuman(8);
+
+    expect(totalElement).toHaveTextContent(totalInBTC);
+
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, MOCK_BITCOIN_PRICE_IN_USD);
+
+    expect(totalElement).toHaveTextContent(totalInUSD.toString());
+  });
+  // ray test touch >>
 });
