@@ -30,7 +30,7 @@ import TextField from '@/components/TextField';
 import Toggle from '@/components/Toggle';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, REDEEM_FEE_RATE } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
@@ -98,7 +98,7 @@ const RedeemForm = (): JSX.Element | null => {
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   // ray test touch <
-  const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
+  const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(REDEEM_FEE_RATE));
   // ray test touch >
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
@@ -491,9 +491,13 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
+            // ray test touch <
             value={totalBTC.toHuman(8)}
+            // ray test touch >
             unitName='BTC'
+            // ray test touch <
             approxUSD={totalBTCInUSD}
+            // ray test touch >
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -508,9 +512,13 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
+            // ray test touch <
             value={redeemFeeInBTC}
+            // ray test touch >
             unitName='BTC'
+            // ray test touch <
             approxUSD={redeemFeeInUSD}
+            // ray test touch >
           />
           <PriceInfo
             title={
@@ -524,9 +532,13 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
+            // ray test touch <
             value={bitcoinNetworkFeeInBTC}
+            // ray test touch >
             unitName='BTC'
+            // ray test touch <
             approxUSD={bitcoinNetworkFeeInUSD}
+            // ray test touch >
           />
           {premiumRedeemSelected && (
             <PriceInfo
