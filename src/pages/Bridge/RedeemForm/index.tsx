@@ -97,9 +97,7 @@ const RedeemForm = (): JSX.Element | null => {
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  // ray test touch <
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(REDEEM_FEE_RATE));
-  // ray test touch >
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
   );
@@ -204,10 +202,7 @@ const RedeemForm = (): JSX.Element | null => {
 
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeRateResult.value));
-        // ray test touch <
-        console.log('ray : ***** feeRateResult.value.toString() => ', feeRateResult.value.toString());
         setRedeemFeeRate(feeRateResult.value);
-        // ray test touch >
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -335,9 +330,7 @@ const RedeemForm = (): JSX.Element | null => {
         })}`;
       }
 
-      // ray test touch <
       const redeemFee = monetaryValue.mul(redeemFeeRate);
-      // ray test touch >
       const minValue = dustValue.add(currentInclusionFee).add(redeemFee);
 
       if (monetaryValue.lte(minValue)) {
@@ -514,7 +507,9 @@ const RedeemForm = (): JSX.Element | null => {
             role='redeem-bridge-fee'
             value={redeemFeeInBTC}
             unitName='BTC'
+            // ray test touch <
             approxUSD={redeemFeeInUSD}
+            // ray test touch >
           />
           <PriceInfo
             title={

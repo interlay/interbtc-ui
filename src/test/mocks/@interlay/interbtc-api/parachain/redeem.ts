@@ -23,9 +23,7 @@ const mockRedeemGetDustValue = jest.fn(() => zeroWrappedTokenAmount);
 
 const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => Big(0));
 
-// ray test touch <
 const mockRedeemGetFeeRate = jest.fn(() => Big(REDEEM_FEE_RATE));
-// ray test touch >
 
 const mockRedeemGetCurrentInclusionFee = jest.fn(() => zeroWrappedTokenAmount);
 
