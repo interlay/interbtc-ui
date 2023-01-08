@@ -5,6 +5,6 @@ const BLOCKS_BEHIND_LIMIT = 6;
 
 const ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL = 10000; // Milliseconds
 
-const REDEEM_FEE_RATE = 0.005; // Should be the same as the one from the parachain
+const REDEEM_BRIDGE_FEE_RATE = 0.005; // Should be the same as the one from the parachain
 
-export { BLOCK_TIME, BLOCKS_BEHIND_LIMIT, ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL, REDEEM_FEE_RATE };
+export { BLOCK_TIME, BLOCKS_BEHIND_LIMIT, ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL, REDEEM_BRIDGE_FEE_RATE };

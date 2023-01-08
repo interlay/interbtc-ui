@@ -4,9 +4,9 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 
 import App from '@/App';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { REDEEM_FEE_RATE } from '@/config/parachain';
+import { REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
 
-import { mockRedeemRequest } from '../mocks/@interlay/interbtc-api';
+import { CURRENT_INCLUSION_FEE, mockRedeemRequest } from '../mocks/@interlay/interbtc-api';
 import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
@@ -46,7 +46,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
   });
 
-  it('the redeem fee is correctly displayed', async () => {
+  it('the bridge fee is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -57,16 +57,40 @@ describe('redeem form', () => {
       userEvent.type(amountToRedeemInput, inputAmount.toString());
     });
 
-    const redeemFee = new BitcoinAmount(inputAmount).mul(REDEEM_FEE_RATE);
+    const bridgeFee = new BitcoinAmount(inputAmount).mul(REDEEM_BRIDGE_FEE_RATE);
 
-    const redeemFeeElement = screen.getByRole(/redeem-bridge-fee/i);
+    const bridgeFeeElement = screen.getByRole(/redeem-bridge-fee/i);
 
-    const redeemFeeInBTC = redeemFee.toHuman(8);
+    const bridgeFeeInBTC = bridgeFee.toHuman(8);
 
-    expect(redeemFeeElement).toHaveTextContent(redeemFeeInBTC);
+    expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInBTC);
 
-    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(redeemFee, MOCK_BITCOIN_PRICE_IN_USD);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, MOCK_BITCOIN_PRICE_IN_USD);
 
-    expect(redeemFeeElement).toHaveTextContent(redeemFeeInUSD.toString());
+    expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
+
+  // ray test touch <<
+  it('the Bitcoin network fee is correctly displayed', async () => {
+    const textboxElements = screen.getAllByRole('textbox');
+
+    const amountToRedeemInput = textboxElements[0];
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToRedeemInput, inputAmount.toString());
+    });
+
+    const bitcoinNetworkFeeElement = screen.getByRole(/redeem-bitcoin-network-fee/i);
+
+    const bitcoinNetworkFeeInBTC = CURRENT_INCLUSION_FEE.toHuman(8);
+
+    expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInBTC);
+
+    const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(CURRENT_INCLUSION_FEE, MOCK_BITCOIN_PRICE_IN_USD);
+
+    expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
+  });
+  // ray test touch >>
 });

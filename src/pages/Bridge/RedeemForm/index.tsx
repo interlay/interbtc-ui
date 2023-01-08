@@ -30,7 +30,7 @@ import TextField from '@/components/TextField';
 import Toggle from '@/components/Toggle';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import { BLOCKS_BEHIND_LIMIT, REDEEM_FEE_RATE } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
@@ -97,7 +97,7 @@ const RedeemForm = (): JSX.Element | null => {
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(REDEEM_FEE_RATE));
+  const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(REDEEM_BRIDGE_FEE_RATE));
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
   );
@@ -203,6 +203,12 @@ const RedeemForm = (): JSX.Element | null => {
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeRateResult.value));
         setRedeemFeeRate(feeRateResult.value);
+        // ray test touch <<
+        console.log(
+          'ray : ***** currentInclusionFeeResult.value.toString() => ',
+          currentInclusionFeeResult.value.toString()
+        );
+        // ray test touch >>
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -390,11 +396,14 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
     );
 
+    // ray test touch <<
     const bitcoinNetworkFeeInBTC = currentInclusionFee.toHuman(8);
     const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
       currentInclusionFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
+    // ray test touch >>
+
     const accountSet = !!selectedAccount;
 
     // `btcToDotRate` has 0 value only if oracle call fails
@@ -521,13 +530,14 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            // ray test touch <
+            // ray test touch <<
+            role='redeem-bitcoin-network-fee'
             value={bitcoinNetworkFeeInBTC}
-            // ray test touch >
+            // ray test touch >>
             unitName='BTC'
-            // ray test touch <
+            // ray test touch <<
             approxUSD={bitcoinNetworkFeeInUSD}
-            // ray test touch >
+            // ray test touch >>
           />
           {premiumRedeemSelected && (
             <PriceInfo
