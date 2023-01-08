@@ -53,7 +53,6 @@ describe('redeemTab page', () => {
     const redeemTab = screen.getByRole('tab', { name: /redeem/i });
     userEvent.click(redeemTab);
 
-    // ray test touch <<
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -64,6 +63,7 @@ describe('redeemTab page', () => {
       userEvent.type(amountToRedeemInput, inputAmount.toString());
     });
 
+    // ray test touch <<
     const redeemFee = Big(inputAmount).mul(REDEEM_FEE_RATE);
 
     const redeemFeeElement = screen.getByRole(/redeem-bridge-fee/i);

@@ -10,9 +10,7 @@ interface Props {
   approxUSD: string; // TODO: should be number
   tooltip?: JSX.Element;
   className?: string;
-  // ray test touch <<
   role?: string;
-  // ray test touch >>
 }
 
 const PriceInfo = ({ title, unitIcon, value, unitName, approxUSD, tooltip, className, role }: Props): JSX.Element => (

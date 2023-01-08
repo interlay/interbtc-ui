@@ -511,9 +511,7 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            // ray test touch <<
             role='redeem-bridge-fee'
-            // ray test touch >>
             value={redeemFeeInBTC}
             unitName='BTC'
             approxUSD={redeemFeeInUSD}
