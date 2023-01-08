@@ -81,9 +81,7 @@ const IssueRedeemForm = ({
 
   // const [status, setStatus] = useState(STATUSES.IDLE);
   // const [vaultCapacity, setVaultCapacity] = useState(BitcoinAmount.zero());
-  // ray test touch <<
   const [issueFeeRate, setIssueFeeRate] = useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
-  // ray test touch >>
   const [depositRate, setDepositRate] = useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
