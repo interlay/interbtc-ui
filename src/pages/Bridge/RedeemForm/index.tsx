@@ -203,12 +203,6 @@ const RedeemForm = (): JSX.Element | null => {
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeRateResult.value));
         setRedeemFeeRate(feeRateResult.value);
-        // ray test touch <<
-        console.log(
-          'ray : ***** currentInclusionFeeResult.value.toString() => ',
-          currentInclusionFeeResult.value.toString()
-        );
-        // ray test touch >>
         setCurrentInclusionFee(currentInclusionFeeResult.value);
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -396,13 +390,11 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
     );
 
-    // ray test touch <<
     const bitcoinNetworkFeeInBTC = currentInclusionFee.toHuman(8);
     const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
       currentInclusionFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
-    // ray test touch >>
 
     const accountSet = !!selectedAccount;
 
@@ -530,14 +522,10 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            // ray test touch <<
             role='redeem-bitcoin-network-fee'
             value={bitcoinNetworkFeeInBTC}
-            // ray test touch >>
             unitName='BTC'
-            // ray test touch <<
             approxUSD={bitcoinNetworkFeeInUSD}
-            // ray test touch >>
           />
           {premiumRedeemSelected && (
             <PriceInfo

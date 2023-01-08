@@ -70,7 +70,6 @@ describe('redeem form', () => {
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
 
-  // ray test touch <<
   it('the Bitcoin network fee is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
@@ -92,5 +91,4 @@ describe('redeem form', () => {
 
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
   });
-  // ray test touch >>
 });

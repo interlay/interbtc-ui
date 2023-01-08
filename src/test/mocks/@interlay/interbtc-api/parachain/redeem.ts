@@ -8,9 +8,7 @@ import { WRAPPED_TOKEN } from '@/config/relay-chains';
 const DEFAULT_MAX_BURNABLE_TOKENS = '100000000'; // 1 BTC
 const DEFAULT_BURN_EXCHANGE_RATE = '150000';
 
-// ray test touch <<
 const CURRENT_INCLUSION_FEE = new BitcoinAmount(0.0000038);
-// ray test touch >>
 
 const zeroWrappedTokenAmount = newMonetaryAmount(0, WRAPPED_TOKEN);
 
@@ -29,9 +27,7 @@ const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => Big(0));
 
 const mockRedeemGetFeeRate = jest.fn(() => Big(REDEEM_BRIDGE_FEE_RATE));
 
-// ray test touch <<
 const mockRedeemGetCurrentInclusionFee = jest.fn(() => CURRENT_INCLUSION_FEE);
-// ray test touch >>
 
 const mockRedeemRequest = jest.fn();
 
