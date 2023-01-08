@@ -381,13 +381,12 @@ const RedeemForm = (): JSX.Element | null => {
       redeemFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
-    const totalBTC = monetaryWrappedTokenAmount.gt(BitcoinAmount.zero())
+
+    const total = monetaryWrappedTokenAmount.gt(redeemFee.add(currentInclusionFee))
       ? monetaryWrappedTokenAmount.sub(redeemFee).sub(currentInclusionFee)
       : BitcoinAmount.zero();
-    const totalBTCInUSD = displayMonetaryAmountInUSDFormat(
-      totalBTC,
-      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-    );
+    const totalInBTC = total.toHuman(8);
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
     // ray test touch >
 
     const totalRelayChainNativeToken = monetaryWrappedTokenAmount.gt(BitcoinAmount.zero())
@@ -492,11 +491,11 @@ const RedeemForm = (): JSX.Element | null => {
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             // ray test touch <
-            value={totalBTC.toHuman(8)}
+            value={totalInBTC}
             // ray test touch >
             unitName='BTC'
             // ray test touch <
-            approxUSD={totalBTCInUSD}
+            approxUSD={totalInUSD}
             // ray test touch >
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
