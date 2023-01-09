@@ -113,9 +113,7 @@ const IssueForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
-  // ray test touch <
   const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
-  // ray test touch >
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
@@ -184,9 +182,7 @@ const IssueForm = (): JSX.Element | null => {
           setBTCToGovernanceTokenRate(btcToGovernanceTokenResult.value);
         }
 
-        // ray test touch <
         setIssueFeeRate(feeRateResult.value);
-        // ray test touch >
         setDepositRate(depositRateResult.value);
         setDustValue(dustValueResult.value);
       } catch (error) {
@@ -359,14 +355,12 @@ const IssueForm = (): JSX.Element | null => {
 
     const monetaryBtcAmount = new BitcoinAmount(btcAmount);
 
-    // ray test touch <
     const bridgeFee = monetaryBtcAmount.mul(issueFeeRate);
     const bridgeFeeInBTC = bridgeFee.toHuman(8);
     const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(
       bridgeFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
-    // ray test touch >
 
     const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
     const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
@@ -460,9 +454,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            // ray test touch <
             role='issue-bridge-fee'
-            // ray test touch >
             value={bridgeFeeInBTC}
             unitName='BTC'
             approxUSD={bridgeFeeInUSD}
