@@ -7,9 +7,7 @@ const ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL = 10000; // Milliseconds
 
 // Should be the same as the one from the parachain
 const REDEEM_BRIDGE_FEE_RATE = 0.005;
-// ray test touch <
 const ISSUE_BRIDGE_FEE_RATE = 0.005;
-// ray test touch >
 
 export {
   BLOCK_TIME,

@@ -461,12 +461,11 @@ const IssueForm = (): JSX.Element | null => {
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
             // ray test touch <
+            role='issue-bridge-fee'
+            // ray test touch >
             value={bridgeFeeInBTC}
-            // ray test touch >
             unitName='BTC'
-            // ray test touch <
             approxUSD={bridgeFeeInUSD}
-            // ray test touch >
             tooltip={
               <InformationTooltip
                 className={clsx(
