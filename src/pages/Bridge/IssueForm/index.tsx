@@ -114,7 +114,9 @@ const IssueForm = (): JSX.Element | null => {
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
   const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
+  // ray test touch <
   const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
+  // ray test touch >
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
@@ -183,7 +185,9 @@ const IssueForm = (): JSX.Element | null => {
         }
 
         setIssueFeeRate(feeRateResult.value);
+        // ray test touch <
         setDepositRate(depositRateResult.value);
+        // ray test touch >
         setDustValue(dustValueResult.value);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
@@ -362,7 +366,9 @@ const IssueForm = (): JSX.Element | null => {
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
 
+    // ray test touch <
     const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
+    // ray test touch >
     const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
     const isSelectVaultCheckboxDisabled = monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable);
@@ -480,12 +486,16 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
+            // ray test touch <
             value={displayMonetaryAmount(securityDeposit)}
+            // ray test touch >
             unitName={GOVERNANCE_TOKEN_SYMBOL}
+            // ray test touch <
             approxUSD={displayMonetaryAmountInUSDFormat(
               securityDeposit,
               getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
             )}
+            // ray test touch >
             tooltip={
               <InformationTooltip
                 className={clsx(
