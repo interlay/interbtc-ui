@@ -128,6 +128,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const [isMaxAmount, setMaxAmount] = useState(false);
 
   const handleSuccess = () => {
+    const successText = variant === 'lend' ? 'Lending' : 'Withdrawal';
+    toast.success(`${successText} Successful`);
     onChangeLoan?.();
     refetch();
   };

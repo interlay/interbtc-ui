@@ -545,6 +545,7 @@
     "lend": "Lend",
     "my_lend_positions": "My Lend Positions",
     "my_borrow_positions": "My Borrow Positions",
+    "loan_successful": "Lending was Successful",
     "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation."
   },
   "forms": {

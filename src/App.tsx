@@ -45,7 +45,6 @@ const App = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
-
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
     try {
