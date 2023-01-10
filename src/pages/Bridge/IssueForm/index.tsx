@@ -379,8 +379,14 @@ const IssueForm = (): JSX.Element | null => {
       getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
     );
 
-    const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
+    // ray test touch <
+    const total = monetaryBtcAmount.sub(bridgeFee);
+    const totalInBTC = total.toHuman(8);
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
+    // ray test touch >
+
     const accountSet = !!selectedAccount;
+
     const isSelectVaultCheckboxDisabled = monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable);
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
@@ -450,12 +456,13 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={wrappedTokenAmount.toHuman(8)}
+            // ray test touch <
+            value={totalInBTC}
+            // ray test touch >
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={displayMonetaryAmountInUSDFormat(
-              wrappedTokenAmount,
-              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-            )}
+            // ray test touch <
+            approxUSD={totalInUSD}
+            // ray test touch >
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo

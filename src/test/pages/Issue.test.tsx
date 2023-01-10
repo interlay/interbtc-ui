@@ -114,4 +114,16 @@ describe('issue form', () => {
 
     expect(transactionFeeElement).toHaveTextContent(txFeeInUSD);
   });
+
+  // ray test touch <
+  it('the total receiving amount is correctly displayed', async () => {
+    const amountToIssueInput = screen.getByRole('textbox');
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToIssueInput, inputAmount.toString());
+    });
+  });
+  // ray test touch >
 });
