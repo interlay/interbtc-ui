@@ -4,14 +4,19 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 
 import App from '@/App';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
 
-import { CURRENT_INCLUSION_FEE, mockRedeemRequest } from '../mocks/@interlay/interbtc-api';
+import {
+  MOCK_REDEEM_BRIDGE_FEE_RATE,
+  MOCK_REDEEM_CURRENT_INCLUSION_FEE,
+  mockRedeemRequest
+} from '../mocks/@interlay/interbtc-api';
 import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
-  return new BitcoinAmount(inputAmount).mul(REDEEM_BRIDGE_FEE_RATE);
+  // ray test touch <<
+  return new BitcoinAmount(inputAmount).mul(MOCK_REDEEM_BRIDGE_FEE_RATE);
+  // ray test touch >>
 };
 
 describe('redeem form', () => {
@@ -85,11 +90,14 @@ describe('redeem form', () => {
 
     const bitcoinNetworkFeeElement = screen.getByRole(/redeem-bitcoin-network-fee/i);
 
-    const bitcoinNetworkFeeInBTC = CURRENT_INCLUSION_FEE.toHuman(8);
+    const bitcoinNetworkFeeInBTC = MOCK_REDEEM_CURRENT_INCLUSION_FEE.toHuman(8);
 
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInBTC);
 
-    const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(CURRENT_INCLUSION_FEE, MOCK_BITCOIN_PRICE_IN_USD);
+    const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
+      MOCK_REDEEM_CURRENT_INCLUSION_FEE,
+      MOCK_BITCOIN_PRICE_IN_USD
+    );
 
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
   });
@@ -111,8 +119,8 @@ describe('redeem form', () => {
 
     const monetaryWrappedTokenAmount = new BitcoinAmount(inputAmount);
 
-    const total = monetaryWrappedTokenAmount.gt(bridgeFee.add(CURRENT_INCLUSION_FEE))
-      ? monetaryWrappedTokenAmount.sub(bridgeFee).sub(CURRENT_INCLUSION_FEE)
+    const total = monetaryWrappedTokenAmount.gt(bridgeFee.add(MOCK_REDEEM_CURRENT_INCLUSION_FEE))
+      ? monetaryWrappedTokenAmount.sub(bridgeFee).sub(MOCK_REDEEM_CURRENT_INCLUSION_FEE)
       : BitcoinAmount.zero();
 
     const totalInBTC = total.toHuman(8);

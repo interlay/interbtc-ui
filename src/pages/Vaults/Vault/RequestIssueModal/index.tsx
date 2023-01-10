@@ -20,7 +20,7 @@ import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
-import { BLOCKS_BEHIND_LIMIT, ISSUE_BRIDGE_FEE_RATE } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, ISSUE_BRIDGE_FEE_RATE, ISSUE_GRIEFING_COLLATERAL_RATE } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -73,7 +73,9 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [vaultCapacity, setVaultCapacity] = React.useState(BitcoinAmount.zero());
   const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
-  const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
+  // ray test touch <<
+  const [depositRate, setDepositRate] = React.useState(new Big(ISSUE_GRIEFING_COLLATERAL_RATE)); // Set default to 0.005%
+  // ray test touch >>
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );

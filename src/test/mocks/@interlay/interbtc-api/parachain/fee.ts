@@ -1,25 +1,35 @@
 import { BitcoinAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
-import { ISSUE_BRIDGE_FEE_RATE } from '@/config/parachain';
-import { REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
+import { ISSUE_BRIDGE_FEE_RATE, ISSUE_GRIEFING_COLLATERAL_RATE, REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
 
-const DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE = new Big(0.00005);
+// ray test touch <<
+const MOCK_ISSUE_BRIDGE_FEE_RATE = new Big(ISSUE_BRIDGE_FEE_RATE);
 
-const CURRENT_INCLUSION_FEE = new BitcoinAmount(0.0000038);
+const MOCK_ISSUE_GRIEFING_COLLATERAL_RATE = new Big(ISSUE_GRIEFING_COLLATERAL_RATE);
 
-const mockFeeGetIssueFee = jest.fn(() => new Big(ISSUE_BRIDGE_FEE_RATE));
+const MOCK_REDEEM_BRIDGE_FEE_RATE = new Big(REDEEM_BRIDGE_FEE_RATE);
+// ray test touch >>
 
-const mockFeeGetIssueGriefingCollateralRate = jest.fn(() => DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE);
+const MOCK_REDEEM_CURRENT_INCLUSION_FEE = new BitcoinAmount(0.0000038);
+
+const mockFeeGetIssueFee = jest.fn(() => MOCK_ISSUE_BRIDGE_FEE_RATE);
+
+const mockFeeGetIssueGriefingCollateralRate = jest.fn(() => MOCK_ISSUE_GRIEFING_COLLATERAL_RATE);
 
 const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => Big(0));
 
-const mockRedeemGetFeeRate = jest.fn(() => Big(REDEEM_BRIDGE_FEE_RATE));
+const mockRedeemGetFeeRate = jest.fn(() => MOCK_REDEEM_BRIDGE_FEE_RATE);
 
-const mockRedeemGetCurrentInclusionFee = jest.fn(() => CURRENT_INCLUSION_FEE);
+const mockRedeemGetCurrentInclusionFee = jest.fn(() => MOCK_REDEEM_CURRENT_INCLUSION_FEE);
 
 export {
-  CURRENT_INCLUSION_FEE,
+  // ray test touch <<
+  MOCK_ISSUE_BRIDGE_FEE_RATE,
+  MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
+  MOCK_REDEEM_BRIDGE_FEE_RATE,
+  // ray test touch >>
+  MOCK_REDEEM_CURRENT_INCLUSION_FEE,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
   mockRedeemGetCurrentInclusionFee,

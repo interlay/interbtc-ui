@@ -4,14 +4,15 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 
 import App from '@/App';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { ISSUE_BRIDGE_FEE_RATE } from '@/config/parachain';
 
-import { mockIssueRequest } from '../mocks/@interlay/interbtc-api';
+import { MOCK_ISSUE_BRIDGE_FEE_RATE, mockIssueRequest } from '../mocks/@interlay/interbtc-api';
 import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
-  return new BitcoinAmount(inputAmount).mul(ISSUE_BRIDGE_FEE_RATE);
+  // ray test touch <<
+  return new BitcoinAmount(inputAmount).mul(MOCK_ISSUE_BRIDGE_FEE_RATE);
+  // ray test touch >>
 };
 
 describe('issue form', () => {
@@ -61,4 +62,9 @@ describe('issue form', () => {
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
+
+  // ray test touch <
+  // it('the security deposit is correctly displayed', async () => {
+  // });
+  // ray test touch >
 });
