@@ -67,7 +67,6 @@ describe('issue form', () => {
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
 
-  // ray test touch <<
   it('the security deposit is correctly displayed', async () => {
     const amountToIssueInput = screen.getByRole('textbox');
 
@@ -95,5 +94,4 @@ describe('issue form', () => {
 
     expect(securityDepositElement).toHaveTextContent(securityDepositInUSD);
   });
-  // ray test touch >>
 });

@@ -16,9 +16,7 @@ const getExchangeRate = async (
   //   throw new Error(`No exchange rate for given currency: ${collateralCurrency.ticker}`);
   // }
 
-  // ray test touch <<
   return await window.bridge.oracle.getExchangeRate(collateralCurrency, wrappedCurrency);
-  // ray test touch >>
 };
 
 export { getExchangeRate };

@@ -118,13 +118,9 @@ const IssueForm = (): JSX.Element | null => {
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
   const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(DEFAULT_ISSUE_BRIDGE_FEE_RATE));
-  // ray test touch <
   const [depositRate, setDepositRate] = React.useState(new Big(DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE));
-  // ray test touch >
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
-    // ray test touch <<
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
-    // ray test touch >>
   );
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -187,19 +183,11 @@ const IssueForm = (): JSX.Element | null => {
         }
 
         if (btcToGovernanceTokenResult.status === 'fulfilled') {
-          // ray test touch <<
-          console.log(
-            'ray : ***** btcToGovernanceTokenResult.value.toString() => ',
-            btcToGovernanceTokenResult.value.toString()
-          );
-          // ray test touch >>
           setBTCToGovernanceTokenRate(btcToGovernanceTokenResult.value);
         }
 
         setIssueFeeRate(feeRateResult.value);
-        // ray test touch <
         setDepositRate(depositRateResult.value);
-        // ray test touch >
         setDustValue(dustValueResult.value);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
@@ -378,14 +366,12 @@ const IssueForm = (): JSX.Element | null => {
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
 
-    // ray test touch <
     const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
     const securityDepositInBTC = displayMonetaryAmount(securityDeposit);
     const securityDepositInUSD = displayMonetaryAmountInUSDFormat(
       securityDeposit,
       getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
     );
-    // ray test touch >
 
     const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
@@ -504,9 +490,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
-            // ray test touch <<
             role='security-deposit'
-            // ray test touch >>
             value={securityDepositInBTC}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={securityDepositInUSD}
