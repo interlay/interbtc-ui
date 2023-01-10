@@ -1,91 +1,39 @@
-import { Expandable } from '@react-types/shared';
-import { forwardRef, HTMLAttributes, Key, useEffect, useState } from 'react';
+import { AriaAccordionProps, useAccordion } from '@react-aria/accordion';
+import { mergeProps } from '@react-aria/utils';
+import { useTreeState } from '@react-stately/tree';
+import { forwardRef, HTMLAttributes, Ref } from 'react';
 
 import { useDOMRef } from '../utils/dom';
-import { AccordionContext } from './AccordionContext';
-import { useCollection } from './use-collection';
+import { AccordionItem } from './AccordionItem';
 
-const transformKeys = (keys: Key[]): Key[] => keys.map((key) => `.$${key}`);
+type InheritAttrs<T> = AriaAccordionProps<T>;
 
-type Props = {
-  disabledKeys?: Array<Key>;
-  /** The currently expanded keys in the collection (controlled). */
-  expandedKeys?: Array<Key>;
-  /** The initial expanded keys in the collection (uncontrolled). */
-  defaultExpandedKeys?: Array<Key>;
-  /** Handler that is called when items are expanded or collapsed. */
-  onExpandedChange?: (keys: Array<Key>) => any;
+type NativeAttrs<T> = Omit<HTMLAttributes<unknown>, keyof InheritAttrs<T> | 'children'>;
+
+type AccordionProps<T = any> = InheritAttrs<T> & NativeAttrs<T>;
+
+const Accordion = <T extends Record<string, unknown>>(
+  props: AccordionProps<T>,
+  ref: Ref<HTMLDivElement>
+): JSX.Element => {
+  const state = useTreeState(props);
+  const accordionRef = useDOMRef<HTMLDivElement>(ref);
+  const { accordionProps } = useAccordion(props, state, accordionRef);
+
+  return (
+    <div {...mergeProps(props, accordionProps)} ref={accordionRef}>
+      {[...state.collection].map((item) => (
+        <AccordionItem<T> key={item.key} item={item} state={state} />
+      ))}
+    </div>
+  );
 };
-
-type InheritAttrs = Omit<Expandable, keyof Props>;
-
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof InheritAttrs & Props>;
-
-type AccordionProps = Props & InheritAttrs & NativeAttrs;
-
-// TODO: rewrite using react-aria accordion when it becomes more stable
-// MEMO: we are only only able to target elements that have specified keys
-// when trying to disable them or expand them.
-const Accordion = forwardRef<HTMLDivElement, AccordionProps>(
-  (
-    {
-      defaultExpandedKeys = [],
-      expandedKeys: expandedKeysProp,
-      onExpandedChange,
-      disabledKeys: disabledKeysProp = [],
-      ...props
-    },
-    ref
-  ): JSX.Element => {
-    const [expandedKeys, setExpandedKeys] = useState(new Set(transformKeys(defaultExpandedKeys)));
-    const disabledKeys = new Set(transformKeys(disabledKeysProp));
-
-    const accordionRef = useDOMRef<HTMLDivElement>(ref);
-    const collection = useCollection(props, accordionRef);
-
-    // Checks for updates in expandedKeysProp, just in
-    // case the prop is being controlled from outside
-    useEffect(() => {
-      if (!expandedKeysProp) return;
-
-      const isEqual = expandedKeysProp.every((value) => expandedKeys.has(value));
-
-      if (isEqual) return;
-
-      setExpandedKeys(new Set(transformKeys(expandedKeysProp)));
-    }, [expandedKeys, expandedKeysProp]);
-
-    const updateKeys = (key: Key) => {
-      if (!expandedKeys) return;
-
-      const newSet = new Set([...expandedKeys]);
-
-      if (newSet.has(key)) {
-        newSet.delete(key);
-      } else {
-        newSet.add(key);
-      }
-
-      setExpandedKeys(newSet);
-      onExpandedChange?.(Array.from(newSet));
-    };
-
-    return (
-      <AccordionContext.Provider
-        value={{
-          expandedKeys,
-          disabledKeys,
-          updateKeys,
-          collection
-        }}
-      >
-        <div {...props} ref={accordionRef} />
-      </AccordionContext.Provider>
-    );
-  }
-);
 
 Accordion.displayName = 'Accordion';
 
-export { Accordion };
+const _Accordion = forwardRef(Accordion) as <T>(
+  props: AccordionProps<T> & { ref?: Ref<HTMLDivElement> }
+) => ReturnType<typeof Accordion>;
+
+export { _Accordion as Accordion };
 export type { AccordionProps };

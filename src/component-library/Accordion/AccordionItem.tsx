@@ -1,7 +1,9 @@
-import { useButton } from '@react-aria/button';
+import { useAccordionItem } from '@react-aria/accordion';
 import { FocusRing, useFocusRing } from '@react-aria/focus';
-import { mergeProps, useId } from '@react-aria/utils';
-import { ButtonHTMLAttributes, Key, ReactNode, RefObject, useEffect, useRef, useState } from 'react';
+import { mergeProps } from '@react-aria/utils';
+import { TreeState } from '@react-stately/tree';
+import { Node } from '@react-types/shared';
+import { useRef } from 'react';
 
 import {
   StyledAccordionItemButton,
@@ -9,93 +11,37 @@ import {
   StyledAccordionItemWrapper,
   StyledChevronDown
 } from './Accordion.style';
-import { useAccordionContext } from './AccordionContext';
 import { AccordionItemRegion } from './AccordionItemRegion';
 
-// The `collection` variables contains a set o Keys mapped to
-// elements references. Each component gets their identitiy from
-// getting their key using their ref object.
-const useKey = (ref: RefObject<HTMLDivElement>): Key | undefined => {
-  const { collection } = useAccordionContext();
-
-  const [key, setKey] = useState<Key>();
-
-  useEffect(() => {
-    if (!collection || !ref.current) return;
-
-    const elementKey = collection.get(ref.current);
-
-    if (!elementKey) return;
-
-    setKey(elementKey);
-  }, [collection, key, ref]);
-
-  return key;
+type AccordionItemProps<T> = {
+  item: Node<T>;
+  state: TreeState<T>;
 };
-
-type Props = {
-  title: ReactNode;
-};
-
-type NativeAttrs = Omit<ButtonHTMLAttributes<unknown>, keyof Props>;
-
-type AccordionItemProps = Props & NativeAttrs;
-
-const AccordionItem = ({ className, style, title, children, ...props }: AccordionItemProps): JSX.Element => {
-  const { disabledKeys, expandedKeys, updateKeys } = useAccordionContext();
-
-  const accordionItemRef = useRef<HTMLDivElement>(null);
-  const key = useKey(accordionItemRef);
-
-  const isDisabled = !!key && !!disabledKeys?.has(key);
-  const isExpanded = !!key && !!expandedKeys?.has(key);
-
-  const buttonId = useId();
-  const regionId = useId();
-
-  const btnRef = useRef<HTMLButtonElement>(null);
-
-  const { buttonProps: ariaButtonProps } = useButton(
-    mergeProps(props as any, {
-      id: buttonId,
-      elementType: 'button',
-      isDisabled,
-      onPress: () => key && updateKeys?.(key)
-    }),
-    btnRef
-  );
-
-  const { focusProps, isFocusVisible } = useFocusRing(props);
-
-  const buttonProps: ButtonHTMLAttributes<unknown> = {
-    ...mergeProps(ariaButtonProps, focusProps),
-    'aria-expanded': isExpanded,
-    'aria-controls': isExpanded ? regionId : undefined
-  };
-
-  const regionProps = {
-    id: regionId,
-    role: 'region',
-    'aria-labelledby': buttonId
-  };
+const AccordionItem = <T extends Record<string, unknown>>(props: AccordionItemProps<T>): JSX.Element => {
+  const ref = useRef<HTMLButtonElement>(null);
+  const { state, item } = props;
+  const { buttonProps, regionProps } = useAccordionItem<T>(props, state, ref);
+  const isExpanded = state.expandedKeys.has(item.key);
+  const isDisabled = state.disabledKeys.has(item.key);
+  const { isFocusVisible, focusProps } = useFocusRing();
 
   return (
-    <StyledAccordionItemWrapper $isDisabled={isDisabled} className={className} style={style} ref={accordionItemRef}>
-      <StyledAccordionItemHeading size='base'>
+    <StyledAccordionItemWrapper $isDisabled={isDisabled}>
+      <StyledAccordionItemHeading>
         <FocusRing within>
           <StyledAccordionItemButton
-            {...buttonProps}
-            ref={btnRef}
-            $isFocusVisible={isFocusVisible}
+            {...mergeProps(buttonProps, focusProps)}
+            ref={ref}
             $isDisabled={isDisabled}
+            $isFocusVisible={isFocusVisible}
           >
-            {title}
-            <StyledChevronDown role='img' $isExpanded={isExpanded} />
+            {item.props.title}
+            <StyledChevronDown $isExpanded={isExpanded} />
           </StyledAccordionItemButton>
         </FocusRing>
       </StyledAccordionItemHeading>
       <AccordionItemRegion {...regionProps} isExpanded={isExpanded}>
-        {children}
+        {item.props.children}
       </AccordionItemRegion>
     </StyledAccordionItemWrapper>
   );
