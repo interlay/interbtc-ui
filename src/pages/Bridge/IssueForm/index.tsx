@@ -379,11 +379,9 @@ const IssueForm = (): JSX.Element | null => {
       getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
     );
 
-    // ray test touch <
     const total = monetaryBtcAmount.sub(bridgeFee);
     const totalInBTC = total.toHuman(8);
     const totalInUSD = displayMonetaryAmountInUSDFormat(total, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
-    // ray test touch >
 
     const accountSet = !!selectedAccount;
 
@@ -456,9 +454,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            // ray test touch <
             role='total-receiving-amount'
-            // ray test touch >
             value={totalInBTC}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={totalInUSD}

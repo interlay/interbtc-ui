@@ -5,7 +5,7 @@ const BLOCKS_BEHIND_LIMIT = 6;
 
 const ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL = 10000; // Milliseconds
 
-// Should be the same as the one from the parachain
+// Should be the same as the ones from the parachain
 
 const DEFAULT_REDEEM_BRIDGE_FEE_RATE = 0.005; // Set default to 0.5%
 

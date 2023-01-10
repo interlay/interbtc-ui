@@ -115,7 +115,6 @@ describe('issue form', () => {
     expect(transactionFeeElement).toHaveTextContent(txFeeInUSD);
   });
 
-  // ray test touch <
   it('the total receiving amount is correctly displayed', async () => {
     const amountToIssueInput = screen.getByRole('textbox');
 
@@ -141,5 +140,4 @@ describe('issue form', () => {
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
-  // ray test touch >
 });
