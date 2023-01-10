@@ -17,6 +17,7 @@ import { POLKADOT } from './relay-chain-names';
 const ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, VOTE_GOVERNANCE_TOKEN, true);
 const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true);
 
+// TODO: Pull values in from lib, as we do with vault collaterals
 const NATIVE_CURRENCIES: Array<CurrencyExt> =
   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT ? [Polkadot, InterBtc, Interlay] : [KBtc, Kintsugi, Kusama];
 
