@@ -1,12 +1,18 @@
 import '@testing-library/jest-dom';
 
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 
 import App from '@/App';
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
-import { MOCK_ISSUE_BRIDGE_FEE_RATE, mockIssueRequest } from '../mocks/@interlay/interbtc-api';
-import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
+import {
+  MOCK_EXCHANGE_RATE,
+  MOCK_ISSUE_BRIDGE_FEE_RATE,
+  MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
+  mockIssueRequest
+} from '../mocks/@interlay/interbtc-api';
+import { MOCK_BITCOIN_PRICE_IN_USD, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
@@ -61,8 +67,33 @@ describe('issue form', () => {
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
 
-  // ray test touch <
-  // it('the security deposit is correctly displayed', async () => {
-  // });
-  // ray test touch >
+  // ray test touch <<
+  it('the security deposit is correctly displayed', async () => {
+    const amountToIssueInput = screen.getByRole('textbox');
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToIssueInput, inputAmount.toString());
+    });
+
+    const btcToGovernanceTokenRate = new ExchangeRate(Bitcoin, GOVERNANCE_TOKEN, MOCK_EXCHANGE_RATE);
+
+    const monetaryBtcAmount = new BitcoinAmount(inputAmount);
+
+    const securityDeposit = btcToGovernanceTokenRate
+      .toCounter(monetaryBtcAmount)
+      .mul(MOCK_ISSUE_GRIEFING_COLLATERAL_RATE);
+
+    const securityDepositElement = screen.getByRole(/security-deposit/i);
+
+    const securityDepositInBTC = displayMonetaryAmount(securityDeposit);
+
+    expect(securityDepositElement).toHaveTextContent(securityDepositInBTC);
+
+    const securityDepositInUSD = displayMonetaryAmountInUSDFormat(securityDeposit, mockGovernanceTokenPriceInUsd);
+
+    expect(securityDepositElement).toHaveTextContent(securityDepositInUSD);
+  });
+  // ray test touch >>
 });

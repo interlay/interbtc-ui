@@ -122,7 +122,9 @@ const IssueForm = (): JSX.Element | null => {
   const [depositRate, setDepositRate] = React.useState(new Big(DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE));
   // ray test touch >
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
+    // ray test touch <<
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
+    // ray test touch >>
   );
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
@@ -185,6 +187,12 @@ const IssueForm = (): JSX.Element | null => {
         }
 
         if (btcToGovernanceTokenResult.status === 'fulfilled') {
+          // ray test touch <<
+          console.log(
+            'ray : ***** btcToGovernanceTokenResult.value.toString() => ',
+            btcToGovernanceTokenResult.value.toString()
+          );
+          // ray test touch >>
           setBTCToGovernanceTokenRate(btcToGovernanceTokenResult.value);
         }
 
@@ -496,13 +504,12 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
-            // ray test touch <
+            // ray test touch <<
+            role='security-deposit'
+            // ray test touch >>
             value={securityDepositInBTC}
-            // ray test touch >
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            // ray test touch <
             approxUSD={securityDepositInUSD}
-            // ray test touch >
             tooltip={
               <InformationTooltip
                 className={clsx(
