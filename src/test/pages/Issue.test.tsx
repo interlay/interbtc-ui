@@ -95,7 +95,6 @@ describe('issue form', () => {
     expect(securityDepositElement).toHaveTextContent(securityDepositInUSD);
   });
 
-  // ray test touch <
   it('the transaction fee is correctly displayed', async () => {
     const amountToIssueInput = screen.getByRole('textbox');
 
@@ -115,5 +114,4 @@ describe('issue form', () => {
 
     expect(transactionFeeElement).toHaveTextContent(txFeeInUSD);
   });
-  // ray test touch >
 });

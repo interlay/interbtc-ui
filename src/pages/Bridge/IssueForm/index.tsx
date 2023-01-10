@@ -373,13 +373,11 @@ const IssueForm = (): JSX.Element | null => {
       getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
     );
 
-    // ray test touch <
     const txFeeInGovernanceToken = displayMonetaryAmount(TRANSACTION_FEE_AMOUNT);
     const txFeeInUSD = displayMonetaryAmountInUSDFormat(
       TRANSACTION_FEE_AMOUNT,
       getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
     );
-    // ray test touch >
 
     const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
@@ -524,9 +522,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
-            // ray test touch <
             role='transaction-fee'
-            // ray test touch >
             value={txFeeInGovernanceToken}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={txFeeInUSD}

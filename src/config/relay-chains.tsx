@@ -150,10 +150,8 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       MIN: 1,
       MAX: 192
     };
-    // ray test touch <
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
-    // ray test touch >
     XCM_ADAPTERS = {
       interlay: new InterlayAdapter(),
       polkadot: new PolkadotAdapter(),
@@ -193,10 +191,8 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       MIN: 1,
       MAX: 96
     };
-    // ray test touch <
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
-    // ray test touch >
     XCM_ADAPTERS = {
       kintsugi: new KintsugiAdapter(),
       kusama: new KusamaAdapter(),
