@@ -10,7 +10,7 @@ import {
   MOCK_REDEEM_CURRENT_INCLUSION_FEE,
   mockRedeemRequest
 } from '../mocks/@interlay/interbtc-api';
-import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
+import { DEFAULT_MOCK_PRICES } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
@@ -70,7 +70,7 @@ describe('redeem form', () => {
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInBTC);
 
-    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, MOCK_BITCOIN_PRICE_IN_USD);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, DEFAULT_MOCK_PRICES.bitcoin.usd);
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
@@ -94,7 +94,7 @@ describe('redeem form', () => {
 
     const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
       MOCK_REDEEM_CURRENT_INCLUSION_FEE,
-      MOCK_BITCOIN_PRICE_IN_USD
+      DEFAULT_MOCK_PRICES.bitcoin.usd
     );
 
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
@@ -125,7 +125,7 @@ describe('redeem form', () => {
 
     expect(totalElement).toHaveTextContent(totalInBTC);
 
-    const totalInUSD = displayMonetaryAmountInUSDFormat(total, MOCK_BITCOIN_PRICE_IN_USD);
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, DEFAULT_MOCK_PRICES.bitcoin.usd);
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });

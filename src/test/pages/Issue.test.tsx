@@ -12,7 +12,7 @@ import {
   MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
   mockIssueRequest
 } from '../mocks/@interlay/interbtc-api';
-import { MOCK_BITCOIN_PRICE_IN_USD, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
+import { DEFAULT_MOCK_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
@@ -62,7 +62,7 @@ describe('issue form', () => {
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInBTC);
 
-    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, MOCK_BITCOIN_PRICE_IN_USD);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, DEFAULT_MOCK_PRICES.bitcoin.usd);
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });

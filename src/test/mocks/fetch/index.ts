@@ -1,9 +1,6 @@
 import { PRICES_API } from '@/utils/constants/api';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
-const MOCK_BITCOIN_PRICE_IN_USD = 20306;
-
-// ray test touch <<
 let mockGovernanceTokenPriceInUsd: number;
 if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   mockGovernanceTokenPriceInUsd = 0.057282;
@@ -12,10 +9,9 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
 } else {
   throw new Error('Something went wrong!');
 }
-// ray test touch >>
 
 const DEFAULT_MOCK_PRICES = {
-  bitcoin: { usd: MOCK_BITCOIN_PRICE_IN_USD },
+  bitcoin: { usd: 20306 },
   polkadot: { usd: 7.19 },
   'kintsugi-btc': { usd: 20128 },
   kusama: { usd: 48.74 },
@@ -42,4 +38,4 @@ const mockFetch = jest.fn((input, _init?) => {
 
 global.fetch = mockFetch as any;
 
-export { MOCK_BITCOIN_PRICE_IN_USD, mockFetch, mockGovernanceTokenPriceInUsd };
+export { DEFAULT_MOCK_PRICES, mockFetch, mockGovernanceTokenPriceInUsd };
