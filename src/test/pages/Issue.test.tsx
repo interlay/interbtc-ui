@@ -124,6 +124,22 @@ describe('issue form', () => {
     await act(async () => {
       userEvent.type(amountToIssueInput, inputAmount.toString());
     });
+
+    const totalElement = screen.getByRole(/total-receiving-amount/i);
+
+    const bridgeFee = getBridgeFee(inputAmount);
+
+    const monetaryBtcAmount = new BitcoinAmount(inputAmount);
+
+    const total = monetaryBtcAmount.sub(bridgeFee);
+
+    const totalInBTC = total.toHuman(8);
+
+    expect(totalElement).toHaveTextContent(totalInBTC);
+
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, DEFAULT_MOCK_PRICES.bitcoin.usd);
+
+    expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
   // ray test touch >
 });

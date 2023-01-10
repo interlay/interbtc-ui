@@ -457,12 +457,11 @@ const IssueForm = (): JSX.Element | null => {
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
             // ray test touch <
+            role='total-receiving-amount'
+            // ray test touch >
             value={totalInBTC}
-            // ray test touch >
             unitName={WRAPPED_TOKEN_SYMBOL}
-            // ray test touch <
             approxUSD={totalInUSD}
-            // ray test touch >
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
