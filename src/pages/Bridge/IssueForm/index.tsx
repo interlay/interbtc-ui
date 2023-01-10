@@ -373,6 +373,14 @@ const IssueForm = (): JSX.Element | null => {
       getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
     );
 
+    // ray test touch <
+    const txFeeInGovernanceToken = displayMonetaryAmount(TRANSACTION_FEE_AMOUNT);
+    const txFeeInUSD = displayMonetaryAmountInUSDFormat(
+      TRANSACTION_FEE_AMOUNT,
+      getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+    );
+    // ray test touch >
+
     const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
     const accountSet = !!selectedAccount;
     const isSelectVaultCheckboxDisabled = monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable);
@@ -517,14 +525,11 @@ const IssueForm = (): JSX.Element | null => {
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
             // ray test touch <
-            value={displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)}
+            value={txFeeInGovernanceToken}
             // ray test touch >
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             // ray test touch <
-            approxUSD={displayMonetaryAmountInUSDFormat(
-              TRANSACTION_FEE_AMOUNT,
-              getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
-            )}
+            approxUSD={txFeeInUSD}
             // ray test touch >
             tooltip={
               <InformationTooltip
