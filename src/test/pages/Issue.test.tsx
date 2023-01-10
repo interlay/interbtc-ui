@@ -86,9 +86,9 @@ describe('issue form', () => {
 
     const securityDepositElement = screen.getByRole(/security-deposit/i);
 
-    const securityDepositInBTC = displayMonetaryAmount(securityDeposit);
+    const securityDepositInGovernanceToken = displayMonetaryAmount(securityDeposit);
 
-    expect(securityDepositElement).toHaveTextContent(securityDepositInBTC);
+    expect(securityDepositElement).toHaveTextContent(securityDepositInGovernanceToken);
 
     const securityDepositInUSD = displayMonetaryAmountInUSDFormat(securityDeposit, mockGovernanceTokenPriceInUsd);
 

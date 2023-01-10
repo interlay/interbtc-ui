@@ -367,7 +367,7 @@ const IssueForm = (): JSX.Element | null => {
     );
 
     const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
-    const securityDepositInBTC = displayMonetaryAmount(securityDeposit);
+    const securityDepositInGovernanceToken = displayMonetaryAmount(securityDeposit);
     const securityDepositInUSD = displayMonetaryAmountInUSDFormat(
       securityDeposit,
       getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
@@ -491,7 +491,7 @@ const IssueForm = (): JSX.Element | null => {
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
             role='security-deposit'
-            value={securityDepositInBTC}
+            value={securityDepositInGovernanceToken}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={securityDepositInUSD}
             tooltip={
@@ -516,12 +516,16 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
+            // ray test touch <
             value={displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)}
+            // ray test touch >
             unitName={GOVERNANCE_TOKEN_SYMBOL}
+            // ray test touch <
             approxUSD={displayMonetaryAmountInUSDFormat(
               TRANSACTION_FEE_AMOUNT,
               getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
             )}
+            // ray test touch >
             tooltip={
               <InformationTooltip
                 className={clsx(
