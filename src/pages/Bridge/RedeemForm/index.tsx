@@ -30,7 +30,7 @@ import TextField from '@/components/TextField';
 import Toggle from '@/components/Toggle';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import { BLOCKS_BEHIND_LIMIT, REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
@@ -97,7 +97,7 @@ const RedeemForm = (): JSX.Element | null => {
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(REDEEM_BRIDGE_FEE_RATE));
+  const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(DEFAULT_REDEEM_BRIDGE_FEE_RATE));
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
   );

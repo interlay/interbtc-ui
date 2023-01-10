@@ -16,7 +16,7 @@ import {
   displayMonetaryAmountInUSDFormat
 } from '@/common/utils/utils';
 import { CTA, Input, Stack, TokenInput } from '@/component-library';
-import { ISSUE_BRIDGE_FEE_RATE, ISSUE_GRIEFING_COLLATERAL_RATE } from '@/config/parachain';
+import { DEFAULT_ISSUE_BRIDGE_FEE_RATE, DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -81,8 +81,8 @@ const IssueRedeemForm = ({
 
   // const [status, setStatus] = useState(STATUSES.IDLE);
   // const [vaultCapacity, setVaultCapacity] = useState(BitcoinAmount.zero());
-  const [issueFeeRate, setIssueFeeRate] = useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
-  const [depositRate, setDepositRate] = useState(new Big(ISSUE_GRIEFING_COLLATERAL_RATE)); // Set default to 0.005%
+  const [issueFeeRate, setIssueFeeRate] = useState(new Big(DEFAULT_ISSUE_BRIDGE_FEE_RATE));
+  const [depositRate, setDepositRate] = useState(new Big(DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE));
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );

@@ -36,7 +36,11 @@ import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayLink from '@/components/UI/InterlayLink';
 import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
-import { BLOCKS_BEHIND_LIMIT, ISSUE_BRIDGE_FEE_RATE, ISSUE_GRIEFING_COLLATERAL_RATE } from '@/config/parachain';
+import {
+  BLOCKS_BEHIND_LIMIT,
+  DEFAULT_ISSUE_BRIDGE_FEE_RATE,
+  DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE
+} from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -113,9 +117,9 @@ const IssueForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
-  const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
+  const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(DEFAULT_ISSUE_BRIDGE_FEE_RATE));
   // ray test touch <
-  const [depositRate, setDepositRate] = React.useState(new Big(ISSUE_GRIEFING_COLLATERAL_RATE)); // Set default to 0.005%
+  const [depositRate, setDepositRate] = React.useState(new Big(DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE));
   // ray test touch >
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
