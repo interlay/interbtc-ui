@@ -525,12 +525,11 @@ const IssueForm = (): JSX.Element | null => {
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
             // ray test touch <
+            role='transaction-fee'
+            // ray test touch >
             value={txFeeInGovernanceToken}
-            // ray test touch >
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            // ray test touch <
             approxUSD={txFeeInUSD}
-            // ray test touch >
             tooltip={
               <InformationTooltip
                 className={clsx(

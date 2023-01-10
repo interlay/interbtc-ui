@@ -4,7 +4,7 @@ import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 
 import {
   MOCK_EXCHANGE_RATE,
@@ -94,4 +94,26 @@ describe('issue form', () => {
 
     expect(securityDepositElement).toHaveTextContent(securityDepositInUSD);
   });
+
+  // ray test touch <
+  it('the transaction fee is correctly displayed', async () => {
+    const amountToIssueInput = screen.getByRole('textbox');
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToIssueInput, inputAmount.toString());
+    });
+
+    const transactionFeeElement = screen.getByRole(/transaction-fee/i);
+
+    const txFeeInGovernanceToken = displayMonetaryAmount(TRANSACTION_FEE_AMOUNT);
+
+    expect(transactionFeeElement).toHaveTextContent(txFeeInGovernanceToken);
+
+    const txFeeInUSD = displayMonetaryAmountInUSDFormat(TRANSACTION_FEE_AMOUNT, mockGovernanceTokenPriceInUsd);
+
+    expect(transactionFeeElement).toHaveTextContent(txFeeInUSD);
+  });
+  // ray test touch >
 });
