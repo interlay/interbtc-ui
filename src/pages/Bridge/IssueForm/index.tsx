@@ -187,7 +187,6 @@ const IssueForm = (): JSX.Element | null => {
         setIssueFeeRate(feeRateResult.value);
         // ray test touch <
         setDepositRate(depositRateResult.value);
-        console.log('ray : ***** depositRateResult.value.toString() => ', depositRateResult.value.toString());
         // ray test touch >
         setDustValue(dustValueResult.value);
       } catch (error) {

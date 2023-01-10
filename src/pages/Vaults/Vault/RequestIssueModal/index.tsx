@@ -73,9 +73,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [vaultCapacity, setVaultCapacity] = React.useState(BitcoinAmount.zero());
   const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(ISSUE_BRIDGE_FEE_RATE)); // Set default to 0.5%
-  // ray test touch <<
   const [depositRate, setDepositRate] = React.useState(new Big(ISSUE_GRIEFING_COLLATERAL_RATE)); // Set default to 0.005%
-  // ray test touch >>
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );

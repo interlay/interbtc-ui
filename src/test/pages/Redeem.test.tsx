@@ -14,9 +14,7 @@ import { MOCK_BITCOIN_PRICE_IN_USD } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
-  // ray test touch <<
   return new BitcoinAmount(inputAmount).mul(MOCK_REDEEM_BRIDGE_FEE_RATE);
-  // ray test touch >>
 };
 
 describe('redeem form', () => {
