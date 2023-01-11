@@ -30,11 +30,11 @@ type PoolsTableRow = {
 
 type PoolsTableProps = {
   variant: 'available-pools' | 'account-pools';
-  liquidityPools: AccountLiquidityPool[];
+  pools: AccountLiquidityPool[];
   onRowAction: PoolsBaseTableProps['onRowAction'];
 };
 
-const PoolsTable = ({ variant, liquidityPools, onRowAction }: PoolsTableProps): JSX.Element => {
+const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -53,7 +53,8 @@ const PoolsTable = ({ variant, liquidityPools, onRowAction }: PoolsTableProps): 
 
   const rows: PoolsTableRow[] = useMemo(
     () =>
-      liquidityPools.map(({ apr, lpToken, amount, pooledCurrencies }) => {
+      pools.map(({ data, amount }) => {
+        const { pooledCurrencies, lpToken, apr } = data;
         const poolName = (
           <PoolName tickers={pooledCurrencies.map((pooledCurrencies) => pooledCurrencies.currency.ticker)} />
         );
@@ -89,7 +90,7 @@ const PoolsTable = ({ variant, liquidityPools, onRowAction }: PoolsTableProps): 
           accountLiquidity
         };
       }),
-    [isAccountPools, liquidityPools, prices, variant]
+    [isAccountPools, pools, prices, variant]
   );
 
   return (

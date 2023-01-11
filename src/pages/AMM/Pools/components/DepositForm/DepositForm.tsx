@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
 import Big from 'big.js';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -12,7 +13,6 @@ import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains'
 import validate, { PoolDepositSchemaParams } from '@/lib/form-validation';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -22,18 +22,18 @@ import { StyledDl } from './DepositForm.styles';
 type DepositFormData = Record<string, string>;
 
 type DepositFormProps = {
-  liquidityPool: AccountLiquidityPool;
+  pool: LiquidityPool;
   onChangePool?: () => void;
 };
 
-const DepositForm = ({ liquidityPool }: DepositFormProps): JSX.Element => {
+const DepositForm = ({ pool }: DepositFormProps): JSX.Element => {
   const { t } = useTranslation();
   const { getBalance, getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
-  const schema = liquidityPool.pooledCurrencies.reduce((acc, pooled) => {
+  const schema = pool.pooledCurrencies.reduce((acc, pooled) => {
     const zeroAssetAmount = newMonetaryAmount(0, pooled.currency);
     const schemaParams: PoolDepositSchemaParams = {
       governanceBalance,
@@ -70,10 +70,7 @@ const DepositForm = ({ liquidityPool }: DepositFormProps): JSX.Element => {
   };
 
   const poolName = (
-    <PoolName
-      justifyContent='center'
-      tickers={liquidityPool.pooledCurrencies.map((currency) => currency.currency.ticker)}
-    />
+    <PoolName justifyContent='center' tickers={pool.pooledCurrencies.map((currency) => currency.currency.ticker)} />
   );
 
   return (
@@ -81,7 +78,7 @@ const DepositForm = ({ liquidityPool }: DepositFormProps): JSX.Element => {
       {poolName}
       <Flex direction='column' gap='spacing8'>
         <Flex direction='column' gap='spacing2'>
-          {liquidityPool.pooledCurrencies.map((currency) => (
+          {pool.pooledCurrencies.map((currency) => (
             <TokenInput
               key={currency.currency.ticker}
               placeholder='0.00'

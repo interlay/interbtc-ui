@@ -1,3 +1,4 @@
+import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
 import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
@@ -7,30 +8,31 @@ import { PoolModal } from '../PoolModal/PoolModal';
 import { PoolsTable } from './PoolsTable';
 
 type PoolsTablesProps = {
-  liquidityPools: AccountLiquidityPool[];
+  pools: AccountLiquidityPool[];
 };
 
-const PoolsTables = ({ liquidityPools }: PoolsTablesProps): JSX.Element => {
-  const [liquidityPool, setLiquidityPool] = useState<AccountLiquidityPool>();
+const PoolsTables = ({ pools }: PoolsTablesProps): JSX.Element => {
+  const [liquidityPool, setLiquidityPool] = useState<LiquidityPool>();
 
   const handleRowAction = (ticker: Key) => {
-    const selectedLiquidityPool = liquidityPools.find((liquidityPool) => liquidityPool.lpToken.ticker === ticker);
-    setLiquidityPool(selectedLiquidityPool);
+    const pool = pools.find((pool) => pool.data.lpToken.ticker === ticker);
+    setLiquidityPool(pool?.data);
   };
 
   const handleClose = () => setLiquidityPool(undefined);
 
-  const hasProvidedLiquidity = !!liquidityPools.find((liquidityPools) => !!liquidityPools.amount);
+  const accountPools = pools.filter((pool) => !!pool.amount);
+  const otherPools = pools.filter((pool) => !pool.amount);
 
   return (
     <>
       <Flex direction='column' gap='spacing6'>
-        {hasProvidedLiquidity && (
-          <PoolsTable variant='account-pools' liquidityPools={liquidityPools} onRowAction={handleRowAction} />
+        {!!accountPools.length && (
+          <PoolsTable variant='account-pools' pools={accountPools} onRowAction={handleRowAction} />
         )}
-        <PoolsTable variant='available-pools' liquidityPools={liquidityPools} onRowAction={handleRowAction} />
+        <PoolsTable variant='available-pools' pools={otherPools} onRowAction={handleRowAction} />
       </Flex>
-      <PoolModal isOpen={!!liquidityPool} liquidityPool={liquidityPool} onClose={handleClose} />
+      <PoolModal isOpen={!!liquidityPool} pool={liquidityPool} onClose={handleClose} />
     </>
   );
 };

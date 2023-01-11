@@ -5,16 +5,16 @@ import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools'
 import { PoolsInsights, PoolsTables } from './components';
 
 const Pools = (): JSX.Element => {
-  const { data: liquidityPools } = useGetAccountPools();
+  const { data: pools } = useGetAccountPools();
 
-  if (liquidityPools === undefined) {
+  if (pools === undefined) {
     return <FullLoadingSpinner />;
   }
 
   return (
     <MainContainer>
       <PoolsInsights />
-      <PoolsTables liquidityPools={liquidityPools} />
+      <PoolsTables pools={pools} />
     </MainContainer>
   );
 };

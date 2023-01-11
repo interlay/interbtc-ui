@@ -1,39 +1,39 @@
+import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
 import { useTranslation } from 'react-i18next';
 
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 
 import { DepositForm } from '../DepositForm';
 import { WithdrawForm } from '../WithdrawForm';
 import { StyledTabs, StyledWrapper } from './PoolModal.style';
 
 type Props = {
-  liquidityPool?: AccountLiquidityPool;
+  pool?: LiquidityPool;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type PoolModalProps = Props & InheritAttrs;
 
-const PoolModal = ({ liquidityPool, onClose, ...props }: PoolModalProps): JSX.Element | null => {
+const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | null => {
   const { t } = useTranslation();
 
-  if (!liquidityPool) {
+  if (!pool) {
     return null;
   }
 
   return (
-    <Modal aria-label={`${liquidityPool.lpToken.ticker} pool deposit or withdraw`} onClose={onClose} {...props}>
+    <Modal aria-label={`${pool.lpToken.ticker} pool deposit or withdraw`} onClose={onClose} {...props}>
       <ModalBody noPadding>
         <StyledTabs size='large' fullWidth>
           <TabsItem title={t('deposit')}>
             <StyledWrapper>
-              <DepositForm liquidityPool={liquidityPool} onChangePool={onClose} />
+              <DepositForm pool={pool} onChangePool={onClose} />
             </StyledWrapper>
           </TabsItem>
           <TabsItem title={t('withdraw')}>
             <StyledWrapper>
-              <WithdrawForm liquidityPool={liquidityPool} onChangePool={onClose} />
+              <WithdrawForm pool={pool} onChangePool={onClose} />
             </StyledWrapper>
           </TabsItem>
         </StyledTabs>

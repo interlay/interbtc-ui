@@ -1,3 +1,4 @@
+import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -7,7 +8,6 @@ import { CoinIcon, CTA, Dd, Dl, DlGroup, Dt, Flex, P, TokenInput } from '@/compo
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { PoolName } from '../PoolName';
@@ -22,11 +22,11 @@ type WithdrawFormData = {
 };
 
 type WithdrawFormProps = {
-  liquidityPool: AccountLiquidityPool;
+  pool: LiquidityPool;
   onChangePool?: () => void;
 };
 
-const WithdrawForm = ({ liquidityPool }: WithdrawFormProps): JSX.Element => {
+const WithdrawForm = ({ pool }: WithdrawFormProps): JSX.Element => {
   const { t } = useTranslation();
   // const { getBalance, getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
@@ -65,7 +65,7 @@ const WithdrawForm = ({ liquidityPool }: WithdrawFormProps): JSX.Element => {
     }
   };
 
-  const tickers = liquidityPool.pooledCurrencies.map((currency) => currency.currency.ticker);
+  const tickers = pool.pooledCurrencies.map((currency) => currency.currency.ticker);
 
   const poolName = <PoolName justifyContent='center' tickers={tickers} />;
 
@@ -92,7 +92,7 @@ const WithdrawForm = ({ liquidityPool }: WithdrawFormProps): JSX.Element => {
             {t('amm.pools.receivable_assets')}
           </P>
           <Dl direction='column' gap='spacing2'>
-            {liquidityPool.pooledCurrencies.map((pooled) => {
+            {pool.pooledCurrencies.map((pooled) => {
               return (
                 <DlGroup key={pooled.currency.ticker} justifyContent='space-between'>
                   <Dt size='xs' color='primary'>

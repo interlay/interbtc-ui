@@ -83,5 +83,3 @@ export type Orientation = 'horizontal' | 'vertical';
 export type IconSize = keyof typeof theme.icon.sizes;
 
 export type Overflow = 'auto' | 'hidden' | 'scroll' | 'visible' | 'inherit';
-
-export type Rounded = keyof typeof theme.rounded;
