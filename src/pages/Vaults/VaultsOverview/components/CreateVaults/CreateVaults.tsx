@@ -47,7 +47,7 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
     <Stack spacing='double'>
       <H3 id={titleId}>{t('vault.create_vault')}</H3>
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
-      <Modal open={open} onClose={handleCloseModal}>
+      <Modal aria-label='Create vault' isOpen={open} onClose={handleCloseModal}>
         <CreateVaultWizard vault={selectedVault} />
       </Modal>
     </Stack>

@@ -60,7 +60,7 @@ const StyledMeter = styled.div<StyledMeterProps>`
       &::before {
         content: '';
         position: absolute;
-        // need for a correct placement
+        // needed for a correct placement
         width: calc(50% - 1px);
         top: -8px;
         bottom: -8px;
@@ -90,7 +90,7 @@ const StyledIndicatorWrapper = styled(Flex)<Omit<StyledMeterProps, '$hasRanges'>
   font-weight: ${theme.fontWeight.bold};
 `;
 
-const StyledRangeIndicator = styled(Span)<StyledRangeIndicatorProps>`
+const StyledRangeIndicator = styled(Span)<StyledRangeIndicatorProps & { $hasOffset?: boolean }>`
   position: absolute;
   width: 0;
   top: -2px;
@@ -104,7 +104,18 @@ const StyledRangeIndicator = styled(Span)<StyledRangeIndicatorProps>`
   &::after {
     content: '${({ $position }) => $position}%';
     position: absolute;
-    transform: translate(-45%, -120%);
+    transform: ${({ $status, $hasOffset }) => {
+      if ($hasOffset) {
+        switch ($status) {
+          case 'warning':
+            return `translate(-100%, -120%);`;
+          case 'error':
+            return `translate(-0%, -120%);`;
+        }
+      }
+
+      return `translate(-45%, -120%);`;
+    }};
     font-size: ${theme.text.xs};
     font-weight: ${theme.fontWeight.bold};
   }

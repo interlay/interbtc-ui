@@ -1,23 +1,24 @@
-import { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseCloseIcon } from './Icon.style';
+import { forwardRef, SVGAttributes } from 'react';
 
-type IconVariant = 'close' | 'checkmark' | 'check-circle';
+import { Colors, IconSize } from '../utils/prop-types';
+import { StyledIcon } from './Icon.style';
 
-interface IconProps extends React.ComponentPropsWithRef<'svg'> {
-  variant: IconVariant;
-}
-
-const Icon = ({ variant, ...rest }: IconProps): JSX.Element => {
-  switch (variant) {
-    case 'close':
-      return <BaseCloseIcon {...rest} />;
-    case 'checkmark':
-      return <BaseCheckmarkIcon {...rest} />;
-    case 'check-circle':
-      return <BaseCheckCircleIcon {...rest} />;
-    default:
-      throw new Error('Something went wrong!');
-  }
+type Props = {
+  size?: IconSize;
+  color?: Colors;
 };
 
+type NativeAttrs<T = unknown> = Omit<SVGAttributes<T>, keyof Props>;
+
+type IconProps<T = unknown> = Props & NativeAttrs<T>;
+
+const Icon = forwardRef<SVGSVGElement, IconProps>(
+  ({ size = 'md', color = 'primary', ...props }, ref): JSX.Element => (
+    <StyledIcon ref={ref} $color={color} $size={size} {...props} />
+  )
+);
+
+Icon.displayName = 'Icon';
+
 export { Icon };
-export type { IconProps, IconVariant };
+export type { IconProps };

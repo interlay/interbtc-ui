@@ -55,6 +55,7 @@ const theme = {
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)',
+    spacing14: 'var(--spacing-14)',
     spacing28: 'var(--spacing-28)'
   },
   rounded: {
@@ -78,6 +79,7 @@ const theme = {
   input: {
     color: 'var(--colors-input-text)',
     background: 'var(--colors-input-background)',
+    height: '4rem',
     default: {
       border: '1px solid var(--colors-input-default-border)'
     },
@@ -108,12 +110,33 @@ const theme = {
       text: 'var(--text-base)'
     },
     large: {
-      text: 'var(--text-5xl)'
+      text: 'var(--text-4xl)'
     },
     overflow: {
       large: {
-        text: 'var(--text-2xl)',
-        height: '4.6875rem'
+        text: 'var(--text-2xl)'
+      }
+    },
+    paddingX: {
+      s: '2rem',
+      md: '4rem',
+      lg: '6.25rem',
+      xl: '8rem',
+      xl2: '9.5rem'
+    }
+  },
+  tokenInput: {
+    endAdornment: {
+      bg: 'var(--colors-token-input-end-adornment-bg)'
+    },
+    list: {
+      item: {
+        default: {
+          text: 'var(--colors-token-list-item-text)'
+        },
+        selected: {
+          text: 'var(--colors-token-list-item-select-text)'
+        }
       }
     }
   },
@@ -338,13 +361,33 @@ const theme = {
     }
   },
   modal: {
-    title: {
-      primary: {
-        color: 'var(--colors-title-primary)'
-      },
-      secondary: {
-        color: 'var(--colors-title-secondary)'
-      }
+    maxWidth: '32rem',
+    maxHeight: 'calc(100vh - var(--spacing-12))',
+    // TODO: z-index needs to be higher
+    zIndex: 2,
+    underlay: {
+      zIndex: 1,
+      bg: 'var(--colors-neutral-black-60)'
+    },
+    header: {
+      paddingY: 'var(--spacing-4)',
+      paddingX: 'var(--spacing-6)'
+    },
+    divider: {
+      marginX: 'var(--spacing-6)',
+      marginBottom: 'var(--spacing-2)'
+    },
+    body: {
+      paddingY: 'var(--spacing-3)',
+      paddingX: 'var(--spacing-6)'
+    },
+    footer: {
+      paddingTop: 'var(--spacing-4)',
+      paddingBottom: 'var(--spacing-6)',
+      paddingX: 'var(--spacing-6)'
+    },
+    closeBtn: {
+      zIndex: 100
     }
   },
   switch: {
@@ -368,6 +411,32 @@ const theme = {
   },
   divider: {
     bg: 'var(--colors-border)'
+  },
+  icon: {
+    sizes: {
+      s: 'var(--spacing-4)',
+      md: 'var(--spacing-6)',
+      lg: 'var(--spacing-8)',
+      xl: 'var(--spacing-10)',
+      xl2: 'var(--spacing-12)'
+    }
+  },
+  list: {
+    text: 'var(--color-list-selected-text)',
+    primary: {
+      bg: 'var(--color-list-primary-bg)',
+      border: '1px solid var(--colors-border)',
+      hover: {
+        bg: 'var(--color-list-primary-hover-bg)'
+      }
+    },
+    secondary: {
+      bg: 'var(--color-list-secondary-bg)',
+      border: 'none',
+      hover: {
+        bg: 'var(--color-list-secondary-hover-bg)'
+      }
+    }
   }
 };
 

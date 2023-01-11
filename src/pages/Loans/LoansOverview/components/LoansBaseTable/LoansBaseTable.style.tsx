@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-import { H2, Span, Status, theme } from '@/component-library';
+import { Flex, H2, Span, Status, theme } from '@/component-library';
+
+type StyledAssetCellWrapperProps = {
+  $hasPadding?: boolean;
+};
 
 const StyledTitle = styled(H2)`
   font-size: ${theme.text.xl};
@@ -37,4 +41,9 @@ const StyledTag = styled.div<StyledChipProps>`
   background-color: ${(props) => theme.transaction.status.bg[props.$variant]};
 `;
 
-export { StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel, StyledTag, StyledTitle };
+const StyledAssetCellWrapper = styled(Flex)<StyledAssetCellWrapperProps>`
+  // Needs a specific rem so that row size matches on both lending and borrow tables
+  padding: ${({ $hasPadding }) => $hasPadding && `0.5625rem 0`};
+`;
+
+export { StyledAssetCellWrapper, StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel, StyledTag, StyledTitle };

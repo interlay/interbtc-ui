@@ -44,7 +44,7 @@ const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTa
   const rows: BorrowAssetsTableRow[] = useMemo(
     () =>
       Object.values(assets).map(({ borrowApy, currency, availableCapacity, borrowReward, totalBorrows }) => {
-        const asset = <AssetCell currency={currency.ticker} />;
+        const asset = <AssetCell hasPadding currency={currency.ticker} />;
 
         const apy = (
           <ApyCell

@@ -1,12 +1,16 @@
-import { TextProps } from '../types';
-import { H4Text } from './H4.style';
+import { forwardRef } from 'react';
 
-const H4 = ({ color, children, ...props }: TextProps<HTMLHeadingElement>): JSX.Element => (
-  <H4Text color={color} {...props}>
-    {children}
-  </H4Text>
+import { Text } from '../style';
+import { TextProps } from '../types';
+import { mapTextProps } from '../utils';
+
+type H4Props = TextProps<HTMLHeadingElement>;
+
+const H4 = forwardRef<HTMLHeadingElement, H4Props>(
+  ({ size = 'xl2', ...props }, ref): JSX.Element => <Text ref={ref} as='h4' {...mapTextProps({ size, ...props })} />
 );
 
 H4.displayName = 'H4';
 
 export { H4 };
+export type { H4Props };

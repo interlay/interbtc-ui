@@ -1,22 +1,23 @@
-import { ReactComponent as CheckmarkIcon } from '@material-icons/svg/svg/check/baseline.svg';
-import { ReactComponent as CheckCircleIcon } from '@material-icons/svg/svg/check_circle/baseline.svg';
-import { ReactComponent as CloseIcon } from '@material-icons/svg/svg/close/baseline.svg';
 import styled from 'styled-components';
 
 import { theme } from '../theme';
+import { Colors, IconSize } from '../utils/prop-types';
+import { resolveColor } from '../utils/theme';
 
-const BaseCloseIcon = styled(CloseIcon)`
-  fill: ${theme.colors.textPrimary};
+type StyledIconProps = {
+  $size: IconSize;
+  $color?: Colors;
+};
+
+const StyledIcon = styled.svg<StyledIconProps>`
+  color: ${({ $color }) => resolveColor($color)};
+  width: ${({ $size }) => theme.icon.sizes[$size]};
+  height: ${({ $size }) => theme.icon.sizes[$size]};
+  display: inline-block;
+  user-select: none;
+  flex-shrink: 0;
+  overflow: hidden;
 `;
 
-const BaseCheckmarkIcon = styled(CheckmarkIcon)`
-  fill: ${theme.colors.textPrimary};
-`;
-
-const BaseCheckCircleIcon = styled(CheckCircleIcon)`
-  width: ${theme.spacing.spacing28};
-  height: ${theme.spacing.spacing28};
-  fill: ${theme.colors.textSecondary};
-`;
-
-export { BaseCheckCircleIcon, BaseCheckmarkIcon, BaseCloseIcon };
+export { StyledIcon };
+export type { StyledIconProps };
