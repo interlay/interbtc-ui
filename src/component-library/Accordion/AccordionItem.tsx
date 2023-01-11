@@ -27,7 +27,7 @@ const AccordionItem = <T extends Record<string, unknown>>(props: AccordionItemPr
 
   return (
     <StyledAccordionItemWrapper $isDisabled={isDisabled}>
-      <StyledAccordionItemHeading>
+      <StyledAccordionItemHeading size='base'>
         <FocusRing within>
           <StyledAccordionItemButton
             {...mergeProps(buttonProps, focusProps)}
@@ -36,7 +36,7 @@ const AccordionItem = <T extends Record<string, unknown>>(props: AccordionItemPr
             $isFocusVisible={isFocusVisible}
           >
             {item.props.title}
-            <StyledChevronDown $isExpanded={isExpanded} />
+            <StyledChevronDown role='img' $isExpanded={isExpanded} />
           </StyledAccordionItemButton>
         </FocusRing>
       </StyledAccordionItemHeading>
