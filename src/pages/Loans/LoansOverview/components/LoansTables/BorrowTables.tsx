@@ -45,7 +45,7 @@ const BorrowTables = ({ assets, positions, disabledAssets, hasPositions }: Borro
       <BorrowAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
       <LoanModal
         variant='borrow'
-        open={!!selectedAsset.data}
+        isOpen={!!selectedAsset.data}
         asset={selectedAsset.data}
         position={selectedAsset.position}
         onClose={handleClose}

@@ -6,7 +6,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
 
-import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, Flex, TokenInput } from '@/component-library';
 import ErrorModal from '@/components/ErrorModal';
 import validate, {
@@ -114,7 +114,7 @@ type LoanFormProps = {
   asset: LoanAsset;
   variant: LoanAction;
   position?: BorrowPosition | LendPosition;
-  onChangeLoan: () => void;
+  onChangeLoan?: () => void;
 };
 
 const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JSX.Element => {
@@ -128,7 +128,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const [isMaxAmount, setMaxAmount] = useState(false);
 
   const handleSuccess = () => {
-    onChangeLoan();
+    onChangeLoan?.();
     refetch();
   };
 
@@ -187,19 +187,13 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
           <Flex direction='column' gap='spacing4'>
             <TokenInput
               placeholder='0.00'
-              tokenSymbol={asset.currency.ticker}
+              ticker={asset.currency.ticker}
               errorMessage={getErrorMessage(errors[formField])}
               label={content.label}
               aria-label={content.fieldAriaLabel}
               balance={assetAmount.max.toBig().toNumber()}
-              balanceInUSD={displayMonetaryAmountInUSDFormat(assetAmount.max, assetPrice)}
-              valueInUSD={displayMonetaryAmountInUSDFormat(monetaryAmount, assetPrice)}
-              renderBalance={(value) =>
-                formatNumber(value, {
-                  minimumFractionDigits: 0,
-                  maximumFractionDigits: asset.currency.humanDecimals || 5
-                })
-              }
+              balanceDecimals={asset.currency.humanDecimals}
+              valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
               onClickBalance={handleClickBalance}
               {...register(formField, { onChange: handleChange })}
             />

@@ -10,7 +10,11 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat
+} from '@/common/utils/utils';
 import { CTA, Input, Stack, TokenInput } from '@/component-library';
 import {
   GOVERNANCE_TOKEN,
@@ -19,13 +23,13 @@ import {
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
 import { ForeignAssetIdLiteral } from '@/types/currency';
+import { TreasuryAction } from '@/types/general.d';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-import { TreasuryActions } from '../../types';
 import { HighlightDescriptionItem } from './HighlightDescriptionItem';
 import { IssueDescriptionItem } from './IssueDescriptionItem';
 import { StyledDescription, StyledDl, StyledHr, StyledInputLabel, StyledTitle } from './IssueRedeemForm.styles';
@@ -38,13 +42,13 @@ type IssueRedeemFormData = {
   [REDEEM_AMOUNT]?: string;
 };
 
-const collateralInputId: Record<TreasuryActions, keyof IssueRedeemFormData> = {
+const collateralInputId: Record<TreasuryAction, keyof IssueRedeemFormData> = {
   issue: ISSUE_AMOUNT,
   redeem: REDEEM_AMOUNT
 };
 
 type Props = {
-  variant?: TreasuryActions;
+  variant?: TreasuryAction;
   onSubmit?: () => void;
   collateralToken: CurrencyExt;
   remainingCapacity: MonetaryAmount<CollateralCurrencyExt>;
@@ -187,7 +191,7 @@ const IssueRedeemForm = ({
             <StyledInputLabel id={amountLabelId}>{label}</StyledInputLabel>
             <TokenInput
               aria-labelledby={amountLabelId}
-              tokenSymbol='BTC'
+              ticker='BTC'
               placeholder='0.00'
               id={tokenInputId}
               {...register(tokenInputId, {
@@ -197,10 +201,12 @@ const IssueRedeemForm = ({
                 }
                 // validate: (value) => validateForm(value)
               })}
-              valueInUSD={displayMonetaryAmountInUSDFormat(
-                parsedBTCAmount || BitcoinAmount.zero(),
-                getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-              )}
+              valueUSD={
+                convertMonetaryAmountToValueInUSD(
+                  parsedBTCAmount || BitcoinAmount.zero(),
+                  getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+                ) ?? 0
+              }
             />
 
             {isIssueModal && (

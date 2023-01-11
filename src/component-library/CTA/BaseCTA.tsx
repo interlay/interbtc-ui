@@ -1,7 +1,7 @@
 import { forwardRef, HTMLAttributes } from 'react';
 import { StyledComponent } from 'styled-components';
 
-import { CTAVariants, Sizes } from '../utils/prop-types';
+import { CTAVariants, ElementTypeProp, Sizes } from '../utils/prop-types';
 import { OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledCTAProps, TextCTA } from './CTA.style';
 
 const ctaElements: Record<CTAVariants, StyledComponent<'button', any, StyledCTAProps, never>> = {
@@ -16,19 +16,39 @@ type Props = {
   fullWidth?: boolean;
   size?: Sizes;
   disabled?: boolean;
-  as?: any;
+  isFocusVisible?: boolean;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
-type BaseCTAProps = Props & NativeAttrs;
+type BaseCTAProps = Props & NativeAttrs & ElementTypeProp;
 
 const BaseCTA = forwardRef<HTMLElement, BaseCTAProps>(
-  ({ variant = 'primary', fullWidth = false, size = 'medium', children, disabled, ...props }, ref): JSX.Element => {
+  (
+    {
+      variant = 'primary',
+      fullWidth = false,
+      size = 'medium',
+      children,
+      disabled,
+      elementType,
+      isFocusVisible,
+      ...props
+    },
+    ref
+  ): JSX.Element => {
     const StyledCTA = ctaElements[variant];
 
     return (
-      <StyledCTA ref={ref} $fullWidth={fullWidth} $size={size} disabled={disabled} {...props}>
+      <StyledCTA
+        ref={ref}
+        as={elementType}
+        $fullWidth={fullWidth}
+        $size={size}
+        disabled={disabled}
+        $isFocusVisible={isFocusVisible}
+        {...props}
+      >
         {children}
       </StyledCTA>
     );

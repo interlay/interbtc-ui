@@ -1,7 +1,14 @@
 import styled from 'styled-components';
 
 import { ReactComponent as WarningIcon } from '@/assets/img/icons/exclamation-triangle.svg';
-import { H2, P, theme } from '@/component-library';
+import { ModalHeader, P, theme } from '@/component-library';
+
+const StyledModalHeader = styled(ModalHeader)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ${theme.spacing.spacing1};
+`;
 
 const StyledDisclaimerText = styled(P)`
   font-size: ${theme.text.xs};
@@ -9,8 +16,8 @@ const StyledDisclaimerText = styled(P)`
 `;
 
 const StyledWarningIcon = styled(WarningIcon)`
-  width: ${theme.spacing.spacing12};
-  height: ${theme.spacing.spacing12};
+  width: ${theme.spacing.spacing10};
+  height: ${theme.spacing.spacing10};
 `;
 
 const StyledDisclaimerCard = styled.div`
@@ -55,15 +62,6 @@ const StyledDd = styled.dd`
   line-height: ${theme.lineHeight.base};
 `;
 
-const StyledDepositTitle = styled(H2)`
-  color: ${theme.modal.title.secondary.color};
-  font-size: ${theme.text.base};
-  line-height: ${theme.lineHeight.base};
-  padding: ${theme.spacing.spacing3};
-  border-bottom: 2px solid ${theme.colors.textSecondary};
-  text-align: center;
-`;
-
 const StyledHr = styled.hr`
   border: 0;
   border-bottom: ${theme.border.default};
@@ -72,7 +70,6 @@ const StyledHr = styled.hr`
 
 export {
   StyledDd,
-  StyledDepositTitle,
   StyledDisclaimerCard,
   StyledDisclaimerList,
   StyledDisclaimerListItem,
@@ -81,5 +78,6 @@ export {
   StyledDl,
   StyledDt,
   StyledHr,
+  StyledModalHeader,
   StyledWarningIcon
 };

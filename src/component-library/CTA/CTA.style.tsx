@@ -6,6 +6,7 @@ import { Sizes } from '../utils/prop-types';
 interface StyledCTAProps {
   $fullWidth: boolean;
   $size: Sizes;
+  $isFocusVisible?: boolean;
 }
 
 const BaseCTA = styled.button<StyledCTAProps>`
@@ -22,6 +23,7 @@ const BaseCTA = styled.button<StyledCTAProps>`
   text-decoration: none;
   width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
   background: none;
+  outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};
 
   &[aria-disabled='true'],
   &[disabled] {

@@ -1,36 +1,37 @@
-import { FC } from 'react';
+import { FC, forwardRef } from 'react';
 
-import { Tokens } from '../types';
-import { Sizes } from '../utils/prop-types';
-import { IconWrapper } from './CoinIcon.style';
-import { BtcIcon, DotIcon, InterBtcIcon, IntrIcon, KbtcIcon, KintIcon, KsmIcon, LksmIcon, USDTIcon } from './icons';
+import { IconProps } from '../Icon';
+import { BTC, DOT, IBTC, INTR, KBTC, KINT, KSM, LKSM, USDT } from './icons';
 
-const coinsIcon: Record<Tokens, FC> = {
-  BTC: BtcIcon,
-  DOT: DotIcon,
-  IBTC: InterBtcIcon,
-  INTR: IntrIcon,
-  KBTC: KbtcIcon,
-  KINT: KintIcon,
-  KSM: KsmIcon,
-  LKSM: LksmIcon,
-  USDT: USDTIcon
+const coinsIcon: Record<string, FC> = {
+  BTC,
+  DOT,
+  IBTC,
+  INTR,
+  KBTC,
+  KINT,
+  KSM,
+  LKSM,
+  USDT
 };
 
-type CoinIconProps = {
-  size: Sizes;
-  coin: Tokens;
+type Props = {
+  ticker: string;
 };
 
-const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
-  const CoinIcon = coinsIcon[coin] || (() => null);
+type NativeAttrs = Omit<IconProps, keyof Props>;
 
-  return (
-    <IconWrapper $size={size}>
-      <CoinIcon />
-    </IconWrapper>
-  );
-};
+type CoinIconProps = Props & NativeAttrs;
+
+const CoinIcon = forwardRef<SVGSVGElement, CoinIconProps>(
+  ({ ticker, ...props }, ref): JSX.Element => {
+    const CoinIcon = (coinsIcon[ticker] || (() => null)) as any;
+
+    return <CoinIcon ref={ref} {...props} />;
+  }
+);
+
+CoinIcon.displayName = 'CoinIcon';
 
 export { CoinIcon };
 export type { CoinIconProps };
