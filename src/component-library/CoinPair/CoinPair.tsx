@@ -1,18 +1,17 @@
 import { CoinIcon } from '../CoinIcon';
-import { Tokens } from '../types';
-import { Sizes } from '../utils/prop-types';
+import { IconSize } from '../utils/prop-types';
 import { CoinPairWrapper } from './CoinPair.style';
 
 type CoinPairProps = {
-  size: Sizes;
-  coinOne: Tokens;
-  coinTwo: Tokens;
+  coinOne: string;
+  coinTwo: string;
+  size: IconSize;
 };
 
 const CoinPair = ({ coinOne, coinTwo, size }: CoinPairProps): JSX.Element => (
   <CoinPairWrapper $size={size}>
-    <CoinIcon size={size} coin={coinOne} />
-    <CoinIcon size={size} coin={coinTwo} />
+    <CoinIcon size={size} ticker={coinOne} />
+    <CoinIcon size={size} ticker={coinTwo} />
   </CoinPairWrapper>
 );
 

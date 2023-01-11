@@ -1,12 +1,16 @@
-import { TextProps } from '../types';
-import { ParagraphText } from './P.style';
+import { forwardRef } from 'react';
 
-const P = ({ color, children, ...props }: TextProps<HTMLParagraphElement>): JSX.Element => (
-  <ParagraphText color={color} {...props}>
-    {children}
-  </ParagraphText>
+import { Text } from '../style';
+import { TextProps } from '../types';
+import { mapTextProps } from '../utils';
+
+type PProps = TextProps<HTMLParagraphElement>;
+
+const P = forwardRef<HTMLParagraphElement, PProps>(
+  (props, ref): JSX.Element => <Text ref={ref} as='p' {...mapTextProps(props)} />
 );
 
 P.displayName = 'P';
 
 export { P };
+export type { PProps };

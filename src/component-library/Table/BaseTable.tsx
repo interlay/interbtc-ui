@@ -31,7 +31,7 @@ const BaseTable = forwardRef<HTMLTableElement, BaseTableProps>(
 
     return (
       <StyledTable ref={tableRef} {...mergeProps(props, gridProps)}>
-        <TableRowGroup as='thead'>
+        <TableRowGroup elementType='thead'>
           {collection.headerRows.map((headerRow) => (
             <TableHeaderRow key={headerRow.key} item={headerRow} state={state}>
               {[...headerRow.childNodes].map((column) => (
@@ -40,7 +40,7 @@ const BaseTable = forwardRef<HTMLTableElement, BaseTableProps>(
             </TableHeaderRow>
           ))}
         </TableRowGroup>
-        <TableRowGroup as='tbody'>
+        <TableRowGroup elementType='tbody'>
           {[...collection.body.childNodes].map((row) => (
             <TableRow key={row.key} item={row} state={state}>
               {[...row.childNodes].map((cell) => (

@@ -1,4 +1,4 @@
-import { RefObject } from 'react';
+import { MutableRefObject, RefObject } from 'react';
 
 /**
  * @param {RefObject<HTMLInputElement>}  ref - input ref.
@@ -16,4 +16,14 @@ const triggerChangeEvent = (
   ref.current?.dispatchEvent(e);
 };
 
-export { triggerChangeEvent };
+const assignFormRef = (formRef?: (instance: any) => void, domRef?: MutableRefObject<HTMLInputElement | null>) => (
+  el: HTMLInputElement | null
+): void => {
+  formRef?.(el);
+
+  if (domRef) {
+    domRef.current = el;
+  }
+};
+
+export { assignFormRef, triggerChangeEvent };

@@ -130,6 +130,7 @@
   "canceled": "Canceled",
   "fees": "Fees",
   "redeem_page": {
+    "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
     "sorry_redeem_failed": "Sorry, your redeem request has failed",
     "to_redeem_interbtc": "To redeem your {{wrappedTokenSymbol}} , you must now pick one of the two options:",
@@ -406,7 +407,7 @@
     "tooltip_transaction_fee": "The fee for the transaction to be included in the parachain.",
     "manually_select_vault": "Manually Select Vault",
     "vault_must_be_selected": "Specific vault must be selected.",
-    "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity",
+    "selected_vault_has_no_enough_capacity": "Selected vault doesn’t have enough capacity.",
     "no_issuable_token_available": "Oh, snap! All iBTC minting capacity has been snatched up. Please come back a bit later, or <1>consider running a Vault</1>!",
     "vault_has_capacity_you_can_claim": "Vault has {{vaultCapacity}} {{wrappedTokenSymbol}} capacity. You can claim your {{wrappedTokenSymbol}}.",
     "vault_has_capacity_you_can_not_claim": "Vault has {{vaultCapacity}} {{wrappedTokenSymbol}} capacity. You cannot claim your {{wrappedTokenSymbol}} at the moment."
