@@ -120,7 +120,7 @@
   "get_governance_token": "Get {{governanceTokenSymbol}}",
   "get_governance_token_description": "Please check the individual terms and conditions of each exchange before you buy/trade {{governanceTokenSymbol}}.",
   "select_vault": "Please Select Vault",
-  "not_enough_vault_capacity": "None vault has enough capacity.",
+  "not_enough_vault_capacity": "No vault has enough capacity.",
   "view_all_transactions_on_subscan": "View all transactions on Subscan",
   "collateral": "Collateral",
   "error_oracle_offline": "You can't {{action}} {{wrappedTokenSymbol}} at the moment because oracle is offline.",
