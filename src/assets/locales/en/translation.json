@@ -561,7 +561,8 @@
       "other_pools": "Other Pools",
       "pool_name": "Pool Name",
       "add_liquidity": "Add Liquidity",
-      "remove_liquidity": "Remove Liquidity"
+      "remove_liquidity": "Remove Liquidity",
+      "receivable_assets": "Receivable Assets"
     }
   },
   "forms": {

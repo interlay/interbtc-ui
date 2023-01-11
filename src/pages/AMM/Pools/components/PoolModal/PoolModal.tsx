@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
 import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 
-import { PoolForm } from '../PoolForm';
+import { DepositForm } from '../DepositForm';
+import { WithdrawForm } from '../WithdrawForm';
 import { StyledTabs, StyledWrapper } from './PoolModal.style';
 
 type Props = {
@@ -27,12 +28,12 @@ const PoolModal = ({ liquidityPool, onClose, ...props }: PoolModalProps): JSX.El
         <StyledTabs size='large' fullWidth>
           <TabsItem title={t('deposit')}>
             <StyledWrapper>
-              <PoolForm variant='deposit' liquidityPool={liquidityPool} onChangePool={onClose} />
+              <DepositForm liquidityPool={liquidityPool} onChangePool={onClose} />
             </StyledWrapper>
           </TabsItem>
           <TabsItem title={t('withdraw')}>
             <StyledWrapper>
-              <PoolForm variant='withdraw' liquidityPool={liquidityPool} onChangePool={onClose} />
+              <WithdrawForm liquidityPool={liquidityPool} onChangePool={onClose} />
             </StyledWrapper>
           </TabsItem>
         </StyledTabs>
