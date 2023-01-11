@@ -160,9 +160,7 @@ const RedeemForm = (): JSX.Element | null => {
           getExchangeRate(RELAY_CHAIN_NATIVE_TOKEN),
           window.bridge.redeem.getFeeRate(),
           window.bridge.redeem.getCurrentInclusionFee(),
-          // ray test touch <
           window.bridge.vaults.getVaultsWithRedeemableTokens()
-          // ray test touch >
         ]);
 
         if (dustValueResult.status === 'rejected') {
@@ -195,9 +193,7 @@ const RedeemForm = (): JSX.Element | null => {
           vaultsWithRedeemableTokensResult.value.size > 0
         ) {
           // Find the vault with the largest capacity
-          // ray test touch <
           const theMaxRedeemableCapacity = vaultsWithRedeemableTokensResult.value.values().next().value;
-          // ray test touch >
           setMaxRedeemableCapacity(theMaxRedeemableCapacity);
         }
         if (btcToRelayChainNativeTokenRateResult.status === 'fulfilled') {
@@ -414,14 +410,12 @@ const RedeemForm = (): JSX.Element | null => {
             })}
           </FormTitle>
           <div>
-            {/* ray test touch < */}
             <AvailableBalanceUI
               role='single-max-redeemable'
               label={t('redeem_page.maximum_in_single_request')}
               balance={displayMonetaryAmount(maxRedeemableCapacity)}
               tokenSymbol={WRAPPED_TOKEN_SYMBOL}
             />
-            {/* ray test touch > */}
             <TokenField
               id={WRAPPED_TOKEN_AMOUNT}
               label={WRAPPED_TOKEN_SYMBOL}

@@ -131,7 +131,6 @@ describe('redeem form', () => {
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
 
-  // ray test touch <
   it('the max redeemable amount is correctly displayed', async () => {
     const singleMaxIssuableAmountElement = screen.getByRole(/single-max-redeemable/i);
 
@@ -139,5 +138,4 @@ describe('redeem form', () => {
 
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxRedeemableAmount);
   });
-  // ray test touch >
 });
