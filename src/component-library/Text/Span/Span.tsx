@@ -1,16 +1,16 @@
 import { forwardRef } from 'react';
 
+import { Text } from '../style';
 import { TextProps } from '../types';
-import { SpanText } from './Span.style';
+import { mapTextProps } from '../utils';
 
-const Span = forwardRef<HTMLElement, TextProps<HTMLElement>>(
-  ({ color, children, ...props }, ref): JSX.Element => (
-    <SpanText ref={ref} color={color} {...props}>
-      {children}
-    </SpanText>
-  )
+type SpanProps = TextProps<HTMLSpanElement>;
+
+const Span = forwardRef<HTMLSpanElement, SpanProps>(
+  (props, ref): JSX.Element => <Text ref={ref} as='span' {...mapTextProps(props)} />
 );
 
 Span.displayName = 'Span';
 
 export { Span };
+export type { SpanProps };

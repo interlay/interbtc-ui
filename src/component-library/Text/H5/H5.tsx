@@ -1,12 +1,16 @@
-import { TextProps } from '../types';
-import { H5Text } from './H5.style';
+import { forwardRef } from 'react';
 
-const H5 = ({ color, children, ...props }: TextProps<HTMLHeadingElement>): JSX.Element => (
-  <H5Text color={color} {...props}>
-    {children}
-  </H5Text>
+import { Text } from '../style';
+import { TextProps } from '../types';
+import { mapTextProps } from '../utils';
+
+type H5Props = TextProps<HTMLHeadingElement>;
+
+const H5 = forwardRef<HTMLHeadingElement, H5Props>(
+  ({ size = 'xl', ...props }, ref): JSX.Element => <Text ref={ref} as='h5' {...mapTextProps({ size, ...props })} />
 );
 
 H5.displayName = 'H5';
 
 export { H5 };
+export type { H5Props };

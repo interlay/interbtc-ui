@@ -1,12 +1,13 @@
+import { forwardRef } from 'react';
+
+import { Text } from '../style';
 import { TextProps } from '../types';
-import { StyledDd } from './Dl.style';
+import { mapTextProps } from '../utils';
 
 type DdProps = TextProps<HTMLElement>;
 
-const Dd = ({ color, children, ...props }: DdProps): JSX.Element => (
-  <StyledDd color={color} {...props}>
-    {children}
-  </StyledDd>
+const Dd = forwardRef<HTMLElement, DdProps>(
+  (props, ref): JSX.Element => <Text ref={ref} as='dd' {...mapTextProps(props)} />
 );
 
 Dd.displayName = 'Dd';

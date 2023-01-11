@@ -6,6 +6,7 @@
   --colors-light-blue-90: rgba(7, 90, 188, 0.9);
   --colors-lighter-blue: #c4e7fa;
   --box-shadow-black: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --color-light-grey: #eeeeee;
 }
 
 .theme-interlay {
@@ -24,6 +25,7 @@
   --colors-cta-outlined-hover: var(--colors-neutral-black-05);
   --colors-cta-text-text: var(--colors-neutral-black);
   --colors-cta-text-hover: var(--colors-neutral-black-05);
+  /* Text */
   --colors-text-primary: var(--colors-neutral-black);
   --colors-text-secondary: var(--colors-light-blue);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
@@ -57,6 +59,11 @@
   --colors-input-disabled-text: var(--colors-neutral-lighter-grey);
   --colors-input-disabled-border: var(--colors-neutral-lighter-grey);
   --colors-input-background: var(--colors-neutral-white);
+  /* Token Input */
+  --colors-token-input-end-adornment-bg: var(--colors-neutral-lighter-grey);
+  /* Token List */
+  --colors-token-list-item-text: var(--colors-neutral-black);
+  --colors-token-list-item-select-text: var(--colors-neutral-white);
   /* Modal */
   --colors-title-primary: var(--colors-neutral-black);
   --colors-title-secondary: var(--colors-light-blue);
@@ -73,4 +80,10 @@
   /* Table */
   --colors-tooltip-bg: var(--colors-neutral-white);
   --colors-tooltip-tip-bg: var(--colors-neutral-white);
+  /* List */
+  --color-list-primary-bg: var(--colors-bg-primary);
+  --color-list-primary-hover-bg: #f0f1f2;
+  --color-list-secondary-bg: var(--color-light-grey);
+  --color-list-secondary-hover-bg: #f0f1f2;
+  --color-list-selected-text: var(--colors-neutral-white);
 }

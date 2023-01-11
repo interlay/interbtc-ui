@@ -1,57 +1,62 @@
-import { MutableRefObject, ReactNode, useEffect, useRef } from 'react';
+import { AriaDialogProps, useDialog } from '@react-aria/dialog';
+import { FocusScope } from '@react-aria/focus';
+import { AriaOverlayProps, OverlayContainer, useModalOverlay } from '@react-aria/overlays';
+import { OverlayTriggerState } from '@react-stately/overlays';
+import { forwardRef, ReactNode } from 'react';
 
-import Portal from '@/parts/Portal';
+import { XMark } from '@/assets/icons';
 import { useMountTransition } from '@/utils/hooks/use-mount-transition';
 
-import { Icon } from '../Icon';
 import { theme } from '../theme';
-import { CloseIcon, ModalContainer, ModalContent, ModalOverlay } from './Modal.style';
-interface ModalProps {
-  open: boolean;
-  onClose: () => void;
+import { useDOMRef } from '../utils/dom';
+import { StyledCloseCTA, StyledDialog, StyledDialogWrapper, StyledUnderlay } from './Modal.style';
+import { ModalContext } from './ModalContext';
+
+type Props = {
   children: ReactNode;
-  initialFocusRef?: MutableRefObject<HTMLElement | null>;
-}
-
-// TODO: we have missing relevant behaviours for a Modal. Could be rewritten with react-aria.
-const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.Element | null => {
-  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration.duration100);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // If initial element to be focused is not specified, close button is focused.
-    if (initialFocusRef?.current) {
-      initialFocusRef.current.focus();
-    } else if (closeButtonRef?.current) {
-      closeButtonRef.current.focus();
-    }
-  }, [initialFocusRef, closeButtonRef, shouldRender]);
-
-  // Closes modal on escape key.
-  useEffect(() => {
-    const handleKeydown = (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleKeydown);
-    return () => document.removeEventListener('keydown', handleKeydown);
-  }, [onClose]);
-
-  return open || shouldRender ? (
-    <Portal>
-      <ModalContainer role='dialog'>
-        <ModalOverlay onClick={onClose} />
-        <ModalContent transitionTrigger={transitionTrigger}>
-          <CloseIcon aria-label='Dismiss' onClick={onClose} ref={closeButtonRef}>
-            <Icon variant='close' />
-          </CloseIcon>
-          {children}
-        </ModalContent>
-      </ModalContainer>
-    </Portal>
-  ) : null;
 };
+
+type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
+
+type ModalProps = Props & InheritAttrs;
+
+const Modal = forwardRef<HTMLDivElement, ModalProps>(
+  ({ children, isDismissable = true, ...props }, ref): JSX.Element | null => {
+    const dialogRef = useDOMRef(ref);
+    const { isOpen, onClose } = props;
+    const { shouldRender, transitionTrigger } = useMountTransition(!!isOpen, theme.transition.duration.duration100);
+
+    // Handle interacting outside the dialog and pressing
+    // the Escape key to close the modal.
+    const { modalProps, underlayProps } = useModalOverlay(
+      { isDismissable, ...props },
+      // These are the only props needed
+      { isOpen: !!isOpen, close: onClose } as OverlayTriggerState,
+      dialogRef
+    );
+
+    // Get props for the dialog and its title
+    const { dialogProps, titleProps } = useDialog(props, dialogRef);
+
+    return isOpen || shouldRender ? (
+      <OverlayContainer>
+        <StyledUnderlay {...underlayProps} />
+        <FocusScope contain restoreFocus autoFocus>
+          <StyledDialogWrapper ref={dialogRef} {...modalProps} $transitionTrigger={transitionTrigger}>
+            <ModalContext.Provider value={{ titleProps }}>
+              <StyledDialog {...dialogProps}>
+                <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onPress={onClose}>
+                  <XMark />
+                </StyledCloseCTA>
+                {children}
+              </StyledDialog>
+            </ModalContext.Provider>
+          </StyledDialogWrapper>
+        </FocusScope>
+      </OverlayContainer>
+    ) : null;
+  }
+);
 
 Modal.displayName = 'Modal';
 

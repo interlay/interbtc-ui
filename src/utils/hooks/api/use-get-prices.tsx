@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { PRICES_API } from '@/utils/constants/api';
+import { BLOCKTIME_REFETCH_INTERVAL, PRICES_API } from '@/utils/constants/api';
 import { COINGECKO_ID_BY_CURRENCY_TICKER } from '@/utils/constants/currency';
 
 import { useGetCurrencies } from './use-get-currencies';
@@ -71,7 +71,7 @@ const useGetPrices = (): Prices | undefined => {
   const { data: currencies, isSuccess: isGetCurrenciesSuccess } = useGetCurrencies(bridgeLoaded);
   const { data, error } = useQuery<Prices | undefined, Error>(['prices'], () => getPrices(currencies), {
     enabled: isGetCurrenciesSuccess,
-    refetchInterval: 60000
+    refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
   useEffect(() => {

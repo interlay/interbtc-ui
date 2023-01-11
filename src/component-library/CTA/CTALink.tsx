@@ -24,7 +24,7 @@ const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
     return (
       <BaseCTA
         ref={ref}
-        as={Link}
+        elementType={Link}
         onClick={onClick}
         aria-disabled={disabled ? 'true' : undefined}
         {...props}

@@ -2,60 +2,113 @@ import styled from 'styled-components';
 
 import { TransitionTrigger } from '@/utils/hooks/use-mount-transition';
 
+import { CTA } from '../CTA';
+import { Divider } from '../Divider';
+import { Flex } from '../Flex';
+import { H3 } from '../Text';
 import { theme } from '../theme';
+import { NormalAlignments, Overflow } from '../utils/prop-types';
 
-interface ModalContentProps {
-  transitionTrigger: TransitionTrigger;
-}
+type StyledDialogWrapperProps = {
+  $transitionTrigger?: TransitionTrigger;
+};
 
-const ModalContainer = styled.div`
+type StyledModalHeaderProps = {
+  $alignment?: NormalAlignments;
+};
+
+type StyledModalBodyProps = {
+  $overflow?: Overflow;
+  $noPadding?: boolean;
+};
+
+const StyledUnderlay = styled.div`
   position: fixed;
-  left: 0;
-  top: 0;
+  z-index: ${theme.modal.underlay.zIndex};
+  inset: 0;
+  background: ${theme.modal.underlay.bg};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: auto;
+`;
+
+const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
   width: 100vw;
   height: 100vh;
-  display: flex;
   justify-content: center;
   align-items: center;
-`;
+  display: flex;
+  position: fixed;
+  pointer-events: none;
+  z-index: ${theme.modal.zIndex};
+  top: 0;
+  left: 0;
 
-const ModalOverlay = styled.div`
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  background: ${theme.overlay.bg};
-`;
-
-const ModalContent = styled.div<ModalContentProps>`
-  position: relative;
-  width: 100%;
-  z-index: 2;
-  max-width: 32em;
-  margin: 1.5em;
-  background: ${theme.colors.bgPrimary};
-  border: ${theme.border.default};
-  padding: ${theme.spacing.spacing8};
-  border-radius: ${theme.rounded.md};
-  color: ${theme.colors.textPrimary};
   transition: opacity ${theme.transition.duration.duration100}ms ease-out;
   transition-property: opacity, transform;
-  ${({ transitionTrigger }) =>
-    transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
+  ${({ $transitionTrigger }) =>
+    $transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
 `;
 
-const CloseIcon = styled.button`
-  display: inline-flex;
+const StyledDialog = styled.section`
+  background: ${theme.colors.bgPrimary};
+  border: ${theme.border.default};
+  border-radius: ${theme.rounded.md};
+  color: ${theme.colors.textPrimary};
+
+  max-width: ${theme.modal.maxWidth};
+  width: 100%;
+  max-height: ${theme.modal.maxHeight};
+  margin: 0 ${theme.spacing.spacing6};
+  pointer-events: auto;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  position: relative;
+`;
+
+const StyledCloseCTA = styled(CTA)`
   position: absolute;
-  top: 0.5em;
-  right: 0.5em;
-  background: none;
-  color: inherit;
-  border: none;
-  padding: ${theme.spacing.spacing1};
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  fill: ${theme.colors.textSecondary};
+  top: ${theme.spacing.spacing2};
+  right: ${theme.spacing.spacing2};
+  z-index: ${theme.modal.closeBtn.zIndex};
 `;
 
-export { CloseIcon, ModalContainer, ModalContent, ModalOverlay };
+const StyledModalHeader = styled(H3)<StyledModalHeaderProps>`
+  font-size: ${theme.text.xl};
+  line-height: ${theme.lineHeight.base};
+  text-align: ${({ $alignment }) => $alignment};
+  padding: ${theme.modal.header.paddingY} ${theme.modal.header.paddingX};
+  flex-shrink: 0;
+`;
+
+const StyledModalDivider = styled(Divider)`
+  margin: 0 ${theme.modal.divider.marginX} ${theme.modal.divider.marginBottom};
+  flex-shrink: 0;
+`;
+
+const StyledModalBody = styled(Flex)<StyledModalBodyProps>`
+  flex: 1 1 auto;
+  overflow-y: ${({ $overflow }) => $overflow};
+  position: relative;
+  padding: ${({ $noPadding }) => !$noPadding && `${theme.modal.body.paddingY} ${theme.modal.body.paddingX}`};
+`;
+
+const StyledModalFooter = styled(Flex)`
+  padding: ${theme.modal.footer.paddingTop} ${theme.modal.footer.paddingX} ${theme.modal.footer.paddingBottom};
+`;
+
+export {
+  StyledCloseCTA,
+  StyledDialog,
+  StyledDialogWrapper,
+  StyledModalBody,
+  StyledModalDivider,
+  StyledModalFooter,
+  StyledModalHeader,
+  StyledUnderlay
+};
