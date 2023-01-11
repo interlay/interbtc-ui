@@ -265,6 +265,10 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
+    // Note: this is a around but ok for now. Component will be refactored
+    // when we introduce support for multiple currencies per channel
+    setCurrency(undefined);
+    setToChain(undefined);
     setFromChain(chain);
   };
 
