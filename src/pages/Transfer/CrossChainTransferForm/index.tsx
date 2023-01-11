@@ -269,6 +269,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     // when we introduce support for multiple currencies per channel
     setCurrency(undefined);
     setToChain(undefined);
+    setValue(TRANSFER_AMOUNT, '0');
     setFromChain(chain);
   };
 
@@ -276,11 +277,12 @@ const CrossChainTransferForm = (): JSX.Element => {
     // Note: this is a workaround but ok for now. Component will be refactored
     // when we introduce support for multiple currencies per channel
     setCurrency(undefined);
+    setValue(TRANSFER_AMOUNT, '0');
     setToChain(chain);
   };
 
   const handleClickBalance = () => {
-    setValue(TRANSFER_AMOUNT, transferableBalance);
+    setValue(TRANSFER_AMOUNT, transferableBalance.toString());
     handleUpdateUsdAmount(transferableBalance);
     trigger(TRANSFER_AMOUNT);
   };
