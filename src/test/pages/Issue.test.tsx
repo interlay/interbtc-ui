@@ -142,13 +142,17 @@ describe('issue form', () => {
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
 
-  // ray test touch <
-  it('the single vault max issuable amount is correctly displayed', async () => {
-    const singleMaxIssuableAmountElement = screen.getByRole(/single-vault-max-issuable/i);
+  it('the max issuable amounts are correctly displayed', async () => {
+    const singleMaxIssuableAmountElement = screen.getByRole(/single-max-issuable/i);
 
     const singleMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable);
 
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxIssuableAmount);
+
+    const totalMaxIssuableAmountElement = screen.getByRole(/total-max-issuable/i);
+
+    const totalMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.totalMaxIssuable);
+
+    expect(totalMaxIssuableAmountElement).toHaveTextContent(totalMaxIssuableAmount);
   });
-  // ray test touch >
 });
