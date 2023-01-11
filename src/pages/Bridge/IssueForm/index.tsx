@@ -403,6 +403,7 @@ const IssueForm = (): JSX.Element | null => {
               balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
               tokenSymbol={WRAPPED_TOKEN_SYMBOL}
             />
+            {/* ray test touch > */}
             <TokenField
               id={BTC_AMOUNT}
               label='BTC'
