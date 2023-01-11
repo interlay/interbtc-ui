@@ -29,23 +29,34 @@ const MOCK_COLLATERAL_TOKEN = RELAY_CHAIN_NATIVE_TOKEN;
 const MOCK_BITCOIN_AMOUNT = 100;
 
 // ray test touch <
-const mockVaults = new Map().set(
+const mockVaultsWithIssuableTokens = new Map().set(
+  mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN),
+  new BitcoinAmount(MOCK_BITCOIN_AMOUNT)
+);
+
+const mockVaultsWithRedeemableTokens = new Map().set(
+  mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN),
+  new BitcoinAmount(MOCK_BITCOIN_AMOUNT)
+);
+
+const mockVaultsWithPremiumRedeemableTokens = new Map().set(
   mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN),
   new BitcoinAmount(MOCK_BITCOIN_AMOUNT)
 );
 // ray test touch >
 
-const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => mockVaults);
+const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => mockVaultsWithIssuableTokens);
 
-const mockVaultsGetPremiumRedeemVaults = jest.fn(() => mockVaults);
+const mockVaultsGetPremiumRedeemVaults = jest.fn(() => mockVaultsWithPremiumRedeemableTokens);
 
 // ray test touch <
-const mockVaultsGetVaultsWithRedeemableTokens = jest.fn(() => mockVaults);
+const mockVaultsGetVaultsWithRedeemableTokens = jest.fn(() => mockVaultsWithRedeemableTokens);
 // ray test touch >
 
 export {
   mockVaultsGet,
   mockVaultsGetPremiumRedeemVaults,
   mockVaultsGetVaultsWithIssuableTokens,
-  mockVaultsGetVaultsWithRedeemableTokens
+  mockVaultsGetVaultsWithRedeemableTokens,
+  mockVaultsWithRedeemableTokens
 };

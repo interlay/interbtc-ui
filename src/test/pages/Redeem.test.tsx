@@ -3,12 +3,13 @@ import '@testing-library/jest-dom';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import App from '@/App';
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 
 import {
   MOCK_REDEEM_BRIDGE_FEE_RATE,
   MOCK_REDEEM_CURRENT_INCLUSION_FEE,
-  mockRedeemRequest
+  mockRedeemRequest,
+  mockVaultsWithRedeemableTokens
 } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_MOCK_PRICES } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
@@ -129,4 +130,14 @@ describe('redeem form', () => {
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
+
+  // ray test touch <
+  it('the max redeemable amount is correctly displayed', async () => {
+    const singleMaxIssuableAmountElement = screen.getByRole(/single-max-redeemable/i);
+
+    const singleMaxRedeemableAmount = displayMonetaryAmount(mockVaultsWithRedeemableTokens.values().next().value);
+
+    expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxRedeemableAmount);
+  });
+  // ray test touch >
 });
