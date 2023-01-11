@@ -10,6 +10,7 @@ import {
   MOCK_EXCHANGE_RATE,
   MOCK_ISSUE_BRIDGE_FEE_RATE,
   MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
+  MOCK_ISSUE_REQUEST_LIMITS,
   mockIssueRequest
 } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_MOCK_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
@@ -140,4 +141,14 @@ describe('issue form', () => {
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
+
+  // ray test touch <
+  it('the single vault max issuable amount is correctly displayed', async () => {
+    const singleMaxIssuableAmountElement = screen.getByRole(/single-vault-max-issuable/i);
+
+    const singleMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable);
+
+    expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxIssuableAmount);
+  });
+  // ray test touch >
 });

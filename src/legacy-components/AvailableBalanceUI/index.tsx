@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import React from 'react';
 
 import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';

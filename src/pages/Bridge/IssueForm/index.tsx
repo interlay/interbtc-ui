@@ -129,7 +129,6 @@ const IssueForm = (): JSX.Element | null => {
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
 
-  // ray test touch <
   const {
     isIdle: requestLimitsIdle,
     isLoading: requestLimitsLoading,
@@ -139,7 +138,6 @@ const IssueForm = (): JSX.Element | null => {
   } = useQuery<IssueLimits, Error>([GENERIC_FETCHER, 'issue', 'getRequestLimits'], genericFetcher<IssueLimits>(), {
     enabled: !!bridgeLoaded
   });
-  // ray test touch >
   useErrorHandler(requestLimitsError);
 
   React.useEffect(() => {
@@ -400,18 +398,20 @@ const IssueForm = (): JSX.Element | null => {
             })}
           </FormTitle>
           <div>
-            {/* ray test touch < */}
             <AvailableBalanceUI
+              role='single-vault-max-issuable'
               label={t('issue_page.maximum_in_single_request')}
               balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
               tokenSymbol={WRAPPED_TOKEN_SYMBOL}
             />
-            {/* ray test touch > */}
+            {/* ray test touch < */}
             <AvailableBalanceUI
+              role='total-max-issuable'
               label={t('issue_page.maximum_total_request')}
               balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
               tokenSymbol={WRAPPED_TOKEN_SYMBOL}
             />
+            {/* ray test touch > */}
             <TokenField
               id={BTC_AMOUNT}
               label='BTC'

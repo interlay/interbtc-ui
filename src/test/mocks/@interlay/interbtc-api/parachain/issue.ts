@@ -4,7 +4,7 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 
 // ray test touch <
-const DEFAULT_REQUEST_LIMITS = {
+const MOCK_ISSUE_REQUEST_LIMITS = {
   singleVaultMaxIssuable: newMonetaryAmount('56527153', WRAPPED_TOKEN),
   totalMaxIssuable: newMonetaryAmount('493817337', WRAPPED_TOKEN)
 };
@@ -13,8 +13,8 @@ const DEFAULT_REQUEST_LIMITS = {
 const mockIssueGetDustValue = jest.fn(() => BitcoinAmount.zero());
 
 // ray test touch <
-const mockIssueGetRequestLimits = jest.fn(() => DEFAULT_REQUEST_LIMITS);
+const mockIssueGetRequestLimits = jest.fn(() => MOCK_ISSUE_REQUEST_LIMITS);
 // ray test touch >
 const mockIssueRequest = jest.fn();
 
-export { mockIssueGetDustValue, mockIssueGetRequestLimits, mockIssueRequest };
+export { MOCK_ISSUE_REQUEST_LIMITS, mockIssueGetDustValue, mockIssueGetRequestLimits, mockIssueRequest };
