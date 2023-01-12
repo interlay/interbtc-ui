@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { ChangeEventHandler, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import _ from 'lodash';
+import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -23,6 +24,10 @@ import { useSwapFormData } from '../../hooks/use-swap-form-data';
 import { SlippageManager } from '../SlippageManager';
 import { SwapInfo } from '../SwapInfo';
 import { SwapDivider } from './SwapDivider';
+
+const getOutput = async (param: number) => {
+  return param;
+};
 
 const getPairChange = (pair: SwapPair, currency: CurrencyExt, name: string): SwapPair => {
   switch (name) {
@@ -70,12 +75,15 @@ type SwapFormProps = Props & InheritAttrs;
 
 const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element | null => {
   const { t } = useTranslation();
-  const [slippage, setSlippage] = useState<SwapSlippage>('0.1%');
-  const prices = useGetPrices();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
+  const prices = useGetPrices();
   const { getAvailableBalance } = useGetBalances();
+
+  const [slippage, setSlippage] = useState<SwapSlippage>('0.1%');
+
+  const [outputAmount, setOutputAmount] = useState<number>();
 
   const tokens: TokenInputProps['tokens'] = currencies?.map((currency) => ({
     balance: getAvailableBalance(currency.ticker)?.toBig().toNumber() || 0,
@@ -92,29 +100,39 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
 
   const {
     register,
+    control,
     handleSubmit: h,
-    watch,
-    formState: { errors, isDirty, isValid }
+    formState: { errors, isDirty, isValid },
+
+    setValue
   } = useForm<SwapFormData>({
     mode: 'onChange',
     resolver: zodResolver(schema)
-    // values: {
-    //   'input-ticker': pair.input?.ticker || '',
-    //   'output-ticker': pair.output?.ticker || '',
-    //   'input-amount': '',
-    //   'output-amount': ''
-    // }
   });
 
-  // // Callback version of watch.  It's your responsibility to unsubscribe when done.
-  // React.useEffect(() => {
-  //   const subscription = watch((value, { name, type }) => console.log(value, name, type));
-  //   return () => subscription.unsubscribe();
-  // }, [watch]);
+  const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    async (e) => {
+      const value = Number(e.target.value || 0) - 1;
 
-  const data = watch();
+      const output = await getOutput(value);
+      // await trigger('output-amount');
+      setOutputAmount(output);
+      setValue('output-amount', output.toString() as never);
+    },
+    [setValue]
+  );
 
-  const inputAmount = Number(data['input-amount']) || 0;
+  const handleDebouncedChange = useMemo(() => _.debounce(handleChange, 500), [handleChange]);
+
+  useEffect(() => {
+    return () => {
+      handleDebouncedChange.cancel();
+    };
+  }, [handleDebouncedChange]);
+
+  const inputAmount = useWatch({ control, name: 'input-amount' });
+
+  console.log(inputAmount);
 
   const handleSubmit = (data: SwapFormData) => {
     try {
@@ -143,18 +161,16 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
 
   const inputValueUSD = pair.input
     ? convertMonetaryAmountToValueInUSD(
-        newMonetaryAmount(inputAmount, pair.input, true),
+        newMonetaryAmount(0, pair.input, true),
         getTokenPrice(prices, pair.input.ticker)?.usd
       ) || 0
     : 0;
   const outputValueUSD = pair.output
     ? convertMonetaryAmountToValueInUSD(
-        newMonetaryAmount(inputAmount, pair.output, true),
+        newMonetaryAmount(outputAmount || 0, pair.output, true),
         getTokenPrice(prices, pair.output.ticker)?.usd
       ) || 0
     : 0;
-
-  console.log(data);
 
   return (
     <Card {...props} gap='spacing2'>
@@ -180,12 +196,8 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
                     onChange: handleTickerChange
                   })
                 }}
-                {...register(
-                  FormFields.INPUT_AMOUNT
-                  //   {
-                  //   onChange: (e) => setValue('output-amount', e.target.value as never, { shouldValidate: true })
-                  // }
-                )}
+                {...register(FormFields.INPUT_AMOUNT)}
+                onChange={handleDebouncedChange}
               />
               <SwapDivider />
               <TokenInput
@@ -195,14 +207,15 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
                 valueUSD={outputValueUSD}
                 balance={outputSchema?.balance || 0}
                 tokens={tokens}
-                isReadOnly
+                // isReadOnly
                 selectProps={{
                   value: pair.output?.ticker || '',
                   ...register('output-ticker', {
                     onChange: handleTickerChange
                   })
                 }}
-                {...register(FormFields.OUTPUT_AMOUNT, { valueAsNumber: true })}
+                value={outputAmount}
+                {...register(FormFields.OUTPUT_AMOUNT, { deps: ['input-ticker'] })}
               />
             </Flex>
             {hasCompletePair && <SwapInfo pair={pair} />}
