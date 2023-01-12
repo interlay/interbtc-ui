@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import _ from 'lodash';
 import { ChangeEventHandler, useCallback, useEffect, useMemo, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -25,7 +25,7 @@ import { SlippageManager } from '../SlippageManager';
 import { SwapInfo } from '../SwapInfo';
 import { SwapDivider } from './SwapDivider';
 
-const getOutput = async (param: number) => {
+const getOutput = async (param?: number) => {
   return param;
 };
 
@@ -94,30 +94,32 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
   const { input: inputSchema, output: outputSchema } = useSwapFormData(pair);
 
   const schema = z.object({
-    ...(inputSchema && { [FormFields.INPUT_AMOUNT]: validate.amm.swap(t, inputSchema.schema) }),
-    ...(outputSchema && { [FormFields.OUTPUT_AMOUNT]: validate.amm.swap(t, outputSchema.schema) })
+    ...(inputSchema && { [FormFields.INPUT_AMOUNT]: validate.amm.swap(t, inputSchema.schema) })
   });
 
   const {
     register,
-    control,
     handleSubmit: h,
     formState: { errors, isDirty, isValid },
-
     setValue
   } = useForm<SwapFormData>({
     mode: 'onChange',
-    resolver: zodResolver(schema)
+    resolver: zodResolver(schema),
+    defaultValues: {
+      'input-ticker': pair.input?.ticker || ''
+    }
   });
+
+  // console.log(outputAmount);
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = useCallback(
     async (e) => {
-      const value = Number(e.target.value || 0) - 1;
+      const value = e.target.value ? Number(e.target.value) - 1 : undefined;
 
       const output = await getOutput(value);
-      // await trigger('output-amount');
+
       setOutputAmount(output);
-      setValue('output-amount', output.toString() as never);
+      setValue('output-amount', (output?.toString() || '') as never);
     },
     [setValue]
   );
@@ -130,9 +132,9 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
     };
   }, [handleDebouncedChange]);
 
-  const inputAmount = useWatch({ control, name: 'input-amount' });
+  // const data = watch();
 
-  console.log(inputAmount);
+  // const inputAmount = Number(data['input-amount']) || 0;
 
   const handleSubmit = (data: SwapFormData) => {
     try {
@@ -153,6 +155,10 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
     const newPair = getPairChange(pair, currency, name);
 
     onChangePair(newPair);
+    const newValue = outputAmount ? outputAmount - 1 : undefined;
+
+    setOutputAmount(newValue);
+    setValue('output-amount', (newValue?.toString() || '') as never);
   };
 
   const hasCompletePair = !!(pair.input && pair.output);
@@ -161,7 +167,7 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
 
   const inputValueUSD = pair.input
     ? convertMonetaryAmountToValueInUSD(
-        newMonetaryAmount(0, pair.input, true),
+        newMonetaryAmount(outputAmount || 0, pair.input, true),
         getTokenPrice(prices, pair.input.ticker)?.usd
       ) || 0
     : 0;
@@ -185,42 +191,48 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
             <Flex direction='column' gap='spacing12'>
               <TokenInput
                 placeholder='0.00'
-                errorMessage={getErrorMessage(errors['input-amount'])}
                 label='From'
                 valueUSD={inputValueUSD}
                 balance={inputSchema?.balance || 0}
                 tokens={tokens}
-                selectProps={{
-                  value: pair.input?.ticker || '',
-                  ...register('input-ticker', {
-                    onChange: handleTickerChange
-                  })
-                }}
-                {...register(FormFields.INPUT_AMOUNT)}
-                onChange={handleDebouncedChange}
+                ticker={pair.input?.ticker || ''}
+                selectProps={{}}
+                // selectProps={{
+                //   // value: pair.input?.ticker || '',
+                //   ...register('input-ticker', {
+                //     onChange: handleTickerChange,
+                //     value: (pair.input?.ticker || '') as never
+                //   })
+                // }}
+                {...register(FormFields.INPUT_AMOUNT, {
+                  onChange: (e) => {
+                    if (!pair.input || !pair.output) return;
+
+                    handleDebouncedChange(e);
+                  }
+                })}
               />
               <SwapDivider />
               <TokenInput
                 placeholder='0.00'
-                errorMessage={getErrorMessage(errors['output-amount'])}
                 label='To'
                 valueUSD={outputValueUSD}
                 balance={outputSchema?.balance || 0}
                 tokens={tokens}
-                // isReadOnly
+                isReadOnly
                 selectProps={{
-                  value: pair.output?.ticker || '',
+                  // value: pair.output?.ticker || '',
                   ...register('output-ticker', {
-                    onChange: handleTickerChange
+                    onChange: handleTickerChange,
+                    value: (pair.output?.ticker || '') as never
                   })
                 }}
-                value={outputAmount}
-                {...register(FormFields.OUTPUT_AMOUNT, { deps: ['input-ticker'] })}
+                {...register(FormFields.OUTPUT_AMOUNT, { value: outputAmount as never })}
               />
             </Flex>
             {hasCompletePair && <SwapInfo pair={pair} />}
             <AuthCTA type='submit' disabled={isBtnDisabled} fullWidth>
-              Swap
+              {getErrorMessage(errors['input-amount']) || 'Swap'}
             </AuthCTA>
           </Flex>
         </form>

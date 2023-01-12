@@ -16,13 +16,17 @@ const triggerChangeEvent = (
   ref.current?.dispatchEvent(e);
 };
 
-const assignFormRef = (formRef?: (instance: any) => void, domRef?: MutableRefObject<HTMLInputElement | null>) => (
-  el: HTMLInputElement | null
-): void => {
+const assignFormRef = (
+  formRef?: (instance: any) => void,
+  domRef?: MutableRefObject<HTMLInputElement | null>,
+  cb?: any
+) => (el: HTMLInputElement | null): void => {
   formRef?.(el);
 
   if (domRef) {
     domRef.current = el;
+
+    cb?.(domRef);
   }
 };
 
