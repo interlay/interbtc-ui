@@ -1,8 +1,9 @@
-import { swap } from './swap';
+import { select, swap } from './swap';
 
-const loans = {
-  swap
+const amm = {
+  swap,
+  select
 };
 
-export default loans;
+export default amm;
 export type { SwapSchemaParams } from './swap';
