@@ -1,6 +1,6 @@
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
 import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
-import { StatemineAdapter } from '@interlay/bridge/build/adapters/statemint';
+import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import {
   CurrencyExt,
@@ -154,7 +154,8 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
       interlay: new InterlayAdapter(),
-      polkadot: new PolkadotAdapter()
+      polkadot: new PolkadotAdapter(),
+      statemint: new StatemintAdapter()
     };
 
     break;
