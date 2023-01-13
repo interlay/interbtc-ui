@@ -1,11 +1,7 @@
-
 name: Add issues and pull requests to backlog
 
 on:
   issues:
-    types:
-      - opened
-  pull_request:
     types:
       - opened
       
