@@ -7,13 +7,16 @@ const Template: Story<TokenInputProps> = (args) => {
   const [value, setValue] = useState<number>();
 
   return (
-    <TokenInput
-      {...args}
-      value={value}
-      onChange={(e) => setValue(Number(e.target.value || 0))}
-      aria-label='token field'
-      valueUSD={(value || 0) * 10}
-    />
+    <>
+      <TokenInput
+        {...args}
+        value={value}
+        onChange={(e) => setValue(Number(e.target.value) || undefined)}
+        aria-label='token field'
+        valueUSD={(value || 0) * 10}
+      />
+      <TokenInput value={value} aria-label='token field' valueUSD={(value || 0) * 10} />
+    </>
   );
 };
 
