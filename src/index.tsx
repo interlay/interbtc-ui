@@ -29,31 +29,29 @@ window.isFetchingActive = false;
 const queryClient = new QueryClient();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <Provider store={store}>
-            <SubstrateProvider>
-              <ThemeWrapper>
-                <SubstrateLoadingAndErrorHandlingWrapper>
-                  <Subscriptions>
-                    <OverlayProvider>
-                      <App />
-                    </OverlayProvider>
-                  </Subscriptions>
-                </SubstrateLoadingAndErrorHandlingWrapper>
-              </ThemeWrapper>
-              <React.Suspense fallback={null}>
-                <DeveloperConsole />
-              </React.Suspense>
-            </SubstrateProvider>
-          </Provider>
-        </HelmetProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </Router>
-  </React.StrictMode>,
+  <Router>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <Provider store={store}>
+          <SubstrateProvider>
+            <ThemeWrapper>
+              <SubstrateLoadingAndErrorHandlingWrapper>
+                <Subscriptions>
+                  <OverlayProvider>
+                    <App />
+                  </OverlayProvider>
+                </Subscriptions>
+              </SubstrateLoadingAndErrorHandlingWrapper>
+            </ThemeWrapper>
+            <React.Suspense fallback={null}>
+              <DeveloperConsole />
+            </React.Suspense>
+          </SubstrateProvider>
+        </Provider>
+      </HelmetProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </Router>,
   document.getElementById('root')
 );
 

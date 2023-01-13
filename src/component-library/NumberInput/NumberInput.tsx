@@ -24,7 +24,6 @@ const locale = 'en-US';
 type Props = {
   value?: number;
   defaultValue?: number;
-  yo?: boolean;
 };
 
 type InheritAttrs = Omit<BaseInputProps, keyof Props | 'disabled' | 'required' | 'readOnly'>;
@@ -34,11 +33,8 @@ type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'onC
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ onChange, formatOptions, yo, ...props }, ref): JSX.Element => {
+  ({ onChange, formatOptions, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
-    if (yo) {
-      console.log(props.value);
-    }
 
     const state = useNumberFieldState({
       ...props,
