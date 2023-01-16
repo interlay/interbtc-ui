@@ -283,7 +283,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     // Note: this is a workaround but ok for now. Component will be refactored
     // when we introduce support for multiple currencies per channel
     setCurrency(undefined);
-    setValue(TRANSFER_AMOUNT, '0');
+    setValue(TRANSFER_AMOUNT, '');
     setToChain(chain);
   };
 
