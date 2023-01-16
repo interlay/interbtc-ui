@@ -7,16 +7,13 @@ const Template: Story<TokenInputProps> = (args) => {
   const [value, setValue] = useState<number>();
 
   return (
-    <>
-      <TokenInput
-        {...args}
-        value={value}
-        onChange={(e) => setValue(Number(e.target.value) || undefined)}
-        aria-label='token field'
-        valueUSD={(value || 0) * 10}
-      />
-      <TokenInput value={value} aria-label='token field' valueUSD={(value || 0) * 10} />
-    </>
+    <TokenInput
+      {...args}
+      value={value}
+      onChange={(e) => setValue(Number(e.target.value) || undefined)}
+      aria-label='token field'
+      valueUSD={(value || 0) * 10}
+    />
   );
 };
 
@@ -28,7 +25,7 @@ WithBalance.args = {
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'Amount',
-  isDisabled: false
+  isDisabled: true
 };
 
 const WithoutBalance = Template.bind({});

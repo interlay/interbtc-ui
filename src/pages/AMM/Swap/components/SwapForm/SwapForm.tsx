@@ -1,18 +1,15 @@
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import Big from 'big.js';
+import { CurrencyExt } from '@interlay/interbtc-api';
 import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { useDebounce } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
-import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { Card, CardProps, Divider, Flex, H1, TokenInput, TokenInputProps } from '@/component-library';
+import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components/AuthCTA';
 import { SwapPair, SwapSlippage } from '@/types/swap';
-import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useSwapFormData } from '../../hooks/use-swap-form-data';
 import { SlippageManager } from '../SlippageManager';
@@ -44,29 +41,6 @@ const getPairChange = (pair: SwapPair, currency: CurrencyExt, name: string): Swa
   }
 };
 
-const useFormState = (pair: SwapPair, input?: number, output?: number, availableInput?: Big) => {
-  let children;
-  let disabled = true;
-
-  if (!pair.input || !pair.output) {
-    children = 'Select Token';
-  } else if (!input) {
-    children = `Enter ${pair.input.ticker} amount`;
-  } else if (new Big(input).gt(availableInput || 0)) {
-    children = `Insufficient ${pair.input.ticker} balance`;
-  } else {
-    children = 'Swap';
-    disabled = false;
-  }
-
-  return {
-    btn: {
-      children,
-      disabled
-    }
-  };
-};
-
 enum FormFields {
   INPUT_AMOUNT = 'input-amount',
   INPUT_TICKER = 'input-ticker',
@@ -91,12 +65,10 @@ type InheritAttrs = CardProps & Props;
 type SwapFormProps = Props & InheritAttrs;
 
 const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element | null => {
-  // const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-  const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-  const prices = useGetPrices();
-  const { getAvailableBalance } = useGetBalances();
+  const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
   const [slippage, setSlippage] = useState<SwapSlippage>('0.1%');
 
@@ -105,6 +77,8 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
 
   useDebounce(
     async () => {
+      if (!pair.input || !pair.output) return;
+
       const output = await getOutput(inputAmount);
       setOutputAmount(output);
     },
@@ -112,15 +86,12 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
     [inputAmount, pair]
   );
 
-  const { btn } = useFormState(pair, inputAmount, outputAmount, getAvailableBalance(pair.input?.ticker || '')?.toBig());
+  const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, {
+    input: inputAmount,
+    output: outputAmount
+  });
 
-  const tokens: TokenInputProps['tokens'] = currencies?.map((currency) => ({
-    balance: getAvailableBalance(currency.ticker)?.toBig().toNumber() || 0,
-    balanceUSD: formatUSD(getTokenPrice(prices, currency.ticker)?.usd || 0),
-    ticker: currency.ticker
-  }));
-
-  const { input: inputSchema, output: outputSchema } = useSwapFormData(pair);
+  console.log(pair);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = Number(e.target.value) || undefined;
@@ -128,29 +99,25 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const form = e.currentTarget;
-    const formElements = form.elements as typeof form.elements & SwapFormData;
+      const form = e.currentTarget;
+      const formElements = form.elements as typeof form.elements & SwapFormData;
 
-    const {
-      [FormFields.INPUT_AMOUNT]: inputAmount,
-      [FormFields.OUTPUT_AMOUNT]: outputAmount,
-      [FormFields.INPUT_TICKER]: inputTicker,
-      [FormFields.OUTPUT_TICKER]: outputTicker
-    } = formElements;
+      const {
+        [FormFields.INPUT_AMOUNT]: inputAmount,
+        [FormFields.OUTPUT_AMOUNT]: outputAmount,
+        [FormFields.INPUT_TICKER]: inputTicker,
+        [FormFields.OUTPUT_TICKER]: outputTicker
+      } = formElements;
 
-    console.log('input: ', inputAmount.value);
-    console.log('output: ', outputAmount.value);
-    console.log('tickers: ', inputTicker.value, '/', outputTicker.value);
-    // try {
-    //   const inputAmount = data['input-amount'] || 0;
-    //   const outputAmount = data['output-amount'] || 0;
-    //   console.log(pair.input, inputAmount);
-    //   console.log(pair.output, outputAmount);
-    // } catch (err: any) {
-    //   toast.error(err.toString());
-    // }
+      console.log('input: ', inputAmount.value);
+      console.log('output: ', outputAmount.value);
+      console.log('tickers: ', inputTicker.value, '/', outputTicker.value);
+    } catch (err: any) {
+      toast.error(err.toString());
+    }
   };
 
   const handleTickerChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -162,20 +129,11 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
     onChangePair(newPair);
   };
 
-  const hasCompletePair = !!(pair.input && pair.output);
+  const handlePairSwap = () => {
+    onChangePair({ input: pair.output, output: pair.input });
+  };
 
-  const inputValueUSD = pair.input
-    ? convertMonetaryAmountToValueInUSD(
-        newMonetaryAmount(inputAmount || 0, pair.input, true),
-        getTokenPrice(prices, pair.input.ticker)?.usd
-      ) || 0
-    : 0;
-  const outputValueUSD = pair.output
-    ? convertMonetaryAmountToValueInUSD(
-        newMonetaryAmount(outputAmount || 0, pair.output, true),
-        getTokenPrice(prices, pair.output.ticker)?.usd
-      ) || 0
-    : 0;
+  const isComplete = !!(pair.output && pair.input);
 
   return (
     <Card {...props} gap='spacing2'>
@@ -190,27 +148,21 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
             <Flex direction='column' gap='spacing12'>
               <TokenInput
                 placeholder='0.00'
-                label='From'
-                valueUSD={inputValueUSD}
-                balance={inputSchema?.balance || 0}
-                tokens={tokens}
-                ticker={pair.input?.ticker || ''}
+                label={t('amm.from')}
                 selectProps={{
                   name: FormFields.INPUT_TICKER,
                   onChange: handleTickerChange,
-                  value: (pair.input?.ticker || '') as never
+                  value: pair.input?.ticker || ''
                 }}
                 name={FormFields.INPUT_AMOUNT}
                 onChange={handleChangeInput}
+                {...inputProps}
               />
-              <SwapDivider />
+              <SwapDivider onPress={handlePairSwap} />
               <TokenInput
                 placeholder='0.00'
-                label='To'
-                valueUSD={outputValueUSD}
-                balance={outputSchema?.balance || 0}
-                tokens={tokens}
-                isReadOnly
+                label={t('amm.to')}
+                isDisabled
                 value={outputAmount}
                 name={FormFields.OUTPUT_AMOUNT}
                 selectProps={{
@@ -218,12 +170,11 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
                   onChange: handleTickerChange,
                   value: pair.output?.ticker || ''
                 }}
+                {...outputProps}
               />
             </Flex>
-            {hasCompletePair && <SwapInfo pair={pair} />}
-            <AuthCTA type='submit' disabled={btn.disabled} fullWidth size='large'>
-              {btn.children}
-            </AuthCTA>
+            {isComplete && <SwapInfo pair={pair} />}
+            <AuthCTA type='submit' fullWidth size='large' {...buttonProps} />
           </Flex>
         </form>
       </Flex>

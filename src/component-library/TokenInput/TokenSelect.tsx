@@ -54,12 +54,6 @@ const TokenSelect = ({ value, icons, tokens, isDisabled, onChange, selectProps }
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => onChange(e.target.value);
 
-  // useEffect(() => {
-  //   if (!inputRef.current?.value) return;
-
-  //   onChange(inputRef.current.value);
-  // }, [inputRef.current]);
-
   return (
     <>
       <StyledTokenSelect
