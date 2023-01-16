@@ -265,6 +265,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
+    // Return from function is user clicks on current chain option
+    if (chain === fromChain) return;
+
     // Note: this is a workaround but ok for now. Component will be refactored
     // when we introduce support for multiple currencies per channel
     setCurrency(undefined);
@@ -274,6 +277,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleSetToChain = (chain: ChainOption) => {
+    // Return from function is user clicks on current chain option
+    if (chain === toChain) return;
+
     // Note: this is a workaround but ok for now. Component will be refactored
     // when we introduce support for multiple currencies per channel
     setCurrency(undefined);
