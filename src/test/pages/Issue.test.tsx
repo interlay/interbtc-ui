@@ -1,6 +1,8 @@
 import '@testing-library/jest-dom';
 
+import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
@@ -11,6 +13,7 @@ import {
   MOCK_ISSUE_BRIDGE_FEE_RATE,
   MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
   MOCK_ISSUE_REQUEST_LIMITS,
+  MOCK_TOKEN_BALANCE,
   mockIssueRequest
 } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_MOCK_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
@@ -20,15 +23,15 @@ const getBridgeFee = (inputAmount: number) => {
   return new BitcoinAmount(inputAmount).mul(MOCK_ISSUE_BRIDGE_FEE_RATE);
 };
 
+const ISSUE_TAB_PATH = '/bridge?tab=issue';
+
 describe('issue form', () => {
-  beforeEach(async () => {
-    await render(<App />, { path: '/bridge?tab=issue' });
+  it('issuing calls `issue.request` method', async () => {
+    await render(<App />, { path: ISSUE_TAB_PATH });
 
     const issueTab = screen.getByRole('tab', { name: /issue/i });
     userEvent.click(issueTab);
-  });
 
-  it('issuing calls `issue.request` method', async () => {
     const amountToIssueInput = screen.getByRole('textbox');
 
     const inputAmount = 0.0001;
@@ -47,6 +50,11 @@ describe('issue form', () => {
   });
 
   it('the bridge fee is correctly displayed', async () => {
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
     const amountToIssueInput = screen.getByRole('textbox');
 
     const inputAmount = 0.0001;
@@ -69,6 +77,11 @@ describe('issue form', () => {
   });
 
   it('the security deposit is correctly displayed', async () => {
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
     const amountToIssueInput = screen.getByRole('textbox');
 
     const inputAmount = 0.0001;
@@ -97,6 +110,11 @@ describe('issue form', () => {
   });
 
   it('the transaction fee is correctly displayed', async () => {
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
     const amountToIssueInput = screen.getByRole('textbox');
 
     const inputAmount = 0.0001;
@@ -117,6 +135,11 @@ describe('issue form', () => {
   });
 
   it('the total receiving amount is correctly displayed', async () => {
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
     const amountToIssueInput = screen.getByRole('textbox');
 
     const inputAmount = 0.0001;
@@ -143,6 +166,11 @@ describe('issue form', () => {
   });
 
   it('the max issuable amounts are correctly displayed', async () => {
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
     const singleMaxIssuableAmountElement = screen.getByRole(/single-max-issuable/i);
 
     const singleMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable);
@@ -154,5 +182,40 @@ describe('issue form', () => {
     const totalMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.totalMaxIssuable);
 
     expect(totalMaxIssuableAmountElement).toHaveTextContent(totalMaxIssuableAmount);
+  });
+
+  it('when the governance token balance is less than required', async () => {
+    (window.bridge.tokens.balance as any).mockImplementation((currency: CurrencyExt, _id: AccountId) => {
+      if (currency.ticker === GOVERNANCE_TOKEN.ticker) {
+        return new ChainBalance(currency, 0, 0);
+      } else {
+        return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
+      }
+    });
+
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
+    const amountToIssueInput = screen.getByRole('textbox');
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToIssueInput, inputAmount.toString());
+    });
+
+    const errorElement = screen.getByText(/insufficient funds/i);
+
+    expect(errorElement).toBeInTheDocument();
+
+    const submitButton = screen.getByRole('button', { name: /confirm/i });
+
+    await act(async () => {
+      userEvent.click(submitButton);
+    });
+
+    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
   });
 });
