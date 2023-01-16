@@ -11,6 +11,11 @@ import { NormalAlignments, Overflow } from '../utils/prop-types';
 
 type StyledDialogWrapperProps = {
   $transitionTrigger?: TransitionTrigger;
+  $isCentered?: boolean;
+};
+
+type StyledDialogProps = {
+  $isCentered?: boolean;
 };
 
 type StyledModalHeaderProps = {
@@ -39,21 +44,21 @@ const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
   width: 100vw;
   height: 100vh;
   justify-content: center;
-  align-items: center;
+  align-items: ${({ $isCentered }) => ($isCentered ? 'center' : 'flex-start')};
   display: flex;
   position: fixed;
-  pointer-events: none;
+  pointer-events: ${({ $isCentered }) => $isCentered && 'none'};
+  overflow: ${({ $isCentered }) => !$isCentered && 'auto'};
   z-index: ${theme.modal.zIndex};
   top: 0;
   left: 0;
-
   transition: opacity ${theme.transition.duration.duration100}ms ease-out;
   transition-property: opacity, transform;
   ${({ $transitionTrigger }) =>
     $transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
 `;
 
-const StyledDialog = styled.section`
+const StyledDialog = styled.section<StyledDialogProps>`
   background: ${theme.colors.bgPrimary};
   border: ${theme.border.default};
   border-radius: ${theme.rounded.md};
@@ -61,10 +66,10 @@ const StyledDialog = styled.section`
 
   max-width: ${theme.modal.maxWidth};
   width: 100%;
-  max-height: ${theme.modal.maxHeight};
-  margin: 0 ${theme.spacing.spacing6};
+  max-height: ${({ $isCentered }) => $isCentered && theme.modal.maxHeight};
+  overflow: ${({ $isCentered }) => $isCentered && 'hidden'};
+  margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
   pointer-events: auto;
-  overflow: hidden;
 
   display: flex;
   flex-direction: column;

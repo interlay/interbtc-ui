@@ -14,6 +14,7 @@ import { ModalContext } from './ModalContext';
 
 type Props = {
   children: ReactNode;
+  isCentered?: boolean;
 };
 
 type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
@@ -21,7 +22,7 @@ type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
 type ModalProps = Props & InheritAttrs;
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
-  ({ children, isDismissable = true, ...props }, ref): JSX.Element | null => {
+  ({ children, isDismissable = true, isCentered, ...props }, ref): JSX.Element | null => {
     const dialogRef = useDOMRef(ref);
     const { isOpen, onClose } = props;
     const { shouldRender, transitionTrigger } = useMountTransition(!!isOpen, theme.transition.duration.duration100);
@@ -42,9 +43,14 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
       <OverlayContainer>
         <StyledUnderlay {...underlayProps} />
         <FocusScope contain restoreFocus autoFocus>
-          <StyledDialogWrapper ref={dialogRef} {...modalProps} $transitionTrigger={transitionTrigger}>
+          <StyledDialogWrapper
+            ref={dialogRef}
+            $transitionTrigger={transitionTrigger}
+            $isCentered={isCentered}
+            {...modalProps}
+          >
             <ModalContext.Provider value={{ titleProps }}>
-              <StyledDialog {...dialogProps}>
+              <StyledDialog $isCentered={isCentered} {...dialogProps}>
                 <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onPress={onClose}>
                   <XMark />
                 </StyledCloseCTA>
