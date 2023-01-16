@@ -1,21 +1,21 @@
+import { CurrencyExt } from '@interlay/interbtc-api';
+
 import { Card, CardProps, CoinPair, Dd, Dl, DlGroup, Dt, Flex, H2 } from '@/component-library';
-import { SwapPair } from '@/types/swap';
 
 type Props = {
-  pair: Required<SwapPair>;
+  input: CurrencyExt;
+  output: CurrencyExt;
 };
 
 type InheritAttrs = Omit<CardProps, keyof Props>;
 
 type SwapLiquidityProps = Props & InheritAttrs;
 
-const SwapLiquidity = ({ pair, ...props }: SwapLiquidityProps): JSX.Element | null => {
-  const { input, output } = pair;
-
+const SwapLiquidity = ({ input, output, ...props }: SwapLiquidityProps): JSX.Element | null => {
   return (
     <Card {...props} gap='spacing4'>
       <Flex gap='spacing2' alignItems='center'>
-        <CoinPair coinOne={pair.input.ticker} coinTwo={pair.output.ticker} size='lg' />
+        <CoinPair coinOne={input.ticker} coinTwo={output.ticker} size='lg' />
         <H2 size='lg' weight='bold'>
           {input.ticker} - {output.ticker}
         </H2>
