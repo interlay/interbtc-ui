@@ -28,6 +28,7 @@ import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
 import {
   BLOCKS_BEHIND_LIMIT,
   DEFAULT_ISSUE_BRIDGE_FEE_RATE,
+  DEFAULT_ISSUE_DUST_AMOUNT,
   DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE
 } from '@/config/parachain';
 import {
@@ -122,7 +123,7 @@ const IssueForm = (): JSX.Element | null => {
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
+  const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT));
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
