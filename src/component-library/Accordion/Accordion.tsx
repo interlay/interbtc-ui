@@ -4,16 +4,21 @@ import { useTreeState } from '@react-stately/tree';
 import { forwardRef, HTMLAttributes, Ref } from 'react';
 
 import { useDOMRef } from '../utils/dom';
+import { FontSize } from '../utils/prop-types';
 import { AccordionItem } from './AccordionItem';
 
-type InheritAttrs<T> = AriaAccordionProps<T>;
+type Props = {
+  size?: FontSize;
+};
 
-type NativeAttrs<T> = Omit<HTMLAttributes<unknown>, keyof InheritAttrs<T> | 'children'>;
+type InheritAttrs<T> = Omit<AriaAccordionProps<T>, keyof Props>;
 
-type AccordionProps<T = any> = InheritAttrs<T> & NativeAttrs<T>;
+type NativeAttrs<T> = Omit<HTMLAttributes<unknown>, (keyof InheritAttrs<T> & Props) | 'children'>;
+
+type AccordionProps<T = any> = Props & InheritAttrs<T> & NativeAttrs<T>;
 
 const Accordion = <T extends Record<string, unknown>>(
-  props: AccordionProps<T>,
+  { size = 'base', ...props }: AccordionProps<T>,
   ref: Ref<HTMLDivElement>
 ): JSX.Element => {
   const state = useTreeState(props);
@@ -23,7 +28,7 @@ const Accordion = <T extends Record<string, unknown>>(
   return (
     <div {...mergeProps(props, accordionProps)} ref={accordionRef}>
       {[...state.collection].map((item) => (
-        <AccordionItem<T> key={item.key} item={item} state={state} />
+        <AccordionItem<T> key={item.key} item={item} state={state} size={size} />
       ))}
     </div>
   );
