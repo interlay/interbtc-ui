@@ -72,7 +72,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
         </Stack>
       </ModalBody>
       <ModalFooter>
-        <CTA size='large' fullWidth onClick={onClickAgree}>
+        <CTA size='large' fullWidth onPress={onClickAgree}>
           {t('vault.disclaimer.accept_risks_involved')}
         </CTA>
         <CTALink external to={INTERLAY_VAULT_DOCS_LINK} variant='secondary' size='large' fullWidth>
