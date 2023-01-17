@@ -1,12 +1,12 @@
 import '@testing-library/jest-dom';
 
-import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
+import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import {
   MOCK_EXCHANGE_RATE,
@@ -207,6 +207,37 @@ describe('issue form', () => {
     });
 
     const errorElement = screen.getByText(/insufficient funds/i);
+
+    expect(errorElement).toBeInTheDocument();
+
+    const submitButton = screen.getByRole('button', { name: /confirm/i });
+
+    await act(async () => {
+      userEvent.click(submitButton);
+    });
+
+    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+
+    (window.bridge.tokens.balance as any).mockImplementation(
+      (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
+    );
+  });
+
+  it('when the input amount is greater than the single vault max issuable amount', async () => {
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
+    const amountToIssueInput = screen.getByRole('textbox');
+
+    const inputAmount = MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable.add(newMonetaryAmount('1', WRAPPED_TOKEN));
+
+    await act(async () => {
+      userEvent.type(amountToIssueInput, inputAmount.toString());
+    });
+
+    const errorElement = screen.getByText(/please enter less than/i);
 
     expect(errorElement).toBeInTheDocument();
 
