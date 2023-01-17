@@ -1,4 +1,4 @@
 export type { AccordionProps } from './Accordion';
 export { Accordion } from './Accordion';
-export type { AccordionItemProps } from './AccordionItem';
-export { AccordionItem } from './AccordionItem';
+export { Item as AccordionItem } from '@react-stately/collections';
+export type { ItemProps as AccordionItemProps } from '@react-types/shared';

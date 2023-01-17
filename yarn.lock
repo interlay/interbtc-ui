@@ -6029,6 +6029,21 @@
     prop-types "^15.7.2"
     tslib "^2.3.0"
 
+"@react-aria/accordion@^3.0.0-alpha.14":
+  version "3.0.0-alpha.14"
+  resolved "https://registry.yarnpkg.com/@react-aria/accordion/-/accordion-3.0.0-alpha.14.tgz#8606b8c8858370ba7985a1cbf45f2d353de1d8fd"
+  integrity sha512-B06lLcpgib7MMkHmCg5qXkbEEfDSSabPa8Fu2U/ZNeZ9NKi2aYMZRwGum3l+cl4q8+5P+5wgcy/HJaOPJT6odg==
+  dependencies:
+    "@react-aria/button" "^3.6.4"
+    "@react-aria/interactions" "^3.13.1"
+    "@react-aria/selection" "^3.12.1"
+    "@react-aria/utils" "^3.14.2"
+    "@react-stately/tree" "^3.4.1"
+    "@react-types/accordion" "3.0.0-alpha.11"
+    "@react-types/button" "^3.7.0"
+    "@react-types/shared" "^3.16.0"
+    "@swc/helpers" "^0.4.14"
+
 "@react-aria/button@^3.6.4":
   version "3.6.4"
   resolved "https://registry.yarnpkg.com/@react-aria/button/-/button-3.6.4.tgz#51927c9d968d0c1f741ee2081ca7f2e244abbc12"
@@ -6847,6 +6862,17 @@
     "@react-stately/utils" "^3.5.1"
     "@react-types/tooltip" "^3.2.5"
 
+"@react-stately/tree@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@react-stately/tree/-/tree-3.4.1.tgz#bb267784000b22c7c1aa6415103ad1b9f3566677"
+  integrity sha512-kIXeJOHgGGaUFnAD2wyRIiOwOw/+PN1OXo46n8+dPTFIYwR4+IWFNG8OMjVlIiSLPYWMCzzxZBE9a5grmbmNWQ==
+  dependencies:
+    "@react-stately/collections" "^3.5.1"
+    "@react-stately/selection" "^3.11.2"
+    "@react-stately/utils" "^3.5.2"
+    "@react-types/shared" "^3.16.0"
+    "@swc/helpers" "^0.4.14"
+
 "@react-stately/utils@^3.5.0":
   version "3.5.0"
   resolved "https://registry.yarnpkg.com/@react-stately/utils/-/utils-3.5.0.tgz#e76231cfc93042814dcc5d96436e50c807c1d905"
@@ -6885,6 +6911,13 @@
     "@react-aria/utils" "^3.14.2"
     "@react-types/shared" "^3.16.0"
     "@swc/helpers" "^0.4.14"
+
+"@react-types/accordion@3.0.0-alpha.11":
+  version "3.0.0-alpha.11"
+  resolved "https://registry.yarnpkg.com/@react-types/accordion/-/accordion-3.0.0-alpha.11.tgz#b09ccf8afc411b6fce54da70680426f56a5858f1"
+  integrity sha512-7TAvvMnfSWtX4gkmRg3pE31y/E/oTWfUAIi9WT4hPJBbE/8zItjD2P5cQ5tLizXT87fnm+4s8jvci7gZcN2/pw==
+  dependencies:
+    "@react-types/shared" "^3.16.0"
 
 "@react-types/button@^3.5.1":
   version "3.5.1"
