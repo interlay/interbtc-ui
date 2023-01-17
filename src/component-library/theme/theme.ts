@@ -311,27 +311,17 @@ const theme = {
     }
   },
   spinner: {
-    determinate: {
-      color: 'var(--colors-cta-primary)',
-      bg: 'var(--colors-cta-secondary)'
+    primary: {
+      color: 'var(--colors-spinner-primary-color)',
+      bg: 'var(--colors-spinner-primary-bg)'
     },
-    indeterminate: {
-      primary: {
-        color: 'var(--colors-indeterminate-primary-color)',
-        bg: 'var(--colors-indeterminate-primary-bg)'
-      },
-      secondary: {
-        color: 'var(--colors-indeterminate-secondary-color)',
-        bg: 'var(--colors-indeterminate-secondary-bg)'
-      },
-      outlined: {
-        color: 'var(--colors-indeterminate-outlined-color)',
-        bg: 'var(--colors-indeterminate-outlined-bg)'
-      },
-      text: {
-        color: 'var(--colors-indeterminate-outlined-color)',
-        bg: 'var(--colors-indeterminate-outlined-bg)'
-      }
+    secondary: {
+      color: 'var(--colors-spinner-secondary-color)',
+      bg: 'var(--colors-spinner-secondary-bg)'
+    },
+    tertiary: {
+      color: 'var(--colors-spinner-outlined-color)',
+      bg: 'var(--colors-spinner-outlined-bg)'
     }
   },
   progress: {

@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { LoadingSpinner } from '../LoadingSpinner';
 import { theme } from '../theme';
 import { Sizes } from '../utils/prop-types';
 
@@ -19,7 +20,8 @@ const BaseCTA = styled.button<StyledCTAProps>`
   border-radius: ${theme.rounded.md};
   font-size: ${(props) => theme.cta[props.$size].text};
   font-weight: ${theme.fontWeight.medium};
-  line-height: ${(props) => theme.cta[props.$size].lineHeight};
+  /* line-height: ${(props) => theme.cta[props.$size].lineHeight}; */
+  line-height: 1.5;
   padding: ${({ $size, $hasIcon }) => ($hasIcon ? theme.cta.icon[$size].padding : theme.cta[$size].padding)};
   text-decoration: none;
   width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
@@ -70,5 +72,10 @@ const LoadingWrapper = styled.span`
   margin-right: ${theme.spacing.spacing2};
 `;
 
-export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, TextCTA };
+const StyledLoadingSpinner = styled(LoadingSpinner)<Pick<StyledCTAProps, '$size'>>`
+  width: ${(props) => theme.cta[props.$size].text};
+  height: ${(props) => theme.cta[props.$size].text};
+`;
+
+export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledLoadingSpinner, TextCTA };
 export type { StyledCTAProps };

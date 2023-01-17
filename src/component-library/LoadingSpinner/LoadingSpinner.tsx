@@ -1,15 +1,12 @@
 import { HTMLAttributes } from 'react';
 
-import { CTAVariants } from '../utils/prop-types';
-import { BaseIndeterminateLoadingSpinner, BaseLoadingSpinner, BaseLoadingSpinnerProps } from './LoadingSpinner.style';
-
-type SpinnerVariants = 'indeterminate' | 'determinate';
+import { Colors, IconSize } from '../utils/prop-types';
+import { StyledLoadingSpinner } from './LoadingSpinner.style';
 
 type Props = {
-  variant?: SpinnerVariants;
-  diameter?: number;
   thickness?: number;
-  color?: CTAVariants;
+  color?: Colors;
+  size?: IconSize;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -17,26 +14,13 @@ type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 type LoadingSpinnerProps = Props & NativeAttrs;
 
 const LoadingSpinner = ({
-  diameter = 48,
-  thickness = 10,
-  variant = 'determinate',
+  thickness = 3,
   color = 'primary',
+  size = 'md',
   ...props
 }: LoadingSpinnerProps): JSX.Element => {
-  const commonProps: LoadingSpinnerProps & BaseLoadingSpinnerProps = {
-    role: 'progressbar',
-    $diameter: diameter,
-    $thickness: thickness,
-    $color: color,
-    ...props
-  };
-
-  if (variant === 'indeterminate') {
-    return <BaseIndeterminateLoadingSpinner {...commonProps} />;
-  }
-
-  return <BaseLoadingSpinner {...commonProps} />;
+  return <StyledLoadingSpinner role='progressbar' $thickness={thickness} $color={color} $size={size} {...props} />;
 };
 
 export { LoadingSpinner };
-export type { LoadingSpinnerProps, SpinnerVariants };
+export type { LoadingSpinnerProps };

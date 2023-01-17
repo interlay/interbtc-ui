@@ -16,6 +16,8 @@ export type { FlexProps } from './Flex';
 export { Flex } from './Flex';
 export type { GridItemProps, GridProps } from './Grid';
 export { Grid, GridItem } from './Grid';
+export type { IconProps } from './Icon';
+export { Icon } from './Icon';
 export type { InfoBoxProps } from './InfoBox';
 export { InfoBox } from './InfoBox';
 export type { InputProps } from './Input';
