@@ -7,7 +7,7 @@ import { Divider } from '../Divider';
 import { Flex } from '../Flex';
 import { H3 } from '../Text';
 import { theme } from '../theme';
-import { Overflow } from '../utils/prop-types';
+import { NormalAlignments, Overflow } from '../utils/prop-types';
 
 type StyledDialogWrapperProps = {
   $transitionTrigger?: TransitionTrigger;
@@ -18,12 +18,16 @@ type StyledDialogProps = {
   $isCentered?: boolean;
 };
 
+type StyledModalHeaderProps = {
+  $alignment?: NormalAlignments;
+};
+
 type StyledModalBodyProps = {
   $overflow?: Overflow;
   $noPadding?: boolean;
 };
 
-const StyledUnderlay = styled.div`
+const StyledUnderlay = styled.div<Pick<StyledDialogWrapperProps, '$isCentered'>>`
   position: fixed;
   z-index: ${theme.modal.underlay.zIndex};
   top: 0;
@@ -34,7 +38,8 @@ const StyledUnderlay = styled.div`
   background: ${theme.modal.underlay.bg};
   display: flex;
   justify-content: center;
-  overflow: auto;
+  align-items: ${({ $isCentered }) => ($isCentered ? 'center' : 'flex-start')};
+  overflow: ${({ $isCentered }) => !$isCentered && 'auto'};
 `;
 
 const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
@@ -44,7 +49,9 @@ const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
   z-index: ${theme.modal.zIndex};
   transition: opacity ${theme.transition.duration.duration100}ms ease-out;
   margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
-
+  max-width: ${theme.modal.maxWidth};
+  max-height: ${({ $isCentered }) => $isCentered && theme.modal.maxHeight};
+  width: 100%;
   transition-property: opacity, transform;
   ${({ $transitionTrigger }) =>
     $transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
@@ -56,9 +63,7 @@ const StyledDialog = styled.section<StyledDialogProps>`
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};
 
-  max-width: ${theme.modal.maxWidth};
   width: 100%;
-  max-height: ${({ $isCentered }) => $isCentered && theme.modal.maxHeight};
   overflow: ${({ $isCentered }) => $isCentered && 'hidden'};
   pointer-events: auto;
 
@@ -74,7 +79,10 @@ const StyledCloseCTA = styled(CTA)`
   z-index: ${theme.modal.closeBtn.zIndex};
 `;
 
-const StyledModalHeader = styled(H3)`
+const StyledModalHeader = styled(H3)<StyledModalHeaderProps>`
+  font-size: ${theme.text.xl};
+  line-height: ${theme.lineHeight.base};
+  text-align: ${({ $alignment }) => $alignment};
   padding: ${theme.modal.header.paddingY} ${theme.modal.header.paddingX};
   flex-shrink: 0;
 `;

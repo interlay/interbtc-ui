@@ -178,12 +178,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   return (
     <>
       <form onSubmit={h(handleSubmit)}>
-        <StyledFormWrapper
-          $showBorrowLimit={showBorrowLimit}
-          direction='column'
-          justifyContent='space-between'
-          gap='spacing4'
-        >
+        <StyledFormWrapper direction='column' justifyContent='space-between' gap='spacing4'>
           <Flex direction='column' gap='spacing4'>
             <TokenInput
               placeholder='0.00'

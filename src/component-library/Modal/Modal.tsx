@@ -41,7 +41,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
     return isOpen || shouldRender ? (
       <OverlayContainer>
-        <StyledUnderlay {...underlayProps}>
+        <StyledUnderlay {...underlayProps} $isCentered={isCentered}>
           <FocusScope contain restoreFocus autoFocus>
             <StyledDialogWrapper
               ref={dialogRef}
@@ -49,7 +49,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
               $isCentered={isCentered}
               {...modalProps}
             >
-              <ModalContext.Provider value={{ titleProps }}>
+              <ModalContext.Provider value={{ titleProps, bodyProps: { overflow: isCentered ? 'auto' : undefined } }}>
                 <StyledDialog $isCentered={isCentered} {...dialogProps}>
                   <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onPress={onClose}>
                     <XMark />
