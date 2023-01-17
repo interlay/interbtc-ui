@@ -6,6 +6,7 @@ import { AccountId } from '@polkadot/types/interfaces';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { DEFAULT_ISSUE_DUST_AMOUNT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import {
@@ -238,6 +239,33 @@ describe('issue form', () => {
     });
 
     const errorElement = screen.getByText(/please enter less than/i);
+
+    expect(errorElement).toBeInTheDocument();
+
+    const submitButton = screen.getByRole('button', { name: /confirm/i });
+
+    await act(async () => {
+      userEvent.click(submitButton);
+    });
+
+    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+  });
+
+  it('when the input amount is less than the Bitcoin dust amount', async () => {
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
+    const amountToIssueInput = screen.getByRole('textbox');
+
+    const inputAmount = new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT).sub(newMonetaryAmount(1, Bitcoin));
+
+    await act(async () => {
+      userEvent.type(amountToIssueInput, inputAmount.toString());
+    });
+
+    const errorElement = screen.getByText(/bitcoin dust limit/i);
 
     expect(errorElement).toBeInTheDocument();
 
