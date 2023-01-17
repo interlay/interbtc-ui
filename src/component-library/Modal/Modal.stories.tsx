@@ -96,7 +96,6 @@ LargeContent.args = {
   isOpen: false,
   hasFooter: true,
   hasTitle: true,
-  isCentered: true,
   children: (
     <>
       Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.

@@ -18,7 +18,7 @@ const ModalBody = ({ overflow, noPadding, direction = 'column', ...props }: Moda
   return (
     <StyledModalBody
       {...props}
-      $overflow={bodyProps?.overflow || overflow}
+      $overflow={overflow || bodyProps?.overflow}
       $noPadding={noPadding}
       direction={direction}
     />

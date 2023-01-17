@@ -50,7 +50,7 @@ const LoanModal = ({ variant = 'lend', asset, position, onClose, ...props }: Loa
   const { tabs } = getData(t, variant);
 
   return (
-    <Modal aria-label={`${variant} ${asset.currency.ticker}`} onClose={onClose} {...props}>
+    <Modal aria-label={`${variant} ${asset.currency.ticker}`} onClose={onClose} align='top' {...props}>
       <ModalBody noPadding>
         <StyledTabs size='large' fullWidth>
           {tabs.map((tab) => (

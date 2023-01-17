@@ -45,7 +45,6 @@ const StyledUnderlay = styled.div<Pick<StyledDialogWrapperProps, '$isCentered'>>
 const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
   justify-content: center;
   display: flex;
-  height: max-content;
   z-index: ${theme.modal.zIndex};
   transition: opacity ${theme.transition.duration.duration100}ms ease-out;
   margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
