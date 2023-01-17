@@ -11,7 +11,7 @@ type InheritAttrs = Omit<FlexProps, keyof Props>;
 
 type ModalBodyProps = Props & InheritAttrs;
 
-const ModalBody = ({ overflow = 'auto', noPadding, direction = 'column', ...props }: ModalBodyProps): JSX.Element => (
+const ModalBody = ({ overflow, noPadding, direction = 'column', ...props }: ModalBodyProps): JSX.Element => (
   <StyledModalBody {...props} $overflow={overflow} $noPadding={noPadding} direction={direction} />
 );
 

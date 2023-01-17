@@ -7,7 +7,7 @@ import { Divider } from '../Divider';
 import { Flex } from '../Flex';
 import { H3 } from '../Text';
 import { theme } from '../theme';
-import { NormalAlignments, Overflow } from '../utils/prop-types';
+import { Overflow } from '../utils/prop-types';
 
 type StyledDialogWrapperProps = {
   $transitionTrigger?: TransitionTrigger;
@@ -18,10 +18,6 @@ type StyledDialogProps = {
   $isCentered?: boolean;
 };
 
-type StyledModalHeaderProps = {
-  $alignment?: NormalAlignments;
-};
-
 type StyledModalBodyProps = {
   $overflow?: Overflow;
   $noPadding?: boolean;
@@ -30,29 +26,25 @@ type StyledModalBodyProps = {
 const StyledUnderlay = styled.div`
   position: fixed;
   z-index: ${theme.modal.underlay.zIndex};
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
   background: ${theme.modal.underlay.bg};
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
-  overflow: hidden;
-  pointer-events: auto;
+  overflow: auto;
 `;
 
 const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
-  width: 100vw;
-  height: 100vh;
   justify-content: center;
-  align-items: ${({ $isCentered }) => ($isCentered ? 'center' : 'flex-start')};
   display: flex;
-  position: fixed;
-  pointer-events: ${({ $isCentered }) => $isCentered && 'none'};
-  overflow: ${({ $isCentered }) => !$isCentered && 'auto'};
+  height: max-content;
   z-index: ${theme.modal.zIndex};
-  top: 0;
-  left: 0;
   transition: opacity ${theme.transition.duration.duration100}ms ease-out;
+  margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
+
   transition-property: opacity, transform;
   ${({ $transitionTrigger }) =>
     $transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
@@ -68,7 +60,6 @@ const StyledDialog = styled.section<StyledDialogProps>`
   width: 100%;
   max-height: ${({ $isCentered }) => $isCentered && theme.modal.maxHeight};
   overflow: ${({ $isCentered }) => $isCentered && 'hidden'};
-  margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
   pointer-events: auto;
 
   display: flex;
@@ -83,10 +74,7 @@ const StyledCloseCTA = styled(CTA)`
   z-index: ${theme.modal.closeBtn.zIndex};
 `;
 
-const StyledModalHeader = styled(H3)<StyledModalHeaderProps>`
-  font-size: ${theme.text.xl};
-  line-height: ${theme.lineHeight.base};
-  text-align: ${({ $alignment }) => $alignment};
+const StyledModalHeader = styled(H3)`
   padding: ${theme.modal.header.paddingY} ${theme.modal.header.paddingX};
   flex-shrink: 0;
 `;

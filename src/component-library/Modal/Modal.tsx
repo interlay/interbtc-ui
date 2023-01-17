@@ -41,24 +41,25 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
 
     return isOpen || shouldRender ? (
       <OverlayContainer>
-        <StyledUnderlay {...underlayProps} />
-        <FocusScope contain restoreFocus autoFocus>
-          <StyledDialogWrapper
-            ref={dialogRef}
-            $transitionTrigger={transitionTrigger}
-            $isCentered={isCentered}
-            {...modalProps}
-          >
-            <ModalContext.Provider value={{ titleProps }}>
-              <StyledDialog $isCentered={isCentered} {...dialogProps}>
-                <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onPress={onClose}>
-                  <XMark />
-                </StyledCloseCTA>
-                {children}
-              </StyledDialog>
-            </ModalContext.Provider>
-          </StyledDialogWrapper>
-        </FocusScope>
+        <StyledUnderlay {...underlayProps}>
+          <FocusScope contain restoreFocus autoFocus>
+            <StyledDialogWrapper
+              ref={dialogRef}
+              $transitionTrigger={transitionTrigger}
+              $isCentered={isCentered}
+              {...modalProps}
+            >
+              <ModalContext.Provider value={{ titleProps }}>
+                <StyledDialog $isCentered={isCentered} {...dialogProps}>
+                  <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onPress={onClose}>
+                    <XMark />
+                  </StyledCloseCTA>
+                  {children}
+                </StyledDialog>
+              </ModalContext.Provider>
+            </StyledDialogWrapper>
+          </FocusScope>
+        </StyledUnderlay>
       </OverlayContainer>
     ) : null;
   }
