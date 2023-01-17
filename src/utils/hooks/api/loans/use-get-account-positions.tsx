@@ -55,7 +55,6 @@ interface AccountPositionsStatisticsData {
   earnedDeptAmountUSD: Big;
   netAmountUSD: Big;
   netAPY: Big;
-  thresholds?: PositionsThresholdsData;
 }
 
 const getNetAPY = (
@@ -139,24 +138,25 @@ const getAccountPositionsStats = (
   );
 
   const collateralizedAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositions, prices);
-  const earnedInterestAmountUSD = getPositionsSumOfFieldsInUSD<LendPosition>('earnedInterest', lendPositions, prices);
   const earnedDeptAmountUSD = getPositionsSumOfFieldsInUSD('accumulatedDebt', borrowPositions, prices);
 
-  const totalEarnedRewardsUSDValue =
-    convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) || 0;
-  const netAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
+  // TODO: This is temporary, atleast until earned interest
+  // is moved into squid.
+  // const totalEarnedRewardsUSDValue =
+  //   convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) || 0;
+  // const netAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
 
   const netAPY = getNetAPY(lendPositions, borrowPositions, assets, supplyAmountUSD, prices);
 
   return {
     supplyAmountUSD,
     borrowAmountUSD,
-    earnedInterestAmountUSD,
+    earnedInterestAmountUSD: new Big(0),
     collateralAmountUSD,
     liquidationAmountUSD,
     collateralizedAmountUSD,
     earnedDeptAmountUSD,
-    netAmountUSD,
+    netAmountUSD: new Big(0),
     netAPY
   };
 };

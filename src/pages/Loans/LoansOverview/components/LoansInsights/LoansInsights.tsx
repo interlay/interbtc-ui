@@ -27,10 +27,11 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
 
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
-  const { supplyAmountUSD, netAmountUSD, netAPY } = statistics || {};
+  const { supplyAmountUSD, netAPY } = statistics || {};
 
   const supplyBalanceLabel = formatUSD(supplyAmountUSD?.toNumber() || 0);
-  const netBalanceLabel = formatUSD(netAmountUSD?.toNumber() || 0);
+  // TODO: temporary until squid has earned interest calculation.
+  // const netBalanceLabel = formatUSD(netAmountUSD?.toNumber() || 0);
   const netPercentage = formatPercentage(netAPY?.toNumber() || 0);
   const netPercentageLabel = `${netAPY?.gt(0) ? '+' : ''}${netPercentage}`;
 
@@ -52,9 +53,8 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
         <Card flex='1'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
             <StyledDt color='primary'>Net APY</StyledDt>
-            <StyledDd color='secondary'>
-              {netPercentageLabel} ({netBalanceLabel})
-            </StyledDd>
+            {/* {netPercentageLabel} ({netBalanceLabel}) */}
+            <StyledDd color='secondary'>{netPercentageLabel}</StyledDd>
           </DlGroup>
         </Card>
         <Card

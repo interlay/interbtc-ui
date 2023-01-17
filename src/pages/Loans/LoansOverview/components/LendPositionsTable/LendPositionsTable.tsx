@@ -51,7 +51,7 @@ const LendPositionsTable = ({
 
   const rows: LendPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ amount, currency, earnedInterest, isCollateral }) => {
+      positions.map(({ amount, currency, isCollateral }) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
         const { lendApy, lendReward } = assets[currency.ticker];
@@ -62,7 +62,6 @@ const LendPositionsTable = ({
             currency={currency}
             prices={prices}
             rewards={lendReward}
-            earnedInterest={earnedInterest}
             // TODO: temporary until we find why row click is being ignored
             onClick={() => onRowAction?.(currency.ticker as Key)}
           />
