@@ -279,14 +279,6 @@ const IssueForm = (): JSX.Element | null => {
         });
       }
 
-      if (!bridgeLoaded) {
-        return 'Bridge must be loaded!';
-      }
-
-      if (btcAmount === undefined) {
-        return 'Invalid BTC amount input!';
-      }
-
       if (isOracleOffline) {
         return t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
       }
