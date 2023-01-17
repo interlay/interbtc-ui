@@ -31,7 +31,7 @@ type CTAProps = Props & InheritAttrs & NativeAttrs;
 
 const CTA = forwardRef<HTMLButtonElement, CTAProps>(
   (
-    { children, loading, disabled, variant = 'primary', fullWidth, size = 'medium', onPress, ...props },
+    { children, loading, disabled, variant = 'primary', fullWidth, size = 'medium', onPress, onClick, ...props },
     ref
   ): JSX.Element => {
     const domRef = useDOMRef(ref);
@@ -49,7 +49,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
         variant={variant}
         size={size}
         isFocusVisible={isFocusVisible}
-        {...mergeProps(props, buttonProps, focusProps)}
+        {...mergeProps(props, buttonProps, focusProps, { onClick })}
       >
         {loading && (
           <LoadingWrapper>
