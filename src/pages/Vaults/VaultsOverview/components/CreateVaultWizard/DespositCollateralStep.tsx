@@ -80,8 +80,8 @@ const DepositCollateralStep = ({
     <>
       <ModalHeader color='secondary'>{t('vault.deposit_collateral')}</ModalHeader>
       <ModalDivider color='secondary' />
-      <ModalBody>
-        <form onSubmit={h(handleSubmit)}>
+      <form onSubmit={h(handleSubmit)}>
+        <ModalBody>
           <Stack spacing='double'>
             <TokenInput
               aria-labelledby={titleId}
@@ -112,21 +112,21 @@ const DepositCollateralStep = ({
               </StyledDItem>
             </StyledDl>
           </Stack>
-          {registerNewVaultMutation.isError && (
-            <ErrorModal
-              open={registerNewVaultMutation.isError}
-              onClose={() => registerNewVaultMutation.reset()}
-              title='Error'
-              description={registerNewVaultMutation.error?.message || ''}
-            />
-          )}
-        </form>
-      </ModalBody>
-      <ModalFooter>
-        <CTA type='submit' disabled={isBtnDisabled} fullWidth loading={registerNewVaultMutation.isLoading}>
-          {t('vault.deposit_collateral')}
-        </CTA>
-      </ModalFooter>
+        </ModalBody>
+        <ModalFooter>
+          <CTA type='submit' disabled={isBtnDisabled} fullWidth loading={registerNewVaultMutation.isLoading}>
+            {t('vault.deposit_collateral')}
+          </CTA>
+        </ModalFooter>
+      </form>
+      {registerNewVaultMutation.isError && (
+        <ErrorModal
+          open={registerNewVaultMutation.isError}
+          onClose={() => registerNewVaultMutation.reset()}
+          title='Error'
+          description={registerNewVaultMutation.error?.message || ''}
+        />
+      )}
     </>
   );
 };
