@@ -1,10 +1,10 @@
 import { CollateralCurrencyExt, newVaultId, WrappedCurrency, WrappedIdLiteral } from '@interlay/interbtc-api';
 import Big from 'big.js';
-import { HTMLAttributes } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { formatNumber, formatUSD } from '@/common/utils/utils';
+import { CardProps } from '@/component-library';
 import { LoadingSpinner } from '@/component-library/LoadingSpinner';
 import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -30,9 +30,9 @@ type Props = {
   hasWithdrawRewardsBtn: boolean;
 };
 
-type NativeAttrs = HTMLAttributes<unknown>;
+type InheritAttrs = Omit<CardProps, keyof Props>;
 
-type RewardsProps = Props & NativeAttrs;
+type RewardsProps = Props & InheritAttrs;
 
 const Rewards = ({
   vaultAddress,
