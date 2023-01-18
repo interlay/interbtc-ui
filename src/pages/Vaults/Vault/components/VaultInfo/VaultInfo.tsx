@@ -1,9 +1,9 @@
 import { CollateralCurrencyExt, VaultStatusExt } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import React, { HTMLAttributes, useState } from 'react';
+import React, { useState } from 'react';
 
-import { CTA, Dd, Dt } from '@/component-library';
+import { CardProps, CTA, Dd, Dt } from '@/component-library';
 import { Status } from '@/component-library/utils/prop-types';
 import AddressWithCopyUI from '@/components/AddressWithCopyUI';
 import RequestReplacementModal from '@/pages/Vaults/Vault/RequestReplacementModal';
@@ -39,9 +39,9 @@ type Props = {
   hasManageVaultBtn: boolean;
 };
 
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
+type InheritAttrs = Omit<CardProps, keyof Props>;
 
-type VaultInfoProps = Props & NativeAttrs;
+type VaultInfoProps = Props & InheritAttrs;
 
 const VaultInfo = ({
   vaultStatus,
