@@ -1,6 +1,4 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
-import { PoolType } from '@interlay/interbtc-api/build/src/parachain/amm/types';
+import { LiquidityPool, newMonetaryAmount, PoolType } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, useQueryClient } from 'react-query';

@@ -1,5 +1,4 @@
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
+import { CurrencyExt, LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';

@@ -1,4 +1,4 @@
-import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
+import { LiquidityPool } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';

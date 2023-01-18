@@ -1,4 +1,4 @@
-import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
+import { LiquidityPool } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';

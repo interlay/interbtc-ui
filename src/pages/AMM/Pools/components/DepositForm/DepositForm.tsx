@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { LiquidityPool } from '@interlay/interbtc-api/build/src/parachain/amm/liquidity-pool/types';
+import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
