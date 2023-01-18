@@ -11,7 +11,7 @@ const Swap = (): JSX.Element => {
   // const accountId = useAccountId();
   const [pair, setPair] = useState<SwapPair>({ input: RELAY_CHAIN_NATIVE_TOKEN });
 
-  // if () {
+  // if (isLoading) {
   //   return <FullLoadingSpinner />;
   // }
 

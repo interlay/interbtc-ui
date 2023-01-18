@@ -10,7 +10,7 @@ const Template: Story<TokenInputProps> = (args) => {
     <TokenInput
       {...args}
       value={value}
-      onChange={(e) => setValue(Number(e.target.value) || undefined)}
+      onChange={(e) => setValue(Number(e.target.value || 0))}
       aria-label='token field'
       valueUSD={(value || 0) * 10}
     />
@@ -25,7 +25,7 @@ WithBalance.args = {
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'Amount',
-  isDisabled: true
+  isDisabled: false
 };
 
 const WithoutBalance = Template.bind({});

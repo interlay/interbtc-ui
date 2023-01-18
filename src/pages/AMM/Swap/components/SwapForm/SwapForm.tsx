@@ -16,6 +16,7 @@ import { SlippageManager } from '../SlippageManager';
 import { SwapInfo } from '../SwapInfo';
 import { SwapDivider } from './SwapDivider';
 
+// TODO: here we will call the lib to get the expected output
 const getOutput = async (param?: number) => {
   return param;
 };
@@ -91,8 +92,6 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
     output: outputAmount
   });
 
-  console.log(pair);
-
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = Number(e.target.value) || undefined;
     setInputAmount(value);
@@ -129,9 +128,7 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
     onChangePair(newPair);
   };
 
-  const handlePairSwap = () => {
-    onChangePair({ input: pair.output, output: pair.input });
-  };
+  const handlePairSwap = () => onChangePair({ input: pair.output, output: pair.input });
 
   const isComplete = !!(pair.output && pair.input);
 

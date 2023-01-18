@@ -1,14 +1,11 @@
-import amm from './amm';
 import loans from './loans';
 import vaults from './vaults';
 
 const validation = {
   vaults,
-  loans,
-  amm
+  loans
 };
 
-export type { SwapSchemaParams } from './amm';
 export type {
   LoanBorrowSchemaParams,
   LoanLendSchemaParams,
