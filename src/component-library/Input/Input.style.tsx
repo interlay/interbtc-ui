@@ -104,10 +104,9 @@ const Adornment = styled.div<AdornmentProps>`
   bottom: ${({ $position }) => $position === 'bottom' && theme.spacing.spacing1};
 `;
 
-const Wrapper = styled.div<Pick<BaseInputProps, '$isDisabled'>>`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  opacity: ${({ $isDisabled }) => $isDisabled && 0.5};
 `;
 
 export { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper };

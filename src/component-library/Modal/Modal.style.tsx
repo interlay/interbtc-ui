@@ -7,7 +7,7 @@ import { Divider } from '../Divider';
 import { Flex } from '../Flex';
 import { H3 } from '../Text';
 import { theme } from '../theme';
-import { NormalAlignments, Overflow } from '../utils/prop-types';
+import { Overflow } from '../utils/prop-types';
 
 type StyledDialogWrapperProps = {
   $transitionTrigger?: TransitionTrigger;
@@ -16,10 +16,6 @@ type StyledDialogWrapperProps = {
 
 type StyledDialogProps = {
   $isCentered?: boolean;
-};
-
-type StyledModalHeaderProps = {
-  $alignment?: NormalAlignments;
 };
 
 type StyledModalBodyProps = {
@@ -78,10 +74,7 @@ const StyledCloseCTA = styled(CTA)`
   z-index: ${theme.modal.closeBtn.zIndex};
 `;
 
-const StyledModalHeader = styled(H3)<StyledModalHeaderProps>`
-  font-size: ${theme.text.xl};
-  line-height: ${theme.lineHeight.base};
-  text-align: ${({ $alignment }) => $alignment};
+const StyledModalHeader = styled(H3)`
   padding: ${theme.modal.header.paddingY} ${theme.modal.header.paddingX};
   flex-shrink: 0;
 `;

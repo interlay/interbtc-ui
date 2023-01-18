@@ -56,7 +56,7 @@
   --colors-input-default-border: var(--colors-neutral-light-grey);
   --colors-input-hover-border: var(--colors-lighter-blue);
   --colors-input-focus-border: var(--colors-light-blue-90);
-  --colors-input-disabled-text: var(--colors-neutral-lighter-grey);
+  --colors-input-disabled-text: #9a9a9a;
   --colors-input-disabled-border: var(--colors-neutral-lighter-grey);
   --colors-input-background: var(--colors-neutral-white);
   /* Token Input */

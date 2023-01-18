@@ -59,7 +59,7 @@
   --colors-input-default-border: var(--colors-neutral-white-25);
   --colors-input-hover-border: var(--colors-slate-gray);
   --colors-input-focus-border: var(--colors-neutral-white);
-  --colors-input-disabled-text: var(--colors-mid-blue);
+  --colors-input-disabled-text: var(--colors-slate-gray);
   --colors-input-disabled-border: var(--colors-mid-blue);
   --colors-input-background: transparent;
   /* Token Input */

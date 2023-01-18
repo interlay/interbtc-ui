@@ -25,11 +25,11 @@ const StyledTicker = styled.span`
   color: ${theme.colors.textPrimary};
 `;
 
-const StyledUSDAdornment = styled.span`
+const StyledUSDAdornment = styled.span<Pick<StyledTokenInputBalanceValueProps, '$isDisabled'>>`
   display: block;
   font-size: ${theme.text.xs};
   line-height: ${theme.lineHeight.s};
-  color: ${theme.colors.textTertiary};
+  color: ${({ $isDisabled }) => ($isDisabled ? theme.input.disabled.color : theme.colors.textTertiary)};
   white-space: nowrap;
   align-self: flex-start;
 `;
