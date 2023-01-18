@@ -3,6 +3,7 @@ import '@testing-library/jest-dom';
 import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
@@ -313,5 +314,40 @@ describe('issue form', () => {
 
     (window.bridge.btcRelay.getLatestBlockHeight as any).mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
     (window.bridge.electrsAPI.getLatestBlockHeight as any).mockImplementation(() => MOCK_BITCOIN_HEIGHT);
+  });
+
+  it('when the oracle is offline', async () => {
+    (window.bridge.oracle.getExchangeRate as any).mockImplementation(
+      (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, new Big(0))
+    );
+
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
+    const amountToIssueInput = screen.getByRole('textbox');
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToIssueInput, inputAmount.toString());
+    });
+
+    const errorElement = screen.getByText(/oracle is offline/i);
+
+    expect(errorElement).toBeInTheDocument();
+
+    const submitButton = screen.getByRole('button', { name: /confirm/i });
+
+    await act(async () => {
+      userEvent.click(submitButton);
+    });
+
+    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+
+    (window.bridge.oracle.getExchangeRate as any).mockImplementation(
+      (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, MOCK_EXCHANGE_RATE)
+    );
   });
 });
