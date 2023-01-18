@@ -3070,10 +3070,10 @@
   dependencies:
     browser-headers "^0.4.1"
 
-"@interlay/bridge@^0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@interlay/bridge/-/bridge-0.1.12.tgz#74f00bd735eb5771220751d015bb4e1157bbe22b"
-  integrity sha512-yClLq+8xuVWnzybZET4hf+ZLVhQtmhuyBb7McgECaQX0bo6Twq1cDUO4yHvkcbZ/ykZQR8K2lLCa8uQfgcZuiA==
+"@interlay/bridge@^0.1.13":
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/@interlay/bridge/-/bridge-0.1.13.tgz#f17974ef6b65aa541943494d682be33b9b303dce"
+  integrity sha512-sqh+8fTPZarLYmeCejaxOi0M/2ral4E26ViVQREt8MWFEUg1hEkaUi9AFWpqKrbHOEj8GTrI8ipNMFdqwVUMew==
   dependencies:
     "@acala-network/api" "4.1.6-23"
     "@acala-network/sdk" "4.1.6-23"
