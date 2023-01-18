@@ -16,8 +16,12 @@ const SwapInfo = ({ pair }: SwapInfoProps): JSX.Element | null => {
 
   return (
     <StyledCard>
-      <Accordion>
-        <AccordionItem key='info' title={`1 ${pair.input?.ticker} = 16.062 ${pair.output?.ticker}`}>
+      <Accordion size='s'>
+        <AccordionItem
+          hasChildItems={false}
+          key='info'
+          title={`1 ${pair.input?.ticker} = 16.062 ${pair.output?.ticker}`}
+        >
           <Dl direction='column'>
             <DlGroup justifyContent='space-between'>
               <Dt size='s' color='primary'>
