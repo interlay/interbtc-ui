@@ -13,6 +13,12 @@ import { TokenInputLabel } from './TokenInputLabel';
 import { TokenData } from './TokenList';
 import { TokenSelect } from './TokenSelect';
 
+type SingleToken = string;
+
+type MultiToken = { text: string; icons: string[] };
+
+type TokenTicker = SingleToken | MultiToken;
+
 const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
   if (!decimals) return;
 
@@ -29,9 +35,11 @@ type Props = {
   balance?: number;
   balanceLabel?: ReactNode;
   balanceDecimals?: number;
-  ticker?: string;
+  ticker?: TokenTicker;
+  defaultTicker?: TokenTicker;
   tokens?: TokenData[];
   onClickBalance?: (balance?: number) => void;
+  onChangeTicker?: (ticker?: string) => void;
   selectProps?: InputHTMLAttributes<HTMLInputElement>;
 };
 
@@ -50,11 +58,13 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       isDisabled,
       label,
       ticker: tickerProp,
+      defaultTicker,
       tokens = [],
       style,
       hidden,
       className,
       onClickBalance,
+      onChangeTicker,
       selectProps,
       ...props
     },
@@ -62,27 +72,41 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
-    const [ticker, setTicker] = useState((selectProps?.value as string) || tickerProp);
+    const [tickerValue, setTickerValue] = useState(
+      (selectProps?.defaultValue as string) || (typeof defaultTicker === 'string' ? defaultTicker : defaultTicker?.text)
+    );
 
     const { labelProps, fieldProps } = useLabel({ label });
 
     useEffect(() => {
-      if (!tickerProp) return;
+      if (tickerProp === undefined) return;
 
-      setTicker(tickerProp);
+      setTickerValue(typeof tickerProp === 'string' ? tickerProp : tickerProp?.text);
     }, [tickerProp]);
+
+    useEffect(() => {
+      if (selectProps?.value === undefined) return;
+
+      setTickerValue(selectProps.value as string);
+    }, [selectProps?.value]);
 
     const handleClickBalance = () => {
       triggerChangeEvent(inputRef, balance);
       onClickBalance?.(balance);
     };
 
-    const handleTokenChange = (ticker: string) => setTicker(ticker);
+    const handleTokenChange = (ticker: string) => {
+      onChangeTicker?.(ticker);
+      setTickerValue(ticker);
+    };
 
-    const isSelectDisabled = !selectProps || !tokens?.length;
+    const customIcons = typeof tickerProp === 'object' ? tickerProp.icons : undefined;
+
+    const isSelectDisabled = !tokens?.length;
     const endAdornment = (
       <TokenSelect
-        ticker={ticker}
+        value={tickerValue}
+        icons={customIcons}
         isDisabled={isSelectDisabled}
         tokens={tokens}
         onChange={handleTokenChange}
@@ -96,11 +120,11 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     return (
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
         <TokenInputLabel
-          ticker={ticker}
+          ticker={tickerValue}
           balance={balance}
           balanceLabel={balanceLabel}
           balanceDecimals={balanceDecimals}
-          isDisabled={isDisabled || !ticker}
+          isDisabled={isDisabled || !tickerValue}
           onClickBalance={handleClickBalance}
           {...labelProps}
         >
@@ -112,7 +136,6 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           size='large'
           isDisabled={isDisabled}
           formatOptions={formatOptions}
-          paddingX={{ right: isSelectDisabled ? 'lg' : ticker ? 'xl' : 'xl2' }}
           endAdornment={endAdornment}
           bottomAdornment={<StyledUSDAdornment>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}
@@ -125,4 +148,4 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 TokenInput.displayName = 'TokenInput';
 
 export { TokenInput };
-export type { TokenInputProps };
+export type { TokenInputProps, TokenTicker };

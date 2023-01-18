@@ -3,22 +3,35 @@ import { chain, mergeProps } from '@react-aria/utils';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { ChangeEventHandler, InputHTMLAttributes, useRef, useState } from 'react';
 
+import { CoinIcon } from '../CoinIcon';
+import { TokenStack } from '../TokenStack';
 import { assignFormRef, triggerChangeEvent } from '../utils/input';
-import { StyledChevronDown, StyledCoinIcon, StyledTicker, StyledTokenSelect } from './TokenInput.style';
+import { StyledChevronDown, StyledTicker, StyledTokenSelect } from './TokenInput.style';
 import { TokenData } from './TokenList';
 import { TokenListModal } from './TokenListModal';
+
+const Icon = ({ value, icons }: Pick<TokenSelectProps, 'value' | 'icons'>) => {
+  if (!value) return null;
+
+  if (icons?.length) {
+    return <TokenStack offset={icons.length > 2 ? 'lg' : 'md'} tickers={icons} />;
+  }
+
+  return <CoinIcon ticker={value} />;
+};
 
 type SelectProps = InputHTMLAttributes<HTMLInputElement> & { ref?: any };
 
 type TokenSelectProps = {
-  ticker?: string;
+  value?: string;
+  icons?: string[];
   isDisabled: boolean;
   tokens: TokenData[];
   onChange: (ticker: string) => void;
   selectProps?: SelectProps;
 };
 
-const TokenSelect = ({ ticker, tokens, isDisabled, onChange, selectProps }: TokenSelectProps): JSX.Element => {
+const TokenSelect = ({ value, icons, tokens, isDisabled, onChange, selectProps }: TokenSelectProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
 
   const tokenButtonRef = useRef<HTMLDivElement>(null);
@@ -47,22 +60,21 @@ const TokenSelect = ({ ticker, tokens, isDisabled, onChange, selectProps }: Toke
         {...(!isDisabled && buttonProps)}
         ref={tokenButtonRef}
         alignItems='center'
-        justifyContent='center'
+        justifyContent='space-evenly'
         gap='spacing1'
         $isClickable={!isDisabled}
-        $hasToken={!!ticker}
       >
-        {ticker && <StyledCoinIcon ticker={ticker} />}
-        <StyledTicker>{ticker || 'Select Token'}</StyledTicker>
+        <Icon value={value} icons={icons} />
+        <StyledTicker>{value || 'Select Token'}</StyledTicker>
         {!isDisabled && (
           <>
             <StyledChevronDown size='s' />
             <VisuallyHidden>
               <input
                 ref={assignFormRef(selectRef, inputRef)}
-                tabIndex={-1}
-                value={ticker}
                 {...mergeProps(inputProps, { onChange: handleChange })}
+                tabIndex={-1}
+                value={value}
               />
             </VisuallyHidden>
           </>
@@ -72,7 +84,7 @@ const TokenSelect = ({ ticker, tokens, isDisabled, onChange, selectProps }: Toke
         <TokenListModal
           isOpen={isOpen}
           tokens={tokens}
-          selectedTicker={ticker}
+          selectedTicker={value}
           onClose={handleClose}
           onSelectionChange={chain(onChange, handleSelectionChange, handleClose)}
         />

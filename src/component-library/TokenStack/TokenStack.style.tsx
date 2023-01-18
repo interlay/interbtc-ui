@@ -4,7 +4,19 @@ import { Flex } from '../Flex';
 import { theme } from '../theme';
 import { IconSize } from '../utils/prop-types';
 
-type TokenOffset = 'none' | '1/2' | '1/3' | '1/4';
+const getOffset = (offset: TokenOffset) => {
+  switch (offset) {
+    case 'lg':
+      return '-0.5';
+    default:
+    case 'md':
+      return '-0.33';
+    case 's':
+      return '-0.25';
+  }
+};
+
+type TokenOffset = 'none' | 's' | 'md' | 'lg';
 
 type StyledWrapperProps = {
   $size: IconSize;
@@ -17,7 +29,7 @@ const StyledWrapper = styled(Flex)<StyledWrapperProps>`
   > :not(:last-child) {
     // Coin one covers 30% of coin two
     margin-right: ${({ $size, $offset }) =>
-      $offset !== 'none' && `calc(${theme.icon.sizes[$size]} * calc(${$offset}) * -1)`};
+      $offset !== 'none' && `calc(${theme.icon.sizes[$size]} * ${getOffset($offset)})`};
   }
 `;
 

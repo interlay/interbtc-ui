@@ -1,17 +1,18 @@
-import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode, useRef } from 'react';
 
 import { HelperText, HelperTextProps } from '../HelperText';
 import { hasErrorMessage } from '../HelperText/HelperText';
 import { Label, LabelProps } from '../Label';
 import { Sizes } from '../utils/prop-types';
-import { Adornment, BaseInputWrapper, PaddingX, StyledBaseInput, Wrapper } from './Input.style';
+import { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper } from './Input.style';
 
 type Props = {
   label?: ReactNode;
   labelProps?: LabelProps;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
-  paddingX?: PaddingX;
   bottomAdornment?: ReactNode;
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;
@@ -33,7 +34,6 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       hidden,
       startAdornment,
       endAdornment,
-      paddingX,
       bottomAdornment,
       label,
       labelProps,
@@ -47,8 +47,17 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     },
     ref
   ): JSX.Element => {
+    const endAdornmentRef = useRef<HTMLDivElement>(null);
+    const [endAdornmentWidth, setEndAdornmentWidth] = useState(0);
+
     const hasError = hasErrorMessage(errorMessage);
     const hasHelpText = !!description || hasError;
+
+    useEffect(() => {
+      if (!endAdornmentRef.current || !endAdornment) return;
+
+      setEndAdornmentWidth(endAdornmentRef.current.getBoundingClientRect().width);
+    }, [endAdornment]);
 
     return (
       <Wrapper hidden={hidden} className={className} style={style} $isDisabled={!!disabled}>
@@ -61,13 +70,17 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
             ref={ref}
             type='text'
             $adornments={{ bottom: !!bottomAdornment, left: !!startAdornment, right: !!endAdornment }}
-            $paddingX={paddingX}
             $hasError={hasError}
             $isDisabled={!!disabled}
+            $endAdornmentWidth={endAdornmentWidth}
             {...props}
           />
           {bottomAdornment && <Adornment $position='bottom'>{bottomAdornment}</Adornment>}
-          {endAdornment && <Adornment $position='right'>{endAdornment}</Adornment>}
+          {endAdornment && (
+            <Adornment ref={endAdornmentRef} $position='right'>
+              {endAdornment}
+            </Adornment>
+          )}
         </BaseInputWrapper>
         {hasHelpText && (
           <HelperText
