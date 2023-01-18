@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 import { ChevronDown } from '@/assets/icons';
 
-import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
 import { List } from '../List';
 import { Span } from '../Text';
@@ -10,7 +9,6 @@ import { theme } from '../theme';
 
 type StyledClickableProps = {
   $isClickable: boolean;
-  $hasToken: boolean;
 };
 
 type StyledTokenInputBalanceValueProps = {
@@ -25,7 +23,6 @@ type StyledListItemSelectedLabelProps = {
 const StyledTicker = styled.span`
   font-size: ${theme.text.s};
   color: ${theme.colors.textPrimary};
-  flex: 0 1 auto;
 `;
 
 const StyledUSDAdornment = styled.span`
@@ -44,20 +41,11 @@ const StyledTokenSelect = styled(Flex)<StyledClickableProps>`
   padding: ${theme.spacing.spacing3};
   cursor: ${({ $isClickable }) => $isClickable && 'pointer'};
   height: 3rem;
-  width: ${({ $hasToken, $isClickable }) => {
-    if (!$hasToken) return '8.5rem';
-
-    return $isClickable ? '7rem' : '5.25rem';
-  }};
+  width: auto;
 `;
 
 const StyledChevronDown = styled(ChevronDown)`
   margin-left: ${theme.spacing.spacing1};
-  flex: 1 0 auto;
-`;
-
-const StyledCoinIcon = styled(CoinIcon)`
-  flex: 1 0 auto;
 `;
 
 const StyledTokenInputBalanceWrapper = styled.dl`
@@ -100,7 +88,6 @@ const StyledListHeader = styled(Flex)`
 
 export {
   StyledChevronDown,
-  StyledCoinIcon,
   StyledList,
   StyledListHeader,
   StyledListItemLabel,
