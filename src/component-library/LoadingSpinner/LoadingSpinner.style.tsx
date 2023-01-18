@@ -19,9 +19,9 @@ const StyledLoadingSpinner = styled.span<StyledLoadingSpinnerProps>`
   border-left: ${(props) => props.$thickness}px solid ${({ $color }) => theme.spinner[$color].color};
   transform: translateZ(0);
   animation: loadIndeterminate 1.1s infinite linear;
-
-  width: ${({ $size }) => theme.icon.sizes[$size]};
-  height: ${({ $size }) => theme.icon.sizes[$size]};
+  font-size: ${({ $size }) => theme.icon.sizes[$size]};
+  width: 1.5em;
+  height: 1.5em;
   display: inline-block;
   user-select: none;
   flex-shrink: 0;

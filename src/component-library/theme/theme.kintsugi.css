@@ -39,12 +39,12 @@
   --colors-tabs-active-color: var(--colors-blue);
   --colors-tabs-active-bg: var(--colors-neutral-white);
   /* Loading Spinner */
-  --colors-indeterminate-primary-color: var(--colors-neutral-white);
-  --colors-indeterminate-primary-bg: var(--colors-neutral-black-20);
-  --colors-indeterminate-secondary-color: var(--colors-neutral-black-80);
-  --colors-indeterminate-secondary-bg: var(--colors-neutral-lighter-grey);
-  --colors-indeterminate-outlined-color: var(--colors-yellow);
-  --colors-indeterminate-outlined-bg: var(--colors-mid-blue);
+  --colors-spinner-primary-color: var(--colors-neutral-white);
+  --colors-spinner-primary-bg: var(--colors-neutral-black-20);
+  --colors-spinner-secondary-color: var(--colors-neutral-black-80);
+  --colors-spinner-secondary-bg: var(--colors-neutral-lighter-grey);
+  --colors-spinner-tertiary-color: var(--colors-yellow);
+  --colors-spinner-tertiary-bg: var(--colors-mid-blue);
   /* Meter */
   --colors-meter-bar-indicator-color: var(--colors-yellow);
   --colors-meter-bar-separator-color: var(--colors-neutral-white);

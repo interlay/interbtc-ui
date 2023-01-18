@@ -77,5 +77,23 @@ const StyledLoadingSpinner = styled(LoadingSpinner)<Pick<StyledCTAProps, '$size'
   height: ${(props) => theme.cta[props.$size].text};
 `;
 
-export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledLoadingSpinner, TextCTA };
+const StyledIconLoadingWrapper = styled.span`
+  display: inline-flex;
+  /* line-height: ${theme.icon.sizes.lg}; */
+`;
+
+// const StyledIconLoadingSpinner = styled(LoadingSpinner)<{ $size: IconSize }>`
+//   width: ${(props) => theme.icon.sizes[props.$size]};
+//   height: ${(props) => theme.icon.sizes[props.$size]};
+// `;
+
+export {
+  LoadingWrapper,
+  OutlinedCTA,
+  PrimaryCTA,
+  SecondaryCTA,
+  StyledIconLoadingWrapper,
+  StyledLoadingSpinner,
+  TextCTA
+};
 export type { StyledCTAProps };

@@ -320,8 +320,8 @@ const theme = {
       bg: 'var(--colors-spinner-secondary-bg)'
     },
     tertiary: {
-      color: 'var(--colors-spinner-outlined-color)',
-      bg: 'var(--colors-spinner-outlined-bg)'
+      color: 'var(--colors-spinner-tertiary-color)',
+      bg: 'var(--colors-spinner-tertiary-bg)'
     }
   },
   progress: {
