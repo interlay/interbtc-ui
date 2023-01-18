@@ -71,6 +71,9 @@ const TokenSelect = ({ value, icons, tokens, isDisabled, onChange, selectProps }
             <StyledChevronDown size='s' />
             <VisuallyHidden>
               <input
+                // TODO: react-hook-forms sets initial value using ref
+                // so we will need to keep up out state with that initial value
+                // using our ref.
                 ref={assignFormRef(selectRef, inputRef)}
                 {...mergeProps(inputProps, { onChange: handleChange })}
                 tabIndex={-1}

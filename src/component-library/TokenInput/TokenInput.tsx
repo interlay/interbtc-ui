@@ -137,7 +137,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           isDisabled={isDisabled}
           formatOptions={formatOptions}
           endAdornment={endAdornment}
-          bottomAdornment={<StyledUSDAdornment>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>}
+          bottomAdornment={
+            <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
+          }
           {...mergeProps(props, fieldProps)}
         />
       </Flex>

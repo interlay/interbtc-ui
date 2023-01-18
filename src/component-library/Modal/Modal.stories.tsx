@@ -21,7 +21,7 @@ const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = 
       <Modal {...args} isOpen={state.isOpen} onClose={state.close}>
         {hasTitle && (
           <>
-            <ModalHeader color='secondary' alignment='center'>
+            <ModalHeader color='secondary' align='center'>
               Title
             </ModalHeader>
             <ModalDivider color='secondary' />

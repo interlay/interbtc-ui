@@ -60,7 +60,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     }, [endAdornment]);
 
     return (
-      <Wrapper hidden={hidden} className={className} style={style} $isDisabled={!!disabled}>
+      <Wrapper hidden={hidden} className={className} style={style}>
         {label && <Label {...labelProps}>{label}</Label>}
         <BaseInputWrapper>
           {startAdornment && <Adornment $position='left'>{startAdornment}</Adornment>}
