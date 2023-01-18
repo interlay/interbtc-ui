@@ -11,6 +11,11 @@ import { NormalAlignments, Overflow } from '../utils/prop-types';
 
 type StyledDialogWrapperProps = {
   $transitionTrigger?: TransitionTrigger;
+  $isCentered?: boolean;
+};
+
+type StyledDialogProps = {
+  $isCentered?: boolean;
 };
 
 type StyledModalHeaderProps = {
@@ -22,49 +27,44 @@ type StyledModalBodyProps = {
   $noPadding?: boolean;
 };
 
-const StyledUnderlay = styled.div`
+const StyledUnderlay = styled.div<Pick<StyledDialogWrapperProps, '$isCentered'>>`
   position: fixed;
   z-index: ${theme.modal.underlay.zIndex};
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
   background: ${theme.modal.underlay.bg};
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
-  overflow: hidden;
-  pointer-events: auto;
+  align-items: ${({ $isCentered }) => ($isCentered ? 'center' : 'flex-start')};
+  overflow: ${({ $isCentered }) => !$isCentered && 'auto'};
 `;
 
 const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
-  width: 100vw;
-  height: 100vh;
   justify-content: center;
-  align-items: center;
   display: flex;
-  position: fixed;
-  pointer-events: none;
   z-index: ${theme.modal.zIndex};
-  top: 0;
-  left: 0;
-
   transition: opacity ${theme.transition.duration.duration100}ms ease-out;
+  margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
+  max-width: ${theme.modal.maxWidth};
+  max-height: ${({ $isCentered }) => $isCentered && theme.modal.maxHeight};
+  width: 100%;
   transition-property: opacity, transform;
   ${({ $transitionTrigger }) =>
     $transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
 `;
 
-const StyledDialog = styled.section`
+const StyledDialog = styled.section<StyledDialogProps>`
   background: ${theme.colors.bgPrimary};
   border: ${theme.border.default};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};
 
-  max-width: ${theme.modal.maxWidth};
   width: 100%;
-  max-height: ${theme.modal.maxHeight};
-  margin: 0 ${theme.spacing.spacing6};
+  overflow: ${({ $isCentered }) => $isCentered && 'hidden'};
   pointer-events: auto;
-  overflow: hidden;
 
   display: flex;
   flex-direction: column;
