@@ -14,7 +14,7 @@ const Icon = ({ value, icons }: Pick<TokenSelectProps, 'value' | 'icons'>) => {
   if (!value) return null;
 
   if (icons?.length) {
-    return <TokenStack offset={icons.length > 2 ? '1/2' : '1/3'} tickers={icons} />;
+    return <TokenStack offset={icons.length > 2 ? 'lg' : 'md'} tickers={icons} />;
   }
 
   return <CoinIcon ticker={value} />;

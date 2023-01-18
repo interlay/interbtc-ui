@@ -56,9 +56,8 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
     useEffect(() => {
       if (!endAdornmentRef.current || !endAdornment) return;
 
-      setEndAdornmentWidth(endAdornmentRef.current.clientWidth);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [endAdornment, endAdornmentRef.current]);
+      setEndAdornmentWidth(endAdornmentRef.current.getBoundingClientRect().width);
+    }, [endAdornment]);
 
     return (
       <Wrapper hidden={hidden} className={className} style={style} $isDisabled={!!disabled}>
