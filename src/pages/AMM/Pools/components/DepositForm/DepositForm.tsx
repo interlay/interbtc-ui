@@ -7,7 +7,8 @@ import { toast } from 'react-toastify';
 import * as z from 'zod';
 
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { CTA, Dd, Dl, DlGroup, Dt, Flex, P, TokenInput } from '@/component-library';
+import { Dd, Dl, DlGroup, Dt, Flex, P, TokenInput } from '@/component-library';
+import { AuthCTA } from '@/components/AuthCTA';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import validate, { PoolDepositSchemaParams } from '@/lib/form-validation';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
@@ -55,8 +56,6 @@ const DepositForm = ({ pool }: DepositFormProps): JSX.Element => {
   });
 
   const data = watch();
-  console.log(data);
-  // const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
 
@@ -124,9 +123,9 @@ const DepositForm = ({ pool }: DepositFormProps): JSX.Element => {
           </DlGroup>
         </StyledDl>
 
-        <CTA type='submit' size='large' disabled={isBtnDisabled}>
+        <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
           {t('amm.pools.add_liquidity')}
-        </CTA>
+        </AuthCTA>
       </Flex>
     </form>
   );

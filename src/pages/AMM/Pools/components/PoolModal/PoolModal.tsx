@@ -23,7 +23,7 @@ const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | n
   }
 
   return (
-    <Modal aria-label={`${pool.lpToken.ticker} pool deposit or withdraw`} onClose={onClose} {...props}>
+    <Modal aria-label={`${pool.lpToken.ticker} pool deposit or withdraw`} onClose={onClose} align='top' {...props}>
       <ModalBody noPadding>
         <StyledTabs size='large' fullWidth>
           <TabsItem title={t('deposit')}>

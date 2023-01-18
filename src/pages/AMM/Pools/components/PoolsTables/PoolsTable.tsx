@@ -8,7 +8,7 @@ import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pool
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { PoolName } from '../PoolName';
-import { PoolsBaseTable, PoolsBaseTableProps } from '../PoolsBaseTable';
+import { BalanceCell, PoolsBaseTable, PoolsBaseTableProps } from '../PoolsBaseTable';
 import { MonetaryCell } from '../PoolsBaseTable/MonetaryCell';
 
 enum BorrowAssetsColumns {
@@ -78,7 +78,7 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
 
         const accountLiquidity =
           variant === 'account-pools' && !!amount ? (
-            <MonetaryCell label={formatUSD(sevenDayVolumeUSD || 0, { compact: true })} alignItems='flex-end' />
+            <BalanceCell amount={amount} prices={prices} alignItems='flex-end' />
           ) : undefined;
 
         return {

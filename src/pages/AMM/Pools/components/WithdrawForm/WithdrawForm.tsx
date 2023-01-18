@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { CoinIcon, CTA, Dd, Dl, DlGroup, Dt, Flex, P, TokenInput } from '@/component-library';
+import { CoinIcon, Dd, Dl, DlGroup, Dt, Flex, P, TokenInput } from '@/component-library';
+import { AuthCTA } from '@/components/AuthCTA';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -28,32 +29,17 @@ type WithdrawFormProps = {
 
 const WithdrawForm = ({ pool }: WithdrawFormProps): JSX.Element => {
   const { t } = useTranslation();
-  // const { getBalance, getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-
-  // const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-
-  // const zeroAssetAmount = newMonetaryAmount(0, pooled.currency);
-  // const schemaParams: PoolDepositSchemaParams = {
-  //   governanceBalance,
-  //   maxAmount: getAvailableBalance(pooled.currency.ticker) || zeroAssetAmount,
-  //   minAmount: newMonetaryAmount(1, pooled.currency),
-  //   transactionFee: TRANSACTION_FEE_AMOUNT
-  // };
 
   const {
     register,
     handleSubmit: h,
-    watch,
     formState: { errors, isDirty, isValid }
   } = useForm<WithdrawFormData>({
     mode: 'onChange'
+    // TODO: when there is more info regarding LP Tokens, I will add validation
     // resolver: zodResolver(z.object({[FormFields.WITHDRAW_AMOUNT]: validate.amm.pool.withdraw()}))
   });
-
-  const data = watch();
-  console.log(data);
-  // const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
 
@@ -123,9 +109,9 @@ const WithdrawForm = ({ pool }: WithdrawFormProps): JSX.Element => {
           </DlGroup>
         </StyledDl>
 
-        <CTA type='submit' size='large' disabled={isBtnDisabled}>
+        <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
           {t('amm.pools.remove_liquidity')}
-        </CTA>
+        </AuthCTA>
       </Flex>
     </form>
   );
