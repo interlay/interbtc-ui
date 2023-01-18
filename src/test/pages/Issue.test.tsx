@@ -6,10 +6,12 @@ import { AccountId } from '@polkadot/types/interfaces';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { DEFAULT_ISSUE_DUST_AMOUNT } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, DEFAULT_ISSUE_DUST_AMOUNT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import {
+  MOCK_BITCOIN_HEIGHT,
+  MOCK_BTC_RELAY_HEIGHT,
   MOCK_EXCHANGE_RATE,
   MOCK_ISSUE_BRIDGE_FEE_RATE,
   MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
@@ -276,5 +278,40 @@ describe('issue form', () => {
     });
 
     await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+  });
+
+  it('when the parachain is more than 6 blocks behind', async () => {
+    (window.bridge.btcRelay.getLatestBlockHeight as any).mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
+    (window.bridge.electrsAPI.getLatestBlockHeight as any).mockImplementation(
+      () => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1
+    );
+
+    await render(<App />, { path: ISSUE_TAB_PATH });
+
+    const issueTab = screen.getByRole('tab', { name: /issue/i });
+    userEvent.click(issueTab);
+
+    const amountToIssueInput = screen.getByRole('textbox');
+
+    const inputAmount = 0.0001;
+
+    await act(async () => {
+      userEvent.type(amountToIssueInput, inputAmount.toString());
+    });
+
+    const errorElement = screen.getByText(/parachain is more than 6 blocks behind/i);
+
+    expect(errorElement).toBeInTheDocument();
+
+    const submitButton = screen.getByRole('button', { name: /confirm/i });
+
+    await act(async () => {
+      userEvent.click(submitButton);
+    });
+
+    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+
+    (window.bridge.btcRelay.getLatestBlockHeight as any).mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
+    (window.bridge.electrsAPI.getLatestBlockHeight as any).mockImplementation(() => MOCK_BITCOIN_HEIGHT);
   });
 });
