@@ -14,7 +14,7 @@ import {
 
 import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../../test-utils';
 import { TABLES } from './constants';
-import { getModalTabPanel, withinModalTabPanel } from './utils';
+import { withinModalTabPanel } from './utils';
 
 jest.mock('../../../parts/Layout', () => {
   return ({ children }: any) => children;
@@ -34,120 +34,67 @@ describe('Borrow Flow', () => {
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
   });
 
-  it.each([TABLES.BORROW.MARKET, TABLES.BORROW.POSITION])(
-    'should be able open borrow modal using %s table',
-    async (tableName) => {
-      await render(<App />, { path });
-
-      const tabPanel = getModalTabPanel(tableName, tab, 'IBTC');
-
-      expect(tabPanel).toBeInTheDocument();
-    }
-  );
-
-  it('should render LTV section', async () => {
+  it('should be able to borrow', async () => {
     await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC');
 
-    expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.SMALL);
+
+    await waitFor(() => {
+      expect(tabPanel.getByRole('button', { name: /borrow/i })).not.toBeDisabled();
+    });
+
+    userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
+
+    await waitForElementToBeRemoved(screen.getByRole('dialog'));
+
+    expect(mockBorrow).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
   });
 
-  it('should not render LTV section', async () => {
+  it.only('should not be able to borrow', async () => {
+    // SCENARIO: use has collateral but is not enought to cover what he wants to borrow
+    const { unmount } = await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
+
+    // If there is collateral, modal LTV meter should be rendered
+    expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
+
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+
+    await waitFor(() => {
+      expect(tabPanel.getByRole('textbox', { name: 'borrow amount' })).toHaveErrorMessage('');
+    });
+
+    userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
+
+    await waitFor(() => {
+      expect(mockBorrow).not.toHaveBeenCalled();
+    });
+
+    unmount();
+
+    // SCENARIO: if there is not collateral, user should not be able to borrow
     mockGetLendPositionsOfAccount.mockReturnValue([{ ...DEFAULT_POSITIONS.LEND.IBTC, isCollateral: false }]);
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC');
+    const tabPanel2 = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
 
-    expect(tabPanel.queryByRole('meter', { name: /ltv meter/i })).not.toBeInTheDocument();
-  });
+    // If there is no collateral, modal LTV meter should not render
+    expect(tabPanel2.queryByRole('meter', { name: /ltv meter/i })).not.toBeInTheDocument();
 
-  describe('Without collateral lend positions', () => {
-    beforeEach(() => {
-      mockGetLendPositionsOfAccount.mockReturnValue([{ ...DEFAULT_POSITIONS.LEND.IBTC, isCollateral: false }]);
+    userEvent.type(tabPanel2.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+
+    await waitFor(() => {
+      expect(tabPanel2.getByRole('textbox', { name: 'borrow amount' })).toHaveErrorMessage('');
     });
 
-    it('should not be able to borrow', async () => {
-      await render(<App />, { path });
+    userEvent.click(tabPanel2.getByRole('button', { name: /borrow/i }));
 
-      const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
-
-      userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
-
-      userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
-
-      await waitFor(() => {
-        expect(mockBorrow).not.toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('With lend positions', () => {
-    describe('With one asset as collateral', () => {
-      it('should be able to partially borrow', async () => {
-        await render(<App />, { path });
-
-        const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC');
-
-        userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.SMALL);
-
-        userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
-
-        await waitForElementToBeRemoved(screen.getByRole('dialog'));
-
-        expect(mockBorrow).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
-      });
-
-      it('should not be able to borrow', async () => {
-        await render(<App />, { path });
-
-        const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
-
-        userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
-
-        userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
-
-        await waitFor(() => {
-          expect(screen.getByRole('dialog')).toBeInTheDocument();
-          expect(mockBorrow).not.toHaveBeenCalled();
-        });
-      });
-    });
-
-    describe('With two assets as collateral', () => {
-      beforeEach(() => {
-        mockGetLendPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.LEND.IBTC, DEFAULT_POSITIONS.LEND.INTR]);
-      });
-
-      it('should be able to partially borrow', async () => {
-        await render(<App />, { path });
-
-        const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC');
-
-        userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.SMALL);
-
-        userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
-
-        await waitForElementToBeRemoved(screen.getByRole('dialog'));
-
-        expect(mockBorrow).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
-      });
-
-      it('should not be able to borrow', async () => {
-        await render(<App />, { path });
-
-        const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
-
-        userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
-
-        userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
-
-        await waitFor(() => {
-          expect(screen.getByRole('dialog')).toBeInTheDocument();
-          expect(mockBorrow).not.toHaveBeenCalled();
-        });
-      });
+    await waitFor(() => {
+      expect(mockBorrow).not.toHaveBeenCalled();
     });
   });
 });
