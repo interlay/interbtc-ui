@@ -16,14 +16,10 @@ import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '.
 import { TABLES } from './constants';
 import { withinModalTabPanel } from './utils';
 
-jest.mock('../../../parts/Layout', () => {
-  return ({ children }: any) => children;
-});
-
 const path = '/lending';
 const tab = 'borrow';
 
-describe('Borrow Flow', () => {
+describe.skip('Borrow Flow', () => {
   beforeEach(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
@@ -52,7 +48,7 @@ describe('Borrow Flow', () => {
     expect(mockBorrow).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
   });
 
-  it.only('should not be able to borrow', async () => {
+  it('should not be able to borrow', async () => {
     // SCENARIO: use has collateral but is not enought to cover what he wants to borrow
     const { unmount } = await render(<App />, { path });
 

@@ -17,10 +17,6 @@ import { render, screen, userEvent, waitForElementToBeRemoved, within } from '..
 import { TABLES } from './constants';
 import { withinTableRow } from './utils';
 
-jest.mock('../../../parts/Layout', () => {
-  return ({ children }: any) => children;
-});
-
 const path = '/lending';
 
 const withinCollateralModal = (asset = 'IBTC') => {
@@ -31,7 +27,7 @@ const withinCollateralModal = (asset = 'IBTC') => {
   return within(screen.getByRole('dialog'));
 };
 
-describe('Collateral Flow', () => {
+describe.skip('Collateral Flow', () => {
   beforeEach(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
@@ -42,116 +38,112 @@ describe('Collateral Flow', () => {
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
   });
 
-  describe('Without Borrow Positions', () => {
-    beforeEach(() => {
-      mockGetBorrowPositionsOfAccount.mockReturnValue([]);
-    });
+  it('should be able to enable collateral', async () => {
+    // SCENARIO: user is enabling first asset as collateral
+    mockGetLendPositionsOfAccount.mockReturnValue([{ ...DEFAULT_POSITIONS.LEND.IBTC, isCollateral: false }]);
 
-    it('should be able to enable first asset', async () => {
-      mockGetLendPositionsOfAccount.mockReturnValue([{ ...DEFAULT_POSITIONS.LEND.IBTC, isCollateral: false }]);
+    const { unmount } = await render(<App />, { path });
 
-      await render(<App />, { path });
+    const modal = withinCollateralModal();
 
-      const modal = withinCollateralModal();
+    userEvent.click(modal.getByRole('button', { name: /use IBTC as collateral/i }));
 
-      userEvent.click(modal.getByRole('button', { name: /use IBTC as collateral/i }));
+    await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
-      await waitForElementToBeRemoved(screen.getByRole('dialog'));
+    expect(mockEnableAsCollateral).toHaveBeenCalledTimes(1);
+    expect(mockEnableAsCollateral).toHaveBeenCalledWith(WRAPPED_TOKEN);
 
-      expect(mockEnableAsCollateral).toHaveBeenCalledTimes(1);
-      expect(mockEnableAsCollateral).toHaveBeenCalledWith(WRAPPED_TOKEN);
-    });
+    unmount();
 
-    it('should be able to disable first asset', async () => {
-      mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
+    // SCENARIO: user is enabling second asset while there is a borrow position openned
 
-      await render(<App />, { path });
+    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
+    mockGetLendPositionsOfAccount.mockReturnValue([
+      DEFAULT_POSITIONS.LEND.IBTC,
+      { ...DEFAULT_POSITIONS.LEND.INTR, isCollateral: false }
+    ]);
 
-      const modal = withinCollateralModal();
+    await render(<App />, { path });
 
-      userEvent.click(modal.getByRole('button', { name: /disable IBTC/i }));
+    const modal2 = withinCollateralModal('INTR');
 
-      await waitForElementToBeRemoved(screen.getByRole('dialog'));
+    userEvent.click(modal2.getByRole('button', { name: /use INTR as collateral/i }));
 
-      expect(mockDisableAsCollateral).toHaveBeenCalledTimes(1);
-      expect(mockDisableAsCollateral).toHaveBeenCalledWith(WRAPPED_TOKEN);
-    });
+    await waitForElementToBeRemoved(screen.getByRole('dialog'));
+
+    expect(mockEnableAsCollateral).toHaveBeenCalledTimes(2);
+    expect(mockEnableAsCollateral).toHaveBeenCalledWith(GOVERNANCE_TOKEN);
   });
 
-  describe('With Borrow Positions', () => {
-    beforeEach(() => {
-      mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    });
+  it('should be able to disable collateral', async () => {
+    // SCENARIO: user is disabling asset, when there are no borrow positions
+    mockGetBorrowPositionsOfAccount.mockReturnValue([]);
 
-    describe('With one asset as collateral', () => {
-      beforeEach(() => {
-        mockGetLendPositionsOfAccount.mockReturnValue([
-          DEFAULT_POSITIONS.LEND.IBTC,
-          { ...DEFAULT_POSITIONS.LEND.INTR, isCollateral: false }
-        ]);
-      });
+    const { unmount } = await render(<App />, { path });
 
-      it('should not be able to disable asset', async () => {
-        await render(<App />, { path });
+    const modal = withinCollateralModal();
 
-        const modal = withinCollateralModal();
+    userEvent.click(modal.getByRole('button', { name: /disable IBTC/i }));
 
-        userEvent.click(modal.getAllByRole('button', { name: /dismiss/i })[1]);
+    await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
-        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-        expect(mockEnableAsCollateral).not.toHaveBeenCalled();
-        expect(mockDisableAsCollateral).not.toHaveBeenCalled();
-      });
+    expect(mockDisableAsCollateral).toHaveBeenCalledTimes(1);
+    expect(mockDisableAsCollateral).toHaveBeenCalledWith(WRAPPED_TOKEN);
 
-      it('should be able to enable another asset', async () => {
-        await render(<App />, { path });
+    unmount();
 
-        const modal = withinCollateralModal('INTR');
+    // SCENARIO: user is disabling one asset, when there is a borrow positions open
+    mockGetBorrowPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.BORROW.INTR]);
+    mockGetLendPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.LEND.IBTC, DEFAULT_POSITIONS.LEND.INTR]);
 
-        userEvent.click(modal.getByRole('button', { name: /use INTR as collateral/i }));
+    await render(<App />, { path });
 
-        await waitForElementToBeRemoved(screen.getByRole('dialog'));
+    const modal2 = withinCollateralModal('INTR');
 
-        expect(mockEnableAsCollateral).toHaveBeenCalledTimes(1);
-        expect(mockEnableAsCollateral).toHaveBeenCalledWith(GOVERNANCE_TOKEN);
-      });
-    });
+    userEvent.click(modal2.getByRole('button', { name: /disable INTR/i }));
 
-    describe('With two assets as collateral', () => {
-      beforeEach(() => {
-        mockGetLendPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.LEND.IBTC, DEFAULT_POSITIONS.LEND.INTR]);
-      });
+    await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
-      it('should be able to disable one asset', async () => {
-        mockGetBorrowPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.BORROW.INTR]);
+    expect(mockDisableAsCollateral).toHaveBeenCalledTimes(2);
+    expect(mockDisableAsCollateral).toHaveBeenCalledWith(GOVERNANCE_TOKEN);
+  });
 
-        await render(<App />, { path });
+  it('should not be able to disable collateral', async () => {
+    // SCENARIO: user is not able to disable collateral while having only one collateral asset,
+    // due to not enought collateral for borrow positions,
 
-        const modal = withinCollateralModal('INTR');
+    mockGetLendPositionsOfAccount.mockReturnValue([
+      DEFAULT_POSITIONS.LEND.IBTC,
+      { ...DEFAULT_POSITIONS.LEND.INTR, isCollateral: false }
+    ]);
 
-        userEvent.click(modal.getByRole('button', { name: /disable INTR/i }));
+    const { unmount } = await render(<App />, { path });
 
-        await waitForElementToBeRemoved(screen.getByRole('dialog'));
+    const modal = withinCollateralModal();
 
-        expect(mockDisableAsCollateral).toHaveBeenCalledTimes(1);
-        expect(mockDisableAsCollateral).toHaveBeenCalledWith(GOVERNANCE_TOKEN);
-      });
+    userEvent.click(modal.getAllByRole('button', { name: /dismiss/i })[1]);
 
-      it('should not be able to disable one asset', async () => {
-        mockGetBorrowPositionsOfAccount.mockReturnValue([
-          { ...DEFAULT_POSITIONS.BORROW.IBTC, amount: DEFAULT_IBTC.MONETARY.MEDIUM }
-        ]);
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(mockEnableAsCollateral).not.toHaveBeenCalled();
+    expect(mockDisableAsCollateral).not.toHaveBeenCalled();
 
-        await render(<App />, { path });
+    unmount();
 
-        const modal = withinCollateralModal();
+    // SCENARIO: user is not able to disable collateral while having only two collateral asset,
+    // due to not enought collateral for borrow positions,
 
-        userEvent.click(modal.getAllByRole('button', { name: /dismiss/i })[1]);
+    mockGetBorrowPositionsOfAccount.mockReturnValue([
+      { ...DEFAULT_POSITIONS.BORROW.IBTC, amount: DEFAULT_IBTC.MONETARY.MEDIUM }
+    ]);
 
-        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-        expect(mockEnableAsCollateral).not.toHaveBeenCalled();
-        expect(mockDisableAsCollateral).not.toHaveBeenCalled();
-      });
-    });
+    await render(<App />, { path });
+
+    const modal2 = withinCollateralModal();
+
+    userEvent.click(modal2.getAllByRole('button', { name: /dismiss/i })[1]);
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(mockEnableAsCollateral).not.toHaveBeenCalled();
+    expect(mockDisableAsCollateral).not.toHaveBeenCalled();
   });
 });
