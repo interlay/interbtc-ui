@@ -29,43 +29,44 @@ const getBridgeFee = (inputAmount: number) => {
 
 const ISSUE_TAB_PATH = '/bridge?tab=issue';
 
+// TODO: type `props` properly
+const renderIssueForm = async (props?: any) => {
+  await render(<App {...props} />, { path: ISSUE_TAB_PATH });
+
+  const issueTab = screen.getByRole('tab', { name: /issue/i });
+  userEvent.click(issueTab);
+
+  const amountToIssueInput = screen.getByRole('textbox');
+
+  const submitButton = screen.getByRole('button', { name: /confirm/i });
+
+  return {
+    amountToIssueInput,
+    submitButton,
+    changeAmountToIssue: async (value: string) => await act(async () => userEvent.type(amountToIssueInput, value)),
+    submitForm: async () => await act(async () => userEvent.click(submitButton))
+  };
+};
+
 describe('issue form', () => {
   it('issuing calls `issue.request` method', async () => {
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue, submitForm } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
-    const submitButton = screen.getByRole('button', { name: /confirm/i });
-
-    await act(async () => {
-      userEvent.click(submitButton);
-    });
+    await submitForm();
 
     await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(1));
   });
 
   it('the bridge fee is correctly displayed', async () => {
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const bridgeFee = getBridgeFee(inputAmount);
 
@@ -81,18 +82,11 @@ describe('issue form', () => {
   });
 
   it('the security deposit is correctly displayed', async () => {
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const btcToGovernanceTokenRate = new ExchangeRate(Bitcoin, GOVERNANCE_TOKEN, MOCK_EXCHANGE_RATE);
 
@@ -114,18 +108,11 @@ describe('issue form', () => {
   });
 
   it('the transaction fee is correctly displayed', async () => {
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const transactionFeeElement = screen.getByTestId(/transaction-fee/i);
 
@@ -139,18 +126,11 @@ describe('issue form', () => {
   });
 
   it('the total receiving amount is correctly displayed', async () => {
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const totalElement = screen.getByTestId(/total-receiving-amount/i);
 
@@ -170,10 +150,7 @@ describe('issue form', () => {
   });
 
   it('the max issuable amounts are correctly displayed', async () => {
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
+    await renderIssueForm();
 
     const singleMaxIssuableAmountElement = screen.getByRole(/single-max-issuable/i);
 
@@ -197,30 +174,19 @@ describe('issue form', () => {
       }
     });
 
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue, submitForm } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const errorElement = screen.getByText(/insufficient funds/i);
 
     expect(errorElement).toBeInTheDocument();
 
-    const submitButton = screen.getByRole('button', { name: /confirm/i });
+    await submitForm();
 
-    await act(async () => {
-      userEvent.click(submitButton);
-    });
-
-    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+    await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
 
     (window.bridge.tokens.balance as any).mockImplementation(
       (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
@@ -228,57 +194,35 @@ describe('issue form', () => {
   });
 
   it('when the input amount is greater than the single vault max issuable amount', async () => {
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue, submitForm } = await renderIssueForm();
 
     const inputAmount = MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable.add(newMonetaryAmount('1', WRAPPED_TOKEN));
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const errorElement = screen.getByText(/please enter less than/i);
 
     expect(errorElement).toBeInTheDocument();
 
-    const submitButton = screen.getByRole('button', { name: /confirm/i });
+    await submitForm();
 
-    await act(async () => {
-      userEvent.click(submitButton);
-    });
-
-    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+    await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
   });
 
   it('when the input amount is less than the Bitcoin dust amount', async () => {
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue, submitForm } = await renderIssueForm();
 
     const inputAmount = new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT).sub(newMonetaryAmount(1, Bitcoin));
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const errorElement = screen.getByText(/bitcoin dust limit/i);
 
     expect(errorElement).toBeInTheDocument();
 
-    const submitButton = screen.getByRole('button', { name: /confirm/i });
+    await submitForm();
 
-    await act(async () => {
-      userEvent.click(submitButton);
-    });
-
-    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+    await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
   });
 
   it('when the parachain is more than 6 blocks behind', async () => {
@@ -287,30 +231,19 @@ describe('issue form', () => {
       () => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1
     );
 
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue, submitForm } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const errorElement = screen.getByText(/parachain is more than 6 blocks behind/i);
 
     expect(errorElement).toBeInTheDocument();
 
-    const submitButton = screen.getByRole('button', { name: /confirm/i });
+    await submitForm();
 
-    await act(async () => {
-      userEvent.click(submitButton);
-    });
-
-    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+    await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
 
     (window.bridge.btcRelay.getLatestBlockHeight as any).mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
     (window.bridge.electrsAPI.getLatestBlockHeight as any).mockImplementation(() => MOCK_BITCOIN_HEIGHT);
@@ -321,30 +254,19 @@ describe('issue form', () => {
       (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, new Big(0))
     );
 
-    await render(<App />, { path: ISSUE_TAB_PATH });
-
-    const issueTab = screen.getByRole('tab', { name: /issue/i });
-    userEvent.click(issueTab);
-
-    const amountToIssueInput = screen.getByRole('textbox');
+    const { changeAmountToIssue, submitForm } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToIssueInput, inputAmount.toString());
-    });
+    await changeAmountToIssue(inputAmount.toString());
 
     const errorElement = screen.getByText(/oracle is offline/i);
 
     expect(errorElement).toBeInTheDocument();
 
-    const submitButton = screen.getByRole('button', { name: /confirm/i });
+    await submitForm();
 
-    await act(async () => {
-      userEvent.click(submitButton);
-    });
-
-    await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(0));
+    await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
 
     (window.bridge.oracle.getExchangeRate as any).mockImplementation(
       (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, MOCK_EXCHANGE_RATE)
