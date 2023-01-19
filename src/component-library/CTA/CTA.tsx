@@ -8,7 +8,7 @@ import { LoadingSpinner } from '../LoadingSpinner';
 import { useDOMRef } from '../utils/dom';
 import { Colors, CTAVariants, IconSize, Sizes } from '../utils/prop-types';
 import { BaseCTA, BaseCTAProps } from './BaseCTA';
-import { LoadingWrapper } from './CTA.style';
+import { LoadingWrapper, StyledIconLoadingWrapper } from './CTA.style';
 
 // TODO: this will be improved on redesign
 const spinnerVariant: Record<CTAVariants, Colors> = {
@@ -59,10 +59,12 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
 
     const icon =
       loading && iconProp ? (
-        <LoadingSpinner size={spinnerSizes[size]} color={spinnerVariant[variant]} aria-label='Loading...' />
-      ) : (
-        iconProp
-      );
+        <>
+        <StyledIconLoadingWrapper>
+          <LoadingSpinner size={spinnerSizes[size]} color={spinnerVariant[variant]} aria-label='Loading...' />
+        </StyledIconLoadingWrapper>
+        {iconProp}
+        </>
 
     const { buttonProps } = useButton({ isDisabled, onPress, ...props }, domRef);
     const { focusProps, isFocusVisible } = useFocusRing(props);
