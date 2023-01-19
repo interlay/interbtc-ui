@@ -8,13 +8,14 @@ import { LoadingSpinner } from '../LoadingSpinner';
 import { useDOMRef } from '../utils/dom';
 import { Colors, CTAVariants, IconSize, Sizes } from '../utils/prop-types';
 import { BaseCTA, BaseCTAProps } from './BaseCTA';
-import { LoadingWrapper, StyledIconLoadingWrapper, StyledLoadingSpinner } from './CTA.style';
+import { LoadingWrapper } from './CTA.style';
 
+// TODO: this will be improved on redesign
 const spinnerVariant: Record<CTAVariants, Colors> = {
   primary: 'primary',
   secondary: 'secondary',
-  outlined: 'tertiary',
-  text: 'tertiary'
+  outlined: 'secondary',
+  text: 'secondary'
 };
 
 const spinnerSizes: Record<Sizes, IconSize> = {
@@ -56,19 +57,12 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
 
     const isDisabled = disabled || loading;
 
-    // // TODO: block by Icon change that will affect as well LoadingSpinner
-    const icon = loading ? (
-      <StyledIconLoadingWrapper>
-        <LoadingSpinner
-          size={spinnerSizes[size]}
-          color={spinnerVariant[variant]}
-          aria-label='Loading...'
-          thickness={2}
-        />
-      </StyledIconLoadingWrapper>
-    ) : (
-      iconProp
-    );
+    const icon =
+      loading && iconProp ? (
+        <LoadingSpinner size={spinnerSizes[size]} color={spinnerVariant[variant]} aria-label='Loading...' />
+      ) : (
+        iconProp
+      );
 
     const { buttonProps } = useButton({ isDisabled, onPress, ...props }, domRef);
     const { focusProps, isFocusVisible } = useFocusRing(props);
@@ -86,7 +80,7 @@ const CTA = forwardRef<HTMLButtonElement, CTAProps>(
       >
         {loading && (
           <LoadingWrapper>
-            <StyledLoadingSpinner $size={size} color={spinnerVariant[variant]} aria-label='Loading...' thickness={2} />
+            <LoadingSpinner size={spinnerSizes[size]} color={spinnerVariant[variant]} aria-label='Loading...' />
           </LoadingWrapper>
         )}
         {children}

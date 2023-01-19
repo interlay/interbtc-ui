@@ -312,16 +312,13 @@ const theme = {
   },
   spinner: {
     primary: {
-      color: 'var(--colors-spinner-primary-color)',
-      bg: 'var(--colors-spinner-primary-bg)'
+      color: 'var(--colors-spinner-primary-color)'
     },
     secondary: {
-      color: 'var(--colors-spinner-secondary-color)',
-      bg: 'var(--colors-spinner-secondary-bg)'
+      color: 'var(--colors-spinner-secondary-color)'
     },
     tertiary: {
-      color: 'var(--colors-spinner-tertiary-color)',
-      bg: 'var(--colors-spinner-tertiary-bg)'
+      color: 'var(--colors-spinner-tertiary-color)'
     }
   },
   progress: {

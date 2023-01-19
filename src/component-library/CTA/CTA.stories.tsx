@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/react';
 
-import { ReactComponent as Close } from '@/assets/img/icons/close.svg';
+import { XMark } from '@/assets/icons';
 
 import { CTA, CTAProps } from '.';
 
@@ -60,7 +60,7 @@ Loading.args = {
 
 const Icon = Template.bind({});
 Icon.args = {
-  icon: <Close width='1.5em' height='1.5em' />
+  icon: <XMark size='md' />
 };
 
 export { FullWidth, Icon, Large, Loading, Outlined, Primary, Secondary, Small, Text };
