@@ -64,7 +64,7 @@ describe('redeem form', () => {
 
     const bridgeFee = getBridgeFee(inputAmount);
 
-    const bridgeFeeElement = screen.getByRole(/redeem-bridge-fee/i);
+    const bridgeFeeElement = screen.getByTestId(/redeem-bridge-fee/i);
 
     const bridgeFeeInBTC = bridgeFee.toHuman(8);
 
@@ -86,7 +86,7 @@ describe('redeem form', () => {
       userEvent.type(amountToRedeemInput, inputAmount.toString());
     });
 
-    const bitcoinNetworkFeeElement = screen.getByRole(/redeem-bitcoin-network-fee/i);
+    const bitcoinNetworkFeeElement = screen.getByTestId(/redeem-bitcoin-network-fee/i);
 
     const bitcoinNetworkFeeInBTC = MOCK_REDEEM_CURRENT_INCLUSION_FEE.toHuman(8);
 
@@ -111,7 +111,7 @@ describe('redeem form', () => {
       userEvent.type(amountToRedeemInput, inputAmount.toString());
     });
 
-    const totalElement = screen.getByRole(/total-receiving-amount/i);
+    const totalElement = screen.getByTestId(/total-receiving-amount/i);
 
     const bridgeFee = getBridgeFee(inputAmount);
 

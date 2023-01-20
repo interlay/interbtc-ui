@@ -56,7 +56,7 @@ describe('issue form', () => {
 
     const bridgeFee = getBridgeFee(inputAmount);
 
-    const bridgeFeeElement = screen.getByRole(/issue-bridge-fee/i);
+    const bridgeFeeElement = screen.getByTestId(/issue-bridge-fee/i);
 
     const bridgeFeeInBTC = bridgeFee.toHuman(8);
 
@@ -84,7 +84,7 @@ describe('issue form', () => {
       .toCounter(monetaryBtcAmount)
       .mul(MOCK_ISSUE_GRIEFING_COLLATERAL_RATE);
 
-    const securityDepositElement = screen.getByRole(/security-deposit/i);
+    const securityDepositElement = screen.getByTestId(/security-deposit/i);
 
     const securityDepositInGovernanceToken = displayMonetaryAmount(securityDeposit);
 
@@ -104,7 +104,7 @@ describe('issue form', () => {
       userEvent.type(amountToIssueInput, inputAmount.toString());
     });
 
-    const transactionFeeElement = screen.getByRole(/transaction-fee/i);
+    const transactionFeeElement = screen.getByTestId(/transaction-fee/i);
 
     const txFeeInGovernanceToken = displayMonetaryAmount(TRANSACTION_FEE_AMOUNT);
 
@@ -124,7 +124,7 @@ describe('issue form', () => {
       userEvent.type(amountToIssueInput, inputAmount.toString());
     });
 
-    const totalElement = screen.getByRole(/total-receiving-amount/i);
+    const totalElement = screen.getByTestId(/total-receiving-amount/i);
 
     const bridgeFee = getBridgeFee(inputAmount);
 

@@ -482,7 +482,7 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            role='total-receiving-amount'
+            dataTestId='total-receiving-amount'
             value={totalInBTC}
             unitName='BTC'
             approxUSD={totalInUSD}
@@ -500,7 +500,7 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            role='redeem-bridge-fee'
+            dataTestId='redeem-bridge-fee'
             value={bridgeFeeInBTC}
             unitName='BTC'
             approxUSD={bridgeFeeInUSD}
@@ -517,7 +517,7 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            role='redeem-bitcoin-network-fee'
+            dataTestId='redeem-bitcoin-network-fee'
             value={bitcoinNetworkFeeInBTC}
             unitName='BTC'
             approxUSD={bitcoinNetworkFeeInUSD}

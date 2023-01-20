@@ -454,7 +454,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            role='total-receiving-amount'
+            dataTestId='total-receiving-amount'
             value={totalInBTC}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={totalInUSD}
@@ -472,7 +472,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            role='issue-bridge-fee'
+            dataTestId='issue-bridge-fee'
             value={bridgeFeeInBTC}
             unitName='BTC'
             approxUSD={bridgeFeeInUSD}
@@ -498,7 +498,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
-            role='security-deposit'
+            dataTestId='security-deposit'
             value={securityDepositInGovernanceToken}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={securityDepositInUSD}
@@ -524,7 +524,7 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
-            role='transaction-fee'
+            dataTestId='transaction-fee'
             value={txFeeInGovernanceToken}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
             approxUSD={txFeeInUSD}
