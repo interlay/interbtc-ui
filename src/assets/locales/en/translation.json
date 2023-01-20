@@ -563,7 +563,13 @@
       "add_liquidity": "Add Liquidity",
       "remove_liquidity": "Remove Liquidity",
       "receivable_assets": "Receivable Assets"
-    }
+    },
+    "swap": "Swap",
+    "select-token": "Select Token",
+    "enter-token-amount": "Enter {{token}} amount",
+    "insufficient-token-balance": "Insufficient {{token}} balance",
+    "from": "From",
+    "to": "To"
   },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",
