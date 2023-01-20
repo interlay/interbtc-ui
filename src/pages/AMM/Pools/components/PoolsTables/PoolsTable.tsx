@@ -2,7 +2,7 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -84,7 +84,7 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
         return {
           id: lpToken.ticker,
           poolName,
-          apr,
+          apr: formatPercentage(apr.toNumber()),
           totalLiquidity,
           sevenDayVolume,
           accountLiquidity
