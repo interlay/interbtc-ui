@@ -117,7 +117,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const formatOptions = getFormatOptions(decimals);
 
-    const hasLabel = !!label || !!balance;
+    const hasLabel = !!label || balance !== undefined;
 
     return (
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
