@@ -117,19 +117,23 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const formatOptions = getFormatOptions(decimals);
 
+    const hasLabel = !!label || !!balance;
+
     return (
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
-        <TokenInputLabel
-          ticker={tickerValue}
-          balance={balance}
-          balanceLabel={balanceLabel}
-          balanceDecimals={balanceDecimals}
-          isDisabled={isDisabled || !tickerValue}
-          onClickBalance={handleClickBalance}
-          {...labelProps}
-        >
-          {label}
-        </TokenInputLabel>
+        {hasLabel && (
+          <TokenInputLabel
+            ticker={tickerValue}
+            balance={balance}
+            balanceLabel={balanceLabel}
+            balanceDecimals={balanceDecimals}
+            isDisabled={isDisabled || !tickerValue}
+            onClickBalance={handleClickBalance}
+            {...labelProps}
+          >
+            {label}
+          </TokenInputLabel>
+        )}
         <NumberInput
           ref={inputRef}
           minValue={0}

@@ -26,21 +26,25 @@ const TokenInputLabel = ({
   ticker,
   children,
   ...props
-}: TokenInputLabelProps): JSX.Element => (
-  <Flex gap='spacing0' justifyContent='space-between'>
-    <Label {...props}>{children}</Label>
-    {balance !== undefined && (
-      <TokenInputBalance
-        ticker={ticker}
-        value={balance}
-        onClickBalance={onClickBalance}
-        isDisabled={isDisabled}
-        label={balanceLabel}
-        decimals={balanceDecimals}
-      />
-    )}
-  </Flex>
-);
+}: TokenInputLabelProps): JSX.Element => {
+  const hasLabel = !!children;
+
+  return (
+    <Flex gap='spacing0' justifyContent={hasLabel ? 'space-between' : 'flex-end'}>
+      {hasLabel && <Label {...props}>{children}</Label>}
+      {balance !== undefined && (
+        <TokenInputBalance
+          ticker={ticker}
+          value={balance}
+          onClickBalance={onClickBalance}
+          isDisabled={isDisabled}
+          label={balanceLabel}
+          decimals={balanceDecimals}
+        />
+      )}
+    </Flex>
+  );
+};
 
 export { TokenInputLabel };
 export type { TokenInputLabelProps };
