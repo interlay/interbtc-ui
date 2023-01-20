@@ -24,18 +24,14 @@ const getOutput = async (param?: number) => {
 const getPairChange = (pair: SwapPair, currency: CurrencyExt, name: string): SwapPair => {
   switch (name) {
     case FormFields.INPUT_TICKER: {
-      if (currency.ticker === pair.output?.ticker) {
-        return { input: currency, output: pair.input };
-      }
-
-      return { ...pair, input: currency };
+      return currency.ticker === pair.output?.ticker
+        ? { input: currency, output: pair.input }
+        : { ...pair, input: currency };
     }
     case FormFields.OUTPUT_TICKER: {
-      if (currency.ticker === pair.input?.ticker) {
-        return { input: pair.output, output: currency };
-      }
-
-      return { ...pair, output: currency };
+      return currency.ticker === pair.input?.ticker
+        ? { input: pair.output, output: currency }
+        : { ...pair, output: currency };
     }
     default:
       return pair;
