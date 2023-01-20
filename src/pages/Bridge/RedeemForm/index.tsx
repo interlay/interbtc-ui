@@ -30,7 +30,7 @@ import TextField from '@/components/TextField';
 import Toggle from '@/components/Toggle';
 import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
@@ -88,12 +88,16 @@ const RedeemForm = (): JSX.Element | null => {
   } = useForm<RedeemFormData>({
     mode: 'onChange'
   });
-  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
+
+  const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT) || '0';
+
+  const monetaryWrappedTokenAmount = React.useMemo(() => {
+    return new BitcoinAmount(wrappedTokenAmount);
+  }, [wrappedTokenAmount]);
 
   const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
   const [status, setStatus] = React.useState(STATUSES.IDLE);
-  const [redeemFee, setRedeemFee] = React.useState(BitcoinAmount.zero());
-  const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(0.005));
+  const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(DEFAULT_REDEEM_BRIDGE_FEE_RATE));
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
   );
@@ -110,21 +114,18 @@ const RedeemForm = (): JSX.Element | null => {
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
 
   React.useEffect(() => {
-    if (!wrappedTokenAmount) return;
+    if (!monetaryWrappedTokenAmount) return;
     if (!maxRedeemableCapacity) return;
 
-    const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
     if (monetaryWrappedTokenAmount.gt(maxRedeemableCapacity)) {
       setSelectVaultManually(false);
     }
-  }, [wrappedTokenAmount, maxRedeemableCapacity]);
+  }, [monetaryWrappedTokenAmount, maxRedeemableCapacity]);
 
   React.useEffect(() => {
-    if (!wrappedTokenAmount) return;
+    if (!monetaryWrappedTokenAmount) return;
     if (!setError) return;
     if (!clearErrors) return;
-
-    const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
 
     if (selectVaultManually && selectedVault === undefined) {
       setError(VAULT_SELECTION, { type: 'validate', message: t('issue_page.vault_must_be_selected') });
@@ -133,17 +134,9 @@ const RedeemForm = (): JSX.Element | null => {
     } else {
       clearErrors(VAULT_SELECTION);
     }
-  }, [selectVaultManually, selectedVault, setError, clearErrors, t, wrappedTokenAmount]);
+  }, [selectVaultManually, selectedVault, setError, clearErrors, t, monetaryWrappedTokenAmount]);
 
-  React.useEffect(() => {
-    if (!bridgeLoaded) return;
-    if (!wrappedTokenAmount) return;
-    if (!redeemFeeRate) return;
-
-    const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount);
-    const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
-    setRedeemFee(theRedeemFee);
-  }, [bridgeLoaded, wrappedTokenAmount, redeemFeeRate]);
+  const bridgeFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -337,9 +330,8 @@ const RedeemForm = (): JSX.Element | null => {
         })}`;
       }
 
-      const monetaryWrappedTokenAmount = new BitcoinAmount(value);
-      const theRedeemFee = monetaryWrappedTokenAmount.mul(redeemFeeRate);
-      const minValue = dustValue.add(currentInclusionFee).add(theRedeemFee);
+      const bridgeFee = monetaryValue.mul(redeemFeeRate);
+      const minValue = dustValue.add(currentInclusionFee).add(bridgeFee);
 
       if (monetaryValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
@@ -376,21 +368,19 @@ const RedeemForm = (): JSX.Element | null => {
       dispatch(togglePremiumRedeemAction(!premiumRedeemSelected));
     };
 
-    const redeemFeeInBTC = redeemFee.toHuman(8);
-    const redeemFeeInUSD = displayMonetaryAmountInUSDFormat(
-      redeemFee,
-      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-    );
-    const monetaryWrappedTokenAmount = new BitcoinAmount(wrappedTokenAmount || 0);
-    const totalBTC = wrappedTokenAmount
-      ? monetaryWrappedTokenAmount.sub(redeemFee).sub(currentInclusionFee)
-      : BitcoinAmount.zero();
-    const totalBTCInUSD = displayMonetaryAmountInUSDFormat(
-      totalBTC,
+    const bridgeFeeInBTC = bridgeFee.toHuman(8);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(
+      bridgeFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
 
-    const totalRelayChainNativeToken = wrappedTokenAmount
+    const total = monetaryWrappedTokenAmount.gt(bridgeFee.add(currentInclusionFee))
+      ? monetaryWrappedTokenAmount.sub(bridgeFee).sub(currentInclusionFee)
+      : BitcoinAmount.zero();
+    const totalInBTC = total.toHuman(8);
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
+
+    const totalRelayChainNativeToken = monetaryWrappedTokenAmount.gt(BitcoinAmount.zero())
       ? btcToRelayChainNativeTokenRate.toCounter(monetaryWrappedTokenAmount).mul(premiumRedeemFee)
       : newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN);
     const totalRelayChainNativeTokenInUSD = displayMonetaryAmountInUSDFormat(
@@ -403,6 +393,7 @@ const RedeemForm = (): JSX.Element | null => {
       currentInclusionFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
+
     const accountSet = !!selectedAccount;
 
     // `btcToDotRate` has 0 value only if oracle call fails
@@ -435,10 +426,7 @@ const RedeemForm = (): JSX.Element | null => {
                 },
                 validate: (value) => validateForm(value)
               })}
-              approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(
-                monetaryWrappedTokenAmount || BitcoinAmount.zero(),
-                usdPrice
-              )}`}
+              approxUSD={`≈ ${displayMonetaryAmountInUSDFormat(monetaryWrappedTokenAmount, usdPrice)}`}
               error={!!errors[WRAPPED_TOKEN_AMOUNT]}
               helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
             />
@@ -494,9 +482,10 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={totalBTC.toHuman(8)}
+            dataTestId='total-receiving-amount'
+            value={totalInBTC}
             unitName='BTC'
-            approxUSD={totalBTCInUSD}
+            approxUSD={totalInUSD}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -511,9 +500,10 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={redeemFeeInBTC}
+            dataTestId='redeem-bridge-fee'
+            value={bridgeFeeInBTC}
             unitName='BTC'
-            approxUSD={redeemFeeInUSD}
+            approxUSD={bridgeFeeInUSD}
           />
           <PriceInfo
             title={
@@ -527,6 +517,7 @@ const RedeemForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
+            dataTestId='redeem-bitcoin-network-fee'
             value={bitcoinNetworkFeeInBTC}
             unitName='BTC'
             approxUSD={bitcoinNetworkFeeInUSD}

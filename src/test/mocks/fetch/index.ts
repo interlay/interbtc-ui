@@ -1,12 +1,22 @@
 import { PRICES_API } from '@/utils/constants/api';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
-const DEFAULT_PRICES = {
+let mockGovernanceTokenPriceInUsd: number;
+if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
+  mockGovernanceTokenPriceInUsd = 0.057282;
+} else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
+  mockGovernanceTokenPriceInUsd = 1.84;
+} else {
+  throw new Error('Something went wrong!');
+}
+
+const DEFAULT_MOCK_PRICES = {
   bitcoin: { usd: 20306 },
   polkadot: { usd: 7.19 },
   'kintsugi-btc': { usd: 20128 },
   kusama: { usd: 48.74 },
-  interlay: { usd: 0.057282 },
-  kintsugi: { usd: 1.84 }
+  interlay: { usd: mockGovernanceTokenPriceInUsd },
+  kintsugi: { usd: mockGovernanceTokenPriceInUsd }
 };
 
 // Can mock all fetch calls here based on URL and input.
@@ -15,7 +25,7 @@ const mockFetch = jest.fn((input, _init?) => {
   let result: unknown;
   switch (true) {
     case input.includes(PRICES_API.URL):
-      result = DEFAULT_PRICES;
+      result = DEFAULT_MOCK_PRICES;
       break;
     default: {
       throw new Error(`mockFetch: provided input [${input}] is not mocked`);
@@ -28,4 +38,4 @@ const mockFetch = jest.fn((input, _init?) => {
 
 global.fetch = mockFetch as any;
 
-export { mockFetch };
+export { DEFAULT_MOCK_PRICES, mockFetch, mockGovernanceTokenPriceInUsd };

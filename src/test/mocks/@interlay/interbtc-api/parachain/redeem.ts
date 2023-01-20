@@ -20,21 +20,12 @@ const mockRedeemBurn = jest.fn();
 
 const mockRedeemGetDustValue = jest.fn(() => zeroWrappedTokenAmount);
 
-const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => Big(0));
-
-const mockRedeemGetFeeRate = jest.fn(() => Big(0.005));
-
-const mockRedeemGetCurrentInclusionFee = jest.fn(() => zeroWrappedTokenAmount);
-
 const mockRedeemRequest = jest.fn();
 
 export {
   mockRedeemBurn,
   mockRedeemGetBurnExchangeRate,
-  mockRedeemGetCurrentInclusionFee,
   mockRedeemGetDustValue,
-  mockRedeemGetFeeRate,
   mockRedeemGetMaxBurnableTokens,
-  mockRedeemGetPremiumRedeemFeeRate,
   mockRedeemRequest
 };

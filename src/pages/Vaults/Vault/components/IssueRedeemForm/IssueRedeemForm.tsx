@@ -16,6 +16,7 @@ import {
   displayMonetaryAmountInUSDFormat
 } from '@/common/utils/utils';
 import { CTA, Input, Stack, TokenInput } from '@/component-library';
+import { DEFAULT_ISSUE_BRIDGE_FEE_RATE, DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -80,8 +81,8 @@ const IssueRedeemForm = ({
 
   // const [status, setStatus] = useState(STATUSES.IDLE);
   // const [vaultCapacity, setVaultCapacity] = useState(BitcoinAmount.zero());
-  const [feeRate, setFeeRate] = useState(new Big(0.005)); // Set default to 0.5%
-  const [depositRate, setDepositRate] = useState(new Big(0.00005)); // Set default to 0.005%
+  const [issueFeeRate, setIssueFeeRate] = useState(new Big(DEFAULT_ISSUE_BRIDGE_FEE_RATE));
+  const [depositRate, setDepositRate] = useState(new Big(DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE));
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
@@ -113,11 +114,11 @@ const IssueRedeemForm = ({
       try {
         // setStatus(STATUSES.PENDING);
         const [
-          theFeeRate,
-          theDepositRate,
-          theDustValue,
-          theBtcToGovernanceToken,
-          issuableAmount
+          feeRateResult,
+          depositRateResult,
+          dustValueResult,
+          btcToGovernanceTokenResult,
+          vaultIssuableAmountResult
         ] = await Promise.allSettled([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
@@ -129,20 +130,20 @@ const IssueRedeemForm = ({
           window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralToken)
         ]);
         // setStatus(STATUSES.RESOLVED);
-        if (theFeeRate.status === 'fulfilled') {
-          setFeeRate(theFeeRate.value);
+        if (feeRateResult.status === 'fulfilled') {
+          setIssueFeeRate(feeRateResult.value);
         }
-        if (theDepositRate.status === 'fulfilled') {
-          setDepositRate(theDepositRate.value);
+        if (depositRateResult.status === 'fulfilled') {
+          setDepositRate(depositRateResult.value);
         }
-        if (theDustValue.status === 'fulfilled') {
+        if (dustValueResult.status === 'fulfilled') {
           // setDustValue(theDustValue.value);
         }
-        if (issuableAmount.status === 'fulfilled') {
-          // setVaultCapacity(issuableAmount.value);
+        if (vaultIssuableAmountResult.status === 'fulfilled') {
+          // setVaultCapacity(vaultIssuableAmountResult.value);
         }
-        if (theBtcToGovernanceToken.status === 'fulfilled') {
-          setBTCToGovernanceTokenRate(theBtcToGovernanceToken.value);
+        if (btcToGovernanceTokenResult.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(btcToGovernanceTokenResult.value);
         } else {
           setError(tokenInputId, {
             type: 'validate',
@@ -170,7 +171,7 @@ const IssueRedeemForm = ({
   };
 
   const parsedBTCAmount = new BitcoinAmount(inputBTCAmount);
-  const bridgeFee = parsedBTCAmount.mul(feeRate);
+  const bridgeFee = parsedBTCAmount.mul(issueFeeRate);
   const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
   const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
 

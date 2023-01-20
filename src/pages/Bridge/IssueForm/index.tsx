@@ -36,7 +36,11 @@ import TokenField from '@/components/TokenField';
 import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import InterlayLink from '@/components/UI/InterlayLink';
 import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
-import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
+import {
+  BLOCKS_BEHIND_LIMIT,
+  DEFAULT_ISSUE_BRIDGE_FEE_RATE,
+  DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE
+} from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -113,8 +117,8 @@ const IssueForm = (): JSX.Element | null => {
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   // Additional info: bridge fee, security deposit, amount BTC
   // Current fee model specification taken from: https://interlay.gitlab.io/polkabtc-spec/spec/fee.html
-  const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
-  const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
+  const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(DEFAULT_ISSUE_BRIDGE_FEE_RATE));
+  const [depositRate, setDepositRate] = React.useState(new Big(DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE));
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
@@ -145,10 +149,10 @@ const IssueForm = (): JSX.Element | null => {
       try {
         setStatus(STATUSES.PENDING);
         const [
-          theFeeRateResult,
-          theDepositRateResult,
-          theDustValueResult,
-          theBtcToGovernanceTokenResult
+          feeRateResult,
+          depositRateResult,
+          dustValueResult,
+          btcToGovernanceTokenResult
         ] = await Promise.allSettled([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
@@ -159,32 +163,32 @@ const IssueForm = (): JSX.Element | null => {
         ]);
         setStatus(STATUSES.RESOLVED);
 
-        if (theFeeRateResult.status === 'rejected') {
-          throw new Error(theFeeRateResult.reason);
+        if (feeRateResult.status === 'rejected') {
+          throw new Error(feeRateResult.reason);
         }
 
-        if (theDepositRateResult.status === 'rejected') {
-          throw new Error(theDepositRateResult.reason);
+        if (depositRateResult.status === 'rejected') {
+          throw new Error(depositRateResult.reason);
         }
 
-        if (theDustValueResult.status === 'rejected') {
-          throw new Error(theDustValueResult.reason);
+        if (dustValueResult.status === 'rejected') {
+          throw new Error(dustValueResult.reason);
         }
 
-        if (theBtcToGovernanceTokenResult.status === 'rejected') {
+        if (btcToGovernanceTokenResult.status === 'rejected') {
           setError(BTC_AMOUNT, {
             type: 'validate',
             message: t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
           });
         }
 
-        if (theBtcToGovernanceTokenResult.status === 'fulfilled') {
-          setBTCToGovernanceTokenRate(theBtcToGovernanceTokenResult.value);
+        if (btcToGovernanceTokenResult.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(btcToGovernanceTokenResult.value);
         }
 
-        setFeeRate(theFeeRateResult.value);
-        setDepositRate(theDepositRateResult.value);
-        setDustValue(theDustValueResult.value);
+        setIssueFeeRate(feeRateResult.value);
+        setDepositRate(depositRateResult.value);
+        setDustValue(dustValueResult.value);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
@@ -354,10 +358,33 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const monetaryBtcAmount = new BitcoinAmount(btcAmount);
-    const bridgeFee = monetaryBtcAmount.mul(feeRate);
+
+    const bridgeFee = monetaryBtcAmount.mul(issueFeeRate);
+    const bridgeFeeInBTC = bridgeFee.toHuman(8);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(
+      bridgeFee,
+      getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+    );
+
     const securityDeposit = btcToGovernanceTokenRate.toCounter(monetaryBtcAmount).mul(depositRate);
-    const wrappedTokenAmount = monetaryBtcAmount.sub(bridgeFee);
+    const securityDepositInGovernanceToken = displayMonetaryAmount(securityDeposit);
+    const securityDepositInUSD = displayMonetaryAmountInUSDFormat(
+      securityDeposit,
+      getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+    );
+
+    const txFeeInGovernanceToken = displayMonetaryAmount(TRANSACTION_FEE_AMOUNT);
+    const txFeeInUSD = displayMonetaryAmountInUSDFormat(
+      TRANSACTION_FEE_AMOUNT,
+      getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
+    );
+
+    const total = monetaryBtcAmount.sub(bridgeFee);
+    const totalInBTC = total.toHuman(8);
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd);
+
     const accountSet = !!selectedAccount;
+
     const isSelectVaultCheckboxDisabled = monetaryBtcAmount.gt(requestLimits.singleVaultMaxIssuable);
 
     // `btcToGovernanceTokenRate` has 0 value only if oracle call fails
@@ -427,12 +454,10 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={wrappedTokenAmount.toHuman(8)}
+            dataTestId='total-receiving-amount'
+            value={totalInBTC}
             unitName={WRAPPED_TOKEN_SYMBOL}
-            approxUSD={displayMonetaryAmountInUSDFormat(
-              wrappedTokenAmount,
-              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-            )}
+            approxUSD={totalInUSD}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
@@ -447,12 +472,10 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<BitcoinLogoIcon width={23} height={23} />}
-            value={bridgeFee.toHuman(8)}
+            dataTestId='issue-bridge-fee'
+            value={bridgeFeeInBTC}
             unitName='BTC'
-            approxUSD={displayMonetaryAmountInUSDFormat(
-              bridgeFee,
-              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
-            )}
+            approxUSD={bridgeFeeInUSD}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -475,12 +498,10 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
-            value={displayMonetaryAmount(securityDeposit)}
+            dataTestId='security-deposit'
+            value={securityDepositInGovernanceToken}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            approxUSD={displayMonetaryAmountInUSDFormat(
-              securityDeposit,
-              getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
-            )}
+            approxUSD={securityDepositInUSD}
             tooltip={
               <InformationTooltip
                 className={clsx(
@@ -503,12 +524,10 @@ const IssueForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<GovernanceTokenLogoIcon width={20} />}
-            value={displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)}
+            dataTestId='transaction-fee'
+            value={txFeeInGovernanceToken}
             unitName={GOVERNANCE_TOKEN_SYMBOL}
-            approxUSD={displayMonetaryAmountInUSDFormat(
-              TRANSACTION_FEE_AMOUNT,
-              getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
-            )}
+            approxUSD={txFeeInUSD}
             tooltip={
               <InformationTooltip
                 className={clsx(
