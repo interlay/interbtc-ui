@@ -1,4 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
 import { ChangeEventHandler, FormEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -15,11 +15,6 @@ import { useSwapFormData } from '../../hooks/use-swap-form-data';
 import { SlippageManager } from '../SlippageManager';
 import { SwapInfo } from '../SwapInfo';
 import { SwapDivider } from './SwapDivider';
-
-// TODO: here we will call the lib to get the expected output
-const getOutput = async (param?: number) => {
-  return param;
-};
 
 const getPairChange = (pair: SwapPair, currency: CurrencyExt, name: string): SwapPair => {
   switch (name) {
@@ -54,6 +49,7 @@ type SwapFormData = {
 
 type Props = {
   pair: SwapPair;
+  liquidityPools: LiquidityPool[];
   onChangePair: (pair: SwapPair) => void;
 };
 
@@ -61,7 +57,7 @@ type InheritAttrs = CardProps & Props;
 
 type SwapFormProps = Props & InheritAttrs;
 
-const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element | null => {
+const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProps): JSX.Element | null => {
   const { t } = useTranslation();
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -70,23 +66,21 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
   const [slippage, setSlippage] = useState<SwapSlippage>('0.1%');
 
   const [inputAmount, setInputAmount] = useState<number>();
-  const [outputAmount, setOutputAmount] = useState<number>();
+  const [trade, setTrade] = useState<Trade | null>();
 
   useDebounce(
-    async () => {
-      if (!pair.input || !pair.output) return;
+    () => {
+      if (!pair.input || !pair.output || !inputAmount) return;
 
-      const output = await getOutput(inputAmount);
-      setOutputAmount(output);
+      const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
+      const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
+      setTrade(trade);
     },
     500,
     [inputAmount, pair]
   );
 
-  const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, {
-    input: inputAmount,
-    output: outputAmount
-  });
+  const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, inputAmount, trade);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = Number(e.target.value) || undefined;
@@ -156,7 +150,6 @@ const SwapForm = ({ pair, onChangePair, ...props }: SwapFormProps): JSX.Element 
                 placeholder='0.00'
                 label={t('amm.to')}
                 isDisabled
-                value={outputAmount}
                 name={FormFields.OUTPUT_AMOUNT}
                 selectProps={{
                   name: FormFields.OUTPUT_TICKER,

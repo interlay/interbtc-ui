@@ -17,6 +17,7 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { PoolName } from '../PoolName';
+import { DepositDivider } from './DepositDivider';
 import { StyledDl } from './DepositForm.styles';
 
 type DepositFormData = Record<string, string>;
@@ -76,22 +77,24 @@ const DepositForm = ({ pool }: DepositFormProps): JSX.Element => {
       {poolName}
       <Flex direction='column' gap='spacing8'>
         <Flex direction='column' gap='spacing2'>
-          {pool.pooledCurrencies.map((currency) => (
-            <TokenInput
-              key={currency.currency.ticker}
-              placeholder='0.00'
-              ticker={currency.currency.ticker}
-              aria-label={t('forms.field_amount', {
-                field: `${currency.currency.ticker} ${t('deposit').toLowerCase()}}`
-              })}
-              balance={getAvailableBalance(currency.currency.ticker)?.toBig().toNumber() || 0}
-              balanceDecimals={currency.currency.humanDecimals}
-              valueUSD={new Big(data[currency.currency.ticker] || 0)
-                .mul(getTokenPrice(prices, currency.currency.ticker)?.usd || 0)
-                .toNumber()}
-              errorMessage={getErrorMessage(errors[currency.currency.ticker])}
-              {...register(currency.currency.ticker)}
-            />
+          {pool.pooledCurrencies.map((currency, index) => (
+            <Flex key={currency.currency.ticker} direction='column' gap='spacing8'>
+              <TokenInput
+                placeholder='0.00'
+                ticker={currency.currency.ticker}
+                aria-label={t('forms.field_amount', {
+                  field: `${currency.currency.ticker} ${t('deposit').toLowerCase()}}`
+                })}
+                balance={getAvailableBalance(currency.currency.ticker)?.toBig().toNumber() || 0}
+                balanceDecimals={currency.currency.humanDecimals}
+                valueUSD={new Big(data[currency.currency.ticker] || 0)
+                  .mul(getTokenPrice(prices, currency.currency.ticker)?.usd || 0)
+                  .toNumber()}
+                errorMessage={getErrorMessage(errors[currency.currency.ticker])}
+                {...register(currency.currency.ticker)}
+              />
+              {index !== pool.pooledCurrencies.length - 1 && <DepositDivider />}
+            </Flex>
           ))}
         </Flex>
         <Flex direction='column' gap='spacing4'>

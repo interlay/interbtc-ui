@@ -1,10 +1,12 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
 
 import { Card, CardProps, CoinPair, Dd, Dl, DlGroup, Dt, Flex, H2 } from '@/component-library';
 
 type Props = {
   input: CurrencyExt;
   output: CurrencyExt;
+  // TODO: not used
+  liquidityPool?: LiquidityPool;
 };
 
 type InheritAttrs = Omit<CardProps, keyof Props>;
