@@ -33,7 +33,7 @@ type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'onC
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ onChange, formatOptions, ...props }, ref): JSX.Element => {
+  ({ onChange, formatOptions, validationState, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
     const state = useNumberFieldState({
@@ -41,7 +41,11 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       formatOptions: formatOptions || defaultFormatOptions,
       locale
     });
-    const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(props, state, inputRef);
+    const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(
+      { ...props, validationState: props.errorMessage ? 'invalid' : validationState },
+      state,
+      inputRef
+    );
 
     useEffect(() => {
       const input = inputRef.current;

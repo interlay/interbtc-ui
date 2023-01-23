@@ -76,7 +76,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       (selectProps?.defaultValue as string) || (typeof defaultTicker === 'string' ? defaultTicker : defaultTicker?.text)
     );
 
-    const { labelProps, fieldProps } = useLabel({ label });
+    const { labelProps, fieldProps } = useLabel({ label, ...props });
 
     useEffect(() => {
       if (tickerProp === undefined) return;
