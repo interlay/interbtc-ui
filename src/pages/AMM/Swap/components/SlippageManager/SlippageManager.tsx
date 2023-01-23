@@ -1,14 +1,13 @@
-import { useState } from 'react';
+import { Key, useState } from 'react';
 
 import { Cog } from '@/assets/icons';
 import { List, ListItem, ListProps, Modal, ModalBody, ModalHeader } from '@/component-library';
-import { SwapSlippage } from '@/types/swap';
 
 import { StyledCTA } from './SlippageManager.style';
 
 type SlippageManagerProps = {
-  value: SwapSlippage;
-  onChange: (slippage: SwapSlippage) => void;
+  value: Key;
+  onChange: (slippage: Key) => void;
 };
 
 const SlippageManager = ({ value, onChange }: SlippageManagerProps): JSX.Element | null => {
@@ -19,7 +18,8 @@ const SlippageManager = ({ value, onChange }: SlippageManagerProps): JSX.Element
 
     if (!selectedKey) return;
 
-    onChange?.(selectedKey as SwapSlippage);
+    onChange?.(selectedKey);
+    setOpen(false);
   };
 
   return (
@@ -39,10 +39,10 @@ const SlippageManager = ({ value, onChange }: SlippageManagerProps): JSX.Element
             onSelectionChange={handleSelectionChange}
             defaultSelectedKeys={[value]}
           >
-            <ListItem key='0.1%'>0.1%</ListItem>
-            <ListItem key='0.5%'>0.5%</ListItem>
-            <ListItem key='1%'>1%</ListItem>
-            <ListItem key='3%'>3%</ListItem>
+            <ListItem key='0.1'>0.1%</ListItem>
+            <ListItem key='0.5'>0.5%</ListItem>
+            <ListItem key='1'>1%</ListItem>
+            <ListItem key='3'>3%</ListItem>
           </List>
         </ModalBody>
       </Modal>

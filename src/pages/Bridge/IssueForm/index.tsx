@@ -332,11 +332,7 @@ const IssueForm = (): JSX.Element | null => {
           vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), monetaryBtcAmount);
         }
 
-        const collateralToken = await currencyIdToMonetaryCurrency(
-          window.bridge.assetRegistry,
-          window.bridge.loans,
-          vaultId.currencies.collateral
-        );
+        const collateralToken = await currencyIdToMonetaryCurrency(window.bridge.api, vaultId.currencies.collateral);
 
         const result = await window.bridge.issue.request(
           monetaryBtcAmount,
