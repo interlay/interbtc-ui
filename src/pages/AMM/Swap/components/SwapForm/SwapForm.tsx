@@ -1,6 +1,10 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
-import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import { MonetaryAmount } from '@interlay/monetary-js';
+import { AddressOrPair } from '@polkadot/api/types';
+import { mergeProps } from '@react-aria/utils';
+import { ChangeEventHandler, FormEventHandler, Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useDebounce } from 'react-use';
@@ -8,8 +12,9 @@ import { useDebounce } from 'react-use';
 import { StoreType } from '@/common/types/util.types';
 import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components/AuthCTA';
-import { SwapPair, SwapSlippage } from '@/types/swap';
+import { SwapPair } from '@/types/swap';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
+import useAccountId from '@/utils/hooks/use-account-id';
 
 import { useSwapFormData } from '../../hooks/use-swap-form-data';
 import { SlippageManager } from '../SlippageManager';
@@ -33,19 +38,22 @@ const getPairChange = (pair: SwapPair, currency: CurrencyExt, name: string): Swa
   }
 };
 
+type SwapData = {
+  trade: Trade;
+  minimumAmountOut: MonetaryAmount<CurrencyExt>;
+  recipient: AddressOrPair;
+  deadline: string | number;
+};
+
+const mutateSwap = ({ deadline, minimumAmountOut, recipient, trade }: SwapData) =>
+  window.bridge.amm.swap(trade, minimumAmountOut, recipient, deadline);
+
 enum FormFields {
   INPUT_AMOUNT = 'input-amount',
   INPUT_TICKER = 'input-ticker',
   OUTPUT_AMOUNT = 'output-amount',
   OUTPUT_TICKER = 'output-ticker'
 }
-
-type SwapFormData = {
-  [FormFields.INPUT_AMOUNT]: { value: string };
-  [FormFields.INPUT_TICKER]: { value: string };
-  [FormFields.OUTPUT_AMOUNT]: { value: string };
-  [FormFields.OUTPUT_TICKER]: { value: string };
-};
 
 type Props = {
   pair: SwapPair;
@@ -58,12 +66,13 @@ type InheritAttrs = CardProps & Props;
 type SwapFormProps = Props & InheritAttrs;
 
 const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProps): JSX.Element | null => {
+  const accountId = useAccountId();
   const { t } = useTranslation();
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
-  const [slippage, setSlippage] = useState<SwapSlippage>('0.1%');
+  const [slippage, setSlippage] = useState<Key>(0.1);
 
   const [inputAmount, setInputAmount] = useState<number>();
   const [trade, setTrade] = useState<Trade | null>();
@@ -80,6 +89,12 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
     [inputAmount, pair]
   );
 
+  const swapMutation = useMutation<void, Error, SwapData>(mutateSwap, {
+    onSuccess: () => {
+      toast.success('Swap successful');
+    }
+  });
+
   const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, inputAmount, trade);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -88,22 +103,19 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    if (!trade || !accountId) return;
+
     try {
-      e.preventDefault();
+      const minimumAmountOut = trade.getMinimumOutputAmount(Number(slippage.toString()));
 
-      const form = e.currentTarget;
-      const formElements = form.elements as typeof form.elements & SwapFormData;
-
-      const {
-        [FormFields.INPUT_AMOUNT]: inputAmount,
-        [FormFields.OUTPUT_AMOUNT]: outputAmount,
-        [FormFields.INPUT_TICKER]: inputTicker,
-        [FormFields.OUTPUT_TICKER]: outputTicker
-      } = formElements;
-
-      console.log('input: ', inputAmount.value);
-      console.log('output: ', outputAmount.value);
-      console.log('tickers: ', inputTicker.value, '/', outputTicker.value);
+      return swapMutation.mutate({
+        trade,
+        recipient: accountId,
+        minimumAmountOut,
+        deadline: 0
+      });
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -121,6 +133,8 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
   const handlePairSwap = () => onChangePair({ input: pair.output, output: pair.input });
 
   const isComplete = !!(pair.output && pair.input);
+
+  console.log(slippage);
 
   return (
     <Card {...props} gap='spacing2'>
@@ -160,7 +174,12 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
               />
             </Flex>
             {isComplete && <SwapInfo pair={pair} />}
-            <AuthCTA type='submit' fullWidth size='large' {...buttonProps} />
+            <AuthCTA
+              type='submit'
+              fullWidth
+              size='large'
+              {...mergeProps(buttonProps, { loading: swapMutation.isLoading })}
+            />
           </Flex>
         </form>
       </Flex>

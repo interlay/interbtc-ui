@@ -1,14 +1,21 @@
-import { LiquidityPool } from '@interlay/interbtc-api';
+import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
+import Big from 'big.js';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
+  formatNumber
+} from '@/common/utils/utils';
 import { CoinIcon, Dd, Dl, DlGroup, Dt, Flex, P, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components/AuthCTA';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { PoolName } from '../PoolName';
@@ -30,16 +37,21 @@ type WithdrawFormProps = {
 const WithdrawForm = ({ pool }: WithdrawFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
+  const { getAvailableBalance } = useGetBalances();
+  const { lpToken } = pool;
 
   const {
     register,
     handleSubmit: h,
-    formState: { errors, isDirty, isValid }
+    formState: { errors, isDirty, isValid },
+    watch
   } = useForm<WithdrawFormData>({
     mode: 'onChange'
     // TODO: when there is more info regarding LP Tokens, I will add validation
     // resolver: zodResolver(z.object({[FormFields.WITHDRAW_AMOUNT]: validate.amm.pool.withdraw()}))
   });
+
+  const data = watch();
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
 
@@ -55,6 +67,10 @@ const WithdrawForm = ({ pool }: WithdrawFormProps): JSX.Element => {
 
   const poolName = <PoolName justifyContent='center' tickers={tickers} />;
 
+  const lpTokenAmount = newMonetaryAmount(data[FormFields.WITHDRAW_AMOUNT] || 0, pool.lpToken);
+
+  const pooledAmounts = pool.getLiquidityWithdrawalPooledCurrencyAmounts(lpTokenAmount as any);
+
   return (
     <form onSubmit={h(handleSubmit)}>
       {poolName}
@@ -66,9 +82,11 @@ const WithdrawForm = ({ pool }: WithdrawFormProps): JSX.Element => {
             aria-label={t('forms.field_amount', {
               field: t('withdraw').toLowerCase()
             })}
-            // TODO: get LPToken daat
-            balance={0}
-            valueUSD={0}
+            balance={getAvailableBalance(lpToken.ticker)?.toBig().toNumber() || 0}
+            balanceDecimals={lpToken.humanDecimals}
+            valueUSD={new Big(data[FormFields.WITHDRAW_AMOUNT] || 0)
+              .mul(getTokenPrice(prices, lpToken.ticker)?.usd || 0)
+              .toNumber()}
             errorMessage={getErrorMessage(errors[FormFields.WITHDRAW_AMOUNT])}
             {...register(FormFields.WITHDRAW_AMOUNT)}
           />
@@ -78,16 +96,19 @@ const WithdrawForm = ({ pool }: WithdrawFormProps): JSX.Element => {
             {t('amm.pools.receivable_assets')}
           </P>
           <Dl direction='column' gap='spacing2'>
-            {pool.pooledCurrencies.map((pooled) => {
+            {pooledAmounts.map((amount) => {
               return (
-                <DlGroup key={pooled.currency.ticker} justifyContent='space-between'>
+                <DlGroup key={amount.currency.ticker} justifyContent='space-between'>
                   <Dt size='xs' color='primary'>
                     <Flex alignItems='center' gap='spacing1'>
-                      <CoinIcon ticker={pooled.currency.ticker} />
-                      {pooled.currency.ticker}
+                      <CoinIcon ticker={amount.currency.ticker} />
+                      {amount.currency.ticker}
                     </Flex>
                   </Dt>
-                  <Dd size='xs'>62.00 ($22.00)</Dd>
+                  <Dd size='xs'>
+                    {formatNumber(amount.toBig().toNumber(), { maximumFractionDigits: amount.currency.humanDecimals })}{' '}
+                    ({convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, amount.currency.ticker)?.usd)})
+                  </Dd>
                 </DlGroup>
               );
             })}
