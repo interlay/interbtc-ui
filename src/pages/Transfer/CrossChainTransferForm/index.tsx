@@ -265,11 +265,30 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleSetFromChain = (chain: ChainOption) => {
+    // Return from function is user clicks on current chain option
+    if (chain === fromChain) return;
+
+    // Note: this is a workaround but ok for now. Component will be refactored
+    // when we introduce support for multiple currencies per channel
+    setCurrency(undefined);
+    setToChain(undefined);
+    setValue(TRANSFER_AMOUNT, '');
     setFromChain(chain);
   };
 
+  const handleSetToChain = (chain: ChainOption) => {
+    // Return from function is user clicks on current chain option
+    if (chain === toChain) return;
+
+    // Note: this is a workaround but ok for now. Component will be refactored
+    // when we introduce support for multiple currencies per channel
+    setCurrency(undefined);
+    setValue(TRANSFER_AMOUNT, '');
+    setToChain(chain);
+  };
+
   const handleClickBalance = () => {
-    setValue(TRANSFER_AMOUNT, transferableBalance);
+    setValue(TRANSFER_AMOUNT, transferableBalance.toString());
     handleUpdateUsdAmount(transferableBalance);
     trigger(TRANSFER_AMOUNT);
   };
@@ -327,6 +346,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           chainOptions={toChains}
           label={t('transfer_page.cross_chain_transfer_form.to_chain')}
           selectedChain={toChain}
+          onChange={handleSetToChain}
         />
         <Accounts
           label={t('transfer_page.cross_chain_transfer_form.target_account')}
