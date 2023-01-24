@@ -21,7 +21,7 @@ import {
   mockIssueRequest
 } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_MOCK_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
-import { act, render, screen, userEvent, waitFor } from '../test-utils';
+import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
   return new BitcoinAmount(inputAmount).mul(MOCK_ISSUE_BRIDGE_FEE_RATE);
@@ -34,6 +34,11 @@ const renderIssueForm = async (props?: any) => {
   await render(<App {...props} />, { path: ISSUE_TAB_PATH });
 
   const issueTab = screen.getByRole('tab', { name: /issue/i });
+
+  const issueTabpanel = screen.getByRole('tabpanel', {
+    name: /issue/i
+  });
+
   userEvent.click(issueTab);
 
   const amountToIssueInput = screen.getByRole('textbox');
@@ -41,6 +46,8 @@ const renderIssueForm = async (props?: any) => {
   const submitButton = screen.getByRole('button', { name: /confirm/i });
 
   return {
+    tab: issueTab,
+    tabPanel: issueTabpanel,
     amountToIssueInput,
     submitButton,
     changeAmountToIssue: async (value: string) => await act(async () => userEvent.type(amountToIssueInput, value)),
@@ -174,15 +181,15 @@ describe('issue form', () => {
       }
     });
 
-    const { changeAmountToIssue, submitForm } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
     await changeAmountToIssue(inputAmount.toString());
 
-    const errorElement = screen.getByText(/insufficient funds/i);
+    const errorElement = within(tabPanel).getByRole('alert');
 
-    expect(errorElement).toBeInTheDocument();
+    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient funds to pay for INTR fees."`);
 
     await submitForm();
 
@@ -194,15 +201,15 @@ describe('issue form', () => {
   });
 
   it('when the input amount is greater than the single vault max issuable amount', async () => {
-    const { changeAmountToIssue, submitForm } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
 
     const inputAmount = MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable.add(newMonetaryAmount('1', WRAPPED_TOKEN));
 
     await changeAmountToIssue(inputAmount.toString());
 
-    const errorElement = screen.getByText(/please enter less than/i);
+    const errorElement = within(tabPanel).getByRole('alert');
 
-    expect(errorElement).toBeInTheDocument();
+    expect(errorElement.textContent).toMatchInlineSnapshot(`"Please enter less than 0.565 IBTC."`);
 
     await submitForm();
 
@@ -210,15 +217,17 @@ describe('issue form', () => {
   });
 
   it('when the input amount is less than the Bitcoin dust amount', async () => {
-    const { changeAmountToIssue, submitForm } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
 
     const inputAmount = new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT).sub(newMonetaryAmount(1, Bitcoin));
 
     await changeAmountToIssue(inputAmount.toString());
 
-    const errorElement = screen.getByText(/bitcoin dust limit/i);
+    const errorElement = within(tabPanel).getByRole('alert');
 
-    expect(errorElement).toBeInTheDocument();
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"Please enter an amount greater than Bitcoin dust limit (0 BTC)."`
+    );
 
     await submitForm();
 
@@ -231,15 +240,17 @@ describe('issue form', () => {
       () => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1
     );
 
-    const { changeAmountToIssue, submitForm } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
     await changeAmountToIssue(inputAmount.toString());
 
-    const errorElement = screen.getByText(/parachain is more than 6 blocks behind/i);
+    const errorElement = within(tabPanel).getByRole('alert');
 
-    expect(errorElement).toBeInTheDocument();
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"You can't issue IBTC at the moment because IBTC parachain is more than 6 blocks behind."`
+    );
 
     await submitForm();
 
@@ -254,15 +265,17 @@ describe('issue form', () => {
       (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, new Big(0))
     );
 
-    const { changeAmountToIssue, submitForm } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
     await changeAmountToIssue(inputAmount.toString());
 
-    const errorElement = screen.getByText(/oracle is offline/i);
+    const errorElement = within(tabPanel).getByRole('alert');
 
-    expect(errorElement).toBeInTheDocument();
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"You can't issue IBTC at the moment because oracle is offline."`
+    );
 
     await submitForm();
 
