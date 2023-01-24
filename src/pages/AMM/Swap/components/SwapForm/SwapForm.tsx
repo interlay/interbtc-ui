@@ -72,14 +72,14 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
-  const [slippage, setSlippage] = useState<Key>(0.1);
+  const [slippage, setSlippage] = useState<Key>('0.1');
 
   const [inputAmount, setInputAmount] = useState<number>();
   const [trade, setTrade] = useState<Trade | null>();
 
   useDebounce(
     () => {
-      if (!pair.input || !pair.output || !inputAmount) return;
+      if (!pair.input || !pair.output || inputAmount === undefined) return;
 
       const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
       const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
@@ -110,10 +110,13 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
     try {
       const minimumAmountOut = trade.getMinimumOutputAmount(Number(slippage.toString()));
 
+      // const deadline =window.bridge.system.getFutureBlockNumber(30*60)
+
       return swapMutation.mutate({
         trade,
         recipient: accountId,
         minimumAmountOut,
+        // TODO: missing dealine. Waiting on Peter PR
         deadline: 0
       });
     } catch (err: any) {
@@ -131,10 +134,6 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
   };
 
   const handlePairSwap = () => onChangePair({ input: pair.output, output: pair.input });
-
-  const isComplete = !!(pair.output && pair.input);
-
-  console.log(slippage);
 
   return (
     <Card {...props} gap='spacing2'>
@@ -173,7 +172,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
                 {...outputProps}
               />
             </Flex>
-            {isComplete && <SwapInfo pair={pair} />}
+            {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
             <AuthCTA
               type='submit'
               fullWidth
