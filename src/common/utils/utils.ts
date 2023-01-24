@@ -84,9 +84,13 @@ const formatNumber = (
   options?: {
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
+    compact?: boolean;
   }
 ): string => {
-  const { format } = new Intl.NumberFormat(undefined, options);
+  const { format } = new Intl.NumberFormat(undefined, {
+    ...options,
+    notation: options?.compact ? getFormatUSDNotation(amount) : undefined
+  });
 
   return format(amount);
 };

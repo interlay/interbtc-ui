@@ -4,7 +4,7 @@ import * as z from 'zod';
 import { Validation } from './types';
 
 type RequiredFieldValidationParams = {
-  value: string;
+  value?: number | string;
 };
 
 type RequiredFieldIssueParams = {

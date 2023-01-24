@@ -31,7 +31,7 @@ const Swap = (): JSX.Element => {
     <MainContainer>
       <StyledWrapper direction='column' gap='spacing8'>
         <SwapForm pair={pair} liquidityPools={liquidityPools} onChangePair={handleChangePair} />
-        {pair.input && pair.output && (
+        {pair.input && pair.output && liquidityPool && (
           <SwapLiquidity input={pair.input} output={pair.output} liquidityPool={liquidityPool} />
         )}
       </StyledWrapper>

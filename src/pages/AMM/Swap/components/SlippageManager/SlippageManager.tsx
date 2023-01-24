@@ -39,10 +39,18 @@ const SlippageManager = ({ value, onChange }: SlippageManagerProps): JSX.Element
             onSelectionChange={handleSelectionChange}
             defaultSelectedKeys={[value]}
           >
-            <ListItem key='0.1'>0.1%</ListItem>
-            <ListItem key='0.5'>0.5%</ListItem>
-            <ListItem key='1'>1%</ListItem>
-            <ListItem key='3'>3%</ListItem>
+            <ListItem textValue='0.1' key='0.1'>
+              0.1%
+            </ListItem>
+            <ListItem textValue='0.5' key='0.5'>
+              0.5%
+            </ListItem>
+            <ListItem textValue='1' key='1'>
+              1%
+            </ListItem>
+            <ListItem textValue='3' key='3'>
+              3%
+            </ListItem>
           </List>
         </ModalBody>
       </Modal>

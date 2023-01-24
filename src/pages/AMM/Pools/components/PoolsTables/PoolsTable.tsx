@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -59,9 +60,12 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
           <PoolName tickers={pooledCurrencies.map((pooledCurrencies) => pooledCurrencies.currency.ticker)} />
         );
 
-        const totalLiquidity = convertMonetaryAmountToValueInUSD(
-          newMonetaryAmount(200000000, GOVERNANCE_TOKEN),
-          prices?.[GOVERNANCE_TOKEN.ticker].usd
+        const totalLiquidity = formatUSD(
+          pooledCurrencies.reduce(
+            (total, currentAmount) => total + (getTokenPrice(prices, currentAmount.currency.ticker)?.usd || 0),
+            0
+          ),
+          { compact: true }
         );
 
         const sevenDayVolumeUSD = convertMonetaryAmountToValueInUSD(
