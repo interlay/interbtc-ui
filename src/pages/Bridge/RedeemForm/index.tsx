@@ -411,7 +411,7 @@ const RedeemForm = (): JSX.Element | null => {
           </FormTitle>
           <div>
             <AvailableBalanceUI
-              role='single-max-redeemable'
+              data-testid='single-max-redeemable'
               label={t('redeem_page.maximum_in_single_request')}
               balance={displayMonetaryAmount(maxRedeemableCapacity)}
               tokenSymbol={WRAPPED_TOKEN_SYMBOL}

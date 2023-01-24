@@ -152,13 +152,13 @@ describe('issue form', () => {
   it('the max issuable amounts are correctly displayed', async () => {
     await renderIssueForm();
 
-    const singleMaxIssuableAmountElement = screen.getByRole(/single-max-issuable/i);
+    const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-issuable/i);
 
     const singleMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable);
 
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxIssuableAmount);
 
-    const totalMaxIssuableAmountElement = screen.getByRole(/total-max-issuable/i);
+    const totalMaxIssuableAmountElement = screen.getByTestId(/total-max-issuable/i);
 
     const totalMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.totalMaxIssuable);
 

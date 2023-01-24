@@ -132,7 +132,7 @@ describe('redeem form', () => {
   });
 
   it('the max redeemable amount is correctly displayed', async () => {
-    const singleMaxIssuableAmountElement = screen.getByRole(/single-max-redeemable/i);
+    const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-redeemable/i);
 
     const singleMaxRedeemableAmount = displayMonetaryAmount(mockVaultsWithRedeemableTokens.values().next().value);
 

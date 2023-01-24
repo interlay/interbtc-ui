@@ -392,13 +392,13 @@ const IssueForm = (): JSX.Element | null => {
           </FormTitle>
           <div>
             <AvailableBalanceUI
-              role='single-max-issuable'
+              data-testid='single-max-issuable'
               label={t('issue_page.maximum_in_single_request')}
               balance={displayMonetaryAmount(requestLimits.singleVaultMaxIssuable)}
               tokenSymbol={WRAPPED_TOKEN_SYMBOL}
             />
             <AvailableBalanceUI
-              role='total-max-issuable'
+              data-testid='total-max-issuable'
               label={t('issue_page.maximum_total_request')}
               balance={displayMonetaryAmount(requestLimits.totalMaxIssuable)}
               tokenSymbol={WRAPPED_TOKEN_SYMBOL}
