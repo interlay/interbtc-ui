@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { H2, Span, Status, theme } from '@/component-library';
+import { H2, Span, theme } from '@/component-library';
 
 const StyledTitle = styled(H2)`
   font-size: ${theme.text.xl};
@@ -23,18 +23,4 @@ const StyledCellSubLabel = styled(Span)`
   font-size: ${theme.text.xs};
 `;
 
-type StyledChipProps = {
-  $variant: Status;
-};
-
-const StyledTag = styled.div<StyledChipProps>`
-  display: inline-flex;
-  font-size: ${theme.text.xs};
-  padding: ${theme.spacing.spacing1} ${theme.spacing.spacing2};
-  border-radius: ${theme.rounded.full};
-  border: ${theme.border.default};
-  border-color: ${(props) => theme.transaction.status.color[props.$variant]};
-  background-color: ${(props) => theme.transaction.status.bg[props.$variant]};
-`;
-
-export { StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel, StyledTag, StyledTitle };
+export { StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel, StyledTitle };

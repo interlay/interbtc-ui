@@ -2,7 +2,7 @@ import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, FormEventHandler, Key, useState } from 'react';
+import { ChangeEventHandler, FormEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -59,20 +59,21 @@ type Props = {
   pair: SwapPair;
   liquidityPools: LiquidityPool[];
   onChangePair: (pair: SwapPair) => void;
+  onSwap: () => void;
 };
 
 type InheritAttrs = CardProps & Props;
 
 type SwapFormProps = Props & InheritAttrs;
 
-const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProps): JSX.Element | null => {
+const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: SwapFormProps): JSX.Element | null => {
   const accountId = useAccountId();
   const { t } = useTranslation();
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
-  const [slippage, setSlippage] = useState<Key>('0.1');
+  const [slippage, setSlippage] = useState(0.1);
 
   const [inputAmount, setInputAmount] = useState<number>();
   const [trade, setTrade] = useState<Trade | null>();
@@ -92,6 +93,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
   const swapMutation = useMutation<void, Error, SwapData>(mutateSwap, {
     onSuccess: () => {
       toast.success('Swap successful');
+      onSwap();
     },
     onError: (err) => {
       toast.error(err.message);
@@ -111,7 +113,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
     if (!trade || !accountId) return;
 
     try {
-      const minimumAmountOut = trade.getMinimumOutputAmount(Number(slippage.toString()));
+      const minimumAmountOut = trade.getMinimumOutputAmount(slippage);
 
       const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
 

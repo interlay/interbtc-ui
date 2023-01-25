@@ -14,7 +14,7 @@ type BalanceCellProps = {
 
 const BalanceCell = ({ amount, amountUSD, alignItems }: BalanceCellProps): JSX.Element => {
   const assetBalance = formatNumber(amount.toBig().toNumber(), {
-    maximumFractionDigits: amount.currency.humanDecimals
+    maximumFractionDigits: amount.currency.humanDecimals || 8
   });
 
   return (

@@ -1,8 +1,10 @@
 import { LiquidityPool } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
+import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
 
 import { DepositForm } from '../DepositForm';
 import { WithdrawForm } from '../WithdrawForm';
@@ -19,23 +21,37 @@ type PoolModalProps = Props & InheritAttrs;
 
 const PoolModal = ({ pool, onClose, accountId, ...props }: PoolModalProps): JSX.Element | null => {
   const { t } = useTranslation();
+  const { refetch } = useGetAccountPools();
+  const ref = useRef<HTMLDivElement>(null);
 
   if (!pool) {
     return null;
   }
 
+  const handleAction = () => {
+    refetch();
+    onClose?.();
+  };
+
   return (
-    <Modal aria-label={`${pool.lpToken.ticker} pool deposit or withdraw`} onClose={onClose} align='top' {...props}>
+    <Modal
+      aria-label={`${pool.lpToken.ticker} pool deposit or withdraw`}
+      onClose={onClose}
+      align='top'
+      // Pool modal should not close while user interacts with stacked modal (slippage modal)
+      shouldCloseOnInteractOutside={(el) => !ref.current?.contains(el)}
+      {...props}
+    >
       <ModalBody noPadding>
         <StyledTabs size='large' fullWidth>
           <TabsItem title={t('deposit')}>
             <StyledWrapper>
-              <DepositForm pool={pool} accountId={accountId} onDeposit={onClose} />
+              <DepositForm slippageModalRef={ref} pool={pool} accountId={accountId} onDeposit={handleAction} />
             </StyledWrapper>
           </TabsItem>
           <TabsItem title={t('withdraw')}>
             <StyledWrapper>
-              <WithdrawForm pool={pool} accountId={accountId} onWithdraw={onClose} />
+              <WithdrawForm slippageModalRef={ref} pool={pool} accountId={accountId} onWithdraw={handleAction} />
             </StyledWrapper>
           </TabsItem>
         </StyledTabs>

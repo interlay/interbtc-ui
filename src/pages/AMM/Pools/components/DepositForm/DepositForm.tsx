@@ -1,7 +1,7 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, PooledCurrencies } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
-import { ChangeEventHandler, FormEventHandler, Key, useState } from 'react';
+import { ChangeEventHandler, FormEventHandler, RefObject, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
@@ -35,14 +35,15 @@ const mutateDeposit = ({ amounts, pool, slippage, deadline, accountId }: Deposit
 type DepositFormProps = {
   pool: LiquidityPool;
   accountId: AccountId;
+  slippageModalRef: RefObject<HTMLDivElement>;
   onDeposit?: () => void;
 };
 
-const DepositForm = ({ pool, accountId, onDeposit }: DepositFormProps): JSX.Element => {
+const DepositForm = ({ pool, accountId, slippageModalRef, onDeposit }: DepositFormProps): JSX.Element => {
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-  const [slippage, setSlippage] = useState<Key>('0.1');
+  const [slippage, setSlippage] = useState(0.1);
 
   const { pooledCurrencies } = pool;
 
@@ -91,7 +92,7 @@ const DepositForm = ({ pool, accountId, onDeposit }: DepositFormProps): JSX.Elem
 
       const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
 
-      return depositMutation.mutate({ amounts, pool, slippage: Number(slippage), deadline, accountId });
+      return depositMutation.mutate({ amounts, pool, slippage, deadline, accountId });
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -104,7 +105,7 @@ const DepositForm = ({ pool, accountId, onDeposit }: DepositFormProps): JSX.Elem
   return (
     <form onSubmit={handleSubmit}>
       <Flex direction='column'>
-        <SlippageManager value={slippage} onChange={(slippage) => setSlippage(slippage)} />
+        <SlippageManager ref={slippageModalRef} value={slippage} onChange={(slippage) => setSlippage(slippage)} />
         {poolName}
         <Flex direction='column' gap='spacing8'>
           <Flex direction='column' gap='spacing2'>
