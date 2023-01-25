@@ -11,14 +11,13 @@ import { StyledWrapper } from './Swap.style';
 
 const Swap = (): JSX.Element => {
   // const accountId = useAccountId();
-  const { data: liquidityPools } = useGetLiquidityPools();
+  const { data: liquidityPools, refetch } = useGetLiquidityPools();
   const [pair, setPair] = useState<SwapPair>({ input: RELAY_CHAIN_NATIVE_TOKEN });
 
   if (liquidityPools === undefined) {
     return <FullLoadingSpinner />;
   }
 
-  // TODO: might be necessary
   const liquidityPool = liquidityPools.find(
     (obj) =>
       obj.pooledCurrencies.some((val) => val.currency.ticker === pair.input?.ticker) &&
@@ -30,7 +29,7 @@ const Swap = (): JSX.Element => {
   return (
     <MainContainer>
       <StyledWrapper direction='column' gap='spacing8'>
-        <SwapForm pair={pair} liquidityPools={liquidityPools} onChangePair={handleChangePair} />
+        <SwapForm pair={pair} liquidityPools={liquidityPools} onChangePair={handleChangePair} onSwap={refetch} />
         {pair.input && pair.output && liquidityPool && (
           <SwapLiquidity input={pair.input} output={pair.output} liquidityPool={liquidityPool} />
         )}

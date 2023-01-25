@@ -8,8 +8,8 @@ import { CommonSchemaParams, MaxAmountSchemaParams } from '../types';
 
 type PoolWithdrawSchemaParams = CommonSchemaParams & MaxAmountSchemaParams;
 
-const withdraw = (t: TFunction, params: PoolWithdrawSchemaParams): z.ZodEffects<z.ZodNumber, number, number> =>
-  z.number().superRefine((value, ctx) => {
+const withdraw = (t: TFunction, params: PoolWithdrawSchemaParams): z.ZodEffects<z.ZodString, string, string> =>
+  z.string().superRefine((value, ctx) => {
     const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
     if (!field.required.validate({ value })) {

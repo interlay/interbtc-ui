@@ -36,7 +36,7 @@ interface UseGetAccountProvidedLiquidity {
 const useGetAccountPools = (): UseGetAccountProvidedLiquidity => {
   const accountId = useAccountId();
 
-  const { data: liquidityPools } = useGetLiquidityPools();
+  const { data: liquidityPools, refetch: refetchLiquidityPools } = useGetLiquidityPools();
   const queryKey = ['account-pools', accountId];
   const { data, error, refetch: refetchQuery } = useQuery({
     queryKey: ['account-pools', accountId],
@@ -47,7 +47,10 @@ const useGetAccountPools = (): UseGetAccountProvidedLiquidity => {
 
   useErrorHandler(error);
 
-  const refetch = () => refetchQuery({ queryKey });
+  const refetch = () => {
+    refetchQuery({ queryKey });
+    refetchLiquidityPools();
+  };
 
   return { data, refetch };
 };

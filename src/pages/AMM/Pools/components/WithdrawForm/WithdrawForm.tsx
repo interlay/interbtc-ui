@@ -3,7 +3,7 @@ import { LiquidityPool, LpCurrency, newMonetaryAmount } from '@interlay/interbtc
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
-import { Key, useState } from 'react';
+import { RefObject, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
@@ -47,14 +47,15 @@ type WithdrawFormData = {
 type WithdrawFormProps = {
   pool: LiquidityPool;
   accountId: AccountId;
+  slippageModalRef: RefObject<HTMLDivElement>;
   onWithdraw?: () => void;
 };
 
-const WithdrawForm = ({ pool, onWithdraw }: WithdrawFormProps): JSX.Element => {
+const WithdrawForm = ({ pool, accountId, slippageModalRef, onWithdraw }: WithdrawFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { getAvailableBalance, getBalance } = useGetBalances();
-  const [slippage, setSlippage] = useState<Key>('0.1');
+  const [slippage, setSlippage] = useState<number>(0.1);
 
   const { lpToken } = pool;
 
@@ -93,9 +94,12 @@ const WithdrawForm = ({ pool, onWithdraw }: WithdrawFormProps): JSX.Element => {
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
 
-  const handleSubmit = (data: WithdrawFormData) => {
+  const handleSubmit = async (data: WithdrawFormData) => {
     try {
-      console.log(withdrawMutation, data);
+      const amount = newMonetaryAmount(data[FormFields.WITHDRAW_AMOUNT] || 0, lpToken, true);
+      const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
+
+      return withdrawMutation.mutate({ amount, pool, deadline, slippage, accountId });
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -108,7 +112,7 @@ const WithdrawForm = ({ pool, onWithdraw }: WithdrawFormProps): JSX.Element => {
   return (
     <form onSubmit={h(handleSubmit)}>
       <Flex direction='column'>
-        <SlippageManager value={slippage} onChange={(slippage) => setSlippage(slippage)} />
+        <SlippageManager ref={slippageModalRef} value={slippage} onChange={(slippage) => setSlippage(slippage)} />
         {poolName}
         <Flex direction='column' gap='spacing8'>
           <Flex direction='column'>
@@ -143,7 +147,7 @@ const WithdrawForm = ({ pool, onWithdraw }: WithdrawFormProps): JSX.Element => {
               </Dd>
             </DlGroup>
           </StyledDl>
-          <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
+          <AuthCTA type='submit' size='large' disabled={isBtnDisabled} loading={withdrawMutation.isLoading}>
             {t('amm.pools.remove_liquidity')}
           </AuthCTA>
         </Flex>
