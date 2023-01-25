@@ -12,12 +12,12 @@ import { useDebounce } from 'react-use';
 import { StoreType } from '@/common/types/util.types';
 import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components/AuthCTA';
+import { SlippageManager } from '@/pages/AMM/shared/components';
 import { SwapPair } from '@/types/swap';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { useSwapFormData } from '../../hooks/use-swap-form-data';
-import { SlippageManager } from '../SlippageManager';
 import { SwapInfo } from '../SwapInfo';
 import { SwapDivider } from './SwapDivider';
 
@@ -102,7 +102,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
     setInputAmount(value);
   };
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     if (!trade || !accountId) return;
@@ -110,14 +110,13 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
     try {
       const minimumAmountOut = trade.getMinimumOutputAmount(Number(slippage.toString()));
 
-      // const deadline =window.bridge.system.getFutureBlockNumber(30*60)
+      const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
 
       return swapMutation.mutate({
         trade,
         recipient: accountId,
         minimumAmountOut,
-        // TODO: missing dealine. Waiting on Peter PR
-        deadline: 0
+        deadline
       });
     } catch (err: any) {
       toast.error(err.toString());

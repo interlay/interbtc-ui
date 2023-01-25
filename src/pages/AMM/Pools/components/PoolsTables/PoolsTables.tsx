@@ -1,4 +1,5 @@
 import { LiquidityPool } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
 import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
@@ -9,9 +10,10 @@ import { PoolsTable } from './PoolsTable';
 
 type PoolsTablesProps = {
   pools: AccountLiquidityPool[];
+  accountId: AccountId;
 };
 
-const PoolsTables = ({ pools }: PoolsTablesProps): JSX.Element => {
+const PoolsTables = ({ pools, accountId }: PoolsTablesProps): JSX.Element => {
   const [liquidityPool, setLiquidityPool] = useState<LiquidityPool>();
 
   const handleRowAction = (ticker: Key) => {
@@ -32,7 +34,7 @@ const PoolsTables = ({ pools }: PoolsTablesProps): JSX.Element => {
         )}
         <PoolsTable variant='available-pools' pools={otherPools} onRowAction={handleRowAction} />
       </Flex>
-      <PoolModal isOpen={!!liquidityPool} pool={liquidityPool} onClose={handleClose} />
+      <PoolModal isOpen={!!liquidityPool} pool={liquidityPool} accountId={accountId} onClose={handleClose} />
     </>
   );
 };

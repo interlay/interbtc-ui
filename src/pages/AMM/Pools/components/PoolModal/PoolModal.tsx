@@ -1,4 +1,5 @@
 import { LiquidityPool } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
 import { useTranslation } from 'react-i18next';
 
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
@@ -9,13 +10,14 @@ import { StyledTabs, StyledWrapper } from './PoolModal.style';
 
 type Props = {
   pool?: LiquidityPool;
+  accountId: AccountId;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type PoolModalProps = Props & InheritAttrs;
 
-const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | null => {
+const PoolModal = ({ pool, onClose, accountId, ...props }: PoolModalProps): JSX.Element | null => {
   const { t } = useTranslation();
 
   if (!pool) {
@@ -28,12 +30,12 @@ const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | n
         <StyledTabs size='large' fullWidth>
           <TabsItem title={t('deposit')}>
             <StyledWrapper>
-              <DepositForm pool={pool} onChangePool={onClose} />
+              <DepositForm pool={pool} accountId={accountId} onChangePool={onClose} />
             </StyledWrapper>
           </TabsItem>
           <TabsItem title={t('withdraw')}>
             <StyledWrapper>
-              <WithdrawForm pool={pool} onChangePool={onClose} />
+              <WithdrawForm pool={pool} accountId={accountId} onChangePool={onClose} />
             </StyledWrapper>
           </TabsItem>
         </StyledTabs>
