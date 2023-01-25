@@ -15,7 +15,7 @@ const Pools = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <PoolsInsights />
+      <PoolsInsights pools={pools} />
       <PoolsTables pools={pools} accountId={accountId} />
     </MainContainer>
   );

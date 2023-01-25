@@ -1,4 +1,5 @@
-import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatNumber, formatUSD } from '@/common/utils/utils';
@@ -7,16 +8,12 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 type WithdrawAssetsProps = {
-  pool: LiquidityPool;
-  lpTokenAmount?: string;
+  pooledAmounts: MonetaryAmount<CurrencyExt>[];
   prices?: Prices;
 };
 
-const WithdrawAssets = ({ pool, lpTokenAmount, prices }: WithdrawAssetsProps): JSX.Element => {
+const WithdrawAssets = ({ pooledAmounts, prices }: WithdrawAssetsProps): JSX.Element => {
   const { t } = useTranslation();
-  const lpTokenMonetaryAmount = newMonetaryAmount(lpTokenAmount || 0, pool.lpToken, true);
-
-  const pooledAmounts = pool.getLiquidityWithdrawalPooledCurrencyAmounts(lpTokenMonetaryAmount as any);
 
   return (
     <Flex direction='column' gap='spacing4'>

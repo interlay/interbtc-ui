@@ -10,7 +10,11 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
 
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat
+} from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components/AuthCTA';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -109,6 +113,21 @@ const WithdrawForm = ({ pool, accountId, slippageModalRef, onWithdraw }: Withdra
 
   const poolName = <PoolName justifyContent='center' tickers={tickers} />;
 
+  const lpTokenMonetaryAmount = newMonetaryAmount(data[FormFields.WITHDRAW_AMOUNT] || 0, pool.lpToken, true);
+
+  const pooledAmounts = pool.getLiquidityWithdrawalPooledCurrencyAmounts(lpTokenMonetaryAmount as any);
+
+  const pooledAmountsUSD = pooledAmounts
+    .reduce((acc, pooledAmount) => {
+      const pooledAmountUSD = convertMonetaryAmountToValueInUSD(
+        pooledAmount,
+        getTokenPrice(prices, pooledAmount.currency.ticker)?.usd
+      );
+
+      return acc.add(pooledAmountUSD || 0);
+    }, new Big(0))
+    .toNumber();
+
   return (
     <form onSubmit={h(handleSubmit)}>
       <Flex direction='column'>
@@ -124,14 +143,12 @@ const WithdrawForm = ({ pool, accountId, slippageModalRef, onWithdraw }: Withdra
               })}
               balance={balance?.toBig().toNumber() || 0}
               balanceDecimals={lpToken.humanDecimals}
-              valueUSD={new Big(data[FormFields.WITHDRAW_AMOUNT] || 0)
-                .mul(getTokenPrice(prices, lpToken.ticker)?.usd || 0)
-                .toNumber()}
+              valueUSD={pooledAmountsUSD}
               errorMessage={getErrorMessage(errors[FormFields.WITHDRAW_AMOUNT])}
               {...register(FormFields.WITHDRAW_AMOUNT)}
             />
           </Flex>
-          <WithdrawAssets pool={pool} lpTokenAmount={data[FormFields.WITHDRAW_AMOUNT]} prices={prices} />
+          <WithdrawAssets pooledAmounts={pooledAmounts} prices={prices} />
           <StyledDl direction='column' gap='spacing2'>
             <DlGroup justifyContent='space-between'>
               <Dt size='xs' color='primary'>
