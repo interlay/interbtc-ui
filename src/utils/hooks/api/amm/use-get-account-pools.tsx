@@ -1,4 +1,4 @@
-import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
+import { CurrencyExt, isCurrencyEqual, LiquidityPool } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
@@ -22,7 +22,7 @@ const getAccountLiqudityPools = async (
   return pools.map((pool) => ({
     data: pool,
     amount: accountLiquidityPools.find(
-      (lpToken) => lpToken.currency.ticker === pool.lpToken.ticker && !lpToken.isZero()
+      (lpToken) => isCurrencyEqual(pool.lpToken, lpToken.currency) && !lpToken.isZero()
     )
   }));
 };
