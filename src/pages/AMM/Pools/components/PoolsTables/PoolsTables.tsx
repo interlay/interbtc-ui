@@ -32,7 +32,9 @@ const PoolsTables = ({ pools, accountId }: PoolsTablesProps): JSX.Element => {
         {!!accountPools.length && (
           <PoolsTable variant='account-pools' pools={accountPools} onRowAction={handleRowAction} />
         )}
-        <PoolsTable variant='available-pools' pools={otherPools} onRowAction={handleRowAction} />
+        {!!otherPools.length && (
+          <PoolsTable variant='available-pools' pools={otherPools} onRowAction={handleRowAction} />
+        )}
       </Flex>
       <PoolModal isOpen={!!liquidityPool} pool={liquidityPool} accountId={accountId} onClose={handleClose} />
     </>

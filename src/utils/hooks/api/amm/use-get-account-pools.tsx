@@ -21,7 +21,9 @@ const getAccountLiqudityPools = async (
 
   return pools.map((pool) => ({
     data: pool,
-    amount: accountLiquidityPools.find((lpToken) => lpToken.currency.ticker === pool.lpToken.ticker)
+    amount: accountLiquidityPools.find(
+      (lpToken) => lpToken.currency.ticker === pool.lpToken.ticker && !lpToken.isZero()
+    )
   }));
 };
 
