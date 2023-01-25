@@ -35,7 +35,7 @@ const renderIssueForm = async (props?: any) => {
 
   const issueTab = screen.getByRole('tab', { name: /issue/i });
 
-  const issueTabpanel = screen.getByRole('tabpanel', {
+  const issueTabPanel = screen.getByRole('tabpanel', {
     name: /issue/i
   });
 
@@ -47,7 +47,7 @@ const renderIssueForm = async (props?: any) => {
 
   return {
     tab: issueTab,
-    tabPanel: issueTabpanel,
+    tabPanel: issueTabPanel,
     amountToIssueInput,
     submitButton,
     changeAmountToIssue: async (value: string) => await act(async () => userEvent.type(amountToIssueInput, value)),

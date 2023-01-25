@@ -18,50 +18,62 @@ const getBridgeFee = (inputAmount: number) => {
   return new BitcoinAmount(inputAmount).mul(MOCK_REDEEM_BRIDGE_FEE_RATE);
 };
 
-describe('redeem form', () => {
-  beforeEach(async () => {
-    await render(<App />, { path: '/bridge?tab=redeem' });
+const REDEEM_TAB_PATH = '/bridge?tab=redeem';
 
-    const redeemTab = screen.getByRole('tab', { name: /redeem/i });
-    userEvent.click(redeemTab);
+// TODO: type `props` properly
+const renderRedeemForm = async (props?: any) => {
+  await render(<App {...props} />, { path: REDEEM_TAB_PATH });
+
+  const redeemTab = screen.getByRole('tab', { name: /redeem/i });
+
+  const redeemTabPanel = screen.getByRole('tabpanel', {
+    name: /redeem/i
   });
 
-  test('if the redeem method is called', async () => {
-    const textboxElements = screen.getAllByRole('textbox');
+  userEvent.click(redeemTab);
 
-    const amountToRedeemInput = textboxElements[0];
+  const textboxElements = screen.getAllByRole('textbox');
+
+  const amountToRedeemInput = textboxElements[0];
+
+  const btcAddressToSendInput = textboxElements[1];
+
+  const submitButton = screen.getByRole('button', { name: /confirm/i });
+
+  return {
+    tab: redeemTab,
+    tabPanel: redeemTabPanel,
+    amountToRedeemInput,
+    btcAddressToSendInput,
+    submitButton,
+    changeAmountToRedeem: async (value: string) => await act(async () => userEvent.type(amountToRedeemInput, value)),
+    changeBtcAddressToSend: async (value: string) =>
+      await act(async () => userEvent.type(btcAddressToSendInput, value)),
+    submitForm: async () => await act(async () => userEvent.click(submitButton))
+  };
+};
+
+describe('redeem form', () => {
+  it('redeeming calls `redeem.request` method', async () => {
+    const { changeAmountToRedeem, changeBtcAddressToSend, submitForm } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToRedeemInput, inputAmount.toString());
-    });
+    await changeAmountToRedeem(inputAmount.toString());
 
-    const btcAddressToSendInput = textboxElements[1];
+    await changeBtcAddressToSend('tb1q3f6lu0g92q0d5jdng6m367uwpw7lnt7x3n0nqf');
 
-    await act(async () => {
-      userEvent.type(btcAddressToSendInput, 'tb1q3f6lu0g92q0d5jdng6m367uwpw7lnt7x3n0nqf');
-    });
-
-    const submitButton = screen.getByRole('button', { name: /confirm/i });
-
-    await act(async () => {
-      userEvent.click(submitButton);
-    });
+    await submitForm();
 
     await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
   });
 
   test('if the bridge fee is correctly displayed', async () => {
-    const textboxElements = screen.getAllByRole('textbox');
-
-    const amountToRedeemInput = textboxElements[0];
+    const { changeAmountToRedeem } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToRedeemInput, inputAmount.toString());
-    });
+    await changeAmountToRedeem(inputAmount.toString());
 
     const bridgeFee = getBridgeFee(inputAmount);
 
@@ -77,15 +89,11 @@ describe('redeem form', () => {
   });
 
   test('if the Bitcoin network fee is correctly displayed', async () => {
-    const textboxElements = screen.getAllByRole('textbox');
-
-    const amountToRedeemInput = textboxElements[0];
+    const { changeAmountToRedeem } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToRedeemInput, inputAmount.toString());
-    });
+    await changeAmountToRedeem(inputAmount.toString());
 
     const bitcoinNetworkFeeElement = screen.getByTestId(/redeem-bitcoin-network-fee/i);
 
@@ -102,15 +110,11 @@ describe('redeem form', () => {
   });
 
   test('if the total receiving amount is correctly displayed', async () => {
-    const textboxElements = screen.getAllByRole('textbox');
-
-    const amountToRedeemInput = textboxElements[0];
+    const { changeAmountToRedeem } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
 
-    await act(async () => {
-      userEvent.type(amountToRedeemInput, inputAmount.toString());
-    });
+    await changeAmountToRedeem(inputAmount.toString());
 
     const totalElement = screen.getByTestId(/total-receiving-amount/i);
 
@@ -132,6 +136,8 @@ describe('redeem form', () => {
   });
 
   test('if the max redeemable amount is correctly displayed', async () => {
+    await renderRedeemForm();
+
     const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-redeemable/i);
 
     const singleMaxRedeemableAmount = displayMonetaryAmount(mockVaultsWithRedeemableTokens.values().next().value);
