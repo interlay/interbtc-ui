@@ -1,6 +1,7 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, PooledCurrencies } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
-import { ChangeEventHandler, FormEventHandler, useState } from 'react';
+import { ChangeEventHandler, FormEventHandler, Key, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
@@ -12,6 +13,7 @@ import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains'
 import balance from '@/lib/form-validation/common/balance';
 import field from '@/lib/form-validation/common/field';
 import { CommonSchemaParams, MaxAmountSchemaParams } from '@/lib/form-validation/types';
+import { SlippageManager } from '@/pages/AMM/shared/components';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -88,19 +90,25 @@ const useFormState = (values: Record<string, number | undefined>, pooledCurrenci
 type DepositData = {
   amounts: PooledCurrencies;
   pool: LiquidityPool;
+  slippage: number;
+  deadline: number;
+  accountId: AccountId;
 };
 
-const mutateDeposit = ({ amounts, pool }: DepositData) => window.bridge.amm.addLiquidity(amounts, pool);
+const mutateDeposit = ({ amounts, pool, slippage, deadline, accountId }: DepositData) =>
+  window.bridge.amm.addLiquidity(amounts, pool, slippage, deadline, accountId);
 
 type DepositFormProps = {
   pool: LiquidityPool;
+  accountId: AccountId;
   onChangePool?: () => void;
 };
 
-const DepositForm = ({ pool }: DepositFormProps): JSX.Element => {
+const DepositForm = ({ pool, accountId }: DepositFormProps): JSX.Element => {
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
+  const [slippage, setSlippage] = useState<Key>('0.1');
 
   const { pooledCurrencies } = pool;
 
@@ -135,7 +143,7 @@ const DepositForm = ({ pool }: DepositFormProps): JSX.Element => {
     );
   };
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     try {
@@ -143,7 +151,9 @@ const DepositForm = ({ pool }: DepositFormProps): JSX.Element => {
         newMonetaryAmount(values[currency.currency.ticker] || 0, currency.currency)
       );
 
-      return depositMutation.mutate({ amounts, pool });
+      const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
+
+      return depositMutation.mutate({ amounts, pool, slippage: Number(slippage), deadline, accountId });
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -171,6 +181,8 @@ const DepositForm = ({ pool }: DepositFormProps): JSX.Element => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <SlippageManager value={slippage} onChange={(slippage) => setSlippage(slippage)} />
+
       {poolName}
       <Flex direction='column' gap='spacing8'>
         <Flex direction='column' gap='spacing2'>

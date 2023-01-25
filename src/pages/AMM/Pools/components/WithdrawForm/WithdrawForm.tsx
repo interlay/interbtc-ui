@@ -1,4 +1,5 @@
 import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +32,7 @@ type WithdrawFormData = {
 
 type WithdrawFormProps = {
   pool: LiquidityPool;
+  accountId: AccountId;
   onChangePool?: () => void;
 };
 
