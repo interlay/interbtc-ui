@@ -14,10 +14,12 @@ type BalanceCellProps = {
 };
 
 const BalanceCell = ({ amount, prices, alignItems }: BalanceCellProps): JSX.Element => {
-  const assetBalanceUSD = displayMonetaryAmountInUSDFormat(amount, prices?.[amount.currency.ticker].usd);
+  const assetBalanceUSD = displayMonetaryAmountInUSDFormat(amount, prices?.[amount.currency.ticker]?.usd);
   const assetBalance = formatNumber(amount.toBig().toNumber(), {
     maximumFractionDigits: amount.currency.humanDecimals
   });
+
+  console.log(amount.toString());
 
   return (
     <MonetaryCell alignItems={alignItems} label={assetBalance} sublabel={assetBalanceUSD} labelColor='secondary' />

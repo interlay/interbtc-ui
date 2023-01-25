@@ -30,12 +30,12 @@ const PoolModal = ({ pool, onClose, accountId, ...props }: PoolModalProps): JSX.
         <StyledTabs size='large' fullWidth>
           <TabsItem title={t('deposit')}>
             <StyledWrapper>
-              <DepositForm pool={pool} accountId={accountId} onChangePool={onClose} />
+              <DepositForm pool={pool} accountId={accountId} onDeposit={onClose} />
             </StyledWrapper>
           </TabsItem>
           <TabsItem title={t('withdraw')}>
             <StyledWrapper>
-              <WithdrawForm pool={pool} accountId={accountId} onChangePool={onClose} />
+              <WithdrawForm pool={pool} accountId={accountId} onWithdraw={onClose} />
             </StyledWrapper>
           </TabsItem>
         </StyledTabs>

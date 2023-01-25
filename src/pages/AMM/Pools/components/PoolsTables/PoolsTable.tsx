@@ -85,6 +85,8 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
             <BalanceCell amount={amount} prices={prices} alignItems='flex-end' />
           ) : undefined;
 
+        console.log();
+
         return {
           id: lpToken.ticker,
           poolName,

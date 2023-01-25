@@ -27,11 +27,6 @@ type PoolDepositSchemaParams = CommonSchemaParams & MaxAmountSchemaParams;
 const validateField = (value: number | undefined, params: PoolDepositSchemaParams, t: TFunction) => {
   const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
-  // if (!field.required.validate({ value })) {
-  //   const issueArg = field.required.issue(t, { fieldName: t('deposit').toLowerCase(), fieldType: 'number' });
-  //   return issueArg;
-  // }
-
   if (!balance.transactionFee.validate({ availableBalance: governanceBalance, transactionFee })) {
     return balance.transactionFee.issue(t);
   }
@@ -101,10 +96,10 @@ const mutateDeposit = ({ amounts, pool, slippage, deadline, accountId }: Deposit
 type DepositFormProps = {
   pool: LiquidityPool;
   accountId: AccountId;
-  onChangePool?: () => void;
+  onDeposit?: () => void;
 };
 
-const DepositForm = ({ pool, accountId }: DepositFormProps): JSX.Element => {
+const DepositForm = ({ pool, accountId, onDeposit }: DepositFormProps): JSX.Element => {
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
@@ -118,7 +113,11 @@ const DepositForm = ({ pool, accountId }: DepositFormProps): JSX.Element => {
 
   const depositMutation = useMutation<void, Error, DepositData>(mutateDeposit, {
     onSuccess: () => {
+      onDeposit?.();
       toast.success('Deposit successful');
+    },
+    onError: (error) => {
+      toast.error(error.message);
     }
   });
 
@@ -148,7 +147,7 @@ const DepositForm = ({ pool, accountId }: DepositFormProps): JSX.Element => {
 
     try {
       const amounts = pooledCurrencies.map((currency) =>
-        newMonetaryAmount(values[currency.currency.ticker] || 0, currency.currency)
+        newMonetaryAmount(values[currency.currency.ticker] || 0, currency.currency, true)
       );
 
       const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
@@ -181,74 +180,75 @@ const DepositForm = ({ pool, accountId }: DepositFormProps): JSX.Element => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <SlippageManager value={slippage} onChange={(slippage) => setSlippage(slippage)} />
+      <Flex direction='column'>
+        <SlippageManager value={slippage} onChange={(slippage) => setSlippage(slippage)} />
+        {poolName}
+        <Flex direction='column' gap='spacing8'>
+          <Flex direction='column' gap='spacing2'>
+            {pooledCurrencies.map((amount, index) => {
+              const {
+                currency: { ticker, humanDecimals }
+              } = amount;
 
-      {poolName}
-      <Flex direction='column' gap='spacing8'>
-        <Flex direction='column' gap='spacing2'>
-          {pooledCurrencies.map((amount, index) => {
-            const {
-              currency: { ticker, humanDecimals }
-            } = amount;
-
-            return (
-              <Flex key={ticker} direction='column' gap='spacing8'>
-                <TokenInput
-                  placeholder='0.00'
-                  ticker={ticker}
-                  aria-label={t('forms.field_amount', {
-                    field: `${ticker} ${t('deposit').toLowerCase()}`
-                  })}
-                  balance={getAvailableBalance(ticker)?.toBig().toNumber() || 0}
-                  balanceDecimals={humanDecimals}
-                  valueUSD={new Big(values[ticker] || 0).mul(getTokenPrice(prices, ticker)?.usd || 0).toNumber()}
-                  value={values[ticker]}
-                  name={ticker}
-                  onChange={handleChange}
-                  errorMessage={errors[ticker]}
-                />
-                {index !== pooledCurrencies.length - 1 && <DepositDivider />}
-              </Flex>
-            );
-          })}
-        </Flex>
-        <Flex direction='column' gap='spacing4'>
-          <P align='center' size='xs'>
-            {t('amm.pools.receivable_assets')}
-          </P>
-          <Dl direction='column' gap='spacing2'>
+              return (
+                <Flex key={ticker} direction='column' gap='spacing8'>
+                  <TokenInput
+                    placeholder='0.00'
+                    ticker={ticker}
+                    aria-label={t('forms.field_amount', {
+                      field: `${ticker} ${t('deposit').toLowerCase()}`
+                    })}
+                    balance={getAvailableBalance(ticker)?.toBig().toNumber() || 0}
+                    balanceDecimals={humanDecimals}
+                    valueUSD={new Big(values[ticker] || 0).mul(getTokenPrice(prices, ticker)?.usd || 0).toNumber()}
+                    value={values[ticker]}
+                    name={ticker}
+                    onChange={handleChange}
+                    errorMessage={errors[ticker]}
+                  />
+                  {index !== pooledCurrencies.length - 1 && <DepositDivider />}
+                </Flex>
+              );
+            })}
+          </Flex>
+          <Flex direction='column' gap='spacing4'>
+            <P align='center' size='xs'>
+              {t('amm.pools.receivable_assets')}
+            </P>
+            <Dl direction='column' gap='spacing2'>
+              <DlGroup justifyContent='space-between'>
+                <Dt size='xs' color='primary'>
+                  {poolName}
+                </Dt>
+                <Dd size='xs'>
+                  {formatNumber(lpTokenAmount.toBig().toNumber(), {
+                    maximumFractionDigits: lpTokenAmount.currency.humanDecimals,
+                    compact: true
+                  })}{' '}
+                  ({formatUSD(lpTokenAmountUSD, { compact: true })})
+                </Dd>
+              </DlGroup>
+            </Dl>
+          </Flex>
+          <StyledDl direction='column' gap='spacing2'>
             <DlGroup justifyContent='space-between'>
               <Dt size='xs' color='primary'>
-                {poolName}
+                Fees
               </Dt>
               <Dd size='xs'>
-                {formatNumber(lpTokenAmount.toBig().toNumber(), {
-                  maximumFractionDigits: lpTokenAmount.currency.humanDecimals,
-                  compact: true
-                })}{' '}
-                ({formatUSD(lpTokenAmountUSD, { compact: true })})
+                {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
+                {displayMonetaryAmountInUSDFormat(
+                  TRANSACTION_FEE_AMOUNT,
+                  getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
+                )}
+                )
               </Dd>
             </DlGroup>
-          </Dl>
+          </StyledDl>
+          <AuthCTA type='submit' size='large' disabled={!isComplete || isInvalid} loading={depositMutation.isLoading}>
+            {t('amm.pools.add_liquidity')}
+          </AuthCTA>
         </Flex>
-        <StyledDl direction='column' gap='spacing2'>
-          <DlGroup justifyContent='space-between'>
-            <Dt size='xs' color='primary'>
-              Fees
-            </Dt>
-            <Dd size='xs'>
-              {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
-              {displayMonetaryAmountInUSDFormat(
-                TRANSACTION_FEE_AMOUNT,
-                getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
-              )}
-              )
-            </Dd>
-          </DlGroup>
-        </StyledDl>
-        <AuthCTA type='submit' size='large' disabled={!isComplete || isInvalid}>
-          {t('amm.pools.add_liquidity')}
-        </AuthCTA>
       </Flex>
     </form>
   );
