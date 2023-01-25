@@ -8,7 +8,7 @@ const validation = {
   amm
 };
 
-export type { PoolDepositSchemaParams } from './amm';
+export type { PoolWithdrawSchemaParams } from './amm';
 export type {
   LoanBorrowSchemaParams,
   LoanLendSchemaParams,

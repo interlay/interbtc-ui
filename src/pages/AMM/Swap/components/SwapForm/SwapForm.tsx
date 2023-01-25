@@ -92,6 +92,9 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, ...props }: SwapFormProp
   const swapMutation = useMutation<void, Error, SwapData>(mutateSwap, {
     onSuccess: () => {
       toast.success('Swap successful');
+    },
+    onError: (err) => {
+      toast.error(err.message);
     }
   });
 

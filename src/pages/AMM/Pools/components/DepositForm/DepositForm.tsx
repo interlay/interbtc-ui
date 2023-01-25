@@ -2,17 +2,14 @@ import { CurrencyExt, LiquidityPool, newMonetaryAmount, PooledCurrencies } from 
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { ChangeEventHandler, FormEventHandler, Key, useState } from 'react';
-import { TFunction, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatNumber, formatUSD } from '@/common/utils/utils';
-import { Dd, Dl, DlGroup, Dt, Flex, P, TokenInput } from '@/component-library';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components/AuthCTA';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import balance from '@/lib/form-validation/common/balance';
-import field from '@/lib/form-validation/common/field';
-import { CommonSchemaParams, MaxAmountSchemaParams } from '@/lib/form-validation/types';
+import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -21,66 +18,8 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { PoolName } from '../PoolName';
 import { DepositDivider } from './DepositDivider';
 import { StyledDl } from './DepositForm.styles';
-
-type PoolDepositSchemaParams = CommonSchemaParams & MaxAmountSchemaParams;
-
-const validateField = (value: number | undefined, params: PoolDepositSchemaParams, t: TFunction) => {
-  const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
-
-  if (!balance.transactionFee.validate({ availableBalance: governanceBalance, transactionFee })) {
-    return balance.transactionFee.issue(t);
-  }
-
-  const inputAmount = new Big(value as number);
-
-  if (!field.min.validate({ inputAmount, minAmount: minAmount.toBig() })) {
-    const issueArg = field.min.issue(t, {
-      action: t('deposit').toLowerCase(),
-      amount: minAmount.toString()
-    });
-    return issueArg;
-  }
-
-  if (!field.max.validate({ inputAmount, maxAmount: maxAmount.toBig() })) {
-    const issueArg = field.max.issue(t, {
-      action: t('deposit').toLowerCase(),
-      amount: maxAmount.toString()
-    });
-    return issueArg;
-  }
-};
-
-const useFormState = (values: Record<string, number | undefined>, pooledCurrencies: PooledCurrencies) => {
-  const { getAvailableBalance, getBalance } = useGetBalances();
-  const { t } = useTranslation();
-
-  const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-
-  const errors: Record<string, string> = pooledCurrencies.reduce((acc, curr) => {
-    const value = values[curr.currency.ticker];
-
-    if (!value) return acc;
-
-    const zeroAssetAmount = newMonetaryAmount(0, curr.currency);
-    const params: PoolDepositSchemaParams = {
-      governanceBalance,
-      maxAmount: getAvailableBalance(curr.currency.ticker) || zeroAssetAmount,
-      minAmount: newMonetaryAmount(1, curr.currency),
-      transactionFee: TRANSACTION_FEE_AMOUNT
-    };
-    const validation = validateField(value, params, t);
-
-    if (!validation?.message) return acc;
-
-    return { ...acc, [curr.currency.ticker]: validation?.message };
-  }, {});
-
-  return {
-    errors,
-    isComplete: Object.values(values).filter((val) => val !== undefined).length === pooledCurrencies.length,
-    isInvalid: !!Object.keys(errors).length
-  };
-};
+import { DepositOutputAssets } from './DepositOutputAssets';
+import { useFormState } from './use-form-state';
 
 type DepositData = {
   amounts: PooledCurrencies;
@@ -162,22 +101,6 @@ const DepositForm = ({ pool, accountId, onDeposit }: DepositFormProps): JSX.Elem
     <PoolName justifyContent='center' tickers={pooledCurrencies.map((currency) => currency.currency.ticker)} />
   );
 
-  const lpTokenAmount = pool.getLiquidityDepositLpTokenAmount(
-    newMonetaryAmount(values[pooledCurrencies[0].currency.ticker] || 0, pooledCurrencies[0].currency, true)
-  );
-
-  const lpTokenAmountUSD = pooledCurrencies
-    .reduce(
-      (acc, curr) =>
-        acc.add(
-          new Big(values[curr.currency.ticker] || 0)
-            .mul(getTokenPrice(prices, curr.currency.ticker)?.usd || 0)
-            .toNumber()
-        ),
-      new Big(0)
-    )
-    .toNumber();
-
   return (
     <form onSubmit={handleSubmit}>
       <Flex direction='column'>
@@ -211,25 +134,7 @@ const DepositForm = ({ pool, accountId, onDeposit }: DepositFormProps): JSX.Elem
               );
             })}
           </Flex>
-          <Flex direction='column' gap='spacing4'>
-            <P align='center' size='xs'>
-              {t('amm.pools.receivable_assets')}
-            </P>
-            <Dl direction='column' gap='spacing2'>
-              <DlGroup justifyContent='space-between'>
-                <Dt size='xs' color='primary'>
-                  {poolName}
-                </Dt>
-                <Dd size='xs'>
-                  {formatNumber(lpTokenAmount.toBig().toNumber(), {
-                    maximumFractionDigits: lpTokenAmount.currency.humanDecimals,
-                    compact: true
-                  })}{' '}
-                  ({formatUSD(lpTokenAmountUSD, { compact: true })})
-                </Dd>
-              </DlGroup>
-            </Dl>
-          </Flex>
+          <DepositOutputAssets pool={pool} values={values} prices={prices} />
           <StyledDl direction='column' gap='spacing2'>
             <DlGroup justifyContent='space-between'>
               <Dt size='xs' color='primary'>

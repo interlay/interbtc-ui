@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Divider, Dl, theme } from '@/component-library';
+import { Divider, Dl, DlGroup, theme } from '@/component-library';
 
 const StyledDl = styled(Dl)`
   background-color: ${theme.card.secondaryBg};
@@ -37,4 +37,12 @@ const StyledDivider = styled(Divider)`
   background-color: var(--colors-token-input-end-adornment-bg);
 `;
 
-export { StyledBackground, StyledCircle, StyledDivider, StyledDl, StyledWrapper };
+const StyledDlGroup = styled(DlGroup)`
+  flex-direction: column;
+
+  @media (min-width: 30em) {
+    flex-direction: row;
+  }
+`;
+
+export { StyledBackground, StyledCircle, StyledDivider, StyledDl, StyledDlGroup, StyledWrapper };
