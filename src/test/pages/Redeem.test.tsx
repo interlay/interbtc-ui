@@ -43,9 +43,11 @@ const renderRedeemForm = async (props?: any) => {
 
   const submitButton = screen.getByRole('button', { name: /confirm/i });
 
+  const errorElement = within(redeemTabPanel).getByRole('alert', { name: WRAPPED_TOKEN_SYMBOL });
+
   return {
     tab: redeemTab,
-    tabPanel: redeemTabPanel,
+    errorElement,
     amountToRedeemInput,
     btcAddressToSendInput,
     submitButton,
@@ -157,15 +159,11 @@ describe('redeem form', () => {
       }
     });
 
-    const { changeAmountToRedeem, submitForm, tabPanel } = await renderRedeemForm();
+    const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
 
     await changeAmountToRedeem(inputAmount.toString());
-
-    // ray test touch <
-    const errorElement = within(tabPanel).getByRole('alert', { name: WRAPPED_TOKEN_SYMBOL });
-    // ray test touch >
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
       `"Please enter an amount smaller than your current balance: 0"`
