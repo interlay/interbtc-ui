@@ -57,6 +57,8 @@ const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
 const VAULT_SELECTION = 'vault-selection';
 
+const BTC_ADDRESS_LABEL = 'BTC Address';
+
 type RedeemFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
   [BTC_ADDRESS]: string;
@@ -447,7 +449,7 @@ const RedeemForm = (): JSX.Element | null => {
           <TextField
             id={BTC_ADDRESS}
             type='text'
-            label='BTC Address'
+            label={BTC_ADDRESS_LABEL}
             placeholder={t('enter_btc_address')}
             {...register(BTC_ADDRESS, {
               required: {
@@ -564,6 +566,8 @@ const RedeemForm = (): JSX.Element | null => {
 
   return null;
 };
+
+export { BTC_ADDRESS_LABEL };
 
 export default withErrorBoundary(RedeemForm, {
   FallbackComponent: ErrorFallback,

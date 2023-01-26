@@ -7,6 +7,7 @@ import { AccountId } from '@polkadot/types/interfaces';
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { BTC_ADDRESS_LABEL } from '@/pages/Bridge/RedeemForm';
 
 import {
   MOCK_REDEEM_BRIDGE_FEE_RATE,
@@ -36,13 +37,9 @@ const renderRedeemForm = async (props?: any) => {
 
   userEvent.click(redeemTab);
 
-  // ray test touch <
-  const textboxElements = screen.getAllByRole('textbox');
+  const amountToRedeemInput = screen.getByRole('textbox', { name: WRAPPED_TOKEN_SYMBOL });
 
-  const amountToRedeemInput = textboxElements[0];
-
-  const btcAddressToSendInput = textboxElements[1];
-  // ray test touch >
+  const btcAddressToSendInput = screen.getByRole('textbox', { name: BTC_ADDRESS_LABEL });
 
   const submitButton = screen.getByRole('button', { name: /confirm/i });
 
