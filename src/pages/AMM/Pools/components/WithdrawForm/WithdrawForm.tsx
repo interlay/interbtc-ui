@@ -57,12 +57,12 @@ type WithdrawFormProps = {
 };
 
 const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps): JSX.Element => {
+  const [slippage, setSlippage] = useState<number>(0.1);
+
   const accountId = useAccountId();
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { getAvailableBalance, getBalance } = useGetBalances();
-
-  const [slippage, setSlippage] = useState<number>(0.1);
 
   const withdrawMutation = useMutation<void, Error, DepositData>(mutateWithdraw, {
     onSuccess: () => {

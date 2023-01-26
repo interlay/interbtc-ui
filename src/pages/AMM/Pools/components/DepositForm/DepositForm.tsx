@@ -41,17 +41,16 @@ type DepositFormProps = {
 };
 
 const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): JSX.Element => {
+  const { pooledCurrencies } = pool;
+  const defaultValues = pooledCurrencies.reduce((acc, amount) => ({ ...acc, [amount.currency.ticker]: undefined }), {});
+
+  const [slippage, setSlippage] = useState(0.1);
+  const [values, setValues] = useState<Record<string, number | undefined>>(defaultValues);
+
   const accountId = useAccountId();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-
-  const { pooledCurrencies } = pool;
-
-  const [slippage, setSlippage] = useState(0.1);
-
-  const defaultValues = pooledCurrencies.reduce((acc, amount) => ({ ...acc, [amount.currency.ticker]: undefined }), {});
-  const [values, setValues] = useState<Record<string, number | undefined>>(defaultValues);
 
   const { errors, isInvalid, isComplete } = useFormState(values, pooledCurrencies);
 
