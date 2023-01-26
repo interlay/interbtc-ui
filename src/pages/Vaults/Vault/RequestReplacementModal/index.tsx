@@ -14,6 +14,7 @@ import { toast } from 'react-toastify';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
 import InterlayCinnabarOutlinedButton from '@/legacy-components/buttons/InterlayCinnabarOutlinedButton';
@@ -70,7 +71,9 @@ const RequestReplacementModal = ({
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [griefingRate, setGriefingRate] = React.useState(new Big(10.0)); // Set default to 10%
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
+  // ray test touch <
+  const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_REDEEM_DUST_AMOUNT));
+  // ray test touch >
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );

@@ -18,7 +18,7 @@ import {
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
-import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE, DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
@@ -97,7 +97,9 @@ const RedeemForm = (): JSX.Element | null => {
     return new BitcoinAmount(wrappedTokenAmount);
   }, [wrappedTokenAmount]);
 
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
+  // ray test touch <
+  const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_REDEEM_DUST_AMOUNT));
+  // ray test touch >
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(DEFAULT_REDEEM_BRIDGE_FEE_RATE));
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
@@ -202,6 +204,9 @@ const RedeemForm = (): JSX.Element | null => {
           setBtcToRelayChainNativeTokenRate(btcToRelayChainNativeTokenRateResult.value);
         }
 
+        // ray test touch <
+        console.log('ray : ***** dustValueResult.value.toString() => ', dustValueResult.value.toString());
+        // ray test touch >
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeRateResult.value));
         setRedeemFeeRate(feeRateResult.value);
@@ -333,10 +338,11 @@ const RedeemForm = (): JSX.Element | null => {
 
       const bridgeFee = monetaryValue.mul(redeemFeeRate);
       const minValue = dustValue.add(currentInclusionFee).add(bridgeFee);
-
+      // ray test touch <
       if (monetaryValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
+      // ray test touch >
 
       if (!selectedAccount) {
         return t('redeem_page.must_select_account_warning');

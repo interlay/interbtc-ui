@@ -214,6 +214,7 @@ describe('issue form', () => {
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
   });
 
+  // ray test touch <
   test('when the input amount is less than the Bitcoin dust amount', async () => {
     const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
@@ -229,6 +230,7 @@ describe('issue form', () => {
 
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
   });
+  // ray test touch >
 
   test('when the parachain is more than 6 blocks behind', async () => {
     (window.bridge.btcRelay.getLatestBlockHeight as any).mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
