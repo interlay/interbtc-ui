@@ -4,7 +4,7 @@ import { ListItem, ListProps } from '../List';
 import { Span } from '../Text';
 import { TokenStack } from '../TokenStack';
 import { TokenTicker } from './TokenInput';
-import { StyledList, StyledListItemLabel } from './TokenInput.style';
+import { StyledList, StyledListItemLabel, StyledListTokenWrapper } from './TokenInput.style';
 
 type TokenData = {
   ticker: TokenTicker;
@@ -53,15 +53,15 @@ const TokenList = ({ items, selectedTicker, onSelectionChange, ...props }: Token
             justifyContent='space-between'
             gap='spacing4'
           >
-            <Flex alignItems='center' gap='spacing2'>
+            <StyledListTokenWrapper alignItems='center' gap='spacing2' flex='1'>
               {typeof item.ticker === 'string' ? (
                 <CoinIcon ticker={item.ticker} />
               ) : (
                 <TokenStack tickers={item.ticker.icons} />
               )}
               <StyledListItemLabel $isSelected={isSelected}>{tickerText}</StyledListItemLabel>
-            </Flex>
-            <Flex direction='column' alignItems='flex-end' gap='spacing2'>
+            </StyledListTokenWrapper>
+            <Flex direction='column' alignItems='flex-end' gap='spacing2' flex='0'>
               <StyledListItemLabel $isSelected={isSelected}>{item.balance}</StyledListItemLabel>
               <Span size='s' color='tertiary'>
                 {item.balanceUSD}

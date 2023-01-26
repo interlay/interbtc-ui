@@ -23,6 +23,8 @@ type StyledListItemSelectedLabelProps = {
 const StyledTicker = styled.span`
   font-size: ${theme.text.s};
   color: ${theme.colors.textPrimary};
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const StyledUSDAdornment = styled.span<Pick<StyledTokenInputBalanceValueProps, '$isDisabled'>>`
@@ -42,6 +44,7 @@ const StyledTokenSelect = styled(Flex)<StyledClickableProps>`
   cursor: ${({ $isClickable }) => $isClickable && 'pointer'};
   height: 3rem;
   width: auto;
+  overflow: hidden;
 `;
 
 const StyledChevronDown = styled(ChevronDown)`
@@ -75,6 +78,8 @@ const StyledTokenInputBalanceValue = styled.span<StyledTokenInputBalanceValuePro
 const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
   color: ${({ $isSelected }) =>
     $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const StyledList = styled(List)`
@@ -86,11 +91,16 @@ const StyledListHeader = styled(Flex)`
   padding: ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
 `;
 
+const StyledListTokenWrapper = styled(Flex)`
+  overflow: hidden;
+`;
+
 export {
   StyledChevronDown,
   StyledList,
   StyledListHeader,
   StyledListItemLabel,
+  StyledListTokenWrapper,
   StyledTicker,
   StyledTokenInputBalanceLabel,
   StyledTokenInputBalanceValue,
