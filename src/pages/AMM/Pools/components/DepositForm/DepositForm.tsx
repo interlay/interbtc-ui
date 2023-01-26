@@ -11,9 +11,11 @@ import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components/AuthCTA';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { SlippageManager } from '@/pages/AMM/shared/components';
+import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolName } from '../PoolName';
 import { DepositDivider } from './DepositDivider';
@@ -34,21 +36,23 @@ const mutateDeposit = ({ amounts, pool, slippage, deadline, accountId }: Deposit
 
 type DepositFormProps = {
   pool: LiquidityPool;
-  accountId: AccountId;
   slippageModalRef: RefObject<HTMLDivElement>;
   onDeposit?: () => void;
 };
 
-const DepositForm = ({ pool, accountId, slippageModalRef, onDeposit }: DepositFormProps): JSX.Element => {
+const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): JSX.Element => {
+  const accountId = useAccountId();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-  const [slippage, setSlippage] = useState(0.1);
 
   const { pooledCurrencies } = pool;
 
-  const defaultValues = pooledCurrencies.reduce((acc, val) => ({ ...acc, [val.currency.ticker]: undefined }), {});
+  const [slippage, setSlippage] = useState(0.1);
+
+  const defaultValues = pooledCurrencies.reduce((acc, amount) => ({ ...acc, [amount.currency.ticker]: undefined }), {});
   const [values, setValues] = useState<Record<string, number | undefined>>(defaultValues);
+
   const { errors, isInvalid, isComplete } = useFormState(values, pooledCurrencies);
 
   const depositMutation = useMutation<void, Error, DepositData>(mutateDeposit, {
@@ -67,30 +71,32 @@ const DepositForm = ({ pool, accountId, slippageModalRef, onDeposit }: DepositFo
     }
 
     const inputCurrency = pooledCurrencies.find((currency) => currency.currency.ticker === e.target.name);
-
     const inputAmount = newMonetaryAmount(e.target.value || 0, inputCurrency?.currency as CurrencyExt, true);
+
     const amounts = pool.getLiquidityDepositInputAmounts(inputAmount);
 
-    setValues(
-      amounts.reduce((acc, val) => {
-        if (val.currency.ticker === inputCurrency?.currency.ticker) {
-          return { ...acc, [val.currency.ticker]: e.target.value ? Number(e.target.value) : undefined };
-        }
+    const newValues = amounts.reduce((acc, val) => {
+      if (val.currency.ticker === inputCurrency?.currency.ticker) {
+        return { ...acc, [val.currency.ticker]: e.target.value ? Number(e.target.value) : undefined };
+      }
 
-        return { ...acc, [val.currency.ticker]: val.toBig().toNumber() };
-      }, {})
-    );
+      return { ...acc, [val.currency.ticker]: val.toBig().toNumber() };
+    }, {});
+
+    setValues(newValues);
   };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
+    if (!accountId) return;
+
     try {
-      const amounts = pooledCurrencies.map((currency) =>
-        newMonetaryAmount(values[currency.currency.ticker] || 0, currency.currency, true)
+      const amounts = pooledCurrencies.map((amount) =>
+        newMonetaryAmount(values[amount.currency.ticker] || 0, amount.currency, true)
       );
 
-      const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
+      const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
 
       return depositMutation.mutate({ amounts, pool, slippage, deadline, accountId });
     } catch (err: any) {
@@ -99,7 +105,7 @@ const DepositForm = ({ pool, accountId, slippageModalRef, onDeposit }: DepositFo
   };
 
   const poolName = (
-    <PoolName justifyContent='center' tickers={pooledCurrencies.map((currency) => currency.currency.ticker)} />
+    <PoolName justifyContent='center' tickers={pooledCurrencies.map((amount) => amount.currency.ticker)} />
   );
 
   return (
@@ -113,6 +119,8 @@ const DepositForm = ({ pool, accountId, slippageModalRef, onDeposit }: DepositFo
               const {
                 currency: { ticker, humanDecimals }
               } = amount;
+
+              const isLastItem = index === pooledCurrencies.length - 1;
 
               return (
                 <Flex key={ticker} direction='column' gap='spacing8'>
@@ -130,7 +138,7 @@ const DepositForm = ({ pool, accountId, slippageModalRef, onDeposit }: DepositFo
                     onChange={handleChange}
                     errorMessage={errors[ticker]}
                   />
-                  {index !== pooledCurrencies.length - 1 && <DepositDivider />}
+                  {!isLastItem && <DepositDivider />}
                 </Flex>
               );
             })}
@@ -139,7 +147,7 @@ const DepositForm = ({ pool, accountId, slippageModalRef, onDeposit }: DepositFo
           <StyledDl direction='column' gap='spacing2'>
             <DlGroup justifyContent='space-between'>
               <Dt size='xs' color='primary'>
-                Fees
+                {t('fees')}
               </Dt>
               <Dd size='xs'>
                 {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (

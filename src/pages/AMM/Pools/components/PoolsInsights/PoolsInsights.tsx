@@ -1,3 +1,4 @@
+import { LiquidityPool } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 
@@ -10,31 +11,30 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { StyledDd, StyledDt } from './PoolsInsights.style';
 
 type PoolsInsightsProps = {
-  pools: AccountLiquidityPool[];
+  pools: LiquidityPool[];
+  accountPools?: AccountLiquidityPool[];
 };
 
-const PoolsInsights = ({ pools }: PoolsInsightsProps): JSX.Element => {
+const PoolsInsights = ({ pools, accountPools }: PoolsInsightsProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const supplyAmountUSD = pools
-    .filter((pool) => !!pool.amount)
-    .reduce((acc, curr) => {
-      const totalLiquidityUSD = curr.data.pooledCurrencies.reduce(
-        (total, currentAmount) => total + (getTokenPrice(prices, currentAmount.currency.ticker)?.usd || 0),
-        0
-      );
+  const supplyAmountUSD = accountPools?.reduce((acc, curr) => {
+    const totalLiquidityUSD = curr.data.pooledCurrencies.reduce(
+      (total, currentAmount) => total + (getTokenPrice(prices, currentAmount.currency.ticker)?.usd || 0),
+      0
+    );
 
-      const accountLiquidityUSD =
-        curr.amount?.mul(totalLiquidityUSD).div(curr.data.totalSupply.toBig()).toBig().toNumber() || 0;
+    const accountLiquidityUSD =
+      curr.amount?.mul(totalLiquidityUSD).div(curr.data.totalSupply.toBig()).toBig().toNumber() || 0;
 
-      return acc.add(accountLiquidityUSD);
-    }, new Big(0));
+    return acc.add(accountLiquidityUSD);
+  }, new Big(0));
 
-  const supplyBalanceLabel = formatUSD(supplyAmountUSD?.toNumber() || 0);
+  const supplyBalanceLabel = supplyAmountUSD ? formatUSD(supplyAmountUSD.toNumber() || 0) : '-';
 
-  const totalLiquidity = pools.reduce((acc, curr) => {
-    const poolLiquidityUSD = curr.data.pooledCurrencies.reduce(
+  const totalLiquidity = pools.reduce((acc, pool) => {
+    const poolLiquidityUSD = pool.pooledCurrencies.reduce(
       (total, currentAmount) => total + (getTokenPrice(prices, currentAmount.currency.ticker)?.usd || 0),
       0
     );

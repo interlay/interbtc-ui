@@ -48,23 +48,23 @@ const useFormState = (values: Record<string, number | undefined>, pooledCurrenci
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
-  const errors: Record<string, string> = pooledCurrencies.reduce((acc, curr) => {
-    const value = values[curr.currency.ticker];
+  const errors: Record<string, string> = pooledCurrencies.reduce((acc, { currency }) => {
+    const value = values[currency.ticker];
 
     if (!value) return acc;
 
-    const zeroAssetAmount = newMonetaryAmount(0, curr.currency);
+    const zeroAssetAmount = newMonetaryAmount(0, currency);
     const params: PoolDepositSchemaParams = {
       governanceBalance,
-      maxAmount: getAvailableBalance(curr.currency.ticker) || zeroAssetAmount,
-      minAmount: newMonetaryAmount(1, curr.currency),
+      maxAmount: getAvailableBalance(currency.ticker) || zeroAssetAmount,
+      minAmount: newMonetaryAmount(1, currency),
       transactionFee: TRANSACTION_FEE_AMOUNT
     };
     const validation = validateField(value, params, t);
 
     if (!validation?.message) return acc;
 
-    return { ...acc, [curr.currency.ticker]: validation?.message };
+    return { ...acc, [currency.ticker]: validation?.message };
   }, {});
 
   return {

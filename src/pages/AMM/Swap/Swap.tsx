@@ -1,3 +1,4 @@
+import { isCurrencyEqual } from '@interlay/interbtc-api';
 import { useState } from 'react';
 
 import FullLoadingSpinner from '@/components/FullLoadingSpinner';
@@ -10,7 +11,6 @@ import { SwapForm, SwapLiquidity } from './components';
 import { StyledWrapper } from './Swap.style';
 
 const Swap = (): JSX.Element => {
-  // const accountId = useAccountId();
   const { data: liquidityPools, refetch } = useGetLiquidityPools();
   const [pair, setPair] = useState<SwapPair>({ input: RELAY_CHAIN_NATIVE_TOKEN });
 
@@ -20,8 +20,8 @@ const Swap = (): JSX.Element => {
 
   const liquidityPool = liquidityPools.find(
     (obj) =>
-      obj.pooledCurrencies.some((val) => val.currency.ticker === pair.input?.ticker) &&
-      obj.pooledCurrencies.some((val) => val.currency.ticker === pair.output?.ticker)
+      obj.pooledCurrencies.some((amount) => pair.input && isCurrencyEqual(amount.currency, pair.input)) &&
+      obj.pooledCurrencies.some((amount) => pair.output && isCurrencyEqual(amount.currency, pair.output))
   );
 
   const handleChangePair = (pair: SwapPair) => setPair(pair);
