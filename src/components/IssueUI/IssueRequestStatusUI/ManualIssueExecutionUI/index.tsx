@@ -75,8 +75,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
       const issue = await window.bridge.issue.getRequestById(request.id);
 
       const collateralToken = await currencyIdToMonetaryCurrency(
-        window.bridge.assetRegistry,
-        window.bridge.loans,
+        window.bridge.api,
         issue.vaultId.currencies.collateral
       );
 
