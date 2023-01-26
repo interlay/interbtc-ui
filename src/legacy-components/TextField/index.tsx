@@ -44,6 +44,7 @@ const TextField = React.forwardRef<Ref, Props>(
         {...rest}
       />
       <TextFieldHelperText
+        aria-labelledby={id}
         className={clsx(
           {
             [clsx(
