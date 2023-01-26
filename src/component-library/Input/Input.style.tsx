@@ -102,6 +102,8 @@ const Adornment = styled.div<AdornmentProps>`
   right: ${({ $position }) => $position === 'right' && theme.spacing.spacing2};
   transform: ${({ $position }) => ($position === 'left' || $position === 'right') && 'translateY(-50%)'};
   bottom: ${({ $position }) => $position === 'bottom' && theme.spacing.spacing1};
+  // to not allow adornment to take more than 50% of the input. We might want to reduce this in the future.
+  max-width: 50%;
 `;
 
 const Wrapper = styled.div`

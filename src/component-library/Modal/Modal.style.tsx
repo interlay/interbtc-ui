@@ -16,6 +16,7 @@ type StyledDialogWrapperProps = {
 
 type StyledDialogProps = {
   $isCentered?: boolean;
+  $hasMaxHeight?: boolean;
 };
 
 type StyledModalBodyProps = {
@@ -59,6 +60,7 @@ const StyledDialog = styled.section<StyledDialogProps>`
   color: ${theme.colors.textPrimary};
 
   width: 100%;
+  max-height: ${({ $hasMaxHeight }) => $hasMaxHeight && '560px'};
   overflow: ${({ $isCentered }) => $isCentered && 'hidden'};
   pointer-events: auto;
 

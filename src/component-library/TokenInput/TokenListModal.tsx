@@ -14,7 +14,7 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 type TokenListModalProps = Props & InheritAttrs;
 
 const TokenListModal = ({ selectedTicker, tokens, onSelectionChange, ...props }: TokenListModalProps): JSX.Element => (
-  <Modal {...props}>
+  <Modal hasMaxHeight {...props}>
     <ModalHeader size='lg' weight='medium' color='secondary'>
       Select Token
     </ModalHeader>

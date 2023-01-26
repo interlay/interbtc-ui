@@ -420,6 +420,10 @@ const theme = {
       lg: 'var(--spacing-8)',
       xl: 'var(--spacing-10)',
       xl2: 'var(--spacing-12)'
+    },
+    fallback: {
+      color: 'var(--colors-neutral-white)',
+      stroke: 'var(--colors-neutral-black)'
     }
   },
   list: {
