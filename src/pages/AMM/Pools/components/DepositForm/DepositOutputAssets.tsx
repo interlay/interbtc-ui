@@ -1,5 +1,6 @@
 import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatNumber, formatUSD } from '@/common/utils/utils';
@@ -28,17 +29,19 @@ const DepositOutputAssets = ({ pool, values, prices }: DepositOutputAssetsProps)
     newMonetaryAmount(values[pooledCurrencies[0].currency.ticker] || 0, pooledCurrencies[0].currency, true)
   );
 
-  const lpTokenAmountUSD = pooledCurrencies
-    .reduce(
-      (acc, curr) =>
-        acc.add(
-          new Big(values[curr.currency.ticker] || 0)
+  const lpTokenAmountUSD = useMemo(
+    () =>
+      pooledCurrencies
+        .reduce((acc, curr) => {
+          const amountUSD = new Big(values[curr.currency.ticker] || 0)
             .mul(getTokenPrice(prices, curr.currency.ticker)?.usd || 0)
-            .toNumber()
-        ),
-      new Big(0)
-    )
-    .toNumber();
+            .toNumber();
+
+          return acc.add(amountUSD);
+        }, new Big(0))
+        .toNumber(),
+    [pooledCurrencies, prices, values]
+  );
 
   const lpTokenAmount = formatNumber(lpTokenMonetaryAmount.toBig().toNumber(), {
     maximumFractionDigits: lpTokenMonetaryAmount.currency.humanDecimals || lpTokenMonetaryAmount.currency.decimals,

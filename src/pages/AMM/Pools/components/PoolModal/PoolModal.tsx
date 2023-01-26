@@ -1,5 +1,4 @@
 import { LiquidityPool } from '@interlay/interbtc-api';
-import { AccountId } from '@polkadot/types/interfaces';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,14 +11,13 @@ import { StyledTabs, StyledWrapper } from './PoolModal.style';
 
 type Props = {
   pool?: LiquidityPool;
-  accountId: AccountId;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type PoolModalProps = Props & InheritAttrs;
 
-const PoolModal = ({ pool, onClose, accountId, ...props }: PoolModalProps): JSX.Element | null => {
+const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | null => {
   const { t } = useTranslation();
   const { refetch } = useGetAccountPools();
   const ref = useRef<HTMLDivElement>(null);
@@ -46,12 +44,12 @@ const PoolModal = ({ pool, onClose, accountId, ...props }: PoolModalProps): JSX.
         <StyledTabs size='large' fullWidth>
           <TabsItem title={t('deposit')}>
             <StyledWrapper>
-              <DepositForm slippageModalRef={ref} pool={pool} accountId={accountId} onDeposit={handleAction} />
+              <DepositForm slippageModalRef={ref} pool={pool} onDeposit={handleAction} />
             </StyledWrapper>
           </TabsItem>
           <TabsItem title={t('withdraw')}>
             <StyledWrapper>
-              <WithdrawForm slippageModalRef={ref} pool={pool} accountId={accountId} onWithdraw={handleAction} />
+              <WithdrawForm slippageModalRef={ref} pool={pool} onWithdraw={handleAction} />
             </StyledWrapper>
           </TabsItem>
         </StyledTabs>

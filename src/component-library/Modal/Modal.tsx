@@ -15,7 +15,6 @@ import { ModalContext } from './ModalContext';
 type Props = {
   children: ReactNode;
   align?: 'top' | 'center';
-  portalContainer?: Element;
 };
 
 type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
@@ -23,7 +22,7 @@ type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
 type ModalProps = Props & InheritAttrs;
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
-  ({ children, isDismissable = true, align = 'center', portalContainer, ...props }, ref): JSX.Element | null => {
+  ({ children, isDismissable = true, align = 'center', ...props }, ref): JSX.Element | null => {
     const dialogRef = useDOMRef(ref);
     const { isOpen, onClose } = props;
     const { shouldRender, transitionTrigger } = useMountTransition(!!isOpen, theme.transition.duration.duration100);
@@ -43,7 +42,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
     const isCentered = align === 'center';
 
     return isOpen || shouldRender ? (
-      <OverlayContainer portalContainer={portalContainer}>
+      <OverlayContainer>
         <StyledUnderlay {...underlayProps} $isCentered={isCentered}>
           <FocusScope contain restoreFocus autoFocus>
             <StyledDialogWrapper

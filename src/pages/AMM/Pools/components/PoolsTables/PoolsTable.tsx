@@ -1,9 +1,10 @@
+import { LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatPercentage, formatUSD } from '@/common/utils/utils';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { PoolName } from '../PoolName';
@@ -29,7 +30,7 @@ type PoolsTableRow = {
 
 type PoolsTableProps = {
   variant: 'available-pools' | 'account-pools';
-  pools: AccountLiquidityPool[];
+  pools: Array<{ data: LiquidityPool; amount?: MonetaryAmount<LpCurrency> }>;
   onRowAction: PoolsBaseTableProps['onRowAction'];
 };
 

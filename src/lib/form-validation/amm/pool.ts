@@ -33,7 +33,7 @@ const withdraw = (t: TFunction, params: PoolWithdrawSchemaParams): z.ZodEffects<
 
     if (!field.max.validate({ inputAmount, maxAmount: maxAmount.toBig() })) {
       const issueArg = field.max.issue(t, {
-        action: t('deposit').toLowerCase(),
+        action: t('withdraw').toLowerCase(),
         amount: maxAmount.toString()
       });
       return ctx.addIssue(issueArg);

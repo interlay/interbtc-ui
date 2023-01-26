@@ -1,4 +1,4 @@
-import { CurrencyExt, isCurrencyEqual, LiquidityPool } from '@interlay/interbtc-api';
+import { isCurrencyEqual, LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
@@ -9,22 +9,25 @@ import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import useAccountId from '../../use-account-id';
 import { useGetLiquidityPools } from './use-get-liquidity-pools';
 
-type AccountLiquidityPool = { data: LiquidityPool; amount?: MonetaryAmount<CurrencyExt> };
+type AccountLiquidityPool = { data: LiquidityPool; amount: MonetaryAmount<LpCurrency> };
 
 const getAccountLiqudityPools = async (
   accountId: AccountId,
   pools: LiquidityPool[]
 ): Promise<Array<AccountLiquidityPool>> => {
-  const accountLiquidityPools: MonetaryAmount<CurrencyExt>[] = await window.bridge.amm.getLiquidityProvidedByAccount(
-    accountId
-  );
+  const accountLiquidityPools = await window.bridge.amm.getLiquidityProvidedByAccount(accountId);
 
-  return pools.map((pool) => ({
-    data: pool,
-    amount: accountLiquidityPools.find(
-      (lpToken) => isCurrencyEqual(pool.lpToken, lpToken.currency) && !lpToken.isZero()
-    )
-  }));
+  const filteredPools = accountLiquidityPools.filter((lpToken) => !lpToken.isZero());
+
+  return filteredPools.reduce((acc: AccountLiquidityPool[], amount) => {
+    const pool = pools.find((pool) => isCurrencyEqual(pool.lpToken, amount.currency));
+
+    if (!pool) return acc;
+
+    const data = { data: pool, amount };
+
+    return [...acc, data];
+  }, []);
 };
 
 interface UseGetAccountProvidedLiquidity {

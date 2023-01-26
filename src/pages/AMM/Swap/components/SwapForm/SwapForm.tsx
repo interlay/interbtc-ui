@@ -69,12 +69,10 @@ type SwapFormProps = Props & InheritAttrs;
 const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: SwapFormProps): JSX.Element | null => {
   const accountId = useAccountId();
   const { t } = useTranslation();
-
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
   const [slippage, setSlippage] = useState(0.1);
-
   const [inputAmount, setInputAmount] = useState<number>();
   const [trade, setTrade] = useState<Trade | null>();
 
