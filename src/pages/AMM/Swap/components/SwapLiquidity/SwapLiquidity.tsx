@@ -1,17 +1,28 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
 
+import { formatUSD } from '@/common/utils/utils';
 import { Card, CardProps, CoinPair, Dd, Dl, DlGroup, Dt, Flex, H2 } from '@/component-library';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 type Props = {
   input: CurrencyExt;
   output: CurrencyExt;
+  // TODO: not used
+  liquidityPool: LiquidityPool;
 };
 
 type InheritAttrs = Omit<CardProps, keyof Props>;
 
 type SwapLiquidityProps = Props & InheritAttrs;
 
-const SwapLiquidity = ({ input, output, ...props }: SwapLiquidityProps): JSX.Element | null => {
+const SwapLiquidity = ({ input, output, liquidityPool, ...props }: SwapLiquidityProps): JSX.Element | null => {
+  const prices = useGetPrices();
+  const liquidity = liquidityPool.pooledCurrencies.reduce(
+    (total, currentAmount) => total + (getTokenPrice(prices, currentAmount.currency.ticker)?.usd || 0),
+    0
+  );
+
   return (
     <Card {...props} gap='spacing4'>
       <Flex gap='spacing2' alignItems='center'>
@@ -23,11 +34,11 @@ const SwapLiquidity = ({ input, output, ...props }: SwapLiquidityProps): JSX.Ele
       <Dl>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing1' flex={1}>
           <Dt color='primary'>Volume (24h)</Dt>
-          <Dd weight='bold'>$12,124</Dd>
+          <Dd weight='bold'>-</Dd>
         </DlGroup>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing1' flex={1}>
           <Dt color='primary'>Liquidity</Dt>
-          <Dd weight='bold'>$240,124</Dd>
+          <Dd weight='bold'>{formatUSD(liquidity, { compact: true })}</Dd>
         </DlGroup>
       </Dl>
     </Card>

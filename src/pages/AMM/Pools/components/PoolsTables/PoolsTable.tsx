@@ -1,10 +1,10 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
+import { formatPercentage, formatUSD } from '@/common/utils/utils';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { PoolName } from '../PoolName';
@@ -30,7 +30,7 @@ type PoolsTableRow = {
 
 type PoolsTableProps = {
   variant: 'available-pools' | 'account-pools';
-  pools: AccountLiquidityPool[];
+  pools: Array<{ data: LiquidityPool; amount?: MonetaryAmount<LpCurrency> }>;
   onRowAction: PoolsBaseTableProps['onRowAction'];
 };
 
@@ -53,32 +53,30 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
 
   const rows: PoolsTableRow[] = useMemo(
     () =>
-      pools.map(({ data, amount }) => {
-        const { pooledCurrencies, lpToken, apr } = data;
+      pools.map(({ data, amount: accountLPTokenAmount }) => {
+        const { pooledCurrencies, lpToken, apr: aprAmount, totalSupply } = data;
         const poolName = (
           <PoolName tickers={pooledCurrencies.map((pooledCurrencies) => pooledCurrencies.currency.ticker)} />
         );
 
-        const totalLiquidity = convertMonetaryAmountToValueInUSD(
-          newMonetaryAmount(200000000, GOVERNANCE_TOKEN),
-          prices?.[GOVERNANCE_TOKEN.ticker].usd
+        const apr = <MonetaryCell label={formatPercentage(aprAmount.toNumber())} alignSelf='flex-start' />;
+
+        const totalLiquidityUSD = pooledCurrencies.reduce(
+          (total, currentAmount) => total + (getTokenPrice(prices, currentAmount.currency.ticker)?.usd || 0),
+          0
         );
 
-        const sevenDayVolumeUSD = convertMonetaryAmountToValueInUSD(
-          newMonetaryAmount(200000000, GOVERNANCE_TOKEN),
-          prices?.[GOVERNANCE_TOKEN.ticker].usd
-        );
+        const totalLiquidity = <MonetaryCell label={formatUSD(totalLiquidityUSD, { compact: true })} />;
 
-        const sevenDayVolume = (
-          <MonetaryCell
-            label={formatUSD(sevenDayVolumeUSD || 0, { compact: true })}
-            alignItems={isAccountPools ? 'flex-start' : 'flex-end'}
-          />
-        );
+        // TODO: add real value when squid is ready
+        const sevenDayVolume = <MonetaryCell label='-' alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />;
+
+        const accountLiquidityUSD =
+          accountLPTokenAmount?.mul(totalLiquidityUSD).div(totalSupply.toBig()).toBig().toNumber() || 0;
 
         const accountLiquidity =
-          variant === 'account-pools' && !!amount ? (
-            <BalanceCell amount={amount} prices={prices} alignItems='flex-end' />
+          variant === 'account-pools' && !!accountLPTokenAmount ? (
+            <BalanceCell amount={accountLPTokenAmount} amountUSD={accountLiquidityUSD} alignItems='flex-end' />
           ) : undefined;
 
         return {

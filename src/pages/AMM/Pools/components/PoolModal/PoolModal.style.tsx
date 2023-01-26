@@ -7,7 +7,7 @@ const StyledTabs = styled(Tabs)`
 `;
 
 const StyledWrapper = styled.div`
-  margin-top: ${theme.spacing.spacing8};
+  margin-top: ${theme.spacing.spacing2};
 `;
 
 export { StyledTabs, StyledWrapper };

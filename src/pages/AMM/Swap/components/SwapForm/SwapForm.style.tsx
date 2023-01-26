@@ -33,7 +33,7 @@ const StyledBackground = styled.div`
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  padding: ${theme.spacing.spacing8};
+  padding: ${theme.spacing.spacing1} ${theme.spacing.spacing8};
   background-color: ${theme.colors.bgPrimary};
 `;
 

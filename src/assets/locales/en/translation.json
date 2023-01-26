@@ -565,9 +565,10 @@
       "receivable_assets": "Receivable Assets"
     },
     "swap": "Swap",
-    "select-token": "Select Token",
-    "enter-token-amount": "Enter {{token}} amount",
-    "insufficient-token-balance": "Insufficient {{token}} balance",
+    "select_token": "Select Token",
+    "enter_token_amount": "Enter {{token}} amount",
+    "insufficient_token_balance": "Insufficient {{token}} balance",
+    "insufficient_liquidity_trade": "Insufficient liquidity for this trade",
     "from": "From",
     "to": "To"
   },
