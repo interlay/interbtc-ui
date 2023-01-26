@@ -327,7 +327,6 @@ const RedeemForm = (): JSX.Element | null => {
       if (monetaryValue.gte(maxRedeemableCapacity)) {
         return `${t('redeem_page.request_exceeds_capacity', {
           maxRedeemableAmount: `${maxRedeemableCapacity.toHuman(8)} ${ForeignAssetIdLiteral.BTC}`,
-          redeemRequestAmount: `${monetaryValue.toHuman()} ${ForeignAssetIdLiteral.BTC}`,
           btcIdLiteral: `${ForeignAssetIdLiteral.BTC}`
         })}`;
       }

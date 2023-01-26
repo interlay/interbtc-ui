@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 
-import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 
 import App from '@/App';
@@ -176,5 +176,21 @@ describe('redeem form', () => {
     (window.bridge.tokens.balance as any).mockImplementation(
       (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
     );
+  });
+
+  it('when the input amount is greater than the single vault max redeemable amount', async () => {
+    const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
+
+    const inputAmount = mockVaultsWithRedeemableTokens.values().next().value.add(newMonetaryAmount('1', Bitcoin));
+
+    await changeAmountToRedeem(inputAmount.toString());
+
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `" The Vault with the highest amount of locked BTC has 100 BTC which is the maximum you can redeem in a single request. You can request to redeem from multiple Vaults to get your whole amount of BTC."`
+    );
+
+    await submitForm();
+
+    await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
 });
