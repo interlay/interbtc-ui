@@ -1,18 +1,22 @@
 import '@testing-library/jest-dom';
 
+import { ChainBalance, CurrencyExt } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 
 import {
   MOCK_REDEEM_BRIDGE_FEE_RATE,
   MOCK_REDEEM_CURRENT_INCLUSION_FEE,
+  MOCK_TOKEN_BALANCE,
   mockRedeemRequest,
   mockVaultsWithRedeemableTokens
 } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_MOCK_PRICES } from '../mocks/fetch';
-import { act, render, screen, userEvent, waitFor } from '../test-utils';
+import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
   return new BitcoinAmount(inputAmount).mul(MOCK_REDEEM_BRIDGE_FEE_RATE);
@@ -32,11 +36,13 @@ const renderRedeemForm = async (props?: any) => {
 
   userEvent.click(redeemTab);
 
+  // ray test touch <
   const textboxElements = screen.getAllByRole('textbox');
 
   const amountToRedeemInput = textboxElements[0];
 
   const btcAddressToSendInput = textboxElements[1];
+  // ray test touch >
 
   const submitButton = screen.getByRole('button', { name: /confirm/i });
 
@@ -143,5 +149,37 @@ describe('redeem form', () => {
     const singleMaxRedeemableAmount = displayMonetaryAmount(mockVaultsWithRedeemableTokens.values().next().value);
 
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxRedeemableAmount);
+  });
+
+  it('when the wrapped token balance is less than required', async () => {
+    (window.bridge.tokens.balance as any).mockImplementation((currency: CurrencyExt, _id: AccountId) => {
+      if (currency.ticker === WRAPPED_TOKEN.ticker) {
+        return new ChainBalance(currency, 0, 0);
+      } else {
+        return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
+      }
+    });
+
+    const { changeAmountToRedeem, submitForm, tabPanel } = await renderRedeemForm();
+
+    const inputAmount = 0.0001;
+
+    await changeAmountToRedeem(inputAmount.toString());
+
+    // ray test touch <
+    const errorElement = within(tabPanel).getByRole('alert', { name: WRAPPED_TOKEN_SYMBOL });
+    // ray test touch >
+
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"Please enter an amount smaller than your current balance: 0"`
+    );
+
+    await submitForm();
+
+    await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
+
+    (window.bridge.tokens.balance as any).mockImplementation(
+      (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
+    );
   });
 });
