@@ -6,11 +6,16 @@ import { AccountId } from '@polkadot/types/interfaces';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { BTC_ADDRESS_LABEL } from '@/pages/Bridge/RedeemForm';
 
 import {
+  MOCK_BITCOIN_HEIGHT,
+  MOCK_BTC_RELAY_HEIGHT,
   MOCK_TOKEN_BALANCE,
+  mockBtcRelayGetLatestBlockHeight,
+  mockElectrsAPIGetLatestBlockHeight,
   mockRedeemGetCurrentInclusionFee,
   mockRedeemGetDustValue,
   mockRedeemGetFeeRate,
@@ -212,5 +217,27 @@ describe('redeem form', () => {
     await submitForm();
 
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
+  });
+
+  it('when the parachain is more than 6 blocks behind', async () => {
+    mockBtcRelayGetLatestBlockHeight.mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
+    mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1);
+
+    const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
+
+    const inputAmount = 0.0001;
+
+    await changeAmountToRedeem(inputAmount.toString());
+
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"You can't redeem IBTC at the moment because IBTC bridge is more than 6 blocks behind."`
+    );
+
+    await submitForm();
+
+    await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
+
+    mockBtcRelayGetLatestBlockHeight.mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
+    mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => MOCK_BITCOIN_HEIGHT);
   });
 });

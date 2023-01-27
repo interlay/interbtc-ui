@@ -336,13 +336,11 @@ const RedeemForm = (): JSX.Element | null => {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
 
-      // ray test touch <
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
         return t('redeem_page.error_more_than_6_blocks_behind', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
       }
-      // ray test touch >
 
       const polkaBTCAmountInteger = value.toString().split('.')[0];
       if (polkaBTCAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
