@@ -15,9 +15,7 @@ const DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE = 0.00005; // Set default to 0.005%
 
 const DEFAULT_ISSUE_DUST_AMOUNT = 0.00001;
 
-// ray test touch <
 const DEFAULT_REDEEM_DUST_AMOUNT = 0.00001;
-// ray test touch >
 
 export {
   BLOCK_TIME,

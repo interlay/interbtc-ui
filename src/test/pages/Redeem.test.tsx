@@ -10,9 +10,13 @@ import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { BTC_ADDRESS_LABEL } from '@/pages/Bridge/RedeemForm';
 
 import {
+  // ray test touch <
   MOCK_REDEEM_BRIDGE_FEE_RATE,
   MOCK_REDEEM_CURRENT_INCLUSION_FEE,
   MOCK_TOKEN_BALANCE,
+  // ray test touch >
+  mockRedeemGetCurrentInclusionFee,
+  mockRedeemGetDustValue,
   mockRedeemRequest,
   mockVaultsWithRedeemableTokens
 } from '../mocks/@interlay/interbtc-api';
@@ -193,4 +197,24 @@ describe('redeem form', () => {
 
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
+
+  // ray test touch <
+  it.only('when the input amount is less than the combined', async () => {
+    const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
+
+    const inputAmount = mockRedeemGetDustValue()
+      .add(mockRedeemGetCurrentInclusionFee())
+      .sub(newMonetaryAmount(1, Bitcoin));
+
+    await changeAmountToRedeem(inputAmount.toString());
+
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"Please enter an amount above the combined Bridge Fee, Bitcoin Network Fee, and Bitcoin Dust limit (0 BTC)."`
+    );
+
+    await submitForm();
+
+    await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
+  });
+  // ray test touch >
 });

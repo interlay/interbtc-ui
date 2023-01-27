@@ -97,9 +97,7 @@ const RedeemForm = (): JSX.Element | null => {
     return new BitcoinAmount(wrappedTokenAmount);
   }, [wrappedTokenAmount]);
 
-  // ray test touch <
   const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_REDEEM_DUST_AMOUNT));
-  // ray test touch >
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(DEFAULT_REDEEM_BRIDGE_FEE_RATE));
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
@@ -204,9 +202,6 @@ const RedeemForm = (): JSX.Element | null => {
           setBtcToRelayChainNativeTokenRate(btcToRelayChainNativeTokenRateResult.value);
         }
 
-        // ray test touch <
-        console.log('ray : ***** dustValueResult.value.toString() => ', dustValueResult.value.toString());
-        // ray test touch >
         setDustValue(dustValueResult.value);
         setPremiumRedeemFee(new Big(premiumRedeemFeeRateResult.value));
         setRedeemFeeRate(feeRateResult.value);

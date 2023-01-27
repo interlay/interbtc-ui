@@ -11,6 +11,7 @@ import { BLOCKS_BEHIND_LIMIT, DEFAULT_ISSUE_DUST_AMOUNT } from '@/config/paracha
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import {
+  // ray test touch <
   MOCK_BITCOIN_HEIGHT,
   MOCK_BTC_RELAY_HEIGHT,
   MOCK_EXCHANGE_RATE,
@@ -18,6 +19,7 @@ import {
   MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
   MOCK_ISSUE_REQUEST_LIMITS,
   MOCK_TOKEN_BALANCE,
+  // ray test touch >
   mockIssueRequest
 } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_MOCK_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
@@ -214,11 +216,12 @@ describe('issue form', () => {
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
   });
 
-  // ray test touch <
   test('when the input amount is less than the Bitcoin dust amount', async () => {
     const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
+    // ray test touch <
     const inputAmount = new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT).sub(newMonetaryAmount(1, Bitcoin));
+    // ray test touch >
 
     await changeAmountToIssue(inputAmount.toString());
 
@@ -230,7 +233,6 @@ describe('issue form', () => {
 
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
   });
-  // ray test touch >
 
   test('when the parachain is more than 6 blocks behind', async () => {
     (window.bridge.btcRelay.getLatestBlockHeight as any).mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);

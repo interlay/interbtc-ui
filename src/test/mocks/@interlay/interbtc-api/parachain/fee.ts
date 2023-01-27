@@ -21,9 +21,13 @@ const mockFeeGetIssueGriefingCollateralRate = jest.fn(() => MOCK_ISSUE_GRIEFING_
 
 const mockRedeemGetPremiumRedeemFeeRate = jest.fn(() => Big(0));
 
+// ray test touch <
 const mockRedeemGetFeeRate = jest.fn(() => MOCK_REDEEM_BRIDGE_FEE_RATE);
+// ray test touch >
 
+// ray test touch <
 const mockRedeemGetCurrentInclusionFee = jest.fn(() => MOCK_REDEEM_CURRENT_INCLUSION_FEE);
+// ray test touch >
 
 export {
   MOCK_ISSUE_BRIDGE_FEE_RATE,

@@ -71,9 +71,7 @@ const RequestReplacementModal = ({
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [griefingRate, setGriefingRate] = React.useState(new Big(10.0)); // Set default to 10%
-  // ray test touch <
   const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_REDEEM_DUST_AMOUNT));
-  // ray test touch >
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
