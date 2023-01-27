@@ -38,4 +38,6 @@ const mockFetch = jest.fn((input, _init?) => {
 
 global.fetch = mockFetch as any;
 
+// ray test touch <
 export { DEFAULT_MOCK_PRICES, mockFetch, mockGovernanceTokenPriceInUsd };
+// ray test touch >

@@ -198,7 +198,6 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
 
-  // ray test touch <
   it.only('when the input amount is less than the combined', async () => {
     const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
@@ -216,5 +215,4 @@ describe('redeem form', () => {
 
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
-  // ray test touch >
 });

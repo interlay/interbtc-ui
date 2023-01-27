@@ -333,11 +333,9 @@ const RedeemForm = (): JSX.Element | null => {
 
       const bridgeFee = monetaryValue.mul(redeemFeeRate);
       const minValue = dustValue.add(currentInclusionFee).add(bridgeFee);
-      // ray test touch <
       if (monetaryValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
-      // ray test touch >
 
       if (!selectedAccount) {
         return t('redeem_page.must_select_account_warning');
