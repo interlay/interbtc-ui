@@ -89,4 +89,7 @@
   --color-list-secondary-bg: #101e3d;
   --color-list-secondary-hover-bg: #1c2c46;
   --color-list-selected-text: var(--colors-neutral-black);
+  /* Icon */
+  --color-icon-fallback-stroke: #232323;
+  --color-icon-fallback-color: #040816;
 }

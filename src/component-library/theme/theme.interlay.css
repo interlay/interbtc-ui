@@ -86,4 +86,7 @@
   --color-list-secondary-bg: var(--color-light-grey);
   --color-list-secondary-hover-bg: #f0f1f2;
   --color-list-selected-text: var(--colors-neutral-white);
+  /* Icon */
+  --color-icon-fallback-stroke: var(--colors-neutral-white);
+  --color-icon-fallback-color: #f4f3f5;
 }
