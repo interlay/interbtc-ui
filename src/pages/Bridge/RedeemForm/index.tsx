@@ -342,8 +342,8 @@ const RedeemForm = (): JSX.Element | null => {
         });
       }
 
-      const polkaBTCAmountInteger = value.toString().split('.')[0];
-      if (polkaBTCAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
+      const wrappedTokenAmountInteger = value.toString().split('.')[0];
+      if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!';
       }
 
