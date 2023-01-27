@@ -10,16 +10,15 @@ import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { BTC_ADDRESS_LABEL } from '@/pages/Bridge/RedeemForm';
 
 import {
-  // ray test touch <
   MOCK_TOKEN_BALANCE,
-  // ray test touch >
   mockRedeemGetCurrentInclusionFee,
   mockRedeemGetDustValue,
   mockRedeemGetFeeRate,
   mockRedeemRequest,
+  mockTokensBalance,
   mockVaultsWithRedeemableTokens
 } from '../mocks/@interlay/interbtc-api';
-import { DEFAULT_MOCK_PRICES } from '../mocks/fetch';
+import { MOCK_DEFAULT_PRICES } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
@@ -91,7 +90,7 @@ describe('redeem form', () => {
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInBTC);
 
-    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, DEFAULT_MOCK_PRICES.bitcoin.usd);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, MOCK_DEFAULT_PRICES.bitcoin.usd);
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
@@ -111,7 +110,7 @@ describe('redeem form', () => {
 
     const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
       mockRedeemGetCurrentInclusionFee(),
-      DEFAULT_MOCK_PRICES.bitcoin.usd
+      MOCK_DEFAULT_PRICES.bitcoin.usd
     );
 
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
@@ -138,7 +137,7 @@ describe('redeem form', () => {
 
     expect(totalElement).toHaveTextContent(totalInBTC);
 
-    const totalInUSD = displayMonetaryAmountInUSDFormat(total, DEFAULT_MOCK_PRICES.bitcoin.usd);
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, MOCK_DEFAULT_PRICES.bitcoin.usd);
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
@@ -154,7 +153,7 @@ describe('redeem form', () => {
   });
 
   it('when the wrapped token balance is less than required', async () => {
-    (window.bridge.tokens.balance as any).mockImplementation((currency: CurrencyExt, _id: AccountId) => {
+    mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
       if (currency.ticker === WRAPPED_TOKEN.ticker) {
         return new ChainBalance(currency, 0, 0);
       } else {
@@ -176,7 +175,7 @@ describe('redeem form', () => {
 
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
 
-    (window.bridge.tokens.balance as any).mockImplementation(
+    mockTokensBalance.mockImplementation(
       (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
     );
   });

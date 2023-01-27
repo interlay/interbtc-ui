@@ -8,6 +8,4 @@ const mockOracleGetExchangeRate = jest.fn(
   (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, MOCK_EXCHANGE_RATE)
 );
 
-// ray test touch <
 export { MOCK_EXCHANGE_RATE, mockOracleGetExchangeRate };
-// ray test touch >
