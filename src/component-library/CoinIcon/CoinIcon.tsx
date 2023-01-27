@@ -32,13 +32,7 @@ const CoinIcon = forwardRef<SVGSVGElement, CoinIconProps>(
 
     if (!CoinIcon) {
       return (
-        <StyledFallbackIcon
-          {...props}
-          ref={ref}
-          viewBox='0 0 24 24'
-          strokeWidth='.5'
-          xmlns='http://www.w3.org/2000/svg'
-        >
+        <StyledFallbackIcon {...props} ref={ref} viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
           <title>{ticker}</title>
           <circle cx='12' cy='12' r='11.5' fill='currentColor' />
         </StyledFallbackIcon>

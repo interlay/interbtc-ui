@@ -422,8 +422,8 @@ const theme = {
       xl2: 'var(--spacing-12)'
     },
     fallback: {
-      color: 'var(--colors-neutral-white)',
-      stroke: 'var(--colors-neutral-black)'
+      color: 'var(--color-icon-fallback-color)',
+      stroke: 'var(--color-icon-fallback-stroke)'
     }
   },
   list: {
