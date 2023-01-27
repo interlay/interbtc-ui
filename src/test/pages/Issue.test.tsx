@@ -15,19 +15,19 @@ import {
   MOCK_BITCOIN_HEIGHT,
   MOCK_BTC_RELAY_HEIGHT,
   MOCK_EXCHANGE_RATE,
-  MOCK_ISSUE_BRIDGE_FEE_RATE,
-  MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
-  MOCK_ISSUE_REQUEST_LIMITS,
   MOCK_TOKEN_BALANCE,
-  mockIssueGetDustValue,
   // ray test touch >
+  mockFeeGetIssueFee,
+  mockFeeGetIssueGriefingCollateralRate,
+  mockIssueGetDustValue,
+  mockIssueGetRequestLimits,
   mockIssueRequest
 } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_MOCK_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
-  return new BitcoinAmount(inputAmount).mul(MOCK_ISSUE_BRIDGE_FEE_RATE);
+  return new BitcoinAmount(inputAmount).mul(mockFeeGetIssueFee());
 };
 
 const ISSUE_TAB_PATH = '/bridge?tab=issue';
@@ -106,7 +106,7 @@ describe('issue form', () => {
 
     const securityDeposit = btcToGovernanceTokenRate
       .toCounter(monetaryBtcAmount)
-      .mul(MOCK_ISSUE_GRIEFING_COLLATERAL_RATE);
+      .mul(mockFeeGetIssueGriefingCollateralRate());
 
     const securityDepositElement = screen.getByTestId(/security-deposit/i);
 
@@ -166,13 +166,13 @@ describe('issue form', () => {
 
     const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-issuable/i);
 
-    const singleMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable);
+    const singleMaxIssuableAmount = displayMonetaryAmount(mockIssueGetRequestLimits().singleVaultMaxIssuable);
 
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxIssuableAmount);
 
     const totalMaxIssuableAmountElement = screen.getByTestId(/total-max-issuable/i);
 
-    const totalMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.totalMaxIssuable);
+    const totalMaxIssuableAmount = displayMonetaryAmount(mockIssueGetRequestLimits().totalMaxIssuable);
 
     expect(totalMaxIssuableAmountElement).toHaveTextContent(totalMaxIssuableAmount);
   });
@@ -206,7 +206,7 @@ describe('issue form', () => {
   test('when the input amount is greater than the single vault max issuable amount', async () => {
     const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
-    const inputAmount = MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable.add(newMonetaryAmount('1', WRAPPED_TOKEN));
+    const inputAmount = mockIssueGetRequestLimits().singleVaultMaxIssuable.add(newMonetaryAmount('1', WRAPPED_TOKEN));
 
     await changeAmountToIssue(inputAmount.toString());
 

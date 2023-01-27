@@ -11,12 +11,11 @@ import { BTC_ADDRESS_LABEL } from '@/pages/Bridge/RedeemForm';
 
 import {
   // ray test touch <
-  MOCK_REDEEM_BRIDGE_FEE_RATE,
-  MOCK_REDEEM_CURRENT_INCLUSION_FEE,
   MOCK_TOKEN_BALANCE,
   // ray test touch >
   mockRedeemGetCurrentInclusionFee,
   mockRedeemGetDustValue,
+  mockRedeemGetFeeRate,
   mockRedeemRequest,
   mockVaultsWithRedeemableTokens
 } from '../mocks/@interlay/interbtc-api';
@@ -24,7 +23,7 @@ import { DEFAULT_MOCK_PRICES } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
-  return new BitcoinAmount(inputAmount).mul(MOCK_REDEEM_BRIDGE_FEE_RATE);
+  return new BitcoinAmount(inputAmount).mul(mockRedeemGetFeeRate());
 };
 
 const REDEEM_TAB_PATH = '/bridge?tab=redeem';
@@ -106,12 +105,12 @@ describe('redeem form', () => {
 
     const bitcoinNetworkFeeElement = screen.getByTestId(/redeem-bitcoin-network-fee/i);
 
-    const bitcoinNetworkFeeInBTC = MOCK_REDEEM_CURRENT_INCLUSION_FEE.toHuman(8);
+    const bitcoinNetworkFeeInBTC = mockRedeemGetCurrentInclusionFee().toHuman(8);
 
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInBTC);
 
     const bitcoinNetworkFeeInUSD = displayMonetaryAmountInUSDFormat(
-      MOCK_REDEEM_CURRENT_INCLUSION_FEE,
+      mockRedeemGetCurrentInclusionFee(),
       DEFAULT_MOCK_PRICES.bitcoin.usd
     );
 
@@ -131,8 +130,8 @@ describe('redeem form', () => {
 
     const monetaryWrappedTokenAmount = new BitcoinAmount(inputAmount);
 
-    const total = monetaryWrappedTokenAmount.gt(bridgeFee.add(MOCK_REDEEM_CURRENT_INCLUSION_FEE))
-      ? monetaryWrappedTokenAmount.sub(bridgeFee).sub(MOCK_REDEEM_CURRENT_INCLUSION_FEE)
+    const total = monetaryWrappedTokenAmount.gt(bridgeFee.add(mockRedeemGetCurrentInclusionFee()))
+      ? monetaryWrappedTokenAmount.sub(bridgeFee).sub(mockRedeemGetCurrentInclusionFee())
       : BitcoinAmount.zero();
 
     const totalInBTC = total.toHuman(8);

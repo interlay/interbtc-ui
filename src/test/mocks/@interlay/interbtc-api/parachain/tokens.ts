@@ -8,7 +8,7 @@ const mockTokensBalance = jest.fn(
   (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
 );
 
-const mockTokensTotal = jest.fn(async (currency: CurrencyExt) => newMonetaryAmount(MOCK_TOKEN_TOTAL_AMOUNT, currency));
+const mockTokensTotal = jest.fn((currency: CurrencyExt) => newMonetaryAmount(MOCK_TOKEN_TOTAL_AMOUNT, currency));
 
 const mockTokensSubscribeToBalance = jest.fn((currency: CurrencyExt, account, callback) => {
   const balance = new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
