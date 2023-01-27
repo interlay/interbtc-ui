@@ -319,7 +319,6 @@ const RedeemForm = (): JSX.Element | null => {
       const monetaryValue = new BitcoinAmount(value);
 
       const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].free || newMonetaryAmount(0, WRAPPED_TOKEN);
-
       if (monetaryValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
       }
@@ -338,16 +337,12 @@ const RedeemForm = (): JSX.Element | null => {
       }
 
       // ray test touch <
-      if (!selectedAccount) {
-        return t('redeem_page.must_select_account_warning');
-      }
-      // ray test touch >
-
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
         return t('redeem_page.error_more_than_6_blocks_behind', {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         });
       }
+      // ray test touch >
 
       const polkaBTCAmountInteger = value.toString().split('.')[0];
       if (polkaBTCAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
