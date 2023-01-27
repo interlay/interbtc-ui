@@ -337,13 +337,11 @@ const RedeemForm = (): JSX.Element | null => {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
       }
 
+      // ray test touch <
       if (!selectedAccount) {
         return t('redeem_page.must_select_account_warning');
       }
-
-      if (!bridgeLoaded) {
-        return 'Bridge must be loaded!';
-      }
+      // ray test touch >
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
         return t('redeem_page.error_more_than_6_blocks_behind', {
