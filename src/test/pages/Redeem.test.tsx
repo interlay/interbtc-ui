@@ -198,7 +198,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
 
-  it.only('when the input amount is less than the combined', async () => {
+  it('when the input amount is less than the combined', async () => {
     const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
     const inputAmount = mockRedeemGetDustValue()

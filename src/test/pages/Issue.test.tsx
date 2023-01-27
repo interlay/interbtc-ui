@@ -7,7 +7,7 @@ import Big from 'big.js';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { BLOCKS_BEHIND_LIMIT, DEFAULT_ISSUE_DUST_AMOUNT } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import {
@@ -19,6 +19,7 @@ import {
   MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
   MOCK_ISSUE_REQUEST_LIMITS,
   MOCK_TOKEN_BALANCE,
+  mockIssueGetDustValue,
   // ray test touch >
   mockIssueRequest
 } from '../mocks/@interlay/interbtc-api';
@@ -219,9 +220,7 @@ describe('issue form', () => {
   test('when the input amount is less than the Bitcoin dust amount', async () => {
     const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
-    // ray test touch <
-    const inputAmount = new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT).sub(newMonetaryAmount(1, Bitcoin));
-    // ray test touch >
+    const inputAmount = mockIssueGetDustValue().sub(newMonetaryAmount(1, Bitcoin));
 
     await changeAmountToIssue(inputAmount.toString());
 
