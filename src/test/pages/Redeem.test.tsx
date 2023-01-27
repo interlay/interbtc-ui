@@ -1,8 +1,9 @@
 import '@testing-library/jest-dom';
 
 import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount } from '@interlay/monetary-js';
+import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
@@ -13,9 +14,11 @@ import { BTC_ADDRESS_LABEL } from '@/pages/Bridge/RedeemForm';
 import {
   MOCK_BITCOIN_HEIGHT,
   MOCK_BTC_RELAY_HEIGHT,
+  MOCK_EXCHANGE_RATE,
   MOCK_TOKEN_BALANCE,
   mockBtcRelayGetLatestBlockHeight,
   mockElectrsAPIGetLatestBlockHeight,
+  mockOracleGetExchangeRate,
   mockRedeemGetCurrentInclusionFee,
   mockRedeemGetDustValue,
   mockRedeemGetFeeRate,
@@ -239,5 +242,29 @@ describe('redeem form', () => {
 
     mockBtcRelayGetLatestBlockHeight.mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
     mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => MOCK_BITCOIN_HEIGHT);
+  });
+
+  it('when the oracle is offline', async () => {
+    mockOracleGetExchangeRate.mockImplementation(
+      (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, new Big(0))
+    );
+
+    const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
+
+    const inputAmount = 0.0001;
+
+    await changeAmountToRedeem(inputAmount.toString());
+
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"You can't redeem IBTC at the moment because oracle is offline."`
+    );
+
+    await submitForm();
+
+    await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
+
+    mockOracleGetExchangeRate.mockImplementation(
+      (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, MOCK_EXCHANGE_RATE)
+    );
   });
 });
