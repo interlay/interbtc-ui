@@ -7,12 +7,10 @@ import { AccountId } from '@polkadot/types/interfaces';
 import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 const MOCK_COLLATERAL_AMOUNT = '1000000000000';
-// TODO: Extend with all the data needed for Vaults page.
-const defaultVaultWithIssuableTokens = (_accountId: AccountId, collateralCurrency: CollateralCurrencyExt) => ({
-  backingCollateral: newMonetaryAmount(MOCK_COLLATERAL_AMOUNT, collateralCurrency)
-});
 
-const mockVaultsGet = jest.fn((accountId, currency) => defaultVaultWithIssuableTokens(accountId, currency));
+const mockVaultsGet = jest.fn((_accountId: AccountId, collateralCurrency: CollateralCurrencyExt) => ({
+  backingCollateral: newMonetaryAmount(MOCK_COLLATERAL_AMOUNT, collateralCurrency)
+}));
 
 const mockNewVaultId = (vaultAddress: string, collateralToken: CurrencyExt) => ({
   accountId: vaultAddress,
