@@ -12,6 +12,7 @@ import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayPagination from '@/components/UI/InterlayPagination';
+import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -27,8 +28,9 @@ import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useIssueRequests } from '@/services/hooks/issue-requests';
 import { issuesCountQuery } from '@/services/queries/issues';
+import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
@@ -63,6 +65,20 @@ const IssueRequestsTable = (): JSX.Element => {
           }
 
           return <>{formatDateTimePrecise(new Date(date))}</>;
+        }
+      },
+      {
+        Header: t('view_details'),
+        classNames: ['text-left'],
+        // TODO: should type properly (`Relay`)
+        Cell: ({ row: { original: issue } }: any) => {
+          const path = `${PAGES.TX}/${TXType.Issue}/${issue.id}`;
+
+          return (
+            <InterlayRouterLink className='hover:underline' to={path} withArrow>
+              {shortAddress(issue.id)}
+            </InterlayRouterLink>
+          );
         }
       },
       {

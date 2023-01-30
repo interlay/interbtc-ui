@@ -2,17 +2,12 @@ import * as React from 'react';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import MainContainer from '@/parts/MainContainer';
+import { TXType } from '@/types/general.d';
 import { URL_PARAMETERS } from '@/utils/constants/links';
 
 const IssueTX = React.lazy(() => import(/* webpackChunkName: 'issue-tx' */ './IssueTX'));
 const RedeemTX = React.lazy(() => import(/* webpackChunkName: 'redeem-tx' */ './RedeemTX'));
 const ReplaceTX = React.lazy(() => import(/* webpackChunkName: 'replace-tx' */ './ReplaceTX'));
-
-enum TXType {
-  Issue = 'issue',
-  Redeem = 'redeem',
-  Replace = 'replace'
-}
 
 const TX = (): JSX.Element => {
   const { path } = useRouteMatch();
