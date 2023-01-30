@@ -59,7 +59,6 @@ const RequestReplacementModal = ({
   } = useForm<RequestReplacementFormData>();
   const amount = watch(AMOUNT) || '0';
 
-
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const handleError = useErrorHandler();
@@ -84,11 +83,7 @@ const RequestReplacementModal = ({
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [
-          theGriefingRate,
-          theDustValue,
-          theBtcToGovernanceTokenRate
-        ] = await Promise.all([
+        const [theGriefingRate, theDustValue, theBtcToGovernanceTokenRate] = await Promise.all([
           window.bridge.fee.getReplaceGriefingCollateralRate(),
           window.bridge.redeem.getDustValue(),
           getExchangeRate(GOVERNANCE_TOKEN)
@@ -120,14 +115,9 @@ const RequestReplacementModal = ({
     }
   });
 
-  if (
-    status === STATUSES.IDLE ||
-    status === STATUSES.PENDING ||
-    isBalancesLoading
-  ) {
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING || isBalancesLoading) {
     return <PrimaryColorEllipsisLoader />;
   }
-
 
   if (status === STATUSES.RESOLVED) {
     const validateAmount = (value: number): string | undefined => {
