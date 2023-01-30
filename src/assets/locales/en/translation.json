@@ -132,11 +132,15 @@
   "replace": "Replace",
   "canceled": "Canceled",
   "fees": "Fees",
+<<<<<<< HEAD
   "total_liquidity": "Total Liquidity",
   "my_liquidity": "My Liquidity",
   "7_day_volume": "7 Day Volume",
   "rewards": "Rewards",
   "supply_balance": "Supply Balance",
+=======
+  "view_details": "View Details",
+>>>>>>> a1d42326 (feat: add view-details column to IssueRequestsTable)
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
