@@ -33,16 +33,20 @@ type AriaAttrs = Omit<NumberFieldStateProps, (keyof Props & InheritAttrs) | 'onC
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
-  ({ onChange, formatOptions, validationState, ...props }, ref): JSX.Element => {
+  ({ onChange, formatOptions, validationState, value: valueProp, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
+
+    // MEMO: in case formik sets value to "" (empty string)
+    const value = (valueProp as number | string) === '' ? undefined : valueProp;
 
     const state = useNumberFieldState({
       ...props,
+      value,
       formatOptions: formatOptions || defaultFormatOptions,
       locale
     });
     const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(
-      { ...props, validationState: props.errorMessage ? 'invalid' : validationState },
+      { ...props, value, validationState: props.errorMessage ? 'invalid' : validationState },
       state,
       inputRef
     );
