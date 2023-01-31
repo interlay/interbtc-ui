@@ -10,7 +10,7 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   throw new Error('Something went wrong!');
 }
 
-const MOCK_DEFAULT_PRICES = {
+const MOCK_TOKEN_PRICES = {
   bitcoin: { usd: 20306 },
   polkadot: { usd: 7.19 },
   'kintsugi-btc': { usd: 20128 },
@@ -25,7 +25,7 @@ const mockFetch = jest.fn((input, _init?) => {
   let result: unknown;
   switch (true) {
     case input.includes(PRICES_API.URL):
-      result = MOCK_DEFAULT_PRICES;
+      result = MOCK_TOKEN_PRICES;
       break;
     default: {
       throw new Error(`mockFetch: provided input [${input}] is not mocked`);
@@ -38,4 +38,4 @@ const mockFetch = jest.fn((input, _init?) => {
 
 global.fetch = mockFetch as any;
 
-export { MOCK_DEFAULT_PRICES, mockFetch, mockGovernanceTokenPriceInUsd };
+export { MOCK_TOKEN_PRICES, mockFetch, mockGovernanceTokenPriceInUsd };

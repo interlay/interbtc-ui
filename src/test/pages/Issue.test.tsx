@@ -25,7 +25,7 @@ import {
   mockOracleGetExchangeRate,
   mockTokensBalance
 } from '../mocks/@interlay/interbtc-api';
-import { MOCK_DEFAULT_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
+import { MOCK_TOKEN_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
@@ -90,7 +90,7 @@ describe('issue form', () => {
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInBTC);
 
-    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, MOCK_DEFAULT_PRICES.bitcoin.usd);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, MOCK_TOKEN_PRICES.bitcoin.usd);
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
@@ -158,7 +158,7 @@ describe('issue form', () => {
 
     expect(totalElement).toHaveTextContent(totalInBTC);
 
-    const totalInUSD = displayMonetaryAmountInUSDFormat(total, MOCK_DEFAULT_PRICES.bitcoin.usd);
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, MOCK_TOKEN_PRICES.bitcoin.usd);
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
