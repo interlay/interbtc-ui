@@ -12,7 +12,6 @@ import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayPagination from '@/components/UI/InterlayPagination';
-import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -22,6 +21,7 @@ import InterlayTable, {
   InterlayTr
 } from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
+import ViewRequestDetailsLink from '@/components/ViewRequestDetailsLink';
 import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
@@ -32,7 +32,7 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
@@ -74,13 +74,7 @@ const RedeemRequestsTable = (): JSX.Element => {
         classNames: ['text-left'],
         // TODO: should type properly (`Relay`)
         Cell: ({ row: { original: redeem } }: any) => {
-          const path = `${PAGES.TX}/${TXType.Redeem}/${redeem.id}`;
-
-          return (
-            <InterlayRouterLink className='hover:underline' to={path} withArrow>
-              {shortAddress(redeem.id)}
-            </InterlayRouterLink>
-          );
+          return <ViewRequestDetailsLink id={redeem.id} txType={TXType.Redeem} />;
         }
       },
       {
