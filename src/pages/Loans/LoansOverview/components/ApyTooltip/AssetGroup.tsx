@@ -3,6 +3,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import { Dd, Dt } from '@/component-library';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledApyTooltipGroup } from './ApyTooltip.style';
@@ -13,7 +14,7 @@ type AssetGroupProps = {
 };
 
 const AssetGroup = ({ amount, prices }: AssetGroupProps): JSX.Element => {
-  const amountUSD = displayMonetaryAmountInUSDFormat(amount, prices?.[amount.currency.ticker].usd);
+  const amountUSD = displayMonetaryAmountInUSDFormat(amount, getTokenPrice(prices, amount.currency.ticker)?.usd);
 
   const amountLabel = formatNumber(amount?.toBig().toNumber(), {
     maximumFractionDigits: amount?.currency.humanDecimals
