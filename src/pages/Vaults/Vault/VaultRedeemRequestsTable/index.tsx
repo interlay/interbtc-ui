@@ -12,6 +12,7 @@ import ErrorFallback from '@/components/ErrorFallback';
 import ExternalLink from '@/components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import InterlayPagination from '@/components/UI/InterlayPagination';
+import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -30,8 +31,9 @@ import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-blo
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
@@ -125,6 +127,20 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return <>{formatDateTimePrecise(new Date(redeem.request.timestamp))}</>;
+        }
+      },
+      {
+        Header: t('view_details'),
+        classNames: ['text-left'],
+        // TODO: should type properly (`Relay`)
+        Cell: ({ row: { original: redeem } }: any) => {
+          const path = `${PAGES.TX}/${TXType.Redeem}/${redeem.id}`;
+
+          return (
+            <InterlayRouterLink className='hover:underline' to={path} withArrow>
+              {shortAddress(redeem.id)}
+            </InterlayRouterLink>
+          );
         }
       },
       {
