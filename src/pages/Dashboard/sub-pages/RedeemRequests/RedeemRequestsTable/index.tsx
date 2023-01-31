@@ -29,8 +29,9 @@ import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-blo
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
 
@@ -65,6 +66,20 @@ const RedeemRequestsTable = (): JSX.Element => {
           }
 
           return <>{formatDateTimePrecise(new Date(date))}</>;
+        }
+      },
+      {
+        Header: t('view_details'),
+        classNames: ['text-left'],
+        // TODO: should type properly (`Relay`)
+        Cell: ({ row: { original: redeem } }: any) => {
+          const path = `${PAGES.TX}/${TXType.Redeem}/${redeem.id}`;
+
+          return (
+            <InterlayRouterLink className='hover:underline' to={path} withArrow>
+              {shortAddress(redeem.id)}
+            </InterlayRouterLink>
+          );
         }
       },
       {

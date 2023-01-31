@@ -7,7 +7,6 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, formatNumber, shortAddress, shortTxId } from '@/common/utils/utils';
-<<<<<<< HEAD
 import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
@@ -15,14 +14,6 @@ import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import InterlayPagination from '@/legacy-components/UI/InterlayPagination';
-=======
-import AddressWithCopyUI from '@/components/AddressWithCopyUI';
-import ErrorFallback from '@/components/ErrorFallback';
-import ExternalLink from '@/components/ExternalLink';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InterlayPagination from '@/components/UI/InterlayPagination';
-import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
->>>>>>> a1d42326 (feat: add view-details column to IssueRequestsTable)
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
