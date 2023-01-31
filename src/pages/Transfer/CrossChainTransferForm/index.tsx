@@ -24,7 +24,6 @@ import AvailableBalanceUI from '@/components/AvailableBalanceUI';
 import Chains, { ChainOption } from '@/components/Chains';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
-import FormTitle from '@/components/FormTitle';
 import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/components/SubmitButton';
 import TokenField from '@/components/TokenField';
@@ -312,7 +311,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   return (
     <>
       <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
-        <FormTitle>{t('transfer_page.cross_chain_transfer_form.title')}</FormTitle>
         <div>
           <AvailableBalanceUI
             label='Transferable balance'
