@@ -3,6 +3,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
 import { Dd, Dt } from '@/component-library';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledApyTooltipGroup } from './ApyTooltip.style';
@@ -13,7 +14,7 @@ type RewardsGroupProps = {
 };
 
 const RewardsGroup = ({ rewards, prices }: RewardsGroupProps): JSX.Element => {
-  const rewardsUSD = displayMonetaryAmountInUSDFormat(rewards, prices?.[rewards.currency.ticker].usd);
+  const rewardsUSD = displayMonetaryAmountInUSDFormat(rewards, getTokenPrice(prices, rewards.currency.ticker)?.usd);
 
   const rewardsLabel = `${formatNumber(rewards?.toBig().toNumber(), {
     maximumFractionDigits: rewards?.currency.humanDecimals
