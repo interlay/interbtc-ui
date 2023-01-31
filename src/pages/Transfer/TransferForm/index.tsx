@@ -12,7 +12,6 @@ import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { formatNumber } from '@/common/utils/utils';
 import ErrorFallback from '@/components/ErrorFallback';
 import ErrorModal from '@/components/ErrorModal';
-import FormTitle from '@/components/FormTitle';
 import SubmitButton from '@/components/SubmitButton';
 import TextField from '@/components/TextField';
 import Tokens, { TokenOption } from '@/components/Tokens';
@@ -125,7 +124,6 @@ const TransferForm = (): JSX.Element => {
   return (
     <>
       <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
-        <FormTitle>{t('transfer_page.transfer_currency')}</FormTitle>
         <div>
           <p
             className={clsx(
