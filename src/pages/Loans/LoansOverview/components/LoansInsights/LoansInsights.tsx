@@ -2,7 +2,7 @@ import { useMutation } from 'react-query';
 
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
+import ErrorModal from '@/legacy-components/ErrorModal';
 import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 

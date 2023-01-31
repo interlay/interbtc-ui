@@ -18,18 +18,6 @@ import {
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
-import AvailableBalanceUI from '@/components/AvailableBalanceUI';
-import ErrorFallback from '@/components/ErrorFallback';
-import ErrorModal from '@/components/ErrorModal';
-import FormTitle from '@/components/FormTitle';
-import Hr2 from '@/components/hrs/Hr2';
-import PriceInfo from '@/components/PriceInfo';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import SubmitButton from '@/components/SubmitButton';
-import TextField from '@/components/TextField';
-import Toggle from '@/components/Toggle';
-import TokenField from '@/components/TokenField';
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
@@ -39,6 +27,18 @@ import {
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '@/constants';
+import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import FormTitle from '@/legacy-components/FormTitle';
+import Hr2 from '@/legacy-components/hrs/Hr2';
+import PriceInfo from '@/legacy-components/PriceInfo';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/legacy-components/SubmitButton';
+import TextField from '@/legacy-components/TextField';
+import Toggle from '@/legacy-components/Toggle';
+import TokenField from '@/legacy-components/TokenField';
+import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import { ForeignAssetIdLiteral } from '@/types/currency';

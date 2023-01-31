@@ -11,14 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
-import ErrorModal from '@/components/ErrorModal';
-import FormTitle from '@/components/FormTitle';
-import Hr2 from '@/components/hrs/Hr2';
-import PriceInfo from '@/components/PriceInfo';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import SubmitButton from '@/components/SubmitButton';
-import TokenField from '@/components/TokenField';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
@@ -28,6 +20,14 @@ import {
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import FormTitle from '@/legacy-components/FormTitle';
+import Hr2 from '@/legacy-components/hrs/Hr2';
+import PriceInfo from '@/legacy-components/PriceInfo';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import SubmitButton from '@/legacy-components/SubmitButton';
+import TokenField from '@/legacy-components/TokenField';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';

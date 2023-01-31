@@ -1,5 +1,5 @@
 import { Flex } from '@/component-library';
-import FullLoadingSpinner from '@/components/FullLoadingSpinner';
+import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';

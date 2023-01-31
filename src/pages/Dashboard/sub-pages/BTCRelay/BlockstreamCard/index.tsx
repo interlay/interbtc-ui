@@ -6,10 +6,10 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { formatNumber } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
-import ExternalLink from '@/components/ExternalLink';
-import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
 import { BTC_EXPLORER_BLOCK_API } from '@/config/blockstream-explorer-links';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import ExternalLink from '@/legacy-components/ExternalLink';
+import Ring64, { Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 

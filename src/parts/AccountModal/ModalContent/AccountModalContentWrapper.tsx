@@ -2,10 +2,10 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { Trans } from 'react-i18next';
 
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayLink from '@/components/UI/InterlayLink';
-import { InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import InterlayLink from '@/legacy-components/UI/InterlayLink';
+import { InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 
 interface AccountContentWrapperProps {
   title: string;
