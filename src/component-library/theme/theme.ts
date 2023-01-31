@@ -442,6 +442,24 @@ const theme = {
         bg: 'var(--color-list-secondary-hover-bg)'
       }
     }
+  },
+  select: {
+    placeholder: 'var(--colors-text-tertiary)',
+    color: 'var(--color-select-text)',
+    size: {
+      small: {
+        padding: 'var(--spacing-1)',
+        text: 'var(--text-s)'
+      },
+      medium: {
+        padding: 'var(--spacing-2)',
+        text: 'var(--text-base)'
+      },
+      large: {
+        padding: 'var(--spacing-5) var(--spacing-2)',
+        text: 'var(--text-lg)'
+      }
+    }
   }
 };
 
