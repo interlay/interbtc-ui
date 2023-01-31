@@ -15,7 +15,7 @@ const Transfer = (): JSX.Element | null => {
           <TabsItem title='Transfer'>
             <TransferForm />
           </TabsItem>
-          <TabsItem title='Cross chain transfer'>
+          <TabsItem title='Cross Chain Transfer'>
             <CrossChainTransferForm />
           </TabsItem>
         </Tabs>
