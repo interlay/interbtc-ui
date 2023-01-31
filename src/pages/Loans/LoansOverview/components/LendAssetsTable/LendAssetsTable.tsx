@@ -3,6 +3,7 @@ import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -65,7 +66,7 @@ const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableP
 
         const liquidityUSDValue = convertMonetaryAmountToValueInUSD(
           totalLiquidity,
-          prices?.[totalLiquidity.currency.ticker].usd
+          getTokenPrice(prices, totalLiquidity.currency.ticker)?.usd
         );
         const liquidityLabel = liquidityUSDValue || 0;
         const totalSupply = <MonetaryCell label={formatUSD(liquidityLabel, { compact: true })} alignItems='flex-end' />;
