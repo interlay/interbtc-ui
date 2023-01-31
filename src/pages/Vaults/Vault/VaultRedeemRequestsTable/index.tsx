@@ -32,7 +32,7 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters';
@@ -133,13 +133,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
         classNames: ['text-left'],
         // TODO: should type properly (`Relay`)
         Cell: ({ row: { original: redeem } }: any) => {
-          const path = `${PAGES.TX}/${TXType.Redeem}/${redeem.id}`;
-
-          return (
-            <InterlayRouterLink className='hover:underline' to={path} withArrow>
-              {shortAddress(redeem.id)}
-            </InterlayRouterLink>
-          );
+          return <ViewRequestDetailsLink id={redeem.id} txType={TXType.Redeem} />;
         }
       },
       {
