@@ -89,4 +89,6 @@
   /* Icon */
   --color-icon-fallback-stroke: var(--colors-neutral-white);
   --color-icon-fallback-color: #f4f3f5;
+  /* Select */
+  --color-select-text: var(--colors-neutral-black);
 }

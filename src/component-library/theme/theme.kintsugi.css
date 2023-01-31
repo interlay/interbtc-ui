@@ -61,7 +61,7 @@
   --colors-input-focus-border: var(--colors-neutral-white);
   --colors-input-disabled-text: var(--colors-slate-gray);
   --colors-input-disabled-border: var(--colors-mid-blue);
-  --colors-input-background: transparent;
+  --colors-input-background: var(--colors-blue);
   /* Token Input */
   --colors-token-input-end-adornment-bg: var(--colors-neutral-white-25);
   /* Token List */
@@ -92,4 +92,6 @@
   /* Icon */
   --color-icon-fallback-stroke: #232323;
   --color-icon-fallback-color: #040816;
+  /* Select */
+  --color-select-text: var(--colors-neutral-white);
 }
