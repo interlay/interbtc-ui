@@ -24,7 +24,7 @@ import {
   mockRedeemGetFeeRate,
   mockRedeemRequest,
   mockTokensBalance,
-  mockVaultsWithRedeemableTokens
+  mockVaultsGetVaultsWithRedeemableTokens
 } from '../mocks/@interlay/interbtc-api';
 import { MOCK_DEFAULT_PRICES } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
@@ -155,7 +155,9 @@ describe('redeem form', () => {
 
     const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-redeemable/i);
 
-    const singleMaxRedeemableAmount = displayMonetaryAmount(mockVaultsWithRedeemableTokens.values().next().value);
+    const singleMaxRedeemableAmount = displayMonetaryAmount(
+      mockVaultsGetVaultsWithRedeemableTokens().values().next().value
+    );
 
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxRedeemableAmount);
   });
@@ -191,7 +193,10 @@ describe('redeem form', () => {
   it('when the input amount is greater than the single vault max redeemable amount', async () => {
     const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
-    const inputAmount = mockVaultsWithRedeemableTokens.values().next().value.add(newMonetaryAmount('1', Bitcoin));
+    const inputAmount = mockVaultsGetVaultsWithRedeemableTokens()
+      .values()
+      .next()
+      .value.add(newMonetaryAmount('1', Bitcoin));
 
     await changeAmountToRedeem(inputAmount.toString());
 
