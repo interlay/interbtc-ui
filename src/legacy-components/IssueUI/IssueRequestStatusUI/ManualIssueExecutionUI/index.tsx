@@ -38,11 +38,14 @@ interface Props {
         token: CurrencyIdLiteral;
       };
     };
-    status: any;
+    status: IssueStatus;
+    userParachainAddress: string;
   };
 }
 
 const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
+  const { selectedAccount } = useSubstrateSecureState();
+
   const { t } = useTranslation();
 
   const queryParams = useQueryParams();
@@ -99,6 +102,8 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
     executable = true;
   }
 
+  const isOwner = request.userParachainAddress === selectedAccount?.address;
+
   return (
     <div className={clsx('text-center', 'space-y-2')}>
       {vaultCapacity && (
@@ -128,7 +133,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
       <InterlayDenimOrKintsugiMidnightOutlinedButton
         className='w-full'
         pending={executeMutation.isLoading}
-        disabled={!executable}
+        disabled={!executable || !isOwner}
         onClick={handleExecute(request)}
       >
         {t('issue_page.claim_interbtc', {
