@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import Hr1 from '@/components/hrs/Hr1';
+import Hr1 from '@/legacy-components/hrs/Hr1';
 import PageTitle from '@/parts/PageTitle';
 import TimerIncrement from '@/parts/TimerIncrement';
 

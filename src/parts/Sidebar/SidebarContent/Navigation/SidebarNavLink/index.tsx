@@ -1,8 +1,10 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
-import InterlayLink, { Props as InterlayLinkProps } from '@/components/UI/InterlayLink';
-import InterlayRouterNavLink, { Props as InterlayRouterNavLinkProps } from '@/components/UI/InterlayRouterNavLink';
+import InterlayLink, { Props as InterlayLinkProps } from '@/legacy-components/UI/InterlayLink';
+import InterlayRouterNavLink, {
+  Props as InterlayRouterNavLinkProps
+} from '@/legacy-components/UI/InterlayRouterNavLink';
 
 interface CustomProps {
   external: boolean;

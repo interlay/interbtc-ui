@@ -3,9 +3,9 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { shortAddress } from '@/common/utils/utils';
-import CopyToClipboardButton from '@/components/CopyToClipboardButton';
-import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
 import { WALLETS, WalletSourceName } from '@/config/wallets';
+import CopyToClipboardButton from '@/legacy-components/CopyToClipboardButton';
+import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import { ACCOUNT_MODAL_BUTTON_CLASSES, ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES } from '..';

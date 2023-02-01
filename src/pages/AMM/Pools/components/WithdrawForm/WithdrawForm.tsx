@@ -16,8 +16,8 @@ import {
   displayMonetaryAmountInUSDFormat
 } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
-import { AuthCTA } from '@/components/AuthCTA';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import { AuthCTA } from '@/legacy-components/AuthCTA';
 import validate, { PoolWithdrawSchemaParams } from '@/lib/form-validation';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';

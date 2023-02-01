@@ -2,10 +2,10 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import Hr1 from '@/components/hrs/Hr1';
-import IssueUI from '@/components/IssueUI';
-import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import Hr1 from '@/legacy-components/hrs/Hr1';
+import IssueUI from '@/legacy-components/IssueUI';
+import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/legacy-components/UI/InterlayModal';
 
 import RequestModalTitle from '../../RequestModalTitle';
 

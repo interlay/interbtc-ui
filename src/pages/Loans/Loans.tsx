@@ -1,6 +1,6 @@
 import { withErrorBoundary } from 'react-error-boundary';
 
-import ErrorFallback from '@/components/ErrorFallback';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
 
 import LoansOverview from './LoansOverview';
 

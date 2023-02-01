@@ -8,7 +8,7 @@ import * as z from 'zod';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, Flex, TokenInput } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
+import ErrorModal from '@/legacy-components/ErrorModal';
 import validate, {
   LoanBorrowSchemaParams,
   LoanLendSchemaParams,

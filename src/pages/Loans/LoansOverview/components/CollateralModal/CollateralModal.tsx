@@ -3,7 +3,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 
 import { CTA, Flex, Modal, ModalBody, ModalHeader, ModalProps, Status } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
+import ErrorModal from '@/legacy-components/ErrorModal';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 

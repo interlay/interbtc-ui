@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
 import { getLastMidnightTimestamps } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
 import cumulativeVolumesFetcher, {
   CUMULATIVE_VOLUMES_FETCHER,
   VolumeDataPoint,

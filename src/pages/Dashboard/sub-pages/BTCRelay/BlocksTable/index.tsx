@@ -9,11 +9,12 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, formatNumber, shortAddress } from '@/common/utils/utils';
-import AddressWithCopyUI from '@/components/AddressWithCopyUI';
-import ErrorFallback from '@/components/ErrorFallback';
-import ExternalLink from '@/components/ExternalLink';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InterlayPagination from '@/components/UI/InterlayPagination';
+import { BTC_EXPLORER_BLOCK_API } from '@/config/blockstream-explorer-links';
+import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import ExternalLink from '@/legacy-components/ExternalLink';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import InterlayPagination from '@/legacy-components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -21,8 +22,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayThead,
   InterlayTr
-} from '@/components/UI/InterlayTable';
-import { BTC_EXPLORER_BLOCK_API } from '@/config/blockstream-explorer-links';
+} from '@/legacy-components/UI/InterlayTable';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import btcBlocksCountQuery from '@/services/queries/btc-blocks-count-query';
