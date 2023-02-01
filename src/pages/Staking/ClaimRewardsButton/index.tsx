@@ -1,11 +1,11 @@
 import clsx from 'clsx';
 import { useMutation, useQueryClient } from 'react-query';
 
+import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
-} from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
-import ErrorModal from '@/components/ErrorModal';
-import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+} from '@/legacy-components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
+import ErrorModal from '@/legacy-components/ErrorModal';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 

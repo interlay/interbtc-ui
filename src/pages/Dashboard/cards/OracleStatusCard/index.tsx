@@ -7,9 +7,9 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import ErrorFallback from '@/components/ErrorFallback';
-import Ring64, { Ring64Subtitle, Ring64Title, Ring64Value } from '@/components/Ring64';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import Ring64, { Ring64Subtitle, Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import {
   BtcToCurrencyOracleStatus,

@@ -9,8 +9,8 @@ import * as z from 'zod';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import ErrorModal from '@/legacy-components/ErrorModal';
 import validate, { VaultDepositSchemaParams } from '@/lib/form-validation';
 import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 

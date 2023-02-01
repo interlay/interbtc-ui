@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import Ring64, { Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import { PAGES } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
 

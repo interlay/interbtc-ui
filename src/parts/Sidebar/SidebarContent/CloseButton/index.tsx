@@ -3,7 +3,7 @@ import { XCircleIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import * as React from 'react';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/legacy-components/UI/InterlayButtonBase';
 
 type Ref = HTMLButtonElement;
 const CloseButton = React.forwardRef<Ref, InterlayButtonBaseProps>(

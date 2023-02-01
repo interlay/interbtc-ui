@@ -11,15 +11,6 @@ import { useSelector } from 'react-redux';
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import ErrorModal from '@/components/ErrorModal';
-import Hr2 from '@/components/hrs/Hr2';
-import PriceInfo from '@/components/PriceInfo';
-import SubmitButton from '@/components/SubmitButton';
-import TokenField from '@/components/TokenField';
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import {
   BLOCKS_BEHIND_LIMIT,
   DEFAULT_ISSUE_BRIDGE_FEE_RATE,
@@ -33,6 +24,15 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import Hr2 from '@/legacy-components/hrs/Hr2';
+import PriceInfo from '@/legacy-components/PriceInfo';
+import SubmitButton from '@/legacy-components/SubmitButton';
+import TokenField from '@/legacy-components/TokenField';
+import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
+import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import { ForeignAssetIdLiteral } from '@/types/currency';

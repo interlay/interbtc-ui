@@ -2,13 +2,13 @@ import clsx from 'clsx';
 import { add, format } from 'date-fns';
 import { useMutation, useQueryClient } from 'react-query';
 
-import InterlayDenimOrKintsugiSupernovaContainedButton, {
-  Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
-} from '@/components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
-import ErrorModal from '@/components/ErrorModal';
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import { BLOCK_TIME } from '@/config/parachain';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import InterlayDenimOrKintsugiSupernovaContainedButton, {
+  Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
+} from '@/legacy-components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';

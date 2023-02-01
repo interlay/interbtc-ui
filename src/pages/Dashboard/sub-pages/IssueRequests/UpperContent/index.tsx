@@ -6,9 +6,9 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
-import Panel from '@/components/Panel';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import Panel from '@/legacy-components/Panel';
 import IssuedChart from '@/pages/Dashboard/IssuedChart';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { issuesCountQuery } from '@/services/queries/issues';

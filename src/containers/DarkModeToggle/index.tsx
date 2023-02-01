@@ -1,6 +1,6 @@
 import useDarkMode from 'use-dark-mode';
 
-import Toggle from '@/components/Toggle';
+import Toggle from '@/legacy-components/Toggle';
 import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import { CLASS_NAMES } from '@/utils/constants/styles';
 

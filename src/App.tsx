@@ -11,9 +11,9 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { initGeneralDataAction, isFaucetLoaded, isVaultClientLoaded } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import ErrorFallback from '@/components/ErrorFallback';
-import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
@@ -21,8 +21,8 @@ import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
-import TestnetBanner from './components/TestnetBanner';
 import * as constants from './constants';
+import TestnetBanner from './legacy-components/TestnetBanner';
 import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));

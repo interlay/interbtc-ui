@@ -7,13 +7,13 @@ import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import InterlayCaliforniaOutlinedButton from '@/components/buttons/InterlayCaliforniaOutlinedButton';
-import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
-import Tokens from '@/components/Tokens';
-import InterlayLink from '@/components/UI/InterlayLink';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
+import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import Tokens from '@/legacy-components/Tokens';
+import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
