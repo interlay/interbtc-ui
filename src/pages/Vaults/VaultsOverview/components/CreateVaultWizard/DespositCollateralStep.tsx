@@ -8,20 +8,13 @@ import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import { useForm } from '@/lib/form';
-import Yup from '@/lib/form/yup.custom';
-import { VaultDepositSchemaParams } from '@/lib/form-validation';
+import { forms, useForm } from '@/lib/form';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
 import { StepComponentProps, withStep } from './Step';
 
-const DEPOSIT_COLLATERAL_AMOUNT = 'deposit';
-const SwapSchema = Yup.object().shape({
-  [DEPOSIT_COLLATERAL_AMOUNT]: Yup.number().requiredAmount().fees()
-});
-
-type CollateralFormData = { [DEPOSIT_COLLATERAL_AMOUNT]?: number };
+type CollateralFormData = { [forms.createVault.fields.deposit]?: number };
 
 type Props = {
   collateralCurrency: CollateralCurrencyExt;
@@ -40,7 +33,7 @@ const DepositCollateralStep = ({
   const { t } = useTranslation();
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
 
-  const validationParams: VaultDepositSchemaParams = {
+  const validationParams = {
     minAmount: collateral.min.raw,
     availableBalance: newMonetaryAmount(0, governance.raw.currency),
     governanceBalance: governance.raw,
@@ -58,7 +51,7 @@ const DepositCollateralStep = ({
     initialValues: { [DEPOSIT_COLLATERAL_AMOUNT]: undefined },
     onSubmit: handleSubmit,
     params: validationParams,
-    validationSchema: SwapSchema
+    validationSchema: forms.createVault.schema
   });
 
   const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
