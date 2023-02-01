@@ -14,6 +14,7 @@ import { displayMonetaryAmount } from '@/common/utils/utils';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorModal from '@/components/ErrorModal';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -38,11 +39,14 @@ interface Props {
         token: CurrencyIdLiteral;
       };
     };
-    status: any;
+    status: IssueStatus;
+    userParachainAddress: string;
   };
 }
 
 const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
+  const { selectedAccount } = useSubstrateSecureState();
+
   const { t } = useTranslation();
 
   const queryParams = useQueryParams();
@@ -100,6 +104,8 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
     executable = true;
   }
 
+  const isOwner = request.userParachainAddress === selectedAccount?.address;
+
   return (
     <div className={clsx('text-center', 'space-y-2')}>
       {vaultCapacity && (
@@ -129,7 +135,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
       <InterlayDenimOrKintsugiMidnightOutlinedButton
         className='w-full'
         pending={executeMutation.isLoading}
-        disabled={!executable}
+        disabled={!executable || !isOwner}
         onClick={handleExecute(request)}
       >
         {t('issue_page.claim_interbtc', {

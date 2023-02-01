@@ -21,6 +21,7 @@ import InterlayTable, {
   InterlayTr
 } from '@/components/UI/InterlayTable';
 import StatusCell from '@/components/UI/InterlayTable/StatusCell';
+import ViewRequestDetailsLink from '@/components/ViewRequestDetailsLink';
 import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
@@ -29,6 +30,7 @@ import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-blo
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import useQueryParams from '@/utils/hooks/use-query-params';
@@ -65,6 +67,14 @@ const RedeemRequestsTable = (): JSX.Element => {
           }
 
           return <>{formatDateTimePrecise(new Date(date))}</>;
+        }
+      },
+      {
+        Header: t('view_details'),
+        classNames: ['text-left'],
+        // TODO: should type properly (`Relay`)
+        Cell: ({ row: { original: redeem } }: any) => {
+          return <ViewRequestDetailsLink id={redeem.id} txType={TXType.Redeem} />;
         }
       },
       {

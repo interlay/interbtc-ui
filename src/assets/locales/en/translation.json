@@ -129,6 +129,7 @@
   "replace": "Replace",
   "canceled": "Canceled",
   "fees": "Fees",
+  "view_details": "View Details",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
