@@ -14,6 +14,7 @@ import { displayMonetaryAmount } from '@/common/utils/utils';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorModal from '@/legacy-components/ErrorModal';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';

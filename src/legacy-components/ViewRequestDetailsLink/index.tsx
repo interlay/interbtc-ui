@@ -1,5 +1,5 @@
 import { shortAddress } from '@/common/utils/utils';
-import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
+import InterlayRouterLink from '@/legacy-components/UI/InterlayRouterLink';
 import { TXType } from '@/types/general.d';
 import { PAGES } from '@/utils/constants/links';
 

@@ -36,6 +36,7 @@ import SubmitButton from '@/legacy-components/SubmitButton';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
+import WarningBanner from '@/legacy-components/WarningBanner';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';

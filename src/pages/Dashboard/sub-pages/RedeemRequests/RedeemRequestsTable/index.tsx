@@ -22,6 +22,7 @@ import InterlayTable, {
   InterlayTr
 } from '@/legacy-components/UI/InterlayTable';
 import StatusCell from '@/legacy-components/UI/InterlayTable/StatusCell';
+import ViewRequestDetailsLink from '@/legacy-components/ViewRequestDetailsLink';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
