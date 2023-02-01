@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { Flex, TokenInput } from '@/component-library';
 import { SelectTrigger } from '@/component-library/Select/SelectTrigger';
-import SubmitButton from '@/components/SubmitButton';
+import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
 
 const CrossChainTransferForm = (): JSX.Element => {

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { Flex, Tabs, TabsItem } from '@/component-library';
-import Panel from '@/components/Panel';
+import Panel from '@/legacy-components/Panel';
 import MainContainer from '@/parts/MainContainer';
 
 import CrossChainTransferForm from './CrossChainTransferForm';

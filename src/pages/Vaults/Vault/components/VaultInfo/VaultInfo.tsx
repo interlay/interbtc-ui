@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 
 import { CardProps, CTA, Dd, Dt } from '@/component-library';
 import { Status } from '@/component-library/utils/prop-types';
-import AddressWithCopyUI from '@/components/AddressWithCopyUI';
+import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import RequestReplacementModal from '@/pages/Vaults/Vault/RequestReplacementModal';
 
 import { StatusTag } from '../StatusTag';

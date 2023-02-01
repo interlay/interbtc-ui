@@ -1,8 +1,8 @@
 import { isCurrencyEqual } from '@interlay/interbtc-api';
 import { useState } from 'react';
 
-import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { SwapPair } from '@/types/swap';
 import { useGetLiquidityPools } from '@/utils/hooks/api/amm/use-get-liquidity-pools';

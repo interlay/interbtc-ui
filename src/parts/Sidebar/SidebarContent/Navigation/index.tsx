@@ -22,7 +22,6 @@ import { matchPath } from 'react-router';
 import { useLocation } from 'react-router-dom';
 
 import { StoreType } from '@/common/types/util.types';
-import Hr2 from '@/components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from '@/config/links';
 import {
   CROWDLOAN_LINK,
@@ -32,6 +31,7 @@ import {
   USE_WRAPPED_CURRENCY_LINK,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import Hr2 from '@/legacy-components/hrs/Hr2';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';

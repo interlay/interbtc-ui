@@ -1,7 +1,7 @@
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
-import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/components/UI/InterlayButtonBase';
+import InterlayButtonBase, { Props as InterlayButtonBaseProps } from '@/legacy-components/UI/InterlayButtonBase';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const OpenButton = ({ onClick }: InterlayButtonBaseProps): JSX.Element => (

@@ -3,7 +3,6 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD, getLastMidnightTimestamps } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
 import {
   GOVERNANCE_TOKEN,
@@ -11,6 +10,7 @@ import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
 import useCumulativeCollateralVolumes from '@/services/hooks/use-cumulative-collateral-volumes';
 import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
 import { PAGES } from '@/utils/constants/links';

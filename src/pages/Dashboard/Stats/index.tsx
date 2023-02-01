@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import * as React from 'react';
 
-import InterlayRouterLink, { Props as InterlayRouterLinkProps } from '@/components/UI/InterlayRouterLink';
+import InterlayRouterLink, { Props as InterlayRouterLinkProps } from '@/legacy-components/UI/InterlayRouterLink';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const StatsDt = ({ className, ...rest }: React.ComponentPropsWithRef<'dt'>): JSX.Element => (

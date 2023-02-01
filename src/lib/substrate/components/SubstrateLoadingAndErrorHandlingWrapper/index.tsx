@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux';
 import { toast, ToastContainer } from 'react-toastify';
 
 import { isBridgeLoaded } from '@/common/actions/general.actions';
-import FullLoadingSpinner from '@/components/FullLoadingSpinner';
+import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrateState } from '@/lib/substrate/context/hooks';
 import { ActionType, ApiStatus, KeyringStatus } from '@/lib/substrate/context/types';
 import InterlayHelmet from '@/parts/InterlayHelmet';

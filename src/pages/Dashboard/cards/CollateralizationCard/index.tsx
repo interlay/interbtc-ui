@@ -8,9 +8,9 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { formatPercentage } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
-import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
 import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import Ring64, { Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
