@@ -1,57 +1,40 @@
 import { chain } from '@react-aria/utils';
 import { Meta, Story } from '@storybook/react';
-import { ChangeEventHandler } from 'react';
-import * as Yup from 'yup';
 
 import { useForm } from '@/lib/form';
+import Yup from '@/lib/form/yup.custom';
 
 import { TokenInput, TokenInputProps } from '.';
 
-// Example of resuable schema
-const MegaFailSchema = Yup.string().test({
-  name: 'match',
-  message: 'Big fail',
-  test: (value, ctx) => {
-    if (value === '123') {
-      return ctx.createError({ message: 'Thats a fail' });
-    }
-
-    return true;
-  }
+const SwapSchema = Yup.object().shape({
+  deposit: Yup.number().requiredAmount().fees()
 });
 
 const Template: Story<TokenInputProps> = () => {
-  const SwapSchema = Yup.object().shape({
-    input: Yup.string().max(5, 'Too Long!').concat(MegaFailSchema)
-  });
-
   const formik = useForm({
-    initialValues: { input: undefined, output: undefined },
+    initialValues: { deposit: undefined, output: undefined },
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
+    // params: {
+    //   availableBalance: newMonetaryAmount(new Big(10), WRAPPED_TOKEN, true),
+    //   transactionFee: newMonetaryAmount(new Big(11), WRAPPED_TOKEN, true)
+    // },
     validationSchema: SwapSchema
   });
-
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    console.log(e.target.value);
-    formik.setFieldValue('output', e.target.value || undefined, true);
-  };
-
-  console.log(formik.values);
 
   return (
     <div>
       <h1>Anywhere in your app!</h1>
       <form onSubmit={formik.handleSubmit}>
         <TokenInput
-          name='input'
-          onChange={chain(formik.handleChange, handleChange)}
+          name='deposit'
+          onChange={chain(formik.handleChange, formik.handleChangeDep('output'))}
           onBlur={formik.handleBlur}
-          value={formik.values.input}
+          value={formik.values.deposit}
           aria-label='token field'
-          valueUSD={(formik.values.input || 0) * 10}
-          errorMessage={formik.errors.input}
+          valueUSD={(formik.values.deposit || 0) * 10}
+          errorMessage={formik.errors.deposit}
         />
         <TokenInput
           name='output'

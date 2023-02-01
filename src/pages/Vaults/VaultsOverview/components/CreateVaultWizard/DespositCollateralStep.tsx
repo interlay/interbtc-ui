@@ -1,26 +1,27 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
-import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
-import * as z from 'zod';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import validate, { VaultDepositSchemaParams } from '@/lib/form-validation';
-import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
+import { useForm } from '@/lib/form';
+import Yup from '@/lib/form/yup.custom';
+import { VaultDepositSchemaParams } from '@/lib/form-validation';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
 import { StepComponentProps, withStep } from './Step';
 
-const DEPOSIT_COLLATERAL_AMOUNT = 'deposit-collateral-amount';
+const DEPOSIT_COLLATERAL_AMOUNT = 'deposit';
+const SwapSchema = Yup.object().shape({
+  [DEPOSIT_COLLATERAL_AMOUNT]: Yup.number().requiredAmount().fees()
+});
 
-type CollateralFormData = { [DEPOSIT_COLLATERAL_AMOUNT]: string };
+type CollateralFormData = { [DEPOSIT_COLLATERAL_AMOUNT]?: number };
 
 type Props = {
   collateralCurrency: CollateralCurrencyExt;
@@ -41,22 +42,23 @@ const DepositCollateralStep = ({
 
   const validationParams: VaultDepositSchemaParams = {
     minAmount: collateral.min.raw,
-    availableBalance: collateral.balance.raw,
+    availableBalance: newMonetaryAmount(0, governance.raw.currency),
     governanceBalance: governance.raw,
     transactionFee: fee.raw
   };
-  const schema = z.object({
-    [DEPOSIT_COLLATERAL_AMOUNT]: validate.vaults.deposit(t, validationParams)
-  });
 
-  const {
-    register,
-    handleSubmit: h,
-    watch,
-    formState: { errors, isDirty }
-  } = useForm<CollateralFormData>({
-    mode: 'onChange',
-    resolver: zodResolver(schema)
+  const handleSubmit = (data: CollateralFormData) => {
+    if (!data[DEPOSIT_COLLATERAL_AMOUNT]) return;
+
+    const amount = newMonetaryAmount(data[DEPOSIT_COLLATERAL_AMOUNT] || 0, collateral.currency, true);
+    registerNewVaultMutation.mutate(amount);
+  };
+
+  const formik = useForm<CollateralFormData>({
+    initialValues: { [DEPOSIT_COLLATERAL_AMOUNT]: undefined },
+    onSubmit: handleSubmit,
+    params: validationParams,
+    validationSchema: SwapSchema
   });
 
   const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
@@ -66,21 +68,19 @@ const DepositCollateralStep = ({
     }
   );
 
-  const inputCollateral = watch(DEPOSIT_COLLATERAL_AMOUNT) || '0';
-  const inputCollateralAmount = newMonetaryAmount(inputCollateral, collateral.currency, true);
+  const inputCollateralAmount = newMonetaryAmount(
+    formik.values[DEPOSIT_COLLATERAL_AMOUNT] || 0,
+    collateral.currency,
+    true
+  );
 
-  const handleSubmit = async (data: CollateralFormData) => {
-    const amount = newMonetaryAmount(data[DEPOSIT_COLLATERAL_AMOUNT], collateral.currency, true);
-    registerNewVaultMutation.mutate(amount);
-  };
-
-  const isBtnDisabled = !isValidForm(errors) || !isDirty;
+  const isBtnDisabled = !formik.isValid || !formik.dirty;
 
   return (
     <>
       <ModalHeader color='secondary'>{t('vault.deposit_collateral')}</ModalHeader>
       <ModalDivider color='secondary' />
-      <form onSubmit={h(handleSubmit)}>
+      <form onSubmit={formik.handleSubmit}>
         <ModalBody>
           <Stack spacing='double'>
             <TokenInput
@@ -90,8 +90,11 @@ const DepositCollateralStep = ({
               valueUSD={convertMonetaryAmountToValueInUSD(inputCollateralAmount, collateral.price.usd) ?? 0}
               balance={collateral.balance.raw.toString()}
               humanBalance={collateral.balance.raw.toHuman()}
-              errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}
-              {...register(DEPOSIT_COLLATERAL_AMOUNT)}
+              errorMessage={formik.errors[DEPOSIT_COLLATERAL_AMOUNT]}
+              name={DEPOSIT_COLLATERAL_AMOUNT}
+              onChange={formik.handleChange}
+              value={formik.values[DEPOSIT_COLLATERAL_AMOUNT]}
+              onBlur={formik.handleBlur}
             />
             <StyledDl>
               <StyledDItem>
