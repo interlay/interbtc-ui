@@ -238,7 +238,7 @@ describe('redeem form', () => {
     await changeAmountToRedeem(inputAmount.toString());
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
-      `"You can't redeem IBTC at the moment because IBTC bridge is more than 6 blocks behind."`
+      `"You can't redeem IBTC at the moment because IBTC parachain is more than 6 blocks behind."`
     );
 
     await submitForm();

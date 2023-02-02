@@ -157,7 +157,7 @@
     "we_will_inform_you_btc": "We will inform you when the BTC payment is executed.",
     "redeem_processed": "Your Redeem request is being processed",
     "retried": "Retried",
-    "error_more_than_6_blocks_behind": "You can't redeem {{wrappedTokenSymbol}} at the moment because {{wrappedTokenSymbol}} bridge is more than 6 blocks behind.",
+    "error_more_than_6_blocks_behind": "You can't redeem {{wrappedTokenSymbol}} at the moment because {{wrappedTokenSymbol}} parachain is more than 6 blocks behind.",
     "confirm_redeem": "Confirm Redeem Request",
     "verify_and_confirm": "Please verify and confirm your redeem request.",
     "burning": "Burning",
