@@ -1,16 +1,24 @@
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+
 import { Modal, ModalBody, ModalHeader, ModalProps } from '@/component-library';
 
-type InheritAttrs = Omit<ModalProps, 'children'>;
+type Props = {
+  accounts: InjectedAccountWithMeta[];
+};
 
-type TokenListModalProps = InheritAttrs;
+type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
-const AccountSelectorModal = ({ ...props }: TokenListModalProps): JSX.Element => (
+type TokenListModalProps = Props & InheritAttrs;
+
+const AccountSelectorModal = ({ accounts, ...props }: TokenListModalProps): JSX.Element => (
   <Modal hasMaxHeight {...props}>
     <ModalHeader size='lg' weight='medium' color='secondary'>
       Select Account
     </ModalHeader>
     <ModalBody overflow='hidden' noPadding>
-      <p>These are your accounts</p>
+      {accounts.map((account) => (
+        <p key={account.address}>{account.address}</p>
+      ))}
     </ModalBody>
   </Modal>
 );
