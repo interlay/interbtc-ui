@@ -4,7 +4,7 @@ import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatPercentage, formatUSD } from '@/common/utils/utils';
-import { getTokenPrice } from '@/utils/helpers/prices';
+import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { PoolName } from '../PoolName';
@@ -61,18 +61,16 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
 
         const apr = <MonetaryCell label={formatPercentage(aprAmount.toNumber())} alignSelf='flex-start' />;
 
-        const totalLiquidityUSD = pooledCurrencies.reduce(
-          (total, currentAmount) => total + (getTokenPrice(prices, currentAmount.currency.ticker)?.usd || 0),
-          0
-        );
+        const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
 
         const totalLiquidity = <MonetaryCell label={formatUSD(totalLiquidityUSD, { compact: true })} />;
 
         // TODO: add real value when squid is ready
         const sevenDayVolume = <MonetaryCell label='-' alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />;
 
-        const accountLiquidityUSD =
-          accountLPTokenAmount?.mul(totalLiquidityUSD).div(totalSupply.toBig()).toBig().toNumber() || 0;
+        const accountLiquidityUSD = accountLPTokenAmount
+          ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
+          : 0;
 
         const accountLiquidity =
           variant === 'account-pools' && !!accountLPTokenAmount ? (

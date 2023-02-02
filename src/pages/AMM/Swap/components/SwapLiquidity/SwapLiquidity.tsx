@@ -2,8 +2,9 @@ import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
 
 import { formatUSD } from '@/common/utils/utils';
 import { Card, CardProps, CoinPair, Dd, Dl, DlGroup, Dt, Flex, H2 } from '@/component-library';
-import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import { calculateTotalLiquidityUSD } from '../../../shared/utils';
 
 type Props = {
   input: CurrencyExt;
@@ -18,10 +19,7 @@ type SwapLiquidityProps = Props & InheritAttrs;
 
 const SwapLiquidity = ({ input, output, liquidityPool, ...props }: SwapLiquidityProps): JSX.Element | null => {
   const prices = useGetPrices();
-  const liquidity = liquidityPool.pooledCurrencies.reduce(
-    (total, currentAmount) => total + (getTokenPrice(prices, currentAmount.currency.ticker)?.usd || 0),
-    0
-  );
+  const liquidity = calculateTotalLiquidityUSD(liquidityPool.pooledCurrencies, prices);
 
   return (
     <Card {...props} gap='spacing4'>
