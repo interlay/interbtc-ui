@@ -8,8 +8,8 @@ import { toast } from 'react-toastify';
 
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
+import { AuthCTA } from '@/components';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import { AuthCTA } from '@/legacy-components/AuthCTA';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
