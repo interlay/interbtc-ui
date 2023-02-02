@@ -69,7 +69,7 @@ const renderRedeemForm = async (props?: any) => {
 };
 
 describe('redeem form', () => {
-  it('redeeming calls `redeem.request` method', async () => {
+  test('if the redeem method is called', async () => {
     const { changeAmountToRedeem, changeBtcAddressToSend, submitForm } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
@@ -162,7 +162,7 @@ describe('redeem form', () => {
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxRedeemableAmount);
   });
 
-  it('when the wrapped token balance is less than required', async () => {
+  test('when the wrapped token balance is less than required', async () => {
     mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
       if (currency.ticker === WRAPPED_TOKEN.ticker) {
         return new ChainBalance(currency, 0, 0);
@@ -190,7 +190,7 @@ describe('redeem form', () => {
     );
   });
 
-  it('when the input amount is greater than the single vault max redeemable amount', async () => {
+  test('when the input amount is greater than the single vault max redeemable amount', async () => {
     const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
     const inputAmount = mockVaultsGetVaultsWithRedeemableTokens()
@@ -209,7 +209,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
 
-  it('when the input amount is less than the combined', async () => {
+  test('when the input amount is less than the combined', async () => {
     const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
     const inputAmount = mockRedeemGetDustValue()
@@ -227,7 +227,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
 
-  it('when the parachain is more than 6 blocks behind', async () => {
+  test('when the parachain is more than 6 blocks behind', async () => {
     mockBtcRelayGetLatestBlockHeight.mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
     mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1);
 
@@ -249,7 +249,7 @@ describe('redeem form', () => {
     mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => MOCK_BITCOIN_HEIGHT);
   });
 
-  it('when the oracle is offline', async () => {
+  test('when the oracle is offline', async () => {
     mockOracleGetExchangeRate.mockImplementation(
       (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, new Big(0))
     );
