@@ -135,7 +135,8 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
                     value={values[ticker]}
                     name={ticker}
                     onChange={handleChange}
-                    errorMessage={errors[ticker]}
+                    // TODO: when adding formik, use isLoanding to disabled validation
+                    errorMessage={depositMutation.isLoading ? undefined : errors[ticker]}
                   />
                   {!isLastItem && <DepositDivider />}
                 </Flex>
