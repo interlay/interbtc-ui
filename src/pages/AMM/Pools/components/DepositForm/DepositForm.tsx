@@ -10,7 +10,6 @@ import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import { DepositLiquidityFormData, useForm } from '@/lib/form';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -43,10 +42,7 @@ type DepositFormProps = {
 
 const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): JSX.Element => {
   const { pooledCurrencies } = pool;
-  const defaultValues: DepositLiquidityFormData = pooledCurrencies.reduce(
-    (acc, amount) => ({ ...acc, [amount.currency.ticker]: undefined }),
-    {}
-  );
+  const defaultValues = pooledCurrencies.reduce((acc, amount) => ({ ...acc, [amount.currency.ticker]: undefined }), {});
 
   const [slippage, setSlippage] = useState(0.1);
   const [values, setValues] = useState<Record<string, number | undefined>>(defaultValues);
@@ -68,31 +64,6 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
     }
   });
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    e.preventDefault();
-
-    if (!accountId) return;
-
-    try {
-      const amounts = pooledCurrencies.map((amount) =>
-        newMonetaryAmount(values[amount.currency.ticker] || 0, amount.currency, true)
-      );
-
-      const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
-
-      return depositMutation.mutate({ amounts, pool, slippage, deadline, accountId });
-    } catch (err: any) {
-      toast.error(err.toString());
-    }
-  };
-
-  const form = useForm<DepositLiquidityFormData>({
-    initialValues: defaultValues,
-    params: validationParams,
-    validationSchema: forms.vaults.create.schema,
-    onSubmit: handleSubmit
-  });
-
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!e.target.value) {
       return setValues(defaultValues);
@@ -112,6 +83,24 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
     }, {});
 
     setValues(newValues);
+  };
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+
+    if (!accountId) return;
+
+    try {
+      const amounts = pooledCurrencies.map((amount) =>
+        newMonetaryAmount(values[amount.currency.ticker] || 0, amount.currency, true)
+      );
+
+      const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
+
+      return depositMutation.mutate({ amounts, pool, slippage, deadline, accountId });
+    } catch (err: any) {
+      toast.error(err.toString());
+    }
   };
 
   const poolName = (

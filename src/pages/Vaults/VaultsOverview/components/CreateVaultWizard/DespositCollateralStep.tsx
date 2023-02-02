@@ -8,7 +8,13 @@ import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import { CreateVaultFormData, forms, isFormDisabled, useForm } from '@/lib/form';
+import {
+  CREATE_VAULT_DEPOSIT_FIELD,
+  CreateVaultFormData,
+  createVaultSchema,
+  isFormDisabled,
+  useForm
+} from '@/lib/form';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
@@ -47,8 +53,7 @@ const DepositCollateralStep = ({
 
   const form = useForm<CreateVaultFormData>({
     initialValues: { deposit: undefined },
-    params: validationParams,
-    validationSchema: forms.vaults.create.schema,
+    validationSchema: createVaultSchema(validationParams),
     onSubmit: handleSubmit
   });
 
@@ -78,7 +83,7 @@ const DepositCollateralStep = ({
               balance={collateral.balance.raw.toString()}
               humanBalance={collateral.balance.raw.toHuman()}
               errorMessage={form.errors.deposit}
-              {...form.getFieldProps(forms.vaults.create.fields.deposit)}
+              {...form.getFieldProps(CREATE_VAULT_DEPOSIT_FIELD)}
             />
             <StyledDl>
               <StyledDItem>

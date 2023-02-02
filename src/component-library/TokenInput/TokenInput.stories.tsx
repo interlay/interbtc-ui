@@ -7,7 +7,7 @@ import Yup from '@/lib/form/yup.custom';
 import { TokenInput, TokenInputProps } from '.';
 
 const SwapSchema = Yup.object().shape({
-  deposit: Yup.number().requiredAmount().fees()
+  deposit: Yup.number().requiredAmount()
 });
 
 const Template: Story<TokenInputProps> = () => {

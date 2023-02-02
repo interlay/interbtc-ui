@@ -6,16 +6,8 @@ import { TFunction } from 'react-i18next';
 import * as yup from 'yup';
 import { AnyObject, Maybe } from 'yup/lib/types';
 
-type Params = {
-  balance?: MonetaryAmount<CurrencyExt>;
-  transactionFee?: MonetaryAmount<CurrencyExt>;
-  minAmount?: MonetaryAmount<CurrencyExt>;
-  governanceBalance?: MonetaryAmount<CurrencyExt>;
-};
-
 type YupContext = {
   t: TFunction;
-  params: Params;
 };
 
 yup.addMethod<yup.NumberSchema>(yup.number, 'requiredAmount', function () {
@@ -31,41 +23,44 @@ yup.addMethod<yup.NumberSchema>(yup.number, 'requiredAmount', function () {
   });
 });
 
+type FeesValidationParams = {
+  transactionFee: MonetaryAmount<CurrencyExt>;
+  governanceBalance: MonetaryAmount<CurrencyExt>;
+};
+
 // TODO: remove when fees are moved out of form validation
-yup.addMethod<yup.NumberSchema>(yup.number, 'fees', function () {
-  return this.test('fees', (_, ctx) => {
-    const { t, params } = ctx.options.context as YupContext;
+yup.addMethod<yup.NumberSchema>(
+  yup.number,
+  'fees',
+  function ({ transactionFee, governanceBalance }: FeesValidationParams) {
+    return this.test('fees', (_, ctx) => {
+      const { t } = ctx.options.context as YupContext;
 
-    // MEMO: this errors helps development
-    if (!params.transactionFee || !params.governanceBalance) {
-      return ctx.createError({ message: 'Something went wrong!' });
-    }
+      if (governanceBalance.lt(transactionFee)) {
+        const message = t('insufficient_funds_governance_token', {
+          governanceTokenSymbol: transactionFee.currency.ticker
+        });
+        return ctx.createError({ message });
+      }
 
-    if (params.governanceBalance.lt(params.transactionFee)) {
-      const message = t('insufficient_funds_governance_token', {
-        governanceTokenSymbol: params.transactionFee.currency.ticker
-      });
-      return ctx.createError({ message });
-    }
+      return true;
+    });
+  }
+);
 
-    return true;
-  });
-});
+type BalanceValidationParams = {
+  availableBalance: MonetaryAmount<CurrencyExt>;
+};
 
-yup.addMethod<yup.NumberSchema>(yup.number, 'balance', function () {
+yup.addMethod<yup.NumberSchema>(yup.number, 'balance', function ({ availableBalance }: BalanceValidationParams) {
   return this.test('balance', (value, ctx) => {
-    const { t, params } = ctx.options.context as YupContext;
+    const { t } = ctx.options.context as YupContext;
 
     if (value === undefined) return true;
 
     const amount = new Big(value);
 
-    // MEMO: this errors helps development
-    if (!params.availableBalance) {
-      return ctx.createError({ message: 'Something went wrong!' });
-    }
-
-    if (amount.gt(params.availableBalance.toBig())) {
+    if (amount.gt(availableBalance.toBig())) {
       const message = t('forms.please_enter_no_higher_available_balance');
       return ctx.createError({ message });
     }
@@ -74,24 +69,23 @@ yup.addMethod<yup.NumberSchema>(yup.number, 'balance', function () {
   });
 });
 
-yup.addMethod<yup.NumberSchema>(yup.number, 'minBalance', function () {
+type MinBalanceValidationParams = {
+  minAmount: MonetaryAmount<CurrencyExt>;
+};
+
+yup.addMethod<yup.NumberSchema>(yup.number, 'minAmount', function ({ minAmount }: MinBalanceValidationParams) {
   return this.test('balance', (value, ctx) => {
-    const { t, params } = ctx.options.context as YupContext;
+    const { t } = ctx.options.context as YupContext;
 
     if (value === undefined) return true;
 
     const amount = new Big(value);
 
-    // MEMO: this errors helps development
-    if (!params.minAmount) {
-      return ctx.createError({ message: 'Something went wrong!' });
-    }
-
-    if (amount.lt(params.minAmount.toBig())) {
+    if (amount.lt(minAmount.toBig())) {
       const message = t('forms.amount_must_be_at_least', {
         action: ctx.path,
-        amount: params.minAmount.toString(),
-        token: params.minAmount.currency.ticker
+        amount: minAmount.toString(),
+        token: minAmount.currency.ticker
       });
       return ctx.createError({ message });
     }
@@ -107,11 +101,11 @@ declare module 'yup' {
     TOut extends TType = TType
   > extends yup.BaseSchema<TType, TContext, TOut> {
     requiredAmount(): NumberSchema<TType, TContext>;
-    fees(): NumberSchema<TType, TContext>;
-    balance(): NumberSchema<TType, TContext>;
-    minBalance(): NumberSchema<TType, TContext>;
+    fees(params: FeesValidationParams): NumberSchema<TType, TContext>;
+    balance(params: BalanceValidationParams): NumberSchema<TType, TContext>;
+    minAmount(params: MinBalanceValidationParams): NumberSchema<TType, TContext>;
   }
 }
 
 export default yup;
-export type { YupContext };
+export type { BalanceValidationParams, FeesValidationParams, MinBalanceValidationParams, YupContext };
