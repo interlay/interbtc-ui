@@ -3,13 +3,25 @@ import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { TFunction } from 'react-i18next';
-import * as Yup from 'yup';
+import * as yup from 'yup';
 import { AnyObject, Maybe } from 'yup/lib/types';
 
-Yup.addMethod<Yup.NumberSchema>(Yup.number, 'requiredAmount', function () {
+type Params = {
+  balance?: MonetaryAmount<CurrencyExt>;
+  transactionFee?: MonetaryAmount<CurrencyExt>;
+  minAmount?: MonetaryAmount<CurrencyExt>;
+  governanceBalance?: MonetaryAmount<CurrencyExt>;
+};
+
+type YupContext = {
+  t: TFunction;
+  params: Params;
+};
+
+yup.addMethod<yup.NumberSchema>(yup.number, 'requiredAmount', function () {
   return this.transform((value) => (value === '' ? undefined : Number(value))).test('requiredAmount', (value, ctx) => {
     if (value === undefined) {
-      const { t } = ctx.options.context as { t: TFunction };
+      const { t } = ctx.options.context as YupContext;
 
       const message = t('forms.please_enter_the_amount_to', { field: ctx.path });
       return ctx.createError({ message });
@@ -20,19 +32,16 @@ Yup.addMethod<Yup.NumberSchema>(Yup.number, 'requiredAmount', function () {
 });
 
 // TODO: remove when fees are moved out of form validation
-Yup.addMethod<Yup.NumberSchema>(Yup.number, 'fees', function () {
+yup.addMethod<yup.NumberSchema>(yup.number, 'fees', function () {
   return this.test('fees', (_, ctx) => {
-    const { t, params } = ctx.options.context as {
-      t: TFunction;
-      params: { availableBalance?: MonetaryAmount<CurrencyExt>; transactionFee?: MonetaryAmount<CurrencyExt> };
-    };
+    const { t, params } = ctx.options.context as YupContext;
 
     // MEMO: this errors helps development
-    if (!params.transactionFee || !params.availableBalance) {
-      return ctx.createError({ message: 'Something went wrong! Please comeback later.' });
+    if (!params.transactionFee || !params.governanceBalance) {
+      return ctx.createError({ message: 'Something went wrong!' });
     }
 
-    if (params.availableBalance.lt(params.transactionFee)) {
+    if (params.governanceBalance.lt(params.transactionFee)) {
       const message = t('insufficient_funds_governance_token', {
         governanceTokenSymbol: params.transactionFee.currency.ticker
       });
@@ -43,12 +52,9 @@ Yup.addMethod<Yup.NumberSchema>(Yup.number, 'fees', function () {
   });
 });
 
-Yup.addMethod<Yup.NumberSchema>(Yup.number, 'balance', function () {
+yup.addMethod<yup.NumberSchema>(yup.number, 'balance', function () {
   return this.test('balance', (value, ctx) => {
-    const { t, params } = ctx.options.context as {
-      t: TFunction;
-      params: { availableBalance?: MonetaryAmount<CurrencyExt> };
-    };
+    const { t, params } = ctx.options.context as YupContext;
 
     if (value === undefined) return true;
 
@@ -56,7 +62,7 @@ Yup.addMethod<Yup.NumberSchema>(Yup.number, 'balance', function () {
 
     // MEMO: this errors helps development
     if (!params.availableBalance) {
-      return ctx.createError({ message: 'Something went wrong! Please comeback later.' });
+      return ctx.createError({ message: 'Something went wrong!' });
     }
 
     if (amount.gt(params.availableBalance.toBig())) {
@@ -68,12 +74,9 @@ Yup.addMethod<Yup.NumberSchema>(Yup.number, 'balance', function () {
   });
 });
 
-Yup.addMethod<Yup.NumberSchema>(Yup.number, 'minBalance', function () {
+yup.addMethod<yup.NumberSchema>(yup.number, 'minBalance', function () {
   return this.test('balance', (value, ctx) => {
-    const { t, params } = ctx.options.context as {
-      t: TFunction;
-      params: { minAmount?: MonetaryAmount<CurrencyExt> };
-    };
+    const { t, params } = ctx.options.context as YupContext;
 
     if (value === undefined) return true;
 
@@ -81,7 +84,7 @@ Yup.addMethod<Yup.NumberSchema>(Yup.number, 'minBalance', function () {
 
     // MEMO: this errors helps development
     if (!params.minAmount) {
-      return ctx.createError({ message: 'Something went wrong! Please comeback later.' });
+      return ctx.createError({ message: 'Something went wrong!' });
     }
 
     if (amount.lt(params.minAmount.toBig())) {
@@ -97,12 +100,12 @@ Yup.addMethod<Yup.NumberSchema>(Yup.number, 'minBalance', function () {
   });
 });
 
-declare module 'Yup' {
+declare module 'yup' {
   interface NumberSchema<
     TType extends Maybe<number> = number | undefined,
     TContext extends AnyObject = AnyObject,
     TOut extends TType = TType
-  > extends Yup.BaseSchema<TType, TContext, TOut> {
+  > extends yup.BaseSchema<TType, TContext, TOut> {
     requiredAmount(): NumberSchema<TType, TContext>;
     fees(): NumberSchema<TType, TContext>;
     balance(): NumberSchema<TType, TContext>;
@@ -110,4 +113,5 @@ declare module 'Yup' {
   }
 }
 
-export default Yup;
+export default yup;
+export type { YupContext };

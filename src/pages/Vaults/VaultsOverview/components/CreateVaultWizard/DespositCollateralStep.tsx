@@ -8,13 +8,11 @@ import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import { forms, useForm } from '@/lib/form';
+import { CreateVaultFormData, forms, isFormDisabled, useForm } from '@/lib/form';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
 import { StepComponentProps, withStep } from './Step';
-
-type CollateralFormData = { [forms.createVault.fields.deposit]?: number };
 
 type Props = {
   collateralCurrency: CollateralCurrencyExt;
@@ -35,23 +33,23 @@ const DepositCollateralStep = ({
 
   const validationParams = {
     minAmount: collateral.min.raw,
-    availableBalance: newMonetaryAmount(0, governance.raw.currency),
+    availableBalance: collateral.balance.raw,
     governanceBalance: governance.raw,
     transactionFee: fee.raw
   };
 
-  const handleSubmit = (data: CollateralFormData) => {
-    if (!data[DEPOSIT_COLLATERAL_AMOUNT]) return;
+  const handleSubmit = (data: CreateVaultFormData) => {
+    if (!data.deposit) return;
 
-    const amount = newMonetaryAmount(data[DEPOSIT_COLLATERAL_AMOUNT] || 0, collateral.currency, true);
+    const amount = newMonetaryAmount(data.deposit || 0, collateral.currency, true);
     registerNewVaultMutation.mutate(amount);
   };
 
-  const formik = useForm<CollateralFormData>({
-    initialValues: { [DEPOSIT_COLLATERAL_AMOUNT]: undefined },
-    onSubmit: handleSubmit,
+  const form = useForm<CreateVaultFormData>({
+    initialValues: { deposit: undefined },
     params: validationParams,
-    validationSchema: forms.createVault.schema
+    validationSchema: forms.vaults.create.schema,
+    onSubmit: handleSubmit
   });
 
   const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
@@ -61,19 +59,15 @@ const DepositCollateralStep = ({
     }
   );
 
-  const inputCollateralAmount = newMonetaryAmount(
-    formik.values[DEPOSIT_COLLATERAL_AMOUNT] || 0,
-    collateral.currency,
-    true
-  );
+  const inputCollateralAmount = newMonetaryAmount(form.values.deposit || 0, collateral.currency, true);
 
-  const isBtnDisabled = !formik.isValid || !formik.dirty;
+  const isBtnDisabled = isFormDisabled(form);
 
   return (
     <>
       <ModalHeader color='secondary'>{t('vault.deposit_collateral')}</ModalHeader>
       <ModalDivider color='secondary' />
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={form.handleSubmit}>
         <ModalBody>
           <Stack spacing='double'>
             <TokenInput
@@ -83,11 +77,8 @@ const DepositCollateralStep = ({
               valueUSD={convertMonetaryAmountToValueInUSD(inputCollateralAmount, collateral.price.usd) ?? 0}
               balance={collateral.balance.raw.toString()}
               humanBalance={collateral.balance.raw.toHuman()}
-              errorMessage={formik.errors[DEPOSIT_COLLATERAL_AMOUNT]}
-              name={DEPOSIT_COLLATERAL_AMOUNT}
-              onChange={formik.handleChange}
-              value={formik.values[DEPOSIT_COLLATERAL_AMOUNT]}
-              onBlur={formik.handleBlur}
+              errorMessage={form.errors.deposit}
+              {...form.getFieldProps(forms.vaults.create.fields.deposit)}
             />
             <StyledDl>
               <StyledDItem>

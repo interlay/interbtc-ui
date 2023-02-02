@@ -1,15 +1,26 @@
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { FormikConfig, FormikValues, useFormik, validateYupSchema, yupToFormErrors } from 'formik';
 import { ChangeEventHandler } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+
+import { YupContext } from './yup.custom';
+
 type ChangeDepHandler = (dep: string) => ChangeEventHandler<HTMLInputElement>;
+
+type UseFormAgrs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
+  params?: YupContext['params'];
+  handleChangeDep?: ChangeDepHandler;
+};
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useForm = <Values extends FormikValues = FormikValues>({
   validationSchema,
   params,
   ...args
-}: FormikConfig<Values> & { params?: any; handleChangeDep?: ChangeDepHandler }) => {
+}: UseFormAgrs<Values>) => {
   const { t } = useTranslation();
   const { validateForm, values, ...formik } = useFormik<Values>({
     ...args,
@@ -22,17 +33,23 @@ const useForm = <Values extends FormikValues = FormikValues>({
     }
   });
 
-  const handleChangeDep: ChangeDepHandler = (dep: string) => (e) => {
+  const handleChangeDep: ChangeDepHandler = (dep: string | string[]) => (e) => {
     formik.validateField(e.target.name);
-    setTimeout(() => formik.setFieldValue(dep, e.target.value || undefined, true), 0);
+
+    if (typeof dep === 'string') {
+      setTimeout(() => formik.setFieldValue(dep, e.target.value || undefined, true), 0);
+    }
+
+    // setTimeout(() => formik.setFieldValue(dep, e.target.value || undefined, true), 0);
   };
 
   return {
-    validateForm,
     values,
+    validateForm,
     handleChangeDep,
     ...formik
   };
 };
 
 export { useForm };
+export type { ChangeDepHandler };
