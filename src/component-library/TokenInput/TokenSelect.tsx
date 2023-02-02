@@ -76,6 +76,7 @@ const TokenSelect = ({ value, icons, tokens, isDisabled, onChange, selectProps }
                 // using our ref.
                 ref={assignFormRef(selectRef, inputRef)}
                 {...mergeProps(inputProps, { onChange: handleChange })}
+                autoComplete='off'
                 tabIndex={-1}
                 value={value}
               />
