@@ -12,9 +12,7 @@ const AccountSelector = (): JSX.Element => {
   return (
     <>
       <SelectTrigger onPress={() => setOpen(true)} ref={tokenButtonRef} placeholder='Select account' />
-      <AccountSelectorModal onClose={() => setOpen(false)} isOpen={isOpen}>
-        <p>A child</p>
-      </AccountSelectorModal>
+      <AccountSelectorModal onClose={() => setOpen(false)} isOpen={isOpen} />
     </>
   );
 };
