@@ -23,10 +23,12 @@ import InterlayTable, {
   InterlayTr
 } from '@/legacy-components/UI/InterlayTable';
 import StatusCell from '@/legacy-components/UI/InterlayTable/StatusCell';
+import ViewRequestDetailsLink from '@/legacy-components/ViewRequestDetailsLink';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useIssueRequests } from '@/services/hooks/issue-requests';
 import { issuesCountQuery } from '@/services/queries/issues';
+import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
@@ -91,6 +93,14 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: issue } }: any) {
           return <>{formatDateTimePrecise(new Date(issue.request.timestamp))}</>;
+        }
+      },
+      {
+        Header: t('view_details'),
+        classNames: ['text-left'],
+        // TODO: should type properly (`Relay`)
+        Cell: ({ row: { original: issue } }: any) => {
+          return <ViewRequestDetailsLink id={issue.id} txType={TXType.Issue} />;
         }
       },
       {
