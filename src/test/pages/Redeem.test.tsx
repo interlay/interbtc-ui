@@ -26,7 +26,7 @@ describe('redeem form', () => {
     userEvent.click(redeemTab);
   });
 
-  it('redeeming calls `redeem.request` method', async () => {
+  test('if the redeem method is called', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -52,7 +52,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
   });
 
-  it('the bridge fee is correctly displayed', async () => {
+  test('if the bridge fee is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -76,7 +76,7 @@ describe('redeem form', () => {
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
 
-  it('the Bitcoin network fee is correctly displayed', async () => {
+  test('if the Bitcoin network fee is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -101,7 +101,7 @@ describe('redeem form', () => {
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
   });
 
-  it('the total receiving amount is correctly displayed', async () => {
+  test('if the total receiving amount is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -131,7 +131,7 @@ describe('redeem form', () => {
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
 
-  it('the max redeemable amount is correctly displayed', async () => {
+  test('if the max redeemable amount is correctly displayed', async () => {
     const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-redeemable/i);
 
     const singleMaxRedeemableAmount = displayMonetaryAmount(mockVaultsWithRedeemableTokens.values().next().value);
