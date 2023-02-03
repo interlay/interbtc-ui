@@ -4,14 +4,14 @@ import { useSelector } from 'react-redux';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { Flex, TokenInput } from '@/component-library';
 import { SelectTrigger } from '@/component-library/Select/SelectTrigger';
-import { AccountSelector } from '@/components/AccountSelect';
+import { AccountInput } from '@/components/AccountSelect';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
 
 const CrossChainTransferForm = (): JSX.Element => {
   const { t } = useTranslation();
 
-  const { selectedAccount } = useSubstrateSecureState();
+  const { selectedAccount, accounts } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   return (
@@ -50,7 +50,7 @@ const CrossChainTransferForm = (): JSX.Element => {
               // errorMessage={'Error'}
             />
           </div>
-          <AccountSelector />
+          <AccountInput selectedAccount={selectedAccount} accounts={accounts} />
           <SubmitButton disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}>
             {selectedAccount ? t('transfer') : t('connect_wallet')}
           </SubmitButton>
