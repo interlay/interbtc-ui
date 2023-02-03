@@ -18,7 +18,7 @@ import {
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
-import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE, DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
@@ -56,6 +56,8 @@ import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 const BTC_ADDRESS = 'btc-address';
 const VAULT_SELECTION = 'vault-selection';
+
+const BTC_ADDRESS_LABEL = 'BTC Address';
 
 type RedeemFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
@@ -95,7 +97,7 @@ const RedeemForm = (): JSX.Element | null => {
     return new BitcoinAmount(wrappedTokenAmount);
   }, [wrappedTokenAmount]);
 
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
+  const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_REDEEM_DUST_AMOUNT));
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [redeemFeeRate, setRedeemFeeRate] = React.useState(new Big(DEFAULT_REDEEM_BRIDGE_FEE_RATE));
   const [btcToRelayChainNativeTokenRate, setBtcToRelayChainNativeTokenRate] = React.useState(
@@ -317,32 +319,21 @@ const RedeemForm = (): JSX.Element | null => {
       const monetaryValue = new BitcoinAmount(value);
 
       const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].free || newMonetaryAmount(0, WRAPPED_TOKEN);
-
       if (monetaryValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
       }
 
-      if (monetaryValue.gte(maxRedeemableCapacity)) {
+      if (monetaryValue.gt(maxRedeemableCapacity)) {
         return `${t('redeem_page.request_exceeds_capacity', {
           maxRedeemableAmount: `${maxRedeemableCapacity.toHuman(8)} ${ForeignAssetIdLiteral.BTC}`,
-          redeemRequestAmount: `${monetaryValue.toHuman()} ${ForeignAssetIdLiteral.BTC}`,
           btcIdLiteral: `${ForeignAssetIdLiteral.BTC}`
         })}`;
       }
 
       const bridgeFee = monetaryValue.mul(redeemFeeRate);
       const minValue = dustValue.add(currentInclusionFee).add(bridgeFee);
-
       if (monetaryValue.lte(minValue)) {
         return `${t('redeem_page.amount_greater_dust_inclusion')}${displayMonetaryAmount(minValue)} BTC).`;
-      }
-
-      if (!selectedAccount) {
-        return t('redeem_page.must_select_account_warning');
-      }
-
-      if (!bridgeLoaded) {
-        return 'Bridge must be loaded!';
       }
 
       if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
@@ -351,8 +342,8 @@ const RedeemForm = (): JSX.Element | null => {
         });
       }
 
-      const polkaBTCAmountInteger = value.toString().split('.')[0];
-      if (polkaBTCAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
+      const wrappedTokenAmountInteger = value.toString().split('.')[0];
+      if (wrappedTokenAmountInteger.length > BALANCE_MAX_INTEGER_LENGTH) {
         return 'Input value is too high!';
       }
 
@@ -447,7 +438,7 @@ const RedeemForm = (): JSX.Element | null => {
           <TextField
             id={BTC_ADDRESS}
             type='text'
-            label='BTC Address'
+            label={BTC_ADDRESS_LABEL}
             placeholder={t('enter_btc_address')}
             {...register(BTC_ADDRESS, {
               required: {
@@ -564,6 +555,8 @@ const RedeemForm = (): JSX.Element | null => {
 
   return null;
 };
+
+export { BTC_ADDRESS_LABEL };
 
 export default withErrorBoundary(RedeemForm, {
   FallbackComponent: ErrorFallback,

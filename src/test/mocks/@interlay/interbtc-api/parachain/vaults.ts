@@ -26,31 +26,21 @@ const MOCK_COLLATERAL_TOKEN = RELAY_CHAIN_NATIVE_TOKEN;
 
 const MOCK_BITCOIN_AMOUNT = 100;
 
-const mockVaultsWithIssuableTokens = new Map().set(
-  mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN),
-  new BitcoinAmount(MOCK_BITCOIN_AMOUNT)
+const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() =>
+  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
 );
 
-const mockVaultsWithRedeemableTokens = new Map().set(
-  mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN),
-  new BitcoinAmount(MOCK_BITCOIN_AMOUNT)
+const mockVaultsGetPremiumRedeemVaults = jest.fn(() =>
+  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
 );
 
-const mockVaultsWithPremiumRedeemableTokens = new Map().set(
-  mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN),
-  new BitcoinAmount(MOCK_BITCOIN_AMOUNT)
+const mockVaultsGetVaultsWithRedeemableTokens = jest.fn(() =>
+  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
 );
-
-const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => mockVaultsWithIssuableTokens);
-
-const mockVaultsGetPremiumRedeemVaults = jest.fn(() => mockVaultsWithPremiumRedeemableTokens);
-
-const mockVaultsGetVaultsWithRedeemableTokens = jest.fn(() => mockVaultsWithRedeemableTokens);
 
 export {
   mockVaultsGet,
   mockVaultsGetPremiumRedeemVaults,
   mockVaultsGetVaultsWithIssuableTokens,
-  mockVaultsGetVaultsWithRedeemableTokens,
-  mockVaultsWithRedeemableTokens
+  mockVaultsGetVaultsWithRedeemableTokens
 };

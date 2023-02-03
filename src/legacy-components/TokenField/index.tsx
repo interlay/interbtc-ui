@@ -33,6 +33,7 @@ const TokenField = React.forwardRef<HTMLInputElement, Props>(
             {...rest}
           />
           <TextFieldLabel
+            htmlFor={id}
             className={clsx('text-2xl', 'text-gray-400', 'font-medium', 'absolute', 'right-4', 'top-2')}
             required={required}
           >
@@ -54,6 +55,7 @@ const TokenField = React.forwardRef<HTMLInputElement, Props>(
           </span>
         </TextFieldContainer>
         <TextFieldHelperText
+          aria-labelledby={id}
           className={clsx(
             {
               [clsx(

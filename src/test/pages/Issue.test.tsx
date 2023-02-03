@@ -7,24 +7,29 @@ import Big from 'big.js';
 
 import App from '@/App';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { BLOCKS_BEHIND_LIMIT, DEFAULT_ISSUE_DUST_AMOUNT } from '@/config/parachain';
+import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import {
   MOCK_BITCOIN_HEIGHT,
   MOCK_BTC_RELAY_HEIGHT,
   MOCK_EXCHANGE_RATE,
-  MOCK_ISSUE_BRIDGE_FEE_RATE,
-  MOCK_ISSUE_GRIEFING_COLLATERAL_RATE,
-  MOCK_ISSUE_REQUEST_LIMITS,
   MOCK_TOKEN_BALANCE,
-  mockIssueRequest
+  mockBtcRelayGetLatestBlockHeight,
+  mockElectrsAPIGetLatestBlockHeight,
+  mockFeeGetIssueFee,
+  mockFeeGetIssueGriefingCollateralRate,
+  mockIssueGetDustValue,
+  mockIssueGetRequestLimits,
+  mockIssueRequest,
+  mockOracleGetExchangeRate,
+  mockTokensBalance
 } from '../mocks/@interlay/interbtc-api';
-import { DEFAULT_MOCK_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
+import { MOCK_TOKEN_PRICES, mockGovernanceTokenPriceInUsd } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const getBridgeFee = (inputAmount: number) => {
-  return new BitcoinAmount(inputAmount).mul(MOCK_ISSUE_BRIDGE_FEE_RATE);
+  return new BitcoinAmount(inputAmount).mul(mockFeeGetIssueFee());
 };
 
 const ISSUE_TAB_PATH = '/bridge?tab=issue';
@@ -35,7 +40,7 @@ const renderIssueForm = async (props?: any) => {
 
   const issueTab = screen.getByRole('tab', { name: /issue/i });
 
-  const issueTabpanel = screen.getByRole('tabpanel', {
+  const issueTabPanel = screen.getByRole('tabpanel', {
     name: /issue/i
   });
 
@@ -45,9 +50,11 @@ const renderIssueForm = async (props?: any) => {
 
   const submitButton = screen.getByRole('button', { name: /confirm/i });
 
+  const errorElement = within(issueTabPanel).getByRole('alert');
+
   return {
     tab: issueTab,
-    tabPanel: issueTabpanel,
+    errorElement,
     amountToIssueInput,
     submitButton,
     changeAmountToIssue: async (value: string) => await act(async () => userEvent.type(amountToIssueInput, value)),
@@ -83,7 +90,7 @@ describe('issue form', () => {
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInBTC);
 
-    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, DEFAULT_MOCK_PRICES.bitcoin.usd);
+    const bridgeFeeInUSD = displayMonetaryAmountInUSDFormat(bridgeFee, MOCK_TOKEN_PRICES.bitcoin.usd);
 
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
@@ -95,13 +102,13 @@ describe('issue form', () => {
 
     await changeAmountToIssue(inputAmount.toString());
 
-    const btcToGovernanceTokenRate = new ExchangeRate(Bitcoin, GOVERNANCE_TOKEN, MOCK_EXCHANGE_RATE);
+    const btcToGovernanceTokenRate = mockOracleGetExchangeRate(GOVERNANCE_TOKEN);
 
     const monetaryBtcAmount = new BitcoinAmount(inputAmount);
 
     const securityDeposit = btcToGovernanceTokenRate
       .toCounter(monetaryBtcAmount)
-      .mul(MOCK_ISSUE_GRIEFING_COLLATERAL_RATE);
+      .mul(mockFeeGetIssueGriefingCollateralRate());
 
     const securityDepositElement = screen.getByTestId(/security-deposit/i);
 
@@ -151,7 +158,7 @@ describe('issue form', () => {
 
     expect(totalElement).toHaveTextContent(totalInBTC);
 
-    const totalInUSD = displayMonetaryAmountInUSDFormat(total, DEFAULT_MOCK_PRICES.bitcoin.usd);
+    const totalInUSD = displayMonetaryAmountInUSDFormat(total, MOCK_TOKEN_PRICES.bitcoin.usd);
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
@@ -161,19 +168,19 @@ describe('issue form', () => {
 
     const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-issuable/i);
 
-    const singleMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable);
+    const singleMaxIssuableAmount = displayMonetaryAmount(mockIssueGetRequestLimits().singleVaultMaxIssuable);
 
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxIssuableAmount);
 
     const totalMaxIssuableAmountElement = screen.getByTestId(/total-max-issuable/i);
 
-    const totalMaxIssuableAmount = displayMonetaryAmount(MOCK_ISSUE_REQUEST_LIMITS.totalMaxIssuable);
+    const totalMaxIssuableAmount = displayMonetaryAmount(mockIssueGetRequestLimits().totalMaxIssuable);
 
     expect(totalMaxIssuableAmountElement).toHaveTextContent(totalMaxIssuableAmount);
   });
 
   test('when the governance token balance is less than required', async () => {
-    (window.bridge.tokens.balance as any).mockImplementation((currency: CurrencyExt, _id: AccountId) => {
+    mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
       if (currency.ticker === GOVERNANCE_TOKEN.ticker) {
         return new ChainBalance(currency, 0, 0);
       } else {
@@ -181,13 +188,11 @@ describe('issue form', () => {
       }
     });
 
-    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
     await changeAmountToIssue(inputAmount.toString());
-
-    const errorElement = within(tabPanel).getByRole('alert');
 
     expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient funds to pay for INTR fees."`);
 
@@ -195,19 +200,17 @@ describe('issue form', () => {
 
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
 
-    (window.bridge.tokens.balance as any).mockImplementation(
+    mockTokensBalance.mockImplementation(
       (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
     );
   });
 
   test('when the input amount is greater than the single vault max issuable amount', async () => {
-    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
-    const inputAmount = MOCK_ISSUE_REQUEST_LIMITS.singleVaultMaxIssuable.add(newMonetaryAmount('1', WRAPPED_TOKEN));
+    const inputAmount = mockIssueGetRequestLimits().singleVaultMaxIssuable.add(newMonetaryAmount('1', WRAPPED_TOKEN));
 
     await changeAmountToIssue(inputAmount.toString());
-
-    const errorElement = within(tabPanel).getByRole('alert');
 
     expect(errorElement.textContent).toMatchInlineSnapshot(`"Please enter less than 0.565 IBTC."`);
 
@@ -217,13 +220,11 @@ describe('issue form', () => {
   });
 
   test('when the input amount is less than the Bitcoin dust amount', async () => {
-    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
-    const inputAmount = new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT).sub(newMonetaryAmount(1, Bitcoin));
+    const inputAmount = mockIssueGetDustValue().sub(newMonetaryAmount(1, Bitcoin));
 
     await changeAmountToIssue(inputAmount.toString());
-
-    const errorElement = within(tabPanel).getByRole('alert');
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
       `"Please enter an amount greater than Bitcoin dust limit (0 BTC)."`
@@ -235,18 +236,14 @@ describe('issue form', () => {
   });
 
   test('when the parachain is more than 6 blocks behind', async () => {
-    (window.bridge.btcRelay.getLatestBlockHeight as any).mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
-    (window.bridge.electrsAPI.getLatestBlockHeight as any).mockImplementation(
-      () => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1
-    );
+    mockBtcRelayGetLatestBlockHeight.mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
+    mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1);
 
-    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
     await changeAmountToIssue(inputAmount.toString());
-
-    const errorElement = within(tabPanel).getByRole('alert');
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
       `"You can't issue IBTC at the moment because IBTC parachain is more than 6 blocks behind."`
@@ -256,22 +253,20 @@ describe('issue form', () => {
 
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
 
-    (window.bridge.btcRelay.getLatestBlockHeight as any).mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
-    (window.bridge.electrsAPI.getLatestBlockHeight as any).mockImplementation(() => MOCK_BITCOIN_HEIGHT);
+    mockBtcRelayGetLatestBlockHeight.mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
+    mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => MOCK_BITCOIN_HEIGHT);
   });
 
   test('when the oracle is offline', async () => {
-    (window.bridge.oracle.getExchangeRate as any).mockImplementation(
+    mockOracleGetExchangeRate.mockImplementation(
       (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, new Big(0))
     );
 
-    const { changeAmountToIssue, submitForm, tabPanel } = await renderIssueForm();
+    const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
     const inputAmount = 0.0001;
 
     await changeAmountToIssue(inputAmount.toString());
-
-    const errorElement = within(tabPanel).getByRole('alert');
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
       `"You can't issue IBTC at the moment because oracle is offline."`
@@ -281,7 +276,7 @@ describe('issue form', () => {
 
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
 
-    (window.bridge.oracle.getExchangeRate as any).mockImplementation(
+    mockOracleGetExchangeRate.mockImplementation(
       (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, MOCK_EXCHANGE_RATE)
     );
   });
