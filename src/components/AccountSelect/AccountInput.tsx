@@ -1,5 +1,5 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import { forwardRef, InputHTMLAttributes, useEffect, useState } from 'react';
+import { forwardRef, useState } from 'react';
 
 import { KeyringPair } from '@/lib/substrate';
 
@@ -9,20 +9,13 @@ import { AccountSelect } from './AccountSelect';
 type Props = {
   accounts?: InjectedAccountWithMeta[];
   selectedAccount?: KeyringPair;
-  selectProps?: InputHTMLAttributes<HTMLInputElement>;
 };
 
 type AccountInputProps = Props;
 
 const AccountInput = forwardRef<HTMLInputElement, AccountInputProps>(
-  ({ accounts = [], selectedAccount, selectProps }): JSX.Element => {
+  ({ accounts = [], selectedAccount }): JSX.Element => {
     const [accountValue, setAccountValue] = useState(selectedAccount?.address as string);
-
-    useEffect(() => {
-      if (selectProps?.value === undefined) return;
-
-      setAccountValue(selectProps.value as string);
-    }, [selectProps?.value]);
 
     const handleAccountChange = (account: string) => {
       setAccountValue(account);
@@ -38,7 +31,6 @@ const AccountInput = forwardRef<HTMLInputElement, AccountInputProps>(
           isDisabled={isSelectDisabled}
           accounts={accounts}
           onChange={handleAccountChange}
-          selectProps={selectProps}
         />
       </>
     );
