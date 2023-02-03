@@ -10,12 +10,12 @@ type YupContext = {
   t: TFunction;
 };
 
-yup.addMethod<yup.NumberSchema>(yup.number, 'requiredAmount', function () {
+yup.addMethod<yup.NumberSchema>(yup.number, 'requiredAmount', function (action: string) {
   return this.transform((value) => (value === '' ? undefined : Number(value))).test('requiredAmount', (value, ctx) => {
     if (value === undefined) {
       const { t } = ctx.options.context as YupContext;
 
-      const message = t('forms.please_enter_the_amount_to', { field: ctx.path });
+      const message = t('forms.please_enter_the_amount_to', { field: action });
       return ctx.createError({ message });
     }
 
@@ -48,51 +48,66 @@ yup.addMethod<yup.NumberSchema>(
   }
 );
 
-type BalanceValidationParams = {
-  availableBalance: MonetaryAmount<CurrencyExt>;
+type MaxAmountValidationParams = {
+  maxAmount: MonetaryAmount<CurrencyExt> | Big;
 };
 
-yup.addMethod<yup.NumberSchema>(yup.number, 'balance', function ({ availableBalance }: BalanceValidationParams) {
-  return this.test('balance', (value, ctx) => {
-    const { t } = ctx.options.context as YupContext;
+yup.addMethod<yup.NumberSchema>(
+  yup.number,
+  'maxAmount',
+  function ({ maxAmount }: MaxAmountValidationParams, action?: string) {
+    return this.test('maxAmount', (value, ctx) => {
+      const { t } = ctx.options.context as YupContext;
 
-    if (value === undefined) return true;
+      if (value === undefined) return true;
 
-    const amount = new Big(value);
+      const amount = new Big(value);
 
-    if (amount.gt(availableBalance.toBig())) {
-      const message = t('forms.please_enter_no_higher_available_balance');
-      return ctx.createError({ message });
-    }
+      const isMonetaryAmount = (maxAmount as MonetaryAmount<CurrencyExt>).currency;
 
-    return true;
-  });
-});
+      if (isMonetaryAmount && amount.gt((maxAmount as MonetaryAmount<CurrencyExt>).toBig())) {
+        const message = t('forms.please_enter_no_higher_available_balance');
+        return ctx.createError({ message });
+      }
 
-type MinBalanceValidationParams = {
+      if (amount.gt(maxAmount as Big)) {
+        const message = t('forms.amount_must_be_at_most', { action, amount: maxAmount.toString() });
+        return ctx.createError({ message });
+      }
+
+      return true;
+    });
+  }
+);
+
+type MinAmountValidationParams = {
   minAmount: MonetaryAmount<CurrencyExt>;
 };
 
-yup.addMethod<yup.NumberSchema>(yup.number, 'minAmount', function ({ minAmount }: MinBalanceValidationParams) {
-  return this.test('balance', (value, ctx) => {
-    const { t } = ctx.options.context as YupContext;
+yup.addMethod<yup.NumberSchema>(
+  yup.number,
+  'minAmount',
+  function ({ minAmount }: MinAmountValidationParams, action: string) {
+    return this.test('balance', (value, ctx) => {
+      const { t } = ctx.options.context as YupContext;
 
-    if (value === undefined) return true;
+      if (value === undefined) return true;
 
-    const amount = new Big(value);
+      const amount = new Big(value);
 
-    if (amount.lt(minAmount.toBig())) {
-      const message = t('forms.amount_must_be_at_least', {
-        action: ctx.path,
-        amount: minAmount.toString(),
-        token: minAmount.currency.ticker
-      });
-      return ctx.createError({ message });
-    }
+      if (amount.lt(minAmount.toBig())) {
+        const message = t('forms.amount_must_be_at_least', {
+          action,
+          amount: minAmount.toString(),
+          token: minAmount.currency.ticker
+        });
+        return ctx.createError({ message });
+      }
 
-    return true;
-  });
-});
+      return true;
+    });
+  }
+);
 
 declare module 'yup' {
   interface NumberSchema<
@@ -100,12 +115,12 @@ declare module 'yup' {
     TContext extends AnyObject = AnyObject,
     TOut extends TType = TType
   > extends yup.BaseSchema<TType, TContext, TOut> {
-    requiredAmount(): NumberSchema<TType, TContext>;
+    requiredAmount(action: string): NumberSchema<TType, TContext>;
     fees(params: FeesValidationParams): NumberSchema<TType, TContext>;
-    balance(params: BalanceValidationParams): NumberSchema<TType, TContext>;
-    minAmount(params: MinBalanceValidationParams): NumberSchema<TType, TContext>;
+    maxAmount(params: MaxAmountValidationParams, action?: string): NumberSchema<TType, TContext>;
+    minAmount(params: MinAmountValidationParams, action: string): NumberSchema<TType, TContext>;
   }
 }
 
 export default yup;
-export type { BalanceValidationParams, FeesValidationParams, MinBalanceValidationParams, YupContext };
+export type { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams, YupContext };

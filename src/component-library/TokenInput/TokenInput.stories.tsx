@@ -1,4 +1,3 @@
-import { chain } from '@react-aria/utils';
 import { Meta, Story } from '@storybook/react';
 
 import { useForm } from '@/lib/form';
@@ -7,7 +6,7 @@ import Yup from '@/lib/form/yup.custom';
 import { TokenInput, TokenInputProps } from '.';
 
 const SwapSchema = Yup.object().shape({
-  deposit: Yup.number().requiredAmount()
+  deposit: Yup.mixed()
 });
 
 const Template: Story<TokenInputProps> = () => {
@@ -29,7 +28,7 @@ const Template: Story<TokenInputProps> = () => {
       <form onSubmit={formik.handleSubmit}>
         <TokenInput
           name='deposit'
-          onChange={chain(formik.handleChange, formik.handleChangeDep('output'))}
+          onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.deposit}
           aria-label='token field'

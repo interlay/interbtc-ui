@@ -39,7 +39,7 @@ const DepositCollateralStep = ({
 
   const validationParams = {
     minAmount: collateral.min.raw,
-    availableBalance: collateral.balance.raw,
+    maxAmount: collateral.balance.raw,
     governanceBalance: governance.raw,
     transactionFee: fee.raw
   };

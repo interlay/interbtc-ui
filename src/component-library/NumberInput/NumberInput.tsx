@@ -45,6 +45,7 @@ const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
       formatOptions: formatOptions || defaultFormatOptions,
       locale
     });
+
     const { inputProps, descriptionProps, errorMessageProps, labelProps } = useNumberField(
       { ...props, value, validationState: props.errorMessage ? 'invalid' : validationState },
       state,
