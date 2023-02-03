@@ -10,7 +10,7 @@ import { assignFormRef, triggerChangeEvent } from '@/component-library/utils/inp
 import { StyledAccount, StyledAccountSelect, StyledChevronDown } from './AccountInput.style';
 import { AccountListModal } from './AccountListModal';
 
-const Icon = ({ value }: Pick<AccountSelectProps, 'value' | 'icons'>) => {
+const Icon = ({ value }: Pick<AccountSelectProps, 'value'>) => {
   return <Identicon size={32} value={value} theme='polkadot' />;
 };
 
@@ -18,14 +18,13 @@ type SelectProps = InputHTMLAttributes<HTMLInputElement> & { ref?: any };
 
 type AccountSelectProps = {
   value?: string;
-  icons?: string[];
   isDisabled: boolean;
   accounts: InjectedAccountWithMeta[];
   onChange: (account: string) => void;
   selectProps?: SelectProps;
 };
 
-const AccountSelect = ({ value, icons, accounts, onChange, selectProps }: AccountSelectProps): JSX.Element => {
+const AccountSelect = ({ value, accounts, onChange, selectProps }: AccountSelectProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
 
   const accountButtonRef = useRef<HTMLDivElement>(null);
@@ -57,7 +56,7 @@ const AccountSelect = ({ value, icons, accounts, onChange, selectProps }: Accoun
         $isClickable={true}
         {...buttonProps}
       >
-        <Icon value={value} icons={icons} />
+        <Icon value={value} />
         <StyledAccount>{value || 'Select Account'}</StyledAccount>
         <>
           <StyledChevronDown size='s' />
