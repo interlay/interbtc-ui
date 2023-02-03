@@ -12,6 +12,9 @@ const withdraw = (t: TFunction, params: PoolWithdrawSchemaParams): z.ZodEffects<
   z.string().superRefine((value, ctx) => {
     const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
+    const parsed = parseInt(value);
+    if (isNaN(parsed)) return;
+
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('withdraw').toLowerCase(), fieldType: 'number' });
       return ctx.addIssue(issueArg);

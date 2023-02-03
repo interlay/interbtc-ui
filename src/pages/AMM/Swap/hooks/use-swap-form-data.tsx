@@ -1,11 +1,11 @@
-import { newMonetaryAmount, Trade } from '@interlay/interbtc-api';
+import { Trade } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, formatUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { TokenInputProps } from '@/component-library';
 import { SwapPair } from '@/types/swap';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -92,7 +92,7 @@ const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | n
       valueUSD:
         inputAmount && pair.input
           ? convertMonetaryAmountToValueInUSD(
-              newMonetaryAmount(inputAmount, pair.input, true),
+              newSafeMonetaryAmount(inputAmount, pair.input, true),
               getTokenPrice(prices, pair.input.ticker)?.usd
             ) || 0
           : 0

@@ -13,6 +13,9 @@ const borrow = (t: TFunction, params: LoanBorrowSchemaParams): z.ZodEffects<z.Zo
   z.string().superRefine((value, ctx) => {
     const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
 
+    const parsed = parseInt(value);
+    if (isNaN(parsed)) return;
+
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('loans.borrow').toLowerCase(), fieldType: 'number' });
       return ctx.addIssue(issueArg);
@@ -46,6 +49,9 @@ type LoanRepaySchemaParams = CommonSchemaParams & MaxAmountSchemaParams & Availa
 const repay = (t: TFunction, params: LoanRepaySchemaParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
     const { governanceBalance, transactionFee, availableBalance, minAmount, maxAmount } = params;
+
+    const parsed = parseInt(value);
+    if (isNaN(parsed)) return;
 
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('loans.repay').toLowerCase(), fieldType: 'number' });

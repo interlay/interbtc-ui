@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import * as z from 'zod';
 
-import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
@@ -67,7 +67,7 @@ const DepositCollateralStep = ({
   );
 
   const inputCollateral = watch(DEPOSIT_COLLATERAL_AMOUNT) || '0';
-  const inputCollateralAmount = newMonetaryAmount(inputCollateral, collateral.currency, true);
+  const inputCollateralAmount = newSafeMonetaryAmount(inputCollateral, collateral.currency, true);
 
   const handleSubmit = async (data: CollateralFormData) => {
     const amount = newMonetaryAmount(data[DEPOSIT_COLLATERAL_AMOUNT], collateral.currency, true);

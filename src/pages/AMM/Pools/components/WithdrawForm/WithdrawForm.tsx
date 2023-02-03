@@ -10,7 +10,11 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
 
-import { convertMonetaryAmountToValueInUSD, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmountInUSDFormat,
+  newSafeMonetaryAmount
+} from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -107,7 +111,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   };
 
   const data = watch();
-  const lpTokenMonetaryAmount = newMonetaryAmount(data[FormFields.WITHDRAW_AMOUNT] || 0, pool.lpToken, true);
+  const lpTokenMonetaryAmount = newSafeMonetaryAmount(data[FormFields.WITHDRAW_AMOUNT] || 0, pool.lpToken, true);
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
 
