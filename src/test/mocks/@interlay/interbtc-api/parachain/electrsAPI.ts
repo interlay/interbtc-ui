@@ -1,5 +1,5 @@
-const DEFAULT_BTC_BLOCK_HEIGHT = 1000;
+const MOCK_BITCOIN_HEIGHT = 1000;
 
-const mockElectrsAPIGetLatestBlockHeight = jest.fn(() => DEFAULT_BTC_BLOCK_HEIGHT);
+const mockElectrsAPIGetLatestBlockHeight = jest.fn(() => MOCK_BITCOIN_HEIGHT);
 
-export { mockElectrsAPIGetLatestBlockHeight };
+export { MOCK_BITCOIN_HEIGHT, mockElectrsAPIGetLatestBlockHeight };

@@ -80,7 +80,7 @@ const TextFieldLabel = ({
 );
 
 const TextFieldHelperText = ({ className, ...rest }: React.ComponentPropsWithRef<'p'>): JSX.Element => (
-  <p className={clsx('text-sm', className)} {...rest} />
+  <p role='alert' className={clsx('text-sm', className)} {...rest} />
 );
 
 export { TextFieldContainer, TextFieldHelperText, TextFieldLabel };
