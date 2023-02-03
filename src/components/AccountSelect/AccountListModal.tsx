@@ -1,4 +1,5 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import Identicon from '@polkadot/react-identicon';
 
 import { Modal, ModalBody, ModalHeader, ModalProps } from '@/component-library';
 
@@ -17,7 +18,10 @@ const AccountSelectorModal = ({ accounts, ...props }: TokenListModalProps): JSX.
     </ModalHeader>
     <ModalBody overflow='hidden' noPadding>
       {accounts.map((account) => (
-        <p key={account.address}>{account.address}</p>
+        <p key={account.address}>
+          <Identicon value={account.address} theme='polkadot' />
+          {account.address}
+        </p>
       ))}
     </ModalBody>
   </Modal>

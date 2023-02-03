@@ -3,12 +3,13 @@ import { useRef, useState } from 'react';
 import { SelectTrigger } from '@/component-library/Select/SelectTrigger';
 import { useSubstrateSecureState } from '@/lib/substrate';
 
-import { AccountSelectorModal } from './AccountSelectorModal';
+import { AccountSelectorModal } from './AccountListModal';
 
 const AccountSelector = (): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
 
-  const { accounts } = useSubstrateSecureState();
+  const { selectedAccount, accounts } = useSubstrateSecureState();
+  console.log(selectedAccount);
 
   const tokenButtonRef = useRef<HTMLButtonElement>(null);
 
