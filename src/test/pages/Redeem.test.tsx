@@ -3,12 +3,13 @@ import '@testing-library/jest-dom';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import App from '@/App';
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 
 import {
   MOCK_REDEEM_BRIDGE_FEE_RATE,
   MOCK_REDEEM_CURRENT_INCLUSION_FEE,
-  mockRedeemRequest
+  mockRedeemRequest,
+  mockVaultsWithRedeemableTokens
 } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_MOCK_PRICES } from '../mocks/fetch';
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
@@ -25,7 +26,7 @@ describe('redeem form', () => {
     userEvent.click(redeemTab);
   });
 
-  it('redeeming calls `redeem.request` method', async () => {
+  test('if the redeem method is called', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -51,7 +52,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
   });
 
-  it('the bridge fee is correctly displayed', async () => {
+  test('if the bridge fee is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -75,7 +76,7 @@ describe('redeem form', () => {
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
 
-  it('the Bitcoin network fee is correctly displayed', async () => {
+  test('if the Bitcoin network fee is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -100,7 +101,7 @@ describe('redeem form', () => {
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
   });
 
-  it('the total receiving amount is correctly displayed', async () => {
+  test('if the total receiving amount is correctly displayed', async () => {
     const textboxElements = screen.getAllByRole('textbox');
 
     const amountToRedeemInput = textboxElements[0];
@@ -128,5 +129,13 @@ describe('redeem form', () => {
     const totalInUSD = displayMonetaryAmountInUSDFormat(total, DEFAULT_MOCK_PRICES.bitcoin.usd);
 
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
+  });
+
+  test('if the max redeemable amount is correctly displayed', async () => {
+    const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-redeemable/i);
+
+    const singleMaxRedeemableAmount = displayMonetaryAmount(mockVaultsWithRedeemableTokens.values().next().value);
+
+    expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxRedeemableAmount);
   });
 });

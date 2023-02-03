@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import React from 'react';
 
 import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -10,11 +9,11 @@ interface Props extends React.HTMLAttributes<unknown> {
   tokenSymbol: string;
 }
 
-const AvailableBalanceUI = ({ balance, label, tokenSymbol, onClick, className, ...props }: Props): JSX.Element => {
+const AvailableBalanceUI = ({ balance, label, tokenSymbol, onClick, className, ...rest }: Props): JSX.Element => {
   const Balance = onClick ? InterlayButtonBase : 'span';
 
   return (
-    <div className={clsx('space-x-1', className)} {...props}>
+    <div className={clsx('space-x-1', className)} {...rest}>
       <span
         className={clsx(
           { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },

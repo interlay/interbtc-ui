@@ -11,7 +11,7 @@ import { useDebounce } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
 import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
-import { AuthCTA } from '@/legacy-components/AuthCTA';
+import { AuthCTA } from '@/components';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { SwapPair } from '@/types/swap';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
