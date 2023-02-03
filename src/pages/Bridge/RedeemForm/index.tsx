@@ -323,7 +323,7 @@ const RedeemForm = (): JSX.Element | null => {
         return `${t('redeem_page.current_balance')}${displayMonetaryAmount(wrappedTokenBalance)}`;
       }
 
-      if (monetaryValue.gte(maxRedeemableCapacity)) {
+      if (monetaryValue.gt(maxRedeemableCapacity)) {
         return `${t('redeem_page.request_exceeds_capacity', {
           maxRedeemableAmount: `${maxRedeemableCapacity.toHuman(8)} ${ForeignAssetIdLiteral.BTC}`,
           btcIdLiteral: `${ForeignAssetIdLiteral.BTC}`
