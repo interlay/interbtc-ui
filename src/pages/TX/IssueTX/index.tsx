@@ -39,6 +39,7 @@ const IssueTX = (): JSX.Element => {
   } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
+  // ray test touch <
   const {
     isIdle: issuesIdle,
     isLoading: issuesLoading,
@@ -54,6 +55,7 @@ const IssueTX = (): JSX.Element => {
     ],
     issuesFetcher
   );
+  // ray test touch >
   useErrorHandler(issuesError);
 
   if (

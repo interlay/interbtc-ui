@@ -91,6 +91,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
   );
   useErrorHandler(redeemRequestsTotalCountError);
 
+  // ray test touch <<
   const {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
@@ -109,6 +110,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
       refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
     }
   );
+  // ray test touch >>
   useErrorHandler(redeemRequestsError);
 
   const columns = React.useMemo(

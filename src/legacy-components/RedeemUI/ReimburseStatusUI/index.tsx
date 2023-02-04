@@ -73,7 +73,9 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
     },
     {
       onSuccess: () => {
+        // ray test touch <
         queryClient.invalidateQueries([REDEEMS_FETCHER]);
+        // ray test touch >
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },
@@ -90,7 +92,9 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
     },
     {
       onSuccess: () => {
+        // ray test touch <
         queryClient.invalidateQueries([REDEEMS_FETCHER]);
+        // ray test touch >
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },

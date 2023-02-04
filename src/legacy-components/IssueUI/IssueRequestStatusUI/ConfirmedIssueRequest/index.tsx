@@ -32,6 +32,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
 
   const queryClient = useQueryClient();
+  // ray test touch <
   // TODO: should type properly (`Relay`)
   const executeMutation = useMutation<void, Error, any>(
     (variables: any) => {
@@ -47,6 +48,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
       }
     }
   );
+  // ray test touch >
 
   return (
     <>
@@ -80,6 +82,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
         </p>
         <ManualIssueExecutionUI request={request} />
       </RequestWrapper>
+      {/* ray test touch < */}
       {executeMutation.isError && executeMutation.error && (
         <ErrorModal
           open={!!executeMutation.error}
@@ -92,6 +95,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
           }
         />
       )}
+      {/* ray test touch > */}
     </>
   );
 };

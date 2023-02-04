@@ -39,6 +39,7 @@ const RedeemTX = (): JSX.Element => {
   } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
 
+  // ray test touch <<
   const {
     isIdle: redeemsIdle,
     isLoading: redeemsLoading,
@@ -54,6 +55,7 @@ const RedeemTX = (): JSX.Element => {
     ],
     redeemsFetcher
   );
+  // ray test touch >>
   useErrorHandler(redeemsError);
 
   if (

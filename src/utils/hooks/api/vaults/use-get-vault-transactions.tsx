@@ -149,6 +149,7 @@ const useGetVaultTransactions = (
   } = useStableParachainConfirmations();
   useErrorHandler(stableParachainConfirmationsError);
 
+  // ray test touch <
   // TODO: remove the dependency on legacy issuesFetcher and redeemFetcher
   const { data: issues, error: issuesError } = useQuery<any, Error>(
     [
@@ -160,8 +161,10 @@ const useGetVaultTransactions = (
     issuesFetcher,
     { enabled: currenciesSuccess }
   );
+  // ray test touch >
   useErrorHandler(issuesError);
 
+  // ray test touch <
   const { data: redeems, error: redeemsError } = useQuery<any, Error>(
     [
       REDEEMS_FETCHER,
@@ -172,6 +175,7 @@ const useGetVaultTransactions = (
     redeemsFetcher,
     { enabled: currenciesSuccess }
   );
+  // ray test touch >
   useErrorHandler(redeemsError);
 
   // TODO: removing the generic fetcher in this instance caused a type error. This needs to be fixed.

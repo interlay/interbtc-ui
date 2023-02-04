@@ -6,12 +6,14 @@ import { useManualIssueRequests } from '@/services/hooks/issue-requests';
 import { PAGES } from '@/utils/constants/links';
 
 const ManualIssueExecutionActionsBadge = (): JSX.Element => {
+  // ray test touch <
   const {
     isIdle: manualIssueRequestsIdle,
     isLoading: manualIssueRequestsLoading,
     data: manualIssueRequests,
     error: manualIssueRequestsError
   } = useManualIssueRequests();
+  // ray test touch >
   useErrorHandler(manualIssueRequestsError);
 
   const disabled = manualIssueRequestsIdle || manualIssueRequestsLoading || manualIssueRequests?.length === 0;

@@ -200,6 +200,7 @@ const RedeemRequestsTable = (): JSX.Element => {
 
   const selectedPageIndex = selectedPage - 1;
 
+  // ray test touch <<
   const {
     isIdle: redeemsIdle,
     isLoading: redeemsLoading,
@@ -214,6 +215,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     ],
     redeemsFetcher
   );
+  // ray test touch >>
   useErrorHandler(redeemsError);
 
   const {

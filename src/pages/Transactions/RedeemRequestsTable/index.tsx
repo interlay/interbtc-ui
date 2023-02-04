@@ -86,6 +86,7 @@ const RedeemRequestsTable = (): JSX.Element => {
   );
   useErrorHandler(redeemRequestsTotalCountError);
 
+  // ray test touch <<
   const {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
@@ -104,6 +105,7 @@ const RedeemRequestsTable = (): JSX.Element => {
       refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
     }
   );
+  // ray test touch >>
   useErrorHandler(redeemRequestsError);
 
   const columns = React.useMemo(

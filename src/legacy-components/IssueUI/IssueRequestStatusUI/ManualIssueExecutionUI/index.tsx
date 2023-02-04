@@ -65,7 +65,9 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
     },
     {
       onSuccess: (_, variables) => {
+        // ray test touch <
         queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
+        // ray test touch >
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
       }
     }
@@ -87,10 +89,12 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
     }
   });
 
+  // ray test touch <
   // TODO: should type properly (`Relay`)
   const handleExecute = (request: any) => () => {
     executeMutation.mutate(request);
   };
+  // ray test touch >
 
   const backingPaymentAmount = newMonetaryAmount(request.backingPayment.amount, WRAPPED_TOKEN);
 
