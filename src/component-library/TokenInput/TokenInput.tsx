@@ -13,6 +13,11 @@ import { TokenInputLabel } from './TokenInputLabel';
 import { TokenData } from './TokenList';
 import { TokenSelect } from './TokenSelect';
 
+function convertExponentialToNormal(exponentialNumber: number) {
+  const normalNumber = parseFloat(exponentialNumber.toString()).toFixed(20);
+  return normalNumber.replace(/0+$/, '').replace(/\.$/, '');
+}
+
 type SingleToken = string;
 
 type MultiToken = { text: string; icons: string[] };
@@ -91,7 +96,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     }, [selectProps?.value]);
 
     const handleClickBalance = () => {
-      triggerChangeEvent(inputRef, balance);
+      if (!balance) return;
+
+      triggerChangeEvent(inputRef, convertExponentialToNormal(balance));
       onClickBalance?.(balance);
     };
 
