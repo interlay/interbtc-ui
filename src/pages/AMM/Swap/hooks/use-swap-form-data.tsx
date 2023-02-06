@@ -66,11 +66,17 @@ const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | n
 
   const tokens: TokenInputProps['tokens'] = useMemo(
     () =>
-      currencies?.map((currency) => ({
-        balance: getAvailableBalance(currency.ticker)?.toBig().toNumber() || 0,
-        balanceUSD: formatUSD(getTokenPrice(prices, currency.ticker)?.usd || 0),
-        ticker: currency.ticker
-      })),
+      currencies?.map((currency) => {
+        const balance = getAvailableBalance(currency.ticker);
+        const balanceUSD = balance
+          ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
+          : 0;
+        return {
+          balance: Number(balance?.toBig().toFixed(balance.currency.humanDecimals)) || 0,
+          balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
+          ticker: currency.ticker
+        };
+      }),
     [currencies, getAvailableBalance, prices]
   );
 

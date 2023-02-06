@@ -52,7 +52,7 @@ const SwapInfo = ({ trade, slippage }: SwapInfoProps): JSX.Element | null => {
             </DlGroup>
             <DlGroup justifyContent='space-between'>
               <Dt size='s' color='primary'>
-                Prices Impact
+                Price Impact
               </Dt>
               {/* TODO: handle small percentages */}
               <Dd size='s'>{formatPercentage(priceImpact.toNumber())}</Dd>
