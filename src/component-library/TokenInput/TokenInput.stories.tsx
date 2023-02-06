@@ -4,15 +4,15 @@ import { useState } from 'react';
 import { TokenInput, TokenInputProps } from '.';
 
 const Template: Story<TokenInputProps> = (args) => {
-  const [value, setValue] = useState<number>();
+  const [value, setValue] = useState<string>();
 
   return (
     <TokenInput
       {...args}
       value={value}
-      onChange={(e) => setValue(Number(e.target.value || 0))}
+      onChange={(e) => setValue(e.target.value)}
       aria-label='token field'
-      valueUSD={(value || 0) * 10}
+      // valueUSD={(value || 0) * 10}
     />
   );
 };
@@ -20,7 +20,7 @@ const Template: Story<TokenInputProps> = (args) => {
 const WithBalance = Template.bind({});
 WithBalance.args = {
   defaultTicker: 'KSM',
-  balance: 1000.0,
+  balance: 0.0000000000000023232,
   decimals: 8,
   balanceLabel: 'Balance',
   placeholder: '0.00',

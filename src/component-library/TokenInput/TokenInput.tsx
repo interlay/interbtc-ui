@@ -2,10 +2,9 @@ import { useLabel } from '@react-aria/label';
 import { mergeProps } from '@react-aria/utils';
 import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useState } from 'react';
 
-import { formatUSD } from '@/common/utils/utils';
-
 import { Flex } from '../Flex';
 import { NumberInput, NumberInputProps } from '../NumberInput';
+import { convertExponentialToNormal } from '../utils/decimals';
 import { useDOMRef } from '../utils/dom';
 import { triggerChangeEvent } from '../utils/input';
 import { StyledUSDAdornment } from './TokenInput.style';
@@ -18,16 +17,6 @@ type SingleToken = string;
 type MultiToken = { text: string; icons: string[] };
 
 type TokenTicker = SingleToken | MultiToken;
-
-const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
-  if (!decimals) return;
-
-  return {
-    style: 'decimal',
-    maximumFractionDigits: decimals || 20,
-    useGrouping: false
-  };
-};
 
 type Props = {
   decimals?: number;
@@ -50,7 +39,6 @@ type TokenInputProps = Props & InheritAttrs;
 const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
-      decimals,
       valueUSD,
       balance,
       balanceLabel,
@@ -91,7 +79,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     }, [selectProps?.value]);
 
     const handleClickBalance = () => {
-      triggerChangeEvent(inputRef, balance);
+      if (!balance) return;
+
+      triggerChangeEvent(inputRef, convertExponentialToNormal(balance));
       onClickBalance?.(balance);
     };
 
@@ -115,8 +105,6 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       />
     );
 
-    const formatOptions = getFormatOptions(decimals);
-
     const hasLabel = !!label || balance !== undefined;
 
     return (
@@ -136,14 +124,10 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         )}
         <NumberInput
           ref={inputRef}
-          minValue={0}
           size='large'
           isDisabled={isDisabled}
-          formatOptions={formatOptions}
           endAdornment={endAdornment}
-          bottomAdornment={
-            <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
-          }
+          bottomAdornment={<StyledUSDAdornment $isDisabled={isDisabled}>{valueUSD}</StyledUSDAdornment>}
           {...mergeProps(props, fieldProps)}
         />
       </Flex>

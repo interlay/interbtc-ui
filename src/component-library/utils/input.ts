@@ -9,6 +9,7 @@ const triggerChangeEvent = (
   ref: RefObject<HTMLInputElement>,
   value: string | ReadonlyArray<string> | number = ''
 ): void => {
+  console.log(value);
   const setValue = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
   setValue?.call(ref.current, value);
 
