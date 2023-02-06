@@ -8,14 +8,14 @@ import { AccountSelect } from './AccountSelect';
 
 type Props = {
   accounts?: InjectedAccountWithMeta[];
-  defaultAccount?: KeyringPair;
+  account?: KeyringPair;
 };
 
 type AccountInputProps = Props;
 
 const AccountInput = forwardRef<HTMLInputElement, AccountInputProps>(
-  ({ accounts = [], defaultAccount }): JSX.Element => {
-    const [accountValue, setAccountValue] = useState(defaultAccount?.address);
+  ({ accounts = [], account }): JSX.Element => {
+    const [accountValue, setAccountValue] = useState(account?.address);
 
     const handleAccountChange = (account: string) => {
       setAccountValue(account);

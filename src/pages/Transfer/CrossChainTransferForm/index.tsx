@@ -50,7 +50,7 @@ const CrossChainTransferForm = (): JSX.Element => {
               // errorMessage={'Error'}
             />
           </div>
-          <AccountInput defaultAccount={selectedAccount} accounts={accounts} />
+          <AccountInput account={selectedAccount} accounts={accounts} />
           <SubmitButton disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}>
             {selectedAccount ? t('transfer') : t('connect_wallet')}
           </SubmitButton>
