@@ -79,7 +79,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   useDebounce(
     () => {
       if (!pair.input || !pair.output || inputAmount === undefined) {
-        return setTrade(null);
+        return setTrade(undefined);
       }
 
       const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
@@ -104,6 +104,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = Number(e.target.value) || undefined;
+    setTrade(undefined);
     setInputAmount(value);
   };
 
