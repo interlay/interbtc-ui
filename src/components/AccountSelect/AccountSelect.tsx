@@ -24,6 +24,8 @@ type AccountSelectProps = {
 const AccountSelect = ({ value, accounts, isDisabled, onChange }: AccountSelectProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
 
+  console.log('account value', value);
+
   const handleClose = () => setOpen(false);
 
   return (

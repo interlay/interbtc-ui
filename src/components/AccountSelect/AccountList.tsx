@@ -1,7 +1,8 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import Identicon from '@polkadot/react-identicon';
 
-import { shortAddress } from '@/common/utils/utils';
+import { shortAddress } from '@/common//utils/utils';
+import { Span } from '@/component-library';
 import { Flex } from '@/component-library/Flex';
 import { ListItem, ListProps } from '@/component-library/List';
 
@@ -49,15 +50,14 @@ const AccountList = ({ items, selectedAccount, onSelectionChange, ...props }: Ac
             gap='spacing4'
           >
             <StyledListAccountWrapper alignItems='center' gap='spacing2' flex='1'>
-              <StyledListItemLabel $isSelected={isSelected}>{accountText}</StyledListItemLabel>
-            </StyledListAccountWrapper>
-            <Flex direction='column' alignItems='flex-end' gap='spacing2' flex='0'>
               <Identicon size={32} value={item.address} theme='polkadot' />
-              {item.meta.name} {shortAddress(item.address.toString())}
-              <StyledListItemLabel $isSelected={isSelected}>
-                {shortAddress(item.address.toString())}
-              </StyledListItemLabel>
-            </Flex>
+              <Flex direction='column'>
+                <StyledListItemLabel $isSelected={isSelected}>{accountText}</StyledListItemLabel>
+                <Span size='s' color='tertiary'>
+                  {shortAddress(item.address.toString())}
+                </Span>
+              </Flex>
+            </StyledListAccountWrapper>
           </ListItem>
         );
       })}
