@@ -23,7 +23,7 @@ type AccountSelectProps = {
 
 const AccountSelect = ({ value, accounts, isDisabled, onChange }: AccountSelectProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
-  const currentAccount = accounts.find((account) => account.address === value);
+  const selectedAccount = accounts.find((account) => account.address === value);
 
   const handleClose = () => setOpen(false);
 
@@ -31,9 +31,9 @@ const AccountSelect = ({ value, accounts, isDisabled, onChange }: AccountSelectP
     <>
       <SelectTrigger onPress={() => setOpen(true)} disabled={isDisabled}>
         <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing1'>
-          <Icon value={currentAccount?.address} />
+          <Icon value={selectedAccount?.address} />
           <StyledAccount>
-            {currentAccount?.meta.name} {currentAccount?.address}
+            {selectedAccount?.meta.name} {selectedAccount?.address}
           </StyledAccount>
         </Flex>
       </SelectTrigger>
