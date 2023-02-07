@@ -77,13 +77,21 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
   useDebounce(
-    () => {
+    async () => {
       if (!pair.input || !pair.output || inputAmount === undefined) {
         return setTrade(undefined);
       }
 
       const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
-      const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
+      const trade: any = await new Promise((resolve, reject) => {
+        try {
+          const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output as any, liquidityPools);
+          resolve(trade);
+        } catch (error) {
+          reject(error);
+        }
+      });
+
       setTrade(trade);
     },
     500,
