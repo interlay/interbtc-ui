@@ -1,3 +1,4 @@
+// ray test touch <
 import { CurrencyExt, ForeignAsset } from '@interlay/interbtc-api';
 import { Bitcoin } from '@interlay/monetary-js';
 import { useEffect } from 'react';
@@ -69,6 +70,8 @@ type Prices = {
 const useGetPrices = (): Prices | undefined => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { data: currencies, isSuccess: isGetCurrenciesSuccess } = useGetCurrencies(bridgeLoaded);
+
+  // TODO: error prone because the key computation is not complete
   const { data, error } = useQuery<Prices | undefined, Error>(['prices'], () => getPrices(currencies), {
     enabled: isGetCurrenciesSuccess,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
@@ -85,3 +88,4 @@ const useGetPrices = (): Prices | undefined => {
 
 export { useGetPrices };
 export type { Price, Prices };
+// ray test touch >
