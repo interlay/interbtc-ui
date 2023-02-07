@@ -9,6 +9,7 @@
     "@hookform/resolvers": "^2.9.7",
     "@interlay/bridge": "^0.2.1",
     "@interlay/interbtc-api": "0.32.3",
+    "@koale/useworker": "^4.0.2",
     "@material-icons/svg": "^1.0.28",
     "@polkadot/api": "9.11.1",
     "@polkadot/extension-dapp": "0.44.1",
@@ -42,6 +43,7 @@
     "@react-stately/toggle": "^3.4.2",
     "@react-stately/tooltip": "^3.2.3",
     "@react-stately/tree": "^3.4.1",
+    "@shopify/react-web-worker": "^5.0.7",
     "@tailwindcss/forms": "^0.3.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -126,7 +128,8 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-pseudo-elements": "^1.5.1",
     "ts-node": "^8.6.2",
-    "webpack-bundle-analyzer": "^4.4.0"
+    "webpack-bundle-analyzer": "^4.4.0",
+    "worker-plugin": "^5.0.1"
   },
   "scripts": {
     "start": "craco start",

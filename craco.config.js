@@ -1,4 +1,5 @@
 const path = require('path');
+const WorkerPlugin = require('worker-plugin');
 
 module.exports = {
   // TODO: only for app
@@ -38,6 +39,9 @@ module.exports = {
       webpackConfig.externals = ['dtrace-provider'];
 
       return webpackConfig;
-    }
+    },
+    plugins: [
+      new WorkerPlugin(),
+    ],
   }
 };

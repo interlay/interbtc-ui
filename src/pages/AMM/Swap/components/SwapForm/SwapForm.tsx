@@ -1,4 +1,4 @@
-import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
+import { CurrencyExt, LiquidityPool, Trade } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { mergeProps } from '@react-aria/utils';
@@ -66,6 +66,8 @@ type InheritAttrs = CardProps & Props;
 
 type SwapFormProps = Props & InheritAttrs;
 
+const worker = new Worker(new URL('./worker.ts', import.meta.url));
+
 const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: SwapFormProps): JSX.Element | null => {
   const [slippage, setSlippage] = useState(0.1);
   const [inputAmount, setInputAmount] = useState<number>();
@@ -76,23 +78,35 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
+  // useEffect(() => {
+  //   if (window.Worker) {
+  //     counter.postMessage({ liquidityPools, pair, inputAmount });
+  //   }
+  // }, [counter]);
+
+  // useCallback(
+  //   async (inputAmount: number) => {
+  //     const a = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
+  //     const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input as any, true);
+
+  //     return a.amm.getOptimalTrade(inputMonetaryAmount, pair.output as any, liquidityPools);
+  //   },
+  //   [liquidityPools, pair.input, pair.output]
+  // );
+
   useDebounce(
     async () => {
       if (!pair.input || !pair.output || inputAmount === undefined) {
         return setTrade(undefined);
       }
 
-      const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
-      const trade: any = await new Promise((resolve, reject) => {
-        try {
-          const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output as any, liquidityPools);
-          resolve(trade);
-        } catch (error) {
-          reject(error);
-        }
+      worker.postMessage(JSON.stringify({ inputAmount, liquidityPools, pair }));
+      worker.addEventListener('message', (message) => {
+        console.log(message);
+        // Handle worker response here
       });
 
-      setTrade(trade);
+      // const result = await sortWorker(inputAmount); // non-blocking UI
     },
     500,
     [inputAmount, pair]
