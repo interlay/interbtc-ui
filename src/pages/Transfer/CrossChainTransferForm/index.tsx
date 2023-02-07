@@ -7,7 +7,7 @@ import { AccountInput } from '@/components/AccountSelect';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
 
-import { ChainSelector } from './components/ChainSelector';
+import { ChainInput } from './components/SelectChainInput';
 
 const CrossChainTransferForm = (): JSX.Element => {
   const { t } = useTranslation();
@@ -19,9 +19,9 @@ const CrossChainTransferForm = (): JSX.Element => {
     <>
       <form className='space-y-8'>
         <Flex direction='column' gap='spacing4'>
-          <Flex direction='row' gap='spacing4' justifyContent='space-between'>
-            <ChainSelector />
-            <ChainSelector />
+          <Flex direction='column' gap='spacing4' justifyContent='space-between'>
+            <ChainInput />
+            <ChainInput />
           </Flex>
           <div>
             <TokenInput
