@@ -126,7 +126,8 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-pseudo-elements": "^1.5.1",
     "ts-node": "^8.6.2",
-    "webpack-bundle-analyzer": "^4.4.0"
+    "webpack-bundle-analyzer": "^4.4.0",
+    "worker-plugin": "^5.0.1"
   },
   "scripts": {
     "start": "craco start",
