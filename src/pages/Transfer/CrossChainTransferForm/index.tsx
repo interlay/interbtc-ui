@@ -3,10 +3,11 @@ import { useSelector } from 'react-redux';
 
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { Flex, TokenInput } from '@/component-library';
-import { SelectTrigger } from '@/component-library/Select/SelectTrigger';
 import { AccountInput } from '@/components/AccountSelect';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
+
+import { ChainSelector } from './components/ChainSelector';
 
 const CrossChainTransferForm = (): JSX.Element => {
   const { t } = useTranslation();
@@ -19,8 +20,8 @@ const CrossChainTransferForm = (): JSX.Element => {
       <form className='space-y-8'>
         <Flex direction='column' gap='spacing4'>
           <Flex direction='row' gap='spacing4' justifyContent='space-between'>
-            <SelectTrigger />
-            <SelectTrigger />
+            <ChainSelector />
+            <ChainSelector />
           </Flex>
           <div>
             <TokenInput
