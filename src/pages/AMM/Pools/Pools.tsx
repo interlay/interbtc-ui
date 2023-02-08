@@ -8,10 +8,11 @@ import { PoolsInsights, PoolsTables } from './components';
 
 const Pools = (): JSX.Element => {
   const accountId = useAccountId();
-  const { data: accountPools } = useGetAccountPools();
+  const { data: accountPoolsData, refetch: refetchAccountPools } = useGetAccountPools();
   const { data: pools } = useGetLiquidityPools();
 
-  const isLoadingAccountData = accountId !== undefined && accountPools === undefined;
+  const accountPositions = accountPoolsData?.positions;
+  const isLoadingAccountData = accountId !== undefined && accountPoolsData === undefined;
 
   if (pools === undefined || isLoadingAccountData) {
     return <FullLoadingSpinner />;
@@ -19,8 +20,8 @@ const Pools = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <PoolsInsights pools={pools} accountPools={accountPools} />
-      <PoolsTables pools={pools} accountPools={accountPools} />
+      <PoolsInsights pools={pools} accountPoolsData={accountPoolsData} refetch={refetchAccountPools} />
+      <PoolsTables pools={pools} accountPools={accountPositions} />
     </MainContainer>
   );
 };

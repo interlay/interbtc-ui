@@ -1,25 +1,30 @@
 import { LiquidityPool } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from 'react-query';
 
 import { formatUSD } from '@/common/utils/utils';
-import { Card, Dl, DlGroup } from '@/component-library';
+import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
+import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledDd, StyledDt } from './PoolsInsights.style';
+import { calculateClaimableFarmingRewardUSD } from './utils';
 
 type PoolsInsightsProps = {
   pools: LiquidityPool[];
-  accountPools?: AccountLiquidityPool[];
+  accountPoolsData?: AccountPoolsData;
+  refetch: () => void;
 };
 
-const PoolsInsights = ({ pools, accountPools }: PoolsInsightsProps): JSX.Element => {
+const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const supplyAmountUSD = accountPools?.reduce((acc, curr) => {
+  const accountPositions = accountPoolsData?.positions;
+
+  const supplyAmountUSD = accountPositions?.reduce((acc, curr) => {
     const totalLiquidityUSD = calculateTotalLiquidityUSD(curr.data.pooledCurrencies, prices);
 
     const accountLiquidityUSD = curr.amount
@@ -39,6 +44,24 @@ const PoolsInsights = ({ pools, accountPools }: PoolsInsightsProps): JSX.Element
 
   const totalLiquidityUSD = formatUSD(totalLiquidity?.toNumber() || 0, { compact: true });
 
+  const totalClaimableRewardUSD = calculateClaimableFarmingRewardUSD(accountPoolsData?.claimableRewards, prices);
+
+  const handleSuccess = () => {
+    refetch();
+  };
+
+  const mutateClaimRewards = async () => {
+    if (accountPoolsData !== undefined) {
+      await window.bridge.amm.claimFarmingRewards(accountPoolsData.claimableRewards);
+    }
+  };
+
+  const claimRewardsMutation = useMutation<void, Error, void>(mutateClaimRewards, {
+    onSuccess: handleSuccess
+  });
+  const handleClickClaimRewards = () => claimRewardsMutation.mutate();
+
+  const hasClaimableRewards = totalClaimableRewardUSD > 0;
   return (
     <Dl wrap direction='row'>
       <Card flex='1'>
@@ -56,8 +79,13 @@ const PoolsInsights = ({ pools, accountPools }: PoolsInsightsProps): JSX.Element
       <Card direction='row' flex='1' gap='spacing2' alignItems='center' justifyContent='space-between'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
           <StyledDt color='primary'>{t('rewards')}</StyledDt>
-          <StyledDd color='secondary'>-</StyledDd>
+          <StyledDd color='secondary'>{totalClaimableRewardUSD}</StyledDd>
         </DlGroup>
+        {hasClaimableRewards && (
+          <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
+            Claim
+          </CTA>
+        )}
       </Card>
     </Dl>
   );
