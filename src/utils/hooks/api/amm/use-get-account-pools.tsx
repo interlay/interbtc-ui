@@ -1,4 +1,4 @@
-import { isCurrencyEqual, LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
+import { CurrencyExt, isCurrencyEqual, LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
@@ -11,15 +11,17 @@ import { useGetLiquidityPools } from './use-get-liquidity-pools';
 
 type AccountLiquidityPool = { data: LiquidityPool; amount: MonetaryAmount<LpCurrency> };
 
-const getAccountLiqudityPools = async (
-  accountId: AccountId,
-  pools: LiquidityPool[]
-): Promise<Array<AccountLiquidityPool>> => {
-  const accountLiquidityPools = await window.bridge.amm.getLiquidityProvidedByAccount(accountId);
+interface AccountPoolsData {
+  positions: AccountLiquidityPool[];
+  claimableRewards: Map<LpCurrency, MonetaryAmount<CurrencyExt>[]>;
+}
 
+const getAccountLiqudityPools = async (accountId: AccountId, pools: LiquidityPool[]): Promise<AccountPoolsData> => {
+  const accountLiquidityPools = await window.bridge.amm.getLiquidityProvidedByAccount(accountId);
+  const claimableRewards = await window.bridge.amm.getClaimableFarmingRewards(accountId, accountLiquidityPools, pools);
   const filteredPools = accountLiquidityPools.filter((lpToken) => !lpToken.isZero());
 
-  return filteredPools.reduce((acc: AccountLiquidityPool[], amount) => {
+  const positions = filteredPools.reduce((acc: AccountLiquidityPool[], amount) => {
     const pool = pools.find((pool) => isCurrencyEqual(pool.lpToken, amount.currency));
 
     if (!pool) return acc;
@@ -28,10 +30,12 @@ const getAccountLiqudityPools = async (
 
     return [...acc, data];
   }, []);
+
+  return { positions, claimableRewards };
 };
 
 interface UseGetAccountProvidedLiquidity {
-  data: AccountLiquidityPool[] | undefined;
+  data: AccountPoolsData | undefined;
   refetch: () => void;
 }
 
@@ -59,4 +63,4 @@ const useGetAccountPools = (): UseGetAccountProvidedLiquidity => {
 };
 
 export { useGetAccountPools };
-export type { AccountLiquidityPool, UseGetAccountProvidedLiquidity };
+export type { AccountLiquidityPool, AccountPoolsData, UseGetAccountProvidedLiquidity };

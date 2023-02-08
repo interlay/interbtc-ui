@@ -10,6 +10,7 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { PoolName } from '../PoolName';
 import { BalanceCell, PoolsBaseTable, PoolsBaseTableProps } from '../PoolsBaseTable';
 import { MonetaryCell } from '../PoolsBaseTable/MonetaryCell';
+import { getFarmingApr } from './utils';
 
 enum BorrowAssetsColumns {
   POOL_NAME = 'poolName',
@@ -54,14 +55,17 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
   const rows: PoolsTableRow[] = useMemo(
     () =>
       pools.map(({ data, amount: accountLPTokenAmount }) => {
-        const { pooledCurrencies, lpToken, apr: aprAmount, totalSupply } = data;
+        const { pooledCurrencies, lpToken, rewardAmountsYearly, totalSupply } = data;
         const poolName = (
           <PoolName tickers={pooledCurrencies.map((pooledCurrencies) => pooledCurrencies.currency.ticker)} />
         );
 
-        const apr = <MonetaryCell label={formatPercentage(aprAmount.toNumber())} alignSelf='flex-start' />;
-
         const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
+
+        const farmingApr = getFarmingApr(rewardAmountsYearly, totalSupply, totalLiquidityUSD, prices);
+        // TODO: add also APR from trading volume based on squid data
+        const aprAmount = farmingApr;
+        const apr = <MonetaryCell label={formatPercentage(aprAmount.toNumber())} alignSelf='flex-start' />;
 
         const totalLiquidity = <MonetaryCell label={formatUSD(totalLiquidityUSD, { compact: true })} />;
 
