@@ -1,21 +1,14 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FaCheckCircle } from 'react-icons/fa';
-import { useMutation, useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
-import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
-import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-import useQueryParams from '@/utils/hooks/use-query-params';
 
 import ManualIssueExecutionUI from '../ManualIssueExecutionUI';
 
@@ -26,29 +19,6 @@ interface Props {
 
 const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
   const { t } = useTranslation();
-
-  const queryParams = useQueryParams();
-  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
-  const selectedPageIndex = selectedPage - 1;
-
-  const queryClient = useQueryClient();
-  // ray test touch <
-  // TODO: should type properly (`Relay`)
-  const executeMutation = useMutation<void, Error, any>(
-    (variables: any) => {
-      if (!variables.backingPayment.btcTxId) {
-        throw new Error('Bitcoin transaction ID not identified yet.');
-      }
-      return window.bridge.issue.execute(variables.id, variables.backingPayment.btcTxId);
-    },
-    {
-      onSuccess: (_, variables) => {
-        queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
-        toast.success(t('issue_page.successfully_executed', { id: variables.id }));
-      }
-    }
-  );
-  // ray test touch >
 
   return (
     <>
@@ -82,20 +52,6 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
         </p>
         <ManualIssueExecutionUI request={request} />
       </RequestWrapper>
-      {/* ray test touch < */}
-      {executeMutation.isError && executeMutation.error && (
-        <ErrorModal
-          open={!!executeMutation.error}
-          onClose={() => {
-            executeMutation.reset();
-          }}
-          title='Error'
-          description={
-            typeof executeMutation.error === 'string' ? executeMutation.error : executeMutation.error.message
-          }
-        />
-      )}
-      {/* ray test touch > */}
     </>
   );
 };
