@@ -20,7 +20,7 @@ const INTERLAY_VAULT_DOCS_LINK = 'https://docs.interlay.io/#/vault/overview';
 const INTERLAY_DOS_AND_DONTS_DOCS_LINK = 'https://docs.interlay.io/#/vault/installation?id=dos-and-donts';
 const KINTSUGI_COMPETITION_FEEDBACK_LINK = 'https://interlay.typeform.com/to/evmxrSyL';
 const KINTSUGI_COMPETITION_DASHBOARD_LINK =
-  'https://stats.interlay.io/d/lzyjhMT4k/kintsugi-trading-competition?orgId=1';
+  'https://stats.interlay.io/d/lzyjhMT4k/kintsugi-trading-competition?from=1675749600000&to=now&orgId=1&kiosk';
 const KINTSUGI_COMPETITION_ISSUES_LINK = 'https://github.com/interlay/interbtc-ui/labels/testnet-competition';
 
 export {
