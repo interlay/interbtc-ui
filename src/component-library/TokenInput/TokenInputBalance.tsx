@@ -1,7 +1,7 @@
 import { useFocusRing } from '@react-aria/focus';
 import { usePress } from '@react-aria/interactions';
 import { mergeProps } from '@react-aria/utils';
-import { ReactNode } from 'react';
+import { ReactNode, useMemo } from 'react';
 
 import { formatNumber } from '@/common/utils/utils';
 
@@ -41,9 +41,13 @@ const TokenInputBalance = ({
         ...mergeProps(pressProps, focusProps)
       };
 
-  const balanceLabel = ticker
-    ? formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20 })
-    : 0;
+  const balanceLabel = useMemo(
+    () =>
+      ticker
+        ? formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20, rounding: false })
+        : 0,
+    [decimals, ticker, value]
+  );
 
   return (
     <StyledTokenInputBalanceWrapper className={className}>
