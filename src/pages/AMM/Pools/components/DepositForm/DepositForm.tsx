@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -150,7 +150,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
                 {t('fees')}
               </Dt>
               <Dd size='xs'>
-                {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
+                {TRANSACTION_FEE_AMOUNT.toHuman()} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
                 {displayMonetaryAmountInUSDFormat(
                   TRANSACTION_FEE_AMOUNT,
                   getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd

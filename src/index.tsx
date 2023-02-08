@@ -4,6 +4,7 @@ import '@/component-library/theme/theme.interlay.css';
 import '@/component-library/theme/theme.kintsugi.css';
 
 import { OverlayProvider } from '@react-aria/overlays';
+import Big from 'big.js';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -19,6 +20,11 @@ import { Subscriptions } from '@/utils/hooks/api/tokens/use-balances-subscriptio
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
+
+// TODO: export this to a config
+Big.DP = 100;
+Big.NE = -39;
+Big.PE = 39;
 
 const DeveloperConsole = React.lazy(
   () => import(/* webpackChunkName: 'developer-console' */ '@/lib/substrate/components/DeveloperConsole')
