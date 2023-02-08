@@ -65,7 +65,7 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
         const farmingApr = getFarmingApr(rewardAmountsYearly, totalSupply, totalLiquidityUSD, prices);
         // TODO: add also APR from trading volume based on squid data
         const aprAmount = farmingApr;
-        const apr = <MonetaryCell label={formatPercentage(aprAmount)} alignSelf='flex-start' />;
+        const apr = <MonetaryCell label={formatPercentage(aprAmount.toNumber())} alignSelf='flex-start' />;
 
         const totalLiquidity = <MonetaryCell label={formatUSD(totalLiquidityUSD, { compact: true })} />;
 
