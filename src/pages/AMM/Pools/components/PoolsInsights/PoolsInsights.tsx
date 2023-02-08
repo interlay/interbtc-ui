@@ -59,6 +59,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
   const claimRewardsMutation = useMutation<void, Error, void>(mutateClaimRewards, {
     onSuccess: handleSuccess
   });
+
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
   const hasClaimableRewards = totalClaimableRewardUSD > 0;
@@ -79,7 +80,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
       <Card direction='row' flex='1' gap='spacing2' alignItems='center' justifyContent='space-between'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
           <StyledDt color='primary'>{t('rewards')}</StyledDt>
-          <StyledDd color='secondary'>{totalClaimableRewardUSD}</StyledDd>
+          <StyledDd color='secondary'>{formatUSD(totalClaimableRewardUSD, { compact: true })}</StyledDd>
         </DlGroup>
         {hasClaimableRewards && (
           <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
