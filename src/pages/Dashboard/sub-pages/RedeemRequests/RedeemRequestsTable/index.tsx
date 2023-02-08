@@ -26,11 +26,7 @@ import StatusCell from '@/legacy-components/UI/InterlayTable/StatusCell';
 import ViewRequestDetailsLink from '@/legacy-components/ViewRequestDetailsLink';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import { useRedeemRequests } from '@/services/hooks/redeem-requests';
-import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
-import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
@@ -176,49 +172,7 @@ const RedeemRequestsTable = (): JSX.Element => {
     [t]
   );
 
-  const {
-    isIdle: stableBitcoinConfirmationsIdle,
-    isLoading: stableBitcoinConfirmationsLoading,
-    data: stableBitcoinConfirmations,
-    error: stableBitcoinConfirmationsError
-  } = useStableBitcoinConfirmations();
-  useErrorHandler(stableBitcoinConfirmationsError);
-
-  const {
-    isIdle: currentActiveBlockNumberIdle,
-    isLoading: currentActiveBlockNumberLoading,
-    data: currentActiveBlockNumber,
-    error: currentActiveBlockNumberError
-  } = useCurrentActiveBlockNumber();
-  useErrorHandler(currentActiveBlockNumberError);
-
-  const {
-    isIdle: stableParachainConfirmationsIdle,
-    isLoading: stableParachainConfirmationsLoading,
-    data: stableParachainConfirmations,
-    error: stableParachainConfirmationsError
-  } = useStableParachainConfirmations();
-  useErrorHandler(stableParachainConfirmationsError);
-
   const selectedPageIndex = selectedPage - 1;
-
-  // ray test touch <<
-  const {
-    isIdle: redeemsIdle,
-    isLoading: redeemsLoading,
-    data: redeems,
-    error: redeemsError
-    // TODO: should type properly (`Relay`)
-  } = useQuery<any, Error>(
-    [
-      REDEEMS_FETCHER,
-      selectedPageIndex * TABLE_PAGE_LIMIT, // offset
-      TABLE_PAGE_LIMIT // limit
-    ],
-    redeemsFetcher
-  );
-  // ray test touch >>
-  useErrorHandler(redeemsError);
 
   const {
     isIdle: redeemsCountIdle,
@@ -229,27 +183,9 @@ const RedeemRequestsTable = (): JSX.Element => {
   } = useQuery<GraphqlReturn<any>, Error>([GRAPHQL_FETCHER, redeemCountQuery()], graphqlFetcher<GraphqlReturn<any>>());
   useErrorHandler(redeemsCountError);
 
-  const data =
-    redeems === undefined ||
-    stableBitcoinConfirmations === undefined ||
-    stableParachainConfirmations === undefined ||
-    currentActiveBlockNumber === undefined
-      ? []
-      : redeems.map(
-          // TODO: should type properly (`Relay`)
-          (redeem: any) =>
-            getRedeemWithStatus(
-              redeem,
-              stableBitcoinConfirmations,
-              stableParachainConfirmations,
-              currentActiveBlockNumber
-            )
-        );
-
-  // ray test touch <<
   const {
-    // isIdle: redeemRequestsIdle,
-    // isLoading: redeemRequestsLoading,
+    isIdle: redeemRequestsIdle,
+    isLoading: redeemRequestsLoading,
     data: redeemRequests,
     error: redeemRequestsError
   } = useRedeemRequests(
@@ -259,27 +195,14 @@ const RedeemRequestsTable = (): JSX.Element => {
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
   useErrorHandler(redeemRequestsError);
-  console.log('ray : ***** redeemRequests => ', redeemRequests);
-  // ray test touch >>
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    data
+    data: redeemRequests ?? []
   });
 
   const renderContent = () => {
-    if (
-      stableBitcoinConfirmationsIdle ||
-      stableBitcoinConfirmationsLoading ||
-      stableParachainConfirmationsIdle ||
-      stableParachainConfirmationsLoading ||
-      currentActiveBlockNumberIdle ||
-      currentActiveBlockNumberLoading ||
-      redeemsIdle ||
-      redeemsLoading ||
-      redeemsCountIdle ||
-      redeemsCountLoading
-    ) {
+    if (redeemRequestsIdle || redeemRequestsLoading || redeemsCountIdle || redeemsCountLoading) {
       return <PrimaryColorEllipsisLoader />;
     }
     if (redeemsCount === undefined) {
