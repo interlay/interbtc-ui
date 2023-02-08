@@ -14,13 +14,11 @@ const getFarmingApr = (
   if (prices === undefined || lpTotalSupply.toBig().eq(0) || totalLiquidityUSD === 0) {
     return new Big(0);
   }
-  const lpTokenPriceUSD = new Big(totalLiquidityUSD).div(lpTotalSupply.toBig());
-
   const totalRewardsPerTokenUSD = calculateTotalLiquidityUSD(rewardAmountsYearly, prices);
 
-  const yearlyRewardPerLPRatePercentage = new Big(totalRewardsPerTokenUSD).div(lpTokenPriceUSD).mul(100);
+  const farmingApr = new Big(totalRewardsPerTokenUSD).div(totalLiquidityUSD).mul(100);
 
-  return yearlyRewardPerLPRatePercentage;
+  return farmingApr;
 };
 
 export { getFarmingApr };
