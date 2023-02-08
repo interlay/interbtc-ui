@@ -185,6 +185,7 @@ const useGetVaultTransactions = (
   );
   useErrorHandler(replaceRequestsError);
 
+  // ray test touch <
   return parseTransactionsData(
     issues,
     redeems,
@@ -193,6 +194,7 @@ const useGetVaultTransactions = (
     stableParachainConfirmations,
     currentActiveBlockNumber
   );
+  // ray test touch >
 };
 
 export { useGetVaultTransactions };

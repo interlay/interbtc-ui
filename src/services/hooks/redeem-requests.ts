@@ -1,4 +1,3 @@
-// ray test touch <<
 import { useQuery } from 'react-query';
 
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
@@ -83,4 +82,3 @@ const useRedeemRequests = (
 };
 
 export { useRedeemRequests };
-// ray test touch >>

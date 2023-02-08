@@ -1,4 +1,3 @@
-// ray test touch <
 import { RedeemStatus } from '@interlay/interbtc-api';
 
 // Bare minimum for now
@@ -11,4 +10,3 @@ interface RedeemRequestWithStatusDecoded extends RedeemRequest {
 }
 
 export type { RedeemRequest, RedeemRequestWithStatusDecoded };
-// ray test touch >

@@ -89,12 +89,10 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
     }
   });
 
-  // ray test touch <
   // TODO: should type properly (`Relay`)
   const handleExecute = (request: any) => () => {
     executeMutation.mutate(request);
   };
-  // ray test touch >
 
   const backingPaymentAmount = newMonetaryAmount(request.backingPayment.amount, WRAPPED_TOKEN);
 

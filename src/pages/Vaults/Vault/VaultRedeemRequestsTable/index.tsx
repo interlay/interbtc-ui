@@ -26,10 +26,7 @@ import StatusCell from '@/legacy-components/UI/InterlayTable/StatusCell';
 import ViewRequestDetailsLink from '@/legacy-components/ViewRequestDetailsLink';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
-import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
-import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
-import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
-import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
+import { useRedeemRequests } from '@/services/hooks/redeem-requests';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
 import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
@@ -53,30 +50,6 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
   const collateralTokenCondition = getCurrencyEqualityCondition(collateralToken);
 
   const {
-    isIdle: stableBitcoinConfirmationsIdle,
-    isLoading: stableBitcoinConfirmationsLoading,
-    data: stableBitcoinConfirmations,
-    error: stableBitcoinConfirmationsError
-  } = useStableBitcoinConfirmations();
-  useErrorHandler(stableBitcoinConfirmationsError);
-
-  const {
-    isIdle: currentActiveBlockNumberIdle,
-    isLoading: currentActiveBlockNumberLoading,
-    data: currentActiveBlockNumber,
-    error: currentActiveBlockNumberError
-  } = useCurrentActiveBlockNumber();
-  useErrorHandler(currentActiveBlockNumberError);
-
-  const {
-    isIdle: stableParachainConfirmationsIdle,
-    isLoading: stableParachainConfirmationsLoading,
-    data: stableParachainConfirmations,
-    error: stableParachainConfirmationsError
-  } = useStableParachainConfirmations();
-  useErrorHandler(stableParachainConfirmationsError);
-
-  const {
     isIdle: redeemRequestsTotalCountIdle,
     isLoading: redeemRequestsTotalCountLoading,
     data: redeemRequestsTotalCount,
@@ -91,26 +64,17 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
   );
   useErrorHandler(redeemRequestsTotalCountError);
 
-  // ray test touch <<
   const {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
     data: redeemRequests,
     error: redeemRequestsError
-    // TODO: should type properly (`Relay`)
-  } = useQuery<any, Error>(
-    [
-      REDEEMS_FETCHER,
-      selectedPageIndex * TABLE_PAGE_LIMIT, // offset
-      TABLE_PAGE_LIMIT, // limit
-      `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}` // `WHERE` condition // TODO: add asset_eq, see comment above
-    ],
-    redeemsFetcher,
-    {
-      refetchInterval: ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
-    }
+  } = useRedeemRequests(
+    selectedPageIndex * TABLE_PAGE_LIMIT,
+    TABLE_PAGE_LIMIT,
+    `vault: {accountId_eq: "${vaultAddress}", collateralToken: {${collateralTokenCondition}}}`, // TODO: add asset_eq, see comment above
+    ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
-  // ray test touch >>
   useErrorHandler(redeemRequestsError);
 
   const columns = React.useMemo(
@@ -267,40 +231,12 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
     [t]
   );
 
-  const data =
-    redeemRequests === undefined ||
-    stableBitcoinConfirmations === undefined ||
-    stableParachainConfirmations === undefined ||
-    currentActiveBlockNumber === undefined
-      ? []
-      : redeemRequests.map(
-          // TODO: should type properly (`Relay`)
-          (redeemRequest: any) =>
-            getRedeemWithStatus(
-              redeemRequest,
-              stableBitcoinConfirmations,
-              stableParachainConfirmations,
-              currentActiveBlockNumber
-            )
-        );
-
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
-    data
+    data: redeemRequests ?? []
   });
 
-  if (
-    stableBitcoinConfirmationsIdle ||
-    stableBitcoinConfirmationsLoading ||
-    stableParachainConfirmationsIdle ||
-    stableParachainConfirmationsLoading ||
-    currentActiveBlockNumberIdle ||
-    currentActiveBlockNumberLoading ||
-    redeemRequestsTotalCountIdle ||
-    redeemRequestsTotalCountLoading ||
-    redeemRequestsIdle ||
-    redeemRequestsLoading
-  ) {
+  if (redeemRequestsTotalCountIdle || redeemRequestsTotalCountLoading || redeemRequestsIdle || redeemRequestsLoading) {
     return <PrimaryColorEllipsisLoader />;
   }
   if (redeemRequestsTotalCount === undefined) {
