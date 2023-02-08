@@ -58,7 +58,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   const accountId = useAccountId();
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { getAvailableBalance, getBalance } = useGetBalances();
+  const { getBalance } = useGetBalances();
 
   const withdrawMutation = useMutation<void, Error, DepositData>(mutateWithdraw, {
     onSuccess: () => {
@@ -73,7 +73,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   const { lpToken } = pool;
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const balance = getAvailableBalance(lpToken.ticker);
+  const balance = getBalance(lpToken.ticker)?.reserved;
 
   const zeroAssetAmount = newMonetaryAmount(0, lpToken);
   const schemaParams: PoolWithdrawSchemaParams = {
