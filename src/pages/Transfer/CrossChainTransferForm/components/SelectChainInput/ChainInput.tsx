@@ -6,6 +6,7 @@ import { ChainSelect } from './ChainSelect';
 type Chain = {
   display: string;
   id: string;
+  nativeToken: string;
 };
 
 type Chains = Chain[];

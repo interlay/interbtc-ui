@@ -1,17 +1,12 @@
-import Identicon from '@polkadot/react-identicon';
 import { chain } from '@react-aria/utils';
 import { useState } from 'react';
 
-import { Flex } from '@/component-library';
+import { CoinIcon, Flex } from '@/component-library';
 import { SelectTrigger } from '@/component-library/Select';
 
 import { Chains } from './ChainInput';
 import { StyledChain } from './ChainInput.style';
 import { ChainListModal } from './ChainListModal';
-
-const Icon = ({ value }: Pick<ChainSelectProps, 'value'>) => {
-  return <Identicon size={32} value={value} theme='polkadot' />;
-};
 
 type ChainSelectProps = {
   value?: string;
@@ -30,12 +25,12 @@ const ChainSelect = ({ value, chains, isDisabled, onChange }: ChainSelectProps):
   return (
     <>
       <SelectTrigger onPress={() => setOpen(true)} disabled={isDisabled}>
-        <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing1'>
-          <Icon value={selectedChain?.id} />
-          <StyledChain>
-            {selectedChain?.id} {selectedChain?.id}
-          </StyledChain>
-        </Flex>
+        {selectedChain && (
+          <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing4'>
+            <CoinIcon ticker={selectedChain.nativeToken} />
+            <StyledChain>{selectedChain?.display}</StyledChain>
+          </Flex>
+        )}
       </SelectTrigger>
       <ChainListModal
         isOpen={isOpen}

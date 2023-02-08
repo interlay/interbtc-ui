@@ -24,8 +24,10 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!XCMBridge) return;
 
     const availableChains = XCMBridge.adapters.map((adapter) => {
-      return { display: adapter.chain.display, id: adapter.chain.id };
+      return { display: adapter.chain.display, id: adapter.chain.id, nativeToken: 'KINT' };
     });
+
+    console.log('XCMBridge.adapters', XCMBridge.adapters);
 
     setTestChains(availableChains);
   }, [XCMBridge]);
