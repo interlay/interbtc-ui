@@ -1,4 +1,4 @@
-import { Span } from '@/component-library';
+import { CoinIcon } from '@/component-library';
 import { Flex } from '@/component-library/Flex';
 import { ListItem, ListProps } from '@/component-library/List';
 
@@ -46,12 +46,10 @@ const ChainList = ({ items, selectedChain, onSelectionChange, ...props }: ChainL
             justifyContent='space-between'
             gap='spacing4'
           >
-            <StyledListChainWrapper alignItems='center' gap='spacing2' flex='1'>
-              <Flex direction='column'>
+            <StyledListChainWrapper alignItems='center' gap='spacing4' flex='1'>
+              <Flex gap='spacing4'>
+                <CoinIcon ticker={item.nativeToken} />
                 <StyledListItemLabel $isSelected={isSelected}>{item.display}</StyledListItemLabel>
-                <Span size='xs' color='tertiary'>
-                  {item.id}
-                </Span>
               </Flex>
             </StyledListChainWrapper>
           </ListItem>
