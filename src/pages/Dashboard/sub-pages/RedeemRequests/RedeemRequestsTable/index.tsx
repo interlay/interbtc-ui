@@ -8,6 +8,7 @@ import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, formatNumber, shortAddress, shortTxId } from '@/common/utils/utils';
 import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
@@ -26,6 +27,7 @@ import ViewRequestDetailsLink from '@/legacy-components/ViewRequestDetailsLink';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
+import { useRedeemRequests } from '@/services/hooks/redeem-requests';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
@@ -243,6 +245,22 @@ const RedeemRequestsTable = (): JSX.Element => {
               currentActiveBlockNumber
             )
         );
+
+  // ray test touch <<
+  const {
+    // isIdle: redeemRequestsIdle,
+    // isLoading: redeemRequestsLoading,
+    data: redeemRequests,
+    error: redeemRequestsError
+  } = useRedeemRequests(
+    selectedPageIndex * TABLE_PAGE_LIMIT,
+    TABLE_PAGE_LIMIT,
+    undefined,
+    ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
+  );
+  useErrorHandler(redeemRequestsError);
+  console.log('ray : ***** redeemRequests => ', redeemRequests);
+  // ray test touch >>
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
     columns,
