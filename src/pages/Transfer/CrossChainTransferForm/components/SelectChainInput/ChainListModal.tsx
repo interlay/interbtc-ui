@@ -1,11 +1,10 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-
 import { Modal, ModalBody, ModalHeader, ModalProps } from '@/component-library/Modal';
 
+import { Chains } from './ChainInput';
 import { ChainList } from './ChainList';
 
 type Props = {
-  chains: InjectedAccountWithMeta[];
+  chains: Chains;
   onSelectionChange?: (chain: string) => void;
   selectedChain?: string;
 };

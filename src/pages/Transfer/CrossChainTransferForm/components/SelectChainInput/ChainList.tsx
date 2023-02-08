@@ -1,14 +1,12 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import Identicon from '@polkadot/react-identicon';
-
 import { Span } from '@/component-library';
 import { Flex } from '@/component-library/Flex';
 import { ListItem, ListProps } from '@/component-library/List';
 
+import { Chains } from './ChainInput';
 import { StyledList, StyledListChainWrapper, StyledListItemLabel } from './ChainInput.style';
 
 type Props = {
-  items: InjectedAccountWithMeta[];
+  items: Chains;
   selectedChain?: string;
   onSelectionChange?: (chain: string) => void;
 };
@@ -36,7 +34,7 @@ const ChainList = ({ items, selectedChain, onSelectionChange, ...props }: ChainL
       {...props}
     >
       {items.map((item) => {
-        const chainText = item.address;
+        const chainText = item.id;
 
         const isSelected = selectedChain === chainText;
 
@@ -49,11 +47,10 @@ const ChainList = ({ items, selectedChain, onSelectionChange, ...props }: ChainL
             gap='spacing4'
           >
             <StyledListChainWrapper alignItems='center' gap='spacing2' flex='1'>
-              <Identicon size={32} value={item.address} theme='polkadot' />
               <Flex direction='column'>
-                <StyledListItemLabel $isSelected={isSelected}>{item.meta.name}</StyledListItemLabel>
+                <StyledListItemLabel $isSelected={isSelected}>{item.display}</StyledListItemLabel>
                 <Span size='xs' color='tertiary'>
-                  {item.address}
+                  {item.id}
                 </Span>
               </Flex>
             </StyledListChainWrapper>

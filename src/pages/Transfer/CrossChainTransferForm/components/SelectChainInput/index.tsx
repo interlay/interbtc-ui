@@ -1,2 +1,2 @@
-export type { ChainInputProps } from './ChainInput';
+export type { Chain, ChainInputProps, Chains } from './ChainInput';
 export { ChainInput } from './ChainInput';

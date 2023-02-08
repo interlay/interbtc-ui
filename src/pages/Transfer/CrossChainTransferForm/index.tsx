@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
@@ -6,22 +7,35 @@ import { Flex, TokenInput } from '@/component-library';
 import { AccountInput } from '@/components/AccountSelect';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 
-import { ChainInput } from './components/SelectChainInput';
+import { ChainInput, Chains } from './components/SelectChainInput';
 
 const CrossChainTransferForm = (): JSX.Element => {
+  const [testChains, setTestChains] = useState<Chains>([]);
+
   const { t } = useTranslation();
+  const { XCMBridge } = useXCMBridge();
 
   const { selectedAccount, accounts } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
+
+  useEffect(() => {
+    if (!XCMBridge) return;
+
+    const availableChains = XCMBridge.adapters.map((adapter) => {
+      return { display: adapter.chain.display, id: adapter.chain.id };
+    });
+
+    setTestChains(availableChains);
+  }, [XCMBridge]);
 
   return (
     <>
       <form className='space-y-8'>
         <Flex direction='column' gap='spacing4'>
           <Flex direction='column' gap='spacing4' justifyContent='space-between'>
-            <ChainInput />
-            <ChainInput />
+            {testChains.length && <ChainInput chains={testChains} />}
           </Flex>
           <div>
             <TokenInput

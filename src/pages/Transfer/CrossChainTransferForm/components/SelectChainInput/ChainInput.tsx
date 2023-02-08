@@ -1,21 +1,24 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { forwardRef, useState } from 'react';
-
-import { KeyringPair } from '@/lib/substrate';
 
 import { ChainInputLabel } from './ChainInputLabel';
 import { ChainSelect } from './ChainSelect';
 
+type Chain = {
+  display: string;
+  id: string;
+};
+
+type Chains = Chain[];
+
 type Props = {
-  chains?: InjectedAccountWithMeta[];
-  chain?: KeyringPair;
+  chains: Chains;
 };
 
 type ChainInputProps = Props;
 
 const ChainInput = forwardRef<HTMLInputElement, ChainInputProps>(
-  ({ chains = [], chain }): JSX.Element => {
-    const [chainValue, setChainValue] = useState(chain?.address);
+  ({ chains = [] }): JSX.Element => {
+    const [chainValue, setChainValue] = useState(chains[0].id);
 
     const handleChainChange = (chain: string) => {
       setChainValue(chain);
@@ -35,4 +38,4 @@ const ChainInput = forwardRef<HTMLInputElement, ChainInputProps>(
 ChainInput.displayName = 'ChainInput';
 
 export { ChainInput };
-export type { ChainInputProps };
+export type { Chain, ChainInputProps, Chains };

@@ -1,4 +1,3 @@
-import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import Identicon from '@polkadot/react-identicon';
 import { chain } from '@react-aria/utils';
 import { useState } from 'react';
@@ -6,6 +5,7 @@ import { useState } from 'react';
 import { Flex } from '@/component-library';
 import { SelectTrigger } from '@/component-library/Select';
 
+import { Chains } from './ChainInput';
 import { StyledChain } from './ChainInput.style';
 import { ChainListModal } from './ChainListModal';
 
@@ -16,14 +16,14 @@ const Icon = ({ value }: Pick<ChainSelectProps, 'value'>) => {
 type ChainSelectProps = {
   value?: string;
   icons?: string[];
-  chains: InjectedAccountWithMeta[];
+  chains: Chains;
   onChange: (chain: string) => void;
   isDisabled?: boolean;
 };
 
 const ChainSelect = ({ value, chains, isDisabled, onChange }: ChainSelectProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
-  const selectedChain = chains.find((chain) => chain.address === value);
+  const selectedChain = chains.find((chain) => chain.id === value);
 
   const handleClose = () => setOpen(false);
 
@@ -31,9 +31,9 @@ const ChainSelect = ({ value, chains, isDisabled, onChange }: ChainSelectProps):
     <>
       <SelectTrigger onPress={() => setOpen(true)} disabled={isDisabled}>
         <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing1'>
-          <Icon value={selectedChain?.address} />
+          <Icon value={selectedChain?.id} />
           <StyledChain>
-            {selectedChain?.meta.name} {selectedChain?.address}
+            {selectedChain?.id} {selectedChain?.id}
           </StyledChain>
         </Flex>
       </SelectTrigger>
