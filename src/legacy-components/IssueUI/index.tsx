@@ -34,7 +34,9 @@ const renderModalStatusPanel = (request: any) => {
 };
 
 interface Props {
+  // ray test touch <
   issue: any; // TODO: should type properly (`Relay`)
+  // ray test touch >
 }
 
 const IssueUI = ({ issue }: Props): JSX.Element => {

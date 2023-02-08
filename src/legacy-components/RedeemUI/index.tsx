@@ -18,7 +18,9 @@ import RedeemRequestStatusUI from './RedeemRequestStatusUI';
 import ReimburseStatusUI from './ReimburseStatusUI';
 
 interface Props {
+  // ray test touch <
   redeem: any; // TODO: should type properly (`Relay`)
+  // ray test touch >
   onClose: () => void;
 }
 
