@@ -7,8 +7,8 @@ import { toast } from 'react-toastify';
 import * as z from 'zod';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
-import { CTA, Flex, TokenInput } from '@/component-library';
-import ErrorModal from '@/legacy-components/ErrorModal';
+import { Flex, TokenInput } from '@/component-library';
+import { AuthCTA } from '@/components';
 import validate, {
   LoanBorrowSchemaParams,
   LoanLendSchemaParams,
@@ -132,7 +132,11 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     refetch();
   };
 
-  const loanMutation = useLoanMutation({ onSuccess: handleSuccess });
+  const handleError = (error: Error) => {
+    toast.error(error.message);
+  };
+
+  const loanMutation = useLoanMutation({ onSuccess: handleSuccess, onError: handleError });
 
   const schemaParams: LoanSchemaParams = {
     governanceBalance,
@@ -176,49 +180,39 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const showBorrowLimit = shouldShowBorrowLimit(variant, hasCollateral, position);
 
   return (
-    <>
-      <form onSubmit={h(handleSubmit)}>
-        <StyledFormWrapper direction='column' justifyContent='space-between' gap='spacing4'>
-          <Flex direction='column' gap='spacing4'>
-            <TokenInput
-              placeholder='0.00'
-              ticker={asset.currency.ticker}
-              errorMessage={getErrorMessage(errors[formField])}
-              aria-label={content.fieldAriaLabel}
-              balance={assetAmount.max.toString()}
-              humanBalance={assetAmount.max.toHuman()}
-              balanceLabel={content.label}
-              valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
-              onClickBalance={handleClickBalance}
-              {...register(formField, { onChange: handleChange })}
+    <form onSubmit={h(handleSubmit)}>
+      <StyledFormWrapper direction='column' justifyContent='space-between' gap='spacing4'>
+        <Flex direction='column' gap='spacing4'>
+          <TokenInput
+            placeholder='0.00'
+            ticker={asset.currency.ticker}
+            errorMessage={getErrorMessage(errors[formField])}
+            aria-label={content.fieldAriaLabel}
+            balance={assetAmount.max.toString()}
+            humanBalance={assetAmount.max.toHuman()}
+            balanceLabel={content.label}
+            valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
+            onClickBalance={handleClickBalance}
+            {...register(formField, { onChange: handleChange })}
+          />
+          {showBorrowLimit && (
+            <BorrowLimit
+              shouldDisplayLiquidationAlert
+              loanAction={variant}
+              asset={asset}
+              actionAmount={monetaryAmount}
+              prices={prices}
             />
-            {showBorrowLimit && (
-              <BorrowLimit
-                shouldDisplayLiquidationAlert
-                loanAction={variant}
-                asset={asset}
-                actionAmount={monetaryAmount}
-                prices={prices}
-              />
-            )}
-          </Flex>
-          <Flex direction='column' gap='spacing4'>
-            <LoanActionInfo variant={variant} asset={asset} prices={prices} />
-            <CTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
-              {content.title}
-            </CTA>
-          </Flex>
-        </StyledFormWrapper>
-      </form>
-      {loanMutation.isError && (
-        <ErrorModal
-          open={loanMutation.isError}
-          onClose={() => loanMutation.reset()}
-          title='Error'
-          description={loanMutation.error?.message || ''}
-        />
-      )}
-    </>
+          )}
+        </Flex>
+        <Flex direction='column' gap='spacing4'>
+          <LoanActionInfo variant={variant} asset={asset} prices={prices} />
+          <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
+            {content.title}
+          </AuthCTA>
+        </Flex>
+      </StyledFormWrapper>
+    </form>
   );
 };
 

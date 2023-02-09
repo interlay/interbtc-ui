@@ -85,29 +85,14 @@ const formatNumber = (
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
     compact?: boolean;
-    rounding?: boolean;
   }
 ): string => {
-  let formatted = amount;
-  let { compact, maximumFractionDigits, minimumFractionDigits, rounding = true } = options || {};
-
-  // Intl.NumberFormat rounds number by default. The alternative is to cut
-  // programmatically the number decimals before being formatted
-  if (!rounding && maximumFractionDigits) {
-    const decimal = new Big(10).pow(maximumFractionDigits);
-    formatted = new Big(Math.floor(decimal.mul(amount).toNumber())).div(decimal).toNumber();
-
-    // set to max digits to avoid rounding
-    maximumFractionDigits = 20;
-  }
-
   const { format } = new Intl.NumberFormat(undefined, {
-    minimumFractionDigits,
-    maximumFractionDigits,
-    notation: compact ? getFormatUSDNotation(formatted) : undefined
+    ...options,
+    notation: options?.compact ? getFormatUSDNotation(amount) : undefined
   });
 
-  return format(formatted);
+  return format(amount);
 };
 
 const formatPercentage = (
