@@ -88,9 +88,9 @@ const DepositCollateralStep = ({
               placeholder='0.00'
               ticker={collateral.currency.ticker}
               valueUSD={convertMonetaryAmountToValueInUSD(inputCollateralAmount, collateral.price.usd) ?? 0}
-              balance={collateral.balance.raw.toBig().toNumber()}
+              balance={collateral.balance.raw.toString()}
+              humanBalance={collateral.balance.raw.toHuman()}
               errorMessage={getErrorMessage(errors[DEPOSIT_COLLATERAL_AMOUNT])}
-              balanceDecimals={collateral.currency.humanDecimals}
               {...register(DEPOSIT_COLLATERAL_AMOUNT)}
             />
             <StyledDl>

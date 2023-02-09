@@ -52,8 +52,8 @@ const useButtonProps = (
 };
 
 type UseSwapFormData = {
-  inputProps: { balance: number; valueUSD: number; tokens: TokenInputProps['tokens'] };
-  outputProps: { balance: number; valueUSD: number; tokens: TokenInputProps['tokens']; value?: number };
+  inputProps: Pick<TokenInputProps, 'balance' | 'humanBalance' | 'valueUSD' | 'tokens'>;
+  outputProps: Pick<TokenInputProps, 'balance' | 'humanBalance' | 'valueUSD' | 'value' | 'tokens'>;
   buttonProps: { children: ReactNode; disabled: boolean };
 };
 
@@ -71,8 +71,9 @@ const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | n
         const balanceUSD = balance
           ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
           : 0;
+
         return {
-          balance: Number(balance?.toBig().toFixed(balance.currency.humanDecimals)) || 0,
+          balance: balance?.toHuman() || 0,
           balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
           ticker: currency.ticker
         };
@@ -80,10 +81,14 @@ const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | n
     [currencies, getAvailableBalance, prices]
   );
 
+  const inputBalance = pair.input && getAvailableBalance(pair.input.ticker);
+  const outputBalance = pair.output && getAvailableBalance(pair.output.ticker);
+
   return {
     inputProps: {
       tokens,
-      balance: pair.input ? getAvailableBalance(pair.input.ticker)?.toBig().toNumber() || 0 : 0,
+      balance: inputBalance?.toString() || 0,
+      humanBalance: inputBalance?.toHuman() || 0,
       valueUSD:
         inputAmount && pair.input
           ? convertMonetaryAmountToValueInUSD(
@@ -94,7 +99,8 @@ const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | n
     },
     outputProps: {
       tokens,
-      balance: pair.output ? getAvailableBalance(pair.output.ticker)?.toBig().toNumber() || 0 : 0,
+      balance: outputBalance?.toString() || 0,
+      humanBalance: outputBalance?.toHuman() || 0,
       value: trade?.outputAmount.toBig().toNumber(),
       valueUSD:
         trade?.outputAmount && pair.output

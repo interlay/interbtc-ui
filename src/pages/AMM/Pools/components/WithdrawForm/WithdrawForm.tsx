@@ -140,8 +140,8 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
               aria-label={t('forms.field_amount', {
                 field: t('withdraw').toLowerCase()
               })}
-              balance={balance?.toBig().toNumber() || 0}
-              balanceDecimals={lpToken.humanDecimals}
+              balance={balance?.toString() || 0}
+              humanBalance={balance?.toHuman() || 0}
               valueUSD={pooledAmountsUSD}
               errorMessage={getErrorMessage(errors[FormFields.WITHDRAW_AMOUNT])}
               {...register(FormFields.WITHDRAW_AMOUNT)}

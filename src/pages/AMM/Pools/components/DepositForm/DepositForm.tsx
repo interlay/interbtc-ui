@@ -116,10 +116,12 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
           <Flex direction='column' gap='spacing2'>
             {pooledCurrencies.map((amount, index) => {
               const {
-                currency: { ticker, humanDecimals }
+                currency: { ticker }
               } = amount;
 
               const isLastItem = index === pooledCurrencies.length - 1;
+
+              const balance = getAvailableBalance(ticker);
 
               return (
                 <Flex key={ticker} direction='column' gap='spacing8'>
@@ -129,8 +131,8 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
                     aria-label={t('forms.field_amount', {
                       field: `${ticker} ${t('deposit').toLowerCase()}`
                     })}
-                    balance={getAvailableBalance(ticker)?.toBig().toNumber() || 0}
-                    balanceDecimals={humanDecimals}
+                    balance={balance?.toString() || 0}
+                    humanBalance={balance?.toHuman() || 0}
                     valueUSD={new Big(values[ticker] || 0).mul(getTokenPrice(prices, ticker)?.usd || 0).toNumber()}
                     value={values[ticker]}
                     name={ticker}
