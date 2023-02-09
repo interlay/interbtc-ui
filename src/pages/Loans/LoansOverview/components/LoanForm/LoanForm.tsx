@@ -6,7 +6,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
 
-import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { CTA, Flex, TokenInput } from '@/component-library';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import validate, {
@@ -155,7 +155,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   });
 
   const amount = watch(formField) || 0;
-  const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
+  const monetaryAmount = newSafeMonetaryAmount(amount, asset.currency, true);
 
   const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
 

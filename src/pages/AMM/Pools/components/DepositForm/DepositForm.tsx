@@ -1,12 +1,15 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, PooledCurrencies } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
-import Big from 'big.js';
 import { ChangeEventHandler, FormEventHandler, RefObject, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmountInUSDFormat,
+  newSafeMonetaryAmount
+} from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -121,6 +124,10 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
 
               const isLastItem = index === pooledCurrencies.length - 1;
 
+              const monetaryAmount = newSafeMonetaryAmount(values[ticker] || 0, amount.currency, true);
+              const valueUSD =
+                convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, ticker)?.usd) || 0;
+
               return (
                 <Flex key={ticker} direction='column' gap='spacing8'>
                   <TokenInput
@@ -131,7 +138,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
                     })}
                     balance={getAvailableBalance(ticker)?.toBig().toNumber() || 0}
                     balanceDecimals={humanDecimals}
-                    valueUSD={new Big(values[ticker] || 0).mul(getTokenPrice(prices, ticker)?.usd || 0).toNumber()}
+                    valueUSD={valueUSD}
                     value={values[ticker]}
                     name={ticker}
                     onChange={handleChange}

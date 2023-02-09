@@ -12,6 +12,9 @@ const deposit = (t: TFunction, params: VaultDepositSchemaParams): z.ZodEffects<z
   z.string().superRefine((value, ctx) => {
     const { availableBalance, governanceBalance, minAmount, transactionFee } = params;
 
+    const parsed = parseInt(value);
+    if (isNaN(parsed)) return;
+
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('vault.deposit').toLowerCase(), fieldType: 'number' });
       return ctx.addIssue(issueArg);

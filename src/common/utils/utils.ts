@@ -1,4 +1,4 @@
-import { CurrencyExt, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { CurrencyExt, InterbtcPrimitivesVaultId, newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
@@ -160,6 +160,15 @@ function getPolkadotLink(blockHeight: number): string {
 const monetaryToNumber = (monetaryAmount: MonetaryAmount<CurrencyExt> | undefined): number =>
   monetaryAmount?.toBig().toNumber() || 0;
 
+const newSafeMonetaryAmount: typeof newMonetaryAmount = (...args) => {
+  try {
+    return newMonetaryAmount(...args);
+  } catch (e) {
+    const [, ...rest] = args;
+    return newMonetaryAmount(0, ...rest);
+  }
+};
+
 export {
   convertMonetaryAmountToValueInUSD,
   displayMonetaryAmount,
@@ -173,6 +182,7 @@ export {
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
   monetaryToNumber,
+  newSafeMonetaryAmount,
   shortAddress,
   shortTxId
 };
