@@ -13,11 +13,6 @@ import { TokenInputLabel } from './TokenInputLabel';
 import { TokenData } from './TokenList';
 import { TokenSelect } from './TokenSelect';
 
-function convertExponentialToNormal(exponentialNumber: number, decimals = 20) {
-  const normalNumber = parseFloat(exponentialNumber.toString()).toFixed(decimals);
-  return normalNumber.replace(/0+$/, '').replace(/\.$/, '');
-}
-
 type SingleToken = string;
 
 type MultiToken = { text: string; icons: string[] };
@@ -37,13 +32,13 @@ const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefin
 type Props = {
   decimals?: number;
   valueUSD: number;
-  balance?: number;
+  balance?: string | number;
+  humanBalance?: string | number;
   balanceLabel?: ReactNode;
-  balanceDecimals?: number;
   ticker?: TokenTicker;
   defaultTicker?: TokenTicker;
   tokens?: TokenData[];
-  onClickBalance?: (balance?: number) => void;
+  onClickBalance?: (balance?: string | number) => void;
   onChangeTicker?: (ticker?: string) => void;
   selectProps?: InputHTMLAttributes<HTMLInputElement>;
 };
@@ -58,8 +53,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       decimals,
       valueUSD,
       balance,
+      humanBalance,
       balanceLabel,
-      balanceDecimals,
       isDisabled,
       label,
       ticker: tickerProp,
@@ -98,15 +93,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     const handleClickBalance = () => {
       if (!balance) return;
 
-      const isExponential = balance.toString().includes('e');
-
-      if (isExponential) {
-        const amount = convertExponentialToNormal(balance, decimals);
-        triggerChangeEvent(inputRef, amount.toString());
-      } else {
-        triggerChangeEvent(inputRef, balance);
-      }
-
+      triggerChangeEvent(inputRef, balance);
       onClickBalance?.(balance);
     };
 
@@ -139,9 +126,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         {hasLabel && (
           <TokenInputLabel
             ticker={tickerValue}
-            balance={balance}
+            balance={humanBalance || balance}
             balanceLabel={balanceLabel}
-            balanceDecimals={balanceDecimals}
             isDisabled={isDisabled || !tickerValue}
             onClickBalance={handleClickBalance}
             {...labelProps}

@@ -185,9 +185,9 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
               ticker={asset.currency.ticker}
               errorMessage={getErrorMessage(errors[formField])}
               aria-label={content.fieldAriaLabel}
-              balance={assetAmount.max.toBig().toNumber()}
+              balance={assetAmount.max.toString()}
+              humanBalance={assetAmount.max.toHuman()}
               balanceLabel={content.label}
-              balanceDecimals={asset.currency.humanDecimals}
               valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
               onClickBalance={handleClickBalance}
               {...register(formField, { onChange: handleChange })}
