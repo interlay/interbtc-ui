@@ -3,16 +3,22 @@ import { forwardRef, ForwardRefExoticComponent, RefAttributes } from 'react';
 import { IconProps } from '../Icon';
 import { StyledFallbackIcon } from './CoinIcon.style';
 import {
+  AUSD,
   BTC,
   DOT,
+  ETH,
   IBTC,
   INTR,
+  KAR,
   KBTC,
   KINT,
   KSM,
   LKSM,
   LSKSM,
   MOVR,
+  qDOT,
+  qIBTC,
+  qINTR,
   qKBTC,
   qKINT,
   qKSM,
@@ -43,7 +49,13 @@ const coinsIcon: Record<string, CoinComponent> = {
   qKINT,
   qKBTC,
   qKSM,
-  qMOVR
+  qMOVR,
+  AUSD,
+  KAR,
+  qDOT,
+  qIBTC,
+  qINTR,
+  ETH
 };
 
 type Props = {

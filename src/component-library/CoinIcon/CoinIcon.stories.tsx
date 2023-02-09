@@ -1,12 +1,23 @@
 import { Meta, Story } from '@storybook/react';
 
 import { CoinIcon, CoinIconProps } from './CoinIcon';
+import * as ICONS from './icons';
 
-const Template: Story<CoinIconProps> = (args) => <CoinIcon {...args} />;
+const Template: Story<CoinIconProps> = (args) => {
+  const icons = Object.keys(ICONS);
+  return (
+    <>
+      {icons.map((icon) => (
+        <CoinIcon {...args} key={icon} ticker={icon} />
+      ))}
+    </>
+  );
+};
 
 const Default = Template.bind({});
 Default.args = {
-  ticker: 'IBTC'
+  size: 'lg',
+  ticker: undefined
 };
 
 export { Default };
