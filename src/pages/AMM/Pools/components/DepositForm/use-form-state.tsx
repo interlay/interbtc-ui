@@ -6,18 +6,21 @@ import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains'
 import balance from '@/lib/form-validation/common/balance';
 import field from '@/lib/form-validation/common/field';
 import { CommonSchemaParams, MaxAmountSchemaParams } from '@/lib/form-validation/types';
+import { transformNaN } from '@/lib/form-validation/utils';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 type PoolDepositSchemaParams = CommonSchemaParams & MaxAmountSchemaParams;
 
-const validateField = (value: number | undefined, params: PoolDepositSchemaParams, t: TFunction) => {
+const validateField = (value: number, params: PoolDepositSchemaParams, t: TFunction) => {
   const { governanceBalance, transactionFee, minAmount, maxAmount } = params;
+
+  const newValue = transformNaN(value);
 
   if (!balance.transactionFee.validate({ availableBalance: governanceBalance, transactionFee })) {
     return balance.transactionFee.issue(t);
   }
 
-  const inputAmount = new Big(value as number);
+  const inputAmount = new Big(newValue as number);
 
   if (!field.min.validate({ inputAmount, minAmount: minAmount.toBig() })) {
     const issueArg = field.min.issue(t, {
@@ -51,7 +54,7 @@ const useFormState = (values: Record<string, number | undefined>, pooledCurrenci
   const errors: Record<string, string> = pooledCurrencies.reduce((acc, { currency }) => {
     const value = values[currency.ticker];
 
-    if (!value) return acc;
+    if (value === undefined) return acc;
 
     const zeroAssetAmount = newMonetaryAmount(0, currency);
     const params: PoolDepositSchemaParams = {

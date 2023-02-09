@@ -73,7 +73,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
     }
 
     const inputCurrency = pooledCurrencies.find((currency) => currency.currency.ticker === e.target.name);
-    const inputAmount = newMonetaryAmount(e.target.value || 0, inputCurrency?.currency as CurrencyExt, true);
+    const inputAmount = newSafeMonetaryAmount(e.target.value || 0, inputCurrency?.currency as CurrencyExt, true);
 
     const amounts = pool.getLiquidityDepositInputAmounts(inputAmount);
 

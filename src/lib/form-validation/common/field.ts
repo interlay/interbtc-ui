@@ -4,7 +4,7 @@ import * as z from 'zod';
 import { Validation } from './types';
 
 type RequiredFieldValidationParams = {
-  value: string;
+  value: string | number;
 };
 
 type RequiredFieldIssueParams = {
@@ -13,7 +13,7 @@ type RequiredFieldIssueParams = {
 };
 
 const required: Validation<RequiredFieldValidationParams, RequiredFieldIssueParams> = {
-  validate: ({ value }): boolean => !!value,
+  validate: ({ value }): boolean => value !== undefined || value !== '',
   issue: (t, params) => {
     const translationField =
       params?.fieldType === 'number' ? 'forms.please_enter_the_amount_to' : 'forms.please_enter_your_field';
