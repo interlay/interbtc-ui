@@ -14,7 +14,6 @@ import { URL_PARAMETERS } from '@/utils/constants/links';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetIdentities } from '@/utils/hooks/api/use-get-identities';
 import { useGetVaultData } from '@/utils/hooks/api/vaults/use-get-vault-data';
-import { useGetVaultTransactions } from '@/utils/hooks/api/vaults/use-get-vault-transactions';
 
 import { InsightListItem, InsightsList, PageTitle, VaultInfo } from './components';
 import ReplaceTable from './ReplaceTable';
@@ -31,7 +30,6 @@ const VaultDashboard = (): JSX.Element => {
   } = useParams<Record<string, string>>();
 
   const vaultData = useGetVaultData({ address: selectedVaultAccountAddress });
-  const transactions = useGetVaultTransactions(selectedVaultAccountAddress, vaultCollateral, bridgeLoaded);
   const { isIdle: identitiesIdle, isLoading: identitiesLoading, data: identities } = useGetIdentities(bridgeLoaded);
 
   const { getCurrencyFromTicker, isSuccess: currenciesSuccess } = useGetCurrencies(bridgeLoaded);
@@ -39,7 +37,7 @@ const VaultDashboard = (): JSX.Element => {
   const vault = vaultData?.vaults?.find((vault: any) => vault.collateralId === vaultCollateral);
   const displayName = identities?.get(selectedVaultAccountAddress);
 
-  if (!vault || !transactions || !currenciesSuccess || identitiesIdle || identitiesLoading) {
+  if (!vault || !currenciesSuccess || identitiesIdle || identitiesLoading) {
     return (
       <MainContainer>
         <Stack>
