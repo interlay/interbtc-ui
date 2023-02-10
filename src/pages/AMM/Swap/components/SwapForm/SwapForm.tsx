@@ -100,7 +100,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     }
   });
 
-  const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, inputAmount, trade);
+  const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, liquidityPools, inputAmount, trade);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = Number(e.target.value) || undefined;

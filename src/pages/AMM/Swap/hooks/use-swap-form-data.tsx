@@ -1,4 +1,4 @@
-import { newMonetaryAmount, Trade } from '@interlay/interbtc-api';
+import { LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,8 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import { getPooledTickers } from '../../shared/utils';
 
 const useButtonProps = (
   pair: SwapPair,
@@ -57,16 +59,24 @@ type UseSwapFormData = {
   buttonProps: { children: ReactNode; disabled: boolean };
 };
 
-const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | null): UseSwapFormData => {
+const useSwapFormData = (
+  pair: SwapPair,
+  liquidityPools: LiquidityPool[],
+  inputAmount?: number,
+  trade?: Trade | null
+): UseSwapFormData => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
   const buttonProps = useButtonProps(pair, inputAmount, trade);
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
-  const tokens: TokenInputProps['tokens'] = useMemo(
-    () =>
-      currencies?.map((currency) => {
+  const pooledTickers = useMemo(() => getPooledTickers(liquidityPools), [liquidityPools]);
+
+  const tokens: TokenInputProps['tokens'] = useMemo(() => {
+    return currencies
+      ?.filter((currency) => pooledTickers.has(currency.ticker))
+      .map((currency) => {
         const balance = getAvailableBalance(currency.ticker);
         const balanceUSD = balance
           ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
@@ -77,9 +87,8 @@ const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | n
           balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
           ticker: currency.ticker
         };
-      }),
-    [currencies, getAvailableBalance, prices]
-  );
+      });
+  }, [currencies, getAvailableBalance, pooledTickers, prices]);
 
   const inputBalance = pair.input && getAvailableBalance(pair.input.ticker);
   const outputBalance = pair.output && getAvailableBalance(pair.output.ticker);
