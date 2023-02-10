@@ -11,7 +11,7 @@ type CreateVaultValidationParams = FeesValidationParams & MaxAmountValidationPar
 const createVaultSchema = (params: CreateVaultValidationParams): yup.ObjectSchema<any> =>
   yup.object().shape({
     [CREATE_VAULT_DEPOSIT_FIELD]: yup
-      .number()
+      .string()
       .requiredAmount(CREATE_VAULT_DEPOSIT_FIELD)
       .maxAmount(params)
       .minAmount(params, CREATE_VAULT_DEPOSIT_FIELD)

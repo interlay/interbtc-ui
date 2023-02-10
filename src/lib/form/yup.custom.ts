@@ -10,8 +10,8 @@ type YupContext = {
   t: TFunction;
 };
 
-yup.addMethod<yup.NumberSchema>(yup.number, 'requiredAmount', function (action: string) {
-  return this.transform((value) => (value === '' ? undefined : Number(value))).test('requiredAmount', (value, ctx) => {
+yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: string) {
+  return this.transform((value) => (isNaN(value) ? undefined : value)).test('requiredAmount', (value, ctx) => {
     if (value === undefined) {
       const { t } = ctx.options.context as YupContext;
 
@@ -29,8 +29,8 @@ type FeesValidationParams = {
 };
 
 // TODO: remove when fees are moved out of form validation
-yup.addMethod<yup.NumberSchema>(
-  yup.number,
+yup.addMethod<yup.StringSchema>(
+  yup.string,
   'fees',
   function ({ transactionFee, governanceBalance }: FeesValidationParams) {
     return this.test('fees', (_, ctx) => {
@@ -52,8 +52,8 @@ type MaxAmountValidationParams = {
   maxAmount: MonetaryAmount<CurrencyExt> | Big;
 };
 
-yup.addMethod<yup.NumberSchema>(
-  yup.number,
+yup.addMethod<yup.StringSchema>(
+  yup.string,
   'maxAmount',
   function ({ maxAmount }: MaxAmountValidationParams, action?: string) {
     return this.test('maxAmount', (value, ctx) => {
@@ -84,8 +84,8 @@ type MinAmountValidationParams = {
   minAmount: MonetaryAmount<CurrencyExt>;
 };
 
-yup.addMethod<yup.NumberSchema>(
-  yup.number,
+yup.addMethod<yup.StringSchema>(
+  yup.string,
   'minAmount',
   function ({ minAmount }: MinAmountValidationParams, action: string) {
     return this.test('balance', (value, ctx) => {
@@ -110,15 +110,15 @@ yup.addMethod<yup.NumberSchema>(
 );
 
 declare module 'yup' {
-  interface NumberSchema<
-    TType extends Maybe<number> = number | undefined,
+  interface StringSchema<
+    TType extends Maybe<string> = string | undefined,
     TContext extends AnyObject = AnyObject,
     TOut extends TType = TType
   > extends yup.BaseSchema<TType, TContext, TOut> {
-    requiredAmount(action: string): NumberSchema<TType, TContext>;
-    fees(params: FeesValidationParams): NumberSchema<TType, TContext>;
-    maxAmount(params: MaxAmountValidationParams, action?: string): NumberSchema<TType, TContext>;
-    minAmount(params: MinAmountValidationParams, action: string): NumberSchema<TType, TContext>;
+    requiredAmount(action: string): StringSchema<TType, TContext>;
+    fees(params: FeesValidationParams): StringSchema<TType, TContext>;
+    maxAmount(params: MaxAmountValidationParams, action?: string): StringSchema<TType, TContext>;
+    minAmount(params: MinAmountValidationParams, action: string): StringSchema<TType, TContext>;
   }
 }
 

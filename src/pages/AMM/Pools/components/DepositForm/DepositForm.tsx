@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -75,7 +75,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
 
     try {
       const amounts = pooledCurrencies.map((amount) =>
-        newMonetaryAmount(data[amount.currency.ticker] || 0, amount.currency, true)
+        newSafeMonetaryAmount(data[amount.currency.ticker] || 0, amount.currency, true)
       );
 
       const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
@@ -100,8 +100,8 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
   const form = useForm<DepositLiquidityPoolFormData>({
     initialValues: defaultValues,
     validationSchema: depositLiquidityPoolSchema({ transactionFee: TRANSACTION_FEE_AMOUNT, governanceBalance, tokens }),
-
-    onSubmit: handleSubmit
+    onSubmit: handleSubmit,
+    disableValidation: depositMutation.isLoading
   });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -110,16 +110,16 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
     }
 
     const inputCurrency = pooledCurrencies.find((currency) => currency.currency.ticker === e.target.name);
-    const inputAmount = newMonetaryAmount(e.target.value || 0, inputCurrency?.currency as CurrencyExt, true);
+    const inputAmount = newSafeMonetaryAmount(e.target.value || 0, inputCurrency?.currency as CurrencyExt, true);
 
     const amounts = pool.getLiquidityDepositInputAmounts(inputAmount);
 
     const newValues = amounts.reduce((acc, val) => {
       if (val.currency.ticker === inputCurrency?.currency.ticker) {
-        return { ...acc, [val.currency.ticker]: e.target.value ? Number(e.target.value) : undefined };
+        return { ...acc, [val.currency.ticker]: e.target.value ? e.target.value : undefined };
       }
 
-      return { ...acc, [val.currency.ticker]: val.toBig().toNumber() };
+      return { ...acc, [val.currency.ticker]: val.toBig().toString() };
     }, {});
 
     form.setValues(newValues);
@@ -157,10 +157,9 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
                     })}
                     balance={balance?.toString() || 0}
                     humanBalance={balance?.toHuman() || 0}
-                    onChange={handleChange}
-                    // TODO: when adding formik, use isLoanding to disabled validation
-                    errorMessage={depositMutation.isLoading ? undefined : form.errors[ticker]}
-                    valueUSD={new Big(form.values[ticker] || 0).mul(getTokenPrice(prices, ticker)?.usd || 0).toNumber()}
+                    valueUSD={new Big(isNaN(Number(form.values[ticker])) ? 0 : form.values[ticker] || 0)
+                      .mul(getTokenPrice(prices, ticker)?.usd || 0)
+                      .toNumber()}
                     {...mergeProps(form.getFieldProps(ticker), { onChange: handleChange })}
                   />
                   {!isLastItem && <DepositDivider />}

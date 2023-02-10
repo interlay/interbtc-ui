@@ -91,7 +91,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
     onSubmit: handleSubmit
   });
 
-  const lpTokenMonetaryAmount = newMonetaryAmount(0, pool.lpToken, true);
+  const lpTokenMonetaryAmount = newMonetaryAmount(form.values[WITHDRAW_LIQUIDITY_POOL_FIELD] || 0, pool.lpToken, true);
 
   const isBtnDisabled = isFormDisabled(form);
 

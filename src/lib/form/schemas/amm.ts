@@ -1,6 +1,6 @@
 import yup, { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
-type DepositLiquidityPoolFormData = Record<string, number>;
+type DepositLiquidityPoolFormData = Record<string, string>;
 
 type DepositLiquidityPoolValidationParams = FeesValidationParams & {
   tokens: Record<string, MaxAmountValidationParams & MinAmountValidationParams>;
@@ -9,7 +9,7 @@ type DepositLiquidityPoolValidationParams = FeesValidationParams & {
 const depositLiquidityPoolSchema = (params: DepositLiquidityPoolValidationParams): yup.ObjectSchema<any> => {
   const shape = Object.keys(params.tokens).reduce((acc, ticker, idx) => {
     const tokenParams = params.tokens[ticker];
-    const validation = yup.number().requiredAmount('deposit').maxAmount(tokenParams).minAmount(tokenParams, 'deposit');
+    const validation = yup.string().requiredAmount('deposit').maxAmount(tokenParams).minAmount(tokenParams, 'deposit');
 
     if (idx === 0) {
       return { ...acc, [ticker]: validation.fees(params) };
@@ -34,7 +34,7 @@ type WithdrawLiquidityPoolValidationParams = FeesValidationParams &
 const withdrawLiquidityPoolSchema = (params: WithdrawLiquidityPoolValidationParams): yup.ObjectSchema<any> =>
   yup.object().shape({
     [WITHDRAW_LIQUIDITY_POOL_FIELD]: yup
-      .number()
+      .string()
       .requiredAmount(WITHDRAW_LIQUIDITY_POOL_FIELD)
       .maxAmount(params)
       .minAmount(params, WITHDRAW_LIQUIDITY_POOL_FIELD)
