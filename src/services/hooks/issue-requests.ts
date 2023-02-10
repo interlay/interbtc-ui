@@ -57,7 +57,7 @@ const useIssueRequests = (
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useCurrentActiveBlockNumber();
+  } = useCurrentActiveBlockNumber(refetchInterval);
 
   const {
     isIdle: issueRequestsIdle,

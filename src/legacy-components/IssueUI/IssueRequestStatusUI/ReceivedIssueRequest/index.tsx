@@ -26,7 +26,7 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
   const {
     isIdle: stableBitcoinConfirmationsIdle,
     isLoading: stableBitcoinConfirmationsLoading,
-    data: stableBitcoinConfirmations = 1, // TODO: double-check
+    data: stableBitcoinConfirmations,
     error: stableBitcoinConfirmationsError
   } = useStableBitcoinConfirmations();
   useErrorHandler(stableBitcoinConfirmationsError);
@@ -34,7 +34,7 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
   const {
     isIdle: stableParachainConfirmationsIdle,
     isLoading: stableParachainConfirmationsLoading,
-    data: stableParachainConfirmations = 100, // TODO: double-check
+    data: stableParachainConfirmations,
     error: stableParachainConfirmationsError
   } = useStableParachainConfirmations();
   useErrorHandler(stableParachainConfirmationsError);
@@ -42,7 +42,7 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
   const {
     isIdle: currentActiveBlockNumberIdle,
     isLoading: currentActiveBlockNumberLoading,
-    data: currentActiveBlockNumber = 0, // TODO: double-check
+    data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
   } = useCurrentActiveBlockNumber();
   useErrorHandler(currentActiveBlockNumberError);
@@ -56,6 +56,15 @@ const ReceivedIssueRequest = ({ request }: Props): JSX.Element => {
   }
   if (currentActiveBlockNumberIdle || currentActiveBlockNumberLoading) {
     return <>Loading...</>;
+  }
+  if (stableBitcoinConfirmations === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  if (stableParachainConfirmations === undefined) {
+    throw new Error('Something went wrong!');
+  }
+  if (currentActiveBlockNumber === undefined) {
+    throw new Error('Something went wrong!');
   }
 
   const requestConfirmations = request.backingPayment.includedAtParachainActiveBlock

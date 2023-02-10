@@ -62,13 +62,13 @@ const issuesFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
 function getIssueWithStatus(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   issue: any,
-  stableBtcConfirmations: number,
+  stableBitcoinConfirmations: number,
   stableParachainConfirmations: number,
-  parachainActiveHeight: number
+  currentActiveBlockNumber: number
 ): any {
   stableParachainConfirmations = Number(stableParachainConfirmations);
-  stableBtcConfirmations = Number(stableBtcConfirmations);
-  parachainActiveHeight = Number(parachainActiveHeight);
+  stableBitcoinConfirmations = Number(stableBitcoinConfirmations);
+  currentActiveBlockNumber = Number(currentActiveBlockNumber);
 
   if (issue.status !== 'Pending') {
     // ideally this would be auto-decoded, for now set by hand
@@ -90,9 +90,9 @@ function getIssueWithStatus(
   } else if (!issue.backingPayment.confirmations) {
     issue.status = IssueStatus.PendingWithBtcTxNotIncluded;
   } else if (
-    issue.backingPayment.confirmations < stableBtcConfirmations ||
+    issue.backingPayment.confirmations < stableBitcoinConfirmations ||
     issue.backingPayment.includedAtParachainActiveBlock === undefined ||
-    issue.backingPayment.includedAtParachainActiveBlock + stableParachainConfirmations > parachainActiveHeight
+    issue.backingPayment.includedAtParachainActiveBlock + stableParachainConfirmations > currentActiveBlockNumber
   ) {
     issue.status = IssueStatus.PendingWithTooFewConfirmations;
   } else {

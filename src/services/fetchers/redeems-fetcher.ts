@@ -70,13 +70,13 @@ const redeemsFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
 function getRedeemWithStatus(
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   redeem: any,
-  stableBtcConfirmations: number,
+  stableBitcoinConfirmations: number,
   stableParachainConfirmations: number,
-  parachainActiveHeight: number
+  currentActiveBlockNumber: number
 ): any {
   stableParachainConfirmations = Number(stableParachainConfirmations);
-  stableBtcConfirmations = Number(stableBtcConfirmations);
-  parachainActiveHeight = Number(parachainActiveHeight);
+  stableBitcoinConfirmations = Number(stableBitcoinConfirmations);
+  currentActiveBlockNumber = Number(currentActiveBlockNumber);
 
   if (redeem.status !== 'Pending') {
     // ideally this would be auto-decoded, for now set by hand
@@ -92,9 +92,9 @@ function getRedeemWithStatus(
   } else if (!redeem.backingPayment.confirmations) {
     redeem.status = RedeemStatus.PendingWithBtcTxNotIncluded;
   } else if (
-    redeem.backingPayment.confirmations < stableBtcConfirmations ||
+    redeem.backingPayment.confirmations < stableBitcoinConfirmations ||
     redeem.backingPayment.includedAtParachainActiveBlock === undefined ||
-    redeem.backingPayment.includedAtParachainActiveBlock + stableParachainConfirmations > parachainActiveHeight
+    redeem.backingPayment.includedAtParachainActiveBlock + stableParachainConfirmations > currentActiveBlockNumber
   ) {
     redeem.status = RedeemStatus.PendingWithTooFewConfirmations;
   } else {

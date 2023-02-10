@@ -29,7 +29,7 @@ const useRedeemRequests = (
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
-  } = useCurrentActiveBlockNumber();
+  } = useCurrentActiveBlockNumber(refetchInterval);
 
   const {
     isIdle: stableParachainConfirmationsIdle,
