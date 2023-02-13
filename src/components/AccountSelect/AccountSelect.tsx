@@ -30,7 +30,7 @@ const AccountSelect = ({ value, accounts, isDisabled, onChange }: AccountSelectP
   return (
     <>
       <SelectTrigger onPress={() => setOpen(true)} disabled={isDisabled}>
-        <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing1'>
+        <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing2'>
           <Icon value={selectedAccount?.address} />
           <StyledAccount>
             {selectedAccount?.meta.name} {selectedAccount?.address}

@@ -1,7 +1,7 @@
-import { CoinIcon } from '@/component-library';
 import { Flex } from '@/component-library/Flex';
 import { ListItem, ListProps } from '@/component-library/List';
 
+import { ChainIcon } from '../ChainIcon';
 import { Chains } from './ChainInput';
 import { StyledList, StyledListChainWrapper, StyledListItemLabel } from './ChainInput.style';
 
@@ -47,8 +47,8 @@ const ChainList = ({ items, selectedChain, onSelectionChange, ...props }: ChainL
             gap='spacing4'
           >
             <StyledListChainWrapper alignItems='center' gap='spacing4' flex='1'>
-              <Flex gap='spacing4'>
-                <CoinIcon ticker={item.nativeToken} />
+              <Flex gap='spacing2'>
+                <ChainIcon id={item.id} />
                 <StyledListItemLabel $isSelected={isSelected}>{item.display}</StyledListItemLabel>
               </Flex>
             </StyledListChainWrapper>

@@ -1,9 +1,10 @@
 import { chain } from '@react-aria/utils';
 import { useState } from 'react';
 
-import { CoinIcon, Flex } from '@/component-library';
+import { Flex } from '@/component-library';
 import { SelectTrigger } from '@/component-library/Select';
 
+import { ChainIcon } from '../ChainIcon';
 import { Chains } from './ChainInput';
 import { StyledChain } from './ChainInput.style';
 import { ChainListModal } from './ChainListModal';
@@ -26,8 +27,8 @@ const ChainSelect = ({ value, chains, isDisabled, onChange }: ChainSelectProps):
     <>
       <SelectTrigger onPress={() => setOpen(true)} disabled={isDisabled}>
         {selectedChain && (
-          <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing4'>
-            <CoinIcon ticker={selectedChain.nativeToken} />
+          <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing2'>
+            <ChainIcon id={selectedChain.id} />
             <StyledChain>{selectedChain?.display}</StyledChain>
           </Flex>
         )}

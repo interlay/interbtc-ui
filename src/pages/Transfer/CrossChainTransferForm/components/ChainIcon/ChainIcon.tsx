@@ -1,0 +1,45 @@
+import { forwardRef, ForwardRefExoticComponent, RefAttributes } from 'react';
+
+import { IconProps } from '@/component-library/Icon';
+
+import { StyledFallbackIcon } from './ChainIcon.style';
+import { INTERLAY, KINTSUGI, KUSAMA, POLKADOT } from './icons';
+
+type ChainComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
+
+const chainsIcon: Record<string, ChainComponent> = {
+  INTERLAY,
+  KINTSUGI,
+  KUSAMA,
+  POLKADOT
+};
+
+type Props = {
+  id: string;
+};
+
+type NativeAttrs = Omit<IconProps, keyof Props>;
+
+type ChainIconProps = Props & NativeAttrs;
+
+const ChainIcon = forwardRef<SVGSVGElement, ChainIconProps>(
+  ({ id, ...props }, ref): JSX.Element => {
+    const ChainIcon = chainsIcon[id.toUpperCase()];
+
+    if (!ChainIcon) {
+      return (
+        <StyledFallbackIcon {...props} ref={ref} viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
+          <title>{id}</title>
+          <circle cx='12' cy='12' r='11.5' fill='currentColor' />
+        </StyledFallbackIcon>
+      );
+    }
+
+    return <ChainIcon ref={ref} {...props} />;
+  }
+);
+
+ChainIcon.displayName = 'CoinIcon';
+
+export { ChainIcon };
+export type { ChainIconProps };

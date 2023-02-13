@@ -22,17 +22,12 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   useEffect(() => {
     if (!XCMBridge) return;
-    // TODO: Fix this type issue in the api. The `balanceAdapter` type
-    // should be added to `BaseCrossChainAdapter`, or the type should
-    // be extended.
+
     const availableChains = XCMBridge.adapters.map((adapter: any) => {
       console.log('adapter');
       return {
         display: adapter.chain.display,
-        id: adapter.chain.id,
-        // TODO: Fallback native token or (better) always return
-        // a native token
-        nativeToken: adapter.balanceAdapter.nativeToken || 'KINT'
+        id: adapter.chain.id
       };
     });
 
