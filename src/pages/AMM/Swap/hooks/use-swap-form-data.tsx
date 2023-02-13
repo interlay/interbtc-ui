@@ -18,7 +18,8 @@ import { getPooledTickers } from '../../shared/utils';
 const useButtonProps = (
   pair: SwapPair,
   inputAmount?: number,
-  trade?: Trade | null
+  trade?: Trade | null,
+  isSwaping?: boolean
 ): { children: ReactNode; disabled: boolean } => {
   const { getAvailableBalance } = useGetBalances();
   const { t } = useTranslation();
@@ -34,7 +35,7 @@ const useButtonProps = (
     return { children: t('amm.enter_token_amount', { token: pair.input.ticker }), disabled: true };
   }
 
-  if (new Big(inputAmount).gt(getAvailableBalance(pair.input.ticker || '')?.toBig() || 0)) {
+  if (!isSwaping && new Big(inputAmount).gt(getAvailableBalance(pair.input.ticker || '')?.toBig() || 0)) {
     return { children: t('amm.insufficient_token_balance', { token: pair.input.ticker }), disabled: true };
   }
 
@@ -62,13 +63,14 @@ type UseSwapFormData = {
 const useSwapFormData = (
   pair: SwapPair,
   liquidityPools: LiquidityPool[],
+  isSwaping: boolean,
   inputAmount?: number,
   trade?: Trade | null
 ): UseSwapFormData => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-  const buttonProps = useButtonProps(pair, inputAmount, trade);
+  const buttonProps = useButtonProps(pair, inputAmount, trade, isSwaping);
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
   const pooledTickers = useMemo(() => getPooledTickers(liquidityPools), [liquidityPools]);

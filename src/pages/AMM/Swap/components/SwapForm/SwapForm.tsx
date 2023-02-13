@@ -93,6 +93,8 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const swapMutation = useMutation<void, Error, SwapData>(mutateSwap, {
     onSuccess: () => {
       toast.success('Swap successful');
+      setTrade(undefined);
+      setInputAmount(undefined);
       onSwap();
     },
     onError: (err) => {
@@ -100,7 +102,13 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     }
   });
 
-  const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, liquidityPools, inputAmount, trade);
+  const { buttonProps, inputProps, outputProps } = useSwapFormData(
+    pair,
+    liquidityPools,
+    swapMutation.isLoading,
+    inputAmount,
+    trade
+  );
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = Number(e.target.value) || undefined;
