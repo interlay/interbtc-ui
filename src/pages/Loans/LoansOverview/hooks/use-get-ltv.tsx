@@ -3,7 +3,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
-import { convertMonetaryAmountToValueInUSD, formatNumber } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { MeterRanges, Status } from '@/component-library';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -26,10 +26,10 @@ type GetDataParams = {
 };
 
 const getRanges = (thresholds: PositionsThresholdsData): MeterRanges => {
-  const collateral = formatNumber(thresholds.collateral.toNumber(), { maximumFractionDigits: 2 });
-  const liquidation = formatNumber(thresholds.liquidation.toNumber(), { maximumFractionDigits: 2 });
+  const collateral = thresholds.collateral.round(2).toNumber();
+  const liquidation = thresholds.liquidation.round(2).toNumber();
 
-  return [0, Number(collateral), Number(liquidation), 100];
+  return [0, collateral, liquidation, 100];
 };
 
 const getStatus = (value: Big, thresholds: PositionsThresholdsData): Status => {
