@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BorrowPosition, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
-import { useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TFunction, useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useDebounce } from 'react-use';
 import * as z from 'zod';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
@@ -118,6 +119,9 @@ type LoanFormProps = {
 };
 
 const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JSX.Element => {
+  const [inputAmount, setInputAmount] = useState<string>();
+  const [isMaxAmount, setMaxAmount] = useState(false);
+
   const { t } = useTranslation();
   const {
     refetch,
@@ -125,7 +129,23 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   } = useGetAccountPositions();
   const prices = useGetPrices();
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
-  const [isMaxAmount, setMaxAmount] = useState(false);
+
+  // withdraw has `withdraw` and `withdrawAll`
+  // repay has `repay` and `repayAll`
+  // They both are considered a multi action variant
+  const hasMultiActionVariant = variant === 'withdraw' || variant === 'repay';
+
+  useDebounce(
+    () => {
+      if (!inputAmount || !hasMultiActionVariant) return;
+
+      // Checks if the user is trying to type the max value
+      const isEqualAmount = assetAmount.max.eq(newMonetaryAmount(inputAmount, asset.currency, true));
+      setMaxAmount(isEqualAmount);
+    },
+    300,
+    [inputAmount]
+  );
 
   const handleSuccess = () => {
     onChangeLoan?.();
@@ -173,9 +193,18 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     }
   };
 
-  const handleClickBalance = () => setMaxAmount(true);
+  const handleClickBalance = () => {
+    if (!hasMultiActionVariant) return;
 
-  const handleChange = () => setMaxAmount(false);
+    setMaxAmount(true);
+  };
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (!hasMultiActionVariant) return;
+
+    setMaxAmount(false);
+    setInputAmount(e.target.value);
+  };
 
   const showBorrowLimit = shouldShowBorrowLimit(variant, hasCollateral, position);
 
