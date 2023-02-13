@@ -2,7 +2,6 @@ import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
-import { formatNumber } from '@/common/utils/utils';
 import { Flex } from '@/component-library';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
@@ -39,13 +38,7 @@ const ApyCell = ({
 
   const earnedAsset = accumulatedDebt || earnedInterest;
 
-  const earnedAssetAmount = earnedAsset
-    ? formatNumber(earnedAsset?.toBig().toNumber(), {
-        maximumFractionDigits: earnedAsset?.currency.humanDecimals
-      })
-    : undefined;
-
-  const earnedAssetLabel = earnedAsset ? `${earnedAssetAmount} ${earnedAsset.currency.ticker}` : undefined;
+  const earnedAssetLabel = earnedAsset ? `${earnedAsset.toHuman(8)} ${earnedAsset.currency.ticker}` : undefined;
 
   const children = (
     <MonetaryCell onClick={onClick} label={totalApyLabel} sublabel={earnedAssetLabel} alignSelf='flex-start' />
