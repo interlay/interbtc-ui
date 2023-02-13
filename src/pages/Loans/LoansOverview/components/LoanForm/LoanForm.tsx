@@ -85,20 +85,33 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
-  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
+  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(
+    variant,
+    asset,
+    variant,
+    position
+  );
 
   // withdraw has `withdraw` and `withdrawAll`
   // repay has `repay` and `repayAll`
   // They both are considered a multi action variant
   const hasMultiActionVariant = variant === 'withdraw' || variant === 'repay';
 
+  const handleMaxAmount = () => {
+    const isMaxAmount = (variant === 'withdraw' && assetAmount.max.isEqualBalance) || variant === 'repay';
+    setMaxAmount(isMaxAmount);
+  };
+
   useDebounce(
     () => {
       if (!inputAmount || !hasMultiActionVariant) return;
 
       // Checks if the user is trying to type the max value
-      const isEqualAmount = assetAmount.max.eq(newMonetaryAmount(inputAmount, asset.currency, true));
-      setMaxAmount(isEqualAmount);
+      const isEqualAmount = assetAmount.max.value.eq(newMonetaryAmount(inputAmount, asset.currency, true));
+
+      if (!isEqualAmount) return;
+
+      handleMaxAmount();
     },
     300,
     [inputAmount]
@@ -119,7 +132,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     governanceBalance,
     transactionFee,
     minAmount: assetAmount.min,
-    maxAmount: assetAmount.max
+    maxAmount: assetAmount.max.value
   };
 
   const { content } = getData(t, variant);
@@ -147,7 +160,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const handleClickBalance = () => {
     if (!hasMultiActionVariant) return;
 
-    setMaxAmount(true);
+    handleMaxAmount();
   };
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -167,8 +180,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
             placeholder='0.00'
             ticker={asset.currency.ticker}
             aria-label={content.fieldAriaLabel}
-            balance={assetAmount.max.toString()}
-            humanBalance={assetAmount.max.toHuman()}
+            balance={assetAmount.max.value.toString()}
+            humanBalance={assetAmount.max.value.toHuman()}
             balanceLabel={content.label}
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
             onClickBalance={handleClickBalance}
