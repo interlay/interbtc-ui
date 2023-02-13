@@ -18,18 +18,7 @@ type MultiToken = { text: string; icons: string[] };
 
 type TokenTicker = SingleToken | MultiToken;
 
-const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
-  if (!decimals) return;
-
-  return {
-    style: 'decimal',
-    maximumFractionDigits: decimals || 20,
-    useGrouping: false
-  };
-};
-
 type Props = {
-  decimals?: number;
   valueUSD?: number;
   balance?: string | number;
   humanBalance?: string | number;
@@ -49,7 +38,6 @@ type TokenInputProps = Props & InheritAttrs;
 const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
-      decimals,
       valueUSD,
       balance,
       humanBalance,
@@ -65,6 +53,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       onClickBalance,
       onChangeTicker,
       selectProps,
+      placeholder = '0',
       ...props
     },
     ref
@@ -116,8 +105,6 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       />
     );
 
-    const formatOptions = getFormatOptions(decimals);
-
     const hasLabel = !!label || balance !== undefined;
 
     return (
@@ -136,10 +123,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         )}
         <NumberInput
           ref={inputRef}
-          minValue={0}
+          placeholder={placeholder}
           size='large'
           isDisabled={isDisabled}
-          formatOptions={formatOptions}
           endAdornment={endAdornment}
           bottomAdornment={
             valueUSD !== undefined && (
