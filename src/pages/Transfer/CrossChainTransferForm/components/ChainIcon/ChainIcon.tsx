@@ -24,6 +24,7 @@ type ChainIconProps = Props & NativeAttrs;
 
 const ChainIcon = forwardRef<SVGSVGElement, ChainIconProps>(
   ({ id, ...props }, ref): JSX.Element => {
+    // id is returned from api as lowercase, e.g. 'interlay'
     const ChainIcon = chainsIcon[id.toUpperCase()];
 
     if (!ChainIcon) {
