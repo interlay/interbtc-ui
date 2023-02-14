@@ -22,7 +22,14 @@ const useRedeemRequests = (
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations,
     error: stableBitcoinConfirmationsError
-  } = useStableBitcoinConfirmations();
+  } = useStableBitcoinConfirmations(); // Relatively static value so refetch is not necessary
+
+  const {
+    isIdle: stableParachainConfirmationsIdle,
+    isLoading: stableParachainConfirmationsLoading,
+    data: stableParachainConfirmations,
+    error: stableParachainConfirmationsError
+  } = useStableParachainConfirmations(); // Relatively static value so refetch is not necessary
 
   const {
     isIdle: currentActiveBlockNumberIdle,
@@ -30,13 +37,6 @@ const useRedeemRequests = (
     data: currentActiveBlockNumber,
     error: currentActiveBlockNumberError
   } = useCurrentActiveBlockNumber(refetchInterval);
-
-  const {
-    isIdle: stableParachainConfirmationsIdle,
-    isLoading: stableParachainConfirmationsLoading,
-    data: stableParachainConfirmations,
-    error: stableParachainConfirmationsError
-  } = useStableParachainConfirmations();
 
   const {
     isIdle: redeemRequestsIdle,
@@ -51,7 +51,7 @@ const useRedeemRequests = (
     }
   );
 
-  const data =
+  const data: Array<RedeemRequestWithStatusDecoded> | undefined =
     redeemRequests === undefined ||
     stableBitcoinConfirmations === undefined ||
     stableParachainConfirmations === undefined ||

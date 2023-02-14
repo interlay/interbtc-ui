@@ -66,7 +66,12 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
     {
       onSuccess: (_, variables) => {
         // ray test touch <
-        queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
+        queryClient.invalidateQueries([
+          ISSUES_FETCHER,
+          selectedPageIndex * TABLE_PAGE_LIMIT,
+          TABLE_PAGE_LIMIT,
+          `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`
+        ]);
         // ray test touch >
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
       }

@@ -37,33 +37,36 @@ const useIssueRequests = (
   isLoading: boolean;
   data: Array<IssueRequestWithStatusDecoded> | undefined;
   error: Error | null;
+  refetch: () => Promise<void>;
 } => {
   const {
     isIdle: stableBitcoinConfirmationsIdle,
     isLoading: stableBitcoinConfirmationsLoading,
     data: stableBitcoinConfirmations,
     error: stableBitcoinConfirmationsError
-  } = useStableBitcoinConfirmations();
+  } = useStableBitcoinConfirmations(); // Relatively static value so refetch is not necessary
 
   const {
     isIdle: stableParachainConfirmationsIdle,
     isLoading: stableParachainConfirmationsLoading,
     data: stableParachainConfirmations,
     error: stableParachainConfirmationsError
-  } = useStableParachainConfirmations();
+  } = useStableParachainConfirmations(); // Relatively static value so refetch is not necessary
 
   const {
     isIdle: currentActiveBlockNumberIdle,
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
-    error: currentActiveBlockNumberError
+    error: currentActiveBlockNumberError,
+    refetch: currentActiveBlockNumberRefetch
   } = useCurrentActiveBlockNumber(refetchInterval);
 
   const {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: issueRequests,
-    error: issueRequestsError
+    error: issueRequestsError,
+    refetch: issueRequestsRefetch
   } = useQuery<Array<IssueRequest>, Error>(
     whereCondition === undefined ? [ISSUES_FETCHER, offset, limit] : [ISSUES_FETCHER, offset, limit, whereCondition],
     issuesFetcher,
@@ -98,7 +101,11 @@ const useIssueRequests = (
       stableBitcoinConfirmationsError ||
       stableParachainConfirmationsError ||
       currentActiveBlockNumberError ||
-      issueRequestsError
+      issueRequestsError,
+    refetch: async () => {
+      await currentActiveBlockNumberRefetch();
+      await issueRequestsRefetch();
+    }
   };
 };
 
