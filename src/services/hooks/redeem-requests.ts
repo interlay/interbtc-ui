@@ -16,6 +16,7 @@ const useRedeemRequests = (
   isLoading: boolean;
   data: Array<RedeemRequestWithStatusDecoded> | undefined;
   error: Error | null;
+  refetch: () => Promise<void>;
 } => {
   const {
     isIdle: stableBitcoinConfirmationsIdle,
@@ -35,14 +36,16 @@ const useRedeemRequests = (
     isIdle: currentActiveBlockNumberIdle,
     isLoading: currentActiveBlockNumberLoading,
     data: currentActiveBlockNumber,
-    error: currentActiveBlockNumberError
+    error: currentActiveBlockNumberError,
+    refetch: currentActiveBlockNumberRefetch
   } = useCurrentActiveBlockNumber(refetchInterval);
 
   const {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
     data: redeemRequests,
-    error: redeemRequestsError
+    error: redeemRequestsError,
+    refetch: redeemRequestsRefetch
   } = useQuery<Array<RedeemRequest>, Error>(
     whereCondition === undefined ? [REDEEMS_FETCHER, offset, limit] : [REDEEMS_FETCHER, offset, limit, whereCondition],
     redeemsFetcher,
@@ -77,7 +80,11 @@ const useRedeemRequests = (
       stableBitcoinConfirmationsError ||
       stableParachainConfirmationsError ||
       currentActiveBlockNumberError ||
-      redeemRequestsError
+      redeemRequestsError,
+    refetch: async () => {
+      await currentActiveBlockNumberRefetch();
+      await redeemRequestsRefetch();
+    }
   };
 };
 

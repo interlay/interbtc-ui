@@ -68,9 +68,11 @@ const IssueRequestsTable = (): JSX.Element => {
     data: issueRequests,
     error: issueRequestsError
   } = useIssueRequests(
+    // ray test touch <
     selectedPageIndex * TABLE_PAGE_LIMIT,
     TABLE_PAGE_LIMIT,
     `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
+    // ray test touch >
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
   useErrorHandler(issueRequestsError);
