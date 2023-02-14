@@ -4,7 +4,7 @@ import { useId } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 
-import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
@@ -64,7 +64,7 @@ const DepositCollateralStep = ({
     }
   );
 
-  const inputCollateralAmount = newMonetaryAmount(form.values.deposit || 0, collateral.currency, true);
+  const inputCollateralAmount = newSafeMonetaryAmount(form.values.deposit || 0, collateral.currency, true);
 
   const isBtnDisabled = isFormDisabled(form);
 

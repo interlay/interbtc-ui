@@ -7,7 +7,11 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { convertMonetaryAmountToValueInUSD, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmountInUSDFormat,
+  newSafeMonetaryAmount
+} from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -91,7 +95,11 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
     onSubmit: handleSubmit
   });
 
-  const lpTokenMonetaryAmount = newMonetaryAmount(form.values[WITHDRAW_LIQUIDITY_POOL_FIELD] || 0, pool.lpToken, true);
+  const lpTokenMonetaryAmount = newSafeMonetaryAmount(
+    form.values[WITHDRAW_LIQUIDITY_POOL_FIELD] || 0,
+    pool.lpToken,
+    true
+  );
 
   const isBtnDisabled = isFormDisabled(form);
 

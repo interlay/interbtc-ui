@@ -6,6 +6,7 @@ type DepositLiquidityPoolValidationParams = FeesValidationParams & {
   tokens: Record<string, MaxAmountValidationParams & MinAmountValidationParams>;
 };
 
+// MEMO: schema is dynamic because is deals with one to many fields
 const depositLiquidityPoolSchema = (params: DepositLiquidityPoolValidationParams): yup.ObjectSchema<any> => {
   const shape = Object.keys(params.tokens).reduce((acc, ticker, idx) => {
     const tokenParams = params.tokens[ticker];

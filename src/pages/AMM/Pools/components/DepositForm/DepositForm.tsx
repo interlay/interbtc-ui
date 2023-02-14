@@ -49,7 +49,7 @@ type DepositFormProps = {
 
 const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): JSX.Element => {
   const { pooledCurrencies } = pool;
-  const defaultValues = pooledCurrencies.reduce((acc, amount) => ({ ...acc, [amount.currency.ticker]: undefined }), {});
+  const defaultValues = pooledCurrencies.reduce((acc, amount) => ({ ...acc, [amount.currency.ticker]: '' }), {});
 
   const [slippage, setSlippage] = useState(0.1);
 
@@ -105,7 +105,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
   });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    if (!e.target.value) {
+    if (!e.target.value || isNaN(Number(e.target.value))) {
       return form.setValues(defaultValues);
     }
 
