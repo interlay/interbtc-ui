@@ -66,13 +66,12 @@ const IssueRequestsTable = (): JSX.Element => {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: issueRequests,
-    error: issueRequestsError
+    error: issueRequestsError,
+    refetch: issueRequestsRefetch
   } = useIssueRequests(
-    // ray test touch <
     selectedPageIndex * TABLE_PAGE_LIMIT,
     TABLE_PAGE_LIMIT,
     `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`,
-    // ray test touch >
     ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL
   );
   useErrorHandler(issueRequestsError);
@@ -306,6 +305,7 @@ const IssueRequestsTable = (): JSX.Element => {
           open={!!selectedIssueRequest}
           onClose={handleIssueModalClose}
           request={selectedIssueRequest}
+          issueRequestsRefetch={issueRequestsRefetch}
         />
       )}
     </>

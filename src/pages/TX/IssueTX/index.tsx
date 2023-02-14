@@ -15,7 +15,8 @@ const IssueTX = (): JSX.Element => {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: issueRequests,
-    error: issueRequestsError
+    error: issueRequestsError,
+    refetch: issueRequestsRefetch
   } = useIssueRequests(0, 1, `id_eq: "${txHash}"`);
   useErrorHandler(issueRequestsError);
 
@@ -26,7 +27,7 @@ const IssueTX = (): JSX.Element => {
     throw new Error('Something went wrong!');
   }
 
-  return <IssueUI issue={issueRequests[0]} />;
+  return <IssueUI issue={issueRequests[0]} issueRequestsRefetch={issueRequestsRefetch} />;
 };
 
 export default withErrorBoundary(IssueTX, {

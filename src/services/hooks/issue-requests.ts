@@ -116,6 +116,7 @@ const useManualIssueRequests = (): {
   isLoading: boolean;
   data: Array<IssueRequestWithStatusDecoded> | undefined;
   error: Error | null;
+  refetch: () => Promise<void>;
 } => {
   const { selectedAccount } = useSubstrateSecureState();
 
@@ -123,7 +124,8 @@ const useManualIssueRequests = (): {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: issueRequests,
-    error: issueRequestsError
+    error: issueRequestsError,
+    refetch: issueRequestsRefetch
   } = useIssueRequests(
     0,
     FAKE_UNLIMITED_NUMBER,
@@ -141,7 +143,8 @@ const useManualIssueRequests = (): {
     isIdle: issueRequestsIdle,
     isLoading: issueRequestsLoading,
     data: manualIssueRequests,
-    error: issueRequestsError
+    error: issueRequestsError,
+    refetch: issueRequestsRefetch
   };
 };
 

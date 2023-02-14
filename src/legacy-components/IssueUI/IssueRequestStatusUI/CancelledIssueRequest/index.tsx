@@ -12,9 +12,10 @@ import ManualIssueExecutionUI from '../ManualIssueExecutionUI';
 interface Props {
   // TODO: should type properly (`Relay`)
   request: any;
+  issueRequestsRefetch: () => Promise<void>;
 }
 
-const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
+const CancelledIssueRequest = ({ request, issueRequestsRefetch }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -33,7 +34,9 @@ const CancelledIssueRequest = ({ request }: Props): JSX.Element => {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
         </p>
-        {request.backingPayment.btcTxId && <ManualIssueExecutionUI request={request} />}
+        {request.backingPayment.btcTxId && (
+          <ManualIssueExecutionUI request={request} issueRequestsRefetch={issueRequestsRefetch} />
+        )}
         {/* TODO: could componentize */}
         <div>
           <h6 className={clsx('flex', 'items-center', 'justify-center', 'space-x-0.5', getColorShade('red'))}>

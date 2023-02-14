@@ -15,9 +15,10 @@ import ManualIssueExecutionUI from '../ManualIssueExecutionUI';
 interface Props {
   // TODO: should type properly (`Relay`)
   request: any;
+  issueRequestsRefetch: () => Promise<void>;
 }
 
-const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
+const ConfirmedIssueRequest = ({ request, issueRequestsRefetch }: Props): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -50,7 +51,7 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
             wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
           })}
         </p>
-        <ManualIssueExecutionUI request={request} />
+        <ManualIssueExecutionUI request={request} issueRequestsRefetch={issueRequestsRefetch} />
       </RequestWrapper>
     </>
   );

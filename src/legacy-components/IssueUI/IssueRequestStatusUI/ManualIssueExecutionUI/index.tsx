@@ -6,21 +6,20 @@ import {
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 import clsx from 'clsx';
+import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { displayMonetaryAmount } from '@/common/utils/utils';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
-import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { useManualIssueRequests } from '@/services/hooks/issue-requests';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-import useQueryParams from '@/utils/hooks/use-query-params';
 
 // TODO: issue requests should not be typed here but further above in the app
 interface Props {
@@ -42,18 +41,16 @@ interface Props {
     status: IssueStatus;
     userParachainAddress: string;
   };
+  issueRequestsRefetch: () => Promise<void>;
 }
 
-const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
+const ManualIssueExecutionUI = ({ request, issueRequestsRefetch }: Props): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
 
   const { t } = useTranslation();
 
-  const queryParams = useQueryParams();
-  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
-  const selectedPageIndex = selectedPage - 1;
-
-  const queryClient = useQueryClient();
+  const { refetch: manualIssueRequestsRefetch, error: manualIssueRequestsError } = useManualIssueRequests();
+  useErrorHandler(manualIssueRequestsError);
 
   // TODO: should type properly (`Relay`)
   const executeMutation = useMutation<void, Error, any>(
@@ -64,15 +61,8 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
       return window.bridge.issue.execute(variables.id, variables.backingPayment.btcTxId);
     },
     {
-      onSuccess: (_, variables) => {
-        // ray test touch <
-        queryClient.invalidateQueries([
-          ISSUES_FETCHER,
-          selectedPageIndex * TABLE_PAGE_LIMIT,
-          TABLE_PAGE_LIMIT,
-          `userParachainAddress_eq: "${selectedAccount?.address ?? ''}"`
-        ]);
-        // ray test touch >
+      onSuccess: async (_, variables) => {
+        await Promise.all([issueRequestsRefetch(), manualIssueRequestsRefetch()]);
         toast.success(t('issue_page.successfully_executed', { id: variables.id }));
       }
     }
@@ -164,4 +154,9 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
   );
 };
 
-export default ManualIssueExecutionUI;
+export default withErrorBoundary(ManualIssueExecutionUI, {
+  FallbackComponent: ErrorFallback,
+  onReset: () => {
+    window.location.reload();
+  }
+});

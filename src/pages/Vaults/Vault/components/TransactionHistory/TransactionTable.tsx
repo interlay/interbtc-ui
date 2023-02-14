@@ -1,4 +1,4 @@
-import React, { HTMLAttributes, useState } from 'react';
+import { HTMLAttributes, useState } from 'react';
 
 import IssueRequestModal from '@/pages/Transactions/IssueRequestsTable/IssueRequestModal';
 import RedeemRequestModal from '@/pages/Transactions/RedeemRequestsTable/RedeemRequestModal';
@@ -64,6 +64,8 @@ const TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Elemen
           open={selectedTableRow.type === 'Issue'}
           onClose={() => setSelectedTableRow(undefined)}
           request={selectedTableRow.requestData}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          issueRequestsRefetch={async () => {}}
         />
       )}
       {selectedTableRow?.type === 'Redeem' && (

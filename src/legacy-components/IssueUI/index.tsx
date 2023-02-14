@@ -19,7 +19,7 @@ import IssueRequestStatusUI from './IssueRequestStatusUI';
 import WhoopsStatusUI from './WhoopsStatusUI';
 
 // TODO: should type properly (`Relay`)
-const renderModalStatusPanel = (request: any) => {
+const renderModalStatusPanel = (request: any, issueRequestsRefetch: () => Promise<void>) => {
   switch (request.status) {
     case IssueStatus.PendingWithBtcTxNotFound: {
       return <BTCPaymentPendingStatusUI request={request} />;
@@ -28,16 +28,17 @@ const renderModalStatusPanel = (request: any) => {
       return <WhoopsStatusUI request={request} />;
     }
     default: {
-      return <IssueRequestStatusUI request={request} />;
+      return <IssueRequestStatusUI request={request} issueRequestsRefetch={issueRequestsRefetch} />;
     }
   }
 };
 
 interface Props {
   issue: any; // TODO: should type properly (`Relay`)
+  issueRequestsRefetch: () => Promise<void>;
 }
 
-const IssueUI = ({ issue }: Props): JSX.Element => {
+const IssueUI = ({ issue, issueRequestsRefetch }: Props): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -183,7 +184,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
           </span>
         </p>
       </div>
-      <>{renderModalStatusPanel(issue)}</>
+      <>{renderModalStatusPanel(issue, issueRequestsRefetch)}</>
     </div>
   );
 };

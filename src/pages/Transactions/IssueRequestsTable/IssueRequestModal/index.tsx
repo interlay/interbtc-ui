@@ -11,9 +11,15 @@ import RequestModalTitle from '../../RequestModalTitle';
 
 interface CustomProps {
   request: any; // TODO: should type properly (`Relay`)
+  issueRequestsRefetch: () => Promise<void>;
 }
 
-const IssueRequestModal = ({ open, onClose, request }: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {
+const IssueRequestModal = ({
+  open,
+  onClose,
+  request,
+  issueRequestsRefetch
+}: CustomProps & Omit<ModalProps, 'children'>): JSX.Element => {
   const { t } = useTranslation();
 
   const focusRef = React.useRef(null);
@@ -24,7 +30,7 @@ const IssueRequestModal = ({ open, onClose, request }: CustomProps & Omit<ModalP
         <RequestModalTitle>{t('issue_page.request', { id: request.id })}</RequestModalTitle>
         <Hr1 className={clsx('border-t-2', 'my-2')} />
         <CloseIconButton ref={focusRef} onClick={onClose} />
-        <IssueUI issue={request} />
+        <IssueUI issue={request} issueRequestsRefetch={issueRequestsRefetch} />
       </InterlayModalInnerWrapper>
     </InterlayModal>
   );
