@@ -12,12 +12,14 @@ import RequestModalTitle from '../../RequestModalTitle';
 interface CustomProps {
   // TODO: should type properly (`Relay`)
   request: any;
+  redeemRequestsRefetch: () => Promise<void>;
 }
 
 const RedeemRequestModal = ({
   open,
   onClose,
-  request
+  request,
+  redeemRequestsRefetch
 }: CustomProps & Omit<ModalProps, 'children'>): JSX.Element | null => {
   const { t } = useTranslation();
 
@@ -29,7 +31,7 @@ const RedeemRequestModal = ({
         <RequestModalTitle>{t('issue_page.request', { id: request.id })}</RequestModalTitle>
         <Hr1 className={clsx('border-t-2', 'my-2')} />
         <CloseIconButton ref={focusRef} onClick={onClose} />
-        <RedeemUI redeem={request} onClose={onClose} />
+        <RedeemUI redeem={request} onClose={onClose} redeemRequestsRefetch={redeemRequestsRefetch} />
       </InterlayModalInnerWrapper>
     </InterlayModal>
   );

@@ -63,7 +63,8 @@ const RedeemRequestsTable = (): JSX.Element => {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
     data: redeemRequests,
-    error: redeemRequestsError
+    error: redeemRequestsError,
+    refetch: redeemRequestsRefetch
   } = useRedeemRequests(
     selectedPageIndex * TABLE_PAGE_LIMIT,
     TABLE_PAGE_LIMIT,
@@ -305,6 +306,7 @@ const RedeemRequestsTable = (): JSX.Element => {
           open={!!selectedRedeemRequest}
           onClose={handleRedeemModalClose}
           request={selectedRedeemRequest}
+          redeemRequestsRefetch={redeemRequestsRefetch}
         />
       )}
     </>

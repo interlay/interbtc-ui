@@ -73,6 +73,8 @@ const TransactionTable = ({ data, ...props }: TransactionTableProps): JSX.Elemen
           open={selectedTableRow.type === 'Redeem'}
           onClose={() => setSelectedTableRow(undefined)}
           request={selectedTableRow.requestData}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          redeemRequestsRefetch={async () => {}}
         />
       )}
       ;

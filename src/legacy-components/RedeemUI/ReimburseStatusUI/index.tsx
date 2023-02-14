@@ -5,7 +5,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -18,7 +18,6 @@ import ErrorFallback from '@/legacy-components/ErrorFallback';
 import PrimaryColorSpan from '@/legacy-components/PrimaryColorSpan';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
-import { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getExchangeRate } from '@/utils/helpers/oracle';
@@ -28,9 +27,10 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 interface Props {
   redeem: any; // TODO: should type properly (`Relay`)
   onClose: () => void;
+  redeemRequestsRefetch: () => Promise<void>;
 }
 
-const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
+const ReimburseStatusUI = ({ redeem, onClose, redeemRequestsRefetch }: Props): JSX.Element => {
   const prices = useGetPrices();
 
   const { selectedAccount } = useSubstrateSecureState();
@@ -65,17 +65,14 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
     })();
   }, [redeem, bridgeLoaded, handleError]);
 
-  const queryClient = useQueryClient();
   // TODO: should type properly (`Relay`)
   const retryMutation = useMutation<void, Error, any>(
     (variables: any) => {
       return window.bridge.redeem.cancel(variables.id, false);
     },
     {
-      onSuccess: () => {
-        // ray test touch <
-        queryClient.invalidateQueries([REDEEMS_FETCHER]);
-        // ray test touch >
+      onSuccess: async () => {
+        await redeemRequestsRefetch();
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },
@@ -91,10 +88,8 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
       return window.bridge.redeem.cancel(variables.id, true);
     },
     {
-      onSuccess: () => {
-        // ray test touch <
-        queryClient.invalidateQueries([REDEEMS_FETCHER]);
-        // ray test touch >
+      onSuccess: async () => {
+        await redeemRequestsRefetch();
         toast.success(t('redeem_page.successfully_cancelled_redeem'));
         onClose();
       },

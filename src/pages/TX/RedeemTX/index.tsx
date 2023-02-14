@@ -15,7 +15,8 @@ const RedeemTX = (): JSX.Element => {
     isIdle: redeemRequestsIdle,
     isLoading: redeemRequestsLoading,
     data: redeemRequests,
-    error: redeemRequestsError
+    error: redeemRequestsError,
+    refetch: redeemRequestsRefetch
   } = useRedeemRequests(0, 1, `id_eq: "${txHash}"`);
   useErrorHandler(redeemRequestsError);
 
@@ -27,7 +28,7 @@ const RedeemTX = (): JSX.Element => {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  return <RedeemUI redeem={redeemRequests[0]} onClose={() => {}} />;
+  return <RedeemUI redeem={redeemRequests[0]} onClose={() => {}} redeemRequestsRefetch={redeemRequestsRefetch} />;
 };
 
 export default withErrorBoundary(RedeemTX, {

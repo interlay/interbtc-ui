@@ -20,9 +20,10 @@ import ReimburseStatusUI from './ReimburseStatusUI';
 interface Props {
   redeem: any; // TODO: should type properly (`Relay`)
   onClose: () => void;
+  redeemRequestsRefetch: () => Promise<void>;
 }
 
-const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
+const RedeemUI = ({ redeem, onClose, redeemRequestsRefetch }: Props): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -31,10 +32,10 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
     .add(redeem.btcTransferFee);
 
   // TODO: should type properly (`Relay`)
-  const renderModalStatusPanel = (redeem: any) => {
+  const renderModalStatusPanel = (redeem: any, redeemRequestsRefetch: () => Promise<void>) => {
     switch (redeem.status) {
       case RedeemStatus.Expired: {
-        return <ReimburseStatusUI redeem={redeem} onClose={onClose} />;
+        return <ReimburseStatusUI redeem={redeem} onClose={onClose} redeemRequestsRefetch={redeemRequestsRefetch} />;
       }
       default: {
         return <RedeemRequestStatusUI redeem={redeem} />;
@@ -159,7 +160,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
           </div>
         </div>
       </div>
-      <>{renderModalStatusPanel(redeem)}</>
+      <>{renderModalStatusPanel(redeem, redeemRequestsRefetch)}</>
     </div>
   );
 };
