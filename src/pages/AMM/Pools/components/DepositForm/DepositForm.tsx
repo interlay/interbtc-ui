@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -116,10 +116,12 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
           <Flex direction='column' gap='spacing2'>
             {pooledCurrencies.map((amount, index) => {
               const {
-                currency: { ticker, humanDecimals }
+                currency: { ticker }
               } = amount;
 
               const isLastItem = index === pooledCurrencies.length - 1;
+
+              const balance = getAvailableBalance(ticker);
 
               return (
                 <Flex key={ticker} direction='column' gap='spacing8'>
@@ -129,8 +131,8 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
                     aria-label={t('forms.field_amount', {
                       field: `${ticker} ${t('deposit').toLowerCase()}`
                     })}
-                    balance={getAvailableBalance(ticker)?.toBig().toNumber() || 0}
-                    balanceDecimals={humanDecimals}
+                    balance={balance?.toString() || 0}
+                    humanBalance={balance?.toHuman() || 0}
                     valueUSD={new Big(values[ticker] || 0).mul(getTokenPrice(prices, ticker)?.usd || 0).toNumber()}
                     value={values[ticker]}
                     name={ticker}
@@ -150,7 +152,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
                 {t('fees')}
               </Dt>
               <Dd size='xs'>
-                {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
+                {TRANSACTION_FEE_AMOUNT.toHuman()} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
                 {displayMonetaryAmountInUSDFormat(
                   TRANSACTION_FEE_AMOUNT,
                   getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd

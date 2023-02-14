@@ -86,7 +86,7 @@ const IssueRedeemForm = ({
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
-  // const [dustValue, setDustValue] = useState(BitcoinAmount.zero());
+  // const [dustValue, setDustValue] = useState(new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT));
   // const [submitStatus, setSubmitStatus] = useState(STATUSES.IDLE);
   // const [submitError, setSubmitError] = useState<Error | null>(null);
   // const [submittedRequest, setSubmittedRequest] = useState<Issue>();

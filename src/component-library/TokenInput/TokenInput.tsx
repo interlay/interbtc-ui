@@ -32,13 +32,13 @@ const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefin
 type Props = {
   decimals?: number;
   valueUSD: number;
-  balance?: number;
+  balance?: string | number;
+  humanBalance?: string | number;
   balanceLabel?: ReactNode;
-  balanceDecimals?: number;
   ticker?: TokenTicker;
   defaultTicker?: TokenTicker;
   tokens?: TokenData[];
-  onClickBalance?: (balance?: number) => void;
+  onClickBalance?: (balance?: string | number) => void;
   onChangeTicker?: (ticker?: string) => void;
   selectProps?: InputHTMLAttributes<HTMLInputElement>;
 };
@@ -53,8 +53,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       decimals,
       valueUSD,
       balance,
+      humanBalance,
       balanceLabel,
-      balanceDecimals,
       isDisabled,
       label,
       ticker: tickerProp,
@@ -91,6 +91,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     }, [selectProps?.value]);
 
     const handleClickBalance = () => {
+      if (!balance) return;
+
       triggerChangeEvent(inputRef, balance);
       onClickBalance?.(balance);
     };
@@ -124,9 +126,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         {hasLabel && (
           <TokenInputLabel
             ticker={tickerValue}
-            balance={balance}
+            balance={humanBalance || balance}
             balanceLabel={balanceLabel}
-            balanceDecimals={balanceDecimals}
             isDisabled={isDisabled || !tickerValue}
             onClickBalance={handleClickBalance}
             {...labelProps}

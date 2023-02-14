@@ -13,7 +13,6 @@ import Select, {
 } from '@/legacy-components/Select';
 
 interface TokenOption {
-  type: TokenType;
   balance: string;
   symbol: string;
   icon: JSX.Element;
@@ -31,7 +30,7 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
   return (
     <>
       {currentToken && (
-        <Select variant={variant} key={currentToken.type} value={currentToken.type} onChange={onChange}>
+        <Select variant={variant} key={currentToken.symbol} value={currentToken.symbol} onChange={onChange}>
           {({ open }) => (
             <>
               <SelectBody className={clsx('w-52')}>
@@ -59,7 +58,7 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                 <SelectOptions open={open} variant={variant}>
                   {tokenOptions.map((tokenOption: TokenOption) => {
                     return (
-                      <SelectOption key={tokenOption.type} value={tokenOption.type}>
+                      <SelectOption key={tokenOption.symbol} value={tokenOption.symbol}>
                         {({ selected, active }) => (
                           <>
                             <div

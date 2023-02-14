@@ -27,11 +27,15 @@ const mutateLoan = ({ loanType, amount, isMaxAmount }: CreateLoanVariables) => {
   }
 };
 
-type UseLoanMutation = { onSuccess: () => void };
+type UseLoanMutation = { onSuccess: () => void; onError: (error: Error) => void };
 
-const useLoanMutation = ({ onSuccess }: UseLoanMutation): UseMutationResult<void, Error, CreateLoanVariables> => {
+const useLoanMutation = ({
+  onSuccess,
+  onError
+}: UseLoanMutation): UseMutationResult<void, Error, CreateLoanVariables> => {
   return useMutation<void, Error, CreateLoanVariables>(mutateLoan, {
-    onSuccess
+    onSuccess,
+    onError
   });
 };
 

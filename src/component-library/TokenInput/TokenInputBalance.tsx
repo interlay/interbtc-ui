@@ -3,8 +3,6 @@ import { usePress } from '@react-aria/interactions';
 import { mergeProps } from '@react-aria/utils';
 import { ReactNode } from 'react';
 
-import { formatNumber } from '@/common/utils/utils';
-
 import {
   StyledTokenInputBalanceLabel,
   StyledTokenInputBalanceValue,
@@ -13,12 +11,11 @@ import {
 
 type TokenInputBalanceProps = {
   ticker?: string;
-  value: number;
+  value: string | number;
   onClickBalance?: () => void;
   isDisabled?: boolean;
   className?: string;
   label?: ReactNode;
-  decimals?: number;
 };
 
 const TokenInputBalance = ({
@@ -27,7 +24,6 @@ const TokenInputBalance = ({
   onClickBalance,
   className,
   isDisabled,
-  decimals,
   label = 'Balance'
 }: TokenInputBalanceProps): JSX.Element => {
   const { pressProps } = usePress({ onPress: onClickBalance, isDisabled: isDisabled });
@@ -41,16 +37,12 @@ const TokenInputBalance = ({
         ...mergeProps(pressProps, focusProps)
       };
 
-  const balanceLabel = ticker
-    ? formatNumber(value, { minimumFractionDigits: 0, maximumFractionDigits: decimals || 20 })
-    : 0;
-
   return (
     <StyledTokenInputBalanceWrapper className={className}>
       <StyledTokenInputBalanceLabel>{label}</StyledTokenInputBalanceLabel>
       <dd>
         <StyledTokenInputBalanceValue $isDisabled={isDisabled} $isFocusVisible={isFocusVisible} {...balanceValueProps}>
-          {balanceLabel}
+          {ticker ? value : 0}
         </StyledTokenInputBalanceValue>
       </dd>
     </StyledTokenInputBalanceWrapper>

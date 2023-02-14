@@ -2,7 +2,32 @@ import { forwardRef, ForwardRefExoticComponent, RefAttributes } from 'react';
 
 import { IconProps } from '../Icon';
 import { StyledFallbackIcon } from './CoinIcon.style';
-import { BTC, DOT, IBTC, INTR, KBTC, KINT, KSM, LKSM, USDT } from './icons';
+import {
+  AUSD,
+  BTC,
+  DOT,
+  ETH,
+  IBTC,
+  INTR,
+  KAR,
+  KBTC,
+  KINT,
+  KSM,
+  LKSM,
+  LSKSM,
+  MOVR,
+  qDOT,
+  qIBTC,
+  qINTR,
+  qKBTC,
+  qKINT,
+  qKSM,
+  qMOVR,
+  qUSDT,
+  SKSM,
+  USDT,
+  VKSM
+} from './icons';
 
 type CoinComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
@@ -15,7 +40,22 @@ const coinsIcon: Record<string, CoinComponent> = {
   KINT,
   KSM,
   LKSM,
-  USDT
+  USDT,
+  VKSM,
+  LSKSM,
+  MOVR,
+  SKSM,
+  qUSDT,
+  qKINT,
+  qKBTC,
+  qKSM,
+  qMOVR,
+  AUSD,
+  KAR,
+  qDOT,
+  qIBTC,
+  qINTR,
+  ETH
 };
 
 type Props = {

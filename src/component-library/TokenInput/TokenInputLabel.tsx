@@ -6,9 +6,8 @@ import { TokenInputBalance } from './TokenInputBalance';
 
 type Props = {
   ticker?: string;
-  balance?: number;
+  balance?: string | number;
   balanceLabel?: ReactNode;
-  balanceDecimals?: number;
   isDisabled?: boolean;
   onClickBalance?: (balance?: number) => void;
 };
@@ -22,7 +21,6 @@ const TokenInputLabel = ({
   balanceLabel,
   isDisabled,
   onClickBalance,
-  balanceDecimals,
   ticker,
   children,
   ...props
@@ -39,7 +37,6 @@ const TokenInputLabel = ({
           onClickBalance={onClickBalance}
           isDisabled={isDisabled}
           label={balanceLabel}
-          decimals={balanceDecimals}
         />
       )}
     </Flex>

@@ -1,11 +1,6 @@
 import { Trade } from '@interlay/interbtc-api';
 
-import {
-  displayMonetaryAmount,
-  displayMonetaryAmountInUSDFormat,
-  formatNumber,
-  formatPercentage
-} from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
 import { Accordion, AccordionItem, Dd, Dl, DlGroup, Dt } from '@/component-library';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -23,9 +18,7 @@ const SwapInfo = ({ trade, slippage }: SwapInfoProps): JSX.Element | null => {
 
   const { inputAmount, outputAmount, executionPrice, priceImpact } = trade;
 
-  const title = `1 ${inputAmount.currency.ticker} = ${formatNumber(executionPrice.toBig().toNumber())} ${
-    outputAmount.currency.ticker
-  }`;
+  const title = `1 ${inputAmount.currency.ticker} = ${executionPrice.toHuman()} ${outputAmount.currency.ticker}`;
 
   const minimumReceived = outputAmount.sub(outputAmount.mul(slippage).div(100));
 
@@ -39,7 +32,7 @@ const SwapInfo = ({ trade, slippage }: SwapInfoProps): JSX.Element | null => {
                 Expected Output
               </Dt>
               <Dd size='s'>
-                {displayMonetaryAmount(outputAmount)} {outputAmount.currency.ticker}
+                {outputAmount.toHuman()} {outputAmount.currency.ticker}
               </Dd>
             </DlGroup>
             <DlGroup justifyContent='space-between'>
@@ -47,22 +40,22 @@ const SwapInfo = ({ trade, slippage }: SwapInfoProps): JSX.Element | null => {
                 Minimum Received
               </Dt>
               <Dd size='s'>
-                {displayMonetaryAmount(minimumReceived)} {outputAmount.currency.ticker}
+                {minimumReceived.toHuman()} {outputAmount.currency.ticker}
               </Dd>
             </DlGroup>
             <DlGroup justifyContent='space-between'>
               <Dt size='s' color='primary'>
-                Prices Impact
+                Price Impact
               </Dt>
               {/* TODO: handle small percentages */}
-              <Dd size='s'>{formatPercentage(Number(priceImpact))}</Dd>
+              <Dd size='s'>{formatPercentage(priceImpact.toNumber())}</Dd>
             </DlGroup>
             <DlGroup justifyContent='space-between'>
               <Dt size='s' color='primary'>
                 Fees
               </Dt>
               <Dd size='s'>
-                {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
+                {TRANSACTION_FEE_AMOUNT.toHuman()} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
                 {displayMonetaryAmountInUSDFormat(
                   TRANSACTION_FEE_AMOUNT,
                   getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd

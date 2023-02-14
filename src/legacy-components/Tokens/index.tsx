@@ -1,29 +1,18 @@
-import { GovernanceCurrency, WrappedCurrency } from '@interlay/interbtc-api';
+import { CurrencyExt } from '@interlay/interbtc-api';
 import * as React from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
 
 import { TokenType } from '@/common/types/util.types';
-import {
-  GOVERNANCE_TOKEN,
-  GOVERNANCE_TOKEN_SYMBOL,
-  GovernanceTokenLogoIcon,
-  RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-  RelayChainNativeToken,
-  RelayChainNativeTokenLogoIcon,
-  WRAPPED_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon
-} from '@/config/relay-chains';
+import { CoinIcon } from '@/component-library';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import { SELECT_VARIANTS, SelectVariants } from '@/legacy-components/Select';
+import { SelectVariants } from '@/legacy-components/Select';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 import TokenSelector from './TokenSelector';
 
 interface TokenOption {
-  token: WrappedCurrency | RelayChainNativeToken | GovernanceCurrency;
-  type: TokenType;
+  token: CurrencyExt;
   balance: string;
   transferableBalance: string;
   symbol: string;
@@ -40,9 +29,9 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
   const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(undefined);
 
-  const { data: balances } = useGetBalances();
+  const { data: balances, getBalance } = useGetBalances();
 
-  const getTokenOption = React.useCallback((type: TokenType) => tokenOptions?.find((token) => token.type === type), [
+  const getTokenOption = React.useCallback((ticker) => tokenOptions?.find((token) => token.symbol === ticker), [
     tokenOptions
   ]);
 
@@ -51,7 +40,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 
     if (!currentToken) {
       // Set relay-chain native token as default
-      setCurrentToken(getTokenOption(TokenType.RelayChainNative));
+      setCurrentToken(getTokenOption(RELAY_CHAIN_NATIVE_TOKEN.ticker));
     }
 
     if (callbackFunction && currentToken) {
@@ -71,35 +60,16 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   React.useEffect(() => {
     if (!balances) return;
 
-    const tokenOptions: Array<TokenOption> = [
-      {
-        token: RELAY_CHAIN_NATIVE_TOKEN,
-        type: TokenType.RelayChainNative,
-        balance: balances[RELAY_CHAIN_NATIVE_TOKEN.ticker].free.toHuman(5),
-        transferableBalance: balances[RELAY_CHAIN_NATIVE_TOKEN.ticker].transferable.toHuman(5),
-        icon: <RelayChainNativeTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
-        symbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
-      },
-      {
-        token: WRAPPED_TOKEN,
-        type: TokenType.Wrapped,
-        balance: balances[WRAPPED_TOKEN.ticker].free.toHuman(8),
-        transferableBalance: balances[WRAPPED_TOKEN.ticker].transferable.toHuman(8),
-        icon: <WrappedTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
-        symbol: WRAPPED_TOKEN_SYMBOL
-      },
-      {
-        token: GOVERNANCE_TOKEN,
-        type: TokenType.Governance,
-        balance: balances[GOVERNANCE_TOKEN.ticker].free.toHuman(5),
-        transferableBalance: balances[GOVERNANCE_TOKEN.ticker].transferable.toHuman(5),
-        icon: <GovernanceTokenLogoIcon height={variant === SELECT_VARIANTS.formField ? 46 : 26} />,
-        symbol: GOVERNANCE_TOKEN_SYMBOL
-      }
-    ];
+    const tokenOptions: Array<TokenOption> = Object.values(balances).map((balance) => ({
+      token: balance.currency,
+      balance: getBalance(balance.currency.ticker)?.free.toHuman(5) || '0',
+      transferableBalance: getBalance(balance.currency.ticker)?.transferable.toHuman(5) || '0',
+      icon: <CoinIcon ticker={balance.currency.ticker} />,
+      symbol: balance.currency.ticker
+    }));
 
     setTokenOptions(tokenOptions);
-  }, [balances, variant]);
+  }, [balances, getBalance, variant]);
 
   // Reset currentToken to get updated values if tokenOptions change
   // while a current token is set. This will always happen because
@@ -107,7 +77,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   React.useEffect(() => {
     if (!currentToken) return;
 
-    setCurrentToken(getTokenOption(currentToken.type));
+    setCurrentToken(getTokenOption(currentToken.symbol));
   }, [currentToken, getTokenOption, tokenOptions]);
 
   return (

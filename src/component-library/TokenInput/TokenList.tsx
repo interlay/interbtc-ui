@@ -8,7 +8,7 @@ import { StyledList, StyledListItemLabel, StyledListTokenWrapper } from './Token
 
 type TokenData = {
   ticker: TokenTicker;
-  balance: number;
+  balance: string | number;
   balanceUSD: string;
 };
 

@@ -1,4 +1,4 @@
-import { newMonetaryAmount, Trade } from '@interlay/interbtc-api';
+import { LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +12,8 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import { getPooledTickers } from '../../shared/utils';
 
 const useButtonProps = (
   pair: SwapPair,
@@ -52,32 +54,50 @@ const useButtonProps = (
 };
 
 type UseSwapFormData = {
-  inputProps: { balance: number; valueUSD: number; tokens: TokenInputProps['tokens'] };
-  outputProps: { balance: number; valueUSD: number; tokens: TokenInputProps['tokens']; value?: number };
+  inputProps: Pick<TokenInputProps, 'balance' | 'humanBalance' | 'valueUSD' | 'tokens'>;
+  outputProps: Pick<TokenInputProps, 'balance' | 'humanBalance' | 'valueUSD' | 'value' | 'tokens'>;
   buttonProps: { children: ReactNode; disabled: boolean };
 };
 
-const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | null): UseSwapFormData => {
+const useSwapFormData = (
+  pair: SwapPair,
+  liquidityPools: LiquidityPool[],
+  inputAmount?: number,
+  trade?: Trade | null
+): UseSwapFormData => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
   const buttonProps = useButtonProps(pair, inputAmount, trade);
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
-  const tokens: TokenInputProps['tokens'] = useMemo(
-    () =>
-      currencies?.map((currency) => ({
-        balance: getAvailableBalance(currency.ticker)?.toBig().toNumber() || 0,
-        balanceUSD: formatUSD(getTokenPrice(prices, currency.ticker)?.usd || 0),
-        ticker: currency.ticker
-      })),
-    [currencies, getAvailableBalance, prices]
-  );
+  const pooledTickers = useMemo(() => getPooledTickers(liquidityPools), [liquidityPools]);
+
+  const tokens: TokenInputProps['tokens'] = useMemo(() => {
+    return currencies
+      ?.filter((currency) => pooledTickers.has(currency.ticker))
+      .map((currency) => {
+        const balance = getAvailableBalance(currency.ticker);
+        const balanceUSD = balance
+          ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
+          : 0;
+
+        return {
+          balance: balance?.toHuman() || 0,
+          balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
+          ticker: currency.ticker
+        };
+      });
+  }, [currencies, getAvailableBalance, pooledTickers, prices]);
+
+  const inputBalance = pair.input && getAvailableBalance(pair.input.ticker);
+  const outputBalance = pair.output && getAvailableBalance(pair.output.ticker);
 
   return {
     inputProps: {
       tokens,
-      balance: pair.input ? getAvailableBalance(pair.input.ticker)?.toBig().toNumber() || 0 : 0,
+      balance: inputBalance?.toString() || 0,
+      humanBalance: inputBalance?.toHuman() || 0,
       valueUSD:
         inputAmount && pair.input
           ? convertMonetaryAmountToValueInUSD(
@@ -88,7 +108,8 @@ const useSwapFormData = (pair: SwapPair, inputAmount?: number, trade?: Trade | n
     },
     outputProps: {
       tokens,
-      balance: pair.output ? getAvailableBalance(pair.output.ticker)?.toBig().toNumber() || 0 : 0,
+      balance: outputBalance?.toString() || 0,
+      humanBalance: outputBalance?.toHuman() || 0,
       value: trade?.outputAmount.toBig().toNumber(),
       valueUSD:
         trade?.outputAmount && pair.output

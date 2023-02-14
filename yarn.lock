@@ -2590,14 +2590,14 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@0.32.1":
-  version "0.32.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-0.32.1.tgz#7dd05d6275048c5b00a0162b2f6aa8af1ae20aab"
-  integrity sha512-AYWusqJnqGiBSYhQx56hZW0BEm6zJ5MOgmnWtg6Cd2zVBzNIASeNxwu+xCCfMIS1Dbx8zkJeLpgVoSHJxJMSkg==
+"@interlay/interbtc-api@0.32.8":
+  version "0.32.8"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-0.32.8.tgz#99b9b64806d0c167783f9a97a3779ae7471f310d"
+  integrity sha512-XGTJL+DgP46Kn3SGozqfbq4G7ggQV4XiNl9/DJTM/b+20YdU6byZ9uJwLZtGz53Ch5+fKOzOcljAJYS/OaiKkw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
-    "@interlay/interbtc-types" "0.31.3"
-    "@interlay/monetary-js" "0.7.0"
+    "@interlay/interbtc-types" "0.31.6"
+    "@interlay/monetary-js" "0.7.2"
     "@polkadot/api" "9.11.1"
     big.js "6.1.1"
     bitcoin-core "^3.0.0"
@@ -2607,20 +2607,20 @@
     isomorphic-fetch "^3.0.0"
     regtest-client "^0.2.0"
 
-"@interlay/interbtc-types@0.31.3":
-  version "0.31.3"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.31.3.tgz#99021c714eb9a5378854aa5312de2f4ace2998fc"
-  integrity sha512-d0SeBg49Kka8SdJnB6QCbMiuOAUPSeoX/tfkM/Swd7tAHPXMKEqV6yu09PA3tTM6S3tpqxGNHZ/9oMcQEmscRw==
+"@interlay/interbtc-types@0.31.6":
+  version "0.31.6"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-0.31.6.tgz#e790887674192cc1a21af00f9062ca7ca8d78613"
+  integrity sha512-bN4AtuHgLIjuGjuvNrmKpna9fohT7PKLqvK5xglE5id/BW0eeDFHWCKJvOOEEPkNTOQ7SjUcRbEUe78IYJ0ECg==
 
 "@interlay/interbtc-types@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.9.0.tgz#beffd3b04bc1d9dba49f3ddc338b5867b81dec3d"
   integrity sha512-G/jOHXM6lqoFAPquESAxsjt5ETrmcPTDC36WFRWYpoRUfFxcjq6TkWGxUC5/RS6jIoWMQ6lEJZupmlm/QNdbAg==
 
-"@interlay/monetary-js@0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.7.0.tgz#7142f7d2b86acf77d8524cee22b4ae2c5ba2d3a6"
-  integrity sha512-vxUcrl2Kum4W2bPt9Lz0WM/pPZEjOrwBtMEgNBAqBtBROXWeOi5jdwQeUwNSr2jqxv0g3V0mVyCVqOxy00iiQg==
+"@interlay/monetary-js@0.7.2":
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.7.2.tgz#a54a315b60be12f5b1a9c31f0d71d5e8ee7ba174"
+  integrity sha512-SqNKJKBEstXuLnzqWi+ON+9ImrNVlKqZpXfiTtT3bcvxqh4jnVsGbYVe2I0FqDWtilCWq6/1RjKkpaSG2dvJhA==
   dependencies:
     "@types/big.js" "6.1.2"
     big.js "6.1.1"

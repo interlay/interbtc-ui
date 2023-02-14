@@ -10,11 +10,7 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import * as z from 'zod';
 
-import {
-  convertMonetaryAmountToValueInUSD,
-  displayMonetaryAmount,
-  displayMonetaryAmountInUSDFormat
-} from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -62,7 +58,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   const accountId = useAccountId();
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { getAvailableBalance, getBalance } = useGetBalances();
+  const { getBalance } = useGetBalances();
 
   const withdrawMutation = useMutation<void, Error, DepositData>(mutateWithdraw, {
     onSuccess: () => {
@@ -77,7 +73,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   const { lpToken } = pool;
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
-  const balance = getAvailableBalance(lpToken.ticker);
+  const balance = getBalance(lpToken.ticker)?.reserved;
 
   const zeroAssetAmount = newMonetaryAmount(0, lpToken);
   const schemaParams: PoolWithdrawSchemaParams = {
@@ -144,8 +140,8 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
               aria-label={t('forms.field_amount', {
                 field: t('withdraw').toLowerCase()
               })}
-              balance={balance?.toBig().toNumber() || 0}
-              balanceDecimals={lpToken.humanDecimals}
+              balance={balance?.toString() || 0}
+              humanBalance={balance?.toHuman() || 0}
               valueUSD={pooledAmountsUSD}
               errorMessage={getErrorMessage(errors[FormFields.WITHDRAW_AMOUNT])}
               {...register(FormFields.WITHDRAW_AMOUNT)}
@@ -158,7 +154,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
                 Fees
               </Dt>
               <Dd size='xs'>
-                {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
+                {TRANSACTION_FEE_AMOUNT.toHuman()} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
                 {displayMonetaryAmountInUSDFormat(
                   TRANSACTION_FEE_AMOUNT,
                   getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd

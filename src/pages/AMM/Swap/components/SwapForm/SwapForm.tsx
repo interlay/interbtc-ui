@@ -78,7 +78,9 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
 
   useDebounce(
     () => {
-      if (!pair.input || !pair.output || inputAmount === undefined) return;
+      if (!pair.input || !pair.output || inputAmount === undefined) {
+        return setTrade(undefined);
+      }
 
       const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
       const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
@@ -98,10 +100,11 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     }
   });
 
-  const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, inputAmount, trade);
+  const { buttonProps, inputProps, outputProps } = useSwapFormData(pair, liquidityPools, inputAmount, trade);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     const value = Number(e.target.value) || undefined;
+    setTrade(undefined);
     setInputAmount(value);
   };
 

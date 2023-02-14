@@ -4,12 +4,14 @@ import {
   ArrowsRightLeftIcon,
   BanknotesIcon,
   BookOpenIcon,
+  BugAntIcon,
   ChartBarSquareIcon,
   CircleStackIcon,
   ClipboardDocumentListIcon,
   CpuChipIcon,
   DocumentTextIcon,
   HandRaisedIcon,
+  PencilSquareIcon,
   PresentationChartBarIcon,
   ScaleIcon,
   Square3Stack3DIcon
@@ -24,6 +26,9 @@ import { useLocation } from 'react-router-dom';
 import { StoreType } from '@/common/types/util.types';
 import { INTERLAY_DOCS_LINK } from '@/config/links';
 import {
+  COMPETITION_DASHBOARD_LINK,
+  COMPETITION_FEEDBACK_LINK,
+  COMPETITION_ISSUES_LINK,
   CROWDLOAN_LINK,
   GOVERNANCE_LINK,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -33,6 +38,7 @@ import {
 } from '@/config/relay-chains';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
@@ -56,6 +62,9 @@ const TEXT_CLASSES_FOR_DISABLED = clsx(
   { 'text-gray-500': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
   { 'dark:text-gray-400': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
+
+const IS_KINTSUGI_TESTNET =
+  process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA;
 
 const Navigation = ({
   onSmallScreen = false,
@@ -130,6 +139,39 @@ const Navigation = ({
         separator: true
       },
       {
+        name: 'nav_competition_feedback',
+        link: COMPETITION_FEEDBACK_LINK,
+        icon: PencilSquareIcon,
+        hidden: !COMPETITION_FEEDBACK_LINK || !IS_KINTSUGI_TESTNET,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
+        name: 'nav_competition_dashboard',
+        link: COMPETITION_DASHBOARD_LINK,
+        icon: ChartBarSquareIcon,
+        hidden: !COMPETITION_DASHBOARD_LINK || !IS_KINTSUGI_TESTNET,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
+        name: 'nav_competition_issues',
+        link: COMPETITION_ISSUES_LINK,
+        icon: BugAntIcon,
+        hidden: !COMPETITION_ISSUES_LINK || !IS_KINTSUGI_TESTNET,
+        external: true,
+        rest: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        }
+      },
+      {
         name: 'nav_use_wrapped',
         link: USE_WRAPPED_CURRENCY_LINK,
         icon: HandRaisedIcon,
@@ -167,7 +209,7 @@ const Navigation = ({
         link: GOVERNANCE_LINK,
         icon: ScaleIcon,
         external: true,
-        hidden: !GOVERNANCE_LINK,
+        hidden: !GOVERNANCE_LINK || IS_KINTSUGI_TESTNET,
         rest: {
           target: '_blank',
           rel: 'noopener noreferrer'
