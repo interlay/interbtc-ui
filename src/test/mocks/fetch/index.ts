@@ -28,7 +28,9 @@ const mockFetch = jest.fn((input, _init?) => {
       result = MOCK_TOKEN_PRICES;
       break;
     default: {
+      // ray test touch <
       throw new Error(`mockFetch: provided input [${input}] is not mocked`);
+      // ray test touch >
     }
   }
   return Promise.resolve({

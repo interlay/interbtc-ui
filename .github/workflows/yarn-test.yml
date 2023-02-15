@@ -2,10 +2,12 @@ name: yarn test
 
 on: [push]
 
-env: 
+env:
+  # ray test touch <
   REACT_APP_RELAY_CHAIN_NAME: polkadot
   REACT_APP_PARACHAIN_ID: 2032
   DOCKER_RELAY_CHAIN_CURRENCY: DOT
+  # ray test touch >
 
 jobs:
   build:

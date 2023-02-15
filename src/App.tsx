@@ -83,7 +83,9 @@ const App = (): JSX.Element => {
         const isVaultOperator = data?.vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
+      // ray test touch <
       onError: (error) => console.log('[App useQuery 1] error.message => ', error.message)
+      // ray test touch >
     }
   );
   useErrorHandler(vaultsError);
