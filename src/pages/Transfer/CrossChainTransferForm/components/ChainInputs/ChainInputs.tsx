@@ -1,4 +1,4 @@
-import { PlusCircle } from '@/assets/icons';
+import { ArrowRight } from '@/assets/icons';
 import { Flex } from '@/component-library';
 
 import { Chains, ChainSelect } from '../ChainSelect';
@@ -13,7 +13,7 @@ const ChainInputs = ({ testChains }: Props): JSX.Element => {
     <Flex alignItems='center' direction='row' gap='spacing4' justifyContent='space-between'>
       <ChainSelect chains={testChains} />
       <IconWrapper>
-        <PlusCircle color='secondary' strokeWidth={2} />
+        <ArrowRight color='secondary' strokeWidth={2} />
       </IconWrapper>
       <ChainSelect chains={testChains} />
     </Flex>

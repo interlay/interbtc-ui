@@ -1,3 +1,4 @@
+export { ArrowRight } from './ArrowRight';
 export { ArrowsUpDown } from './ArrowsUpDown';
 export { ChevronDown } from './ChevronDown';
 export { Cog } from './Cog';
