@@ -1,23 +1,24 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { LiquidityPool, LpCurrency, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { RefObject, useState } from 'react';
-import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
-import * as z from 'zod';
 
-import { convertMonetaryAmountToValueInUSD, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmountInUSDFormat,
+  newSafeMonetaryAmount
+} from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import validate, { PoolWithdrawSchemaParams } from '@/lib/form-validation';
+import { isFormDisabled, useForm, WITHDRAW_LIQUIDITY_POOL_FIELD } from '@/lib/form';
+import { WithdrawLiquidityPoolFormData, withdrawLiquidityPoolSchema } from '@/lib/form/schemas';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
-import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -37,14 +38,6 @@ type DepositData = {
 
 const mutateWithdraw = ({ amount, pool, slippage, deadline, accountId }: DepositData) =>
   window.bridge.amm.removeLiquidity(amount, pool, slippage, deadline, accountId);
-
-enum FormFields {
-  WITHDRAW_AMOUNT = 'withdraw-amount'
-}
-
-type WithdrawFormData = {
-  [FormFields.WITHDRAW_AMOUNT]: string;
-};
 
 type WithdrawFormProps = {
   pool: LiquidityPool;
@@ -76,28 +69,18 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   const balance = getBalance(lpToken.ticker)?.reserved;
 
   const zeroAssetAmount = newMonetaryAmount(0, lpToken);
-  const schemaParams: PoolWithdrawSchemaParams = {
+  const schemaParams = {
     governanceBalance,
     maxAmount: balance || zeroAssetAmount,
     minAmount: newMonetaryAmount(1, lpToken),
     transactionFee: TRANSACTION_FEE_AMOUNT
   };
 
-  const {
-    register,
-    handleSubmit: h,
-    formState: { errors, isDirty, isValid },
-    watch
-  } = useForm<WithdrawFormData>({
-    mode: 'onChange',
-    resolver: zodResolver(z.object({ [FormFields.WITHDRAW_AMOUNT]: validate.amm.pool.withdraw(t, schemaParams) }))
-  });
-
-  const handleSubmit = async (data: WithdrawFormData) => {
+  const handleSubmit = async (data: WithdrawLiquidityPoolFormData) => {
     if (!accountId) return;
 
     try {
-      const amount = newMonetaryAmount(data[FormFields.WITHDRAW_AMOUNT] || 0, lpToken, true);
+      const amount = newMonetaryAmount(data[WITHDRAW_LIQUIDITY_POOL_FIELD] || 0, lpToken, true);
       const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
 
       return withdrawMutation.mutate({ amount, pool, deadline, slippage, accountId });
@@ -106,10 +89,19 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
     }
   };
 
-  const data = watch();
-  const lpTokenMonetaryAmount = newMonetaryAmount(data[FormFields.WITHDRAW_AMOUNT] || 0, pool.lpToken, true);
+  const form = useForm<WithdrawLiquidityPoolFormData>({
+    initialValues: { withdraw: undefined },
+    validationSchema: withdrawLiquidityPoolSchema(schemaParams),
+    onSubmit: handleSubmit
+  });
 
-  const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
+  const lpTokenMonetaryAmount = newSafeMonetaryAmount(
+    form.values[WITHDRAW_LIQUIDITY_POOL_FIELD] || 0,
+    pool.lpToken,
+    true
+  );
+
+  const isBtnDisabled = isFormDisabled(form);
 
   const tickers = pool.pooledCurrencies.map((currency) => currency.currency.ticker);
   const poolName = <PoolName justifyContent='center' tickers={tickers} />;
@@ -128,7 +120,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
     .toNumber();
 
   return (
-    <form onSubmit={h(handleSubmit)}>
+    <form onSubmit={form.handleSubmit}>
       <Flex direction='column'>
         <SlippageManager ref={slippageModalRef} value={slippage} onChange={(slippage) => setSlippage(slippage)} />
         {poolName}
@@ -143,8 +135,8 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
               balance={balance?.toString() || 0}
               humanBalance={balance?.toHuman() || 0}
               valueUSD={pooledAmountsUSD}
-              errorMessage={getErrorMessage(errors[FormFields.WITHDRAW_AMOUNT])}
-              {...register(FormFields.WITHDRAW_AMOUNT)}
+              errorMessage={form.errors[WITHDRAW_LIQUIDITY_POOL_FIELD]}
+              {...form.getFieldProps(WITHDRAW_LIQUIDITY_POOL_FIELD)}
             />
           </Flex>
           <WithdrawAssets pooledAmounts={pooledAmounts} prices={prices} />

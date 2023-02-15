@@ -1,9 +1,14 @@
-import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
+import { LiquidityPool } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { formatNumber, formatUSD } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  formatNumber,
+  formatUSD,
+  newSafeMonetaryAmount
+} from '@/common/utils/utils';
 import { Dd, Dl, Dt, Flex, P } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
@@ -13,7 +18,7 @@ import { StyledDlGroup } from './DepositForm.styles';
 
 type DepositOutputAssetsProps = {
   pool: LiquidityPool;
-  values: Record<string, number | undefined>;
+  values: Record<string, string | undefined>;
   prices?: Prices;
 };
 
@@ -26,16 +31,16 @@ const DepositOutputAssets = ({ pool, values, prices }: DepositOutputAssetsProps)
   );
 
   const lpTokenMonetaryAmount = pool.getLiquidityDepositLpTokenAmount(
-    newMonetaryAmount(values[pooledCurrencies[0].currency.ticker] || 0, pooledCurrencies[0].currency, true)
+    newSafeMonetaryAmount(values[pooledCurrencies[0].currency.ticker] || 0, pooledCurrencies[0].currency, true)
   );
 
   const lpTokenAmountUSD = useMemo(
     () =>
       pooledCurrencies
         .reduce((acc, curr) => {
-          const amountUSD = new Big(values[curr.currency.ticker] || 0)
-            .mul(getTokenPrice(prices, curr.currency.ticker)?.usd || 0)
-            .toNumber();
+          const assetMonetary = newSafeMonetaryAmount(values[curr.currency.ticker] || 0, curr.currency, true);
+          const amountUSD =
+            convertMonetaryAmountToValueInUSD(assetMonetary, getTokenPrice(prices, curr.currency.ticker)?.usd) || 0;
 
           return acc.add(amountUSD);
         }, new Big(0))

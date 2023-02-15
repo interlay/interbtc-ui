@@ -2,11 +2,10 @@ import { useLabel } from '@react-aria/label';
 import { mergeProps } from '@react-aria/utils';
 import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useState } from 'react';
 
-import { formatUSD } from '@/common/utils/utils';
-
 import { Flex } from '../Flex';
 import { NumberInput, NumberInputProps } from '../NumberInput';
 import { useDOMRef } from '../utils/dom';
+import { formatUSD } from '../utils/format';
 import { triggerChangeEvent } from '../utils/input';
 import { StyledUSDAdornment } from './TokenInput.style';
 import { TokenInputLabel } from './TokenInputLabel';
@@ -19,19 +18,8 @@ type MultiToken = { text: string; icons: string[] };
 
 type TokenTicker = SingleToken | MultiToken;
 
-const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
-  if (!decimals) return;
-
-  return {
-    style: 'decimal',
-    maximumFractionDigits: decimals || 20,
-    useGrouping: false
-  };
-};
-
 type Props = {
-  decimals?: number;
-  valueUSD: number;
+  valueUSD?: number;
   balance?: string | number;
   humanBalance?: string | number;
   balanceLabel?: ReactNode;
@@ -50,7 +38,6 @@ type TokenInputProps = Props & InheritAttrs;
 const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
-      decimals,
       valueUSD,
       balance,
       humanBalance,
@@ -66,6 +53,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       onClickBalance,
       onChangeTicker,
       selectProps,
+      placeholder = '0',
       ...props
     },
     ref
@@ -117,8 +105,6 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       />
     );
 
-    const formatOptions = getFormatOptions(decimals);
-
     const hasLabel = !!label || balance !== undefined;
 
     return (
@@ -137,13 +123,14 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         )}
         <NumberInput
           ref={inputRef}
-          minValue={0}
+          placeholder={placeholder}
           size='large'
           isDisabled={isDisabled}
-          formatOptions={formatOptions}
           endAdornment={endAdornment}
           bottomAdornment={
-            <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
+            valueUSD !== undefined && (
+              <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
+            )
           }
           {...mergeProps(props, fieldProps)}
         />
