@@ -24,7 +24,7 @@ const AccountListModal = ({
     <ModalHeader size='lg' weight='medium' color='secondary'>
       Select Account
     </ModalHeader>
-    <ModalBody overflow='hidden'>
+    <ModalBody overflow='hidden' noPadding>
       <AccountList items={accounts} selectedAccount={selectedAccount} onSelectionChange={onSelectionChange} />
     </ModalBody>
   </Modal>
