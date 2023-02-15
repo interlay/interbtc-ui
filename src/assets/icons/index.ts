@@ -1,4 +1,4 @@
-export { ArrowRight } from './ArrowRight';
+export { ArrowRightCircle } from './ArrowRightCircle';
 export { ArrowsUpDown } from './ArrowsUpDown';
 export { ChevronDown } from './ChevronDown';
 export { Cog } from './Cog';
