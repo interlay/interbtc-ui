@@ -1,8 +1,6 @@
-import { useFocusRing } from '@react-aria/focus';
-import { usePress } from '@react-aria/interactions';
-import { mergeProps } from '@react-aria/utils';
 import { ReactNode } from 'react';
 
+import { CTA } from '../CTA';
 import {
   StyledTokenInputBalanceLabel,
   StyledTokenInputBalanceValue,
@@ -25,29 +23,18 @@ const TokenInputBalance = ({
   className,
   isDisabled,
   label = 'Balance'
-}: TokenInputBalanceProps): JSX.Element => {
-  const { pressProps } = usePress({ onPress: onClickBalance, isDisabled: isDisabled });
-  const { focusProps, isFocusVisible } = useFocusRing();
-  const balanceValueProps = isDisabled
-    ? {}
-    : {
-        role: 'button',
-        tabIndex: 0,
-        'aria-label': 'apply balance',
-        ...mergeProps(pressProps, focusProps)
-      };
-
-  return (
-    <StyledTokenInputBalanceWrapper className={className}>
-      <StyledTokenInputBalanceLabel>{label}</StyledTokenInputBalanceLabel>
-      <dd>
-        <StyledTokenInputBalanceValue $isDisabled={isDisabled} $isFocusVisible={isFocusVisible} {...balanceValueProps}>
-          {ticker ? value : 0}
-        </StyledTokenInputBalanceValue>
-      </dd>
-    </StyledTokenInputBalanceWrapper>
-  );
-};
+}: TokenInputBalanceProps): JSX.Element => (
+  <StyledTokenInputBalanceWrapper className={className}>
+    <StyledTokenInputBalanceLabel>{label}</StyledTokenInputBalanceLabel>
+    <dd>
+      <StyledTokenInputBalanceValue>{ticker ? value : 0}</StyledTokenInputBalanceValue>
+    </dd>
+    // TODO: change border radius
+    <CTA onPress={onClickBalance} disabled={isDisabled} size='x-small'>
+      MAX
+    </CTA>
+  </StyledTokenInputBalanceWrapper>
+);
 
 export { TokenInputBalance };
 export type { TokenInputBalanceProps };

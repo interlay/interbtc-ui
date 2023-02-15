@@ -164,6 +164,11 @@ const theme = {
       text: 'var(--colors-cta-text-text)',
       bgHover: 'var(--colors-cta-text-hover)'
     },
+    'x-small': {
+      padding: 'var(--spacing-1)',
+      text: 'var(--text-xs)',
+      lineHeight: '1'
+    },
     small: {
       padding: 'var(--spacing-2)',
       text: 'var(--text-xs)',
