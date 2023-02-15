@@ -2,11 +2,10 @@ import { useLabel } from '@react-aria/label';
 import { mergeProps } from '@react-aria/utils';
 import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useState } from 'react';
 
-import { formatUSD } from '@/common/utils/utils';
-
 import { Flex } from '../Flex';
 import { NumberInput, NumberInputProps } from '../NumberInput';
 import { useDOMRef } from '../utils/dom';
+import { formatUSD } from '../utils/format';
 import { triggerChangeEvent } from '../utils/input';
 import { StyledUSDAdornment } from './TokenInput.style';
 import { TokenInputLabel } from './TokenInputLabel';
@@ -20,7 +19,7 @@ type MultiToken = { text: string; icons: string[] };
 type TokenTicker = SingleToken | MultiToken;
 
 type Props = {
-  valueUSD: number;
+  valueUSD?: number;
   balance?: string | number;
   humanBalance?: string | number;
   balanceLabel?: ReactNode;
@@ -129,7 +128,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
           isDisabled={isDisabled}
           endAdornment={endAdornment}
           bottomAdornment={
-            <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
+            valueUSD !== undefined && (
+              <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
+            )
           }
           {...mergeProps(props, fieldProps)}
         />

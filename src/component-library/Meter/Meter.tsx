@@ -1,7 +1,5 @@
 import { HTMLAttributes, useEffect, useState } from 'react';
 
-import { formatPercentage } from '@/common/utils/utils';
-
 import { Span } from '../Text';
 import { Status, Variants } from '../utils/prop-types';
 import { Indicator } from './Indicator';
@@ -35,7 +33,7 @@ const Meter = ({
   className,
   style,
   hidden,
-  formatOptions,
+  formatOptions = { maximumFractionDigits: 2 },
   ...props
 }: MeterProps): JSX.Element => {
   const [status, setStatus] = useState<Status>();
@@ -65,7 +63,7 @@ const Meter = ({
           $variant={variant}
         >
           <Indicator />
-          {!isPrimary && <Span>{formatPercentage(position, formatOptions)}</Span>}
+          {!isPrimary && <Span>{Intl.NumberFormat(undefined, formatOptions).format(position)}%</Span>}
         </StyledIndicatorWrapper>
         {!isPrimary && !!ranges && <RangeIndicators ranges={ranges} />}
       </StyledContainer>

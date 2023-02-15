@@ -1,14 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BorrowPosition, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
-import { useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TFunction, useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import { useDebounce } from 'react-use';
 import * as z from 'zod';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
-import { CTA, Flex, TokenInput } from '@/component-library';
-import ErrorModal from '@/legacy-components/ErrorModal';
+import { Flex, TokenInput } from '@/component-library';
+import { AuthCTA } from '@/components';
 import validate, {
   LoanBorrowSchemaParams,
   LoanLendSchemaParams,
@@ -118,6 +119,9 @@ type LoanFormProps = {
 };
 
 const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JSX.Element => {
+  const [inputAmount, setInputAmount] = useState<string>();
+  const [isMaxAmount, setMaxAmount] = useState(false);
+
   const { t } = useTranslation();
   const {
     refetch,
@@ -125,14 +129,34 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   } = useGetAccountPositions();
   const prices = useGetPrices();
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
-  const [isMaxAmount, setMaxAmount] = useState(false);
+
+  // withdraw has `withdraw` and `withdrawAll`
+  // repay has `repay` and `repayAll`
+  // They both are considered a multi action variant
+  const hasMultiActionVariant = variant === 'withdraw' || variant === 'repay';
+
+  useDebounce(
+    () => {
+      if (!inputAmount || !hasMultiActionVariant) return;
+
+      // Checks if the user is trying to type the max value
+      const isEqualAmount = assetAmount.max.eq(newMonetaryAmount(inputAmount, asset.currency, true));
+      setMaxAmount(isEqualAmount);
+    },
+    300,
+    [inputAmount]
+  );
 
   const handleSuccess = () => {
     onChangeLoan?.();
     refetch();
   };
 
-  const loanMutation = useLoanMutation({ onSuccess: handleSuccess });
+  const handleError = (error: Error) => {
+    toast.error(error.message);
+  };
+
+  const loanMutation = useLoanMutation({ onSuccess: handleSuccess, onError: handleError });
 
   const schemaParams: LoanSchemaParams = {
     governanceBalance,
@@ -169,56 +193,55 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     }
   };
 
-  const handleClickBalance = () => setMaxAmount(true);
+  const handleClickBalance = () => {
+    if (!hasMultiActionVariant) return;
 
-  const handleChange = () => setMaxAmount(false);
+    setMaxAmount(true);
+  };
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (!hasMultiActionVariant) return;
+
+    setMaxAmount(false);
+    setInputAmount(e.target.value);
+  };
 
   const showBorrowLimit = shouldShowBorrowLimit(variant, hasCollateral, position);
 
   return (
-    <>
-      <form onSubmit={h(handleSubmit)}>
-        <StyledFormWrapper direction='column' justifyContent='space-between' gap='spacing4'>
-          <Flex direction='column' gap='spacing4'>
-            <TokenInput
-              placeholder='0.00'
-              ticker={asset.currency.ticker}
-              errorMessage={getErrorMessage(errors[formField])}
-              aria-label={content.fieldAriaLabel}
-              balance={assetAmount.max.toString()}
-              humanBalance={assetAmount.max.toHuman()}
-              balanceLabel={content.label}
-              valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
-              onClickBalance={handleClickBalance}
-              {...register(formField, { onChange: handleChange })}
+    <form onSubmit={h(handleSubmit)}>
+      <StyledFormWrapper direction='column' justifyContent='space-between' gap='spacing4'>
+        <Flex direction='column' gap='spacing4'>
+          <TokenInput
+            placeholder='0.00'
+            ticker={asset.currency.ticker}
+            errorMessage={getErrorMessage(errors[formField])}
+            aria-label={content.fieldAriaLabel}
+            balance={assetAmount.max.toString()}
+            humanBalance={assetAmount.max.toHuman()}
+            balanceLabel={content.label}
+            valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
+            onClickBalance={handleClickBalance}
+            {...register(formField, { onChange: handleChange })}
+          />
+          {showBorrowLimit && (
+            <BorrowLimit
+              shouldDisplayLiquidationAlert
+              loanAction={variant}
+              asset={asset}
+              actionAmount={monetaryAmount}
+              prices={prices}
             />
-            {showBorrowLimit && (
-              <BorrowLimit
-                shouldDisplayLiquidationAlert
-                loanAction={variant}
-                asset={asset}
-                actionAmount={monetaryAmount}
-                prices={prices}
-              />
-            )}
-          </Flex>
-          <Flex direction='column' gap='spacing4'>
-            <LoanActionInfo variant={variant} asset={asset} prices={prices} />
-            <CTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
-              {content.title}
-            </CTA>
-          </Flex>
-        </StyledFormWrapper>
-      </form>
-      {loanMutation.isError && (
-        <ErrorModal
-          open={loanMutation.isError}
-          onClose={() => loanMutation.reset()}
-          title='Error'
-          description={loanMutation.error?.message || ''}
-        />
-      )}
-    </>
+          )}
+        </Flex>
+        <Flex direction='column' gap='spacing4'>
+          <LoanActionInfo variant={variant} asset={asset} prices={prices} />
+          <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
+            {content.title}
+          </AuthCTA>
+        </Flex>
+      </StyledFormWrapper>
+    </form>
   );
 };
 

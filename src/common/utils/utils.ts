@@ -1,4 +1,4 @@
-import { CurrencyExt, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { CurrencyExt, InterbtcPrimitivesVaultId, newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
@@ -85,29 +85,14 @@ const formatNumber = (
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
     compact?: boolean;
-    rounding?: boolean;
   }
 ): string => {
-  let formatted = amount;
-  let { compact, maximumFractionDigits, minimumFractionDigits, rounding = true } = options || {};
-
-  // Intl.NumberFormat rounds number by default. The alternative is to cut
-  // programmatically the number decimals before being formatted
-  if (!rounding && maximumFractionDigits) {
-    const decimal = new Big(10).pow(maximumFractionDigits);
-    formatted = new Big(Math.floor(decimal.mul(amount).toNumber())).div(decimal).toNumber();
-
-    // set to max digits to avoid rounding
-    maximumFractionDigits = 20;
-  }
-
   const { format } = new Intl.NumberFormat(undefined, {
-    minimumFractionDigits,
-    maximumFractionDigits,
-    notation: compact ? getFormatUSDNotation(formatted) : undefined
+    ...options,
+    notation: options?.compact ? getFormatUSDNotation(amount) : undefined
   });
 
-  return format(formatted);
+  return format(amount);
 };
 
 const formatPercentage = (
@@ -160,6 +145,15 @@ function getPolkadotLink(blockHeight: number): string {
 const monetaryToNumber = (monetaryAmount: MonetaryAmount<CurrencyExt> | undefined): number =>
   monetaryAmount?.toBig().toNumber() || 0;
 
+const newSafeMonetaryAmount: typeof newMonetaryAmount = (...args) => {
+  try {
+    return newMonetaryAmount(...args);
+  } catch (e) {
+    const [, ...rest] = args;
+    return newMonetaryAmount(0, ...rest);
+  }
+};
+
 export {
   convertMonetaryAmountToValueInUSD,
   displayMonetaryAmount,
@@ -173,6 +167,7 @@ export {
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
   monetaryToNumber,
+  newSafeMonetaryAmount,
   shortAddress,
   shortTxId
 };
