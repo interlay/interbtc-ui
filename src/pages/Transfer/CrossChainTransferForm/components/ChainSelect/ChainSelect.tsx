@@ -37,15 +37,17 @@ const ChainSelect = forwardRef<HTMLInputElement, ChainSelectProps>(
 
     return (
       <>
-        <ChainSelectLabel>Select Chain</ChainSelectLabel>
-        <SelectTrigger onPress={() => setOpen(true)}>
-          {selectedChain && (
-            <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing2'>
-              <ChainIcon id={selectedChain.id} />
-              <StyledChain>{selectedChain?.display}</StyledChain>
-            </Flex>
-          )}
-        </SelectTrigger>
+        <Flex direction='column' flex='1'>
+          <ChainSelectLabel>Select Chain</ChainSelectLabel>
+          <SelectTrigger onPress={() => setOpen(true)}>
+            {selectedChain && (
+              <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing2'>
+                <ChainIcon id={selectedChain.id} />
+                <StyledChain>{selectedChain?.display}</StyledChain>
+              </Flex>
+            )}
+          </SelectTrigger>
+        </Flex>
         <ChainListModal
           isOpen={isOpen}
           chains={chains}
