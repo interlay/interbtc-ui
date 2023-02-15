@@ -18,7 +18,7 @@ const ChainListModal = ({ selectedChain, chains, onSelectionChange, ...props }: 
     <ModalHeader size='lg' weight='medium' color='secondary'>
       Select Chain
     </ModalHeader>
-    <ModalBody overflow='hidden'>
+    <ModalBody overflow='hidden' noPadding>
       <ChainList items={chains} selectedChain={selectedChain} onSelectionChange={onSelectionChange} />
     </ModalBody>
   </Modal>
