@@ -4,7 +4,7 @@ import { Icon, IconProps } from '@/component-library/Icon';
 
 const KUSAMA = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   <Icon {...props} ref={ref} viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <title>KSM</title>
+    <title>KUSAMA</title>
     <g clipPath='url(#clip0_1308_233)'>
       <path
         d='M16 31.5C7.43958 31.5 0.5 24.5605 0.5 16C0.5 7.43958 7.43958 0.5 16 0.5C24.5605 0.5 31.5 7.43958 31.5 16C31.5 24.5605 24.5605 31.5 16 31.5Z'
@@ -24,6 +24,6 @@ const KUSAMA = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   </Icon>
 ));
 
-KUSAMA.displayName = 'KSM';
+KUSAMA.displayName = 'KUSAMA';
 
 export { KUSAMA };
