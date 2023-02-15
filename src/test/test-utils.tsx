@@ -47,16 +47,6 @@ const customRender = (ui: ReactElement, options?: CustomRenderOptions): Promise<
     history.push(options.path);
   }
 
-  if (!options?.hasLayout) {
-    jest.mock('../parts/Layout', () => {
-      const MockedLayout: React.FC = ({ children }: any) => children;
-      MockedLayout.displayName = 'MockedLayout';
-      return MockedLayout;
-    });
-
-    console.warn('Rendering with mocked out `Layout` component');
-  }
-
   // Wrapped in act so async updates are awaited.
   return act(async () => {
     render(ui, { wrapper: ProvidersWrapper(history), ...options });
