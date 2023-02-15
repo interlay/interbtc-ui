@@ -3,13 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import { Flex, TokenInput } from '@/component-library';
+import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AccountInput } from '@/components/AccountSelect';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 
-import { Chains, ChainSelect } from './components/ChainSelect';
+import { ChainInputs } from './components/ChainInputs';
+import { Chains } from './components/ChainSelect';
+import { StyledDl } from './CrossChainTransferForm.styles';
 
 const CrossChainTransferForm = (): JSX.Element => {
   const [testChains, setTestChains] = useState<Chains>([]);
@@ -24,7 +26,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!XCMBridge) return;
 
     const availableChains = XCMBridge.adapters.map((adapter: any) => {
-      console.log('adapter');
       return {
         display: adapter.chain.display,
         id: adapter.chain.id
@@ -38,9 +39,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     <>
       <form className='space-y-8'>
         <Flex direction='column' gap='spacing4'>
-          <Flex direction='column' gap='spacing4' justifyContent='space-between'>
-            {testChains.length && <ChainSelect chains={testChains} />}
-          </Flex>
+          {testChains.length && <ChainInputs testChains={testChains} />}
           <div>
             <TokenInput
               placeholder='0.00'
@@ -49,7 +48,6 @@ const CrossChainTransferForm = (): JSX.Element => {
                 field: `KINT ${t('deposit').toLowerCase()}`
               })}
               balance={0}
-              balanceDecimals={8}
               valueUSD={0}
               value={0}
               name={'KINT'}
@@ -70,6 +68,20 @@ const CrossChainTransferForm = (): JSX.Element => {
             />
           </div>
           <AccountInput account={selectedAccount} accounts={accounts} />
+          <StyledDl direction='column' gap='spacing2'>
+            <DlGroup justifyContent='space-between'>
+              <Dt size='xs' color='primary'>
+                Origin chain transfer fee
+              </Dt>
+              <Dd size='xs'>0 DOT</Dd>
+            </DlGroup>
+            <DlGroup justifyContent='space-between'>
+              <Dt size='xs' color='primary'>
+                Destination chain transfer fee
+              </Dt>
+              <Dd size='xs'>0 INTR</Dd>
+            </DlGroup>
+          </StyledDl>
           <SubmitButton disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}>
             {selectedAccount ? t('transfer') : t('connect_wallet')}
           </SubmitButton>

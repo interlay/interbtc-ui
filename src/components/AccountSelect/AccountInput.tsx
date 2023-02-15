@@ -1,6 +1,7 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { forwardRef, useState } from 'react';
 
+import { Flex } from '@/component-library';
 import { KeyringPair } from '@/lib/substrate';
 
 import { AccountInputLabel } from './AccountInputLabel';
@@ -24,7 +25,7 @@ const AccountInput = forwardRef<HTMLInputElement, AccountInputProps>(
     const isSelectDisabled = !accounts?.length;
 
     return (
-      <>
+      <Flex direction='column'>
         <AccountInputLabel>Select Account</AccountInputLabel>
         <AccountSelect
           value={accountValue}
@@ -32,7 +33,7 @@ const AccountInput = forwardRef<HTMLInputElement, AccountInputProps>(
           accounts={accounts}
           onChange={handleAccountChange}
         />
-      </>
+      </Flex>
     );
   }
 );
