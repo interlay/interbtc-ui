@@ -1,26 +1,45 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { Flex, TokenInput } from '@/component-library';
-import { SelectTrigger } from '@/component-library/Select/SelectTrigger';
 import { AccountInput } from '@/components/AccountSelect';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
+
+import { Chains, ChainSelect } from './components/ChainSelect';
 
 const CrossChainTransferForm = (): JSX.Element => {
+  const [testChains, setTestChains] = useState<Chains>([]);
+
   const { t } = useTranslation();
+  const { XCMBridge } = useXCMBridge();
 
   const { selectedAccount, accounts } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
+
+  useEffect(() => {
+    if (!XCMBridge) return;
+
+    const availableChains = XCMBridge.adapters.map((adapter: any) => {
+      console.log('adapter');
+      return {
+        display: adapter.chain.display,
+        id: adapter.chain.id
+      };
+    });
+
+    setTestChains(availableChains);
+  }, [XCMBridge]);
 
   return (
     <>
       <form className='space-y-8'>
         <Flex direction='column' gap='spacing4'>
-          <Flex direction='row' gap='spacing4' justifyContent='space-between'>
-            <SelectTrigger />
-            <SelectTrigger />
+          <Flex direction='column' gap='spacing4' justifyContent='space-between'>
+            {testChains.length && <ChainSelect chains={testChains} />}
           </Flex>
           <div>
             <TokenInput

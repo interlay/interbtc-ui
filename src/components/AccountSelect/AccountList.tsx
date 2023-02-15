@@ -46,7 +46,7 @@ const AccountList = ({ items, selectedAccount, onSelectionChange, ...props }: Ac
             textValue={accountText}
             alignItems='center'
             justifyContent='space-between'
-            gap='spacing4'
+            gap='spacing2'
           >
             <StyledListAccountWrapper alignItems='center' gap='spacing2' flex='1'>
               <Identicon size={32} value={item.address} theme='polkadot' />
