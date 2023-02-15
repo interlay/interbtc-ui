@@ -2,8 +2,8 @@ import { Flex } from '@/component-library/Flex';
 import { ListItem, ListProps } from '@/component-library/List';
 
 import { ChainIcon } from '../ChainIcon';
-import { Chains } from './ChainInput';
-import { StyledList, StyledListChainWrapper, StyledListItemLabel } from './ChainInput.style';
+import { Chains } from './ChainSelect';
+import { StyledList, StyledListChainWrapper, StyledListItemLabel } from './ChainSelect.style';
 
 type Props = {
   items: Chains;

@@ -1,7 +1,7 @@
 import { Flex } from '@/component-library/Flex';
 import { Label, LabelProps } from '@/component-library/Label';
 
-const ChainInputLabel = ({ children, ...props }: LabelProps): JSX.Element => {
+const ChainSelectLabel = ({ children, ...props }: LabelProps): JSX.Element => {
   const hasLabel = !!children;
 
   return (
@@ -11,4 +11,4 @@ const ChainInputLabel = ({ children, ...props }: LabelProps): JSX.Element => {
   );
 };
 
-export { ChainInputLabel };
+export { ChainSelectLabel };

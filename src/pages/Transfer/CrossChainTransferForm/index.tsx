@@ -9,7 +9,7 @@ import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 
-import { ChainInput, Chains } from './components/SelectChainInput';
+import { Chains, ChainSelect } from './components/ChainSelect';
 
 const CrossChainTransferForm = (): JSX.Element => {
   const [testChains, setTestChains] = useState<Chains>([]);
@@ -39,7 +39,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       <form className='space-y-8'>
         <Flex direction='column' gap='spacing4'>
           <Flex direction='column' gap='spacing4' justifyContent='space-between'>
-            {testChains.length && <ChainInput chains={testChains} />}
+            {testChains.length && <ChainSelect chains={testChains} />}
           </Flex>
           <div>
             <TokenInput
