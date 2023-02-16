@@ -41,7 +41,7 @@ const getData = (t: TFunction, variant: LoanAction) =>
     lend: {
       content: {
         title: t('loans.lend'),
-        label: 'Balance',
+        label: 'Maximum amount',
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.lend').toLowerCase() })
       }
     },
