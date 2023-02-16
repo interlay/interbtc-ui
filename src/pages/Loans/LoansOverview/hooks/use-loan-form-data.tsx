@@ -10,6 +10,7 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { getMaxBorrowableAmount } from '../utils/get-max-borrowable-amount';
+import { getMaxLendableAmount } from '../utils/get-max-lendable-amount';
 import { getMaxWithdrawableAmount } from '../utils/get-max-withdrawable-amount';
 
 type GetMaxAmountParams = {
@@ -42,8 +43,15 @@ const getMaxAmount = ({
         totalBorrowedAmountUSD,
         totalCollateralAmountUSD
       );
-    case 'lend':
-      return assetBalance;
+    case 'lend': {
+      if (assetBalance === undefined) {
+        return newMonetaryAmount(0, asset.currency);
+      }
+      const r = getMaxLendableAmount(assetBalance, asset);
+      console.log(r?.toString());
+      return r;
+    }
+
     case 'repay':
       return position?.amount.add((position as BorrowPosition).accumulatedDebt || 0);
   }

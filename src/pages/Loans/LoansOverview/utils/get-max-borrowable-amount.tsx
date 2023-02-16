@@ -2,6 +2,8 @@ import { CurrencyExt, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-ap
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
+import { pickSmallerAmount } from '@/utils/helpers/currencies';
+
 /**
  * Get maximum amount of currency that user can borrow
  * with currently provided collateral and liquidity.
@@ -22,7 +24,7 @@ const getMaxBorrowableAmount = (
     return newMonetaryAmount(0, asset.currency);
   }
 
-  const { availableCapacity, currency } = asset;
+  const { availableCapacity, currency, borrowCap, totalBorrows } = asset;
 
   const availableCollateralUSDValue = totalCollateralAmountUSD.sub(totalBorrowedAmountUSD);
   const maxBorrowableCurrencyAmount = availableCollateralUSDValue.div(assetPrice);
@@ -30,7 +32,15 @@ const getMaxBorrowableAmount = (
   const maxBorrowableAmountByCollateral =
     new MonetaryAmount(currency, maxBorrowableCurrencyAmount) || new MonetaryAmount(currency, 0);
 
-  return availableCapacity.gt(maxBorrowableAmountByCollateral) ? maxBorrowableAmountByCollateral : availableCapacity;
+  const maxBorrowableAmount = pickSmallerAmount(
+    pickSmallerAmount(availableCapacity, borrowCap.sub(totalBorrows)),
+    maxBorrowableAmountByCollateral
+  );
+
+  if (maxBorrowableAmount.toBig().lte(0)) {
+    return newMonetaryAmount(0, currency);
+  }
+  return maxBorrowableAmount;
 };
 
 export { getMaxBorrowableAmount };
