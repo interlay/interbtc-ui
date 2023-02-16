@@ -80,7 +80,7 @@ type SwapFormProps = Props & InheritAttrs;
 
 const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: SwapFormProps): JSX.Element | null => {
   const [slippage, setSlippage] = useState(0.1);
-  const [inputAmount, setInputAmount] = useState<number>();
+  const [inputAmount, setInputAmount] = useState<string>();
   const [trade, setTrade] = useState<Trade | null>();
 
   const prices = useGetPrices();
@@ -93,7 +93,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
 
   useDebounce(
     () => {
-      if (!pair.input || !pair.output || inputAmount === undefined) {
+      if (!pair.input || !pair.output || !inputAmount) {
         return setTrade(undefined);
       }
 
@@ -108,6 +108,8 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const swapMutation = useMutation<void, Error, SwapData>(mutateSwap, {
     onSuccess: () => {
       toast.success('Swap successful');
+      setTrade(undefined);
+      setInputAmount(undefined);
       onSwap();
     },
     onError: (err) => {
@@ -166,9 +168,8 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   });
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const value = Number(e.target.value) || undefined;
     setTrade(undefined);
-    setInputAmount(value);
+    setInputAmount(e.target.value);
   };
 
   const handlePairChange = (pair: SwapPair) => {
@@ -260,7 +261,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
                 balance={outputBalance?.toString() || 0}
                 humanBalance={outputBalance?.toHuman() || 0}
                 valueUSD={outputValueUSD}
-                value={trade?.outputAmount.toString()}
+                value={trade?.outputAmount.toString() || ''}
                 tokens={tokens}
                 selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
                   onChange: handleTickerChange
