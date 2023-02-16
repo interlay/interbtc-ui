@@ -21,20 +21,23 @@ const TokenInputBalance = ({
   value,
   onClickBalance,
   className,
-  isDisabled,
+  isDisabled: isDisabledProp,
   label = 'Balance'
-}: TokenInputBalanceProps): JSX.Element => (
-  <StyledTokenInputBalanceWrapper className={className}>
-    <StyledTokenInputBalanceLabel>{label}</StyledTokenInputBalanceLabel>
-    <dd>
-      <StyledTokenInputBalanceValue>{ticker ? value : 0}</StyledTokenInputBalanceValue>
-    </dd>
-    // TODO: change border radius
-    <CTA onPress={onClickBalance} disabled={isDisabled} size='x-small'>
-      MAX
-    </CTA>
-  </StyledTokenInputBalanceWrapper>
-);
+}: TokenInputBalanceProps): JSX.Element => {
+  const isDisabled = isDisabledProp || !ticker || value === 0;
+
+  return (
+    <StyledTokenInputBalanceWrapper className={className}>
+      <StyledTokenInputBalanceLabel>{label}</StyledTokenInputBalanceLabel>
+      <dd>
+        <StyledTokenInputBalanceValue>{ticker ? value : 0}</StyledTokenInputBalanceValue>
+      </dd>
+      <CTA onPress={onClickBalance} disabled={isDisabled} size='x-small'>
+        MAX
+      </CTA>
+    </StyledTokenInputBalanceWrapper>
+  );
+};
 
 export { TokenInputBalance };
 export type { TokenInputBalanceProps };

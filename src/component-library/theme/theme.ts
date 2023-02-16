@@ -167,6 +167,7 @@ const theme = {
     'x-small': {
       padding: 'var(--spacing-1)',
       text: 'var(--text-xs)',
+      // TODO: revist on redesign
       lineHeight: '1'
     },
     small: {
