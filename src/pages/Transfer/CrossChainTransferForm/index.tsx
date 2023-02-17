@@ -6,6 +6,7 @@ import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AccountInput } from '@/components/AccountSelect';
 import SubmitButton from '@/legacy-components/SubmitButton';
+import { CrossChainTransferFormData, useForm } from '@/lib/form';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 
@@ -35,9 +36,18 @@ const CrossChainTransferForm = (): JSX.Element => {
     setTestChains(availableChains);
   }, [XCMBridge]);
 
+  const handleSubmit = () => {
+    console.log('submit');
+  };
+
+  const form = useForm<CrossChainTransferFormData>({
+    initialValues: { withdraw: '' },
+    onSubmit: handleSubmit
+  });
+
   return (
     <>
-      <form className='space-y-8'>
+      <form className='space-y-8' onSubmit={form.handleSubmit}>
         <Flex direction='column' gap='spacing4'>
           {testChains.length && <ChainInputs testChains={testChains} />}
           <div>
