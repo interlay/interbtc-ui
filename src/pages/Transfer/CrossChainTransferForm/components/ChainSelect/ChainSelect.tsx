@@ -3,18 +3,12 @@ import { forwardRef, useState } from 'react';
 
 import { Flex } from '@/component-library';
 import { SelectTrigger } from '@/component-library/Select';
+import { Chains } from '@/types/chains';
 
 import { ChainIcon } from '../ChainIcon';
 import { ChainListModal } from './ChainListModal';
 import { StyledChain } from './ChainSelect.style';
 import { ChainSelectLabel } from './ChainSelectLabel';
-
-type Chain = {
-  display: string;
-  id: string;
-};
-
-type Chains = Chain[];
 
 type Props = {
   chains: Chains;
@@ -63,4 +57,4 @@ const ChainSelect = forwardRef<HTMLInputElement, ChainSelectProps>(
 ChainSelect.displayName = 'ChainSelect';
 
 export { ChainSelect };
-export type { Chain, Chains, ChainSelectProps };
+export type { ChainSelectProps };

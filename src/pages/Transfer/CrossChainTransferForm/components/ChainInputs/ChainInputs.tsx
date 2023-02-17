@@ -1,21 +1,23 @@
 import { ArrowRightCircle } from '@/assets/icons';
 import { Flex } from '@/component-library';
+import { Chains } from '@/types/chains';
 
-import { Chains, ChainSelect } from '../ChainSelect';
+import { ChainSelect } from '../ChainSelect';
 import { IconWrapper } from './ChainInputs.styles';
 
 type Props = {
-  testChains: Chains;
+  fromChains: Chains;
+  toChains: Chains;
 };
 
-const ChainInputs = ({ testChains }: Props): JSX.Element => {
+const ChainInputs = ({ fromChains, toChains }: Props): JSX.Element => {
   return (
     <Flex alignItems='center' direction='row' gap='spacing4' justifyContent='space-between'>
-      <ChainSelect chains={testChains} />
+      <ChainSelect chains={fromChains} />
       <IconWrapper>
         <ArrowRightCircle color='secondary' strokeWidth={2} />
       </IconWrapper>
-      <ChainSelect chains={testChains} />
+      <ChainSelect chains={toChains} />
     </Flex>
   );
 };

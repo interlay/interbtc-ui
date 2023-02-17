@@ -1,7 +1,7 @@
 import { Modal, ModalBody, ModalHeader, ModalProps } from '@/component-library/Modal';
+import { Chains } from '@/types/chains';
 
 import { ChainList } from './ChainList';
-import { Chains } from './ChainSelect';
 
 type Props = {
   chains: Chains;
