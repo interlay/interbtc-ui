@@ -1,2 +1,2 @@
-export type { AccountInputProps } from './AccountInput';
-export { AccountInput } from './AccountInput';
+export type { AccountSelectProps } from './AccountSelect';
+export { AccountSelect } from './AccountSelect';

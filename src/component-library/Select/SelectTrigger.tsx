@@ -4,12 +4,10 @@ import { mergeProps } from '@react-aria/utils';
 import { PressEvent } from '@react-types/shared';
 import { ButtonHTMLAttributes, forwardRef, ReactNode } from 'react';
 
-import { ChevronDown } from '@/assets/icons';
-
 import { TextProps } from '../Text';
 import { useDOMRef } from '../utils/dom';
 import { Sizes } from '../utils/prop-types';
-import { StyledTrigger, StyledTriggerValue } from './Select.style';
+import { StyledChevronDown, StyledTrigger, StyledTriggerValue } from './Select.style';
 
 type Props = {
   size?: Sizes;
@@ -51,7 +49,7 @@ const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
         <StyledTriggerValue {...valueProps} $isSelected={!!children} $isDisabled={disabled}>
           {children || placeholder}
         </StyledTriggerValue>
-        <ChevronDown size={size === 'large' ? 'md' : 's'} />
+        <StyledChevronDown size={size === 'large' ? 'md' : 's'} />
       </StyledTrigger>
     );
   }

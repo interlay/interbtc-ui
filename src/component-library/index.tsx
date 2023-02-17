@@ -18,6 +18,8 @@ export type { GridItemProps, GridProps } from './Grid';
 export { Grid, GridItem } from './Grid';
 export type { InputProps } from './Input';
 export { Input } from './Input';
+export type { LabelProps } from './Label';
+export { Label } from './Label';
 export type { ListItemProps, ListProps } from './List';
 export { List, ListItem } from './List';
 export type { LoadingSpinnerProps } from './LoadingSpinner';
