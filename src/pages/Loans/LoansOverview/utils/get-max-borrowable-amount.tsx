@@ -31,11 +31,8 @@ const getMaxBorrowableAmount = (
 
   const maxBorrowableAmountByCollateral =
     new MonetaryAmount(currency, maxBorrowableCurrencyAmount) || new MonetaryAmount(currency, 0);
-
-  const maxBorrowableAmount = pickSmallerAmount(
-    pickSmallerAmount(availableCapacity, borrowCap.sub(totalBorrows)),
-    maxBorrowableAmountByCollateral
-  );
+  const protocolLimitAmount = pickSmallerAmount(availableCapacity, borrowCap.sub(totalBorrows));
+  const maxBorrowableAmount = pickSmallerAmount(protocolLimitAmount, maxBorrowableAmountByCollateral);
 
   if (maxBorrowableAmount.toBig().lte(0)) {
     return newMonetaryAmount(0, currency);

@@ -43,15 +43,8 @@ const getMaxAmount = ({
         totalBorrowedAmountUSD,
         totalCollateralAmountUSD
       );
-    case 'lend': {
-      if (assetBalance === undefined) {
-        return newMonetaryAmount(0, asset.currency);
-      }
-      const r = getMaxLendableAmount(assetBalance, asset);
-      console.log(r?.toString());
-      return r;
-    }
-
+    case 'lend':
+      return getMaxLendableAmount(assetBalance, asset);
     case 'repay':
       return position?.amount.add((position as BorrowPosition).accumulatedDebt || 0);
   }
