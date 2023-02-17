@@ -1,3 +1,4 @@
+import { ChainName } from '@interlay/bridge';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -14,32 +15,42 @@ import { Chains } from './components/ChainSelect';
 import { StyledDl } from './CrossChainTransferForm.styles';
 
 const CrossChainTransferForm = (): JSX.Element => {
-  const [testChains, setTestChains] = useState<Chains>([]);
+  const [destinationChains, setDestinationChains] = useState<Chains>([]);
+  const [availableTokens, setAvailableTokens] = useState<string[]>([]);
 
   const { t } = useTranslation();
-  const { XCMBridge } = useXCMBridge();
+  const { availableChains, getDestinationChains, getAvailableTokens } = useXCMBridge();
+
+  useEffect(() => {
+    if (!availableChains.length) return;
+
+    const destinations = getDestinationChains(availableChains[0].id as ChainName);
+    setDestinationChains(destinations);
+  }, [availableChains, getDestinationChains]);
+
+  useEffect(() => {
+    if (!availableChains.length || !destinationChains.length) return;
+
+    const tokens = getAvailableTokens(availableChains[0].id as ChainName, destinationChains[0].id as ChainName);
+    setAvailableTokens(tokens);
+  }, [availableChains, destinationChains, getAvailableTokens]);
+
+  useEffect(() => {
+    if (!availableTokens.length) return;
+
+    console.log(availableTokens);
+  }, [availableTokens]);
 
   const { selectedAccount, accounts } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
-
-  useEffect(() => {
-    if (!XCMBridge) return;
-
-    const availableChains = XCMBridge.adapters.map((adapter: any) => {
-      return {
-        display: adapter.chain.display,
-        id: adapter.chain.id
-      };
-    });
-
-    setTestChains(availableChains);
-  }, [XCMBridge]);
 
   return (
     <>
       <form className='space-y-8'>
         <Flex direction='column' gap='spacing4'>
-          {testChains.length && <ChainInputs testChains={testChains} />}
+          {availableChains.length && destinationChains.length && (
+            <ChainInputs fromChains={availableChains} toChains={destinationChains} />
+          )}
           <div>
             <TokenInput
               placeholder='0.00'

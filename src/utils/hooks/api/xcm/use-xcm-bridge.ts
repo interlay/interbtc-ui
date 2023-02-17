@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { XCM_ADAPTERS } from '@/config/relay-chains';
 import { BITCOIN_NETWORK } from '@/constants';
+import { Chains } from '@/pages/Transfer/CrossChainTransferForm/components/ChainSelect';
 
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
@@ -11,6 +12,10 @@ const XCMBridge = new Bridge({
 
 // MEMO: BitcoinNetwork type is not available on XCM bridge
 const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
+
+const getDestinationChains = (chain: ChainName): Chains => XCMBridge.router.getDestinationChains(chain as any);
+
+const getAvailableTokens = (from: ChainName, to: ChainName): any => XCMBridge.router.getAvailableTokens({ from, to });
 
 // TODO: This config needs to be pushed higher up the app.
 // Not sure how this will look: something to decide when
@@ -36,8 +41,15 @@ const getEndpoints = (chains: ChainName[]) => {
 };
 
 // const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
-const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
+const useXCMBridge = (): {
+  XCMProvider: ApiProvider;
+  XCMBridge: Bridge;
+  availableChains: Chains;
+  getDestinationChains: (chain: ChainName) => Chains;
+  getAvailableTokens: (from: ChainName, to: ChainName) => any;
+} => {
   const [XCMProvider, setXCMProvider] = useState<any>();
+  const [availableChains, setAvailableChains] = useState<Chains>([]);
 
   useEffect(() => {
     const createBridge = async () => {
@@ -56,6 +68,14 @@ const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
         )
       );
 
+      const originatingChains = XCMBridge.adapters.map((adapter: any) => {
+        return {
+          display: adapter.chain.display,
+          id: adapter.chain.id
+        };
+      });
+
+      setAvailableChains(originatingChains);
       setXCMProvider(XCMProvider);
     };
 
@@ -64,7 +84,7 @@ const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
     }
   }, [XCMProvider]);
 
-  return { XCMProvider, XCMBridge };
+  return { XCMProvider, XCMBridge, availableChains, getDestinationChains, getAvailableTokens };
 };
 
 export { useXCMBridge };
