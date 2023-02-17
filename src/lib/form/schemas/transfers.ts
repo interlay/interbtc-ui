@@ -14,16 +14,19 @@ type CrossChainTransferFormData = {
   [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]?: string;
 };
 
-type CrossChainTransferValidationParams = FeesValidationParams & MaxAmountValidationParams & MinAmountValidationParams;
+type CrossChainTransferValidationParams = {
+  [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: FeesValidationParams & MaxAmountValidationParams & MinAmountValidationParams;
+};
 
+// MEMO: until now, only CROSS_CHAIN_TRANSFER_AMOUNT_FIELD needs validation
 const crossChainTransferSchema = (params: CrossChainTransferValidationParams): yup.ObjectSchema<any> =>
   yup.object().shape({
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: yup
       .string()
       .requiredAmount('transfer')
-      .maxAmount(params)
-      .minAmount(params, 'transfer')
-      .fees(params)
+      .maxAmount(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD])
+      .minAmount(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD], 'transfer')
+      .fees(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD])
   });
 
 export {

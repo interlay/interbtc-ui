@@ -1,13 +1,11 @@
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
 
-import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
-import { AccountSelect } from '@/components';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import SubmitButton from '@/legacy-components/SubmitButton';
+import { AccountSelect, AuthCTA } from '@/components';
+import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
   CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
   CROSS_CHAIN_TRANSFER_FROM_FIELD,
@@ -15,6 +13,9 @@ import {
   CROSS_CHAIN_TRANSFER_TO_FIELD,
   CROSS_CHAIN_TRANSFER_TOKEN_FIELD,
   CrossChainTransferFormData,
+  crossChainTransferSchema,
+  CrossChainTransferValidationParams,
+  isFormDisabled,
   useForm
 } from '@/lib/form';
 import { useSubstrateSecureState } from '@/lib/substrate';
@@ -41,8 +42,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { t } = useTranslation();
   const { XCMBridge } = useXCMBridge();
 
-  const { selectedAccount, accounts } = useSubstrateSecureState();
-  const { parachainStatus } = useSelector((state: StoreType) => state.general);
+  const { accounts } = useSubstrateSecureState();
 
   useEffect(() => {
     if (!XCMBridge) return;
@@ -61,6 +61,18 @@ const CrossChainTransferForm = (): JSX.Element => {
     console.log('submit');
   };
 
+  const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const balance = getBalance(GOVERNANCE_TOKEN.ticker)?.transferable;
+
+  const schema: CrossChainTransferValidationParams = {
+    [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
+      governanceBalance,
+      minAmount: newMonetaryAmount(1, GOVERNANCE_TOKEN),
+      maxAmount: balance || newMonetaryAmount(0, GOVERNANCE_TOKEN),
+      transactionFee: TRANSACTION_FEE_AMOUNT
+    }
+  };
+
   const form = useForm<CrossChainTransferFormData>({
     initialValues: {
       [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
@@ -69,11 +81,9 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: 'KSM',
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
-    onSubmit: handleSubmit
+    onSubmit: handleSubmit,
+    validationSchema: crossChainTransferSchema(schema)
   });
-
-  const transferTicker = form.values[CROSS_CHAIN_TRANSFER_TOKEN_FIELD];
-  const balance = transferTicker ? getBalance(transferTicker)?.transferable : undefined;
 
   const transferMonetaryAmount = newSafeMonetaryAmount(
     form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
@@ -81,12 +91,13 @@ const CrossChainTransferForm = (): JSX.Element => {
     true
   );
 
-  const valueUSD = transferTicker
-    ? convertMonetaryAmountToValueInUSD(transferMonetaryAmount, getTokenPrice(prices, transferTicker)?.usd) ?? 0
-    : 0;
+  const valueUSD =
+    convertMonetaryAmountToValueInUSD(transferMonetaryAmount, getTokenPrice(prices, GOVERNANCE_TOKEN.ticker)?.usd) ?? 0;
+
+  const isCTADisabled = isFormDisabled(form);
 
   return (
-    <form className='space-y-8' onSubmit={form.handleSubmit}>
+    <form onSubmit={form.handleSubmit}>
       <Flex direction='column' gap='spacing4'>
         <ChainSelectSection justifyContent='space-between'>
           <StyledSourceChainSelect
@@ -143,9 +154,9 @@ const CrossChainTransferForm = (): JSX.Element => {
             <Dd size='xs'>0 INTR</Dd>
           </DlGroup>
         </StyledDl>
-        <SubmitButton disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}>
-          {selectedAccount ? t('transfer') : t('connect_wallet')}
-        </SubmitButton>
+        <AuthCTA size='large' type='submit' disabled={isCTADisabled}>
+          {t('transfer')}
+        </AuthCTA>
       </Flex>
     </form>
   );
