@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { XCM_ADAPTERS } from '@/config/relay-chains';
 import { BITCOIN_NETWORK } from '@/constants';
-import { Chains } from '@/pages/Transfer/CrossChainTransferForm/components/ChainSelect';
+import { Chains } from '@/types/chains';
 
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)

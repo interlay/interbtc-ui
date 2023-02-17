@@ -1,7 +1,8 @@
 import { ArrowRightCircle } from '@/assets/icons';
 import { Flex } from '@/component-library';
+import { Chains } from '@/types/chains';
 
-import { Chains, ChainSelect } from '../ChainSelect';
+import { ChainSelect } from '../ChainSelect';
 import { IconWrapper } from './ChainInputs.styles';
 
 type Props = {

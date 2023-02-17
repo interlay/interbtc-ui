@@ -8,10 +8,10 @@ import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AccountInput } from '@/components/AccountSelect';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { Chains } from '@/types/chains';
 import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 
 import { ChainInputs } from './components/ChainInputs';
-import { Chains } from './components/ChainSelect';
 import { StyledDl } from './CrossChainTransferForm.styles';
 
 const CrossChainTransferForm = (): JSX.Element => {
