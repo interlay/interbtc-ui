@@ -60,7 +60,7 @@ const getData = (t: TFunction, variant: LoanAction, params: LoanSchemaParams) =>
     lend: {
       content: {
         title: t('loans.lend'),
-        label: 'Maximum amount',
+        label: 'Available',
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.lend').toLowerCase() })
       },
       schema: z.object({
