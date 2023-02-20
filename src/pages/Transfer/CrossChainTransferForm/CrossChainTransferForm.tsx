@@ -76,14 +76,24 @@ const CrossChainTransferForm = (): JSX.Element => {
   const form = useForm<CrossChainTransferFormData>({
     initialValues: {
       [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_FROM_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TO_FIELD]: '',
+      [CROSS_CHAIN_TRANSFER_FROM_FIELD]: 'kintsugi',
+      [CROSS_CHAIN_TRANSFER_TO_FIELD]: 'kusama',
       [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: 'KSM',
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema)
+    validationSchema: crossChainTransferSchema(schema, t)
   });
+
+  useEffect(() => {
+    if (!accountId) {
+      return form.resetForm();
+    }
+
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, accountId.toString());
+    form.validateField(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountId]);
 
   const transferMonetaryAmount = newSafeMonetaryAmount(
     form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
@@ -103,13 +113,13 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledSourceChainSelect
             label='Source Chain'
             chains={testChains}
-            {...form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false)}
+            {...form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD)}
           />
           <StyledArrowRightCircle color='secondary' strokeWidth={2} />
           <ChainSelect
             label='Destination Chain'
             chains={testChains}
-            {...form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false)}
+            {...form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD)}
           />
         </ChainSelectSection>
         <div>
@@ -136,7 +146,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           />
         </div>
         <AccountSelect
-          label='Select Account'
+          label='Destination'
           accounts={accounts}
           {...form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, false)}
         />

@@ -575,6 +575,7 @@
   },
   "forms": {
     "please_enter_your_field": "Please enter your {{field}}",
+    "please_select_your_field": "Please select your {{field}}",
     "please_enter_the_amount_to": "Please enter the amount to {{field}}",
     "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}} {{token}}",
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",

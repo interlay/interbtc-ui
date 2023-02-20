@@ -2,7 +2,7 @@ import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { useLabel } from '@react-aria/label';
 import { chain, mergeProps } from '@react-aria/utils';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
-import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useState } from 'react';
 
 import { Flex, Label } from '@/component-library';
 import { SelectTrigger } from '@/component-library/Select';
@@ -30,7 +30,6 @@ type AccountSelectProps = Props & NativeAttrs;
 
 const AccountSelect = forwardRef<HTMLInputElement, AccountSelectProps>(
   ({ value: valueProp, defaultValue, accounts, disabled, label, className, ...props }, ref): JSX.Element => {
-    const btnRef = useRef<HTMLButtonElement>(null);
     const inputRef = useDOMRef(ref);
 
     const [isOpen, setOpen] = useState(false);
@@ -59,17 +58,25 @@ const AccountSelect = forwardRef<HTMLInputElement, AccountSelectProps>(
       <>
         <Flex direction='column' className={className}>
           {label && <Label {...labelProps}>{label}</Label>}
-          <SelectTrigger ref={btnRef} size='large' onPress={() => setOpen(true)} disabled={isDisabled}>
+          <SelectTrigger
+            size='large'
+            onPress={() => setOpen(true)}
+            disabled={isDisabled}
+            {...mergeProps(fieldProps, {
+              // MEMO: when the button is blurred, a focus and blur is executed on the input
+              // so that validation gets triggered.
+              onBlur: () => {
+                if (!isOpen) {
+                  inputRef.current?.focus();
+                  inputRef.current?.blur();
+                }
+              }
+            })}
+          >
             {selectedAccount && <AccountLabel address={selectedAccount.address} name={selectedAccount.meta.name} />}
           </SelectTrigger>
           <VisuallyHidden>
-            <input
-              ref={inputRef}
-              autoComplete='off'
-              tabIndex={-1}
-              value={value}
-              {...mergeProps(props, fieldProps, { onFocus: () => btnRef.current?.focus() })}
-            />
+            <input ref={inputRef} autoComplete='off' tabIndex={-1} value={value} {...props} />
           </VisuallyHidden>
         </Flex>
         {accounts && (
