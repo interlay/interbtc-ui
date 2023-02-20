@@ -34,6 +34,11 @@ import {
   mockVaultsGetVaultsWithIssuableTokens,
   mockVaultsGetVaultsWithRedeemableTokens
 } from './parachain';
+import {
+  mockGetClaimableFarmingRewards,
+  mockGetLiquidityPools,
+  mockGetLiquidityProvidedByAccount
+} from './parachain/amm';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import {
   mockBorrow,
@@ -134,7 +139,10 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getVaultsWithRedeemableTokens: mockVaultsGetVaultsWithRedeemableTokens
   },
   amm: {
-    getLpTokens: jest.fn().mockResolvedValue([])
+    getLpTokens: jest.fn().mockResolvedValue([]),
+    getLiquidityPools: mockGetLiquidityPools,
+    getLiquidityProvidedByAccount: mockGetLiquidityProvidedByAccount,
+    getClaimableFarmingRewards: mockGetClaimableFarmingRewards
   }
 };
 

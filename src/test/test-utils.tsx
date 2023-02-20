@@ -16,7 +16,6 @@ const queryClient = new QueryClient();
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   path?: `/${string}`;
-  hasLayout?: boolean;
 }
 
 const testStore = createStore(rootReducer);

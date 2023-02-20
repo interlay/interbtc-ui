@@ -13,7 +13,6 @@ const Pools = (): JSX.Element => {
 
   const accountPositions = accountPoolsData?.positions;
   const isLoadingAccountData = accountId !== undefined && accountPoolsData === undefined;
-
   if (pools === undefined || isLoadingAccountData) {
     return <FullLoadingSpinner />;
   }
