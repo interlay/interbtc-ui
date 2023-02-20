@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { ChevronDown } from '@/assets/icons';
+
 import { Span } from '../Text';
 import { theme } from '../theme';
 import { Sizes } from '../utils/prop-types';
@@ -45,7 +47,7 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
       : theme.border.default};
   background-color: ${theme.input.background};
 
-  max-height: calc(${theme.spacing.spacing16} - 1px);
+  max-height: ${({ $size }) => theme.select.size[$size].maxHeight};
 
   overflow: hidden;
 
@@ -69,8 +71,16 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
 const StyledTriggerValue = styled(Span)<StyledTriggerValueProps>`
   display: inline-flex;
   align-items: center;
+  flex-grow: 1;
+  overflow: hidden;
+  white-space: nowrap;
+
   color: ${({ $isDisabled, $isSelected }) =>
     $isDisabled ? theme.input.disabled.color : $isSelected ? theme.select.color : theme.select.placeholder};
 `;
 
-export { StyledTrigger, StyledTriggerValue };
+const StyledChevronDown = styled(ChevronDown)`
+  margin-left: ${theme.spacing.spacing2};
+`;
+
+export { StyledChevronDown, StyledTrigger, StyledTriggerValue };

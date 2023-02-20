@@ -449,15 +449,19 @@ const theme = {
     size: {
       small: {
         padding: 'var(--spacing-1)',
-        text: 'var(--text-s)'
+        text: 'var(--text-s)',
+        // TODO: to be determined
+        maxHeight: 'calc(var(--spacing-6) - 1px)'
       },
       medium: {
         padding: 'var(--spacing-2)',
-        text: 'var(--text-base)'
+        text: 'var(--text-base)',
+        maxHeight: 'calc(var(--spacing-10) - 1px)'
       },
       large: {
         padding: 'var(--spacing-5) var(--spacing-2)',
-        text: 'var(--text-lg)'
+        text: 'var(--text-lg)',
+        maxHeight: 'calc(var(--spacing-16) - 1px)'
       }
     }
   }

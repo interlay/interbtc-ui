@@ -56,6 +56,9 @@ const StyledTab = styled.div<StyledTabProps>`
   color: ${theme.tabs.color};
   // TODO: have this transition into theme
   transition: color 150ms;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &[aria-selected='true'] {
     color: ${theme.tabs.active.color};
