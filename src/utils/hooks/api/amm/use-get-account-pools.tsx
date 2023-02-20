@@ -20,7 +20,7 @@ const getAccountLiqudityPools = async (accountId: AccountId, pools: LiquidityPoo
   const accountLiquidityPools = await window.bridge.amm.getLiquidityProvidedByAccount(accountId);
   const claimableRewards = await window.bridge.amm.getClaimableFarmingRewards(accountId, accountLiquidityPools, pools);
   const filteredPools = accountLiquidityPools.filter((lpToken) => !lpToken.isZero());
-  console.log('here');
+
   const positions = filteredPools.reduce((acc: AccountLiquidityPool[], amount) => {
     const pool = pools.find((pool) => isCurrencyEqual(pool.lpToken, amount.currency));
 

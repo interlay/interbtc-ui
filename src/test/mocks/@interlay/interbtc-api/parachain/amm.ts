@@ -63,4 +63,12 @@ const mockGetLiquidityProvidedByAccount = jest
 
 const mockGetClaimableFarmingRewards = jest.fn().mockResolvedValue([]);
 
-export { mockGetClaimableFarmingRewards, mockGetLiquidityPools, mockGetLiquidityProvidedByAccount };
+export {
+  LP_TOKEN_1,
+  LP_TOKEN_1_NAME,
+  LP_TOKEN_2,
+  LP_TOKEN_2_NAME,
+  mockGetClaimableFarmingRewards,
+  mockGetLiquidityPools,
+  mockGetLiquidityProvidedByAccount
+};
