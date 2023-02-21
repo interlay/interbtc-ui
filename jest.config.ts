@@ -199,6 +199,10 @@ const config = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+
+  // RE: inspired by https://stackoverflow.com/a/49864436
+  // MEMO: the root cause of this fix may be that these operations (running tests) can take longer to complete in a CI environment than on your local machine so the timeout might be increased accordingly
+  testTimeout: 30000
 };
 
 export default config;

@@ -20,6 +20,7 @@ const graphqlFetcher = <T>() => async ({ queryKey }: any): Promise<GraphqlReturn
       variables: variables || null
     })
   });
+
   return await response.json();
 };
 

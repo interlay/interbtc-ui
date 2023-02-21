@@ -1,6 +1,6 @@
 name: yarn test
 
-on: [push]
+on: [push, pull_request_target]
 
 env:
   REACT_APP_RELAY_CHAIN_NAME: polkadot
