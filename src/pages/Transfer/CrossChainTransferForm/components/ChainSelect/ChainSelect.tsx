@@ -7,17 +7,11 @@ import { Flex, Label } from '@/component-library';
 import { HelperText } from '@/component-library/HelperText';
 import { SelectTrigger } from '@/component-library/Select';
 import { triggerChangeEvent } from '@/component-library/utils/input';
+import { Chains } from '@/types/chains';
 
 import { ChainIcon } from '../ChainIcon';
 import { ChainListModal } from './ChainListModal';
 import { StyledChain } from './ChainSelect.style';
-
-type Chain = {
-  display: string;
-  id: string;
-};
-
-type Chains = Chain[];
 
 type Props = {
   value?: string;
@@ -111,4 +105,4 @@ const ChainSelect = forwardRef<HTMLInputElement, ChainSelectProps>(
 ChainSelect.displayName = 'ChainSelect';
 
 export { ChainSelect };
-export type { Chain, Chains, ChainSelectProps };
+export type { ChainSelectProps };

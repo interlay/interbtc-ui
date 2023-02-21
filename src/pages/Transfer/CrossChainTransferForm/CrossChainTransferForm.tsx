@@ -19,13 +19,14 @@ import {
   useForm
 } from '@/lib/form';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { Chains } from '@/types/chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-import { Chains, ChainSelect } from './components';
+import { ChainSelect } from './components';
 import {
   ChainSelectSection,
   StyledArrowRightCircle,
