@@ -78,13 +78,9 @@ const App = (): JSX.Element => {
     [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
     graphqlFetcher<GraphqlReturn<string[]>>(),
     {
-      enabled: bridgeLoaded && !!selectedAccount,
+      enabled: process.env.NODE_ENV !== 'test' && bridgeLoaded && !!selectedAccount,
       onSuccess: ({ data }) => {
-        // ray test touch <
-        console.log('ray : ***** data => ', data);
-        // const isVaultOperator = data?.vaults.length > 0;
-        const isVaultOperator = data?.vaults?.length > 0;
-        // ray test touch >
+        const isVaultOperator = data?.vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
       onError: (error) => {

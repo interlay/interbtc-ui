@@ -32,9 +32,7 @@ const RELAY_CHAIN_URL = process.env.REACT_APP_RELAY_CHAIN_URL;
 const DEFAULT_ACCOUNT_SEED = process.env.REACT_APP_DEFAULT_ACCOUNT_SEED;
 const FAUCET_URL = process.env.REACT_APP_FAUCET_URL || 'http://localhost:3035';
 
-// ray test touch <
 const SQUID_URL = process.env.REACT_APP_SQUID_URL || 'http://localhost:4000/graphql';
-// ray test touch >
 
 const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 

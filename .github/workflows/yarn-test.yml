@@ -3,16 +3,14 @@ name: yarn test
 on: [push]
 
 env:
-  # ray test touch <
   REACT_APP_RELAY_CHAIN_NAME: polkadot
   REACT_APP_PARACHAIN_ID: 2032
   DOCKER_RELAY_CHAIN_CURRENCY: DOT
-  # ray test touch >
 
 jobs:
   # MEMO: how to run a GitHub action locally
   # - Set up https://github.com/nektos/act
-  # - Run this command: `act -j build --container-architecture linux/amd64` (`--container-architecture` and `linux/amd64` are local computer specific so may or may not need them) to locally run this `build` job
+  # - Run this command: `act -j build --container-architecture linux/amd64` (where `build` is the job name and `--container-architecture` & `linux/amd64` are local computer specific parameters so may or may not need them) to locally run this `build` job
   # - `yarn` may not be available from a regular set-up of `act` then follow https://github.com/nektos/act/issues/280#issuecomment-817661786
   # - `--ignore-engines` may only be needed when locally running a GitHub action
   build:

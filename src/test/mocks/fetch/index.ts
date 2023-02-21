@@ -28,9 +28,7 @@ const mockFetch = jest.fn((input, _init?) => {
       result = MOCK_TOKEN_PRICES;
       break;
     default: {
-      // ray test touch <
       throw new Error(`mockFetch: provided input [${input}] is not mocked`);
-      // ray test touch >
     }
   }
   return Promise.resolve({
@@ -38,6 +36,7 @@ const mockFetch = jest.fn((input, _init?) => {
   });
 });
 
+// TODO: need to mock with `msw`
 global.fetch = mockFetch as any;
 
 export { MOCK_TOKEN_PRICES, mockFetch, mockGovernanceTokenPriceInUsd };
