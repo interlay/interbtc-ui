@@ -80,12 +80,16 @@ const App = (): JSX.Element => {
     {
       enabled: bridgeLoaded && !!selectedAccount,
       onSuccess: ({ data }) => {
-        const isVaultOperator = data?.vaults.length > 0;
+        // ray test touch <
+        console.log('ray : ***** data => ', data);
+        // const isVaultOperator = data?.vaults.length > 0;
+        const isVaultOperator = data?.vaults?.length > 0;
+        // ray test touch >
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
-      // ray test touch <
-      onError: (error) => console.log('[App useQuery 1] error.message => ', error.message)
-      // ray test touch >
+      onError: (error) => {
+        console.log('[App useQuery 1] error.message => ', error.message);
+      }
     }
   );
   useErrorHandler(vaultsError);

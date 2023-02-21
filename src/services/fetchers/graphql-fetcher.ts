@@ -10,6 +10,10 @@ const graphqlFetcher = <T>() => async ({ queryKey }: any): Promise<GraphqlReturn
     throw new Error('Invalid key!');
   }
 
+  // ray test touch <
+  return { data: {} };
+  // ray test touch >
+
   const response = await fetch(SQUID_URL, {
     method: 'POST',
     headers: {
@@ -20,7 +24,6 @@ const graphqlFetcher = <T>() => async ({ queryKey }: any): Promise<GraphqlReturn
       variables: variables || null
     })
   });
-
   return await response.json();
 };
 
