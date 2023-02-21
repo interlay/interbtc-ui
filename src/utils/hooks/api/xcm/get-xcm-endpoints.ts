@@ -1,6 +1,12 @@
 import { ChainName } from '@interlay/bridge';
 
-const getXCMEndpoints = (chains: ChainName[]): any => {
+type XCMEndpoints =
+  | {
+      [chain: string]: string[];
+    }
+  | undefined;
+
+const getXCMEndpoints = (chains: ChainName[]): XCMEndpoints => {
   switch (true) {
     case chains.includes('kusama'):
       return {
@@ -21,3 +27,4 @@ const getXCMEndpoints = (chains: ChainName[]): any => {
 };
 
 export { getXCMEndpoints };
+export type { XCMEndpoints };
