@@ -61,10 +61,9 @@ const useXCMBridge = (): UseXCMBridge => {
     []
   );
 
-  const getDestinationChains = useCallback(
-    (chain: ChainName): Chains => XCMBridge.router.getDestinationChains(chain as any),
-    []
-  );
+  const getDestinationChains = useCallback((chain: ChainName): Chains => {
+    return XCMBridge.router.getDestinationChains({ from: chain });
+  }, []);
 
   const getAvailableTokens = useCallback(
     (from: ChainName, to: ChainName): string[] => XCMBridge.router.getAvailableTokens({ from, to }),
