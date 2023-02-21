@@ -1,4 +1,5 @@
 import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
+import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
 import { firstValueFrom } from 'rxjs';
@@ -49,18 +50,26 @@ const useXCMBridge = (): UseXCMBridge => {
 
   const { error } = queryResult;
 
-  const getOriginatingChains = (): Chains =>
-    XCMBridge.adapters.map((adapter: any) => {
-      return {
-        display: adapter.chain.display,
-        id: adapter.chain.id
-      };
-    });
+  const getOriginatingChains = useCallback(
+    (): Chains =>
+      XCMBridge.adapters.map((adapter: any) => {
+        return {
+          display: adapter.chain.display,
+          id: adapter.chain.id
+        };
+      }),
+    []
+  );
 
-  const getDestinationChains = (chain: ChainName): Chains => XCMBridge.router.getDestinationChains(chain as any);
+  const getDestinationChains = useCallback(
+    (chain: ChainName): Chains => XCMBridge.router.getDestinationChains(chain as any),
+    []
+  );
 
-  const getAvailableTokens = (from: ChainName, to: ChainName): string[] =>
-    XCMBridge.router.getAvailableTokens({ from, to });
+  const getAvailableTokens = useCallback(
+    (from: ChainName, to: ChainName): string[] => XCMBridge.router.getAvailableTokens({ from, to }),
+    []
+  );
 
   useErrorHandler(error);
 
