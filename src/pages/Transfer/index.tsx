@@ -5,6 +5,7 @@ import Panel from '@/legacy-components/Panel';
 import MainContainer from '@/parts/MainContainer';
 
 import CrossChainTransferForm from './CrossChainTransferForm';
+import { StyledWrapper } from './Transfer.style';
 import TransferForm from './TransferForm';
 
 const Transfer = (): JSX.Element | null => {
@@ -14,10 +15,14 @@ const Transfer = (): JSX.Element | null => {
         <Flex direction='column' gap='spacing8'>
           <Tabs size='large' fullWidth>
             <TabsItem title='Transfer'>
-              <TransferForm />
+              <StyledWrapper>
+                <TransferForm />
+              </StyledWrapper>
             </TabsItem>
             <TabsItem title='Cross Chain Transfer'>
-              <CrossChainTransferForm />
+              <StyledWrapper>
+                <CrossChainTransferForm />
+              </StyledWrapper>
             </TabsItem>
           </Tabs>
         </Flex>

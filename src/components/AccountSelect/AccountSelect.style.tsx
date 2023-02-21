@@ -36,11 +36,15 @@ const StyledChevronDown = styled(ChevronDown)`
   margin-left: ${theme.spacing.spacing1};
 `;
 
-const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
-  color: ${({ $isSelected }) =>
-    $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
+const StyledAccountLabelAddress = styled(Span)`
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: nowrap;
+`;
+
+const StyledAccountLabelName = styled(StyledAccountLabelAddress)<StyledListItemSelectedLabelProps>`
+  color: ${({ $isSelected }) =>
+    $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
 `;
 
 const StyledList = styled(List)`
@@ -48,15 +52,17 @@ const StyledList = styled(List)`
   padding: 0 ${theme.modal.body.paddingX} ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
 `;
 
-const StyledListAccountWrapper = styled(Flex)`
+const StyledAccountLabelWrapper = styled(Flex)`
+  flex-grow: 1;
   overflow: hidden;
 `;
 
 export {
   StyledAccount,
+  StyledAccountLabelAddress,
+  StyledAccountLabelName,
+  StyledAccountLabelWrapper,
   StyledAccountSelect,
   StyledChevronDown,
-  StyledList,
-  StyledListAccountWrapper,
-  StyledListItemLabel
+  StyledList
 };

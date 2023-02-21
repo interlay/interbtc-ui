@@ -1,11 +1,9 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import Identicon from '@polkadot/react-identicon';
 
-import { Span } from '@/component-library';
-import { Flex } from '@/component-library/Flex';
 import { ListItem, ListProps } from '@/component-library/List';
 
-import { StyledList, StyledListAccountWrapper, StyledListItemLabel } from './AccountInput.style';
+import { AccountLabel } from './AccountLabel';
+import { StyledList } from './AccountSelect.style';
 
 type Props = {
   items: InjectedAccountWithMeta[];
@@ -48,15 +46,7 @@ const AccountList = ({ items, selectedAccount, onSelectionChange, ...props }: Ac
             justifyContent='space-between'
             gap='spacing2'
           >
-            <StyledListAccountWrapper alignItems='center' gap='spacing2' flex='1'>
-              <Identicon size={32} value={item.address} theme='polkadot' />
-              <Flex direction='column'>
-                <StyledListItemLabel $isSelected={isSelected}>{item.meta.name}</StyledListItemLabel>
-                <Span size='xs' color='tertiary'>
-                  {item.address}
-                </Span>
-              </Flex>
-            </StyledListAccountWrapper>
+            <AccountLabel isSelected={isSelected} address={item.address} name={item.meta.name} />
           </ListItem>
         );
       })}

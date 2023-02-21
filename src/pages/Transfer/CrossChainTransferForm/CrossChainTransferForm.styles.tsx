@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-import { Dl, theme } from '@/component-library';
+import { ArrowRightCircle } from '@/assets/icons';
+import { Dl, Flex, theme } from '@/component-library';
+
+import { ChainSelect } from './components';
 
 const StyledDl = styled(Dl)`
   background-color: ${theme.card.secondaryBg};
@@ -9,4 +12,35 @@ const StyledDl = styled(Dl)`
   border-radius: ${theme.rounded.rg};
 `;
 
-export { StyledDl };
+const StyledArrowRightCircle = styled(ArrowRightCircle)`
+  transform: rotate(90deg);
+  align-self: center;
+
+  @media (min-width: 30em) {
+    transform: rotate(0deg);
+    margin-top: 1.75rem;
+  }
+`;
+
+const StyledWrapper = styled.div`
+  margin-top: ${theme.spacing.spacing6};
+`;
+
+const ChainSelectSection = styled(Flex)`
+  flex-direction: column;
+
+  @media (min-width: 30em) {
+    flex-direction: row;
+    gap: ${theme.spacing.spacing4};
+  }
+`;
+
+const StyledSourceChainSelect = styled(ChainSelect)`
+  margin-bottom: ${theme.spacing.spacing3};
+
+  @media (min-width: 30em) {
+    margin-bottom: 0;
+  }
+`;
+
+export { ChainSelectSection, StyledArrowRightCircle, StyledDl, StyledSourceChainSelect, StyledWrapper };
