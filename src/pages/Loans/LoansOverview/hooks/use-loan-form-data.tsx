@@ -10,6 +10,7 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { getMaxBorrowableAmount } from '../utils/get-max-borrowable-amount';
+import { getMaxLendableAmount } from '../utils/get-max-lendable-amount';
 import { getMaxWithdrawableAmount } from '../utils/get-max-withdrawable-amount';
 
 type GetMaxAmountParams = {
@@ -43,9 +44,29 @@ const getMaxAmount = ({
         totalCollateralAmountUSD
       );
     case 'lend':
-      return assetBalance;
+      return getMaxLendableAmount(assetBalance, asset);
     case 'repay':
       return position?.amount.add((position as BorrowPosition).accumulatedDebt || 0);
+  }
+};
+
+// Only relevant for withdraw or repay
+const isEqualBalance = (
+  variant: LoanAction,
+  maxAmount: MonetaryAmount<CurrencyExt>,
+  assetBalance: MonetaryAmount<CurrencyExt>,
+  position?: LendPosition | BorrowPosition
+) => {
+  switch (variant) {
+    case 'withdraw': {
+      return !!position?.amount && maxAmount.eq(position.amount);
+    }
+    case 'repay': {
+      return maxAmount.eq(assetBalance);
+    }
+    default: {
+      return false;
+    }
   }
 };
 
@@ -56,7 +77,7 @@ type UseLoanFormData = {
   assetAmount: {
     available: MonetaryAmount<CurrencyExt>;
     min: MonetaryAmount<CurrencyExt>;
-    max: MonetaryAmount<CurrencyExt>;
+    max: { value: MonetaryAmount<CurrencyExt>; isEqualBalance: boolean };
   };
 };
 
@@ -101,7 +122,10 @@ const useLoanFormData = (
       available: assetBalance,
       min: minAmount,
       // MEMO: checks for negative values
-      max: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount
+      max: {
+        value: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount,
+        isEqualBalance: isEqualBalance(loanAction, maxAmount, assetBalance, position)
+      }
     }
   };
 };
