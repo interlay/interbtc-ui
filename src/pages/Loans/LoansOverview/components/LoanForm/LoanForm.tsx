@@ -85,12 +85,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
-  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(
-    variant,
-    asset,
-    variant,
-    position
-  );
+  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
 
   // withdraw has `withdraw` and `withdrawAll`
   // repay has `repay` and `repayAll`
