@@ -25,7 +25,7 @@ type PoolsTableRow = {
   [BorrowAssetsColumns.POOL_NAME]: ReactNode;
   [BorrowAssetsColumns.APR]: ReactNode;
   [BorrowAssetsColumns.TOTAL_LIQUIDITY]: ReactNode;
-  [BorrowAssetsColumns.SEVEN_DAY_VOLUME]: ReactNode;
+  // [BorrowAssetsColumns.SEVEN_DAY_VOLUME]: ReactNode;
   [BorrowAssetsColumns.ACCOUNT_LIQUIDITY]?: ReactNode;
 };
 
@@ -44,8 +44,8 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
   const commonColumns = [
     { name: t('amm.pools.pool_name'), uid: BorrowAssetsColumns.POOL_NAME },
     { name: t('apr'), uid: BorrowAssetsColumns.APR },
-    { name: t('total_liquidity'), uid: BorrowAssetsColumns.TOTAL_LIQUIDITY },
-    { name: t('7_day_volume'), uid: BorrowAssetsColumns.SEVEN_DAY_VOLUME }
+    { name: t('total_liquidity'), uid: BorrowAssetsColumns.TOTAL_LIQUIDITY }
+    // { name: t('7_day_volume'), uid: BorrowAssetsColumns.SEVEN_DAY_VOLUME }
   ];
 
   const borrowAssetsColumns = isAccountPools
@@ -65,12 +65,18 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
         const farmingApr = getFarmingApr(rewardAmountsYearly, totalSupply, totalLiquidityUSD, prices);
         // TODO: add also APR from trading volume based on squid data
         const aprAmount = farmingApr;
-        const apr = <MonetaryCell label={formatPercentage(aprAmount.toNumber())} alignSelf='flex-start' />;
+        const apr = <MonetaryCell label={formatPercentage(aprAmount.toNumber())} />;
 
-        const totalLiquidity = <MonetaryCell label={formatUSD(totalLiquidityUSD, { compact: true })} />;
+        // TODO: revert alignItems prop when `sevenDayVolume` is adressed
+        const totalLiquidity = (
+          <MonetaryCell
+            label={formatUSD(totalLiquidityUSD, { compact: true })}
+            alignItems={isAccountPools ? 'flex-start' : 'flex-end'}
+          />
+        );
 
-        // TODO: add real value when squid is ready
-        const sevenDayVolume = <MonetaryCell label='-' alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />;
+        // TODO: uncomment and add real value when squid is ready
+        // const sevenDayVolume = <MonetaryCell label='-' alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />;
 
         const accountLiquidityUSD = accountLPTokenAmount
           ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
@@ -86,7 +92,7 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
           poolName,
           apr,
           totalLiquidity,
-          sevenDayVolume,
+          // sevenDayVolume,
           accountLiquidity
         };
       }),
