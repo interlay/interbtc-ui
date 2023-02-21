@@ -56,13 +56,14 @@ const CrossChainTransferForm = (): JSX.Element => {
     setOriginatingChains(originatingChains);
   }, [getOriginatingChains]);
 
-  const handleSubmit = () => {
-    console.log('submit');
+  const handleSubmit = (data: CrossChainTransferFormData) => {
+    console.log('submit data', data);
   };
 
   const handleOriginatingChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const destinationChains = getDestinationChains(e.target.value as ChainName);
 
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, e.target.value);
     setDestinationChains(destinationChains);
   };
 
