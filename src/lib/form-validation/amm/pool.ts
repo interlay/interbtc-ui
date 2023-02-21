@@ -17,6 +17,8 @@ const withdraw = (t: TFunction, params: PoolWithdrawSchemaParams): z.ZodEffects<
       return ctx.addIssue(issueArg);
     }
 
+    console.log(governanceBalance.toString(), transactionFee.toString());
+
     if (!balance.transactionFee.validate({ availableBalance: governanceBalance, transactionFee })) {
       return ctx.addIssue(balance.transactionFee.issue(t));
     }

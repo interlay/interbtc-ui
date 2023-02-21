@@ -119,6 +119,8 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
     }, new Big(0))
     .toNumber();
 
+  console.log('INTR: ', schemaParams.governanceBalance.toString(), 'LPs: ', lpTokenMonetaryAmount.toString());
+
   return (
     <form onSubmit={form.handleSubmit}>
       <Flex direction='column'>
