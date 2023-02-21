@@ -41,14 +41,14 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { getBalance } = useGetBalances();
   const prices = useGetPrices();
   const { t } = useTranslation();
-  const { XCMBridge } = useXCMBridge();
+  const { data: XCMBridge } = useXCMBridge();
 
   const { accounts } = useSubstrateSecureState();
 
   useEffect(() => {
     if (!XCMBridge) return;
 
-    const availableChains = XCMBridge.adapters.map((adapter: any) => {
+    const availableChains = XCMBridge.bridge.adapters.map((adapter: any) => {
       return {
         display: adapter.chain.display,
         id: adapter.chain.id
