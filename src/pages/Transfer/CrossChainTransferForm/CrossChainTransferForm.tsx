@@ -1,5 +1,6 @@
+import { ChainName } from '@interlay/bridge';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { useEffect, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
@@ -35,31 +36,34 @@ import {
 } from './CrossChainTransferForm.styles';
 
 const CrossChainTransferForm = (): JSX.Element => {
-  const [testChains, setTestChains] = useState<Chains>([]);
+  const [originatingChains, setOriginatingChains] = useState<Chains>([]);
+  const [destinationChains, setDestinationChains] = useState<Chains>([]);
+
   const accountId = useAccountId();
 
   const { getBalance } = useGetBalances();
   const prices = useGetPrices();
   const { t } = useTranslation();
-  const { data: XCMBridge } = useXCMBridge();
+  const { getDestinationChains, getOriginatingChains } = useXCMBridge();
 
   const { accounts } = useSubstrateSecureState();
 
   useEffect(() => {
-    if (!XCMBridge) return;
+    if (!getOriginatingChains) return;
 
-    const availableChains = XCMBridge.bridge.adapters.map((adapter: any) => {
-      return {
-        display: adapter.chain.display,
-        id: adapter.chain.id
-      };
-    });
+    const originatingChains = getOriginatingChains();
 
-    setTestChains(availableChains);
-  }, [XCMBridge]);
+    setOriginatingChains(originatingChains);
+  }, [getOriginatingChains]);
 
   const handleSubmit = () => {
     console.log('submit');
+  };
+
+  const handleOriginatingChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const destinationChains = getDestinationChains(e.target.value as ChainName);
+
+    setDestinationChains(destinationChains);
   };
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
@@ -113,13 +117,13 @@ const CrossChainTransferForm = (): JSX.Element => {
         <ChainSelectSection justifyContent='space-between'>
           <StyledSourceChainSelect
             label='Source Chain'
-            chains={testChains}
-            {...form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD)}
+            chains={originatingChains}
+            {...(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD), { onChange: handleOriginatingChainChange })}
           />
           <StyledArrowRightCircle color='secondary' strokeWidth={2} />
           <ChainSelect
             label='Destination Chain'
-            chains={testChains}
+            chains={destinationChains}
             {...form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD)}
           />
         </ChainSelectSection>
