@@ -37,8 +37,7 @@ const ApyTooltip = ({
   isBorrow,
   ...props
 }: ApyTooltipProps): JSX.Element => {
-  // MEMO: in assets table there is no earn or debt asset to be shown
-  const showEarnedRewards = !!accumulatedDebt || !!earnedInterest;
+  const showEarnedRewards = !!rewards || !!earnedInterest;
 
   const label = (
     <Dl direction='column' gap='spacing2'>
