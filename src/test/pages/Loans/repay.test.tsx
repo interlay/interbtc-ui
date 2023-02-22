@@ -7,13 +7,14 @@ import {
   DEFAULT_BORROW_POSITIONS,
   DEFAULT_IBTC,
   DEFAULT_LEND_POSITIONS,
+  DEFAULT_POSITIONS,
   mockGetBorrowPositionsOfAccount,
   mockGetLendPositionsOfAccount,
   mockRepay,
   mockRepayAll
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
-import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../../test-utils';
+import { act, render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../../test-utils';
 import { TABLES } from './constants';
 import { withinModalTabPanel } from './utils';
 
@@ -33,7 +34,7 @@ describe('Repay Flow', () => {
 
   it('should be able to repay', async () => {
     // SCENARIO: user is partially repaying loan
-    const { unmount } = await render(<App />, { path });
+    await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
 
@@ -51,25 +52,51 @@ describe('Repay Flow', () => {
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
     expect(mockRepay).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
+  });
 
-    unmount();
+  it('should be able repay all', async () => {
+    const { unmount } = await render(<App />, { path });
 
-    // SCENARIO: user is totally repaying loan
-    await render(<App />, { path });
-
-    const tabPanel2 = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
+    let tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
 
     userEvent.click(
-      tabPanel2.getByRole('button', {
+      tabPanel.getByRole('button', {
         name: /max/i
       })
     );
 
     await waitFor(() => {
-      expect(tabPanel2.getByRole('button', { name: /repay/i })).not.toBeDisabled();
+      expect(tabPanel.getByRole('button', { name: /repay/i })).not.toBeDisabled();
     });
 
-    userEvent.click(tabPanel2.getByRole('button', { name: /repay/i }));
+    userEvent.click(tabPanel.getByRole('button', { name: /repay/i }));
+
+    await waitForElementToBeRemoved(screen.getByRole('dialog'));
+
+    expect(mockRepayAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
+
+    unmount();
+
+    mockRepayAll.mockRestore();
+
+    await render(<App />, { path });
+
+    tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
+
+    const replayAllAmount = DEFAULT_POSITIONS.BORROW.IBTC.amount.add(DEFAULT_POSITIONS.BORROW.IBTC.accumulatedDebt);
+
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'repay amount' }), replayAllAmount.toString());
+
+    // Wait for debounce
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    });
+
+    await waitFor(() => {
+      expect(tabPanel.getByRole('button', { name: /repay/i })).not.toBeDisabled();
+    });
+
+    userEvent.click(tabPanel.getByRole('button', { name: /repay/i }));
 
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
@@ -96,6 +123,6 @@ describe('Repay Flow', () => {
       expect(mockRepay).not.toHaveBeenCalled();
     });
 
-    mockTokensBalance.mockRestore();
+    mockTokensBalance.restore();
   });
 });

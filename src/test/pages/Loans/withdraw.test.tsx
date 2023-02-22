@@ -13,7 +13,7 @@ import {
   mockWithdrawAll
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
-import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../../test-utils';
+import { act, render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../../test-utils';
 import { TABLES } from './constants';
 import { withinModalTabPanel } from './utils';
 
@@ -33,9 +33,9 @@ describe('Withdraw Flow', () => {
 
   it('should be able to partially withdraw', async () => {
     // SCENARIO: user is partially withdrawing when there are borrow positions
-    await render(<App />, { path });
+    const { unmount } = await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    let tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     // should render modal with ltv meter
     expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
@@ -52,40 +52,17 @@ describe('Withdraw Flow', () => {
 
     expect(mockWithdraw).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
 
-    // unmount();
+    unmount();
 
-    // // SCENARIO: user is partially withdrawing when there are no borrow positions
-    // mockGetBorrowPositionsOfAccount.mockReturnValue([]);
-    // mockWithdraw.mockClear();
+    // SCENARIO: user is partially withdrawing when there are no borrow positions
+    mockGetBorrowPositionsOfAccount.mockReturnValue([]);
+    mockWithdraw.mockClear();
 
-    // await render(<App />, { path });
+    await render(<App />, { path });
 
-    // tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
-    // userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
-
-    // await waitFor(() => {
-    //   expect(tabPanel.getByRole('button', { name: /withdraw/i })).not.toBeDisabled();
-    // });
-
-    // userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
-
-    // await waitForElementToBeRemoved(screen.getByRole('dialog'));
-
-    // expect(mockWithdraw).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.MEDIUM);
-  });
-
-  it('should be able to withdraw all', async () => {
-    // SCENARIO: user is totally withdrawing when there are borrow positions
-    const { unmount } = await render(<App />, { path });
-
-    let tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
-
-    userEvent.click(
-      tabPanel.getByRole('button', {
-        name: /max/i
-      })
-    );
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 
     await waitFor(() => {
       expect(tabPanel.getByRole('button', { name: /withdraw/i })).not.toBeDisabled();
@@ -93,19 +70,18 @@ describe('Withdraw Flow', () => {
 
     userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
 
-    await waitFor(() => {
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(mockWithdrawAll).not.toHaveBeenCalled();
-    });
+    await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
-    unmount();
+    expect(mockWithdraw).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.MEDIUM);
+  });
 
-    // SCENARIO: user is totally withdrawing when there are no borrow positions
+  it('should be able to withdraw all', async () => {
+    // SCENARIO: user is withdrawing all when there are no borrow positions (by clicking max)
     mockGetBorrowPositionsOfAccount.mockReturnValue([]);
 
-    await render(<App />, { path });
+    const { unmount } = await render(<App />, { path });
 
-    tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    let tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     userEvent.click(
       tabPanel.getByRole('button', {
@@ -122,37 +98,41 @@ describe('Withdraw Flow', () => {
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
     expect(mockWithdrawAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
-  });
-
-  it('should not be able to withdraw', async () => {
-    // SCENARIO: user is not able to partially withdraw, while not having enougth collateral,
-    // when there is only a single asset as collateral
-    const { unmount } = await render(<App />, { path });
-
-    let tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
-
-    userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
-
-    await waitFor(() => {
-      expect(tabPanel.getByRole('textbox', { name: 'withdraw amount' })).toHaveErrorMessage('');
-    });
-
-    userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
-
-    await waitFor(() => {
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(mockWithdraw).not.toHaveBeenCalled();
-    });
 
     unmount();
 
-    // SCENARIO: user is not able to partially withdraw, while not having enougth collateral,
-    // when there is only a two assets as collateral
-    mockGetLendPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.LEND.IBTC, DEFAULT_POSITIONS.LEND.INTR]);
+    // SCENARIO: user is withdrawing all when there are no borrow positions (by typing max)
+    mockWithdrawAll.mockRestore();
 
     await render(<App />, { path });
 
     tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+
+    userEvent.type(
+      tabPanel.getByRole('textbox', { name: 'withdraw amount' }),
+      DEFAULT_POSITIONS.LEND.IBTC.amount.toString()
+    );
+
+    // Wait for debounce
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    });
+
+    await waitFor(() => {
+      expect(tabPanel.getByRole('button', { name: /withdraw/i })).not.toBeDisabled();
+    });
+
+    userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
+
+    await waitForElementToBeRemoved(screen.getByRole('dialog'));
+
+    expect(mockWithdrawAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
+  });
+
+  it('should not be able to withdraw', async () => {
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 

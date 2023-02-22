@@ -4,11 +4,14 @@ import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { mockTokensBalance } from '@/test/mocks/@interlay/interbtc-api';
 import {
+  DEFAULT_ASSETS,
   DEFAULT_BORROW_POSITIONS,
   DEFAULT_IBTC,
+  DEFAULT_IBTC_LOAN_ASSET,
   DEFAULT_LEND_POSITIONS,
   mockGetBorrowPositionsOfAccount,
   mockGetLendPositionsOfAccount,
+  mockGetLoanAssets,
   mockLend
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
@@ -21,8 +24,10 @@ const tab = 'lend';
 
 describe('Lending Flow', () => {
   beforeEach(() => {
+    mockGetLoanAssets.mockReturnValue(DEFAULT_ASSETS);
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
+    mockLend.mockRestore();
   });
 
   afterAll(() => {
@@ -70,6 +75,33 @@ describe('Lending Flow', () => {
       expect(mockLend).not.toHaveBeenCalled();
     });
 
-    mockTokensBalance.mockRestore();
+    mockTokensBalance.restore();
+  });
+
+  it('should not be able to lend due to lack of borrows and supply cap', async () => {
+    mockGetLoanAssets.mockReturnValue({
+      IBTC: {
+        ...DEFAULT_IBTC_LOAN_ASSET,
+        totalBorrows: DEFAULT_IBTC.MONETARY.VERY_LARGE,
+        supplyCap: DEFAULT_IBTC.MONETARY.EMPTY
+      }
+    });
+
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC');
+
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+
+    await waitFor(() => {
+      expect(tabPanel.getByRole('textbox', { name: 'lend amount' })).toHaveErrorMessage('');
+    });
+
+    userEvent.click(tabPanel.getByRole('button', { name: /lend/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(mockLend).not.toHaveBeenCalled();
+    });
   });
 });

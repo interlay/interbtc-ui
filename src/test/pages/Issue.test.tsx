@@ -212,7 +212,7 @@ describe('issue form', () => {
 
     await changeAmountToIssue(inputAmount.toString());
 
-    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient funds to pay for INTR fees."`);
+    expect(errorElement.textContent).toMatchInlineSnapshot(`"Please enter less than 0.565 IBTC."`);
 
     await submitForm();
 
@@ -226,7 +226,9 @@ describe('issue form', () => {
 
     await changeAmountToIssue(inputAmount.toString());
 
-    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient funds to pay for INTR fees."`);
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"Please enter an amount greater than Bitcoin dust limit (0 BTC)."`
+    );
 
     await submitForm();
 
@@ -243,7 +245,9 @@ describe('issue form', () => {
 
     await changeAmountToIssue(inputAmount.toString());
 
-    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient funds to pay for INTR fees."`);
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"You can't issue IBTC at the moment because IBTC parachain is more than 6 blocks behind."`
+    );
 
     await submitForm();
 
@@ -264,7 +268,9 @@ describe('issue form', () => {
 
     await changeAmountToIssue(inputAmount.toString());
 
-    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient funds to pay for INTR fees."`);
+    expect(errorElement.textContent).toMatchInlineSnapshot(
+      `"You can't issue IBTC at the moment because oracle is offline."`
+    );
 
     await submitForm();
 

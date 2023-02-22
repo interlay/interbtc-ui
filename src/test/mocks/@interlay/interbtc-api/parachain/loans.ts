@@ -9,6 +9,7 @@ const DEFAULT_LEND_TOKENS: CurrencyExt[] = [];
 const DEFAULT_IBTC = {
   AMOUNT: { VERY_SMALL: '0.01', SMALL: '0.1', MEDIUM: '1', LARGE: '10', VERY_LARGE: '100' },
   MONETARY: {
+    EMPTY: newMonetaryAmount(0, WRAPPED_TOKEN, true),
     VERY_SMALL: newMonetaryAmount(0.01, WRAPPED_TOKEN, true),
     SMALL: newMonetaryAmount(0.1, WRAPPED_TOKEN, true),
     MEDIUM: newMonetaryAmount(1, WRAPPED_TOKEN, true),
@@ -20,6 +21,7 @@ const DEFAULT_IBTC = {
 const DEFAULT_INTR = {
   AMOUNT: { VERY_SMALL: '10', SMALL: '100', MEDIUM: '1000', LARGE: '10000', VERY_LARGE: '100000' },
   MONETARY: {
+    EMPTY: newMonetaryAmount(0, GOVERNANCE_TOKEN, true),
     VERY_SMALL: newMonetaryAmount(10, GOVERNANCE_TOKEN, true),
     SMALL: newMonetaryAmount(100, GOVERNANCE_TOKEN, true),
     MEDIUM: newMonetaryAmount(1000, GOVERNANCE_TOKEN, true),
@@ -74,37 +76,41 @@ const DEFAULT_LEND_POSITIONS: LendPosition[] = [DEFAULT_POSITIONS.LEND.IBTC];
 
 const DEFAULT_BORROW_POSITIONS: BorrowPosition[] = [DEFAULT_POSITIONS.BORROW.IBTC];
 
+const DEFAULT_IBTC_LOAN_ASSET = {
+  currency: WRAPPED_TOKEN,
+  lendApy: new Big(DEFAULT_APY.IBTC.BASE),
+  borrowApy: new Big(DEFAULT_APY.IBTC.BASE),
+  totalLiquidity: DEFAULT_IBTC.MONETARY.VERY_LARGE,
+  lendReward: DEFAULT_INTR.MONETARY.VERY_LARGE,
+  borrowReward: DEFAULT_INTR.MONETARY.VERY_LARGE,
+  availableCapacity: DEFAULT_IBTC.MONETARY.VERY_LARGE,
+  collateralThreshold: new Big(0.6),
+  liquidationThreshold: new Big(0.8),
+  isActive: true,
+  totalBorrows: DEFAULT_IBTC.MONETARY.MEDIUM,
+  borrowCap: DEFAULT_IBTC.MONETARY.VERY_LARGE,
+  supplyCap: DEFAULT_IBTC.MONETARY.VERY_LARGE
+};
+
+const DEFAULT_INTR_LOAN_ASSET = {
+  currency: GOVERNANCE_TOKEN,
+  lendApy: new Big(DEFAULT_APY.INTR.BASE),
+  borrowApy: new Big(DEFAULT_APY.INTR.BASE),
+  totalLiquidity: DEFAULT_INTR.MONETARY.VERY_SMALL,
+  lendReward: null,
+  borrowReward: null,
+  availableCapacity: DEFAULT_INTR.MONETARY.VERY_SMALL,
+  collateralThreshold: new Big(0.6),
+  liquidationThreshold: new Big(0.8),
+  isActive: true,
+  totalBorrows: DEFAULT_INTR.MONETARY.MEDIUM,
+  borrowCap: DEFAULT_INTR.MONETARY.VERY_LARGE,
+  supplyCap: DEFAULT_INTR.MONETARY.VERY_LARGE
+};
+
 const DEFAULT_ASSETS: TickerToData<LoanAsset> = {
-  IBTC: {
-    currency: WRAPPED_TOKEN,
-    lendApy: new Big(DEFAULT_APY.IBTC.BASE),
-    borrowApy: new Big(DEFAULT_APY.IBTC.BASE),
-    totalLiquidity: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-    lendReward: DEFAULT_INTR.MONETARY.VERY_LARGE,
-    borrowReward: DEFAULT_INTR.MONETARY.VERY_LARGE,
-    availableCapacity: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-    collateralThreshold: new Big(0.6),
-    liquidationThreshold: new Big(0.8),
-    isActive: true,
-    totalBorrows: DEFAULT_IBTC.MONETARY.MEDIUM,
-    borrowCap: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-    supplyCap: DEFAULT_IBTC.MONETARY.VERY_LARGE
-  },
-  INTR: {
-    currency: GOVERNANCE_TOKEN,
-    lendApy: new Big(DEFAULT_APY.INTR.BASE),
-    borrowApy: new Big(DEFAULT_APY.INTR.BASE),
-    totalLiquidity: DEFAULT_INTR.MONETARY.VERY_SMALL,
-    lendReward: null,
-    borrowReward: null,
-    availableCapacity: DEFAULT_INTR.MONETARY.VERY_SMALL,
-    collateralThreshold: new Big(0.6),
-    liquidationThreshold: new Big(0.8),
-    isActive: true,
-    totalBorrows: DEFAULT_INTR.MONETARY.MEDIUM,
-    borrowCap: DEFAULT_INTR.MONETARY.VERY_LARGE,
-    supplyCap: DEFAULT_INTR.MONETARY.VERY_LARGE
-  }
+  IBTC: DEFAULT_IBTC_LOAN_ASSET,
+  INTR: DEFAULT_INTR_LOAN_ASSET
 };
 
 const mockGetLendPositionsOfAccount = jest.fn().mockReturnValue(DEFAULT_LEND_POSITIONS);
@@ -131,6 +137,8 @@ export {
   DEFAULT_ASSETS,
   DEFAULT_BORROW_POSITIONS,
   DEFAULT_IBTC,
+  DEFAULT_IBTC_LOAN_ASSET,
+  DEFAULT_INTR_LOAN_ASSET,
   DEFAULT_LEND_POSITIONS,
   DEFAULT_POSITIONS,
   mockBorrow,
