@@ -82,14 +82,23 @@ const CrossChainTransferForm = (): JSX.Element => {
   const form = useForm<CrossChainTransferFormData>({
     initialValues: {
       [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_FROM_FIELD]: 'kintsugi',
-      [CROSS_CHAIN_TRANSFER_TO_FIELD]: 'kusama',
+      [CROSS_CHAIN_TRANSFER_FROM_FIELD]: '',
+      [CROSS_CHAIN_TRANSFER_TO_FIELD]: '',
       [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: 'KSM',
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
     validationSchema: crossChainTransferSchema(schema, t)
   });
+
+  useEffect(() => {
+    if (!originatingChains[0]?.id) return;
+
+    console.log(originatingChains[0]?.id);
+
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, originatingChains[0].id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originatingChains]);
 
   useEffect(() => {
     if (!accountId) {
