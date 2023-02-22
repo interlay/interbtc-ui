@@ -12,6 +12,8 @@ export type { CTALinkProps, CTAProps } from './CTA';
 export { CTA, CTALink } from './CTA';
 export type { DividerProps } from './Divider';
 export { Divider } from './Divider';
+export type { FieldProps } from './Field';
+export { Field, useFieldProps } from './Field';
 export type { FlexProps } from './Flex';
 export { Flex } from './Flex';
 export type { GridItemProps, GridProps } from './Grid';

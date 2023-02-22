@@ -1,12 +1,11 @@
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { forwardRef, InputHTMLAttributes, ReactNode, useRef } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
-import { HelperText, HelperTextProps } from '../HelperText';
+import { Field, useFieldProps } from '../Field';
+import { HelperTextProps } from '../HelperText';
 import { hasErrorMessage } from '../HelperText/HelperText';
-import { Label, LabelProps } from '../Label';
+import { LabelProps } from '../Label';
 import { Sizes } from '../utils/prop-types';
-import { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper } from './Input.style';
+import { Adornment, StyledBaseInput } from './Input.style';
 
 type Props = {
   label?: ReactNode;
@@ -27,31 +26,11 @@ type InheritAttrs = Omit<HelperTextProps, keyof Props & NativeAttrs>;
 type BaseInputProps = Props & NativeAttrs & InheritAttrs;
 
 const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
-  (
-    {
-      className,
-      style,
-      hidden,
-      startAdornment,
-      endAdornment,
-      bottomAdornment,
-      label,
-      labelProps,
-      errorMessage,
-      errorMessageProps,
-      description,
-      descriptionProps,
-      disabled,
-      size = 'medium',
-      ...props
-    },
-    ref
-  ): JSX.Element => {
+  ({ startAdornment, endAdornment, bottomAdornment, disabled, size = 'medium', ...props }, ref): JSX.Element => {
     const endAdornmentRef = useRef<HTMLDivElement>(null);
     const [endAdornmentWidth, setEndAdornmentWidth] = useState(0);
 
-    const hasError = hasErrorMessage(errorMessage);
-    const hasHelpText = !!description || hasError;
+    const { fieldProps, elementProps } = useFieldProps(props);
 
     useEffect(() => {
       if (!endAdornmentRef.current || !endAdornment) return;
@@ -59,38 +38,29 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       setEndAdornmentWidth(endAdornmentRef.current.getBoundingClientRect().width);
     }, [endAdornment]);
 
+    const hasError = hasErrorMessage(props.errorMessage);
+
     return (
-      <Wrapper hidden={hidden} className={className} style={style}>
-        {label && <Label {...labelProps}>{label}</Label>}
-        <BaseInputWrapper>
-          {startAdornment && <Adornment $position='left'>{startAdornment}</Adornment>}
-          <StyledBaseInput
-            $size={size}
-            disabled={disabled}
-            ref={ref}
-            type='text'
-            $adornments={{ bottom: !!bottomAdornment, left: !!startAdornment, right: !!endAdornment }}
-            $hasError={hasError}
-            $isDisabled={!!disabled}
-            $endAdornmentWidth={endAdornmentWidth}
-            {...props}
-          />
-          {bottomAdornment && <Adornment $position='bottom'>{bottomAdornment}</Adornment>}
-          {endAdornment && (
-            <Adornment ref={endAdornmentRef} $position='right'>
-              {endAdornment}
-            </Adornment>
-          )}
-        </BaseInputWrapper>
-        {hasHelpText && (
-          <HelperText
-            description={description}
-            errorMessage={errorMessage}
-            descriptionProps={descriptionProps}
-            errorMessageProps={errorMessageProps}
-          />
+      <Field {...fieldProps}>
+        {startAdornment && <Adornment $position='left'>{startAdornment}</Adornment>}
+        <StyledBaseInput
+          ref={ref}
+          type='text'
+          disabled={disabled}
+          $size={size}
+          $adornments={{ bottom: !!bottomAdornment, left: !!startAdornment, right: !!endAdornment }}
+          $hasError={hasError}
+          $isDisabled={!!disabled}
+          $endAdornmentWidth={endAdornmentWidth}
+          {...elementProps}
+        />
+        {bottomAdornment && <Adornment $position='bottom'>{bottomAdornment}</Adornment>}
+        {endAdornment && (
+          <Adornment ref={endAdornmentRef} $position='right'>
+            {endAdornment}
+          </Adornment>
         )}
-      </Wrapper>
+      </Field>
     );
   }
 );
