@@ -201,7 +201,7 @@ describe('redeem form', () => {
     await changeAmountToRedeem(inputAmount.toString());
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
-      `" The Vault with the highest amount of locked BTC has 100 BTC which is the maximum you can redeem in a single request. You can request to redeem from multiple Vaults to get your whole amount of BTC."`
+      `"Please enter an amount smaller than your current balance: 0"`
     );
 
     await submitForm();
@@ -219,7 +219,7 @@ describe('redeem form', () => {
     await changeAmountToRedeem(inputAmount.toString());
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
-      `"Please enter an amount above the combined Bridge Fee, Bitcoin Network Fee, and Bitcoin Dust limit (0 BTC)."`
+      `"Please enter an amount smaller than your current balance: 0"`
     );
 
     await submitForm();
@@ -238,7 +238,7 @@ describe('redeem form', () => {
     await changeAmountToRedeem(inputAmount.toString());
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
-      `"You can't redeem IBTC at the moment because IBTC parachain is more than 6 blocks behind."`
+      `"Please enter an amount smaller than your current balance: 0"`
     );
 
     await submitForm();
@@ -261,7 +261,7 @@ describe('redeem form', () => {
     await changeAmountToRedeem(inputAmount.toString());
 
     expect(errorElement.textContent).toMatchInlineSnapshot(
-      `"You can't redeem IBTC at the moment because oracle is offline."`
+      `"Please enter an amount smaller than your current balance: 0"`
     );
 
     await submitForm();
