@@ -86,7 +86,7 @@ const DEFAULT_ASSETS: TickerToData<LoanAsset> = {
     collateralThreshold: new Big(0.6),
     liquidationThreshold: new Big(0.8),
     isActive: true,
-    totalBorrows: DEFAULT_IBTC.MONETARY.VERY_LARGE,
+    totalBorrows: DEFAULT_IBTC.MONETARY.MEDIUM,
     borrowCap: DEFAULT_IBTC.MONETARY.VERY_LARGE,
     supplyCap: DEFAULT_IBTC.MONETARY.VERY_LARGE
   },
@@ -101,7 +101,7 @@ const DEFAULT_ASSETS: TickerToData<LoanAsset> = {
     collateralThreshold: new Big(0.6),
     liquidationThreshold: new Big(0.8),
     isActive: true,
-    totalBorrows: DEFAULT_INTR.MONETARY.VERY_SMALL,
+    totalBorrows: DEFAULT_INTR.MONETARY.MEDIUM,
     borrowCap: DEFAULT_INTR.MONETARY.VERY_LARGE,
     supplyCap: DEFAULT_INTR.MONETARY.VERY_LARGE
   }

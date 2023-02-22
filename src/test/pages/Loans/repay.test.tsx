@@ -61,7 +61,7 @@ describe('Repay Flow', () => {
 
     userEvent.click(
       tabPanel2.getByRole('button', {
-        name: /apply balance/i
+        name: /max/i
       })
     );
 

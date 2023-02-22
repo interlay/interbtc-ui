@@ -35,7 +35,7 @@ describe('Withdraw Flow', () => {
     // SCENARIO: user is partially withdrawing when there are borrow positions
     const { unmount } = await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    let tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     // should render modal with ltv meter
     expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
@@ -56,18 +56,19 @@ describe('Withdraw Flow', () => {
 
     // SCENARIO: user is partially withdrawing when there are no borrow positions
     mockGetBorrowPositionsOfAccount.mockReturnValue([]);
+    mockWithdraw.mockClear();
 
     await render(<App />, { path });
 
-    const tabPanel2 = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
-    userEvent.type(tabPanel2.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 
     await waitFor(() => {
-      expect(tabPanel2.getByRole('button', { name: /withdraw/i })).not.toBeDisabled();
+      expect(tabPanel.getByRole('button', { name: /withdraw/i })).not.toBeDisabled();
     });
 
-    userEvent.click(tabPanel2.getByRole('button', { name: /withdraw/i }));
+    userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
 
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
@@ -78,11 +79,11 @@ describe('Withdraw Flow', () => {
     // SCENARIO: user is totally withdrawing when there are borrow positions
     const { unmount } = await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    let tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     userEvent.click(
       tabPanel.getByRole('button', {
-        name: /apply balance/i
+        name: /max/i
       })
     );
 
@@ -104,19 +105,19 @@ describe('Withdraw Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel2 = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     userEvent.click(
-      tabPanel2.getByRole('button', {
-        name: /apply balance/i
+      tabPanel.getByRole('button', {
+        name: /max/i
       })
     );
 
     await waitFor(() => {
-      expect(tabPanel2.getByRole('button', { name: /withdraw/i })).not.toBeDisabled();
+      expect(tabPanel.getByRole('button', { name: /withdraw/i })).not.toBeDisabled();
     });
 
-    userEvent.click(tabPanel2.getByRole('button', { name: /withdraw/i }));
+    userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
 
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
@@ -128,7 +129,7 @@ describe('Withdraw Flow', () => {
     // when there is only a single asset as collateral
     const { unmount } = await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    let tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 
@@ -151,15 +152,15 @@ describe('Withdraw Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel2 = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
-    userEvent.type(tabPanel2.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 
     await waitFor(() => {
-      expect(tabPanel2.getByRole('textbox', { name: 'withdraw amount' })).toHaveErrorMessage('');
+      expect(tabPanel.getByRole('textbox', { name: 'withdraw amount' })).toHaveErrorMessage('');
     });
 
-    userEvent.click(tabPanel2.getByRole('button', { name: /withdraw/i }));
+    userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
 
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
@@ -167,16 +168,16 @@ describe('Withdraw Flow', () => {
     });
 
     userEvent.click(
-      tabPanel2.getByRole('button', {
-        name: /apply balance/i
+      tabPanel.getByRole('button', {
+        name: /max/i
       })
     );
 
     await waitFor(() => {
-      expect(tabPanel2.getByRole('textbox', { name: 'withdraw amount' })).toHaveErrorMessage('');
+      expect(tabPanel.getByRole('textbox', { name: 'withdraw amount' })).toHaveErrorMessage('');
     });
 
-    userEvent.click(tabPanel2.getByRole('button', { name: /withdraw/i }));
+    userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
 
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();

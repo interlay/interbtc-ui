@@ -30,7 +30,7 @@ describe('Borrow Flow', () => {
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
   });
 
-  it.only('should be able to borrow', async () => {
+  it('should be able to borrow', async () => {
     await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC');
