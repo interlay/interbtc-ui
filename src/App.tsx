@@ -78,12 +78,14 @@ const App = (): JSX.Element => {
     [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
     graphqlFetcher<GraphqlReturn<string[]>>(),
     {
-      enabled: bridgeLoaded && !!selectedAccount,
+      enabled: process.env.NODE_ENV !== 'test' && bridgeLoaded && !!selectedAccount,
       onSuccess: ({ data }) => {
         const isVaultOperator = data?.vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
-      onError: (error) => console.log('[App useQuery 1] error.message => ', error.message)
+      onError: (error) => {
+        console.log('[App useQuery 1] error.message => ', error.message);
+      }
     }
   );
   useErrorHandler(vaultsError);

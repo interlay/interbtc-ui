@@ -36,6 +36,7 @@ const mockFetch = jest.fn((input, _init?) => {
   });
 });
 
+// TODO: need to mock with `msw`
 global.fetch = mockFetch as any;
 
 export { MOCK_TOKEN_PRICES, mockFetch, mockGovernanceTokenPriceInUsd };
