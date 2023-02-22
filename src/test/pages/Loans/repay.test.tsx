@@ -20,7 +20,7 @@ import { withinModalTabPanel } from './utils';
 const path = '/lending';
 const tab = 'repay';
 
-describe.skip('Repay Flow', () => {
+describe('Repay Flow', () => {
   beforeEach(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);

@@ -130,6 +130,9 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens,
     getPremiumRedeemVaults: mockVaultsGetPremiumRedeemVaults,
     getVaultsWithRedeemableTokens: mockVaultsGetVaultsWithRedeemableTokens
+  },
+  amm: {
+    getLpTokens: jest.fn().mockResolvedValue([])
   }
 };
 

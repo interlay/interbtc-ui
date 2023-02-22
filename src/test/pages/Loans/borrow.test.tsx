@@ -19,7 +19,7 @@ import { withinModalTabPanel } from './utils';
 const path = '/lending';
 const tab = 'borrow';
 
-describe.skip('Borrow Flow', () => {
+describe('Borrow Flow', () => {
   beforeEach(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
@@ -30,7 +30,7 @@ describe.skip('Borrow Flow', () => {
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
   });
 
-  it('should be able to borrow', async () => {
+  it.only('should be able to borrow', async () => {
     await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC');
@@ -49,7 +49,7 @@ describe.skip('Borrow Flow', () => {
   });
 
   it('should not be able to borrow', async () => {
-    // SCENARIO: use has collateral but is not enought to cover what he wants to borrow
+    // SCENARIO: user has collateral but is not enought to cover what he wants to borrow
     const { unmount } = await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
