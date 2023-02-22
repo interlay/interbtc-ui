@@ -39,23 +39,16 @@ import {
 const CrossChainTransferForm = (): JSX.Element => {
   const [originatingChains, setOriginatingChains] = useState<Chains>([]);
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
+  const [availableTokens, setAvailableTokens] = useState<string[]>([]);
 
   const accountId = useAccountId();
 
   const { getBalance } = useGetBalances();
   const prices = useGetPrices();
   const { t } = useTranslation();
-  const { getDestinationChains, getOriginatingChains } = useXCMBridge();
+  const { getDestinationChains, getOriginatingChains, getAvailableTokens } = useXCMBridge();
 
   const { accounts } = useSubstrateSecureState();
-
-  useEffect(() => {
-    if (!getOriginatingChains) return;
-
-    const originatingChains = getOriginatingChains();
-
-    setOriginatingChains(originatingChains);
-  }, [getOriginatingChains]);
 
   const handleSubmit = (data: CrossChainTransferFormData) => {
     console.log('submit data', data);
@@ -93,6 +86,14 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   useEffect(() => {
+    if (!getOriginatingChains) return;
+
+    const originatingChains = getOriginatingChains();
+
+    setOriginatingChains(originatingChains);
+  }, [getOriginatingChains]);
+
+  useEffect(() => {
     if (!originatingChains.length) return;
 
     const destinationChains = getDestinationChains(originatingChains[0].id as ChainName);
@@ -106,9 +107,19 @@ const CrossChainTransferForm = (): JSX.Element => {
   useEffect(() => {
     if (!destinationChains.length) return;
 
+    const availableTokens = getAvailableTokens(
+      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+      destinationChains[0].id as ChainName
+    );
+
+    setAvailableTokens(availableTokens);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destinationChains]);
+
+  useEffect(() => {
+    console.log('availableTokens', availableTokens);
+  }, [availableTokens]);
 
   useEffect(() => {
     if (!accountId) {
