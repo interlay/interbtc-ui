@@ -11,9 +11,8 @@ type StyledClickableProps = {
   $isClickable: boolean;
 };
 
-type StyledTokenInputBalanceValueProps = {
+type StyledUSDAdornmentProps = {
   $isDisabled?: boolean;
-  $isFocusVisible: boolean;
 };
 
 type StyledListItemSelectedLabelProps = {
@@ -27,7 +26,7 @@ const StyledTicker = styled.span`
   text-overflow: ellipsis;
 `;
 
-const StyledUSDAdornment = styled.span<Pick<StyledTokenInputBalanceValueProps, '$isDisabled'>>`
+const StyledUSDAdornment = styled.span<StyledUSDAdornmentProps>`
   display: block;
   font-size: ${theme.text.xs};
   line-height: ${theme.lineHeight.s};
@@ -68,11 +67,9 @@ const StyledTokenInputBalanceLabel = styled.dt`
   }
 `;
 
-const StyledTokenInputBalanceValue = styled.span<StyledTokenInputBalanceValueProps>`
+const StyledTokenInputBalanceValue = styled.span`
   display: block;
   color: ${theme.colors.textSecondary};
-  cursor: ${({ $isDisabled }) => !$isDisabled && 'pointer'};
-  outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};
 `;
 
 const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`

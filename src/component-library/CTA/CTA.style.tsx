@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
-import { Sizes } from '../utils/prop-types';
+import { CTASizes } from '../utils/prop-types';
 
 interface StyledCTAProps {
   $fullWidth: boolean;
-  $size: Sizes;
+  $size: CTASizes;
   $isFocusVisible?: boolean;
 }
 

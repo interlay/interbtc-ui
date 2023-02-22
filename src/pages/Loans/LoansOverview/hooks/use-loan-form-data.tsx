@@ -50,6 +50,26 @@ const getMaxAmount = ({
   }
 };
 
+// Only relevant for withdraw or repay
+const isEqualBalance = (
+  variant: LoanAction,
+  maxAmount: MonetaryAmount<CurrencyExt>,
+  assetBalance: MonetaryAmount<CurrencyExt>,
+  position?: LendPosition | BorrowPosition
+) => {
+  switch (variant) {
+    case 'withdraw': {
+      return !!position?.amount && maxAmount.eq(position.amount);
+    }
+    case 'repay': {
+      return maxAmount.eq(assetBalance);
+    }
+    default: {
+      return false;
+    }
+  }
+};
+
 type UseLoanFormData = {
   governanceBalance: MonetaryAmount<CurrencyExt>;
   transactionFee: MonetaryAmount<CurrencyExt>;
@@ -57,7 +77,7 @@ type UseLoanFormData = {
   assetAmount: {
     available: MonetaryAmount<CurrencyExt>;
     min: MonetaryAmount<CurrencyExt>;
-    max: MonetaryAmount<CurrencyExt>;
+    max: { value: MonetaryAmount<CurrencyExt>; isEqualBalance: boolean };
   };
 };
 
@@ -102,7 +122,10 @@ const useLoanFormData = (
       available: assetBalance,
       min: minAmount,
       // MEMO: checks for negative values
-      max: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount
+      max: {
+        value: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount,
+        isEqualBalance: isEqualBalance(loanAction, maxAmount, assetBalance, position)
+      }
     }
   };
 };
