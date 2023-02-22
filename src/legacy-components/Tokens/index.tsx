@@ -7,6 +7,7 @@ import { CoinIcon } from '@/component-library';
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import { SelectVariants } from '@/legacy-components/Select';
+import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 import TokenSelector from './TokenSelector';
@@ -64,7 +65,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
       token: balance.currency,
       balance: getBalance(balance.currency.ticker)?.free.toHuman(5) || '0',
       transferableBalance: getBalance(balance.currency.ticker)?.transferable.toHuman(5) || '0',
-      icon: <CoinIcon ticker={balance.currency.ticker} />,
+      icon: <CoinIcon {...getCoinIconProps(balance.currency)} />,
       symbol: balance.currency.ticker
     }));
 
