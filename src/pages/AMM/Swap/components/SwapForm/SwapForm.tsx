@@ -2,7 +2,7 @@ import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, useMemo, useState } from 'react';
+import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -167,13 +167,8 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     validateOnMount: true
   });
 
-  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setTrade(undefined);
-    setInputAmount(e.target.value);
-  };
-
-  const handlePairChange = (pair: SwapPair) => {
-    onChangePair(pair);
+  // MEMO: trigger validation after pair state change
+  useEffect(() => {
     form.setValues(
       {
         ...form.values,
@@ -182,6 +177,26 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
       },
       true
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pair]);
+
+  // MEMO: amount field cleaned up after successful swap
+  useEffect(() => {
+    const isAmountFieldEmpty = form.values[SWAP_INPUT_AMOUNT_FIELD] === '';
+
+    if (isAmountFieldEmpty || !swapMutation.isSuccess) return;
+
+    form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [swapMutation.isSuccess]);
+
+  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setInputAmount(e.target.value);
+    setTrade(undefined);
+  };
+
+  const handlePairChange = (pair: SwapPair) => {
+    onChangePair(pair);
     setTrade(undefined);
   };
 
