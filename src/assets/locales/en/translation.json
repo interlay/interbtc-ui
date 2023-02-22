@@ -140,6 +140,7 @@
   "7_day_volume": "7 Day Volume",
   "rewards": "Rewards",
   "supply_balance": "Supply Balance",
+  "insufficient_funds_fees": "Insufficient funds for fees",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
