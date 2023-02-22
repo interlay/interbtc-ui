@@ -1,65 +1,14 @@
-import { forwardRef, ForwardRefExoticComponent, RefAttributes } from 'react';
+import { forwardRef } from 'react';
 
 import { IconProps } from '../Icon';
-import { StyledFallbackIcon } from './CoinIcon.style';
-import {
-  AUSD,
-  BTC,
-  DOT,
-  ETH,
-  IBTC,
-  INTR,
-  KAR,
-  KBTC,
-  KINT,
-  KSM,
-  LKSM,
-  LSKSM,
-  MOVR,
-  qDOT,
-  qIBTC,
-  qINTR,
-  qKBTC,
-  qKINT,
-  qKSM,
-  qMOVR,
-  qUSDT,
-  SKSM,
-  USDT,
-  VKSM
-} from './icons';
-
-type CoinComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
-
-const coinsIcon: Record<string, CoinComponent> = {
-  BTC,
-  DOT,
-  IBTC,
-  INTR,
-  KBTC,
-  KINT,
-  KSM,
-  LKSM,
-  USDT,
-  VKSM,
-  LSKSM,
-  MOVR,
-  SKSM,
-  qUSDT,
-  qKINT,
-  qKBTC,
-  qKSM,
-  qMOVR,
-  AUSD,
-  KAR,
-  qDOT,
-  qIBTC,
-  qINTR,
-  ETH
-};
+import { FallbackIcon } from './FallbackIcon';
+import { LPCoinIcon } from './LPCoinIcon';
+import { coins } from './utils';
 
 type Props = {
   ticker: string;
+  // Multi tickers icons
+  tickers?: string[];
 };
 
 type NativeAttrs = Omit<IconProps, keyof Props>;
@@ -67,16 +16,16 @@ type NativeAttrs = Omit<IconProps, keyof Props>;
 type CoinIconProps = Props & NativeAttrs;
 
 const CoinIcon = forwardRef<SVGSVGElement, CoinIconProps>(
-  ({ ticker, ...props }, ref): JSX.Element => {
-    const CoinIcon = coinsIcon[ticker];
+  ({ ticker, tickers, ...props }, ref): JSX.Element => {
+    // Only want to render multi-token if has more than 1 ticker
+    if (tickers && tickers?.length > 1) {
+      return <LPCoinIcon ref={ref} tickers={tickers} ticker={ticker} {...props} />;
+    }
+
+    const CoinIcon = coins[ticker];
 
     if (!CoinIcon) {
-      return (
-        <StyledFallbackIcon {...props} ref={ref} viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'>
-          <title>{ticker}</title>
-          <circle cx='12' cy='12' r='11.5' fill='currentColor' />
-        </StyledFallbackIcon>
-      );
+      return <FallbackIcon ref={ref} ticker={ticker} {...props} />;
     }
 
     return <CoinIcon ref={ref} {...props} />;
