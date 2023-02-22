@@ -93,13 +93,22 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   useEffect(() => {
-    if (!originatingChains[0]?.id) return;
+    if (!originatingChains.length) return;
 
-    console.log(originatingChains[0]?.id);
+    const destinationChains = getDestinationChains(originatingChains[0].id as ChainName);
+
+    setDestinationChains(destinationChains);
 
     form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, originatingChains[0].id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [originatingChains]);
+
+  useEffect(() => {
+    if (!destinationChains.length) return;
+
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [destinationChains]);
 
   useEffect(() => {
     if (!accountId) {
