@@ -51,7 +51,9 @@ const connect = async (state: State, dispatch: Dispatch) => {
 
     dispatch({ type: ActionType.ConnectInit });
 
-    console.log(`Connected socket: ${socket}`);
+    if (socket) {
+      console.log(`Connected socket: ${socket}`);
+    }
 
     window.bridge = await createInterBtcApi(constants.PARACHAIN_URL, constants.BITCOIN_NETWORK);
     const _api = window.bridge.api;
