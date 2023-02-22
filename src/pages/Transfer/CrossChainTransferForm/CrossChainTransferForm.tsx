@@ -1,5 +1,6 @@
 import { ChainName } from '@interlay/bridge';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -128,13 +129,15 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledSourceChainSelect
             label='Source Chain'
             chains={originatingChains}
-            {...(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD), { onChange: handleOriginatingChainChange })}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD), {
+              onChange: handleOriginatingChainChange
+            })}
           />
           <StyledArrowRightCircle color='secondary' strokeWidth={2} />
           <ChainSelect
             label='Destination Chain'
             chains={destinationChains}
-            {...form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD)}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD))}
           />
         </ChainSelectSection>
         <div>
