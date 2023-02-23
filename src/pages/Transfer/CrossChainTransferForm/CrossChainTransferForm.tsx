@@ -65,6 +65,20 @@ const CrossChainTransferForm = (): JSX.Element => {
     setDestinationChains(destinationChains);
   };
 
+  const handleDestinationChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const {
+      target: { value }
+    } = e;
+
+    const availableTokens = getAvailableTokens(
+      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+      value as ChainName
+    );
+
+    setAvailableTokens(availableTokens);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, value);
+  };
+
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
   const balance = getBalance(GOVERNANCE_TOKEN.ticker)?.transferable;
 
@@ -122,16 +136,17 @@ const CrossChainTransferForm = (): JSX.Element => {
   }, [destinationChains]);
 
   useEffect(() => {
+    console.log('availableTokens from balance effect', availableTokens);
     const balanceFunction = async () => {
       const transferableBalances = await getTransferableBalances(
-        'kintsugi' as ChainName,
-        'statemine' as ChainName,
+        form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+        form.values[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName,
         form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
         form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
-        ['USDT']
+        availableTokens
       );
 
-      console.log(transferableBalances);
+      console.log('transferableBalances', transferableBalances);
     };
 
     balanceFunction();
@@ -174,7 +189,9 @@ const CrossChainTransferForm = (): JSX.Element => {
           <ChainSelect
             label='Destination Chain'
             chains={destinationChains}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD), {
+              onChange: handleDestinationChainChange
+            })}
           />
         </ChainSelectSection>
         <div>
