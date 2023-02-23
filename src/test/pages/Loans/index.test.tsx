@@ -17,8 +17,8 @@ import {
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
 import { render, screen, userEvent, waitFor } from '../../test-utils';
+import { getTableRow } from '../utils/loans';
 import { TABLES } from './constants';
-import { getTableRow } from './utils';
 
 const path = '/lending';
 

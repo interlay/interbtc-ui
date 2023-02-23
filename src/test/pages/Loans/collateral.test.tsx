@@ -14,8 +14,8 @@ import {
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
 import { render, screen, userEvent, waitForElementToBeRemoved, within } from '../../test-utils';
+import { withinTableRow } from '../utils/loans';
 import { TABLES } from './constants';
-import { withinTableRow } from './utils';
 
 const path = '/lending';
 

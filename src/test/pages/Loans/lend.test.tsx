@@ -16,8 +16,8 @@ import {
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
 import { render, screen, userEvent, waitFor } from '../../test-utils';
+import { submitForm, withinModalTabPanel } from '../utils/loans';
 import { TABLES } from './constants';
-import { submitForm, withinModalTabPanel } from './utils';
 
 const path = '/lending';
 const tab = 'lend';
