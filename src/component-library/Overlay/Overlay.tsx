@@ -30,7 +30,6 @@ const Overlay = ({
 
   const handleEntered = useCallback(() => {
     setExited(false);
-
     if (onEntered) {
       onEntered();
     }
@@ -38,7 +37,6 @@ const Overlay = ({
 
   const handleExited = useCallback(() => {
     setExited(true);
-
     if (onExited) {
       onExited();
     }
