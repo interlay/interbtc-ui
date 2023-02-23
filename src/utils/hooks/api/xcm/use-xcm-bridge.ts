@@ -25,6 +25,20 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
   getOriginatingChains: () => Chains;
   getDestinationChains: (chain: ChainName) => Chains;
   getAvailableTokens: (from: ChainName, to: ChainName) => string[];
+  getInputConfigs: (
+    from: ChainName,
+    to: ChainName,
+    token: string,
+    destinationAddress: string,
+    originAddress: string
+  ) => any;
+  getTransferableBalances: (
+    from: ChainName,
+    to: ChainName,
+    originAddress: string,
+    destinationAddress: string,
+    tokens: string[]
+  ) => any;
 };
 
 const initXCMBridge = async () => {
@@ -48,7 +62,7 @@ const useXCMBridge = (): UseXCMBridge => {
     queryFn: initXCMBridge
   });
 
-  const { error } = queryResult;
+  const { data, error } = queryResult;
 
   const getOriginatingChains = useCallback(
     (): Chains =>
@@ -70,9 +84,49 @@ const useXCMBridge = (): UseXCMBridge => {
     []
   );
 
+  const getInputConfigs = useCallback(
+    async (from: ChainName, to: ChainName, token: string, destinationAddress: string, originAddress: string) =>
+      await firstValueFrom(
+        XCMBridge.findAdapter(from).subscribeInputConfigs({
+          to,
+          token,
+          address: destinationAddress,
+          signer: originAddress
+        }) as any
+      ),
+    []
+  );
+
+  const getTransferableBalances = useCallback(
+    async (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string, tokens: string[]) => {
+      if (!data) return;
+
+      return await Promise.all(
+        tokens.map((token) =>
+          firstValueFrom(
+            data.bridge.findAdapter(from).subscribeInputConfigs({
+              to,
+              token,
+              address: destinationAddress,
+              signer: originAddress
+            }) as any
+          )
+        )
+      );
+    },
+    [data]
+  );
+
   useErrorHandler(error);
 
-  return { ...queryResult, getOriginatingChains, getDestinationChains, getAvailableTokens };
+  return {
+    ...queryResult,
+    getOriginatingChains,
+    getDestinationChains,
+    getAvailableTokens,
+    getInputConfigs,
+    getTransferableBalances
+  };
 };
 
 export { useXCMBridge };

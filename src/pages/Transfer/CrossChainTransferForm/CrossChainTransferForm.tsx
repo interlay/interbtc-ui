@@ -46,7 +46,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { getBalance } = useGetBalances();
   const prices = useGetPrices();
   const { t } = useTranslation();
-  const { getDestinationChains, getOriginatingChains, getAvailableTokens } = useXCMBridge();
+  const { getDestinationChains, getOriginatingChains, getAvailableTokens, getTransferableBalances } = useXCMBridge();
+
+  // IF address changes
+  // IF token changes
+  // IF destination chain changes
 
   const { accounts } = useSubstrateSecureState();
 
@@ -118,7 +122,20 @@ const CrossChainTransferForm = (): JSX.Element => {
   }, [destinationChains]);
 
   useEffect(() => {
-    console.log('availableTokens', availableTokens);
+    const balanceFunction = async () => {
+      const transferableBalances = await getTransferableBalances(
+        'kintsugi' as ChainName,
+        'statemine' as ChainName,
+        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
+        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
+        ['USDT']
+      );
+
+      console.log(transferableBalances);
+    };
+
+    balanceFunction();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableTokens]);
 
   useEffect(() => {
