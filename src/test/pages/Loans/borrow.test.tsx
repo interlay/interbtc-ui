@@ -12,9 +12,9 @@ import {
   mockGetLendPositionsOfAccount
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
-import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../../test-utils';
+import { render, userEvent, waitFor } from '../../test-utils';
 import { TABLES } from './constants';
-import { withinModalTabPanel } from './utils';
+import { submitForm, withinModalTabPanel } from './utils';
 
 const path = '/lending';
 const tab = 'borrow';
@@ -37,13 +37,7 @@ describe('Borrow Flow', () => {
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.SMALL);
 
-    await waitFor(() => {
-      expect(tabPanel.getByRole('button', { name: /borrow/i })).not.toBeDisabled();
-    });
-
-    userEvent.click(tabPanel.getByRole('button', { name: /borrow/i }));
-
-    await waitForElementToBeRemoved(screen.getByRole('dialog'));
+    await submitForm(tabPanel, 'borrow');
 
     expect(mockBorrow).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
   });

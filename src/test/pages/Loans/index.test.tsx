@@ -70,7 +70,7 @@ describe('Loans page', () => {
   });
 
   describe('LTV Section', () => {
-    it('should not render when there any no positions open', async () => {
+    it('should not render when there no positions open', async () => {
       mockGetBorrowPositionsOfAccount.mockReturnValue([]);
       mockGetLendPositionsOfAccount.mockReturnValue([]);
 

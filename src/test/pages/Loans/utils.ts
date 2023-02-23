@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { screen, userEvent, within } from '../../test-utils';
+import { screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../../test-utils';
 
 const withinTable = (name: string) => {
   const table = within(screen.getByRole('grid', { name: new RegExp(name, 'i') }));
@@ -9,7 +9,7 @@ const withinTable = (name: string) => {
 const getTableRow = (tableName: string, asset: string) => {
   const table = withinTable(tableName);
 
-  return table.getByRole('row', { name: new RegExp(`${asset} ${asset}`, 'i') });
+  return table.getByRole('row', { name: new RegExp(`${asset}`, 'i') });
 };
 
 const withinTableRow = (tableName: string, asset: string) => within(getTableRow(tableName, asset));
@@ -43,10 +43,21 @@ const getModalTabPanel = (tableName: string, tabName: string, asset: string, sho
 const withinModalTabPanel = (tableName: string, tabName: string, asset: string, shouldClickTab?: boolean) =>
   within(getModalTabPanel(tableName, tabName, asset, shouldClickTab));
 
+const submitForm = async (tabPanel: ReturnType<typeof withinModalTabPanel>, buttonLabel: string) => {
+  await waitFor(() => {
+    expect(tabPanel.getByRole('button', { name: new RegExp(buttonLabel, 'i') })).not.toBeDisabled();
+  });
+
+  userEvent.click(tabPanel.getByRole('button', { name: new RegExp(buttonLabel, 'i') }));
+
+  await waitForElementToBeRemoved(screen.getByRole('dialog'));
+};
+
 export {
   getModalTabPanel,
   getTableModal,
   getTableRow,
+  submitForm,
   withinModalTabPanel,
   withinTable,
   withinTableModal,
