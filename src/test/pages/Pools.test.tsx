@@ -126,12 +126,16 @@ describe('Pools Page', () => {
       DEFAULT_DEADLINE_BLOCK_NUMBER,
       DEFAULT_ACCOUNT_ADDRESS
     );
+
+    // SCENARIO: change slippage
+
+    userEvent.click(tabPanel.getByRole('button', { name: /slippage settings/i }));
   });
 
   it.only('should be able to withdraw', async () => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(ACCOUNT_WITH_SOME_LIQUIDITY);
 
-    const LP_TOKEN_INPUT = newMonetaryAmount(10, DEFAULT_LP_TOKEN_2, true);
+    const LP_TOKEN_INPUT = newMonetaryAmount(0.1, DEFAULT_LP_TOKEN_2, true);
 
     jest.spyOn(DEFAULT_LIQUIDITY_POOL_2, 'getLiquidityWithdrawalPooledCurrencyAmounts').mockReturnValue([]);
 
@@ -141,24 +145,15 @@ describe('Pools Page', () => {
 
     const tabPanel = withinModalTabPanel(TABLES.ACCOUNT_POOLS, DEFAULT_LP_TOKEN_2.ticker, TABS.WITHDRAW, true);
 
-    userEvent.type(
+    await userEvent.type(
       tabPanel.getByRole('textbox', {
         name: /withdraw amount/i
       }),
-      LP_TOKEN_INPUT.toString()
+      LP_TOKEN_INPUT.toString(),
+      { delay: 1 }
     );
 
-    // await waitFor(() => {
-    //   expect(
-    //     tabPanel.getByRole('textbox', {
-    //       name: new RegExp(`${DEFAULT_CURRENCY_2.currency.ticker} deposit amount`, 'i')
-    //     })
-    //   ).toHaveValue(DEFAULT_CURRENCY_2.toString());
-    // });
-
     await waitFor(() => {
-      // expect(DEFAULT_LIQUIDITY_POOL_2.getLiquidityWithdrawalPooledCurrencyAmounts).toHaveBeenCalledWith(LP_TOKEN_INPUT);
-
       expect(tabPanel.getByRole('button', { name: /remove liquidity/i })).not.toBeDisabled();
     });
 
