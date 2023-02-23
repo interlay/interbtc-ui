@@ -211,6 +211,21 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
     removeLS();
   }, [removeLS]);
 
+  // ray test touch <
+  // TODO: just a quick fix for now
+  const disconnect = React.useCallback(() => {
+    console.log('ray : ***** disconnect');
+    if (!removeSelectedAccount) return;
+
+    removeSelectedAccount();
+
+    // dispatch({
+    //   type: ActionType.SetAccounts,
+    //   payload: []
+    // });
+  }, [removeSelectedAccount]);
+  // ray test touch >
+
   React.useEffect(() => {
     if (keyringStatus !== KeyringStatus.Ready) return;
     if (!selectedAccountAddress) return;
@@ -235,7 +250,10 @@ const SubstrateProvider = ({ children, socket }: SubstrateProviderProps): JSX.El
   const value = {
     state,
     setSelectedAccount,
-    removeSelectedAccount
+    removeSelectedAccount,
+    // ray test touch <
+    disconnect
+    // ray test touch >
   };
 
   return <SubstrateStateContext.Provider value={value}>{children}</SubstrateStateContext.Provider>;

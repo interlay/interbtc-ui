@@ -90,6 +90,9 @@ interface SubstrateStateContextInterface {
   state: State;
   setSelectedAccount: (newAccount: PolkadotKeyringPair) => Promise<void>;
   removeSelectedAccount: () => void;
+  // ray test touch <
+  disconnect: () => void;
+  // ray test touch >
 }
 
 export type {
