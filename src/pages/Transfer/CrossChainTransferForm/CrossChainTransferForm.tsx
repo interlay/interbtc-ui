@@ -39,7 +39,7 @@ import {
 const CrossChainTransferForm = (): JSX.Element => {
   const [originatingChains, setOriginatingChains] = useState<Chains>([]);
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
-  const [availableTokens, setAvailableTokens] = useState<string[]>([]);
+  const [availableTokens, setAvailableTokens] = useState<any[]>([]);
 
   const accountId = useAccountId();
 
@@ -75,7 +75,12 @@ const CrossChainTransferForm = (): JSX.Element => {
       value as ChainName
     );
 
-    setAvailableTokens(availableTokens);
+    const tokenWithAmounts = availableTokens.map((token) => {
+      return { ticker: token, balance: 0, balanceUSD: '0' };
+    });
+
+    setAvailableTokens(tokenWithAmounts);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, tokenWithAmounts[0].ticker);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, value);
   };
 
@@ -96,7 +101,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
       [CROSS_CHAIN_TRANSFER_FROM_FIELD]: '',
       [CROSS_CHAIN_TRANSFER_TO_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: 'KSM',
+      [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: '',
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
@@ -130,7 +135,12 @@ const CrossChainTransferForm = (): JSX.Element => {
       destinationChains[0].id as ChainName
     );
 
-    setAvailableTokens(availableTokens);
+    const tokenWithAmounts = availableTokens.map((token) => {
+      return { ticker: token, balance: 0, balanceUSD: '0' };
+    });
+
+    setAvailableTokens(tokenWithAmounts);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, tokenWithAmounts[0].ticker);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [destinationChains]);
@@ -201,20 +211,9 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={balance?.toString() || 0}
             humanBalance={balance?.toHuman() || 0}
             valueUSD={valueUSD}
-            tokens={[
-              {
-                balance: 0,
-                balanceUSD: '0',
-                ticker: 'KSM'
-              },
-              {
-                balance: 0,
-                balanceUSD: '0',
-                ticker: 'KINT'
-              }
-            ]}
+            tokens={availableTokens}
             selectProps={form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false)}
-            {...form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD)}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
           />
         </div>
         <AccountSelect

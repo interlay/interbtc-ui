@@ -1,4 +1,5 @@
 import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
+import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
@@ -98,21 +99,31 @@ const useXCMBridge = (): UseXCMBridge => {
   );
 
   const getTransferableBalances = useCallback(
-    async (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string, tokens: string[]) => {
+    async (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string, tokens: any[]) => {
       if (!data) return;
 
-      return await Promise.all(
-        tokens.map((token) =>
-          firstValueFrom(
-            data.bridge.findAdapter(from).subscribeInputConfigs({
-              to,
-              token,
-              address: destinationAddress,
-              signer: originAddress
-            }) as any
-          )
+      const inputConfigs = await Promise.all(
+        tokens.map(
+          async (token): Promise<any> => {
+            const inputConfig: any = await firstValueFrom(
+              data.bridge.findAdapter(from).subscribeInputConfigs({
+                to,
+                token: token.ticker,
+                address: destinationAddress,
+                signer: originAddress
+              }) as any
+            );
+
+            const maxInput = Big(inputConfig.maxInput.toString());
+            console.log('in the promise', maxInput, token.ticker);
+
+            return { ticker: token.ticker, maxInput };
+          }
         )
       );
+
+      console.log('input configs in utility', inputConfigs);
+      return inputConfigs;
     },
     [data]
   );
