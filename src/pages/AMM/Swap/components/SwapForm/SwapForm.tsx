@@ -83,7 +83,9 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const [inputAmount, setInputAmount] = useState<string>();
   const [trade, setTrade] = useState<Trade | null>();
 
+  // ray test touch <
   const prices = useGetPrices();
+  // ray test touch >
   const accountId = useAccountId();
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);

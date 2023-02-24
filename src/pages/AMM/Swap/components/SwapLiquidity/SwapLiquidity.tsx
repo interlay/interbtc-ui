@@ -18,7 +18,9 @@ type InheritAttrs = Omit<CardProps, keyof Props>;
 type SwapLiquidityProps = Props & InheritAttrs;
 
 const SwapLiquidity = ({ input, output, liquidityPool, ...props }: SwapLiquidityProps): JSX.Element | null => {
+  // ray test touch <
   const prices = useGetPrices();
+  // ray test touch >
   const liquidity = calculateTotalLiquidityUSD(liquidityPool.pooledCurrencies, prices);
 
   return (

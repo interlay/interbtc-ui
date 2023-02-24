@@ -88,7 +88,9 @@ const useLoanFormData = (
   position?: LendPosition | BorrowPosition
 ): UseLoanFormData => {
   const { getBalance, getAvailableBalance } = useGetBalances();
+  // ray test touch <
   const prices = useGetPrices();
+  // ray test touch >
   const {
     data: { statistics }
   } = useGetAccountPositions();

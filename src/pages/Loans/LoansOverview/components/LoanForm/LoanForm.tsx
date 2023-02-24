@@ -84,7 +84,9 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     refetch,
     data: { hasCollateral }
   } = useGetAccountPositions();
+  // ray test touch <
   const prices = useGetPrices();
+  // ray test touch >
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
 
   // withdraw has `withdraw` and `withdrawAll`

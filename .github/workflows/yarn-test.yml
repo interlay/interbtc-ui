@@ -27,5 +27,5 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: yarn install --ignore-engines # RE: inspired by https://stackoverflow.com/a/57748163
+    - run: yarn install --silent --ignore-engines # RE: inspired by https://stackoverflow.com/a/57748163
     - run: yarn test

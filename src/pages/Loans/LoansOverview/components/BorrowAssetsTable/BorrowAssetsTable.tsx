@@ -40,7 +40,9 @@ type BorrowAssetsTableProps = {
 
 const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
+  // ray test touch <
   const prices = useGetPrices();
+  // ray test touch >
 
   const rows: BorrowAssetsTableRow[] = useMemo(
     () =>

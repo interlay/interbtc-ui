@@ -14,7 +14,9 @@ type SwapInfoProps = {
 };
 
 const SwapInfo = ({ trade, slippage }: SwapInfoProps): JSX.Element | null => {
+  // ray test touch <
   const prices = useGetPrices();
+  // ray test touch >
 
   const { inputAmount, outputAmount, executionPrice, priceImpact } = trade;
 

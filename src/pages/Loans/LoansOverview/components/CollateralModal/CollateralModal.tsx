@@ -67,7 +67,9 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const { t } = useTranslation();
   const { refetch } = useGetAccountPositions();
   const { getLTV } = useGetLTV();
+  // ray test touch <
   const prices = useGetPrices();
+  // ray test touch >
 
   const handleSuccess = () => {
     onClose?.();

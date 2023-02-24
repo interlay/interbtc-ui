@@ -172,7 +172,9 @@ type UseGetAccountPositions = {
 const useGetAccountPositions = (): UseGetAccountPositions => {
   const accountId = useAccountId();
 
+  // ray test touch <
   const prices = useGetPrices();
+  // ray test touch >
   const { data: assets } = useGetLoanAssets();
 
   const { data: positions, error: positionsError, refetch: refetchPositions } = useQuery({
