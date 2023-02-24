@@ -54,10 +54,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     [accounts, selectedWallet]
   );
 
-  // ray test touch <
-  // const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
-  const { setSelectedAccount, disconnect } = useSubstrate();
-  // ray test touch >
+  const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const supportedExtensions = React.useMemo(
     () => extensions.filter((item) => Object.values(WalletSourceName).includes(item.name as WalletSourceName)),
     [extensions]
@@ -77,10 +74,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
   // State of the modal content.
   const modalContent = React.useMemo(() => {
     if (!setSelectedAccount) return;
-    // ray test touch <
-    // if (!removeSelectedAccount) return;
-    if (!disconnect) return;
-    // ray test touch >
+    if (!removeSelectedAccount) return;
 
     const handleWalletSelect = (walletName: WalletSourceName | undefined) => {
       setSelectedWallet(walletName);
@@ -95,10 +89,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     };
 
     const handleAccountDisconnect = () => {
-      // ray test touch <
-      // removeSelectedAccount();
-      disconnect();
-      // ray test touch >
+      removeSelectedAccount();
       onClose();
     };
 
@@ -147,10 +138,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
     selectedWallet,
     t,
     setSelectedAccount,
-    // ray test touch <
-    // removeSelectedAccount
-    disconnect
-    // ray test touch >
+    removeSelectedAccount
   ]);
 
   return (

@@ -10,10 +10,7 @@ interface Props {
 }
 
 const Accounts = ({ callbackFunction, label }: Props): JSX.Element => {
-  // ray test touch <
   const { selectedAccount: currentAccount, accounts } = useSubstrateSecureState();
-  console.log('ray : ***** accounts => ', accounts);
-  // ray test touch >
 
   const [selectedAccount, setSelectedAccount] = React.useState<KeyringPair | undefined>(undefined);
 
