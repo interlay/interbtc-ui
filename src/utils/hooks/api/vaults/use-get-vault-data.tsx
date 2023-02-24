@@ -62,6 +62,7 @@ const useGetVaultData = ({ address }: { address: string }): VaultOverview | unde
     //   }
     // }
 
+    // Only render vaults which are not in an error state
     const filteredVaultData = vaultData.filter((vault) => !vault.error);
 
     const haveQueriesCompleted = filteredVaultData.every((vault) => vault && !vault.isLoading);
