@@ -1,25 +1,24 @@
+import { useOverlayTriggerState } from '@react-stately/overlays';
 import { Meta, Story } from '@storybook/react';
-import { useState } from 'react';
 
 import { CTA } from '../CTA';
 import { Modal, ModalBody, ModalDivider, ModalFooter, ModalHeader, ModalProps } from '.';
 
 const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = ({
-  isOpen: isOpenProp,
+  isOpen,
   children,
   hasFooter,
   hasTitle,
   ...args
 }) => {
-  // const state = useOverlayTriggerState({ defaultOpen: isOpen });
-  const [isOpen, setOpen] = useState(isOpenProp);
+  const state = useOverlayTriggerState({ defaultOpen: isOpen });
 
   return (
     <>
-      <CTA onClick={() => setOpen(true)} variant='primary'>
+      <CTA onClick={state.open} variant='primary'>
         Open modal
       </CTA>
-      <Modal {...args} isOpen={isOpen} onClose={() => setOpen(false)}>
+      <Modal {...args} isOpen={state.isOpen} onClose={state.close}>
         {hasTitle && (
           <>
             <ModalHeader color='secondary' align='center'>
@@ -31,7 +30,7 @@ const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = 
         <ModalBody>{children}</ModalBody>
         {hasFooter && (
           <ModalFooter>
-            <CTA onClick={() => setOpen(false)}>Procced</CTA>
+            <CTA onClick={state.close}>Procced</CTA>
           </ModalFooter>
         )}
       </Modal>

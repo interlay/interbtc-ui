@@ -1,27 +1,36 @@
-/*
- * Copyright 2020 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
-
-import { Overlay as ReactAriaOverlay } from '@react-aria/overlays';
-import { OverlayProps } from '@react-types/overlays';
-import { useCallback, useState } from 'react';
+import { Overlay as AriaOverlay } from '@react-aria/overlays';
+import { ReactNode, useCallback, useState } from 'react';
 
 import { OpenTransition } from './OpenTransition';
 
-function Overlay(props: OverlayProps) {
-  const { children, isOpen, container, onEnter, onEntering, onEntered, onExit, onExiting, onExited } = props;
+type OverlayProps = {
+  children: ReactNode;
+  isOpen?: boolean;
+  container?: Element;
+  onEnter?: () => void;
+  onEntering?: () => void;
+  onEntered?: () => void;
+  onExit?: () => void;
+  onExiting?: () => void;
+  onExited?: () => void;
+};
+
+const Overlay = ({
+  children,
+  isOpen,
+  container,
+  onEnter,
+  onEntering,
+  onEntered,
+  onExit,
+  onExiting,
+  onExited
+}: OverlayProps): JSX.Element | null => {
   const [exited, setExited] = useState(!isOpen);
 
   const handleEntered = useCallback(() => {
     setExited(false);
+
     if (onEntered) {
       onEntered();
     }
@@ -29,6 +38,7 @@ function Overlay(props: OverlayProps) {
 
   const handleExited = useCallback(() => {
     setExited(true);
+
     if (onExited) {
       onExited();
     }
@@ -42,7 +52,7 @@ function Overlay(props: OverlayProps) {
   }
 
   return (
-    <ReactAriaOverlay portalContainer={container}>
+    <AriaOverlay portalContainer={container}>
       <OpenTransition
         in={isOpen}
         appear
@@ -55,8 +65,9 @@ function Overlay(props: OverlayProps) {
       >
         {children}
       </OpenTransition>
-    </ReactAriaOverlay>
+    </AriaOverlay>
   );
-}
+};
 
 export { Overlay };
+export type { OverlayProps };

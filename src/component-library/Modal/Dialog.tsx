@@ -1,5 +1,4 @@
 import { AriaDialogProps, useDialog } from '@react-aria/dialog';
-import { AriaOverlayProps } from '@react-aria/overlays';
 import { forwardRef, ReactNode } from 'react';
 
 import { XMark } from '@/assets/icons';
@@ -12,13 +11,14 @@ type Props = {
   children: ReactNode;
   align?: 'top' | 'center';
   hasMaxHeight?: boolean;
+  onClose: () => void;
 };
 
-type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
+type InheritAttrs = Omit<AriaDialogProps, keyof Props>;
 
-type ModalWrapperProps = Props & InheritAttrs;
+type DialogProps = Props & InheritAttrs;
 
-const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
+const Dialog = forwardRef<HTMLDivElement, DialogProps>(
   ({ children, align = 'center', hasMaxHeight, onClose, ...props }, ref): JSX.Element | null => {
     const dialogRef = useDOMRef(ref);
 
@@ -29,7 +29,7 @@ const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
 
     return (
       <ModalContext.Provider value={{ titleProps, bodyProps: { overflow: isCentered ? 'auto' : undefined } }}>
-        <StyledDialog $isCentered={isCentered} $hasMaxHeight={hasMaxHeight} {...dialogProps}>
+        <StyledDialog ref={dialogRef} $isCentered={isCentered} $hasMaxHeight={hasMaxHeight} {...dialogProps}>
           <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onPress={onClose}>
             <XMark />
           </StyledCloseCTA>
@@ -40,7 +40,7 @@ const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
   }
 );
 
-ModalWrapper.displayName = 'ModalWrapper';
+Dialog.displayName = 'Dialog';
 
-export { ModalWrapper };
-export type { ModalWrapperProps };
+export { Dialog };
+export type { DialogProps };

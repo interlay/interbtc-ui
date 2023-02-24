@@ -8,8 +8,8 @@ import { H3 } from '../Text';
 import { theme } from '../theme';
 import { Overflow } from '../utils/prop-types';
 
-type StyledDialogWrapperProps = {
-  $isOpen: boolean;
+type StyledModalProps = {
+  $isOpen?: boolean;
   $isCentered?: boolean;
 };
 
@@ -43,14 +43,11 @@ const StyledUnderlay = styled.div<StyledUnderlayProps>`
   overflow: ${({ $isCentered }) => !$isCentered && 'auto'};
 
   ${({ $isOpen }) => overlayCSS($isOpen)}
-
   transition: ${({ $isOpen }) =>
-    $isOpen
-      ? 'opacity .3s cubic-bezier(0,0,.4,1)'
-      : 'opacity 0.13s cubic-bezier(0.5,0,1,1), visibility 0s linear 0.16s'};
+    $isOpen ? theme.modal.underlay.transition.entering : theme.modal.underlay.transition.exiting};
 `;
 
-const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
+const StyledModal = styled.div<StyledModalProps>`
   justify-content: center;
   display: flex;
   z-index: ${theme.modal.zIndex};
@@ -62,10 +59,7 @@ const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
   transform: ${({ $isOpen }) => ($isOpen ? 'translateY(0)' : `translateY(20px)`)};
   visibility: inherit;
   opacity: inherit;
-  transition: ${({ $isOpen }) =>
-    $isOpen
-      ? 'transform 0.25s cubic-bezier(0,0,0.4,1) 0.16s, opacity 0.25s cubic-bezier(0,0,0.4,1)'
-      : 'opacity 0.13s cubic-bezier(0.5,0,1,1), visibility 0s linear, transform 0s linear 0.13s'};
+  transition: ${({ $isOpen }) => ($isOpen ? theme.modal.transition.entering : theme.modal.transition.exiting)};
 `;
 
 const StyledDialog = styled.section<StyledDialogProps>`
@@ -115,7 +109,7 @@ const StyledModalFooter = styled(Flex)`
 export {
   StyledCloseCTA,
   StyledDialog,
-  StyledDialogWrapper,
+  StyledModal,
   StyledModalBody,
   StyledModalDivider,
   StyledModalFooter,
