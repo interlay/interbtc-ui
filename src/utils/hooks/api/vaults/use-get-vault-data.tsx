@@ -51,6 +51,8 @@ const useGetVaultData = ({ address }: { address: string }): VaultOverview | unde
 
   useEffect(() => {
     if (!vaultData || vaultData.length === 0) return;
+    // TODO: This is a hotfix to prevent one erroring vault from preventing
+    // all vaults being shown and should be removed as soon as possible.
 
     // for (const vault of vaultData) {
     //   if (vault.error) {
