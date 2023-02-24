@@ -1,5 +1,4 @@
 import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
-import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
@@ -114,10 +113,7 @@ const useXCMBridge = (): UseXCMBridge => {
               }) as any
             );
 
-            const maxInput = Big(inputConfig.maxInput.toString());
-            console.log('in the promise', maxInput, token.ticker);
-
-            return { ticker: token.ticker, maxInput };
+            return { ticker: token.ticker, inputConfig };
           }
         )
       );

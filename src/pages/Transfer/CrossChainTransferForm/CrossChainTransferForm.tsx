@@ -146,7 +146,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   }, [destinationChains]);
 
   useEffect(() => {
-    console.log('availableTokens from balance effect', availableTokens);
     const balanceFunction = async () => {
       const transferableBalances = await getTransferableBalances(
         form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
