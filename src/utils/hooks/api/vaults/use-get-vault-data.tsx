@@ -1,6 +1,6 @@
 import { newAccountId } from '@interlay/interbtc-api';
 import { useEffect, useState } from 'react';
-import { useErrorHandler } from 'react-error-boundary';
+// import { useErrorHandler } from 'react-error-boundary';
 import { useQueries, UseQueryResult } from 'react-query';
 
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -30,12 +30,12 @@ const getVaultTotals = (vaults: Array<VaultData>) => ({
 
 const useGetVaultData = ({ address }: { address: string }): VaultOverview | undefined => {
   const [queriesComplete, setQueriesComplete] = useState<boolean>(false);
-  const [queryError, setQueryError] = useState<Error | undefined>(undefined);
+  // const [queryError, setQueryError] = useState<Error | undefined>(undefined);
 
   const prices = useGetPrices();
 
   const vaultsResponseData = useGetVaults({ address });
-  useErrorHandler(queryError);
+  // useErrorHandler(queryError);
 
   // TODO: updating react-query to > 3.28.0 will allow us type this without `any`
   const vaultData: Array<any> = useQueries<Array<UseQueryResult<VaultOverview, Error>>>(
@@ -52,15 +52,17 @@ const useGetVaultData = ({ address }: { address: string }): VaultOverview | unde
   useEffect(() => {
     if (!vaultData || vaultData.length === 0) return;
 
-    for (const vault of vaultData) {
-      if (vault.error) {
-        setQueryError(vault.error);
+    // for (const vault of vaultData) {
+    //   if (vault.error) {
+    //     setQueryError(vault.error);
 
-        return;
-      }
-    }
+    //     return;
+    //   }
+    // }
 
-    const haveQueriesCompleted = vaultData.every((vault) => vault && !vault.isLoading);
+    const filteredVaultData = vaultData.filter((vault) => !vault.error);
+
+    const haveQueriesCompleted = filteredVaultData.every((vault) => vault && !vault.isLoading);
     setQueriesComplete(haveQueriesCompleted);
   }, [vaultData]);
 
