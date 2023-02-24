@@ -28,7 +28,7 @@ const Accounts = ({ callbackFunction, label }: Props): JSX.Element => {
 
   return (
     <div>
-      {accounts && selectedAccount ? (
+      {accounts && selectedAccount && currentAccount ? (
         <AccountSelector
           label={label}
           accounts={accounts}

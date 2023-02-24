@@ -348,12 +348,10 @@ const CrossChainTransferForm = (): JSX.Element => {
           selectedChain={toChain}
           onChange={handleSetToChain}
         />
-        {/* ray test touch < */}
         <Accounts
           label={t('transfer_page.cross_chain_transfer_form.target_account')}
           callbackFunction={setDestination}
         />
-        {/* ray test touch > */}
         <SubmitButton
           disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
           pending={submitStatus === STATUSES.PENDING}
