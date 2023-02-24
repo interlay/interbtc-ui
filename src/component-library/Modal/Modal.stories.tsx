@@ -5,13 +5,13 @@ import { CTA } from '../CTA';
 import { Modal, ModalBody, ModalDivider, ModalFooter, ModalHeader, ModalProps } from '.';
 
 const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = ({
-  isOpen: isOpenProp,
+  isOpen,
   children,
   hasFooter,
   hasTitle,
   ...args
 }) => {
-  const state = useOverlayTriggerState({ defaultOpen: isOpenProp });
+  const state = useOverlayTriggerState({ defaultOpen: isOpen });
 
   return (
     <>
