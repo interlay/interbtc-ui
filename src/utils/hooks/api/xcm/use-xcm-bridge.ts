@@ -24,7 +24,7 @@ type XCMBridgeData = {
 type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
   getOriginatingChains: () => Chains;
   getDestinationChains: (chain: ChainName) => Chains;
-  getAvailableTokens: (from: ChainName, to: ChainName) => string[];
+  getAvailableTokens: (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string) => any;
   getInputConfigs: (
     from: ChainName,
     to: ChainName,
@@ -80,8 +80,36 @@ const useXCMBridge = (): UseXCMBridge => {
   }, []);
 
   const getAvailableTokens = useCallback(
-    (from: ChainName, to: ChainName): string[] => XCMBridge.router.getAvailableTokens({ from, to }),
-    []
+    async (
+      from: ChainName,
+      to: ChainName,
+      originAddress: string,
+      destinationAddress: string
+    ): Promise<any[] | undefined> => {
+      if (!data) return;
+
+      const tokens = XCMBridge.router.getAvailableTokens({ from, to });
+
+      const inputConfigs = await Promise.all(
+        tokens.map(
+          async (token): Promise<any> => {
+            const inputConfig: any = await firstValueFrom(
+              data.bridge.findAdapter(from).subscribeInputConfigs({
+                to,
+                token,
+                address: destinationAddress,
+                signer: originAddress
+              }) as any
+            );
+
+            return { ticker: token, maxInput: inputConfig.maxInput };
+          }
+        )
+      );
+
+      return inputConfigs;
+    },
+    [data]
   );
 
   const getInputConfigs = useCallback(

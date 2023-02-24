@@ -46,7 +46,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { getBalance } = useGetBalances();
   const prices = useGetPrices();
   const { t } = useTranslation();
-  const { getDestinationChains, getOriginatingChains, getAvailableTokens, getTransferableBalances } = useXCMBridge();
+  const { getDestinationChains, getOriginatingChains, getAvailableTokens } = useXCMBridge();
 
   // IF address changes
   // IF token changes
@@ -72,10 +72,12 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     const availableTokens = getAvailableTokens(
       form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      value as ChainName
+      value as ChainName,
+      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
+      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
     );
 
-    const tokenWithAmounts = availableTokens.map((token) => {
+    const tokenWithAmounts = availableTokens.map((token: any) => {
       return { ticker: token, balance: 0, balanceUSD: '0' };
     });
 
@@ -130,37 +132,24 @@ const CrossChainTransferForm = (): JSX.Element => {
   useEffect(() => {
     if (!destinationChains.length) return;
 
-    const availableTokens = getAvailableTokens(
-      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      destinationChains[0].id as ChainName
-    );
-
-    const tokenWithAmounts = availableTokens.map((token) => {
-      return { ticker: token, balance: 0, balanceUSD: '0' };
-    });
-
-    setAvailableTokens(tokenWithAmounts);
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, tokenWithAmounts[0].ticker);
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [destinationChains]);
-
-  useEffect(() => {
-    const balanceFunction = async () => {
-      const transferableBalances = await getTransferableBalances(
+    const availableTokens = async () => {
+      const tokens = await getAvailableTokens(
         form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-        form.values[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName,
+        destinationChains[0].id as ChainName,
         form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
-        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
-        availableTokens
+        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
       );
 
-      console.log('transferableBalances', transferableBalances);
+      console.log('from effect', tokens);
+
+      setAvailableTokens(tokens);
+      form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, tokens[0].ticker);
+      form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
     };
 
-    balanceFunction();
+    availableTokens();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [availableTokens]);
+  }, [destinationChains]);
 
   useEffect(() => {
     if (!accountId) {
