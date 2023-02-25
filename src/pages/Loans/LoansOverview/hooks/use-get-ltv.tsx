@@ -85,13 +85,19 @@ interface UserGetLTV {
 }
 
 const useGetLTV = (): UserGetLTV => {
-  // ray test touch <
+  // ray test touch <<
   const prices = useGetPrices();
-  // ray test touch >
+  // ray test touch >>
   const {
     data: { statistics }
   } = useGetAccountPositions();
   const { borrowAmountUSD, collateralizedAmountUSD, collateralAmountUSD, liquidationAmountUSD } = statistics || {};
+  // ray test touch <<
+  // console.log('ray : ***** borrowAmountUSD?.toString() => ', borrowAmountUSD?.toString());
+  // console.log('ray : ***** collateralizedAmountUSD?.toString() => ', collateralizedAmountUSD?.toString());
+  // console.log('ray : ***** collateralAmountUSD?.toString() => ', collateralAmountUSD?.toString());
+  // console.log('ray : ***** liquidationAmountUSD?.toString() => ', liquidationAmountUSD?.toString());
+  // ray test touch >>
 
   /**
    * This method computes how the LTV will

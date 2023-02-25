@@ -2,6 +2,7 @@ import Big from 'big.js';
 
 import { LoanAction } from '@/types/loans';
 
+// ray test touch <<
 const calculateThresholdAmountUSD = (amountUSD: Big, threshold: Big): Big => amountUSD.mul(threshold);
 
 const calculateBorrowedAmountUSD = (
@@ -33,5 +34,6 @@ const calculateCollateralAmountUSD = (
       return currentCollateralAmountUSD;
   }
 };
+// ray test touch >>
 
 export { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateThresholdAmountUSD };
