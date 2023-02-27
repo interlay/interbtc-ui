@@ -40,14 +40,14 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [originatingChains, setOriginatingChains] = useState<Chains>([]);
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
 
-  const accountId = useAccountId();
-
   const { getBalance } = useGetBalances();
   const prices = useGetPrices();
   const { t } = useTranslation();
-  const { getDestinationChains, getOriginatingChains } = useXCMBridge();
 
+  const accountId = useAccountId();
   const { accounts } = useSubstrateSecureState();
+
+  const { getDestinationChains, getOriginatingChains } = useXCMBridge();
 
   const handleSubmit = (data: CrossChainTransferFormData) => {
     console.log('submit data', data);
