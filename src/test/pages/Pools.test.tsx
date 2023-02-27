@@ -38,6 +38,7 @@ jest.mock('../../parts/Layout', () => {
   return MockedLayout;
 });
 
+// MEMO: skipped including testing slippage
 describe('Pools Page', () => {
   beforeEach(() => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(DEFAULT_ACCOUNT_LIQUIDITY);
@@ -97,11 +98,12 @@ describe('Pools Page', () => {
 
     const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, DEFAULT_LP_TOKEN_1.ticker, TABS.DEPOSIT);
 
-    userEvent.type(
+    await userEvent.type(
       tabPanel.getByRole('textbox', {
         name: new RegExp(`${DEFAULT_CURRENCY_1.currency.ticker} deposit amount`, 'i')
       }),
-      DEFAULT_CURRENCY_1.toString()
+      DEFAULT_CURRENCY_1.toString(),
+      { delay: 1 }
     );
 
     expect(DEFAULT_LIQUIDITY_POOL_1.getLiquidityDepositInputAmounts).toHaveBeenCalledWith(DEFAULT_CURRENCY_1);
@@ -126,13 +128,9 @@ describe('Pools Page', () => {
       DEFAULT_DEADLINE_BLOCK_NUMBER,
       DEFAULT_ACCOUNT_ADDRESS
     );
-
-    // SCENARIO: change slippage
-
-    userEvent.click(tabPanel.getByRole('button', { name: /slippage settings/i }));
   });
 
-  it.only('should be able to withdraw', async () => {
+  it('should be able to withdraw', async () => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(ACCOUNT_WITH_SOME_LIQUIDITY);
 
     const LP_TOKEN_INPUT = newMonetaryAmount(0.1, DEFAULT_LP_TOKEN_2, true);
@@ -143,7 +141,7 @@ describe('Pools Page', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.ACCOUNT_POOLS, DEFAULT_LP_TOKEN_2.ticker, TABS.WITHDRAW, true);
+    const tabPanel = await withinModalTabPanel(TABLES.ACCOUNT_POOLS, DEFAULT_LP_TOKEN_2.ticker, TABS.WITHDRAW, true);
 
     await userEvent.type(
       tabPanel.getByRole('textbox', {

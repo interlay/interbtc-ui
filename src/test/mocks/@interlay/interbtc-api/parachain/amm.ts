@@ -1,4 +1,11 @@
-import { newMonetaryAmount, StandardLiquidityPool, StandardLpToken } from '@interlay/interbtc-api';
+import {
+  MultiPathElementStandard,
+  MultiPathElementType,
+  newMonetaryAmount,
+  StandardLiquidityPool,
+  StandardLpToken,
+  Trade
+} from '@interlay/interbtc-api';
 import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -81,6 +88,33 @@ const mockRemoveLiquidity = jest.fn();
 
 const mockGetLpTokens = jest.fn().mockResolvedValue([DEFAULT_LP_TOKEN_1, DEFAULT_LP_TOKEN_2]);
 
+const mockGetOutputAmount = jest.fn().mockReturnValue(newMonetaryAmount(0.1, WRAPPED_TOKEN, true));
+
+const DEFAULT_MULTI_PATH_ELEMENT: MultiPathElementStandard = {
+  pair: {
+    getOutputAmount: mockGetOutputAmount,
+    pathOf: jest.fn(),
+    token0: RELAY_CHAIN_NATIVE_TOKEN,
+    token1: WRAPPED_TOKEN,
+    reserve0: newMonetaryAmount(5, RELAY_CHAIN_NATIVE_TOKEN, true),
+    reserve1: newMonetaryAmount(5, WRAPPED_TOKEN, true)
+  },
+  input: RELAY_CHAIN_NATIVE_TOKEN,
+  output: WRAPPED_TOKEN,
+  type: MultiPathElementType.STANDARD,
+  pool: DEFAULT_LIQUIDITY_POOL_2
+};
+
+const mockGetOptimalTrade = jest
+  .fn()
+  .mockReturnValue(
+    new Trade(
+      [DEFAULT_MULTI_PATH_ELEMENT],
+      newMonetaryAmount(1, RELAY_CHAIN_NATIVE_TOKEN, true),
+      newMonetaryAmount(0.1, WRAPPED_TOKEN, true)
+    )
+  );
+
 export {
   ACCOUNT_WITH_FULL_LIQUIDITY,
   ACCOUNT_WITH_SOME_LIQUIDITY,
@@ -97,5 +131,6 @@ export {
   mockGetLiquidityPools,
   mockGetLiquidityProvidedByAccount,
   mockGetLpTokens,
+  mockGetOptimalTrade,
   mockRemoveLiquidity
 };

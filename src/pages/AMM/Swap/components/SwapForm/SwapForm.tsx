@@ -99,6 +99,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
 
       const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
       const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
+      console.log(trade);
       setTrade(trade);
     },
     500,

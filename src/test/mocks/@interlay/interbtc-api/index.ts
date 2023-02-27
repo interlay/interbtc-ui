@@ -41,6 +41,7 @@ import {
   mockGetLiquidityPools,
   mockGetLiquidityProvidedByAccount,
   mockGetLpTokens,
+  mockGetOptimalTrade,
   mockRemoveLiquidity
 } from './parachain/amm';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
@@ -151,7 +152,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getClaimableFarmingRewards: mockGetClaimableFarmingRewards,
     addLiquidity: mockAddLiquidity,
     removeLiquidity: mockRemoveLiquidity,
-    getLpTokens: mockGetLpTokens
+    getLpTokens: mockGetLpTokens,
+    getOptimalTrade: mockGetOptimalTrade
   }
 };
 
