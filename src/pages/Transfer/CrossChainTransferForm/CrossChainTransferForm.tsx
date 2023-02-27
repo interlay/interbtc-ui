@@ -140,9 +140,13 @@ const CrossChainTransferForm = (): JSX.Element => {
         form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
       );
 
-      console.log('from effect', tokens);
+      const mappedTokens = tokens.map((token: any) => {
+        return { ticker: token.ticker, balance: 100, balanceUSD: '100' };
+      });
 
-      setAvailableTokens(tokens);
+      console.log('mappedTokens', mappedTokens);
+      setAvailableTokens(mappedTokens);
+
       form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, tokens[0].ticker);
       form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
     };
