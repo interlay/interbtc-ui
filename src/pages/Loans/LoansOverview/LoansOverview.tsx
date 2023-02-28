@@ -21,16 +21,31 @@ const LoansOverview = (): JSX.Element => {
 
   // ray test touch <<
   React.useEffect(() => {
-    (async () => {
-      if (!accountId) return;
+    try {
+      (async () => {
+        if (!accountId) return;
 
-      const lendPositions = await window.bridge.loans.getLendPositionsOfAccount(accountId);
+        const lendPositions = await window.bridge.loans.getLendPositionsOfAccount(accountId);
 
-      const borrowPositions = await window.bridge.loans.getBorrowPositionsOfAccount(accountId);
+        const borrowPositions = await window.bridge.loans.getBorrowPositionsOfAccount(accountId);
 
-      console.log('ray : ***** lendingPositions => ', lendPositions);
-      console.log('ray : ***** borrowPositions => ', borrowPositions);
-    })();
+        const loanAssets = await window.bridge.loans.getLoanAssets();
+
+        console.log('ray : ***** lendingPositions => ', lendPositions);
+        console.log('ray : ***** borrowPositions => ', borrowPositions);
+        console.log('ray : ***** loanAssets => ', loanAssets);
+
+        const loanCollateralInfo = window.bridge.loans.getLoanCollateralInfo(
+          lendPositions,
+          borrowPositions,
+          loanAssets
+        );
+
+        console.log('ray : ***** loanCollateralInfo => ', loanCollateralInfo);
+      })();
+    } catch (error) {
+      console.log('ray : ***** error => ', error);
+    }
   }, [accountId]);
   // ray test touch >>
 
