@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import { ReactComponent as InformationCircleIcon } from '@/assets/img/hero-icons/information-circle.svg';
 import { Span, Status, theme } from '@/component-library';
 
 type LTVLegendStatus = Exclude<Status, 'success'> | 'info';
@@ -23,10 +22,5 @@ const StyledLabel = styled(Span)`
   font-weight: ${theme.fontWeight.semibold};
 `;
 
-const StyledIcon = styled(InformationCircleIcon)`
-  width: ${theme.text.s};
-  color: ${theme.colors.textPrimary};
-`;
-
-export { StyledIcon, StyledLabel, StyledLegend };
+export { StyledLabel, StyledLegend };
 export type { LTVLegendStatus };

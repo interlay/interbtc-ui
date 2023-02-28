@@ -11,12 +11,14 @@ interface Props {
 
 const InformationTooltip = ({ label, forDisabledAction, className }: Props): JSX.Element => (
   <InterlayTooltip label={label}>
-    <InformationCircleIcon
-      onClick={(event) => {
-        forDisabledAction && event.stopPropagation();
-      }}
-      className={clsx('w-5', 'h-5', { 'pointer-events-auto': forDisabledAction }, className)}
-    />
+    <span>
+      <InformationCircleIcon
+        onClick={(event) => {
+          forDisabledAction && event.stopPropagation();
+        }}
+        className={clsx('w-5', 'h-5', { 'pointer-events-auto': forDisabledAction }, className)}
+      />
+    </span>
   </InterlayTooltip>
 );
 
