@@ -37,10 +37,7 @@ const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | n
       onClose={onClose}
       align='top'
       // Pool modal should not close while user interacts with stacked modal (slippage modal)
-      shouldCloseOnInteractOutside={(el) => {
-        console.log(!ref.current?.contains(el));
-        return !ref.current?.contains(el);
-      }}
+      shouldCloseOnInteractOutside={(el) => !ref.current?.contains(el)}
       {...props}
     >
       <ModalBody noPadding>

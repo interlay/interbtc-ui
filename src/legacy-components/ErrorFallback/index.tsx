@@ -22,8 +22,6 @@ const ErrorFallback = ({ error, resetErrorBoundary }: Props): JSX.Element => {
     message = error.message;
   }
 
-  console.log(message);
-
   return (
     <p className={clsx(getColorShade('red'), 'space-x-1')}>
       <span>Error: {message}.</span>

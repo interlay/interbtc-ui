@@ -88,7 +88,12 @@ const mockRemoveLiquidity = jest.fn();
 
 const mockGetLpTokens = jest.fn().mockResolvedValue([DEFAULT_LP_TOKEN_1, DEFAULT_LP_TOKEN_2]);
 
-const mockGetOutputAmount = jest.fn().mockReturnValue(newMonetaryAmount(0.1, WRAPPED_TOKEN, true));
+const DEFAULT_TRADE_AMOUNT = {
+  INPUT: newMonetaryAmount(1, RELAY_CHAIN_NATIVE_TOKEN, true),
+  OUTPUT: newMonetaryAmount(0.1, WRAPPED_TOKEN, true)
+};
+
+const mockGetOutputAmount = jest.fn().mockReturnValue(DEFAULT_TRADE_AMOUNT.OUTPUT);
 
 const DEFAULT_MULTI_PATH_ELEMENT: MultiPathElementStandard = {
   pair: {
@@ -105,15 +110,12 @@ const DEFAULT_MULTI_PATH_ELEMENT: MultiPathElementStandard = {
   pool: DEFAULT_LIQUIDITY_POOL_2
 };
 
-const mockGetOptimalTrade = jest
-  .fn()
-  .mockReturnValue(
-    new Trade(
-      [DEFAULT_MULTI_PATH_ELEMENT],
-      newMonetaryAmount(1, RELAY_CHAIN_NATIVE_TOKEN, true),
-      newMonetaryAmount(0.1, WRAPPED_TOKEN, true)
-    )
-  );
+const DEFAULT_TRADE = new Trade([DEFAULT_MULTI_PATH_ELEMENT], DEFAULT_TRADE_AMOUNT.INPUT, DEFAULT_TRADE_AMOUNT.OUTPUT);
+jest.spyOn(DEFAULT_TRADE, 'getMinimumOutputAmount').mockReturnValue(DEFAULT_TRADE_AMOUNT.OUTPUT);
+
+const mockGetOptimalTrade = jest.fn().mockReturnValue(DEFAULT_TRADE);
+
+const mockSwap = jest.fn();
 
 export {
   ACCOUNT_WITH_FULL_LIQUIDITY,
@@ -126,11 +128,14 @@ export {
   DEFAULT_LP_TOKEN_2,
   DEFAULT_POOLED_CURRENCIES_1,
   DEFAULT_POOLED_CURRENCIES_2,
+  DEFAULT_TRADE,
+  DEFAULT_TRADE_AMOUNT,
   mockAddLiquidity,
   mockGetClaimableFarmingRewards,
   mockGetLiquidityPools,
   mockGetLiquidityProvidedByAccount,
   mockGetLpTokens,
   mockGetOptimalTrade,
-  mockRemoveLiquidity
+  mockRemoveLiquidity,
+  mockSwap
 };

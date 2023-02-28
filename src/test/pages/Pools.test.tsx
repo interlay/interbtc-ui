@@ -32,12 +32,6 @@ const TABS = {
   WITHDRAW: 'withdraw'
 };
 
-jest.mock('../../parts/Layout', () => {
-  const MockedLayout: React.FC = ({ children }: any) => children;
-  MockedLayout.displayName = 'MockedLayout';
-  return MockedLayout;
-});
-
 // MEMO: skipped including testing slippage
 describe('Pools Page', () => {
   beforeEach(() => {

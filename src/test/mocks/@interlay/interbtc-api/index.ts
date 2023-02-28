@@ -42,7 +42,8 @@ import {
   mockGetLiquidityProvidedByAccount,
   mockGetLpTokens,
   mockGetOptimalTrade,
-  mockRemoveLiquidity
+  mockRemoveLiquidity,
+  mockSwap
 } from './parachain/amm';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import {
@@ -153,7 +154,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     addLiquidity: mockAddLiquidity,
     removeLiquidity: mockRemoveLiquidity,
     getLpTokens: mockGetLpTokens,
-    getOptimalTrade: mockGetOptimalTrade
+    getOptimalTrade: mockGetOptimalTrade,
+    swap: mockSwap
   }
 };
 
