@@ -17,14 +17,8 @@ const useGetLoanAssets = (): LoanAssetsData => {
   const { data, error } = useQuery({
     queryKey,
     queryFn: getLoanAssets,
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL,
-    // ray test touch <<
-    enabled: false
-    // ray test touch >>
+    refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
-  // ray test touch <<
-  // console.log('ray : ***** error => ', error);
-  // ray test touch >>
   useErrorHandler(error);
 
   const queryClient = useQueryClient();

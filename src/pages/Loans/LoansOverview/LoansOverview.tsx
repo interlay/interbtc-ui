@@ -4,23 +4,16 @@ import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-// ray test touch <<
-// import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
-// ray test touch >>
+import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-import {
-  LoansInsights,
-  // ray test touch <<
-  // LoansTables,
-  // ray test touch >>
-  LTVSection
-} from './components';
+import { LoansInsights, LoansTables, LTVSection } from './components';
 
 const LoansOverview = (): JSX.Element => {
   const accountId = useAccountId();
   // ray test touch <<
-  // const { data: assets } = useGetLoanAssets();
+  const { data: assets } = useGetLoanAssets();
+  console.log('ray : ***** assets => ', assets);
   // ray test touch >>
   const {
     data: { borrowPositions, lendPositions, hasCollateral, statistics }
@@ -43,12 +36,7 @@ const LoansOverview = (): JSX.Element => {
 
   const isLoadingPositions = accountId !== undefined && (lendPositions === undefined || borrowPositions === undefined);
 
-  if (
-    // ray test touch <<
-    // assets === undefined ||
-    // ray test touch >>
-    isLoadingPositions
-  ) {
+  if (assets === undefined || isLoadingPositions) {
     return <FullLoadingSpinner />;
   }
 
@@ -59,9 +47,7 @@ const LoansOverview = (): JSX.Element => {
           <LoansInsights statistics={statistics} />
           {hasCollateral && <LTVSection statistics={statistics} />}
         </Flex>
-        {/* ray test touch << */}
-        {/* <LoansTables borrowPositions={borrowPositions || []} lendPositions={lendPositions || []} assets={assets} /> */}
-        {/* ray test touch >> */}
+        <LoansTables borrowPositions={borrowPositions || []} lendPositions={lendPositions || []} assets={assets} />
       </Flex>
     </MainContainer>
   );
