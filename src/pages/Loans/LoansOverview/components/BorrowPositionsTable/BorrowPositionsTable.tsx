@@ -41,9 +41,7 @@ const BorrowPositionsTable = ({
   disabledKeys
 }: BorrowPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
-  // ray test touch <
   const prices = useGetPrices();
-  // ray test touch >
 
   const rows: BorrowPositionTableRow[] = useMemo(
     () =>

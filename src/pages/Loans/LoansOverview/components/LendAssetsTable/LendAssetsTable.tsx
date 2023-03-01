@@ -42,9 +42,7 @@ type LendAssetsTableProps = {
 
 const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
-  // ray test touch <
   const prices = useGetPrices();
-  // ray test touch >
   const { data: balances } = useGetBalances();
 
   const rows: LendAssetsTableRow[] = useMemo(

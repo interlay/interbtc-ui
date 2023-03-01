@@ -17,12 +17,12 @@ const LoansOverview = (): JSX.Element => {
     data: { borrowPositions, lendPositions, hasCollateral }
   } = useGetAccountPositions();
 
-  // ray test touch <<
   const {
     data: { loanCollateralInfo, statistics }
   } = useLoanInfo();
+
   if (loanCollateralInfo) {
-    console.log('ray : ***** loanCollateralInfo => ', loanCollateralInfo);
+    console.log('loanCollateralInfo => ', loanCollateralInfo);
     const {
       // borrowLimitBtc,
       ltv,
@@ -30,10 +30,9 @@ const LoansOverview = (): JSX.Element => {
       // totalCollateralBtc,
       // totalLentBtc,
     } = loanCollateralInfo;
-    console.log('ray : ***** ltv.toString() => ', ltv.toString());
-    console.log('ray : ***** totalBorrowedBtc.toString() => ', totalBorrowedBtc.toString());
+    console.log('ltv.toString() => ', ltv.toString());
+    console.log('totalBorrowedBtc.toString() => ', totalBorrowedBtc.toString());
   }
-  // ray test touch >>
 
   const isLoadingPositions = accountId !== undefined && (lendPositions === undefined || borrowPositions === undefined);
 

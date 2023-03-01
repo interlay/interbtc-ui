@@ -32,16 +32,10 @@ const BorrowLimit = ({
   const { t } = useTranslation();
 
   const { data: currentBorrowLimit, getBorrowLimitUSD } = useAccountBorrowLimit();
-  // ray test touch <<
   const { data: currentLTV, getLTV } = useGetLTV();
-  console.log('ray : ***** currentLTV => ', currentLTV);
-  console.log('ray : ***** currentBorrowLimit?.toString() => ', currentBorrowLimit?.toString());
-  // ray test touch >>
 
-  // ray test touch <<
   // TODO: update with `calculateBorrowLimitBtcChange`
   const newBorrowLimit = getBorrowLimitUSD({ type: loanAction, amount: actionAmount, asset });
-  // ray test touch >>
   const newLTV = getLTV({ type: loanAction, amount: actionAmount, asset });
 
   if (!currentLTV || !newLTV || !currentBorrowLimit || !newBorrowLimit) {

@@ -26,11 +26,9 @@ const getPositionsSumOfFieldsInUSD = <T extends LendPosition | BorrowPosition>(
   positions.reduce((totalValue: Big, position: T) => {
     const price = getTokenPrice(prices, position.currency.ticker)?.usd;
 
-    // ray test touch <<
     if (price === undefined) {
       console.error(`useGetAccountCollateralization: No exchange rate found for currency: ${position.currency.name}`);
     }
-    // ray test touch >>
 
     const positionUSDValue = convertMonetaryAmountToValueInUSD(position[field as 'amount'], price);
     return positionUSDValue === null ? totalValue : totalValue.add(positionUSDValue);

@@ -23,11 +23,9 @@ interface UseAccountBorrowLimit {
 
 const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
   const prices = useGetPrices();
-  // ray test touch <<
   const {
     data: { statistics }
   } = useLoanInfo();
-  // ray test touch >>
   const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 
   /**

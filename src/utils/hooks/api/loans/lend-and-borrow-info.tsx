@@ -71,7 +71,6 @@ const useGetBorrowPositionsOfAccount = (): {
   return { data, refetch };
 };
 
-// ray test touch <<
 interface AccountPositionsStatisticsData {
   supplyAmountUSD: Big;
   borrowAmountUSD: Big;
@@ -187,7 +186,6 @@ const getAccountPositionsStats = (
     netAPY
   };
 };
-// ray test touch >>
 
 const useLoanInfo = (): {
   data: {
@@ -202,7 +200,6 @@ const useLoanInfo = (): {
 
   const { data: loanAssets, refetch: loanAssetsRefetch } = useGetLoanAssets();
 
-  // ray test touch <<
   const prices = useGetPrices();
 
   const { data: subsidyRewards, refetch: subsidyRewardsRefetch } = useGetAccountSubsidyRewards();
@@ -217,7 +214,6 @@ const useLoanInfo = (): {
     return getAccountPositionsStats(loanAssets, lendPositions, borrowPositions, subsidyRewards, prices);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lendPositions, borrowPositions, prices, subsidyRewards]);
-  // ray test touch >>
 
   const loanCollateralInfo =
     !lendPositions || !borrowPositions || !loanAssets

@@ -66,9 +66,7 @@ type CollateralModalProps = Props & InheritAttrs;
 const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
   const { refetch } = useLoanInfo();
-  // ray test touch <<
   const { getLTV } = useGetLTV();
-  // ray test touch >>
   const prices = useGetPrices();
 
   const handleSuccess = () => {

@@ -89,11 +89,9 @@ const useLoanFormData = (
 ): UseLoanFormData => {
   const { getBalance, getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-  // ray test touch <<
   const {
     data: { statistics }
   } = useLoanInfo();
-  // ray test touch >>
   const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
