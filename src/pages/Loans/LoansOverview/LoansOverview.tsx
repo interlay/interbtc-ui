@@ -3,13 +3,7 @@ import * as React from 'react';
 import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
-// ray test touch <<
-import {
-  useGetBorrowPositionsOfAccount,
-  useGetLendPositionsOfAccount
-} from '@/utils/hooks/api/loans/lend-and-borrow-info';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-// ray test touch >>
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -17,22 +11,14 @@ import { LoansInsights, LoansTables, LTVSection } from './components';
 
 const LoansOverview = (): JSX.Element => {
   const accountId = useAccountId();
-  // ray test touch <<
+
   const { data: assets } = useGetLoanAssets();
-  console.log('ray : ***** assets => ', assets);
-  // ray test touch >>
+
   const {
     data: { borrowPositions, lendPositions, hasCollateral, statistics }
   } = useGetAccountPositions();
+
   // ray test touch <<
-  console.log('ray : ***** borrowPositions => ', borrowPositions);
-  console.log('ray : ***** lendPositions => ', lendPositions);
-  const { data: lendPositionsOfAccount } = useGetLendPositionsOfAccount();
-  console.log('ray : ***** lendPositionsOfAccount => ', lendPositionsOfAccount);
-
-  const { data: borrowPositionsOfAccount } = useGetBorrowPositionsOfAccount();
-  console.log('ray : ***** borrowPositionsOfAccount => ', borrowPositionsOfAccount);
-
   React.useEffect(() => {
     try {
       (async () => {

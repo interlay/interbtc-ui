@@ -1,4 +1,3 @@
-// ray test touch <<
 import { BorrowPosition, LendPosition } from '@interlay/interbtc-api';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -55,4 +54,3 @@ const useGetBorrowPositionsOfAccount = (): {
 };
 
 export { useGetBorrowPositionsOfAccount, useGetLendPositionsOfAccount };
-// ray test touch >>

@@ -156,16 +156,9 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
   // ray test touch >
   const { data: assets } = useGetLoanAssets();
 
-  // ray test touch <<
-  // const { data: positions, error: positionsError, refetch: refetchPositions } = useQuery({
-  //   queryKey: ['positions', accountId],
-  //   queryFn: () => accountId && getAccountPositionsQuery(accountId),
-  //   enabled: !!accountId,
-  //   refetchInterval: BLOCKTIME_REFETCH_INTERVAL
-  // });
   const { data: lendPositions, refetch: lendPositionsRefetch } = useGetLendPositionsOfAccount();
+
   const { data: borrowPositions, refetch: borrowPositionsRefetch } = useGetBorrowPositionsOfAccount();
-  // ray test touch >>
 
   const { data: subsidyRewards } = useGetAccountSubsidyRewards();
 
