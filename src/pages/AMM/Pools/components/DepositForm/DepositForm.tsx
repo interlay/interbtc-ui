@@ -56,9 +56,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
   const accountId = useAccountId();
   const { t } = useTranslation();
   const { getAvailableBalance, getBalance } = useGetBalances();
-  // ray test touch <
   const prices = useGetPrices();
-  // ray test touch >
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 

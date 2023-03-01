@@ -1,4 +1,3 @@
-// ray test touch <
 import { CurrencyExt, ForeignAsset } from '@interlay/interbtc-api';
 import { Bitcoin } from '@interlay/monetary-js';
 import { useEffect } from 'react';
@@ -88,4 +87,3 @@ const useGetPrices = (): Prices | undefined => {
 
 export { useGetPrices };
 export type { Price, Prices };
-// ray test touch >

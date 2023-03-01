@@ -85,12 +85,12 @@ interface UserGetLTV {
 }
 
 const useGetLTV = (): UserGetLTV => {
-  // ray test touch <<
   const prices = useGetPrices();
-  // ray test touch >>
+  // ray test touch <<
   const {
     data: { statistics }
   } = useGetAccountPositions();
+  // ray test touch >>
   const { borrowAmountUSD, collateralizedAmountUSD, collateralAmountUSD, liquidationAmountUSD } = statistics || {};
   // ray test touch <<
   // console.log('ray : ***** borrowAmountUSD?.toString() => ', borrowAmountUSD?.toString());

@@ -1,13 +1,11 @@
 import { BLOCK_TIME } from '@/config/parachain';
 
-// ray test touch <
 const PRICES_API = Object.freeze({
   URL: 'https://api.coingecko.com/api/v3/simple/price?vs_currencies=usd',
   QUERY_PARAMETERS: {
     ASSETS_IDS: 'ids'
   }
 });
-// ray test touch >
 
 const COINGECKO_IDS = ['bitcoin', 'kintsugi', 'kusama', 'polkadot', 'interlay'] as const;
 

@@ -20,9 +20,7 @@ type PoolsInsightsProps = {
 
 const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps): JSX.Element => {
   const { t } = useTranslation();
-  // ray test touch <
   const prices = useGetPrices();
-  // ray test touch >
 
   const accountPositions = accountPoolsData?.positions;
 

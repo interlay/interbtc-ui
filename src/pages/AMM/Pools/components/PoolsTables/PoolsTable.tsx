@@ -37,9 +37,7 @@ type PoolsTableProps = {
 
 const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Element => {
   const { t } = useTranslation();
-  // ray test touch <
   const prices = useGetPrices();
-  // ray test touch >
 
   const isAccountPools = variant === 'account-pools';
 

@@ -21,7 +21,6 @@ const ZERO_GOVERNANCE_TOKEN_AMOUNT = newMonetaryAmount(0, GOVERNANCE_TOKEN, true
 const NATIVE_CURRENCIES: Array<CurrencyExt> =
   process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT ? [Polkadot, InterBtc, Interlay] : [KBtc, Kintsugi, Kusama];
 
-// ray test touch <
 const COINGECKO_ID_BY_CURRENCY_TICKER: Record<string, typeof COINGECKO_IDS[number]> = Object.freeze({
   [Bitcoin.ticker]: 'bitcoin',
   [Kintsugi.ticker]: 'kintsugi',
@@ -31,7 +30,6 @@ const COINGECKO_ID_BY_CURRENCY_TICKER: Record<string, typeof COINGECKO_IDS[numbe
   [Interlay.ticker]: 'interlay',
   [InterBtc.ticker]: 'bitcoin'
 });
-// ray test touch >
 
 export {
   COINGECKO_ID_BY_CURRENCY_TICKER,

@@ -121,7 +121,7 @@ const getAccountPositionsStats = (
   const collateralizedAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositions, prices);
   const earnedDeptAmountUSD = getPositionsSumOfFieldsInUSD('accumulatedDebt', borrowPositions, prices);
 
-  // TODO: This is temporary, atleast until earned interest
+  // TODO: This is temporary, at least until earned interest
   // is moved into squid.
   // const totalEarnedRewardsUSDValue =
   //   convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) || 0;
@@ -151,9 +151,7 @@ type UseGetAccountPositions = {
 };
 
 const useGetAccountPositions = (): UseGetAccountPositions => {
-  // ray test touch <
   const prices = useGetPrices();
-  // ray test touch >
   const { data: assets } = useGetLoanAssets();
 
   const { data: lendPositions, refetch: lendPositionsRefetch } = useGetLendPositionsOfAccount();
@@ -162,7 +160,8 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
 
   const { data: subsidyRewards } = useGetAccountSubsidyRewards();
 
-  // MEMO: we dont need assets as a dependency, since we only use the collateral threshold and
+  // ray test touch <<
+  // MEMO: we don't need assets as a dependency, since we only use the collateral threshold and
   // it's value is very unlikely to change
   const statistics = useMemo(() => {
     if (!assets || !lendPositions || !borrowPositions || !subsidyRewards || !prices) {
@@ -172,6 +171,7 @@ const useGetAccountPositions = (): UseGetAccountPositions => {
     return getAccountPositionsStats(assets, lendPositions, borrowPositions, subsidyRewards, prices);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lendPositions, borrowPositions, prices, subsidyRewards]);
+  // ray test touch >>
 
   return {
     data: {
