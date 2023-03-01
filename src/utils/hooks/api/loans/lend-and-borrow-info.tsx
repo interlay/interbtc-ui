@@ -54,7 +54,6 @@ const useGetBorrowPositionsOfAccount = (): {
   return { data, refetch };
 };
 
-// ray test touch <<
 const useGetLoanCollateralInfo = (): {
   data: LoanCollateralInfo | undefined;
   refetch: () => void;
@@ -79,6 +78,5 @@ const useGetLoanCollateralInfo = (): {
     }
   };
 };
-// ray test touch >>
 
 export { useGetBorrowPositionsOfAccount, useGetLendPositionsOfAccount, useGetLoanCollateralInfo };

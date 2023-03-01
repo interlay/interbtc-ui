@@ -1,5 +1,3 @@
-import * as React from 'react';
-
 import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
@@ -22,34 +20,6 @@ const LoansOverview = (): JSX.Element => {
   // ray test touch <<
   const { data: loanCollateralInfo } = useGetLoanCollateralInfo();
   console.log('ray : ***** loanCollateralInfo => ', loanCollateralInfo);
-
-  React.useEffect(() => {
-    try {
-      (async () => {
-        if (!accountId) return;
-
-        const lendPositions = await window.bridge.loans.getLendPositionsOfAccount(accountId);
-
-        const borrowPositions = await window.bridge.loans.getBorrowPositionsOfAccount(accountId);
-
-        const loanAssets = await window.bridge.loans.getLoanAssets();
-
-        console.log('ray : ***** lendingPositions => ', lendPositions);
-        console.log('ray : ***** borrowPositions => ', borrowPositions);
-        console.log('ray : ***** loanAssets => ', loanAssets);
-
-        const loanCollateralInfo = window.bridge.loans.getLoanCollateralInfo(
-          lendPositions,
-          borrowPositions,
-          loanAssets
-        );
-
-        console.log('ray : ***** loanCollateralInfo => ', loanCollateralInfo);
-      })();
-    } catch (error) {
-      console.log('ray : ***** error => ', error);
-    }
-  }, [accountId]);
   // ray test touch >>
 
   const isLoadingPositions = accountId !== undefined && (lendPositions === undefined || borrowPositions === undefined);
