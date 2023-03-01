@@ -1,8 +1,9 @@
-import { BorrowPosition, LendPosition } from '@interlay/interbtc-api';
+import { BorrowPosition, LendPosition, LoanCollateralInfo } from '@interlay/interbtc-api';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
+import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 const useGetLendPositionsOfAccount = (): {
@@ -53,4 +54,31 @@ const useGetBorrowPositionsOfAccount = (): {
   return { data, refetch };
 };
 
-export { useGetBorrowPositionsOfAccount, useGetLendPositionsOfAccount };
+// ray test touch <<
+const useGetLoanCollateralInfo = (): {
+  data: LoanCollateralInfo | undefined;
+  refetch: () => void;
+} => {
+  const { data: lendPositions, refetch: lendPositionsRefetch } = useGetLendPositionsOfAccount();
+
+  const { data: borrowPositions, refetch: borrowPositionsRefetch } = useGetBorrowPositionsOfAccount();
+
+  const { data: loanAssets, refetch: loanAssetsRefetch } = useGetLoanAssets();
+
+  const loanCollateralInfo =
+    !lendPositions || !borrowPositions || !loanAssets
+      ? undefined
+      : window.bridge.loans.getLoanCollateralInfo(lendPositions, borrowPositions, loanAssets);
+
+  return {
+    data: loanCollateralInfo,
+    refetch: () => {
+      lendPositionsRefetch();
+      borrowPositionsRefetch();
+      loanAssetsRefetch();
+    }
+  };
+};
+// ray test touch >>
+
+export { useGetBorrowPositionsOfAccount, useGetLendPositionsOfAccount, useGetLoanCollateralInfo };
