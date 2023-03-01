@@ -32,11 +32,11 @@ describe('Swap Page', () => {
         exact: true
       })
     ).toBeDisabled();
-    expect(screen.getByRole('textbox', { name: /to field token/i })).toHaveValue('');
+    expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue('');
 
     /* START - Select Output token */
 
-    userEvent.click(screen.getByRole('button', { name: /to field token/i }));
+    userEvent.click(screen.getByRole('button', { name: /choose token for to field/i }));
 
     let dialog = within(screen.getByRole('dialog', { name: /select token/i }));
 
@@ -44,8 +44,10 @@ describe('Swap Page', () => {
 
     await waitFor(() => {
       // Fields should switch tokens
-      expect(screen.getByRole('textbox', { name: /from field token/i })).toHaveValue('');
-      expect(screen.getByRole('textbox', { name: /to field token/i })).toHaveValue(RELAY_CHAIN_NATIVE_TOKEN.ticker);
+      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue('');
+      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue(
+        RELAY_CHAIN_NATIVE_TOKEN.ticker
+      );
       // Submit button should be disabled
       expect(screen.getByRole('button', { name: /select token/i })).toBeDisabled();
     });
@@ -54,14 +56,14 @@ describe('Swap Page', () => {
 
     /* START - Select Input token */
 
-    userEvent.click(screen.getByRole('button', { name: /from field token/i }));
+    userEvent.click(screen.getByRole('button', { name: /choose token for from field/i }));
 
     dialog = within(screen.getByRole('dialog', { name: /select token/i }));
 
     userEvent.click(dialog.getByRole('row', { name: WRAPPED_TOKEN.ticker }));
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: /from field token/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
     });
 
     /* END - Select Input token */
@@ -71,8 +73,10 @@ describe('Swap Page', () => {
     userEvent.click(screen.getByRole('button', { name: /switch tokens/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: /from field token/i })).toHaveValue(RELAY_CHAIN_NATIVE_TOKEN.ticker);
-      expect(screen.getByRole('textbox', { name: /to field token/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(
+        RELAY_CHAIN_NATIVE_TOKEN.ticker
+      );
+      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
 
       // Submit button should be disabled
       expect(

@@ -40,7 +40,7 @@ WithCurrencySelect.args = {
   isDisabled: false,
   balanceLabel: 'Balance',
   placeholder: '0.00',
-  'aria-label': 'From',
+  label: 'From',
   tokens: [
     { balance: 200, ticker: 'KSM', balanceUSD: '$200' },
     { balance: 200, ticker: 'BTC', balanceUSD: '$200' },
