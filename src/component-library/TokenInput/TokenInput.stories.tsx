@@ -11,7 +11,6 @@ const Template: Story<TokenInputProps> = (args) => {
       {...args}
       value={value}
       onChange={(e) => setValue(e.target.value)}
-      aria-label='token field'
       valueUSD={isNaN(value as any) ? 0 : Number(value) * 10}
     />
   );
