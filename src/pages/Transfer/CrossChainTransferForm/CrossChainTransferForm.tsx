@@ -36,9 +36,21 @@ import {
   StyledSourceChainSelect
 } from './CrossChainTransferForm.styles';
 
+// GET SELECTED TOKENS
+// When origin chain changes
+// When destination chain changes
+// GET TOKEN BALANCE
+// When origin chain changes
+// When destination chain changes
+// When originating account changes
+// When destination accountchanges
+
 const CrossChainTransferForm = (): JSX.Element => {
   const [originatingChains, setOriginatingChains] = useState<Chains>([]);
+  const [originatingChain, setOriginatingChain] = useState<ChainName>();
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
+  const [destinationChain, setDestinationChain] = useState<ChainName>();
+  const [destinationAccount, setDestinationAccount] = useState<string>('');
 
   const { getBalance } = useGetBalances();
   const prices = useGetPrices();
@@ -57,14 +69,26 @@ const CrossChainTransferForm = (): JSX.Element => {
     const destinationChains = getDestinationChains(e.target.value as ChainName);
 
     setDestinationChains(destinationChains);
+    setOriginatingChain(e.target.value as ChainName);
 
     form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, e.target.value);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
   };
 
   const handleDestinationChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    console.log(e.target.value);
+    setDestinationChain(e.target.value as ChainName);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value);
   };
+
+  const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    setDestinationAccount(e.target.value);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
+  };
+
+  useEffect(() => {
+    console.log(accountId?.toString(), destinationAccount, originatingChain, destinationChain);
+    console.log('update balances');
+  }, [accountId, destinationAccount, originatingChain, destinationChain]);
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
   const balance = getBalance(GOVERNANCE_TOKEN.ticker)?.transferable;
@@ -158,7 +182,14 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={balance?.toString() || 0}
             humanBalance={balance?.toHuman() || 0}
             valueUSD={valueUSD}
-            tokens={[]}
+            ticker={'KSM'}
+            tokens={[
+              {
+                balance: 0,
+                balanceUSD: '0',
+                ticker: 'KSM'
+              }
+            ]}
             selectProps={form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false)}
             {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
           />
@@ -166,7 +197,9 @@ const CrossChainTransferForm = (): JSX.Element => {
         <AccountSelect
           label='Destination'
           accounts={accounts}
-          {...form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, false)}
+          {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, false), {
+            onChange: handleDestinationAccountChange
+          })}
         />
         <StyledDl direction='column' gap='spacing2'>
           <DlGroup justifyContent='space-between'>
