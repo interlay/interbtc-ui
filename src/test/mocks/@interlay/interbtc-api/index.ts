@@ -37,6 +37,7 @@ import {
 } from './parachain';
 import {
   mockAddLiquidity,
+  mockClaimFarmingRewards,
   mockGetClaimableFarmingRewards,
   mockGetLiquidityPools,
   mockGetLiquidityProvidedByAccount,
@@ -155,7 +156,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     removeLiquidity: mockRemoveLiquidity,
     getLpTokens: mockGetLpTokens,
     getOptimalTrade: mockGetOptimalTrade,
-    swap: mockSwap
+    swap: mockSwap,
+    claimFarmingRewards: mockClaimFarmingRewards
   }
 };
 

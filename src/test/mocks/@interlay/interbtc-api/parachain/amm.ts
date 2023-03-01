@@ -80,7 +80,13 @@ const mockGetLiquidityPools = jest.fn().mockResolvedValue(DEFAULT_LIQUIDITY_POOL
 
 const mockGetLiquidityProvidedByAccount = jest.fn().mockResolvedValue(DEFAULT_ACCOUNT_LIQUIDITY);
 
-const mockGetClaimableFarmingRewards = jest.fn().mockResolvedValue([]);
+const DEFAULT_CLAIMABLE_REWARDS = new Map();
+
+DEFAULT_CLAIMABLE_REWARDS.set(DEFAULT_LP_TOKEN_1, [newMonetaryAmount(1, WRAPPED_TOKEN, true)]);
+
+const mockGetClaimableFarmingRewards = jest.fn().mockResolvedValue(DEFAULT_CLAIMABLE_REWARDS);
+
+const mockClaimFarmingRewards = jest.fn();
 
 const mockAddLiquidity = jest.fn();
 
@@ -121,6 +127,7 @@ export {
   ACCOUNT_WITH_FULL_LIQUIDITY,
   ACCOUNT_WITH_SOME_LIQUIDITY,
   DEFAULT_ACCOUNT_LIQUIDITY,
+  DEFAULT_CLAIMABLE_REWARDS,
   DEFAULT_LIQUIDITY_POOL_1,
   DEFAULT_LIQUIDITY_POOL_2,
   DEFAULT_LIQUIDITY_POOLS,
@@ -131,6 +138,7 @@ export {
   DEFAULT_TRADE,
   DEFAULT_TRADE_AMOUNT,
   mockAddLiquidity,
+  mockClaimFarmingRewards,
   mockGetClaimableFarmingRewards,
   mockGetLiquidityPools,
   mockGetLiquidityProvidedByAccount,

@@ -7,12 +7,15 @@ import {
   ACCOUNT_WITH_FULL_LIQUIDITY,
   ACCOUNT_WITH_SOME_LIQUIDITY,
   DEFAULT_ACCOUNT_LIQUIDITY,
+  DEFAULT_CLAIMABLE_REWARDS,
   DEFAULT_LIQUIDITY_POOL_1,
   DEFAULT_LIQUIDITY_POOL_2,
   DEFAULT_LP_TOKEN_1,
   DEFAULT_LP_TOKEN_2,
   DEFAULT_POOLED_CURRENCIES_1,
   mockAddLiquidity,
+  mockClaimFarmingRewards,
+  mockGetClaimableFarmingRewards,
   mockGetLiquidityProvidedByAccount,
   mockRemoveLiquidity
 } from '../mocks/@interlay/interbtc-api/parachain/amm';
@@ -131,8 +134,6 @@ describe('Pools Page', () => {
 
     jest.spyOn(DEFAULT_LIQUIDITY_POOL_2, 'getLiquidityWithdrawalPooledCurrencyAmounts').mockReturnValue([]);
 
-    // const [DEFAULT_CURRENCY_1, DEFAULT_CURRENCY_2] = DEFAULT_POOLED_CURRENCIES_1;
-
     await render(<App />, { path });
 
     const tabPanel = await withinModalTabPanel(TABLES.ACCOUNT_POOLS, DEFAULT_LP_TOKEN_2.ticker, TABS.WITHDRAW, true);
@@ -161,5 +162,26 @@ describe('Pools Page', () => {
       DEFAULT_DEADLINE_BLOCK_NUMBER,
       DEFAULT_ACCOUNT_ADDRESS
     );
+  });
+
+  it('should be able to claim rewards', async () => {
+    let app = await render(<App />, { path });
+
+    userEvent.click(screen.getByRole('button', { name: /claim/i }));
+
+    await waitFor(() => {
+      expect(mockClaimFarmingRewards).toHaveBeenCalledWith(DEFAULT_CLAIMABLE_REWARDS);
+      expect(mockClaimFarmingRewards).toHaveBeenCalledTimes(1);
+    });
+
+    app.unmount();
+
+    mockGetClaimableFarmingRewards.mockReturnValue(new Map());
+
+    app = await render(<App />, { path });
+
+    expect(screen.queryByRole('button', { name: /claim/i })).not.toBeInTheDocument();
+
+    mockGetClaimableFarmingRewards.mockReturnValue(DEFAULT_CLAIMABLE_REWARDS);
   });
 });
