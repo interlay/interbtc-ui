@@ -5,7 +5,7 @@ import Big from 'big.js';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { BorrowAction, LendAction, LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useLoanInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -92,7 +92,7 @@ const useLoanFormData = (
   // ray test touch <<
   const {
     data: { statistics }
-  } = useGetAccountPositions();
+  } = useLoanInfo();
   // ray test touch >>
   const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 

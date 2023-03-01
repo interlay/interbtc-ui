@@ -6,7 +6,7 @@ import { useCallback } from 'react';
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useLoanInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateThresholdAmountUSD } from '../utils/math';
@@ -26,7 +26,7 @@ const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
   // ray test touch <<
   const {
     data: { statistics }
-  } = useGetAccountPositions();
+  } = useLoanInfo();
   // ray test touch >>
   const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 

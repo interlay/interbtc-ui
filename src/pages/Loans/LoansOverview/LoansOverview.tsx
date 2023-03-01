@@ -1,7 +1,7 @@
 import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
-import { useGetLoanCollateralInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
+import { useLoanInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import useAccountId from '@/utils/hooks/use-account-id';
@@ -14,11 +14,13 @@ const LoansOverview = (): JSX.Element => {
   const { data: assets } = useGetLoanAssets();
 
   const {
-    data: { borrowPositions, lendPositions, hasCollateral, statistics }
+    data: { borrowPositions, lendPositions, hasCollateral }
   } = useGetAccountPositions();
 
   // ray test touch <<
-  const { data: loanCollateralInfo } = useGetLoanCollateralInfo();
+  const {
+    data: { loanCollateralInfo, statistics }
+  } = useLoanInfo();
   if (loanCollateralInfo) {
     console.log('ray : ***** loanCollateralInfo => ', loanCollateralInfo);
     const {

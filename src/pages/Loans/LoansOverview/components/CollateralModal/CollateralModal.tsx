@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 
 import { CTA, Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useLoanInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
@@ -65,7 +65,7 @@ type CollateralModalProps = Props & InheritAttrs;
 
 const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
-  const { refetch } = useGetAccountPositions();
+  const { refetch } = useLoanInfo();
   // ray test touch <<
   const { getLTV } = useGetLTV();
   // ray test touch >>

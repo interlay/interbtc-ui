@@ -7,7 +7,8 @@ import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { MeterRanges, Status } from '@/component-library';
 import { LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { PositionsThresholdsData, useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useLoanInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
+import { PositionsThresholdsData } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateThresholdAmountUSD } from '../utils/math';
@@ -89,7 +90,7 @@ const useGetLTV = (): UserGetLTV => {
   // ray test touch <<
   const {
     data: { statistics }
-  } = useGetAccountPositions();
+  } = useLoanInfo();
   // ray test touch >>
   const { borrowAmountUSD, collateralizedAmountUSD, collateralAmountUSD, liquidationAmountUSD } = statistics || {};
   // ray test touch <<
