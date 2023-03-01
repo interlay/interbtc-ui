@@ -24,8 +24,9 @@ const LoansOverview = (): JSX.Element => {
   const {
     data: { borrowPositions, lendPositions, hasCollateral, statistics }
   } = useGetAccountPositions();
-
   // ray test touch <<
+  console.log('ray : ***** borrowPositions => ', borrowPositions);
+  console.log('ray : ***** lendPositions => ', lendPositions);
   const { data: lendPositionsOfAccount } = useGetLendPositionsOfAccount();
   console.log('ray : ***** lendPositionsOfAccount => ', lendPositionsOfAccount);
 

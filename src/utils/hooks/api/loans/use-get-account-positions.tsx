@@ -1,17 +1,16 @@
 import { BorrowPosition, CurrencyExt, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
 import Big from 'big.js';
 import { useMemo } from 'react';
-import { useErrorHandler } from 'react-error-boundary';
-import { useQuery } from 'react-query';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { getSubsidyRewardApy } from '@/pages/Loans/LoansOverview/utils/get-subsidy-rewards-apy';
-import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import {
+  useGetBorrowPositionsOfAccount,
+  useGetLendPositionsOfAccount
+} from '@/utils/hooks/api/loans/lend-and-borrow-info';
 
-import useAccountId from '../../use-account-id';
 import { Prices, useGetPrices } from '../use-get-prices';
 import { useGetAccountSubsidyRewards } from './use-get-account-subsidy-rewards';
 import { useGetLoanAssets } from './use-get-loan-assets';
@@ -21,24 +20,6 @@ interface AccountPositionsData {
   lendPositions: LendPosition[];
   borrowPositions: BorrowPosition[];
 }
-
-const getAccountLendPositions = (accountId: AccountId): Promise<Array<LendPosition>> =>
-  window.bridge.loans.getLendPositionsOfAccount(accountId);
-
-const getAccountBorrowPositions = (accountId: AccountId): Promise<Array<BorrowPosition>> =>
-  window.bridge.loans.getBorrowPositionsOfAccount(accountId);
-
-const getAccountPositionsQuery = async (accountId: AccountId): Promise<AccountPositionsData> => {
-  const [lendPositions, borrowPositions] = await Promise.all([
-    getAccountLendPositions(accountId),
-    getAccountBorrowPositions(accountId)
-  ]);
-
-  return {
-    borrowPositions,
-    lendPositions
-  };
-};
 
 interface PositionsThresholdsData {
   collateral: Big;
@@ -170,43 +151,46 @@ type UseGetAccountPositions = {
 };
 
 const useGetAccountPositions = (): UseGetAccountPositions => {
-  const accountId = useAccountId();
-
   // ray test touch <
   const prices = useGetPrices();
   // ray test touch >
   const { data: assets } = useGetLoanAssets();
 
-  const { data: positions, error: positionsError, refetch: refetchPositions } = useQuery({
-    queryKey: ['positions', accountId],
-    queryFn: () => accountId && getAccountPositionsQuery(accountId),
-    enabled: !!accountId,
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL
-  });
+  // ray test touch <<
+  // const { data: positions, error: positionsError, refetch: refetchPositions } = useQuery({
+  //   queryKey: ['positions', accountId],
+  //   queryFn: () => accountId && getAccountPositionsQuery(accountId),
+  //   enabled: !!accountId,
+  //   refetchInterval: BLOCKTIME_REFETCH_INTERVAL
+  // });
+  const { data: lendPositions, refetch: lendPositionsRefetch } = useGetLendPositionsOfAccount();
+  const { data: borrowPositions, refetch: borrowPositionsRefetch } = useGetBorrowPositionsOfAccount();
+  // ray test touch >>
 
   const { data: subsidyRewards } = useGetAccountSubsidyRewards();
 
   // MEMO: we dont need assets as a dependency, since we only use the collateral threshold and
   // it's value is very unlikely to change
   const statistics = useMemo(() => {
-    if (!assets || !positions || !subsidyRewards || !prices) {
+    if (!assets || !lendPositions || !borrowPositions || !subsidyRewards || !prices) {
       return undefined;
     }
 
-    return getAccountPositionsStats(assets, positions.lendPositions, positions.borrowPositions, subsidyRewards, prices);
+    return getAccountPositionsStats(assets, lendPositions, borrowPositions, subsidyRewards, prices);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positions, prices, subsidyRewards]);
-
-  useErrorHandler(positionsError);
+  }, [lendPositions, borrowPositions, prices, subsidyRewards]);
 
   return {
     data: {
-      borrowPositions: positions?.borrowPositions,
-      lendPositions: positions?.lendPositions,
-      hasCollateral: !!positions?.lendPositions.find((position) => position.isCollateral),
+      borrowPositions: borrowPositions,
+      lendPositions: lendPositions,
+      hasCollateral: !!lendPositions?.find((position) => position.isCollateral),
       statistics
     },
-    refetch: refetchPositions
+    refetch: () => {
+      lendPositionsRefetch();
+      borrowPositionsRefetch();
+    }
   };
 };
 
