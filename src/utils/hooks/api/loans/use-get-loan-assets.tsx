@@ -12,13 +12,12 @@ interface LoanAssetsData {
 const getLoanAssets = (): Promise<TickerToData<LoanAsset>> => window.bridge.loans.getLoanAssets();
 
 const useGetLoanAssets = (): LoanAssetsData => {
-  const queryKey = ['loan-assets'];
-
   const { data, error, refetch } = useQuery({
-    queryKey,
+    queryKey: ['loan-assets'],
     queryFn: getLoanAssets,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
+
   useErrorHandler(error);
 
   return { data, refetch };

@@ -3,7 +3,10 @@ import * as React from 'react';
 import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
+// ray test touch <<
+import { useGetLendPositionsOfAccount } from '@/utils/hooks/api/loans/lend-and-borrow-info';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+// ray test touch >>
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -20,6 +23,9 @@ const LoansOverview = (): JSX.Element => {
   } = useGetAccountPositions();
 
   // ray test touch <<
+  const { data: lendPositionsOfAccount } = useGetLendPositionsOfAccount();
+  console.log('ray : ***** lendPositionsOfAccount => ', lendPositionsOfAccount);
+
   React.useEffect(() => {
     try {
       (async () => {
