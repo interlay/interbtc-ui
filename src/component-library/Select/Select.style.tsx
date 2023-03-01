@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { List } from '../List';
 import { Span } from '../Text';
 import { theme } from '../theme';
 import { Sizes } from '../utils/prop-types';
@@ -29,8 +30,8 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
   justify-content: space-between;
   width: 100%;
   text-align: left;
-  // TODO: figure out this z-index when select is fully added
-  z-index: 1000;
+  /* // TODO: figure out this z-index when select is fully added
+  z-index: 1000; */
 
   font-size: ${({ $size }) => theme.select.size[$size].text};
   line-height: ${theme.lineHeight.base};
@@ -73,4 +74,9 @@ const StyledTriggerValue = styled(Span)<StyledTriggerValueProps>`
     $isDisabled ? theme.input.disabled.color : $isSelected ? theme.select.color : theme.select.placeholder};
 `;
 
-export { StyledTrigger, StyledTriggerValue };
+const StyledList = styled(List)`
+  overflow: auto;
+  padding: 0 ${theme.modal.body.paddingX} ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
+`;
+
+export { StyledList, StyledTrigger, StyledTriggerValue };
