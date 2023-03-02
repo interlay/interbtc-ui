@@ -1,15 +1,20 @@
-import { useButton } from '@react-aria/button';
-import { useField } from '@react-aria/label';
-import { chain, mergeProps } from '@react-aria/utils';
-import { VisuallyHidden } from '@react-aria/visually-hidden';
-import { InputHTMLAttributes, ReactNode, useRef, useState } from 'react';
+import { mergeProps } from '@react-aria/utils';
+import { InputHTMLAttributes, ReactNode } from 'react';
 
 import { CoinIcon } from '../CoinIcon';
+import { Flex } from '../Flex';
+import { Item, Select } from '../Select';
+import { useSelectModalContext } from '../Select/SelectModalContext';
+import { Span } from '../Text';
 import { TokenStack } from '../TokenStack';
-import { useDOMRef } from '../utils/dom';
-import { StyledChevronDown, StyledTicker, StyledTokenSelect } from './TokenInput.style';
+import {
+  StyledListItemLabel,
+  StyledListTokenWrapper,
+  StyledTicker,
+  StyledTokenAdornment,
+  StyledTokenSelect
+} from './TokenInput.style';
 import { TokenData } from './TokenList';
-import { TokenListModal } from './TokenListModal';
 
 const Icon = ({ value, icons }: Pick<TokenSelectProps, 'value' | 'icons'>) => {
   if (!value) return null;
@@ -21,7 +26,32 @@ const Icon = ({ value, icons }: Pick<TokenSelectProps, 'value' | 'icons'>) => {
   return <CoinIcon ticker={value} />;
 };
 
-type SelectProps = InputHTMLAttributes<HTMLInputElement> & { ref?: any; onSelectionChange?: (ticker: string) => void };
+const ListItem = ({ item }: { item: TokenData }) => {
+  const tickerText = typeof item.ticker === 'string' ? item.ticker : item.ticker.text;
+
+  const isSelected = useSelectModalContext().selectedItem?.key === tickerText;
+
+  return (
+    <>
+      <StyledListTokenWrapper alignItems='center' gap='spacing2' flex='1'>
+        {typeof item.ticker === 'string' ? (
+          <CoinIcon ticker={item.ticker} />
+        ) : (
+          <TokenStack tickers={item.ticker.icons} />
+        )}
+        <StyledListItemLabel $isSelected={isSelected}>{tickerText}</StyledListItemLabel>
+      </StyledListTokenWrapper>
+      <Flex direction='column' alignItems='flex-end' gap='spacing2' flex='0'>
+        <StyledListItemLabel $isSelected={isSelected}>{item.balance}</StyledListItemLabel>
+        <Span size='s' color='tertiary'>
+          {item.balanceUSD}
+        </Span>
+      </Flex>
+    </>
+  );
+};
+
+type SelectProps = InputHTMLAttributes<HTMLInputElement> & { ref?: any };
 
 type Props = {
   label?: ReactNode;
@@ -43,70 +73,50 @@ const TokenSelect = ({
   tokens,
   isDisabled,
   onChange,
-  label: labelProp,
-  'aria-label': ariaLabel,
-  selectProps: selectPropsProp
+  label,
+  selectProps
 }: TokenSelectProps): JSX.Element => {
-  const [isOpen, setOpen] = useState(false);
-
-  const tokenButtonRef = useRef<HTMLDivElement>(null);
-
-  const { ref, onSelectionChange, ...selectProps } = selectPropsProp || {};
-  const inputRef = useDOMRef<HTMLInputElement>(ref);
-
-  const { buttonProps } = useButton(
-    {
-      onPress: () => setOpen(true),
-      elementType: 'div',
-      isDisabled
-    },
-    tokenButtonRef
-  );
-
-  const label = labelProp || ariaLabel;
-
-  const { labelProps, fieldProps } = useField({ label });
-
-  const handleClose = () => setOpen(false);
-
   const isSelect = !isDisabled;
 
-  return (
-    <>
-      {isSelect && (
-        <VisuallyHidden>
-          <label {...labelProps}>Choose token for {label} field</label>
-          <input
-            {...mergeProps(selectProps || {}, fieldProps)}
-            ref={inputRef}
-            autoComplete='off'
-            tabIndex={-1}
-            value={value}
-          />
-        </VisuallyHidden>
-      )}
-      <StyledTokenSelect
-        {...(isSelect && mergeProps(buttonProps, fieldProps))}
-        ref={tokenButtonRef}
-        alignItems='center'
-        justifyContent='space-evenly'
-        gap='spacing1'
-        $isClickable={isSelect}
-      >
+  if (!isSelect) {
+    return (
+      <StyledTokenAdornment alignItems='center' justifyContent='space-evenly' gap='spacing1'>
         <Icon value={value} icons={icons} />
         <StyledTicker>{value || 'Select Token'}</StyledTicker>
-        {isSelect && <StyledChevronDown size='s' />}
-      </StyledTokenSelect>
-      {isSelect && (
-        <TokenListModal
-          isOpen={isOpen}
-          tokens={tokens}
-          selectedTicker={value}
-          onClose={handleClose}
-          onSelectionChange={chain(onChange, onSelectionChange, handleClose)}
-        />
-      )}
-    </>
+      </StyledTokenAdornment>
+    );
+  }
+
+  return (
+    <Select
+      {...mergeProps(selectProps as any)}
+      type='modal'
+      items={tokens}
+      size='medium'
+      label={label}
+      labelProps={{ isVisuallyHidden: true }}
+      onSelectionChange={onChange}
+      asSelectTrigger={StyledTokenSelect}
+      customRender={(item) => {
+        return (
+          <Flex alignItems='center' justifyContent='space-evenly' gap='spacing1'>
+            <Icon value={item.key as string} icons={icons} />
+            <StyledTicker>{item.key as string}</StyledTicker>
+          </Flex>
+        );
+      }}
+      placeholder={<Span>Select Token</Span>}
+    >
+      {(item: TokenData) => {
+        const tickerText = typeof item.ticker === 'string' ? item.ticker : item.ticker.text;
+
+        return (
+          <Item key={tickerText}>
+            <ListItem item={item} />
+          </Item>
+        );
+      }}
+    </Select>
   );
 };
 

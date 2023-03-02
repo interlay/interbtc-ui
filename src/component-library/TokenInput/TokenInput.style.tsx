@@ -4,12 +4,9 @@ import { ChevronDown } from '@/assets/icons';
 
 import { Flex } from '../Flex';
 import { List } from '../List';
+import { StyledTrigger } from '../Select/Select.style';
 import { Span } from '../Text';
 import { theme } from '../theme';
-
-type StyledClickableProps = {
-  $isClickable: boolean;
-};
 
 type StyledUSDAdornmentProps = {
   $isDisabled?: boolean;
@@ -35,13 +32,23 @@ const StyledUSDAdornment = styled.span<StyledUSDAdornmentProps>`
   align-self: flex-start;
 `;
 
-const StyledTokenSelect = styled(Flex)<StyledClickableProps>`
+const StyledTokenAdornment = styled(Flex)`
   background-color: ${theme.tokenInput.endAdornment.bg};
   border-radius: ${theme.rounded.md};
-  font-size: ${theme.text.xl2};
+  font-size: ${theme.text.s};
   padding: ${theme.spacing.spacing3};
-  cursor: ${({ $isClickable }) => $isClickable && 'pointer'};
   height: 3rem;
+  width: auto;
+  overflow: hidden;
+`;
+
+const StyledTokenSelect = styled(StyledTrigger)`
+  background-color: ${theme.tokenInput.endAdornment.bg};
+  border-radius: ${theme.rounded.md};
+  font-size: ${theme.text.s};
+  padding: ${theme.spacing.spacing3};
+  height: 3rem;
+  max-height: 3rem;
   width: auto;
   overflow: hidden;
 `;
@@ -99,6 +106,7 @@ export {
   StyledListItemLabel,
   StyledListTokenWrapper,
   StyledTicker,
+  StyledTokenAdornment,
   StyledTokenInputBalanceLabel,
   StyledTokenInputBalanceValue,
   StyledTokenInputBalanceWrapper,

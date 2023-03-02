@@ -45,6 +45,7 @@ const SelectTemplate: Story<SelectProps> = (args) => {
 
 const Default = SelectTemplate.bind({});
 Default.args = {
+  type: 'modal',
   placeholder: 'placeholder',
   label: 'Coin',
   description: 'Select a coin',

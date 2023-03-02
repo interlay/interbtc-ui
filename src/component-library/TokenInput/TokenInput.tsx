@@ -107,6 +107,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       />
     );
 
+    console.log('here');
+
     const hasLabel = !!label || balance !== undefined;
 
     return (

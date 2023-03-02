@@ -2,13 +2,17 @@ import { forwardRef, LabelHTMLAttributes } from 'react';
 
 import { StyledLabel } from './Label.style';
 
-type NativeAttrs = LabelHTMLAttributes<unknown>;
+type Props = {
+  isVisuallyHidden?: boolean;
+};
 
-type LabelProps = NativeAttrs;
+type NativeAttrs = Omit<LabelHTMLAttributes<unknown>, keyof Props>;
+
+type LabelProps = Props & NativeAttrs;
 
 const Label = forwardRef<HTMLLabelElement, LabelProps>(
-  ({ children, ...props }, ref): JSX.Element => (
-    <StyledLabel {...props} ref={ref}>
+  ({ children, isVisuallyHidden, ...props }, ref): JSX.Element => (
+    <StyledLabel {...props} $isVisuallyHidden={isVisuallyHidden} ref={ref}>
       {children}
     </StyledLabel>
   )

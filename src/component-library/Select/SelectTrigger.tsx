@@ -4,14 +4,13 @@ import { mergeProps } from '@react-aria/utils';
 import { PressEvent } from '@react-types/shared';
 import { ButtonHTMLAttributes, forwardRef, ReactNode } from 'react';
 
-import { ChevronDown } from '@/assets/icons';
-
 import { TextProps } from '../Text';
 import { useDOMRef } from '../utils/dom';
 import { Sizes } from '../utils/prop-types';
-import { StyledTrigger, StyledTriggerValue } from './Select.style';
+import { StyledChevronDown, StyledTrigger, StyledTriggerValue } from './Select.style';
 
 type Props = {
+  as: any;
   size?: Sizes;
   isOpen?: boolean;
   hasError?: boolean;
@@ -27,7 +26,7 @@ type SelectTriggerProps = Props & NativeAttrs;
 // MEMO: this is prune to change when `Select` is added
 const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
   (
-    { size = 'medium', hasError, isOpen, children, valueProps, placeholder = 'Select an option', ...props },
+    { as, size = 'medium', hasError = false, isOpen, children, valueProps, placeholder = 'Select an option', ...props },
     ref
   ): JSX.Element => {
     const { disabled } = props;
@@ -38,11 +37,13 @@ const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
 
     const { focusProps, isFocusVisible } = useFocusRing();
 
+    const Comp = as || StyledTrigger;
+
     return (
-      <StyledTrigger
+      <Comp
         {...mergeProps(buttonProps, focusProps)}
         ref={buttonRef}
-        $isDisabled={disabled}
+        $isDisabled={!!disabled}
         $size={size}
         $hasError={hasError}
         $isFocusVisible={isFocusVisible}
@@ -51,8 +52,8 @@ const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
         <StyledTriggerValue {...valueProps} $isSelected={!!children} $isDisabled={disabled}>
           {children || placeholder}
         </StyledTriggerValue>
-        <ChevronDown size={size === 'large' ? 'md' : 's'} />
-      </StyledTrigger>
+        <StyledChevronDown size={size === 'large' ? 'md' : 's'} />
+      </Comp>
     );
   }
 );
