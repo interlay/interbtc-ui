@@ -50,6 +50,8 @@ import {
 // minimise code repetition and use common handler if
 // possible.
 
+// TODO: set balance when token selected
+
 const CrossChainTransferForm = (): JSX.Element => {
   const [originatingChains, setOriginatingChains] = useState<Chains>([]);
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
@@ -62,11 +64,21 @@ const CrossChainTransferForm = (): JSX.Element => {
   const accountId = useAccountId();
   const { accounts } = useSubstrateSecureState();
 
-  const { getDestinationChains, getOriginatingChains } = useXCMBridge();
+  const { getDestinationChains, getOriginatingChains, getAvailableTokens } = useXCMBridge();
 
-  const commonFunction = () => {
-    console.log('update tokens and balances');
-    setTransferableTokens([{ ticker: 'KSM', balance: 0, balanceUSD: '0' }]);
+  const commonFunction = async () => {
+    if (!accountId) return;
+
+    const tokens = await getAvailableTokens(
+      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+      form.values[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName,
+      accountId.toString(),
+      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
+    );
+
+    console.log('common function', tokens);
+
+    setTransferableTokens(tokens);
   };
 
   const handleSubmit = (data: CrossChainTransferFormData) => {

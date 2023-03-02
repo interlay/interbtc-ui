@@ -90,6 +90,8 @@ const useXCMBridge = (): UseXCMBridge => {
 
       const tokens = XCMBridge.router.getAvailableTokens({ from, to });
 
+      console.log(from, to, originAddress, destinationAddress);
+
       const inputConfigs = await Promise.all(
         tokens.map(
           async (token): Promise<any> => {
@@ -102,7 +104,10 @@ const useXCMBridge = (): UseXCMBridge => {
               }) as any
             );
 
-            return { ticker: token, maxInput: inputConfig.maxInput };
+            const balance = inputConfig.maxInput.lt(inputConfig.minInput) ? 0 : inputConfig.maxInput;
+            console.log(balance);
+
+            return { ticker: token, balance };
           }
         )
       );
