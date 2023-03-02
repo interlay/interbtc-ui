@@ -1,4 +1,12 @@
-import { FieldInputProps, FormikConfig, FormikValues, useFormik, validateYupSchema, yupToFormErrors } from 'formik';
+import {
+  FieldInputProps,
+  FormikConfig,
+  FormikErrors as FormErrors,
+  FormikValues,
+  useFormik,
+  validateYupSchema,
+  yupToFormErrors
+} from 'formik';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -66,3 +74,4 @@ const useForm = <Values extends FormikValues = FormikValues>({
 };
 
 export { useForm };
+export type { FormErrors };

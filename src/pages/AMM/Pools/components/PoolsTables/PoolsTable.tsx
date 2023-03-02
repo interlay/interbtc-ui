@@ -57,7 +57,10 @@ const PoolsTable = ({ variant, pools, onRowAction }: PoolsTableProps): JSX.Eleme
       pools.map(({ data, amount: accountLPTokenAmount }) => {
         const { pooledCurrencies, lpToken, rewardAmountsYearly, totalSupply } = data;
         const poolName = (
-          <PoolName tickers={pooledCurrencies.map((pooledCurrencies) => pooledCurrencies.currency.ticker)} />
+          <PoolName
+            aria-label={lpToken.ticker}
+            tickers={pooledCurrencies.map((pooledCurrencies) => pooledCurrencies.currency.ticker)}
+          />
         );
 
         const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);

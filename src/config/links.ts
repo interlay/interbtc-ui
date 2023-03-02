@@ -1,6 +1,6 @@
 const INTERLAY_COMPANY_LINK = 'https://www.interlay.io';
 const INTERLAY_EMAIL_LINK = 'mailto:contact@interlay.io';
-const INTERLAY_DISCORD_LINK = 'https://discord.gg/KgCYK3MKSf';
+const INTERLAY_DISCORD_LINK = 'https://discord.gg/interlay';
 const INTERLAY_GITHUB_LINK = 'https://github.com/interlay';
 const INTERLAY_TWITTER_LINK = 'https://twitter.com/interlayHQ';
 const INTERLAY_DOCS_LINK = 'https://docs.interlay.io';
@@ -18,10 +18,6 @@ const INTERLAY_SUBSCAN_LINK = 'https://interlay.subscan.io';
 const KINTSUGI_SUBSCAN_LINK = 'https://kintsugi.subscan.io';
 const INTERLAY_VAULT_DOCS_LINK = 'https://docs.interlay.io/#/vault/overview';
 const INTERLAY_DOS_AND_DONTS_DOCS_LINK = 'https://docs.interlay.io/#/vault/installation?id=dos-and-donts';
-const KINTSUGI_COMPETITION_FEEDBACK_LINK = 'https://interlay.typeform.com/to/evmxrSyL';
-const KINTSUGI_COMPETITION_DASHBOARD_LINK =
-  'https://stats.interlay.io/d/lzyjhMT4k/kintsugi-trading-competition?orgId=1&kiosk';
-const KINTSUGI_COMPETITION_ISSUES_LINK = 'https://github.com/interlay/interbtc-ui/labels/testnet-competition';
 
 export {
   INTERLAY_COMPANY_LINK,
@@ -37,9 +33,6 @@ export {
   INTERLAY_TWITTER_LINK,
   INTERLAY_USE_WRAPPED_CURRENCY_LINK,
   INTERLAY_VAULT_DOCS_LINK,
-  KINTSUGI_COMPETITION_DASHBOARD_LINK,
-  KINTSUGI_COMPETITION_FEEDBACK_LINK,
-  KINTSUGI_COMPETITION_ISSUES_LINK,
   KINTSUGI_CROWDLOAN_LINK,
   KINTSUGI_GOVERNANCE_LINK,
   KINTSUGI_SUBSCAN_LINK,

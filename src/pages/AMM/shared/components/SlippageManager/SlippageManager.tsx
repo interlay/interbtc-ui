@@ -25,7 +25,7 @@ const SlippageManager = forwardRef<HTMLDivElement, SlippageManagerProps>(
 
     return (
       <>
-        <StyledCTA size='small' variant='text' onPress={() => setOpen(true)}>
+        <StyledCTA aria-label='slippage settings' size='small' variant='text' onPress={() => setOpen(true)}>
           <Cog />
         </StyledCTA>
         <Modal ref={ref} isOpen={isOpen} onClose={() => setOpen(false)}>

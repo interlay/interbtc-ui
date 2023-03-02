@@ -14,7 +14,7 @@ type SwapDividerProps = {
 
 const SwapDivider = ({ onPress }: SwapDividerProps): JSX.Element | null => {
   const ref = useRef<HTMLButtonElement>(null);
-  const { buttonProps } = useButton({ onPress }, ref);
+  const { buttonProps } = useButton({ onPress, 'aria-label': 'switch tokens' }, ref);
   const { focusProps, isFocusVisible } = useFocusRing();
 
   return (

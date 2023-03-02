@@ -45,7 +45,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       isDisabled,
       label,
       ticker: tickerProp,
-      defaultTicker,
+      defaultTicker = '',
       tokens = [],
       style,
       hidden,
@@ -102,6 +102,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         onChange={handleTokenChange}
         // Allows seamingless integration with form lib
         selectProps={selectProps}
+        label={label}
+        aria-label={fieldProps['aria-label']}
       />
     );
 
