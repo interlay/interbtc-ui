@@ -1,4 +1,5 @@
 import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
+import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
@@ -90,7 +91,14 @@ const useXCMBridge = (): UseXCMBridge => {
 
       const tokens = XCMBridge.router.getAvailableTokens({ from, to });
 
-      console.log(from, to, originAddress, destinationAddress);
+      console.log(
+        'from, to, originAddress, destinationAddress, tokens',
+        from,
+        to,
+        originAddress,
+        destinationAddress,
+        tokens
+      );
 
       const inputConfigs = await Promise.all(
         tokens.map(
@@ -104,10 +112,14 @@ const useXCMBridge = (): UseXCMBridge => {
               }) as any
             );
 
-            const balance = inputConfig.maxInput.lt(inputConfig.minInput) ? 0 : inputConfig.maxInput;
-            console.log(balance);
+            const transferableBalance = inputConfig.maxInput.lt(inputConfig.minInput)
+              ? '0'
+              : Big(inputConfig.maxInput.toString()).toString();
 
-            return { ticker: token, balance };
+            return {
+              ticker: token,
+              balance: transferableBalance
+            };
           }
         )
       );
