@@ -17,7 +17,6 @@ import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
-import { POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
@@ -77,29 +76,24 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
-        {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Mainnet ||
-          (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
-            <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
-          ))}
+        <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
         {selectedAccount !== undefined && (
           <>
             {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
               <>
-                {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
-                  <InterlayLink
-                    className='hover:no-underline'
-                    target='_blank'
-                    rel='noopener noreferrer'
-                    href='https://bitcoinfaucet.uo1.net'
+                <InterlayLink
+                  className='hover:no-underline'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  href='https://bitcoinfaucet.uo1.net'
+                >
+                  <InterlayCaliforniaOutlinedButton
+                    className={SMALL_SIZE_BUTTON_CLASSES}
+                    endIcon={<ArrowTopRightOnSquareIcon className={clsx('w-4', 'h-4', 'ml-1')} />}
                   >
-                    <InterlayCaliforniaOutlinedButton
-                      className={SMALL_SIZE_BUTTON_CLASSES}
-                      endIcon={<ArrowTopRightOnSquareIcon className={clsx('w-4', 'h-4', 'ml-1')} />}
-                    >
-                      {t('request_btc')}
-                    </InterlayCaliforniaOutlinedButton>
-                  </InterlayLink>
-                )}
+                    {t('request_btc')}
+                  </InterlayCaliforniaOutlinedButton>
+                </InterlayLink>
                 <InterlayDenimOrKintsugiMidnightOutlinedButton
                   className={SMALL_SIZE_BUTTON_CLASSES}
                   pending={isRequestPending}

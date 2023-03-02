@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
-import { TransitionTrigger } from '@/utils/hooks/use-mount-transition';
-
+import { overlayCSS } from '../css/overlay';
 import { CTA } from '../CTA';
 import { Divider } from '../Divider';
 import { Flex } from '../Flex';
@@ -9,8 +8,8 @@ import { H3 } from '../Text';
 import { theme } from '../theme';
 import { Overflow } from '../utils/prop-types';
 
-type StyledDialogWrapperProps = {
-  $transitionTrigger?: TransitionTrigger;
+type StyledModalProps = {
+  $isOpen?: boolean;
   $isCentered?: boolean;
 };
 
@@ -24,7 +23,12 @@ type StyledModalBodyProps = {
   $noPadding?: boolean;
 };
 
-const StyledUnderlay = styled.div<Pick<StyledDialogWrapperProps, '$isCentered'>>`
+type StyledUnderlayProps = {
+  $isOpen: boolean;
+  $isCentered?: boolean;
+};
+
+const StyledUnderlay = styled.div<StyledUnderlayProps>`
   position: fixed;
   z-index: ${theme.modal.underlay.zIndex};
   top: 0;
@@ -37,20 +41,25 @@ const StyledUnderlay = styled.div<Pick<StyledDialogWrapperProps, '$isCentered'>>
   justify-content: center;
   align-items: ${({ $isCentered }) => ($isCentered ? 'center' : 'flex-start')};
   overflow: ${({ $isCentered }) => !$isCentered && 'auto'};
+
+  ${({ $isOpen }) => overlayCSS($isOpen)}
+  transition: ${({ $isOpen }) =>
+    $isOpen ? theme.modal.underlay.transition.entering : theme.modal.underlay.transition.exiting};
 `;
 
-const StyledDialogWrapper = styled.div<StyledDialogWrapperProps>`
+const StyledModal = styled.div<StyledModalProps>`
   justify-content: center;
   display: flex;
   z-index: ${theme.modal.zIndex};
-  transition: opacity ${theme.transition.duration.duration100}ms ease-out;
   margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
   max-width: ${theme.modal.maxWidth};
   max-height: ${({ $isCentered }) => $isCentered && theme.modal.maxHeight};
   width: 100%;
-  transition-property: opacity, transform;
-  ${({ $transitionTrigger }) =>
-    $transitionTrigger === 'in' ? `opacity: 1; transform: translateY(0);` : `opacity: 0; transform: translateY(2em);`}
+
+  transform: ${({ $isOpen }) => ($isOpen ? 'translateY(0)' : `translateY(20px)`)};
+  visibility: inherit;
+  opacity: inherit;
+  transition: ${({ $isOpen }) => ($isOpen ? theme.modal.transition.entering : theme.modal.transition.exiting)};
 `;
 
 const StyledDialog = styled.section<StyledDialogProps>`
@@ -100,7 +109,7 @@ const StyledModalFooter = styled(Flex)`
 export {
   StyledCloseCTA,
   StyledDialog,
-  StyledDialogWrapper,
+  StyledModal,
   StyledModalBody,
   StyledModalDivider,
   StyledModalFooter,

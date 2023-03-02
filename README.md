@@ -79,7 +79,7 @@ See our [contribution guidelines](https://github.com/interlay/interbtc-ui/blob/m
 
 If you are searching for a place to start or would like to discuss features, reach out to us:
 
-- [Discord](https://discord.gg/KgCYK3MKSf)
+- [Discord](https://discord.gg/interlay)
 
 ## License
 

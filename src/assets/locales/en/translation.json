@@ -74,9 +74,6 @@
   "issue": "Issue",
   "redeem": "Redeem",
   "nav_bridge": "Bridge",
-  "nav_competition_feedback": "Competition Feedback",
-  "nav_competition_dashboard": "Competition Dashboard",
-  "nav_competition_issues": "Known Issues",
   "nav_transfer": "Transfer",
   "nav_lending": "Lending",
   "nav_swap": "Swap",
@@ -140,6 +137,7 @@
   "7_day_volume": "7 Day Volume",
   "rewards": "Rewards",
   "supply_balance": "Supply Balance",
+  "insufficient_funds_fees": "Insufficient funds for fees",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
