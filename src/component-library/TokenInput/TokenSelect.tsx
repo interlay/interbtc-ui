@@ -1,124 +1,62 @@
-import { mergeProps } from '@react-aria/utils';
-import { InputHTMLAttributes, ReactNode } from 'react';
-
 import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
-import { Item, Select } from '../Select';
+import { Item, Select, SelectProps } from '../Select';
 import { useSelectModalContext } from '../Select/SelectModalContext';
 import { Span } from '../Text';
-import { TokenStack } from '../TokenStack';
-import {
-  StyledListItemLabel,
-  StyledListTokenWrapper,
-  StyledTicker,
-  StyledTokenAdornment,
-  StyledTokenSelect
-} from './TokenInput.style';
-import { TokenData } from './TokenList';
+import { StyledListItemLabel, StyledListTokenWrapper, StyledTicker, StyledTokenSelect } from './TokenInput.style';
 
-const Icon = ({ value, icons }: Pick<TokenSelectProps, 'value' | 'icons'>) => {
-  if (!value) return null;
-
-  if (icons?.length) {
-    return <TokenStack offset={icons.length > 2 ? 'lg' : 'md'} tickers={icons} />;
-  }
-
-  return <CoinIcon ticker={value} />;
-};
-
-const ListItem = ({ item }: { item: TokenData }) => {
-  const tickerText = typeof item.ticker === 'string' ? item.ticker : item.ticker.text;
-
-  const isSelected = useSelectModalContext().selectedItem?.key === tickerText;
+const ListItem = ({ data }: { data: TokenData }) => {
+  const isSelected = useSelectModalContext().selectedItem?.key === data.value;
 
   return (
     <>
       <StyledListTokenWrapper alignItems='center' gap='spacing2' flex='1'>
-        {typeof item.ticker === 'string' ? (
-          <CoinIcon ticker={item.ticker} />
-        ) : (
-          <TokenStack tickers={item.ticker.icons} />
-        )}
-        <StyledListItemLabel $isSelected={isSelected}>{tickerText}</StyledListItemLabel>
+        <CoinIcon size={data.tickers ? 'lg' : 'md'} ticker={data.value} tickers={data.tickers} />
+        <StyledListItemLabel $isSelected={isSelected}>{data.value}</StyledListItemLabel>
       </StyledListTokenWrapper>
       <Flex direction='column' alignItems='flex-end' gap='spacing2' flex='0'>
-        <StyledListItemLabel $isSelected={isSelected}>{item.balance}</StyledListItemLabel>
+        <StyledListItemLabel $isSelected={isSelected}>{data.balance}</StyledListItemLabel>
         <Span size='s' color='tertiary'>
-          {item.balanceUSD}
+          {data.balanceUSD}
         </Span>
       </Flex>
     </>
   );
 };
 
-type SelectProps = InputHTMLAttributes<HTMLInputElement> & { ref?: any };
+const Value = ({ data }: { data: TokenData }) => (
+  <Flex alignItems='center' justifyContent='space-evenly' gap='spacing1'>
+    <CoinIcon size={data.tickers ? 'lg' : 'md'} ticker={data.value} tickers={data.tickers} />
+    <StyledTicker>{data.value}</StyledTicker>
+  </Flex>
+);
 
-type Props = {
-  label?: ReactNode;
-  value?: string;
-  icons?: string[];
-  isDisabled: boolean;
-  tokens: TokenData[];
-  onChange: (ticker: string) => void;
-  selectProps?: SelectProps;
+type TokenData = {
+  value: string;
+  tickers?: string[];
+  balance: string | number;
+  balanceUSD: string;
 };
 
-type NativeAttrs = Omit<InputHTMLAttributes<unknown>, keyof Props>;
+type TokenSelectProps = Omit<SelectProps<TokenData>, 'children' | 'type'>;
 
-type TokenSelectProps = Props & NativeAttrs;
-
-const TokenSelect = ({
-  value,
-  icons,
-  tokens,
-  isDisabled,
-  onChange,
-  label,
-  selectProps
-}: TokenSelectProps): JSX.Element => {
-  const isSelect = !isDisabled;
-
-  if (!isSelect) {
-    return (
-      <StyledTokenAdornment alignItems='center' justifyContent='space-evenly' gap='spacing1'>
-        <Icon value={value} icons={icons} />
-        <StyledTicker>{value || 'Select Token'}</StyledTicker>
-      </StyledTokenAdornment>
-    );
-  }
-
-  return (
-    <Select
-      {...mergeProps(selectProps as any)}
-      type='modal'
-      items={tokens}
-      size='medium'
-      label={label}
-      labelProps={{ isVisuallyHidden: true }}
-      onSelectionChange={onChange}
-      asSelectTrigger={StyledTokenSelect}
-      customRender={(item) => {
-        return (
-          <Flex alignItems='center' justifyContent='space-evenly' gap='spacing1'>
-            <Icon value={item.key as string} icons={icons} />
-            <StyledTicker>{item.key as string}</StyledTicker>
-          </Flex>
-        );
-      }}
-      placeholder={<Span>Select Token</Span>}
-    >
-      {(item: TokenData) => {
-        const tickerText = typeof item.ticker === 'string' ? item.ticker : item.ticker.text;
-
-        return (
-          <Item key={tickerText}>
-            <ListItem item={item} />
-          </Item>
-        );
-      }}
-    </Select>
-  );
-};
+const TokenSelect = (props: TokenSelectProps): JSX.Element => (
+  <Select<TokenData>
+    {...props}
+    type='modal'
+    labelProps={{ isVisuallyHidden: true }}
+    asSelectTrigger={StyledTokenSelect}
+    renderValue={(item) => <Value data={item.value} />}
+    placeholder={<Span>Select Token</Span>}
+    modalTitle='Select Token'
+  >
+    {(data: TokenData) => (
+      <Item key={data.value}>
+        <ListItem data={data} />
+      </Item>
+    )}
+  </Select>
+);
 
 export { TokenSelect };
 export type { TokenSelectProps };

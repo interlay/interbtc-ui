@@ -44,6 +44,7 @@ const StyledTokenAdornment = styled(Flex)`
 
 const StyledTokenSelect = styled(StyledTrigger)`
   background-color: ${theme.tokenInput.endAdornment.bg};
+  opacity: ${({ $isDisabled }) => $isDisabled && 0.5};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.s};
   padding: ${theme.spacing.spacing3};

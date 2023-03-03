@@ -6,7 +6,7 @@ import { Flex } from '../Flex';
 import { Select, SelectProps } from './Select';
 import { SelectTrigger, SelectTriggerProps } from './SelectTrigger';
 
-const SelectTemplate: Story<SelectProps> = (args) => {
+const SelectTemplate: Story<SelectProps<any>> = (args) => {
   return (
     <Select {...args}>
       <Item key='BTC'>
@@ -46,6 +46,7 @@ const SelectTemplate: Story<SelectProps> = (args) => {
 const Default = SelectTemplate.bind({});
 Default.args = {
   type: 'modal',
+  modalTitle: 'Select Token',
   placeholder: 'placeholder',
   label: 'Coin',
   description: 'Select a coin',

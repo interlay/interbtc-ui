@@ -28,7 +28,7 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
 
   font-size: ${({ $size }) => theme.select.size[$size].text};
   line-height: ${theme.lineHeight.base};
-  color: ${(props) => (props.disabled ? theme.input.disabled.color : theme.input.color)};
+  color: ${({ $isDisabled }) => ($isDisabled ? theme.input.disabled.color : theme.input.color)};
   background-color: ${theme.input.background};
   overflow: hidden;
 
@@ -39,26 +39,22 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
   text-align: left;
 
   padding: ${({ $size }) => theme.select.size[$size].padding};
-  cursor: pointer;
+  cursor: ${({ $isDisabled }) => !$isDisabled && 'pointer'};
   max-height: ${({ $size }) => `calc(${theme.input[$size].maxHeight} - 1px)`};
 
-  border: ${(props) =>
-    props.$isDisabled
-      ? theme.input.disabled.border
-      : props.$hasError
-      ? theme.input.error.border
-      : theme.border.default};
+  border: ${({ $isDisabled, $hasError }) =>
+    $isDisabled ? theme.input.disabled.border : $hasError ? theme.input.error.border : theme.border.default};
   border-radius: ${theme.rounded.md};
   transition: border-color ${theme.transition.duration.duration150}ms ease-in-out,
     box-shadow ${theme.transition.duration.duration150}ms ease-in-out;
 
   &:hover:not(:disabled):not(:focus) {
-    border: ${(props) => !props.$isDisabled && !props.$hasError && theme.input.hover.border};
+    border: ${({ $isDisabled, $hasError }) => !$isDisabled && !$hasError && theme.input.hover.border};
   }
 
   &:focus {
-    border: ${(props) => !props.$isDisabled && theme.input.focus.border};
-    box-shadow: ${(props) => !props.$isDisabled && theme.input.focus.boxShadow};
+    border: ${({ $isDisabled }) => !$isDisabled && theme.input.focus.border};
+    box-shadow: ${({ $isDisabled }) => !$isDisabled && theme.input.focus.boxShadow};
   }
 `;
 

@@ -33,7 +33,7 @@ const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
 
     const buttonRef = useDOMRef(ref);
 
-    const { buttonProps } = useButton(props, buttonRef);
+    const { buttonProps } = useButton({ ...props, isDisabled: disabled }, buttonRef);
 
     const { focusProps, isFocusVisible } = useFocusRing();
 
