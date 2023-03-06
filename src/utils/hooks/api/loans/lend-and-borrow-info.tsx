@@ -8,11 +8,11 @@ import {
 } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import * as React from 'react';
+import { useMemo } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
-import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, convertMonetaryBtcToUSD } from '@/common/utils/utils';
 import { getSubsidyRewardApy } from '@/pages/Loans/LoansOverview/utils/get-subsidy-rewards-apy';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -21,7 +21,6 @@ import useAccountId from '@/utils/hooks/use-account-id';
 
 import { Prices, useGetPrices } from '../use-get-prices';
 import { useGetAccountSubsidyRewards } from './use-get-account-subsidy-rewards';
-import { getPositionsSumOfFieldsInUSD } from './utils';
 
 const useGetLendPositionsOfAccount = (): {
   data: Array<LendPosition> | undefined;
@@ -71,14 +70,11 @@ const useGetBorrowPositionsOfAccount = (): {
   return { data, refetch };
 };
 
-interface AccountPositionsStatisticsData {
+interface AccountPositionsStatisticsData extends LoanCollateralInfo {
   supplyAmountUSD: Big;
   borrowAmountUSD: Big;
-  collateralAmountUSD: Big;
-  liquidationAmountUSD: Big;
   collateralizedAmountUSD: Big;
   earnedInterestAmountUSD: Big;
-  earnedDeptAmountUSD: Big;
   netAmountUSD: Big;
   netAPY: Big;
 }
@@ -126,62 +122,22 @@ const getAccountPositionsStats = (
   lendPositions: LendPosition[],
   borrowPositions: BorrowPosition[],
   subsidyRewards: MonetaryAmount<CurrencyExt>,
-  prices: Prices
+  prices: Prices,
+  loanCollateralInfo: LoanCollateralInfo
 ): AccountPositionsStatisticsData => {
-  const supplyAmountUSD = getPositionsSumOfFieldsInUSD('amount', lendPositions, prices);
-
-  const borrowAmountUSD = getPositionsSumOfFieldsInUSD('amount', borrowPositions, prices);
-
-  const collateralLendPositions = lendPositions.filter(({ isCollateral }) => isCollateral);
-
-  const collateralPositionsWithAppliedCollateralThreshold = collateralLendPositions.map(
-    ({ amount, currency, ...rest }) => ({
-      // MEMO: compute total value based on collateral threshold (not full lend amount value)
-      amount: amount.mul(assets[currency.ticker].collateralThreshold),
-      currency,
-      ...rest
-    })
-  );
-
-  const collateralPositionsWithAppliedLiquidationThreshold = collateralLendPositions.map(
-    ({ amount, currency, ...rest }) => ({
-      // MEMO: compute total value based on collateral threshold (not full lend amount value)
-      amount: amount.mul(assets[currency.ticker].liquidationThreshold),
-      currency,
-      ...rest
-    })
-  );
-
-  const collateralAmountUSD = getPositionsSumOfFieldsInUSD(
-    'amount',
-    collateralPositionsWithAppliedCollateralThreshold,
-    prices
-  );
-  const liquidationAmountUSD = getPositionsSumOfFieldsInUSD(
-    'amount',
-    collateralPositionsWithAppliedLiquidationThreshold,
-    prices
-  );
-
-  const collateralizedAmountUSD = getPositionsSumOfFieldsInUSD('amount', collateralLendPositions, prices);
-  const earnedDeptAmountUSD = getPositionsSumOfFieldsInUSD('accumulatedDebt', borrowPositions, prices);
-
-  // TODO: This is temporary, at least until earned interest
-  // is moved into squid.
-  // const totalEarnedRewardsUSDValue =
-  //   convertMonetaryAmountToValueInUSD(subsidyRewards, getTokenPrice(prices, subsidyRewards.currency.ticker)?.usd) || 0;
-  // const netAmountUSD = earnedInterestAmountUSD.add(totalEarnedRewardsUSDValue).sub(earnedDeptAmountUSD);
-
+  const { totalLentBtc, totalBorrowedBtc, totalCollateralBtc } = loanCollateralInfo;
+  // Convert from BTC to USD values.
+  const supplyAmountUSD = convertMonetaryBtcToUSD(totalLentBtc, prices);
+  const borrowAmountUSD = convertMonetaryBtcToUSD(totalBorrowedBtc, prices);
+  const collateralizedAmountUSD = convertMonetaryBtcToUSD(totalCollateralBtc, prices);
   const netAPY = getNetAPY(lendPositions, borrowPositions, assets, supplyAmountUSD, prices);
 
   return {
+    ...loanCollateralInfo,
     supplyAmountUSD,
     borrowAmountUSD,
     earnedInterestAmountUSD: new Big(0),
-    collateralAmountUSD,
-    liquidationAmountUSD,
     collateralizedAmountUSD,
-    earnedDeptAmountUSD,
     netAmountUSD: new Big(0),
     netAPY
   };
@@ -189,7 +145,6 @@ const getAccountPositionsStats = (
 
 const useLoanInfo = (): {
   data: {
-    loanCollateralInfo: LoanCollateralInfo | undefined;
     statistics: AccountPositionsStatisticsData | undefined;
   };
   refetch: () => void;
@@ -204,25 +159,30 @@ const useLoanInfo = (): {
 
   const { data: subsidyRewards, refetch: subsidyRewardsRefetch } = useGetAccountSubsidyRewards();
 
-  // MEMO: we don't need assets as a dependency, since we only use the collateral threshold and
-  // it's value is very unlikely to change
-  const statistics = React.useMemo(() => {
-    if (!loanAssets || !lendPositions || !borrowPositions || !subsidyRewards || !prices) {
+  const loanCollateralInfo = useMemo(() => {
+    if (!lendPositions || !borrowPositions || !loanAssets) {
+      return undefined;
+    }
+    return window.bridge.loans.getLoanCollateralInfo(lendPositions, borrowPositions, loanAssets);
+  }, [lendPositions, borrowPositions, loanAssets]);
+
+  const statistics = useMemo(() => {
+    if (!loanAssets || !lendPositions || !borrowPositions || !subsidyRewards || !prices || !loanCollateralInfo) {
       return undefined;
     }
 
-    return getAccountPositionsStats(loanAssets, lendPositions, borrowPositions, subsidyRewards, prices);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lendPositions, borrowPositions, prices, subsidyRewards]);
-
-  const loanCollateralInfo =
-    !lendPositions || !borrowPositions || !loanAssets
-      ? undefined
-      : window.bridge.loans.getLoanCollateralInfo(lendPositions, borrowPositions, loanAssets);
+    return getAccountPositionsStats(
+      loanAssets,
+      lendPositions,
+      borrowPositions,
+      subsidyRewards,
+      prices,
+      loanCollateralInfo
+    );
+  }, [lendPositions, borrowPositions, prices, subsidyRewards, loanAssets, loanCollateralInfo]);
 
   return {
     data: {
-      loanCollateralInfo,
       statistics
     },
     refetch: () => {

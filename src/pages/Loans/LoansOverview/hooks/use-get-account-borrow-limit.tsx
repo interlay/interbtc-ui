@@ -3,16 +3,10 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 
-import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
+import { convertMonetaryBtcToUSD } from '@/common/utils/utils';
 import { LoanAction } from '@/types/loans';
-import { getTokenPrice } from '@/utils/helpers/prices';
 import { useLoanInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-
-import { calculateBorrowedAmountUSD, calculateCollateralAmountUSD, calculateThresholdAmountUSD } from '../utils/math';
-
-const calculateBorrowLimitUSD = (borrowAmountUSD: Big, collateralAmountUSD: Big): Big =>
-  collateralAmountUSD.sub(borrowAmountUSD);
 
 type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt>; asset: LoanAsset };
 
@@ -26,7 +20,6 @@ const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
   const {
     data: { statistics }
   } = useLoanInfo();
-  const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
 
   /**
    * This method computes how the borrow limit will change if
@@ -36,32 +29,20 @@ const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
    * @returns New borrow limit in USD after the transaction is done.
    */
   const getBorrowLimitUSD = useCallback(
-    ({ type, amount, asset }: LoanActionData): Big | undefined => {
-      if (prices === undefined || borrowAmountUSD === undefined || collateralAmountUSD === undefined) {
+    ({ type, amount }: LoanActionData): Big | undefined => {
+      if (prices === undefined || statistics === undefined) {
         return undefined;
       }
-      const { currency, collateralThreshold } = asset;
 
-      const currencyPrice = getTokenPrice(prices, currency.ticker)?.usd;
-      const actionAmountUSD = Big(convertMonetaryAmountToValueInUSD(amount, currencyPrice) || 0);
-
-      const newTotalBorrowedAmountUSD = calculateBorrowedAmountUSD(type, borrowAmountUSD, actionAmountUSD);
-
-      const collateralThresholdAmountUSD = calculateThresholdAmountUSD(actionAmountUSD, collateralThreshold);
-      const newCollateralAssetsUSD = calculateCollateralAmountUSD(
-        type,
-        collateralAmountUSD,
-        collateralThresholdAmountUSD
-      );
-
-      return calculateBorrowLimitUSD(newTotalBorrowedAmountUSD, newCollateralAssetsUSD);
+      const newBorrowLimitBtc = statistics.calculateBorrowLimitBtcChange(type, amount);
+      return convertMonetaryBtcToUSD(newBorrowLimitBtc, prices);
     },
-    [borrowAmountUSD, collateralAmountUSD, prices]
+    [prices, statistics]
   );
 
   const data =
-    borrowAmountUSD !== undefined && collateralAmountUSD !== undefined
-      ? calculateBorrowLimitUSD(borrowAmountUSD, collateralAmountUSD)
+    prices !== undefined && statistics !== undefined
+      ? convertMonetaryBtcToUSD(statistics.borrowLimitBtc, prices)
       : undefined;
 
   return {

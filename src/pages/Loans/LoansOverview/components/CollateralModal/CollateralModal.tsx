@@ -85,7 +85,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
 
   const loanAction = isCollateralActive ? 'withdraw' : 'lend';
-  const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount, asset });
+  const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount });
   const variant = getModalVariant(isCollateralActive, currentLTV?.status);
 
   const content = getContentMap(t, variant, asset);

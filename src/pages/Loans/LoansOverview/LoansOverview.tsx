@@ -18,21 +18,8 @@ const LoansOverview = (): JSX.Element => {
   } = useGetAccountPositions();
 
   const {
-    data: { loanCollateralInfo, statistics }
+    data: { statistics }
   } = useLoanInfo();
-
-  if (loanCollateralInfo) {
-    console.log('loanCollateralInfo => ', loanCollateralInfo);
-    const {
-      // borrowLimitBtc,
-      ltv,
-      totalBorrowedBtc
-      // totalCollateralBtc,
-      // totalLentBtc,
-    } = loanCollateralInfo;
-    console.log('ltv.toString() => ', ltv.toString());
-    console.log('totalBorrowedBtc.toString() => ', totalBorrowedBtc.toString());
-  }
 
   const isLoadingPositions = accountId !== undefined && (lendPositions === undefined || borrowPositions === undefined);
 
