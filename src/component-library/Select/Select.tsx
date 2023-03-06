@@ -74,9 +74,7 @@ const Select = <T extends SelectObject>(
     label,
     errorMessage,
     onSelectionChange: chain((key: Key) => triggerChangeEvent(inputRef, key), onSelectionChange),
-    onOpenChange: (isOpen) => {
-      return isOpen ? buttonRef.current?.blur() : buttonRef.current?.focus();
-    },
+
     ...props
   };
 
@@ -105,7 +103,7 @@ const Select = <T extends SelectObject>(
       ? triggerProps
       : mergeProps(props, {
           onPress: () => {
-            // buttonRef.current?.blur();
+            buttonRef.current?.blur();
             state.setOpen(true);
           },
           disabled,

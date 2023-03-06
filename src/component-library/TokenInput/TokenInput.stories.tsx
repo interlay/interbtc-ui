@@ -42,7 +42,6 @@ WithCurrencySelect.args = {
   placeholder: '0.00',
   label: 'From',
   selectProps: {
-    disabled: true,
     items: [
       { balance: 200, value: 'KSM', balanceUSD: '$200' },
       { balance: 200, value: 'BTC', balanceUSD: '$200' },
