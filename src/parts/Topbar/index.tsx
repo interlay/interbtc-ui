@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
+import { FundWallet } from '@/components';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
@@ -18,7 +19,6 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
 
-import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
 
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
@@ -76,7 +76,8 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
-        <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
+        {/* <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} /> */}
+        <FundWallet />
         {selectedAccount !== undefined && (
           <>
             {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
