@@ -37,29 +37,43 @@ const StyledUnderlay = styled.div<StyledUnderlayProps>`
   height: 100vh;
 
   background: ${theme.modal.underlay.bg};
-  display: flex;
-  justify-content: center;
-  align-items: ${({ $isCentered }) => ($isCentered ? 'center' : 'flex-start')};
-  overflow: ${({ $isCentered }) => !$isCentered && 'auto'};
 
   ${({ $isOpen }) => overlayCSS($isOpen)}
   transition: ${({ $isOpen }) =>
     $isOpen ? theme.modal.underlay.transition.entering : theme.modal.underlay.transition.exiting};
 `;
 
-const StyledModal = styled.div<StyledModalProps>`
-  justify-content: center;
-  display: flex;
+const StyledWrapper = styled.div<StyledModalProps>`
+  position: fixed;
+  top: 0;
+  left: 0;
   z-index: ${theme.modal.zIndex};
-  margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
+  width: 100vw;
+  height: 100vh;
+  visibility: visible;
+
+  display: flex;
+  justify-content: center;
+  align-items: ${({ $isCentered }) => ($isCentered ? 'center' : 'flex-start')};
+  overflow: ${({ $isCentered }) => !$isCentered && 'auto'};
+`;
+
+const StyledModal = styled.div<StyledModalProps>`
   max-width: ${theme.modal.maxWidth};
   max-height: ${({ $isCentered }) => $isCentered && theme.modal.maxHeight};
-  width: 100%;
+  margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
 
   transform: ${({ $isOpen }) => ($isOpen ? 'translateY(0)' : `translateY(20px)`)};
-  visibility: inherit;
-  opacity: inherit;
+  ${({ $isOpen }) => overlayCSS(!!$isOpen)}
+  // Overrides overlayCSS properties, because react-aria Overlay
+  // contains a FocusScope that will ignore this element if it is
+  // visually hidden
+  visibility: visible;
+  // Allows scroll on the modal
+  pointer-events: auto;
   transition: ${({ $isOpen }) => ($isOpen ? theme.modal.transition.entering : theme.modal.transition.exiting)};
+
+  outline: none;
 `;
 
 const StyledDialog = styled.section<StyledDialogProps>`
@@ -71,11 +85,12 @@ const StyledDialog = styled.section<StyledDialogProps>`
   width: 100%;
   max-height: ${({ $hasMaxHeight }) => $hasMaxHeight && '560px'};
   overflow: ${({ $isCentered }) => $isCentered && 'hidden'};
-  pointer-events: auto;
 
   display: flex;
   flex-direction: column;
   position: relative;
+
+  outline: none;
 `;
 
 const StyledCloseCTA = styled(CTA)`
@@ -114,5 +129,6 @@ export {
   StyledModalDivider,
   StyledModalFooter,
   StyledModalHeader,
-  StyledUnderlay
+  StyledUnderlay,
+  StyledWrapper
 };
