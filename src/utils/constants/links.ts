@@ -28,7 +28,8 @@ const PAGES = Object.freeze({
   ACTIONS: '/actions',
   LOANS: '/lending',
   SWAP: '/swap',
-  POOLS: '/pools'
+  POOLS: '/pools',
+  WALLET: '/wallet'
 });
 
 const QUERY_PARAMETERS = Object.freeze({
