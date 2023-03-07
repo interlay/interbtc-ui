@@ -16,10 +16,20 @@ const StyledDd = styled(Dd)<StyledDdProps>`
   display: flex;
   gap: ${theme.spacing.spacing2};
   align-items: center;
+  overflow: hidden;
 `;
 
 const StyledDl = styled(Dl)`
   font-size: ${theme.text.s};
 `;
 
-export { StyledDd, StyledDl };
+const StyledSpan = styled.span`
+  white-space: nowrap;
+
+  &:last-of-type {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+`;
+
+export { StyledDd, StyledDl, StyledSpan };

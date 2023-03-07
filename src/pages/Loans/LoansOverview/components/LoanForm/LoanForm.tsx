@@ -62,7 +62,7 @@ const getData = (t: TFunction, variant: LoanAction) =>
     repay: {
       content: {
         title: t('loans.repay'),
-        label: t('loans.borrowing'),
+        label: 'Balance',
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.repay').toLowerCase() })
       }
     }
@@ -85,7 +85,11 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
-  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
+  const { governanceBalance, assetAmount, assetPrice, transactionFee, balance } = useLoanFormData(
+    variant,
+    asset,
+    position
+  );
 
   // withdraw has `withdraw` and `withdrawAll`
   // repay has `repay` and `repayAll`
@@ -175,8 +179,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
             placeholder='0.00'
             ticker={asset.currency.ticker}
             aria-label={content.fieldAriaLabel}
-            balance={assetAmount.max.value.toString()}
-            humanBalance={assetAmount.max.value.toHuman()}
+            balance={balance.toString()}
+            humanBalance={balance.toHuman()}
             balanceLabel={content.label}
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
             onClickBalance={handleClickBalance}
@@ -189,6 +193,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
               asset={asset}
               actionAmount={monetaryAmount}
               prices={prices}
+              remainingDebt={variant === 'repay' ? assetAmount.max.value : undefined}
             />
           )}
         </Flex>

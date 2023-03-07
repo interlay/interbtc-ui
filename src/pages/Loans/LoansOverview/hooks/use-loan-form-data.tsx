@@ -74,6 +74,7 @@ type UseLoanFormData = {
   governanceBalance: MonetaryAmount<CurrencyExt>;
   transactionFee: MonetaryAmount<CurrencyExt>;
   assetPrice: number;
+  balance: MonetaryAmount<CurrencyExt>;
   assetAmount: {
     available: MonetaryAmount<CurrencyExt>;
     min: MonetaryAmount<CurrencyExt>;
@@ -118,6 +119,7 @@ const useLoanFormData = (
     governanceBalance,
     transactionFee,
     assetPrice,
+    balance: loanAction === 'repay' ? (assetBalance.gt(maxAmount) ? maxAmount : assetBalance) : maxAmount,
     assetAmount: {
       available: assetBalance,
       min: minAmount,
