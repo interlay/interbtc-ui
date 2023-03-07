@@ -1,9 +1,9 @@
 import {
   BorrowPosition,
   CurrencyExt,
+  LendingStats,
   LendPosition,
   LoanAsset,
-  LoanCollateralInfo,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
@@ -24,7 +24,7 @@ type GetMaxAmountParams = {
   asset: LoanAsset;
   assetBalance?: MonetaryAmount<CurrencyExt>;
   position?: LendPosition | BorrowPosition;
-  loanCollateralInfo?: LoanCollateralInfo;
+  lendingStats?: LendingStats;
 };
 
 const getMaxAmount = ({
@@ -32,13 +32,13 @@ const getMaxAmount = ({
   asset,
   assetBalance,
   position,
-  loanCollateralInfo
+  lendingStats
 }: GetMaxAmountParams): MonetaryAmount<CurrencyExt> | undefined => {
   switch (loanAction) {
     case 'borrow':
-      return getMaxBorrowableAmount(asset, loanCollateralInfo);
+      return getMaxBorrowableAmount(asset, lendingStats);
     case 'withdraw':
-      return getMaxWithdrawableAmount(asset, position as LendPosition, loanCollateralInfo);
+      return getMaxWithdrawableAmount(asset, position as LendPosition, lendingStats);
     case 'lend':
       return getMaxLendableAmount(assetBalance, asset);
     case 'repay':
@@ -101,7 +101,7 @@ const useLoanFormData = (
     asset,
     assetBalance,
     position,
-    loanCollateralInfo: statistics
+    lendingStats: statistics
   };
 
   const maxAmount = getMaxAmount(maxAmountParams) || zeroAssetAmount;

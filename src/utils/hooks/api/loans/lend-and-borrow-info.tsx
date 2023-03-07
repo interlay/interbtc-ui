@@ -1,9 +1,9 @@
 import {
   BorrowPosition,
   CurrencyExt,
+  LendingStats,
   LendPosition,
   LoanAsset,
-  LoanCollateralInfo,
   TickerToData
 } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
@@ -70,7 +70,7 @@ const useGetBorrowPositionsOfAccount = (): {
   return { data, refetch };
 };
 
-interface AccountPositionsStatisticsData extends LoanCollateralInfo {
+interface AccountPositionsStatisticsData extends LendingStats {
   supplyAmountUSD: Big;
   borrowAmountUSD: Big;
   collateralizedAmountUSD: Big;
@@ -123,9 +123,9 @@ const getAccountPositionsStats = (
   borrowPositions: BorrowPosition[],
   subsidyRewards: MonetaryAmount<CurrencyExt>,
   prices: Prices,
-  loanCollateralInfo: LoanCollateralInfo
+  lendingStats: LendingStats
 ): AccountPositionsStatisticsData => {
-  const { totalLentBtc, totalBorrowedBtc, totalCollateralBtc } = loanCollateralInfo;
+  const { totalLentBtc, totalBorrowedBtc, totalCollateralBtc } = lendingStats;
   // Convert from BTC to USD values.
   const supplyAmountUSD = convertMonetaryBtcToUSD(totalLentBtc, prices);
   const borrowAmountUSD = convertMonetaryBtcToUSD(totalBorrowedBtc, prices);
@@ -133,7 +133,7 @@ const getAccountPositionsStats = (
   const netAPY = getNetAPY(lendPositions, borrowPositions, assets, supplyAmountUSD, prices);
 
   return {
-    ...loanCollateralInfo,
+    ...lendingStats,
     supplyAmountUSD,
     borrowAmountUSD,
     earnedInterestAmountUSD: new Big(0),
@@ -159,27 +159,20 @@ const useLoanInfo = (): {
 
   const { data: subsidyRewards, refetch: subsidyRewardsRefetch } = useGetAccountSubsidyRewards();
 
-  const loanCollateralInfo = useMemo(() => {
+  const lendingStats = useMemo(() => {
     if (!lendPositions || !borrowPositions || !loanAssets) {
       return undefined;
     }
-    return window.bridge.loans.getLoanCollateralInfo(lendPositions, borrowPositions, loanAssets);
+    return window.bridge.loans.getLendingStats(lendPositions, borrowPositions, loanAssets);
   }, [lendPositions, borrowPositions, loanAssets]);
 
   const statistics = useMemo(() => {
-    if (!loanAssets || !lendPositions || !borrowPositions || !subsidyRewards || !prices || !loanCollateralInfo) {
+    if (!loanAssets || !lendPositions || !borrowPositions || !subsidyRewards || !prices || !lendingStats) {
       return undefined;
     }
 
-    return getAccountPositionsStats(
-      loanAssets,
-      lendPositions,
-      borrowPositions,
-      subsidyRewards,
-      prices,
-      loanCollateralInfo
-    );
-  }, [lendPositions, borrowPositions, prices, subsidyRewards, loanAssets, loanCollateralInfo]);
+    return getAccountPositionsStats(loanAssets, lendPositions, borrowPositions, subsidyRewards, prices, lendingStats);
+  }, [lendPositions, borrowPositions, prices, subsidyRewards, loanAssets, lendingStats]);
 
   return {
     data: {

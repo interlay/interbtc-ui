@@ -34,7 +34,6 @@ const BorrowLimit = ({
   const { data: currentBorrowLimit, getBorrowLimitUSD } = useAccountBorrowLimit();
   const { data: currentLTV, getLTV } = useGetLTV();
 
-  // TODO: update with `calculateBorrowLimitBtcChange`
   const newBorrowLimit = getBorrowLimitUSD({ type: loanAction, amount: actionAmount, asset });
   const newLTV = getLTV({ type: loanAction, amount: actionAmount });
 
