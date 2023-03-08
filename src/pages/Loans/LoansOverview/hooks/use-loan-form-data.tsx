@@ -11,7 +11,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { BorrowAction, LendAction, LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useLoanInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
+import { useAccountLendingStatistics } from '@/utils/hooks/api/loans/use-account-lending-statistics';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -87,7 +87,7 @@ const useLoanFormData = (
   const prices = useGetPrices();
   const {
     data: { statistics }
-  } = useLoanInfo();
+  } = useAccountLendingStatistics();
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 

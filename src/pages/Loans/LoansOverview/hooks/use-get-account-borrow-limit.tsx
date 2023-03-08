@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 
 import { convertMonetaryBtcToUSD } from '@/common/utils/utils';
 import { LoanAction } from '@/types/loans';
-import { useLoanInfo } from '@/utils/hooks/api/loans/lend-and-borrow-info';
+import { useAccountLendingStatistics } from '@/utils/hooks/api/loans/use-account-lending-statistics';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 type LoanActionData = { type: LoanAction; amount: MonetaryAmount<CurrencyExt>; asset: LoanAsset };
@@ -19,7 +19,7 @@ const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
   const prices = useGetPrices();
   const {
     data: { statistics }
-  } = useLoanInfo();
+  } = useAccountLendingStatistics();
 
   /**
    * This method computes how the borrow limit will change if

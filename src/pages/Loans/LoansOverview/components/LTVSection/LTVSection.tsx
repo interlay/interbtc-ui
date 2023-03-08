@@ -1,6 +1,6 @@
 import { formatUSD } from '@/common/utils/utils';
 import { Card } from '@/component-library';
-import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/lend-and-borrow-info';
+import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-account-lending-statistics';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
@@ -22,7 +22,7 @@ const status = {
 
 type LTVSectionProps = {
   prices?: Prices;
-  statistics: AccountPositionsStatisticsData | undefined;
+  statistics: AccountLendingStatistics | undefined;
 };
 
 const LTVSection = ({ statistics }: LTVSectionProps): JSX.Element => {

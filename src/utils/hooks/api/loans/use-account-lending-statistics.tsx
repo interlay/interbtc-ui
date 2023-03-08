@@ -9,68 +9,17 @@ import {
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useMemo } from 'react';
-import { useErrorHandler } from 'react-error-boundary';
-import { useQuery } from 'react-query';
 
 import { convertMonetaryAmountToValueInUSD, convertMonetaryBtcToUSD } from '@/common/utils/utils';
 import { getSubsidyRewardApy } from '@/pages/Loans/LoansOverview/utils/get-subsidy-rewards-apy';
-import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
-import useAccountId from '@/utils/hooks/use-account-id';
 
 import { Prices, useGetPrices } from '../use-get-prices';
+import { useGetAccountPositions } from './use-get-account-positions';
 import { useGetAccountSubsidyRewards } from './use-get-account-subsidy-rewards';
 
-const useGetLendPositionsOfAccount = (): {
-  data: Array<LendPosition> | undefined;
-  refetch: () => void;
-} => {
-  const accountId = useAccountId();
-
-  const { data, error, refetch } = useQuery({
-    queryKey: ['getLendPositionsOfAccount', accountId],
-    queryFn: async () => {
-      if (!accountId) {
-        throw new Error('Something went wrong!');
-      }
-
-      return await window.bridge.loans.getLendPositionsOfAccount(accountId);
-    },
-    enabled: !!accountId,
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL
-  });
-
-  useErrorHandler(error);
-
-  return { data, refetch };
-};
-
-const useGetBorrowPositionsOfAccount = (): {
-  data: Array<BorrowPosition> | undefined;
-  refetch: () => void;
-} => {
-  const accountId = useAccountId();
-
-  const { data, error, refetch } = useQuery({
-    queryKey: ['getBorrowPositionsOfAccount', accountId],
-    queryFn: async () => {
-      if (!accountId) {
-        throw new Error('Something went wrong!');
-      }
-
-      return await window.bridge.loans.getBorrowPositionsOfAccount(accountId);
-    },
-    enabled: !!accountId,
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL
-  });
-
-  useErrorHandler(error);
-
-  return { data, refetch };
-};
-
-interface AccountPositionsStatisticsData extends LendingStats {
+interface AccountLendingStatistics extends LendingStats {
   supplyAmountUSD: Big;
   borrowAmountUSD: Big;
   collateralizedAmountUSD: Big;
@@ -124,7 +73,7 @@ const getAccountPositionsStats = (
   subsidyRewards: MonetaryAmount<CurrencyExt>,
   prices: Prices,
   lendingStats: LendingStats
-): AccountPositionsStatisticsData => {
+): AccountLendingStatistics => {
   const { totalLentBtc, totalBorrowedBtc, totalCollateralBtc } = lendingStats;
   // Convert from BTC to USD values.
   const supplyAmountUSD = convertMonetaryBtcToUSD(totalLentBtc, prices);
@@ -143,16 +92,16 @@ const getAccountPositionsStats = (
   };
 };
 
-const useLoanInfo = (): {
+const useAccountLendingStatistics = (): {
   data: {
-    statistics: AccountPositionsStatisticsData | undefined;
+    statistics: AccountLendingStatistics | undefined;
   };
   refetch: () => void;
 } => {
-  const { data: lendPositions, refetch: lendPositionsRefetch } = useGetLendPositionsOfAccount();
-
-  const { data: borrowPositions, refetch: borrowPositionsRefetch } = useGetBorrowPositionsOfAccount();
-
+  const {
+    data: { lendPositions, borrowPositions },
+    refetch: positionsRefetch
+  } = useGetAccountPositions();
   const { data: loanAssets, refetch: loanAssetsRefetch } = useGetLoanAssets();
 
   const prices = useGetPrices();
@@ -179,14 +128,13 @@ const useLoanInfo = (): {
       statistics
     },
     refetch: () => {
-      lendPositionsRefetch();
-      borrowPositionsRefetch();
+      positionsRefetch();
       loanAssetsRefetch();
       subsidyRewardsRefetch();
     }
   };
 };
 
-export { useGetBorrowPositionsOfAccount, useGetLendPositionsOfAccount, useLoanInfo };
+export { useAccountLendingStatistics };
 
-export type { AccountPositionsStatisticsData };
+export type { AccountLendingStatistics };
