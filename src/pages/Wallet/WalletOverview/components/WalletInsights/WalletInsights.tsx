@@ -6,6 +6,8 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
+import { WalletMeta } from './WalletMeta';
+
 type WalletInsightsProps = {
   balances?: BalanceData;
 };
@@ -13,67 +15,41 @@ type WalletInsightsProps = {
 const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
   const prices = useGetPrices();
 
-  if (!balances) {
-    return (
-      <Dl wrap direction='row'>
-        {/* <Card flex='1'>
-          <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <StyledDt color='primary'>{t('supply_balance')}</StyledDt>
-            <StyledDd color='secondary'>{supplyBalanceLabel}</StyledDd>
-          </DlGroup>
-        </Card> */}
-        <Card flex='1'>
-          <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <Dt weight='semibold' color='primary'>
-              Total Balance
-            </Dt>
-            <Dd weight='bold' color='secondary'>
-              --
-            </Dd>
-          </DlGroup>
-        </Card>
-        <Card direction='row' flex='1' gap='spacing2' alignItems='center' justifyContent='space-between'>
-          <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-            <Dt weight='semibold' color='primary'>
-              Transferable balance
-            </Dt>
-            <Dd weight='bold' color='secondary'>
-              --
-            </Dd>
-          </DlGroup>
-        </Card>
-      </Dl>
+  const totalBalance =
+    balances &&
+    Object.values(balances).reduce(
+      (total, balance) =>
+        total.add(
+          convertMonetaryAmountToValueInUSD(balance.free, getTokenPrice(prices, balance.currency.ticker)?.usd) || 0
+        ),
+      new Big(0)
     );
-  }
 
-  const totalBalance = Object.values(balances).reduce(
-    (total, balance) =>
-      total.add(
-        convertMonetaryAmountToValueInUSD(balance.free, getTokenPrice(prices, balance.currency.ticker)?.usd) || 0
-      ),
-    new Big(0)
-  );
-  const totalBalanceLabel = formatUSD(totalBalance.toNumber(), { compact: true });
+  const totalBalanceLabel = totalBalance ? formatUSD(totalBalance.toNumber(), { compact: true }) : '-';
 
-  const transfarableBalance = Object.values(balances).reduce(
-    (total, balance) =>
-      total.add(
-        convertMonetaryAmountToValueInUSD(balance.transferable, getTokenPrice(prices, balance.currency.ticker)?.usd) ||
-          0
-      ),
-    new Big(0)
-  );
-  const transfarableBalanceLabel = formatUSD(transfarableBalance.toNumber(), { compact: true });
+  const transfarableBalance =
+    balances &&
+    Object.values(balances).reduce(
+      (total, balance) =>
+        total.add(
+          convertMonetaryAmountToValueInUSD(
+            balance.transferable,
+            getTokenPrice(prices, balance.currency.ticker)?.usd
+          ) || 0
+        ),
+      new Big(0)
+    );
+
+  const transfarableBalanceLabel = transfarableBalance
+    ? formatUSD(transfarableBalance.toNumber(), { compact: true })
+    : '-';
 
   return (
     <Dl wrap direction='row'>
-      {/* <Card flex='1'>
-        <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
-          <StyledDt color='primary'>{t('supply_balance')}</StyledDt>
-          <StyledDd color='secondary'>{supplyBalanceLabel}</StyledDd>
-        </DlGroup>
-      </Card> */}
       <Card flex='1'>
+        <WalletMeta />
+      </Card>
+      <Card flex='1' justifyContent='center'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
           <Dt weight='semibold' color='primary'>
             Total Balance
@@ -83,7 +59,7 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
           </Dd>
         </DlGroup>
       </Card>
-      <Card direction='row' flex='1' gap='spacing2' alignItems='center' justifyContent='space-between'>
+      <Card flex='1' justifyContent='center'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
           <Dt weight='semibold' color='primary'>
             Transferable balance
