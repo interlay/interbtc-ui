@@ -28,6 +28,13 @@ interface AccountLendingStatistics extends LendingStats {
   netAPY: Big;
 }
 
+interface UseGetAccountLendingStatistics {
+  data: {
+    statistics: AccountLendingStatistics | undefined;
+  };
+  refetch: () => void;
+}
+
 const getNetAPY = (
   lendPositions: LendPosition[],
   borrowPositions: BorrowPosition[],
@@ -92,12 +99,7 @@ const getAccountPositionsStats = (
   };
 };
 
-const useGetAccountLendingStatistics = (): {
-  data: {
-    statistics: AccountLendingStatistics | undefined;
-  };
-  refetch: () => void;
-} => {
+const useGetAccountLendingStatistics = (): UseGetAccountLendingStatistics => {
   const {
     data: { lendPositions, borrowPositions },
     refetch: positionsRefetch

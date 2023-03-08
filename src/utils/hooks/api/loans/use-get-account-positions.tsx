@@ -24,10 +24,17 @@ type UseGetAccountPositions = {
   refetch: () => void;
 };
 
-const useGetLendPositionsOfAccount = (): {
+interface UseGetLendPositionsOfAccount {
   data: Array<LendPosition> | undefined;
   refetch: () => void;
-} => {
+}
+
+interface UseGetBorrowPositionsOfAccount {
+  data: Array<BorrowPosition> | undefined;
+  refetch: () => void;
+}
+
+const useGetLendPositionsOfAccount = (): UseGetLendPositionsOfAccount => {
   const accountId = useAccountId();
 
   const { data, error, refetch } = useQuery({
@@ -48,10 +55,7 @@ const useGetLendPositionsOfAccount = (): {
   return { data, refetch };
 };
 
-const useGetBorrowPositionsOfAccount = (): {
-  data: Array<BorrowPosition> | undefined;
-  refetch: () => void;
-} => {
+const useGetBorrowPositionsOfAccount = (): UseGetBorrowPositionsOfAccount => {
   const accountId = useAccountId();
 
   const { data, error, refetch } = useQuery({

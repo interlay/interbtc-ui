@@ -4,10 +4,12 @@ import { useQuery } from 'react-query';
 
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
-const useGetLoanAssets = (): {
+interface UseGetLoansAssets {
   data: TickerToData<LoanAsset> | undefined;
   refetch: () => void;
-} => {
+}
+
+const useGetLoanAssets = (): UseGetLoansAssets => {
   const { data, error, refetch } = useQuery({
     queryKey: ['loan-assets'],
     queryFn: (): Promise<TickerToData<LoanAsset>> => window.bridge.loans.getLoanAssets(),
