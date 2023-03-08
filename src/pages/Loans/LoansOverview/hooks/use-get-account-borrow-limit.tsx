@@ -17,9 +17,7 @@ interface UseAccountBorrowLimit {
 
 const useAccountBorrowLimit = (): UseAccountBorrowLimit => {
   const prices = useGetPrices();
-  const {
-    data: { statistics }
-  } = useGetAccountLendingStatistics();
+  const { data: statistics } = useGetAccountLendingStatistics();
 
   /**
    * This method computes how the borrow limit will change if

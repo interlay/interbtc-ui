@@ -85,9 +85,7 @@ const useLoanFormData = (
 ): UseLoanFormData => {
   const { getBalance, getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-  const {
-    data: { statistics }
-  } = useGetAccountLendingStatistics();
+  const { data: statistics } = useGetAccountLendingStatistics();
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 

@@ -58,9 +58,7 @@ interface UserGetLTV {
 }
 
 const useGetLTV = (): UserGetLTV => {
-  const {
-    data: { statistics }
-  } = useGetAccountLendingStatistics();
+  const { data: statistics } = useGetAccountLendingStatistics();
 
   /**
    * This method computes how the LTV will

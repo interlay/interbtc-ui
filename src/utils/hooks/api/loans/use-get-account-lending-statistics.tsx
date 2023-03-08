@@ -29,9 +29,7 @@ interface AccountLendingStatistics extends LendingStats {
 }
 
 interface UseGetAccountLendingStatistics {
-  data: {
-    statistics: AccountLendingStatistics | undefined;
-  };
+  data: AccountLendingStatistics | undefined;
   refetch: () => void;
 }
 
@@ -126,9 +124,7 @@ const useGetAccountLendingStatistics = (): UseGetAccountLendingStatistics => {
   }, [lendPositions, borrowPositions, prices, subsidyRewards, loanAssets, lendingStats]);
 
   return {
-    data: {
-      statistics
-    },
+    data: statistics,
     refetch: () => {
       positionsRefetch();
       loanAssetsRefetch();

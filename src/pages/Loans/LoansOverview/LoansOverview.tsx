@@ -17,9 +17,7 @@ const LoansOverview = (): JSX.Element => {
     data: { borrowPositions, lendPositions, hasCollateral }
   } = useGetAccountPositions();
 
-  const {
-    data: { statistics }
-  } = useGetAccountLendingStatistics();
+  const { data: statistics } = useGetAccountLendingStatistics();
 
   const isLoadingPositions = accountId !== undefined && (lendPositions === undefined || borrowPositions === undefined);
 
