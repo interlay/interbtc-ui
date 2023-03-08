@@ -6,7 +6,7 @@ import { Card, Flex, Table as LiTable, TableProps as LibTableProps } from '@/com
 import { StyledTitle } from './Table.style';
 
 type Props = {
-  title: string;
+  title: ReactNode;
   className?: string;
   actions?: ReactNode;
   placeholder?: ReactNode;
