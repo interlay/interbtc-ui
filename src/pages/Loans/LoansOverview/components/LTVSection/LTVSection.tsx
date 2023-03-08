@@ -1,6 +1,6 @@
 import { formatUSD } from '@/common/utils/utils';
 import { Card } from '@/component-library';
-import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-account-lending-statistics';
+import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';

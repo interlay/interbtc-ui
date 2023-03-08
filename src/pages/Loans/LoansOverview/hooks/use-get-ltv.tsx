@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 
 import { MeterRanges, Status } from '@/component-library';
 import { LoanAction } from '@/types/loans';
-import { useAccountLendingStatistics } from '@/utils/hooks/api/loans/use-account-lending-statistics';
+import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { PositionsThresholdsData } from '@/utils/hooks/api/loans/use-get-account-positions';
 
 type LTVData = {
@@ -60,7 +60,7 @@ interface UserGetLTV {
 const useGetLTV = (): UserGetLTV => {
   const {
     data: { statistics }
-  } = useAccountLendingStatistics();
+  } = useGetAccountLendingStatistics();
 
   /**
    * This method computes how the LTV will

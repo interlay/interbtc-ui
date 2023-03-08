@@ -1,7 +1,7 @@
 import { Flex } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
-import { useAccountLendingStatistics } from '@/utils/hooks/api/loans/use-account-lending-statistics';
+import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import useAccountId from '@/utils/hooks/use-account-id';
@@ -19,7 +19,7 @@ const LoansOverview = (): JSX.Element => {
 
   const {
     data: { statistics }
-  } = useAccountLendingStatistics();
+  } = useGetAccountLendingStatistics();
 
   const isLoadingPositions = accountId !== undefined && (lendPositions === undefined || borrowPositions === undefined);
 

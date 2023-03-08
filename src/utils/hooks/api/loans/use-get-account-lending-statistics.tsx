@@ -92,7 +92,7 @@ const getAccountPositionsStats = (
   };
 };
 
-const useAccountLendingStatistics = (): {
+const useGetAccountLendingStatistics = (): {
   data: {
     statistics: AccountLendingStatistics | undefined;
   };
@@ -135,6 +135,6 @@ const useAccountLendingStatistics = (): {
   };
 };
 
-export { useAccountLendingStatistics };
+export { useGetAccountLendingStatistics };
 
 export type { AccountLendingStatistics };
