@@ -91,15 +91,6 @@ const useXCMBridge = (): UseXCMBridge => {
 
       const tokens = XCMBridge.router.getAvailableTokens({ from, to });
 
-      console.log(
-        'from, to, originAddress, destinationAddress, tokens',
-        from,
-        to,
-        originAddress,
-        destinationAddress,
-        tokens
-      );
-
       const inputConfigs = await Promise.all(
         tokens.map(
           async (token): Promise<any> => {
@@ -163,7 +154,6 @@ const useXCMBridge = (): UseXCMBridge => {
         )
       );
 
-      console.log('input configs in utility', inputConfigs);
       return inputConfigs;
     },
     [data]

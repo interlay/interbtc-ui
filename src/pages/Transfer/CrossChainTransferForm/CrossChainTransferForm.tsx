@@ -37,25 +37,23 @@ import {
   StyledSourceChainSelect
 } from './CrossChainTransferForm.styles';
 
-// GET SELECTED TOKENS
+// 0. Change handler on token change
+// 1. Remove governance token
+// 2. GET SELECTED TOKENS
 // When origin chain changes
 // When destination chain changes
-// GET TOKEN BALANCE
+// 3. GET TOKEN BALANCE
 // When origin chain changes
 // When destination chain changes
 // When originating account changes
 // When destination accountchanges
-
-// TODO: Use onChange handlers instead of useEffect
-// minimise code repetition and use common handler if
-// possible.
-
-// TODO: set balance when token selected
+// 4. set balance when token selected
 
 const CrossChainTransferForm = (): JSX.Element => {
   const [originatingChains, setOriginatingChains] = useState<Chains>([]);
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<TokenData[]>([]);
+  const [currentToken, setCurrentToken] = useState<TokenData | undefined>();
 
   const { getBalance } = useGetBalances();
   const prices = useGetPrices();
@@ -66,7 +64,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const { getDestinationChains, getOriginatingChains, getAvailableTokens } = useXCMBridge();
 
-  const commonFunction = async () => {
+  const setTokens = async () => {
     if (!accountId) return;
 
     const tokens = await getAvailableTokens(
@@ -75,8 +73,6 @@ const CrossChainTransferForm = (): JSX.Element => {
       accountId.toString(),
       form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
     );
-
-    console.log('common function', tokens);
 
     setTransferableTokens(tokens);
   };
@@ -88,24 +84,29 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleOriginatingChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const destinationChains = getDestinationChains(e.target.value as ChainName);
 
-    setDestinationChains(destinationChains);
-
-    commonFunction();
-
     form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, e.target.value);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
+
+    setDestinationChains(destinationChains);
+    setTokens();
   };
 
   const handleDestinationChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    commonFunction();
-
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value);
+
+    setTokens();
+  };
+
+  const genericChangeHandler = (ticker: string | undefined) => {
+    const selectedToken = transferableTokens.find((token: TokenData) => token.ticker === ticker);
+
+    setCurrentToken(selectedToken);
   };
 
   const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    commonFunction();
-
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
+
+    setTokens();
   };
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
@@ -145,10 +146,10 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     const destinationChains = getDestinationChains(originatingChains[0].id as ChainName);
 
-    setDestinationChains(destinationChains);
-
     form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, originatingChains[0].id);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
+
+    setDestinationChains(destinationChains);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [originatingChains]);
 
@@ -157,10 +158,10 @@ const CrossChainTransferForm = (): JSX.Element => {
       return form.resetForm();
     }
 
-    commonFunction();
-
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, accountId.toString());
     form.validateField(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD);
+
+    setTokens();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
 
@@ -199,12 +200,14 @@ const CrossChainTransferForm = (): JSX.Element => {
           <TokenInput
             placeholder='0.00'
             label='Transfer amount'
-            balance={balance?.toString() || 0}
-            humanBalance={balance?.toHuman() || 0}
+            balance={currentToken?.balance?.toString() || 0}
+            humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD}
             tokens={transferableTokens}
             selectProps={form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false)}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD), {
+              onChangeTicker: genericChangeHandler
+            })}
           />
         </div>
         <AccountSelect
