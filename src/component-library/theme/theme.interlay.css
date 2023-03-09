@@ -12,8 +12,9 @@
 .theme-interlay {
   --colors-border: var(--colors-neutral-black-25);
   --colors-bg-primary: var(--colors-neutral-white);
-  --colors-card-bg: var(--colors-neutral-white);
-  --colors-card-secondary-bg: var(--colors-light-blue-10);
+  /* Card */
+  --color-card-primary-bg: var(--colors-neutral-white);
+  --color-card-secondary-bg: var(--colors-light-blue-10);
   /* CTA */
   --colors-cta-primary: var(--colors-light-blue);
   --colors-cta-primary-hover: var(--colors-light-blue-90);

@@ -51,6 +51,7 @@ const FundWallet = forwardRef<HTMLButtonElement, FundWalletProps>(
             <StyledTabs size='large' fullWidth>
               {TABS.map((tab) => {
                 const { title, description, entities } = getData(tab, t);
+
                 return (
                   <TabsItem title={title} key={tab}>
                     <StyledWrapper direction='column' gap='spacing8'>

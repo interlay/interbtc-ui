@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 
-import BANXA_KITNSUGI from '@/assets/img/banxa-kintsugi.png';
+import BANXA_INTERLAY from '@/assets/img/banxa-dark.png';
+import BANXA_KITNSUGI from '@/assets/img/banxa-white.png';
 import { ReactComponent as AcalaLogoIcon } from '@/assets/img/exchanges/acala-logo.svg';
 import { ReactComponent as GateLogoIcon } from '@/assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from '@/assets/img/exchanges/kraken-logo.svg';
@@ -45,7 +46,7 @@ if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
   ];
 
   // TODO: add banxa for light theme
-  payments = [{ link: '#', icon: <img src={BANXA_KITNSUGI} alt='banxa' /> }];
+  payments = [{ link: '#', icon: <img src={BANXA_INTERLAY} alt='banxa' /> }];
 } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
   exchanges = [
     {

@@ -24,8 +24,8 @@ const StyledEntitiesItem = styled.a`
   align-items: center;
   padding: ${theme.spacing.spacing8};
   width: 100%;
-  background-color: ${theme.card.secondaryBg};
-  border: ${theme.input.default.border};
+  border: ${theme.border.default};
+  background-color: ${theme.card.bg.secondary};
   border-radius: 12px;
   max-height: 120px;
 
@@ -40,11 +40,12 @@ const StyledEntitiesItem = styled.a`
   }
 
   &:hover {
-    border: ${theme.input.hover.border};
+    border: ${theme.border.hover};
   }
 
   &:focus {
-    box-shadow: ${theme.input.focus.boxShadow};
+    border: ${theme.border.focus};
+    box-shadow: ${theme.boxShadow.focus};
   }
 `;
 
