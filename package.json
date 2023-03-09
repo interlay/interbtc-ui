@@ -7,7 +7,7 @@
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^2.0.0",
     "@hookform/resolvers": "^2.9.7",
-    "@interlay/bridge": "^0.2.1",
+    "@interlay/bridge": "^0.2.3",
     "@interlay/interbtc-api": "0.32.9",
     "@material-icons/svg": "^1.0.28",
     "@polkadot/api": "9.11.1",
