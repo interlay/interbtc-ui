@@ -1,5 +1,6 @@
 import { AvailableAssetsTable, AvailableAssetsTableProps } from './AvailableAssetsTable';
+import { StakingTable, StakingTableProps } from './StakingTable';
 import { WalletInsights, WalletInsightsProps } from './WalletInsights';
 
-export { AvailableAssetsTable, WalletInsights };
-export type { AvailableAssetsTableProps, WalletInsightsProps };
+export { AvailableAssetsTable, StakingTable, WalletInsights };
+export type { AvailableAssetsTableProps, StakingTableProps, WalletInsightsProps };

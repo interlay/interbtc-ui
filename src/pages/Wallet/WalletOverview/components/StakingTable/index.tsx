@@ -1,2 +1,2 @@
-export type { AvailableAssetsTableProps } from './AvailableAssetsTable';
-export { AvailableAssetsTable } from './AvailableAssetsTable';
+export type { StakingTableProps } from './StakingTable';
+export { StakingTable } from './StakingTable';

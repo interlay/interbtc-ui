@@ -1,8 +1,11 @@
+import { isCurrencyEqual } from '@interlay/interbtc-api';
 import { ReactNode, useMemo, useState } from 'react';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { CTA, Flex, P, Switch } from '@/component-library';
+import { CTA, CTALink, Flex, P, Switch } from '@/component-library';
 import { AssetCell, Cell, Table } from '@/components';
+import { WRAPPED_TOKEN } from '@/config/relay-chains';
+import { PAGES } from '@/utils/constants/links';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -10,7 +13,7 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 enum AvailableAssetsColumns {
   ASSET = 'asset',
-  ASSET_PRICE = 'assetPrice',
+  PRICE = 'price',
   BALANCE = 'balance',
   ACTIONS = 'actions'
 }
@@ -18,7 +21,7 @@ enum AvailableAssetsColumns {
 type AvailableAssetsRows = {
   id: string;
   [AvailableAssetsColumns.ASSET]: ReactNode;
-  [AvailableAssetsColumns.ASSET_PRICE]: ReactNode;
+  [AvailableAssetsColumns.PRICE]: ReactNode;
   [AvailableAssetsColumns.BALANCE]: ReactNode;
   [AvailableAssetsColumns.ACTIONS]: ReactNode;
 };
@@ -33,7 +36,7 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
 
   const columns = [
     { name: 'Asset', uid: AvailableAssetsColumns.ASSET },
-    { name: 'Asset Price', uid: AvailableAssetsColumns.ASSET_PRICE },
+    { name: 'Price', uid: AvailableAssetsColumns.PRICE },
     { name: 'Balance', uid: AvailableAssetsColumns.BALANCE },
     { name: '', uid: AvailableAssetsColumns.ACTIONS }
   ];
@@ -49,7 +52,7 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
         const tokenPrice = getTokenPrice(prices, currency.ticker)?.usd || 0;
 
         const assetPriceLabel = formatUSD(getTokenPrice(prices, currency.ticker)?.usd || 0, { compact: true });
-        const assetPrice = <Cell label={assetPriceLabel} />;
+        const price = <Cell label={assetPriceLabel} />;
 
         const balanceLabel = free.toString();
         const balanceSublabel = formatUSD(convertMonetaryAmountToValueInUSD(free, tokenPrice) || 0, {
@@ -59,16 +62,28 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
 
         const actions = (
           <Flex justifyContent='flex-end' gap='spacing1'>
-            <CTA size='small'>Transfer</CTA>
-            <CTA size='small'>Swap</CTA>
-            <CTA size='small'>Buy</CTA>
+            {isCurrencyEqual(currency, WRAPPED_TOKEN) && (
+              <CTALink to={{ pathname: PAGES.BRIDGE, search: 'tab=redeem' }} variant='outlined' size='small'>
+                Redeem
+              </CTALink>
+            )}
+            <CTALink to={PAGES.TRANSFER} variant='outlined' size='small'>
+              Transfer
+            </CTALink>
+            <CTALink to={PAGES.SWAP} variant='outlined' size='small'>
+              Swap
+            </CTALink>
+            {/* Missing the buy link */}
+            <CTA variant='outlined' size='small'>
+              Buy
+            </CTA>
           </Flex>
         );
 
         return {
           id: currency.ticker,
           asset,
-          assetPrice,
+          price,
           balance,
           actions
         };
