@@ -1,13 +1,17 @@
 import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
+import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryResult } from 'react-query';
 import { firstValueFrom } from 'rxjs';
 
+import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { XCM_ADAPTERS } from '@/config/relay-chains';
 import { BITCOIN_NETWORK } from '@/constants';
 import { Chains } from '@/types/chains';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { getXCMEndpoints } from './get-xcm-endpoints';
 
@@ -64,6 +68,7 @@ const useXCMBridge = (): UseXCMBridge => {
   });
 
   const { data, error } = queryResult;
+  const prices = useGetPrices();
 
   const getOriginatingChains = useCallback(
     (): Chains =>
@@ -103,13 +108,21 @@ const useXCMBridge = (): UseXCMBridge => {
               }) as any
             );
 
-            const transferableBalance = inputConfig.maxInput.lt(inputConfig.minInput)
-              ? '0'
-              : Big(inputConfig.maxInput.toString()).toString();
+            const maxInputToBig = Big(inputConfig.maxInput.toString());
+
+            // Never show less than zero
+            const transferableBalance = inputConfig.maxInput < inputConfig.minInput ? 0 : maxInputToBig;
+
+            const currency = XCMBridge.findAdapter(from).getToken(token, from);
+
+            const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
+
+            const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
 
             return {
               ticker: token,
-              balance: transferableBalance
+              balance: transferableBalance.toString(),
+              balanceUSD: formatUSD(balanceUSD || 0, { compact: true })
             };
           }
         )
@@ -117,7 +130,7 @@ const useXCMBridge = (): UseXCMBridge => {
 
       return inputConfigs;
     },
-    [data]
+    [data, prices]
   );
 
   const getInputConfigs = useCallback(

@@ -37,7 +37,7 @@ import {
   StyledSourceChainSelect
 } from './CrossChainTransferForm.styles';
 
-// 0. Change handler on token change
+// 0. Get tokens on initial render
 // 1. Remove governance token
 // 2. GET SELECTED TOKENS
 // When origin chain changes
