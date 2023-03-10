@@ -59,6 +59,7 @@ const StyledWrapper = styled.div<StyledModalProps>`
 `;
 
 const StyledModal = styled.div<StyledModalProps>`
+  width: 100%;
   max-width: ${theme.modal.maxWidth};
   max-height: ${({ $isCentered }) => $isCentered && theme.modal.maxHeight};
   margin: ${({ $isCentered }) => ($isCentered ? 0 : theme.spacing.spacing16)} ${theme.spacing.spacing6};
