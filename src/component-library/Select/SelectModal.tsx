@@ -26,7 +26,9 @@ const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
     const handleSelectionChange: ListProps['onSelectionChange'] = (key) => {
       const [selectedKey] = [...key];
 
-      if (!selectedKey) return;
+      if (!selectedKey) {
+        return onClose();
+      }
 
       onSelectionChange?.(selectedKey);
       state.selectionManager.setSelectedKeys(key);

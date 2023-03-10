@@ -73,6 +73,7 @@ MultiToken.args = {
       { balance: 200, value: 'LP KSM-KBTC-KINT', tickers: ['KSM', 'KBTC', 'KINT'], balanceUSD: '$200' }
     ]
   }
+  // errorMessage: 'Failed'
 };
 
 export { MultiToken, WithBalance, WithCurrencySelect, WithoutBalance };

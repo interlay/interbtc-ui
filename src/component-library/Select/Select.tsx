@@ -1,4 +1,3 @@
-import { useField } from '@react-aria/label';
 import { useSelect } from '@react-aria/select';
 import { chain, mergeProps } from '@react-aria/utils';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
@@ -7,9 +6,8 @@ import { CollectionBase, Node } from '@react-types/shared';
 import { ForwardedRef, forwardRef, Key, ReactNode, useRef } from 'react';
 
 import { Field, FieldProps, useFieldProps } from '../Field';
-import { hasErrorMessage } from '../HelperText/HelperText';
 import { useDOMRef } from '../utils/dom';
-import { triggerChangeEvent } from '../utils/input';
+import { hasError, triggerChangeEvent } from '../utils/input';
 import { Sizes } from '../utils/prop-types';
 import { SelectModal } from './SelectModal';
 import { SelectTrigger } from './SelectTrigger';
@@ -54,6 +52,7 @@ const Select = <T extends SelectObject>(
     placeholder = 'Select an option',
     asSelectTrigger,
     modalTitle,
+    validationState,
     onChange,
     onSelectionChange,
     renderValue = (item) => item.rendered,
@@ -73,6 +72,7 @@ const Select = <T extends SelectObject>(
     defaultSelectedKey: defaultValue as Key,
     label,
     errorMessage,
+    validationState,
     onSelectionChange: chain((key: Key) => triggerChangeEvent(inputRef, key), onSelectionChange),
     ...props
   };
@@ -96,7 +96,7 @@ const Select = <T extends SelectObject>(
     })
   );
 
-  const hasError = hasErrorMessage(errorMessage);
+  const error = hasError({ errorMessage, validationState });
 
   const selectTriggerProps =
     type === 'listbox'
@@ -108,12 +108,9 @@ const Select = <T extends SelectObject>(
           'aria-labelledby': triggerProps['aria-labelledby']
         });
 
-  const { fieldProps: hiddenFieldProps, labelProps: hiddenLabelProps } = useField({ label });
-
   return (
     <Field {...fieldProps}>
-      <VisuallyHidden>
-        {label && <label {...hiddenLabelProps}>{label}</label>}
+      <VisuallyHidden aria-hidden='true'>
         <input
           ref={inputRef}
           name={name}
@@ -121,7 +118,6 @@ const Select = <T extends SelectObject>(
           value={onChange ? state.selectedItem?.textValue || '' : undefined}
           onChange={onChange}
           tabIndex={-1}
-          {...hiddenFieldProps}
         />
       </VisuallyHidden>
       <SelectTrigger
@@ -129,7 +125,7 @@ const Select = <T extends SelectObject>(
         as={asSelectTrigger}
         ref={buttonRef}
         size={size}
-        hasError={hasError}
+        hasError={error}
         valueProps={valueProps}
         placeholder={placeholder}
       >

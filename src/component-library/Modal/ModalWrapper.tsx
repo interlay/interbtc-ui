@@ -46,10 +46,6 @@ const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
       ref as RefObject<HTMLElement>
     );
 
-    // CANNOT ESC out of modal
-
-    console.log(underlayProps, modalProps);
-
     const isCentered = align === 'center';
 
     return (

@@ -12,7 +12,7 @@ import { useDebounce } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, formatUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { Card, CardProps, Divider, Flex, H1, TokenInput, TokenInputProps } from '@/component-library';
+import { Card, CardProps, Divider, Flex, H1, TokenInput, TokenSelectProps } from '@/component-library';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
   SWAP_INPUT_AMOUNT_FIELD,
@@ -277,7 +277,7 @@ const SwapForm = ({
     form.values[SWAP_INPUT_AMOUNT_FIELD]
   );
 
-  const tokens: TokenInputProps['tokens'] = useMemo(
+  const selectItems: TokenSelectProps['items'] = useMemo(
     () =>
       currencies
         ?.filter((currency) => pooledTickers.has(currency.ticker))
@@ -290,7 +290,7 @@ const SwapForm = ({
           return {
             balance: balance?.toHuman() || 0,
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
-            ticker: currency.ticker
+            value: currency.ticker
           };
         }),
     [currencies, getAvailableBalance, pooledTickers, prices]
@@ -317,9 +317,9 @@ const SwapForm = ({
                   balance={inputBalance?.toString() || 0}
                   humanBalance={inputBalance?.toHuman() || 0}
                   valueUSD={inputAmountUSD}
-                  tokens={tokens}
                   selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, false), {
-                    onSelectionChange: (ticker: string) => handleTickerChange(ticker, SWAP_INPUT_TOKEN_FIELD)
+                    onChange: handleTickerChange,
+                    items: selectItems
                   })}
                   {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, false), { onChange: handleChangeInput })}
                 />
@@ -332,9 +332,9 @@ const SwapForm = ({
                   humanBalance={outputBalance?.toHuman() || 0}
                   valueUSD={outputAmountUSD}
                   value={trade?.outputAmount.toString() || ''}
-                  tokens={tokens}
                   selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
-                    onSelectionChange: (ticker: string) => handleTickerChange(ticker, SWAP_OUTPUT_TOKEN_FIELD)
+                    onChange: handleTickerChange,
+                    items: selectItems
                   })}
                 />
               </Flex>

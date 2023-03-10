@@ -49,8 +49,6 @@ const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }
     <Select<TokenData>
       {...props}
       type='modal'
-      descriptionProps={{ isHidden: true }}
-      errorMessageProps={{ isHidden: true }}
       asSelectTrigger={StyledTokenSelect}
       renderValue={(item) => <Value data={item.value} />}
       placeholder={<Span>Select Token</Span>}

@@ -1,3 +1,4 @@
+import { ValidationState } from '@react-types/shared';
 import { RefObject } from 'react';
 
 /**
@@ -18,4 +19,12 @@ const triggerChangeEvent = (
   ref.current?.dispatchEvent(e);
 };
 
-export { triggerChangeEvent };
+type HasErrorProps = { errorMessage?: string | string[]; validationState?: ValidationState };
+
+const hasErrorMessage = (errorMessage?: string | string[]): boolean =>
+  typeof errorMessage === 'string' ? !!errorMessage : !!errorMessage?.filter(Boolean).length;
+
+const hasError = ({ errorMessage, validationState }: HasErrorProps): boolean =>
+  (errorMessage && hasErrorMessage(errorMessage)) || validationState === 'invalid';
+
+export { hasError, triggerChangeEvent };

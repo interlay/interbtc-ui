@@ -80,7 +80,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     // Prioritise Number Input description and error message
     const hasSelectHelperText =
       !errorMessage && !description && (selectProps?.errorMessage || selectProps?.description);
-    const { errorMessage: selectErrorProps, ...restSelectProps } = selectProps || {};
+    const { ...restSelectProps } = selectProps || {};
 
     const endAdornment = restSelectProps ? (
       <TokenSelect
@@ -90,8 +90,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         label={label}
         aria-label={fieldProps['aria-label']}
         aria-describedby={hasSelectHelperText ? selectHelperTextId : undefined}
-        // Only show Select errorMessage when Select HelperText is rendered
-        errorMessage={hasSelectHelperText ? selectErrorProps : undefined}
+        validationState={hasSelectHelperText ? 'invalid' : undefined}
+        errorMessage={undefined}
       />
     ) : ticker ? (
       <TokenAdornment ticker={ticker} />
