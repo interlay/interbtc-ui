@@ -68,36 +68,35 @@ const theme = {
     full: 'var(--rounded-full)'
   },
   border: {
-    default: '1px solid var(--colors-border)'
+    default: '1px solid var(--colors-border)',
+    color: {
+      default: 'var(--colors-border)',
+      hover: 'var(--colors-border-hover)',
+      focus: 'var(--colors-border-focus)',
+      disabled: 'var(--colors-border-disabled)',
+      error: 'var(--colors-border-error)'
+    }
   },
   outline: {
     default: '2px solid var(--colors-border)'
   },
   boxShadow: {
-    default: 'var(--box-shadow-default)'
+    default: 'var(--box-shadow-default)',
+    color: {
+      focus: 'var(--colors-box-shadow-focus)'
+    }
   },
   // Components
   input: {
+    borderWidth: '1px',
     color: 'var(--colors-input-text)',
     background: 'var(--colors-input-background)',
     height: '4rem',
-    default: {
-      border: '1px solid var(--colors-input-default-border)'
-    },
-    hover: {
-      border: '1px solid var(--colors-input-hover-border)'
-    },
-    focus: {
-      border: '1px solid var(--colors-input-focus-border)',
-      boxShadow: '0 0 0 1px var(--colors-input-focus-border)'
-    },
     error: {
-      color: 'var(--colors-error-dark)',
-      border: '1px solid var(--colors-error-dark)'
+      color: 'var(--colors-error-dark)'
     },
     disabled: {
-      color: 'var(--colors-input-disabled-text)',
-      border: '1px solid var(--colors-input-disabled-border)'
+      color: 'var(--colors-input-disabled-text)'
     },
     helperText: {
       error: {
@@ -142,8 +141,11 @@ const theme = {
     }
   },
   card: {
-    bg: 'var(--colors-card-bg)',
-    secondaryBg: 'var(--colors-card-secondary-bg)'
+    borderWidth: '1px',
+    outlined: {
+      borderColor: 'transparent'
+    },
+    bg: { primary: 'var(--color-card-primary-bg)', secondary: 'var(--color-card-secondary-bg)' }
   },
   cta: {
     primary: {

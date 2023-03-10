@@ -33,12 +33,14 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   background-color: ${theme.input.background};
   overflow: hidden;
 
-  border: ${(props) =>
+  border-width: ${theme.input.borderWidth};
+  border-style: solid;
+  border-color: ${(props) =>
     props.$isDisabled
-      ? theme.input.disabled.border
+      ? theme.border.color.disabled
       : props.$hasError
-      ? theme.input.error.border
-      : theme.border.default};
+      ? theme.border.color.error
+      : theme.border.color.default};
   border-radius: ${theme.rounded.md};
   transition: border-color ${theme.transition.duration.duration150}ms ease-in-out,
     box-shadow ${theme.transition.duration.duration150}ms ease-in-out;
@@ -59,12 +61,12 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   padding-bottom: ${({ $adornments }) => ($adornments.bottom ? theme.spacing.spacing6 : theme.spacing.spacing2)};
 
   &:hover:not(:disabled):not(:focus) {
-    border: ${(props) => !props.$isDisabled && !props.$hasError && theme.input.hover.border};
+    border-color: ${(props) => !props.$isDisabled && !props.$hasError && theme.border.color.hover};
   }
 
   &:focus {
-    border: ${(props) => !props.$isDisabled && theme.input.focus.border};
-    box-shadow: ${(props) => !props.$isDisabled && theme.input.focus.boxShadow};
+    border-color: ${(props) => !props.$isDisabled && theme.border.color.focus};
+    box-shadow: 0 0 0 1px ${(props) => !props.$isDisabled && theme.boxShadow.color.focus};
   }
 
   &::placeholder {

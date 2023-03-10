@@ -12,8 +12,18 @@
 .theme-interlay {
   --colors-border: var(--colors-neutral-black-25);
   --colors-bg-primary: var(--colors-neutral-white);
-  --colors-card-bg: var(--colors-neutral-white);
-  --colors-card-secondary-bg: var(--colors-light-blue-10);
+  /* border */
+  --colors-border: var(--colors-neutral-black-25);
+  --colors-border-hover: var(--colors-lighter-blue);
+  --colors-border-focus: var(--colors-light-blue-90);
+  --colors-border-disabled: var(--colors-neutral-lighter-grey);
+  --colors-border-error: var(--colors-error-dark);
+  /* box-shadow */
+  --box-shadow-default: var(--box-shadow-black);
+  --colors-box-shadow-focus: var(--colors-light-blue-90);
+  /* Card */
+  --color-card-primary-bg: var(--colors-neutral-white);
+  --color-card-secondary-bg: var(--colors-light-blue-10);
   /* CTA */
   --colors-cta-primary: var(--colors-light-blue);
   --colors-cta-primary-hover: var(--colors-light-blue-90);
@@ -29,7 +39,6 @@
   --colors-text-primary: var(--colors-neutral-black);
   --colors-text-secondary: var(--colors-light-blue);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
-  --box-shadow-default: var(--box-shadow-black);
   /* Tabs */
   --colors-tabs-bg: var(--colors-neutral-white);
   --colors-tabs-text: var(--colors-neutral-black-9);
@@ -53,11 +62,7 @@
   --color-progress-circle-fill: var(--colors-light-blue);
   /* Input */
   --colors-input-text: var(--colors-neutral-black);
-  --colors-input-default-border: var(--colors-neutral-light-grey);
-  --colors-input-hover-border: var(--colors-lighter-blue);
-  --colors-input-focus-border: var(--colors-light-blue-90);
   --colors-input-disabled-text: #9a9a9a;
-  --colors-input-disabled-border: var(--colors-neutral-lighter-grey);
   --colors-input-background: var(--colors-neutral-white);
   /* Token Input */
   --colors-token-input-end-adornment-bg: var(--colors-neutral-lighter-grey);

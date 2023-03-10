@@ -37,12 +37,14 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
 
   // Inherited from Input styled
   color: ${(props) => (props.disabled ? theme.input.disabled.color : theme.input.color)};
-  border: ${(props) =>
+  border-width: ${theme.input.borderWidth};
+  border-style: solid;
+  border-color: ${(props) =>
     props.$isDisabled
-      ? theme.input.disabled.border
+      ? theme.border.color.disabled
       : props.$hasError
-      ? theme.input.error.border
-      : theme.border.default};
+      ? theme.border.color.error
+      : theme.border.color.default};
   background-color: ${theme.input.background};
 
   max-height: calc(${theme.spacing.spacing16} - 1px);
@@ -57,12 +59,12 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
   cursor: pointer;
 
   &:hover:not(:disabled):not(:focus) {
-    border: ${(props) => !props.$isDisabled && !props.$hasError && theme.input.hover.border};
+    border-color: ${(props) => !props.$isDisabled && !props.$hasError && theme.border.color.hover};
   }
 
   &:focus {
-    border: ${(props) => !props.$isDisabled && theme.input.focus.border};
-    box-shadow: ${(props) => !props.$isDisabled && theme.input.focus.boxShadow};
+    border-color: ${(props) => !props.$isDisabled && theme.border.color.focus};
+    box-shadow: 0 0 0 1px ${(props) => !props.$isDisabled && theme.boxShadow.color.focus};
   }
 `;
 
