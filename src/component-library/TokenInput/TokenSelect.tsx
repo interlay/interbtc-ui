@@ -40,23 +40,31 @@ type TokenData = {
 
 type TokenSelectProps = Omit<SelectProps<TokenData>, 'children' | 'type'>;
 
-const TokenSelect = (props: TokenSelectProps): JSX.Element => (
-  <Select<TokenData>
-    {...props}
-    type='modal'
-    labelProps={{ isVisuallyHidden: true }}
-    asSelectTrigger={StyledTokenSelect}
-    renderValue={(item) => <Value data={item.value} />}
-    placeholder={<Span>Select Token</Span>}
-    modalTitle='Select Token'
-  >
-    {(data: TokenData) => (
-      <Item key={data.value}>
-        <ListItem data={data} />
-      </Item>
-    )}
-  </Select>
-);
+const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }: TokenSelectProps): JSX.Element => {
+  // it is unlikely that labelProp is not a string, but we need to avoid any accessibility error
+  const labelText = (typeof labelProp === 'string' && labelProp) || ariaLabelProp;
+  const ariaLabel = labelText && `Choose token for ${labelText} field`;
+
+  return (
+    <Select<TokenData>
+      {...props}
+      type='modal'
+      descriptionProps={{ isHidden: true }}
+      errorMessageProps={{ isHidden: true }}
+      asSelectTrigger={StyledTokenSelect}
+      renderValue={(item) => <Value data={item.value} />}
+      placeholder={<Span>Select Token</Span>}
+      modalTitle='Select Token'
+      aria-label={ariaLabel}
+    >
+      {(data: TokenData) => (
+        <Item key={data.value}>
+          <ListItem data={data} />
+        </Item>
+      )}
+    </Select>
+  );
+};
 
 export { TokenSelect };
 export type { TokenSelectProps };

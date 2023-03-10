@@ -1,6 +1,4 @@
 import { useButton } from '@react-aria/button';
-import { useFocusRing } from '@react-aria/focus';
-import { mergeProps } from '@react-aria/utils';
 import { PressEvent } from '@react-types/shared';
 import { ButtonHTMLAttributes, forwardRef, ReactNode } from 'react';
 
@@ -35,18 +33,15 @@ const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
 
     const { buttonProps } = useButton({ ...props, isDisabled: disabled }, buttonRef);
 
-    const { focusProps, isFocusVisible } = useFocusRing();
-
     const Comp = as || StyledTrigger;
 
     return (
       <Comp
-        {...mergeProps(buttonProps, focusProps)}
+        {...buttonProps}
         ref={buttonRef}
         $isDisabled={!!disabled}
         $size={size}
         $hasError={hasError}
-        $isFocusVisible={isFocusVisible}
         $isOpen={isOpen}
       >
         <StyledTriggerValue {...valueProps} $isSelected={!!children} $isDisabled={disabled}>

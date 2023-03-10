@@ -1,8 +1,9 @@
 import { useLabel } from '@react-aria/label';
-import { mergeProps } from '@react-aria/utils';
+import { mergeProps, useId } from '@react-aria/utils';
 import { forwardRef, Key, ReactNode, useEffect, useState } from 'react';
 
 import { Flex } from '../Flex';
+import { HelperText } from '../HelperText';
 import { NumberInput, NumberInputProps } from '../NumberInput';
 import { useDOMRef } from '../utils/dom';
 import { formatUSD } from '../utils/format';
@@ -20,7 +21,7 @@ type Props = {
   ticker?: TokenTicker;
   onClickBalance?: (balance?: string | number) => void;
   onChangeTicker?: (ticker?: string) => void;
-  selectProps?: TokenSelectProps;
+  selectProps?: Omit<TokenSelectProps, 'label' | 'helperTextId'>;
 };
 
 type InheritAttrs = Omit<NumberInputProps, keyof Props>;
@@ -44,6 +45,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       onChangeTicker,
       selectProps,
       placeholder = '0',
+      errorMessage,
+      description,
       ...props
     },
     ref
@@ -53,6 +56,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     const [selectValue, setSelectValue] = useState(selectProps?.defaultValue as string);
 
     const { labelProps, fieldProps } = useLabel({ label, ...props });
+
+    const selectHelperTextId = useId();
 
     useEffect(() => {
       if (selectProps?.value === undefined) return;
@@ -72,13 +77,21 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       setSelectValue(ticker as string);
     };
 
-    const endAdornment = selectProps ? (
+    // Prioritise Number Input description and error message
+    const hasSelectHelperText =
+      !errorMessage && !description && (selectProps?.errorMessage || selectProps?.description);
+    const { errorMessage: selectErrorProps, ...restSelectProps } = selectProps || {};
+
+    const endAdornment = restSelectProps ? (
       <TokenSelect
-        {...selectProps}
+        {...restSelectProps}
         value={selectValue}
         onSelectionChange={handleTokenChange}
         label={label}
         aria-label={fieldProps['aria-label']}
+        aria-describedby={hasSelectHelperText ? selectHelperTextId : undefined}
+        // Only show Select errorMessage when Select HelperText is rendered
+        errorMessage={hasSelectHelperText ? selectErrorProps : undefined}
       />
     ) : ticker ? (
       <TokenAdornment ticker={ticker} />
@@ -111,8 +124,17 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
               <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
             )
           }
+          errorMessage={errorMessage}
+          description={description}
           {...mergeProps(props, fieldProps)}
         />
+        {hasSelectHelperText && (
+          <HelperText
+            id={selectHelperTextId}
+            errorMessage={selectProps?.errorMessage}
+            description={selectProps?.description}
+          />
+        )}
       </Flex>
     );
   }

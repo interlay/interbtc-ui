@@ -7,6 +7,7 @@ import { Modal, ModalBody, ModalHeader, ModalProps } from '@/component-library/M
 import { ListItem, ListProps } from '../List';
 import { StyledList } from './Select.style';
 import { SelectModalContext } from './SelectModalContext';
+
 type Props = {
   state: SelectState<unknown>;
   onSelectionChange?: (key: Key) => void;

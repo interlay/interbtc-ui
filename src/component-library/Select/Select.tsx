@@ -74,7 +74,6 @@ const Select = <T extends SelectObject>(
     label,
     errorMessage,
     onSelectionChange: chain((key: Key) => triggerChangeEvent(inputRef, key), onSelectionChange),
-
     ...props
   };
 
@@ -87,14 +86,15 @@ const Select = <T extends SelectObject>(
     buttonRef
   );
 
-  const { fieldProps, elementProps } = useFieldProps({
-    ...props,
-    descriptionProps,
-    errorMessageProps,
-    errorMessage,
-    labelProps: mergeProps(labelProps, props.labelProps || {}),
-    label
-  });
+  const { fieldProps, elementProps } = useFieldProps(
+    mergeProps(props, {
+      descriptionProps: mergeProps(descriptionProps, props.descriptionProps || {}),
+      errorMessageProps: mergeProps(errorMessageProps, props.errorMessageProps || {}),
+      errorMessage,
+      labelProps: mergeProps(labelProps, props.labelProps || {}),
+      label
+    })
+  );
 
   const hasError = hasErrorMessage(errorMessage);
 
@@ -102,10 +102,7 @@ const Select = <T extends SelectObject>(
     type === 'listbox'
       ? triggerProps
       : mergeProps(props, {
-          onPress: () => {
-            buttonRef.current?.blur();
-            state.setOpen(true);
-          },
+          onPress: () => state.setOpen(true),
           disabled,
           id: triggerProps.id,
           'aria-labelledby': triggerProps['aria-labelledby']
@@ -116,7 +113,7 @@ const Select = <T extends SelectObject>(
   return (
     <Field {...fieldProps}>
       <VisuallyHidden>
-        <label {...hiddenLabelProps}>{label}</label>
+        {label && <label {...hiddenLabelProps}>{label}</label>}
         <input
           ref={inputRef}
           name={name}

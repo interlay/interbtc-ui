@@ -9,7 +9,6 @@ import { Sizes } from '../utils/prop-types';
 
 type StyledTriggerProps = {
   $isOpen?: boolean;
-  $isFocusVisible?: boolean;
   $size: Sizes;
   $isDisabled: boolean;
   $hasError: boolean;
