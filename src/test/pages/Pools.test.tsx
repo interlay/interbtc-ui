@@ -41,45 +41,42 @@ describe('Pools Page', () => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(DEFAULT_ACCOUNT_LIQUIDITY);
   });
 
-  it('should render pools', async () => {
-    // should only display available pools
-    let app = await render(<App />, { path });
+  it('should only render available pools', async () => {
+    await render(<App />, { path });
 
-    let otherPoolsTable = withinTable(TABLES.AVAILABLE_POOLS);
+    const otherPoolsTable = withinTable(TABLES.AVAILABLE_POOLS);
 
     expect(otherPoolsTable.getAllByRole('row')).toHaveLength(2);
     expect(otherPoolsTable.getByRole('row', { name: DEFAULT_LP_TOKEN_1.ticker })).toBeInTheDocument();
     expect(otherPoolsTable.getByRole('row', { name: DEFAULT_LP_TOKEN_2.ticker })).toBeInTheDocument();
 
     expect(screen.queryByRole('grid', { name: new RegExp(TABLES.ACCOUNT_POOLS, 'i') })).not.toBeInTheDocument();
+  });
 
+  it('should render both available and account pools', async () => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(ACCOUNT_WITH_SOME_LIQUIDITY);
 
-    app.unmount();
+    await render(<App />, { path });
 
-    // should display both available and account pools
-    app = await render(<App />, { path });
-
-    otherPoolsTable = withinTable(TABLES.AVAILABLE_POOLS);
+    const otherPoolsTable = withinTable(TABLES.AVAILABLE_POOLS);
 
     expect(otherPoolsTable.getAllByRole('row')).toHaveLength(1);
     expect(otherPoolsTable.getByRole('row', { name: DEFAULT_LP_TOKEN_1.ticker })).toBeInTheDocument();
 
-    let myPoolsTable = withinTable(TABLES.ACCOUNT_POOLS);
+    const myPoolsTable = withinTable(TABLES.ACCOUNT_POOLS);
 
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(1);
     expect(myPoolsTable.getByRole('row', { name: DEFAULT_LP_TOKEN_2.ticker })).toBeInTheDocument();
+  });
 
-    app.unmount();
-
+  it('should render account pools', async () => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(ACCOUNT_WITH_FULL_LIQUIDITY);
 
-    // should only display account pools
-    app = await render(<App />, { path });
+    await render(<App />, { path });
 
     expect(screen.queryByRole('grid', { name: new RegExp(TABLES.AVAILABLE_POOLS, 'i') })).not.toBeInTheDocument();
 
-    myPoolsTable = withinTable(TABLES.ACCOUNT_POOLS);
+    const myPoolsTable = withinTable(TABLES.ACCOUNT_POOLS);
 
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(2);
   });

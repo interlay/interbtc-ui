@@ -19,6 +19,7 @@ describe('Swap Page', () => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(DEFAULT_ACCOUNT_LIQUIDITY);
   });
 
+  // There is only a single test case that tests the whole flow of a swap
   it('should be able to swap', async () => {
     await render(<App />, { path });
 
