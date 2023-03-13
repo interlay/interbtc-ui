@@ -1,5 +1,3 @@
-export type { ApyCellProps } from './ApyCell';
-export { ApyCell } from './ApyCell';
 export type { AssetCellProps } from './AssetCell';
 export { AssetCell } from './AssetCell';
 export type { BalanceCellProps } from './BalanceCell';

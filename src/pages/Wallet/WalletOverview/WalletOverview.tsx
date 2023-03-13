@@ -1,9 +1,12 @@
 import { LiquidityPoolTable } from '@/components/LiquidityPoolTable';
+import { LoanPositionsTable } from '@/components/LoanPositionsTable';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetAccountStakingData } from '@/utils/hooks/api/escrow/use-get-account-staking-data';
 import { useGetAccountVotingBalance } from '@/utils/hooks/api/escrow/use-get-account-voting-balance';
+import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -15,6 +18,10 @@ const WalletOverview = (): JSX.Element => {
   const { data: accountPoolsData } = useGetAccountPools();
   const { data: accountStakingData } = useGetAccountStakingData();
   const { data: accountVotingBalance } = useGetAccountVotingBalance();
+  const {
+    data: { borrowPositions, lendPositions }
+  } = useGetAccountPositions();
+  const { data: assets } = useGetLoanAssets();
 
   if (accountId !== undefined && !balances) {
     return <FullLoadingSpinner />;
@@ -29,6 +36,12 @@ const WalletOverview = (): JSX.Element => {
     <MainContainer>
       <WalletInsights balances={balances} />
       <AvailableAssetsTable balances={balances} />
+      {!!lendPositions?.length && assets && (
+        <LoanPositionsTable title='Lend Positions' positions={lendPositions} variant='lend' assets={assets} />
+      )}
+      {!!borrowPositions?.length && assets && (
+        <LoanPositionsTable title='Borrow Positions' positions={borrowPositions} variant='borrow' assets={assets} />
+      )}
       {!!accountPoolsData?.positions.length && (
         <LiquidityPoolTable variant='account-pools' title='Liquidity Pools' pools={accountPoolsData.positions} />
       )}

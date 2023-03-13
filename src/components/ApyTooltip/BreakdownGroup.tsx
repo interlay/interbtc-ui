@@ -1,8 +1,8 @@
 import Big from 'big.js';
 
 import { Dd, Dl, DlGroup, Dt } from '@/component-library';
+import { getApyLabel } from '@/utils/helpers/loans';
 
-import { getApyLabel } from '../../utils/apy';
 import { StyledApyTooltipGroup, StyledApyTooltipTitle } from './ApyTooltip.style';
 
 type BreakdownGroupProps = {

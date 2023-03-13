@@ -3,8 +3,8 @@ import { Key, useState } from 'react';
 
 import { getPosition } from '../../utils/get-position';
 import { BorrowAssetsTable } from '../BorrowAssetsTable';
-import { BorrowPositionsTable } from '../BorrowPositionsTable';
 import { LoanModal } from '../LoanModal';
+import { StyledBorrowPositionsTable } from './LoansTables.style';
 
 type UseAssetState = {
   data?: LoanAsset;
@@ -35,7 +35,8 @@ const BorrowTables = ({ assets, positions, disabledAssets, hasPositions }: Borro
   return (
     <>
       {hasPositions && (
-        <BorrowPositionsTable
+        <StyledBorrowPositionsTable
+          variant='borrow'
           assets={assets}
           positions={positions}
           onRowAction={handleRowAction}

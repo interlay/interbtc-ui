@@ -3,12 +3,11 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { Flex } from '@/component-library';
+import { getApyLabel, getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { getApyLabel } from '../../utils/apy';
-import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 import { ApyTooltip } from '../ApyTooltip';
-import { MonetaryCell } from './MonetaryCell';
+import { Cell } from '../Table';
 
 type ApyCellProps = {
   apy: Big;
@@ -40,9 +39,7 @@ const ApyCell = ({
 
   const earnedAssetLabel = earnedAsset ? `${earnedAsset.toHuman(8)} ${earnedAsset.currency.ticker}` : undefined;
 
-  const children = (
-    <MonetaryCell onClick={onClick} label={totalApyLabel} sublabel={earnedAssetLabel} alignSelf='flex-start' />
-  );
+  const children = <Cell onClick={onClick} label={totalApyLabel} sublabel={earnedAssetLabel} alignSelf='flex-start' />;
 
   if (!prices) {
     return children;

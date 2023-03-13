@@ -2,8 +2,27 @@ import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
-import { getTokenPrice } from '../../../../utils/helpers/prices';
-import { Prices } from '../../../../utils/hooks/api/use-get-prices';
+import { formatPercentage } from '@/common/utils/utils';
+
+import { Prices } from '../hooks/api/use-get-prices';
+import { getTokenPrice } from './prices';
+
+const MIN_DECIMAL_NUMBER = 0.01;
+
+// MEMO: returns formatted apy or better representation of a very small apy
+const getApyLabel = (apy: Big): string => {
+  const isPositive = apy.gt(0);
+  const isTinyApy = isPositive ? apy.lt(MIN_DECIMAL_NUMBER) : apy.gt(-MIN_DECIMAL_NUMBER);
+
+  if (isTinyApy) {
+    const tinyIndicator = apy.gt(0) ? '<' : '>';
+    const minDecimal = isPositive ? MIN_DECIMAL_NUMBER : -MIN_DECIMAL_NUMBER;
+
+    return `${tinyIndicator}${minDecimal}%`;
+  }
+
+  return formatPercentage(apy.toNumber());
+};
 
 const getSubsidyRewardApy = (
   positionCurrency: CurrencyExt | undefined,
@@ -27,4 +46,4 @@ const getSubsidyRewardApy = (
   return apy;
 };
 
-export { getSubsidyRewardApy };
+export { getApyLabel, getSubsidyRewardApy };

@@ -1,6 +1,15 @@
 import styled from 'styled-components';
 
 import { theme } from '@/component-library';
+import { LoanPositionsTable } from '@/components';
+
+const StyledBorrowPositionsTable = styled(LoanPositionsTable)`
+  grid-area: borrow-positions-table;
+`;
+
+const StyledLendPositionsTable = styled(LoanPositionsTable)`
+  grid-area: lend-positions-table;
+`;
 
 type StyledTablesWrapperProps = {
   $hasPositions: boolean;
@@ -29,4 +38,4 @@ const StyledTablesWrapper = styled.div<StyledTablesWrapperProps>`
   }
 `;
 
-export { StyledTablesWrapper };
+export { StyledBorrowPositionsTable, StyledLendPositionsTable, StyledTablesWrapper };

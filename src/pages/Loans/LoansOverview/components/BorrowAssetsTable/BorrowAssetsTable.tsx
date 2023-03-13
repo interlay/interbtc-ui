@@ -3,10 +3,11 @@ import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
+import { ApyCell } from '@/components/LoanPositionsTable/ApyCell';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { ApyCell, AssetCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
+import { AssetCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
 import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
 
 enum BorrowAssetsColumns {
