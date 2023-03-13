@@ -1,4 +1,4 @@
-import { BorrowPosition, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { BorrowPosition, CollateralPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
@@ -27,11 +27,11 @@ import { StyledFormWrapper } from './LoanForm.style';
 const shouldShowBorrowLimit = (
   variant: LoanAction,
   hasCollateral: boolean,
-  position?: LendPosition | BorrowPosition
+  position?: CollateralPosition | BorrowPosition
 ) => {
   const isLendingAsset = isLendAsset(variant);
   const isBorrowingAsset = !isLendingAsset;
-  const isCollateralAsset = isLendingAsset && (position as LendPosition)?.isCollateral;
+  const isCollateralAsset = isLendingAsset && (position as CollateralPosition)?.isCollateral;
 
   return isCollateralAsset || (isBorrowingAsset && hasCollateral);
 };
@@ -71,7 +71,7 @@ const getData = (t: TFunction, variant: LoanAction) =>
 type LoanFormProps = {
   asset: LoanAsset;
   variant: LoanAction;
-  position?: BorrowPosition | LendPosition;
+  position?: BorrowPosition | CollateralPosition;
   onChangeLoan?: () => void;
 };
 

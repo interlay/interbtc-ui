@@ -1,18 +1,18 @@
-import { CurrencyExt, LendingStats, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralPosition, CurrencyExt, LendingStats, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
 /**
  * Get maximum amount of currency that user can withdraw
  * with currently provided collateral and liquidity.
  * @param {LoanAsset} asset The asset to be withdrawn.
- * @param {LendPosition} position The position to be withdrew.
+ * @param {CollateralPosition} position The position to be withdrew.
  * @param {LendingStats} lendingStats Object containing information about account's collateralization.
  * @return {MonetaryAmount<CurrencyExt> | undefined} maximum amount of currency that
  * user can withdraw with currently provided collateral. Returns undefined if it is loading
  */
 const getMaxWithdrawableAmount = (
   asset: LoanAsset,
-  position?: LendPosition,
+  position?: CollateralPosition,
   lendingStats?: LendingStats
 ): MonetaryAmount<CurrencyExt> | undefined => {
   const { currency } = asset;

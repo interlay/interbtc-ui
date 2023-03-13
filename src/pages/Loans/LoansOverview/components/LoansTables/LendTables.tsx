@@ -1,4 +1,4 @@
-import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { CollateralPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
 import { getPosition } from '../../utils/get-position';
@@ -10,14 +10,14 @@ import { LoanModal } from '../LoanModal';
 type UseAssetState = {
   type?: 'toggle-collateral' | 'change-loan';
   data?: LoanAsset;
-  position?: LendPosition;
+  position?: CollateralPosition;
 };
 
 const defaultAssetState: UseAssetState = { type: undefined, data: undefined, position: undefined };
 
 type LendTablesProps = {
   assets: TickerToData<LoanAsset>;
-  positions: LendPosition[];
+  positions: CollateralPosition[];
   disabledAssets: string[];
   hasPositions: boolean;
 };

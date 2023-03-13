@@ -1,8 +1,8 @@
 import {
   BorrowPosition,
+  CollateralPosition,
   CurrencyExt,
   LendingStats,
-  LendPosition,
   LoanAsset,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
@@ -23,7 +23,7 @@ type GetMaxAmountParams = {
   loanAction: LoanAction;
   asset: LoanAsset;
   assetBalance?: MonetaryAmount<CurrencyExt>;
-  position?: LendPosition | BorrowPosition;
+  position?: CollateralPosition | BorrowPosition;
   lendingStats?: LendingStats;
 };
 
@@ -38,7 +38,7 @@ const getMaxAmount = ({
     case 'borrow':
       return getMaxBorrowableAmount(asset, lendingStats);
     case 'withdraw':
-      return getMaxWithdrawableAmount(asset, position as LendPosition, lendingStats);
+      return getMaxWithdrawableAmount(asset, position as CollateralPosition, lendingStats);
     case 'lend':
       return getMaxLendableAmount(assetBalance, asset);
     case 'repay':
@@ -51,7 +51,7 @@ const isEqualBalance = (
   variant: LoanAction,
   maxAmount: MonetaryAmount<CurrencyExt>,
   assetBalance: MonetaryAmount<CurrencyExt>,
-  position?: LendPosition | BorrowPosition
+  position?: CollateralPosition | BorrowPosition
 ) => {
   switch (variant) {
     case 'withdraw': {
@@ -81,7 +81,7 @@ type UseLoanFormData = {
 const useLoanFormData = (
   loanAction: BorrowAction | LendAction,
   asset: LoanAsset,
-  position?: LendPosition | BorrowPosition
+  position?: CollateralPosition | BorrowPosition
 ): UseLoanFormData => {
   const { getBalance, getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();

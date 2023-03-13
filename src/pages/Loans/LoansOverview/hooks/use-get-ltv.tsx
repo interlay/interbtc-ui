@@ -35,9 +35,26 @@ const getStatus = (value: Big, thresholds: PositionsThresholdsData): Status => {
 
 const getData = (
   ltv: Big,
+  borrowedAmount: MonetaryAmount<CurrencyExt>,
   collateralThresholdWeightedAverage: Big,
   liquidationThresholdWeightedAverage: Big
 ): LTVData => {
+  // if ltv is 0
+  // 1. and there are still assets being
+  // borrowed then status is error, meaning that the user
+  // should not be able to apply action
+  // 2. and there are no assets being borrowed then
+  // the user should successfuly apply action
+  if (ltv.eq(0)) {
+    const hasBorrowedAssets = borrowedAmount.toBig().gt(0);
+
+    return {
+      status: hasBorrowedAssets ? 'error' : 'success',
+      ranges: undefined,
+      value: hasBorrowedAssets ? 100 : 0
+    };
+  }
+
   const thresholds = {
     collateral: collateralThresholdWeightedAverage.mul(100),
     liquidation: liquidationThresholdWeightedAverage.mul(100)
@@ -79,7 +96,12 @@ const useGetLTV = (): UserGetLTV => {
         liquidationThresholdWeightedAverage
       } = statistics.calculateLtvAndThresholdsChange(type, amount);
 
-      return getData(ltv, collateralThresholdWeightedAverage, liquidationThresholdWeightedAverage);
+      return getData(
+        ltv,
+        statistics.totalBorrowedBtc,
+        collateralThresholdWeightedAverage,
+        liquidationThresholdWeightedAverage
+      );
     },
     [statistics]
   );
@@ -87,6 +109,7 @@ const useGetLTV = (): UserGetLTV => {
   const data = statistics
     ? getData(
         statistics.ltv,
+        statistics.totalBorrowedBtc,
         statistics.collateralThresholdWeightedAverage,
         statistics.liquidationThresholdWeightedAverage
       )

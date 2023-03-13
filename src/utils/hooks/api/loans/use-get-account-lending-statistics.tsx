@@ -1,8 +1,8 @@
 import {
   BorrowPosition,
+  CollateralPosition,
   CurrencyExt,
   LendingStats,
-  LendPosition,
   LoanAsset,
   TickerToData
 } from '@interlay/interbtc-api';
@@ -34,7 +34,7 @@ interface UseGetAccountLendingStatistics {
 }
 
 const getNetAPY = (
-  lendPositions: LendPosition[],
+  lendPositions: CollateralPosition[],
   borrowPositions: BorrowPosition[],
   assets: TickerToData<LoanAsset>,
   supplyAmountUSD: Big,
@@ -45,24 +45,26 @@ const getNetAPY = (
   }
 
   const totalLendApy = lendPositions.reduce((total, position) => {
-    const { lendApy, lendReward } = assets[position.currency.ticker];
-    const rewardsApy = getSubsidyRewardApy(position.currency, lendReward, prices);
+    const { currency } = position.amount;
+    const { lendApy, lendReward } = assets[currency.ticker];
+    const rewardsApy = getSubsidyRewardApy(currency, lendReward, prices);
     const positionApy = lendApy.add(rewardsApy || 0);
     const positionUSDValue = convertMonetaryAmountToValueInUSD(
       position.amount,
-      getTokenPrice(prices, position.currency.ticker)?.usd
+      getTokenPrice(prices, currency.ticker)?.usd
     );
 
     return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
   }, new Big(0));
 
   const totalBorrowApy = borrowPositions.reduce((total, position) => {
-    const { borrowApy, borrowReward } = assets[position.currency.ticker];
-    const rewardsApy = getSubsidyRewardApy(position.currency, borrowReward, prices);
+    const { currency } = position.amount;
+    const { borrowApy, borrowReward } = assets[currency.ticker];
+    const rewardsApy = getSubsidyRewardApy(currency, borrowReward, prices);
     const positionApy = borrowApy.sub(rewardsApy || 0);
     const positionUSDValue = convertMonetaryAmountToValueInUSD(
       position.amount,
-      getTokenPrice(prices, position.currency.ticker)?.usd
+      getTokenPrice(prices, currency.ticker)?.usd
     );
 
     return positionUSDValue ? total.add(positionApy.mul(positionUSDValue)) : total;
@@ -73,7 +75,7 @@ const getNetAPY = (
 
 const getAccountPositionsStats = (
   assets: TickerToData<LoanAsset>,
-  lendPositions: LendPosition[],
+  lendPositions: CollateralPosition[],
   borrowPositions: BorrowPosition[],
   subsidyRewards: MonetaryAmount<CurrencyExt>,
   prices: Prices,

@@ -45,7 +45,8 @@ const BorrowPositionsTable = ({
 
   const rows: BorrowPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ currency, amount, accumulatedDebt }) => {
+      positions.map(({ amount, accumulatedDebt }) => {
+        const { currency } = amount;
         const asset = <AssetCell currency={currency.ticker} />;
 
         const { borrowApy, borrowReward } = assets[currency.ticker];

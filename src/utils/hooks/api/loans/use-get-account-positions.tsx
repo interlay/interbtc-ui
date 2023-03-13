@@ -1,4 +1,4 @@
-import { BorrowPosition, LendPosition } from '@interlay/interbtc-api';
+import { BorrowPosition, CollateralPosition } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
@@ -8,7 +8,7 @@ import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import useAccountId from '../../use-account-id';
 
 interface AccountPositionsData {
-  lendPositions: LendPosition[];
+  lendPositions: CollateralPosition[];
   borrowPositions: BorrowPosition[];
 }
 
@@ -25,7 +25,7 @@ type UseGetAccountPositions = {
 };
 
 interface UseGetLendPositionsOfAccount {
-  data: Array<LendPosition> | undefined;
+  data: Array<CollateralPosition> | undefined;
   refetch: () => void;
 }
 

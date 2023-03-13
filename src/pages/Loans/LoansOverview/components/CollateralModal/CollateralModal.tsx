@@ -1,4 +1,4 @@
-import { CurrencyExt, LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { CollateralPosition, CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 
@@ -56,7 +56,7 @@ const getModalVariant = (isCollateralActive: boolean, ltvStatus?: Status): Colla
 
 type Props = {
   asset?: LoanAsset;
-  position?: LendPosition;
+  position?: CollateralPosition;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -97,7 +97,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
     const isEnabling = variant === 'enable';
 
-    return toggleCollateralMutation.mutate({ isEnabling, underlyingCurrency: position.currency });
+    return toggleCollateralMutation.mutate({ isEnabling, underlyingCurrency: position.amount.currency });
   };
 
   return (
