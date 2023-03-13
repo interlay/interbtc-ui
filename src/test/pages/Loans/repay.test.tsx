@@ -48,10 +48,10 @@ describe('Repay Flow', () => {
     expect(mockRepay).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
   });
 
-  it('should be able repay all', async () => {
-    const { unmount } = await render(<App />, { path });
+  it('should be able repay all by using max button', async () => {
+    await render(<App />, { path });
 
-    let tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
 
     userEvent.click(
       tabPanel.getByRole('button', {
@@ -62,14 +62,12 @@ describe('Repay Flow', () => {
     await submitForm(tabPanel, 'repay');
 
     expect(mockRepayAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
+  });
 
-    unmount();
-
-    mockRepayAll.mockRestore();
-
+  it('should be able repay all by typing max amount', async () => {
     await render(<App />, { path });
 
-    tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
 
     const replayAllAmount = DEFAULT_POSITIONS.BORROW.IBTC.amount.add(DEFAULT_POSITIONS.BORROW.IBTC.accumulatedDebt);
 

@@ -31,8 +31,7 @@ describe('Withdraw Flow', () => {
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
   });
 
-  it('should be able to partially withdraw', async () => {
-    // SCENARIO: user is partially withdrawing when there are borrow positions
+  it('should be able to partially withdraw when there are no borrow positions', async () => {
     await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
@@ -47,13 +46,12 @@ describe('Withdraw Flow', () => {
     expect(mockWithdraw).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
   });
 
-  it('should be able to withdraw all', async () => {
-    // SCENARIO: user is withdrawing all when there are no borrow positions (by clicking max)
+  it('should be able to withdraw all when there are no borrow positions by using max button', async () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue([]);
 
-    const { unmount } = await render(<App />, { path });
+    await render(<App />, { path });
 
-    let tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     userEvent.click(
       tabPanel.getByRole('button', {
@@ -64,15 +62,14 @@ describe('Withdraw Flow', () => {
     await submitForm(tabPanel, 'withdraw');
 
     expect(mockWithdrawAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
+  });
 
-    unmount();
-
-    // SCENARIO: user is withdrawing all when there are no borrow positions (by typing max)
-    mockWithdrawAll.mockRestore();
+  it('should be able to withdraw all when there are no borrow positions by typing max amount', async () => {
+    mockGetBorrowPositionsOfAccount.mockReturnValue([]);
 
     await render(<App />, { path });
 
-    tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
 
     userEvent.type(
       tabPanel.getByRole('textbox', { name: 'withdraw amount' }),

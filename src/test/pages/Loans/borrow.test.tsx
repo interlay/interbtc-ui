@@ -42,9 +42,8 @@ describe('Borrow Flow', () => {
     expect(mockBorrow).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
   });
 
-  it('should not be able to borrow', async () => {
-    // SCENARIO: user has collateral but is not enought to cover what he wants to borrow
-    const { unmount } = await render(<App />, { path });
+  it('should not be able to borrow when the collateral is too low', async () => {
+    await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
 
@@ -62,10 +61,9 @@ describe('Borrow Flow', () => {
     await waitFor(() => {
       expect(mockBorrow).not.toHaveBeenCalled();
     });
+  });
 
-    unmount();
-
-    // SCENARIO: if there is not collateral, user should not be able to borrow
+  it('should not be able to borrow when there is no collateral', async () => {
     mockGetLendPositionsOfAccount.mockReturnValue([{ ...DEFAULT_POSITIONS.LEND.IBTC, isCollateral: false }]);
 
     await render(<App />, { path });

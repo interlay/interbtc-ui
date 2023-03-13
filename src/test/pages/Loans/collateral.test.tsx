@@ -38,11 +38,10 @@ describe('Collateral Flow', () => {
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
   });
 
-  it('should be able to enable collateral', async () => {
-    // SCENARIO: user is enabling first asset as collateral
+  it('should be able to enable collateral when there is no collateral', async () => {
     mockGetLendPositionsOfAccount.mockReturnValue([{ ...DEFAULT_POSITIONS.LEND.IBTC, isCollateral: false }]);
 
-    const { unmount } = await render(<App />, { path });
+    await render(<App />, { path });
 
     const modal = withinCollateralModal();
 
@@ -52,11 +51,9 @@ describe('Collateral Flow', () => {
 
     expect(mockEnableAsCollateral).toHaveBeenCalledTimes(1);
     expect(mockEnableAsCollateral).toHaveBeenCalledWith(WRAPPED_TOKEN);
+  });
 
-    unmount();
-
-    // SCENARIO: user is enabling second asset while there is a borrow position openned
-
+  it('should be able to enable collateral when there is already collateral', async () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue([
       DEFAULT_POSITIONS.LEND.IBTC,
@@ -71,15 +68,14 @@ describe('Collateral Flow', () => {
 
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
-    expect(mockEnableAsCollateral).toHaveBeenCalledTimes(2);
+    expect(mockEnableAsCollateral).toHaveBeenCalledTimes(1);
     expect(mockEnableAsCollateral).toHaveBeenCalledWith(GOVERNANCE_TOKEN);
   });
 
-  it('should be able to disable collateral', async () => {
-    // SCENARIO: user is disabling asset, when there are no borrow positions
+  it('should be able to disable collateral when there are no borrow positions', async () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue([]);
 
-    const { unmount } = await render(<App />, { path });
+    await render(<App />, { path });
 
     const modal = withinCollateralModal();
 
@@ -89,10 +85,9 @@ describe('Collateral Flow', () => {
 
     expect(mockDisableAsCollateral).toHaveBeenCalledTimes(1);
     expect(mockDisableAsCollateral).toHaveBeenCalledWith(WRAPPED_TOKEN);
+  });
 
-    unmount();
-
-    // SCENARIO: user is disabling one asset, when there is a borrow positions open
+  it('should be able to disable collateral when there are open borrow positions', async () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.BORROW.INTR]);
     mockGetLendPositionsOfAccount.mockReturnValue([DEFAULT_POSITIONS.LEND.IBTC, DEFAULT_POSITIONS.LEND.INTR]);
 
@@ -104,20 +99,17 @@ describe('Collateral Flow', () => {
 
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
-    expect(mockDisableAsCollateral).toHaveBeenCalledTimes(2);
+    expect(mockDisableAsCollateral).toHaveBeenCalledTimes(1);
     expect(mockDisableAsCollateral).toHaveBeenCalledWith(GOVERNANCE_TOKEN);
   });
 
-  it('should not be able to disable collateral', async () => {
-    // SCENARIO: user is not able to disable collateral while having only one collateral asset,
-    // due to not enought collateral for borrow positions,
-
+  it('should not be able to disable collateral due to low collateral while having only one asset as collateral', async () => {
     mockGetLendPositionsOfAccount.mockReturnValue([
       DEFAULT_POSITIONS.LEND.IBTC,
       { ...DEFAULT_POSITIONS.LEND.INTR, isCollateral: false }
     ]);
 
-    const { unmount } = await render(<App />, { path });
+    await render(<App />, { path });
 
     const modal = withinCollateralModal();
 
@@ -126,12 +118,9 @@ describe('Collateral Flow', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(mockEnableAsCollateral).not.toHaveBeenCalled();
     expect(mockDisableAsCollateral).not.toHaveBeenCalled();
+  });
 
-    unmount();
-
-    // SCENARIO: user is not able to disable collateral while having only two collateral asset,
-    // due to not enought collateral for borrow positions,
-
+  it('should not be able to disable collateral due to low collateral while having two asset as collateral', async () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue([
       { ...DEFAULT_POSITIONS.BORROW.IBTC, amount: DEFAULT_IBTC.MONETARY.MEDIUM }
     ]);
