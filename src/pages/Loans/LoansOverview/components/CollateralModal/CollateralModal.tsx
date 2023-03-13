@@ -1,10 +1,10 @@
-import { CurrencyExt, LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { CollateralPosition, CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 
 import { CTA, Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
@@ -56,7 +56,7 @@ const getModalVariant = (isCollateralActive: boolean, ltvStatus?: Status): Colla
 
 type Props = {
   asset?: LoanAsset;
-  position?: LendPosition;
+  position?: CollateralPosition;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -65,7 +65,7 @@ type CollateralModalProps = Props & InheritAttrs;
 
 const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
-  const { refetch } = useGetAccountPositions();
+  const { refetch } = useGetAccountLendingStatistics();
   const { getLTV } = useGetLTV();
   const prices = useGetPrices();
 
@@ -85,7 +85,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
 
   const loanAction = isCollateralActive ? 'withdraw' : 'lend';
-  const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount, asset });
+  const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount });
   const variant = getModalVariant(isCollateralActive, currentLTV?.status);
 
   const content = getContentMap(t, variant, asset);
@@ -97,7 +97,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
     const isEnabling = variant === 'enable';
 
-    return toggleCollateralMutation.mutate({ isEnabling, underlyingCurrency: position.currency });
+    return toggleCollateralMutation.mutate({ isEnabling, underlyingCurrency: position.amount.currency });
   };
 
   return (

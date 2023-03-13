@@ -35,7 +35,7 @@ const BorrowLimit = ({
   const { data: currentLTV, getLTV } = useGetLTV();
 
   const newBorrowLimit = getBorrowLimitUSD({ type: loanAction, amount: actionAmount, asset });
-  const newLTV = getLTV({ type: loanAction, amount: actionAmount, asset });
+  const newLTV = getLTV({ type: loanAction, amount: actionAmount });
 
   if (!currentLTV || !newLTV || !currentBorrowLimit || !newBorrowLimit) {
     return null;
