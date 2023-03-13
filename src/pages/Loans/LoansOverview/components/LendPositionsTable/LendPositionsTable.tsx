@@ -51,7 +51,7 @@ const LendPositionsTable = ({
 
   const rows: LendPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ amount, currency, earnedInterest, isCollateral }) => {
+      positions.map(({ amount, currency, earnedInterest, isCollateral }: any) => {
         const asset = <AssetCell currency={currency.ticker} />;
 
         const { lendApy, lendReward } = assets[currency.ticker];
