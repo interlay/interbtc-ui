@@ -374,7 +374,11 @@ const theme = {
     zIndex: 2,
     underlay: {
       zIndex: 1,
-      bg: 'var(--colors-neutral-black-60)'
+      bg: 'var(--colors-neutral-black-60)',
+      transition: {
+        entering: 'opacity .15s cubic-bezier(0,0,.4,1)',
+        exiting: 'opacity .1s cubic-bezier(0.5,0,1,1), visibility 0s linear .1s'
+      }
     },
     header: {
       paddingY: 'var(--spacing-4)',
@@ -395,6 +399,10 @@ const theme = {
     },
     closeBtn: {
       zIndex: 100
+    },
+    transition: {
+      entering: 'transform .15s cubic-bezier(0,0,0.4,1) .1s, opacity .15s cubic-bezier(0,0,0.4,1)',
+      exiting: 'opacity .1s cubic-bezier(0.5,0,1,1), visibility 0s linear, transform 0s linear .1s'
     }
   },
   switch: {

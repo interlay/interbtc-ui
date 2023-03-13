@@ -7,6 +7,24 @@ import './fetch';
 import './substrate';
 
 import { createInterBtcApi } from '@interlay/interbtc-api';
+import { FocusScope } from '@react-aria/focus';
+import ReactDOM from 'react-dom';
+
+// MEMO: mocking @react/aria overlay component because
+// of a error around `createTreeWalker`
+const mockOverlay: React.FC = ({ children, isOpen }: any) =>
+  isOpen
+    ? ReactDOM.createPortal(
+        <FocusScope autoFocus contain restoreFocus>
+          {children}
+        </FocusScope>,
+        document.body
+      )
+    : null;
+jest.mock('@/component-library/Overlay', () => {
+  mockOverlay.displayName = 'mockOverlay';
+  return { Overlay: mockOverlay };
+});
 
 // Pre-create API and assign to window to avoid waiting for substrate provider to be loaded before.
 // Does not need any parameters since lib instance is mocked.

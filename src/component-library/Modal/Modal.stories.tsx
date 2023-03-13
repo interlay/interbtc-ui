@@ -15,7 +15,7 @@ const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = 
 
   return (
     <>
-      <CTA onClick={state.open} variant='primary'>
+      <CTA onPress={state.open} variant='primary'>
         Open modal
       </CTA>
       <Modal {...args} isOpen={state.isOpen} onClose={state.close}>
@@ -30,7 +30,7 @@ const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = 
         <ModalBody>{children}</ModalBody>
         {hasFooter && (
           <ModalFooter>
-            <CTA onClick={state.close}>Procced</CTA>
+            <CTA onPress={state.close}>Procced</CTA>
           </ModalFooter>
         )}
       </Modal>

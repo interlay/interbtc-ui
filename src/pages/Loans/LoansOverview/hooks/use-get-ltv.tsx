@@ -45,7 +45,7 @@ const getData = (
   // should not be able to apply action
   // 2. and there are no assets being borrowed then
   // the user should successfuly apply action
-  if (ltv.eq(0)) {
+  if (collateralThresholdWeightedAverage.eq(0)) {
     const hasBorrowedAssets = borrowedAmount.toBig().gt(0);
 
     return {
