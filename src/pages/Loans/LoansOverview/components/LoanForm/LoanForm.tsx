@@ -91,6 +91,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     position
   );
 
+  const { content } = getData(t, variant);
+
   // withdraw has `withdraw` and `withdrawAll`
   // repay has `repay` and `repayAll`
   // They both are considered a multi action variant
@@ -117,6 +119,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   );
 
   const handleSuccess = () => {
+    toast.success(`Successful ${content.title.toLowerCase()}`);
     onChangeLoan?.();
     refetch();
   };
@@ -133,8 +136,6 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     minAmount: assetAmount.min,
     maxAmount: assetAmount.max.value
   };
-
-  const { content } = getData(t, variant);
 
   const handleSubmit = (data: LoanFormData) => {
     try {
