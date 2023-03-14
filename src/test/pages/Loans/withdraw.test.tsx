@@ -6,8 +6,10 @@ import {
   DEFAULT_BORROW_POSITIONS,
   DEFAULT_IBTC,
   DEFAULT_LEND_POSITIONS,
+  DEFAULT_LENDING_STATS,
   DEFAULT_POSITIONS,
   mockGetBorrowPositionsOfAccount,
+  mockGetLendingStats,
   mockGetLendPositionsOfAccount,
   mockWithdraw,
   mockWithdrawAll
@@ -24,11 +26,13 @@ describe('Withdraw Flow', () => {
   beforeEach(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
+    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
   });
 
   afterAll(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
+    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
   });
 
   it('should be able to partially withdraw when there are no borrow positions', async () => {
@@ -86,7 +90,9 @@ describe('Withdraw Flow', () => {
     expect(mockWithdrawAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
   });
 
-  it('should not be able to withdraw', async () => {
+  it('should not be able to withdraw due low borrow limit', async () => {
+    mockGetLendingStats.mockReturnValue({ ...DEFAULT_LENDING_STATS, borrowLimitBtc: DEFAULT_IBTC.MONETARY.VERY_SMALL });
+
     await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC', true);
@@ -102,23 +108,6 @@ describe('Withdraw Flow', () => {
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       expect(mockWithdraw).not.toHaveBeenCalled();
-    });
-
-    userEvent.click(
-      tabPanel.getByRole('button', {
-        name: /max/i
-      })
-    );
-
-    await waitFor(() => {
-      expect(tabPanel.getByRole('textbox', { name: 'withdraw amount' })).toHaveErrorMessage('');
-    });
-
-    userEvent.click(tabPanel.getByRole('button', { name: /withdraw/i }));
-
-    await waitFor(() => {
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-      expect(mockWithdrawAll).not.toHaveBeenCalled();
     });
   });
 });

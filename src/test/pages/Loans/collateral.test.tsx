@@ -4,9 +4,11 @@ import App from '@/App';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
   DEFAULT_BORROW_POSITIONS,
-  DEFAULT_IBTC,
+  DEFAULT_CALCULATE_BORROW_LIMIT,
   DEFAULT_LEND_POSITIONS,
   DEFAULT_POSITIONS,
+  DEFAULT_THRESOLD,
+  mockCalculateLtvAndThresholdsChange,
   mockDisableAsCollateral,
   mockEnableAsCollateral,
   mockGetBorrowPositionsOfAccount,
@@ -104,10 +106,11 @@ describe('Collateral Flow', () => {
   });
 
   it('should not be able to disable collateral due to low collateral while having only one asset as collateral', async () => {
-    mockGetLendPositionsOfAccount.mockReturnValue([
-      DEFAULT_POSITIONS.LEND.IBTC,
-      { ...DEFAULT_POSITIONS.LEND.INTR, isCollateral: false }
-    ]);
+    mockCalculateLtvAndThresholdsChange.mockReturnValue({
+      ltv: DEFAULT_THRESOLD.HIGH,
+      collateralThresholdWeightedAverage: DEFAULT_THRESOLD.MEDIUM,
+      liquidationThresholdWeightedAverage: DEFAULT_THRESOLD.HIGH
+    });
 
     await render(<App />, { path });
 
@@ -118,21 +121,7 @@ describe('Collateral Flow', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     expect(mockEnableAsCollateral).not.toHaveBeenCalled();
     expect(mockDisableAsCollateral).not.toHaveBeenCalled();
-  });
 
-  it('should not be able to disable collateral due to low collateral while having two asset as collateral', async () => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue([
-      { ...DEFAULT_POSITIONS.BORROW.IBTC, amount: DEFAULT_IBTC.MONETARY.MEDIUM }
-    ]);
-
-    await render(<App />, { path });
-
-    const modal2 = withinCollateralModal();
-
-    userEvent.click(modal2.getAllByRole('button', { name: /dismiss/i })[1]);
-
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    expect(mockEnableAsCollateral).not.toHaveBeenCalled();
-    expect(mockDisableAsCollateral).not.toHaveBeenCalled();
+    mockCalculateLtvAndThresholdsChange.mockReturnValue(DEFAULT_CALCULATE_BORROW_LIMIT);
   });
 });

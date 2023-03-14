@@ -1,5 +1,13 @@
-import { BorrowPosition, CurrencyExt, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import {
+  BorrowPosition,
+  CollateralPosition,
+  CurrencyExt,
+  LendingStats,
+  LoanAsset,
+  newMonetaryAmount,
+  TickerToData
+} from '@interlay/interbtc-api';
+import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -50,13 +58,13 @@ const DEFAULT_POSITIONS = {
       amount: DEFAULT_IBTC.MONETARY.MEDIUM,
       isCollateral: true,
       earnedInterest: DEFAULT_IBTC.MONETARY.VERY_SMALL
-    } as LendPosition,
+    } as CollateralPosition,
     INTR: {
       currency: GOVERNANCE_TOKEN,
       amount: DEFAULT_INTR.MONETARY.MEDIUM,
       isCollateral: true,
       earnedInterest: DEFAULT_INTR.MONETARY.SMALL
-    } as LendPosition
+    } as CollateralPosition
   },
   BORROW: {
     IBTC: {
@@ -72,11 +80,11 @@ const DEFAULT_POSITIONS = {
   }
 };
 
-const DEFAULT_LEND_POSITIONS: LendPosition[] = [DEFAULT_POSITIONS.LEND.IBTC];
+const DEFAULT_LEND_POSITIONS: CollateralPosition[] = [DEFAULT_POSITIONS.LEND.IBTC];
 
 const DEFAULT_BORROW_POSITIONS: BorrowPosition[] = [DEFAULT_POSITIONS.BORROW.IBTC];
 
-const DEFAULT_IBTC_LOAN_ASSET = {
+const DEFAULT_IBTC_LOAN_ASSET: LoanAsset = {
   currency: WRAPPED_TOKEN,
   lendApy: new Big(DEFAULT_APY.IBTC.BASE),
   borrowApy: new Big(DEFAULT_APY.IBTC.BASE),
@@ -89,10 +97,11 @@ const DEFAULT_IBTC_LOAN_ASSET = {
   isActive: true,
   totalBorrows: DEFAULT_IBTC.MONETARY.MEDIUM,
   borrowCap: DEFAULT_IBTC.MONETARY.VERY_LARGE,
-  supplyCap: DEFAULT_IBTC.MONETARY.VERY_LARGE
+  supplyCap: DEFAULT_IBTC.MONETARY.VERY_LARGE,
+  exchangeRate: new ExchangeRate(Bitcoin, WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.MEDIUM.toBig())
 };
 
-const DEFAULT_INTR_LOAN_ASSET = {
+const DEFAULT_INTR_LOAN_ASSET: LoanAsset = {
   currency: GOVERNANCE_TOKEN,
   lendApy: new Big(DEFAULT_APY.INTR.BASE),
   borrowApy: new Big(DEFAULT_APY.INTR.BASE),
@@ -105,7 +114,8 @@ const DEFAULT_INTR_LOAN_ASSET = {
   isActive: true,
   totalBorrows: DEFAULT_INTR.MONETARY.MEDIUM,
   borrowCap: DEFAULT_INTR.MONETARY.VERY_LARGE,
-  supplyCap: DEFAULT_INTR.MONETARY.VERY_LARGE
+  supplyCap: DEFAULT_INTR.MONETARY.VERY_LARGE,
+  exchangeRate: new ExchangeRate(Bitcoin, GOVERNANCE_TOKEN, DEFAULT_IBTC.MONETARY.MEDIUM.toBig())
 };
 
 const DEFAULT_ASSETS: TickerToData<LoanAsset> = {
@@ -132,21 +142,59 @@ const mockClaimAllSubsidyRewards = jest.fn();
 
 const mockGetLendTokens = jest.fn(() => DEFAULT_LEND_TOKENS);
 
+const DEFAULT_THRESOLD = {
+  MIN: new Big(0),
+  LOW: new Big(0.25),
+  MEDIUM: new Big(0.5),
+  HIGH: new Big(0.75),
+  MAX: new Big(1)
+};
+
+const DEFAULT_CALCULATE_BORROW_LIMIT = {
+  ltv: DEFAULT_THRESOLD.LOW,
+  collateralThresholdWeightedAverage: DEFAULT_THRESOLD.MEDIUM,
+  liquidationThresholdWeightedAverage: DEFAULT_THRESOLD.HIGH
+};
+
+const mockCalculateLtvAndThresholdsChange = jest.fn().mockReturnValue(DEFAULT_CALCULATE_BORROW_LIMIT);
+
+const mockCalculateBorrowLimitBtcChange = jest.fn().mockReturnValue(DEFAULT_IBTC.MONETARY.LARGE);
+
+const DEFAULT_LENDING_STATS: LendingStats = {
+  borrowLimitBtc: DEFAULT_IBTC.MONETARY.LARGE,
+  calculateBorrowLimitBtcChange: mockCalculateBorrowLimitBtcChange,
+  calculateLtvAndThresholdsChange: mockCalculateLtvAndThresholdsChange,
+  collateralThresholdWeightedAverage: new Big(0.5),
+  liquidationThresholdWeightedAverage: new Big(0.75),
+  ltv: new Big(0.2),
+  totalBorrowedBtc: DEFAULT_IBTC.MONETARY.VERY_SMALL,
+  totalCollateralBtc: DEFAULT_IBTC.MONETARY.LARGE,
+  totalLentBtc: DEFAULT_IBTC.MONETARY.LARGE
+};
+
+const mockGetLendingStats = jest.fn().mockReturnValue(DEFAULT_LENDING_STATS);
+
 export {
   DEFAULT_APY,
   DEFAULT_ASSETS,
   DEFAULT_BORROW_POSITIONS,
+  DEFAULT_CALCULATE_BORROW_LIMIT,
   DEFAULT_IBTC,
   DEFAULT_IBTC_LOAN_ASSET,
   DEFAULT_INTR_LOAN_ASSET,
   DEFAULT_LEND_POSITIONS,
+  DEFAULT_LENDING_STATS,
   DEFAULT_POSITIONS,
+  DEFAULT_THRESOLD,
   mockBorrow,
+  mockCalculateBorrowLimitBtcChange,
+  mockCalculateLtvAndThresholdsChange,
   mockClaimAllSubsidyRewards,
   mockDisableAsCollateral,
   mockEnableAsCollateral,
   mockGetAccountSubsidyRewards,
   mockGetBorrowPositionsOfAccount,
+  mockGetLendingStats,
   mockGetLendPositionsOfAccount,
   mockGetLoanAssets,
   mockLend,
@@ -155,5 +203,4 @@ export {
   mockWithdraw,
   mockWithdrawAll
 };
-
 export { mockGetLendTokens };
