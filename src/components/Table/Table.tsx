@@ -6,7 +6,7 @@ import { Card, Flex, Table as LiTable, TableProps as LibTableProps } from '@/com
 import { StyledTitle } from './Table.style';
 
 type Props = {
-  title: ReactNode;
+  title?: ReactNode;
   className?: string;
   actions?: ReactNode;
   placeholder?: ReactNode;
@@ -21,8 +21,8 @@ const Table = ({ title, rows, columns, className, actions, placeholder, ...props
 
   return (
     <Flex className={className} direction='column' gap='spacing6' alignItems='stretch'>
-      <Flex gap='spacing2' justifyContent='space-between'>
-        <StyledTitle id={titleId}>{title}</StyledTitle>
+      <Flex gap='spacing2' justifyContent={title ? 'space-between' : 'flex-end'}>
+        {title && <StyledTitle id={titleId}>{title}</StyledTitle>}
         {actions}
       </Flex>
       <Card gap='spacing4' alignItems='center'>

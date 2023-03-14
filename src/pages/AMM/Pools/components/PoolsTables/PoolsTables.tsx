@@ -2,7 +2,7 @@ import { isCurrencyEqual, LiquidityPool } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
-import { LiquidityPoolTable } from '@/components/LiquidityPoolTable';
+import { PoolsTable } from '@/components/PoolsTable';
 import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 
 import { PoolModal } from '../PoolModal/PoolModal';
@@ -32,10 +32,10 @@ const PoolsTables = ({ pools, accountPools }: PoolsTablesProps): JSX.Element => 
     <>
       <Flex direction='column' gap='spacing6'>
         {!!accountPools?.length && (
-          <LiquidityPoolTable variant='account-pools' pools={accountPools} onRowAction={handleRowAction} />
+          <PoolsTable variant='account-pools' pools={accountPools} onRowAction={handleRowAction} />
         )}
         {!!otherPools.length && (
-          <LiquidityPoolTable
+          <PoolsTable
             variant='available-pools'
             pools={otherPools.map((pool) => ({ data: pool }))}
             onRowAction={handleRowAction}

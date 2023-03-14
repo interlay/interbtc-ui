@@ -6,9 +6,9 @@ import Big from 'big.js';
 import { Dd, Dl, DlGroup } from '@/component-library';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { StyledApyTooltipTitle, StyledTooltip } from './ApyTooltip.style';
 import { AssetGroup } from './AssetGroup';
 import { BreakdownGroup } from './BreakdownGroup';
+import { StyledApyTooltipTitle, StyledTooltip } from './LoanApyTooltip.style';
 import { RewardsGroup } from './RewardsGroup';
 
 type Props = {
@@ -24,9 +24,9 @@ type Props = {
 
 type InheritAttrs = Omit<TooltipProps, keyof Props | 'label'>;
 
-type ApyTooltipProps = Props & InheritAttrs;
+type LoanApyTooltipProps = Props & InheritAttrs;
 
-const ApyTooltip = ({
+const LoanApyTooltip = ({
   apy,
   currency,
   earnedInterest,
@@ -36,7 +36,7 @@ const ApyTooltip = ({
   prices,
   isBorrow,
   ...props
-}: ApyTooltipProps): JSX.Element => {
+}: LoanApyTooltipProps): JSX.Element => {
   const showEarnedRewards = !!rewards || !!earnedInterest;
 
   const label = (
@@ -75,5 +75,5 @@ const ApyTooltip = ({
   return <StyledTooltip {...props} label={label} />;
 };
 
-export { ApyTooltip };
-export type { ApyTooltipProps };
+export { LoanApyTooltip };
+export type { LoanApyTooltipProps };

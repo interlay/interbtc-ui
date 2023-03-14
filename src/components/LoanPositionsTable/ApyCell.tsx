@@ -6,7 +6,7 @@ import { Flex } from '@/component-library';
 import { getApyLabel, getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { ApyTooltip } from '../ApyTooltip';
+import { LoanApyTooltip } from '../LoanApyTooltip';
 import { Cell } from '../Table';
 
 type ApyCellProps = {
@@ -48,7 +48,7 @@ const ApyCell = ({
   // MEMO: wrapping around a Flex so tooltip is placed correctly
   return (
     <Flex>
-      <ApyTooltip
+      <LoanApyTooltip
         apy={apy}
         currency={currency}
         prices={prices}
@@ -59,7 +59,7 @@ const ApyCell = ({
         earnedInterest={earnedInterest}
       >
         {children}
-      </ApyTooltip>
+      </LoanApyTooltip>
     </Flex>
   );
 };

@@ -3,9 +3,8 @@ import { Key, useState } from 'react';
 
 import { getPosition } from '../../utils/get-position';
 import { CollateralModal } from '../CollateralModal';
-import { LendAssetsTable } from '../LendAssetsTable/LendAssetsTable';
 import { LoanModal } from '../LoanModal';
-import { StyledLendPositionsTable } from './LoansTables.style';
+import { StyledLendAssetsTable, StyledLendPositionsTable } from './LoansTables.style';
 
 type UseAssetState = {
   type?: 'toggle-collateral' | 'change-loan';
@@ -53,7 +52,7 @@ const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTab
           disabledKeys={disabledAssets}
         />
       )}
-      <LendAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
+      <StyledLendAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
       <LoanModal
         variant='lend'
         isOpen={selectedAsset.type === 'change-loan'}

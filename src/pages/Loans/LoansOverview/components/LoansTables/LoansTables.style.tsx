@@ -3,12 +3,23 @@ import styled from 'styled-components';
 import { theme } from '@/component-library';
 import { LoanPositionsTable } from '@/components';
 
+import { BorrowAssetsTable } from '../BorrowAssetsTable';
+import { LendAssetsTable } from '../LendAssetsTable';
+
 const StyledBorrowPositionsTable = styled(LoanPositionsTable)`
   grid-area: borrow-positions-table;
 `;
 
 const StyledLendPositionsTable = styled(LoanPositionsTable)`
   grid-area: lend-positions-table;
+`;
+
+const StyledBorrowAssetsTable = styled(BorrowAssetsTable)`
+  grid-area: borrow-assets-table;
+`;
+
+const StyledLendAssetsTable = styled(LendAssetsTable)`
+  grid-area: lend-assets-table;
 `;
 
 type StyledTablesWrapperProps = {
@@ -38,4 +49,10 @@ const StyledTablesWrapper = styled.div<StyledTablesWrapperProps>`
   }
 `;
 
-export { StyledBorrowPositionsTable, StyledLendPositionsTable, StyledTablesWrapper };
+export {
+  StyledBorrowAssetsTable,
+  StyledBorrowPositionsTable,
+  StyledLendAssetsTable,
+  StyledLendPositionsTable,
+  StyledTablesWrapper
+};

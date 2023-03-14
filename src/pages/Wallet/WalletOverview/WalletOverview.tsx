@@ -1,5 +1,5 @@
-import { LiquidityPoolTable } from '@/components/LiquidityPoolTable';
 import { LoanPositionsTable } from '@/components/LoanPositionsTable';
+import { PoolsTable } from '@/components/PoolsTable';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
@@ -43,7 +43,7 @@ const WalletOverview = (): JSX.Element => {
         <LoanPositionsTable title='Borrow Positions' positions={borrowPositions} variant='borrow' assets={assets} />
       )}
       {!!accountPoolsData?.positions.length && (
-        <LiquidityPoolTable variant='account-pools' title='Liquidity Pools' pools={accountPoolsData.positions} />
+        <PoolsTable variant='account-pools' title='Liquidity Pools' pools={accountPoolsData.positions} />
       )}
       {hasStakingTable && <StakingTable data={accountStakingData as any} votingBalance={accountVotingBalance as any} />}
     </MainContainer>

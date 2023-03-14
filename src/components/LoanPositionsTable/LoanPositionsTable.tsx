@@ -1,15 +1,16 @@
-import { BorrowPosition, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { BorrowPosition, CollateralPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
-import { Card, Flex, P, Strong, Switch } from '@/component-library';
+import { Switch } from '@/component-library';
 import { LoanType } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Table, TableProps } from '../Table';
 import { ApyCell } from './ApyCell';
+import { LoanTablePlaceholder } from './LoanTablePlaceholder';
 
 enum LoanPositionTableColumns {
   ASSET = 'asset',
@@ -26,15 +27,17 @@ type LoanPositionTableRow = {
   [LoanPositionTableColumns.COLLATERAL]?: ReactNode;
 };
 
-type LoanPositionsTableProps = {
+type Props = {
   variant?: LoanType;
   title?: ReactNode;
   assets: TickerToData<LoanAsset>;
-  positions: BorrowPosition[] | LendPosition[];
+  positions: BorrowPosition[] | CollateralPosition[];
   onPressCollateralSwitch?: (ticker: string) => void;
-  onRowAction?: TableProps['onRowAction'];
-  disabledKeys?: TableProps['disabledKeys'];
 };
+
+type InheritAttrs = Omit<TableProps, keyof Props | 'columns' | 'rows'>;
+
+type LoanPositionsTableProps = Props & InheritAttrs;
 
 const LoanPositionsTable = ({
   variant = 'lend',
@@ -42,8 +45,8 @@ const LoanPositionsTable = ({
   assets,
   positions,
   onRowAction,
-  disabledKeys,
-  onPressCollateralSwitch
+  onPressCollateralSwitch,
+  ...props
 }: LoanPositionsTableProps): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
@@ -75,7 +78,8 @@ const LoanPositionsTable = ({
 
   const rows: LoanPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ currency, amount: amountProp, ...position }) => {
+      positions.map(({ amount: amountProp, ...position }) => {
+        const { currency } = amountProp;
         const asset = <AssetCell ticker={currency.ticker} />;
 
         const { borrowApy, borrowReward, lendApy, lendReward } = assets[currency.ticker];
@@ -114,7 +118,7 @@ const LoanPositionsTable = ({
         const collateral = showCollateral ? (
           <Switch
             onPress={() => onPressCollateralSwitch?.(currency.ticker)}
-            isSelected={(position as LendPosition).isCollateral}
+            isSelected={(position as CollateralPosition).isCollateral}
             aria-label={`toggle ${currency.ticker} collateral`}
           />
         ) : undefined;
@@ -130,27 +134,14 @@ const LoanPositionsTable = ({
     [assets, isLending, onPressCollateralSwitch, onRowAction, positions, prices, showCollateral]
   );
 
-  // TODO: cannot stay like this
-  const placeholderTitle = `No ${variant} positions`;
-  const placeholderDescription = `Your ${variant} positions will show here`;
-
-  const placeholder = (
-    <Card flex='1' justifyContent='center' alignItems='center'>
-      <Flex direction='column' gap='spacing2' alignItems='center'>
-        <Strong>{placeholderTitle}</Strong>
-        <P>{placeholderDescription}</P>
-      </Flex>
-    </Card>
-  );
-
   return (
     <Table
       title={title || (isLending ? t('loans.my_lend_positions') : t('loans.my_borrow_positions'))}
       onRowAction={onRowAction}
       rows={rows}
       columns={columns}
-      disabledKeys={disabledKeys}
-      placeholder={placeholder}
+      placeholder={<LoanTablePlaceholder variant={variant} />}
+      {...props}
     />
   );
 };

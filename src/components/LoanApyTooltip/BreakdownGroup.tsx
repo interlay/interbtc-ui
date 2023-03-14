@@ -3,7 +3,7 @@ import Big from 'big.js';
 import { Dd, Dl, DlGroup, Dt } from '@/component-library';
 import { getApyLabel } from '@/utils/helpers/loans';
 
-import { StyledApyTooltipGroup, StyledApyTooltipTitle } from './ApyTooltip.style';
+import { StyledApyTooltipGroup, StyledApyTooltipTitle } from './LoanApyTooltip.style';
 
 type BreakdownGroupProps = {
   apy: Big;

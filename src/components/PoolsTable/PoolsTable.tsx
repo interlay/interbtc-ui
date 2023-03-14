@@ -11,7 +11,7 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { AssetCell, BalanceCell, Cell, Table, TableProps } from '../Table';
 import { getFarmingApr } from './utils';
 
-enum LiquidityPoolTableColumns {
+enum PoolsTableColumns {
   POOL_NAME = 'poolName',
   APR = 'apr',
   TOTAL_LIQUIDITY = 'totalLiquidity',
@@ -19,40 +19,40 @@ enum LiquidityPoolTableColumns {
   ACCOUNT_LIQUIDITY = 'accountLiquidity'
 }
 
-type LiquidityPoolTableRow = {
+type PoolsTableRow = {
   id: string;
-  [LiquidityPoolTableColumns.POOL_NAME]: ReactNode;
-  [LiquidityPoolTableColumns.APR]: ReactNode;
-  [LiquidityPoolTableColumns.TOTAL_LIQUIDITY]: ReactNode;
-  // [LiquidityPoolTableColumns.SEVEN_DAY_VOLUME]: ReactNode;
-  [LiquidityPoolTableColumns.ACCOUNT_LIQUIDITY]?: ReactNode;
+  [PoolsTableColumns.POOL_NAME]: ReactNode;
+  [PoolsTableColumns.APR]: ReactNode;
+  [PoolsTableColumns.TOTAL_LIQUIDITY]: ReactNode;
+  // [PoolsTableColumns.SEVEN_DAY_VOLUME]: ReactNode;
+  [PoolsTableColumns.ACCOUNT_LIQUIDITY]?: ReactNode;
 };
 
-type LiquidityPoolTableProps = {
+type PoolsTableProps = {
   variant: 'available-pools' | 'account-pools';
   pools: Array<{ data: LiquidityPool; amount?: MonetaryAmount<LpCurrency> }>;
   onRowAction?: TableProps['onRowAction'];
   title?: ReactNode;
 };
 
-const LiquidityPoolTable = ({ variant, pools, onRowAction, title }: LiquidityPoolTableProps): JSX.Element => {
+const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
   const isAccountPools = variant === 'account-pools';
 
   const commonColumns = [
-    { name: t('amm.pools.pool_name'), uid: LiquidityPoolTableColumns.POOL_NAME },
-    { name: t('apr'), uid: LiquidityPoolTableColumns.APR },
-    { name: t('total_liquidity'), uid: LiquidityPoolTableColumns.TOTAL_LIQUIDITY }
-    // { name: t('7_day_volume'), uid: LiquidityPoolTableColumns.SEVEN_DAY_VOLUME }
+    { name: t('amm.pools.pool_name'), uid: PoolsTableColumns.POOL_NAME },
+    { name: t('apr'), uid: PoolsTableColumns.APR },
+    { name: t('total_liquidity'), uid: PoolsTableColumns.TOTAL_LIQUIDITY }
+    // { name: t('7_day_volume'), uid: PoolsTableColumns.SEVEN_DAY_VOLUME }
   ];
 
   const borrowAssetsColumns = isAccountPools
-    ? [...commonColumns, { name: t('my_liquidity'), uid: LiquidityPoolTableColumns.ACCOUNT_LIQUIDITY }]
+    ? [...commonColumns, { name: t('my_liquidity'), uid: PoolsTableColumns.ACCOUNT_LIQUIDITY }]
     : commonColumns;
 
-  const rows: LiquidityPoolTableRow[] = useMemo(
+  const rows: PoolsTableRow[] = useMemo(
     () =>
       pools.map(({ data, amount: accountLPTokenAmount }) => {
         const { pooledCurrencies, lpToken, rewardAmountsYearly, totalSupply } = data;
@@ -107,5 +107,5 @@ const LiquidityPoolTable = ({ variant, pools, onRowAction, title }: LiquidityPoo
   );
 };
 
-export { LiquidityPoolTable };
-export type { LiquidityPoolTableProps };
+export { PoolsTable };
+export type { PoolsTableProps };

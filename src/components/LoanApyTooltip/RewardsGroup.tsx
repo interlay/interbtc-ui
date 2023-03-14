@@ -6,7 +6,7 @@ import { Dd, Dt } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { StyledApyTooltipGroup } from './ApyTooltip.style';
+import { StyledApyTooltipGroup } from './LoanApyTooltip.style';
 
 type RewardsGroupProps = {
   rewards: MonetaryAmount<CurrencyExt>;
