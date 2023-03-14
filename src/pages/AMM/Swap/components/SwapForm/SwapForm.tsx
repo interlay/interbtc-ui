@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useDebounce } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
-import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, formatUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Card, CardProps, Divider, Flex, H1, TokenInput, TokenInputProps } from '@/component-library';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
@@ -23,12 +23,14 @@ import {
 } from '@/lib/form';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { SwapPair } from '@/types/swap';
+import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import useAccountId from '@/utils/hooks/use-account-id';
 
+import { PriceImpactModal } from '../PriceImpactModal';
 import { SwapInfo } from '../SwapInfo';
 import { SwapCTA } from './SwapCTA';
 import { SwapDivider } from './SwapDivider';
@@ -48,6 +50,24 @@ const getPairChange = (pair: SwapPair, currency: CurrencyExt, name: string): Swa
     default:
       return pair;
   }
+};
+
+const getAmountsUSD = (pair: SwapPair, prices?: Prices, trade?: Trade | null, inputAmount?: string) => {
+  const monetaryAmount = pair.input && newSafeMonetaryAmount(inputAmount || 0, pair.input, true);
+
+  const inputAmountUSD = monetaryAmount
+    ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
+    : 0;
+
+  const outputAmountUSD =
+    trade?.outputAmount && pair.output
+      ? convertMonetaryAmountToValueInUSD(trade.outputAmount, getTokenPrice(prices, pair.output.ticker)?.usd) || 0
+      : 0;
+
+  return {
+    inputAmountUSD,
+    outputAmountUSD
+  };
 };
 
 const getPooledTickers = (liquidityPools: LiquidityPool[]): Set<string> =>
@@ -82,6 +102,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const [slippage, setSlippage] = useState(0.1);
   const [inputAmount, setInputAmount] = useState<string>();
   const [trade, setTrade] = useState<Trade | null>();
+  const [isPriceImpactModalOpen, setPriceImpactModal] = useState(false);
 
   const prices = useGetPrices();
   const accountId = useAccountId();
@@ -99,6 +120,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
 
       const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
       const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
+
       setTrade(trade);
     },
     500,
@@ -130,7 +152,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     transactionFee: TRANSACTION_FEE_AMOUNT
   };
 
-  const handleSubmit = async () => {
+  const handleSwap = async () => {
     if (!trade || !accountId) return;
 
     try {
@@ -147,6 +169,18 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     } catch (err: any) {
       toast.error(err.toString());
     }
+  };
+
+  const handleSubmit = async (values: SwapFormData) => {
+    const { inputAmountUSD, outputAmountUSD } = getAmountsUSD(pair, prices, trade, values[SWAP_INPUT_AMOUNT_FIELD]);
+
+    const isOverPricedBuy = inputAmountUSD > outputAmountUSD;
+    const isAbovePriceImpactLimit = trade?.priceImpact.gte(SWAP_PRICE_IMPACT_LIMIT);
+    if (isOverPricedBuy && isAbovePriceImpactLimit) {
+      return setPriceImpactModal(true);
+    }
+
+    handleSwap();
   };
 
   const initialValues = useMemo(
@@ -211,18 +245,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
 
   const handlePairSwap = () => handlePairChange({ input: pair.output, output: pair.input });
 
-  const inputValueUSD =
-    inputAmount && pair.input
-      ? convertMonetaryAmountToValueInUSD(
-          newMonetaryAmount(inputAmount, pair.input, true),
-          getTokenPrice(prices, pair.input.ticker)?.usd
-        ) || 0
-      : 0;
-
-  const outputValueUSD =
-    trade?.outputAmount && pair.output
-      ? convertMonetaryAmountToValueInUSD(trade.outputAmount, getTokenPrice(prices, pair.output.ticker)?.usd) || 0
-      : 0;
+  const { inputAmountUSD, outputAmountUSD } = getAmountsUSD(pair, prices, trade, form.values[SWAP_INPUT_AMOUNT_FIELD]);
 
   const pooledTickers = useMemo(() => getPooledTickers(liquidityPools), [liquidityPools]);
 
@@ -246,49 +269,59 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   );
 
   return (
-    <Card {...props} gap='spacing2'>
-      <H1 size='base' color='secondary' weight='bold' align='center'>
-        Swap
-      </H1>
-      <Divider orientation='horizontal' color='secondary' />
-      <Flex direction='column'>
-        <SlippageManager value={slippage} onChange={(slippage) => setSlippage(slippage)} />
-        <form onSubmit={form.handleSubmit}>
-          <Flex direction='column' gap='spacing4'>
-            <Flex direction='column' gap='spacing12'>
-              <TokenInput
-                placeholder='0.00'
-                label={t('amm.from')}
-                balance={inputBalance?.toString() || 0}
-                humanBalance={inputBalance?.toHuman() || 0}
-                valueUSD={inputValueUSD}
-                tokens={tokens}
-                selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, false), {
-                  onChange: handleTickerChange
-                })}
-                {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, false), { onChange: handleChangeInput })}
-              />
-              <SwapDivider onPress={handlePairSwap} />
-              <TokenInput
-                placeholder='0.00'
-                label={t('amm.to')}
-                isDisabled
-                balance={outputBalance?.toString() || 0}
-                humanBalance={outputBalance?.toHuman() || 0}
-                valueUSD={outputValueUSD}
-                value={trade?.outputAmount.toString() || ''}
-                tokens={tokens}
-                selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
-                  onChange: handleTickerChange
-                })}
-              />
+    <>
+      <Card {...props} gap='spacing2'>
+        <H1 size='base' color='secondary' weight='bold' align='center'>
+          Swap
+        </H1>
+        <Divider orientation='horizontal' color='secondary' />
+        <Flex direction='column'>
+          <SlippageManager value={slippage} onChange={(slippage) => setSlippage(slippage)} />
+          <form onSubmit={form.handleSubmit}>
+            <Flex direction='column' gap='spacing4'>
+              <Flex direction='column' gap='spacing12'>
+                <TokenInput
+                  placeholder='0.00'
+                  label={t('amm.from')}
+                  balance={inputBalance?.toString() || 0}
+                  humanBalance={inputBalance?.toHuman() || 0}
+                  valueUSD={inputAmountUSD}
+                  tokens={tokens}
+                  selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, false), {
+                    onChange: handleTickerChange
+                  })}
+                  {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, false), { onChange: handleChangeInput })}
+                />
+                <SwapDivider onPress={handlePairSwap} />
+                <TokenInput
+                  placeholder='0.00'
+                  label={t('amm.to')}
+                  isDisabled
+                  balance={outputBalance?.toString() || 0}
+                  humanBalance={outputBalance?.toHuman() || 0}
+                  valueUSD={outputAmountUSD}
+                  value={trade?.outputAmount.toString() || ''}
+                  tokens={tokens}
+                  selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
+                    onChange: handleTickerChange
+                  })}
+                />
+              </Flex>
+              {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
+              <SwapCTA trade={trade} errors={form.errors} loading={swapMutation.isLoading} pair={pair} />
             </Flex>
-            {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
-            <SwapCTA trade={trade} errors={form.errors} loading={swapMutation.isLoading} pair={pair} />
-          </Flex>
-        </form>
-      </Flex>
-    </Card>
+          </form>
+        </Flex>
+      </Card>
+      <PriceImpactModal
+        isOpen={isPriceImpactModalOpen}
+        onClose={() => setPriceImpactModal(false)}
+        onConfirm={handleSwap}
+        inputValueUSD={inputAmountUSD}
+        outputValueUSD={outputAmountUSD}
+        pair={pair}
+      />
+    </>
   );
 };
 
