@@ -53,18 +53,20 @@ const Overlay = ({
 
   return (
     <AriaOverlay portalContainer={container}>
-      <OpenTransition
-        in={isOpen}
-        appear
-        onExit={onExit}
-        onExiting={onExiting}
-        onExited={handleExited}
-        onEnter={onEnter}
-        onEntering={onEntering}
-        onEntered={handleEntered}
-      >
-        {children}
-      </OpenTransition>
+      <div>
+        <OpenTransition
+          in={isOpen}
+          appear
+          onExit={onExit}
+          onExiting={onExiting}
+          onExited={handleExited}
+          onEnter={onEnter}
+          onEntering={onEntering}
+          onEntered={handleEntered}
+        >
+          {children}
+        </OpenTransition>
+      </div>
     </AriaOverlay>
   );
 };
