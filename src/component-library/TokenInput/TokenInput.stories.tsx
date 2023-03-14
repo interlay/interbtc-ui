@@ -4,24 +4,22 @@ import { useState } from 'react';
 import { TokenInput, TokenInputProps } from '.';
 
 const Template: Story<TokenInputProps> = (args) => {
-  const [value, setValue] = useState<number>();
+  const [value, setValue] = useState<string>();
 
   return (
     <TokenInput
       {...args}
       value={value}
-      onChange={(e) => setValue(Number(e.target.value || 0))}
-      aria-label='token field'
-      valueUSD={(value || 0) * 10}
+      onChange={(e) => setValue(e.target.value)}
+      valueUSD={isNaN(value as any) ? 0 : Number(value) * 10}
     />
   );
 };
 
 const WithBalance = Template.bind({});
 WithBalance.args = {
-  ticker: 'KSM',
+  defaultTicker: 'KSM',
   balance: 1000.0,
-  decimals: 8,
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'Amount',
@@ -30,7 +28,7 @@ WithBalance.args = {
 
 const WithoutBalance = Template.bind({});
 WithoutBalance.args = {
-  ticker: 'KSM',
+  defaultTicker: 'KSM',
   label: 'Amount',
   placeholder: '0.00',
   isDisabled: false
@@ -40,11 +38,9 @@ const WithCurrencySelect = Template.bind({});
 WithCurrencySelect.args = {
   balance: 1000.0,
   isDisabled: false,
-  decimals: 8,
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'From',
-  selectProps: {},
   tokens: [
     { balance: 200, ticker: 'KSM', balanceUSD: '$200' },
     { balance: 200, ticker: 'BTC', balanceUSD: '$200' },
@@ -56,7 +52,26 @@ WithCurrencySelect.args = {
   ]
 };
 
-export { WithBalance, WithCurrencySelect, WithoutBalance };
+const MultiToken = Template.bind({});
+MultiToken.args = {
+  ticker: { text: 'LP Token', icons: ['KSM', 'KBTC', 'KINT', 'USDT'] },
+  balance: 1000.0,
+  balanceLabel: 'Balance',
+  placeholder: '0.00',
+  label: 'Amount',
+  isDisabled: false,
+  tokens: [
+    { balance: 200, ticker: 'KSM', balanceUSD: '$200' },
+    { balance: 200, ticker: 'BTC', balanceUSD: '$200' },
+    { balance: 200, ticker: 'IBTC', balanceUSD: '$200' },
+    { balance: 200, ticker: 'KBTC', balanceUSD: '$200' },
+    { balance: 200, ticker: 'DOT', balanceUSD: '$200' },
+    { balance: 200, ticker: 'INTR', balanceUSD: '$200' },
+    { balance: 200, ticker: { text: 'LP Token', icons: ['KSM', 'KBTC', 'KINT', 'USDT'] }, balanceUSD: '$200' }
+  ]
+};
+
+export { MultiToken, WithBalance, WithCurrencySelect, WithoutBalance };
 
 export default {
   title: 'Forms/TokenInput',

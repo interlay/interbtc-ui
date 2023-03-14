@@ -4,8 +4,8 @@ import { FieldError } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { VaultApiType } from '@/common/types/vault.types';
-import Checkbox, { CheckboxLabelSide } from '@/components/Checkbox';
-import VaultsSelector from '@/components/VaultsSelector';
+import Checkbox, { CheckboxLabelSide } from '@/legacy-components/Checkbox';
+import VaultsSelector from '@/legacy-components/VaultsSelector';
 import { TreasuryAction } from '@/types/general';
 
 interface Props {

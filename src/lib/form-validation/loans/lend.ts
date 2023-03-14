@@ -7,11 +7,11 @@ import balance from '../common/balance';
 import field from '../common/field';
 import { AvailableBalanceSchemaParams, CommonSchemaParams, MaxAmountSchemaParams } from '../types';
 
-type LoanLendSchemaParams = CommonSchemaParams & AvailableBalanceSchemaParams;
+type LoanLendSchemaParams = CommonSchemaParams & AvailableBalanceSchemaParams & MaxAmountSchemaParams;
 
 const lend = (t: TFunction, params: LoanLendSchemaParams): z.ZodEffects<z.ZodString, string, string> =>
   z.string().superRefine((value, ctx) => {
-    const { governanceBalance, transactionFee, availableBalance, minAmount } = params;
+    const { governanceBalance, transactionFee, availableBalance, minAmount, maxAmount } = params;
 
     if (!field.required.validate({ value })) {
       const issueArg = field.required.issue(t, { fieldName: t('loans.lend').toLowerCase(), fieldType: 'number' });
@@ -34,6 +34,14 @@ const lend = (t: TFunction, params: LoanLendSchemaParams): z.ZodEffects<z.ZodStr
 
     if (!balance.currency.validate({ availableBalance: availableBalance, inputAmount })) {
       return ctx.addIssue(balance.currency.issue(t));
+    }
+
+    if (!field.max.validate({ inputAmount: inputAmount.toBig(), maxAmount: maxAmount.toBig() })) {
+      const issueArg = field.max.issue(t, {
+        action: t('loans.lend').toLowerCase(),
+        amount: maxAmount.toString()
+      });
+      return ctx.addIssue(issueArg);
     }
   });
 

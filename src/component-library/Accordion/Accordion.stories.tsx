@@ -5,13 +5,13 @@ import { Accordion, AccordionItem, AccordionProps } from '.';
 
 const Template: Story<AccordionProps> = (args) => (
   <Accordion {...args} disabledKeys={['3']}>
-    <AccordionItem key='1' title='Item 1'>
+    <AccordionItem hasChildItems={false} key='1' title='Item 1'>
       <P>This is item 1 section</P>
     </AccordionItem>
-    <AccordionItem key='2' title='Item 2'>
+    <AccordionItem hasChildItems={false} key='2' title='Item 2'>
       <P>This is item 2 section</P>
     </AccordionItem>
-    <AccordionItem key='3' title='Item 3'>
+    <AccordionItem hasChildItems={false} key='3' title='Item 3'>
       <P>This is item 3 section</P>
     </AccordionItem>
   </Accordion>

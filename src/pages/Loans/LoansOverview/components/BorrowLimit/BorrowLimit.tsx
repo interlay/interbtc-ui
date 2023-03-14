@@ -12,7 +12,8 @@ import { Prices } from '@/utils/hooks/api/use-get-prices';
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { isBorrowAsset } from '../../utils/is-loan-asset';
 import { LTVMeter } from '../LTVMeter.tsx';
-import { StyledDd, StyledDl } from './BorrowLimit.style';
+import { StyledDd, StyledDl, StyledSpan } from './BorrowLimit.style';
+import { RemainingDebt } from './RemainingDebt';
 
 type BorrowLimitProps = {
   loanAction: LoanAction;
@@ -20,6 +21,7 @@ type BorrowLimitProps = {
   actionAmount: MonetaryAmount<CurrencyExt>;
   prices: Prices | undefined;
   shouldDisplayLiquidationAlert?: boolean;
+  remainingDebt?: MonetaryAmount<CurrencyExt>;
 };
 
 const BorrowLimit = ({
@@ -27,6 +29,7 @@ const BorrowLimit = ({
   asset,
   actionAmount,
   prices,
+  remainingDebt,
   shouldDisplayLiquidationAlert
 }: BorrowLimitProps): JSX.Element | null => {
   const { t } = useTranslation();
@@ -35,7 +38,7 @@ const BorrowLimit = ({
   const { data: currentLTV, getLTV } = useGetLTV();
 
   const newBorrowLimit = getBorrowLimitUSD({ type: loanAction, amount: actionAmount, asset });
-  const newLTV = getLTV({ type: loanAction, amount: actionAmount, asset });
+  const newLTV = getLTV({ type: loanAction, amount: actionAmount });
 
   if (!currentLTV || !newLTV || !currentBorrowLimit || !newBorrowLimit) {
     return null;
@@ -61,16 +64,19 @@ const BorrowLimit = ({
           most {displayMonetaryAmount(asset.availableCapacity)} {asset.currency.ticker}.
         </Alert>
       )}
+      {remainingDebt && (
+        <RemainingDebt actionAmount={actionAmount} remainingDebt={remainingDebt} status={newLTV.status} />
+      )}
       <DlGroup justifyContent='space-between'>
         <Dt>Borrow Limit</Dt>
         <StyledDd $status={newLTV.status}>
           {currentBorrowLimit && (
             <>
-              <span>{currentBorrowLimitLabel}</span>
-              <span>--&gt;</span>
+              <StyledSpan>{currentBorrowLimitLabel}</StyledSpan>
+              <StyledSpan>--&gt;</StyledSpan>
             </>
           )}
-          <span>{newBorrowLimitLabel}</span>
+          <StyledSpan>{newBorrowLimitLabel}</StyledSpan>
         </StyledDd>
       </DlGroup>
       <DlGroup justifyContent='space-between'>
@@ -78,11 +84,11 @@ const BorrowLimit = ({
         <StyledDd $status={newLTV.status}>
           {currentLTV && (
             <>
-              <span>{currentLTVLabel}</span>
-              <span>--&gt;</span>
+              <StyledSpan>{currentLTVLabel}</StyledSpan>
+              <StyledSpan>--&gt;</StyledSpan>
             </>
           )}
-          <span>{newLTVLabel}</span>
+          <StyledSpan>{newLTVLabel}</StyledSpan>
         </StyledDd>
       </DlGroup>
       <LTVMeter value={newLTV.value} ranges={newLTV.ranges} />

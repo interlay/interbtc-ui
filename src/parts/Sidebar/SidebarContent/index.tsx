@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
 import { GovernanceTokenLogoWithTextIcon } from '@/config/relay-chains';
+import InterlayRouterLink from '@/legacy-components/UI/InterlayRouterLink';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';

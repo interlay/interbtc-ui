@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
 import { WalletSourceName } from '@/config/wallets';
 import { SS58_FORMAT } from '@/constants';
+import InterlayModal, { InterlayModalInnerWrapper } from '@/legacy-components/UI/InterlayModal';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 

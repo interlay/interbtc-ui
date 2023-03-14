@@ -4,24 +4,33 @@ import { useQuery, UseQueryResult } from 'react-query';
 
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 
+import { FeatureFlags, useFeatureFlag } from '../use-feature-flag';
+
 type UseGetCurrenciesResult = UseQueryResult<Array<CurrencyExt>> & {
   getCurrencyFromTicker: (ticker: string) => CurrencyExt;
   getForeignCurrencyFromId: (id: number) => CurrencyExt;
   getCurrencyFromIdPrimitive: (currencyPrimitive: InterbtcPrimitivesCurrencyId) => CurrencyExt;
 };
 
-const getCurrencies = async (): Promise<Array<CurrencyExt>> => {
-  const isLendingEnabled = process.env.REACT_APP_FEATURE_FLAG_LENDING === 'enabled';
-  const [foreignCurrencies, lendCurrencies] = await Promise.all([
+const getCurrencies = async (featureFlags: { lending: boolean; amm: boolean }): Promise<Array<CurrencyExt>> => {
+  const [foreignCurrencies, lendCurrencies, lpTokens] = await Promise.all([
     window.bridge.assetRegistry.getForeignAssets(),
-    isLendingEnabled ? window.bridge.loans.getLendTokens() : []
+    featureFlags.lending ? window.bridge.loans.getLendTokens() : [],
+    featureFlags.amm ? window.bridge.amm.getLpTokens() : []
   ]);
-  return [...NATIVE_CURRENCIES, ...foreignCurrencies, ...lendCurrencies];
+  return [...NATIVE_CURRENCIES, ...foreignCurrencies, ...lendCurrencies, ...lpTokens];
 };
 
 // Returns all currencies, both native and foreign and helping utils to get CurrencyExt object.
 const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
-  const queryResult = useQuery({ queryKey: 'getCurrencies', queryFn: getCurrencies, enabled: bridgeLoaded });
+  const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
+  const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
+
+  const queryResult = useQuery({
+    queryKey: 'getCurrencies',
+    queryFn: () => getCurrencies({ lending: isLendingEnabled, amm: isAMMEnabled }),
+    enabled: bridgeLoaded
+  });
 
   // Throws when passed parameter is not ticker of any currency or currencies are not loaded yet.
   const getCurrencyFromTicker = useCallback(
@@ -59,6 +68,18 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
     [queryResult]
   );
 
+  //   export declare type StandardLpToken = Currency & {
+  //     lpToken: {
+  //         token0: StandardLpUnderlyingToken;
+  //         token1: StandardLpUnderlyingToken;
+  //     };
+  // };
+  // export declare type StableLpToken = Currency & {
+  //     stableLpToken: {
+  //         poolId: number;
+  //     };
+  // };
+
   // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
   const getLendCurrencyFromId = useCallback(
     (id: number): CurrencyExt => {
@@ -66,17 +87,17 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
         throw new Error('useGetCurrencies: Cannot call `getLendCurrencyFromId` before currencies are loaded.');
       }
 
-      const foreignCurrency = queryResult.data.find(
-        (currency) => 'lendToken' in currency && currency.lendToken.id === id
-      );
-      if (foreignCurrency === undefined) {
+      const lendCurrency = queryResult.data.find((currency) => 'lendToken' in currency && currency.lendToken.id === id);
+      if (lendCurrency === undefined) {
         throw new Error(`useGetCurrencies: getLendCurrencyFromId: Lend token with id ${id} not found.`);
       }
 
-      return foreignCurrency;
+      return lendCurrency;
     },
     [queryResult]
   );
+
+  // TODO: add getter according to existing LP Tokens identifiers
 
   // Throws when passed parameter is not primitiveId of any currency or currencies are not loaded yet.
   // Synchronous function which has the same functionality as async `currencyIdToMonetaryCurrency` in lib.

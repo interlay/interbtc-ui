@@ -1,51 +1,68 @@
-import { BorrowPosition, CurrencyExt, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import {
+  BorrowPosition,
+  CollateralPosition,
+  CurrencyExt,
+  LendingStats,
+  LoanAsset,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { BorrowAction, LendAction, LoanAction } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { getMaxBorrowableAmount } from '../utils/get-max-borrowable-amount';
+import { getMaxLendableAmount } from '../utils/get-max-lendable-amount';
 import { getMaxWithdrawableAmount } from '../utils/get-max-withdrawable-amount';
 
 type GetMaxAmountParams = {
   loanAction: LoanAction;
   asset: LoanAsset;
-  assetPrice?: number;
   assetBalance?: MonetaryAmount<CurrencyExt>;
-  position?: LendPosition | BorrowPosition;
-  totalBorrowedAmountUSD?: Big;
-  totalCollateralAmountUSD?: Big;
+  position?: CollateralPosition | BorrowPosition;
+  lendingStats?: LendingStats;
 };
 
 const getMaxAmount = ({
   loanAction,
   asset,
-  assetPrice,
   assetBalance,
   position,
-  totalBorrowedAmountUSD,
-  totalCollateralAmountUSD
+  lendingStats
 }: GetMaxAmountParams): MonetaryAmount<CurrencyExt> | undefined => {
   switch (loanAction) {
     case 'borrow':
-      return getMaxBorrowableAmount(asset, assetPrice, totalBorrowedAmountUSD, totalCollateralAmountUSD);
+      return getMaxBorrowableAmount(asset, lendingStats);
     case 'withdraw':
-      return getMaxWithdrawableAmount(
-        asset,
-        assetPrice,
-        position as LendPosition,
-        totalBorrowedAmountUSD,
-        totalCollateralAmountUSD
-      );
+      return getMaxWithdrawableAmount(asset, position as CollateralPosition, lendingStats);
     case 'lend':
-      return assetBalance;
+      return getMaxLendableAmount(assetBalance, asset);
     case 'repay':
       return position?.amount.add((position as BorrowPosition).accumulatedDebt || 0);
+  }
+};
+
+// Only relevant for withdraw or repay
+const isEqualBalance = (
+  variant: LoanAction,
+  maxAmount: MonetaryAmount<CurrencyExt>,
+  assetBalance: MonetaryAmount<CurrencyExt>,
+  position?: CollateralPosition | BorrowPosition
+) => {
+  switch (variant) {
+    case 'withdraw': {
+      return !!position?.amount && maxAmount.eq(position.amount);
+    }
+    case 'repay': {
+      return maxAmount.eq(assetBalance);
+    }
+    default: {
+      return false;
+    }
   }
 };
 
@@ -53,10 +70,11 @@ type UseLoanFormData = {
   governanceBalance: MonetaryAmount<CurrencyExt>;
   transactionFee: MonetaryAmount<CurrencyExt>;
   assetPrice: number;
+  balance: MonetaryAmount<CurrencyExt>;
   assetAmount: {
     available: MonetaryAmount<CurrencyExt>;
     min: MonetaryAmount<CurrencyExt>;
-    max: MonetaryAmount<CurrencyExt>;
+    max: { value: MonetaryAmount<CurrencyExt>; isEqualBalance: boolean };
   };
 };
 
@@ -64,14 +82,11 @@ type UseLoanFormData = {
 const useLoanFormData = (
   loanAction: BorrowAction | LendAction,
   asset: LoanAsset,
-  position?: LendPosition | BorrowPosition
+  position?: CollateralPosition | BorrowPosition
 ): UseLoanFormData => {
   const { getBalance, getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-  const {
-    data: { statistics }
-  } = useGetAccountPositions();
-  const { borrowAmountUSD, collateralAmountUSD } = statistics || {};
+  const { data: statistics } = useGetAccountLendingStatistics();
 
   const zeroAssetAmount = newMonetaryAmount(0, asset.currency);
 
@@ -83,11 +98,9 @@ const useLoanFormData = (
   const maxAmountParams: GetMaxAmountParams = {
     loanAction,
     asset,
-    assetPrice,
     assetBalance,
     position,
-    totalBorrowedAmountUSD: borrowAmountUSD,
-    totalCollateralAmountUSD: collateralAmountUSD
+    lendingStats: statistics
   };
 
   const maxAmount = getMaxAmount(maxAmountParams) || zeroAssetAmount;
@@ -97,11 +110,15 @@ const useLoanFormData = (
     governanceBalance,
     transactionFee,
     assetPrice,
+    balance: loanAction === 'repay' ? (assetBalance.gt(maxAmount) ? maxAmount : assetBalance) : maxAmount,
     assetAmount: {
       available: assetBalance,
       min: minAmount,
       // MEMO: checks for negative values
-      max: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount
+      max: {
+        value: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount,
+        isEqualBalance: isEqualBalance(loanAction, maxAmount, assetBalance, position)
+      }
     }
   };
 };

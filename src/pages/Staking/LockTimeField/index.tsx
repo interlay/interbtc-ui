@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import * as React from 'react';
 
-import NumberInput, { Props as NumberInputProps } from '@/components/NumberInput';
-import { TextFieldHelperText, TextFieldLabel } from '@/components/TextField';
 import { STAKE_LOCK_TIME } from '@/config/relay-chains';
+import NumberInput, { Props as NumberInputProps } from '@/legacy-components/NumberInput';
+import { TextFieldHelperText, TextFieldLabel } from '@/legacy-components/TextField';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 // MEMO: inspired by https://medium.com/codex/making-html-5-numeric-inputs-only-accept-integers-d3d117973d56

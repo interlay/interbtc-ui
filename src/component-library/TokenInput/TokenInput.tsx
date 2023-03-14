@@ -2,36 +2,32 @@ import { useLabel } from '@react-aria/label';
 import { mergeProps } from '@react-aria/utils';
 import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useState } from 'react';
 
-import { formatUSD } from '@/common/utils/utils';
-
 import { Flex } from '../Flex';
 import { NumberInput, NumberInputProps } from '../NumberInput';
 import { useDOMRef } from '../utils/dom';
+import { formatUSD } from '../utils/format';
 import { triggerChangeEvent } from '../utils/input';
 import { StyledUSDAdornment } from './TokenInput.style';
 import { TokenInputLabel } from './TokenInputLabel';
 import { TokenData } from './TokenList';
 import { TokenSelect } from './TokenSelect';
 
-const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
-  if (!decimals) return;
+type SingleToken = string;
 
-  return {
-    style: 'decimal',
-    maximumFractionDigits: decimals || 20,
-    useGrouping: false
-  };
-};
+type MultiToken = { text: string; icons: string[] };
+
+type TokenTicker = SingleToken | MultiToken;
 
 type Props = {
-  decimals?: number;
-  valueUSD: number;
-  balance?: number;
+  valueUSD?: number;
+  balance?: string | number;
+  humanBalance?: string | number;
   balanceLabel?: ReactNode;
-  balanceDecimals?: number;
-  ticker?: string;
+  ticker?: TokenTicker;
+  defaultTicker?: TokenTicker;
   tokens?: TokenData[];
-  onClickBalance?: (balance?: number) => void;
+  onClickBalance?: (balance?: string | number) => void;
+  onChangeTicker?: (ticker?: string) => void;
   selectProps?: InputHTMLAttributes<HTMLInputElement>;
 };
 
@@ -42,79 +38,102 @@ type TokenInputProps = Props & InheritAttrs;
 const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
-      decimals,
       valueUSD,
       balance,
+      humanBalance,
       balanceLabel,
-      balanceDecimals,
       isDisabled,
       label,
       ticker: tickerProp,
+      defaultTicker = '',
       tokens = [],
       style,
       hidden,
       className,
       onClickBalance,
+      onChangeTicker,
       selectProps,
+      placeholder = '0',
       ...props
     },
     ref
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
-    const [ticker, setTicker] = useState((selectProps?.value as string) || tickerProp);
+    const [tickerValue, setTickerValue] = useState(
+      (selectProps?.defaultValue as string) || (typeof defaultTicker === 'string' ? defaultTicker : defaultTicker?.text)
+    );
 
-    const { labelProps, fieldProps } = useLabel({ label });
+    const { labelProps, fieldProps } = useLabel({ label, ...props });
 
     useEffect(() => {
-      if (!tickerProp) return;
+      if (tickerProp === undefined) return;
 
-      setTicker(tickerProp);
+      setTickerValue(typeof tickerProp === 'string' ? tickerProp : tickerProp?.text);
     }, [tickerProp]);
 
+    useEffect(() => {
+      if (selectProps?.value === undefined) return;
+
+      setTickerValue(selectProps.value as string);
+    }, [selectProps?.value]);
+
     const handleClickBalance = () => {
+      if (!balance) return;
+
       triggerChangeEvent(inputRef, balance);
       onClickBalance?.(balance);
     };
 
-    const handleTokenChange = (ticker: string) => setTicker(ticker);
+    const handleTokenChange = (ticker: string) => {
+      onChangeTicker?.(ticker);
+      setTickerValue(ticker);
+    };
 
-    const isSelectDisabled = !selectProps || !tokens?.length;
+    const customIcons = typeof tickerProp === 'object' ? tickerProp.icons : undefined;
+
+    const isSelectDisabled = !tokens?.length;
     const endAdornment = (
       <TokenSelect
-        ticker={ticker}
+        value={tickerValue}
+        icons={customIcons}
         isDisabled={isSelectDisabled}
         tokens={tokens}
         onChange={handleTokenChange}
         // Allows seamingless integration with form lib
         selectProps={selectProps}
+        label={label}
+        aria-label={fieldProps['aria-label']}
       />
     );
 
-    const formatOptions = getFormatOptions(decimals);
+    const hasLabel = !!label || balance !== undefined;
 
     return (
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
-        <TokenInputLabel
-          ticker={ticker}
-          balance={balance}
-          balanceLabel={balanceLabel}
-          balanceDecimals={balanceDecimals}
-          isDisabled={isDisabled || !ticker}
-          onClickBalance={handleClickBalance}
-          {...labelProps}
-        >
-          {label}
-        </TokenInputLabel>
+        {hasLabel && (
+          <TokenInputLabel
+            ticker={tickerValue}
+            balance={humanBalance || balance}
+            balanceLabel={balanceLabel}
+            isDisabled={isDisabled || !tickerValue}
+            onClickBalance={handleClickBalance}
+            {...labelProps}
+          >
+            {label}
+          </TokenInputLabel>
+        )}
         <NumberInput
           ref={inputRef}
-          minValue={0}
+          placeholder={placeholder}
           size='large'
           isDisabled={isDisabled}
-          formatOptions={formatOptions}
-          paddingX={{ right: isSelectDisabled ? 'lg' : ticker ? 'xl' : 'xl2' }}
           endAdornment={endAdornment}
-          bottomAdornment={<StyledUSDAdornment>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>}
+          bottomAdornment={
+            valueUSD !== undefined && (
+              <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
+            )
+          }
           {...mergeProps(props, fieldProps)}
         />
       </Flex>
@@ -125,4 +144,4 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 TokenInput.displayName = 'TokenInput';
 
 export { TokenInput };
-export type { TokenInputProps };
+export type { TokenInputProps, TokenTicker };

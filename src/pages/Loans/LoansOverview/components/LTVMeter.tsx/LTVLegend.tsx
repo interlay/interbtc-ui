@@ -1,6 +1,7 @@
+import { InformationCircle } from '@/assets/icons';
 import { Flex, Tooltip } from '@/component-library';
 
-import { LTVLegendStatus, StyledIcon, StyledLabel, StyledLegend } from './LTVMeter.style';
+import { LTVLegendStatus, StyledLabel, StyledLegend } from './LTVMeter.style';
 
 type LTVLegendProps = {
   status: LTVLegendStatus;
@@ -13,7 +14,7 @@ const LTVLegend = ({ status, label, description }: LTVLegendProps): JSX.Element 
     <StyledLegend $status={status} />
     <StyledLabel>{label}</StyledLabel>
     <Tooltip label={description}>
-      <StyledIcon />
+      <InformationCircle size='s' />
     </Tooltip>
   </Flex>
 );
