@@ -55,14 +55,16 @@ const getData = (
     };
   }
 
+  const ltvPercentage = ltv.mul(100);
+
   const thresholds = {
     collateral: collateralThresholdWeightedAverage.mul(100),
     liquidation: liquidationThresholdWeightedAverage.mul(100)
   };
 
   return {
-    value: ltv.toNumber() * 100,
-    status: getStatus(ltv, thresholds),
+    value: ltvPercentage.toNumber(),
+    status: getStatus(ltvPercentage, thresholds),
     ranges: getRanges(thresholds)
   };
 };
