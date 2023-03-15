@@ -18,7 +18,7 @@ import {
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
 import { render, userEvent, waitFor } from '../../test-utils';
-import { submitForm, withinModalTabPanel } from '../utils/loans';
+import { submitForm, withinModalTabPanel } from '../utils/table';
 import { TABLES } from './constants';
 
 const path = '/lending';
@@ -46,7 +46,7 @@ describe('Borrow Flow', () => {
   it('should be able to borrow', async () => {
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC');
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.SMALL);
 
@@ -61,7 +61,7 @@ describe('Borrow Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
 
     // If there is collateral, modal LTV meter should be rendered
     expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
@@ -87,7 +87,7 @@ describe('Borrow Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 
@@ -114,7 +114,7 @@ describe('Borrow Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, tab, 'IBTC', true);
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 

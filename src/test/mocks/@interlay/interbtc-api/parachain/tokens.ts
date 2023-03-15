@@ -11,7 +11,8 @@ type MockTokenBalance = jest.Mock<ChainBalance, [currency: CurrencyExt, _id: Acc
 };
 
 const tokensBalanceFn = jest.fn(
-  (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
+  (currency: CurrencyExt, _id: AccountId) =>
+    new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
 );
 
 // Set empty balance
@@ -22,7 +23,8 @@ const tokensBalanceFn = jest.fn(
 
 (tokensBalanceFn as MockTokenBalance).restore = () =>
   tokensBalanceFn.mockImplementation(
-    (currency: CurrencyExt, _id: AccountId) => new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
+    (currency: CurrencyExt, _id: AccountId) =>
+      new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE)
   );
 
 const mockTokensBalance = tokensBalanceFn as MockTokenBalance;
