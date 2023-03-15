@@ -76,7 +76,6 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
-        {/* <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} /> */}
         <FundWallet />
         {selectedAccount !== undefined && (
           <>

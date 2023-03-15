@@ -4,14 +4,14 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { CTAProps, Flex, Modal, ModalBody, ModalHeader, P, TabsItem } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
-import { exchanges, payments } from './entities';
 import { StyledCTA, StyledEntities, StyledEntitiesItem, StyledTabs, StyledWrapper } from './FundWallet.style';
+import { useEntities, UseEntitiesResult } from './use-entities';
 
 const TABS = ['buy', 'exchange'] as const;
 
 type FundWalletMethod = typeof TABS[number];
 
-const getData = (method: FundWalletMethod, t: TFunction) =>
+const getData = (method: FundWalletMethod, entities: UseEntitiesResult, t: TFunction) =>
   ({
     buy: {
       title: t('fund_wallet_modal.buy'),
@@ -21,24 +21,24 @@ const getData = (method: FundWalletMethod, t: TFunction) =>
           <P color='tertiary'>{t('fund_wallet_modal.banxa_leading_solution')}</P>
         </Flex>
       ),
-      entities: payments
+      entities: entities.payments
     },
     exchange: {
       title: t('fund_wallet_modal.exchange'),
       description: (
         <P color='tertiary'>{t('fund_wallet_modal.please_check_terms', { token: GOVERNANCE_TOKEN.ticker })}</P>
       ),
-      entities: exchanges
+      entities: entities.exchanges
     }
   }[method]);
 
 type FundWalletProps = CTAProps;
 
-// TODO: create theme card
 const FundWallet = forwardRef<HTMLButtonElement, FundWalletProps>(
   (props, ref): JSX.Element => {
     const { t } = useTranslation();
     const [isOpen, setOpen] = useState(false);
+    const entitiesData = useEntities();
 
     return (
       <>
@@ -50,20 +50,15 @@ const FundWallet = forwardRef<HTMLButtonElement, FundWalletProps>(
           <ModalBody noPadding>
             <StyledTabs size='large' fullWidth>
               {TABS.map((tab) => {
-                const { title, description, entities } = getData(tab, t);
+                const { title, description, entities } = getData(tab, entitiesData, t);
 
                 return (
                   <TabsItem title={title} key={tab}>
                     <StyledWrapper direction='column' gap='spacing8'>
                       {description}
                       <StyledEntities>
-                        {entities.map((entity) => (
-                          <StyledEntitiesItem
-                            key={entity.link}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            href={entity.link}
-                          >
+                        {entities.map((entity, key) => (
+                          <StyledEntitiesItem key={key} target='_blank' rel='noopener noreferrer' to={entity.link}>
                             {entity.icon}
                           </StyledEntitiesItem>
                         ))}

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { CTA, Flex, Tabs, theme } from '@/component-library';
@@ -18,7 +19,7 @@ const StyledEntities = styled.div`
   grid-gap: ${theme.spacing.spacing1};
 `;
 
-const StyledEntitiesItem = styled.a`
+const StyledEntitiesItem = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
