@@ -8,7 +8,7 @@ type AssetCellProps = {
 };
 
 const AssetCell = ({ currency, hasPadding }: AssetCellProps): JSX.Element => (
-  <StyledAssetCellWrapper $hasPadding={hasPadding} gap='spacing2' alignItems='center'>
+  <StyledAssetCellWrapper $hasPadding={hasPadding} gap='spacing2' alignItems='center' aria-label={currency}>
     <CoinIcon ticker={currency} />
     <StyledCellLabel>{currency}</StyledCellLabel>
   </StyledAssetCellWrapper>
