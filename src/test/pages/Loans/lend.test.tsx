@@ -16,7 +16,7 @@ import {
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
 import { render, screen, userEvent, waitFor } from '../../test-utils';
-import { submitForm, withinModalTabPanel } from '../utils/loans';
+import { submitForm, withinModalTabPanel } from '../utils/table';
 import { TABLES } from './constants';
 
 const path = '/lending';
@@ -38,7 +38,7 @@ describe('Lending Flow', () => {
   it('should be able to lend', async () => {
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC');
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
 
     expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
 
@@ -54,7 +54,7 @@ describe('Lending Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC');
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 
@@ -83,7 +83,7 @@ describe('Lending Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC');
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 

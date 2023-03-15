@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { screen, userEvent, within } from '../../test-utils';
+import { screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../../test-utils';
 
 type ElementName = string | RegExp;
 
@@ -17,6 +17,8 @@ const getTableRow = (tableName: ElementName, rowName: ElementName) => {
 
   return table.getByRole('row', { name: composeName(rowName) });
 };
+
+const withinTableRow = (tableName: string, asset: string) => within(getTableRow(tableName, asset));
 
 const getTableModal = (tableName: ElementName, rowName: ElementName) => {
   const row = getTableRow(tableName, rowName);
@@ -56,4 +58,14 @@ const withinModalTabPanel = (
   shouldClickTab?: boolean
 ) => within(getModalTabPanel(tableName, rowName, tabName, shouldClickTab));
 
-export { getTable, withinModalTabPanel, withinTable };
+const submitForm = async (tabPanel: ReturnType<typeof withinModalTabPanel>, buttonLabel: string) => {
+  await waitFor(() => {
+    expect(tabPanel.getByRole('button', { name: new RegExp(buttonLabel, 'i') })).not.toBeDisabled();
+  });
+
+  userEvent.click(tabPanel.getByRole('button', { name: new RegExp(buttonLabel, 'i') }));
+
+  await waitForElementToBeRemoved(screen.getByRole('dialog'));
+};
+
+export { getTable, getTableRow, submitForm, withinModalTabPanel, withinTable, withinTableRow };
