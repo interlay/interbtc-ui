@@ -17,7 +17,9 @@ const SlippageManager = forwardRef<HTMLDivElement, SlippageManagerProps>(
     const handleSelectionChange: ListProps['onSelectionChange'] = (key) => {
       const [selectedKey] = [...key];
 
-      if (!selectedKey) return;
+      if (!selectedKey) {
+        return setOpen(false);
+      }
 
       onChange?.(Number(selectedKey));
       setOpen(false);
