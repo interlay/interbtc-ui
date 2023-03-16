@@ -1,14 +1,21 @@
-import { formatUSD } from '@/common/utils/utils';
-import { CTA, Modal, ModalBody, ModalFooter, ModalProps, P } from '@/component-library';
+import { CurrencyExt, Trade } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
+import { useTranslation } from 'react-i18next';
+
+import { formatPercentage, formatUSD } from '@/common/utils/utils';
+import { CTA, Flex, Modal, ModalBody, ModalFooter, ModalProps, P } from '@/component-library';
 import { SwapPair } from '@/types/swap';
 
-import { StyledModalHeader } from './PriceImpactModal.style';
+import { StyledModalHeader, StyledPriceImpact } from './PriceImpactModal.style';
 
 type Props = {
   onConfirm?: () => void;
   inputValueUSD: number;
   outputValueUSD: number;
+  inputAmount?: MonetaryAmount<CurrencyExt>;
+  outputAmount?: MonetaryAmount<CurrencyExt>;
   pair: SwapPair;
+  trade?: Trade | null;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -20,27 +27,44 @@ const PriceImpactModal = ({
   onClose,
   inputValueUSD,
   outputValueUSD,
+  inputAmount,
+  outputAmount,
   pair,
+  trade,
   ...props
-}: PriceImpactModalProps): JSX.Element => (
-  <Modal {...props} onClose={onClose}>
-    <StyledModalHeader>Price Impact Warning</StyledModalHeader>
-    <ModalBody>
-      <P>
-        Your are swapping {formatUSD(inputValueUSD, { compact: true })} {pair.input?.ticker} for{' '}
-        {formatUSD(outputValueUSD, { compact: true })} {pair.output?.ticker}
-      </P>
-    </ModalBody>
-    <ModalFooter direction='row'>
-      <CTA size='large' variant='outlined' fullWidth onPress={onClose}>
-        Cancel
-      </CTA>
-      <CTA size='large' fullWidth onPress={onConfirm}>
-        Confirm
-      </CTA>
-    </ModalFooter>
-  </Modal>
-);
+}: PriceImpactModalProps): JSX.Element => {
+  const { t } = useTranslation();
+
+  return (
+    <Modal {...props} onClose={onClose}>
+      <StyledModalHeader>Price Impact Warning</StyledModalHeader>
+      <ModalBody alignItems='center' gap='spacing4'>
+        <Flex direction='column' alignItems='center' gap='spacing1'>
+          <P>{t('amm.swap_has_price_inpact_of')}:</P>
+          <StyledPriceImpact size='lg'>{formatPercentage(trade?.priceImpact.toNumber() || 0)}</StyledPriceImpact>
+        </Flex>
+        <P align='center'>
+          {t('amm.you_are_swapping_input_for_output', {
+            inputAmount: inputAmount?.toHuman(),
+            inputTicker: pair.input?.ticker,
+            inputAmountUSD: formatUSD(inputValueUSD, { compact: true }),
+            outputAmount: outputAmount?.toHuman(),
+            outputTicker: pair.output?.ticker,
+            outputAmountUSD: formatUSD(outputValueUSD, { compact: true })
+          })}
+        </P>
+      </ModalBody>
+      <ModalFooter direction='row'>
+        <CTA size='large' fullWidth onPress={onClose}>
+          {t('amm.cancel_swap')}
+        </CTA>
+        <CTA size='large' variant='outlined' fullWidth onPress={onConfirm}>
+          {t('amm.confirm_swap')}
+        </CTA>
+      </ModalFooter>
+    </Modal>
+  );
+};
 
 export { PriceImpactModal };
 export type { PriceImpactModalProps };

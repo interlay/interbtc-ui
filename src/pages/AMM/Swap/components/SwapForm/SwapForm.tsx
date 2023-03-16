@@ -66,7 +66,9 @@ const getAmountsUSD = (pair: SwapPair, prices?: Prices, trade?: Trade | null, in
 
   return {
     inputAmountUSD,
-    outputAmountUSD
+    outputAmountUSD,
+    inputMonetary: monetaryAmount,
+    outputMonetary: trade?.outputAmount
   };
 };
 
@@ -174,8 +176,14 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const handleSubmit = async (values: SwapFormData) => {
     const { inputAmountUSD, outputAmountUSD } = getAmountsUSD(pair, prices, trade, values[SWAP_INPUT_AMOUNT_FIELD]);
 
+    // In case prices are 0, do not show the warning
+    if (!inputAmountUSD || !outputAmountUSD) {
+      return handleSwap();
+    }
+
     const isOverPricedBuy = inputAmountUSD > outputAmountUSD;
     const isAbovePriceImpactLimit = trade?.priceImpact.gte(SWAP_PRICE_IMPACT_LIMIT);
+
     if (isOverPricedBuy && isAbovePriceImpactLimit) {
       return setPriceImpactModal(true);
     }
@@ -245,7 +253,19 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
 
   const handlePairSwap = () => handlePairChange({ input: pair.output, output: pair.input });
 
-  const { inputAmountUSD, outputAmountUSD } = getAmountsUSD(pair, prices, trade, form.values[SWAP_INPUT_AMOUNT_FIELD]);
+  const handleConfirmPriceImpactModal = () => {
+    setPriceImpactModal(false);
+    handleSwap();
+  };
+
+  const handleClosePriceImpactModal = () => setPriceImpactModal(false);
+
+  const { inputAmountUSD, outputAmountUSD, inputMonetary, outputMonetary } = getAmountsUSD(
+    pair,
+    prices,
+    trade,
+    form.values[SWAP_INPUT_AMOUNT_FIELD]
+  );
 
   const pooledTickers = useMemo(() => getPooledTickers(liquidityPools), [liquidityPools]);
 
@@ -315,11 +335,14 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
       </Card>
       <PriceImpactModal
         isOpen={isPriceImpactModalOpen}
-        onClose={() => setPriceImpactModal(false)}
-        onConfirm={handleSwap}
+        onClose={handleClosePriceImpactModal}
+        onConfirm={handleConfirmPriceImpactModal}
         inputValueUSD={inputAmountUSD}
         outputValueUSD={outputAmountUSD}
+        inputAmount={inputMonetary}
+        outputAmount={outputMonetary}
         pair={pair}
+        trade={trade}
       />
     </>
   );
