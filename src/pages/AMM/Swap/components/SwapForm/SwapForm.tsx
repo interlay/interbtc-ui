@@ -200,9 +200,8 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     setTrade(undefined);
   };
 
-  const handleTickerChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const { value: ticker, name } = e.target;
-
+  const handleTickerChange = (ticker: string, name: string) => {
+    form.setFieldValue(name, ticker, true);
     const currency = getCurrencyFromTicker(ticker);
     const newPair = getPairChange(pair, currency, name);
 
@@ -264,7 +263,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
                 valueUSD={inputValueUSD}
                 tokens={tokens}
                 selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, false), {
-                  onChange: handleTickerChange
+                  onSelectionChange: (ticker: string) => handleTickerChange(ticker, SWAP_INPUT_TOKEN_FIELD)
                 })}
                 {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, false), { onChange: handleChangeInput })}
               />
@@ -279,7 +278,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
                 value={trade?.outputAmount.toString() || ''}
                 tokens={tokens}
                 selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
-                  onChange: handleTickerChange
+                  onSelectionChange: (ticker: string) => handleTickerChange(ticker, SWAP_OUTPUT_TOKEN_FIELD)
                 })}
               />
             </Flex>
