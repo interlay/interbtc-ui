@@ -2,6 +2,9 @@
 const path = require('path');
 
 module.exports = {
+  reactOptions: {
+    strictMode: false,
+  },
   stories: [
     '../src/**/*.stories.mdx',
     '../src/**/*.stories.@(js|jsx|ts|tsx)'

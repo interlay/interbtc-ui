@@ -1,17 +1,17 @@
-import { forwardRef, InputHTMLAttributes, ReactNode } from 'react';
+import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
-import { HelperText, HelperTextProps } from '../HelperText';
+import { Field, useFieldProps } from '../Field';
+import { HelperTextProps } from '../HelperText';
 import { hasErrorMessage } from '../HelperText/HelperText';
-import { Label, LabelProps } from '../Label';
+import { LabelProps } from '../Label';
 import { Sizes } from '../utils/prop-types';
-import { Adornment, BaseInputWrapper, PaddingX, StyledBaseInput, Wrapper } from './Input.style';
+import { Adornment, StyledBaseInput } from './Input.style';
 
 type Props = {
   label?: ReactNode;
   labelProps?: LabelProps;
   startAdornment?: ReactNode;
   endAdornment?: ReactNode;
-  paddingX?: PaddingX;
   bottomAdornment?: ReactNode;
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;
@@ -26,58 +26,41 @@ type InheritAttrs = Omit<HelperTextProps, keyof Props & NativeAttrs>;
 type BaseInputProps = Props & NativeAttrs & InheritAttrs;
 
 const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
-  (
-    {
-      className,
-      style,
-      hidden,
-      startAdornment,
-      endAdornment,
-      paddingX,
-      bottomAdornment,
-      label,
-      labelProps,
-      errorMessage,
-      errorMessageProps,
-      description,
-      descriptionProps,
-      disabled,
-      size = 'medium',
-      ...props
-    },
-    ref
-  ): JSX.Element => {
-    const hasError = hasErrorMessage(errorMessage);
-    const hasHelpText = !!description || hasError;
+  ({ startAdornment, endAdornment, bottomAdornment, disabled, size = 'medium', ...props }, ref): JSX.Element => {
+    const endAdornmentRef = useRef<HTMLDivElement>(null);
+    const [endAdornmentWidth, setEndAdornmentWidth] = useState(0);
+
+    const { fieldProps, elementProps } = useFieldProps(props);
+
+    useEffect(() => {
+      if (!endAdornmentRef.current || !endAdornment) return;
+
+      setEndAdornmentWidth(endAdornmentRef.current.getBoundingClientRect().width);
+    }, [endAdornment]);
+
+    const hasError = hasErrorMessage(props.errorMessage);
 
     return (
-      <Wrapper hidden={hidden} className={className} style={style} $isDisabled={!!disabled}>
-        {label && <Label {...labelProps}>{label}</Label>}
-        <BaseInputWrapper>
-          {startAdornment && <Adornment $position='left'>{startAdornment}</Adornment>}
-          <StyledBaseInput
-            $size={size}
-            disabled={disabled}
-            ref={ref}
-            type='text'
-            $adornments={{ bottom: !!bottomAdornment, left: !!startAdornment, right: !!endAdornment }}
-            $paddingX={paddingX}
-            $hasError={hasError}
-            $isDisabled={!!disabled}
-            {...props}
-          />
-          {bottomAdornment && <Adornment $position='bottom'>{bottomAdornment}</Adornment>}
-          {endAdornment && <Adornment $position='right'>{endAdornment}</Adornment>}
-        </BaseInputWrapper>
-        {hasHelpText && (
-          <HelperText
-            description={description}
-            errorMessage={errorMessage}
-            descriptionProps={descriptionProps}
-            errorMessageProps={errorMessageProps}
-          />
+      <Field {...fieldProps}>
+        {startAdornment && <Adornment $position='left'>{startAdornment}</Adornment>}
+        <StyledBaseInput
+          ref={ref}
+          type='text'
+          disabled={disabled}
+          $size={size}
+          $adornments={{ bottom: !!bottomAdornment, left: !!startAdornment, right: !!endAdornment }}
+          $hasError={hasError}
+          $isDisabled={!!disabled}
+          $endAdornmentWidth={endAdornmentWidth}
+          {...elementProps}
+        />
+        {bottomAdornment && <Adornment $position='bottom'>{bottomAdornment}</Adornment>}
+        {endAdornment && (
+          <Adornment ref={endAdornmentRef} $position='right'>
+            {endAdornment}
+          </Adornment>
         )}
-      </Wrapper>
+      </Field>
     );
   }
 );

@@ -10,13 +10,13 @@ import { ReactComponent as MexcLogoForInterlayIcon } from '@/assets/img/exchange
 import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchanges/mexc-logo-for-kintsugi.svg';
 import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlink-logo.svg';
+import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import InterlayDefaultOutlinedButton, {
   Props as InterlayDefaultOutlinedButtonProps
-} from '@/components/buttons/InterlayDefaultOutlinedButton';
-import TitleWithUnderline from '@/components/TitleWithUnderline';
-import InterlayLink from '@/components/UI/InterlayLink';
-import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
-import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+} from '@/legacy-components/buttons/InterlayDefaultOutlinedButton';
+import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
+import InterlayLink from '@/legacy-components/UI/InterlayLink';
+import InterlayModal, { InterlayModalInnerWrapper } from '@/legacy-components/UI/InterlayModal';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { BORDER_CLASSES } from '@/utils/constants/styles';
 

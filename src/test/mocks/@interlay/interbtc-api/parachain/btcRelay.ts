@@ -1,5 +1,5 @@
-const DEFAULT_BTC_BLOCK_HEIGHT = 1000;
+const MOCK_BTC_RELAY_HEIGHT = 1000;
 
-const mockBtcRelayGetLatestBlockHeight = jest.fn(() => DEFAULT_BTC_BLOCK_HEIGHT);
+const mockBtcRelayGetLatestBlockHeight = jest.fn(() => MOCK_BTC_RELAY_HEIGHT);
 
-export { mockBtcRelayGetLatestBlockHeight };
+export { MOCK_BTC_RELAY_HEIGHT, mockBtcRelayGetLatestBlockHeight };

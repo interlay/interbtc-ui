@@ -1,4 +1,6 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import { ReactNode } from 'react';
+
+import { CardProps } from '@/component-library';
 
 import {
   InsightItemLabel,
@@ -17,12 +19,11 @@ type InsightListItem = {
 };
 
 type Props = {
-  direction?: 'row' | 'column';
   items: InsightListItem[];
   title?: ReactNode;
 };
 
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
+type NativeAttrs = Omit<CardProps, keyof Props>;
 
 type InsightsListProps = Props & NativeAttrs;
 

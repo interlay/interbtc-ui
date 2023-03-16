@@ -69,6 +69,8 @@ type Prices = {
 const useGetPrices = (): Prices | undefined => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { data: currencies, isSuccess: isGetCurrenciesSuccess } = useGetCurrencies(bridgeLoaded);
+
+  // TODO: error prone because the key computation is not complete
   const { data, error } = useQuery<Prices | undefined, Error>(['prices'], () => getPrices(currencies), {
     enabled: isGetCurrenciesSuccess,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL

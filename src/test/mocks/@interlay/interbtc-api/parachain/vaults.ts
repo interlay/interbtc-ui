@@ -6,13 +6,11 @@ import { AccountId } from '@polkadot/types/interfaces';
 
 import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 
-const DEFAULT_COLLATERAL_AMOUNT = '1000000000000';
-// TODO: Extend with all the data needed for Vaults page.
-const DEFAULT_VAULT_WITH_ISSUABLE_TOKENS = (_accountId: AccountId, collateralCurrency: CollateralCurrencyExt) => ({
-  backingCollateral: newMonetaryAmount(DEFAULT_COLLATERAL_AMOUNT, collateralCurrency)
-});
+const MOCK_COLLATERAL_AMOUNT = '1000000000000';
 
-const mockVaultsGet = jest.fn((accountId, currency) => DEFAULT_VAULT_WITH_ISSUABLE_TOKENS(accountId, currency));
+const mockVaultsGet = jest.fn((_accountId: AccountId, collateralCurrency: CollateralCurrencyExt) => ({
+  backingCollateral: newMonetaryAmount(MOCK_COLLATERAL_AMOUNT, collateralCurrency)
+}));
 
 const mockNewVaultId = (vaultAddress: string, collateralToken: CurrencyExt) => ({
   accountId: vaultAddress,
@@ -22,21 +20,23 @@ const mockNewVaultId = (vaultAddress: string, collateralToken: CurrencyExt) => (
   }
 });
 
-const DEFAULT_VAULT_ADDRESS = '5GQoBrhX3mfnmKnw2qz2vGvHG8yvf6xT15gGM54865g6qEfE';
+const MOCK_VAULT_ADDRESS = '5GQoBrhX3mfnmKnw2qz2vGvHG8yvf6xT15gGM54865g6qEfE';
 
-const DEFAULT_COLLATERAL_TOKEN = RELAY_CHAIN_NATIVE_TOKEN;
+const MOCK_COLLATERAL_TOKEN = RELAY_CHAIN_NATIVE_TOKEN;
 
-const DEFAULT_BITCOIN_AMOUNT = 100;
+const MOCK_BITCOIN_AMOUNT = 100;
 
-const mockVaults = new Map().set(
-  mockNewVaultId(DEFAULT_VAULT_ADDRESS, DEFAULT_COLLATERAL_TOKEN),
-  new BitcoinAmount(DEFAULT_BITCOIN_AMOUNT)
+const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() =>
+  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
 );
-const mockVaultsGetVaultsWithIssuableTokens = jest.fn(() => mockVaults);
 
-const mockVaultsGetPremiumRedeemVaults = jest.fn(() => mockVaults);
+const mockVaultsGetPremiumRedeemVaults = jest.fn(() =>
+  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
+);
 
-const mockVaultsGetVaultsWithRedeemableTokens = jest.fn(() => mockVaults);
+const mockVaultsGetVaultsWithRedeemableTokens = jest.fn(() =>
+  new Map().set(mockNewVaultId(MOCK_VAULT_ADDRESS, MOCK_COLLATERAL_TOKEN), new BitcoinAmount(MOCK_BITCOIN_AMOUNT))
+);
 
 export {
   mockVaultsGet,

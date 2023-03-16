@@ -1,8 +1,10 @@
-import { CurrencyExt, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { CurrencyExt, InterbtcPrimitivesVaultId, newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { PARACHAIN_URL } from '@/constants';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 function shortAddress(address: string): string {
   if (address.length < 12) return address;
@@ -32,6 +34,27 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     })
     .reverse();
 }
+
+const convertMonetaryAmountToUsdBig = <T extends CurrencyExt>(
+  amount: MonetaryAmount<T>,
+  rate: number | undefined
+): Big => {
+  // If the rate is not available return 0.
+  if (rate === undefined) {
+    return Big(0);
+  }
+
+  return amount.toBig().mul(rate);
+};
+
+const convertMonetaryBtcToUSD = (amount: BitcoinAmount, prices: Prices): Big => {
+  if (prices === undefined) {
+    return Big(0);
+  }
+
+  const btcUsdPrice = getTokenPrice(prices, 'BTC')?.usd;
+  return convertMonetaryAmountToUsdBig(amount, btcUsdPrice);
+};
 
 const convertMonetaryAmountToValueInUSD = <T extends CurrencyExt>(
   amount: MonetaryAmount<T>,
@@ -84,9 +107,13 @@ const formatNumber = (
   options?: {
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
+    compact?: boolean;
   }
 ): string => {
-  const { format } = new Intl.NumberFormat(undefined, options);
+  const { format } = new Intl.NumberFormat(undefined, {
+    ...options,
+    notation: options?.compact ? getFormatUSDNotation(amount) : undefined
+  });
 
   return format(amount);
 };
@@ -141,8 +168,19 @@ function getPolkadotLink(blockHeight: number): string {
 const monetaryToNumber = (monetaryAmount: MonetaryAmount<CurrencyExt> | undefined): number =>
   monetaryAmount?.toBig().toNumber() || 0;
 
+const newSafeMonetaryAmount: typeof newMonetaryAmount = (...args) => {
+  try {
+    return newMonetaryAmount(...args);
+  } catch (e) {
+    const [, ...rest] = args;
+    return newMonetaryAmount(0, ...rest);
+  }
+};
+
 export {
+  convertMonetaryAmountToUsdBig as convertMonetaryAmountToBigUSD,
   convertMonetaryAmountToValueInUSD,
+  convertMonetaryBtcToUSD,
   displayMonetaryAmount,
   displayMonetaryAmountInUSDFormat,
   formatDateTime,
@@ -154,6 +192,7 @@ export {
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
   monetaryToNumber,
+  newSafeMonetaryAmount,
   shortAddress,
   shortTxId
 };

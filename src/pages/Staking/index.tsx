@@ -18,14 +18,6 @@ import {
   formatNumber,
   formatPercentage
 } from '@/common/utils/utils';
-import AvailableBalanceUI from '@/components/AvailableBalanceUI';
-import ErrorFallback from '@/components/ErrorFallback';
-import ErrorModal from '@/components/ErrorModal';
-import Panel from '@/components/Panel';
-import SubmitButton from '@/components/SubmitButton';
-import TitleWithUnderline from '@/components/TitleWithUnderline';
-import TokenField from '@/components/TokenField';
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
 import { BLOCK_TIME } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -36,6 +28,14 @@ import {
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   VoteGovernanceTokenMonetaryAmount
 } from '@/config/relay-chains';
+import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import Panel from '@/legacy-components/Panel';
+import SubmitButton from '@/legacy-components/SubmitButton';
+import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
+import TokenField from '@/legacy-components/TokenField';
+import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';

@@ -2,9 +2,9 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 
-import ErrorFallback from '@/components/ErrorFallback';
-import IssueUI from '@/components/IssueUI';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import IssueUI from '@/legacy-components/IssueUI';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';

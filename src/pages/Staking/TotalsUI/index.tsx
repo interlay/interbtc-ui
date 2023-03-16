@@ -5,13 +5,13 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
 import {
   GOVERNANCE_TOKEN_SYMBOL,
   GovernanceTokenMonetaryAmount,
   VOTE_GOVERNANCE_TOKEN_SYMBOL,
   VoteGovernanceTokenMonetaryAmount
 } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 
 import InformationUI from '../InformationUI';

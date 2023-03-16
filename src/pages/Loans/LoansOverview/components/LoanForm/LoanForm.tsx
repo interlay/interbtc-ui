@@ -1,22 +1,15 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { BorrowPosition, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { BorrowPosition, CollateralPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { mergeProps } from '@react-aria/utils';
+import { ChangeEventHandler, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import * as z from 'zod';
+import { useDebounce } from 'react-use';
 
-import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
-import { CTA, Flex, TokenInput } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
-import validate, {
-  LoanBorrowSchemaParams,
-  LoanLendSchemaParams,
-  LoanRepaySchemaParams,
-  LoanWithdrawSchemaParams
-} from '@/lib/form-validation';
+import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
+import { Flex, TokenInput } from '@/component-library';
+import { AuthCTA } from '@/components';
+import { isFormDisabled, LoanFormData, loanSchema, LoanValidationParams, useForm } from '@/lib/form';
 import { LoanAction } from '@/types/loans';
-import { getErrorMessage, isValidForm } from '@/utils/helpers/forms';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useLoanMutation } from '@/utils/hooks/api/loans/use-loan-mutation';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -34,134 +27,119 @@ import { StyledFormWrapper } from './LoanForm.style';
 const shouldShowBorrowLimit = (
   variant: LoanAction,
   hasCollateral: boolean,
-  position?: LendPosition | BorrowPosition
+  position?: CollateralPosition | BorrowPosition
 ) => {
   const isLendingAsset = isLendAsset(variant);
   const isBorrowingAsset = !isLendingAsset;
-  const isCollateralAsset = isLendingAsset && (position as LendPosition)?.isCollateral;
+  const isCollateralAsset = isLendingAsset && (position as CollateralPosition)?.isCollateral;
 
   return isCollateralAsset || (isBorrowingAsset && hasCollateral);
 };
 
-type LoanSchemaParams = LoanBorrowSchemaParams &
-  LoanRepaySchemaParams &
-  LoanLendSchemaParams &
-  LoanWithdrawSchemaParams;
-
-enum FormFields {
-  BORROW_AMOUNT = 'borrow-amount',
-  REPAY_AMOUNT = 'repay-amount',
-  LEND_AMOUNT = 'lend-amount',
-  WITHDRAW_AMOUNT = 'withdraw-amount'
-}
-
-const getData = (t: TFunction, variant: LoanAction, params: LoanSchemaParams) =>
+const getData = (t: TFunction, variant: LoanAction) =>
   ({
     lend: {
       content: {
         title: t('loans.lend'),
-        label: 'Balance',
+        label: 'Available',
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.lend').toLowerCase() })
-      },
-      schema: z.object({
-        [FormFields.LEND_AMOUNT]: validate.loans.lend(t, params)
-      }),
-      formField: FormFields.LEND_AMOUNT
+      }
     },
     withdraw: {
       content: {
         title: t('loans.withdraw'),
         label: 'Limit',
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.withdraw').toLowerCase() })
-      },
-      schema: z.object({
-        [FormFields.WITHDRAW_AMOUNT]: validate.loans.withdraw(t, params)
-      }),
-      formField: FormFields.WITHDRAW_AMOUNT
+      }
     },
     borrow: {
       content: {
         title: t('loans.borrow'),
         label: 'Limit',
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.borrow').toLowerCase() })
-      },
-      schema: z.object({
-        [FormFields.BORROW_AMOUNT]: validate.loans.borrow(t, params)
-      }),
-      formField: FormFields.BORROW_AMOUNT
+      }
     },
     repay: {
       content: {
         title: t('loans.repay'),
-        label: t('loans.borrowing'),
+        label: 'Balance',
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.repay').toLowerCase() })
-      },
-      schema: z.object({
-        [FormFields.REPAY_AMOUNT]: validate.loans.repay(t, params)
-      }),
-      formField: FormFields.REPAY_AMOUNT
+      }
     }
   }[variant]);
-
-type LoanFormData = {
-  [FormFields.BORROW_AMOUNT]: string;
-  [FormFields.REPAY_AMOUNT]: string;
-  [FormFields.LEND_AMOUNT]: string;
-  [FormFields.WITHDRAW_AMOUNT]: string;
-};
 
 type LoanFormProps = {
   asset: LoanAsset;
   variant: LoanAction;
-  position?: BorrowPosition | LendPosition;
+  position?: BorrowPosition | CollateralPosition;
   onChangeLoan?: () => void;
 };
 
 const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JSX.Element => {
+  const [inputAmount, setInputAmount] = useState<string>();
+  const [isMaxAmount, setMaxAmount] = useState(false);
+
   const { t } = useTranslation();
   const {
     refetch,
     data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
-  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
-  const [isMaxAmount, setMaxAmount] = useState(false);
+  const { governanceBalance, assetAmount, assetPrice, transactionFee, balance } = useLoanFormData(
+    variant,
+    asset,
+    position
+  );
+
+  const { content } = getData(t, variant);
+
+  // withdraw has `withdraw` and `withdrawAll`
+  // repay has `repay` and `repayAll`
+  // They both are considered a multi action variant
+  const hasMultiActionVariant = variant === 'withdraw' || variant === 'repay';
+
+  const handleMaxAmount = () => {
+    const isMaxAmount = (variant === 'withdraw' && assetAmount.max.isEqualBalance) || variant === 'repay';
+    setMaxAmount(isMaxAmount);
+  };
+
+  useDebounce(
+    () => {
+      if (!inputAmount || !hasMultiActionVariant) return;
+
+      // Checks if the user is trying to type the max value
+      const isEqualAmount = assetAmount.max.value.eq(newMonetaryAmount(inputAmount, asset.currency, true));
+
+      if (!isEqualAmount) return;
+
+      handleMaxAmount();
+    },
+    300,
+    [inputAmount]
+  );
 
   const handleSuccess = () => {
+    toast.success(`Successful ${content.title.toLowerCase()}`);
     onChangeLoan?.();
     refetch();
   };
 
-  const loanMutation = useLoanMutation({ onSuccess: handleSuccess });
+  const handleError = (error: Error) => {
+    toast.error(error.message);
+  };
 
-  const schemaParams: LoanSchemaParams = {
+  const loanMutation = useLoanMutation({ onSuccess: handleSuccess, onError: handleError });
+
+  const schemaParams: LoanValidationParams = {
     governanceBalance,
     transactionFee,
     minAmount: assetAmount.min,
-    maxAmount: assetAmount.max,
-    availableBalance: assetAmount.available
+    maxAmount: assetAmount.max.value
   };
-
-  const { schema, formField, content } = getData(t, variant, schemaParams);
-
-  const {
-    register,
-    handleSubmit: h,
-    watch,
-    formState: { errors, isDirty, isValid }
-  } = useForm<LoanFormData>({
-    mode: 'onChange',
-    resolver: zodResolver(schema)
-  });
-
-  const amount = watch(formField) || 0;
-  const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
-
-  const isBtnDisabled = !isValidForm(errors) || !isDirty || !isValid;
 
   const handleSubmit = (data: LoanFormData) => {
     try {
-      const submittedAmount = data[formField];
+      const submittedAmount = data[variant] || 0;
       const submittedMonetaryAmount = newMonetaryAmount(submittedAmount, asset.currency, true);
       loanMutation.mutate({ amount: submittedMonetaryAmount, loanType: variant, isMaxAmount });
     } catch (err: any) {
@@ -169,61 +147,65 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     }
   };
 
-  const handleClickBalance = () => setMaxAmount(true);
+  const form = useForm<LoanFormData>({
+    initialValues: { [variant]: '' },
+    validationSchema: loanSchema(variant, schemaParams),
+    onSubmit: handleSubmit
+  });
 
-  const handleChange = () => setMaxAmount(false);
+  const monetaryAmount = newSafeMonetaryAmount(form.values[variant] || 0, asset.currency, true);
+
+  const isBtnDisabled = isFormDisabled(form);
+
+  const handleClickBalance = () => {
+    if (!hasMultiActionVariant) return;
+
+    handleMaxAmount();
+  };
+
+  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (!hasMultiActionVariant) return;
+
+    setMaxAmount(false);
+    setInputAmount(e.target.value);
+  };
 
   const showBorrowLimit = shouldShowBorrowLimit(variant, hasCollateral, position);
 
   return (
-    <>
-      <form onSubmit={h(handleSubmit)}>
-        <StyledFormWrapper
-          $showBorrowLimit={showBorrowLimit}
-          direction='column'
-          justifyContent='space-between'
-          gap='spacing4'
-        >
-          <Flex direction='column' gap='spacing4'>
-            <TokenInput
-              placeholder='0.00'
-              ticker={asset.currency.ticker}
-              errorMessage={getErrorMessage(errors[formField])}
-              label={content.label}
-              aria-label={content.fieldAriaLabel}
-              balance={assetAmount.max.toBig().toNumber()}
-              balanceDecimals={asset.currency.humanDecimals}
-              valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
-              onClickBalance={handleClickBalance}
-              {...register(formField, { onChange: handleChange })}
+    <form onSubmit={form.handleSubmit}>
+      <StyledFormWrapper direction='column' justifyContent='space-between' gap='spacing4'>
+        <Flex direction='column' gap='spacing4'>
+          <TokenInput
+            placeholder='0.00'
+            ticker={asset.currency.ticker}
+            aria-label={content.fieldAriaLabel}
+            balance={balance.toString()}
+            humanBalance={balance.toHuman()}
+            balanceLabel={content.label}
+            valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
+            onClickBalance={handleClickBalance}
+            {...mergeProps(form.getFieldProps(variant), { onChange: handleChange })}
+          />
+          {showBorrowLimit && (
+            <BorrowLimit
+              shouldDisplayLiquidationAlert
+              loanAction={variant}
+              asset={asset}
+              actionAmount={monetaryAmount}
+              prices={prices}
+              remainingDebt={variant === 'repay' ? assetAmount.max.value : undefined}
             />
-            {showBorrowLimit && (
-              <BorrowLimit
-                shouldDisplayLiquidationAlert
-                loanAction={variant}
-                asset={asset}
-                actionAmount={monetaryAmount}
-                prices={prices}
-              />
-            )}
-          </Flex>
-          <Flex direction='column' gap='spacing4'>
-            <LoanActionInfo variant={variant} asset={asset} prices={prices} />
-            <CTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
-              {content.title}
-            </CTA>
-          </Flex>
-        </StyledFormWrapper>
-      </form>
-      {loanMutation.isError && (
-        <ErrorModal
-          open={loanMutation.isError}
-          onClose={() => loanMutation.reset()}
-          title='Error'
-          description={loanMutation.error?.message || ''}
-        />
-      )}
-    </>
+          )}
+        </Flex>
+        <Flex direction='column' gap='spacing4'>
+          <LoanActionInfo variant={variant} asset={asset} prices={prices} />
+          <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
+            {content.title}
+          </AuthCTA>
+        </Flex>
+      </StyledFormWrapper>
+    </form>
   );
 };
 

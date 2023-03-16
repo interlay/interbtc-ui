@@ -1,9 +1,9 @@
 import { CollateralCurrencyExt, CurrencyExt } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { HTMLAttributes, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { CTA, MeterRanges } from '@/component-library';
+import { CardProps, CTA, MeterRanges } from '@/component-library';
 import RequestIssueModal from '@/pages/Vaults/Vault/RequestIssueModal';
 import RequestRedeemModal from '@/pages/Vaults/Vault/RequestRedeemModal';
 import UpdateCollateralModal, { CollateralUpdateStatus } from '@/pages/Vaults/Vault/UpdateCollateralModal';
@@ -52,9 +52,9 @@ type Props = {
   wrappedId: string;
 };
 
-type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
+type InheritAttrs = Omit<CardProps, keyof Props>;
 
-type VaultCollateralProps = Props & NativeAttrs;
+type VaultCollateralProps = Props & InheritAttrs;
 
 // TODO: handling props as a single property bypasses some type errors
 const VaultCollateral = ({

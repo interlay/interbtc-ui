@@ -1,4 +1,4 @@
-import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { CollateralPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -33,7 +33,7 @@ const lendPositionColumns = [
 
 type LendPositionsTableProps = {
   assets: TickerToData<LoanAsset>;
-  positions: LendPosition[];
+  positions: CollateralPosition[];
   onRowAction: LoansBaseTableProps['onRowAction'];
   onPressCollateralSwitch: (ticker: string) => void;
   disabledKeys: LoansBaseTableProps['disabledKeys'];
@@ -51,7 +51,8 @@ const LendPositionsTable = ({
 
   const rows: LendPositionTableRow[] = useMemo(
     () =>
-      positions.map(({ amount, currency, earnedInterest, isCollateral }: any) => {
+      positions.map(({ amount, isCollateral }) => {
+        const { currency } = amount;
         const asset = <AssetCell currency={currency.ticker} />;
 
         const { lendApy, lendReward } = assets[currency.ticker];
@@ -62,7 +63,6 @@ const LendPositionsTable = ({
             currency={currency}
             prices={prices}
             rewards={lendReward}
-            earnedInterest={earnedInterest}
             // TODO: temporary until we find why row click is being ignored
             onClick={() => onRowAction?.(currency.ticker as Key)}
           />

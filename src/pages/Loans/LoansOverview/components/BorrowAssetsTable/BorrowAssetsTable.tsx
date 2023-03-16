@@ -3,6 +3,7 @@ import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { ApyCell, AssetCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
@@ -60,13 +61,13 @@ const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTa
 
         const availableCapacityUSD = convertMonetaryAmountToValueInUSD(
           availableCapacity,
-          prices?.[availableCapacity.currency.ticker].usd
+          getTokenPrice(prices, availableCapacity.currency.ticker)?.usd
         );
         const capacity = <MonetaryCell label={formatUSD(availableCapacityUSD || 0, { compact: true })} />;
 
         const totalBorrowsUSD = convertMonetaryAmountToValueInUSD(
           totalBorrows,
-          prices?.[totalBorrows.currency.ticker].usd
+          getTokenPrice(prices, totalBorrows.currency.ticker)?.usd
         );
         const totalBorrowed = (
           <MonetaryCell label={formatUSD(totalBorrowsUSD || 0, { compact: true })} alignItems='flex-end' />

@@ -41,26 +41,20 @@ const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactN
   );
 };
 
-const customRender = (ui: ReactElement, options?: CustomRenderOptions): Promise<void> => {
+const customRender = async (ui: ReactElement, options?: CustomRenderOptions): Promise<ReturnType<typeof render>> => {
   const history = createMemoryHistory();
   if (options?.path) {
     history.push(options.path);
   }
 
-  if (!options?.hasLayout) {
-    jest.mock('../parts/Layout', () => {
-      const MockedLayout: React.FC = ({ children }: any) => children;
-      MockedLayout.displayName = 'MockedLayout';
-      return MockedLayout;
-    });
-
-    console.warn('Rendering with mocked out `Layout` component');
-  }
+  let _render;
 
   // Wrapped in act so async updates are awaited.
-  return act(async () => {
-    render(ui, { wrapper: ProvidersWrapper(history), ...options });
+  await act(async () => {
+    _render = render(ui, { wrapper: ProvidersWrapper(history), ...options });
   });
+
+  return _render as any;
 };
 
 export * from '@testing-library/react';
