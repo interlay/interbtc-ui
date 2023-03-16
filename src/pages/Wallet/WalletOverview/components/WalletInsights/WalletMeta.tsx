@@ -1,15 +1,20 @@
 import { mergeProps } from '@react-aria/utils';
+import { useDispatch } from 'react-redux';
 import { useCopyToClipboard } from 'react-use';
 
 import { ArrowTopRightOnSquare, DocumentDuplicate, PencilSquare } from '@/assets/icons';
+import { showAccountModalAction } from '@/common/actions/general.actions';
 import { shortAddress } from '@/common/utils/utils';
-import { CTA, Dd, DlGroup, Dt, Flex, P, Tooltip, WalletIcon } from '@/component-library';
+import { CTA, Dd, DlGroup, Dt, Flex, FlexProps, P, Tooltip, WalletIcon } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { useSubstrateState } from '@/lib/substrate';
 import { useCopyTooltip } from '@/utils/hooks/use-copy-tooltip';
 
-const WalletMeta = (): JSX.Element => {
+type WalletMetaProps = FlexProps;
+
+const WalletMeta = (props: WalletMetaProps): JSX.Element => {
   const { selectedAccount } = useSubstrateState();
+  const dispatch = useDispatch();
 
   const [, copy] = useCopyToClipboard();
   const { buttonProps, tooltipProps } = useCopyTooltip();
@@ -26,7 +31,7 @@ const WalletMeta = (): JSX.Element => {
   const handleCopy = () => copy(selectedAccount.address);
 
   return (
-    <Flex direction='column' gap='spacing4'>
+    <Flex direction='column' gap='spacing4' {...props}>
       <Flex alignItems='center' justifyContent='space-between' gap='spacing2'>
         <Flex alignItems='center' gap='spacing2'>
           <WalletIcon size='xl' name={selectedAccount.meta.source as string} />
@@ -43,7 +48,7 @@ const WalletMeta = (): JSX.Element => {
               <DocumentDuplicate size='s' color='tertiary' />
             </CTA>
           </Tooltip>
-          <CTA variant='text' size='x-small'>
+          <CTA onPress={() => dispatch(showAccountModalAction(true))} variant='text' size='x-small'>
             <PencilSquare size='s' color='tertiary' />
           </CTA>
           <CTA variant='text' size='x-small'>
@@ -52,7 +57,8 @@ const WalletMeta = (): JSX.Element => {
         </Flex>
       </Flex>
       <Flex gap='spacing4'>
-        <CTA size='small'>Fund Wallet</CTA> <CTA size='small'>View History</CTA>
+        <CTA size='small'>Fund Wallet</CTA>
+        <CTA size='small'>View History</CTA>
       </Flex>
     </Flex>
   );

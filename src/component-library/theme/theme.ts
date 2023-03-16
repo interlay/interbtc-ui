@@ -1,3 +1,5 @@
+import { breakpoints } from '../utils/breakpoints';
+
 const theme = {
   // Layout
   layout: {
@@ -7,6 +9,7 @@ const theme = {
       lg: '48em'
     }
   },
+  breakpoints,
   // Generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
