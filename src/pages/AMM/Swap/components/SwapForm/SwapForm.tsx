@@ -242,9 +242,8 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     setTrade(undefined);
   };
 
-  const handleTickerChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const { value: ticker, name } = e.target;
-
+  const handleTickerChange = (ticker: string, name: string) => {
+    form.setFieldValue(name, ticker, true);
     const currency = getCurrencyFromTicker(ticker);
     const newPair = getPairChange(pair, currency, name);
 
