@@ -139,6 +139,7 @@
   "supply_balance": "Supply Balance",
   "insufficient_funds_fees": "Insufficient funds for fees",
   "successfully_claimed_rewards": "Successfully claimed rewards",
+  "view_details": "View details",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
