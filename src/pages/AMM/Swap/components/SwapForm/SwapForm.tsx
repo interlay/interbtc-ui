@@ -322,7 +322,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
                   value={trade?.outputAmount.toString() || ''}
                   tokens={tokens}
                   selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
-                    onSelectionChange: (ticker: string) => handleTickerChange(ticker, SWAP_INPUT_TOKEN_FIELD)
+                    onSelectionChange: (ticker: string) => handleTickerChange(ticker, SWAP_OUTPUT_TOKEN_FIELD)
                   })}
                 />
               </Flex>
