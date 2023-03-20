@@ -1,11 +1,11 @@
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { CollateralCurrencyExt } from '@interlay/interbtc-api';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import Hr1 from '@/legacy-components/hrs/Hr1';
 import Panel from '@/legacy-components/Panel';
 import InterlayTabGroup, {
@@ -17,6 +17,7 @@ import InterlayTabGroup, {
 import MainContainer from '@/parts/MainContainer';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import TAB_IDS from '@/utils/constants/tab-ids';
+import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral-currencies';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
 
@@ -43,6 +44,11 @@ const TAB_ITEMS_WITH_BURN = [
   }
 ];
 
+type BurnableToken = {
+  collateral: CollateralCurrencyExt;
+  maxBurnable: MonetaryAmount<CollateralCurrencyExt>;
+};
+
 const Bridge = (): JSX.Element | null => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -51,7 +57,9 @@ const Bridge = (): JSX.Element | null => {
   const selectedTabId = queryParams.get(QUERY_PARAMETERS.TAB);
   const updateQueryParameters = useUpdateQueryParameters();
 
-  const [burnable, setBurnable] = React.useState(false);
+  const [burnable, setBurnable] = React.useState<BurnableToken[]>([]);
+
+  const { data: collateralCurrencies } = useGetCollateralCurrencies(bridgeLoaded);
 
   const updateQueryParametersRef = React.useRef<(newQueryParameters: QueryParameters) => void>();
   // MEMO: inspired by https://epicreact.dev/the-latest-ref-pattern-in-react/
@@ -65,7 +73,7 @@ const Bridge = (): JSX.Element | null => {
     const tabIdValues = Object.values(TAB_IDS);
     switch (true) {
       case selectedTabId === null:
-      case selectedTabId === TAB_IDS.burn && !burnable:
+      case selectedTabId === TAB_IDS.burn && !burnable.length:
       case selectedTabId && !tabIdValues.includes(selectedTabId):
         updateQueryParametersRef.current({
           [QUERY_PARAMETERS.TAB]: TAB_IDS.issue
@@ -75,16 +83,27 @@ const Bridge = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
+    if (!collateralCurrencies) return;
+
     (async () => {
       try {
-        const maxBurnableTokens = await window.bridge.redeem.getMaxBurnableTokens(RELAY_CHAIN_NATIVE_TOKEN);
-        setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero()));
+        const burnableTokens: BurnableToken[] = [];
+
+        collateralCurrencies.forEach(async (collateral) => {
+          const maxBurnable = await window.bridge.redeem.getMaxBurnableTokens(collateral);
+
+          if (maxBurnable.gt(BitcoinAmount.zero())) {
+            burnableTokens.push({ collateral, maxBurnable });
+          }
+        });
+
+        setBurnable(burnableTokens);
       } catch (error) {
         // TODO: should add error handling
         console.log('[Bridge] error => ', error);
       }
     })();
-  }, [bridgeLoaded]);
+  }, [bridgeLoaded, collateralCurrencies]);
 
   if (selectedTabId === null) {
     return null;
@@ -124,7 +143,7 @@ const Bridge = (): JSX.Element | null => {
             <InterlayTabPanel>
               <RedeemForm />
             </InterlayTabPanel>
-            {burnable && (
+            {burnable.length && (
               <InterlayTabPanel>
                 <BurnForm />
               </InterlayTabPanel>
