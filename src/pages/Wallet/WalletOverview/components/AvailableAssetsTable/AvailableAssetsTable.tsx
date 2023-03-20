@@ -2,7 +2,8 @@ import { isCurrencyEqual } from '@interlay/interbtc-api';
 import { ReactNode, useMemo, useState } from 'react';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { CTA, CTALink, Flex, P, Switch } from '@/component-library';
+import { CTA, CTALink, Dd, Dl, DlGroup, Dt, Flex, List, ListItem, P, Switch, theme } from '@/component-library';
+import { useMediaQuery } from '@/component-library/use-media-query';
 import { AssetCell, Cell, Table } from '@/components';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { PAGES } from '@/utils/constants/links';
@@ -33,6 +34,7 @@ type AvailableAssetsTableProps = {
 const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
   const prices = useGetPrices();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const columns = [
     { name: 'Asset', uid: AvailableAssetsColumns.ASSET },
@@ -96,6 +98,28 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
       Show Zero Balance
     </Switch>
   );
+
+  if (isMobile) {
+    return (
+      <List variant='card'>
+        {rows.map((row) => (
+          <ListItem key={row.id} direction='column'>
+            {row.asset}
+            <Dl direction='column'>
+              <DlGroup justifyContent='space-between' alignItems='center'>
+                <Dt>{columns[1].name}</Dt>
+                <Dd>{row.price}</Dd>
+              </DlGroup>
+              <DlGroup justifyContent='space-between' alignItems='center'>
+                <Dt>{columns[2].name}</Dt>
+                <Dd>{row.balance}</Dd>
+              </DlGroup>
+            </Dl>
+          </ListItem>
+        ))}
+      </List>
+    );
+  }
 
   return (
     <Table

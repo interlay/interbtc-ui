@@ -12,7 +12,7 @@ import { Variants } from '../utils/prop-types';
 import { StyledListItem } from './List.style';
 
 type Props = {
-  variant?: Variants;
+  variant?: Variants | 'card';
 };
 
 type InheritAttrs = Omit<FlexProps, keyof Props>;
