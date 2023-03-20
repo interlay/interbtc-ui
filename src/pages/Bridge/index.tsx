@@ -1,5 +1,4 @@
-import { CollateralCurrencyExt } from '@interlay/interbtc-api';
-import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
+import { BitcoinAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -44,11 +43,6 @@ const TAB_ITEMS_WITH_BURN = [
   }
 ];
 
-type BurnableToken = {
-  collateral: CollateralCurrencyExt;
-  maxBurnable: MonetaryAmount<CollateralCurrencyExt>;
-};
-
 const Bridge = (): JSX.Element | null => {
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
@@ -57,7 +51,7 @@ const Bridge = (): JSX.Element | null => {
   const selectedTabId = queryParams.get(QUERY_PARAMETERS.TAB);
   const updateQueryParameters = useUpdateQueryParameters();
 
-  const [burnable, setBurnable] = React.useState<BurnableToken[]>([]);
+  const [burnable, setBurnable] = React.useState(false);
 
   const { data: collateralCurrencies } = useGetCollateralCurrencies(bridgeLoaded);
 
@@ -73,7 +67,7 @@ const Bridge = (): JSX.Element | null => {
     const tabIdValues = Object.values(TAB_IDS);
     switch (true) {
       case selectedTabId === null:
-      case selectedTabId === TAB_IDS.burn && !burnable.length:
+      case selectedTabId === TAB_IDS.burn && !burnable:
       case selectedTabId && !tabIdValues.includes(selectedTabId):
         updateQueryParametersRef.current({
           [QUERY_PARAMETERS.TAB]: TAB_IDS.issue
@@ -87,17 +81,15 @@ const Bridge = (): JSX.Element | null => {
 
     (async () => {
       try {
-        const burnableTokens: BurnableToken[] = [];
+        const burnableTokens = await Promise.all(
+          collateralCurrencies.map(async (collateral) => {
+            const maxBurnable = await window.bridge.redeem.getMaxBurnableTokens(collateral);
 
-        collateralCurrencies.forEach(async (collateral) => {
-          const maxBurnable = await window.bridge.redeem.getMaxBurnableTokens(collateral);
+            return maxBurnable.gt(BitcoinAmount.zero());
+          })
+        );
 
-          if (maxBurnable.gt(BitcoinAmount.zero())) {
-            burnableTokens.push({ collateral, maxBurnable });
-          }
-        });
-
-        setBurnable(burnableTokens);
+        setBurnable(burnableTokens.includes(true));
       } catch (error) {
         // TODO: should add error handling
         console.log('[Bridge] error => ', error);
@@ -143,7 +135,7 @@ const Bridge = (): JSX.Element | null => {
             <InterlayTabPanel>
               <RedeemForm />
             </InterlayTabPanel>
-            {burnable.length && (
+            {burnable && (
               <InterlayTabPanel>
                 <BurnForm />
               </InterlayTabPanel>
