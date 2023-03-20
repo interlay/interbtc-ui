@@ -99,9 +99,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const hasMultiActionVariant = variant === 'withdraw' || variant === 'repay';
 
   const handleMaxAmount = () => {
-    const isMaxAmount =
-      (variant === 'withdraw' && assetAmount.max.isEqualBalance) ||
-      (variant === 'repay' && assetAmount.max.isEqualBalance);
+    const isMaxAmount = hasMultiActionVariant && assetAmount.max.isEqualBalance;
+    
     setMaxAmount(isMaxAmount);
   };
 
