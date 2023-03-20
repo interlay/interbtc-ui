@@ -14,6 +14,12 @@ import { render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const path = '/swap';
 
+jest.mock('../../parts/Layout', () => {
+  const MockedLayout: React.FC = ({ children }: any) => children;
+  MockedLayout.displayName = 'MockedLayout';
+  return MockedLayout;
+});
+
 describe('Swap Page', () => {
   beforeEach(() => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(DEFAULT_ACCOUNT_LIQUIDITY);
@@ -200,5 +206,56 @@ describe('Swap Page', () => {
     });
 
     /* END - Execute trade setup with different slippage */
+  });
+
+  it('should show price impact warning', async () => {
+    await render(<App />, { path });
+
+    /* START - Create a trade setup */
+
+    userEvent.click(screen.getByRole('button', { name: /choose token for to field/i }));
+
+    const dialog = within(screen.getByRole('dialog', { name: /select token/i }));
+
+    userEvent.click(dialog.getByRole('row', { name: WRAPPED_TOKEN.ticker }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /switch tokens/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+    });
+
+    userEvent.type(screen.getByRole('textbox', { name: 'From' }), '100');
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /loading.../i })).toBeDisabled();
+    });
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /swap/i })).toBeInTheDocument();
+    });
+    /* END - Create a trade setup */
+
+    userEvent.click(screen.getByRole('button', { name: /swap/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog', { name: /price impact warning/i })).toBeInTheDocument();
+    });
+
+    const withinPriceImpactDialog = within(screen.getByRole('dialog', { name: /price impact warning/i }));
+
+    userEvent.click(withinPriceImpactDialog.getByRole('button', { name: /confirm swap/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /loading.../i, exact: false })).toBeDisabled();
+    });
+
+    await waitFor(() => {
+      expect(mockSwap).toHaveBeenCalledTimes(1);
+    });
   });
 });

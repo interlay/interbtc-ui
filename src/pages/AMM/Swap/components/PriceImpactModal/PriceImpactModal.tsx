@@ -1,4 +1,4 @@
-import { CurrencyExt, Trade } from '@interlay/interbtc-api';
+import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,7 @@ type Props = {
   inputAmount?: MonetaryAmount<CurrencyExt>;
   outputAmount?: MonetaryAmount<CurrencyExt>;
   pair: SwapPair;
-  trade?: Trade | null;
+  priceImpact: number;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -30,7 +30,7 @@ const PriceImpactModal = ({
   inputAmount,
   outputAmount,
   pair,
-  trade,
+  priceImpact,
   ...props
 }: PriceImpactModalProps): JSX.Element => {
   const { t } = useTranslation();
@@ -41,7 +41,7 @@ const PriceImpactModal = ({
       <ModalBody alignItems='center' gap='spacing4'>
         <Flex direction='column' alignItems='center' gap='spacing1'>
           <P>{t('amm.swap_has_price_inpact_of')}:</P>
-          <StyledPriceImpact size='lg'>{formatPercentage(trade?.priceImpact.toNumber() || 0)}</StyledPriceImpact>
+          <StyledPriceImpact size='lg'>{formatPercentage(priceImpact)}</StyledPriceImpact>
         </Flex>
         <P align='center'>
           {t('amm.you_are_swapping_input_for_output', {
