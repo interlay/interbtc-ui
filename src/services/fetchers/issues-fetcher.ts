@@ -30,8 +30,6 @@ const issuesFetcher = async ({ queryKey }: any): Promise<Array<any>> => {
 
   if (key !== ISSUES_FETCHER) throw new Error('Invalid key!');
 
-  // console.log(issuesQuery(where), where);
-
   // TODO: should type properly (`Relay`)
   const issuesData = await graphqlFetcher<Array<any>>()({
     queryKey: [

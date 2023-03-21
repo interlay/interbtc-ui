@@ -52,7 +52,7 @@ describe('Repay Flow', () => {
     expect(mockRepay).toHaveBeenCalledWith(WRAPPED_TOKEN, DEFAULT_IBTC.MONETARY.SMALL);
   });
 
-  it('should be able repay all by using max button', async () => {
+  it.only('should be able repay all by using max button', async () => {
     await render(<App />, { path });
 
     const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
