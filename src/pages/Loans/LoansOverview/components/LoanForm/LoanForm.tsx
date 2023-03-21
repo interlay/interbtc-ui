@@ -187,7 +187,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
           />
           {showBorrowLimit && (
             <BorrowLimit
-              shouldDisplayLiquidationAlert
+              // Only shows the alert if the user interacted with the form
+              shouldDisplayLiquidationAlert={!!form.values[variant]}
               loanAction={variant}
               asset={asset}
               actionAmount={monetaryAmount}
