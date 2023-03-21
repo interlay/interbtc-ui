@@ -93,6 +93,25 @@ describe('Withdraw Flow', () => {
     expect(mockWithdrawAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
   });
 
+  it('should partially withdraw while applying max withdraw when there is low borrow limit', async () => {
+    mockGetLendingStats.mockReturnValue({ ...DEFAULT_LENDING_STATS, borrowLimitBtc: DEFAULT_IBTC.MONETARY.VERY_SMALL });
+
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab, true);
+
+    userEvent.click(
+      tabPanel.getByRole('button', {
+        name: /max/i
+      })
+    );
+
+    await submitForm(tabPanel, 'withdraw');
+
+    expect(mockWithdraw).toHaveBeenCalled();
+    expect(mockWithdrawAll).not.toHaveBeenCalled();
+  });
+
   it('should not be able to withdraw due low borrow limit', async () => {
     mockGetLendingStats.mockReturnValue({ ...DEFAULT_LENDING_STATS, borrowLimitBtc: DEFAULT_IBTC.MONETARY.VERY_SMALL });
 

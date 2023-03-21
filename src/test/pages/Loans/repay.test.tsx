@@ -1,8 +1,12 @@
 import '@testing-library/jest-dom';
 
+import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
+
 import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
-import { mockTokensBalance } from '@/test/mocks/@interlay/interbtc-api';
+import { MOCK_TOKEN_BALANCE, mockTokensBalance } from '@/test/mocks/@interlay/interbtc-api';
 import {
   DEFAULT_BORROW_POSITIONS,
   DEFAULT_IBTC,
@@ -103,6 +107,35 @@ describe('Repay Flow', () => {
       expect(mockRepay).not.toHaveBeenCalled();
       expect(mockRepayAll).not.toHaveBeenCalled();
     });
+
+    mockTokensBalance.restore();
+  });
+
+  it('should partially repay loan while applying max balance when there are not enough funds to pay the entire loan', async () => {
+    const mockWrappedTokenBalance = 10000000;
+
+    mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
+      if (currency.ticker === WRAPPED_TOKEN.ticker) {
+        return new ChainBalance(currency, mockWrappedTokenBalance, new Big(0), new Big(0));
+      }
+
+      return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
+    });
+
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+
+    userEvent.click(
+      tabPanel.getByRole('button', {
+        name: /max/i
+      })
+    );
+
+    await submitForm(tabPanel, 'repay');
+
+    expect(mockRepay).toHaveBeenCalledWith(WRAPPED_TOKEN, newMonetaryAmount(mockWrappedTokenBalance, WRAPPED_TOKEN));
+    expect(mockRepayAll).not.toHaveBeenCalled();
 
     mockTokensBalance.restore();
   });
