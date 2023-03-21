@@ -24,9 +24,9 @@ import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 
 Sentry.init({
-  dsn: 'https://4de9e593788d4e12aac0610b4e04aab4@o4504853415329792.ingest.sentry.io/4504853441347584',
+  dsn: process.env.REACT_APP_SENTRY_DSN,
   integrations: [new BrowserTracing()],
-  tracesSampleRate: 1.0
+  tracesSampleRate: 1
 });
 
 configGlobalBig();
