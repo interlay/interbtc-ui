@@ -1,3 +1,6 @@
+import { newMonetaryAmount } from '@interlay/interbtc-api';
+
+import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { issuesQuery } from '@/services/queries/issues';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { PRICES_API } from '@/utils/constants/api';
@@ -41,7 +44,51 @@ const mockFetch = jest.fn((input, _init?) => {
           };
           break;
         case issuesQuery(`userParachainAddress_eq: "a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc"`):
-          console.log('here');
+          result = {
+            data: {
+              issues: [
+                {
+                  id: '0x9b0bc5abb87bca076718953b362634646fbbccc76368d2f78104b4be04ff0693',
+                  request: {
+                    amountWrapped: newMonetaryAmount(100000, WRAPPED_TOKEN, true),
+                    bridgeFeeWrapped: newMonetaryAmount(1500, WRAPPED_TOKEN, true),
+                    timestamp: new Date('2023-03-17'),
+                    height: {
+                      absolute: 243298,
+                      active: 241957
+                    }
+                  },
+                  userParachainAddress: 'a3czP8uH8BKyS1NpqXkjzEGe5iKNhuTbXmYSNdC47iM9sNmMB',
+                  vault: {
+                    accountId: 'a3baoFq36qeR3q21sb5hh7m4uJ2rhmmUXxM4uy8ShZj9sFAiX',
+                    collateralToken: {
+                      token: 'KSM'
+                    },
+                    wrappedToken: {
+                      token: 'KBTC'
+                    }
+                  },
+                  vaultBackingAddress: 'tb1q8ylml0gtdv73s6vzm08gder2l4jf4upfg36zte',
+                  vaultWalletPubkey: '0x02a8f111af401369e0ceefc5330a800b5aa3bfe2759dbd2eef5e53b611a4e36e86',
+                  griefingCollateral: newMonetaryAmount(100000, RELAY_CHAIN_NATIVE_TOKEN, true),
+                  status: 'Expired',
+                  refund: null,
+                  execution: null,
+                  cancellation: null,
+                  period: {
+                    id: 'initial-1675864050243',
+                    value: 14400,
+                    height: {
+                      absolute: 499,
+                      id: '499'
+                    },
+                    timestamp: new Date('2023-02-08')
+                  },
+                  backingPayment: {}
+                }
+              ]
+            }
+          };
           break;
 
         default: {
