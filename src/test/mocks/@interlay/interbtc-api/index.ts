@@ -12,6 +12,7 @@ import {
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
+  mockGetFutureBlockNumber,
   mockIssueGetDustValue,
   mockIssueGetRequestLimits,
   mockIssueRequest,
@@ -34,8 +35,37 @@ import {
   mockVaultsGetVaultsWithIssuableTokens,
   mockVaultsGetVaultsWithRedeemableTokens
 } from './parachain';
+import {
+  mockAddLiquidity,
+  mockClaimFarmingRewards,
+  mockGetClaimableFarmingRewards,
+  mockGetLiquidityPools,
+  mockGetLiquidityProvidedByAccount,
+  mockGetLpTokens,
+  mockGetOptimalTrade,
+  mockRemoveLiquidity,
+  mockSwap
+} from './parachain/amm';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
-import { mockGetLendTokens } from './parachain/loans';
+import {
+  mockBorrow,
+  mockClaimAllSubsidyRewards,
+  mockDisableAsCollateral,
+  mockEnableAsCollateral,
+  mockGetAccountSubsidyRewards,
+  mockGetBorrowPositionsOfAccount,
+  mockGetLendingStats,
+  mockGetLendPositionsOfAccount,
+  mockGetLendTokens,
+  mockGetLoanAssets,
+  mockLend,
+  mockRepay,
+  mockRepayAll,
+  mockWithdraw,
+  mockWithdrawAll
+} from './parachain/loans';
+
+const DEFAULT_ACCOUNT_ADDRESS = 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc';
 
 type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
@@ -74,7 +104,21 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     request: mockIssueRequest
   },
   loans: {
-    getLendTokens: mockGetLendTokens
+    getLendTokens: mockGetLendTokens,
+    getLendPositionsOfAccount: mockGetLendPositionsOfAccount,
+    getBorrowPositionsOfAccount: mockGetBorrowPositionsOfAccount,
+    getLoanAssets: mockGetLoanAssets,
+    getAccruedRewardsOfAccount: mockGetAccountSubsidyRewards,
+    lend: mockLend,
+    withdraw: mockWithdraw,
+    withdrawAll: mockWithdrawAll,
+    borrow: mockBorrow,
+    repay: mockRepay,
+    repayAll: mockRepayAll,
+    enableAsCollateral: mockEnableAsCollateral,
+    disableAsCollateral: mockDisableAsCollateral,
+    claimAllSubsidyRewards: mockClaimAllSubsidyRewards,
+    getLendingStats: mockGetLendingStats
   },
   oracle: {
     getExchangeRate: mockOracleGetExchangeRate
@@ -90,7 +134,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     request: mockRedeemRequest
   },
   system: {
-    getStatusCode: mockSystemGetStatusCode
+    getStatusCode: mockSystemGetStatusCode,
+    getFutureBlockNumber: mockGetFutureBlockNumber
   },
   tokens: {
     balance: mockTokensBalance,
@@ -102,6 +147,17 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getVaultsWithIssuableTokens: mockVaultsGetVaultsWithIssuableTokens,
     getPremiumRedeemVaults: mockVaultsGetPremiumRedeemVaults,
     getVaultsWithRedeemableTokens: mockVaultsGetVaultsWithRedeemableTokens
+  },
+  amm: {
+    getLiquidityPools: mockGetLiquidityPools,
+    getLiquidityProvidedByAccount: mockGetLiquidityProvidedByAccount,
+    getClaimableFarmingRewards: mockGetClaimableFarmingRewards,
+    addLiquidity: mockAddLiquidity,
+    removeLiquidity: mockRemoveLiquidity,
+    getLpTokens: mockGetLpTokens,
+    getOptimalTrade: mockGetOptimalTrade,
+    swap: mockSwap,
+    claimFarmingRewards: mockClaimFarmingRewards
   }
 };
 
@@ -111,11 +167,11 @@ jest.mock('@interlay/interbtc-api', () => {
   return {
     ...actualInterBtcApi,
     currencyIdToMonetaryCurrency: jest.fn(),
-    newAccountId: jest.fn().mockReturnValue('a3bS5ufTQYaWkWtiKH9urgnC81QWFArJz4TJCFXiBCj8C1oUm'),
+    newAccountId: jest.fn().mockReturnValue(DEFAULT_ACCOUNT_ADDRESS),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
     createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi)
   };
 });
 
-export { mockInterBtcApi, mockSetAccount };
 export * from './parachain';
+export { mockInterBtcApi, mockSetAccount };

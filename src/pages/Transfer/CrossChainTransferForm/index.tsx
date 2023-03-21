@@ -18,7 +18,6 @@ import { firstValueFrom } from 'rxjs';
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { CoinIcon } from '@/component-library';
 import Accounts from '@/legacy-components/Accounts';
 import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import Chains, { ChainOption } from '@/legacy-components/Chains';
@@ -33,6 +32,8 @@ import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
+
+import { ChainIcon } from './components';
 
 const TRANSFER_AMOUNT = 'transfer-amount';
 
@@ -131,7 +132,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       return {
         type: adapter.chain.id,
         name: adapter.chain.id,
-        icon: <CoinIcon ticker={adapter.balanceAdapter.nativeToken} size='xl' />
+        icon: <ChainIcon id={adapter.chain.id} size='xl' />
       };
     });
 
@@ -146,12 +147,10 @@ const CrossChainTransferForm = (): JSX.Element => {
     const destinationChains = XCMBridge.router.getDestinationChains({ from: fromChain.type });
 
     const availableToChains = destinationChains.map((chain: any) => {
-      const adapter = XCMBridge.findAdapter(chain.id) as any;
-
       return {
         type: chain.id,
         name: chain.id,
-        icon: <CoinIcon ticker={adapter.balanceAdapter.nativeToken} size='xl' />
+        icon: <ChainIcon id={chain.id} size='xl' />
       };
     });
 

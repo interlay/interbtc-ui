@@ -1,5 +1,8 @@
+import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { PRICES_API } from '@/utils/constants/api';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
+
+import { DEFAULT_ACCOUNT_ADDRESS } from '../substrate/mocks';
 
 let mockGovernanceTokenPriceInUsd: number;
 if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
@@ -27,6 +30,22 @@ const mockFetch = jest.fn((input, _init?) => {
     case input.includes(PRICES_API.URL):
       result = MOCK_TOKEN_PRICES;
       break;
+    case input.includes('http://localhost:4000/graphql'): {
+      const { query } = JSON.parse(_init.body);
+
+      switch (query) {
+        case vaultsByAccountIdQuery(DEFAULT_ACCOUNT_ADDRESS):
+          result = {
+            vaults: []
+          };
+          break;
+        default: {
+          throw new Error(`mockFetch: provided input [${input}] is not mocked`);
+        }
+      }
+
+      break;
+    }
     default: {
       throw new Error(`mockFetch: provided input [${input}] is not mocked`);
     }

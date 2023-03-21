@@ -17,7 +17,17 @@ type ModalProps = Props & InheritAttrs;
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
   (
-    { children, isDismissable = true, align = 'center', hasMaxHeight, isKeyboardDismissDisabled, container, ...props },
+    {
+      children,
+      isDismissable = true,
+      align = 'center',
+      hasMaxHeight,
+      isKeyboardDismissDisabled,
+      shouldCloseOnBlur,
+      shouldCloseOnInteractOutside,
+      container,
+      ...props
+    },
     ref
   ): JSX.Element | null => {
     const domRef = useDOMRef(ref);
@@ -31,6 +41,8 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
           isDismissable={isDismissable}
           isOpen={isOpen}
           isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+          shouldCloseOnBlur={shouldCloseOnBlur}
+          shouldCloseOnInteractOutside={shouldCloseOnInteractOutside}
           onClose={onClose}
         >
           <Dialog hasMaxHeight={hasMaxHeight} align={align} {...props}>

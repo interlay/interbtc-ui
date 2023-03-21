@@ -18,13 +18,29 @@ type ModalWrapperProps = Props & InheritAttrs;
 
 const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
   (
-    { children, isDismissable = true, align = 'center', onClose, isKeyboardDismissDisabled, isOpen, ...props },
+    {
+      children,
+      isDismissable = true,
+      align = 'center',
+      onClose,
+      isKeyboardDismissDisabled,
+      isOpen,
+      shouldCloseOnInteractOutside,
+      shouldCloseOnBlur,
+      ...props
+    },
     ref
   ): JSX.Element | null => {
     // Handle interacting outside the dialog and pressing
     // the Escape key to close the modal.
     const { modalProps, underlayProps } = useModalOverlay(
-      { isDismissable, isKeyboardDismissDisabled, ...props },
+      {
+        isDismissable,
+        isKeyboardDismissDisabled,
+        shouldCloseOnInteractOutside,
+        shouldCloseOnBlur,
+        ...props
+      } as AriaOverlayProps,
       // These are the only props needed
       { isOpen: !!isOpen, close: onClose } as OverlayTriggerState,
       ref as RefObject<HTMLElement>
