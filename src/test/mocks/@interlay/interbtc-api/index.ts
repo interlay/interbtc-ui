@@ -12,7 +12,10 @@ import {
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
+  mockGetCurrentActiveBlockNumber,
   mockGetFutureBlockNumber,
+  mockGetStableBitcoinConfirmations,
+  mockGetStableParachainConfirmations,
   mockIssueGetDustValue,
   mockIssueGetRequestLimits,
   mockIssueRequest,
@@ -92,7 +95,11 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   assetRegistry: {
     getForeignAssets: mockGetForeignAssets
   },
-  btcRelay: { getLatestBlockHeight: mockBtcRelayGetLatestBlockHeight },
+  btcRelay: {
+    getLatestBlockHeight: mockBtcRelayGetLatestBlockHeight,
+    getStableParachainConfirmations: mockGetStableParachainConfirmations,
+    getStableBitcoinConfirmations: mockGetStableBitcoinConfirmations
+  },
   electrsAPI: { getLatestBlockHeight: mockElectrsAPIGetLatestBlockHeight },
   fee: {
     getIssueFee: mockFeeGetIssueFee,
@@ -135,7 +142,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   },
   system: {
     getStatusCode: mockSystemGetStatusCode,
-    getFutureBlockNumber: mockGetFutureBlockNumber
+    getFutureBlockNumber: mockGetFutureBlockNumber,
+    getCurrentActiveBlockNumber: mockGetCurrentActiveBlockNumber
   },
   tokens: {
     balance: mockTokensBalance,
