@@ -101,6 +101,7 @@ describe('Repay Flow', () => {
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       expect(mockRepay).not.toHaveBeenCalled();
+      expect(mockRepayAll).not.toHaveBeenCalled();
     });
 
     mockTokensBalance.restore();

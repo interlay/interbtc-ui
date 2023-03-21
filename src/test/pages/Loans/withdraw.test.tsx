@@ -108,6 +108,7 @@ describe('Withdraw Flow', () => {
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       expect(mockWithdraw).not.toHaveBeenCalled();
+      expect(mockWithdrawAll).not.toHaveBeenCalled();
     });
   });
 });
