@@ -1,3 +1,4 @@
+import { issuesQuery } from '@/services/queries/issues';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { PRICES_API } from '@/utils/constants/api';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -39,6 +40,10 @@ const mockFetch = jest.fn((input, _init?) => {
             vaults: []
           };
           break;
+        case issuesQuery(`userParachainAddress_eq: "a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc"`):
+          console.log('here');
+          break;
+
         default: {
           throw new Error(`mockFetch: provided input [${input}] is not mocked`);
         }
