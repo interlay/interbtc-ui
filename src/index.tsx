@@ -21,6 +21,23 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 
+const isValidUrl = (s: string) => {
+  try {
+    new URL(s);
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+if (isValidUrl(process.env.REACT_APP_SENTRY_DSN ?? '')) {
+  Sentry.init({
+    dsn: process.env.REACT_APP_SENTRY_DSN,
+    integrations: [new BrowserTracing()],
+    tracesSampleRate: 1
+  });
+}
+
 configGlobalBig();
 
 const DeveloperConsole = React.lazy(

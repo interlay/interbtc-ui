@@ -1,4 +1,5 @@
 const path = require('path');
+const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 module.exports = {
   // TODO: only for app
@@ -38,6 +39,15 @@ module.exports = {
       webpackConfig.externals = ['dtrace-provider'];
 
       return webpackConfig;
-    }
+    },
+    plugins: {
+      add: [
+        process.env.SENTRY_AUTH_TOKEN ?? new SentryWebpackPlugin({
+          include: './build/',
+          ignoreFile: '.sentrycliignore',
+          ignore: ['node_modules', 'craco.config.js',],
+        }),
+      ]
+    },
   }
 };
