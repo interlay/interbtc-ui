@@ -1,4 +1,5 @@
 const path = require('path');
+const { when } = require("@craco/craco");
 const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 module.exports = {
@@ -41,13 +42,14 @@ module.exports = {
       return webpackConfig;
     },
     plugins: {
-      add: [
-        process.env.SENTRY_AUTH_TOKEN ?? new SentryWebpackPlugin({
+      // Optinoally add SentryWebpackPlugin when SENTRY_AUTH_TOKEN is set (e.g. in Vercel)
+      add: when(process.env.SENTRY_AUTH_TOKEN, () => [
+        new SentryWebpackPlugin({
           include: './build/',
           ignoreFile: '.sentrycliignore',
           ignore: ['node_modules', 'craco.config.js',],
-        }),
-      ]
+        })
+      ], [])
     },
   }
 };
