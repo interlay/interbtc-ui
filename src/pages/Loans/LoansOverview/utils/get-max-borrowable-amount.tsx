@@ -8,13 +8,10 @@ import { pickSmallerAmount } from '@/utils/helpers/currencies';
  * with currently provided collateral and liquidity.
  * @param {LoanAsset} asset The asset to be withdrawn.s
  * @param {LendingStats} lendingStats Object containing information about account's collateralization.
- * @return {MonetaryAmount<CurrencyExt> | undefined} maximum amount of currency that
- * user can withdraw with currently provided collateral. Returns undefined if it is loading
+ * @return {MonetaryAmount<CurrencyExt>} maximum amount of currency that
+ * user can withdraw with currently provided collateral
  */
-const getMaxBorrowableAmount = (
-  asset: LoanAsset,
-  lendingStats?: LendingStats
-): MonetaryAmount<CurrencyExt> | undefined => {
+const getMaxBorrowableAmount = (asset: LoanAsset, lendingStats?: LendingStats): MonetaryAmount<CurrencyExt> => {
   if (lendingStats === undefined) {
     return newMonetaryAmount(0, asset.currency);
   }
