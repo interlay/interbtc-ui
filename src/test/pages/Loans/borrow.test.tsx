@@ -40,12 +40,6 @@ describe('Borrow Flow', () => {
     mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
   });
 
-  afterAll(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
-  });
-
   it('should be able to borrow', async () => {
     await render(<App />, { path });
 

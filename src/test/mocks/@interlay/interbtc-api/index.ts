@@ -5,6 +5,7 @@ import { Interlay, Polkadot } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { Signer } from '@polkadot/types/types';
 
+import { mockFaucet } from './faucet';
 import {
   mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
@@ -177,7 +178,8 @@ jest.mock('@interlay/interbtc-api', () => {
     currencyIdToMonetaryCurrency: jest.fn(),
     newAccountId: jest.fn().mockReturnValue(DEFAULT_ACCOUNT_ADDRESS),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
-    createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi)
+    createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi),
+    FaucetClient: mockFaucet
   };
 });
 
