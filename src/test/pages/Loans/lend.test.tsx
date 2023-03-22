@@ -2,7 +2,11 @@ import '@testing-library/jest-dom';
 
 import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
-import { mockTokensBalance } from '@/test/mocks/@interlay/interbtc-api';
+import {
+  DEFAULT_TOKENS_BALANCE_FN,
+  EMPTY_TOKENS_BALANCE_FN,
+  mockTokensBalance
+} from '@/test/mocks/@interlay/interbtc-api';
 import {
   DEFAULT_ASSETS,
   DEFAULT_BORROW_POSITIONS,
@@ -28,11 +32,13 @@ describe('Lending Flow', () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
     mockLend.mockRestore();
+    mockTokensBalance.mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
   });
 
   afterAll(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
+    mockTokensBalance.mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
   });
 
   it('should be able to lend', async () => {
@@ -50,7 +56,7 @@ describe('Lending Flow', () => {
   });
 
   it('should not be able to lend over available balance', async () => {
-    mockTokensBalance.emptyBalance();
+    mockTokensBalance.mockImplementation(EMPTY_TOKENS_BALANCE_FN);
 
     await render(<App />, { path });
 
@@ -68,8 +74,6 @@ describe('Lending Flow', () => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       expect(mockLend).not.toHaveBeenCalled();
     });
-
-    mockTokensBalance.restore();
   });
 
   it('should not be able to lend due to lack of borrows and supply cap', async () => {
