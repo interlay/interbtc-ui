@@ -5,6 +5,8 @@ import '@/component-library/theme/theme.kintsugi.css';
 
 import { configGlobalBig } from '@interlay/monetary-js';
 import { OverlayProvider } from '@react-aria/overlays';
+import * as Sentry from '@sentry/react';
+import { BrowserTracing } from '@sentry/tracing';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
