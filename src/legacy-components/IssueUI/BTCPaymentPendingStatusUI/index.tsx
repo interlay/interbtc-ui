@@ -94,7 +94,11 @@ const BTCPaymentPendingStatusUI = ({ request }: Props): JSX.Element => {
         >
           {t('issue_page.single_transaction')}
         </p>
-        <AddressWithCopyUI className={clsx('justify-center', 'p-2.5')} address={bitcoinRecipientAddress} />
+        <AddressWithCopyUI
+          shortenAddress={false}
+          className={clsx('justify-center', 'p-2.5')}
+          address={bitcoinRecipientAddress}
+        />
         {initialLeftSeconds && (
           <p className={clsx('flex', 'justify-center', 'items-center', 'space-x-1')}>
             <span
