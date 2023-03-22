@@ -8,13 +8,13 @@ import { MonetaryAmount } from '@interlay/monetary-js';
  * @param {CollateralPosition} position The position to be withdrew.
  * @param {LendingStats} lendingStats Object containing information about account's collateralization.
  * @return {MonetaryAmount<CurrencyExt> | undefined} maximum amount of currency that
- * user can withdraw with currently provided collateral. Returns undefined if it is loading
+ * user can withdraw with currently provided collateral
  */
 const getMaxWithdrawableAmount = (
   asset: LoanAsset,
   position?: CollateralPosition,
   lendingStats?: LendingStats
-): MonetaryAmount<CurrencyExt> | undefined => {
+): MonetaryAmount<CurrencyExt> => {
   const { currency } = asset;
 
   if (position === undefined || lendingStats === undefined) {
