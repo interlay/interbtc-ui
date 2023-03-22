@@ -161,7 +161,6 @@
     "build": "REACT_APP_VERSION=$npm_package_version craco build",
     "build-with-webpack-bundle-analysis": "yarn build --stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
     "tailwind-config-viewer": "cd src && tailwind-config-viewer -o",
-    "test": "jest",
     "lint-and-type-check": "yarn lint && yarn type-check",
     "eject": "react-scripts eject",
     "compose:regtest": "docker-compose --env-file .env.development.local up",
@@ -169,7 +168,10 @@
     "compose:down": "docker-compose down --remove-orphans -v",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
-    "chromatic": "chromatic --project-token"
+    "chromatic": "chromatic --project-token",
+    "test": "jest --maxWorkers=50%",
+    "test:watch": "jest --watch --maxWorkers=25%",
+    "test:ci": "jest --runInBand"
   },
   "homepage": "",
   "browserslist": {
