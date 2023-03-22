@@ -5,8 +5,6 @@ import '@/component-library/theme/theme.kintsugi.css';
 
 import { configGlobalBig } from '@interlay/monetary-js';
 import { OverlayProvider } from '@react-aria/overlays';
-import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -22,12 +20,6 @@ import { Subscriptions } from '@/utils/hooks/api/tokens/use-balances-subscriptio
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
-
-Sentry.init({
-  dsn: process.env.REACT_APP_SENTRY_DSN,
-  integrations: [new BrowserTracing()],
-  tracesSampleRate: 1
-});
 
 configGlobalBig();
 
