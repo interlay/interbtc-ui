@@ -40,7 +40,7 @@
     "@react-stately/toggle": "^3.4.2",
     "@react-stately/tooltip": "^3.2.3",
     "@react-stately/tree": "^3.4.1",
-    "@sentry/node": "^7.44.2",
+    "@sentry/react": "^7.44.2",
     "@sentry/tracing": "^7.44.2",
     "@tailwindcss/forms": "^0.3.2",
     "@testing-library/jest-dom": "^5.11.4",
