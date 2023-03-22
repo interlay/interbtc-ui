@@ -10,7 +10,6 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
-import { isBorrowAsset } from '../../utils/is-loan-asset';
 import { LTVMeter } from '../LTVMeter.tsx';
 import { StyledDd, StyledDl, StyledSpan } from './BorrowLimit.style';
 import { RemainingDebt } from './RemainingDebt';
@@ -44,7 +43,12 @@ const BorrowLimit = ({
     return null;
   }
 
-  const hasLiquidationAlert = shouldDisplayLiquidationAlert && isBorrowAsset(loanAction) && newLTV.status === 'error';
+  // Only show on borrow and withdraw because these could
+  // have negative impact on the loan
+  const hasLiquidationAlert =
+    (loanAction === 'borrow' || loanAction === 'withdraw') &&
+    shouldDisplayLiquidationAlert &&
+    newLTV.status === 'error';
 
   const currentLTVLabel = formatPercentage(currentLTV.value);
   const newLTVLabel = formatPercentage(newLTV.value);
