@@ -30,6 +30,9 @@ import { DepositDivider } from './DepositDivider';
 import { StyledDl } from './DepositForm.styles';
 import { DepositOutputAssets } from './DepositOutputAssets';
 
+const isCustomAmountsMode = (form: ReturnType<typeof useForm>) =>
+  form.dirty && Object.values(form.touched).filter(Boolean).length > 0;
+
 type DepositData = {
   amounts: PooledCurrencies;
   pool: LiquidityPool;
@@ -105,6 +108,8 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
   });
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (isCustomAmountsMode(form)) return;
+
     if (!e.target.value || isNaN(Number(e.target.value))) {
       return form.setValues(defaultValues);
     }
