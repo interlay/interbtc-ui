@@ -58,17 +58,17 @@ const useGetBalances = (): UseGetBalances => {
   // from the return value
   const getAvailableBalance = useCallback(
     (ticker: string) => {
-      const { free } = getBalance(ticker) || {};
+      const { transferable } = getBalance(ticker) || {};
 
       if (ticker === GOVERNANCE_TOKEN.ticker) {
-        if (!free) return undefined;
+        if (!transferable) return undefined;
 
-        const governanceBalance = free.sub(TRANSACTION_FEE_AMOUNT);
+        const governanceBalance = transferable.sub(TRANSACTION_FEE_AMOUNT);
 
         return governanceBalance.toBig().gte(0) ? governanceBalance : newMonetaryAmount(0, governanceBalance.currency);
       }
 
-      return free;
+      return transferable;
     },
     [getBalance]
   );
