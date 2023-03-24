@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -44,7 +45,8 @@ const useGetBalances = (): UseGetBalances => {
   const queryResult = useQuery({
     queryKey: getBalancesQueryKey(selectedAccount?.address),
     queryFn: () => (accountId && currencies ? getBalances(currencies, accountId) : undefined),
-    enabled: selectedAccount && accountId && isCurrenciesSuccess && bridgeLoaded
+    enabled: selectedAccount && accountId && isCurrenciesSuccess && bridgeLoaded,
+    refetchInterval: REFETCH_INTERVAL.BLOCK
   });
 
   const { data, error } = queryResult;
