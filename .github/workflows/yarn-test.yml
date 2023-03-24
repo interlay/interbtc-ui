@@ -1,12 +1,17 @@
 name: yarn test
 
-on: [push, pull_request_target]
+on:
+  push:
+  pull_request:
+  # manual trigger
+  workflow_dispatch:
 
 env:
   REACT_APP_RELAY_CHAIN_NAME: polkadot
   REACT_APP_PARACHAIN_ID: 2032
   DOCKER_RELAY_CHAIN_CURRENCY: DOT
   REACT_APP_FEATURE_FLAG_LENDING: enabled
+  REACT_APP_FEATURE_FLAG_AMM: enabled
 
 jobs:
   # MEMO: how to run a GitHub action locally
