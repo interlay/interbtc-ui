@@ -13,7 +13,7 @@ import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
 import LineChart from '@/pages/Dashboard/LineChart';
 import Stats, { StatsDd, StatsDt } from '@/pages/Dashboard/Stats';
 import useCumulativeCollateralVolumes from '@/services/hooks/use-cumulative-collateral-volumes';
-import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
+import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colours';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const cutoffTimestamps = getLastMidnightTimestamps(COUNT_OF_DATES_FOR_CHART, true);

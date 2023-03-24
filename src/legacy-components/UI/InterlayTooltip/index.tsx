@@ -1,6 +1,6 @@
 import './interlay-tooltip.css';
 
-import Tooltip, { TooltipProps } from '@reach/tooltip';
+import { Tooltip, TooltipProps } from '@reach/tooltip';
 import clsx from 'clsx';
 import * as React from 'react';
 

@@ -12,7 +12,7 @@ import cumulativeVolumesFetcher, {
   VolumeDataPoint,
   VolumeType
 } from '@/services/fetchers/cumulative-volumes-fetcher';
-import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from '@/utils/constants/colors';
+import { INTERLAY_DENIM, INTERLAY_MULBERRY, KINTSUGI_MIDNIGHT, KINTSUGI_PRAIRIE_SAND } from '@/utils/constants/colours';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import LineChart from '../LineChart';

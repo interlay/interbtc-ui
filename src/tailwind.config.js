@@ -1,7 +1,4 @@
-// TODO: should type properly
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
+/** @type {import('tailwindcss').Config} */
 const plugin = require('tailwindcss/plugin');
 
 const {
@@ -36,10 +33,10 @@ const {
   KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
   KINTSUGI_TEXT_SECONDARY_IN_DARK_MODE,
   MINE_SHAFT
-} = require('./utils/constants/colors');
+} = require('./utils/constants/colors.js');
 
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  content: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
   darkMode: 'class',
   theme: {
     fontFamily: {

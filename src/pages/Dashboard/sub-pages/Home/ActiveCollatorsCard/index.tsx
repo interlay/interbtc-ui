@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 
 import { formatNumber, getLastMidnightTimestamps } from '@/common/utils/utils';
 import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
-import { INTERLAY_DENIM, KINTSUGI_APPLE } from '@/utils/constants/colors';
+import { INTERLAY_DENIM, KINTSUGI_APPLE } from '@/utils/constants/colours';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import LineChart from '../../../LineChart';

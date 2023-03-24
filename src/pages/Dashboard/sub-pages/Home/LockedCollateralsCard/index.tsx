@@ -12,7 +12,7 @@ import {
 } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import useCumulativeCollateralVolumes from '@/services/hooks/use-cumulative-collateral-volumes';
-import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colors';
+import { INTERLAY_DENIM, KINTSUGI_SUPERNOVA } from '@/utils/constants/colours';
 import { PAGES } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';

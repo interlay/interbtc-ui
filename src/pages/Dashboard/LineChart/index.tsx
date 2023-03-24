@@ -8,7 +8,7 @@ import {
   KINTSUGI_GRID_LINE_COLOR,
   KINTSUGI_TEXT_PRIMARY_IN_DARK_MODE,
   KINTSUGI_ZERO_LINE_COLOR
-} from '@/utils/constants/colors';
+} from '@/utils/constants/colours';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface YAxis {
