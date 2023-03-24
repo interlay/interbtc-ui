@@ -8,6 +8,7 @@ export default defineConfig({
   build: {
     target: 'esnext', // TODO: confirm this is the right target
   },
+  envPrefix: ['VITE_', 'REACT_APP_'],
   plugins: [react(), svgr()],
   resolve: {
     alias: {
