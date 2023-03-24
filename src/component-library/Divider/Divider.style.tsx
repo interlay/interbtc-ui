@@ -1,15 +1,16 @@
 import styled from 'styled-components';
 
-import { Colors, Orientation } from '../utils/prop-types';
+import { Colors, Orientation, Sizes } from '../utils/prop-types';
 import { resolveColor } from '../utils/theme';
 
 type StyledDividerProps = {
-  $color: Colors;
+  $color: Colors | 'default';
   $orientation: Orientation;
+  $size: Sizes;
 };
 
 const StyledDivider = styled.hr<StyledDividerProps>`
-  background-color: ${({ $color }) => resolveColor($color)};
+  background-color: ${({ $color }) => ($color === 'default' ? 'var(--colors-border)' : resolveColor($color))};
   height: ${({ $orientation }) => ($orientation === 'horizontal' ? '2px' : 'auto')};
   width: ${({ $orientation }) => ($orientation === 'horizontal' ? '' : '2px')};
   border: 0;

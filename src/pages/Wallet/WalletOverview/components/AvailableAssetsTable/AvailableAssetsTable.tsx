@@ -2,7 +2,21 @@ import { isCurrencyEqual } from '@interlay/interbtc-api';
 import { ReactNode, useMemo, useState } from 'react';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { CTA, CTALink, Dd, Dl, DlGroup, Dt, Flex, List, ListItem, P, Switch, theme } from '@/component-library';
+import {
+  CTA,
+  CTALink,
+  Dd,
+  Divider,
+  Dl,
+  DlGroup,
+  Dt,
+  Flex,
+  List,
+  ListItem,
+  P,
+  Switch,
+  theme
+} from '@/component-library';
 import { useMediaQuery } from '@/component-library/use-media-query';
 import { AssetCell, Cell, Table } from '@/components';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -11,6 +25,8 @@ import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import { ListItemWrapper } from './AvailableAssetsTable.style';
 
 enum AvailableAssetsColumns {
   ASSET = 'asset',
@@ -49,7 +65,7 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
 
     return filteredData.map(
       ({ currency, free }): AvailableAssetsRows => {
-        const asset = <AssetCell {...getCoinIconProps(currency)} />;
+        const asset = <AssetCell size={isMobile ? 'xl' : undefined} {...getCoinIconProps(currency)} />;
 
         const tokenPrice = getTokenPrice(prices, currency.ticker)?.usd || 0;
 
@@ -63,20 +79,25 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
         const balance = <Cell label={balanceLabel} sublabel={balanceSublabel} />;
 
         const actions = (
-          <Flex justifyContent='flex-end' gap='spacing1'>
+          <Flex justifyContent={isMobile ? undefined : 'flex-end'} gap='spacing1'>
             {isCurrencyEqual(currency, WRAPPED_TOKEN) && (
-              <CTALink to={{ pathname: PAGES.BRIDGE, search: 'tab=redeem' }} variant='outlined' size='small'>
+              <CTALink
+                fullWidth={isMobile}
+                to={{ pathname: PAGES.BRIDGE, search: 'tab=redeem' }}
+                variant='outlined'
+                size='small'
+              >
                 Redeem
               </CTALink>
             )}
-            <CTALink to={PAGES.TRANSFER} variant='outlined' size='small'>
+            <CTALink fullWidth={isMobile} to={PAGES.TRANSFER} variant='outlined' size='small'>
               Transfer
             </CTALink>
-            <CTALink to={PAGES.SWAP} variant='outlined' size='small'>
+            <CTALink fullWidth={isMobile} to={PAGES.SWAP} variant='outlined' size='small'>
               Swap
             </CTALink>
             {/* Missing the buy link */}
-            <CTA variant='outlined' size='small'>
+            <CTA fullWidth={isMobile} variant='outlined' size='small'>
               Buy
             </CTA>
           </Flex>
@@ -91,7 +112,7 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
         };
       }
     );
-  }, [balances, isOpen, prices]);
+  }, [balances, isMobile, isOpen, prices]);
 
   const actions = (
     <Switch isSelected={isOpen} onChange={(e) => setOpen(e.target.checked)}>
@@ -104,17 +125,21 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
       <List variant='card'>
         {rows.map((row) => (
           <ListItem key={row.id} direction='column'>
-            {row.asset}
-            <Dl direction='column'>
-              <DlGroup justifyContent='space-between' alignItems='center'>
-                <Dt>{columns[1].name}</Dt>
-                <Dd>{row.price}</Dd>
-              </DlGroup>
-              <DlGroup justifyContent='space-between' alignItems='center'>
-                <Dt>{columns[2].name}</Dt>
-                <Dd>{row.balance}</Dd>
-              </DlGroup>
-            </Dl>
+            <ListItemWrapper direction='column' gap='spacing2'>
+              {row.asset}
+              <Dl direction='column'>
+                <DlGroup justifyContent='space-between' alignItems='center'>
+                  <Dt>{columns[1].name}</Dt>
+                  <Dd>{row.price}</Dd>
+                </DlGroup>
+                <DlGroup justifyContent='space-between' alignItems='center'>
+                  <Dt>{columns[2].name}</Dt>
+                  <Dd>{row.balance}</Dd>
+                </DlGroup>
+              </Dl>
+              <Divider color='default' />
+              {row.actions}
+            </ListItemWrapper>
           </ListItem>
         ))}
       </List>
