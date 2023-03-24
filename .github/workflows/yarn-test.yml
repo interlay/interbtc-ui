@@ -2,6 +2,8 @@ name: yarn test
 
 on:
   push:
+    branches:
+      - master
   pull_request:
   # manual trigger
   workflow_dispatch:

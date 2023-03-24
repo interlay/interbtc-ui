@@ -169,7 +169,8 @@
     "chromatic": "chromatic --project-token",
     "test": "jest --maxWorkers=50%",
     "test:watch": "jest --watch --maxWorkers=25%",
-    "test:ci": "jest --runInBand"
+    "test:cov": "yarn test --coverage",
+    "test:ci": "jest --maxWorkers=2"
   },
   "homepage": "",
   "browserslist": {
