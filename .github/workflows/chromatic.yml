@@ -3,6 +3,8 @@ name: 'Chromatic Deployment'
 
 on:
   push:
+    branches:
+      - master
   pull_request:
   # manual trigger
   workflow_dispatch:
