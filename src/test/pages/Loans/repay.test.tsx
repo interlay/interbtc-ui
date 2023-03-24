@@ -2,7 +2,6 @@ import '@testing-library/jest-dom';
 
 import { ChainBalance, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
-import Big from 'big.js';
 
 import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -115,7 +114,7 @@ describe('Repay Flow', () => {
 
     mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
       if (currency.ticker === WRAPPED_TOKEN.ticker) {
-        return new ChainBalance(currency, mockWrappedTokenBalance, new Big(0), new Big(0));
+        return new ChainBalance(currency, mockWrappedTokenBalance, mockWrappedTokenBalance, mockWrappedTokenBalance);
       }
 
       return new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);

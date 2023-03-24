@@ -19,7 +19,7 @@ jobs:
   # - Run this command: `act -j build --container-architecture linux/amd64` (where `build` is the job name and `--container-architecture` & `linux/amd64` are local computer specific parameters so may or may not need them) to locally run this `build` job
   # - `yarn` may not be available from a regular set-up of `act` then follow https://github.com/nektos/act/issues/280#issuecomment-817661786
   # - `--ignore-engines` may only be needed when locally running a GitHub action
-  build:
+  test:
     runs-on: ubuntu-latest
 
     strategy:
