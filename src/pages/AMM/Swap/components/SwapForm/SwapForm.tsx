@@ -120,7 +120,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-  const { getBalance, getAvailableBalance } = useGetBalances();
+  const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
   useDebounce(
@@ -212,6 +212,12 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     disableValidation: swapMutation.isLoading,
     validateOnMount: true
   });
+
+  // MEMO: re-validate form on balances refetch
+  useEffect(() => {
+    form.validateForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [balances]);
 
   // MEMO: trigger validation after pair state change
   useEffect(() => {
