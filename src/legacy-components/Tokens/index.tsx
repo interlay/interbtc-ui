@@ -24,9 +24,10 @@ interface Props {
   variant?: SelectVariants;
   callbackFunction?: (token: TokenOption) => void;
   showBalances?: boolean;
+  tickers?: Array<string>;
 }
 
-const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = true }: Props): JSX.Element => {
+const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = true, tickers }: Props): JSX.Element => {
   const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
   const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(undefined);
 
@@ -61,7 +62,11 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   React.useEffect(() => {
     if (!balances) return;
 
-    const tokenOptions: Array<TokenOption> = Object.values(balances).map((balance) => ({
+    const filteredBalances = tickers
+      ? Object.values(balances).filter((value) => tickers?.includes(value.currency.ticker))
+      : balances;
+
+    const tokenOptions: Array<TokenOption> = Object.values(filteredBalances).map((balance) => ({
       token: balance.currency,
       balance: getBalance(balance.currency.ticker)?.free.toHuman(5) || '0',
       transferableBalance: getBalance(balance.currency.ticker)?.transferable.toHuman(5) || '0',
@@ -70,7 +75,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     }));
 
     setTokenOptions(tokenOptions);
-  }, [balances, getBalance, variant]);
+  }, [balances, getBalance, variant, tickers]);
 
   // Reset currentToken to get updated values if tokenOptions change
   // while a current token is set. This will always happen because
