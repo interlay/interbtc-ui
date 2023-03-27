@@ -1,4 +1,3 @@
-import { mergeProps } from '@react-aria/utils';
 import { forwardRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
@@ -6,31 +5,59 @@ import { useDispatch } from 'react-redux';
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { CTA, CTAProps } from '@/component-library';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { useSignMessage } from '@/utils/hooks/use-sign-message';
+
+enum AuthStatus {
+  UNAUTH,
+  AUTH,
+  UNSIGNED
+}
+
+const useAuthCTAProps = (props: AuthCTAProps): AuthCTAProps => {
+  const { t } = useTranslation();
+  const { hasSignature, buttonProps } = useSignMessage();
+
+  const { selectedAccount } = useSubstrateSecureState();
+
+  const status = selectedAccount ? (hasSignature ? AuthStatus.AUTH : AuthStatus.UNSIGNED) : AuthStatus.UNAUTH;
+
+  const dispatch = useDispatch();
+
+  const { onPress, children, type: typeProp, disabled } = props;
+
+  switch (status) {
+    case AuthStatus.AUTH:
+      return {
+        type: typeProp,
+        disabled,
+        onPress,
+        children
+      };
+    case AuthStatus.UNSIGNED:
+      return {
+        ...buttonProps,
+        type: 'button',
+        disabled: false,
+        children: t('sign_t&cs')
+      };
+    case AuthStatus.UNAUTH:
+    default:
+      return {
+        type: 'button',
+        disabled: false,
+        onPress: () => dispatch(showAccountModalAction(true)),
+        children: t('connect_wallet')
+      };
+  }
+};
 
 type AuthCTAProps = CTAProps;
 
 const AuthCTA = forwardRef<HTMLButtonElement, AuthCTAProps>(
-  ({ onPress, children, type: typeProp, disabled, ...props }, ref): JSX.Element => {
-    const { t } = useTranslation();
+  (props, ref): JSX.Element => {
+    const authProps = useAuthCTAProps(props);
 
-    const { selectedAccount } = useSubstrateSecureState();
-    const dispatch = useDispatch();
-
-    const otherProps = selectedAccount
-      ? {
-          type: typeProp,
-          disabled,
-          onPress,
-          children
-        }
-      : {
-          type: 'button',
-          disabled: false,
-          onPress: () => dispatch(showAccountModalAction(true)),
-          children: t('connect_wallet')
-        };
-
-    return <CTA ref={ref} {...mergeProps(props, otherProps)} />;
+    return <CTA ref={ref} {...props} {...authProps} />;
   }
 );
 

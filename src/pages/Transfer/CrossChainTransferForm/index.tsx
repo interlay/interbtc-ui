@@ -1,7 +1,6 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { BasicToken, CrossChainTransferParams } from '@interlay/bridge';
-import { CurrencyExt, DefaultTransactionAPI } from '@interlay/interbtc-api';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { ApiPromise } from '@polkadot/api';
 import { web3FromAddress } from '@polkadot/extension-dapp';
@@ -11,13 +10,13 @@ import { useEffect } from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { firstValueFrom } from 'rxjs';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { AuthCTA } from '@/components';
 import Accounts from '@/legacy-components/Accounts';
 import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import Chains, { ChainOption } from '@/legacy-components/Chains';
@@ -25,7 +24,6 @@ import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import FormTitle from '@/legacy-components/FormTitle';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TokenField from '@/legacy-components/TokenField';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import STATUSES from '@/utils/constants/statuses';
@@ -55,7 +53,6 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   // TODO: this will need to be refactored when we support multiple currencies
   // per channel, but so will the UI so better to handle this then.
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -203,13 +200,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   };
 
-  const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!selectedAccount) {
-      dispatch(showAccountModalAction(true));
-      event.preventDefault();
-    }
-  };
-
   const handleUpdateUsdAmount = (value: string) => {
     if (!value) return;
 
@@ -351,13 +341,15 @@ const CrossChainTransferForm = (): JSX.Element => {
           label={t('transfer_page.cross_chain_transfer_form.target_account')}
           callbackFunction={setDestination}
         />
-        <SubmitButton
+        <AuthCTA
+          fullWidth
+          size='large'
+          type='submit'
           disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
-          pending={submitStatus === STATUSES.PENDING}
-          onClick={handleConfirmClick}
+          loading={submitStatus === STATUSES.PENDING}
         >
-          {selectedAccount ? t('transfer') : t('connect_wallet')}
-        </SubmitButton>
+          {t('transfer')}
+        </AuthCTA>
       </form>
       {submitStatus === STATUSES.REJECTED && submitError && (
         <ErrorModal

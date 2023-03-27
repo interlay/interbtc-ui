@@ -18,6 +18,7 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
@@ -29,7 +30,9 @@ const Topbar = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
-  const kintBalanceIsZero = getAvailableBalance("KINT")?.isZero();
+  const { selectProp } = useSignMessage();
+
+  const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
 
   const handleRequestFromFaucet = async (): Promise<void> => {
     if (!selectedAccount) return;
@@ -117,7 +120,11 @@ const Topbar = (): JSX.Element => {
           {accountLabel}
         </InterlayDefaultContainedButton>
       </div>
-      <AccountModal open={showAccountModal} onClose={handleAccountModalClose} />
+      <AccountModal
+        open={showAccountModal}
+        onClose={handleAccountModalClose}
+        onAccountSelect={selectProp.onSelectionChange}
+      />
     </>
   );
 };
