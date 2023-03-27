@@ -45,7 +45,7 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                     <SelectText>
                       {showBalances && (
                         <span>
-                          {formatNumber(Number(currentToken.balance), {
+                          {formatNumber(Number(currentToken.transferableBalance), {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 8
                           })}
