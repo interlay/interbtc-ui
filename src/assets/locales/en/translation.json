@@ -350,7 +350,7 @@
     "issuing_title": "Issuing",
     "by_locking": "By locking",
     "deposit_transaction": "BTC deposit transaction",
-    "insufficient_funds": "Insufficient {{governanceTokenSymbol}} for security deposit and fees",
+    "insufficient_funds": "Insufficient free {{governanceTokenSymbol}} for security deposit and fees",
     "waiting_for": "Waiting for",
     "pay_with": "pay with",
     "within": "within",
