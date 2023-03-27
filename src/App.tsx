@@ -62,7 +62,7 @@ const App = (): JSX.Element => {
   // Loads the faucet
   React.useEffect(() => {
     if (!bridgeLoaded) return;
-    if (process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Mainnet) return;
+    // if (process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Mainnet) return;
 
     (async () => {
       try {

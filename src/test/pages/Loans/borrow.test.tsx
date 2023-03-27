@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom';
 
+import Big from 'big.js';
+
 import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
@@ -11,6 +13,7 @@ import {
   DEFAULT_LENDING_STATS,
   mockBorrow,
   mockCalculateBorrowLimitBtcChange,
+  mockCalculateLtvAndThresholdsChange,
   mockGetBorrowPositionsOfAccount,
   mockGetLendingStats,
   mockGetLendPositionsOfAccount,
@@ -32,12 +35,6 @@ jest.mock('../../../parts/Layout', () => {
 
 describe('Borrow Flow', () => {
   beforeEach(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
-  });
-
-  afterAll(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
     mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
@@ -126,6 +123,24 @@ describe('Borrow Flow', () => {
 
     await waitFor(() => {
       expect(mockBorrow).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should display liquidation alert', async () => {
+    mockCalculateLtvAndThresholdsChange.mockReturnValue({
+      collateralThresholdWeightedAverage: new Big(0.5),
+      liquidationThresholdWeightedAverage: new Big(0.75),
+      ltv: new Big(0.75)
+    });
+
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.BORROW.POSITION, 'IBTC', tab, true);
+
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'borrow amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+
+    await waitFor(() => {
+      expect(tabPanel.getByRole('alert')).toBeInTheDocument();
     });
   });
 });

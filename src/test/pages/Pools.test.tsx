@@ -181,4 +181,50 @@ describe('Pools Page', () => {
 
     mockGetClaimableFarmingRewards.mockReturnValue(DEFAULT_CLAIMABLE_REWARDS);
   });
+
+  it('should be able to enter customisable input amounts mode', async () => {
+    jest
+      .spyOn(DEFAULT_LIQUIDITY_POOL_1, 'getLiquidityDepositInputAmounts')
+      .mockReturnValue(DEFAULT_POOLED_CURRENCIES_1);
+
+    const [DEFAULT_CURRENCY_1, DEFAULT_CURRENCY_2] = DEFAULT_POOLED_CURRENCIES_1;
+
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, DEFAULT_LP_TOKEN_1.ticker, TABS.DEPOSIT);
+
+    await userEvent.type(
+      tabPanel.getByRole('textbox', {
+        name: new RegExp(`${DEFAULT_CURRENCY_1.currency.ticker} deposit amount`, 'i')
+      }),
+      DEFAULT_CURRENCY_1.toString(),
+      { delay: 1 }
+    );
+
+    expect(DEFAULT_LIQUIDITY_POOL_1.getLiquidityDepositInputAmounts).toHaveBeenCalledWith(DEFAULT_CURRENCY_1);
+
+    await waitFor(() => {
+      expect(
+        tabPanel.getByRole('textbox', {
+          name: new RegExp(`${DEFAULT_CURRENCY_2.currency.ticker} deposit amount`, 'i')
+        })
+      ).toHaveValue(DEFAULT_CURRENCY_2.toString());
+    });
+
+    await userEvent.type(
+      tabPanel.getByRole('textbox', {
+        name: new RegExp(`${DEFAULT_CURRENCY_2.currency.ticker} deposit amount`, 'i')
+      }),
+      '10',
+      { delay: 1 }
+    );
+
+    await waitFor(() => {
+      expect(
+        tabPanel.getByRole('textbox', {
+          name: new RegExp(`${DEFAULT_CURRENCY_1.currency.ticker} deposit amount`, 'i')
+        })
+      ).toHaveValue(DEFAULT_CURRENCY_1.toString());
+    });
+  });
 });

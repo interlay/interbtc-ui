@@ -2,6 +2,7 @@ import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { mergeProps } from '@react-aria/utils';
+import Big from 'big.js';
 import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
@@ -72,6 +73,14 @@ const getAmountsUSD = (pair: SwapPair, prices?: Prices, trade?: Trade | null, in
   };
 };
 
+const getPoolPriceImpact = (trade: Trade | null | undefined, inputAmountUSD: number, outputAmountUSD: number) => ({
+  poolImpact: trade?.priceImpact,
+  marketPrice:
+    outputAmountUSD && inputAmountUSD
+      ? new Big(inputAmountUSD - outputAmountUSD).div(inputAmountUSD).mul(100)
+      : new Big(0)
+});
+
 const getPooledTickers = (liquidityPools: LiquidityPool[]): Set<string> =>
   liquidityPools.reduce((acc, pool) => {
     pool.pooledCurrencies.forEach((curr) => acc.add(curr.currency.ticker));
@@ -111,7 +120,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const { t } = useTranslation();
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-  const { getBalance, getAvailableBalance } = useGetBalances();
+  const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
   useDebounce(
@@ -176,15 +185,10 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
   const handleSubmit = async (values: SwapFormData) => {
     const { inputAmountUSD, outputAmountUSD } = getAmountsUSD(pair, prices, trade, values[SWAP_INPUT_AMOUNT_FIELD]);
 
-    // In case prices are 0, do not show the warning
-    if (!inputAmountUSD || !outputAmountUSD) {
-      return handleSwap();
-    }
+    const isOverPricedBuy = inputAmountUSD >= outputAmountUSD;
+    const { poolImpact, marketPrice } = getPoolPriceImpact(trade, inputAmountUSD, outputAmountUSD);
 
-    const isOverPricedBuy = inputAmountUSD > outputAmountUSD;
-    const isAbovePriceImpactLimit = trade?.priceImpact.gte(SWAP_PRICE_IMPACT_LIMIT);
-
-    if (isOverPricedBuy && isAbovePriceImpactLimit) {
+    if (isOverPricedBuy && (marketPrice.gte(SWAP_PRICE_IMPACT_LIMIT) || poolImpact?.gte(SWAP_PRICE_IMPACT_LIMIT))) {
       return setPriceImpactModal(true);
     }
 
@@ -208,6 +212,12 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     disableValidation: swapMutation.isLoading,
     validateOnMount: true
   });
+
+  // MEMO: re-validate form on balances refetch
+  useEffect(() => {
+    form.validateForm();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [balances]);
 
   // MEMO: trigger validation after pair state change
   useEffect(() => {
@@ -287,6 +297,9 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     [currencies, getAvailableBalance, pooledTickers, prices]
   );
 
+  const { poolImpact, marketPrice } = getPoolPriceImpact(trade, inputAmountUSD, outputAmountUSD);
+  const priceImpact = (marketPrice || poolImpact).toNumber();
+
   return (
     <>
       <Card {...props} gap='spacing2'>
@@ -341,7 +354,7 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
         inputAmount={inputMonetary}
         outputAmount={outputMonetary}
         pair={pair}
-        trade={trade}
+        priceImpact={priceImpact}
       />
     </>
   );

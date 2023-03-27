@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom';
 
+import Big from 'big.js';
+
 import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
@@ -8,6 +10,7 @@ import {
   DEFAULT_LEND_POSITIONS,
   DEFAULT_LENDING_STATS,
   DEFAULT_POSITIONS,
+  mockCalculateLtvAndThresholdsChange,
   mockGetBorrowPositionsOfAccount,
   mockGetLendingStats,
   mockGetLendPositionsOfAccount,
@@ -24,12 +27,6 @@ const tab = 'withdraw';
 
 describe('Withdraw Flow', () => {
   beforeEach(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
-  });
-
-  afterAll(() => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
     mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
@@ -90,6 +87,25 @@ describe('Withdraw Flow', () => {
     expect(mockWithdrawAll).toHaveBeenCalledWith(WRAPPED_TOKEN);
   });
 
+  it('should partially withdraw while applying max withdraw when there is low borrow limit', async () => {
+    mockGetLendingStats.mockReturnValue({ ...DEFAULT_LENDING_STATS, borrowLimitBtc: DEFAULT_IBTC.MONETARY.VERY_SMALL });
+
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab, true);
+
+    userEvent.click(
+      tabPanel.getByRole('button', {
+        name: /max/i
+      })
+    );
+
+    await submitForm(tabPanel, 'withdraw');
+
+    expect(mockWithdraw).toHaveBeenCalled();
+    expect(mockWithdrawAll).not.toHaveBeenCalled();
+  });
+
   it('should not be able to withdraw due low borrow limit', async () => {
     mockGetLendingStats.mockReturnValue({ ...DEFAULT_LENDING_STATS, borrowLimitBtc: DEFAULT_IBTC.MONETARY.VERY_SMALL });
 
@@ -108,6 +124,25 @@ describe('Withdraw Flow', () => {
     await waitFor(() => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       expect(mockWithdraw).not.toHaveBeenCalled();
+      expect(mockWithdrawAll).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should display liquidation alert', async () => {
+    mockCalculateLtvAndThresholdsChange.mockReturnValue({
+      collateralThresholdWeightedAverage: new Big(0.5),
+      liquidationThresholdWeightedAverage: new Big(0.75),
+      ltv: new Big(0.75)
+    });
+
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab, true);
+
+    userEvent.type(tabPanel.getByRole('textbox', { name: 'withdraw amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
+
+    await waitFor(() => {
+      expect(tabPanel.getByRole('alert')).toBeInTheDocument();
     });
   });
 });

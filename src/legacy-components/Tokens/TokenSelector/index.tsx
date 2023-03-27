@@ -14,6 +14,7 @@ import Select, {
 
 interface TokenOption {
   balance: string;
+  transferableBalance: string;
   symbol: string;
   icon: JSX.Element;
 }
@@ -44,7 +45,7 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                     <SelectText>
                       {showBalances && (
                         <span>
-                          {formatNumber(Number(currentToken.balance), {
+                          {formatNumber(Number(currentToken.transferableBalance), {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 8
                           })}
@@ -69,7 +70,7 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                               {tokenOption.icon}
                               <SelectText selected={selected}>
                                 {showBalances &&
-                                  formatNumber(Number(tokenOption.balance), {
+                                  formatNumber(Number(tokenOption.transferableBalance), {
                                     minimumFractionDigits: 0,
                                     maximumFractionDigits: 8
                                   })}{' '}

@@ -1,8 +1,13 @@
 # Workflow name
 name: 'Chromatic Deployment'
 
-# Event for the workflow
-on: [push, pull_request_target]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  # manual trigger
+  workflow_dispatch:
 
 # List of jobs
 jobs:
