@@ -257,7 +257,7 @@ const IssueForm = (): JSX.Element | null => {
       const securityDeposit = btcToGovernanceTokenRate.toCounter(btcAmount).mul(depositRate);
       const minRequiredGovernanceTokenAmount = TRANSACTION_FEE_AMOUNT.add(securityDeposit);
       if (governanceTokenBalance.transferable.lte(minRequiredGovernanceTokenAmount)) {
-        return t('insufficient_funds_governance_token', {
+        return t('issue_page.insufficient_funds', {
           governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL
         });
       }

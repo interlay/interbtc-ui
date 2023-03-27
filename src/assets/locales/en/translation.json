@@ -266,7 +266,8 @@
       "total_interbtc": "{{amount}} {{wrappedTokenSymbol}}",
       "total_issues": "{{amount}} successful issues",
       "total_issued_chart": "Total {{wrappedTokenSymbol}} issued",
-      "per_day_issued_chart": "{{wrappedTokenSymbol}} issued per day"
+      "per_day_issued_chart": "{{wrappedTokenSymbol}} issued per day",
+      "insufficient_funds": "Insufficient {{governanceTokenSymbol}}for security deposit and fees"
     },
     "redeem": {
       "redeem": "Redeem Requests",
