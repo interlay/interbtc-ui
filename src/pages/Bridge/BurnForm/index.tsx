@@ -28,12 +28,14 @@ import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import TokenField from '@/legacy-components/TokenField';
+import Tokens from '@/legacy-components/Tokens';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
@@ -53,6 +55,7 @@ const BurnForm = (): JSX.Element | null => {
   const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded, parachainStatus } = useSelector((state: StoreType) => state.general);
   const { data: balances } = useGetBalances();
+  const { data: collateralCurrencies } = useGetCollateralCurrencies(bridgeLoaded);
 
   const {
     register,
@@ -76,13 +79,17 @@ const BurnForm = (): JSX.Element | null => {
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!handleError) return;
+    if (!collateralCurrencies) return;
+
+    console.log(collateralCurrencies);
 
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
+
         const [theBurnRate, theBurnableTokens] = await Promise.all([
-          window.bridge.redeem.getBurnExchangeRate(RELAY_CHAIN_NATIVE_TOKEN),
-          window.bridge.redeem.getMaxBurnableTokens(RELAY_CHAIN_NATIVE_TOKEN)
+          window.bridge.redeem.getBurnExchangeRate(collateralCurrencies[1]),
+          window.bridge.redeem.getMaxBurnableTokens(collateralCurrencies[1])
         ]);
         setBurnRate(theBurnRate);
         setBurnableTokens(theBurnableTokens);
@@ -92,7 +99,7 @@ const BurnForm = (): JSX.Element | null => {
         handleError(error);
       }
     })();
-  }, [bridgeLoaded, handleError]);
+  }, [bridgeLoaded, collateralCurrencies, handleError]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return <PrimaryColorEllipsisLoader />;
@@ -212,6 +219,13 @@ const BurnForm = (): JSX.Element | null => {
             )}`}
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
+          />
+          <h2>In exchange for</h2>
+          <Tokens
+            tickers={collateralCurrencies?.map((currency) => currency.ticker)}
+            variant='formField'
+            showBalances={false}
+            // callbackFunction={(token) => console.log('token change', token)}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
