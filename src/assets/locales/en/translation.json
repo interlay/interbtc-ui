@@ -266,8 +266,7 @@
       "total_interbtc": "{{amount}} {{wrappedTokenSymbol}}",
       "total_issues": "{{amount}} successful issues",
       "total_issued_chart": "Total {{wrappedTokenSymbol}} issued",
-      "per_day_issued_chart": "{{wrappedTokenSymbol}} issued per day",
-      "insufficient_funds": "Insufficient {{governanceTokenSymbol}}for security deposit and fees"
+      "per_day_issued_chart": "{{wrappedTokenSymbol}} issued per day"
     },
     "redeem": {
       "redeem": "Redeem Requests",
@@ -351,6 +350,7 @@
     "issuing_title": "Issuing",
     "by_locking": "By locking",
     "deposit_transaction": "BTC deposit transaction",
+    "insufficient_funds": "Insufficient {{governanceTokenSymbol}} for security deposit and fees",
     "waiting_for": "Waiting for",
     "pay_with": "pay with",
     "within": "within",
