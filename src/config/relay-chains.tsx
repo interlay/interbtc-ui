@@ -1,7 +1,7 @@
-import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
-import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
-import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
-import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
+import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/src/adapters/interlay';
+import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/src/adapters/polkadot';
+import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/src/adapters/statemint';
+import { BaseCrossChainAdapter } from '@interlay/bridge/build/src/base-chain-adapter';
 import {
   CurrencyExt,
   CurrencyIdLiteral,

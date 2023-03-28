@@ -1,16 +1,12 @@
-import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
+import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build/src';
 import { useEffect, useState } from 'react';
 import { firstValueFrom } from 'rxjs';
 
 import { XCM_ADAPTERS } from '@/config/relay-chains';
-import { BITCOIN_NETWORK } from '@/constants';
 
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
 });
-
-// MEMO: BitcoinNetwork type is not available on XCM bridge
-const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
 
 // TODO: This config needs to be pushed higher up the app.
 // Not sure how this will look: something to decide when
@@ -41,7 +37,7 @@ const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
 
   useEffect(() => {
     const createBridge = async () => {
-      const XCMProvider = new ApiProvider(XCMNetwork);
+      const XCMProvider = new ApiProvider();
       const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
       // Check connection
