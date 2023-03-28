@@ -1,9 +1,10 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import requests
 import os
 
 app = Flask(__name__)
 
+api_key = os.environ.get("CG_API_KEY")
 
 @app.after_request
 def add_header(response):
@@ -40,17 +41,15 @@ def get_price_coinpaprika():
 def get_price():
     args = request.args
 
-    try:
-        headers_dict = {"content-type": "application/json"}
-        url = "https://api.coingecko.com/api/v3/simple/price"
-        resp = requests.get(url, params=args, headers=headers_dict)
-        print(args)
-        print(resp)
-        resp.raise_for_status()
-        data = resp.json()
-        return str(data)
-    except Exception as e:
-        return get_price_coinpaprika()
+    headers_dict = {
+        "content-type": "application/json",
+        "accept": "application/json",
+        "x-cg-pro-api-key": api_key
+    }
+    url = "https://api.coingecko.com/api/v3/simple/price"
+    resp = requests.get(url, params=args, headers=headers_dict)
+    data = resp.json()
+    return jsonify(data)
 
 
 if __name__ == "__main__":
