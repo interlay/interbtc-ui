@@ -30,7 +30,7 @@ const composeIds = (currencies: CurrencyExt[]): string =>
   }, '');
 
 const composeUrl = (assetsIds: string): string => {
-  const url = new URL(PRICES_API.URL);
+  const url = new URL(PRICES_API.URL, window.location.origin);
   url.searchParams.append(PRICES_API.QUERY_PARAMETERS.ASSETS_IDS, assetsIds);
 
   return url.toString();

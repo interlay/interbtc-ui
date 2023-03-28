@@ -13,6 +13,10 @@
     {
       "source": "/_health/(.*)",
       "destination": "/api/health.py"
+    },
+    {
+      "source": "/marketdata/(.*)",
+      "destination": "/api/market_data.py"
     }
   ],
   "headers": [
