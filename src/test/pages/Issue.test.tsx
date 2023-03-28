@@ -194,7 +194,7 @@ describe('issue form', () => {
 
     await changeAmountToIssue(inputAmount.toString());
 
-    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient funds to pay for INTR fees."`);
+    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient free INTR for security deposit and fees"`);
 
     await submitForm();
 
