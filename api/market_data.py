@@ -7,7 +7,8 @@ app = Flask(__name__)
 
 @app.after_request
 def add_header(response):
-    response.cache_control.max_age = 120
+    response.cache_control.max_age = 0
+    response.cache_control.s_maxage = 300
     return response
 
 
@@ -17,7 +18,7 @@ def get_price():
 
     headers_dict = {"content-type": "application/json"}
     url = "https://api.coingecko.com/api/v3/simple/price"
-    resp = requests.get(url, params=args, headers=headers_dict)  # .json()
+    resp = requests.get(url, params=args, headers=headers_dict).json()
     return str(resp)
 
 
