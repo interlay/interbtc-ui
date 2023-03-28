@@ -5,10 +5,10 @@ import Big from 'big.js';
 const MOCK_TOKEN_BALANCE = '1000000000000';
 const MOCK_TOKEN_TOTAL_AMOUNT = '10000000000000000000000';
 
-const DEFAULT_TOKENS_BALANCE_FN = (currency: CurrencyExt, _id: AccountId) =>
+const DEFAULT_TOKENS_BALANCE_FN = (currency: CurrencyExt, _id: AccountId): ChainBalance =>
   new ChainBalance(currency, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE, MOCK_TOKEN_BALANCE);
 
-const EMPTY_TOKENS_BALANCE_FN = (currency: CurrencyExt, _id: AccountId) =>
+const EMPTY_TOKENS_BALANCE_FN = (currency: CurrencyExt, _id: AccountId): ChainBalance =>
   new ChainBalance(currency, new Big(0), new Big(0));
 
 const mockTokensBalance = jest.fn().mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
