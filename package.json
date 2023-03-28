@@ -7,8 +7,9 @@
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^2.0.0",
     "@interlay/bridge": "^0.2.3",
-    "@interlay/interbtc-api": "2.0.2",
-    "@polkadot/api": "9.11.1",
+    "@interlay/interbtc-api": "2.0.3",
+    "@interlay/monetary-js": "0.7.2",
+    "@polkadot/api": "9.14.2",
     "@polkadot/extension-dapp": "0.44.1",
     "@polkadot/ui-keyring": "^2.9.7",
     "@reach/tooltip": "^0.16.0",
@@ -80,7 +81,7 @@
     "@commitlint/cli": "^16.2.4",
     "@commitlint/config-conventional": "^16.2.4",
     "@open-wc/webpack-import-meta-loader": "^0.4.7",
-    "@polkadot/types": "9.11.1",
+    "@polkadot/types": "9.14.2",
     "@react-types/grid": "^3.1.2",
     "@react-types/shared": "^3.14.0",
     "@storybook/addon-actions": "^6.5.9",
@@ -90,6 +91,9 @@
     "@storybook/preset-create-react-app": "^3.1.7",
     "@storybook/react": "^6.5.9",
     "@tailwindcss/postcss7-compat": "^2.0.3",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "12.1.5",
+    "@testing-library/user-event": "^12.1.10",
     "@types/big.js": "6.1.2",
     "@types/history": "^4.7.1",
     "@types/jest": "^26",
@@ -119,9 +123,7 @@
     "tailwindcss-pseudo-elements": "^1.5.1",
     "ts-node": "^8.6.2",
     "webpack-bundle-analyzer": "^4.4.0",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "12.1.5",
-    "@testing-library/user-event": "^12.1.10"
+    "yarn-deduplicate": "^6.0.1"
   },
   "resolutions": {
     "babel-loader": "8.1.0",
@@ -154,7 +156,8 @@
     "test": "jest --maxWorkers=50%",
     "test:watch": "jest --watch --maxWorkers=25%",
     "test:cov": "yarn test --coverage",
-    "test:ci": "jest --maxWorkers=2"
+    "test:ci": "jest --maxWorkers=2",
+    "deduplicate": "yarn-deduplicate --strategy=highest"
   },
   "homepage": "",
   "browserslist": {
