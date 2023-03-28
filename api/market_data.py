@@ -46,7 +46,7 @@ def get_price():
         "accept": "application/json",
         "x-cg-pro-api-key": api_key
     }
-    url = "https://api.coingecko.com/api/v3/simple/price"
+    url = "https://pro-api.coingecko.com/api/v3/simple/price"
     resp = requests.get(url, params=args, headers=headers_dict)
     data = resp.json()
     return jsonify(data)
