@@ -1,5 +1,5 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { BasicToken, CrossChainTransferParams } from '@interlay/bridge/build/src';
+import { BasicToken, CrossChainTransferParams } from '@interlay/bridge';
 import { CurrencyExt, DefaultTransactionAPI } from '@interlay/interbtc-api';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
