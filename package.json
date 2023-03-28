@@ -87,7 +87,6 @@
     "@storybook/addon-actions": "^6.5.9",
     "@storybook/addon-essentials": "^6.5.9",
     "@storybook/addon-links": "^6.5.9",
-    "@storybook/node-logger": "^6.5.9",
     "@storybook/preset-create-react-app": "^3.1.7",
     "@storybook/react": "^6.5.9",
     "@tailwindcss/postcss7-compat": "^2.0.3",
@@ -122,8 +121,7 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat",
     "tailwindcss-pseudo-elements": "^1.5.1",
     "ts-node": "^8.6.2",
-    "webpack-bundle-analyzer": "^4.4.0",
-    "yarn-deduplicate": "^6.0.1"
+    "webpack-bundle-analyzer": "^4.4.0"
   },
   "resolutions": {
     "babel-loader": "8.1.0",
@@ -156,8 +154,7 @@
     "test": "jest --maxWorkers=50%",
     "test:watch": "jest --watch --maxWorkers=25%",
     "test:cov": "yarn test --coverage",
-    "test:ci": "jest --maxWorkers=2",
-    "deduplicate": "yarn-deduplicate --strategy=highest"
+    "test:ci": "jest --maxWorkers=2"
   },
   "homepage": "",
   "browserslist": {
