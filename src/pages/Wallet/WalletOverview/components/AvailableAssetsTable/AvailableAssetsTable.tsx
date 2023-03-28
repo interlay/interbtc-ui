@@ -1,4 +1,5 @@
 import { isCurrencyEqual } from '@interlay/interbtc-api';
+import { useId } from '@react-aria/utils';
 import { ReactNode, useMemo, useState } from 'react';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
@@ -11,6 +12,7 @@ import {
   DlGroup,
   Dt,
   Flex,
+  H2,
   List,
   ListItem,
   P,
@@ -120,29 +122,39 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
     </Switch>
   );
 
+  const titleId = useId();
+
   if (isMobile) {
     return (
-      <List variant='card'>
-        {rows.map((row) => (
-          <ListItem key={row.id} direction='column'>
-            <ListItemWrapper direction='column' gap='spacing2'>
-              {row.asset}
-              <Dl direction='column'>
-                <DlGroup justifyContent='space-between' alignItems='center'>
-                  <Dt>{columns[1].name}</Dt>
-                  <Dd>{row.price}</Dd>
-                </DlGroup>
-                <DlGroup justifyContent='space-between' alignItems='center'>
-                  <Dt>{columns[2].name}</Dt>
-                  <Dd>{row.balance}</Dd>
-                </DlGroup>
-              </Dl>
-              <Divider color='default' />
-              {row.actions}
-            </ListItemWrapper>
-          </ListItem>
-        ))}
-      </List>
+      <Flex direction='column' gap='spacing6' alignItems='stretch'>
+        <Flex gap='spacing2' justifyContent='space-between'>
+          <H2 size='xl' weight='bold' id={titleId}>
+            Available assets
+          </H2>
+          {actions}
+        </Flex>
+        <List variant='card' aria-labelledby={titleId}>
+          {rows.map((row) => (
+            <ListItem key={row.id} textValue={row.id} direction='column'>
+              <ListItemWrapper direction='column' gap='spacing2'>
+                {row.asset}
+                <Dl direction='column'>
+                  <DlGroup justifyContent='space-between' alignItems='center'>
+                    <Dt>{columns[1].name}</Dt>
+                    <Dd>{row.price}</Dd>
+                  </DlGroup>
+                  <DlGroup justifyContent='space-between' alignItems='center'>
+                    <Dt>{columns[2].name}</Dt>
+                    <Dd>{row.balance}</Dd>
+                  </DlGroup>
+                </Dl>
+                <Divider color='default' />
+                {row.actions}
+              </ListItemWrapper>
+            </ListItem>
+          ))}
+        </List>
+      </Flex>
     );
   }
 

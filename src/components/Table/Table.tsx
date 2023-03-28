@@ -1,9 +1,7 @@
 import { useId } from '@react-aria/utils';
 import { ReactNode } from 'react';
 
-import { Card, Flex, Table as LiTable, TableProps as LibTableProps } from '@/component-library';
-
-import { StyledTitle } from './Table.style';
+import { Card, Flex, H2, Table as LiTable, TableProps as LibTableProps } from '@/component-library';
 
 type Props = {
   title?: ReactNode;
@@ -22,7 +20,11 @@ const Table = ({ title, rows, columns, className, actions, placeholder, ...props
   return (
     <Flex className={className} direction='column' gap='spacing6' alignItems='stretch'>
       <Flex gap='spacing2' justifyContent={title ? 'space-between' : 'flex-end'}>
-        {title && <StyledTitle id={titleId}>{title}</StyledTitle>}
+        {title && (
+          <H2 size='xl' weight='bold' id={titleId}>
+            {title}
+          </H2>
+        )}
         {actions}
       </Flex>
       <Card gap='spacing4' alignItems='center'>
