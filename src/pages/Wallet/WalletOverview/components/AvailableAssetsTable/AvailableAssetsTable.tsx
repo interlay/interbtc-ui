@@ -3,22 +3,7 @@ import { useId } from '@react-aria/utils';
 import { ReactNode, useMemo, useState } from 'react';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import {
-  CTA,
-  CTALink,
-  Dd,
-  Divider,
-  Dl,
-  DlGroup,
-  Dt,
-  Flex,
-  H2,
-  List,
-  ListItem,
-  P,
-  Switch,
-  theme
-} from '@/component-library';
+import { CTALink, Dd, Divider, Dl, DlGroup, Dt, Flex, H2, List, ListItem, P, Switch, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/use-media-query';
 import { AssetCell, Cell, Table } from '@/components';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -67,7 +52,13 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
 
     return filteredData.map(
       ({ currency, free }): AvailableAssetsRows => {
-        const asset = <AssetCell size={isMobile ? 'xl' : undefined} {...getCoinIconProps(currency)} />;
+        const asset = (
+          <AssetCell
+            size={isMobile ? 'xl2' : undefined}
+            textSize={isMobile ? 'base' : undefined}
+            {...getCoinIconProps(currency)}
+          />
+        );
 
         const tokenPrice = getTokenPrice(prices, currency.ticker)?.usd || 0;
 
@@ -78,7 +69,9 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
         const balanceSublabel = formatUSD(convertMonetaryAmountToValueInUSD(free, tokenPrice) || 0, {
           compact: true
         });
-        const balance = <Cell label={balanceLabel} sublabel={balanceSublabel} />;
+        const balance = (
+          <Cell alignItems={isMobile ? 'flex-end' : undefined} label={balanceLabel} sublabel={balanceSublabel} />
+        );
 
         const actions = (
           <Flex justifyContent={isMobile ? undefined : 'flex-end'} gap='spacing1'>
@@ -92,16 +85,16 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
                 Redeem
               </CTALink>
             )}
-            <CTALink fullWidth={isMobile} to={PAGES.TRANSFER} variant='outlined' size='small'>
+            <CTALink fullWidth={isMobile} to={PAGES.TRANSFER} variant='outlined' size={isMobile ? 'medium' : 'small'}>
               Transfer
             </CTALink>
-            <CTALink fullWidth={isMobile} to={PAGES.SWAP} variant='outlined' size='small'>
+            <CTALink fullWidth={isMobile} to={PAGES.SWAP} variant='outlined' size={isMobile ? 'medium' : 'small'}>
               Swap
             </CTALink>
             {/* Missing the buy link */}
-            <CTA fullWidth={isMobile} variant='outlined' size='small'>
+            <CTALink fullWidth={isMobile} to='' variant='outlined' size={isMobile ? 'medium' : 'small'}>
               Buy
-            </CTA>
+            </CTALink>
           </Flex>
         );
 
@@ -136,14 +129,14 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
         <List variant='card' aria-labelledby={titleId}>
           {rows.map((row) => (
             <ListItem key={row.id} textValue={row.id} direction='column'>
-              <ListItemWrapper direction='column' gap='spacing2'>
+              <ListItemWrapper direction='column' gap='spacing4'>
                 {row.asset}
-                <Dl direction='column'>
-                  <DlGroup justifyContent='space-between' alignItems='center'>
+                <Dl direction='column' gap='spacing2'>
+                  <DlGroup justifyContent='space-between' alignItems='baseline'>
                     <Dt>{columns[1].name}</Dt>
                     <Dd>{row.price}</Dd>
                   </DlGroup>
-                  <DlGroup justifyContent='space-between' alignItems='center'>
+                  <DlGroup justifyContent='space-between' alignItems='baseline'>
                     <Dt>{columns[2].name}</Dt>
                     <Dd>{row.balance}</Dd>
                   </DlGroup>

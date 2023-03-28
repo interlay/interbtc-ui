@@ -428,7 +428,12 @@ const theme = {
     }
   },
   divider: {
-    bg: 'var(--colors-border)'
+    bg: 'var(--colors-border)',
+    size: {
+      small: '1px',
+      medium: '2px',
+      large: '3px'
+    }
   },
   icon: {
     sizes: {
