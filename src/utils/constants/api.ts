@@ -1,7 +1,7 @@
 import { BLOCK_TIME } from '@/config/parachain';
 
 const PRICES_API = Object.freeze({
-  URL: '/api/marketdata/price',
+  URL: '/marketdata/price',
   QUERY_PARAMETERS: {
     ASSETS_IDS: 'ids'
   }
