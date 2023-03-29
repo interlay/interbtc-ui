@@ -23,10 +23,6 @@ import { store } from './store';
 
 configGlobalBig();
 
-const DeveloperConsole = React.lazy(
-  () => import(/* webpackChunkName: 'developer-console' */ '@/lib/substrate/components/DeveloperConsole')
-);
-
 window.isFetchingActive = false;
 
 const queryClient = new QueryClient();
@@ -48,9 +44,6 @@ ReactDOM.render(
                 </Subscriptions>
               </SubstrateLoadingAndErrorHandlingWrapper>
             </ThemeWrapper>
-            <React.Suspense fallback={null}>
-              <DeveloperConsole />
-            </React.Suspense>
           </SubstrateProvider>
         </Provider>
       </HelmetProvider>

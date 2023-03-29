@@ -29,12 +29,7 @@ const composeIds = (currencies: CurrencyExt[]): string =>
     return [acc, coingeckoId].join(',');
   }, '');
 
-const composeUrl = (assetsIds: string): string => {
-  const url = new URL(PRICES_API.URL, window.location.origin);
-  url.searchParams.append(PRICES_API.QUERY_PARAMETERS.ASSETS_IDS, assetsIds);
-
-  return url.toString();
-};
+const composeEndpoint = (assetsIds: string): string => `${PRICES_API.URL}&ids=${assetsIds}`;
 
 const getPricesByTicker = (currencies: CurrencyExt[], prices: Prices) =>
   currencies.reduce((acc, currency) => {
@@ -49,9 +44,9 @@ const getPrices = async (currencies?: CurrencyExt[]): Promise<Prices | undefined
 
   const allCurrencies = [Bitcoin, ...currencies];
   const assetsIds = composeIds(allCurrencies);
-  const url = composeUrl(assetsIds);
+  const endpoint = composeEndpoint(assetsIds);
 
-  const response = await fetch(url);
+  const response = await fetch(endpoint);
   const pricesByCoingeckoId = await response.json();
 
   return getPricesByTicker(allCurrencies, pricesByCoingeckoId);

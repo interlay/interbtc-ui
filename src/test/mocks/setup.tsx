@@ -10,6 +10,11 @@ import { createInterBtcApi } from '@interlay/interbtc-api';
 import { FocusScope } from '@react-aria/focus';
 import ReactDOM from 'react-dom';
 
+// Enforce garbage collection
+afterAll(() => {
+  if (global.gc) global.gc();
+});
+
 // MEMO: mocking @react/aria overlay component because
 // of a error around `createTreeWalker`
 const mockOverlay: React.FC = ({ children, isOpen }: any) =>
