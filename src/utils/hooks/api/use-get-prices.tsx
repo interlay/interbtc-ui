@@ -44,9 +44,9 @@ const getPrices = async (currencies?: CurrencyExt[]): Promise<Prices | undefined
 
   const allCurrencies = [Bitcoin, ...currencies];
   const assetsIds = composeIds(allCurrencies);
-  const url = composeEndpoint(assetsIds);
+  const endpoint = composeEndpoint(assetsIds);
 
-  const response = await fetch(url);
+  const response = await fetch(endpoint);
   const pricesByCoingeckoId = await response.json();
 
   return getPricesByTicker(allCurrencies, pricesByCoingeckoId);
