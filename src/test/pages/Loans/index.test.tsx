@@ -33,12 +33,6 @@ describe('Loans page', () => {
     mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
   });
 
-  afterAll(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
-  });
-
   describe('Tables Section', () => {
     it.each([TABLES.LEND.MARKET, TABLES.BORROW.MARKET])(
       'should not be able to open inactive market on %s table',

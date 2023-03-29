@@ -32,12 +32,6 @@ describe('Withdraw Flow', () => {
     mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
   });
 
-  afterAll(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
-    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
-  });
-
   it('should be able to partially withdraw when there are no borrow positions', async () => {
     await render(<App />, { path });
 

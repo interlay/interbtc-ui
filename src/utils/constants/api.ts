@@ -1,7 +1,7 @@
 import { BLOCK_TIME } from '@/config/parachain';
 
 const PRICES_API = Object.freeze({
-  URL: '/marketdata/price?vs_currencies=usd',
+  URL: process.env.REACT_APP_MARKET_DATA_URL || '',
   QUERY_PARAMETERS: {
     ASSETS_IDS: 'ids'
   }

@@ -5,6 +5,7 @@ import { Interlay, Polkadot } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { Signer } from '@polkadot/types/types';
 
+import { mockFaucet } from './faucet';
 import {
   mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
@@ -12,7 +13,10 @@ import {
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
+  mockGetCurrentActiveBlockNumber,
   mockGetFutureBlockNumber,
+  mockGetStableBitcoinConfirmations,
+  mockGetStableParachainConfirmations,
   mockIssueGetDustValue,
   mockIssueGetRequestLimits,
   mockIssueRequest,
@@ -92,7 +96,11 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   assetRegistry: {
     getForeignAssets: mockGetForeignAssets
   },
-  btcRelay: { getLatestBlockHeight: mockBtcRelayGetLatestBlockHeight },
+  btcRelay: {
+    getLatestBlockHeight: mockBtcRelayGetLatestBlockHeight,
+    getStableParachainConfirmations: mockGetStableParachainConfirmations,
+    getStableBitcoinConfirmations: mockGetStableBitcoinConfirmations
+  },
   electrsAPI: { getLatestBlockHeight: mockElectrsAPIGetLatestBlockHeight },
   fee: {
     getIssueFee: mockFeeGetIssueFee,
@@ -135,7 +143,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   },
   system: {
     getStatusCode: mockSystemGetStatusCode,
-    getFutureBlockNumber: mockGetFutureBlockNumber
+    getFutureBlockNumber: mockGetFutureBlockNumber,
+    getCurrentActiveBlockNumber: mockGetCurrentActiveBlockNumber
   },
   tokens: {
     balance: mockTokensBalance,
@@ -169,7 +178,8 @@ jest.mock('@interlay/interbtc-api', () => {
     currencyIdToMonetaryCurrency: jest.fn(),
     newAccountId: jest.fn().mockReturnValue(DEFAULT_ACCOUNT_ADDRESS),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
-    createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi)
+    createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi),
+    FaucetClient: mockFaucet
   };
 });
 
