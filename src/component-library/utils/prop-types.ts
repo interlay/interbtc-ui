@@ -78,6 +78,16 @@ export interface ElementTypeProp {
   elementType?: ElementType;
 }
 
+export interface MarginProps {
+  margin?: Spacing;
+  marginTop?: Spacing;
+  marginBottom?: Spacing;
+  marginLeft?: Spacing;
+  marginRight?: Spacing;
+  marginX?: Spacing;
+  marginY?: Spacing;
+}
+
 export type FontWeight = keyof typeof theme.fontWeight;
 
 export type Orientation = 'horizontal' | 'vertical';

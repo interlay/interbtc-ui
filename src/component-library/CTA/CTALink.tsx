@@ -40,7 +40,10 @@ const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
         ref={linkRef}
         elementType={Link}
         isFocusVisible={isFocusVisible}
-        {...mergeProps(linkProps, focusProps, { href: undefined, to: external ? { pathname: to as string } : to })}
+        {...mergeProps(props, linkProps, focusProps, {
+          href: undefined,
+          to: external ? { pathname: to as string } : to
+        })}
       >
         {children}
       </BaseCTA>

@@ -8,7 +8,7 @@ import { LoanType } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { AssetCell, BalanceCell, Table, TableProps } from '../Table';
+import { AssetCell, BalanceCell, Table, TableProps } from '../DataGrid';
 import { ApyCell } from './ApyCell';
 import { LoanTablePlaceholder } from './LoanTablePlaceholder';
 

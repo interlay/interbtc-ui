@@ -20,6 +20,7 @@ type InheritAttrs = Omit<AriaSwitchProps, keyof Props>;
 
 type SwitchProps = Props & NativeAttrs & InheritAttrs;
 
+// TODO: add size
 const Switch = forwardRef<HTMLLabelElement, SwitchProps>(
   ({ children, onChange, className, style, hidden, ...props }, ref): JSX.Element => {
     const labelRef = useDOMRef(ref);

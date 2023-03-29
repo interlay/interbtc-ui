@@ -6,8 +6,8 @@ import { Flex } from '@/component-library';
 import { getApyLabel, getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
+import { Cell } from '../DataGrid';
 import { LoanApyTooltip } from '../LoanApyTooltip';
-import { Cell } from '../Table';
 
 type ApyCellProps = {
   apy: Big;

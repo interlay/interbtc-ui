@@ -8,7 +8,7 @@ import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/page
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { AssetCell, BalanceCell, Cell, Table, TableProps } from '../Table';
+import { AssetCell, BalanceCell, Cell, Table, TableProps } from '../DataGrid';
 import { getFarmingApr } from './utils';
 
 enum PoolsTableColumns {

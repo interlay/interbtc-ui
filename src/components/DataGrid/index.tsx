@@ -4,5 +4,7 @@ export type { BalanceCellProps } from './BalanceCell';
 export { BalanceCell } from './BalanceCell';
 export type { CellProps } from './Cell';
 export { Cell } from './Cell';
+export type { DataGridProps } from './DataGrid';
+export { DataGrid } from './DataGrid';
 export type { TableProps } from './Table';
 export { Table } from './Table';

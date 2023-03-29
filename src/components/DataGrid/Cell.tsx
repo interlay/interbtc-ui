@@ -2,7 +2,7 @@ import { forwardRef } from 'react';
 
 import { Colors, Flex, FlexProps } from '@/component-library';
 
-import { StyledCellLabel, StyledCellSubLabel } from './Table.style';
+import { StyledCellLabel, StyledCellSubLabel } from './DataGrid.style';
 
 type Props = {
   label?: string;

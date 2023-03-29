@@ -1,19 +1,16 @@
-import { isCurrencyEqual } from '@interlay/interbtc-api';
-import { useId } from '@react-aria/utils';
 import { ReactNode, useMemo, useState } from 'react';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { CTALink, Dd, Divider, Dl, DlGroup, Dt, Flex, H2, List, ListItem, P, Switch, theme } from '@/component-library';
+import { P, Switch, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/use-media-query';
-import { AssetCell, Cell, Table } from '@/components';
-import { WRAPPED_TOKEN } from '@/config/relay-chains';
-import { PAGES } from '@/utils/constants/links';
+import { Cell } from '@/components';
+import { AssetCell, DataGrid } from '@/components/DataGrid';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { ListItemWrapper } from './AvailableAssetsTable.style';
+import { ActionsCell } from './ActionsCell';
 
 enum AvailableAssetsColumns {
   ASSET = 'asset',
@@ -32,19 +29,13 @@ type AvailableAssetsRows = {
 
 type AvailableAssetsTableProps = {
   balances?: BalanceData;
+  pooledTickers?: Set<string>;
 };
 
-const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Element => {
+const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
   const prices = useGetPrices();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const columns = [
-    { name: 'Asset', uid: AvailableAssetsColumns.ASSET },
-    { name: 'Price', uid: AvailableAssetsColumns.PRICE },
-    { name: 'Balance', uid: AvailableAssetsColumns.BALANCE },
-    { name: '', uid: AvailableAssetsColumns.ACTIONS }
-  ];
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];
@@ -56,6 +47,7 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
           <AssetCell
             size={isMobile ? 'xl2' : undefined}
             textSize={isMobile ? 'base' : undefined}
+            marginBottom={isMobile ? 'spacing4' : undefined}
             {...getCoinIconProps(currency)}
           />
         );
@@ -73,30 +65,7 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
           <Cell alignItems={isMobile ? 'flex-end' : undefined} label={balanceLabel} sublabel={balanceSublabel} />
         );
 
-        const actions = (
-          <Flex justifyContent={isMobile ? undefined : 'flex-end'} gap='spacing1'>
-            {isCurrencyEqual(currency, WRAPPED_TOKEN) && (
-              <CTALink
-                fullWidth={isMobile}
-                to={{ pathname: PAGES.BRIDGE, search: 'tab=redeem' }}
-                variant='outlined'
-                size='small'
-              >
-                Redeem
-              </CTALink>
-            )}
-            <CTALink fullWidth={isMobile} to={PAGES.TRANSFER} variant='outlined' size={isMobile ? 'medium' : 'small'}>
-              Transfer
-            </CTALink>
-            <CTALink fullWidth={isMobile} to={PAGES.SWAP} variant='outlined' size={isMobile ? 'medium' : 'small'}>
-              Swap
-            </CTALink>
-            {/* Missing the buy link */}
-            <CTALink fullWidth={isMobile} to='' variant='outlined' size={isMobile ? 'medium' : 'small'}>
-              Buy
-            </CTALink>
-          </Flex>
-        );
+        const actions = <ActionsCell pooledTickers={pooledTickers} currency={currency} />;
 
         return {
           id: currency.ticker,
@@ -107,7 +76,7 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
         };
       }
     );
-  }, [balances, isMobile, isOpen, prices]);
+  }, [balances, isMobile, pooledTickers, isOpen, prices]);
 
   const actions = (
     <Switch isSelected={isOpen} onChange={(e) => setOpen(e.target.checked)}>
@@ -115,44 +84,15 @@ const AvailableAssetsTable = ({ balances }: AvailableAssetsTableProps): JSX.Elem
     </Switch>
   );
 
-  const titleId = useId();
-
-  if (isMobile) {
-    return (
-      <Flex direction='column' gap='spacing6' alignItems='stretch'>
-        <Flex gap='spacing2' justifyContent='space-between'>
-          <H2 size='xl' weight='bold' id={titleId}>
-            Available assets
-          </H2>
-          {actions}
-        </Flex>
-        <List variant='card' aria-labelledby={titleId}>
-          {rows.map((row) => (
-            <ListItem key={row.id} textValue={row.id} direction='column'>
-              <ListItemWrapper direction='column' gap='spacing4'>
-                {row.asset}
-                <Dl direction='column' gap='spacing2'>
-                  <DlGroup justifyContent='space-between' alignItems='baseline'>
-                    <Dt>{columns[1].name}</Dt>
-                    <Dd>{row.price}</Dd>
-                  </DlGroup>
-                  <DlGroup justifyContent='space-between' alignItems='baseline'>
-                    <Dt>{columns[2].name}</Dt>
-                    <Dd>{row.balance}</Dd>
-                  </DlGroup>
-                </Dl>
-                <Divider color='default' />
-                {row.actions}
-              </ListItemWrapper>
-            </ListItem>
-          ))}
-        </List>
-      </Flex>
-    );
-  }
+  const columns = [
+    { name: isMobile ? '' : 'Asset', uid: AvailableAssetsColumns.ASSET },
+    { name: 'Price', uid: AvailableAssetsColumns.PRICE },
+    { name: 'Balance', uid: AvailableAssetsColumns.BALANCE },
+    { name: '', uid: AvailableAssetsColumns.ACTIONS }
+  ];
 
   return (
-    <Table
+    <DataGrid
       actions={actions}
       title='Available assets'
       columns={columns}

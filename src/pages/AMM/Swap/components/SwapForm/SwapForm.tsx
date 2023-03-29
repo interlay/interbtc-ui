@@ -81,13 +81,6 @@ const getPoolPriceImpact = (trade: Trade | null | undefined, inputAmountUSD: num
       : new Big(0)
 });
 
-const getPooledTickers = (liquidityPools: LiquidityPool[]): Set<string> =>
-  liquidityPools.reduce((acc, pool) => {
-    pool.pooledCurrencies.forEach((curr) => acc.add(curr.currency.ticker));
-
-    return acc;
-  }, new Set<string>());
-
 type SwapData = {
   trade: Trade;
   minimumAmountOut: MonetaryAmount<CurrencyExt>;
@@ -102,6 +95,7 @@ type Props = {
   pair: SwapPair;
   liquidityPools: LiquidityPool[];
   onChangePair: (pair: SwapPair) => void;
+  pooledTickers: Set<string>;
   onSwap: () => void;
 };
 
@@ -109,7 +103,14 @@ type InheritAttrs = CardProps & Props;
 
 type SwapFormProps = Props & InheritAttrs;
 
-const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: SwapFormProps): JSX.Element | null => {
+const SwapForm = ({
+  pair,
+  liquidityPools,
+  pooledTickers,
+  onChangePair,
+  onSwap,
+  ...props
+}: SwapFormProps): JSX.Element | null => {
   const [slippage, setSlippage] = useState(0.1);
   const [inputAmount, setInputAmount] = useState<string>();
   const [trade, setTrade] = useState<Trade | null>();
@@ -275,8 +276,6 @@ const SwapForm = ({ pair, liquidityPools, onChangePair, onSwap, ...props }: Swap
     trade,
     form.values[SWAP_INPUT_AMOUNT_FIELD]
   );
-
-  const pooledTickers = useMemo(() => getPooledTickers(liquidityPools), [liquidityPools]);
 
   const tokens: TokenInputProps['tokens'] = useMemo(
     () =>

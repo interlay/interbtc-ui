@@ -44,14 +44,24 @@ const WalletMeta = (props: WalletMetaProps): JSX.Element => {
         </Flex>
         <Flex>
           <Tooltip {...tooltipProps}>
-            <CTA variant='text' size='x-small' {...mergeProps(buttonProps, { onPress: handleCopy })}>
+            <CTA
+              aria-label='copy address to clipboard'
+              variant='text'
+              size='x-small'
+              {...mergeProps(buttonProps, { onPress: handleCopy })}
+            >
               <DocumentDuplicate size='s' color='tertiary' />
             </CTA>
           </Tooltip>
-          <CTA onPress={() => dispatch(showAccountModalAction(true))} variant='text' size='x-small'>
+          <CTA
+            aria-label='open select account modal'
+            onPress={() => dispatch(showAccountModalAction(true))}
+            variant='text'
+            size='x-small'
+          >
             <PencilSquare size='s' color='tertiary' />
           </CTA>
-          <CTA variant='text' size='x-small'>
+          <CTA aria-label='view transaction history' variant='text' size='x-small'>
             <ArrowTopRightOnSquare size='s' color='tertiary' />
           </CTA>
         </Flex>

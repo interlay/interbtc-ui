@@ -1,6 +1,16 @@
-import { ElementType, forwardRef, HTMLAttributes } from 'react';
+import { forwardRef, HTMLAttributes } from 'react';
 
-import { AlignItems, AlignSelf, Direction, ElementTypeProp, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
+import { useStyleProps } from '../use-style-props';
+import {
+  AlignItems,
+  AlignSelf,
+  Direction,
+  ElementTypeProp,
+  JustifyContent,
+  MarginProps,
+  Spacing,
+  Wrap
+} from '../utils/prop-types';
 import { StyledFlex } from './Flex.style';
 
 type Props = {
@@ -11,33 +21,37 @@ type Props = {
   flex?: string | number;
   wrap?: Wrap | boolean;
   alignSelf?: AlignSelf;
-  elementType?: ElementType;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
-type FlexProps = Props & NativeAttrs & ElementTypeProp;
+type FlexProps = Props & NativeAttrs & ElementTypeProp & MarginProps;
 
 const Flex = forwardRef<HTMLElement, FlexProps>(
   (
     { children, gap, justifyContent, alignItems, direction, flex, wrap, alignSelf, elementType, ...props },
     ref
-  ): JSX.Element => (
-    <StyledFlex
-      ref={ref}
-      as={elementType}
-      $gap={gap}
-      $justifyContent={justifyContent}
-      $alignItems={alignItems}
-      $direction={direction}
-      $flex={flex}
-      $wrap={wrap}
-      $alignSelf={alignSelf}
-      {...props}
-    >
-      {children}
-    </StyledFlex>
-  )
+  ): JSX.Element => {
+    const { styleProps, componentProps } = useStyleProps(props);
+
+    return (
+      <StyledFlex
+        ref={ref}
+        as={elementType}
+        $gap={gap}
+        $justifyContent={justifyContent}
+        $alignItems={alignItems}
+        $direction={direction}
+        $flex={flex}
+        $wrap={wrap}
+        $alignSelf={alignSelf}
+        {...styleProps}
+        {...componentProps}
+      >
+        {children}
+      </StyledFlex>
+    );
+  }
 );
 
 Flex.displayName = 'Flex';
