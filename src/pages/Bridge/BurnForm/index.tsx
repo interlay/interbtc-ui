@@ -76,16 +76,33 @@ const BurnForm = (): JSX.Element | null => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
+  const handleUpdateCollateral = (collateral: any) => {
+    if (!collateralCurrencies) return;
+
+    console.log(collateralCurrencies?.find((currency) => currency.ticker === collateral.token.ticker));
+  };
+
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!handleError) return;
     if (!collateralCurrencies) return;
 
-    console.log(collateralCurrencies);
-
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
+
+        const allData = await Promise.all(
+          collateralCurrencies.map(async (currency: CollateralCurrencyExt) => {
+            const burnableTokens = await window.bridge.redeem.getMaxBurnableTokens(currency);
+            const burnRate = burnableTokens.gt(BitcoinAmount.zero())
+              ? await window.bridge.redeem.getBurnExchangeRate(currency)
+              : undefined;
+
+            return { burnableTokens, burnRate };
+          })
+        );
+
+        console.log('allData', allData);
 
         const [theBurnRate, theBurnableTokens] = await Promise.all([
           window.bridge.redeem.getBurnExchangeRate(collateralCurrencies[1]),
@@ -140,7 +157,7 @@ const BurnForm = (): JSX.Element | null => {
         Please enter a smaller amount.`;
       }
 
-      const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].free || newMonetaryAmount(0, WRAPPED_TOKEN);
+      const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].transferable || newMonetaryAmount(0, WRAPPED_TOKEN);
 
       if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${wrappedTokenBalance.toString()}`;
@@ -178,7 +195,6 @@ const BurnForm = (): JSX.Element | null => {
         <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
           <FormTitle>
             {t('burn_page.burn_interbtc', {
-              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
               collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
             })}
           </FormTitle>
@@ -190,7 +206,7 @@ const BurnForm = (): JSX.Element | null => {
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
               >
-                {t('burn_page.available', {
+                {t('burn_page.available_total', {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                 })}
               </h5>
@@ -225,7 +241,29 @@ const BurnForm = (): JSX.Element | null => {
             tickers={collateralCurrencies?.map((currency) => currency.ticker)}
             variant='formField'
             showBalances={false}
-            // callbackFunction={(token) => console.log('token change', token)}
+            callbackFunction={handleUpdateCollateral}
+          />
+          <PriceInfo
+            title={
+              <h5
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}
+              >
+                {t('burn_page.available_from_collateral', {
+                  wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
+                  collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+                })}
+              </h5>
+            }
+            unitIcon={<WrappedTokenLogoIcon width={20} />}
+            value={burnableTokens.toString()}
+            unitName={WRAPPED_TOKEN_SYMBOL}
+            approxUSD={displayMonetaryAmountInUSDFormat(
+              burnableTokens,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
           />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
