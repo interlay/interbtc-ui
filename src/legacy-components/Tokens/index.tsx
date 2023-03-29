@@ -42,13 +42,13 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 
     if (!currentToken) {
       // Set relay-chain native token as default
-      setCurrentToken(getTokenOption(RELAY_CHAIN_NATIVE_TOKEN.ticker));
+      setCurrentToken(tickers ? getTokenOption(tickers[0]) : getTokenOption(RELAY_CHAIN_NATIVE_TOKEN.ticker));
     }
 
     if (callbackFunction && currentToken) {
       callbackFunction(currentToken);
     }
-  }, [tokenOptions, currentToken, getTokenOption, callbackFunction]);
+  }, [tokenOptions, currentToken, getTokenOption, callbackFunction, tickers]);
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
@@ -61,6 +61,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
 
   React.useEffect(() => {
     if (!balances) return;
+
+    console.log('in token component', tickers);
 
     const filteredBalances = tickers
       ? Object.values(balances).filter((value) => tickers?.includes(value.currency.ticker))

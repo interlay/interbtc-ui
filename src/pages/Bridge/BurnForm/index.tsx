@@ -73,14 +73,30 @@ const BurnForm = (): JSX.Element | null => {
   );
   const [burnableTokens, setBurnableTokens] = React.useState(BitcoinAmount.zero());
 
+  const [burnableCollateral, setBurnableCollateral] = React.useState<any>();
+  const [selectedCollateral, setSelectedCollateral] = React.useState<any>();
+
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   const handleUpdateCollateral = (collateral: any) => {
     if (!collateralCurrencies) return;
 
-    console.log(collateralCurrencies?.find((currency) => currency.ticker === collateral.token.ticker));
+    const selectedCollateral = collateralCurrencies?.find((currency) => currency.ticker === collateral.token.ticker);
+    setSelectedCollateral(selectedCollateral);
   };
+
+  React.useEffect(() => {
+    if (!burnableCollateral) return;
+
+    console.log('state value of all data', burnableCollateral);
+  }, [burnableCollateral]);
+
+  React.useEffect(() => {
+    if (!selectedCollateral) return;
+
+    console.log('state value of selectedCollateral', selectedCollateral);
+  }, [selectedCollateral]);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -91,18 +107,19 @@ const BurnForm = (): JSX.Element | null => {
       try {
         setStatus(STATUSES.PENDING);
 
-        const allData = await Promise.all(
+        const collateralData = await Promise.all(
           collateralCurrencies.map(async (currency: CollateralCurrencyExt) => {
             const burnableTokens = await window.bridge.redeem.getMaxBurnableTokens(currency);
+
             const burnRate = burnableTokens.gt(BitcoinAmount.zero())
               ? await window.bridge.redeem.getBurnExchangeRate(currency)
               : undefined;
 
-            return { burnableTokens, burnRate };
+            return { currency, burnableTokens, burnRate };
           })
         );
 
-        console.log('allData', allData);
+        setBurnableCollateral(collateralData.filter((item) => item.burnRate));
 
         const [theBurnRate, theBurnableTokens] = await Promise.all([
           window.bridge.redeem.getBurnExchangeRate(collateralCurrencies[1]),
@@ -238,7 +255,7 @@ const BurnForm = (): JSX.Element | null => {
           />
           <h2>In exchange for</h2>
           <Tokens
-            tickers={collateralCurrencies?.map((currency) => currency.ticker)}
+            tickers={burnableCollateral?.map((token: any) => token.currency.ticker)}
             variant='formField'
             showBalances={false}
             callbackFunction={handleUpdateCollateral}
@@ -253,7 +270,7 @@ const BurnForm = (): JSX.Element | null => {
               >
                 {t('burn_page.available_from_collateral', {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
-                  collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+                  collateralTokenSymbol: selectedCollateral?.ticker
                 })}
               </h5>
             }
