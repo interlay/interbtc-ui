@@ -88,6 +88,8 @@ export interface MarginProps {
   marginY?: Spacing;
 }
 
+export type ResponsiveProp<T extends number | string> = T | Partial<{ [K in BreakPoints]: T }>;
+
 export type FontWeight = keyof typeof theme.fontWeight;
 
 export type Orientation = 'horizontal' | 'vertical';
