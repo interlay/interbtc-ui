@@ -8,11 +8,11 @@ import { Node } from '@react-types/shared';
 import { useMemo, useRef } from 'react';
 
 import { Flex, FlexProps } from '../Flex';
-import { Variants } from '../utils/prop-types';
+import { ListVariants } from '../utils/prop-types';
 import { StyledListItem } from './List.style';
 
 type Props = {
-  variant?: Variants | 'card';
+  variant?: ListVariants;
 };
 
 type InheritAttrs = Omit<FlexProps, keyof Props>;

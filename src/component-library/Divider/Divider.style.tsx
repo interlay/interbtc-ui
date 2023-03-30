@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 import { theme } from '../theme';
-import { Colors, Orientation, Sizes } from '../utils/prop-types';
+import { DividerVariants, Orientation, Sizes } from '../utils/prop-types';
 import { resolveColor } from '../utils/theme';
 
 type StyledDividerProps = {
-  $color: Colors | 'default';
+  $color: DividerVariants;
   $orientation: Orientation;
   $size: Sizes;
 };

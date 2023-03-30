@@ -5,12 +5,12 @@ import { forwardRef } from 'react';
 
 import { FlexProps } from '../Flex';
 import { useDOMRef } from '../utils/dom';
-import { Variants } from '../utils/prop-types';
+import { ListVariants } from '../utils/prop-types';
 import { StyledList } from './List.style';
 import { ListItem } from './ListItem';
 
 type Props = {
-  variant?: Variants | 'card';
+  variant?: ListVariants;
 };
 
 type InheritAttrs = Omit<

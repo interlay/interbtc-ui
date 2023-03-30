@@ -2,12 +2,12 @@ import { useSeparator } from '@react-aria/separator';
 import { mergeProps } from '@react-aria/utils';
 import { forwardRef, HTMLAttributes } from 'react';
 
-import { Colors, ElementTypeProp, Orientation, Sizes } from '../utils/prop-types';
+import { DividerVariants, ElementTypeProp, Orientation, Sizes } from '../utils/prop-types';
 import { StyledDivider } from './Divider.style';
 
 type Props = {
   orientation?: Orientation;
-  color?: Colors | 'default';
+  color?: DividerVariants;
   size?: Sizes;
 };
 

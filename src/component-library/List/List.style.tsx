@@ -2,14 +2,14 @@ import styled, { css } from 'styled-components';
 
 import { Flex } from '../Flex';
 import { theme } from '../theme';
-import { Variants } from '../utils/prop-types';
+import { ListVariants, Variants } from '../utils/prop-types';
 
 type StyledListProps = {
-  $variant: Variants | 'card';
+  $variant: ListVariants;
 };
 
 const StyledList = styled(Flex)<StyledListProps>`
-  background-color: ${({ $variant }) => theme.list[$variant].bg};
+  background-color: ${({ $variant }) => theme.list?.[$variant]?.bg};
   border-radius: ${({ $variant }) => theme.list[$variant].rounded};
   border: ${({ $variant }) => theme.list[$variant].border};
   overflow: hidden;
@@ -30,13 +30,7 @@ const StyledListItem = styled.li<StyledListItemProps>`
   border-radius: ${({ $variant }) => theme.list.item[$variant].rounded};
   background-color: ${({ $variant, $isHovered, $isFocusVisible }) =>
     $isHovered || $isFocusVisible ? theme.list.item[$variant].hover.bg : theme.list.item[$variant].bg};
-  border: ${({ $variant }) => {
-    if ($variant === 'card') {
-      return '';
-    }
-
-    return theme.list.item[$variant].border;
-  }};
+  border: ${({ $variant }) => $variant !== 'card' && theme.list.item[$variant].border};
   color: ${theme.colors.textPrimary};
   cursor: ${({ $isInteractable }) => $isInteractable && 'pointer'};
   outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};

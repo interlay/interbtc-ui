@@ -48,6 +48,10 @@ export type Variants = typeof variant[number];
 
 export type CTAVariants = typeof ctaVariant[number];
 
+export type ListVariants = Variants | 'card';
+
+export type DividerVariants = Colors | 'default';
+
 export type CTASizes = 'x-small' | 'small' | 'medium' | 'large';
 
 export type Status = typeof status[number];
