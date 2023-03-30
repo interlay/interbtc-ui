@@ -305,7 +305,7 @@ const SwapForm = ({
         <H1 size='base' color='secondary' weight='bold' align='center'>
           Swap
         </H1>
-        <Divider orientation='horizontal' color='secondary' />
+        <Divider size='medium' orientation='horizontal' color='secondary' />
         <Flex direction='column'>
           <SlippageManager value={slippage} onChange={(slippage) => setSlippage(slippage)} />
           <form onSubmit={form.handleSubmit}>

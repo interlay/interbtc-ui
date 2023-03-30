@@ -1,4 +1,4 @@
-type BreakPoints = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+import { BreakPoints } from './prop-types';
 
 const values: Record<BreakPoints, number> = {
   xs: 0, // phone

@@ -1,4 +1,5 @@
 import { LoanAsset, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
+import { useId } from '@react-aria/utils';
 import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -42,6 +43,7 @@ type InheritAttrs = Omit<TableProps, keyof Props | 'columns' | 'rows'>;
 type LendAssetsTableProps = Props & InheritAttrs;
 
 const LendAssetsTable = ({ assets, onRowAction, ...props }: LendAssetsTableProps): JSX.Element => {
+  const titleId = useId();
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { data: balances } = useGetBalances();
@@ -88,6 +90,7 @@ const LendAssetsTable = ({ assets, onRowAction, ...props }: LendAssetsTableProps
     <Table
       {...props}
       title={t('loans.lend_markets')}
+      titleId={titleId}
       rows={rows}
       columns={lendAssetsColumns}
       placeholder={<LoanTablePlaceholder variant='borrow' />}

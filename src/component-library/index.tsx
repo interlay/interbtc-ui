@@ -54,5 +54,6 @@ export type { TooltipProps } from './Tooltip';
 export { Tooltip } from './Tooltip';
 export * from './types';
 export * from './utils/prop-types';
+export { useMediaQuery } from './utils/use-media-query';
 export type { WalletIconProps } from './WalletIcon';
 export { WalletIcon } from './WalletIcon';

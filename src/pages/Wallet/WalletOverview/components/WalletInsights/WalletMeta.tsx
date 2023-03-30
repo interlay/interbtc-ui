@@ -5,8 +5,9 @@ import { useCopyToClipboard } from 'react-use';
 import { ArrowTopRightOnSquare, DocumentDuplicate, PencilSquare } from '@/assets/icons';
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { shortAddress } from '@/common/utils/utils';
-import { CTA, Dd, DlGroup, Dt, Flex, FlexProps, P, Tooltip, WalletIcon } from '@/component-library';
+import { CTA, CTALink, Dd, DlGroup, Dt, Flex, FlexProps, P, Tooltip, WalletIcon } from '@/component-library';
 import { AuthCTA } from '@/components';
+import { SUBSCAN_LINK } from '@/config/relay-chains';
 import { useSubstrateState } from '@/lib/substrate';
 import { useCopyTooltip } from '@/utils/hooks/use-copy-tooltip';
 
@@ -61,15 +62,22 @@ const WalletMeta = (props: WalletMetaProps): JSX.Element => {
           >
             <PencilSquare size='s' color='tertiary' />
           </CTA>
-          <CTA aria-label='view transaction history' variant='text' size='x-small'>
+          <CTALink
+            external
+            to={`${SUBSCAN_LINK}/account/${selectedAccount.address}`}
+            aria-label='view transactions on subscan'
+            variant='text'
+            size='x-small'
+          >
             <ArrowTopRightOnSquare size='s' color='tertiary' />
-          </CTA>
+          </CTALink>
         </Flex>
       </Flex>
-      <Flex gap='spacing4'>
-        <CTA size='small'>Fund Wallet</CTA>
+      {/* TODO: add back when banxa on-ramp is added */}
+      {/* <Flex gap='spacing4'>
+        <CTA size='small'>{t('fund_wallet')}</CTA>
         <CTA size='small'>View History</CTA>
-      </Flex>
+      </Flex> */}
     </Flex>
   );
 };

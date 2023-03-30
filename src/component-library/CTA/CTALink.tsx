@@ -22,18 +22,20 @@ type CTALinkProps = Props & NativeAttrs & AriaAttrs & InheritAttrs;
 
 // TODO: Does this need to be changed to a React Router link component?
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
-  ({ disabled, external, to, children, ...props }, ref): JSX.Element => {
+  ({ disabled, external, to: toProp, children, ...props }, ref): JSX.Element => {
     const linkRef = useDOMRef(ref);
 
     const ariaProps = {
       ...props,
       isDisabled: disabled,
-      href: to,
+      href: toProp,
       ...(external && { target: '_blank', rel: 'noreferrer' })
     };
 
     const { linkProps } = useLink(ariaProps, linkRef);
     const { focusProps, isFocusVisible } = useFocusRing();
+
+    const to = external && typeof toProp === 'string' ? { pathname: toProp as string } : toProp;
 
     return (
       <BaseCTA
@@ -42,7 +44,8 @@ const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
         isFocusVisible={isFocusVisible}
         {...mergeProps(props, linkProps, focusProps, {
           href: undefined,
-          to: external ? { pathname: to as string } : to
+          to,
+          ...(external && { target: '_blank', rel: 'noreferrer' })
         })}
       >
         {children}

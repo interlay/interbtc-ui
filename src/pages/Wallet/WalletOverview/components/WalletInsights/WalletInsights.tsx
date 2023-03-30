@@ -1,7 +1,9 @@
 import Big from 'big.js';
+import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { Card, Dd, Dl, DlGroup, Dt } from '@/component-library';
+import { Card, Dd, Dl, DlGroup, Dt, theme } from '@/component-library';
+import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -13,7 +15,10 @@ type WalletInsightsProps = {
 };
 
 const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
+  const { t } = useTranslation();
+
   const prices = useGetPrices();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const totalBalance =
     balances &&
@@ -45,14 +50,14 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
     : '-';
 
   return (
-    <Dl wrap direction='row'>
+    <Dl wrap direction={isMobile ? 'column' : 'row'}>
       <Card flex='1'>
         <WalletMeta />
       </Card>
       <Card flex='1' justifyContent='center'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
           <Dt weight='semibold' color='primary'>
-            Total Balance
+            {t('total_balance')}
           </Dt>
           <Dd weight='bold' color='secondary'>
             {totalBalanceLabel}
@@ -62,7 +67,7 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
       <Card flex='1' justifyContent='center'>
         <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
           <Dt weight='semibold' color='primary'>
-            Transferable balance
+            {t('transferable_balance')}
           </Dt>
           <Dd weight='bold' color='secondary'>
             {transfarableBalanceLabel}

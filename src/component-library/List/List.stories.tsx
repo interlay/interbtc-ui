@@ -4,7 +4,7 @@ import { List, ListItem, ListProps } from '.';
 
 const Template: Story<ListProps> = (args) => (
   <div style={{ padding: 20 }}>
-    <List aria-label='Example List' onSelectionChange={console.log} {...args}>
+    <List aria-label='Example List' {...args}>
       <ListItem key='1' textValue='IBTC'>
         IBTC
       </ListItem>

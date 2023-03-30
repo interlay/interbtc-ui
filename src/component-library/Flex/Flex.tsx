@@ -1,6 +1,5 @@
 import { forwardRef, HTMLAttributes } from 'react';
 
-import { useStyleProps } from '../use-style-props';
 import {
   AlignItems,
   AlignSelf,
@@ -11,6 +10,7 @@ import {
   Spacing,
   Wrap
 } from '../utils/prop-types';
+import { useStyleProps } from '../utils/use-style-props';
 import { StyledFlex } from './Flex.style';
 
 type Props = {

@@ -1,5 +1,6 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { useId } from '@react-aria/utils';
 import { differenceInDays, format, formatDistanceToNowStrict } from 'date-fns';
 import { ReactNode, useMemo } from 'react';
 
@@ -34,6 +35,7 @@ type StakingTableProps = {
 };
 
 const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element => {
+  const titleId = useId();
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
 
@@ -79,7 +81,7 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
     ];
   }, [getBalance, prices, data, votingBalance]);
 
-  return <Table title='Staked' columns={columns} rows={rows} />;
+  return <Table title='Staked' titleId={titleId} columns={columns} rows={rows} />;
 };
 
 export { StakingTable };

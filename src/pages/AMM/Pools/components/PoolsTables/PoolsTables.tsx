@@ -2,7 +2,7 @@ import { isCurrencyEqual, LiquidityPool } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
 import { Flex } from '@/component-library';
-import { PoolsTable } from '@/components/PoolsTable';
+import { PoolsTable } from '@/components';
 import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 
 import { PoolModal } from '../PoolModal/PoolModal';

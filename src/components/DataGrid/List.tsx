@@ -1,6 +1,7 @@
 import { Fragment, ReactNode } from 'react';
 
 import {
+  Card,
   Dd,
   Dl,
   DlGroup,
@@ -52,7 +53,7 @@ const List = ({ title, titleId, rows, columns, className, actions, placeholder, 
         ))}
       </LibList>
     ) : (
-      placeholder
+      <Card alignItems='center'>{placeholder}</Card>
     )}
   </TableWrapper>
 );

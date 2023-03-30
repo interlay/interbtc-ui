@@ -1,8 +1,9 @@
 import { ReactNode, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { P, Switch, theme } from '@/component-library';
-import { useMediaQuery } from '@/component-library/use-media-query';
+import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { Cell } from '@/components';
 import { AssetCell, DataGrid } from '@/components/DataGrid';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
@@ -33,16 +34,18 @@ type AvailableAssetsTableProps = {
 };
 
 const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableProps): JSX.Element => {
+  const { t } = useTranslation();
+
   const [isOpen, setOpen] = useState(false);
   const prices = useGetPrices();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];
-    const filteredData = isOpen ? data : data.filter((balance) => !balance.free.isZero());
+    const filteredData = isOpen ? data : data.filter((balance) => !balance.transferable.isZero());
 
     return filteredData.map(
-      ({ currency, free }): AvailableAssetsRows => {
+      ({ currency, transferable }): AvailableAssetsRows => {
         const asset = (
           <AssetCell
             size={isMobile ? 'xl2' : undefined}
@@ -57,15 +60,15 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
         const assetPriceLabel = formatUSD(getTokenPrice(prices, currency.ticker)?.usd || 0, { compact: true });
         const price = <Cell label={assetPriceLabel} />;
 
-        const balanceLabel = free.toString();
-        const balanceSublabel = formatUSD(convertMonetaryAmountToValueInUSD(free, tokenPrice) || 0, {
+        const balanceLabel = transferable.toString();
+        const balanceSublabel = formatUSD(convertMonetaryAmountToValueInUSD(transferable, tokenPrice) || 0, {
           compact: true
         });
         const balance = (
           <Cell alignItems={isMobile ? 'flex-end' : undefined} label={balanceLabel} sublabel={balanceSublabel} />
         );
 
-        const actions = <ActionsCell pooledTickers={pooledTickers} currency={currency} />;
+        const actions = <ActionsCell pooledTickers={pooledTickers} currency={currency} balance={transferable} />;
 
         return {
           id: currency.ticker,
@@ -80,24 +83,24 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
 
   const actions = (
     <Switch isSelected={isOpen} onChange={(e) => setOpen(e.target.checked)}>
-      Show Zero Balance
+      {t('show_zero_balance')}
     </Switch>
   );
 
   const columns = [
-    { name: isMobile ? '' : 'Asset', uid: AvailableAssetsColumns.ASSET },
-    { name: 'Price', uid: AvailableAssetsColumns.PRICE },
-    { name: 'Balance', uid: AvailableAssetsColumns.BALANCE },
+    { name: isMobile ? '' : t('asset'), uid: AvailableAssetsColumns.ASSET },
+    { name: t('price'), uid: AvailableAssetsColumns.PRICE },
+    { name: t('balance'), uid: AvailableAssetsColumns.BALANCE },
     { name: '', uid: AvailableAssetsColumns.ACTIONS }
   ];
 
   return (
     <DataGrid
       actions={actions}
-      title='Available assets'
+      title={t('wallet.available_assets')}
       columns={columns}
       rows={rows}
-      placeholder={<P weight='bold'>No Assets Available</P>}
+      placeholder={<P weight='bold'>{t('wallet.no_assets_available')}</P>}
     />
   );
 };

@@ -1,4 +1,5 @@
 import { BorrowPosition, CollateralPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { useId } from '@react-aria/utils';
 import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -48,6 +49,7 @@ const LoanPositionsTable = ({
   onPressCollateralSwitch,
   ...props
 }: LoanPositionsTableProps): JSX.Element | null => {
+  const titleId = useId();
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -137,6 +139,7 @@ const LoanPositionsTable = ({
   return (
     <Table
       title={title || (isLending ? t('loans.my_lend_positions') : t('loans.my_borrow_positions'))}
+      titleId={titleId}
       onRowAction={onRowAction}
       rows={rows}
       columns={columns}

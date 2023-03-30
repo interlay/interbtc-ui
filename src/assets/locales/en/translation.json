@@ -143,6 +143,13 @@
   "view_details": "View details",
   "copied": "Copied",
   "click_to_copy": "Click to copy",
+  "asset": "Asset",
+  "price": "Price",
+  "balance": "Balance",
+  "show_zero_balance": "Show Zero Balance",
+  "total_balance": "Total Balance",
+  "transferable_balance": "Transferable Balance",
+  "fund_wallet": "Fund Wallet",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -598,5 +605,9 @@
       "transfer_more_than_minimum": "Must transfer more than the minimum amount of {{ amount }}",
       "transfer_less_than_maximum": "Must transfer less than the maximum amount of {{ amount }}"
     }
+  },
+  "wallet": {
+    "available_assets": "Available assets",
+    "no_assets_available": "No assets available"
   }
 }

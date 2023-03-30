@@ -1,15 +1,16 @@
 import { LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { useId } from '@react-aria/utils';
 import { ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { formatPercentage, formatUSD } from '@/common/utils/utils';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
+import { getFarmingApr } from '@/utils/helpers/pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Cell, Table, TableProps } from '../DataGrid';
-import { getFarmingApr } from './utils';
 
 enum PoolsTableColumns {
   POOL_NAME = 'poolName',
@@ -38,6 +39,7 @@ type PoolsTableProps = {
 const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
+  const titleId = useId();
 
   const isAccountPools = variant === 'account-pools';
 
@@ -100,6 +102,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   return (
     <Table
       title={title || (isAccountPools ? t('amm.pools.my_pools') : t('amm.pools.other_pools'))}
+      titleId={titleId}
       onRowAction={onRowAction}
       rows={rows}
       columns={borrowAssetsColumns}
