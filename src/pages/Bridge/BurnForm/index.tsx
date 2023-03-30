@@ -1,6 +1,5 @@
 import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
-import Big from 'big.js';
+import { Bitcoin, BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -68,10 +67,7 @@ const BurnForm = (): JSX.Element | null => {
   });
   const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
-  const [burnRate, setBurnRate] = React.useState(
-    new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
-  );
-  const [burnableTokens, setBurnableTokens] = React.useState(BitcoinAmount.zero());
+  const [totalBurnableTokens, setTotalBurnableTokens] = React.useState(BitcoinAmount.zero());
 
   const [burnableCollateral, setBurnableCollateral] = React.useState<any>();
   const [selectedCollateral, setSelectedCollateral] = React.useState<any>();
@@ -80,22 +76,22 @@ const BurnForm = (): JSX.Element | null => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   const handleUpdateCollateral = (collateral: any) => {
-    if (!collateralCurrencies) return;
-
-    const selectedCollateral = collateralCurrencies?.find((currency) => currency.ticker === collateral.token.ticker);
-    setSelectedCollateral(selectedCollateral);
+    console.log('handle update collateral', collateral);
   };
 
   React.useEffect(() => {
     if (!burnableCollateral) return;
 
-    console.log('state value of all data', burnableCollateral);
+    const totalBurnable = burnableCollateral.reduce(
+      (total: any, collateral: any) => total.add(collateral.burnableTokens),
+      new MonetaryAmount(Bitcoin, 0)
+    );
+
+    setTotalBurnableTokens(totalBurnable);
   }, [burnableCollateral]);
 
   React.useEffect(() => {
-    if (!selectedCollateral) return;
-
-    console.log('state value of selectedCollateral', selectedCollateral);
+    console.log('selectedCollateral', selectedCollateral);
   }, [selectedCollateral]);
 
   React.useEffect(() => {
@@ -119,14 +115,11 @@ const BurnForm = (): JSX.Element | null => {
           })
         );
 
-        setBurnableCollateral(collateralData.filter((item) => item.burnRate));
+        const filteredCollateral = collateralData.filter((item) => item.burnRate);
 
-        const [theBurnRate, theBurnableTokens] = await Promise.all([
-          window.bridge.redeem.getBurnExchangeRate(collateralCurrencies[1]),
-          window.bridge.redeem.getMaxBurnableTokens(collateralCurrencies[1])
-        ]);
-        setBurnRate(theBurnRate);
-        setBurnableTokens(theBurnableTokens);
+        setBurnableCollateral(filteredCollateral);
+        setSelectedCollateral(filteredCollateral[0]);
+
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
@@ -139,8 +132,8 @@ const BurnForm = (): JSX.Element | null => {
     return <PrimaryColorEllipsisLoader />;
   }
 
-  if (status === STATUSES.RESOLVED) {
-    if (!burnRate) {
+  if (status === STATUSES.RESOLVED && selectedCollateral) {
+    if (!selectedCollateral.burnRate) {
       throw new Error('Something went wrong!');
     }
 
@@ -169,8 +162,8 @@ const BurnForm = (): JSX.Element | null => {
       // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
       const bitcoinAmountValue = new BitcoinAmount(value);
 
-      if (bitcoinAmountValue.gt(burnableTokens)) {
-        return `Only ${burnableTokens.toString()} ${WRAPPED_TOKEN_SYMBOL} available to burn.
+      if (bitcoinAmountValue.gt(selectedCollateral.burnableTokens)) {
+        return `Only ${selectedCollateral.burnableTokens.toString()} ${WRAPPED_TOKEN_SYMBOL} available to burn.
         Please enter a smaller amount.`;
       }
 
@@ -202,9 +195,10 @@ const BurnForm = (): JSX.Element | null => {
     };
 
     const parsedInterBTCAmount = new BitcoinAmount(wrappedTokenAmount || 0);
-    const earnedCollateralTokenAmount = burnRate.rate.eq(0)
+
+    const earnedCollateralTokenAmount = selectedCollateral.burnRate?.rate?.eq(0)
       ? newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
-      : burnRate.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
+      : selectedCollateral.burnRate?.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
     const accountSet = !!selectedAccount;
 
     return (
@@ -229,10 +223,10 @@ const BurnForm = (): JSX.Element | null => {
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={burnableTokens.toString()}
+            value={totalBurnableTokens.toString()}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
-              burnableTokens,
+              selectedCollateral.burnableTokens,
               getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
             )}
           />
@@ -270,15 +264,15 @@ const BurnForm = (): JSX.Element | null => {
               >
                 {t('burn_page.available_from_collateral', {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
-                  collateralTokenSymbol: selectedCollateral?.ticker
+                  collateralTokenSymbol: selectedCollateral.currency.ticker
                 })}
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={burnableTokens.toString()}
+            value={selectedCollateral.burnableTokens.toString()}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
-              burnableTokens,
+              selectedCollateral.burnableTokens,
               getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
             )}
           />
