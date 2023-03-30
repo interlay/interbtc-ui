@@ -62,8 +62,6 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   React.useEffect(() => {
     if (!balances) return;
 
-    console.log('in token component', tickers);
-
     const filteredBalances = tickers
       ? Object.values(balances).filter((value) => tickers?.includes(value.currency.ticker))
       : balances;
