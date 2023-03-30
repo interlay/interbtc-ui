@@ -41,7 +41,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     if (!tokenOptions) return;
 
     if (!currentToken) {
-      // Set relay-chain native token as default
+      // Set default
       setCurrentToken(tickers ? getTokenOption(tickers[0]) : getTokenOption(RELAY_CHAIN_NATIVE_TOKEN.ticker));
     }
 
