@@ -76,7 +76,11 @@ const BurnForm = (): JSX.Element | null => {
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
   const handleUpdateCollateral = (collateral: any) => {
-    console.log('handle update collateral', collateral);
+    const selectedCollateral = burnableCollateral.find(
+      (token: any) => token.currency.ticker === collateral.token.ticker
+    );
+
+    setSelectedCollateral(selectedCollateral);
   };
 
   React.useEffect(() => {
@@ -89,10 +93,6 @@ const BurnForm = (): JSX.Element | null => {
 
     setTotalBurnableTokens(totalBurnable);
   }, [burnableCollateral]);
-
-  React.useEffect(() => {
-    console.log('selectedCollateral', selectedCollateral);
-  }, [selectedCollateral]);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
