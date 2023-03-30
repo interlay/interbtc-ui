@@ -226,7 +226,7 @@ const BurnForm = (): JSX.Element | null => {
             value={totalBurnableTokens.toString()}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
-              selectedCollateral.burnableTokens,
+              totalBurnableTokens,
               getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
             )}
           />
