@@ -21,7 +21,7 @@ import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import TokenField from '@/legacy-components/TokenField';
-import Tokens from '@/legacy-components/Tokens';
+import Tokens, { TokenOption } from '@/legacy-components/Tokens';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -75,9 +75,9 @@ const BurnForm = (): JSX.Element | null => {
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
-  const handleUpdateCollateral = (collateral: CollateralCurrencyExt) => {
+  const handleUpdateCollateral = (collateral: TokenOption) => {
     const selectedCollateral = burnableCollateral?.find(
-      (token: BurnableCollateral) => token.currency.ticker === collateral.ticker
+      (token: BurnableCollateral) => token.currency.ticker === collateral.token.ticker
     );
 
     setSelectedCollateral(selectedCollateral);
@@ -252,7 +252,7 @@ const BurnForm = (): JSX.Element | null => {
             tickers={burnableCollateral?.map((collateral: BurnableCollateral) => collateral.currency.ticker)}
             variant='formField'
             showBalances={false}
-            callbackFunction={() => handleUpdateCollateral}
+            callbackFunction={handleUpdateCollateral}
             fullWidth={true}
           />
           <PriceInfo
