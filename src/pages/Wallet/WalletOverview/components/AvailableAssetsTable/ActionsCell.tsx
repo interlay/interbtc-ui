@@ -9,17 +9,18 @@ import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
 const queryString = require('query-string');
 
-const SwapCTALink = ({
-  currency,
-  ...props
-}: {
+type SwapCTALinkProps = {
   currency: CurrencyExt;
-} & CTALinkProps) => {
+} & CTALinkProps;
+
+const SwapCTALink = ({ currency, ...props }: SwapCTALinkProps) => {
+  const toTicker = isCurrencyEqual(WRAPPED_TOKEN, currency) ? undefined : WRAPPED_TOKEN.ticker;
+
   const to = {
     pathname: PAGES.SWAP,
     search: queryString.stringify({
       [QUERY_PARAMETERS.SWAP.FROM]: currency.ticker,
-      [QUERY_PARAMETERS.SWAP.TO]: WRAPPED_TOKEN.ticker
+      [QUERY_PARAMETERS.SWAP.TO]: toTicker
     })
   };
 
@@ -59,7 +60,15 @@ const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JS
       {isMobile && <Divider color='default' />}
       <Flex justifyContent={isMobile ? undefined : 'flex-end'} gap='spacing1'>
         {isRedeemable && (
-          <CTALink {...commonCTAProps} to={{ pathname: PAGES.BRIDGE, search: 'tab=redeem' }}>
+          <CTALink
+            {...commonCTAProps}
+            to={{
+              pathname: PAGES.BRIDGE,
+              search: queryString.stringify({
+                [QUERY_PARAMETERS.TAB]: 'redeem'
+              })
+            }}
+          >
             {t('redeem')}
           </CTALink>
         )}

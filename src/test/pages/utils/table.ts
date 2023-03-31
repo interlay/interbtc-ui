@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../../test-utils';
-
-type ElementName = string | RegExp;
-
-const composeName = (name: ElementName) => (typeof name === 'string' ? new RegExp(name, 'i') : name);
+import { composeName, ElementName } from './common';
 
 const getTable = (name: ElementName) => screen.getByRole('grid', { name: composeName(name) });
 

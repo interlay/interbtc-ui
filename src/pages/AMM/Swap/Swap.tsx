@@ -1,6 +1,8 @@
 import { isCurrencyEqual } from '@interlay/interbtc-api';
 import { useEffect, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 
+import { StoreType } from '@/common/types/util.types';
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
@@ -14,28 +16,31 @@ import useQueryParams from '@/utils/hooks/use-query-params';
 import { SwapForm, SwapLiquidity } from './components';
 import { StyledWrapper } from './Swap.style';
 
+const DEFAULT_PAIR: SwapPair = { input: RELAY_CHAIN_NATIVE_TOKEN };
+
 const Swap = (): JSX.Element => {
   const query = useQueryParams();
+  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { data: liquidityPools, refetch } = useGetLiquidityPools();
-  const { getCurrencyFromTicker } = useGetCurrencies(true);
+  const { data, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
-  const [pair, setPair] = useState<SwapPair>({ input: RELAY_CHAIN_NATIVE_TOKEN });
+  const [pair, setPair] = useState<SwapPair>(DEFAULT_PAIR);
 
   const pooledTickers = useMemo(() => liquidityPools && getPooledTickers(liquidityPools), [liquidityPools]);
 
   useEffect(() => {
-    if (!pooledTickers) return;
+    if (!pooledTickers || !data) return;
 
     const inputQuery = query.get(QUERY_PARAMETERS.SWAP.FROM);
     const outputQuery = query.get(QUERY_PARAMETERS.SWAP.TO);
 
-    const fromCurrency = inputQuery ? getCurrencyFromTicker(inputQuery) : RELAY_CHAIN_NATIVE_TOKEN;
-    const toCurrency = outputQuery ? getCurrencyFromTicker(outputQuery) : undefined;
+    const fromCurrency = inputQuery ? getCurrencyFromTicker(inputQuery) : DEFAULT_PAIR.input;
+    const toCurrency = outputQuery ? getCurrencyFromTicker(outputQuery) : DEFAULT_PAIR.output;
 
     setPair({ input: fromCurrency, output: toCurrency });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pooledTickers]);
+  }, [pooledTickers, data]);
 
   if (liquidityPools === undefined || pooledTickers === undefined) {
     return <FullLoadingSpinner />;
