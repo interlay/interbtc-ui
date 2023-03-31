@@ -14,6 +14,7 @@ import {
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
   mockGetCurrentActiveBlockNumber,
+  mockGetCurrentBlockNumber,
   mockGetFutureBlockNumber,
   mockGetStableBitcoinConfirmations,
   mockGetStableParachainConfirmations,
@@ -51,6 +52,7 @@ import {
   mockSwap
 } from './parachain/amm';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
+import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
 import {
   mockBorrow,
   mockClaimAllSubsidyRewards,
@@ -144,7 +146,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   system: {
     getStatusCode: mockSystemGetStatusCode,
     getFutureBlockNumber: mockGetFutureBlockNumber,
-    getCurrentActiveBlockNumber: mockGetCurrentActiveBlockNumber
+    getCurrentActiveBlockNumber: mockGetCurrentActiveBlockNumber,
+    getCurrentBlockNumber: mockGetCurrentBlockNumber
   },
   tokens: {
     balance: mockTokensBalance,
@@ -167,6 +170,10 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getOptimalTrade: mockGetOptimalTrade,
     swap: mockSwap,
     claimFarmingRewards: mockClaimFarmingRewards
+  },
+  escrow: {
+    getStakedBalance: mockGetStakedBalance,
+    votingBalance: mockVotingBalance
   }
 };
 

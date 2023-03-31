@@ -6,10 +6,27 @@ import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
-import { mockGetLpTokens } from '../mocks/@interlay/interbtc-api/parachain/amm';
-import { render, userEvent } from '../test-utils';
+import { DEFAULT_TOKENS_BALANCE_FN, EMPTY_TOKENS_BALANCE_FN, mockTokensBalance } from '../mocks/@interlay/interbtc-api';
+import {
+  ACCOUNT_WITH_FULL_LIQUIDITY,
+  DEFAULT_ACCOUNT_LIQUIDITY,
+  mockGetLiquidityProvidedByAccount,
+  mockGetLpTokens
+} from '../mocks/@interlay/interbtc-api/parachain/amm';
+import {
+  DEFAULT_STAKED_BALANCE,
+  EMPTY_STAKED_BALANCE,
+  mockGetStakedBalance
+} from '../mocks/@interlay/interbtc-api/parachain/escrow';
+import {
+  DEFAULT_BORROW_POSITIONS,
+  DEFAULT_LEND_POSITIONS,
+  mockGetBorrowPositionsOfAccount,
+  mockGetLendPositionsOfAccount
+} from '../mocks/@interlay/interbtc-api/parachain/loans';
+import { render, screen, userEvent, waitFor } from '../test-utils';
 import { withinList } from './utils/list';
-import { withinTable, withinTableRow } from './utils/table';
+import { queryTable, withinTable, withinTableRow } from './utils/table';
 
 jest.mock('../../parts/Layout', () => {
   const MockedLayout: React.FC = ({ children }: any) => children;
@@ -22,7 +39,11 @@ jest.mock('@/pages/AMM', () => ({ __esModule: true, default: () => <div>Swap pag
 const path = '/wallet';
 
 const TABLES = {
-  AVAILABLE_ASSETS: 'available assets'
+  AVAILABLE_ASSETS: 'available assets',
+  LEND_POSITIONS: 'lend positions',
+  BORROW_POSITIONS: 'borrow positions',
+  LIQUIDITY_POOLS: 'liquidity pools',
+  STAKED: 'staked'
 };
 
 describe('Wallet Page', () => {
@@ -33,14 +54,20 @@ describe('Wallet Page', () => {
 
     // ignoring lp-tokens
     mockGetLpTokens.mockResolvedValue([]);
+    mockTokensBalance.mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
+    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
+    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
+    mockGetLiquidityProvidedByAccount.mockReturnValue(DEFAULT_ACCOUNT_LIQUIDITY);
+    mockGetStakedBalance.mockReturnValue(DEFAULT_STAKED_BALANCE);
   });
 
   afterEach(() => {
     matchMedia.clear();
   });
 
+  // TODO: add tests for Buy and Transfer CTALinks
   describe('Available Assets', () => {
-    it('should render table', async () => {
+    it('should render table (desktop)', async () => {
       await render(<App />, { path });
 
       const table = withinTable(TABLES.AVAILABLE_ASSETS);
@@ -48,7 +75,7 @@ describe('Wallet Page', () => {
       expect(table.getAllByRole('row')).toHaveLength(NATIVE_CURRENCIES.length);
     });
 
-    it('should render list', async () => {
+    it('should render list (mobile)', async () => {
       matchMedia.useMediaQuery(theme.breakpoints.down('md'));
 
       await render(<App />, { path });
@@ -92,29 +119,96 @@ describe('Wallet Page', () => {
         `${QUERY_PARAMETERS.SWAP.FROM}=${RELAY_CHAIN_NATIVE_TOKEN.ticker}&${QUERY_PARAMETERS.SWAP.TO}=${WRAPPED_TOKEN.ticker}`
       );
     });
+
+    it('should display zero balance assets', async () => {
+      mockTokensBalance.mockImplementation(EMPTY_TOKENS_BALANCE_FN);
+
+      await render(<App />, { path });
+
+      const table = withinTable(TABLES.AVAILABLE_ASSETS);
+
+      expect(table.queryAllByRole('row')).toHaveLength(0);
+      expect(screen.getByText(/no assets available/i)).toBeInTheDocument();
+
+      userEvent.click(screen.getByRole('switch', { name: /show zero balance/i }));
+
+      await waitFor(() => {
+        expect(table.queryAllByRole('row')).toHaveLength(NATIVE_CURRENCIES.length);
+      });
+    });
   });
 
-  // it('should render available assets table', async () => {
-  //   mockGetLpTokens.mockResolvedValue([]);
+  describe('Lending Positions', () => {
+    it('should display table', async () => {
+      await render(<App />, { path });
 
-  //   matchMedia.useMediaQuery(theme.breakpoints.up('md'));
+      const table = withinTable(TABLES.LEND_POSITIONS);
 
-  //   const { history } = await render(<App />, { path });
+      expect(table.getAllByRole('row')).toHaveLength(DEFAULT_LEND_POSITIONS.length);
+    });
 
-  //   const otherPoolsTable = withinTable(TABLES.AVAILABLE_ASSETS);
+    it('should not display table', async () => {
+      mockGetLendPositionsOfAccount.mockReturnValue([]);
 
-  //   expect(otherPoolsTable.getAllByRole('row')).toHaveLength(NATIVE_CURRENCIES.length);
+      await render(<App />, { path });
 
-  //   const row = withinTableRow(TABLES.AVAILABLE_ASSETS, WRAPPED_TOKEN.ticker);
+      expect(queryTable(TABLES.LEND_POSITIONS)).not.toBeInTheDocument();
+    });
+  });
 
-  //   userEvent.click(row.getByRole('link', { name: /redeem/i }));
+  describe('Borrow Positions', () => {
+    it('should display table', async () => {
+      await render(<App />, { path });
 
-  //   expect(history.location.pathname).toBe(PAGES.BRIDGE);
-  //   expect(history.location.search).toMatch(`${QUERY_PARAMETERS.TAB}=redeem`);
+      const table = withinTable(TABLES.BORROW_POSITIONS);
 
-  //   userEvent.click(row.getByRole('link', { name: /swap/i }));
+      expect(table.getAllByRole('row')).toHaveLength(DEFAULT_BORROW_POSITIONS.length);
+    });
 
-  //   expect(history.location.pathname).toBe(PAGES.SWAP);
-  //   expect(history.location.search).toMatch(`${QUERY_PARAMETERS.SWAP.FROM}=${WRAPPED_TOKEN.ticker}`);
-  // });
+    it('should not display table', async () => {
+      mockGetBorrowPositionsOfAccount.mockReturnValue([]);
+
+      await render(<App />, { path });
+
+      expect(queryTable(TABLES.BORROW_POSITIONS)).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Liquidity Pools', () => {
+    it('should display table', async () => {
+      mockGetLiquidityProvidedByAccount.mockResolvedValue(ACCOUNT_WITH_FULL_LIQUIDITY);
+
+      await render(<App />, { path });
+
+      const table = withinTable(TABLES.LIQUIDITY_POOLS);
+
+      expect(table.getAllByRole('row')).toHaveLength(ACCOUNT_WITH_FULL_LIQUIDITY.length);
+    });
+
+    it('should not display table', async () => {
+      mockGetLiquidityProvidedByAccount.mockReturnValue(DEFAULT_ACCOUNT_LIQUIDITY);
+
+      await render(<App />, { path });
+
+      expect(queryTable(TABLES.LIQUIDITY_POOLS)).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Staking', () => {
+    it('should display table', async () => {
+      await render(<App />, { path });
+
+      const table = withinTable(TABLES.STAKED);
+
+      expect(table.getAllByRole('row')).toHaveLength(1);
+    });
+
+    it('should not display table', async () => {
+      mockGetStakedBalance.mockReturnValue(EMPTY_STAKED_BALANCE);
+
+      await render(<App />, { path });
+
+      expect(queryTable(TABLES.LIQUIDITY_POOLS)).not.toBeInTheDocument();
+    });
+  });
 });

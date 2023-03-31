@@ -35,10 +35,9 @@ type AvailableAssetsTableProps = {
 
 const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
-
-  const [isOpen, setOpen] = useState(false);
   const prices = useGetPrices();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [isOpen, setOpen] = useState(false);
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];

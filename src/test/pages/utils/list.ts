@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-import { screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../../test-utils';
+import { screen, within } from '../../test-utils';
 import { composeName, ElementName } from './common';
 
 const getList = (name: ElementName) => screen.getByRole('grid', { name: composeName(name) });

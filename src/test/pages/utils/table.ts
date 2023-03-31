@@ -4,6 +4,8 @@ import { composeName, ElementName } from './common';
 
 const getTable = (name: ElementName) => screen.getByRole('grid', { name: composeName(name) });
 
+const queryTable = (name: ElementName) => screen.queryByRole('grid', { name: composeName(name) });
+
 const withinTable = (name: ElementName) => {
   const table = within(getTable(name));
   return within(table.getAllByRole('rowgroup')[1]);
@@ -65,4 +67,4 @@ const submitForm = async (tabPanel: ReturnType<typeof withinModalTabPanel>, butt
   await waitForElementToBeRemoved(screen.getByRole('dialog'));
 };
 
-export { getTable, getTableRow, submitForm, withinModalTabPanel, withinTable, withinTableRow };
+export { getTable, getTableRow, queryTable, submitForm, withinModalTabPanel, withinTable, withinTableRow };
