@@ -74,7 +74,7 @@ const BurnForm = (): JSX.Element | null => {
   const [totalBurnableTokens, setTotalBurnableTokens] = React.useState(BitcoinAmount.zero());
 
   const [burnableCollateral, setBurnableCollateral] = React.useState<BurnableCollateral[]>();
-  const [selectedCollateral, setSelectedCollateral] = React.useState<BurnableCollateral | undefined>(undefined);
+  const [selectedCollateral, setSelectedCollateral] = React.useState<BurnableCollateral>();
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
@@ -89,8 +89,6 @@ const BurnForm = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!burnableCollateral) return;
-
-    console.log('burnableCollateral', burnableCollateral);
 
     const totalBurnable = burnableCollateral.reduce(
       (total: MonetaryAmount<Bitcoin>, collateral: BurnableCollateral) => total.add(collateral.burnableTokens),
@@ -253,12 +251,13 @@ const BurnForm = (): JSX.Element | null => {
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />
-          <h2>In exchange for</h2>
           <Tokens
+            label='In exchange for'
             tickers={burnableCollateral?.map((collateral: BurnableCollateral) => collateral.currency.ticker)}
             variant='formField'
             showBalances={false}
             callbackFunction={() => handleUpdateCollateral}
+            fullWidth={true}
           />
           <PriceInfo
             title={

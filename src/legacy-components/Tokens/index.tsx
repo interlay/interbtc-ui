@@ -1,4 +1,5 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
+import clsx from 'clsx';
 import * as React from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
 
@@ -25,9 +26,18 @@ interface Props {
   callbackFunction?: (token: TokenOption) => void;
   showBalances?: boolean;
   tickers?: Array<string>;
+  label?: string;
+  fullWidth?: boolean;
 }
 
-const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = true, tickers }: Props): JSX.Element => {
+const Tokens = ({
+  variant = 'optionSelector',
+  callbackFunction,
+  showBalances = true,
+  tickers,
+  label,
+  fullWidth = false
+}: Props): JSX.Element => {
   const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
   const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(undefined);
 
@@ -87,7 +97,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   }, [currentToken, getTokenOption, tokenOptions]);
 
   return (
-    <>
+    <div>
+      {label && <label className={clsx('text-sm', 'space-x-0.5')}>{label}</label>}
       {tokenOptions && currentToken ? (
         <TokenSelector
           variant={variant}
@@ -95,9 +106,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
           tokenOptions={tokenOptions}
           currentToken={currentToken}
           onChange={handleUpdateToken}
+          fullWidth={fullWidth}
         />
       ) : null}
-    </>
+    </div>
   );
 };
 

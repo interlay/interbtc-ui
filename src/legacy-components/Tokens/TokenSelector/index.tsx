@@ -25,16 +25,24 @@ interface Props {
   showBalances: boolean;
   currentToken: TokenOption;
   onChange: (type: TokenType) => void;
+  fullWidth?: boolean;
 }
 
-const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBalances }: Props): JSX.Element => {
+const TokenSelector = ({
+  variant,
+  tokenOptions,
+  currentToken,
+  onChange,
+  showBalances,
+  fullWidth
+}: Props): JSX.Element => {
   return (
     <>
       {currentToken && (
         <Select variant={variant} key={currentToken.symbol} value={currentToken.symbol} onChange={onChange}>
           {({ open }) => (
             <>
-              <SelectBody className={clsx('w-52')}>
+              <SelectBody className={clsx(fullWidth ? 'w-full' : 'w-52')}>
                 <SelectButton variant={variant}>
                   <span
                     className={clsx('flex', 'items-center', 'space-x-3', {
