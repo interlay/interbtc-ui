@@ -196,9 +196,9 @@ const BurnForm = (): JSX.Element | null => {
 
     const parsedInterBTCAmount = new BitcoinAmount(wrappedTokenAmount || 0);
 
-    const earnedCollateralTokenAmount = selectedCollateral.burnRate?.rate?.eq(0)
+    const earnedCollateralTokenAmount = selectedCollateral.burnRate.rate.eq(0)
       ? newMonetaryAmount(0, selectedCollateral.currency)
-      : selectedCollateral.burnRate?.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
+      : selectedCollateral.burnRate.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
     const accountSet = !!selectedAccount;
 
     return (
