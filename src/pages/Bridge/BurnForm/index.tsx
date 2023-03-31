@@ -11,8 +11,6 @@ import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import {
-  RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainNativeTokenLogoIcon,
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL,
@@ -147,7 +145,7 @@ const BurnForm = (): JSX.Element | null => {
     const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.bridge.redeem.burn(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), RELAY_CHAIN_NATIVE_TOKEN);
+        await window.bridge.redeem.burn(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), selectedCollateral.currency);
         reset({
           [WRAPPED_TOKEN_AMOUNT]: ''
         });
@@ -197,7 +195,7 @@ const BurnForm = (): JSX.Element | null => {
     const parsedInterBTCAmount = new BitcoinAmount(wrappedTokenAmount || 0);
 
     const earnedCollateralTokenAmount = selectedCollateral.burnRate?.rate?.eq(0)
-      ? newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
+      ? newMonetaryAmount(0, selectedCollateral.currency)
       : selectedCollateral.burnRate?.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
     const accountSet = !!selectedAccount;
 
@@ -206,7 +204,7 @@ const BurnForm = (): JSX.Element | null => {
         <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
           <FormTitle>
             {t('burn_page.burn_interbtc', {
-              collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+              collateralTokenSymbol: selectedCollateral.currency.ticker
             })}
           </FormTitle>
           <PriceInfo
@@ -290,10 +288,10 @@ const BurnForm = (): JSX.Element | null => {
             }
             unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
             value={earnedCollateralTokenAmount.toString()}
-            unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+            unitName={selectedCollateral.currency.ticker}
             approxUSD={displayMonetaryAmountInUSDFormat(
               earnedCollateralTokenAmount,
-              getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+              getTokenPrice(prices, selectedCollateral.currency.ticker)?.usd
             )}
           />
           <SubmitButton
