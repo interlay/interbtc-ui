@@ -248,7 +248,7 @@ const BurnForm = (): JSX.Element | null => {
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />
           <Tokens
-            label='In exchange for'
+            label={t('burn_page.collateral_selector_label')}
             tickers={burnableCollateral?.map((collateral: BurnableCollateral) => collateral.currency.ticker)}
             variant='formField'
             showBalances={false}

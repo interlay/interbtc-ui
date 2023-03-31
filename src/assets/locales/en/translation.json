@@ -239,6 +239,7 @@
     "burn_interbtc": "Burn {{wrappedTokenSymbol}}",
     "available_total": "Total available {{wrappedTokenSymbol}} to burn",
     "available_from_collateral": "{{wrappedTokenSymbol}} available to burn from {{collateralTokenSymbol}}",
+    "collateral_selector_label": "In exchange for",
     "burn": "Burn",
     "please_enter_the_amount": "Please enter the amount.",
     "successfully_burned": "Successfully burned.",
