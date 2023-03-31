@@ -50,7 +50,7 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
           className={clsx('!text-xs', LABEL_TEXT_COLOR_CLASSES)}
           required={optional === false}
         >
-          Max {STAKE_LOCK_TIME.MAX} Weeks
+          Total {STAKE_LOCK_TIME.MAX} Weeks
         </TextFieldLabel>
         <div className={clsx('flex', 'justify-between', 'items-center')}>
           {optional === true && (
