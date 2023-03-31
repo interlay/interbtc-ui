@@ -1,5 +1,5 @@
-import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
+import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, Currency, ExchangeRate, MonetaryAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
@@ -41,6 +41,12 @@ type BurnFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
 };
 
+type BurnableCollateral = {
+  currency: Currency;
+  burnableTokens: MonetaryAmount<CurrencyExt>;
+  burnRate: ExchangeRate<Currency, CollateralCurrencyExt>;
+};
+
 const BurnForm = (): JSX.Element | null => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -67,15 +73,15 @@ const BurnForm = (): JSX.Element | null => {
 
   const [totalBurnableTokens, setTotalBurnableTokens] = React.useState(BitcoinAmount.zero());
 
-  const [burnableCollateral, setBurnableCollateral] = React.useState<any>();
-  const [selectedCollateral, setSelectedCollateral] = React.useState<any>();
+  const [burnableCollateral, setBurnableCollateral] = React.useState<BurnableCollateral[]>();
+  const [selectedCollateral, setSelectedCollateral] = React.useState<BurnableCollateral | undefined>(undefined);
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
-  const handleUpdateCollateral = (collateral: any) => {
-    const selectedCollateral = burnableCollateral.find(
-      (token: any) => token.currency.ticker === collateral.token.ticker
+  const handleUpdateCollateral = (collateral: CollateralCurrencyExt) => {
+    const selectedCollateral = burnableCollateral?.find(
+      (token: BurnableCollateral) => token.currency.ticker === collateral.ticker
     );
 
     setSelectedCollateral(selectedCollateral);
@@ -84,8 +90,10 @@ const BurnForm = (): JSX.Element | null => {
   React.useEffect(() => {
     if (!burnableCollateral) return;
 
+    console.log('burnableCollateral', burnableCollateral);
+
     const totalBurnable = burnableCollateral.reduce(
-      (total: any, collateral: any) => total.add(collateral.burnableTokens),
+      (total: MonetaryAmount<Bitcoin>, collateral: BurnableCollateral) => total.add(collateral.burnableTokens),
       new MonetaryAmount(Bitcoin, 0)
     );
 
@@ -101,7 +109,7 @@ const BurnForm = (): JSX.Element | null => {
       try {
         setStatus(STATUSES.PENDING);
 
-        const collateralData = await Promise.all(
+        const collateralData: BurnableCollateral[] = await Promise.all(
           collateralCurrencies.map(async (currency: CollateralCurrencyExt) => {
             const burnableTokens = await window.bridge.redeem.getMaxBurnableTokens(currency);
 
@@ -109,7 +117,7 @@ const BurnForm = (): JSX.Element | null => {
               ? await window.bridge.redeem.getBurnExchangeRate(currency)
               : undefined;
 
-            return { currency, burnableTokens, burnRate };
+            return { currency, burnableTokens, burnRate } as BurnableCollateral;
           })
         );
 
@@ -247,10 +255,10 @@ const BurnForm = (): JSX.Element | null => {
           />
           <h2>In exchange for</h2>
           <Tokens
-            tickers={burnableCollateral?.map((token: any) => token.currency.ticker)}
+            tickers={burnableCollateral?.map((collateral: BurnableCollateral) => collateral.currency.ticker)}
             variant='formField'
             showBalances={false}
-            callbackFunction={handleUpdateCollateral}
+            callbackFunction={() => handleUpdateCollateral}
           />
           <PriceInfo
             title={
