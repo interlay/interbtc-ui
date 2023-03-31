@@ -41,8 +41,6 @@ describe('Burn page', () => {
   });
 
   it('the burn tab is not displayed when there is no liquidated vault', async () => {
-    // jest.clearAllMocks();
-
     mockRedeemGetMaxBurnableTokens.mockImplementation(() => newMonetaryAmount('0', WRAPPED_TOKEN));
 
     await render(<App />, { path: '/bridge?tab=burn' });
