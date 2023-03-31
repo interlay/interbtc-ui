@@ -10,12 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import {
-  RelayChainNativeTokenLogoIcon,
-  WRAPPED_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon
-} from '@/config/relay-chains';
+import { CoinIcon } from '@/component-library';
+import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL, WrappedTokenLogoIcon } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ErrorModal from '@/legacy-components/ErrorModal';
@@ -293,7 +289,7 @@ const BurnForm = (): JSX.Element | null => {
                 {t('you_will_receive')}
               </h5>
             }
-            unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
+            unitIcon={<CoinIcon ticker={selectedCollateral.currency.ticker} width={20} />}
             value={earnedCollateralTokenAmount.toString()}
             unitName={selectedCollateral.currency.ticker}
             approxUSD={displayMonetaryAmountInUSDFormat(
