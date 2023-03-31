@@ -65,7 +65,7 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
             <NumberInput
               ref={ref}
               id={id}
-              className={clsx('!w-12', {
+              className={clsx('!w-14', {
                 [clsx(
                   { 'border-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:border-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
