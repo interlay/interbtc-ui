@@ -1,5 +1,4 @@
-import { CurrencyExt, isCurrencyEqual } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { CurrencyExt } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
@@ -8,9 +7,8 @@ import { toast } from 'react-toastify';
 import { showBuyModal } from '@/common/actions/general.actions';
 import { CTA, CTALink, CTAProps, Divider, Flex, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
-import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
-import { useGetVestingData } from '@/utils/hooks/api/use-get-vesting-data';
 
 const queryString = require('query-string');
 
@@ -20,14 +18,23 @@ const claimVesting = async () => {
 
 type ActionsCellProps = {
   currency: CurrencyExt;
-  balance: MonetaryAmount<CurrencyExt>;
-  pooledTickers?: Set<string>;
+  isWrappedToken: boolean;
+  isRedeemable: boolean;
+  isPooledAsset: boolean;
+  isGovernanceToken: boolean;
+  isVestingClaimable: boolean;
 };
 
-const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JSX.Element | null => {
+const ActionsCell = ({
+  currency,
+  isGovernanceToken,
+  isPooledAsset,
+  isRedeemable,
+  isVestingClaimable,
+  isWrappedToken
+}: ActionsCellProps): JSX.Element | null => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const vestingData = useGetVestingData();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -44,17 +51,6 @@ const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JS
     onSuccess: handleClaimVestingSuccess,
     onError: handleClaimVestingError
   });
-
-  const isWrappedToken = isCurrencyEqual(currency, WRAPPED_TOKEN);
-  const isRedeemable = isWrappedToken && !balance.isZero();
-  const isPooledAsset = pooledTickers?.has(currency.ticker);
-  const isGovernanceToken = isCurrencyEqual(currency, GOVERNANCE_TOKEN);
-
-  const hasActions = isRedeemable || isPooledAsset || isGovernanceToken;
-
-  if (!hasActions) {
-    return null;
-  }
 
   const handlePressClaimVesting = () => claimVestingMutation.mutate();
 
@@ -119,7 +115,7 @@ const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JS
             <CTA {...commonCTAProps} onPress={handlePressBuyGovernance}>
               Buy
             </CTA>
-            {vestingData.data?.isClaimable && (
+            {isVestingClaimable && (
               <CTA {...commonCTAProps} onPress={handlePressClaimVesting}>
                 Claim vesting
               </CTA>

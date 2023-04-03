@@ -1,3 +1,4 @@
+import { isCurrencyEqual } from '@interlay/interbtc-api';
 import { ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -6,10 +7,12 @@ import { P, Switch, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { Cell } from '@/components';
 import { AssetCell, DataGrid } from '@/components/DataGrid';
+import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { useGetVestingData } from '@/utils/hooks/api/use-get-vesting-data';
 
 import { ActionsCell } from './ActionsCell';
 
@@ -36,7 +39,9 @@ type AvailableAssetsTableProps = {
 const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
+  const { data: vestingData } = useGetVestingData();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
   const [showZeroBalances, setShowZeroBalances] = useState(false);
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
@@ -67,7 +72,24 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
           <Cell alignItems={isMobile ? 'flex-end' : undefined} label={balanceLabel} sublabel={balanceSublabel} />
         );
 
-        const actions = <ActionsCell pooledTickers={pooledTickers} currency={currency} balance={transferable} />;
+        const isWrappedToken = isCurrencyEqual(currency, WRAPPED_TOKEN);
+        const isRedeemable = isWrappedToken && !transferable.isZero();
+        const isPooledAsset = !!pooledTickers?.has(currency.ticker);
+        const isGovernanceToken = isCurrencyEqual(currency, GOVERNANCE_TOKEN);
+        const isVestingClaimable = isGovernanceToken && !!vestingData?.isClaimable;
+
+        const hasActions = isRedeemable || isPooledAsset || isVestingClaimable;
+
+        const actions = hasActions ? (
+          <ActionsCell
+            isPooledAsset={isPooledAsset}
+            isRedeemable={isRedeemable}
+            isGovernanceToken={isGovernanceToken}
+            isWrappedToken={isWrappedToken}
+            isVestingClaimable={isVestingClaimable}
+            currency={currency}
+          />
+        ) : null;
 
         return {
           id: currency.ticker,
@@ -78,7 +100,7 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
         };
       }
     );
-  }, [balances, isMobile, pooledTickers, showZeroBalances, prices]);
+  }, [balances, showZeroBalances, isMobile, prices, pooledTickers, vestingData?.isClaimable]);
 
   const actions = (
     <Switch isSelected={showZeroBalances} onChange={(e) => setShowZeroBalances(e.target.checked)}>

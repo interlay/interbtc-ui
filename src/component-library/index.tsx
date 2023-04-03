@@ -36,7 +36,7 @@ export type { StackProps } from './Stack';
 export { Stack } from './Stack';
 export type { SwitchProps } from './Switch';
 export { Switch } from './Switch';
-export type { TableProps } from './Table';
+export type { ColumnProps, RowProps, TableProps } from './Table';
 export { Table } from './Table';
 export type { TabsItemProps, TabsProps } from './Tabs';
 export { Tabs, TabsItem } from './Tabs';
