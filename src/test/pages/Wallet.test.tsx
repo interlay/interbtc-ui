@@ -2,11 +2,17 @@ import MatchMediaMock from 'jest-matchmedia-mock';
 
 import App from '@/App';
 import { theme } from '@/component-library';
-import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 
-import { DEFAULT_TOKENS_BALANCE_FN, EMPTY_TOKENS_BALANCE_FN, mockTokensBalance } from '../mocks/@interlay/interbtc-api';
+import {
+  DEFAULT_CURRENT_BLOCK_NUMBER,
+  DEFAULT_TOKENS_BALANCE_FN,
+  EMPTY_TOKENS_BALANCE_FN,
+  mockGetCurrentBlockNumber,
+  mockTokensBalance
+} from '../mocks/@interlay/interbtc-api';
 import {
   ACCOUNT_WITH_FULL_LIQUIDITY,
   DEFAULT_ACCOUNT_LIQUIDITY,
@@ -24,15 +30,15 @@ import {
   mockGetBorrowPositionsOfAccount,
   mockGetLendPositionsOfAccount
 } from '../mocks/@interlay/interbtc-api/parachain/loans';
+import {
+  EMPTY_VESTING_SCHEDULES,
+  mockClaimVesting,
+  mockVestingSchedules,
+  SOME_VESTING_SCHEDULES
+} from '../mocks/@interlay/interbtc-api/parachain/vesting';
 import { render, screen, userEvent, waitFor } from '../test-utils';
 import { withinList } from './utils/list';
 import { queryTable, withinTable, withinTableRow } from './utils/table';
-
-jest.mock('../../parts/Layout', () => {
-  const MockedLayout: React.FC = ({ children }: any) => children;
-  MockedLayout.displayName = 'MockedLayout';
-  return MockedLayout;
-});
 
 jest.mock('@/pages/AMM', () => ({ __esModule: true, default: () => <div>Swap page</div> }));
 
@@ -59,6 +65,8 @@ describe('Wallet Page', () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLiquidityProvidedByAccount.mockReturnValue(DEFAULT_ACCOUNT_LIQUIDITY);
     mockGetStakedBalance.mockReturnValue(DEFAULT_STAKED_BALANCE);
+    mockGetCurrentBlockNumber.mockReturnValue(DEFAULT_CURRENT_BLOCK_NUMBER);
+    mockVestingSchedules.mockReturnValue(EMPTY_VESTING_SCHEDULES);
   });
 
   afterEach(() => {
@@ -85,15 +93,43 @@ describe('Wallet Page', () => {
       expect(list.getAllByRole('row')).toHaveLength(NATIVE_CURRENCIES.length);
     });
 
-    it('should be able to navigate to redeem page', async () => {
+    it('should be able to navigate to issue page', async () => {
       const { history } = await render(<App />, { path });
 
       const row = withinTableRow(TABLES.AVAILABLE_ASSETS, WRAPPED_TOKEN.ticker);
 
-      userEvent.click(row.getByRole('link', { name: /redeem/i }));
+      userEvent.click(row.getByRole('link', { name: /issue/i }));
 
       expect(history.location.pathname).toBe(PAGES.BRIDGE);
-      expect(history.location.search).toMatch(`${QUERY_PARAMETERS.TAB}=redeem`);
+      expect(history.location.search).toMatch(`${QUERY_PARAMETERS.TAB}=issue`);
+    });
+
+    // TODO: enable when banxa e merged
+    it.skip('should be able to open buy dialog', async () => {
+      await render(<App />, { path });
+
+      const row = withinTableRow(TABLES.AVAILABLE_ASSETS, GOVERNANCE_TOKEN.ticker);
+
+      userEvent.click(row.getByRole('button', { name: /buy/i }));
+
+      await waitFor(() => {
+        expect(screen.getByRole('dialog')).toBeInTheDocument();
+      });
+    });
+
+    it('should be able to claim vesting', async () => {
+      mockGetCurrentBlockNumber.mockReturnValue(10);
+      mockVestingSchedules.mockReturnValue(SOME_VESTING_SCHEDULES);
+
+      await render(<App />, { path });
+
+      const row = withinTableRow(TABLES.AVAILABLE_ASSETS, GOVERNANCE_TOKEN.ticker);
+
+      userEvent.click(row.getByRole('button', { name: /claim vesting/i }));
+
+      await waitFor(() => {
+        expect(mockClaimVesting).toHaveBeenCalledTimes(1);
+      });
     });
 
     it(`should be able to navigate to swap page using ${WRAPPED_TOKEN.ticker}`, async () => {

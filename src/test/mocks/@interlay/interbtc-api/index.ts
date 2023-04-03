@@ -70,6 +70,7 @@ import {
   mockWithdraw,
   mockWithdrawAll
 } from './parachain/loans';
+import { mockClaimVesting, mockVestingSchedules } from './parachain/vesting';
 
 const DEFAULT_ACCOUNT_ADDRESS = 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc';
 
@@ -93,7 +94,17 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
         chainType: mockChainType
       }
     },
-    on: jest.fn()
+    on: jest.fn(),
+    query: {
+      vesting: {
+        vestingSchedules: mockVestingSchedules as any
+      }
+    },
+    tx: {
+      vesting: {
+        claim: mockClaimVesting
+      }
+    }
   },
   assetRegistry: {
     getForeignAssets: mockGetForeignAssets

@@ -1,32 +1,21 @@
 import { CurrencyExt, isCurrencyEqual } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { showBuyModal } from '@/common/actions/general.actions';
-import { CTA, CTALink, CTALinkProps, CTAProps, Divider, Flex, theme } from '@/component-library';
+import { CTA, CTALink, CTAProps, Divider, Flex, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
+import { useGetVestingData } from '@/utils/hooks/api/use-get-vesting-data';
 
 const queryString = require('query-string');
 
-type SwapCTALinkProps = {
-  currency: CurrencyExt;
-} & CTALinkProps;
-
-const SwapCTALink = ({ currency, ...props }: SwapCTALinkProps) => {
-  const toTicker = isCurrencyEqual(WRAPPED_TOKEN, currency) ? undefined : WRAPPED_TOKEN.ticker;
-
-  const to = {
-    pathname: PAGES.SWAP,
-    search: queryString.stringify({
-      [QUERY_PARAMETERS.SWAP.FROM]: currency.ticker,
-      [QUERY_PARAMETERS.SWAP.TO]: toTicker
-    })
-  };
-
-  return <CTALink {...props} to={to} />;
+const claimVesting = async () => {
+  await window.bridge.api.tx.vesting.claim();
 };
 
 type ActionsCellProps = {
@@ -38,9 +27,23 @@ type ActionsCellProps = {
 const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JSX.Element | null => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
+  const vestingData = useGetVestingData();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const handleClaimVestingSuccess = () => {
+    toast.success('Successfully claimed vesting');
+  };
+
+  const handleClaimVestingError = (error: Error) => {
+    toast.success(error);
+  };
+
+  const claimVestingMutation = useMutation<void, Error, void>(claimVesting, {
+    onSuccess: handleClaimVestingSuccess,
+    onError: handleClaimVestingError
+  });
 
   const isWrappedToken = isCurrencyEqual(currency, WRAPPED_TOKEN);
   const isRedeemable = isWrappedToken && !balance.isZero();
@@ -52,6 +55,10 @@ const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JS
   if (!hasActions) {
     return null;
   }
+
+  const handlePressClaimVesting = () => claimVestingMutation.mutate();
+
+  const handlePressBuyGovernance = () => dispatch(showBuyModal(true));
 
   const commonCTAProps: CTAProps = {
     fullWidth: isMobile,
@@ -94,14 +101,30 @@ const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JS
           {t('transfer')}
         </CTALink> */}
         {isPooledAsset && (
-          <SwapCTALink {...commonCTAProps} to={PAGES.SWAP} currency={currency}>
+          <CTALink
+            {...commonCTAProps}
+            to={{
+              pathname: PAGES.SWAP,
+              search: queryString.stringify({
+                [QUERY_PARAMETERS.SWAP.FROM]: currency.ticker,
+                [QUERY_PARAMETERS.SWAP.TO]: isWrappedToken ? undefined : WRAPPED_TOKEN.ticker
+              })
+            }}
+          >
             {t('amm.swap')}
-          </SwapCTALink>
+          </CTALink>
         )}
         {isGovernanceToken && (
-          <CTA {...commonCTAProps} onPress={() => dispatch(showBuyModal(true))}>
-            Buy
-          </CTA>
+          <>
+            <CTA {...commonCTAProps} onPress={handlePressBuyGovernance}>
+              Buy
+            </CTA>
+            {vestingData.data?.isClaimable && (
+              <CTA {...commonCTAProps} onPress={handlePressClaimVesting}>
+                Claim vesting
+              </CTA>
+            )}
+          </>
         )}
       </Flex>
     </Flex>
