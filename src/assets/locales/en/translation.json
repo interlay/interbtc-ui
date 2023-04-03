@@ -150,6 +150,8 @@
   "total_balance": "Total Balance",
   "transferable_balance": "Transferable Balance",
   "fund_wallet": "Fund Wallet",
+  "unlocks": "Unlocks",
+  "staked": "Staked",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -608,6 +610,9 @@
   },
   "wallet": {
     "available_assets": "Available assets",
-    "no_assets_available": "No assets available"
+    "no_assets_available": "No assets available",
+    "total_governance_locked": "Total {{token}} Locked",
+    "available_to_stake": "Available to stake",
+    "voting_power_governance": "Voting Power {{token}}"
   }
 }

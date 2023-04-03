@@ -3,6 +3,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
 import { differenceInDays, format, formatDistanceToNowStrict } from 'date-fns';
 import { ReactNode, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { CoinIcon, Flex } from '@/component-library';
@@ -35,15 +36,19 @@ type StakingTableProps = {
 };
 
 const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element => {
+  const { t } = useTranslation();
   const titleId = useId();
   const prices = useGetPrices();
-  const { getBalance } = useGetBalances();
+  const { getAvailableBalance } = useGetBalances();
 
   const columns = [
-    { name: `Total ${GOVERNANCE_TOKEN.ticker} Locked`, uid: StakingTableColumns.ASSET },
-    { name: 'Unlocks', uid: StakingTableColumns.UNLOCKS },
-    { name: 'Available to stake', uid: StakingTableColumns.AVAILABLE },
-    { name: `Voting Power ${VOTE_GOVERNANCE_TOKEN.ticker}`, uid: StakingTableColumns.VOTING_POWER }
+    { name: t('wallet.total_governance_locked', { token: GOVERNANCE_TOKEN.ticker }), uid: StakingTableColumns.ASSET },
+    { name: t('unlocks'), uid: StakingTableColumns.UNLOCKS },
+    { name: t('wallet.available_to_stake'), uid: StakingTableColumns.AVAILABLE },
+    {
+      name: t('wallet.voting_power_governance', { token: VOTE_GOVERNANCE_TOKEN.ticker }),
+      uid: StakingTableColumns.VOTING_POWER
+    }
   ];
 
   const rows = useMemo((): StakingTableRows[] => {
@@ -66,7 +71,7 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
 
     const unlocks = <Cell label={unlocksLabel} />;
 
-    const available = <Cell labelColor='secondary' label={getBalance(GOVERNANCE_TOKEN.ticker)?.free.toString()} />;
+    const available = <Cell labelColor='secondary' label={getAvailableBalance(GOVERNANCE_TOKEN.ticker)?.toString()} />;
 
     const votingPower = <Cell alignItems='flex-end' labelColor='secondary' label={votingBalance.toHuman()} />;
 
@@ -79,9 +84,10 @@ const StakingTable = ({ data, votingBalance }: StakingTableProps): JSX.Element =
         votingPower
       }
     ];
-  }, [getBalance, prices, data, votingBalance]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prices, data, votingBalance]);
 
-  return <Table title='Staked' titleId={titleId} columns={columns} rows={rows} />;
+  return <Table title={t('staked')} titleId={titleId} columns={columns} rows={rows} />;
 };
 
 export { StakingTable };

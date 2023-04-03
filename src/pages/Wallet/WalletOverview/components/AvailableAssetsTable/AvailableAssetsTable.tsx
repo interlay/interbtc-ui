@@ -37,11 +37,11 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
   const { t } = useTranslation();
   const prices = useGetPrices();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [isOpen, setOpen] = useState(false);
+  const [showZeroBalances, setShowZeroBalances] = useState(false);
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];
-    const filteredData = isOpen ? data : data.filter((balance) => !balance.transferable.isZero());
+    const filteredData = showZeroBalances ? data : data.filter((balance) => !balance.transferable.isZero());
 
     return filteredData.map(
       ({ currency, transferable }): AvailableAssetsRows => {
@@ -78,10 +78,10 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
         };
       }
     );
-  }, [balances, isMobile, pooledTickers, isOpen, prices]);
+  }, [balances, isMobile, pooledTickers, showZeroBalances, prices]);
 
   const actions = (
-    <Switch isSelected={isOpen} onChange={(e) => setOpen(e.target.checked)}>
+    <Switch isSelected={showZeroBalances} onChange={(e) => setShowZeroBalances(e.target.checked)}>
       {t('show_zero_balance')}
     </Switch>
   );

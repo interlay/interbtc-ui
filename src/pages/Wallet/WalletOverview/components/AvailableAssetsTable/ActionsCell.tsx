@@ -1,8 +1,10 @@
 import { CurrencyExt, isCurrencyEqual } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useTranslation } from 'react-i18next';
+import { useDispatch } from 'react-redux';
 
-import { CTALink, CTALinkProps, CTAProps, Divider, Flex, theme } from '@/component-library';
+import { showBuyModal } from '@/common/actions/general.actions';
+import { CTA, CTALink, CTALinkProps, CTAProps, Divider, Flex, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -35,15 +37,17 @@ type ActionsCellProps = {
 
 const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JSX.Element | null => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const isRedeemable = isCurrencyEqual(currency, WRAPPED_TOKEN) && !balance.isZero();
+  const isWrappedToken = isCurrencyEqual(currency, WRAPPED_TOKEN);
+  const isRedeemable = isWrappedToken && !balance.isZero();
   const isPooledAsset = pooledTickers?.has(currency.ticker);
-  const isBuyable = isCurrencyEqual(currency, GOVERNANCE_TOKEN);
+  const isGovernanceToken = isCurrencyEqual(currency, GOVERNANCE_TOKEN);
 
-  const hasActions = isRedeemable || isPooledAsset || isBuyable;
+  const hasActions = isRedeemable || isPooledAsset || isGovernanceToken;
 
   if (!hasActions) {
     return null;
@@ -59,6 +63,19 @@ const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JS
     <Flex direction='column' gap='spacing4' marginTop={isMobile ? 'spacing4' : undefined}>
       {isMobile && <Divider color='default' />}
       <Flex justifyContent={isMobile ? undefined : 'flex-end'} gap='spacing1'>
+        {isWrappedToken && (
+          <CTALink
+            {...commonCTAProps}
+            to={{
+              pathname: PAGES.BRIDGE,
+              search: queryString.stringify({
+                [QUERY_PARAMETERS.TAB]: 'issue'
+              })
+            }}
+          >
+            {t('issue')}
+          </CTALink>
+        )}
         {isRedeemable && (
           <CTALink
             {...commonCTAProps}
@@ -81,12 +98,11 @@ const ActionsCell = ({ balance, currency, pooledTickers }: ActionsCellProps): JS
             {t('amm.swap')}
           </SwapCTALink>
         )}
-        {/* TODO: add when banxa on-ramp is added */}
-        {/* {isBuyable && (
-          <CTALink {...commonCTAProps} to=''>
+        {isGovernanceToken && (
+          <CTA {...commonCTAProps} onPress={() => dispatch(showBuyModal(true))}>
             Buy
-          </CTALink>
-        )} */}
+          </CTA>
+        )}
       </Flex>
     </Flex>
   );

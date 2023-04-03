@@ -25,7 +25,10 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
     Object.values(balances).reduce(
       (total, balance) =>
         total.add(
-          convertMonetaryAmountToValueInUSD(balance.free, getTokenPrice(prices, balance.currency.ticker)?.usd) || 0
+          convertMonetaryAmountToValueInUSD(
+            balance.free.add(balance.reserved),
+            getTokenPrice(prices, balance.currency.ticker)?.usd
+          ) || 0
         ),
       new Big(0)
     );
