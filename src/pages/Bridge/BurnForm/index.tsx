@@ -1,24 +1,18 @@
-import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
-import Big from 'big.js';
+import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { Bitcoin, BitcoinAmount, Currency, ExchangeRate, MonetaryAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import {
-  RELAY_CHAIN_NATIVE_TOKEN,
-  RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
-  RelayChainNativeTokenLogoIcon,
-  WRAPPED_TOKEN,
-  WRAPPED_TOKEN_SYMBOL,
-  WrappedTokenLogoIcon
-} from '@/config/relay-chains';
+import { CoinIcon } from '@/component-library';
+import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL, WrappedTokenLogoIcon } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ErrorModal from '@/legacy-components/ErrorModal';
@@ -28,18 +22,26 @@ import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import TokenField from '@/legacy-components/TokenField';
+import Tokens, { TokenOption } from '@/legacy-components/Tokens';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 const WRAPPED_TOKEN_AMOUNT = 'wrapped-token-amount';
 
 type BurnFormData = {
   [WRAPPED_TOKEN_AMOUNT]: string;
+};
+
+type BurnableCollateral = {
+  currency: Currency;
+  burnableTokens: MonetaryAmount<CurrencyExt>;
+  burnRate: ExchangeRate<Currency, CollateralCurrencyExt>;
 };
 
 const BurnForm = (): JSX.Element | null => {
@@ -53,6 +55,7 @@ const BurnForm = (): JSX.Element | null => {
   const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded, parachainStatus } = useSelector((state: StoreType) => state.general);
   const { data: balances } = useGetBalances();
+  const { data: collateralCurrencies } = useGetCollateralCurrencies(bridgeLoaded);
 
   const {
     register,
@@ -65,41 +68,85 @@ const BurnForm = (): JSX.Element | null => {
   });
   const wrappedTokenAmount = watch(WRAPPED_TOKEN_AMOUNT);
 
-  const [burnRate, setBurnRate] = React.useState(
-    new ExchangeRate<Bitcoin, CollateralCurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, new Big(0))
-  );
-  const [burnableTokens, setBurnableTokens] = React.useState(BitcoinAmount.zero());
+  const [totalBurnableTokens, setTotalBurnableTokens] = React.useState(BitcoinAmount.zero());
+
+  const [burnableCollateral, setBurnableCollateral] = React.useState<BurnableCollateral[]>();
+  const [selectedCollateral, setSelectedCollateral] = React.useState<BurnableCollateral>();
 
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
+  const handleUpdateCollateral = (collateral: TokenOption) => {
+    const selectedCollateral = burnableCollateral?.find(
+      (token: BurnableCollateral) => token.currency.ticker === collateral.token.ticker
+    );
+
+    setSelectedCollateral(selectedCollateral);
+  };
+
+  React.useEffect(() => {
+    if (!burnableCollateral) return;
+
+    const totalBurnable = burnableCollateral.reduce(
+      (total: MonetaryAmount<Bitcoin>, collateral: BurnableCollateral) => total.add(collateral.burnableTokens),
+      new MonetaryAmount(Bitcoin, 0)
+    );
+
+    setTotalBurnableTokens(totalBurnable);
+  }, [burnableCollateral]);
+
   React.useEffect(() => {
     if (!bridgeLoaded) return;
     if (!handleError) return;
+    if (!collateralCurrencies) return;
 
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [theBurnRate, theBurnableTokens] = await Promise.all([
-          window.bridge.redeem.getBurnExchangeRate(RELAY_CHAIN_NATIVE_TOKEN),
-          window.bridge.redeem.getMaxBurnableTokens(RELAY_CHAIN_NATIVE_TOKEN)
-        ]);
-        setBurnRate(theBurnRate);
-        setBurnableTokens(theBurnableTokens);
+
+        const collateralData: BurnableCollateral[] = await Promise.all(
+          collateralCurrencies.map(async (currency: CollateralCurrencyExt) => {
+            const burnableTokens = await window.bridge.redeem.getMaxBurnableTokens(currency);
+
+            const burnRate = burnableTokens.gt(BitcoinAmount.zero())
+              ? await window.bridge.redeem.getBurnExchangeRate(currency)
+              : undefined;
+
+            return { currency, burnableTokens, burnRate } as BurnableCollateral;
+          })
+        );
+
+        const filteredCollateral = collateralData.filter((item) => item.burnRate);
+
+        setBurnableCollateral(filteredCollateral);
+        setSelectedCollateral(filteredCollateral[0]);
+
         setStatus(STATUSES.RESOLVED);
       } catch (error) {
         setStatus(STATUSES.REJECTED);
         handleError(error);
       }
     })();
-  }, [bridgeLoaded, handleError]);
+  }, [bridgeLoaded, collateralCurrencies, handleError]);
+
+  // This ensures that triggering the notification and clearing
+  // the form happen at the same time.
+  React.useEffect(() => {
+    if (submitStatus !== STATUSES.RESOLVED) return;
+
+    toast.success(t('burn_page.successfully_burned'));
+
+    reset({
+      [WRAPPED_TOKEN_AMOUNT]: ''
+    });
+  }, [submitStatus, reset, t]);
 
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return <PrimaryColorEllipsisLoader />;
   }
 
-  if (status === STATUSES.RESOLVED) {
-    if (!burnRate) {
+  if (status === STATUSES.RESOLVED && selectedCollateral) {
+    if (!selectedCollateral.burnRate) {
       throw new Error('Something went wrong!');
     }
 
@@ -113,10 +160,8 @@ const BurnForm = (): JSX.Element | null => {
     const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.bridge.redeem.burn(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), RELAY_CHAIN_NATIVE_TOKEN);
-        reset({
-          [WRAPPED_TOKEN_AMOUNT]: ''
-        });
+        await window.bridge.redeem.burn(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), selectedCollateral.currency);
+
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
@@ -128,12 +173,12 @@ const BurnForm = (): JSX.Element | null => {
       // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
       const bitcoinAmountValue = new BitcoinAmount(value);
 
-      if (bitcoinAmountValue.gt(burnableTokens)) {
-        return `Only ${burnableTokens.toString()} ${WRAPPED_TOKEN_SYMBOL} available to burn.
+      if (bitcoinAmountValue.gt(selectedCollateral.burnableTokens)) {
+        return `Only ${selectedCollateral.burnableTokens.toString()} ${WRAPPED_TOKEN_SYMBOL} available to burn.
         Please enter a smaller amount.`;
       }
 
-      const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].free || newMonetaryAmount(0, WRAPPED_TOKEN);
+      const wrappedTokenBalance = balances?.[WRAPPED_TOKEN.ticker].transferable || newMonetaryAmount(0, WRAPPED_TOKEN);
 
       if (bitcoinAmountValue.gt(wrappedTokenBalance)) {
         return `${t('redeem_page.current_balance')}${wrappedTokenBalance.toString()}`;
@@ -161,9 +206,10 @@ const BurnForm = (): JSX.Element | null => {
     };
 
     const parsedInterBTCAmount = new BitcoinAmount(wrappedTokenAmount || 0);
-    const earnedCollateralTokenAmount = burnRate.rate.eq(0)
-      ? newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN)
-      : burnRate.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
+
+    const earnedCollateralTokenAmount = selectedCollateral.burnRate.rate.eq(0)
+      ? newMonetaryAmount(0, selectedCollateral.currency)
+      : selectedCollateral.burnRate.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
     const accountSet = !!selectedAccount;
 
     return (
@@ -171,8 +217,7 @@ const BurnForm = (): JSX.Element | null => {
         <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
           <FormTitle>
             {t('burn_page.burn_interbtc', {
-              wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
-              collateralTokenSymbol: RELAY_CHAIN_NATIVE_TOKEN_SYMBOL
+              collateralTokenSymbol: selectedCollateral.currency.ticker
             })}
           </FormTitle>
           <PriceInfo
@@ -183,16 +228,16 @@ const BurnForm = (): JSX.Element | null => {
                   { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                 )}
               >
-                {t('burn_page.available', {
+                {t('burn_page.available_total', {
                   wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
                 })}
               </h5>
             }
             unitIcon={<WrappedTokenLogoIcon width={20} />}
-            value={burnableTokens.toString()}
+            value={totalBurnableTokens.toString()}
             unitName={WRAPPED_TOKEN_SYMBOL}
             approxUSD={displayMonetaryAmountInUSDFormat(
-              burnableTokens,
+              totalBurnableTokens,
               getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
             )}
           />
@@ -213,6 +258,36 @@ const BurnForm = (): JSX.Element | null => {
             error={!!errors[WRAPPED_TOKEN_AMOUNT]}
             helperText={errors[WRAPPED_TOKEN_AMOUNT]?.message}
           />
+          <Tokens
+            label={t('burn_page.collateral_selector_label')}
+            tickers={burnableCollateral?.map((collateral: BurnableCollateral) => collateral.currency.ticker)}
+            variant='formField'
+            showBalances={false}
+            callbackFunction={handleUpdateCollateral}
+            fullWidth={true}
+          />
+          <PriceInfo
+            title={
+              <h5
+                className={clsx(
+                  { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                  { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                )}
+              >
+                {t('burn_page.available_from_collateral', {
+                  wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL,
+                  collateralTokenSymbol: selectedCollateral.currency.ticker
+                })}
+              </h5>
+            }
+            unitIcon={<WrappedTokenLogoIcon width={20} />}
+            value={selectedCollateral.burnableTokens.toString()}
+            unitName={WRAPPED_TOKEN_SYMBOL}
+            approxUSD={displayMonetaryAmountInUSDFormat(
+              selectedCollateral.burnableTokens,
+              getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
+            )}
+          />
           <Hr2 className={clsx('border-t-2', 'my-2.5')} />
           <PriceInfo
             title={
@@ -225,12 +300,12 @@ const BurnForm = (): JSX.Element | null => {
                 {t('you_will_receive')}
               </h5>
             }
-            unitIcon={<RelayChainNativeTokenLogoIcon width={20} />}
+            unitIcon={<CoinIcon ticker={selectedCollateral.currency.ticker} width={20} />}
             value={earnedCollateralTokenAmount.toString()}
-            unitName={RELAY_CHAIN_NATIVE_TOKEN_SYMBOL}
+            unitName={selectedCollateral.currency.ticker}
             approxUSD={displayMonetaryAmountInUSDFormat(
               earnedCollateralTokenAmount,
-              getTokenPrice(prices, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL)?.usd
+              getTokenPrice(prices, selectedCollateral.currency.ticker)?.usd
             )}
           />
           <SubmitButton
