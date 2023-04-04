@@ -3,14 +3,12 @@ import styled from 'styled-components';
 import { theme } from '../theme';
 import { Placement, Sizes } from '../utils/prop-types';
 
-type PaddingX = { left?: keyof typeof theme.input.paddingX; right?: keyof typeof theme.input.paddingX };
-
 type BaseInputProps = {
   $size: Sizes;
-  $paddingX?: PaddingX;
   $adornments: { bottom: boolean; left: boolean; right: boolean };
   $isDisabled: boolean;
   $hasError: boolean;
+  $endAdornmentWidth: number;
 };
 
 type AdornmentProps = {
@@ -46,15 +44,17 @@ const StyledBaseInput = styled.input<BaseInputProps>`
     box-shadow ${theme.transition.duration.duration150}ms ease-in-out;
 
   padding-top: ${theme.spacing.spacing2};
-  padding-left: ${({ $adornments, $paddingX }) => {
-    if (!$adornments.left) return theme.spacing.spacing2;
+  padding-left: ${({ $adornments }) => ($adornments.left ? theme.input.paddingX.md : theme.spacing.spacing2)};
 
-    return $paddingX?.left ? theme.input.paddingX[$paddingX.left] : theme.input.paddingX.md;
-  }};
-  padding-right: ${({ $adornments, $paddingX }) => {
+  padding-right: ${({ $adornments, $endAdornmentWidth }) => {
     if (!$adornments.right) return theme.spacing.spacing2;
 
-    return $paddingX?.right ? theme.input.paddingX[$paddingX.right] : theme.input.paddingX.md;
+    // MEMO: adding `spacing6` is a hacky solution because
+    // the `endAdornmentWidth` does not update width correctly
+    // after fonts are loaded. Instead of falling back to a more
+    // complex solution, an extra offset does the job of not allowing
+    // the input overlap the adornment.
+    return `calc(${$endAdornmentWidth}px + ${theme.spacing.spacing6})`;
   }};
   padding-bottom: ${({ $adornments }) => ($adornments.bottom ? theme.spacing.spacing6 : theme.spacing.spacing2)};
 
@@ -102,13 +102,13 @@ const Adornment = styled.div<AdornmentProps>`
   right: ${({ $position }) => $position === 'right' && theme.spacing.spacing2};
   transform: ${({ $position }) => ($position === 'left' || $position === 'right') && 'translateY(-50%)'};
   bottom: ${({ $position }) => $position === 'bottom' && theme.spacing.spacing1};
+  // to not allow adornment to take more than 50% of the input. We might want to reduce this in the future.
+  max-width: 50%;
 `;
 
-const Wrapper = styled.div<Pick<BaseInputProps, '$isDisabled'>>`
+const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  opacity: ${({ $isDisabled }) => $isDisabled && 0.5};
 `;
 
 export { Adornment, BaseInputWrapper, StyledBaseInput, Wrapper };
-export type { PaddingX };

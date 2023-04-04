@@ -2,16 +2,16 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import Hr1 from '@/components/hrs/Hr1';
-import Panel from '@/components/Panel';
-import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
+import Hr1 from '@/legacy-components/hrs/Hr1';
+import Panel from '@/legacy-components/Panel';
+import InterlayRouterLink from '@/legacy-components/UI/InterlayRouterLink';
 import InterlayTabGroup, {
   InterlayTab,
   InterlayTabList,
   InterlayTabPanel,
   InterlayTabPanels
-} from '@/components/UI/InterlayTabGroup';
-import WarningBanner from '@/components/WarningBanner';
+} from '@/legacy-components/UI/InterlayTabGroup';
+import WarningBanner from '@/legacy-components/WarningBanner';
 import MainContainer from '@/parts/MainContainer';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { POLKADOT } from '@/utils/constants/relay-chain-names';

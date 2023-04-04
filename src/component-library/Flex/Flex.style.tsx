@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { marginCSS, StyledMarginProps } from '../css/margin';
 import { theme } from '../theme';
 import { AlignItems, AlignSelf, Direction, JustifyContent, Spacing, Wrap } from '../utils/prop-types';
 
@@ -11,7 +12,7 @@ type StyledFlexProps = {
   $flex?: string | number;
   $wrap?: Wrap;
   $alignSelf?: AlignSelf;
-};
+} & StyledMarginProps;
 
 const StyledFlex = styled.div<StyledFlexProps>`
   display: flex;
@@ -22,6 +23,7 @@ const StyledFlex = styled.div<StyledFlexProps>`
   flex: ${(props) => props.$flex};
   flex-wrap: ${(props) => (typeof props.$wrap === 'boolean' ? 'wrap' : props.$wrap)};
   align-self: ${(props) => props.$alignSelf};
+  ${(props) => marginCSS(props)};
 `;
 
 export { StyledFlex };

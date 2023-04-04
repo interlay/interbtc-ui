@@ -7,8 +7,8 @@ import {
   displayMonetaryAmountInUSDFormat,
   getLastMidnightTimestamps
 } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
 import DashboardCard from '@/pages/Dashboard/cards/DashboardCard';
 import LineChart from '@/pages/Dashboard/LineChart';
 import Stats, { StatsDd, StatsDt } from '@/pages/Dashboard/Stats';

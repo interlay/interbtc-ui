@@ -5,8 +5,8 @@ import { useQuery } from 'react-query';
 
 import { H3, Stack, Table, TableProps } from '@/component-library';
 import { CTALink } from '@/component-library';
-import ErrorFallback from '@/components/ErrorFallback';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { useManualIssueRequests } from '@/services/hooks/issue-requests';

@@ -9,14 +9,14 @@ import { mockRedeemBurn, mockRedeemGetMaxBurnableTokens } from '../mocks/@interl
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 describe('Burn page', () => {
-  it('should display burn tab when there is liquidated vault', async () => {
+  it('if the burn tab is displayed when there is a liquidated vault', async () => {
     await render(<App />, { path: '/bridge?tab=burn' });
 
     const burnTab = screen.getByRole('tab', { name: /burn/i });
     expect(burnTab).toBeVisible();
   });
 
-  it('should not display burn tab when there is no liquidated vault', async () => {
+  it('if the burn tab is not displayed when there is no liquidated vault', async () => {
     mockRedeemGetMaxBurnableTokens.mockImplementationOnce(() => newMonetaryAmount('0', WRAPPED_TOKEN));
 
     await render(<App />, { path: '/bridge?tab=burn' });
@@ -26,7 +26,7 @@ describe('Burn page', () => {
     });
   });
 
-  it('should burn the IBTC', async () => {
+  it('if the burn method is called', async () => {
     await render(<App />, { path: '/bridge?tab=burn' });
 
     const burnTab = screen.getByRole('tab', { name: /burn/i });

@@ -1,36 +1,33 @@
-import { CurrencyExt, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CurrencyExt, LendingStats, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import Big from 'big.js';
+
+import { pickSmallerAmount } from '@/utils/helpers/currencies';
 
 /**
  * Get maximum amount of currency that user can borrow
  * with currently provided collateral and liquidity.
- * @param {LoanAsset} asset The asset to be withdrew.
- * @param {number} assetPrice The asset price.
- * @param {Big} totalBorrowedAmountUSD Total borrowed amount in usd.
- * @param {Big} totalCollateralAmountUSD Total provided collateral amount in usd.
- * @return {MonetaryAmount<CurrencyExt> | undefined} maximum amount of currency that
- * user can withdraw with currently provided collateral. Returns undefined if it is loading
+ * @param {LoanAsset} asset The asset to be withdrawn.s
+ * @param {LendingStats} lendingStats Object containing information about account's collateralization.
+ * @return {MonetaryAmount<CurrencyExt>} maximum amount of currency that
+ * user can withdraw with currently provided collateral
  */
-const getMaxBorrowableAmount = (
-  asset: LoanAsset,
-  assetPrice?: number,
-  totalBorrowedAmountUSD?: Big,
-  totalCollateralAmountUSD?: Big
-): MonetaryAmount<CurrencyExt> | undefined => {
-  if (assetPrice === undefined || totalCollateralAmountUSD === undefined || totalBorrowedAmountUSD === undefined) {
+const getMaxBorrowableAmount = (asset: LoanAsset, lendingStats?: LendingStats): MonetaryAmount<CurrencyExt> => {
+  if (lendingStats === undefined) {
     return newMonetaryAmount(0, asset.currency);
   }
+  const { exchangeRate } = asset;
 
-  const { availableCapacity, currency } = asset;
+  const { availableCapacity, currency, borrowCap, totalBorrows } = asset;
 
-  const availableCollateralUSDValue = totalCollateralAmountUSD.sub(totalBorrowedAmountUSD);
-  const maxBorrowableCurrencyAmount = availableCollateralUSDValue.div(assetPrice);
+  const maxBorrowableCurrencyAmount = exchangeRate.toCounter(lendingStats.borrowLimitBtc);
+  const protocolLimitAmount = pickSmallerAmount(availableCapacity, borrowCap.sub(totalBorrows));
+  const maxBorrowableAmount = pickSmallerAmount(protocolLimitAmount, maxBorrowableCurrencyAmount);
 
-  const maxBorrowableAmountByCollateral =
-    new MonetaryAmount(currency, maxBorrowableCurrencyAmount) || new MonetaryAmount(currency, 0);
+  if (maxBorrowableAmount.toBig().lte(0)) {
+    return newMonetaryAmount(0, currency);
+  }
 
-  return availableCapacity.gt(maxBorrowableAmountByCollateral) ? maxBorrowableAmountByCollateral : availableCapacity;
+  return maxBorrowableAmount;
 };
 
 export { getMaxBorrowableAmount };

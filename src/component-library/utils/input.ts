@@ -1,10 +1,12 @@
-import { MutableRefObject, RefObject } from 'react';
+import { RefObject } from 'react';
 
 /**
  * @param {RefObject<HTMLInputElement>}  ref - input ref.
  * @param {string | ReadonlyArray<string> | number} value - value to be included in the event
  * @return {void} - Manually emits onChange event
  */
+// TODO: consider moving away from this type of strategy or narrow
+// the usage, because it only works on native events and `onPress`
 const triggerChangeEvent = (
   ref: RefObject<HTMLInputElement>,
   value: string | ReadonlyArray<string> | number = ''
@@ -16,14 +18,4 @@ const triggerChangeEvent = (
   ref.current?.dispatchEvent(e);
 };
 
-const assignFormRef = (formRef?: (instance: any) => void, domRef?: MutableRefObject<HTMLInputElement | null>) => (
-  el: HTMLInputElement | null
-): void => {
-  formRef?.(el);
-
-  if (domRef) {
-    domRef.current = el;
-  }
-};
-
-export { assignFormRef, triggerChangeEvent };
+export { triggerChangeEvent };

@@ -1,8 +1,8 @@
 import { useId } from '@react-aria/utils';
-import { HTMLAttributes, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { TabsItem } from '@/component-library';
+import { CardProps, TabsItem } from '@/component-library';
 import { PAGES } from '@/utils/constants/links';
 
 import {
@@ -19,9 +19,9 @@ type Props = {
   transactions: Array<TransactionTableData>;
 };
 
-type NativeAttrs = HTMLAttributes<unknown>;
+type InheritAttrs = Omit<CardProps, keyof Props>;
 
-type TransactionHistoryProps = Props & NativeAttrs;
+type TransactionHistoryProps = Props & InheritAttrs;
 
 const tabKeys = ['all', 'pending', 'issue', 'redeem', 'replace'] as const;
 

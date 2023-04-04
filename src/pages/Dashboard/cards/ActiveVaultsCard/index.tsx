@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
 import { formatNumber, getLastMidnightTimestamps } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
 import { COUNT_OF_DATES_FOR_CHART } from '@/config/charts';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import { INTERLAY_DENIM, KINTSUGI_SUNDOWN } from '@/utils/constants/colors';
 import { PAGES } from '@/utils/constants/links';

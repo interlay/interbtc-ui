@@ -1,6 +1,8 @@
 import { mockInterBtcApi } from '../@interlay/interbtc-api';
 import mockJsonRpc from './jsonrpc';
 
+const DEFAULT_ACCOUNT_ADDRESS = 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc';
+
 const DEFAULT_KEYRING_ACCOUNTS = [
   {
     key: 'header-accounts',
@@ -45,7 +47,7 @@ const DEFAULT_KEYRING = {
 
 const DEFAULT_ACCOUNTS = [
   {
-    address: 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc',
+    address: DEFAULT_ACCOUNT_ADDRESS,
     meta: {
       genesisHash: '',
       name: 'Wallet 1',
@@ -75,7 +77,7 @@ const DEFAULT_EXTENSIONS = [
 ];
 
 const DEFAULT_SELECTED_ACCOUNT = {
-  address: 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc',
+  address: DEFAULT_ACCOUNT_ADDRESS,
   addressRaw: {
     '0': 10,
     '1': 224,
@@ -166,4 +168,4 @@ const DEFAULT_SUBSTRATE = {
   extensions: DEFAULT_EXTENSIONS
 };
 
-export { DEFAULT_KEYRING, DEFAULT_SUBSTRATE };
+export { DEFAULT_ACCOUNT_ADDRESS, DEFAULT_KEYRING, DEFAULT_SUBSTRATE };

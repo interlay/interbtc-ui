@@ -7,16 +7,17 @@ import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import InterlayCaliforniaOutlinedButton from '@/components/buttons/InterlayCaliforniaOutlinedButton';
-import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
-import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
-import Tokens from '@/components/Tokens';
-import InterlayLink from '@/components/UI/InterlayLink';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
+import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
+import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
+import Tokens from '@/legacy-components/Tokens';
+import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
@@ -27,6 +28,8 @@ const Topbar = (): JSX.Element => {
   const { bridgeLoaded, showAccountModal } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { getAvailableBalance } = useGetBalances();
+  const kintBalanceIsZero = getAvailableBalance("KINT")?.isZero();
 
   const handleRequestFromFaucet = async (): Promise<void> => {
     if (!selectedAccount) return;
@@ -79,6 +82,17 @@ const Topbar = (): JSX.Element => {
         <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
         {selectedAccount !== undefined && (
           <>
+            {process.env.REACT_APP_FAUCET_URL && kintBalanceIsZero && (
+              <>
+                <InterlayDenimOrKintsugiMidnightOutlinedButton
+                  className={SMALL_SIZE_BUTTON_CLASSES}
+                  pending={isRequestPending}
+                  onClick={handleFundsRequest}
+                >
+                  {t('request_funds')}
+                </InterlayDenimOrKintsugiMidnightOutlinedButton>
+              </>
+            )}
             {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
               <>
                 <InterlayLink
@@ -94,13 +108,6 @@ const Topbar = (): JSX.Element => {
                     {t('request_btc')}
                   </InterlayCaliforniaOutlinedButton>
                 </InterlayLink>
-                <InterlayDenimOrKintsugiMidnightOutlinedButton
-                  className={SMALL_SIZE_BUTTON_CLASSES}
-                  pending={isRequestPending}
-                  onClick={handleFundsRequest}
-                >
-                  {t('request_funds')}
-                </InterlayDenimOrKintsugiMidnightOutlinedButton>
               </>
             )}
             <Tokens />

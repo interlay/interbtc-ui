@@ -2,8 +2,8 @@
  * For a detailed explanation regarding each configuration property and type check, visit:
  * https://jestjs.io/docs/en/configuration.html
  */
-import dotenv from "dotenv"
-dotenv.config({ path: "./.env.test" })
+import dotenv from 'dotenv';
+dotenv.config({ path: './.env.test' });
 
 const config = {
   // All imported modules in your tests should be mocked automatically
@@ -33,7 +33,7 @@ const config = {
   // ],
 
   // Indicates which provider should be used to instrument code for coverage
-  coverageProvider: "v8",
+  coverageProvider: 'v8',
 
   // A list of reporter names that Jest uses when writing coverage reports
   // coverageReporters: [
@@ -68,24 +68,15 @@ const config = {
   // maxWorkers: "50%",
 
   // An array of directory names to be searched recursively up from the requiring module's location
-  moduleDirectories: [
-    "node_modules"
-  ],
+  moduleDirectories: ['node_modules'],
 
   // An array of file extensions your modules use
-  moduleFileExtensions: [
-    "js",
-    "json",
-    "jsx",
-    "ts",
-    "tsx",
-    "node"
-  ],
+  moduleFileExtensions: ['js', 'json', 'jsx', 'ts', 'tsx', 'node'],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^@/(.+)": "<rootDir>/src/$1",
-    "\\.css$": "identity-obj-proxy"
+    '^@/(.+)': '<rootDir>/src/$1',
+    '\\.css$': 'identity-obj-proxy'
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -133,7 +124,7 @@ const config = {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ['<rootDir>/src/test/mocks/setup.ts'],
+  setupFilesAfterEnv: ['<rootDir>/src/test/mocks/setup.tsx'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -153,7 +144,7 @@ const config = {
   // The glob patterns Jest uses to detect test files
   testMatch: [
     //   "**/__tests__/**/*.[jt]s?(x)",
-    "**/test/**/*?(*.)+(spec|test).[tj]s?(x)"
+    '**/test/**/*?(*.)+(spec|test).[tj]s?(x)'
   ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
@@ -179,7 +170,7 @@ const config = {
   // A map from regular expressions to paths to transformers
   transform: {
     '^.+\\.svg$': '<rootDir>/src/test/transformers/svg.js',
-    "\\.[jt]sx?$": "babel-jest",
+    '\\.[jt]sx?$': 'babel-jest'
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -199,6 +190,10 @@ const config = {
 
   // Whether to use watchman for file crawling
   // watchman: true,
+
+  // RE: inspired by https://stackoverflow.com/a/49864436
+  // MEMO: the root cause of this fix may be that these operations (running tests) can take longer to complete in a CI environment than on your local machine so the timeout might be increased accordingly
+  testTimeout: 30000
 };
 
 export default config;

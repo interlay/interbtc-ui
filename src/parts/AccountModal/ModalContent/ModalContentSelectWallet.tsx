@@ -1,8 +1,8 @@
 import { InjectedExtension } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 
-import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
 import { WALLETS, WalletSourceName } from '@/config/wallets';
+import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
 
 import { ACCOUNT_MODAL_BUTTON_CLASSES } from '..';
 

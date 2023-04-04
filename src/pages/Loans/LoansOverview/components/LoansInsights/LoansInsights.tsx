@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
-import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-account-positions';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
@@ -11,13 +13,15 @@ import { StyledDd, StyledDt } from './LoansInsights.style';
 const mutateClaimRewards = () => window.bridge.loans.claimAllSubsidyRewards();
 
 type LoansInsightsProps = {
-  statistics?: AccountPositionsStatisticsData;
+  statistics?: AccountLendingStatistics;
 };
 
 const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
+  const { t } = useTranslation();
   const { data: subsidyRewards, refetch } = useGetAccountSubsidyRewards();
 
   const handleSuccess = () => {
+    toast.success(t('successfully_claimed_rewards'));
     refetch();
   };
 
@@ -27,10 +31,11 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
 
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
-  const { supplyAmountUSD, netAmountUSD, netAPY } = statistics || {};
+  const { supplyAmountUSD, netAPY } = statistics || {};
 
   const supplyBalanceLabel = formatUSD(supplyAmountUSD?.toNumber() || 0);
-  const netBalanceLabel = formatUSD(netAmountUSD?.toNumber() || 0);
+  // TODO: temporary until squid has earned interest calculation.
+  // const netBalanceLabel = formatUSD(netAmountUSD?.toNumber() || 0);
   const netPercentage = formatPercentage(netAPY?.toNumber() || 0);
   const netPercentageLabel = `${netAPY?.gt(0) ? '+' : ''}${netPercentage}`;
 
@@ -52,9 +57,8 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
         <Card flex='1'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
             <StyledDt color='primary'>Net APY</StyledDt>
-            <StyledDd color='secondary'>
-              {netPercentageLabel} ({netBalanceLabel})
-            </StyledDd>
+            {/* {netPercentageLabel} ({netBalanceLabel}) */}
+            <StyledDd color='secondary'>{netPercentageLabel}</StyledDd>
           </DlGroup>
         </Card>
         <Card

@@ -12,10 +12,12 @@ import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, formatPercentage } from '@/common/utils/utils';
-import AddressWithCopyUI from '@/components/AddressWithCopyUI';
-import ErrorFallback from '@/components/ErrorFallback';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import * as constants from '@/constants';
+import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -23,9 +25,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayThead,
   InterlayTr
-} from '@/components/UI/InterlayTable';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import * as constants from '@/constants';
+} from '@/legacy-components/UI/InterlayTable';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';

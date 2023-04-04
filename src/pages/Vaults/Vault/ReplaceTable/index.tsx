@@ -16,9 +16,12 @@ import { useSelector } from 'react-redux';
 import { useTable } from 'react-table';
 
 import { StoreType } from '@/common/types/util.types';
-import AddressWithCopyUI from '@/components/AddressWithCopyUI';
-import ErrorFallback from '@/components/ErrorFallback';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -26,10 +29,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayThead,
   InterlayTr
-} from '@/components/UI/InterlayTable';
-import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+} from '@/legacy-components/UI/InterlayTable';
 import SectionTitle from '@/parts/SectionTitle';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 

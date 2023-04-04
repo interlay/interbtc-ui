@@ -2,11 +2,13 @@ import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
 import { ListItem, ListProps } from '../List';
 import { Span } from '../Text';
-import { StyledList, StyledListItemLabel } from './TokenInput.style';
+import { TokenStack } from '../TokenStack';
+import { TokenTicker } from './TokenInput';
+import { StyledList, StyledListItemLabel, StyledListTokenWrapper } from './TokenInput.style';
 
 type TokenData = {
-  ticker: string;
-  balance: number;
+  ticker: TokenTicker;
+  balance: string | number;
   balanceUSD: string;
 };
 
@@ -31,28 +33,35 @@ const TokenList = ({ items, selectedTicker, onSelectionChange, ...props }: Token
 
   return (
     <StyledList
+      aria-label='select token'
+      variant='secondary'
       selectionMode='single'
       onSelectionChange={handleSelectionChange}
       selectedKeys={selectedTicker ? [selectedTicker] : undefined}
       {...props}
     >
       {items.map((item) => {
-        const isSelected = selectedTicker === item.ticker;
+        const tickerText = typeof item.ticker === 'string' ? item.ticker : item.ticker.text;
+
+        const isSelected = selectedTicker === tickerText;
 
         return (
           <ListItem
-            aria-label='select token'
-            key={item.ticker}
-            textValue={item.ticker}
+            key={tickerText}
+            textValue={tickerText}
             alignItems='center'
             justifyContent='space-between'
             gap='spacing4'
           >
-            <Flex alignItems='center' gap='spacing2'>
-              <CoinIcon ticker={item.ticker} />
-              <StyledListItemLabel $isSelected={isSelected}>{item.ticker}</StyledListItemLabel>
-            </Flex>
-            <Flex direction='column' alignItems='center' gap='spacing2'>
+            <StyledListTokenWrapper alignItems='center' gap='spacing2' flex='1'>
+              {typeof item.ticker === 'string' ? (
+                <CoinIcon ticker={item.ticker} />
+              ) : (
+                <TokenStack tickers={item.ticker.icons} />
+              )}
+              <StyledListItemLabel $isSelected={isSelected}>{tickerText}</StyledListItemLabel>
+            </StyledListTokenWrapper>
+            <Flex direction='column' alignItems='flex-end' gap='spacing2' flex='0'>
               <StyledListItemLabel $isSelected={isSelected}>{item.balance}</StyledListItemLabel>
               <Span size='s' color='tertiary'>
                 {item.balanceUSD}

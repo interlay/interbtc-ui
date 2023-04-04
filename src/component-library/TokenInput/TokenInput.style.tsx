@@ -2,7 +2,6 @@ import styled from 'styled-components';
 
 import { ChevronDown } from '@/assets/icons';
 
-import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
 import { List } from '../List';
 import { Span } from '../Text';
@@ -10,12 +9,10 @@ import { theme } from '../theme';
 
 type StyledClickableProps = {
   $isClickable: boolean;
-  $hasToken: boolean;
 };
 
-type StyledTokenInputBalanceValueProps = {
+type StyledUSDAdornmentProps = {
   $isDisabled?: boolean;
-  $isFocusVisible: boolean;
 };
 
 type StyledListItemSelectedLabelProps = {
@@ -25,14 +22,15 @@ type StyledListItemSelectedLabelProps = {
 const StyledTicker = styled.span`
   font-size: ${theme.text.s};
   color: ${theme.colors.textPrimary};
-  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
-const StyledUSDAdornment = styled.span`
+const StyledUSDAdornment = styled.span<StyledUSDAdornmentProps>`
   display: block;
   font-size: ${theme.text.xs};
   line-height: ${theme.lineHeight.s};
-  color: ${theme.colors.textTertiary};
+  color: ${({ $isDisabled }) => ($isDisabled ? theme.input.disabled.color : theme.colors.textTertiary)};
   white-space: nowrap;
   align-self: flex-start;
 `;
@@ -44,20 +42,12 @@ const StyledTokenSelect = styled(Flex)<StyledClickableProps>`
   padding: ${theme.spacing.spacing3};
   cursor: ${({ $isClickable }) => $isClickable && 'pointer'};
   height: 3rem;
-  width: ${({ $hasToken, $isClickable }) => {
-    if (!$hasToken) return '8.5rem';
-
-    return $isClickable ? '7rem' : '5.25rem';
-  }};
+  width: auto;
+  overflow: hidden;
 `;
 
 const StyledChevronDown = styled(ChevronDown)`
   margin-left: ${theme.spacing.spacing1};
-  flex: 1 0 auto;
-`;
-
-const StyledCoinIcon = styled(CoinIcon)`
-  flex: 1 0 auto;
 `;
 
 const StyledTokenInputBalanceWrapper = styled.dl`
@@ -77,16 +67,16 @@ const StyledTokenInputBalanceLabel = styled.dt`
   }
 `;
 
-const StyledTokenInputBalanceValue = styled.span<StyledTokenInputBalanceValueProps>`
+const StyledTokenInputBalanceValue = styled.span`
   display: block;
   color: ${theme.colors.textSecondary};
-  cursor: ${({ $isDisabled }) => !$isDisabled && 'pointer'};
-  outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};
 `;
 
 const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
   color: ${({ $isSelected }) =>
     $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
+  text-overflow: ellipsis;
+  overflow: hidden;
 `;
 
 const StyledList = styled(List)`
@@ -98,12 +88,16 @@ const StyledListHeader = styled(Flex)`
   padding: ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
 `;
 
+const StyledListTokenWrapper = styled(Flex)`
+  overflow: hidden;
+`;
+
 export {
   StyledChevronDown,
-  StyledCoinIcon,
   StyledList,
   StyledListHeader,
   StyledListItemLabel,
+  StyledListTokenWrapper,
   StyledTicker,
   StyledTokenInputBalanceLabel,
   StyledTokenInputBalanceValue,

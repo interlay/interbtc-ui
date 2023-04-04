@@ -5,15 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import Hr1 from '@/components/hrs/Hr1';
-import Panel from '@/components/Panel';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import Hr1 from '@/legacy-components/hrs/Hr1';
+import Panel from '@/legacy-components/Panel';
 import InterlayTabGroup, {
   InterlayTab,
   InterlayTabList,
   InterlayTabPanel,
   InterlayTabPanels
-} from '@/components/UI/InterlayTabGroup';
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+} from '@/legacy-components/UI/InterlayTabGroup';
 import MainContainer from '@/parts/MainContainer';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import TAB_IDS from '@/utils/constants/tab-ids';
