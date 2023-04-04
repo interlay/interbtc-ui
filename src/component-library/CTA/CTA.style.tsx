@@ -23,6 +23,7 @@ const BaseCTA = styled.button<StyledCTAProps>`
   text-decoration: none;
   width: ${(props) => (props.$fullWidth ? '100%' : 'auto')};
   background: none;
+  // TODO: enforce outline
   outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};
 
   &[aria-disabled='true'],
