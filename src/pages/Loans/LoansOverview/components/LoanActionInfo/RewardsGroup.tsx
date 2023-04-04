@@ -3,10 +3,8 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { Dd, DlGroup, Dt } from '@/component-library';
+import { getApyLabel, getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
-
-import { getApyLabel } from '../../utils/apy';
-import { getSubsidyRewardApy } from '../../utils/get-subsidy-rewards-apy';
 
 type RewardsGroupProps = {
   apy: Big;

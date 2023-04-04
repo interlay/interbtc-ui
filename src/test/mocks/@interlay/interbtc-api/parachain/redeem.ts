@@ -11,6 +11,7 @@ const MOCK_BURN_EXCHANGE_RATE = '150000';
 const mockRedeemGetMaxBurnableTokens = jest.fn((_currency: CurrencyExt) =>
   newMonetaryAmount(MOCK_MAX_BURNABLE_TOKENS, WRAPPED_TOKEN)
 );
+
 const mockRedeemGetBurnExchangeRate = jest.fn(
   (collateralCurrency: CollateralCurrencyExt) =>
     new ExchangeRate(Bitcoin, collateralCurrency, Big(MOCK_BURN_EXCHANGE_RATE))

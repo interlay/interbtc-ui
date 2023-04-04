@@ -2,9 +2,9 @@ import { LoanAsset } from '@interlay/interbtc-api';
 
 import { Dd, DlGroup, Dt } from '@/component-library';
 import { LoanAction } from '@/types/loans';
+import { getApyLabel } from '@/utils/helpers/loans';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-import { getApyLabel } from '../../utils/apy';
 import { RewardsGroup } from './RewardsGroup';
 
 type LoanGroupProps = {
