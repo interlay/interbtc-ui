@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import { screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../../test-utils';
-
-type ElementName = string | RegExp;
-
-const composeName = (name: ElementName) => (typeof name === 'string' ? new RegExp(name, 'i') : name);
+import { composeName, ElementName } from './common';
 
 const getTable = (name: ElementName) => screen.getByRole('grid', { name: composeName(name) });
+
+const queryTable = (name: ElementName) => screen.queryByRole('grid', { name: composeName(name) });
 
 const withinTable = (name: ElementName) => {
   const table = within(getTable(name));
@@ -68,4 +67,4 @@ const submitForm = async (tabPanel: ReturnType<typeof withinModalTabPanel>, butt
   await waitForElementToBeRemoved(screen.getByRole('dialog'));
 };
 
-export { getTable, getTableRow, submitForm, withinModalTabPanel, withinTable, withinTableRow };
+export { getTable, getTableRow, queryTable, submitForm, withinModalTabPanel, withinTable, withinTableRow };

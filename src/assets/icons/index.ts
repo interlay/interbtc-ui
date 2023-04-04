@@ -1,7 +1,10 @@
 export { ArrowsUpDown } from './ArrowsUpDown';
+export { ArrowTopRightOnSquare } from './ArrowTopRightOnSquare';
 export { ChevronDown } from './ChevronDown';
 export { Cog } from './Cog';
+export { DocumentDuplicate } from './DocumentDuplicate';
 export { InformationCircle } from './InformationCircle';
+export { PencilSquare } from './PencilSquare';
 export { PlusCircle } from './PlusCircle';
 export { Warning } from './Warning';
 export { XMark } from './XMark';

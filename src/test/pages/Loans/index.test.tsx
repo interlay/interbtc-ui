@@ -20,7 +20,7 @@ import {
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
 import { render, screen, userEvent, waitFor } from '../../test-utils';
-import { getTableRow } from '../utils/table';
+import { getTableRow, withinTable } from '../utils/table';
 import { TABLES } from './constants';
 
 const path = '/lending';
@@ -63,7 +63,9 @@ describe('Loans page', () => {
 
       await render(<App />, { path });
 
-      expect(screen.queryByRole('grid', { name: new RegExp(TABLES.BORROW.POSITION, 'i') })).not.toBeInTheDocument();
+      const table = withinTable(TABLES.BORROW.POSITION);
+
+      expect(table.queryAllByRole('row')).toHaveLength(0);
       expect(screen.getByText(/no borrow positions/i)).toBeInTheDocument();
     });
   });
