@@ -11,7 +11,7 @@ import Big from 'big.js';
 import { useMemo } from 'react';
 
 import { convertMonetaryAmountToValueInUSD, convertMonetaryBtcToUSD } from '@/common/utils/utils';
-import { getSubsidyRewardApy } from '@/pages/Loans/LoansOverview/utils/get-subsidy-rewards-apy';
+import { getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 

@@ -258,4 +258,28 @@ describe('Swap Page', () => {
       expect(mockSwap).toHaveBeenCalledTimes(1);
     });
   });
+
+  it('should setup input and output currencies from search query', async () => {
+    await render(<App />, { path: `${path}?from=${WRAPPED_TOKEN.ticker}&to=${RELAY_CHAIN_NATIVE_TOKEN.ticker}` });
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+
+      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue(
+        RELAY_CHAIN_NATIVE_TOKEN.ticker
+      );
+    });
+  });
+
+  it('should setup input and output currencies to default pair when query is invalid', async () => {
+    await render(<App />, { path: `${path}?from=&to=` });
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(
+        RELAY_CHAIN_NATIVE_TOKEN.ticker
+      );
+
+      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).not.toHaveValue();
+    });
+  });
 });

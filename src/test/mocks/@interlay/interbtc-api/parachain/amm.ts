@@ -92,7 +92,9 @@ const mockAddLiquidity = jest.fn();
 
 const mockRemoveLiquidity = jest.fn();
 
-const mockGetLpTokens = jest.fn().mockResolvedValue([DEFAULT_LP_TOKEN_1, DEFAULT_LP_TOKEN_2]);
+const DEFAULT_LP_TOKENS = [DEFAULT_LP_TOKEN_1, DEFAULT_LP_TOKEN_2];
+
+const mockGetLpTokens = jest.fn().mockResolvedValue(DEFAULT_LP_TOKENS);
 
 const DEFAULT_TRADE_AMOUNT = {
   INPUT: newMonetaryAmount(1, RELAY_CHAIN_NATIVE_TOKEN, true),
@@ -133,6 +135,7 @@ export {
   DEFAULT_LIQUIDITY_POOLS,
   DEFAULT_LP_TOKEN_1,
   DEFAULT_LP_TOKEN_2,
+  DEFAULT_LP_TOKENS,
   DEFAULT_MULTI_PATH_ELEMENT,
   DEFAULT_POOLED_CURRENCIES_1,
   DEFAULT_POOLED_CURRENCIES_2,

@@ -13,6 +13,7 @@ type NativeAttrs = Omit<LinkProps, keyof Props | 'href'>;
 
 type TextLinkProps = Props & NativeAttrs;
 
+// TODO: merge this with CTALink
 const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
   ({ color = 'primary', external, to, ...props }, ref): JSX.Element => {
     const linkProps: TextLinkProps = external
