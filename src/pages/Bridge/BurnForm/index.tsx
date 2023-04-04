@@ -6,6 +6,7 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
@@ -128,6 +129,18 @@ const BurnForm = (): JSX.Element | null => {
     })();
   }, [bridgeLoaded, collateralCurrencies, handleError]);
 
+  // This ensures that triggering the notification and clearing
+  // the form happen at the same time.
+  React.useEffect(() => {
+    if (submitStatus !== STATUSES.RESOLVED) return;
+
+    toast.success(t('burn_page.successfully_burned'));
+
+    reset({
+      [WRAPPED_TOKEN_AMOUNT]: ''
+    });
+  }, [submitStatus, reset, t]);
+
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return <PrimaryColorEllipsisLoader />;
   }
@@ -148,9 +161,7 @@ const BurnForm = (): JSX.Element | null => {
       try {
         setSubmitStatus(STATUSES.PENDING);
         await window.bridge.redeem.burn(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), selectedCollateral.currency);
-        reset({
-          [WRAPPED_TOKEN_AMOUNT]: ''
-        });
+
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
