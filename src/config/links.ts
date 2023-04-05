@@ -27,7 +27,7 @@ const LINK_QUERY_PARAMETERS = {
   }
 };
 
-const BANXA_LINK = `https://talisman.banxa.com`;
+const BANXA_LINK = 'http://kintsugi.banxa.com/';
 
 export {
   BANXA_LINK,
