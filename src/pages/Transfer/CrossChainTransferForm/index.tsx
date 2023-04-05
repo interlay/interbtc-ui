@@ -128,17 +128,13 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!XCMBridge) return;
     if (!XCMProvider) return;
 
-    const availableFromChains: Array<ChainOption> = XCMBridge.adapters
-      // TODO: This is a kintsugi-only hotfix to temporarily disable
-      // originating chains other than kintsugi.
-      .filter((adapter) => adapter.chain.id === 'kintsugi')
-      .map((adapter: any) => {
-        return {
-          type: adapter.chain.id,
-          name: adapter.chain.id,
-          icon: <ChainIcon id={adapter.chain.id} size='xl' />
-        };
-      });
+    const availableFromChains: Array<ChainOption> = XCMBridge.adapters.map((adapter: any) => {
+      return {
+        type: adapter.chain.id,
+        name: adapter.chain.id,
+        icon: <ChainIcon id={adapter.chain.id} size='xl' />
+      };
+    });
 
     setFromChains(availableFromChains);
     setFromChain(availableFromChains[0]);

@@ -6,7 +6,7 @@
     "@craco/craco": "^6.1.1",
     "@headlessui/react": "^1.1.1",
     "@heroicons/react": "^2.0.0",
-    "@interlay/bridge": "^0.2.4",
+    "@interlay/bridge": "^0.2.5",
     "@interlay/interbtc-api": "2.0.3",
     "@interlay/monetary-js": "0.7.2",
     "@polkadot/api": "9.14.2",
