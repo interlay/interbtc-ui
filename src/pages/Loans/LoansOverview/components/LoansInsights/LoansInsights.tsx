@@ -1,3 +1,4 @@
+import { ISubmittableResult } from '@polkadot/types/types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
@@ -5,12 +6,13 @@ import { toast } from 'react-toastify';
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import ErrorModal from '@/legacy-components/ErrorModal';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
 
-const mutateClaimRewards = () => window.bridge.loans.claimAllSubsidyRewards();
+const mutateClaimRewards = () => submitExtrinsic(window.bridge.loans.claimAllSubsidyRewards());
 
 type LoansInsightsProps = {
   statistics?: AccountLendingStatistics;
@@ -25,7 +27,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
     refetch();
   };
 
-  const claimRewardsMutation = useMutation<void, Error, void>(mutateClaimRewards, {
+  const claimRewardsMutation = useMutation<ISubmittableResult, Error, void>(mutateClaimRewards, {
     onSuccess: handleSuccess
   });
 

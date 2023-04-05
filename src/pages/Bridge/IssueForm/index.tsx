@@ -55,6 +55,8 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
+import { finalizedExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
+import { getIssueRequestsFromExtrinsicResult } from '@/utils/helpers/issue';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -319,17 +321,20 @@ const IssueForm = (): JSX.Element | null => {
 
         const collateralToken = await currencyIdToMonetaryCurrency(window.bridge.api, vaultId.currencies.collateral);
 
-        const result = await window.bridge.issue.request(
+        const extrinsicData = await window.bridge.issue.request(
           monetaryBtcAmount,
           vaultId.accountId,
           collateralToken,
           false, // default
-          0, // default
           vaults
         );
+        // When requesting an issue, wait for the finalized event because we cannot revert BTC transactions.
+        // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
+        const extrinsicResult = await submitExtrinsic(extrinsicData, finalizedExtrinsicStatus);
+        const issueRequests = await getIssueRequestsFromExtrinsicResult(extrinsicResult);
 
         // TODO: handle issue aggregation
-        const issueRequest = result[0];
+        const issueRequest = issueRequests[0];
         handleSubmittedRequestModalOpen(issueRequest);
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {

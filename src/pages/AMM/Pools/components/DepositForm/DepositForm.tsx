@@ -1,5 +1,6 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, PooledCurrencies } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
 import { ChangeEventHandler, RefObject, useState } from 'react';
@@ -20,6 +21,7 @@ import {
 } from '@/lib/form';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -42,7 +44,7 @@ type DepositData = {
 };
 
 const mutateDeposit = ({ amounts, pool, slippage, deadline, accountId }: DepositData) =>
-  window.bridge.amm.addLiquidity(amounts, pool, slippage, deadline, accountId);
+  submitExtrinsic(window.bridge.amm.addLiquidity(amounts, pool, slippage, deadline, accountId));
 
 type DepositFormProps = {
   pool: LiquidityPool;
@@ -63,7 +65,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
-  const depositMutation = useMutation<void, Error, DepositData>(mutateDeposit, {
+  const depositMutation = useMutation<ISubmittableResult, Error, DepositData>(mutateDeposit, {
     onSuccess: () => {
       onDeposit?.();
       toast.success('Deposit successful');

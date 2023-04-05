@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
+import { submitExtrinsic, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -54,7 +55,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
 
   const mutateClaimRewards = async () => {
     if (accountPoolsData !== undefined) {
-      await window.bridge.amm.claimFarmingRewards(accountPoolsData.claimableRewards);
+      await submitExtrinsic(window.bridge.amm.claimFarmingRewards(accountPoolsData.claimableRewards));
     }
   };
 
