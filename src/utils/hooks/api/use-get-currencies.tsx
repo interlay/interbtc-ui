@@ -68,18 +68,6 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
     [queryResult]
   );
 
-  //   export declare type StandardLpToken = Currency & {
-  //     lpToken: {
-  //         token0: StandardLpUnderlyingToken;
-  //         token1: StandardLpUnderlyingToken;
-  //     };
-  // };
-  // export declare type StableLpToken = Currency & {
-  //     stableLpToken: {
-  //         poolId: number;
-  //     };
-  // };
-
   // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
   const getLendCurrencyFromId = useCallback(
     (id: number): CurrencyExt => {

@@ -2,9 +2,8 @@ import { BorrowPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api'
 import { Key, useState } from 'react';
 
 import { getPosition } from '../../utils/get-position';
-import { BorrowAssetsTable } from '../BorrowAssetsTable';
-import { BorrowPositionsTable } from '../BorrowPositionsTable';
 import { LoanModal } from '../LoanModal';
+import { StyledBorrowAssetsTable, StyledBorrowPositionsTable } from './LoansTables.style';
 
 type UseAssetState = {
   data?: LoanAsset;
@@ -35,14 +34,15 @@ const BorrowTables = ({ assets, positions, disabledAssets, hasPositions }: Borro
   return (
     <>
       {hasPositions && (
-        <BorrowPositionsTable
+        <StyledBorrowPositionsTable
+          variant='borrow'
           assets={assets}
           positions={positions}
           onRowAction={handleRowAction}
           disabledKeys={disabledAssets}
         />
       )}
-      <BorrowAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
+      <StyledBorrowAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
       <LoanModal
         variant='borrow'
         isOpen={!!selectedAsset.data}

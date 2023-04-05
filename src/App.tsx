@@ -37,6 +37,7 @@ const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/V
 const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
 const Swap = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/AMM'));
 const Pools = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/AMM/Pools'));
+const Wallet = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Wallet'));
 const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
@@ -48,6 +49,7 @@ const App = (): JSX.Element => {
   const dispatch = useDispatch();
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
   const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
+  const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -203,6 +205,11 @@ const App = (): JSX.Element => {
                   {isAMMEnabled && (
                     <Route path={PAGES.POOLS}>
                       <Pools />
+                    </Route>
+                  )}
+                  {isWalletEnabled && (
+                    <Route path={PAGES.WALLET}>
+                      <Wallet />
                     </Route>
                   )}
                   <Route path={PAGES.ACTIONS}>

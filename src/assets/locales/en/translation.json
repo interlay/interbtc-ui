@@ -89,6 +89,7 @@
   "nav_terms_and_conditions": "Terms and Conditions",
   "nav_use_wrapped": "Use {{wrappedTokenSymbol}}",
   "nav_governance": "Governance",
+  "nav_wallet": "Wallet",
   "report_bug": "Report a bug:",
   "request_funds": "Faucet",
   "request_btc": "BTC Faucet",
@@ -140,6 +141,17 @@
   "insufficient_funds_fees": "Insufficient funds for fees",
   "successfully_claimed_rewards": "Successfully claimed rewards",
   "view_details": "View details",
+  "copied": "Copied",
+  "click_to_copy": "Click to copy",
+  "asset": "Asset",
+  "price": "Price",
+  "balance": "Balance",
+  "show_zero_balance": "Show Zero Balance",
+  "total_balance": "Total Balance",
+  "transferable_balance": "Transferable Balance",
+  "fund_wallet": "Fund Wallet",
+  "unlocks": "Unlocks",
+  "staked": "Staked",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -236,8 +248,10 @@
     }
   },
   "burn_page": {
-    "burn_interbtc": "Burn {{wrappedTokenSymbol}} in exchange for {{collateralTokenSymbol}}",
-    "available": "{{wrappedTokenSymbol}} available to burn",
+    "burn_interbtc": "Burn {{wrappedTokenSymbol}}",
+    "available_total": "Total available {{wrappedTokenSymbol}} to burn",
+    "available_from_collateral": "{{wrappedTokenSymbol}} available to burn from {{collateralTokenSymbol}}",
+    "collateral_selector_label": "In exchange for",
     "burn": "Burn",
     "please_enter_the_amount": "Please enter the amount.",
     "successfully_burned": "Successfully burned.",
@@ -555,7 +569,9 @@
     "lend": "Lend",
     "my_lend_positions": "My Lend Positions",
     "my_borrow_positions": "My Borrow Positions",
-    "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation."
+    "action_liquidation_risk": "{{action}} this amount will increase your LTV, thus also increasing the risk of liquidation.",
+    "no_loan_positions": "No {{loanType}} positions",
+    "your_loan_positions_will_show_here": "Your {{loanType}} positions will show here"
   },
   "amm": {
     "pools": {
@@ -573,7 +589,7 @@
     "insufficient_liquidity_trade": "Insufficient liquidity for this trade",
     "from": "From",
     "to": "To",
-    "swap_has_price_inpact_of": "This swap has a price impact of",
+    "swap_has_price_inpact_of": "Considering external price sources, this swap has a price impact of",
     "you_are_swapping_input_for_output": "Your are swapping {{inputAmount}} {{inputTicker}} ({{inputAmountUSD}}) for {{outputAmount}} {{outputTicker}} ({{outputAmountUSD}})",
     "cancel_swap": "Cancel swap",
     "confirm_swap": "Confirm swap"
@@ -593,5 +609,12 @@
       "transfer_more_than_minimum": "Must transfer more than the minimum amount of {{ amount }}",
       "transfer_less_than_maximum": "Must transfer less than the maximum amount of {{ amount }}"
     }
+  },
+  "wallet": {
+    "available_assets": "Available assets",
+    "no_assets_available": "No assets available",
+    "total_governance_locked": "Total {{token}} Locked",
+    "available_to_stake": "Available to stake",
+    "voting_power_governance": "Voting Power {{token}}"
   }
 }

@@ -2,7 +2,7 @@ import { CurrencyExt, StandardLpToken } from '@interlay/interbtc-api';
 
 import { CoinIconProps } from '@/component-library';
 
-const getCoinIconProps = (currency: CurrencyExt): CoinIconProps => {
+const getCoinIconProps = (currency: CurrencyExt): Pick<CoinIconProps, 'ticker' | 'tickers'> => {
   if ((currency as StandardLpToken)?.lpToken) {
     return {
       ticker: currency.ticker,
