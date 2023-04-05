@@ -30,6 +30,9 @@ const overlayCSS = (isOpen: boolean): FlattenInterpolation<DefaultTheme> =>
     visibility: ${isOpen ? 'visible' : 'hidden'};
     opacity: ${isOpen ? 1 : 0};
     pointer-events: ${isOpen ? 'auto' : 'none'};
+    transition: transform ${theme.transition.duration.duration100}ms ease-in-out,
+      opacity ${theme.transition.duration.duration100}ms ease-in-out,
+      visibility 0ms linear ${theme.transition.duration.duration100}ms;
   `;
 
 export { getOverlayPlacementCSS, overlayCSS };

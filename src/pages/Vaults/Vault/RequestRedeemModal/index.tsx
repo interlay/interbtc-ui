@@ -8,15 +8,15 @@ import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { displayMonetaryAmount } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
-import InterlayMulberryOutlinedButton from '@/components/buttons/InterlayMulberryOutlinedButton';
-import ErrorMessage from '@/components/ErrorMessage';
-import NumberInput from '@/components/NumberInput';
-import TextField from '@/components/TextField';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { BTC_ADDRESS_REGEX } from '@/constants';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import InterlayCinnabarOutlinedButton from '@/legacy-components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayMulberryOutlinedButton from '@/legacy-components/buttons/InterlayMulberryOutlinedButton';
+import ErrorMessage from '@/legacy-components/ErrorMessage';
+import NumberInput from '@/legacy-components/NumberInput';
+import TextField from '@/legacy-components/TextField';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';

@@ -11,7 +11,9 @@ import {
   DocumentTextIcon,
   HandRaisedIcon,
   PresentationChartBarIcon,
-  ScaleIcon
+  ScaleIcon,
+  Square3Stack3DIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -21,7 +23,6 @@ import { matchPath } from 'react-router';
 import { useLocation } from 'react-router-dom';
 
 import { StoreType } from '@/common/types/util.types';
-import Hr2 from '@/components/hrs/Hr2';
 import { INTERLAY_DOCS_LINK } from '@/config/links';
 import {
   CROWDLOAN_LINK,
@@ -31,6 +32,7 @@ import {
   USE_WRAPPED_CURRENCY_LINK,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
+import Hr2 from '@/legacy-components/hrs/Hr2';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { PAGES, URL_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -66,9 +68,17 @@ const Navigation = ({
   const { selectedAccount } = useSubstrateSecureState();
   const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
+  const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
+  const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
+      {
+        name: 'nav_wallet',
+        link: PAGES.WALLET,
+        icon: UserIcon,
+        disabled: !isWalletEnabled
+      },
       {
         name: 'nav_bridge',
         link: PAGES.BRIDGE,
@@ -88,9 +98,15 @@ const Navigation = ({
       },
       {
         name: 'nav_swap',
-        link: '#',
+        link: PAGES.SWAP,
         icon: ArrowPathRoundedSquareIcon,
-        disabled: true
+        disabled: !isAMMEnabled
+      },
+      {
+        name: 'nav_pools',
+        link: PAGES.POOLS,
+        icon: Square3Stack3DIcon,
+        disabled: !isAMMEnabled
       },
       {
         name: 'nav_transactions',
@@ -177,7 +193,7 @@ const Navigation = ({
         }
       }
     ],
-    [isLendingEnabled, selectedAccount?.address, vaultClientLoaded]
+    [isWalletEnabled, isLendingEnabled, isAMMEnabled, selectedAccount?.address, vaultClientLoaded]
   );
 
   return (

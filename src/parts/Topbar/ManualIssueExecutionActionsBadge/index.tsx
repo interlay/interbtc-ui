@@ -1,7 +1,7 @@
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 
 import { CTALink } from '@/component-library';
-import ErrorFallback from '@/components/ErrorFallback';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
 import { useManualIssueRequests } from '@/services/hooks/issue-requests';
 import { PAGES } from '@/utils/constants/links';
 

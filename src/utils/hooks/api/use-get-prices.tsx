@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { BLOCKTIME_REFETCH_INTERVAL, PRICES_API } from '@/utils/constants/api';
+import { PRICES_API, REFETCH_INTERVAL } from '@/utils/constants/api';
 import { COINGECKO_ID_BY_CURRENCY_TICKER } from '@/utils/constants/currency';
 
 import { useGetCurrencies } from './use-get-currencies';
@@ -64,9 +64,11 @@ type Prices = {
 const useGetPrices = (): Prices | undefined => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { data: currencies, isSuccess: isGetCurrenciesSuccess } = useGetCurrencies(bridgeLoaded);
+
+  // TODO: error prone because the key computation is not complete
   const { data, error } = useQuery<Prices | undefined, Error>(['prices'], () => getPrices(currencies), {
     enabled: isGetCurrenciesSuccess,
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL
+    refetchInterval: REFETCH_INTERVAL.MINUTE
   });
 
   useEffect(() => {

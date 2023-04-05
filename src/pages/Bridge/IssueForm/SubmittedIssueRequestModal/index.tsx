@@ -3,11 +3,11 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
-import BTCPaymentPendingStatusUI from '@/components/IssueUI/BTCPaymentPendingStatusUI';
-import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
-import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
+import BTCPaymentPendingStatusUI from '@/legacy-components/IssueUI/BTCPaymentPendingStatusUI';
+import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/legacy-components/UI/InterlayModal';
+import InterlayRouterLink from '@/legacy-components/UI/InterlayRouterLink';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
 

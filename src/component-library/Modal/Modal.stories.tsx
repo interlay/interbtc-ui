@@ -15,13 +15,13 @@ const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = 
 
   return (
     <>
-      <CTA onClick={state.open} variant='primary'>
+      <CTA onPress={state.open} variant='primary'>
         Open modal
       </CTA>
       <Modal {...args} isOpen={state.isOpen} onClose={state.close}>
         {hasTitle && (
           <>
-            <ModalHeader color='secondary' alignment='center'>
+            <ModalHeader color='secondary' align='center'>
               Title
             </ModalHeader>
             <ModalDivider color='secondary' />
@@ -30,7 +30,7 @@ const Template: Story<ModalProps & { hasFooter: boolean; hasTitle: boolean }> = 
         <ModalBody>{children}</ModalBody>
         {hasFooter && (
           <ModalFooter>
-            <CTA onClick={state.close}>Procced</CTA>
+            <CTA onPress={state.close}>Procced</CTA>
           </ModalFooter>
         )}
       </Modal>
@@ -96,6 +96,7 @@ LargeContent.args = {
   isOpen: false,
   hasFooter: true,
   hasTitle: true,
+  align: 'top',
   children: (
     <>
       Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis in, egestas eget quam.

@@ -5,12 +5,12 @@ import { firstValueFrom } from 'rxjs';
 import { XCM_ADAPTERS } from '@/config/relay-chains';
 import { BITCOIN_NETWORK } from '@/constants';
 
+// MEMO: BitcoinNetwork type is not available on XCM bridge
+const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
+
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
 });
-
-// MEMO: BitcoinNetwork type is not available on XCM bridge
-const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
 
 // TODO: This config needs to be pushed higher up the app.
 // Not sure how this will look: something to decide when

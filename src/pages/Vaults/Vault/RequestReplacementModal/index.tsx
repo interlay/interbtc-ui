@@ -13,15 +13,16 @@ import { toast } from 'react-toastify';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
-import InterlayMulberryOutlinedButton from '@/components/buttons/InterlayMulberryOutlinedButton';
-import ErrorMessage from '@/components/ErrorMessage';
-import NumberInput from '@/components/NumberInput';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import InterlayCinnabarOutlinedButton from '@/legacy-components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayMulberryOutlinedButton from '@/legacy-components/buttons/InterlayMulberryOutlinedButton';
+import ErrorMessage from '@/legacy-components/ErrorMessage';
+import NumberInput from '@/legacy-components/NumberInput';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
 import { getExchangeRate } from '@/utils/helpers/oracle';
@@ -59,7 +60,6 @@ const RequestReplacementModal = ({
   } = useForm<RequestReplacementFormData>();
   const amount = watch(AMOUNT) || '0';
 
-
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const handleError = useErrorHandler();
@@ -71,7 +71,7 @@ const RequestReplacementModal = ({
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [griefingRate, setGriefingRate] = React.useState(new Big(10.0)); // Set default to 10%
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
+  const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_REDEEM_DUST_AMOUNT));
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
@@ -84,11 +84,7 @@ const RequestReplacementModal = ({
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [
-          theGriefingRate,
-          theDustValue,
-          theBtcToGovernanceTokenRate
-        ] = await Promise.all([
+        const [theGriefingRate, theDustValue, theBtcToGovernanceTokenRate] = await Promise.all([
           window.bridge.fee.getReplaceGriefingCollateralRate(),
           window.bridge.redeem.getDustValue(),
           getExchangeRate(GOVERNANCE_TOKEN)
@@ -120,14 +116,9 @@ const RequestReplacementModal = ({
     }
   });
 
-  if (
-    status === STATUSES.IDLE ||
-    status === STATUSES.PENDING ||
-    isBalancesLoading
-  ) {
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING || isBalancesLoading) {
     return <PrimaryColorEllipsisLoader />;
   }
-
 
   if (status === STATUSES.RESOLVED) {
     const validateAmount = (value: number): string | undefined => {

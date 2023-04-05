@@ -1,14 +1,15 @@
 import { LoanAsset, newMonetaryAmount, TickerToData } from '@interlay/interbtc-api';
+import { useId } from '@react-aria/utils';
 import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
+import { AssetCell, BalanceCell, Cell, Table, TableProps } from '@/components';
+import { ApyCell } from '@/components/LoanPositionsTable/ApyCell';
+import { LoanTablePlaceholder } from '@/components/LoanPositionsTable/LoanTablePlaceholder';
+import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-
-import { ApyCell, AssetCell, BalanceCell, LoansBaseTableProps } from '../LoansBaseTable';
-import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
-import { StyledLendAssetsTable } from './LendAssetsTable.style';
 
 enum LendAssetsColumns {
   ASSET = 'asset',
@@ -33,13 +34,16 @@ const lendAssetsColumns = [
   { name: 'Total Supplied', uid: LendAssetsColumns.TOTAL_SUPPLY }
 ];
 
-type LendAssetsTableProps = {
+type Props = {
   assets: TickerToData<LoanAsset>;
-  onRowAction: LoansBaseTableProps['onRowAction'];
-  disabledKeys: LoansBaseTableProps['disabledKeys'];
 };
 
-const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableProps): JSX.Element => {
+type InheritAttrs = Omit<TableProps, keyof Props | 'columns' | 'rows'>;
+
+type LendAssetsTableProps = Props & InheritAttrs;
+
+const LendAssetsTable = ({ assets, onRowAction, ...props }: LendAssetsTableProps): JSX.Element => {
+  const titleId = useId();
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { data: balances } = useGetBalances();
@@ -47,7 +51,7 @@ const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableP
   const rows: LendAssetsTableRow[] = useMemo(
     () =>
       Object.values(assets).map(({ lendApy, lendReward, currency, totalLiquidity }) => {
-        const asset = <AssetCell currency={currency.ticker} />;
+        const asset = <AssetCell ticker={currency.ticker} />;
 
         const apy = (
           <ApyCell
@@ -61,14 +65,15 @@ const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableP
         );
 
         const amount = balances ? balances[currency.ticker].free : newMonetaryAmount(0, currency);
-        const wallet = <BalanceCell amount={amount} prices={prices} />;
+        const amountUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, amount.currency.ticker)?.usd);
+        const wallet = <BalanceCell amount={amount} amountUSD={amountUSD || 0} />;
 
         const liquidityUSDValue = convertMonetaryAmountToValueInUSD(
           totalLiquidity,
-          prices?.[totalLiquidity.currency.ticker].usd
+          getTokenPrice(prices, totalLiquidity.currency.ticker)?.usd
         );
         const liquidityLabel = liquidityUSDValue || 0;
-        const totalSupply = <MonetaryCell label={formatUSD(liquidityLabel, { compact: true })} alignItems='flex-end' />;
+        const totalSupply = <Cell label={formatUSD(liquidityLabel, { compact: true })} alignItems='flex-end' />;
 
         return {
           id: currency.ticker,
@@ -82,12 +87,14 @@ const LendAssetsTable = ({ assets, onRowAction, disabledKeys }: LendAssetsTableP
   );
 
   return (
-    <StyledLendAssetsTable
+    <Table
+      {...props}
       title={t('loans.lend_markets')}
-      onRowAction={onRowAction}
+      titleId={titleId}
       rows={rows}
       columns={lendAssetsColumns}
-      disabledKeys={disabledKeys}
+      placeholder={<LoanTablePlaceholder variant='borrow' />}
+      onRowAction={onRowAction}
     />
   );
 };

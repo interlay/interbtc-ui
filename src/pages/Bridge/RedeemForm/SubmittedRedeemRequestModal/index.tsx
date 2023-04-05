@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import AddressWithCopyUI from '@/components/AddressWithCopyUI';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
-import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/components/UI/InterlayModal';
-import InterlayRouterLink from '@/components/UI/InterlayRouterLink';
+import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
+import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/legacy-components/UI/InterlayModal';
+import InterlayRouterLink from '@/legacy-components/UI/InterlayRouterLink';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';

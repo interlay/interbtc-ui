@@ -9,24 +9,14 @@ import { mockRedeemBurn, mockRedeemGetMaxBurnableTokens } from '../mocks/@interl
 import { act, render, screen, userEvent, waitFor } from '../test-utils';
 
 describe('Burn page', () => {
-  it('should display burn tab when there is liquidated vault', async () => {
+  it('the burn tab is displayed when there is a liquidated vault', async () => {
     await render(<App />, { path: '/bridge?tab=burn' });
 
     const burnTab = screen.getByRole('tab', { name: /burn/i });
     expect(burnTab).toBeVisible();
   });
 
-  it('should not display burn tab when there is no liquidated vault', async () => {
-    mockRedeemGetMaxBurnableTokens.mockImplementationOnce(() => newMonetaryAmount('0', WRAPPED_TOKEN));
-
-    await render(<App />, { path: '/bridge?tab=burn' });
-
-    await waitFor(() => {
-      expect(screen.queryByText(/Burn/i)).not.toBeInTheDocument();
-    });
-  });
-
-  it('should burn the IBTC', async () => {
+  it('the burn method is called', async () => {
     await render(<App />, { path: '/bridge?tab=burn' });
 
     const burnTab = screen.getByRole('tab', { name: /burn/i });
@@ -48,5 +38,15 @@ describe('Burn page', () => {
 
     // Check that burn method was called.
     await waitFor(() => expect(mockRedeemBurn).toHaveBeenCalledTimes(1));
+  });
+
+  it('the burn tab is not displayed when there is no liquidated vault', async () => {
+    mockRedeemGetMaxBurnableTokens.mockImplementation(() => newMonetaryAmount('0', WRAPPED_TOKEN));
+
+    await render(<App />, { path: '/bridge?tab=burn' });
+
+    await waitFor(() => {
+      expect(screen.queryByText(/Burn/i)).not.toBeInTheDocument();
+    });
   });
 });

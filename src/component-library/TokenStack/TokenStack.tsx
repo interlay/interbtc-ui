@@ -13,7 +13,7 @@ type InheritAttrs = Omit<FlexProps, keyof Props>;
 
 type TokenStackProps = Props & InheritAttrs;
 
-const TokenStack = ({ tickers, gap, size = 'md', offset = '1/3', ...props }: TokenStackProps): JSX.Element => (
+const TokenStack = ({ tickers, gap, size = 'md', offset = 'md', ...props }: TokenStackProps): JSX.Element => (
   <StyledWrapper $size={size} $offset={offset} gap={gap} {...props}>
     {tickers.map((ticker, key) => (
       <CoinIcon key={`${ticker}-${key}`} size={size} ticker={ticker} />

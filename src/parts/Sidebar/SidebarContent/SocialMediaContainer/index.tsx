@@ -1,13 +1,13 @@
 import clsx from 'clsx';
 import { FaDiscord, FaGithub, FaMailBulk, FaTwitter } from 'react-icons/fa';
 
-import InterlayLink from '@/components/UI/InterlayLink';
 import {
   INTERLAY_DISCORD_LINK,
   INTERLAY_EMAIL_LINK,
   INTERLAY_GITHUB_LINK,
   INTERLAY_TWITTER_LINK
 } from '@/config/links';
+import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const SOCIAL_MEDIA_ITEMS = [

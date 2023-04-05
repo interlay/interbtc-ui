@@ -1,52 +1,42 @@
-import { CurrencyExt, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { CollateralPosition, CurrencyExt, LendingStats, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import Big from 'big.js';
 
 /**
  * Get maximum amount of currency that user can withdraw
  * with currently provided collateral and liquidity.
- * @param {LoanAsset} asset The asset to be withdrew.
- * @param {number} assetPrice The asset price.
- * @param {LendPosition} position The position to be withdrew.
- * @param {Big} totalBorrowedAmountUSD Total borrowed amount in usd.
- * @param {Big} totalCollateralAmountUSD Total provided collateral amount in usd.
+ * @param {LoanAsset} asset The asset to be withdrawn.
+ * @param {CollateralPosition} position The position to be withdrew.
+ * @param {LendingStats} lendingStats Object containing information about account's collateralization.
  * @return {MonetaryAmount<CurrencyExt> | undefined} maximum amount of currency that
- * user can withdraw with currently provided collateral. Returns undefined if it is loading
+ * user can withdraw with currently provided collateral
  */
 const getMaxWithdrawableAmount = (
   asset: LoanAsset,
-  assetPrice?: number,
-  position?: LendPosition,
-  totalBorrowedAmountUSD?: Big,
-  totalCollateralAmountUSD?: Big
-): MonetaryAmount<CurrencyExt> | undefined => {
+  position?: CollateralPosition,
+  lendingStats?: LendingStats
+): MonetaryAmount<CurrencyExt> => {
   const { currency } = asset;
 
-  if (
-    assetPrice === undefined ||
-    position === undefined ||
-    totalCollateralAmountUSD === undefined ||
-    totalBorrowedAmountUSD === undefined
-  ) {
+  if (position === undefined || lendingStats === undefined) {
     return newMonetaryAmount(0, currency);
   }
 
   const { amount, isCollateral } = position;
-  const { collateralThreshold } = asset;
+  const { collateralThreshold, exchangeRate } = asset;
+  const { borrowLimitBtc } = lendingStats;
 
   if (!isCollateral) {
     return amount;
   }
 
-  const positionAmountUSD = amount.toBig().mul(assetPrice);
-  const positionCollateralValueUSD = positionAmountUSD.mul(collateralThreshold);
-  const borrowLimit = totalCollateralAmountUSD.sub(totalBorrowedAmountUSD);
+  const positionAmountBtc = exchangeRate.toBase(amount);
+  const positionCollateralValueBtc = positionAmountBtc.mul(collateralThreshold);
 
-  if (positionCollateralValueUSD.lt(borrowLimit)) {
+  if (positionCollateralValueBtc.lt(borrowLimitBtc)) {
     return amount;
   }
 
-  const maxWithdrawable = borrowLimit.div(assetPrice).div(collateralThreshold);
+  const maxWithdrawable = exchangeRate.toCounter(borrowLimitBtc).div(collateralThreshold).toBig();
 
   return newMonetaryAmount(maxWithdrawable, currency, true);
 };

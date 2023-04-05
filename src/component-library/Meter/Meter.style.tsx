@@ -28,6 +28,7 @@ const StyledWrapper = styled.div<StyledWrapperProps>`
 `;
 
 const StyledMeter = styled.div<StyledMeterProps>`
+  // TODO: add overflow: hidden
   position: relative;
   height: ${theme.meter.bar.height};
   background: ${({ $variant }) => theme.meter.bar[$variant].bg};

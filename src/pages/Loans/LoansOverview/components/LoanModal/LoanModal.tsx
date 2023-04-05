@@ -1,4 +1,4 @@
-import { BorrowPosition, LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { BorrowPosition, CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
@@ -33,7 +33,7 @@ const getData = (t: TFunction, variant: LoanType): LoanTypeData => {
 type Props = {
   variant: LoanType;
   asset?: LoanAsset;
-  position?: LendPosition | BorrowPosition;
+  position?: CollateralPosition | BorrowPosition;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -50,7 +50,7 @@ const LoanModal = ({ variant = 'lend', asset, position, onClose, ...props }: Loa
   const { tabs } = getData(t, variant);
 
   return (
-    <Modal aria-label={`${variant} ${asset.currency.ticker}`} onClose={onClose} {...props}>
+    <Modal aria-label={`${variant} ${asset.currency.ticker}`} onClose={onClose} align='top' {...props}>
       <ModalBody noPadding>
         <StyledTabs size='large' fullWidth>
           {tabs.map((tab) => (

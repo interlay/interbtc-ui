@@ -1,3 +1,5 @@
+import { breakpoints } from '../utils/breakpoints';
+
 const theme = {
   // Layout
   layout: {
@@ -7,6 +9,7 @@ const theme = {
       lg: '48em'
     }
   },
+  breakpoints,
   // Generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
@@ -56,6 +59,7 @@ const theme = {
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)',
     spacing14: 'var(--spacing-14)',
+    spacing16: 'var(--spacing-16)',
     spacing28: 'var(--spacing-28)'
   },
   rounded: {
@@ -162,6 +166,12 @@ const theme = {
     text: {
       text: 'var(--colors-cta-text-text)',
       bgHover: 'var(--colors-cta-text-hover)'
+    },
+    'x-small': {
+      padding: 'var(--spacing-1)',
+      text: 'var(--text-xs)',
+      // TODO: revist on redesign
+      lineHeight: '1'
     },
     small: {
       padding: 'var(--spacing-2)',
@@ -367,7 +377,11 @@ const theme = {
     zIndex: 2,
     underlay: {
       zIndex: 1,
-      bg: 'var(--colors-neutral-black-60)'
+      bg: 'var(--colors-neutral-black-60)',
+      transition: {
+        entering: 'opacity .15s cubic-bezier(0,0,.4,1)',
+        exiting: 'opacity .1s cubic-bezier(0.5,0,1,1), visibility 0s linear .1s'
+      }
     },
     header: {
       paddingY: 'var(--spacing-4)',
@@ -388,6 +402,10 @@ const theme = {
     },
     closeBtn: {
       zIndex: 100
+    },
+    transition: {
+      entering: 'transform .15s cubic-bezier(0,0,0.4,1) .1s, opacity .15s cubic-bezier(0,0,0.4,1)',
+      exiting: 'opacity .1s cubic-bezier(0.5,0,1,1), visibility 0s linear, transform 0s linear .1s'
     }
   },
   switch: {
@@ -410,7 +428,12 @@ const theme = {
     }
   },
   divider: {
-    bg: 'var(--colors-border)'
+    bg: 'var(--colors-border)',
+    size: {
+      small: '1px',
+      medium: '2px',
+      large: '3px'
+    }
   },
   icon: {
     sizes: {
@@ -419,22 +442,71 @@ const theme = {
       lg: 'var(--spacing-8)',
       xl: 'var(--spacing-10)',
       xl2: 'var(--spacing-12)'
+    },
+    fallback: {
+      color: 'var(--color-icon-fallback-color)',
+      stroke: 'var(--color-icon-fallback-stroke)'
     }
   },
   list: {
     text: 'var(--color-list-selected-text)',
     primary: {
-      bg: 'var(--color-list-primary-bg)',
-      border: '1px solid var(--colors-border)',
-      hover: {
-        bg: 'var(--color-list-primary-hover-bg)'
-      }
+      bg: '',
+      border: '',
+      rounded: ''
     },
     secondary: {
-      bg: 'var(--color-list-secondary-bg)',
-      border: 'none',
-      hover: {
-        bg: 'var(--color-list-secondary-hover-bg)'
+      bg: '',
+      border: '',
+      rounded: ''
+    },
+    card: {
+      bg: 'var(--colors-table-odd-row-bg)',
+      border: '1px solid var(--colors-border)',
+      rounded: 'var(--rounded-md)'
+    },
+    item: {
+      primary: {
+        bg: 'var(--color-list-primary-bg)',
+        border: '1px solid var(--colors-border)',
+        hover: {
+          bg: 'var(--color-list-primary-hover-bg)'
+        },
+        rounded: 'var(--rounded-md)'
+      },
+      secondary: {
+        bg: 'var(--color-list-secondary-bg)',
+        border: 'none',
+        hover: {
+          bg: 'var(--color-list-secondary-hover-bg)'
+        },
+        rounded: 'var(--rounded-md)'
+      },
+      card: {
+        bg: 'var(--colors-table-odd-row-bg)',
+        border: '1px solid var(--colors-border)',
+        hover: {
+          bg: 'var(--color-list-primary-hover-bg)'
+        },
+        rounded: ''
+      }
+    }
+  },
+  select: {
+    placeholder: 'var(--colors-text-tertiary)',
+    color: 'var(--color-select-text)',
+    size: {
+      small: {
+        padding: 'var(--spacing-1)',
+        text: 'var(--text-s)'
+      },
+      medium: {
+        padding: 'var(--spacing-2)',
+        text: 'var(--text-base)'
+      },
+      large: {
+        padding: 'var(--spacing-5) var(--spacing-2)',
+        text: 'var(--text-lg)'
       }
     }
   }

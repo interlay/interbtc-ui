@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { InterlayModalTitle, InterlayModalTitleProps } from '@/components/UI/InterlayModal';
+import { InterlayModalTitle, InterlayModalTitleProps } from '@/legacy-components/UI/InterlayModal';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 const RequestModalTitle = ({ className, ...rest }: InterlayModalTitleProps): JSX.Element => (

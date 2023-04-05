@@ -3,6 +3,7 @@ import './index.css';
 import '@/component-library/theme/theme.interlay.css';
 import '@/component-library/theme/theme.kintsugi.css';
 
+import { configGlobalBig } from '@interlay/monetary-js';
 import { OverlayProvider } from '@react-aria/overlays';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
@@ -20,40 +21,35 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 
-const DeveloperConsole = React.lazy(
-  () => import(/* webpackChunkName: 'developer-console' */ '@/lib/substrate/components/DeveloperConsole')
-);
+configGlobalBig();
 
 window.isFetchingActive = false;
 
 const queryClient = new QueryClient();
 
+// MEMO: temporarily removed React.StrictMode. We should add back when react-spectrum handles
+// it across their library. (Issue: https://github.com/adobe/react-spectrum/issues/779#issuecomment-1353734729)
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <QueryClientProvider client={queryClient}>
-        <HelmetProvider>
-          <Provider store={store}>
-            <SubstrateProvider>
-              <ThemeWrapper>
-                <SubstrateLoadingAndErrorHandlingWrapper>
-                  <Subscriptions>
-                    <OverlayProvider>
-                      <App />
-                    </OverlayProvider>
-                  </Subscriptions>
-                </SubstrateLoadingAndErrorHandlingWrapper>
-              </ThemeWrapper>
-              <React.Suspense fallback={null}>
-                <DeveloperConsole />
-              </React.Suspense>
-            </SubstrateProvider>
-          </Provider>
-        </HelmetProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </Router>
-  </React.StrictMode>,
+  <Router>
+    <QueryClientProvider client={queryClient}>
+      <HelmetProvider>
+        <Provider store={store}>
+          <SubstrateProvider>
+            <ThemeWrapper>
+              <SubstrateLoadingAndErrorHandlingWrapper>
+                <Subscriptions>
+                  <OverlayProvider>
+                    <App />
+                  </OverlayProvider>
+                </Subscriptions>
+              </SubstrateLoadingAndErrorHandlingWrapper>
+            </ThemeWrapper>
+          </SubstrateProvider>
+        </Provider>
+      </HelmetProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  </Router>,
   document.getElementById('root')
 );
 

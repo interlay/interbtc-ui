@@ -59,9 +59,9 @@
   --colors-input-default-border: var(--colors-neutral-white-25);
   --colors-input-hover-border: var(--colors-slate-gray);
   --colors-input-focus-border: var(--colors-neutral-white);
-  --colors-input-disabled-text: var(--colors-mid-blue);
+  --colors-input-disabled-text: var(--colors-slate-gray);
   --colors-input-disabled-border: var(--colors-mid-blue);
-  --colors-input-background: transparent;
+  --colors-input-background: var(--colors-blue);
   /* Token Input */
   --colors-token-input-end-adornment-bg: var(--colors-neutral-white-25);
   /* Token List */
@@ -86,7 +86,12 @@
   /* List */
   --color-list-primary-bg: var(--colors-bg-primary);
   --color-list-primary-hover-bg: #1c2c46;
-  --color-list-secondary-bg: var(--colors-blue);
+  --color-list-secondary-bg: #101e3d;
   --color-list-secondary-hover-bg: #1c2c46;
   --color-list-selected-text: var(--colors-neutral-black);
+  /* Icon */
+  --color-icon-fallback-stroke: #232323;
+  --color-icon-fallback-color: #040816;
+  /* Select */
+  --color-select-text: var(--colors-neutral-white);
 }

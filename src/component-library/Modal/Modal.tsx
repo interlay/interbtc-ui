@@ -1,60 +1,56 @@
-import { AriaDialogProps, useDialog } from '@react-aria/dialog';
-import { FocusScope } from '@react-aria/focus';
-import { AriaOverlayProps, OverlayContainer, useModalOverlay } from '@react-aria/overlays';
-import { OverlayTriggerState } from '@react-stately/overlays';
-import { forwardRef, ReactNode } from 'react';
+import { forwardRef } from 'react';
 
-import { XMark } from '@/assets/icons';
-import { useMountTransition } from '@/utils/hooks/use-mount-transition';
-
-import { theme } from '../theme';
+import { Overlay } from '../Overlay';
 import { useDOMRef } from '../utils/dom';
-import { StyledCloseCTA, StyledDialog, StyledDialogWrapper, StyledUnderlay } from './Modal.style';
-import { ModalContext } from './ModalContext';
+import { Dialog, DialogProps } from './Dialog';
+import { ModalWrapper, ModalWrapperProps } from './ModalWrapper';
 
 type Props = {
-  children: ReactNode;
+  container?: Element;
+  hasMaxHeight?: boolean;
+  align?: 'top' | 'center';
 };
 
-type InheritAttrs = Omit<AriaDialogProps & AriaOverlayProps, keyof Props>;
+type InheritAttrs = Omit<ModalWrapperProps & DialogProps, keyof Props>;
 
 type ModalProps = Props & InheritAttrs;
 
 const Modal = forwardRef<HTMLDivElement, ModalProps>(
-  ({ children, isDismissable = true, ...props }, ref): JSX.Element | null => {
-    const dialogRef = useDOMRef(ref);
+  (
+    {
+      children,
+      isDismissable = true,
+      align = 'center',
+      hasMaxHeight,
+      isKeyboardDismissDisabled,
+      shouldCloseOnBlur,
+      shouldCloseOnInteractOutside,
+      container,
+      ...props
+    },
+    ref
+  ): JSX.Element | null => {
+    const domRef = useDOMRef(ref);
     const { isOpen, onClose } = props;
-    const { shouldRender, transitionTrigger } = useMountTransition(!!isOpen, theme.transition.duration.duration100);
 
-    // Handle interacting outside the dialog and pressing
-    // the Escape key to close the modal.
-    const { modalProps, underlayProps } = useModalOverlay(
-      { isDismissable, ...props },
-      // These are the only props needed
-      { isOpen: !!isOpen, close: onClose } as OverlayTriggerState,
-      dialogRef
+    return (
+      <Overlay isOpen={isOpen} container={container}>
+        <ModalWrapper
+          ref={domRef}
+          align={align}
+          isDismissable={isDismissable}
+          isOpen={isOpen}
+          isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+          shouldCloseOnBlur={shouldCloseOnBlur}
+          shouldCloseOnInteractOutside={shouldCloseOnInteractOutside}
+          onClose={onClose}
+        >
+          <Dialog hasMaxHeight={hasMaxHeight} align={align} {...props}>
+            {children}
+          </Dialog>
+        </ModalWrapper>
+      </Overlay>
     );
-
-    // Get props for the dialog and its title
-    const { dialogProps, titleProps } = useDialog(props, dialogRef);
-
-    return isOpen || shouldRender ? (
-      <OverlayContainer>
-        <StyledUnderlay {...underlayProps} />
-        <FocusScope contain restoreFocus autoFocus>
-          <StyledDialogWrapper ref={dialogRef} {...modalProps} $transitionTrigger={transitionTrigger}>
-            <ModalContext.Provider value={{ titleProps }}>
-              <StyledDialog {...dialogProps}>
-                <StyledCloseCTA size='small' variant='text' aria-label='Dismiss' onPress={onClose}>
-                  <XMark />
-                </StyledCloseCTA>
-                {children}
-              </StyledDialog>
-            </ModalContext.Provider>
-          </StyledDialogWrapper>
-        </FocusScope>
-      </OverlayContainer>
-    ) : null;
   }
 );
 

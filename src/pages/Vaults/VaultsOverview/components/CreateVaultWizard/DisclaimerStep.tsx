@@ -28,7 +28,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
 
   return (
     <>
-      <StyledModalHeader alignment='center'>
+      <StyledModalHeader align='center'>
         <StyledWarningIcon />
         {t('vault.disclaimer.plase_read_before_you_start')}
       </StyledModalHeader>
