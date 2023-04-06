@@ -82,9 +82,7 @@ const WalletInsights = ({
           ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
           : 0;
       })
-    )
-      .reduce((total, accountLPTokenAmount) => total.add(accountLPTokenAmount), new Big(0))
-      .toString();
+    ).reduce((total, accountLPTokenAmount) => total.add(accountLPTokenAmount), new Big(0));
 
   const totalBalance = rawBalance
     ?.add(totalLendPositions || 0)
