@@ -1,4 +1,3 @@
-import { BorrowPosition, CollateralPosition } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
 
@@ -9,6 +8,7 @@ import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
+import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -16,20 +16,15 @@ import { WalletMeta } from './WalletMeta';
 
 type WalletInsightsProps = {
   balances?: BalanceData;
-  borrowPositions?: BorrowPosition[];
-  lendPositions?: CollateralPosition[];
   accountLiquidityPools?: AccountLiquidityPool[];
 };
 
-const WalletInsights = ({
-  balances,
-  borrowPositions,
-  lendPositions,
-  accountLiquidityPools
-}: WalletInsightsProps): JSX.Element => {
+const WalletInsights = ({ balances, accountLiquidityPools }: WalletInsightsProps): JSX.Element => {
   const { t } = useTranslation();
 
   const prices = useGetPrices();
+  const { data } = useGetAccountLendingStatistics();
+
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const rawBalance =
@@ -40,32 +35,6 @@ const WalletInsights = ({
           convertMonetaryAmountToValueInUSD(
             balance.free.add(balance.reserved),
             getTokenPrice(prices, balance.currency.ticker)?.usd
-          ) || 0
-        ),
-      new Big(0)
-    );
-
-  const totalLendPositions =
-    lendPositions &&
-    Object.values(lendPositions).reduce(
-      (total, balance) =>
-        total.add(
-          convertMonetaryAmountToValueInUSD(
-            balance.amount,
-            getTokenPrice(prices, balance.amount.currency.ticker)?.usd
-          ) || 0
-        ),
-      new Big(0)
-    );
-
-  const totalBorrowPositions =
-    borrowPositions &&
-    Object.values(borrowPositions).reduce(
-      (total, balance) =>
-        total.add(
-          convertMonetaryAmountToValueInUSD(
-            balance.amount,
-            getTokenPrice(prices, balance.amount.currency.ticker)?.usd
           ) || 0
         ),
       new Big(0)
@@ -85,8 +54,8 @@ const WalletInsights = ({
     ).reduce((total, accountLPTokenAmount) => total.add(accountLPTokenAmount), new Big(0));
 
   const totalBalance = rawBalance
-    ?.add(totalLendPositions || 0)
-    .sub(totalBorrowPositions || 0)
+    ?.add(data?.supplyAmountUSD || 0)
+    .sub(data?.borrowAmountUSD || 0)
     .add(totalAccountLiquidityPools || 0);
 
   const totalBalanceLabel = totalBalance ? formatUSD(totalBalance.toNumber(), { compact: true }) : '-';
