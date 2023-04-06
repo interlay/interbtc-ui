@@ -38,7 +38,12 @@ const WalletOverview = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <WalletInsights balances={balances} lendPositions={lendPositions} borrowPositions={borrowPositions} />
+      <WalletInsights
+        balances={balances}
+        lendPositions={lendPositions}
+        borrowPositions={borrowPositions}
+        accountLiquidityPools={accountPoolsData?.positions}
+      />
       <AvailableAssetsTable balances={balances} pooledTickers={pooledTickers} />
       {!!lendPositions?.length && assets && (
         <LoanPositionsTable title='Lend Positions' positions={lendPositions} variant='lend' assets={assets} />
