@@ -92,7 +92,7 @@ const WalletInsights = ({
 
   const totalBalanceLabel = totalBalance ? formatUSD(totalBalance.toNumber(), { compact: true }) : '-';
 
-  const transfarableBalance =
+  const transferableBalance =
     balances &&
     Object.values(balances).reduce(
       (total, balance) =>
@@ -105,8 +105,8 @@ const WalletInsights = ({
       new Big(0)
     );
 
-  const transfarableBalanceLabel = transfarableBalance
-    ? formatUSD(transfarableBalance.toNumber(), { compact: true })
+  const transferableBalanceLabel = transferableBalance
+    ? formatUSD(transferableBalance.toNumber(), { compact: true })
     : '-';
 
   return (
@@ -130,7 +130,7 @@ const WalletInsights = ({
             {t('transferable_balance')}
           </Dt>
           <Dd weight='bold' color='secondary'>
-            {transfarableBalanceLabel}
+            {transferableBalanceLabel}
           </Dd>
         </DlGroup>
       </Card>
