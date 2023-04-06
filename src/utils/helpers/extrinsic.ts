@@ -1,9 +1,9 @@
-import { ExtrinsicData } from '@interlay/interbtc-api';
+import { ExtrinsicData, newExtrinsicStatus } from '@interlay/interbtc-api';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import { ISubmittableResult } from '@polkadot/types/types';
 
-const inBlockExtrinsicStatus = window.bridge.api.createType('ExtrinsicStatus', 'InBlock');
-const finalizedExtrinsicStatus = window.bridge.api.createType('ExtrinsicStatus', 'Finalized');
+const inBlockExtrinsicStatus = newExtrinsicStatus(window.bridge.api, 'InBlock');
+const finalizedExtrinsicStatus = newExtrinsicStatus(window.bridge.api, 'Finalized');
 
 /**
  * Helper to simple extrinsic submission. Waits for inBlock inclusion only by default.
@@ -16,7 +16,7 @@ const submitExtrinsic = async (
   extrinsicStatus: ExtrinsicStatus = inBlockExtrinsicStatus
 ): Promise<ISubmittableResult> => {
   const { extrinsic, event } = extrinsicData;
-  await window.bridge.transaction.sendLogged(extrinsic, event, extrinsicStatus);
+  return await window.bridge.transaction.sendLogged(extrinsic, event, extrinsicStatus);
 };
 
 const submitExtrinsicPromise = async (

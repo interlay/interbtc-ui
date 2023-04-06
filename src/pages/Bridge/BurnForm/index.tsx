@@ -25,6 +25,7 @@ import Tokens, { TokenOption } from '@/legacy-components/Tokens';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral-currencies';
@@ -149,7 +150,9 @@ const BurnForm = (): JSX.Element | null => {
     const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
-        await window.bridge.redeem.burn(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), selectedCollateral.currency);
+        await submitExtrinsic(
+          window.bridge.redeem.burn(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), selectedCollateral.currency)
+        );
 
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {

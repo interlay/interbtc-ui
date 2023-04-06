@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
-import { submitExtrinsic, submitExtrinsic } from '@/utils/helpers/extrinsic';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 

@@ -16,7 +16,7 @@ import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-import { submitExtrinsic, submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
+import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
 import ManualIssueExecutionUI from '../ManualIssueExecutionUI';

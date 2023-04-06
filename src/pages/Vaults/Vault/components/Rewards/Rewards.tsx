@@ -1,4 +1,5 @@
 import { CollateralCurrencyExt, newVaultId, WrappedCurrency, WrappedIdLiteral } from '@interlay/interbtc-api';
+import { ISubmittableResult } from '@polkadot/types/types';
 import Big from 'big.js';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
@@ -9,6 +10,7 @@ import { LoadingSpinner } from '@/component-library/LoadingSpinner';
 import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -47,7 +49,7 @@ const Rewards = ({
   const queryClient = useQueryClient();
   const vaultAccountId = useAccountId(vaultAddress);
 
-  const claimRewardsMutation = useMutation<void, Error, void>(
+  const claimRewardsMutation = useMutation<ISubmittableResult, Error, void>(
     () => {
       if (vaultAccountId === undefined) {
         throw new Error('Something went wrong!');
@@ -60,7 +62,7 @@ const Rewards = ({
         WRAPPED_TOKEN as WrappedCurrency
       );
 
-      return window.bridge.rewards.withdrawRewards(vaultId);
+      return submitExtrinsic(window.bridge.rewards.withdrawRewards(vaultId));
     },
     {
       onSuccess: () => {

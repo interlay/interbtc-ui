@@ -1,4 +1,5 @@
 import { CollateralCurrencyExt, InterbtcPrimitivesVaultId, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
+import { getRedeemRequestsFromExtrinsicResult } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -43,6 +44,7 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getColorShade } from '@/utils/helpers/colors';
+import { finalizedExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -293,10 +295,18 @@ const RedeemForm = (): JSX.Element | null => {
         const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(vaultId, monetaryWrappedTokenAmount.mul(2));
-        const result = await window.bridge.redeem.request(monetaryWrappedTokenAmount, data[BTC_ADDRESS], vaultId);
+        const extrinsicData = await window.bridge.redeem.request(
+          monetaryWrappedTokenAmount,
+          data[BTC_ADDRESS],
+          vaultId
+        );
+        // When requesting a redeem, wait for the finalized event because we cannot revert BTC transactions.
+        // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
+        const extrinsicResult = await submitExtrinsic(extrinsicData, finalizedExtrinsicStatus);
+        const redeemRequests = await getRedeemRequestsFromExtrinsicResult(window.bridge, extrinsicResult);
 
         // TODO: handle redeem aggregator
-        const redeemRequest = result[0];
+        const redeemRequest = redeemRequests[0];
         handleSubmittedRequestModalOpen(redeemRequest);
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {
