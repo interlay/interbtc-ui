@@ -46,7 +46,7 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
 
       return targetCurrency;
     },
-    [queryResult]
+    [queryResult.data]
   );
 
   // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
