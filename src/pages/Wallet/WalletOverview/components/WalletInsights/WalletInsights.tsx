@@ -5,9 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { Card, Dd, Dl, DlGroup, Dt, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
-// import { calculateAccountLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -17,15 +15,9 @@ type WalletInsightsProps = {
   balances?: BalanceData;
   borrowPositions?: BorrowPosition[];
   lendPositions?: CollateralPosition[];
-  accountLiquidityPools?: AccountLiquidityPool[];
 };
 
-const WalletInsights = ({
-  balances,
-  // borrowPositions,
-  lendPositions,
-  accountLiquidityPools
-}: WalletInsightsProps): JSX.Element => {
+const WalletInsights = ({ balances, borrowPositions, lendPositions }: WalletInsightsProps): JSX.Element => {
   const { t } = useTranslation();
 
   const prices = useGetPrices();
@@ -57,32 +49,20 @@ const WalletInsights = ({
       new Big(0)
     );
 
-  // const totalBorrowPositions =
-  //   borrowPositions &&
-  //   Object.values(borrowPositions).reduce(
-  //     (total, balance) =>
-  //       total.add(
-  //         convertMonetaryAmountToValueInUSD(
-  //           balance.amount,
-  //           getTokenPrice(prices, balance.amount.currency.ticker)?.usd
-  //         ) || 0
-  //       ),
-  //     new Big(0)
-  //   );
+  const totalBorrowPositions =
+    borrowPositions &&
+    Object.values(borrowPositions).reduce(
+      (total, balance) =>
+        total.add(
+          convertMonetaryAmountToValueInUSD(
+            balance.amount,
+            getTokenPrice(prices, balance.amount.currency.ticker)?.usd
+          ) || 0
+        ),
+      new Big(0)
+    );
 
-  const totalAccountLiquidityPools =
-    accountLiquidityPools &&
-    accountLiquidityPools.map(({ data, amount: accountLPTokenAmount }) => {
-      return { data, accountLPTokenAmount };
-    });
-
-  // console.log('borrowPositions', borrowPositions, totalBorrowPositions);
-
-  if (accountLiquidityPools) {
-    console.log('accountLiquidityPools', accountLiquidityPools, totalAccountLiquidityPools?.toString());
-  }
-
-  const totalBalance = totalLendPositions ? rawBalance?.add(totalLendPositions) : rawBalance;
+  const totalBalance = rawBalance?.add(totalLendPositions || 0).sub(totalBorrowPositions || 0);
   const totalBalanceLabel = totalBalance ? formatUSD(totalBalance.toNumber(), { compact: true }) : '-';
 
   const transfarableBalance =
