@@ -65,7 +65,7 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
 
       return foreignCurrency;
     },
-    [queryResult]
+    [queryResult.data]
   );
 
   // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
@@ -82,7 +82,7 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
 
       return lendCurrency;
     },
-    [queryResult]
+    [queryResult.data]
   );
 
   // TODO: add getter according to existing LP Tokens identifiers
