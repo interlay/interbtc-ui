@@ -4,10 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { Card, Dd, Dl, DlGroup, Dt, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
-// TODO: should these be moved to a shared utilties directory?
-import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { AccountLiquidityPool } from '@/utils/hooks/api/amm/use-get-account-pools';
+import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -16,14 +14,14 @@ import { WalletMeta } from './WalletMeta';
 
 type WalletInsightsProps = {
   balances?: BalanceData;
-  accountLiquidityPools?: AccountLiquidityPool[];
 };
 
-const WalletInsights = ({ balances, accountLiquidityPools }: WalletInsightsProps): JSX.Element => {
+const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
   const { t } = useTranslation();
 
   const prices = useGetPrices();
-  const { data } = useGetAccountLendingStatistics();
+  const { data: accountLendingStatistics } = useGetAccountLendingStatistics();
+  const { data: accountPools } = useGetAccountPools();
 
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -40,23 +38,10 @@ const WalletInsights = ({ balances, accountLiquidityPools }: WalletInsightsProps
       new Big(0)
     );
 
-  const totalAccountLiquidityPools =
-    accountLiquidityPools &&
-    Object.values(
-      accountLiquidityPools.map(({ data, amount: accountLPTokenAmount }) => {
-        const { pooledCurrencies, totalSupply } = data;
-        const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
-
-        return accountLPTokenAmount
-          ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
-          : 0;
-      })
-    ).reduce((total, accountLPTokenAmount) => total.add(accountLPTokenAmount), new Big(0));
-
   const totalBalance = rawBalance
-    ?.add(data?.supplyAmountUSD || 0)
-    .sub(data?.borrowAmountUSD || 0)
-    .add(totalAccountLiquidityPools || 0);
+    ?.add(accountLendingStatistics?.supplyAmountUSD || 0)
+    .sub(accountLendingStatistics?.borrowAmountUSD || 0)
+    .add(accountPools?.accountLiquidityUSD || 0);
 
   const totalBalanceLabel = totalBalance ? formatUSD(totalBalance.toNumber(), { compact: true }) : '-';
 
