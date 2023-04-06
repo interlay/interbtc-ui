@@ -23,14 +23,14 @@ const Swap = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { data: liquidityPools, refetch } = useGetLiquidityPools();
-  const { data, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
+  const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
   const [pair, setPair] = useState<SwapPair>(DEFAULT_PAIR);
 
   const pooledTickers = useMemo(() => liquidityPools && getPooledTickers(liquidityPools), [liquidityPools]);
 
   useEffect(() => {
-    if (!pooledTickers || !data) return;
+    if (!currencies) return;
 
     const inputQuery = query.get(QUERY_PARAMETERS.SWAP.FROM);
     const outputQuery = query.get(QUERY_PARAMETERS.SWAP.TO);
@@ -39,8 +39,7 @@ const Swap = (): JSX.Element => {
     const toCurrency = outputQuery ? getCurrencyFromTicker(outputQuery) : DEFAULT_PAIR.output;
 
     setPair({ input: fromCurrency, output: toCurrency });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pooledTickers, data]);
+  }, [currencies, query, getCurrencyFromTicker]);
 
   if (liquidityPools === undefined || pooledTickers === undefined) {
     return <FullLoadingSpinner />;
