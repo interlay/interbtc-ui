@@ -21,6 +21,10 @@
     {
       "source": "/marketdata/(.*)",
       "destination": "/api/market_data.py"
+    },
+    {
+      "source": "/terms/(.*)",
+      "destination": "/api/terms.js"
     }
   ],
   "headers": [
