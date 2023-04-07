@@ -1,9 +1,7 @@
 import postgres from 'pg'
 const { Pool } = postgres;
 
-if (!globalThis.URLPattern) {
-    await import("urlpattern-polyfill");
-}
+import "urlpattern-polyfill";
 
 const pool = new Pool()
 const pattern = new URLPattern({ pathname: '/api/terms/:wallet' });
