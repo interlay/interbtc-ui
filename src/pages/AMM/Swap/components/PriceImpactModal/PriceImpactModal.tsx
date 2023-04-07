@@ -37,7 +37,7 @@ const PriceImpactModal = ({
 
   return (
     <Modal {...props} onClose={onClose}>
-      <StyledModalHeader>Price Impact Warning</StyledModalHeader>
+      <StyledModalHeader>External Price Impact Warning</StyledModalHeader>
       <ModalBody alignItems='center' gap='spacing4'>
         <Flex direction='column' alignItems='center' gap='spacing1'>
           <P>{t('amm.swap_has_price_inpact_of')}:</P>
