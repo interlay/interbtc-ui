@@ -1,10 +1,8 @@
 import postgres from 'pg'
 const { Pool } = postgres;
 
-import "urlpattern-polyfill";
-
 const pool = new Pool()
-const pattern = new URLPattern({ pathname: '/terms/:wallet' });
+const pattern = /\/terms\/(?<wallet>\w+)/;
 
 export default async function (request, response) {
     console.log(request)
@@ -12,8 +10,7 @@ export default async function (request, response) {
         return response.status(400).send('Bad Request');
     }
 
-    const result = pattern.exec(request.url);
-    const wallet = result.pathname.groups.wallet;
+    const wallet = request.url.match(pattern).groups.wallet;
 
     if (request.method === 'GET') {
         const result = await pool.query('select exists(select 1 from signed_terms where wallet_id=$1)', [wallet])
