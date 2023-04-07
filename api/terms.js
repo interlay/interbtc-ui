@@ -4,9 +4,10 @@ const { Pool } = postgres;
 import "urlpattern-polyfill";
 
 const pool = new Pool()
-const pattern = new URLPattern({ pathname: '/api/terms/:wallet' });
+const pattern = new URLPattern({ pathname: '/terms/:wallet' });
 
 export default async function (request, response) {
+    console.log(request)
     if (!pattern.test(request.url)) {
         return response.status(400).send('Bad Request');
     }
