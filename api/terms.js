@@ -1,11 +1,10 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
 import postgres from 'pg'
 const { Pool } = postgres;
 
 const pool = new Pool()
 const pattern = new URLPattern({ pathname: '/api/terms/:wallet' });
 
-export default async function (request: VercelRequest, response: VercelResponse) {
+export default async function (request, response) {
     if (!pattern.test(request.url)) {
         return response.status(400).send('Bad Request');
     }
