@@ -13,6 +13,7 @@
     "@vercel/node": "^2.10.2"
   },
   "dependencies": {
-    "pg": "^8.10.0"
+    "pg": "^8.10.0",
+    "urlpattern-polyfill": "^6.0.2"
   }
 }
