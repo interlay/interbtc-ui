@@ -2,10 +2,10 @@ import postgres from 'pg'
 const { Pool } = postgres;
 
 const pool = new Pool()
+
 const pattern = /\/terms\/(?<wallet>\w+)/;
 
 export default async function (request, response) {
-    console.log(request)
     if (!pattern.test(request.url)) {
         return response.status(400).send('Bad Request');
     }
