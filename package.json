@@ -159,7 +159,7 @@
     "type-check": "tsc",
     "format": "yarn prettier --write src",
     "setup": "yarn generate:defs && yarn generate:meta",
-    "build": "REACT_APP_VERSION=$npm_package_version craco build",
+    "build": "REACT_APP_VERSION=$npm_package_version NODE_OPTIONS=--openssl-legacy-provider craco build",
     "build-with-webpack-bundle-analysis": "yarn build --stats && webpack-bundle-analyzer build/bundle-stats.json -m static -r build/bundle-stats.html -O",
     "lint-and-type-check": "yarn lint && yarn type-check",
     "eject": "react-scripts eject",
