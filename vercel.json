@@ -3,6 +3,10 @@
     "api/*.py": {
       "memory": 128,
       "maxDuration": 5
+    },
+    "api/terms.js": {
+      "memory": 128,
+      "maxDuration": 5
     }
   },
   "rewrites": [
