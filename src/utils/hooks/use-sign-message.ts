@@ -1,7 +1,6 @@
 import { PressEvent } from '@react-types/shared';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
-import { useLocalStorage } from 'react-use';
 
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { SIGNER_API_URL } from '@/constants';
@@ -16,15 +15,23 @@ const postSignature = async (account: KeyringPair) => {
     throw new Error('Failed to sign message');
   }
 
-  return fetch(`${SIGNER_API_URL}/accept`, {
+  return fetch(`${SIGNER_API_URL}/${account.address}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      accountid: account.address,
-      signature: signerResult?.signature
+      signed_message: signerResult?.signature
     })
+  });
+};
+
+const getSignature = (account: KeyringPair) => {
+  return fetch(`${SIGNER_API_URL}/${account.address}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
   });
 };
 
@@ -37,39 +44,32 @@ type UseSignMessageResult = {
 };
 
 const useSignMessage = (): UseSignMessageResult => {
-  const [account, setAccount] = useState<KeyringPair>();
-  // TODO: replace this with new get endpoint
-  const [signature, setSignature] = useLocalStorage<string>(`$tc-${account?.address}`);
+  const [hasSigned, setHasSigned] = useState<boolean>(false);
   const { selectedAccount } = useSubstrateSecureState();
-
-  // TODO: this function might be removed
-  const handleSuccess = (account?: KeyringPair) => {
-    if (!account) return;
-    setSignature(`$tc-${account.address}`);
-  };
 
   const handleError = (error: Error) => console.log(error);
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
-    onSuccess: () => handleSuccess(account),
     onError: handleError
   });
 
   useEffect(() => {
     if (!selectedAccount) return;
-    setAccount(selectedAccount);
+    console.log('getSignature(account)', getSignature(selectedAccount));
+
+    setHasSigned(false);
   }, [selectedAccount]);
 
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
     // or if signer api url is not set
-    if (!account || !SIGNER_API_URL || signature) return;
+    if (!account || !SIGNER_API_URL || hasSigned) return;
 
     signMessageMutation.mutate(account);
   };
 
   return {
-    hasSignature: !SIGNER_API_URL || !!signature,
+    hasSignature: !SIGNER_API_URL || hasSigned,
     selectProp: { onSelectionChange: handleSignMessage },
     buttonProps: { onPress: () => handleSignMessage(selectedAccount) }
   };
