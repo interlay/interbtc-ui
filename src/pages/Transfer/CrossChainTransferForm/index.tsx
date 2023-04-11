@@ -149,7 +149,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const availableToChains = destinationChains.map((chain: any) => {
       return {
         type: chain.id,
-        name: chain.id,
+        name: chain.display,
         icon: <ChainIcon id={chain.id} size='xl' />
       };
     });
