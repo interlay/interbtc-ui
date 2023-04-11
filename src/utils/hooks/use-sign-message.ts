@@ -63,7 +63,8 @@ const useSignMessage = (): UseSignMessageResult => {
 
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
-    if (!account || signature) return;
+    // or if signer api url is not set
+    if (!account || !SIGNER_API_URL || signature) return;
 
     signMessageMutation.mutate(account);
   };

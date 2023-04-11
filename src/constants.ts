@@ -36,7 +36,7 @@ const SQUID_URL = process.env.REACT_APP_SQUID_URL || 'http://localhost:4000/grap
 
 const FEEDBACK_URL = 'https://forms.gle/2eKFnq4j1fkBgejW7';
 
-const SIGNER_API_URL = process.env.REACT_APP_SIGNER_API_URL || 'https://api.interlay.io/signer';
+const SIGNER_API_URL = process.env.REACT_APP_SIGNER_API_URL || '';
 
 // FIXME: hacky workaround to get the right ss58 prefix. Should be fetched at runtime instead
 // Possible example below:
