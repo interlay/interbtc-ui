@@ -215,7 +215,7 @@ const App = (): JSX.Element => {
                   <Route path={PAGES.ACTIONS}>
                     <Actions />
                   </Route>
-                  <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
+                  <Redirect exact from={PAGES.HOME} to={isWalletEnabled ? PAGES.WALLET : PAGES.BRIDGE} />
                   <Route path='*'>
                     <NoMatch />
                   </Route>
