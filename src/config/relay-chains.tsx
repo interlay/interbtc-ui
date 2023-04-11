@@ -1,3 +1,4 @@
+import { HydraAdapter } from '@interlay/bridge/build/adapters/hydradx';
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
 import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
 import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
@@ -153,6 +154,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
+      hydra: new HydraAdapter(),
       interlay: new InterlayAdapter(),
       polkadot: new PolkadotAdapter(),
       statemint: new StatemintAdapter()

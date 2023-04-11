@@ -1,3 +1,4 @@
+export { HYDRA } from './Hydra';
 export { INTERLAY } from './Interlay';
 export { KINTSUGI } from './Kintsugi';
 export { KUSAMA } from './Kusama';
