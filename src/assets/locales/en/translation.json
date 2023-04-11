@@ -590,7 +590,7 @@
     "insufficient_liquidity_trade": "Insufficient liquidity for this trade",
     "from": "From",
     "to": "To",
-    "swap_has_price_inpact_of": "This swap has a price impact of",
+    "swap_has_price_inpact_of": "Considering external price sources, this swap has a price impact of",
     "you_are_swapping_input_for_output": "Your are swapping {{inputAmount}} {{inputTicker}} ({{inputAmountUSD}}) for {{outputAmount}} {{outputTicker}} ({{outputAmountUSD}})",
     "cancel_swap": "Cancel swap",
     "confirm_swap": "Confirm swap"

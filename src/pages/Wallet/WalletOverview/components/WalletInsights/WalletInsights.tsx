@@ -5,6 +5,8 @@ import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/uti
 import { Card, Dd, Dl, DlGroup, Dt, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetAccountPools } from '@/utils/hooks/api/amm/use-get-account-pools';
+import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -18,9 +20,12 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
   const { t } = useTranslation();
 
   const prices = useGetPrices();
+  const { data: accountLendingStatistics } = useGetAccountLendingStatistics();
+  const { data: accountPools } = useGetAccountPools();
+
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const totalBalance =
+  const rawBalance =
     balances &&
     Object.values(balances).reduce(
       (total, balance) =>
@@ -33,9 +38,14 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
       new Big(0)
     );
 
+  const totalBalance = rawBalance
+    ?.add(accountLendingStatistics?.supplyAmountUSD || 0)
+    .sub(accountLendingStatistics?.borrowAmountUSD || 0)
+    .add(accountPools?.accountLiquidityUSD || 0);
+
   const totalBalanceLabel = totalBalance ? formatUSD(totalBalance.toNumber(), { compact: true }) : '-';
 
-  const transfarableBalance =
+  const transferableBalance =
     balances &&
     Object.values(balances).reduce(
       (total, balance) =>
@@ -48,8 +58,8 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
       new Big(0)
     );
 
-  const transfarableBalanceLabel = transfarableBalance
-    ? formatUSD(transfarableBalance.toNumber(), { compact: true })
+  const transferableBalanceLabel = transferableBalance
+    ? formatUSD(transferableBalance.toNumber(), { compact: true })
     : '-';
 
   return (
@@ -73,7 +83,7 @@ const WalletInsights = ({ balances }: WalletInsightsProps): JSX.Element => {
             {t('transferable_balance')}
           </Dt>
           <Dd weight='bold' color='secondary'>
-            {transfarableBalanceLabel}
+            {transferableBalanceLabel}
           </Dd>
         </DlGroup>
       </Card>
