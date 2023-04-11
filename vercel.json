@@ -3,6 +3,10 @@
     "api/*.py": {
       "memory": 128,
       "maxDuration": 5
+    },
+    "api/terms.js": {
+      "memory": 128,
+      "maxDuration": 5
     }
   },
   "rewrites": [
@@ -17,6 +21,10 @@
     {
       "source": "/marketdata/(.*)",
       "destination": "/api/market_data.py"
+    },
+    {
+      "source": "/terms/(.*)",
+      "destination": "/api/terms.js"
     }
   ],
   "headers": [
