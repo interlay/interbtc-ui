@@ -6,7 +6,6 @@ import { useLocalStorage } from 'react-use';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { SIGNER_API_URL } from '@/constants';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
-import { BitcoinNetwork } from '@/types/bitcoin';
 
 import { signMessage } from '../helpers/wallet';
 
@@ -70,7 +69,7 @@ const useSignMessage = (): UseSignMessageResult => {
   };
 
   return {
-    hasSignature: process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet || !!signature,
+    hasSignature: !SIGNER_API_URL || !!signature,
     selectProp: { onSelectionChange: handleSignMessage },
     buttonProps: { onPress: () => handleSignMessage(selectedAccount) }
   };
