@@ -1,5 +1,8 @@
+import { cryptoWaitReady, signatureVerify } from "@polkadot/util-crypto";
 import postgres from 'pg'
 const { Pool } = postgres;
+
+// const MESSAGE = "KINTSUGI_TERMS_AND_CONDITIONS_LINK";
 
 const pool = new Pool()
 
@@ -33,9 +36,16 @@ const terms = async (request, response) => {
     return response.send(result.rows[0]);
   } else if (request.method === 'POST') {
     try {
+      // TODO: verify signature
+      // const { signed_message } = JSON.parse(request.body);
+      // const { isValid } = signatureVerify(MESSAGE, signed_message, wallet);
+
       const result = await pool.query('insert into signed_terms (wallet_id) values ($1)', [wallet])
       return response.status(201);
     } catch (error) {
+      if (error.code === '23505') {
+        return response.status(200).send('Already signed');
+      }
       console.log(error);
       return response.status(400).send('Bad Request');
     }
@@ -43,6 +53,6 @@ const terms = async (request, response) => {
   return response.status(400).send('Bad Request');
 }
 
-export default async function(request, response) {
+export default async function (request, response) {
   return allowCors(terms)(request, response);
 }
