@@ -128,7 +128,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const availableFromChains: Array<ChainOption> = XCMBridge.adapters.map((adapter: any) => {
       return {
         type: adapter.chain.id,
-        name: adapter.chain.id,
+        name: adapter.chain.display,
         icon: <ChainIcon id={adapter.chain.id} size='xl' />
       };
     });
@@ -146,7 +146,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const availableToChains = destinationChains.map((chain: any) => {
       return {
         type: chain.id,
-        name: chain.id,
+        name: chain.display,
         icon: <ChainIcon id={chain.id} size='xl' />
       };
     });
