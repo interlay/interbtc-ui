@@ -5,8 +5,8 @@
       "maxDuration": 5
     },
     "api/terms.js": {
-      "memory": 128,
-      "maxDuration": 5
+      "memory": 256,
+      "maxDuration": 10
     }
   },
   "rewrites": [
