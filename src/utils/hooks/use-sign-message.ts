@@ -1,6 +1,6 @@
 import { PressEvent } from '@react-types/shared';
 import { useEffect, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { SIGNER_API_URL } from '@/constants';
@@ -26,7 +26,9 @@ const postSignature = async (account: KeyringPair) => {
   });
 };
 
-const getSignature = (account: KeyringPair) => {
+const getSignature = async (account: KeyringPair | undefined) => {
+  if (!account) return;
+
   return fetch(`${SIGNER_API_URL}/${account.address}`, {
     method: 'GET',
     headers: {
@@ -34,6 +36,8 @@ const getSignature = (account: KeyringPair) => {
     }
   });
 };
+
+const handleError = (error: Error) => console.log(error);
 
 type UseSignMessageResult = {
   hasSignature?: boolean;
@@ -44,32 +48,46 @@ type UseSignMessageResult = {
 };
 
 const useSignMessage = (): UseSignMessageResult => {
-  const [hasSigned, setHasSigned] = useState<boolean>(false);
+  const [accountHasSigned, setAccountHasSigned] = useState<boolean>(false);
+
   const { selectedAccount } = useSubstrateSecureState();
 
-  const handleError = (error: Error) => console.log(error);
+  const { data } = useQuery({
+    queryKey: `${getSignature}${selectedAccount}`,
+    queryFn: () => getSignature(selectedAccount),
+    onError: handleError,
+    enabled: !!selectedAccount
+  });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
     onError: handleError
   });
 
-  useEffect(() => {
-    if (!selectedAccount) return;
-    console.log('getSignature(account)', getSignature(selectedAccount));
-
-    setHasSigned(false);
-  }, [selectedAccount]);
-
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
     // or if signer api url is not set
-    if (!account || !SIGNER_API_URL || hasSigned) return;
+    if (!account || !SIGNER_API_URL || accountHasSigned) return;
 
     signMessageMutation.mutate(account);
   };
 
+  useEffect(() => {
+    if (data?.bodyUsed) return;
+
+    const readData = async () => {
+      const response = await data?.json();
+      setAccountHasSigned(response?.exists);
+    };
+
+    readData();
+  }, [data]);
+
+  useEffect(() => {
+    console.log('accountHasSigned', accountHasSigned);
+  }, [accountHasSigned]);
+
   return {
-    hasSignature: !SIGNER_API_URL || hasSigned,
+    hasSignature: !SIGNER_API_URL || !!accountHasSigned,
     selectProp: { onSelectionChange: handleSignMessage },
     buttonProps: { onPress: () => handleSignMessage(selectedAccount) }
   };
