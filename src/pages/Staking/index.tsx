@@ -106,6 +106,7 @@ interface LockingAmountAndTime {
 
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
+  const [calculateRewards, setCalculateRewards] = React.useState<boolean>(false);
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -190,7 +191,7 @@ const Staking = (): JSX.Element => {
     [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccountAddress],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: !!bridgeLoaded && calculateRewards
     }
   );
   useErrorHandler(rewardAmountAndAPYError);
@@ -213,7 +214,7 @@ const Staking = (): JSX.Element => {
     ],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: !!bridgeLoaded && calculateRewards
     }
   );
   useErrorHandler(estimatedRewardAmountAndAPYError);
@@ -320,10 +321,14 @@ const Staking = (): JSX.Element => {
   React.useEffect(() => {
     if (!lockTime) return;
     if (!currentBlockNumber) return;
+    if (!stakedAmountAndEndBlock) return;
 
     const lockTimeValue = Number(lockTime);
-    setBlockLockTimeExtension(currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue));
-  }, [currentBlockNumber, lockTime]);
+    const extensionTime =
+      stakedAmountAndEndBlock.endBlock + currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue);
+
+    setBlockLockTimeExtension(extensionTime);
+  }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
 
   React.useEffect(() => {
     reset({
@@ -421,6 +426,8 @@ const Staking = (): JSX.Element => {
   };
 
   const validateLockingAmount = (value: string): string | undefined => {
+    setCalculateRewards(false);
+
     const valueWithFallback = value || '0';
     const monetaryLockingAmount = newMonetaryAmount(valueWithFallback, GOVERNANCE_TOKEN, true);
 
@@ -434,6 +441,8 @@ const Staking = (): JSX.Element => {
     if (monetaryLockingAmount.gt(availableBalance)) {
       return 'Locking amount must not be greater than available balance!';
     }
+
+    setCalculateRewards(true);
 
     const planckLockingAmount = monetaryLockingAmount.toBig(0);
     const lockBlocks = convertWeeksToBlockNumbers(parseInt(lockTime));
