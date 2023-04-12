@@ -320,10 +320,13 @@ const Staking = (): JSX.Element => {
   React.useEffect(() => {
     if (!lockTime) return;
     if (!currentBlockNumber) return;
+    if (!stakedAmountAndEndBlock) return;
 
     const lockTimeValue = Number(lockTime);
-    setBlockLockTimeExtension(currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue));
-  }, [currentBlockNumber, lockTime]);
+    setBlockLockTimeExtension(
+      stakedAmountAndEndBlock.endBlock + currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue)
+    );
+  }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
 
   React.useEffect(() => {
     reset({
