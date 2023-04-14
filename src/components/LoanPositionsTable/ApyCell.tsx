@@ -17,6 +17,7 @@ type ApyCellProps = {
   rewards: MonetaryAmount<CurrencyExt> | null;
   prices?: Prices;
   isBorrow?: boolean;
+  negativeApy?: boolean;
   onClick?: () => void;
 };
 
@@ -28,12 +29,13 @@ const ApyCell = ({
   earnedInterest,
   prices,
   isBorrow = false,
+  negativeApy = false,
   onClick
 }: ApyCellProps): JSX.Element => {
   const rewardsApy = getSubsidyRewardApy(currency, rewards, prices);
 
   const totalApy = isBorrow ? apy.sub(rewardsApy || 0) : apy.add(rewardsApy || 0);
-  const totalApyLabel = getApyLabel(totalApy);
+  const totalApyLabel = negativeApy ? `- ${getApyLabel(totalApy)}` : getApyLabel(totalApy);
 
   const earnedAsset = accumulatedDebt || earnedInterest;
 
