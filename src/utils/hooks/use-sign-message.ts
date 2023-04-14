@@ -1,11 +1,15 @@
 import { PressEvent } from '@react-types/shared';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, UseQueryResult } from 'react-query';
 
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { SIGNER_API_URL } from '@/constants';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 
 import { signMessage } from '../helpers/wallet';
+
+interface GetSignatureData {
+  exists: boolean;
+}
 
 const postSignature = async (account: KeyringPair) => {
   const signerResult = await signMessage(account, TERMS_AND_CONDITIONS_LINK);
@@ -49,7 +53,7 @@ type UseSignMessageResult = {
 const useSignMessage = (): UseSignMessageResult => {
   const { selectedAccount } = useSubstrateSecureState();
 
-  const { data: signatureData, refetch: refetchSignatureData } = useQuery({
+  const { data: signatureData, refetch: refetchSignatureData }: UseQueryResult<GetSignatureData, Error> = useQuery({
     queryKey: ['getSignature', selectedAccount?.address],
     queryFn: () => getSignature(selectedAccount),
     onError: handleError,
