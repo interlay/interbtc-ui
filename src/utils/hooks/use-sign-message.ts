@@ -50,7 +50,7 @@ const useSignMessage = (): UseSignMessageResult => {
   const { selectedAccount } = useSubstrateSecureState();
 
   const { data: signatureData, refetch: refetchSignatureData } = useQuery({
-    queryKey: `${getSignature}${selectedAccount}`,
+    queryKey: ['getSignature', selectedAccount?.address],
     queryFn: () => getSignature(selectedAccount),
     onError: handleError,
     enabled: !!selectedAccount
