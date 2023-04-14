@@ -49,7 +49,7 @@ type UseSignMessageResult = {
 const useSignMessage = (): UseSignMessageResult => {
   const { selectedAccount } = useSubstrateSecureState();
 
-  const { data: signatureData } = useQuery({
+  const { data: signatureData, refetch: refetchSignatureData } = useQuery({
     queryKey: `${getSignature}${selectedAccount}`,
     queryFn: () => getSignature(selectedAccount),
     onError: handleError,
@@ -66,6 +66,7 @@ const useSignMessage = (): UseSignMessageResult => {
     if (!account || !SIGNER_API_URL || signatureData?.exists) return;
 
     signMessageMutation.mutate(account);
+    refetchSignatureData();
   };
 
   return {
