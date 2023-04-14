@@ -57,7 +57,8 @@ const useSignMessage = (): UseSignMessageResult => {
   });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
-    onError: handleError
+    onError: handleError,
+    onSuccess: () => refetchSignatureData()
   });
 
   const handleSignMessage = (account?: KeyringPair) => {
@@ -66,7 +67,6 @@ const useSignMessage = (): UseSignMessageResult => {
     if (!account || !SIGNER_API_URL || signatureData?.exists) return;
 
     signMessageMutation.mutate(account);
-    refetchSignatureData();
   };
 
   return {
