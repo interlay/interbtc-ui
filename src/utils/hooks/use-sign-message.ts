@@ -1,5 +1,4 @@
 import { PressEvent } from '@react-types/shared';
-import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
@@ -26,7 +25,7 @@ const postSignature = async (account: KeyringPair) => {
   });
 };
 
-const getSignature = async (account: KeyringPair | undefined) => {
+const getSignature = (account: KeyringPair | undefined) => {
   if (!account) return;
 
   return fetch(`${SIGNER_API_URL}/${account.address}`, {
@@ -34,7 +33,7 @@ const getSignature = async (account: KeyringPair | undefined) => {
     headers: {
       'Content-Type': 'application/json'
     }
-  });
+  }).then((response) => response.json());
 };
 
 const handleError = (error: Error) => console.log(error);
@@ -48,11 +47,9 @@ type UseSignMessageResult = {
 };
 
 const useSignMessage = (): UseSignMessageResult => {
-  const [accountHasSigned, setAccountHasSigned] = useState<boolean>(false);
-
   const { selectedAccount } = useSubstrateSecureState();
 
-  const { data } = useQuery({
+  const { data: signatureData } = useQuery({
     queryKey: `${getSignature}${selectedAccount}`,
     queryFn: () => getSignature(selectedAccount),
     onError: handleError,
@@ -66,28 +63,13 @@ const useSignMessage = (): UseSignMessageResult => {
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
     // or if signer api url is not set
-    if (!account || !SIGNER_API_URL || accountHasSigned) return;
+    if (!account || !SIGNER_API_URL || signatureData?.exists) return;
 
     signMessageMutation.mutate(account);
   };
 
-  useEffect(() => {
-    if (data?.bodyUsed) return;
-
-    const readData = async () => {
-      const response = await data?.json();
-      setAccountHasSigned(response?.exists);
-    };
-
-    readData();
-  }, [data]);
-
-  useEffect(() => {
-    console.log('accountHasSigned', accountHasSigned);
-  }, [accountHasSigned]);
-
   return {
-    hasSignature: !SIGNER_API_URL || !!accountHasSigned,
+    hasSignature: !SIGNER_API_URL || signatureData?.exists,
     selectProp: { onSelectionChange: handleSignMessage },
     buttonProps: { onPress: () => handleSignMessage(selectedAccount) }
   };
