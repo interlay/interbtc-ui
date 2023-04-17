@@ -18,9 +18,11 @@ import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
+import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
 
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
@@ -82,7 +84,10 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
-        <FundWallet />
+        {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
+          <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
+        )}
+        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <FundWallet />}
         {selectedAccount !== undefined && (
           <>
             {process.env.REACT_APP_FAUCET_URL && kintBalanceIsZero && (
