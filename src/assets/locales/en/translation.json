@@ -611,6 +611,13 @@
       "transfer_less_than_maximum": "Must transfer less than the maximum amount of {{ amount }}"
     }
   },
+  "fund_wallet_modal": {
+    "buy": "Buy",
+    "buy_via_banxa": "Purchase KINT via Banxa.",
+    "banxa_leading_solution": "Banxa is the leading global Web3 on-and-off ramp solution.",
+    "exchange": "Exchange",
+    "please_check_terms": "Please check the individual terms and conditions of each exchange before you buy / trade {{token}}."
+  },
   "wallet": {
     "available_assets": "Available assets",
     "no_assets_available": "No assets available",

@@ -48,6 +48,8 @@ export type Variants = typeof variant[number];
 
 export type CTAVariants = typeof ctaVariant[number];
 
+export type CardVariants = 'default' | 'bordered';
+
 export type ListVariants = Variants | 'card';
 
 export type DividerVariants = Colors | 'default';
