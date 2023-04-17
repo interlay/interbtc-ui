@@ -18,6 +18,7 @@ import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
 
@@ -27,6 +28,8 @@ const Topbar = (): JSX.Element => {
   const { bridgeLoaded, showAccountModal } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { getAvailableBalance } = useGetBalances();
+  const kintBalanceIsZero = getAvailableBalance("KINT")?.isZero();
 
   const handleRequestFromFaucet = async (): Promise<void> => {
     if (!selectedAccount) return;
@@ -79,6 +82,17 @@ const Topbar = (): JSX.Element => {
         <FundWallet />
         {selectedAccount !== undefined && (
           <>
+            {process.env.REACT_APP_FAUCET_URL && kintBalanceIsZero && (
+              <>
+                <InterlayDenimOrKintsugiMidnightOutlinedButton
+                  className={SMALL_SIZE_BUTTON_CLASSES}
+                  pending={isRequestPending}
+                  onClick={handleFundsRequest}
+                >
+                  {t('request_funds')}
+                </InterlayDenimOrKintsugiMidnightOutlinedButton>
+              </>
+            )}
             {process.env.REACT_APP_BITCOIN_NETWORK !== BitcoinNetwork.Mainnet && (
               <>
                 <InterlayLink
@@ -94,13 +108,6 @@ const Topbar = (): JSX.Element => {
                     {t('request_btc')}
                   </InterlayCaliforniaOutlinedButton>
                 </InterlayLink>
-                <InterlayDenimOrKintsugiMidnightOutlinedButton
-                  className={SMALL_SIZE_BUTTON_CLASSES}
-                  pending={isRequestPending}
-                  onClick={handleFundsRequest}
-                >
-                  {t('request_funds')}
-                </InterlayDenimOrKintsugiMidnightOutlinedButton>
               </>
             )}
             <Tokens />

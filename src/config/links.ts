@@ -7,9 +7,9 @@ const INTERLAY_DOCS_LINK = 'https://docs.interlay.io';
 const INTERLAY_CROWDLOAN_LINK = 'https://crowdloan.interlay.io';
 const KINTSUGI_CROWDLOAN_LINK = 'https://claim-kint.interlay.io';
 const INTERLAY_TERMS_AND_CONDITIONS_LINK =
-  'https://drive.google.com/file/d/1_oA3ZHoqzIFcE7Z-YeNTJ8g3bpeB9Glt/view?usp=sharing';
+  'https://github.com/interlay/terms/blob/master/interlay-dapp-terms-of-use.pdf';
 const KINTSUGI_TERMS_AND_CONDITIONS_LINK =
-  'https://drive.google.com/file/d/1TuTu49EoTdEoZX8LrysdgbDmuHS0uAvr/view?usp=sharing ';
+  'https://github.com/interlay/terms/blob/master/kintsugi-dapp-terms-of-use.pdf';
 const INTERLAY_USE_WRAPPED_CURRENCY_LINK = 'https://docs.interlay.io/#/interlay/earn-with-ibtc';
 const KINTSUGI_USE_WRAPPED_CURRENCY_LINK = 'https://docs.interlay.io/#/kintsugi/Earn-With-kBTC';
 const INTERLAY_GOVERNANCE_LINK = 'https://interlay.subsquare.io/';

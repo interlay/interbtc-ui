@@ -124,7 +124,7 @@ const DEFAULT_ASSETS: TickerToData<LoanAsset> = {
 };
 
 const mockGetLendPositionsOfAccount = jest.fn().mockReturnValue(DEFAULT_LEND_POSITIONS);
-const mockGetBorrowPositionsOfAccount = jest.fn().mockRejectedValue(DEFAULT_BORROW_POSITIONS);
+const mockGetBorrowPositionsOfAccount = jest.fn().mockReturnValue(DEFAULT_BORROW_POSITIONS);
 const mockGetLoanAssets = jest.fn().mockReturnValue(DEFAULT_ASSETS);
 const mockGetAccountSubsidyRewards = jest.fn().mockReturnValue(DEFAULT_INTR.MONETARY.MEDIUM);
 

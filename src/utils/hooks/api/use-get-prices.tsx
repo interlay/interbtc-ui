@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import { BLOCKTIME_REFETCH_INTERVAL, PRICES_API } from '@/utils/constants/api';
+import { PRICES_API, REFETCH_INTERVAL } from '@/utils/constants/api';
 import { COINGECKO_ID_BY_CURRENCY_TICKER } from '@/utils/constants/currency';
 
 import { useGetCurrencies } from './use-get-currencies';
@@ -29,12 +29,7 @@ const composeIds = (currencies: CurrencyExt[]): string =>
     return [acc, coingeckoId].join(',');
   }, '');
 
-const composeUrl = (assetsIds: string): string => {
-  const url = new URL(PRICES_API.URL);
-  url.searchParams.append(PRICES_API.QUERY_PARAMETERS.ASSETS_IDS, assetsIds);
-
-  return url.toString();
-};
+const composeEndpoint = (assetsIds: string): string => `${PRICES_API.URL}&ids=${assetsIds}`;
 
 const getPricesByTicker = (currencies: CurrencyExt[], prices: Prices) =>
   currencies.reduce((acc, currency) => {
@@ -49,9 +44,9 @@ const getPrices = async (currencies?: CurrencyExt[]): Promise<Prices | undefined
 
   const allCurrencies = [Bitcoin, ...currencies];
   const assetsIds = composeIds(allCurrencies);
-  const url = composeUrl(assetsIds);
+  const endpoint = composeEndpoint(assetsIds);
 
-  const response = await fetch(url);
+  const response = await fetch(endpoint);
   const pricesByCoingeckoId = await response.json();
 
   return getPricesByTicker(allCurrencies, pricesByCoingeckoId);
@@ -73,7 +68,7 @@ const useGetPrices = (): Prices | undefined => {
   // TODO: error prone because the key computation is not complete
   const { data, error } = useQuery<Prices | undefined, Error>(['prices'], () => getPrices(currencies), {
     enabled: isGetCurrenciesSuccess,
-    refetchInterval: BLOCKTIME_REFETCH_INTERVAL
+    refetchInterval: REFETCH_INTERVAL.MINUTE
   });
 
   useEffect(() => {

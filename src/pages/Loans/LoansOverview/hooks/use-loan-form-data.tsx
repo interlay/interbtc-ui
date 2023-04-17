@@ -27,42 +27,23 @@ type GetMaxAmountParams = {
   lendingStats?: LendingStats;
 };
 
-const getMaxAmount = ({
+const getMaxCalculatedAmount = ({
   loanAction,
   asset,
-  assetBalance,
   position,
   lendingStats
-}: GetMaxAmountParams): MonetaryAmount<CurrencyExt> | undefined => {
+}: GetMaxAmountParams): MonetaryAmount<CurrencyExt> => {
   switch (loanAction) {
-    case 'borrow':
-      return getMaxBorrowableAmount(asset, lendingStats);
+    case 'lend':
+      return getMaxLendableAmount(asset);
     case 'withdraw':
       return getMaxWithdrawableAmount(asset, position as CollateralPosition, lendingStats);
-    case 'lend':
-      return getMaxLendableAmount(assetBalance, asset);
+    case 'borrow':
+      return getMaxBorrowableAmount(asset, lendingStats);
     case 'repay':
-      return position?.amount.add((position as BorrowPosition).accumulatedDebt || 0);
-  }
-};
-
-// Only relevant for withdraw or repay
-const isEqualBalance = (
-  variant: LoanAction,
-  maxAmount: MonetaryAmount<CurrencyExt>,
-  assetBalance: MonetaryAmount<CurrencyExt>,
-  position?: CollateralPosition | BorrowPosition
-) => {
-  switch (variant) {
-    case 'withdraw': {
-      return !!position?.amount && maxAmount.eq(position.amount);
-    }
-    case 'repay': {
-      return maxAmount.eq(assetBalance);
-    }
-    default: {
-      return false;
-    }
+      return position
+        ? position.amount.add((position as BorrowPosition).accumulatedDebt)
+        : newMonetaryAmount(0, asset.currency);
   }
 };
 
@@ -70,11 +51,10 @@ type UseLoanFormData = {
   governanceBalance: MonetaryAmount<CurrencyExt>;
   transactionFee: MonetaryAmount<CurrencyExt>;
   assetPrice: number;
-  balance: MonetaryAmount<CurrencyExt>;
   assetAmount: {
     available: MonetaryAmount<CurrencyExt>;
     min: MonetaryAmount<CurrencyExt>;
-    max: { value: MonetaryAmount<CurrencyExt>; isEqualBalance: boolean };
+    max: MonetaryAmount<CurrencyExt>;
   };
 };
 
@@ -95,6 +75,8 @@ const useLoanFormData = (
   const assetBalance = getAvailableBalance(asset.currency.ticker) || zeroAssetAmount;
   const assetPrice = getTokenPrice(prices, asset.currency.ticker)?.usd || 0;
 
+  const minAmount = newMonetaryAmount(1, assetBalance.currency);
+
   const maxAmountParams: GetMaxAmountParams = {
     loanAction,
     asset,
@@ -102,23 +84,23 @@ const useLoanFormData = (
     position,
     lendingStats: statistics
   };
+  const maxAmountData = getMaxCalculatedAmount(maxAmountParams);
 
-  const maxAmount = getMaxAmount(maxAmountParams) || zeroAssetAmount;
-  const minAmount = newMonetaryAmount(1, assetBalance.currency);
+  const available =
+    loanAction === 'lend' || loanAction === 'repay'
+      ? maxAmountData.gt(assetBalance)
+        ? assetBalance
+        : maxAmountData
+      : maxAmountData;
 
   return {
     governanceBalance,
     transactionFee,
     assetPrice,
-    balance: loanAction === 'repay' ? (assetBalance.gt(maxAmount) ? maxAmount : assetBalance) : maxAmount,
     assetAmount: {
-      available: assetBalance,
+      available,
       min: minAmount,
-      // MEMO: checks for negative values
-      max: {
-        value: maxAmount.gte(zeroAssetAmount) ? maxAmount : zeroAssetAmount,
-        isEqualBalance: isEqualBalance(loanAction, maxAmount, assetBalance, position)
-      }
+      max: maxAmountData
     }
   };
 };

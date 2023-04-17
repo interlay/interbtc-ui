@@ -1,6 +1,10 @@
+import { useFocusRing } from '@react-aria/focus';
+import { useLink } from '@react-aria/link';
+import { mergeProps } from '@react-aria/utils';
 import { forwardRef } from 'react';
 import { Link, LinkProps } from 'react-router-dom';
 
+import { useDOMRef } from '../utils/dom';
 import { BaseCTA, BaseCTAProps } from './BaseCTA';
 
 type Props = {
@@ -8,28 +12,44 @@ type Props = {
   disabled?: boolean;
 };
 
-type NativeAttrs = Omit<LinkProps, keyof Props | 'href'>;
+type NativeAttrs = Omit<LinkProps, keyof Props | 'href' | 'onFocus' | 'onBlur'>;
 
-type InheritAttrs = Omit<BaseCTAProps, keyof NativeAttrs & Props>;
+type AriaAttrs = Omit<NativeAttrs, (keyof Props & NativeAttrs) | 'isDisabled'>;
 
-type CTALinkProps = Props & NativeAttrs & InheritAttrs;
+type InheritAttrs = Omit<BaseCTAProps, (keyof AriaAttrs & NativeAttrs & Props) | 'elementType'>;
+
+type CTALinkProps = Props & NativeAttrs & AriaAttrs & InheritAttrs;
 
 // TODO: Does this need to be changed to a React Router link component?
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
-  ({ disabled, onClick, external, to, ...props }, ref): JSX.Element => {
-    const linkProps: LinkProps = external
-      ? { to: { pathname: to as string }, target: '_blank', rel: 'noreferrer' }
-      : { to };
+  ({ disabled, external, to: toProp, children, ...props }, ref): JSX.Element => {
+    const linkRef = useDOMRef(ref);
+
+    const ariaProps = {
+      ...props,
+      isDisabled: disabled,
+      href: toProp,
+      ...(external && { target: '_blank', rel: 'noreferrer' })
+    };
+
+    const { linkProps } = useLink(ariaProps, linkRef);
+    const { focusProps, isFocusVisible } = useFocusRing();
+
+    const to = external && typeof toProp === 'string' ? { pathname: toProp as string } : toProp;
 
     return (
       <BaseCTA
-        ref={ref}
+        ref={linkRef}
         elementType={Link}
-        onClick={onClick}
-        aria-disabled={disabled ? 'true' : undefined}
-        {...props}
-        {...linkProps}
-      />
+        isFocusVisible={isFocusVisible}
+        {...mergeProps(props, linkProps, focusProps, {
+          href: undefined,
+          to,
+          ...(external && { target: '_blank', rel: 'noreferrer' })
+        })}
+      >
+        {children}
+      </BaseCTA>
     );
   }
 );

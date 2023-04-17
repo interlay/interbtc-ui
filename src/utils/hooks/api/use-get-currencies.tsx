@@ -46,7 +46,7 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
 
       return targetCurrency;
     },
-    [queryResult]
+    [queryResult.data]
   );
 
   // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
@@ -65,20 +65,8 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
 
       return foreignCurrency;
     },
-    [queryResult]
+    [queryResult.data]
   );
-
-  //   export declare type StandardLpToken = Currency & {
-  //     lpToken: {
-  //         token0: StandardLpUnderlyingToken;
-  //         token1: StandardLpUnderlyingToken;
-  //     };
-  // };
-  // export declare type StableLpToken = Currency & {
-  //     stableLpToken: {
-  //         poolId: number;
-  //     };
-  // };
 
   // Throws when passed parameter is not id of any foreign currency or currencies are not loaded yet.
   const getLendCurrencyFromId = useCallback(
@@ -94,7 +82,7 @@ const useGetCurrencies = (bridgeLoaded: boolean): UseGetCurrenciesResult => {
 
       return lendCurrency;
     },
-    [queryResult]
+    [queryResult.data]
   );
 
   // TODO: add getter according to existing LP Tokens identifiers

@@ -71,7 +71,7 @@ const DepositCollateralStep = ({
   return (
     <>
       <ModalHeader color='secondary'>{t('vault.deposit_collateral')}</ModalHeader>
-      <ModalDivider color='secondary' />
+      <ModalDivider size='medium' color='secondary' />
       <form onSubmit={form.handleSubmit}>
         <ModalBody>
           <Stack spacing='double'>

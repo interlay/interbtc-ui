@@ -2,7 +2,11 @@ import '@testing-library/jest-dom';
 
 import App from '@/App';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
-import { mockTokensBalance } from '@/test/mocks/@interlay/interbtc-api';
+import {
+  DEFAULT_TOKENS_BALANCE_FN,
+  EMPTY_TOKENS_BALANCE_FN,
+  mockTokensBalance
+} from '@/test/mocks/@interlay/interbtc-api';
 import {
   DEFAULT_ASSETS,
   DEFAULT_BORROW_POSITIONS,
@@ -16,7 +20,7 @@ import {
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
 import { render, screen, userEvent, waitFor } from '../../test-utils';
-import { submitForm, withinModalTabPanel } from '../utils/loans';
+import { submitForm, withinModalTabPanel } from '../utils/table';
 import { TABLES } from './constants';
 
 const path = '/lending';
@@ -28,17 +32,13 @@ describe('Lending Flow', () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
     mockLend.mockRestore();
-  });
-
-  afterAll(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
+    mockTokensBalance.mockImplementation(DEFAULT_TOKENS_BALANCE_FN);
   });
 
   it('should be able to lend', async () => {
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC');
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
 
     expect(tabPanel.getByRole('meter', { name: /ltv meter/i })).toBeInTheDocument();
 
@@ -50,11 +50,11 @@ describe('Lending Flow', () => {
   });
 
   it('should not be able to lend over available balance', async () => {
-    mockTokensBalance.emptyBalance();
+    mockTokensBalance.mockImplementation(EMPTY_TOKENS_BALANCE_FN);
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC');
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 
@@ -68,8 +68,6 @@ describe('Lending Flow', () => {
       expect(screen.getByRole('dialog')).toBeInTheDocument();
       expect(mockLend).not.toHaveBeenCalled();
     });
-
-    mockTokensBalance.restore();
   });
 
   it('should not be able to lend due to lack of borrows and supply cap', async () => {
@@ -83,7 +81,7 @@ describe('Lending Flow', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, tab, 'IBTC');
+    const tabPanel = withinModalTabPanel(TABLES.LEND.POSITION, 'IBTC', tab);
 
     userEvent.type(tabPanel.getByRole('textbox', { name: 'lend amount' }), DEFAULT_IBTC.AMOUNT.MEDIUM);
 

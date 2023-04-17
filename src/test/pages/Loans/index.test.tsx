@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom';
 
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import Big from 'big.js';
 
 import App from '@/App';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
@@ -8,16 +9,18 @@ import {
   DEFAULT_ASSETS,
   DEFAULT_BORROW_POSITIONS,
   DEFAULT_LEND_POSITIONS,
+  DEFAULT_LENDING_STATS,
   DEFAULT_POSITIONS,
   mockClaimAllSubsidyRewards,
   mockGetAccountSubsidyRewards,
   mockGetBorrowPositionsOfAccount,
+  mockGetLendingStats,
   mockGetLendPositionsOfAccount,
   mockGetLoanAssets
 } from '@/test/mocks/@interlay/interbtc-api/parachain/loans';
 
 import { render, screen, userEvent, waitFor } from '../../test-utils';
-import { getTableRow } from '../utils/loans';
+import { getTableRow, withinTable } from '../utils/table';
 import { TABLES } from './constants';
 
 const path = '/lending';
@@ -27,11 +30,7 @@ describe('Loans page', () => {
     mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
     mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
     mockGetLoanAssets.mockReturnValue(DEFAULT_ASSETS);
-  });
-
-  afterAll(() => {
-    mockGetBorrowPositionsOfAccount.mockReturnValue(DEFAULT_BORROW_POSITIONS);
-    mockGetLendPositionsOfAccount.mockReturnValue(DEFAULT_LEND_POSITIONS);
+    mockGetLendingStats.mockReturnValue(DEFAULT_LENDING_STATS);
   });
 
   describe('Tables Section', () => {
@@ -64,7 +63,9 @@ describe('Loans page', () => {
 
       await render(<App />, { path });
 
-      expect(screen.queryByRole('grid', { name: new RegExp(TABLES.BORROW.POSITION, 'i') })).not.toBeInTheDocument();
+      const table = withinTable(TABLES.BORROW.POSITION);
+
+      expect(table.queryAllByRole('row')).toHaveLength(0);
       expect(screen.getByText(/no borrow positions/i)).toBeInTheDocument();
     });
   });
@@ -98,6 +99,38 @@ describe('Loans page', () => {
       expect(screen.getByText(/borrow balance/i)).toBeInTheDocument();
       expect(screen.getByText(/collateral balance/i)).toBeInTheDocument();
       expect(screen.getByText(/loan status/i)).toBeInTheDocument();
+    });
+
+    it('should display low risk', async () => {
+      await render(<App />, { path });
+
+      expect(screen.getByText(/low risk/i)).toBeInTheDocument();
+    });
+
+    it('should display medium risk', async () => {
+      mockGetLendingStats.mockReturnValue({
+        ...DEFAULT_LENDING_STATS,
+        collateralThresholdWeightedAverage: new Big(0.5),
+        liquidationThresholdWeightedAverage: new Big(0.75),
+        ltv: new Big(0.5)
+      });
+
+      await render(<App />, { path });
+
+      expect(screen.getByText(/medium risk/i)).toBeInTheDocument();
+    });
+
+    it('should display liquidation risk', async () => {
+      mockGetLendingStats.mockReturnValue({
+        ...DEFAULT_LENDING_STATS,
+        collateralThresholdWeightedAverage: new Big(0.5),
+        liquidationThresholdWeightedAverage: new Big(0.75),
+        ltv: new Big(0.75)
+      });
+
+      await render(<App />, { path });
+
+      expect(screen.getByText(/liquidation risk/i)).toBeInTheDocument();
     });
   });
 

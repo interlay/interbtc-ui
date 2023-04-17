@@ -69,7 +69,7 @@ const renderRedeemForm = async (props?: any) => {
 };
 
 describe('redeem form', () => {
-  test('if the redeem method is called', async () => {
+  it('if the redeem method is called', async () => {
     const { changeAmountToRedeem, changeBtcAddressToSend, submitForm } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
@@ -83,7 +83,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).toHaveBeenCalledTimes(1));
   });
 
-  test('if the bridge fee is correctly displayed', async () => {
+  it('if the bridge fee is correctly displayed', async () => {
     const { changeAmountToRedeem } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
@@ -103,7 +103,7 @@ describe('redeem form', () => {
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
 
-  test('if the Bitcoin network fee is correctly displayed', async () => {
+  it('if the Bitcoin network fee is correctly displayed', async () => {
     const { changeAmountToRedeem } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
@@ -124,7 +124,7 @@ describe('redeem form', () => {
     expect(bitcoinNetworkFeeElement).toHaveTextContent(bitcoinNetworkFeeInUSD.toString());
   });
 
-  test('if the total receiving amount is correctly displayed', async () => {
+  it('if the total receiving amount is correctly displayed', async () => {
     const { changeAmountToRedeem } = await renderRedeemForm();
 
     const inputAmount = 0.0001;
@@ -150,7 +150,7 @@ describe('redeem form', () => {
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
 
-  test('if the max redeemable amount is correctly displayed', async () => {
+  it('if the max redeemable amount is correctly displayed', async () => {
     await renderRedeemForm();
 
     const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-redeemable/i);
@@ -162,7 +162,7 @@ describe('redeem form', () => {
     expect(singleMaxIssuableAmountElement).toHaveTextContent(singleMaxRedeemableAmount);
   });
 
-  test('when the wrapped token balance is less than required', async () => {
+  it('when the wrapped token balance is less than required', async () => {
     mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
       if (currency.ticker === WRAPPED_TOKEN.ticker) {
         return new ChainBalance(currency, 0, 0);
@@ -190,7 +190,7 @@ describe('redeem form', () => {
     );
   });
 
-  test('when the input amount is greater than the single vault max redeemable amount', async () => {
+  it('when the input amount is greater than the single vault max redeemable amount', async () => {
     const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
     const inputAmount = mockVaultsGetVaultsWithRedeemableTokens()
@@ -209,7 +209,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
 
-  test('when the input amount is less than the combined', async () => {
+  it('when the input amount is less than the combined', async () => {
     const { changeAmountToRedeem, submitForm, errorElement } = await renderRedeemForm();
 
     const inputAmount = mockRedeemGetDustValue()
@@ -227,7 +227,7 @@ describe('redeem form', () => {
     await waitFor(() => expect(mockRedeemRequest).not.toHaveBeenCalled());
   });
 
-  test('when the parachain is more than 6 blocks behind', async () => {
+  it('when the parachain is more than 6 blocks behind', async () => {
     mockBtcRelayGetLatestBlockHeight.mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
     mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1);
 
@@ -249,7 +249,7 @@ describe('redeem form', () => {
     mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => MOCK_BITCOIN_HEIGHT);
   });
 
-  test('when the oracle is offline', async () => {
+  it('when the oracle is offline', async () => {
     mockOracleGetExchangeRate.mockImplementation(
       (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, new Big(0))
     );

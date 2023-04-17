@@ -1,3 +1,5 @@
+import { breakpoints } from '../utils/breakpoints';
+
 const theme = {
   // Layout
   layout: {
@@ -7,6 +9,7 @@ const theme = {
       lg: '48em'
     }
   },
+  breakpoints,
   // Generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
@@ -433,7 +436,12 @@ const theme = {
     }
   },
   divider: {
-    bg: 'var(--colors-border)'
+    bg: 'var(--colors-border)',
+    size: {
+      small: '1px',
+      medium: '2px',
+      large: '3px'
+    }
   },
   icon: {
     sizes: {
@@ -451,17 +459,44 @@ const theme = {
   list: {
     text: 'var(--color-list-selected-text)',
     primary: {
-      bg: 'var(--color-list-primary-bg)',
-      border: '1px solid var(--colors-border)',
-      hover: {
-        bg: 'var(--color-list-primary-hover-bg)'
-      }
+      bg: '',
+      border: '',
+      rounded: ''
     },
     secondary: {
-      bg: 'var(--color-list-secondary-bg)',
-      border: 'none',
-      hover: {
-        bg: 'var(--color-list-secondary-hover-bg)'
+      bg: '',
+      border: '',
+      rounded: ''
+    },
+    card: {
+      bg: 'var(--colors-table-odd-row-bg)',
+      border: '1px solid var(--colors-border)',
+      rounded: 'var(--rounded-md)'
+    },
+    item: {
+      primary: {
+        bg: 'var(--color-list-primary-bg)',
+        border: '1px solid var(--colors-border)',
+        hover: {
+          bg: 'var(--color-list-primary-hover-bg)'
+        },
+        rounded: 'var(--rounded-md)'
+      },
+      secondary: {
+        bg: 'var(--color-list-secondary-bg)',
+        border: 'none',
+        hover: {
+          bg: 'var(--color-list-secondary-hover-bg)'
+        },
+        rounded: 'var(--rounded-md)'
+      },
+      card: {
+        bg: 'var(--colors-table-odd-row-bg)',
+        border: '1px solid var(--colors-border)',
+        hover: {
+          bg: 'var(--color-list-primary-hover-bg)'
+        },
+        rounded: ''
       }
     }
   },

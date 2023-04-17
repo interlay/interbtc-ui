@@ -5,6 +5,8 @@ import { RefObject } from 'react';
  * @param {string | ReadonlyArray<string> | number} value - value to be included in the event
  * @return {void} - Manually emits onChange event
  */
+// TODO: consider moving away from this type of strategy or narrow
+// the usage, because it only works on native events and `onPress`
 const triggerChangeEvent = (
   ref: RefObject<HTMLInputElement>,
   value: string | ReadonlyArray<string> | number = ''
