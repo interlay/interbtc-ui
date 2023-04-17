@@ -4,7 +4,12 @@ const { Pool } = postgres;
 
 // const MESSAGE = "KINTSUGI_TERMS_AND_CONDITIONS_LINK";
 
-const pool = new Pool()
+const pool = new Pool({
+  connectionTimeoutMillis: 3000,
+  ssl: {
+    rejectUnauthorized: false
+  }
+})
 
 const pattern = /\/terms\/(?<wallet>\w+)/;
 
