@@ -5,10 +5,8 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { FaCheck, FaRegClock, FaRegTimesCircle } from 'react-icons/fa';
 import { useQuery } from 'react-query';
-import { useDispatch } from 'react-redux';
 import { useTable } from 'react-table';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
@@ -39,7 +37,6 @@ import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters'
 import IssueRequestModal from './IssueRequestModal';
 
 const IssueRequestsTable = (): JSX.Element => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const queryParams = useQueryParams();
@@ -216,8 +213,6 @@ const IssueRequestsTable = (): JSX.Element => {
       updateQueryParameters({
         [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: requestId
       });
-    } else {
-      dispatch(showAccountModalAction(true));
     }
   };
 
