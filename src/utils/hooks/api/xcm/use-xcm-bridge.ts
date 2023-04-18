@@ -15,8 +15,6 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { getXCMEndpoints } from './get-xcm-endpoints';
 
-const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
-
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
 });
@@ -47,7 +45,7 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
 };
 
 const initXCMBridge = async () => {
-  const XCMProvider = new ApiProvider(XCMNetwork);
+  const XCMProvider = new ApiProvider();
   const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
   // TODO: Get rid of any casting - mismatch between ApiRx types

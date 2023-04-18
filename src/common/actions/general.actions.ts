@@ -13,7 +13,9 @@ import {
   IsFaucetLoaded,
   IsVaultClientLoaded,
   SHOW_ACCOUNT_MODAL,
+  SHOW_BUY_MODAL,
   ShowAccountModal,
+  ShowBuyModal,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
   UpdateHeights,
@@ -56,6 +58,11 @@ export const initGeneralDataAction = (
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({
   type: SHOW_ACCOUNT_MODAL,
   showAccountModal
+});
+
+export const showBuyModal = (isBuyModalOpen: boolean): ShowBuyModal => ({
+  type: SHOW_BUY_MODAL,
+  isBuyModalOpen
 });
 
 export const updateHeightsAction = (btcRelayHeight: number, bitcoinHeight: number): UpdateHeights => ({

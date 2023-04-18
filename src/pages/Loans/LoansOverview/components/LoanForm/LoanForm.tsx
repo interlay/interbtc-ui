@@ -1,4 +1,5 @@
-import { BorrowPosition, LendPosition, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { BorrowPosition, CollateralPosition, CurrencyExt, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
@@ -27,11 +28,11 @@ import { StyledFormWrapper } from './LoanForm.style';
 const shouldShowBorrowLimit = (
   variant: LoanAction,
   hasCollateral: boolean,
-  position?: LendPosition | BorrowPosition
+  position?: CollateralPosition | BorrowPosition
 ) => {
   const isLendingAsset = isLendAsset(variant);
   const isBorrowingAsset = !isLendingAsset;
-  const isCollateralAsset = isLendingAsset && (position as LendPosition)?.isCollateral;
+  const isCollateralAsset = isLendingAsset && (position as CollateralPosition)?.isCollateral;
 
   return isCollateralAsset || (isBorrowingAsset && hasCollateral);
 };
@@ -62,7 +63,7 @@ const getData = (t: TFunction, variant: LoanAction) =>
     repay: {
       content: {
         title: t('loans.repay'),
-        label: t('loans.borrowing'),
+        label: 'Balance',
         fieldAriaLabel: t('forms.field_amount', { field: t('loans.repay').toLowerCase() })
       }
     }
@@ -71,7 +72,7 @@ const getData = (t: TFunction, variant: LoanAction) =>
 type LoanFormProps = {
   asset: LoanAsset;
   variant: LoanAction;
-  position?: BorrowPosition | LendPosition;
+  position?: BorrowPosition | CollateralPosition;
   onChangeLoan?: () => void;
 };
 
@@ -87,13 +88,19 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const prices = useGetPrices();
   const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
 
+  const { content } = getData(t, variant);
+
   // withdraw has `withdraw` and `withdrawAll`
   // repay has `repay` and `repayAll`
   // They both are considered a multi action variant
   const hasMultiActionVariant = variant === 'withdraw' || variant === 'repay';
 
-  const handleMaxAmount = () => {
-    const isMaxAmount = (variant === 'withdraw' && assetAmount.max.isEqualBalance) || variant === 'repay';
+  const handleMaxAmount = (amount: MonetaryAmount<CurrencyExt>) => {
+    // Comparing if the provided amount is equal to the amount
+    // available for the action, which is only relevant for
+    // when the action is `withdraw` or `repay`
+    const isMaxAmount = variant === 'withdraw' ? !!position?.amount.eq(amount) : assetAmount.max.eq(amount);
+
     setMaxAmount(isMaxAmount);
   };
 
@@ -101,18 +108,16 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     () => {
       if (!inputAmount || !hasMultiActionVariant) return;
 
-      // Checks if the user is trying to type the max value
-      const isEqualAmount = assetAmount.max.value.eq(newMonetaryAmount(inputAmount, asset.currency, true));
+      const inputMonetary = newMonetaryAmount(inputAmount, asset.currency, true);
 
-      if (!isEqualAmount) return;
-
-      handleMaxAmount();
+      handleMaxAmount(inputMonetary);
     },
     300,
     [inputAmount]
   );
 
   const handleSuccess = () => {
+    toast.success(`Successful ${content.title.toLowerCase()}`);
     onChangeLoan?.();
     refetch();
   };
@@ -127,10 +132,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     governanceBalance,
     transactionFee,
     minAmount: assetAmount.min,
-    maxAmount: assetAmount.max.value
+    maxAmount: assetAmount.available
   };
-
-  const { content } = getData(t, variant);
 
   const handleSubmit = (data: LoanFormData) => {
     try {
@@ -155,7 +158,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const handleClickBalance = () => {
     if (!hasMultiActionVariant) return;
 
-    handleMaxAmount();
+    handleMaxAmount(assetAmount.available);
   };
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -175,8 +178,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
             placeholder='0.00'
             ticker={asset.currency.ticker}
             aria-label={content.fieldAriaLabel}
-            balance={assetAmount.max.value.toString()}
-            humanBalance={assetAmount.max.value.toHuman()}
+            balance={assetAmount.available.toString()}
+            humanBalance={assetAmount.available.toString()}
             balanceLabel={content.label}
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
             onClickBalance={handleClickBalance}
@@ -184,11 +187,13 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
           />
           {showBorrowLimit && (
             <BorrowLimit
-              shouldDisplayLiquidationAlert
+              // Only shows the alert if the user interacted with the form
+              shouldDisplayLiquidationAlert={!!form.values[variant]}
               loanAction={variant}
               asset={asset}
               actionAmount={monetaryAmount}
               prices={prices}
+              remainingDebt={variant === 'repay' ? assetAmount.max : undefined}
             />
           )}
         </Flex>

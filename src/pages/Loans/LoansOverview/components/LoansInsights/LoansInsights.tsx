@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
@@ -11,13 +13,15 @@ import { StyledDd, StyledDt } from './LoansInsights.style';
 const mutateClaimRewards = () => window.bridge.loans.claimAllSubsidyRewards();
 
 type LoansInsightsProps = {
-  statistics?: AccountPositionsStatisticsData;
+  statistics?: AccountLendingStatistics;
 };
 
 const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
+  const { t } = useTranslation();
   const { data: subsidyRewards, refetch } = useGetAccountSubsidyRewards();
 
   const handleSuccess = () => {
+    toast.success(t('successfully_claimed_rewards'));
     refetch();
   };
 

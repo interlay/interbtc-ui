@@ -1,10 +1,13 @@
 import { CurrencyExt, isCurrencyEqual, LiquidityPool, LpCurrency } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
+import Big from 'big.js';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
+import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
+import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import useAccountId from '../../use-account-id';
 import { useGetLiquidityPools } from './use-get-liquidity-pools';
@@ -14,9 +17,14 @@ type AccountLiquidityPool = { data: LiquidityPool; amount: MonetaryAmount<LpCurr
 interface AccountPoolsData {
   positions: AccountLiquidityPool[];
   claimableRewards: Map<LpCurrency, MonetaryAmount<CurrencyExt>[]>;
+  accountLiquidityUSD: Big;
 }
 
-const getAccountLiqudityPools = async (accountId: AccountId, pools: LiquidityPool[]): Promise<AccountPoolsData> => {
+const getAccountLiqudityPools = async (
+  accountId: AccountId,
+  pools: LiquidityPool[],
+  prices: Prices
+): Promise<AccountPoolsData> => {
   const accountLiquidityPools = await window.bridge.amm.getLiquidityProvidedByAccount(accountId);
   const claimableRewards = await window.bridge.amm.getClaimableFarmingRewards(accountId, accountLiquidityPools, pools);
   const filteredPools = accountLiquidityPools.filter((lpToken) => !lpToken.isZero());
@@ -31,7 +39,18 @@ const getAccountLiqudityPools = async (accountId: AccountId, pools: LiquidityPoo
     return [...acc, data];
   }, []);
 
-  return { positions, claimableRewards };
+  const accountLiquidityUSD = positions
+    .map(({ data, amount: accountLPTokenAmount }) => {
+      const { pooledCurrencies, totalSupply } = data;
+      const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
+
+      return accountLPTokenAmount
+        ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
+        : 0;
+    })
+    .reduce((total, accountLPTokenAmount) => total.add(accountLPTokenAmount), new Big(0));
+
+  return { positions, claimableRewards, accountLiquidityUSD };
 };
 
 interface UseGetAccountProvidedLiquidity {
@@ -42,12 +61,13 @@ interface UseGetAccountProvidedLiquidity {
 // Mixes current pools with liquidity provided by the account
 const useGetAccountPools = (): UseGetAccountProvidedLiquidity => {
   const accountId = useAccountId();
+  const prices = useGetPrices();
 
   const { data: liquidityPools, refetch: refetchLiquidityPools } = useGetLiquidityPools();
   const queryKey = ['account-pools', accountId];
   const { data, error, refetch: refetchQuery } = useQuery({
     queryKey: ['account-pools', accountId],
-    queryFn: () => accountId && liquidityPools && getAccountLiqudityPools(accountId, liquidityPools),
+    queryFn: () => accountId && liquidityPools && prices && getAccountLiqudityPools(accountId, liquidityPools, prices),
     enabled: !!liquidityPools,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });

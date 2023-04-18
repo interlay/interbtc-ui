@@ -63,7 +63,7 @@ const renderIssueForm = async (props?: any) => {
 };
 
 describe('issue form', () => {
-  test('if the issue method is called', async () => {
+  it('if the issue method is called', async () => {
     const { changeAmountToIssue, submitForm } = await renderIssueForm();
 
     const inputAmount = 0.0001;
@@ -75,7 +75,7 @@ describe('issue form', () => {
     await waitFor(() => expect(mockIssueRequest).toHaveBeenCalledTimes(1));
   });
 
-  test('if the bridge fee is correctly displayed', async () => {
+  it('if the bridge fee is correctly displayed', async () => {
     const { changeAmountToIssue } = await renderIssueForm();
 
     const inputAmount = 0.0001;
@@ -95,7 +95,7 @@ describe('issue form', () => {
     expect(bridgeFeeElement).toHaveTextContent(bridgeFeeInUSD.toString());
   });
 
-  test('if the security deposit is correctly displayed', async () => {
+  it('if the security deposit is correctly displayed', async () => {
     const { changeAmountToIssue } = await renderIssueForm();
 
     const inputAmount = 0.0001;
@@ -121,7 +121,7 @@ describe('issue form', () => {
     expect(securityDepositElement).toHaveTextContent(securityDepositInUSD);
   });
 
-  test('if the transaction fee is correctly displayed', async () => {
+  it('if the transaction fee is correctly displayed', async () => {
     const { changeAmountToIssue } = await renderIssueForm();
 
     const inputAmount = 0.0001;
@@ -139,7 +139,7 @@ describe('issue form', () => {
     expect(transactionFeeElement).toHaveTextContent(txFeeInUSD);
   });
 
-  test('if the total receiving amount is correctly displayed', async () => {
+  it('if the total receiving amount is correctly displayed', async () => {
     const { changeAmountToIssue } = await renderIssueForm();
 
     const inputAmount = 0.0001;
@@ -163,7 +163,7 @@ describe('issue form', () => {
     expect(totalElement).toHaveTextContent(totalInUSD.toString());
   });
 
-  test('if the max issuable amounts are correctly displayed', async () => {
+  it('if the max issuable amounts are correctly displayed', async () => {
     await renderIssueForm();
 
     const singleMaxIssuableAmountElement = screen.getByTestId(/single-max-issuable/i);
@@ -179,7 +179,7 @@ describe('issue form', () => {
     expect(totalMaxIssuableAmountElement).toHaveTextContent(totalMaxIssuableAmount);
   });
 
-  test('when the governance token balance is less than required', async () => {
+  it('when the governance token balance is less than required', async () => {
     mockTokensBalance.mockImplementation((currency: CurrencyExt, _id: AccountId) => {
       if (currency.ticker === GOVERNANCE_TOKEN.ticker) {
         return new ChainBalance(currency, 0, 0);
@@ -194,7 +194,7 @@ describe('issue form', () => {
 
     await changeAmountToIssue(inputAmount.toString());
 
-    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient funds to pay for INTR fees."`);
+    expect(errorElement.textContent).toMatchInlineSnapshot(`"Insufficient free INTR for security deposit and fees"`);
 
     await submitForm();
 
@@ -205,7 +205,7 @@ describe('issue form', () => {
     );
   });
 
-  test('when the input amount is greater than the single vault max issuable amount', async () => {
+  it('when the input amount is greater than the single vault max issuable amount', async () => {
     const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
     const inputAmount = mockIssueGetRequestLimits().singleVaultMaxIssuable.add(newMonetaryAmount('1', WRAPPED_TOKEN));
@@ -219,7 +219,7 @@ describe('issue form', () => {
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
   });
 
-  test('when the input amount is less than the Bitcoin dust amount', async () => {
+  it('when the input amount is less than the Bitcoin dust amount', async () => {
     const { changeAmountToIssue, submitForm, errorElement } = await renderIssueForm();
 
     const inputAmount = mockIssueGetDustValue().sub(newMonetaryAmount(1, Bitcoin));
@@ -235,7 +235,7 @@ describe('issue form', () => {
     await waitFor(() => expect(mockIssueRequest).not.toHaveBeenCalled());
   });
 
-  test('when the parachain is more than 6 blocks behind', async () => {
+  it('when the parachain is more than 6 blocks behind', async () => {
     mockBtcRelayGetLatestBlockHeight.mockImplementation(() => MOCK_BTC_RELAY_HEIGHT);
     mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => BLOCKS_BEHIND_LIMIT + MOCK_BTC_RELAY_HEIGHT + 1);
 
@@ -257,7 +257,7 @@ describe('issue form', () => {
     mockElectrsAPIGetLatestBlockHeight.mockImplementation(() => MOCK_BITCOIN_HEIGHT);
   });
 
-  test('when the oracle is offline', async () => {
+  it('when the oracle is offline', async () => {
     mockOracleGetExchangeRate.mockImplementation(
       (currency: CurrencyExt) => new ExchangeRate(Bitcoin, currency, new Big(0))
     );

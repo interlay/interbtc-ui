@@ -21,10 +21,7 @@ const Template: Story<TableProps> = (args) => {
 const Default = Template.bind({});
 Default.args = {};
 
-const RowAction = Template.bind({});
-RowAction.args = { onRowAction: (key) => console.log(key) };
-
-export { Default, RowAction };
+export { Default };
 
 export default {
   title: 'Components/Table',

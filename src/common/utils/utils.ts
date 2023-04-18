@@ -3,6 +3,8 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 
 import { PARACHAIN_URL } from '@/constants';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 function shortAddress(address: string): string {
   if (address.length < 12) return address;
@@ -32,6 +34,27 @@ function getLastMidnightTimestamps(daysBack: number, startFromTonight = false): 
     })
     .reverse();
 }
+
+const convertMonetaryAmountToUsdBig = <T extends CurrencyExt>(
+  amount: MonetaryAmount<T>,
+  rate: number | undefined
+): Big => {
+  // If the rate is not available return 0.
+  if (rate === undefined) {
+    return Big(0);
+  }
+
+  return amount.toBig().mul(rate);
+};
+
+const convertMonetaryBtcToUSD = (amount: BitcoinAmount, prices: Prices): Big => {
+  if (prices === undefined) {
+    return Big(0);
+  }
+
+  const btcUsdPrice = getTokenPrice(prices, 'BTC')?.usd;
+  return convertMonetaryAmountToUsdBig(amount, btcUsdPrice);
+};
 
 const convertMonetaryAmountToValueInUSD = <T extends CurrencyExt>(
   amount: MonetaryAmount<T>,
@@ -155,7 +178,9 @@ const newSafeMonetaryAmount: typeof newMonetaryAmount = (...args) => {
 };
 
 export {
+  convertMonetaryAmountToUsdBig as convertMonetaryAmountToBigUSD,
   convertMonetaryAmountToValueInUSD,
+  convertMonetaryBtcToUSD,
   displayMonetaryAmount,
   displayMonetaryAmountInUSDFormat,
   formatDateTime,

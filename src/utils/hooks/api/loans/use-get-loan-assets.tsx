@@ -1,30 +1,22 @@
 import { LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { useErrorHandler } from 'react-error-boundary';
-import { useQuery, useQueryClient } from 'react-query';
+import { useQuery } from 'react-query';
 
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
-interface LoanAssetsData {
+interface UseGetLoansAssets {
   data: TickerToData<LoanAsset> | undefined;
   refetch: () => void;
 }
 
-const getLoanAssets = (): Promise<TickerToData<LoanAsset>> => window.bridge.loans.getLoanAssets();
-
-const useGetLoanAssets = (): LoanAssetsData => {
-  const queryKey = ['loan-assets'];
-
-  const { data, error } = useQuery({
-    queryKey,
-    queryFn: getLoanAssets,
+const useGetLoanAssets = (): UseGetLoansAssets => {
+  const { data, error, refetch } = useQuery({
+    queryKey: ['loan-assets'],
+    queryFn: (): Promise<TickerToData<LoanAsset>> => window.bridge.loans.getLoanAssets(),
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
   useErrorHandler(error);
-
-  const queryClient = useQueryClient();
-
-  const refetch = () => queryClient.invalidateQueries(queryKey);
 
   return { data, refetch };
 };

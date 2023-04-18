@@ -6,7 +6,7 @@ import { Dl, Flex, theme } from '@/component-library';
 import { ChainSelect } from './components';
 
 const StyledDl = styled(Dl)`
-  background-color: ${theme.card.secondaryBg};
+  background-color: ${theme.card.bg.secondary};
   padding: ${theme.spacing.spacing4};
   font-size: ${theme.text.xs};
   border-radius: ${theme.rounded.rg};
