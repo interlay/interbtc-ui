@@ -8,7 +8,6 @@ import { firstValueFrom } from 'rxjs';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { XCM_ADAPTERS } from '@/config/relay-chains';
-import { BITCOIN_NETWORK } from '@/constants';
 import { Chains } from '@/types/chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
