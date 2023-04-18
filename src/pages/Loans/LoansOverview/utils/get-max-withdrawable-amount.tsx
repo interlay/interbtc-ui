@@ -1,28 +1,15 @@
 import { CollateralPosition, CurrencyExt, LendingStats, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 
-/**
- * Get maximum amount of currency that user can withdraw
- * with currently provided collateral and liquidity.
- * @param {LoanAsset} asset The asset to be withdrawn.
- * @param {CollateralPosition} position The position to be withdrew.
- * @param {LendingStats} lendingStats Object containing information about account's collateralization.
- * @return {MonetaryAmount<CurrencyExt> | undefined} maximum amount of currency that
- * user can withdraw with currently provided collateral
- */
-const getMaxWithdrawableAmount = (
+import { pickSmallerAmount } from '@/utils/helpers/currencies';
+
+const getMaxWithdrawableAmountByBorrowLimit = (
   asset: LoanAsset,
-  position?: CollateralPosition,
-  lendingStats?: LendingStats
+  position: CollateralPosition,
+  lendingStats: LendingStats
 ): MonetaryAmount<CurrencyExt> => {
-  const { currency } = asset;
-
-  if (position === undefined || lendingStats === undefined) {
-    return newMonetaryAmount(0, currency);
-  }
-
   const { amount, isCollateral } = position;
-  const { collateralThreshold, exchangeRate } = asset;
+  const { collateralThreshold, exchangeRate, currency } = asset;
   const { borrowLimitBtc } = lendingStats;
 
   if (!isCollateral) {
@@ -39,6 +26,31 @@ const getMaxWithdrawableAmount = (
   const maxWithdrawable = exchangeRate.toCounter(borrowLimitBtc).div(collateralThreshold).toBig();
 
   return newMonetaryAmount(maxWithdrawable, currency, true);
+};
+
+/**
+ * Get maximum amount of currency that user can withdraw
+ * with currently provided collateral and liquidity.
+ * @param {LoanAsset} asset The asset to be withdrawn.
+ * @param {CollateralPosition} position The position to be withdrew.
+ * @param {LendingStats} lendingStats Object containing information about account's collateralization.
+ * @return {MonetaryAmount<CurrencyExt> | undefined} maximum amount of currency that
+ * user can withdraw with currently provided collateral
+ */
+const getMaxWithdrawableAmount = (
+  asset: LoanAsset,
+  position?: CollateralPosition,
+  lendingStats?: LendingStats
+): MonetaryAmount<CurrencyExt> => {
+  const { currency, availableCapacity } = asset;
+
+  if (position === undefined || lendingStats === undefined) {
+    return newMonetaryAmount(0, currency);
+  }
+
+  const maxWithdrawableAmountByBorrowLimit = getMaxWithdrawableAmountByBorrowLimit(asset, position, lendingStats);
+
+  return pickSmallerAmount(maxWithdrawableAmountByBorrowLimit, availableCapacity);
 };
 
 export { getMaxWithdrawableAmount };
