@@ -2,6 +2,7 @@ import { Overlay as AriaOverlay } from '@react-aria/overlays';
 import { ReactNode, useCallback, useState } from 'react';
 
 import { OpenTransition } from './OpenTransition';
+import { StyledOverlayWrapper } from './Overlay.style';
 
 type OverlayProps = {
   children: ReactNode;
@@ -53,18 +54,20 @@ const Overlay = ({
 
   return (
     <AriaOverlay portalContainer={container}>
-      <OpenTransition
-        in={isOpen}
-        appear
-        onExit={onExit}
-        onExiting={onExiting}
-        onExited={handleExited}
-        onEnter={onEnter}
-        onEntering={onEntering}
-        onEntered={handleEntered}
-      >
-        {children}
-      </OpenTransition>
+      <StyledOverlayWrapper>
+        <OpenTransition
+          in={isOpen}
+          appear
+          onExit={onExit}
+          onExiting={onExiting}
+          onExited={handleExited}
+          onEnter={onEnter}
+          onEntering={onEntering}
+          onEntered={handleEntered}
+        >
+          {children}
+        </OpenTransition>
+      </StyledOverlayWrapper>
     </AriaOverlay>
   );
 };

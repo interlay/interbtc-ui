@@ -3,6 +3,10 @@
     "api/*.py": {
       "memory": 128,
       "maxDuration": 5
+    },
+    "api/terms.js": {
+      "memory": 256,
+      "maxDuration": 10
     }
   },
   "rewrites": [
@@ -13,6 +17,14 @@
     {
       "source": "/_health/(.*)",
       "destination": "/api/health.py"
+    },
+    {
+      "source": "/marketdata/(.*)",
+      "destination": "/api/market_data.py"
+    },
+    {
+      "source": "/terms/(.*)",
+      "destination": "/api/terms.js"
     }
   ],
   "headers": [

@@ -14,6 +14,7 @@ import Select, {
 
 interface TokenOption {
   balance: string;
+  transferableBalance: string;
   symbol: string;
   icon: JSX.Element;
 }
@@ -24,16 +25,24 @@ interface Props {
   showBalances: boolean;
   currentToken: TokenOption;
   onChange: (type: TokenType) => void;
+  fullWidth?: boolean;
 }
 
-const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBalances }: Props): JSX.Element => {
+const TokenSelector = ({
+  variant,
+  tokenOptions,
+  currentToken,
+  onChange,
+  showBalances,
+  fullWidth
+}: Props): JSX.Element => {
   return (
     <>
       {currentToken && (
         <Select variant={variant} key={currentToken.symbol} value={currentToken.symbol} onChange={onChange}>
           {({ open }) => (
             <>
-              <SelectBody className={clsx('w-52')}>
+              <SelectBody className={clsx(fullWidth ? 'w-full' : 'w-52')}>
                 <SelectButton variant={variant}>
                   <span
                     className={clsx('flex', 'items-center', 'space-x-3', {
@@ -44,7 +53,7 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                     <SelectText>
                       {showBalances && (
                         <span>
-                          {formatNumber(Number(currentToken.balance), {
+                          {formatNumber(Number(currentToken.transferableBalance), {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 8
                           })}
@@ -69,7 +78,7 @@ const TokenSelector = ({ variant, tokenOptions, currentToken, onChange, showBala
                               {tokenOption.icon}
                               <SelectText selected={selected}>
                                 {showBalances &&
-                                  formatNumber(Number(tokenOption.balance), {
+                                  formatNumber(Number(tokenOption.transferableBalance), {
                                     minimumFractionDigits: 0,
                                     maximumFractionDigits: 8
                                   })}{' '}

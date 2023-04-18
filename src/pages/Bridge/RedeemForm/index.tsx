@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { togglePremiumRedeemAction } from '@/common/actions/redeem.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { VaultApiType } from '@/common/types/vault.types';
@@ -18,6 +17,7 @@ import {
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
+import { AuthCTA } from '@/components';
 import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE, DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
@@ -34,12 +34,10 @@ import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TextField from '@/legacy-components/TextField';
 import Toggle from '@/legacy-components/Toggle';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
-import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
@@ -73,7 +71,6 @@ const RedeemForm = (): JSX.Element | null => {
   const handleError = useErrorHandler();
 
   const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
-  const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
@@ -224,13 +221,6 @@ const RedeemForm = (): JSX.Element | null => {
     };
     const handleSubmittedRequestModalClose = () => {
       setSubmittedRequest(undefined);
-    };
-
-    const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!accountSet) {
-        dispatch(showAccountModalAction(true));
-        event.preventDefault();
-      }
     };
 
     const handleSelectVaultCheckboxChange = () => {
@@ -385,8 +375,6 @@ const RedeemForm = (): JSX.Element | null => {
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
 
-    const accountSet = !!selectedAccount;
-
     // `btcToDotRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToRelayChainNativeTokenRate.toBig().eq(0);
 
@@ -523,13 +511,15 @@ const RedeemForm = (): JSX.Element | null => {
               approxUSD={totalRelayChainNativeTokenInUSD}
             />
           )}
-          <SubmitButton
+          <AuthCTA
+            fullWidth
+            size='large'
+            type='submit'
             disabled={parachainStatus !== ParachainStatus.Running}
-            pending={submitStatus === STATUSES.PENDING}
-            onClick={handleConfirmClick}
+            loading={submitStatus === STATUSES.PENDING}
           >
-            {accountSet ? t('confirm') : t('connect_wallet')}
-          </SubmitButton>
+            {t('confirm')}
+          </AuthCTA>
         </form>
         {submitStatus === STATUSES.REJECTED && submitError && (
           <ErrorModal

@@ -2,12 +2,11 @@ import { useButton } from '@react-aria/button';
 import { useField } from '@react-aria/label';
 import { chain, mergeProps } from '@react-aria/utils';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
-import { ChangeEventHandler, InputHTMLAttributes, ReactNode, useRef, useState } from 'react';
+import { InputHTMLAttributes, ReactNode, useRef, useState } from 'react';
 
 import { CoinIcon } from '../CoinIcon';
 import { TokenStack } from '../TokenStack';
 import { useDOMRef } from '../utils/dom';
-import { triggerChangeEvent } from '../utils/input';
 import { StyledChevronDown, StyledTicker, StyledTokenSelect } from './TokenInput.style';
 import { TokenData } from './TokenList';
 import { TokenListModal } from './TokenListModal';
@@ -22,7 +21,7 @@ const Icon = ({ value, icons }: Pick<TokenSelectProps, 'value' | 'icons'>) => {
   return <CoinIcon ticker={value} />;
 };
 
-type SelectProps = InputHTMLAttributes<HTMLInputElement> & { ref?: any };
+type SelectProps = InputHTMLAttributes<HTMLInputElement> & { ref?: any; onSelectionChange?: (ticker: string) => void };
 
 type Props = {
   label?: ReactNode;
@@ -46,13 +45,14 @@ const TokenSelect = ({
   onChange,
   label: labelProp,
   'aria-label': ariaLabel,
-  selectProps
+  selectProps: selectPropsProp
 }: TokenSelectProps): JSX.Element => {
   const [isOpen, setOpen] = useState(false);
 
   const tokenButtonRef = useRef<HTMLDivElement>(null);
 
-  const inputRef = useDOMRef<HTMLInputElement>(selectProps?.ref);
+  const { ref, onSelectionChange, ...selectProps } = selectPropsProp || {};
+  const inputRef = useDOMRef<HTMLInputElement>(ref);
 
   const { buttonProps } = useButton(
     {
@@ -69,10 +69,6 @@ const TokenSelect = ({
 
   const handleClose = () => setOpen(false);
 
-  const handleSelectionChange = (ticker: string) => triggerChangeEvent(inputRef, ticker);
-
-  const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => onChange(e.target.value);
-
   const isSelect = !isDisabled;
 
   return (
@@ -81,7 +77,7 @@ const TokenSelect = ({
         <VisuallyHidden>
           <label {...labelProps}>Choose token for {label} field</label>
           <input
-            {...mergeProps(selectProps || {}, fieldProps, { onChange: handleChange })}
+            {...mergeProps(selectProps || {}, fieldProps)}
             ref={inputRef}
             autoComplete='off'
             tabIndex={-1}
@@ -107,7 +103,7 @@ const TokenSelect = ({
           tokens={tokens}
           selectedTicker={value}
           onClose={handleClose}
-          onSelectionChange={chain(onChange, handleSelectionChange, handleClose)}
+          onSelectionChange={chain(onChange, onSelectionChange, handleClose)}
         />
       )}
     </>

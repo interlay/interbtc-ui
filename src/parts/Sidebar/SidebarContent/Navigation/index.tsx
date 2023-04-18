@@ -12,7 +12,8 @@ import {
   HandRaisedIcon,
   PresentationChartBarIcon,
   ScaleIcon,
-  Square3Stack3DIcon
+  Square3Stack3DIcon,
+  UserIcon
 } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -68,9 +69,16 @@ const Navigation = ({
   const { vaultClientLoaded } = useSelector((state: StoreType) => state.general);
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
   const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
+  const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
+      {
+        name: 'nav_wallet',
+        link: PAGES.WALLET,
+        icon: UserIcon,
+        disabled: !isWalletEnabled
+      },
       {
         name: 'nav_bridge',
         link: PAGES.BRIDGE,
@@ -185,7 +193,7 @@ const Navigation = ({
         }
       }
     ],
-    [isLendingEnabled, isAMMEnabled, selectedAccount?.address, vaultClientLoaded]
+    [isWalletEnabled, isLendingEnabled, isAMMEnabled, selectedAccount?.address, vaultClientLoaded]
   );
 
   return (

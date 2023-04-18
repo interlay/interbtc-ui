@@ -1,4 +1,5 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
+import clsx from 'clsx';
 import * as React from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
 
@@ -24,9 +25,19 @@ interface Props {
   variant?: SelectVariants;
   callbackFunction?: (token: TokenOption) => void;
   showBalances?: boolean;
+  tickers?: Array<string>;
+  label?: string;
+  fullWidth?: boolean;
 }
 
-const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = true }: Props): JSX.Element => {
+const Tokens = ({
+  variant = 'optionSelector',
+  callbackFunction,
+  showBalances = true,
+  tickers,
+  label,
+  fullWidth = false
+}: Props): JSX.Element => {
   const [tokenOptions, setTokenOptions] = React.useState<Array<TokenOption> | undefined>(undefined);
   const [currentToken, setCurrentToken] = React.useState<TokenOption | undefined>(undefined);
 
@@ -40,14 +51,14 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     if (!tokenOptions) return;
 
     if (!currentToken) {
-      // Set relay-chain native token as default
-      setCurrentToken(getTokenOption(RELAY_CHAIN_NATIVE_TOKEN.ticker));
+      // Set default
+      setCurrentToken(tickers ? getTokenOption(tickers[0]) : getTokenOption(RELAY_CHAIN_NATIVE_TOKEN.ticker));
     }
 
     if (callbackFunction && currentToken) {
       callbackFunction(currentToken);
     }
-  }, [tokenOptions, currentToken, getTokenOption, callbackFunction]);
+  }, [tokenOptions, currentToken, getTokenOption, callbackFunction, tickers]);
 
   const handleUpdateToken = (tokenType: TokenType) => {
     const token = getTokenOption(tokenType);
@@ -61,7 +72,11 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   React.useEffect(() => {
     if (!balances) return;
 
-    const tokenOptions: Array<TokenOption> = Object.values(balances).map((balance) => ({
+    const filteredBalances = tickers
+      ? Object.values(balances).filter((value) => tickers?.includes(value.currency.ticker))
+      : balances;
+
+    const tokenOptions: Array<TokenOption> = Object.values(filteredBalances).map((balance) => ({
       token: balance.currency,
       balance: getBalance(balance.currency.ticker)?.free.toHuman(5) || '0',
       transferableBalance: getBalance(balance.currency.ticker)?.transferable.toHuman(5) || '0',
@@ -70,7 +85,7 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
     }));
 
     setTokenOptions(tokenOptions);
-  }, [balances, getBalance, variant]);
+  }, [balances, getBalance, variant, tickers]);
 
   // Reset currentToken to get updated values if tokenOptions change
   // while a current token is set. This will always happen because
@@ -82,7 +97,8 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
   }, [currentToken, getTokenOption, tokenOptions]);
 
   return (
-    <>
+    <div>
+      {label && <label className={clsx('text-sm', 'space-x-0.5')}>{label}</label>}
       {tokenOptions && currentToken ? (
         <TokenSelector
           variant={variant}
@@ -90,9 +106,10 @@ const Tokens = ({ variant = 'optionSelector', callbackFunction, showBalances = t
           tokenOptions={tokenOptions}
           currentToken={currentToken}
           onChange={handleUpdateToken}
+          fullWidth={fullWidth}
         />
       ) : null}
-    </>
+    </div>
   );
 };
 

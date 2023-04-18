@@ -1,23 +1,22 @@
-import { LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { CollateralPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { Key, useState } from 'react';
 
 import { getPosition } from '../../utils/get-position';
 import { CollateralModal } from '../CollateralModal';
-import { LendAssetsTable } from '../LendAssetsTable/LendAssetsTable';
-import { LendPositionsTable } from '../LendPositionsTable';
 import { LoanModal } from '../LoanModal';
+import { StyledLendAssetsTable, StyledLendPositionsTable } from './LoansTables.style';
 
 type UseAssetState = {
   type?: 'toggle-collateral' | 'change-loan';
   data?: LoanAsset;
-  position?: LendPosition;
+  position?: CollateralPosition;
 };
 
 const defaultAssetState: UseAssetState = { type: undefined, data: undefined, position: undefined };
 
 type LendTablesProps = {
   assets: TickerToData<LoanAsset>;
-  positions: LendPosition[];
+  positions: CollateralPosition[];
   disabledAssets: string[];
   hasPositions: boolean;
 };
@@ -44,7 +43,8 @@ const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTab
   return (
     <>
       {hasPositions && (
-        <LendPositionsTable
+        <StyledLendPositionsTable
+          variant='lend'
           assets={assets}
           positions={positions}
           onRowAction={handleRowAction}
@@ -52,7 +52,7 @@ const LendTables = ({ assets, positions, disabledAssets, hasPositions }: LendTab
           disabledKeys={disabledAssets}
         />
       )}
-      <LendAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
+      <StyledLendAssetsTable assets={assets} onRowAction={handleRowAction} disabledKeys={disabledAssets} />
       <LoanModal
         variant='lend'
         isOpen={selectedAsset.type === 'change-loan'}

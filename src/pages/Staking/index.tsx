@@ -8,9 +8,8 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import {
   displayMonetaryAmount,
@@ -18,6 +17,7 @@ import {
   formatNumber,
   formatPercentage
 } from '@/common/utils/utils';
+import { AuthCTA } from '@/components';
 import { BLOCK_TIME } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -32,11 +32,9 @@ import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import Panel from '@/legacy-components/Panel';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
-import WarningBanner from '@/legacy-components/WarningBanner';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
@@ -46,7 +44,6 @@ import {
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
-import { KUSAMA } from '@/utils/constants/relay-chain-names';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -109,7 +106,6 @@ interface LockingAmountAndTime {
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
 
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -321,10 +317,15 @@ const Staking = (): JSX.Element => {
 
   React.useEffect(() => {
     if (!lockTime) return;
+    if (!currentBlockNumber) return;
+    if (!stakedAmountAndEndBlock) return;
 
     const lockTimeValue = Number(lockTime);
-    setBlockLockTimeExtension(convertWeeksToBlockNumbers(lockTimeValue));
-  }, [lockTime]);
+    const extensionTime =
+      stakedAmountAndEndBlock.endBlock + currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue);
+
+    setBlockLockTimeExtension(extensionTime);
+  }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
 
   React.useEffect(() => {
     reset({
@@ -670,14 +671,6 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(claimableRewardAmount);
   };
 
-  const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // TODO: should be handled based on https://kentcdodds.com/blog/application-state-management-with-react
-    if (!accountSet) {
-      dispatch(showAccountModalAction(true));
-      event.preventDefault();
-    }
-  };
-
   const valueInUSDOfLockingAmount = displayMonetaryAmountInUSDFormat(
     monetaryLockingAmount,
     getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
@@ -751,11 +744,6 @@ const Staking = (): JSX.Element => {
   return (
     <>
       <MainContainer>
-        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && (
-          <WarningBanner className={SHARED_CLASSES} severity='alert'>
-            <p>Block times are currently higher than expected. Lock times may be longer than expected.</p>
-          </WarningBanner>
-        )}
         <Panel className={SHARED_CLASSES}>
           <form className={clsx('p-8', 'space-y-8')} onSubmit={handleSubmit(onSubmit)}>
             <TitleWithUnderline text={`Stake ${GOVERNANCE_TOKEN_SYMBOL}`} />
@@ -865,18 +853,18 @@ const Staking = (): JSX.Element => {
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
               })}
             />
-            <SubmitButton
+            <AuthCTA
+              fullWidth
+              size='large'
+              type='submit'
               disabled={initializing || unlockFirst}
-              pending={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
-              onClick={handleConfirmClick}
-              endIcon={
-                unlockFirst ? (
-                  <InformationTooltip label='Please unstake first.' forDisabledAction={unlockFirst} />
-                ) : null
-              }
+              loading={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
             >
-              {submitButtonLabel}
-            </SubmitButton>
+              {submitButtonLabel}{' '}
+              {unlockFirst ? (
+                <InformationTooltip label='Please unstake first.' forDisabledAction={unlockFirst} />
+              ) : null}
+            </AuthCTA>
           </form>
         </Panel>
       </MainContainer>

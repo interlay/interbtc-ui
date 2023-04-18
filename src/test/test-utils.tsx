@@ -16,7 +16,6 @@ const queryClient = new QueryClient();
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   path?: `/${string}`;
-  hasLayout?: boolean;
 }
 
 const testStore = createStore(rootReducer);
@@ -41,7 +40,10 @@ const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactN
   );
 };
 
-const customRender = async (ui: ReactElement, options?: CustomRenderOptions): Promise<ReturnType<typeof render>> => {
+const customRender = async (
+  ui: ReactElement,
+  options?: CustomRenderOptions
+): Promise<ReturnType<typeof render> & { history: MemoryHistory<unknown> }> => {
   const history = createMemoryHistory();
   if (options?.path) {
     history.push(options.path);
@@ -54,7 +56,7 @@ const customRender = async (ui: ReactElement, options?: CustomRenderOptions): Pr
     _render = render(ui, { wrapper: ProvidersWrapper(history), ...options });
   });
 
-  return _render as any;
+  return { ...(_render as any), history };
 };
 
 export * from '@testing-library/react';

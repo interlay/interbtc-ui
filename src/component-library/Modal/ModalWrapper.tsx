@@ -3,7 +3,7 @@ import { mergeProps } from '@react-aria/utils';
 import { OverlayTriggerState } from '@react-stately/overlays';
 import { forwardRef, ReactNode, RefObject } from 'react';
 
-import { StyledModal, StyledUnderlay } from './Modal.style';
+import { StyledModal, StyledUnderlay, StyledWrapper } from './Modal.style';
 
 type Props = {
   children: ReactNode;
@@ -18,13 +18,29 @@ type ModalWrapperProps = Props & InheritAttrs;
 
 const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
   (
-    { children, isDismissable = true, align = 'center', onClose, isKeyboardDismissDisabled, isOpen, ...props },
+    {
+      children,
+      isDismissable = true,
+      align = 'center',
+      onClose,
+      isKeyboardDismissDisabled,
+      isOpen,
+      shouldCloseOnInteractOutside,
+      shouldCloseOnBlur,
+      ...props
+    },
     ref
   ): JSX.Element | null => {
     // Handle interacting outside the dialog and pressing
     // the Escape key to close the modal.
     const { modalProps, underlayProps } = useModalOverlay(
-      { isDismissable, isKeyboardDismissDisabled, ...props },
+      {
+        isDismissable,
+        isKeyboardDismissDisabled,
+        shouldCloseOnInteractOutside,
+        shouldCloseOnBlur,
+        ...props
+      } as AriaOverlayProps,
       // These are the only props needed
       { isOpen: !!isOpen, close: onClose } as OverlayTriggerState,
       ref as RefObject<HTMLElement>
@@ -33,11 +49,14 @@ const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
     const isCentered = align === 'center';
 
     return (
-      <StyledUnderlay {...underlayProps} $isOpen={!!isOpen} $isCentered={isCentered}>
-        <StyledModal ref={ref} $isOpen={isOpen} $isCentered={isCentered} {...mergeProps(modalProps, props)}>
-          {children}
-        </StyledModal>
-      </StyledUnderlay>
+      <>
+        <StyledUnderlay {...underlayProps} $isOpen={!!isOpen} $isCentered={isCentered} />
+        <StyledWrapper $isCentered={isCentered} $isOpen={!!isOpen}>
+          <StyledModal $isOpen={isOpen} ref={ref} $isCentered={isCentered} {...mergeProps(modalProps, props)}>
+            {children}
+          </StyledModal>
+        </StyledWrapper>
+      </>
     );
   }
 );
