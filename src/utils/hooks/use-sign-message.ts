@@ -52,12 +52,13 @@ type UseSignMessageResult = {
 
 const useSignMessage = (): UseSignMessageResult => {
   const { selectedAccount } = useSubstrateSecureState();
+  const requireSigning = !!selectedAccount && !!SIGNER_API_URL;
 
   const { data: signatureData, refetch: refetchSignatureData }: UseQueryResult<GetSignatureData, Error> = useQuery({
     queryKey: ['getSignature', selectedAccount?.address],
     queryFn: () => getSignature(selectedAccount),
     onError: handleError,
-    enabled: !!selectedAccount
+    enabled: requireSigning
   });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
@@ -74,7 +75,7 @@ const useSignMessage = (): UseSignMessageResult => {
   };
 
   return {
-    hasSignature: !SIGNER_API_URL || signatureData?.exists,
+    hasSignature: !requireSigning || signatureData?.exists,
     selectProp: { onSelectionChange: handleSignMessage },
     buttonProps: { onPress: () => handleSignMessage(selectedAccount) }
   };
