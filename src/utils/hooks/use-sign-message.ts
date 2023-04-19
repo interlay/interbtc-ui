@@ -57,7 +57,7 @@ const useSignMessage = (): UseSignMessageResult => {
     queryKey: ['getSignature', selectedAccount?.address],
     queryFn: () => getSignature(selectedAccount),
     onError: handleError,
-    enabled: !!selectedAccount
+    enabled: !!selectedAccount && !!SIGNER_API_URL
   });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
