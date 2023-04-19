@@ -10,7 +10,7 @@ export const Card = styled.div`
   box-shadow: ${theme.boxShadow.default};
   color: ${theme.colors.textSecondary};
   display: flex;
-  background-color: ${theme.card.bg};
+  background-color: ${theme.card.bg.primary};
   border: ${theme.border.default};
   border-radius: ${theme.rounded.xl};
   flex-direction: column;
@@ -39,7 +39,7 @@ export const CardBody = styled.div`
 `;
 
 export const StyledDl = styled.dl`
-  background-color: ${theme.card.secondaryBg};
+  background-color: ${theme.card.bg.secondary};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.s};
   font-weight: ${theme.fontWeight.medium};

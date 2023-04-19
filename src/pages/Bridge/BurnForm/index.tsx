@@ -5,13 +5,13 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { CoinIcon } from '@/component-library';
+import { AuthCTA } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL, WrappedTokenLogoIcon } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
@@ -20,10 +20,8 @@ import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TokenField from '@/legacy-components/TokenField';
 import Tokens, { TokenOption } from '@/legacy-components/Tokens';
-import { useSubstrateSecureState } from '@/lib/substrate';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
@@ -45,14 +43,12 @@ type BurnableCollateral = {
 };
 
 const BurnForm = (): JSX.Element | null => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
-  const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded, parachainStatus } = useSelector((state: StoreType) => state.general);
   const { data: balances } = useGetBalances();
   const { data: collateralCurrencies } = useGetCollateralCurrencies(bridgeLoaded);
@@ -150,13 +146,6 @@ const BurnForm = (): JSX.Element | null => {
       throw new Error('Something went wrong!');
     }
 
-    const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!accountSet) {
-        dispatch(showAccountModalAction(true));
-        event.preventDefault();
-      }
-    };
-
     const onSubmit = async (data: BurnFormData) => {
       try {
         setSubmitStatus(STATUSES.PENDING);
@@ -210,7 +199,6 @@ const BurnForm = (): JSX.Element | null => {
     const earnedCollateralTokenAmount = selectedCollateral.burnRate.rate.eq(0)
       ? newMonetaryAmount(0, selectedCollateral.currency)
       : selectedCollateral.burnRate.toCounter(parsedInterBTCAmount || BitcoinAmount.zero());
-    const accountSet = !!selectedAccount;
 
     return (
       <>
@@ -308,14 +296,16 @@ const BurnForm = (): JSX.Element | null => {
               getTokenPrice(prices, selectedCollateral.currency.ticker)?.usd
             )}
           />
-          <SubmitButton
-            // TODO: should not check everywhere like this
+
+          <AuthCTA
+            fullWidth
+            size='large'
+            type='submit'
+            loading={submitStatus === STATUSES.PENDING}
             disabled={parachainStatus === ParachainStatus.Loading || parachainStatus === ParachainStatus.Shutdown}
-            pending={submitStatus === STATUSES.PENDING}
-            onClick={handleConfirmClick}
           >
-            {accountSet ? t('burn') : t('connect_wallet')}
-          </SubmitButton>
+            {t('burn')}
+          </AuthCTA>
         </form>
         {submitStatus === STATUSES.REJECTED && submitError && (
           <ErrorModal

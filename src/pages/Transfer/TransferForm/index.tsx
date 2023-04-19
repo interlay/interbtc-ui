@@ -4,20 +4,18 @@ import * as React from 'react';
 import { withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { formatNumber } from '@/common/utils/utils';
+import { AuthCTA } from '@/components';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import FormTitle from '@/legacy-components/FormTitle';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TextField from '@/legacy-components/TextField';
 import Tokens, { TokenOption } from '@/legacy-components/Tokens';
 import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
-import { useSubstrateSecureState } from '@/lib/substrate';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import isValidPolkadotAddress from '@/utils/helpers/is-valid-polkadot-address';
@@ -33,10 +31,8 @@ type TransferFormData = {
 };
 
 const TransferForm = (): JSX.Element => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { selectedAccount } = useSubstrateSecureState();
   const { parachainStatus } = useSelector((state: StoreType) => state.general);
 
   const {
@@ -50,7 +46,6 @@ const TransferForm = (): JSX.Element => {
   });
 
   const [activeToken, setActiveToken] = React.useState<TokenOption | undefined>(undefined);
-  const [accountSet, setAccountSet] = React.useState<boolean | undefined>(undefined);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
@@ -92,22 +87,11 @@ const TransferForm = (): JSX.Element => {
     [t]
   );
 
-  const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (!accountSet) {
-      dispatch(showAccountModalAction(true));
-      event.preventDefault();
-    }
-  };
-
   const handleTokenChange = (token: any) => {
     setActiveToken(token);
   };
 
   const handleClickBalance = () => setValue(TRANSFER_AMOUNT, activeToken?.transferableBalance || '');
-
-  React.useEffect(() => {
-    setAccountSet(!!selectedAccount);
-  }, [selectedAccount]);
 
   // This ensures that triggering the notification and clearing
   // the form happen at the same time.
@@ -179,13 +163,15 @@ const TransferForm = (): JSX.Element => {
             helperText={errors[RECIPIENT_ADDRESS]?.message}
           />
         </div>
-        <SubmitButton
+        <AuthCTA
+          fullWidth
+          size='large'
+          type='submit'
           disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
-          pending={submitStatus === STATUSES.PENDING}
-          onClick={handleConfirmClick}
+          loading={submitStatus === STATUSES.PENDING}
         >
-          {accountSet ? t('transfer') : t('connect_wallet')}
-        </SubmitButton>
+          {t('transfer')}
+        </AuthCTA>
       </form>
       {submitStatus === STATUSES.REJECTED && submitError && (
         <ErrorModal

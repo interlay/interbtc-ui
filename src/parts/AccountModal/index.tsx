@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { WalletSourceName } from '@/config/wallets';
 import { SS58_FORMAT } from '@/constants';
 import InterlayModal, { InterlayModalInnerWrapper } from '@/legacy-components/UI/InterlayModal';
-import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
+import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 import AccountModalContentWrapper from './ModalContent/AccountModalContentWrapper';
@@ -19,6 +19,7 @@ import ModalContentSelectWallet from './ModalContent/ModalContentSelectWallet';
 interface Props {
   open: boolean;
   onClose: () => void;
+  onAccountSelect?: (account: KeyringPair) => void;
 }
 
 const ACCOUNT_MODAL_BUTTON_CLASSES = clsx(
@@ -42,7 +43,7 @@ const ACCOUNT_MODAL_BUTTON_SELECTED_CLASSES = clsx(
   { 'dark:hover:bg-opacity-100': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
 );
 
-const AccountModal = ({ open, onClose }: Props): JSX.Element => {
+const AccountModal = ({ open, onAccountSelect, onClose }: Props): JSX.Element => {
   const { extensions, selectedAccount, accounts } = useSubstrateSecureState();
 
   const { t } = useTranslation();
@@ -84,7 +85,7 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
       const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
       const theSelectedAccount = keyring.addFromAddress(newAccount.address, newAccount.meta);
       setSelectedAccount(theSelectedAccount);
-
+      onAccountSelect?.(theSelectedAccount as KeyringPair);
       onClose();
     };
 
@@ -130,15 +131,16 @@ const AccountModal = ({ open, onClose }: Props): JSX.Element => {
       );
     }
   }, [
-    accounts,
-    accountsFromSelectedWallet,
-    selectedAccount,
+    setSelectedAccount,
+    removeSelectedAccount,
     supportedExtensions,
+    onAccountSelect,
     onClose,
     selectedWallet,
     t,
-    setSelectedAccount,
-    removeSelectedAccount
+    accounts,
+    accountsFromSelectedWallet,
+    selectedAccount
   ]);
 
   return (

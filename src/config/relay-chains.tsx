@@ -117,6 +117,8 @@ let XCM_ADAPTERS: Record<string, BaseCrossChainAdapter>;
 
 let TRANSACTION_FEE_AMOUNT: MonetaryAmount<CurrencyExt>;
 
+let SS58_PREFIX: number;
+
 type WrappedTokenAmount = InterBtcAmount | KBtcAmount;
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
@@ -159,6 +161,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       polkadot: new PolkadotAdapter(),
       statemint: new StatemintAdapter()
     };
+    SS58_PREFIX = 0;
 
     break;
   }
@@ -200,6 +203,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       kusama: new KusamaAdapter(),
       statemine: new StatemineAdapter()
     };
+    SS58_PREFIX = 2;
     break;
   }
   default: {
@@ -232,6 +236,7 @@ export {
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainLogoIcon,
   RelayChainNativeTokenLogoIcon,
+  SS58_PREFIX,
   STAKE_LOCK_TIME,
   SUBSCAN_LINK,
   TERMS_AND_CONDITIONS_LINK,
