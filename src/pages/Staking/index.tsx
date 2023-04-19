@@ -8,9 +8,8 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import {
   displayMonetaryAmount,
@@ -18,6 +17,7 @@ import {
   formatNumber,
   formatPercentage
 } from '@/common/utils/utils';
+import { AuthCTA } from '@/components';
 import { BLOCK_TIME } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -32,7 +32,6 @@ import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import Panel from '@/legacy-components/Panel';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
@@ -107,7 +106,6 @@ interface LockingAmountAndTime {
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
 
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -673,14 +671,6 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(claimableRewardAmount);
   };
 
-  const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // TODO: should be handled based on https://kentcdodds.com/blog/application-state-management-with-react
-    if (!accountSet) {
-      dispatch(showAccountModalAction(true));
-      event.preventDefault();
-    }
-  };
-
   const valueInUSDOfLockingAmount = displayMonetaryAmountInUSDFormat(
     monetaryLockingAmount,
     getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
@@ -863,18 +853,18 @@ const Staking = (): JSX.Element => {
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
               })}
             />
-            <SubmitButton
+            <AuthCTA
+              fullWidth
+              size='large'
+              type='submit'
               disabled={initializing || unlockFirst}
-              pending={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
-              onClick={handleConfirmClick}
-              endIcon={
-                unlockFirst ? (
-                  <InformationTooltip label='Please unstake first.' forDisabledAction={unlockFirst} />
-                ) : null
-              }
+              loading={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
             >
-              {submitButtonLabel}
-            </SubmitButton>
+              {submitButtonLabel}{' '}
+              {unlockFirst ? (
+                <InformationTooltip label='Please unstake first.' forDisabledAction={unlockFirst} />
+              ) : null}
+            </AuthCTA>
           </form>
         </Panel>
       </MainContainer>

@@ -15,8 +15,9 @@
 .theme-kintsugi {
   --colors-border: var(--colors-mid-blue);
   --colors-bg-primary: var(--colors-dark-blue);
-  --colors-card-bg: var(--colors-dark-blue);
-  --colors-card-secondary-bg: var(--colors-neutral-white-06);
+  /* Card */
+  --color-card-primary-bg: var(--colors-dark-blue);
+  --color-card-secondary-bg: var(--colors-neutral-white-06);
   /* CTA */
   --colors-cta-primary: var(--colors-yellow);
   --colors-cta-primary-hover: var(--colors-dark-yellow);
