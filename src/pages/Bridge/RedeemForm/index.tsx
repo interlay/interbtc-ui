@@ -44,7 +44,7 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getColorShade } from '@/utils/helpers/colors';
-import { finalizedExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
+import { FinalizedExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -302,7 +302,7 @@ const RedeemForm = (): JSX.Element | null => {
         );
         // When requesting a redeem, wait for the finalized event because we cannot revert BTC transactions.
         // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
-        const extrinsicResult = await submitExtrinsic(extrinsicData, finalizedExtrinsicStatus);
+        const extrinsicResult = await submitExtrinsic(extrinsicData, FinalizedExtrinsicStatus);
         const redeemRequests = await getRedeemRequestsFromExtrinsicResult(window.bridge, extrinsicResult);
 
         // TODO: handle redeem aggregator

@@ -27,6 +27,7 @@ import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsis
 import TokenField from '@/legacy-components/TokenField';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import STATUSES from '@/utils/constants/statuses';
+import { InBlockExtrinsicStatus } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
@@ -188,7 +189,13 @@ const CrossChainTransferForm = (): JSX.Element => {
           address: destination.address
         } as CrossChainTransferParams);
 
-        await DefaultTransactionAPI.sendLogged(apiPromise, selectedAccount.address, tx, undefined, true);
+        await DefaultTransactionAPI.sendLogged(
+          apiPromise,
+          selectedAccount.address,
+          tx,
+          undefined,
+          InBlockExtrinsicStatus
+        );
       };
 
       await sendTransaction();

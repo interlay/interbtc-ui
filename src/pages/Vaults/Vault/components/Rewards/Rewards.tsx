@@ -10,7 +10,7 @@ import { LoadingSpinner } from '@/component-library/LoadingSpinner';
 import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
+import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -62,7 +62,7 @@ const Rewards = ({
         WRAPPED_TOKEN as WrappedCurrency
       );
 
-      return submitExtrinsic(window.bridge.rewards.withdrawRewards(vaultId));
+      return submitExtrinsicPromise(window.bridge.rewards.withdrawRewards(vaultId));
     },
     {
       onSuccess: () => {
