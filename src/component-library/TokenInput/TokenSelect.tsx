@@ -56,7 +56,7 @@ const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }
       aria-label={ariaLabel}
     >
       {(data: TokenData) => (
-        <Item key={data.value}>
+        <Item key={data.value} textValue={data.value}>
           <ListItem data={data} />
         </Item>
       )}

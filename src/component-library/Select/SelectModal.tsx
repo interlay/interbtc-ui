@@ -10,7 +10,6 @@ import { SelectModalContext } from './SelectModalContext';
 
 type Props = {
   state: SelectState<unknown>;
-  onSelectionChange?: (key: Key) => void;
   selectedAccount?: Key;
   title?: ReactNode;
 };
@@ -20,7 +19,7 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 type SelectModalProps = Props & InheritAttrs;
 
 const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
-  ({ selectedAccount, state, title, onSelectionChange, onClose, ...props }, ref): JSX.Element => {
+  ({ selectedAccount, state, title, onClose, ...props }, ref): JSX.Element => {
     const headerId = useId();
 
     const handleSelectionChange: ListProps['onSelectionChange'] = (key) => {
@@ -30,7 +29,6 @@ const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
         return onClose();
       }
 
-      onSelectionChange?.(selectedKey);
       state.selectionManager.setSelectedKeys(key);
       onClose();
     };

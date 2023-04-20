@@ -9,32 +9,32 @@ import { SelectTrigger, SelectTriggerProps } from './SelectTrigger';
 const SelectTemplate: Story<SelectProps<any>> = (args) => {
   return (
     <Select {...args}>
-      <Item key='BTC'>
+      <Item textValue='BTC' key='BTC'>
         <Flex alignItems='center' gap='spacing2'>
           <CoinIcon ticker='BTC' /> BTC
         </Flex>
       </Item>
-      <Item key='DOT'>
+      <Item textValue='DOT' key='DOT'>
         <Flex alignItems='center' gap='spacing2'>
           <CoinIcon ticker='DOT' /> DOT
         </Flex>
       </Item>
-      <Item key='KSM'>
+      <Item textValue='KSM' key='KSM'>
         <Flex alignItems='center' gap='spacing2'>
           <CoinIcon ticker='KSM' /> KSM
         </Flex>
       </Item>
-      <Item key='KINT'>
+      <Item textValue='KINT' key='KINT'>
         <Flex alignItems='center' gap='spacing2'>
           <CoinIcon ticker='KINT' /> KINT
         </Flex>
       </Item>
-      <Item key='INTR'>
+      <Item textValue='INTR' key='INTR'>
         <Flex alignItems='center' gap='spacing2'>
           <CoinIcon ticker='INTR' /> INTR
         </Flex>
       </Item>
-      <Item key='USDT'>
+      <Item textValue='USDT' key='USDT'>
         <Flex alignItems='center' gap='spacing2'>
           <CoinIcon ticker='USDT' /> USDT
         </Flex>

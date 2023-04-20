@@ -1,5 +1,5 @@
 import { useLabel } from '@react-aria/label';
-import { mergeProps, useId } from '@react-aria/utils';
+import { chain, mergeProps, useId } from '@react-aria/utils';
 import { forwardRef, Key, ReactNode, useEffect, useState } from 'react';
 
 import { Flex } from '../Flex';
@@ -80,13 +80,13 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     // Prioritise Number Input description and error message
     const hasSelectHelperText =
       !errorMessage && !description && (selectProps?.errorMessage || selectProps?.description);
-    const { ...restSelectProps } = selectProps || {};
+    const { onSelectionChange, ...restSelectProps } = selectProps || {};
 
     const endAdornment = restSelectProps ? (
       <TokenSelect
         {...restSelectProps}
         value={selectValue}
-        onSelectionChange={handleTokenChange}
+        onSelectionChange={chain(onSelectionChange, handleTokenChange)}
         label={label}
         aria-label={fieldProps['aria-label']}
         aria-describedby={hasSelectHelperText ? selectHelperTextId : undefined}

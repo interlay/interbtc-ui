@@ -1,5 +1,5 @@
 import { useSelect } from '@react-aria/select';
-import { chain, mergeProps } from '@react-aria/utils';
+import { mergeProps } from '@react-aria/utils';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { SelectProps as AriaSelectProps, useSelectState } from '@react-stately/select';
 import { CollectionBase, Node } from '@react-types/shared';
@@ -7,7 +7,7 @@ import { ForwardedRef, forwardRef, Key, ReactNode, useRef } from 'react';
 
 import { Field, FieldProps, useFieldProps } from '../Field';
 import { useDOMRef } from '../utils/dom';
-import { hasError, triggerChangeEvent } from '../utils/input';
+import { hasError } from '../utils/input';
 import { Sizes } from '../utils/prop-types';
 import { SelectModal } from './SelectModal';
 import { SelectTrigger } from './SelectTrigger';
@@ -54,7 +54,6 @@ const Select = <T extends SelectObject>(
     modalTitle,
     validationState,
     onChange,
-    onSelectionChange,
     renderValue = (item) => item.rendered,
     ...props
   }: SelectProps<T>,
@@ -73,7 +72,6 @@ const Select = <T extends SelectObject>(
     label,
     errorMessage,
     validationState,
-    onSelectionChange: chain((key: Key) => triggerChangeEvent(inputRef, key), onSelectionChange),
     ...props
   };
 
@@ -115,7 +113,7 @@ const Select = <T extends SelectObject>(
           ref={inputRef}
           name={name}
           disabled={disabled}
-          value={onChange ? state.selectedItem?.textValue || '' : undefined}
+          value={onChange ? state.selectedKey || '' : undefined}
           onChange={onChange}
           tabIndex={-1}
         />

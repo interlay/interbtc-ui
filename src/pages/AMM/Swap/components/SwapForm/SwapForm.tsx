@@ -3,7 +3,7 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
-import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, Key, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -318,7 +318,7 @@ const SwapForm = ({
                   humanBalance={inputBalance?.toHuman() || 0}
                   valueUSD={inputAmountUSD}
                   selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, false), {
-                    onChange: handleTickerChange,
+                    onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_INPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
                   {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, false), { onChange: handleChangeInput })}
@@ -333,7 +333,7 @@ const SwapForm = ({
                   valueUSD={outputAmountUSD}
                   value={trade?.outputAmount.toString() || ''}
                   selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
-                    onChange: handleTickerChange,
+                    onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_OUTPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
                 />
