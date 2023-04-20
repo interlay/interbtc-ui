@@ -18,6 +18,7 @@ import Tokens, { TokenOption } from '@/legacy-components/Tokens';
 import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import isValidPolkadotAddress from '@/utils/helpers/is-valid-polkadot-address';
 
 import TokenAmountField from '../TokenAmountField';
@@ -56,9 +57,11 @@ const TransferForm = (): JSX.Element => {
     try {
       setSubmitStatus(STATUSES.PENDING);
 
-      await window.bridge.tokens.transfer(
-        data[RECIPIENT_ADDRESS],
-        newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token, true)
+      await submitExtrinsic(
+        window.bridge.tokens.transfer(
+          data[RECIPIENT_ADDRESS],
+          newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token, true)
+        )
       );
 
       setSubmitStatus(STATUSES.RESOLVED);

@@ -1,5 +1,6 @@
 import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { useId } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
@@ -15,6 +16,7 @@ import {
   isFormDisabled,
   useForm
 } from '@/lib/form';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
@@ -57,8 +59,8 @@ const DepositCollateralStep = ({
     onSubmit: handleSubmit
   });
 
-  const registerNewVaultMutation = useMutation<void, Error, MonetaryAmount<CollateralCurrencyExt>>(
-    (collateralAmount) => window.bridge.vaults.registerNewCollateralVault(collateralAmount),
+  const registerNewVaultMutation = useMutation<ISubmittableResult, Error, MonetaryAmount<CollateralCurrencyExt>>(
+    (collateralAmount) => submitExtrinsic(window.bridge.vaults.registerNewCollateralVault(collateralAmount)),
     {
       onSuccess: onSuccessfulDeposit
     }
