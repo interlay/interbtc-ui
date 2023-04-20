@@ -36,7 +36,7 @@ const TABS = {
 };
 
 // MEMO: skipped including testing slippage
-describe.skip('Pools Page', () => {
+describe('Pools Page', () => {
   beforeEach(() => {
     mockGetLiquidityProvidedByAccount.mockResolvedValue(DEFAULT_ACCOUNT_LIQUIDITY);
   });
