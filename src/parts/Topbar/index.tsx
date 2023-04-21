@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import { FundWallet } from '@/components';
+import { AuthModal } from '@/components/AuthModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
@@ -16,11 +17,9 @@ import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/b
 import Tokens from '@/legacy-components/Tokens';
 import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
-import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
@@ -32,8 +31,8 @@ const Topbar = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
-  const { selectProp } = useSignMessage();
   const isBanxaEnabled = useFeatureFlag(FeatureFlags.BANXA);
+  // const { selectProp } = useSignMessage();
 
   const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
 
@@ -123,11 +122,7 @@ const Topbar = (): JSX.Element => {
           {accountLabel}
         </InterlayDefaultContainedButton>
       </div>
-      <AccountModal
-        open={showAccountModal}
-        onClose={handleAccountModalClose}
-        onAccountSelect={selectProp.onSelectionChange}
-      />
+      <AuthModal isOpen={showAccountModal} onClose={handleAccountModalClose} />
     </>
   );
 };
