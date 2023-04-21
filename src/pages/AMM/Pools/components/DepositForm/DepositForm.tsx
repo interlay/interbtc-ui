@@ -12,6 +12,7 @@ import { displayMonetaryAmountInUSDFormat, newSafeMonetaryAmount } from '@/commo
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import WarningBanner from '@/legacy-components/WarningBanner';
 import {
   DepositLiquidityPoolFormData,
   depositLiquidityPoolSchema,
@@ -116,6 +117,10 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
       return form.setValues(defaultValues);
     }
 
+    if (pool.isEmpty) {
+      return form.setValues({ [e.target.name]: e.target.value });
+    }
+
     const inputCurrency = pooledCurrencies.find((currency) => currency.currency.ticker === e.target.name);
     const inputAmount = newSafeMonetaryAmount(e.target.value || 0, inputCurrency?.currency as CurrencyExt, true);
 
@@ -174,7 +179,18 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
               );
             })}
           </Flex>
-          <DepositOutputAssets pool={pool} values={form.values} prices={prices} />
+          {pool.isEmpty ? (
+            <WarningBanner severity='info'>
+              <p>
+                {' '}
+                Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on
+                other markets, please.
+              </p>
+            </WarningBanner>
+          ) : (
+            <DepositOutputAssets pool={pool} values={form.values} prices={prices} />
+          )}
+
           <StyledDl direction='column' gap='spacing2'>
             <DlGroup justifyContent='space-between'>
               <Dt size='xs' color='primary'>

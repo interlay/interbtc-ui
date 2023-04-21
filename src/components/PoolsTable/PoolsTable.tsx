@@ -57,15 +57,15 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   const rows: PoolsTableRow[] = useMemo(
     () =>
       pools.map(({ data, amount: accountLPTokenAmount }) => {
-        const { pooledCurrencies, lpToken, rewardAmountsYearly, totalSupply } = data;
-        const poolName = <AssetCell aria-label={lpToken.ticker} {...getCoinIconProps(lpToken)} />;
+        const { pooledCurrencies, lpToken, rewardAmountsYearly, totalSupply, isEmpty } = data;
+        const poolName = <AssetCell aria-label={lpToken.ticker} isEmptyPool={isEmpty} {...getCoinIconProps(lpToken)} />;
 
         const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
 
         const farmingApr = getFarmingApr(rewardAmountsYearly, totalSupply, totalLiquidityUSD, prices);
         // TODO: add also APR from trading volume based on squid data
         const aprAmount = farmingApr;
-        const apr = <Cell label={formatPercentage(aprAmount.toNumber())} />;
+        const apr = <Cell label={isEmpty ? 'N/A' : formatPercentage(aprAmount.toNumber())} />;
 
         // TODO: revert alignItems prop when `sevenDayVolume` is adressed
         const totalLiquidity = (
@@ -78,9 +78,10 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
         // TODO: uncomment and add real value when squid is ready
         // const sevenDayVolume = <MonetaryCell label='-' alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />;
 
-        const accountLiquidityUSD = accountLPTokenAmount
-          ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
-          : 0;
+        const accountLiquidityUSD =
+          accountLPTokenAmount && !isEmpty
+            ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
+            : 0;
 
         const accountLiquidity =
           variant === 'account-pools' && !!accountLPTokenAmount ? (

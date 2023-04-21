@@ -29,9 +29,10 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
   const supplyAmountUSD = accountPositions?.reduce((acc, curr) => {
     const totalLiquidityUSD = calculateTotalLiquidityUSD(curr.data.pooledCurrencies, prices);
 
-    const accountLiquidityUSD = curr.amount
-      ? calculateAccountLiquidityUSD(curr.amount, totalLiquidityUSD, curr.data.totalSupply)
-      : 0;
+    const accountLiquidityUSD =
+      curr.amount && !curr.data.isEmpty
+        ? calculateAccountLiquidityUSD(curr.amount, totalLiquidityUSD, curr.data.totalSupply)
+        : 0;
 
     return acc.add(accountLiquidityUSD);
   }, new Big(0));
