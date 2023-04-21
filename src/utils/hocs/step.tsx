@@ -1,12 +1,12 @@
 import { FC, HTMLAttributes, JSXElementConstructor } from 'react';
 
-type Steps = 1 | 2 | 3;
+type Step = string | number;
 
 type StepComponentProps = {
-  step: Steps;
+  step: Step;
 };
 
-type Props = HTMLAttributes<unknown> & { step: Steps };
+type Props = HTMLAttributes<unknown> & { step: Step };
 
 const withStep = <T extends Props>(Component: JSXElementConstructor<T>, componentStep: number): FC<T> => {
   const Step: FC<T> = (props: T): JSX.Element | null =>
@@ -18,4 +18,4 @@ const withStep = <T extends Props>(Component: JSXElementConstructor<T>, componen
 };
 
 export { withStep };
-export type { StepComponentProps, Steps };
+export type { Step, StepComponentProps };
