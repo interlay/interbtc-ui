@@ -50,7 +50,8 @@ const DEFAULT_LIQUIDITY_POOL_1 = new StandardLiquidityPool(
   [newMonetaryAmount(5, GOVERNANCE_TOKEN, true)],
   new Big('0.003'),
   true,
-  newMonetaryAmount(1, DEFAULT_LP_TOKEN_1, true)
+  newMonetaryAmount(1, DEFAULT_LP_TOKEN_1, true),
+  false
 );
 
 const DEFAULT_LIQUIDITY_POOL_2 = new StandardLiquidityPool(
@@ -59,7 +60,8 @@ const DEFAULT_LIQUIDITY_POOL_2 = new StandardLiquidityPool(
   [newMonetaryAmount(5, GOVERNANCE_TOKEN, true)],
   new Big('0.003'),
   true,
-  newMonetaryAmount(1, DEFAULT_LP_TOKEN_2, true)
+  newMonetaryAmount(1, DEFAULT_LP_TOKEN_2, true),
+  false
 );
 
 const DEFAULT_LIQUIDITY_POOLS = [DEFAULT_LIQUIDITY_POOL_1, DEFAULT_LIQUIDITY_POOL_2];
