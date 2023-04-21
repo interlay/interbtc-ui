@@ -321,8 +321,7 @@ const Staking = (): JSX.Element => {
     if (!stakedAmountAndEndBlock) return;
 
     const lockTimeValue = Number(lockTime);
-    const extensionTime =
-      stakedAmountAndEndBlock.endBlock + currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue);
+    const extensionTime = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(lockTimeValue);
 
     setBlockLockTimeExtension(extensionTime);
   }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
@@ -846,7 +845,7 @@ const Staking = (): JSX.Element => {
               tooltip={`The APR may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`}
             />
             <InformationUI
-              label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
+              label={`Projected ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={renderEstimatedRewardAmountLabel()}
               tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
