@@ -1,6 +1,7 @@
 import { LiquidityPool, LpCurrency, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
+import { ISubmittableResult } from '@polkadot/types/types';
 import Big from 'big.js';
 import { RefObject, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +20,7 @@ import { isFormDisabled, useForm, WITHDRAW_LIQUIDITY_POOL_FIELD } from '@/lib/fo
 import { WithdrawLiquidityPoolFormData, withdrawLiquidityPoolSchema } from '@/lib/form/schemas';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -37,7 +39,7 @@ type DepositData = {
 };
 
 const mutateWithdraw = ({ amount, pool, slippage, deadline, accountId }: DepositData) =>
-  window.bridge.amm.removeLiquidity(amount, pool, slippage, deadline, accountId);
+  submitExtrinsic(window.bridge.amm.removeLiquidity(amount, pool, slippage, deadline, accountId));
 
 type WithdrawFormProps = {
   pool: LiquidityPool;
@@ -53,7 +55,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
 
-  const withdrawMutation = useMutation<void, Error, DepositData>(mutateWithdraw, {
+  const withdrawMutation = useMutation<ISubmittableResult, Error, DepositData>(mutateWithdraw, {
     onSuccess: () => {
       onWithdraw?.();
       toast.success('Withdraw successful');

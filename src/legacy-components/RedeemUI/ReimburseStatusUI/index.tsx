@@ -1,4 +1,5 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { ISubmittableResult } from '@polkadot/types/types';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
@@ -21,6 +22,7 @@ import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -67,9 +69,9 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
 
   const queryClient = useQueryClient();
   // TODO: should type properly (`Relay`)
-  const retryMutation = useMutation<void, Error, any>(
+  const retryMutation = useMutation<ISubmittableResult, Error, any>(
     (variables: any) => {
-      return window.bridge.redeem.cancel(variables.id, false);
+      return submitExtrinsic(window.bridge.redeem.cancel(variables.id, false));
     },
     {
       onSuccess: () => {
@@ -84,9 +86,9 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
     }
   );
   // TODO: should type properly (`Relay`)
-  const reimburseMutation = useMutation<void, Error, any>(
+  const reimburseMutation = useMutation<ISubmittableResult, Error, any>(
     (variables: any) => {
-      return window.bridge.redeem.cancel(variables.id, true);
+      return submitExtrinsic(window.bridge.redeem.cancel(variables.id, true));
     },
     {
       onSuccess: () => {

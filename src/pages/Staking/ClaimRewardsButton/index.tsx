@@ -1,3 +1,4 @@
+import { ISubmittableResult } from '@polkadot/types/types';
 import clsx from 'clsx';
 import { useMutation, useQueryClient } from 'react-query';
 
@@ -8,6 +9,7 @@ import InterlayDenimOrKintsugiSupernovaContainedButton, {
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 
 interface CustomProps {
   claimableRewardAmount: string;
@@ -22,9 +24,9 @@ const ClaimRewardsButton = ({
 
   const queryClient = useQueryClient();
 
-  const claimRewardsMutation = useMutation<void, Error, void>(
+  const claimRewardsMutation = useMutation<ISubmittableResult, Error, void>(
     () => {
-      return window.bridge.escrow.withdrawRewards();
+      return submitExtrinsic(window.bridge.escrow.withdrawRewards());
     },
     {
       onSuccess: () => {
