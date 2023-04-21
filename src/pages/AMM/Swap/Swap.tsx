@@ -59,11 +59,11 @@ const Swap = (): JSX.Element => {
         <SwapForm
           pair={pair}
           liquidityPools={liquidityPools}
-          pooledTickers={pooledTickers}
           onChangePair={handleChangePair}
           onSwap={refetch}
+          pooledTickers={pooledTickers}
         />
-        {pair.input && pair.output && liquidityPool && (
+        {pair.input && pair.output && (
           <SwapLiquidity input={pair.input} output={pair.output} liquidityPool={liquidityPool} />
         )}
       </StyledWrapper>
