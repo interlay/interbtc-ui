@@ -1,5 +1,5 @@
-import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
-import { AddressOrPair } from '@polkadot/api/types';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { ISubmittableResult } from '@polkadot/types/types';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { add, format } from 'date-fns';
@@ -44,6 +44,7 @@ import {
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -245,14 +246,14 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(transactionFeeReserveError);
 
-  const initialStakeMutation = useMutation<void, Error, LockingAmountAndTime>(
+  const initialStakeMutation = useMutation<ISubmittableResult, Error, LockingAmountAndTime>(
     (variables: LockingAmountAndTime) => {
       if (currentBlockNumber === undefined) {
         throw new Error('Something went wrong!');
       }
       const unlockHeight = currentBlockNumber + convertWeeksToBlockNumbers(variables.time);
 
-      return window.bridge.escrow.createLock(variables.amount, unlockHeight);
+      return submitExtrinsic(window.bridge.escrow.createLock(variables.amount, unlockHeight));
     },
     {
       onSuccess: () => {
@@ -283,19 +284,13 @@ const Staking = (): JSX.Element => {
             window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
           ];
           const batch = window.bridge.api.tx.utility.batchAll(txs);
-          await DefaultTransactionAPI.sendLogged(
-            window.bridge.api,
-            window.bridge.account as AddressOrPair,
-            batch,
-            undefined, // don't await success event
-            true // don't wait for finalized blocks
-          );
+          await submitExtrinsic({ extrinsic: batch });
         } else if (checkOnlyIncreaseLockAmount(variables.time, variables.amount)) {
-          return await window.bridge.escrow.increaseAmount(variables.amount);
+          await submitExtrinsic(window.bridge.escrow.increaseAmount(variables.amount));
         } else if (checkOnlyExtendLockTime(variables.time, variables.amount)) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
-          return await window.bridge.escrow.increaseUnlockHeight(unlockHeight);
+          await submitExtrinsic(window.bridge.escrow.increaseUnlockHeight(unlockHeight));
         } else {
           throw new Error('Something went wrong!');
         }

@@ -1,3 +1,4 @@
+import { ISubmittableResult } from '@polkadot/types/types';
 import clsx from 'clsx';
 import { add, format } from 'date-fns';
 import { useMutation, useQueryClient } from 'react-query';
@@ -12,6 +13,7 @@ import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip'
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 
 const getFormattedUnlockDate = (remainingBlockNumbersToUnstake: number, formatPattern: string) => {
   const unlockDate = add(new Date(), {
@@ -36,9 +38,9 @@ const WithdrawButton = ({
 
   const queryClient = useQueryClient();
 
-  const withdrawMutation = useMutation<void, Error, void>(
+  const withdrawMutation = useMutation<ISubmittableResult, Error, void>(
     () => {
-      return window.bridge.escrow.withdraw();
+      return submitExtrinsic(window.bridge.escrow.withdraw());
     },
     {
       onSuccess: () => {

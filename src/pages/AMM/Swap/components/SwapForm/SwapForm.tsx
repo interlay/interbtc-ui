@@ -1,6 +1,7 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
 import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
@@ -25,6 +26,7 @@ import {
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { SwapPair } from '@/types/swap';
 import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -89,7 +91,7 @@ type SwapData = {
 };
 
 const mutateSwap = ({ deadline, minimumAmountOut, recipient, trade }: SwapData) =>
-  window.bridge.amm.swap(trade, minimumAmountOut, recipient, deadline);
+  submitExtrinsic(window.bridge.amm.swap(trade, minimumAmountOut, recipient, deadline));
 
 type Props = {
   pair: SwapPair;
@@ -139,7 +141,7 @@ const SwapForm = ({
     [inputAmount, pair]
   );
 
-  const swapMutation = useMutation<void, Error, SwapData>(mutateSwap, {
+  const swapMutation = useMutation<ISubmittableResult, Error, SwapData>(mutateSwap, {
     onSuccess: () => {
       toast.success('Swap successful');
       setTrade(undefined);
