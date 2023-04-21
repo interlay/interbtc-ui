@@ -1,3 +1,4 @@
+import { ISubmittableResult } from '@polkadot/types/types';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FaCheckCircle } from 'react-icons/fa';
@@ -15,6 +16,7 @@ import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
+import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
 import ManualIssueExecutionUI from '../ManualIssueExecutionUI';
@@ -33,12 +35,12 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
 
   const queryClient = useQueryClient();
   // TODO: should type properly (`Relay`)
-  const executeMutation = useMutation<void, Error, any>(
+  const executeMutation = useMutation<ISubmittableResult, Error, any>(
     (variables: any) => {
       if (!variables.backingPayment.btcTxId) {
         throw new Error('Bitcoin transaction ID not identified yet.');
       }
-      return window.bridge.issue.execute(variables.id, variables.backingPayment.btcTxId);
+      return submitExtrinsicPromise(window.bridge.issue.execute(variables.id, variables.backingPayment.btcTxId));
     },
     {
       onSuccess: (_, variables) => {

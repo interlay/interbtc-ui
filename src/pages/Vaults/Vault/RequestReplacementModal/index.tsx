@@ -25,6 +25,7 @@ import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsis
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
+import { FinalizedExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
@@ -104,7 +105,9 @@ const RequestReplacementModal = ({
     try {
       setSubmitStatus(STATUSES.PENDING);
       const amountPolkaBtc = new BitcoinAmount(data[AMOUNT]);
-      await window.bridge.replace.request(amountPolkaBtc, collateralToken);
+      // When requesting a replace, wait for the finalized event because we cannot revert BTC transactions.
+      // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
+      submitExtrinsic(window.bridge.replace.request(amountPolkaBtc, collateralToken), FinalizedExtrinsicStatus);
 
       const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);

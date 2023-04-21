@@ -18,8 +18,8 @@ import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
-import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
@@ -33,6 +33,7 @@ const Topbar = (): JSX.Element => {
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
   const { selectProp } = useSignMessage();
+  const isBanxaEnabled = useFeatureFlag(FeatureFlags.BANXA);
 
   const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
 
@@ -84,10 +85,7 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
-        {process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT && (
-          <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
-        )}
-        {process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA && <FundWallet />}
+        {isBanxaEnabled ? <FundWallet /> : <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />}
         {selectedAccount !== undefined && (
           <>
             {process.env.REACT_APP_FAUCET_URL && kintBalanceIsZero && (
