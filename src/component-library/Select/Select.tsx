@@ -55,6 +55,7 @@ const Select = <T extends SelectObject>(
     validationState,
     onChange,
     renderValue = (item) => item.rendered,
+    items,
     ...props
   }: SelectProps<T>,
   ref: ForwardedRef<HTMLInputElement>
@@ -72,6 +73,7 @@ const Select = <T extends SelectObject>(
     label,
     errorMessage,
     validationState,
+    items,
     ...props
   };
 

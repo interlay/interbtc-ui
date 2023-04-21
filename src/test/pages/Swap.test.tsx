@@ -30,7 +30,7 @@ describe('Swap Page', () => {
     await render(<App />, { path });
 
     // Submit button should be disabled
-    expect(screen.getByRole('button', { name: /select token/i })).toBeDisabled();
+    expect(screen.getAllByRole('button', { name: /select token/i })[1]).toBeDisabled();
 
     // Output field should be disabled and his token field empty
     expect(
@@ -39,7 +39,7 @@ describe('Swap Page', () => {
         exact: true
       })
     ).toBeDisabled();
-    expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue('');
+    expect(screen.getByRole('button', { name: /choose token for to field/i })).toHaveTextContent(/select token/i);
 
     /* START - Select Output token */
 
@@ -51,12 +51,12 @@ describe('Swap Page', () => {
 
     await waitFor(() => {
       // Fields should switch tokens
-      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue('');
-      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue(
+      expect(screen.getByRole('button', { name: /choose token for from field/i })).toHaveTextContent(/select token/i);
+      expect(screen.getByRole('button', { name: /choose token for to field/i })).toHaveTextContent(
         RELAY_CHAIN_NATIVE_TOKEN.ticker
       );
       // Submit button should be disabled
-      expect(screen.getByRole('button', { name: /select token/i })).toBeDisabled();
+      expect(screen.getAllByRole('button', { name: /select token/i })[1]).toBeDisabled();
     });
 
     /* END - Select Output token */
@@ -70,7 +70,9 @@ describe('Swap Page', () => {
     userEvent.click(dialog.getByRole('row', { name: WRAPPED_TOKEN.ticker }));
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+      expect(screen.getByRole('button', { name: /choose token for from field/i })).toHaveTextContent(
+        WRAPPED_TOKEN.ticker
+      );
     });
 
     /* END - Select Input token */
@@ -80,10 +82,12 @@ describe('Swap Page', () => {
     userEvent.click(screen.getByRole('button', { name: /switch tokens/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(
+      expect(screen.getByRole('button', { name: /choose token for from field/i })).toHaveTextContent(
         RELAY_CHAIN_NATIVE_TOKEN.ticker
       );
-      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+      expect(screen.getByRole('button', { name: /choose token for to field/i })).toHaveTextContent(
+        WRAPPED_TOKEN.ticker
+      );
 
       // Submit button should be disabled
       expect(
@@ -220,13 +224,17 @@ describe('Swap Page', () => {
     userEvent.click(dialog.getByRole('row', { name: WRAPPED_TOKEN.ticker }));
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+      expect(screen.getByRole('button', { name: /choose token for to field/i })).toHaveTextContent(
+        WRAPPED_TOKEN.ticker
+      );
     });
 
     userEvent.click(screen.getByRole('button', { name: /switch tokens/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+      expect(screen.getByRole('button', { name: /choose token for from field/i })).toHaveTextContent(
+        WRAPPED_TOKEN.ticker
+      );
     });
 
     userEvent.type(screen.getByRole('textbox', { name: 'From' }), '100');
@@ -263,9 +271,11 @@ describe('Swap Page', () => {
     await render(<App />, { path: `${path}?from=${WRAPPED_TOKEN.ticker}&to=${RELAY_CHAIN_NATIVE_TOKEN.ticker}` });
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(WRAPPED_TOKEN.ticker);
+      expect(screen.getByRole('button', { name: /choose token for from field/i })).toHaveTextContent(
+        WRAPPED_TOKEN.ticker
+      );
 
-      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).toHaveValue(
+      expect(screen.getByRole('button', { name: /choose token for to field/i })).toHaveTextContent(
         RELAY_CHAIN_NATIVE_TOKEN.ticker
       );
     });
@@ -275,11 +285,11 @@ describe('Swap Page', () => {
     await render(<App />, { path: `${path}?from=&to=` });
 
     await waitFor(() => {
-      expect(screen.getByRole('textbox', { name: /choose token for from field/i })).toHaveValue(
+      expect(screen.getByRole('button', { name: /choose token for from field/i })).toHaveTextContent(
         RELAY_CHAIN_NATIVE_TOKEN.ticker
       );
 
-      expect(screen.getByRole('textbox', { name: /choose token for to field/i })).not.toHaveValue();
+      expect(screen.getByRole('button', { name: /choose token for to field/i })).toHaveTextContent(/select token/i);
     });
   });
 });

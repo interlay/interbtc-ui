@@ -53,7 +53,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
-    const [selectValue, setSelectValue] = useState(selectProps?.defaultValue as string);
+    const [selectValue, setSelectValue] = useState((selectProps?.defaultValue as string) || '');
 
     const { labelProps, fieldProps } = useLabel({ label, ...props });
 
@@ -82,7 +82,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       !errorMessage && !description && (selectProps?.errorMessage || selectProps?.description);
     const { onSelectionChange, ...restSelectProps } = selectProps || {};
 
-    const endAdornment = restSelectProps ? (
+    const endAdornment = selectProps ? (
       <TokenSelect
         {...restSelectProps}
         value={selectValue}

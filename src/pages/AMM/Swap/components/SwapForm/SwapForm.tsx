@@ -199,8 +199,8 @@ const SwapForm = ({
   const initialValues = useMemo(
     () => ({
       [SWAP_INPUT_AMOUNT_FIELD]: '',
-      [SWAP_INPUT_TOKEN_FIELD]: pair.input?.ticker,
-      [SWAP_OUTPUT_TOKEN_FIELD]: pair.output?.ticker
+      [SWAP_INPUT_TOKEN_FIELD]: pair.input?.ticker || '',
+      [SWAP_OUTPUT_TOKEN_FIELD]: pair.output?.ticker || ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -292,7 +292,7 @@ const SwapForm = ({
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
             value: currency.ticker
           };
-        }),
+        }) || [],
     [currencies, getAvailableBalance, pooledTickers, prices]
   );
 
