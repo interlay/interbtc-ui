@@ -1,11 +1,14 @@
-import { InjectedExtension } from '@polkadot/extension-inject/types';
+import { Keyring } from '@polkadot/api';
+import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
 import { useState } from 'react';
 import { Trans } from 'react-i18next';
 
-import { Modal, ModalBody, ModalHeader, ModalProps, P, TextLink } from '@/component-library';
+import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, P, TextLink } from '@/component-library';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
-import { useSubstrateSecureState } from '@/lib/substrate';
+import { SS58_FORMAT } from '@/constants';
+import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 import { WalletData } from '@/utils/constants/wallets';
+import { findWallet } from '@/utils/helpers/wallet';
 
 import { AccountStep } from './AccountStep';
 import { WalletStep } from './WalletStep';
@@ -27,15 +30,21 @@ enum AuthModalSteps {
   WALLET
 }
 
-type InheritAttrs = Omit<ModalProps, 'children'>;
+type Props = {
+  onAccountSelect: (account: KeyringPair) => void;
+};
 
-type AuthModalProps = InheritAttrs;
+type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
-const AuthModal = (props: AuthModalProps): JSX.Element => {
+type AuthModalProps = Props & InheritAttrs;
+
+const AuthModal = ({ onClose, onAccountSelect, ...props }: AuthModalProps): JSX.Element => {
   const { extensions, selectedAccount, accounts } = useSubstrateSecureState();
 
-  const [step, setStep] = useState<AuthModalSteps>(AuthModalSteps.WALLET);
-  const [wallet, setWallet] = useState<WalletData>();
+  const [step, setStep] = useState<AuthModalSteps>(selectedAccount ? AuthModalSteps.ACCOUNT : AuthModalSteps.WALLET);
+  const [wallet, setWallet] = useState<WalletData | undefined>(
+    selectedAccount?.meta.name ? findWallet(selectedAccount?.meta.source as any) : undefined
+  );
 
   const handleWalletSelect = (wallet: WalletData) => {
     setStep(AuthModalSteps.ACCOUNT);
@@ -47,10 +56,17 @@ const AuthModal = (props: AuthModalProps): JSX.Element => {
     setWallet(undefined);
   };
 
+  const onSelectionChange = (account: InjectedAccountWithMeta) => {
+    const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
+    const keyringAccount = keyring.addFromAddress(account.address, account.meta);
+    onAccountSelect(keyringAccount as KeyringPair);
+    onClose();
+  };
+
   const title = getTitle(step, extensions);
 
   return (
-    <Modal align='top' {...props}>
+    <Modal align='top' onClose={onClose} {...props}>
       <ModalHeader align='start'>{title}</ModalHeader>
       <ModalBody>
         <P size='s'>
@@ -70,8 +86,21 @@ const AuthModal = (props: AuthModalProps): JSX.Element => {
           extensions={extensions}
           selectedAccount={selectedAccount}
         />
-        <AccountStep step={step} wallet={wallet} accounts={accounts} onChangeWallet={handleChangeWallet} />
+        <AccountStep
+          step={step}
+          wallet={wallet}
+          accounts={accounts}
+          onSelectionChange={onSelectionChange}
+          onChangeWallet={handleChangeWallet}
+        />
       </ModalBody>
+      {step === AuthModalSteps.ACCOUNT && (
+        <ModalFooter>
+          <CTA size='large' variant='outlined'>
+            Disconnect
+          </CTA>
+        </ModalFooter>
+      )}
     </Modal>
   );
 };

@@ -14,8 +14,10 @@ import {
   IsVaultClientLoaded,
   SHOW_ACCOUNT_MODAL,
   SHOW_BUY_MODAL,
+  SHOW_SIGN_TERMS_MODAL,
   ShowAccountModal,
   ShowBuyModal,
+  ShowSignTermsModal,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
   UpdateHeights,
@@ -58,6 +60,11 @@ export const initGeneralDataAction = (
 export const showAccountModalAction = (showAccountModal: boolean): ShowAccountModal => ({
   type: SHOW_ACCOUNT_MODAL,
   showAccountModal
+});
+
+export const showSignTermsModalAction = (isSignTermsModalOpen: boolean): ShowSignTermsModal => ({
+  type: SHOW_SIGN_TERMS_MODAL,
+  isSignTermsModalOpen
 });
 
 export const showBuyModal = (isBuyModalOpen: boolean): ShowBuyModal => ({
