@@ -46,7 +46,7 @@ export type { TextLinkProps } from './TextLink';
 export { TextLink } from './TextLink';
 export type { ComponentLibraryTheme } from './theme';
 export { theme } from './theme';
-export type { TokenInputProps } from './TokenInput';
+export type { TokenInputProps, TokenSelectProps } from './TokenInput';
 export { TokenInput } from './TokenInput';
 export type { TokenStackProps } from './TokenStack';
 export { TokenStack } from './TokenStack';

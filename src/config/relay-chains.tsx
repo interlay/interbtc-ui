@@ -117,6 +117,8 @@ let XCM_ADAPTERS: Record<string, BaseCrossChainAdapter>;
 
 let TRANSACTION_FEE_AMOUNT: MonetaryAmount<CurrencyExt>;
 
+let SS58_PREFIX: number;
+
 type WrappedTokenAmount = InterBtcAmount | KBtcAmount;
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
@@ -148,7 +150,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     CROWDLOAN_LINK = INTERLAY_CROWDLOAN_LINK;
     OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
     STAKE_LOCK_TIME = {
-      MIN: 1,
+      MIN: 0,
       MAX: 192
     };
     // TODO: temporary
@@ -159,6 +161,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       polkadot: new PolkadotAdapter(),
       statemint: new StatemintAdapter()
     };
+    SS58_PREFIX = 0;
 
     break;
   }
@@ -190,7 +193,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     CROWDLOAN_LINK = KINTSUGI_CROWDLOAN_LINK;
     OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
     STAKE_LOCK_TIME = {
-      MIN: 1,
+      MIN: 0,
       MAX: 96
     };
     // TODO: temporary
@@ -200,6 +203,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
       kusama: new KusamaAdapter(),
       statemine: new StatemineAdapter()
     };
+    SS58_PREFIX = 2;
     break;
   }
   default: {
@@ -232,6 +236,7 @@ export {
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainLogoIcon,
   RelayChainNativeTokenLogoIcon,
+  SS58_PREFIX,
   STAKE_LOCK_TIME,
   SUBSCAN_LINK,
   TERMS_AND_CONDITIONS_LINK,

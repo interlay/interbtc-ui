@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
+import { FundWallet } from '@/components';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
@@ -18,6 +19,8 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 import AccountModal from '@/parts/AccountModal';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
+import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 import GetGovernanceTokenUI from './GetGovernanceTokenUI';
 import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge';
@@ -29,7 +32,10 @@ const Topbar = (): JSX.Element => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
-  const kintBalanceIsZero = getAvailableBalance("KINT")?.isZero();
+  const { selectProp } = useSignMessage();
+  const isBanxaEnabled = useFeatureFlag(FeatureFlags.BANXA);
+
+  const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
 
   const handleRequestFromFaucet = async (): Promise<void> => {
     if (!selectedAccount) return;
@@ -79,7 +85,7 @@ const Topbar = (): JSX.Element => {
     <>
       <div className={clsx('p-4', 'flex', 'items-center', 'justify-end', 'space-x-2')}>
         <ManualIssueExecutionActionsBadge />
-        <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />
+        {isBanxaEnabled ? <FundWallet /> : <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />}
         {selectedAccount !== undefined && (
           <>
             {process.env.REACT_APP_FAUCET_URL && kintBalanceIsZero && (
@@ -117,7 +123,11 @@ const Topbar = (): JSX.Element => {
           {accountLabel}
         </InterlayDefaultContainedButton>
       </div>
-      <AccountModal open={showAccountModal} onClose={handleAccountModalClose} />
+      <AccountModal
+        open={showAccountModal}
+        onClose={handleAccountModalClose}
+        onAccountSelect={selectProp.onSelectionChange}
+      />
     </>
   );
 };

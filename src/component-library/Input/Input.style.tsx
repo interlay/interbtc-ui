@@ -59,12 +59,12 @@ const StyledBaseInput = styled.input<BaseInputProps>`
   padding-bottom: ${({ $adornments }) => ($adornments.bottom ? theme.spacing.spacing6 : theme.spacing.spacing2)};
 
   &:hover:not(:disabled):not(:focus) {
-    border: ${(props) => !props.$isDisabled && !props.$hasError && theme.input.hover.border};
+    border: ${(props) => !props.$isDisabled && !props.$hasError && theme.border.focus};
   }
 
   &:focus {
-    border: ${(props) => !props.$isDisabled && theme.input.focus.border};
-    box-shadow: ${(props) => !props.$isDisabled && theme.input.focus.boxShadow};
+    border: ${(props) => !props.$isDisabled && theme.border.focus};
+    box-shadow: ${(props) => !props.$isDisabled && theme.boxShadow.focus};
   }
 
   &::placeholder {

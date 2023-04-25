@@ -152,6 +152,7 @@
   "fund_wallet": "Fund Wallet",
   "unlocks": "Unlocks",
   "staked": "Staked",
+  "sign_t&cs": "Sign T&Cs",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -513,7 +514,7 @@
     }
   },
   "staking_page": {
-    "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
+    "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} per year you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
     "new_vote_governance_token_gained": "New {{voteGovernanceTokenSymbol}} Gained",
     "the_increase_in_your_vote_governance_token_balance": "The increase in your {{voteGovernanceTokenSymbol}} balance",
     "total_vote_governance_token_in_the_network": "Total {{voteGovernanceTokenSymbol}} in the network",
@@ -609,6 +610,13 @@
       "transfer_more_than_minimum": "Must transfer more than the minimum amount of {{ amount }}",
       "transfer_less_than_maximum": "Must transfer less than the maximum amount of {{ amount }}"
     }
+  },
+  "fund_wallet_modal": {
+    "buy": "Buy",
+    "buy_via_banxa": "Purchase KINT via Banxa.",
+    "banxa_leading_solution": "Banxa is the leading global Web3 on-and-off ramp solution.",
+    "exchange": "Exchange",
+    "please_check_terms": "Please check the individual terms and conditions of each exchange before you buy / trade {{token}}."
   },
   "wallet": {
     "available_assets": "Available assets",

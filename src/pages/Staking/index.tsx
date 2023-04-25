@@ -1,5 +1,5 @@
-import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
-import { AddressOrPair } from '@polkadot/api/types';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { ISubmittableResult } from '@polkadot/types/types';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { add, format } from 'date-fns';
@@ -8,9 +8,8 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import {
   displayMonetaryAmount,
@@ -18,6 +17,7 @@ import {
   formatNumber,
   formatPercentage
 } from '@/common/utils/utils';
+import { AuthCTA } from '@/components';
 import { BLOCK_TIME } from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
@@ -32,7 +32,6 @@ import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import Panel from '@/legacy-components/Panel';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
@@ -45,6 +44,7 @@ import {
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -107,7 +107,6 @@ interface LockingAmountAndTime {
 const Staking = (): JSX.Element => {
   const [blockLockTimeExtension, setBlockLockTimeExtension] = React.useState<number>(0);
 
-  const dispatch = useDispatch();
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -125,7 +124,7 @@ const Staking = (): JSX.Element => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
     trigger,
     setValue
   } = useForm<StakingFormData>({
@@ -201,7 +200,8 @@ const Staking = (): JSX.Element => {
     isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
-    error: estimatedRewardAmountAndAPYError
+    error: estimatedRewardAmountAndAPYError,
+    refetch: estimatedRewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
@@ -213,10 +213,18 @@ const Staking = (): JSX.Element => {
     ],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: false,
+      retry: false
     }
   );
   useErrorHandler(estimatedRewardAmountAndAPYError);
+
+  // MEMO: This is being set outside of a useEffect because of
+  // an race condition. This is a underlying issue with the
+  // component and can't be easily fixed.
+  if (isValid || !isDirty) {
+    estimatedRewardAmountAndAPYRefetch();
+  }
 
   const {
     isIdle: stakedAmountAndEndBlockIdle,
@@ -247,14 +255,14 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(transactionFeeReserveError);
 
-  const initialStakeMutation = useMutation<void, Error, LockingAmountAndTime>(
+  const initialStakeMutation = useMutation<ISubmittableResult, Error, LockingAmountAndTime>(
     (variables: LockingAmountAndTime) => {
       if (currentBlockNumber === undefined) {
         throw new Error('Something went wrong!');
       }
       const unlockHeight = currentBlockNumber + convertWeeksToBlockNumbers(variables.time);
 
-      return window.bridge.escrow.createLock(variables.amount, unlockHeight);
+      return submitExtrinsic(window.bridge.escrow.createLock(variables.amount, unlockHeight));
     },
     {
       onSuccess: () => {
@@ -285,19 +293,13 @@ const Staking = (): JSX.Element => {
             window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
           ];
           const batch = window.bridge.api.tx.utility.batchAll(txs);
-          await DefaultTransactionAPI.sendLogged(
-            window.bridge.api,
-            window.bridge.account as AddressOrPair,
-            batch,
-            undefined, // don't await success event
-            true // don't wait for finalized blocks
-          );
+          await submitExtrinsic({ extrinsic: batch });
         } else if (checkOnlyIncreaseLockAmount(variables.time, variables.amount)) {
-          return await window.bridge.escrow.increaseAmount(variables.amount);
+          await submitExtrinsic(window.bridge.escrow.increaseAmount(variables.amount));
         } else if (checkOnlyExtendLockTime(variables.time, variables.amount)) {
           const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
 
-          return await window.bridge.escrow.increaseUnlockHeight(unlockHeight);
+          await submitExtrinsic(window.bridge.escrow.increaseUnlockHeight(unlockHeight));
         } else {
           throw new Error('Something went wrong!');
         }
@@ -323,8 +325,7 @@ const Staking = (): JSX.Element => {
     if (!stakedAmountAndEndBlock) return;
 
     const lockTimeValue = Number(lockTime);
-    const extensionTime =
-      stakedAmountAndEndBlock.endBlock + currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue);
+    const extensionTime = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(lockTimeValue);
 
     setBlockLockTimeExtension(extensionTime);
   }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
@@ -673,14 +674,6 @@ const Staking = (): JSX.Element => {
     return displayMonetaryAmount(claimableRewardAmount);
   };
 
-  const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    // TODO: should be handled based on https://kentcdodds.com/blog/application-state-management-with-react
-    if (!accountSet) {
-      dispatch(showAccountModalAction(true));
-      event.preventDefault();
-    }
-  };
-
   const valueInUSDOfLockingAmount = displayMonetaryAmountInUSDFormat(
     monetaryLockingAmount,
     getTokenPrice(prices, GOVERNANCE_TOKEN_SYMBOL)?.usd
@@ -856,25 +849,25 @@ const Staking = (): JSX.Element => {
               tooltip={`The APR may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`}
             />
             <InformationUI
-              label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
+              label={`Projected Rewards p.a.`}
               value={renderEstimatedRewardAmountLabel()}
               tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
                 voteGovernanceTokenSymbol: VOTE_GOVERNANCE_TOKEN_SYMBOL
               })}
             />
-            <SubmitButton
-              disabled={initializing || unlockFirst}
-              pending={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
-              onClick={handleConfirmClick}
-              endIcon={
-                unlockFirst ? (
-                  <InformationTooltip label='Please unstake first.' forDisabledAction={unlockFirst} />
-                ) : null
-              }
+            <AuthCTA
+              fullWidth
+              size='large'
+              type='submit'
+              disabled={initializing || unlockFirst || !isValid}
+              loading={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
             >
-              {submitButtonLabel}
-            </SubmitButton>
+              {submitButtonLabel}{' '}
+              {unlockFirst ? (
+                <InformationTooltip label='Please unstake first.' forDisabledAction={unlockFirst} />
+              ) : null}
+            </AuthCTA>
           </form>
         </Panel>
       </MainContainer>
