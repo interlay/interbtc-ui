@@ -26,7 +26,7 @@ const StyledDisclaimerCard = styled.div`
   line-height: ${theme.lineHeight.base};
   padding: ${theme.spacing.spacing3};
   border-radius: ${theme.rounded.rg};
-  background-color: ${theme.card.secondaryBg};
+  background-color: ${theme.card.bg.secondary};
 `;
 
 const StyledDisclaimerList = styled.ol`

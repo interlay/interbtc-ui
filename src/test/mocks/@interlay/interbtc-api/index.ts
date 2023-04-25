@@ -197,7 +197,8 @@ jest.mock('@interlay/interbtc-api', () => {
     newAccountId: jest.fn().mockReturnValue(DEFAULT_ACCOUNT_ADDRESS),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
     createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi),
-    FaucetClient: mockFaucet
+    FaucetClient: mockFaucet,
+    newExtrinsicStatus: jest.fn()
   };
 });
 

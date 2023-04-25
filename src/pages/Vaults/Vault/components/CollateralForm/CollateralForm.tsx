@@ -21,6 +21,7 @@ import {
 import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { URL_PARAMETERS } from '@/utils/constants/links';
+import { submitExtrinsic, submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
@@ -163,11 +164,11 @@ const CollateralForm = ({
 
       switch (variant) {
         case 'deposit': {
-          await window.bridge.vaults.depositCollateral(collateralTokenAmount);
+          await submitExtrinsic(window.bridge.vaults.depositCollateral(collateralTokenAmount));
           break;
         }
         case 'withdraw': {
-          await window.bridge.vaults.withdrawCollateral(collateralTokenAmount);
+          await submitExtrinsicPromise(window.bridge.vaults.withdrawCollateral(collateralTokenAmount));
           break;
         }
       }

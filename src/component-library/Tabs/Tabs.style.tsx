@@ -50,7 +50,7 @@ const StyledTab = styled.div<StyledTabProps>`
   font-size: ${({ $size }) => theme.tabs[$size].tab.text};
   font-weight: ${({ $size }) => theme.tabs[$size].tab.fontWeight};
   text-align: center;
-  cursor: default;
+  cursor: pointer;
   outline: none;
   border-radius: ${theme.rounded.rg};
   color: ${theme.tabs.color};
