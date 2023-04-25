@@ -24,7 +24,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputRef = useDOMRef(ref);
     // We are specifing `validationState` so that when there are errors, `aria-invalid` is set to `true`
     const { inputProps, descriptionProps, errorMessageProps, labelProps } = useTextField(
-      { ...props, validationState: props.errorMessage ? 'invalid' : validationState },
+      { ...props, validationState: validationState || props.errorMessage ? 'invalid' : validationState },
       inputRef
     );
 

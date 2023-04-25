@@ -1,15 +1,14 @@
 import { forwardRef, HTMLAttributes } from 'react';
 
+import { hasError } from '../utils/input';
 import { StyledHelperText, StyledSubHelperText } from './HelperText.style';
-
-// checks for truthy messages both for string and string[]
-const hasErrorMessage = (errorMessage?: string | string[]): boolean =>
-  typeof errorMessage === 'string' ? !!errorMessage : !!errorMessage?.filter(Boolean).length;
 
 type Props = {
   errorMessage?: string | string[];
+  // Used to pass accessiblity props
   errorMessageProps?: HTMLAttributes<HTMLElement>;
   description?: string;
+  // Used to pass accessiblity props
   descriptionProps?: HTMLAttributes<HTMLElement>;
 };
 
@@ -19,7 +18,7 @@ type HelperTextProps = Props & NativeAttrs;
 
 const HelperText = forwardRef<HTMLDivElement, HelperTextProps>(
   ({ errorMessage, errorMessageProps, description, descriptionProps, ...props }, ref): JSX.Element => {
-    const isErrorMessage = hasErrorMessage(errorMessage);
+    const isErrorMessage = hasError({ errorMessage });
 
     const renderErrorMessage = () => {
       if (Array.isArray(errorMessage)) {
@@ -43,5 +42,5 @@ const HelperText = forwardRef<HTMLDivElement, HelperTextProps>(
 
 HelperText.displayName = 'HelperText';
 
-export { hasErrorMessage, HelperText };
+export { HelperText };
 export type { HelperTextProps };
