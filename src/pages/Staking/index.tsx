@@ -124,7 +124,7 @@ const Staking = (): JSX.Element => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty, isValid },
     trigger,
     setValue
   } = useForm<StakingFormData>({
@@ -200,7 +200,8 @@ const Staking = (): JSX.Element => {
     isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
-    error: estimatedRewardAmountAndAPYError
+    error: estimatedRewardAmountAndAPYError,
+    refetch: estimatedRewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
@@ -212,10 +213,18 @@ const Staking = (): JSX.Element => {
     ],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: false,
+      retry: false
     }
   );
   useErrorHandler(estimatedRewardAmountAndAPYError);
+
+  // MEMO: This is being set outside of a useEffect because of
+  // an race condition. This is a underlying issue with the
+  // component and can't be easily fixed.
+  if (isValid || !isDirty) {
+    estimatedRewardAmountAndAPYRefetch();
+  }
 
   const {
     isIdle: stakedAmountAndEndBlockIdle,
@@ -851,7 +860,7 @@ const Staking = (): JSX.Element => {
               fullWidth
               size='large'
               type='submit'
-              disabled={initializing || unlockFirst}
+              disabled={initializing || unlockFirst || !isValid}
               loading={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
             >
               {submitButtonLabel}{' '}
