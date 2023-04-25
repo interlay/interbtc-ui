@@ -219,6 +219,9 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(estimatedRewardAmountAndAPYError);
 
+  // MEMO: This is being set outside of a useEffect because of
+  // an race condition. This is a underlying issue with the
+  // component and can't be easily fixed.
   if (isValid || !isDirty) {
     estimatedRewardAmountAndAPYRefetch();
   }
