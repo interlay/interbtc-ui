@@ -59,8 +59,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const selectHelperTextId = useId();
 
-    const firstItemInSelectProps =
-      selectProps?.items && Object.keys(selectProps.items).length === 1 ? Object.values(selectProps.items)[0] : null;
+    const itemsArr = Array.from(selectProps?.items || []);
+    const isSelectAdornment = itemsArr.length > 1;
+    const adornmentTicker = !isSelectAdornment && selectProps?.items ? itemsArr[0].value : ticker;
 
     useEffect(() => {
       if (selectProps?.value === undefined) return;
@@ -85,11 +86,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       !errorMessage && !description && (selectProps?.errorMessage || selectProps?.description);
     const { onSelectionChange, ...restSelectProps } = selectProps || {};
 
-    const endAdornment = ticker ? (
-      <TokenAdornment ticker={ticker} />
-    ) : firstItemInSelectProps ? (
-      <TokenAdornment ticker={firstItemInSelectProps.value} />
-    ) : selectProps ? (
+    const endAdornment = isSelectAdornment ? (
       <TokenSelect
         {...restSelectProps}
         value={selectValue}
@@ -100,6 +97,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         validationState={hasSelectHelperText ? 'invalid' : undefined}
         errorMessage={undefined}
       />
+    ) : adornmentTicker ? (
+      <TokenAdornment ticker={adornmentTicker} />
     ) : null;
 
     const hasLabel = !!label || balance !== undefined;
