@@ -84,7 +84,6 @@ SingleItemInSelectItems.args = {
   label: 'Amount',
   isDisabled: false,
   selectProps: {
-    value: 'LP KSM-KBTC-KINT',
     items: [{ balance: 200, value: 'KSM', balanceUSD: '$200' }]
   }
   // errorMessage: 'Failed'
