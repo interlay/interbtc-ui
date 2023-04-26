@@ -73,7 +73,6 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     };
 
     const handleTokenChange = (ticker: Key) => {
-      console.log('in the input', ticker);
       onChangeTicker?.(ticker as string);
       setSelectValue(ticker as string);
     };
@@ -83,7 +82,11 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       !errorMessage && !description && (selectProps?.errorMessage || selectProps?.description);
     const { onSelectionChange, ...restSelectProps } = selectProps || {};
 
-    const endAdornment = selectProps ? (
+    const endAdornment = ticker ? (
+      <TokenAdornment ticker={ticker} />
+    ) : selectProps?.items && Object.keys(selectProps?.items).length === 1 ? (
+      <TokenAdornment ticker={Object.values(selectProps.items)[0].value} />
+    ) : selectProps ? (
       <TokenSelect
         {...restSelectProps}
         value={selectValue}
@@ -94,8 +97,6 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
         validationState={hasSelectHelperText ? 'invalid' : undefined}
         errorMessage={undefined}
       />
-    ) : ticker ? (
-      <TokenAdornment ticker={ticker} />
     ) : null;
 
     const hasLabel = !!label || balance !== undefined;

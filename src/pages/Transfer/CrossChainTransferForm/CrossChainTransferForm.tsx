@@ -1,7 +1,7 @@
 import { ChainName } from '@interlay/bridge';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, Key, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
@@ -83,9 +83,17 @@ const CrossChainTransferForm = (): JSX.Element => {
     setCurrentToken(tokens[0]);
   };
 
-  // const handleTickerChange = (ticker: string, name: string) => {
-  //   form.setFieldValue(name, ticker, true);
-  // };
+  useEffect(() => {
+    if (!transferableTokens.length) return;
+    const defaultToken = transferableTokens[0];
+
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, defaultToken.value, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transferableTokens]);
+
+  const handleTickerChange = (ticker: string, name: string) => {
+    form.setFieldValue(name, ticker, true);
+  };
 
   const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
@@ -151,8 +159,8 @@ const CrossChainTransferForm = (): JSX.Element => {
             humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD || 0}
             selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false), {
-              // onSelectionChange: (ticker: Key) =>
-              // handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
+              onSelectionChange: (ticker: Key) =>
+                handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
             })}
           />
