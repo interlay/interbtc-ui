@@ -1,9 +1,10 @@
+import { ValidationState } from '@react-types/shared';
 import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
 
 import { Field, useFieldProps } from '../Field';
 import { HelperTextProps } from '../HelperText';
-import { hasErrorMessage } from '../HelperText/HelperText';
 import { LabelProps } from '../Label';
+import { hasError } from '../utils/input';
 import { Sizes } from '../utils/prop-types';
 import { Adornment, StyledBaseInput } from './Input.style';
 
@@ -16,6 +17,7 @@ type Props = {
   value?: string | ReadonlyArray<string> | number;
   defaultValue?: string | ReadonlyArray<string> | number;
   size?: Sizes;
+  validationState?: ValidationState;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
@@ -26,7 +28,10 @@ type InheritAttrs = Omit<HelperTextProps, keyof Props & NativeAttrs>;
 type BaseInputProps = Props & NativeAttrs & InheritAttrs;
 
 const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
-  ({ startAdornment, endAdornment, bottomAdornment, disabled, size = 'medium', ...props }, ref): JSX.Element => {
+  (
+    { startAdornment, endAdornment, bottomAdornment, disabled, size = 'medium', validationState, ...props },
+    ref
+  ): JSX.Element => {
     const endAdornmentRef = useRef<HTMLDivElement>(null);
     const [endAdornmentWidth, setEndAdornmentWidth] = useState(0);
 
@@ -38,7 +43,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
       setEndAdornmentWidth(endAdornmentRef.current.getBoundingClientRect().width);
     }, [endAdornment]);
 
-    const hasError = hasErrorMessage(props.errorMessage);
+    const error = hasError({ validationState, errorMessage: props.errorMessage });
 
     return (
       <Field {...fieldProps}>
@@ -49,7 +54,7 @@ const BaseInput = forwardRef<HTMLInputElement, BaseInputProps>(
           disabled={disabled}
           $size={size}
           $adornments={{ bottom: !!bottomAdornment, left: !!startAdornment, right: !!endAdornment }}
-          $hasError={hasError}
+          $hasError={error}
           $isDisabled={!!disabled}
           $endAdornmentWidth={endAdornmentWidth}
           {...elementProps}

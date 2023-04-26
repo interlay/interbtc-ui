@@ -1,10 +1,12 @@
 import { CollateralPosition, CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { CTA, Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
 import ErrorModal from '@/legacy-components/ErrorModal';
+import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -17,9 +19,9 @@ type ToggleCollateralVariables = { isEnabling: boolean; underlyingCurrency: Curr
 
 const toggleCollateral = ({ isEnabling, underlyingCurrency }: ToggleCollateralVariables) => {
   if (isEnabling) {
-    return window.bridge.loans.enableAsCollateral(underlyingCurrency);
+    return submitExtrinsicPromise(window.bridge.loans.enableAsCollateral(underlyingCurrency));
   } else {
-    return window.bridge.loans.disableAsCollateral(underlyingCurrency);
+    return submitExtrinsicPromise(window.bridge.loans.disableAsCollateral(underlyingCurrency));
   }
 };
 
@@ -76,7 +78,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
     refetch();
   };
 
-  const toggleCollateralMutation = useMutation<void, Error, ToggleCollateralVariables>(toggleCollateral, {
+  const toggleCollateralMutation = useMutation<ISubmittableResult, Error, ToggleCollateralVariables>(toggleCollateral, {
     onSuccess: handleSuccess
   });
 

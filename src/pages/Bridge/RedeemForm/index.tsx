@@ -1,4 +1,5 @@
 import { CollateralCurrencyExt, InterbtcPrimitivesVaultId, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
+import { getRedeemRequestsFromExtrinsicResult } from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -9,7 +10,6 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { togglePremiumRedeemAction } from '@/common/actions/redeem.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { VaultApiType } from '@/common/types/vault.types';
@@ -18,6 +18,7 @@ import {
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
+import { AuthCTA } from '@/components';
 import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE, DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import {
   RELAY_CHAIN_NATIVE_TOKEN,
@@ -34,17 +35,16 @@ import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TextField from '@/legacy-components/TextField';
 import Toggle from '@/legacy-components/Toggle';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
-import { useSubstrateSecureState } from '@/lib/substrate';
 import ParachainStatusInfo from '@/pages/Bridge/ParachainStatusInfo';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getColorShade } from '@/utils/helpers/colors';
+import { getExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -73,7 +73,6 @@ const RedeemForm = (): JSX.Element | null => {
   const handleError = useErrorHandler();
 
   const usdPrice = getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd;
-  const { selectedAccount } = useSubstrateSecureState();
   const { bridgeLoaded, bitcoinHeight, btcRelayHeight, parachainStatus } = useSelector(
     (state: StoreType) => state.general
   );
@@ -226,13 +225,6 @@ const RedeemForm = (): JSX.Element | null => {
       setSubmittedRequest(undefined);
     };
 
-    const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!accountSet) {
-        dispatch(showAccountModalAction(true));
-        event.preventDefault();
-      }
-    };
-
     const handleSelectVaultCheckboxChange = () => {
       if (!isSelectVaultCheckboxDisabled) {
         setSelectVaultManually((prev) => !prev);
@@ -303,10 +295,19 @@ const RedeemForm = (): JSX.Element | null => {
         const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(vaultId, monetaryWrappedTokenAmount.mul(2));
-        const result = await window.bridge.redeem.request(monetaryWrappedTokenAmount, data[BTC_ADDRESS], vaultId);
+        const extrinsicData = await window.bridge.redeem.request(
+          monetaryWrappedTokenAmount,
+          data[BTC_ADDRESS],
+          vaultId
+        );
+        // When requesting a redeem, wait for the finalized event because we cannot revert BTC transactions.
+        // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
+        const finalizedStatus = getExtrinsicStatus('Finalized');
+        const extrinsicResult = await submitExtrinsic(extrinsicData, finalizedStatus);
+        const redeemRequests = await getRedeemRequestsFromExtrinsicResult(window.bridge, extrinsicResult);
 
         // TODO: handle redeem aggregator
-        const redeemRequest = result[0];
+        const redeemRequest = redeemRequests[0];
         handleSubmittedRequestModalOpen(redeemRequest);
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -384,8 +385,6 @@ const RedeemForm = (): JSX.Element | null => {
       currentInclusionFee,
       getTokenPrice(prices, ForeignAssetIdLiteral.BTC)?.usd
     );
-
-    const accountSet = !!selectedAccount;
 
     // `btcToDotRate` has 0 value only if oracle call fails
     const isOracleOffline = btcToRelayChainNativeTokenRate.toBig().eq(0);
@@ -523,13 +522,15 @@ const RedeemForm = (): JSX.Element | null => {
               approxUSD={totalRelayChainNativeTokenInUSD}
             />
           )}
-          <SubmitButton
+          <AuthCTA
+            fullWidth
+            size='large'
+            type='submit'
             disabled={parachainStatus !== ParachainStatus.Running}
-            pending={submitStatus === STATUSES.PENDING}
-            onClick={handleConfirmClick}
+            loading={submitStatus === STATUSES.PENDING}
           >
-            {accountSet ? t('confirm') : t('connect_wallet')}
-          </SubmitButton>
+            {t('confirm')}
+          </AuthCTA>
         </form>
         {submitStatus === STATUSES.REJECTED && submitError && (
           <ErrorModal

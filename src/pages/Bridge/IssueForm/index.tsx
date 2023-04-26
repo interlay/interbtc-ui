@@ -1,5 +1,6 @@
 import {
   currencyIdToMonetaryCurrency,
+  getIssueRequestsFromExtrinsicResult,
   GovernanceCurrency,
   InterbtcPrimitivesVaultId,
   Issue
@@ -16,7 +17,6 @@ import { useQuery } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { VaultApiType } from '@/common/types/vault.types';
 import {
@@ -24,6 +24,7 @@ import {
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
+import { AuthCTA } from '@/components';
 import { INTERLAY_VAULT_DOCS_LINK } from '@/config/links';
 import {
   BLOCKS_BEHIND_LIMIT,
@@ -46,7 +47,6 @@ import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
-import SubmitButton from '@/legacy-components/SubmitButton';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import InterlayLink from '@/legacy-components/UI/InterlayLink';
@@ -56,6 +56,7 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
+import { getExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -293,13 +294,6 @@ const IssueForm = (): JSX.Element | null => {
       setSubmittedRequest(undefined);
     };
 
-    const handleConfirmClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      if (!accountSet) {
-        dispatch(showAccountModalAction(true));
-        event.preventDefault();
-      }
-    };
-
     const handleSelectVaultCheckboxChange = () => {
       if (!isSelectVaultCheckboxDisabled) {
         setSelectVaultManually((prev) => !prev);
@@ -327,17 +321,21 @@ const IssueForm = (): JSX.Element | null => {
 
         const collateralToken = await currencyIdToMonetaryCurrency(window.bridge.api, vaultId.currencies.collateral);
 
-        const result = await window.bridge.issue.request(
+        const extrinsicData = await window.bridge.issue.request(
           monetaryBtcAmount,
           vaultId.accountId,
           collateralToken,
           false, // default
-          0, // default
           vaults
         );
+        // When requesting an issue, wait for the finalized event because we cannot revert BTC transactions.
+        // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
+        const finalizedStatus = getExtrinsicStatus('Finalized');
+        const extrinsicResult = await submitExtrinsic(extrinsicData, finalizedStatus);
+        const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, extrinsicResult);
 
         // TODO: handle issue aggregation
-        const issueRequest = result[0];
+        const issueRequest = issueRequests[0];
         handleSubmittedRequestModalOpen(issueRequest);
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {
@@ -529,13 +527,16 @@ const IssueForm = (): JSX.Element | null => {
               />
             }
           />
-          <SubmitButton
+
+          <AuthCTA
+            fullWidth
+            size='large'
+            type='submit'
+            loading={submitStatus === STATUSES.PENDING}
             disabled={isSubmitBtnDisabled}
-            pending={submitStatus === STATUSES.PENDING}
-            onClick={handleConfirmClick}
           >
-            {accountSet ? t('confirm') : t('connect_wallet')}
-          </SubmitButton>
+            {t('confirm')}
+          </AuthCTA>
         </form>
         {submitStatus === STATUSES.REJECTED && submitError && (
           <ErrorModal

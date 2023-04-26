@@ -68,7 +68,7 @@ const useGetAccountPools = (): UseGetAccountProvidedLiquidity => {
   const { data, error, refetch: refetchQuery } = useQuery({
     queryKey: ['account-pools', accountId],
     queryFn: () => accountId && liquidityPools && prices && getAccountLiqudityPools(accountId, liquidityPools, prices),
-    enabled: !!liquidityPools,
+    enabled: !!accountId && !!liquidityPools && !!prices,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 

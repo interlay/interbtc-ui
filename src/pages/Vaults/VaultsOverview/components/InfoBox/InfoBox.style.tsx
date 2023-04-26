@@ -5,7 +5,7 @@ import { theme } from '@/component-library';
 const InfoBoxWrapper = styled.div`
   align-items: center;
   box-shadow: ${theme.boxShadow.default};
-  background: ${theme.card.bg};
+  background: ${theme.card.bg.primary};
   border: ${theme.border.default};
   border-radius: ${theme.rounded.xl};
   display: flex;

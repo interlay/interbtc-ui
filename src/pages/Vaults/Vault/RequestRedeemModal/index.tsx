@@ -17,6 +17,7 @@ import ErrorMessage from '@/legacy-components/ErrorMessage';
 import NumberInput from '@/legacy-components/NumberInput';
 import TextField from '@/legacy-components/TextField';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
+import { getExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';
@@ -60,7 +61,11 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
       }
 
       const vaultId = newVaultId(window.bridge.api, vaultAddress, collateralToken, WRAPPED_TOKEN);
-      await window.bridge.redeem.request(amountPolkaBtc, data[BTC_ADDRESS], vaultId);
+      const extrinsicData = await window.bridge.redeem.request(amountPolkaBtc, data[BTC_ADDRESS], vaultId);
+      // When requesting a redeem, wait for the finalized event because we cannot revert BTC transactions.
+      // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
+      const finalizedStatus = getExtrinsicStatus('Finalized');
+      await submitExtrinsic(extrinsicData, finalizedStatus);
 
       queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
 

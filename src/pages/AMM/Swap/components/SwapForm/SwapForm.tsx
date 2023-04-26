@@ -1,9 +1,10 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
-import { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, Key, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
@@ -12,7 +13,7 @@ import { useDebounce } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, formatUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { Card, CardProps, Divider, Flex, H1, TokenInput, TokenInputProps } from '@/component-library';
+import { Card, CardProps, Divider, Flex, H1, TokenInput, TokenSelectProps } from '@/component-library';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
   SWAP_INPUT_AMOUNT_FIELD,
@@ -25,6 +26,7 @@ import {
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { SwapPair } from '@/types/swap';
 import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
@@ -89,7 +91,7 @@ type SwapData = {
 };
 
 const mutateSwap = ({ deadline, minimumAmountOut, recipient, trade }: SwapData) =>
-  window.bridge.amm.swap(trade, minimumAmountOut, recipient, deadline);
+  submitExtrinsic(window.bridge.amm.swap(trade, minimumAmountOut, recipient, deadline));
 
 type Props = {
   pair: SwapPair;
@@ -139,7 +141,7 @@ const SwapForm = ({
     [inputAmount, pair]
   );
 
-  const swapMutation = useMutation<void, Error, SwapData>(mutateSwap, {
+  const swapMutation = useMutation<ISubmittableResult, Error, SwapData>(mutateSwap, {
     onSuccess: () => {
       toast.success('Swap successful');
       setTrade(undefined);
@@ -199,8 +201,8 @@ const SwapForm = ({
   const initialValues = useMemo(
     () => ({
       [SWAP_INPUT_AMOUNT_FIELD]: '',
-      [SWAP_INPUT_TOKEN_FIELD]: pair.input?.ticker,
-      [SWAP_OUTPUT_TOKEN_FIELD]: pair.output?.ticker
+      [SWAP_INPUT_TOKEN_FIELD]: pair.input?.ticker || '',
+      [SWAP_OUTPUT_TOKEN_FIELD]: pair.output?.ticker || ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -277,7 +279,7 @@ const SwapForm = ({
     form.values[SWAP_INPUT_AMOUNT_FIELD]
   );
 
-  const tokens: TokenInputProps['tokens'] = useMemo(
+  const selectItems: TokenSelectProps['items'] = useMemo(
     () =>
       currencies
         ?.filter((currency) => pooledTickers.has(currency.ticker))
@@ -290,9 +292,9 @@ const SwapForm = ({
           return {
             balance: balance?.toHuman() || 0,
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
-            ticker: currency.ticker
+            value: currency.ticker
           };
-        }),
+        }) || [],
     [currencies, getAvailableBalance, pooledTickers, prices]
   );
 
@@ -317,9 +319,9 @@ const SwapForm = ({
                   balance={inputBalance?.toString() || 0}
                   humanBalance={inputBalance?.toHuman() || 0}
                   valueUSD={inputAmountUSD}
-                  tokens={tokens}
                   selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, false), {
-                    onSelectionChange: (ticker: string) => handleTickerChange(ticker, SWAP_INPUT_TOKEN_FIELD)
+                    onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_INPUT_TOKEN_FIELD),
+                    items: selectItems
                   })}
                   {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, false), { onChange: handleChangeInput })}
                 />
@@ -332,9 +334,9 @@ const SwapForm = ({
                   humanBalance={outputBalance?.toHuman() || 0}
                   valueUSD={outputAmountUSD}
                   value={trade?.outputAmount.toString() || ''}
-                  tokens={tokens}
                   selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
-                    onSelectionChange: (ticker: string) => handleTickerChange(ticker, SWAP_OUTPUT_TOKEN_FIELD)
+                    onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_OUTPUT_TOKEN_FIELD),
+                    items: selectItems
                   })}
                 />
               </Flex>
