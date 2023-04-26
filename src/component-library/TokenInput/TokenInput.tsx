@@ -73,6 +73,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     };
 
     const handleTokenChange = (ticker: Key) => {
+      console.log('in the input', ticker);
       onChangeTicker?.(ticker as string);
       setSelectValue(ticker as string);
     };

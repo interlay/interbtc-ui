@@ -1,14 +1,13 @@
 import { ChainName } from '@interlay/bridge';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, Key, useState } from 'react';
+import { ChangeEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
-// import { TokenData } from '@/component-library/TokenInput/TokenList';
 import { AccountSelect, AuthCTA } from '@/components';
 import {
   CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
@@ -48,23 +47,10 @@ const CrossChainTransferForm = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
 
-  console.log('currentToken', currentToken);
-
   const accountId = useAccountId();
   const { accounts } = useSubstrateSecureState();
 
   const { getDestinationChains, originatingChains, getAvailableTokens } = useXCMBridge();
-
-  // const setTokens = async () => {
-  //   if (!accountId) return;
-
-  //   console.log(
-  //     'form.values',
-  //     form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD],
-  //     form.values[CROSS_CHAIN_TRANSFER_TO_FIELD]
-  //   );
-
-  // };
 
   const handleSubmit = (data: CrossChainTransferFormData) => {
     console.log('submit data', data);
@@ -92,17 +78,14 @@ const CrossChainTransferForm = (): JSX.Element => {
       form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
     );
 
+    console.log('console.log(tokens)', tokens);
     setTransferableTokens(tokens);
     setCurrentToken(tokens[0]);
   };
 
-  const handleTickerChange = (ticker: string | undefined) => {
-    console.log('ticker', ticker);
-    // const selectedToken = transferableTokens.find((token: any) => token.ticker === ticker);
-    // form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, ticker);
-
-    // setCurrentToken(selectedToken);
-  };
+  // const handleTickerChange = (ticker: string, name: string) => {
+  //   form.setFieldValue(name, ticker, true);
+  // };
 
   const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
@@ -110,12 +93,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
-      minAmount: currentToken
-        ? newMonetaryAmount(0, getCurrencyFromTicker(currentToken.ticker as string))
-        : newMonetaryAmount(0, getCurrencyFromTicker('KSM')),
-      maxAmount: currentToken
-        ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.ticker as string))
-        : newMonetaryAmount(0, getCurrencyFromTicker('KSM'))
+      minAmount: newMonetaryAmount(0, getCurrencyFromTicker('KSM')),
+      maxAmount: newMonetaryAmount(0, getCurrencyFromTicker('KSM'))
     }
   };
 
@@ -132,11 +111,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   const transferMonetaryAmount = currentToken
-    ? newSafeMonetaryAmount(
-        form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
-        getCurrencyFromTicker(currentToken?.ticker as string),
-        true
-      )
+    ? newSafeMonetaryAmount(form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0, getCurrencyFromTicker('KSM'), true)
     : 0;
 
   const valueUSD = transferMonetaryAmount
@@ -172,12 +147,13 @@ const CrossChainTransferForm = (): JSX.Element => {
           <TokenInput
             placeholder='0.00'
             label='Transfer amount'
-            balance={currentToken?.balance?.toString() || 0}
+            balance={currentToken?.balance.toString() || 0}
             humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD || 0}
             selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false), {
-              onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string),
-              items: transferableTokens || []
+              // onSelectionChange: (ticker: Key) =>
+              // handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
+              items: transferableTokens
             })}
           />
         </div>

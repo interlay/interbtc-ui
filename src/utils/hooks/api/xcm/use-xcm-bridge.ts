@@ -106,10 +106,12 @@ const useXCMBridge = (): UseXCMBridge => {
 
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
 
+          console.log('in bridge hook', token);
+
           return {
-            ticker: token,
             balance: transferableBalance.toString(),
-            balanceUSD: formatUSD(balanceUSD || 0, { compact: true })
+            balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
+            value: token
           };
         })
       );

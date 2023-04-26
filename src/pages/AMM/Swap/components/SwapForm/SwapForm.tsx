@@ -298,6 +298,8 @@ const SwapForm = ({
     [currencies, getAvailableBalance, pooledTickers, prices]
   );
 
+  console.log('selectItems', selectItems);
+
   const { poolImpact, marketPrice } = getPoolPriceImpact(trade, inputAmountUSD, outputAmountUSD);
   const priceImpact = (marketPrice || poolImpact).toNumber();
 
