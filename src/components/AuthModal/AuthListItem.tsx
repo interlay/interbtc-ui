@@ -10,6 +10,7 @@ import { StyledItem } from './AuthModal.style';
 
 type Props = {
   onPress?: (e: PressEvent) => void;
+  isSelected?: boolean;
 };
 
 type InheritAttrs = Omit<FlexProps, keyof Props>;
@@ -17,11 +18,13 @@ type InheritAttrs = Omit<FlexProps, keyof Props>;
 type AuthListItemProps = Props & InheritAttrs;
 
 const AuthListItem = forwardRef<HTMLElement, AuthListItemProps>(
-  ({ onPress, ...props }, ref): JSX.Element => {
+  ({ onPress, isSelected, ...props }, ref): JSX.Element => {
     const elRef = useDOMRef(ref);
     const { buttonProps } = useButton({ onPress, ...props }, elRef);
 
-    return <StyledItem {...mergeProps(props, buttonProps)} ref={elRef} />;
+    return (
+      <StyledItem {...mergeProps(props, buttonProps)} aria-selected={isSelected ? 'true' : undefined} ref={elRef} />
+    );
   }
 );
 

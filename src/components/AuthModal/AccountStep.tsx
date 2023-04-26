@@ -5,11 +5,12 @@ import { useCopyToClipboard } from 'react-use';
 import { DocumentDuplicate } from '@/assets/icons';
 import { shortAddress } from '@/common/utils/utils';
 import { CTA, Divider, Flex, P, Span, Tooltip, WalletIcon } from '@/component-library';
+import { KeyringPair } from '@/lib/substrate';
 import { WalletData } from '@/utils/constants/wallets';
 import { StepComponentProps, withStep } from '@/utils/hocs/step';
 import { useCopyTooltip } from '@/utils/hooks/use-copy-tooltip';
 
-import { StyledAccountItem, StyledCopyItem } from './AuthModal.style';
+import { StyledAccountItem, StyledCopyItem, StyledP } from './AuthModal.style';
 import { AuthModalSteps } from './type';
 
 const CopyAddress = ({ account }: { account: InjectedAccountWithMeta }) => {
@@ -20,7 +21,11 @@ const CopyAddress = ({ account }: { account: InjectedAccountWithMeta }) => {
 
   return (
     <Tooltip {...tooltipProps}>
-      <StyledCopyItem {...mergeProps(buttonProps, { onPress: handleCopy })} elementType='div'>
+      <StyledCopyItem
+        {...mergeProps(buttonProps, { onPress: handleCopy })}
+        aria-label={`copy ${shortAddress(account.address)} to clipboard`}
+        elementType='div'
+      >
         <DocumentDuplicate />
       </StyledCopyItem>
     </Tooltip>
@@ -28,8 +33,9 @@ const CopyAddress = ({ account }: { account: InjectedAccountWithMeta }) => {
 };
 
 type AccountStepProps = {
-  wallet?: WalletData;
   accounts: InjectedAccountWithMeta[];
+  wallet?: WalletData;
+  selectedAccount?: KeyringPair;
   onChangeWallet?: () => void;
   onSelectionChange: (account: InjectedAccountWithMeta) => void;
 } & StepComponentProps;
@@ -37,6 +43,7 @@ type AccountStepProps = {
 const AccountComponent = ({
   accounts,
   wallet,
+  selectedAccount,
   onChangeWallet,
   onSelectionChange
 }: AccountStepProps): JSX.Element | null => {
@@ -63,6 +70,8 @@ const AccountComponent = ({
       <Divider color='default' />
       <Flex elementType='ul' direction='column' gap='spacing4' marginTop='spacing6'>
         {walletAccounts.map((account) => {
+          const isSelected = selectedAccount?.address === account.address;
+
           return (
             <Flex key={account.address} elementType='li' gap='spacing4'>
               <StyledAccountItem
@@ -71,9 +80,10 @@ const AccountComponent = ({
                 direction='column'
                 elementType='div'
                 onPress={() => onSelectionChange(account)}
+                isSelected={isSelected}
               >
-                <P>{account.meta.name}</P>
-                <P>({shortAddress(account.address)})</P>
+                <StyledP $isSelected={isSelected}>{account.meta.name}</StyledP>
+                <StyledP $isSelected={isSelected}>({shortAddress(account.address)})</StyledP>
               </StyledAccountItem>
               <CopyAddress account={account} />
             </Flex>

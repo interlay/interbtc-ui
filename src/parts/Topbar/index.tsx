@@ -1,4 +1,6 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { Keyring } from '@polkadot/api';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +13,7 @@ import { FundWallet } from '@/components';
 import { AuthModal, SignTermsModal } from '@/components/AuthModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { SS58_FORMAT } from '@/constants';
 import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
@@ -33,8 +36,7 @@ const Topbar = (): JSX.Element => {
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
   const isBanxaEnabled = useFeatureFlag(FeatureFlags.BANXA);
-  // const { selectProp } = useSignMessage();
-  const { setSelectedAccount } = useSubstrate();
+  const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const { selectProps } = useSignMessage();
 
   const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
@@ -74,12 +76,19 @@ const Topbar = (): JSX.Element => {
     dispatch(showAccountModalAction(false));
   };
 
-  const handleAccountSelect = (account: KeyringPair) => {
-    setSelectedAccount(account);
-    selectProps.onSelectionChange(account);
+  const handleAccountSelect = (account: InjectedAccountWithMeta) => {
+    const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
+    const keyringAccount = keyring.addFromAddress(account.address, account.meta);
+    setSelectedAccount(keyringAccount);
+    selectProps.onSelectionChange(keyringAccount as KeyringPair);
   };
 
   const handleCloseSignTermsModal = () => dispatch(showSignTermsModalAction(false));
+
+  const handleDisconnect = () => {
+    removeSelectedAccount();
+    handleAccountModalClose();
+  };
 
   let accountLabel;
   if (!extensions.length) {
@@ -132,7 +141,12 @@ const Topbar = (): JSX.Element => {
           {accountLabel}
         </InterlayDefaultContainedButton>
       </div>
-      <AuthModal isOpen={showAccountModal} onClose={handleAccountModalClose} onAccountSelect={handleAccountSelect} />
+      <AuthModal
+        isOpen={showAccountModal}
+        onClose={handleAccountModalClose}
+        onDisconnect={handleDisconnect}
+        onAccountSelect={handleAccountSelect}
+      />
       <SignTermsModal isOpen={isSignTermsModalOpen} onClose={handleCloseSignTermsModal} />
     </>
   );

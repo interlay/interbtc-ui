@@ -1,7 +1,29 @@
+import { WalletName } from '@/utils/constants/wallets';
+
 import { mockInterBtcApi } from '../@interlay/interbtc-api';
 import mockJsonRpc from './jsonrpc';
 
-const DEFAULT_ACCOUNT_ADDRESS = 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc';
+const DEFAULT_ACCOUNT_1 = {
+  address: 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc',
+  meta: {
+    genesisHash: '',
+    name: 'Wallet SubWallet',
+    source: WalletName.SubWallet
+  },
+  type: 'sr25519'
+};
+
+const DEFAULT_ACCOUNT_2 = {
+  address: 'a3ekLbX6dpbnF4VxBJZiF5m7GGaE6Go8Dp8hKQVj75WPZWsnP',
+  meta: {
+    genesisHash: '',
+    name: 'Wallet PolkadotJS',
+    source: WalletName.PolkadotJS
+  },
+  type: 'sr25519'
+};
+
+const DEFAULT_ACCOUNTS = [DEFAULT_ACCOUNT_1, DEFAULT_ACCOUNT_2];
 
 const DEFAULT_KEYRING_ACCOUNTS = [
   {
@@ -10,14 +32,14 @@ const DEFAULT_KEYRING_ACCOUNTS = [
     value: null
   },
   {
-    key: '5CJy5bsZ1T9UTWqCAkrCyrPSjcvd5hYC8cs7mainmTiZcJmn',
-    name: 'Wallet 1',
-    value: '5CJy5bsZ1T9UTWqCAkrCyrPSjcvd5hYC8cs7mainmTiZcJmn'
+    key: DEFAULT_ACCOUNT_1.address,
+    name: DEFAULT_ACCOUNT_1.meta.name,
+    value: DEFAULT_ACCOUNT_1.address
   },
   {
-    key: '5CUZWG8ZofqpPaGpcEF6Y9XM1r4d3qRUbPgECqTNLAfMNLii',
-    name: 'Wallet 2',
-    value: '5CUZWG8ZofqpPaGpcEF6Y9XM1r4d3qRUbPgECqTNLAfMNLii'
+    key: DEFAULT_ACCOUNT_2.address,
+    name: DEFAULT_ACCOUNT_2.meta.name,
+    value: DEFAULT_ACCOUNT_2.address
   }
 ];
 
@@ -45,39 +67,28 @@ const DEFAULT_KEYRING = {
   }
 };
 
-const DEFAULT_ACCOUNTS = [
-  {
-    address: DEFAULT_ACCOUNT_ADDRESS,
-    meta: {
-      genesisHash: '',
-      name: 'Wallet 1',
-      source: 'subwallet-js'
-    },
-    type: 'sr25519'
-  },
-  {
-    address: 'a3ekLbX6dpbnF4VxBJZiF5m7GGaE6Go8Dp8hKQVj75WPZWsnP',
-    meta: {
-      name: 'Wallet 2',
-      source: 'subwallet-js'
-    },
-    type: 'sr25519'
-  }
-];
+const DEFAULT_SUBWALLET_EXTENSION = {
+  name: WalletName.SubWallet,
+  version: '0.6.6-0',
+  accounts: {},
+  metadata: {},
+  provider: {},
+  signer: {}
+};
 
-const DEFAULT_EXTENSIONS = [
-  {
-    name: 'subwallet-js',
-    version: '0.6.6-0',
-    accounts: {},
-    metadata: {},
-    provider: {},
-    signer: {}
-  }
-];
+const DEFAULT_POLKADOTJS_EXTENSION = {
+  name: WalletName.PolkadotJS,
+  version: '0.6.6-0',
+  accounts: {},
+  metadata: {},
+  provider: {},
+  signer: {}
+};
+
+const DEFAULT_EXTENSIONS = [DEFAULT_SUBWALLET_EXTENSION, DEFAULT_POLKADOTJS_EXTENSION];
 
 const DEFAULT_SELECTED_ACCOUNT = {
-  address: DEFAULT_ACCOUNT_ADDRESS,
+  address: DEFAULT_ACCOUNT_1.address,
   addressRaw: {
     '0': 10,
     '1': 224,
@@ -113,11 +124,7 @@ const DEFAULT_SELECTED_ACCOUNT = {
     '31': 13
   },
   isLocked: true,
-  meta: {
-    genesisHash: '',
-    name: 'Wallet 1',
-    source: 'subwallet-js'
-  },
+  meta: DEFAULT_ACCOUNT_1.meta,
   publicKey: {
     '0': 10,
     '1': 224,
@@ -168,4 +175,13 @@ const DEFAULT_SUBSTRATE = {
   extensions: DEFAULT_EXTENSIONS
 };
 
-export { DEFAULT_ACCOUNT_ADDRESS, DEFAULT_KEYRING, DEFAULT_SUBSTRATE };
+export {
+  DEFAULT_ACCOUNT_1,
+  DEFAULT_ACCOUNT_2,
+  DEFAULT_ACCOUNTS,
+  DEFAULT_EXTENSIONS,
+  DEFAULT_KEYRING,
+  DEFAULT_POLKADOTJS_EXTENSION,
+  DEFAULT_SUBSTRATE,
+  DEFAULT_SUBWALLET_EXTENSION
+};

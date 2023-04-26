@@ -1,12 +1,10 @@
-import { Keyring } from '@polkadot/api';
 import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
 import { useState } from 'react';
 import { Trans } from 'react-i18next';
 
 import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, P, TextLink } from '@/component-library';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
-import { SS58_FORMAT } from '@/constants';
-import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
+import { useSubstrateSecureState } from '@/lib/substrate';
 import { WalletData } from '@/utils/constants/wallets';
 import { findWallet } from '@/utils/helpers/wallet';
 
@@ -31,14 +29,15 @@ enum AuthModalSteps {
 }
 
 type Props = {
-  onAccountSelect: (account: KeyringPair) => void;
+  onAccountSelect?: (account: InjectedAccountWithMeta) => void;
+  onDisconnect?: () => void;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type AuthModalProps = Props & InheritAttrs;
 
-const AuthModal = ({ onClose, onAccountSelect, ...props }: AuthModalProps): JSX.Element => {
+const AuthModal = ({ onClose, onAccountSelect, onDisconnect, ...props }: AuthModalProps): JSX.Element => {
   const { extensions, selectedAccount, accounts } = useSubstrateSecureState();
 
   const [step, setStep] = useState<AuthModalSteps>(selectedAccount ? AuthModalSteps.ACCOUNT : AuthModalSteps.WALLET);
@@ -46,21 +45,25 @@ const AuthModal = ({ onClose, onAccountSelect, ...props }: AuthModalProps): JSX.
     selectedAccount?.meta.name ? findWallet(selectedAccount?.meta.source as any) : undefined
   );
 
+  // TODO: finish disconnect correctly
+  console.log(wallet);
+
   const handleWalletSelect = (wallet: WalletData) => {
     setStep(AuthModalSteps.ACCOUNT);
     setWallet(wallet);
   };
 
-  const handleChangeWallet = () => {
-    setStep(AuthModalSteps.WALLET);
-    setWallet(undefined);
+  const handleChangeWallet = () => setStep(AuthModalSteps.WALLET);
+
+  const handleAccountSelection = (account: InjectedAccountWithMeta) => {
+    onAccountSelect?.(account);
+    onClose();
   };
 
-  const onSelectionChange = (account: InjectedAccountWithMeta) => {
-    const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
-    const keyringAccount = keyring.addFromAddress(account.address, account.meta);
-    onAccountSelect(keyringAccount as KeyringPair);
-    onClose();
+  const handleDisconnect = () => {
+    onDisconnect?.();
+    // setWallet(undefined);
+    // setStep(AuthModalSteps.WALLET);
   };
 
   const title = getTitle(step, extensions);
@@ -84,19 +87,20 @@ const AuthModal = ({ onClose, onAccountSelect, ...props }: AuthModalProps): JSX.
           step={step}
           onSelectionChange={handleWalletSelect}
           extensions={extensions}
-          selectedAccount={selectedAccount}
+          selectedWallet={wallet}
         />
         <AccountStep
           step={step}
           wallet={wallet}
           accounts={accounts}
-          onSelectionChange={onSelectionChange}
+          selectedAccount={selectedAccount}
+          onSelectionChange={handleAccountSelection}
           onChangeWallet={handleChangeWallet}
         />
       </ModalBody>
       {step === AuthModalSteps.ACCOUNT && (
         <ModalFooter>
-          <CTA size='large' variant='outlined'>
+          <CTA size='large' variant='outlined' onPress={handleDisconnect}>
             Disconnect
           </CTA>
         </ModalFooter>
