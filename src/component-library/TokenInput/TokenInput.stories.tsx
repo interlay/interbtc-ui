@@ -76,7 +76,21 @@ MultiToken.args = {
   // errorMessage: 'Failed'
 };
 
-export { MultiToken, WithBalance, WithCurrencySelect, WithoutBalance };
+const SingleItemInSelectItems = Template.bind({});
+SingleItemInSelectItems.args = {
+  balance: 1000.0,
+  balanceLabel: 'Balance',
+  placeholder: '0.00',
+  label: 'Amount',
+  isDisabled: false,
+  selectProps: {
+    value: 'LP KSM-KBTC-KINT',
+    items: [{ balance: 200, value: 'KSM', balanceUSD: '$200' }]
+  }
+  // errorMessage: 'Failed'
+};
+
+export { MultiToken, SingleItemInSelectItems, WithBalance, WithCurrencySelect, WithoutBalance };
 
 export default {
   title: 'Forms/TokenInput',
