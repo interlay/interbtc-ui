@@ -34,4 +34,17 @@ const hideScrollbar = (): FlattenInterpolation<DefaultTheme> => css`
   scrollbar-width: none; /* Firefox */
 `;
 
-export { hideScrollbar, spaceX, spaceY };
+const visuallyHidden = (): FlattenInterpolation<DefaultTheme> => css`
+  border: 0px;
+  clip: rect(0px, 0px, 0px, 0px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: 0px -1px -1px 0px;
+  overflow: hidden;
+  padding: 0px;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+`;
+
+export { hideScrollbar, spaceX, spaceY, visuallyHidden };

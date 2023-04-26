@@ -38,7 +38,7 @@ const ChainSelect = forwardRef<HTMLInputElement, ChainSelectProps>(
   }): JSX.Element => {
     const inputRef = useRef<HTMLInputElement | null>(null);
 
-    const [value, setValue] = useState(defaultValue);
+    const [value, setValue] = useState(chains[0]?.id || defaultValue);
     const [isOpen, setOpen] = useState(false);
 
     const { fieldProps, labelProps } = useLabel({ ...props, label });
