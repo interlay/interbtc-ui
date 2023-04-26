@@ -59,6 +59,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const selectHelperTextId = useId();
 
+    const firstItemInSelectProps =
+      selectProps?.items && Object.keys(selectProps.items).length === 1 ? Object.values(selectProps.items)[0] : null;
+
     useEffect(() => {
       if (selectProps?.value === undefined) return;
 
@@ -84,8 +87,8 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const endAdornment = ticker ? (
       <TokenAdornment ticker={ticker} />
-    ) : selectProps?.items && Object.keys(selectProps?.items).length === 1 ? (
-      <TokenAdornment ticker={Object.values(selectProps.items)[0].value} />
+    ) : firstItemInSelectProps ? (
+      <TokenAdornment ticker={firstItemInSelectProps.value} />
     ) : selectProps ? (
       <TokenSelect
         {...restSelectProps}
