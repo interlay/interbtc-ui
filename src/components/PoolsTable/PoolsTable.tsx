@@ -48,12 +48,13 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   const commonColumns = [
     { name: t('amm.pools.pool_name'), uid: PoolsTableColumns.POOL_NAME },
     { name: t('apr'), uid: PoolsTableColumns.APR },
-    { name: t('total_liquidity'), uid: PoolsTableColumns.TOTAL_LIQUIDITY }
+    { name: t('total_liquidity'), uid: PoolsTableColumns.TOTAL_LIQUIDITY },
+    { name: t('7_day_volume'), uid: PoolsTableColumns.SEVEN_DAY_VOLUME }
   ];
 
   const borrowAssetsColumns = isAccountPools
     ? [...commonColumns, { name: t('my_liquidity'), uid: PoolsTableColumns.ACCOUNT_LIQUIDITY }]
-    : [...commonColumns, { name: t('7_day_volume'), uid: PoolsTableColumns.SEVEN_DAY_VOLUME }];
+    : commonColumns;
 
   const rows: PoolsTableRow[] = useMemo(
     () =>
@@ -73,7 +74,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
 
         const total7DayVolumeUSD = getDexTotalVolumeUSD(pooledCurrencies.map((pooled) => pooled.currency.ticker));
         const total7DayVolumeLabel = formatUSD(total7DayVolumeUSD, { compact: true });
-        const sevenDayVolume = isAccountPools ? null : (
+        const sevenDayVolume = (
           <Cell label={total7DayVolumeLabel} alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />
         );
 
