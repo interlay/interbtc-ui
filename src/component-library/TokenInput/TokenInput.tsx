@@ -1,22 +1,17 @@
 import { useLabel } from '@react-aria/label';
-import { mergeProps } from '@react-aria/utils';
-import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useState } from 'react';
+import { chain, mergeProps, useId } from '@react-aria/utils';
+import { forwardRef, Key, ReactNode, useEffect, useState } from 'react';
 
 import { Flex } from '../Flex';
+import { HelperText } from '../HelperText';
 import { NumberInput, NumberInputProps } from '../NumberInput';
 import { useDOMRef } from '../utils/dom';
 import { formatUSD } from '../utils/format';
 import { triggerChangeEvent } from '../utils/input';
+import { TokenAdornment, TokenTicker } from './TokenAdornment';
 import { StyledUSDAdornment } from './TokenInput.style';
 import { TokenInputLabel } from './TokenInputLabel';
-import { TokenData } from './TokenList';
-import { TokenSelect } from './TokenSelect';
-
-type SingleToken = string;
-
-type MultiToken = { text: string; icons: string[] };
-
-type TokenTicker = SingleToken | MultiToken;
+import { TokenSelect, TokenSelectProps } from './TokenSelect';
 
 type Props = {
   valueUSD?: number;
@@ -24,11 +19,9 @@ type Props = {
   humanBalance?: string | number;
   balanceLabel?: ReactNode;
   ticker?: TokenTicker;
-  defaultTicker?: TokenTicker;
-  tokens?: TokenData[];
   onClickBalance?: (balance?: string | number) => void;
   onChangeTicker?: (ticker?: string) => void;
-  selectProps?: InputHTMLAttributes<HTMLInputElement>;
+  selectProps?: Omit<TokenSelectProps, 'label' | 'helperTextId'>;
 };
 
 type InheritAttrs = Omit<NumberInputProps, keyof Props>;
@@ -44,9 +37,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       balanceLabel,
       isDisabled,
       label,
-      ticker: tickerProp,
-      defaultTicker = '',
-      tokens = [],
+      ticker,
       style,
       hidden,
       className,
@@ -54,28 +45,24 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       onChangeTicker,
       selectProps,
       placeholder = '0',
+      errorMessage,
+      description,
       ...props
     },
     ref
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
-    const [tickerValue, setTickerValue] = useState(
-      (selectProps?.defaultValue as string) || (typeof defaultTicker === 'string' ? defaultTicker : defaultTicker?.text)
-    );
+    const [selectValue, setSelectValue] = useState((selectProps?.defaultValue as string) || '');
 
     const { labelProps, fieldProps } = useLabel({ label, ...props });
 
-    useEffect(() => {
-      if (tickerProp === undefined) return;
-
-      setTickerValue(typeof tickerProp === 'string' ? tickerProp : tickerProp?.text);
-    }, [tickerProp]);
+    const selectHelperTextId = useId();
 
     useEffect(() => {
       if (selectProps?.value === undefined) return;
 
-      setTickerValue(selectProps.value as string);
+      setSelectValue(selectProps.value as string);
     }, [selectProps?.value]);
 
     const handleClickBalance = () => {
@@ -85,27 +72,30 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       onClickBalance?.(balance);
     };
 
-    const handleTokenChange = (ticker: string) => {
-      onChangeTicker?.(ticker);
-      setTickerValue(ticker);
+    const handleTokenChange = (ticker: Key) => {
+      onChangeTicker?.(ticker as string);
+      setSelectValue(ticker as string);
     };
 
-    const customIcons = typeof tickerProp === 'object' ? tickerProp.icons : undefined;
+    // Prioritise Number Input description and error message
+    const hasSelectHelperText =
+      !errorMessage && !description && (selectProps?.errorMessage || selectProps?.description);
+    const { onSelectionChange, ...restSelectProps } = selectProps || {};
 
-    const isSelectDisabled = !tokens?.length;
-    const endAdornment = (
+    const endAdornment = selectProps ? (
       <TokenSelect
-        value={tickerValue}
-        icons={customIcons}
-        isDisabled={isSelectDisabled}
-        tokens={tokens}
-        onChange={handleTokenChange}
-        // Allows seamingless integration with form lib
-        selectProps={selectProps}
+        {...restSelectProps}
+        value={selectValue}
+        onSelectionChange={chain(onSelectionChange, handleTokenChange)}
         label={label}
         aria-label={fieldProps['aria-label']}
+        aria-describedby={hasSelectHelperText ? selectHelperTextId : undefined}
+        validationState={hasSelectHelperText ? 'invalid' : undefined}
+        errorMessage={undefined}
       />
-    );
+    ) : ticker ? (
+      <TokenAdornment ticker={ticker} />
+    ) : null;
 
     const hasLabel = !!label || balance !== undefined;
 
@@ -113,10 +103,10 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
         {hasLabel && (
           <TokenInputLabel
-            ticker={tickerValue}
+            ticker={selectValue}
             balance={humanBalance || balance}
             balanceLabel={balanceLabel}
-            isDisabled={isDisabled || !tickerValue}
+            isDisabled={isDisabled || !selectValue}
             onClickBalance={handleClickBalance}
             {...labelProps}
           >
@@ -134,8 +124,17 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
               <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
             )
           }
+          errorMessage={errorMessage}
+          description={description}
           {...mergeProps(props, fieldProps)}
         />
+        {hasSelectHelperText && (
+          <HelperText
+            id={selectHelperTextId}
+            errorMessage={selectProps?.errorMessage}
+            description={selectProps?.description}
+          />
+        )}
       </Flex>
     );
   }
@@ -144,4 +143,4 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 TokenInput.displayName = 'TokenInput';
 
 export { TokenInput };
-export type { TokenInputProps, TokenTicker };
+export type { TokenInputProps };

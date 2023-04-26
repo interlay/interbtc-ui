@@ -70,14 +70,20 @@ const theme = {
     xl: 'var(--rounded-xl)',
     full: 'var(--rounded-full)'
   },
+  // TODO: clean this in each theme
   border: {
-    default: '1px solid var(--colors-border)'
+    default: '1px solid var(--colors-border)',
+    hover: '1px solid var(--colors-input-hover-border)',
+    focus: '1px solid var(--colors-input-focus-border)',
+    disabled: '1px solid var(--colors-input-disabled-border)',
+    error: '1px solid var(--colors-error-dark)'
   },
   outline: {
     default: '2px solid var(--colors-border)'
   },
   boxShadow: {
-    default: 'var(--box-shadow-default)'
+    default: 'var(--box-shadow-default)',
+    focus: '0 0 0 1px var(--colors-input-focus-border)'
   },
   // Components
   input: {
@@ -108,13 +114,16 @@ const theme = {
       }
     },
     small: {
-      text: 'var(--text-s)'
+      text: 'var(--text-s)',
+      maxHeight: 'var(--spacing-8)'
     },
     medium: {
-      text: 'var(--text-base)'
+      text: 'var(--text-base)',
+      maxHeight: 'var(--spacing-10)'
     },
     large: {
-      text: 'var(--text-4xl)'
+      text: 'var(--text-4xl)',
+      maxHeight: 'var(--spacing-16)'
     },
     overflow: {
       large: {
@@ -145,8 +154,10 @@ const theme = {
     }
   },
   card: {
-    bg: 'var(--colors-card-bg)',
-    secondaryBg: 'var(--colors-card-secondary-bg)'
+    outlined: {
+      border: '1px solid transparent'
+    },
+    bg: { primary: 'var(--color-card-primary-bg)', secondary: 'var(--color-card-secondary-bg)' }
   },
   cta: {
     primary: {

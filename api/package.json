@@ -1,0 +1,19 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/pg": "^8.6.6",
+    "@vercel/node": "^2.10.2"
+  },
+  "dependencies": {
+    "@polkadot/util-crypto": "^11.1.3",
+    "pg": "^8.10.0"
+  }
+}

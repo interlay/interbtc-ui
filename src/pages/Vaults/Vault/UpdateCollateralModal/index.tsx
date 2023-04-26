@@ -21,6 +21,7 @@ import TokenField from '@/legacy-components/TokenField';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
+import { submitExtrinsic, submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -141,9 +142,9 @@ const UpdateCollateralModal = ({
         true
       ) as MonetaryAmount<CollateralCurrencyExt>;
       if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
-        await window.bridge.vaults.depositCollateral(collateralTokenAmount);
+        await submitExtrinsic(window.bridge.vaults.depositCollateral(collateralTokenAmount));
       } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
-        await window.bridge.vaults.withdrawCollateral(collateralTokenAmount);
+        await submitExtrinsicPromise(window.bridge.vaults.withdrawCollateral(collateralTokenAmount));
       } else {
         throw new Error('Something went wrong!');
       }

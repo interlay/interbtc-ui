@@ -19,7 +19,18 @@ const KINTSUGI_SUBSCAN_LINK = 'https://kintsugi.subscan.io';
 const INTERLAY_VAULT_DOCS_LINK = 'https://docs.interlay.io/#/vault/overview';
 const INTERLAY_DOS_AND_DONTS_DOCS_LINK = 'https://docs.interlay.io/#/vault/installation?id=dos-and-donts';
 
+const LINK_QUERY_PARAMETERS = {
+  BANXA: {
+    WALLET_ADDRESS: 'walletAddress',
+    FIAT_TYPE: 'fiatType',
+    COIN_TYPE: 'coinType'
+  }
+};
+
+const BANXA_LINK = 'http://talisman.banxa.com/';
+
 export {
+  BANXA_LINK,
   INTERLAY_COMPANY_LINK,
   INTERLAY_CROWDLOAN_LINK,
   INTERLAY_DISCORD_LINK,
@@ -37,5 +48,6 @@ export {
   KINTSUGI_GOVERNANCE_LINK,
   KINTSUGI_SUBSCAN_LINK,
   KINTSUGI_TERMS_AND_CONDITIONS_LINK,
-  KINTSUGI_USE_WRAPPED_CURRENCY_LINK
+  KINTSUGI_USE_WRAPPED_CURRENCY_LINK,
+  LINK_QUERY_PARAMETERS
 };

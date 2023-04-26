@@ -8,6 +8,7 @@ import { formatPercentage, formatUSD } from '@/common/utils/utils';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getFarmingApr } from '@/utils/helpers/pools';
+import { DateRangeVolume, useGetDexVolumes } from '@/utils/hooks/api/use-get-dex-volume';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Cell, Table, TableProps } from '../DataGrid';
@@ -25,7 +26,7 @@ type PoolsTableRow = {
   [PoolsTableColumns.POOL_NAME]: ReactNode;
   [PoolsTableColumns.APR]: ReactNode;
   [PoolsTableColumns.TOTAL_LIQUIDITY]: ReactNode;
-  // [PoolsTableColumns.SEVEN_DAY_VOLUME]: ReactNode;
+  [PoolsTableColumns.SEVEN_DAY_VOLUME]: ReactNode;
   [PoolsTableColumns.ACCOUNT_LIQUIDITY]?: ReactNode;
 };
 
@@ -40,6 +41,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   const { t } = useTranslation();
   const prices = useGetPrices();
   const titleId = useId();
+  const { getDexTotalVolumeUSD } = useGetDexVolumes(DateRangeVolume.D7);
 
   const isAccountPools = variant === 'account-pools';
 
@@ -47,12 +49,11 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
     { name: t('amm.pools.pool_name'), uid: PoolsTableColumns.POOL_NAME },
     { name: t('apr'), uid: PoolsTableColumns.APR },
     { name: t('total_liquidity'), uid: PoolsTableColumns.TOTAL_LIQUIDITY }
-    // { name: t('7_day_volume'), uid: PoolsTableColumns.SEVEN_DAY_VOLUME }
   ];
 
   const borrowAssetsColumns = isAccountPools
     ? [...commonColumns, { name: t('my_liquidity'), uid: PoolsTableColumns.ACCOUNT_LIQUIDITY }]
-    : commonColumns;
+    : [...commonColumns, { name: t('7_day_volume'), uid: PoolsTableColumns.SEVEN_DAY_VOLUME }];
 
   const rows: PoolsTableRow[] = useMemo(
     () =>
@@ -68,15 +69,13 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
         const apr = <Cell label={formatPercentage(aprAmount.toNumber())} />;
 
         // TODO: revert alignItems prop when `sevenDayVolume` is adressed
-        const totalLiquidity = (
-          <Cell
-            label={formatUSD(totalLiquidityUSD, { compact: true })}
-            alignItems={isAccountPools ? 'flex-start' : 'flex-end'}
-          />
-        );
+        const totalLiquidity = <Cell label={formatUSD(totalLiquidityUSD, { compact: true })} alignItems='flex-start' />;
 
-        // TODO: uncomment and add real value when squid is ready
-        // const sevenDayVolume = <MonetaryCell label='-' alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />;
+        const total7DayVolumeUSD = getDexTotalVolumeUSD(pooledCurrencies.map((pooled) => pooled.currency.ticker));
+        const total7DayVolumeLabel = formatUSD(total7DayVolumeUSD, { compact: true });
+        const sevenDayVolume = isAccountPools ? null : (
+          <Cell label={total7DayVolumeLabel} alignItems={isAccountPools ? 'flex-start' : 'flex-end'} />
+        );
 
         const accountLiquidityUSD = accountLPTokenAmount
           ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
@@ -92,11 +91,11 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
           poolName,
           apr,
           totalLiquidity,
-          // sevenDayVolume,
+          sevenDayVolume,
           accountLiquidity
         };
       }),
-    [isAccountPools, pools, prices, variant]
+    [getDexTotalVolumeUSD, isAccountPools, pools, prices, variant]
   );
 
   return (
