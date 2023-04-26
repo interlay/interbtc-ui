@@ -130,18 +130,6 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={balance?.toString() || 0}
             humanBalance={balance?.toHuman() || 0}
             valueUSD={valueUSD}
-            tokens={[
-              {
-                balance: 0,
-                balanceUSD: '0',
-                ticker: 'KSM'
-              },
-              {
-                balance: 0,
-                balanceUSD: '0',
-                ticker: 'KINT'
-              }
-            ]}
             selectProps={form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false)}
             {...form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD)}
           />

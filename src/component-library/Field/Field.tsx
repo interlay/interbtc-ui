@@ -2,8 +2,8 @@ import { forwardRef, HTMLAttributes, ReactNode } from 'react';
 
 import { Flex } from '../Flex';
 import { HelperText, HelperTextProps } from '../HelperText';
-import { hasErrorMessage } from '../HelperText/HelperText';
 import { Label, LabelProps } from '../Label';
+import { hasError } from '../utils/input';
 import { Wrapper } from './Field.style';
 
 type Props = {
@@ -22,8 +22,8 @@ const Field = forwardRef<HTMLDivElement, FieldProps>(
     { label, labelProps, errorMessage, errorMessageProps, description, descriptionProps, children, ...props },
     ref
   ): JSX.Element => {
-    const hasError = hasErrorMessage(errorMessage);
-    const hasHelpText = !!description || hasError;
+    const error = hasError({ errorMessage });
+    const hasHelpText = !!description || error;
 
     return (
       <Flex ref={ref} direction='column' {...props}>

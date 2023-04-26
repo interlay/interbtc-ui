@@ -114,13 +114,16 @@ const theme = {
       }
     },
     small: {
-      text: 'var(--text-s)'
+      text: 'var(--text-s)',
+      maxHeight: 'var(--spacing-8)'
     },
     medium: {
-      text: 'var(--text-base)'
+      text: 'var(--text-base)',
+      maxHeight: 'var(--spacing-10)'
     },
     large: {
-      text: 'var(--text-4xl)'
+      text: 'var(--text-4xl)',
+      maxHeight: 'var(--spacing-16)'
     },
     overflow: {
       large: {
