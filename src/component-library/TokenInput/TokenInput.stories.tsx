@@ -86,7 +86,6 @@ SingleItemInSelectItems.args = {
   selectProps: {
     items: [{ balance: 200, value: 'KSM', balanceUSD: '$200' }]
   }
-  // errorMessage: 'Failed'
 };
 
 export { MultiToken, SingleItemInSelectItems, WithBalance, WithCurrencySelect, WithoutBalance };
