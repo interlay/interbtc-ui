@@ -97,7 +97,8 @@ const useSignMessage = (): UseSignMessageResult => {
     refetchOnMount: false,
     refetchOnReconnect: false,
     queryFn: () => selectedAccount && getSignature(selectedAccount),
-    enabled: !!selectedAccount && !!SIGNER_API_URL,
+    // Does not allow to fetch by default
+    enabled: false,
     onSuccess: (hasSignature) => {
       if (hasSignature) return;
       dispatch(showSignTermsModalAction(true));
@@ -105,9 +106,9 @@ const useSignMessage = (): UseSignMessageResult => {
   });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
-    onError: (error: Error, variables) => {
+    onError: (_, variables) => {
       setSignature(variables.address, false);
-      toast.error(error.message);
+      toast.error('Something went wrong!');
     },
     onSuccess: (_, variables) => {
       setSignature(variables.address, true);
@@ -126,7 +127,11 @@ const useSignMessage = (): UseSignMessageResult => {
   };
 
   const handleOpenSignTermModal = (account: KeyringPair) => {
+    if (!SIGNER_API_URL) return;
+
+    // Cancel possible ongoing unwanted account
     queryClient.cancelQueries({ queryKey });
+    // Fetch selected account
     refetchSignatureData({ queryKey: ['hasSignature', account.address] });
   };
 

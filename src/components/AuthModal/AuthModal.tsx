@@ -1,32 +1,28 @@
 import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
-import { useState } from 'react';
-import { Trans } from 'react-i18next';
+import { useEffect, useMemo, useState } from 'react';
+import { TFunction, Trans, useTranslation } from 'react-i18next';
 
-import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, P, TextLink, theme } from '@/component-library';
+import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, P, TextLink } from '@/component-library';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { WalletData } from '@/utils/constants/wallets';
 import { findWallet } from '@/utils/helpers/wallet';
 
 import { AccountStep } from './AccountStep';
+import { AuthModalSteps } from './types';
 import { WalletStep } from './WalletStep';
 
-const getTitle = (step: AuthModalSteps, extensions: InjectedExtension[]) => {
+const getTitle = (t: TFunction, step: AuthModalSteps, extensions: InjectedExtension[]) => {
   if (step === AuthModalSteps.ACCOUNT) {
-    return 'Please select an account';
+    return t('account_modal.please_select_an_account');
   }
 
   if (!extensions.length) {
-    return 'Please install supported wallet';
+    return t('account_modal.please_install_supported_wallet');
   }
 
-  return 'Please select a wallet';
+  return t('account_modal.please_select_a_wallet');
 };
-
-enum AuthModalSteps {
-  ACCOUNT,
-  WALLET
-}
 
 type Props = {
   onAccountSelect?: (account: InjectedAccountWithMeta) => void;
@@ -37,40 +33,46 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type AuthModalProps = Props & InheritAttrs;
 
-const AuthModal = ({ onClose, onAccountSelect, onDisconnect, ...props }: AuthModalProps): JSX.Element => {
+const AuthModal = ({ onAccountSelect, onDisconnect, isOpen, ...props }: AuthModalProps): JSX.Element => {
+  const { t } = useTranslation();
+
   const { extensions, selectedAccount, accounts } = useSubstrateSecureState();
 
-  const [step, setStep] = useState<AuthModalSteps>(selectedAccount ? AuthModalSteps.ACCOUNT : AuthModalSteps.WALLET);
-  const [wallet, setWallet] = useState<WalletData | undefined>(
-    selectedAccount?.meta.name ? findWallet(selectedAccount?.meta.source as any) : undefined
-  );
+  const [step, setStep] = useState<AuthModalSteps>(AuthModalSteps.ACCOUNT);
+  const [wallet, setWallet] = useState<WalletData | undefined>();
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setStep(selectedAccount ? AuthModalSteps.ACCOUNT : AuthModalSteps.WALLET);
+    setWallet(undefined);
+  }, [isOpen, selectedAccount]);
 
   const handleWalletSelect = (wallet: WalletData) => {
     setStep(AuthModalSteps.ACCOUNT);
     setWallet(wallet);
   };
 
-  const handleChangeWallet = () => setStep(AuthModalSteps.WALLET);
-
-  const handleAccountSelection = (account: InjectedAccountWithMeta) => {
-    onAccountSelect?.(account);
-    onClose();
+  const handleChangeWallet = () => {
+    setStep(AuthModalSteps.WALLET);
+    setWallet(undefined);
   };
 
-  const handleDisconnect = () => {
-    onDisconnect?.();
+  const handleAccountSelection = (account: InjectedAccountWithMeta) => onAccountSelect?.(account);
 
-    // Reset state only when modal animation finishes
-    setTimeout(() => {
-      setWallet(undefined);
-      setStep(AuthModalSteps.WALLET);
-    }, theme.modal.transition.duration.existing);
-  };
+  const handleDisconnect = () => onDisconnect?.();
 
-  const title = getTitle(step, extensions);
+  const currentWallet = useMemo(() => wallet || (selectedAccount && findWallet(selectedAccount?.meta.source)), [
+    selectedAccount,
+    wallet
+  ]);
+
+  const title = getTitle(t, step, extensions);
+
+  const hasDisconnect = step === AuthModalSteps.ACCOUNT && selectedAccount;
 
   return (
-    <Modal align='top' onClose={onClose} {...props}>
+    <Modal align='top' isOpen={isOpen} {...props}>
       <ModalHeader align='start'>{title}</ModalHeader>
       <ModalBody>
         <P size='s'>
@@ -88,12 +90,12 @@ const AuthModal = ({ onClose, onAccountSelect, onDisconnect, ...props }: AuthMod
           step={step}
           onSelectionChange={handleWalletSelect}
           extensions={extensions}
-          selectedWallet={wallet}
+          selectedWallet={currentWallet}
         />
-        {wallet && (
+        {currentWallet && (
           <AccountStep
             step={step}
-            wallet={wallet}
+            wallet={currentWallet}
             accounts={accounts}
             selectedAccount={selectedAccount}
             onSelectionChange={handleAccountSelection}
@@ -101,10 +103,10 @@ const AuthModal = ({ onClose, onAccountSelect, onDisconnect, ...props }: AuthMod
           />
         )}
       </ModalBody>
-      {step === AuthModalSteps.ACCOUNT && (
+      {hasDisconnect && (
         <ModalFooter>
           <CTA size='large' variant='outlined' onPress={handleDisconnect}>
-            Disconnect
+            {t('account_modal.disconnect')}
           </CTA>
         </ModalFooter>
       )}

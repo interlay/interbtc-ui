@@ -1,5 +1,6 @@
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import { mergeProps } from '@react-aria/utils';
+import { useTranslation } from 'react-i18next';
 import { useCopyToClipboard } from 'react-use';
 
 import { DocumentDuplicate } from '@/assets/icons';
@@ -11,7 +12,7 @@ import { StepComponentProps, withStep } from '@/utils/hocs/step';
 import { useCopyTooltip } from '@/utils/hooks/use-copy-tooltip';
 
 import { StyledAccountItem, StyledCopyItem, StyledP } from './AuthModal.style';
-import { AuthModalSteps } from './type';
+import { AuthModalSteps } from './types';
 
 type CopyAddressProps = { account: InjectedAccountWithMeta };
 
@@ -49,6 +50,8 @@ const AccountComponent = ({
   onChangeWallet,
   onSelectionChange
 }: AccountStepProps): JSX.Element | null => {
+  const { t } = useTranslation();
+
   const walletAccounts = accounts.filter(({ meta: { source } }) => source === wallet.extensionName);
 
   return (
@@ -58,11 +61,11 @@ const AccountComponent = ({
         <Flex gap='spacing2' alignItems='center'>
           <WalletIcon name={wallet.extensionName} />
           <P>
-            Connected with <Span color='secondary'>{wallet.title}</Span>
+            {t('account_modal.connected_with')} <Span color='secondary'>{wallet.title}</Span>
           </P>
         </Flex>
         <CTA size='small' variant='outlined' onPress={onChangeWallet}>
-          Change Wallet
+          {t('account_modal.change_wallet')}
         </CTA>
       </Flex>
       <Divider color='default' />
@@ -80,7 +83,9 @@ const AccountComponent = ({
                 onPress={() => onSelectionChange(account)}
                 isSelected={isSelected}
               >
-                <StyledP $isSelected={isSelected}>{account.meta.name}</StyledP>
+                <StyledP weight='bold' $isSelected={isSelected}>
+                  {account.meta.name}
+                </StyledP>
                 <StyledP $isSelected={isSelected}>({shortAddress(account.address)})</StyledP>
               </StyledAccountItem>
               <CopyAddress account={account} />

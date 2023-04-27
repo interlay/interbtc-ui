@@ -68,27 +68,24 @@ const Topbar = (): JSX.Element => {
     setIsRequestPending(false);
   };
 
-  const handleAccountModalOpen = () => {
-    dispatch(showAccountModalAction(true));
-  };
+  const handleAccountModalOpen = () => dispatch(showAccountModalAction(true));
 
-  const handleAccountModalClose = () => {
-    dispatch(showAccountModalAction(false));
-  };
+  const handleAccountModalClose = () => dispatch(showAccountModalAction(false));
 
   const handleAccountSelect = (account: InjectedAccountWithMeta) => {
     const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
     const keyringAccount = keyring.addFromAddress(account.address, account.meta);
     setSelectedAccount(keyringAccount);
     selectProps.onSelectionChange(keyringAccount as KeyringPair);
+    handleAccountModalClose();
   };
-
-  const handleCloseSignTermsModal = () => dispatch(showSignTermsModalAction(false));
 
   const handleDisconnect = () => {
     removeSelectedAccount();
     handleAccountModalClose();
   };
+
+  const handleCloseSignTermsModal = () => dispatch(showSignTermsModalAction(false));
 
   let accountLabel;
   if (!extensions.length) {

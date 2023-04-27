@@ -6,7 +6,7 @@ import { WalletData, WALLETS } from '@/utils/constants/wallets';
 import { StepComponentProps, withStep } from '@/utils/hocs/step';
 
 import { StyledArrowRight, StyledWalletItem } from './AuthModal.style';
-import { AuthModalSteps } from './type';
+import { AuthModalSteps } from './types';
 
 type WalletStepProps = {
   onSelectionChange?: (wallet: WalletData) => void;

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import * as hooks from 'react-use';
 
 import * as substrate from '@/lib/substrate';
@@ -125,5 +126,68 @@ describe('AuthModal', () => {
 
     expect(handleCopy).toHaveBeenCalledTimes(1);
     expect(handleCopy).toHaveBeenCalledWith(DEFAULT_SELECTED_ACCOUNT_1.address);
+  });
+
+  it('should mantain connected wallet as pre-select on each modal open', async () => {
+    jest.spyOn(substrate, 'useSubstrateSecureState').mockReturnValue({
+      extensions: DEFAULT_EXTENSIONS,
+      selectedAccount: DEFAULT_SELECTED_ACCOUNT_1,
+      accounts: DEFAULT_ACCOUNTS
+    } as any);
+
+    const Component = () => {
+      const [isOpen, setOpen] = useState(true);
+
+      return (
+        <>
+          <button onClick={() => setOpen(true)}>Open</button>
+          <AuthModal isOpen={isOpen} onClose={() => setOpen(false)} />
+        </>
+      );
+    };
+
+    await render(<Component />);
+
+    expect(screen.getByRole('heading', { name: /please select an account/i })).toBeInTheDocument();
+    expect(screen.getAllByText(new RegExp(`${SUBWALLET_WALLET.title}`, 'i'))).toHaveLength(2);
+
+    userEvent.click(screen.getByRole('button', { name: /change wallet/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /please select a wallet/i })).toBeInTheDocument();
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /dismiss/i }));
+
+    userEvent.click(screen.getByRole('button', { name: /open/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /please select an account/i })).toBeInTheDocument();
+      expect(screen.getAllByText(new RegExp(`${SUBWALLET_WALLET.title}`, 'i'))).toHaveLength(2);
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /change wallet/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /please select a wallet/i })).toBeInTheDocument();
+    });
+
+    userEvent.click(
+      screen.getByRole('button', { name: new RegExp(`select ${POLKADOTJS_WALLET.title}`, 'i'), exact: false })
+    );
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /please select an account/i })).toBeInTheDocument();
+      expect(screen.getByText(new RegExp(`${POLKADOTJS_WALLET.title}`, 'i'))).toBeInTheDocument();
+    });
+
+    userEvent.click(screen.getByRole('button', { name: /dismiss/i }));
+
+    userEvent.click(screen.getByRole('button', { name: /open/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /please select an account/i })).toBeInTheDocument();
+      expect(screen.getAllByText(new RegExp(`${SUBWALLET_WALLET.title}`, 'i'))).toHaveLength(2);
+    });
   });
 });
