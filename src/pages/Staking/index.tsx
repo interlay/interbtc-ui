@@ -197,7 +197,6 @@ const Staking = (): JSX.Element => {
   // Estimated governance token Rewards & APY
   const monetaryLockingAmount = newMonetaryAmount(lockingAmount, GOVERNANCE_TOKEN, true);
   const {
-    isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
     error: estimatedRewardAmountAndAPYError
@@ -713,7 +712,6 @@ const Staking = (): JSX.Element => {
     claimableRewardAmountLoading ||
     projectedRewardAmountAndAPYIdle ||
     projectedRewardAmountAndAPYLoading ||
-    estimatedRewardAmountAndAPYIdle ||
     estimatedRewardAmountAndAPYLoading ||
     stakedAmountAndEndBlockIdle ||
     stakedAmountAndEndBlockLoading;
