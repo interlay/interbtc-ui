@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AccountSelect, AuthCTA } from '@/components';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import {
   CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
   CROSS_CHAIN_TRANSFER_FROM_FIELD,
@@ -158,6 +159,10 @@ const CrossChainTransferForm = (): JSX.Element => {
     getTokensForNewChain();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, destinationChains]);
+
+  if (!originatingChains || !destinationChains || !transferableTokens) {
+    return <PrimaryColorEllipsisLoader />;
+  }
 
   return (
     <form onSubmit={form.handleSubmit}>
