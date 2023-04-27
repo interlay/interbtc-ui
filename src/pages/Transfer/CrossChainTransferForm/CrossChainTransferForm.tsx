@@ -5,9 +5,8 @@ import { ChangeEventHandler, Key, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
+import { Dd, DlGroup, Dt, Flex, LoadingSpinner, TokenInput } from '@/component-library';
 import { AccountSelect, AuthCTA } from '@/components';
-import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import {
   CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
   CROSS_CHAIN_TRANSFER_FROM_FIELD,
@@ -161,7 +160,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   }, [accountId, destinationChains]);
 
   if (!originatingChains || !destinationChains || !transferableTokens) {
-    return <PrimaryColorEllipsisLoader />;
+    return (
+      <Flex justifyContent='center'>
+        <LoadingSpinner variant='indeterminate' />
+      </Flex>
+    );
   }
 
   return (
