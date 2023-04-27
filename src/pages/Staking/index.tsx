@@ -582,7 +582,7 @@ const Staking = (): JSX.Element => {
 
   const renderNewVoteGovernanceTokenGainedLabel = () => {
     const newTotalStakeAmount = getNewTotalStake();
-    if (voteGovernanceTokenBalance === undefined || newTotalStakeAmount === undefined) {
+    if (voteGovernanceTokenBalance === undefined || newTotalStakeAmount === undefined || !isValid) {
       return '-';
     }
 
