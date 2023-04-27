@@ -124,7 +124,7 @@ const Staking = (): JSX.Element => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isValid },
     trigger,
     setValue
   } = useForm<StakingFormData>({
@@ -200,8 +200,8 @@ const Staking = (): JSX.Element => {
     isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
-    error: estimatedRewardAmountAndAPYError,
-    refetch: estimatedRewardAmountAndAPYRefetch
+    error: estimatedRewardAmountAndAPYError
+    // refetch: estimatedRewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
@@ -219,12 +219,9 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(estimatedRewardAmountAndAPYError);
 
-  // MEMO: This is being set outside of a useEffect because of
-  // an race condition. This is a underlying issue with the
-  // component and can't be easily fixed.
-  if (isValid || !isDirty) {
-    estimatedRewardAmountAndAPYRefetch();
-  }
+  React.useEffect(() => {
+    console.log('estimatedRewardAmountAndAPY', estimatedRewardAmountAndAPY);
+  }, [estimatedRewardAmountAndAPY]);
 
   const {
     isIdle: stakedAmountAndEndBlockIdle,
@@ -633,15 +630,17 @@ const Staking = (): JSX.Element => {
 
   const renderEstimatedAPYLabel = () => {
     if (
-      estimatedRewardAmountAndAPYIdle ||
       estimatedRewardAmountAndAPYLoading ||
+      estimatedRewardAmountAndAPYLoading ||
+      !projectedRewardAmountAndAPY ||
       errors[LOCK_TIME] ||
       errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
+
     if (estimatedRewardAmountAndAPY === undefined) {
-      throw new Error('Something went wrong!');
+      return formatPercentage(projectedRewardAmountAndAPY.apy.toNumber());
     }
 
     return formatPercentage(estimatedRewardAmountAndAPY.apy.toNumber());
@@ -649,15 +648,15 @@ const Staking = (): JSX.Element => {
 
   const renderEstimatedRewardAmountLabel = () => {
     if (
-      estimatedRewardAmountAndAPYIdle ||
       estimatedRewardAmountAndAPYLoading ||
+      !projectedRewardAmountAndAPY ||
       errors[LOCK_TIME] ||
       errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
     if (estimatedRewardAmountAndAPY === undefined) {
-      throw new Error('Something went wrong!');
+      return `${displayMonetaryAmount(projectedRewardAmountAndAPY.amount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
     }
 
     return `${displayMonetaryAmount(estimatedRewardAmountAndAPY.amount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
