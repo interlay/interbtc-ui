@@ -324,7 +324,6 @@ const Staking = (): JSX.Element => {
     if (!currentBlockNumber) return;
 
     const lockTimeValue = Number(lockTime);
-
     const extensionTime =
       (stakedAmountAndEndBlock?.endBlock || currentBlockNumber) + convertWeeksToBlockNumbers(lockTimeValue);
 
