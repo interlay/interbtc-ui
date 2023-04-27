@@ -218,10 +218,6 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(estimatedRewardAmountAndAPYError);
 
-  React.useEffect(() => {
-    console.log('estimatedRewardAmountAndAPY', estimatedRewardAmountAndAPY);
-  }, [estimatedRewardAmountAndAPY]);
-
   const {
     isIdle: stakedAmountAndEndBlockIdle,
     isLoading: stakedAmountAndEndBlockLoading,
@@ -321,7 +317,8 @@ const Staking = (): JSX.Element => {
     if (!stakedAmountAndEndBlock) return;
 
     const lockTimeValue = Number(lockTime);
-    const extensionTime = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(lockTimeValue);
+    const extensionTime =
+      stakedAmountAndEndBlock.endBlock || currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue);
 
     setBlockLockTimeExtension(extensionTime);
   }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
