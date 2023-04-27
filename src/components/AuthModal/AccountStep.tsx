@@ -13,7 +13,9 @@ import { useCopyTooltip } from '@/utils/hooks/use-copy-tooltip';
 import { StyledAccountItem, StyledCopyItem, StyledP } from './AuthModal.style';
 import { AuthModalSteps } from './type';
 
-const CopyAddress = ({ account }: { account: InjectedAccountWithMeta }) => {
+type CopyAddressProps = { account: InjectedAccountWithMeta };
+
+const CopyAddress = ({ account }: CopyAddressProps) => {
   const [, copy] = useCopyToClipboard();
   const { buttonProps, tooltipProps } = useCopyTooltip();
 
@@ -23,7 +25,7 @@ const CopyAddress = ({ account }: { account: InjectedAccountWithMeta }) => {
     <Tooltip {...tooltipProps}>
       <StyledCopyItem
         {...mergeProps(buttonProps, { onPress: handleCopy })}
-        aria-label={`copy ${shortAddress(account.address)} to clipboard`}
+        aria-label={`copy ${`${account.meta.name} address` || shortAddress(account.address)} to clipboard`}
         elementType='div'
       >
         <DocumentDuplicate />
@@ -34,7 +36,7 @@ const CopyAddress = ({ account }: { account: InjectedAccountWithMeta }) => {
 
 type AccountStepProps = {
   accounts: InjectedAccountWithMeta[];
-  wallet?: WalletData;
+  wallet: WalletData;
   selectedAccount?: KeyringPair;
   onChangeWallet?: () => void;
   onSelectionChange: (account: InjectedAccountWithMeta) => void;
@@ -47,10 +49,6 @@ const AccountComponent = ({
   onChangeWallet,
   onSelectionChange
 }: AccountStepProps): JSX.Element | null => {
-  if (!wallet) {
-    return null;
-  }
-
   const walletAccounts = accounts.filter(({ meta: { source } }) => source === wallet.extensionName);
 
   return (

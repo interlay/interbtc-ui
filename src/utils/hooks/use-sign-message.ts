@@ -2,6 +2,7 @@ import { PressEvent } from '@react-types/shared';
 import { useCallback } from 'react';
 import { useMutation, useQuery, useQueryClient, UseQueryResult } from 'react-query';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 import { showSignTermsModalAction } from '@/common/actions/general.actions';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
@@ -93,6 +94,8 @@ const useSignMessage = (): UseSignMessageResult => {
   }: UseQueryResult<boolean, Error> = useQuery({
     queryKey,
     refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
     queryFn: () => selectedAccount && getSignature(selectedAccount),
     enabled: !!selectedAccount && !!SIGNER_API_URL,
     onSuccess: (hasSignature) => {
@@ -102,11 +105,15 @@ const useSignMessage = (): UseSignMessageResult => {
   });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
-    onError: (_, variables) => setSignature(variables.address, false),
+    onError: (error: Error, variables) => {
+      setSignature(variables.address, false);
+      toast.error(error.message);
+    },
     onSuccess: (_, variables) => {
       setSignature(variables.address, true);
       dispatch(showSignTermsModalAction(false));
       refetchSignatureData();
+      toast.success('Your signature was submitted successfully.');
     }
   });
 

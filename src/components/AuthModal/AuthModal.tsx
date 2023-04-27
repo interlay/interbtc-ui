@@ -2,7 +2,7 @@ import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-
 import { useState } from 'react';
 import { Trans } from 'react-i18next';
 
-import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, P, TextLink } from '@/component-library';
+import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, P, TextLink, theme } from '@/component-library';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { WalletData } from '@/utils/constants/wallets';
@@ -45,9 +45,6 @@ const AuthModal = ({ onClose, onAccountSelect, onDisconnect, ...props }: AuthMod
     selectedAccount?.meta.name ? findWallet(selectedAccount?.meta.source as any) : undefined
   );
 
-  // TODO: finish disconnect correctly
-  console.log(wallet);
-
   const handleWalletSelect = (wallet: WalletData) => {
     setStep(AuthModalSteps.ACCOUNT);
     setWallet(wallet);
@@ -62,8 +59,12 @@ const AuthModal = ({ onClose, onAccountSelect, onDisconnect, ...props }: AuthMod
 
   const handleDisconnect = () => {
     onDisconnect?.();
-    // setWallet(undefined);
-    // setStep(AuthModalSteps.WALLET);
+
+    // Reset state only when modal animation finishes
+    setTimeout(() => {
+      setWallet(undefined);
+      setStep(AuthModalSteps.WALLET);
+    }, theme.modal.transition.duration.existing);
   };
 
   const title = getTitle(step, extensions);
@@ -89,14 +90,16 @@ const AuthModal = ({ onClose, onAccountSelect, onDisconnect, ...props }: AuthMod
           extensions={extensions}
           selectedWallet={wallet}
         />
-        <AccountStep
-          step={step}
-          wallet={wallet}
-          accounts={accounts}
-          selectedAccount={selectedAccount}
-          onSelectionChange={handleAccountSelection}
-          onChangeWallet={handleChangeWallet}
-        />
+        {wallet && (
+          <AccountStep
+            step={step}
+            wallet={wallet}
+            accounts={accounts}
+            selectedAccount={selectedAccount}
+            onSelectionChange={handleAccountSelection}
+            onChangeWallet={handleChangeWallet}
+          />
+        )}
       </ModalBody>
       {step === AuthModalSteps.ACCOUNT && (
         <ModalFooter>

@@ -7,7 +7,7 @@ const DEFAULT_ACCOUNT_1 = {
   address: 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc',
   meta: {
     genesisHash: '',
-    name: 'Wallet SubWallet',
+    name: 'Wallet 1',
     source: WalletName.SubWallet
   },
   type: 'sr25519'
@@ -17,7 +17,7 @@ const DEFAULT_ACCOUNT_2 = {
   address: 'a3ekLbX6dpbnF4VxBJZiF5m7GGaE6Go8Dp8hKQVj75WPZWsnP',
   meta: {
     genesisHash: '',
-    name: 'Wallet PolkadotJS',
+    name: 'Wallet 2',
     source: WalletName.PolkadotJS
   },
   type: 'sr25519'
@@ -87,7 +87,7 @@ const DEFAULT_POLKADOTJS_EXTENSION = {
 
 const DEFAULT_EXTENSIONS = [DEFAULT_SUBWALLET_EXTENSION, DEFAULT_POLKADOTJS_EXTENSION];
 
-const DEFAULT_SELECTED_ACCOUNT = {
+const DEFAULT_SELECTED_ACCOUNT_1 = {
   address: DEFAULT_ACCOUNT_1.address,
   addressRaw: {
     '0': 10,
@@ -162,6 +162,81 @@ const DEFAULT_SELECTED_ACCOUNT = {
   type: 'sr25519'
 };
 
+const DEFAULT_SELECTED_ACCOUNT_2 = {
+  address: DEFAULT_ACCOUNT_2.address,
+  addressRaw: {
+    '0': 10,
+    '1': 224,
+    '2': 174,
+    '3': 73,
+    '4': 84,
+    '5': 146,
+    '6': 26,
+    '7': 236,
+    '8': 51,
+    '9': 160,
+    '10': 140,
+    '11': 39,
+    '12': 27,
+    '13': 158,
+    '14': 193,
+    '15': 207,
+    '16': 84,
+    '17': 24,
+    '18': 177,
+    '19': 81,
+    '20': 46,
+    '21': 82,
+    '22': 8,
+    '23': 147,
+    '24': 112,
+    '25': 24,
+    '26': 215,
+    '27': 47,
+    '28': 133,
+    '29': 237,
+    '30': 143,
+    '31': 13
+  },
+  isLocked: true,
+  meta: DEFAULT_ACCOUNT_2.meta,
+  publicKey: {
+    '0': 10,
+    '1': 224,
+    '2': 174,
+    '3': 73,
+    '4': 84,
+    '5': 146,
+    '6': 26,
+    '7': 236,
+    '8': 51,
+    '9': 160,
+    '10': 140,
+    '11': 39,
+    '12': 27,
+    '13': 158,
+    '14': 193,
+    '15': 207,
+    '16': 84,
+    '17': 24,
+    '18': 177,
+    '19': 81,
+    '20': 46,
+    '21': 82,
+    '22': 8,
+    '23': 147,
+    '24': 112,
+    '25': 24,
+    '26': 215,
+    '27': 47,
+    '28': 133,
+    '29': 237,
+    '30': 143,
+    '31': 13
+  },
+  type: 'sr25519'
+};
+
 const DEFAULT_SUBSTRATE = {
   socket: undefined,
   jsonrpc: mockJsonRpc,
@@ -170,7 +245,7 @@ const DEFAULT_SUBSTRATE = {
   api: mockInterBtcApi,
   apiError: undefined,
   apiStatus: 'READY',
-  selectedAccount: DEFAULT_SELECTED_ACCOUNT,
+  selectedAccount: DEFAULT_SELECTED_ACCOUNT_1,
   accounts: DEFAULT_ACCOUNTS,
   extensions: DEFAULT_EXTENSIONS
 };
@@ -182,6 +257,8 @@ export {
   DEFAULT_EXTENSIONS,
   DEFAULT_KEYRING,
   DEFAULT_POLKADOTJS_EXTENSION,
+  DEFAULT_SELECTED_ACCOUNT_1,
+  DEFAULT_SELECTED_ACCOUNT_2,
   DEFAULT_SUBSTRATE,
   DEFAULT_SUBWALLET_EXTENSION
 };
