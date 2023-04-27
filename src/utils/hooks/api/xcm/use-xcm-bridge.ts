@@ -74,9 +74,16 @@ const useXCMBridge = (): UseXCMBridge => {
     };
   });
 
-  const getDestinationChains = useCallback((chain: ChainName): Chains => {
-    return XCMBridge.router.getDestinationChains({ from: chain });
-  }, []);
+  const getDestinationChains = useCallback(
+    (chain: ChainName): Chains => {
+      return XCMBridge.router
+        .getDestinationChains({ from: chain })
+        .filter((destinationChain) =>
+          originatingChains?.some((originatingChain) => originatingChain.id === destinationChain.id)
+        );
+    },
+    [originatingChains]
+  );
 
   const getAvailableTokens = useCallback(
     async (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string) => {
