@@ -199,8 +199,8 @@ const Staking = (): JSX.Element => {
   const {
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
-    error: estimatedRewardAmountAndAPYError
-    // refetch: estimatedRewardAmountAndAPYRefetch
+    error: estimatedRewardAmountAndAPYError,
+    refetch: estimatedRewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
@@ -310,6 +310,13 @@ const Staking = (): JSX.Element => {
       }
     }
   );
+
+  React.useEffect(() => {
+    if (!isValid) return;
+    if (!estimatedRewardAmountAndAPYRefetch) return;
+
+    estimatedRewardAmountAndAPYRefetch();
+  }, [isValid, estimatedRewardAmountAndAPYRefetch]);
 
   React.useEffect(() => {
     if (!lockTime) return;
