@@ -7,7 +7,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
@@ -119,6 +119,8 @@ const Staking = (): JSX.Element => {
   const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
   const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
 
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
@@ -151,8 +153,7 @@ const Staking = (): JSX.Element => {
     isIdle: voteGovernanceTokenBalanceIdle,
     isLoading: voteGovernanceTokenBalanceLoading,
     data: voteGovernanceTokenBalance,
-    error: voteGovernanceTokenBalanceError,
-    refetch: voteGovernanceTokenBalanceRefetch
+    error: voteGovernanceTokenBalanceError
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
     [GENERIC_FETCHER, 'escrow', 'votingBalance', selectedAccountAddress],
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
@@ -167,8 +168,7 @@ const Staking = (): JSX.Element => {
     isIdle: claimableRewardAmountIdle,
     isLoading: claimableRewardAmountLoading,
     data: claimableRewardAmount,
-    error: claimableRewardAmountError,
-    refetch: claimableRewardAmountRefetch
+    error: claimableRewardAmountError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
     [GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccountAddress],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
@@ -183,8 +183,7 @@ const Staking = (): JSX.Element => {
     isIdle: projectedRewardAmountAndAPYIdle,
     isLoading: projectedRewardAmountAndAPYLoading,
     data: projectedRewardAmountAndAPY,
-    error: rewardAmountAndAPYError,
-    refetch: rewardAmountAndAPYRefetch
+    error: rewardAmountAndAPYError
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccountAddress],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
@@ -222,8 +221,7 @@ const Staking = (): JSX.Element => {
     isIdle: stakedAmountAndEndBlockIdle,
     isLoading: stakedAmountAndEndBlockLoading,
     data: stakedAmountAndEndBlock,
-    error: stakedAmountAndEndBlockError,
-    refetch: stakedAmountAndEndBlockRefetch
+    error: stakedAmountAndEndBlockError
   } = useQuery<StakedAmountAndEndBlock, Error>(
     [GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccountAddress],
     genericFetcher<StakedAmountAndEndBlock>(),
@@ -258,10 +256,7 @@ const Staking = (): JSX.Element => {
     },
     {
       onSuccess: () => {
-        voteGovernanceTokenBalanceRefetch();
-        stakedAmountAndEndBlockRefetch();
-        claimableRewardAmountRefetch();
-        rewardAmountAndAPYRefetch();
+        queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
         reset({
           [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
@@ -299,10 +294,7 @@ const Staking = (): JSX.Element => {
     },
     {
       onSuccess: () => {
-        voteGovernanceTokenBalanceRefetch();
-        stakedAmountAndEndBlockRefetch();
-        claimableRewardAmountRefetch();
-        rewardAmountAndAPYRefetch();
+        queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
         reset({
           [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
@@ -312,11 +304,11 @@ const Staking = (): JSX.Element => {
   );
 
   React.useEffect(() => {
-    if (isValidating || !isValid) return;
+    if (isValidating || !isValid || !estimatedRewardAmountAndAPYRefetch) return;
 
     estimatedRewardAmountAndAPYRefetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isValid, isValidating, monetaryLockingAmount, blockLockTimeExtension]);
+  }, [isValid, isValidating, lockTime, lockingAmount, estimatedRewardAmountAndAPYRefetch]);
 
   React.useEffect(() => {
     if (!lockTime) return;
@@ -330,10 +322,12 @@ const Staking = (): JSX.Element => {
   }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
 
   React.useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
     reset({
       [LOCKING_AMOUNT]: '',
       [LOCK_TIME]: ''
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAccount, reset]);
 
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
