@@ -258,8 +258,8 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         queryClient.clear();
         reset({
-          [LOCKING_AMOUNT]: '0',
-          [LOCK_TIME]: '0'
+          [LOCKING_AMOUNT]: '',
+          [LOCK_TIME]: ''
         });
       }
     }
@@ -296,8 +296,8 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         queryClient.clear();
         reset({
-          [LOCKING_AMOUNT]: '0',
-          [LOCK_TIME]: '0'
+          [LOCKING_AMOUNT]: '',
+          [LOCK_TIME]: ''
         });
       }
     }
