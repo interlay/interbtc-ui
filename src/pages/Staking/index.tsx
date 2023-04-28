@@ -124,7 +124,7 @@ const Staking = (): JSX.Element => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isValidating },
     trigger,
     setValue
   } = useForm<StakingFormData>({
@@ -312,11 +312,11 @@ const Staking = (): JSX.Element => {
   );
 
   React.useEffect(() => {
-    if (!isValid) return;
-    if (!estimatedRewardAmountAndAPYRefetch) return;
+    if (isValidating || !isValid) return;
 
     estimatedRewardAmountAndAPYRefetch();
-  }, [isValid, monetaryLockingAmount, blockLockTimeExtension, estimatedRewardAmountAndAPYRefetch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid, isValidating, monetaryLockingAmount, blockLockTimeExtension]);
 
   React.useEffect(() => {
     if (!lockTime) return;
