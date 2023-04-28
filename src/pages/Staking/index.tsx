@@ -258,8 +258,8 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
         reset({
-          [LOCKING_AMOUNT]: '',
-          [LOCK_TIME]: ''
+          [LOCKING_AMOUNT]: '0.0',
+          [LOCK_TIME]: '0'
         });
       }
     }
@@ -296,8 +296,8 @@ const Staking = (): JSX.Element => {
       onSuccess: () => {
         queryClient.clear();
         reset({
-          [LOCKING_AMOUNT]: '',
-          [LOCK_TIME]: ''
+          [LOCKING_AMOUNT]: '0.0',
+          [LOCK_TIME]: '0'
         });
       }
     }
@@ -324,8 +324,8 @@ const Staking = (): JSX.Element => {
 
   React.useEffect(() => {
     reset({
-      [LOCKING_AMOUNT]: '',
-      [LOCK_TIME]: ''
+      [LOCKING_AMOUNT]: '0.0',
+      [LOCK_TIME]: '0'
     });
   }, [selectedAccount, reset]);
 
