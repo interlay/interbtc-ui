@@ -256,7 +256,7 @@ const Staking = (): JSX.Element => {
     },
     {
       onSuccess: () => {
-        queryClient.clear();
+        queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
         reset({
           [LOCKING_AMOUNT]: '',
           [LOCK_TIME]: ''
