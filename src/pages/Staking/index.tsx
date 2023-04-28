@@ -305,10 +305,11 @@ const Staking = (): JSX.Element => {
 
   React.useEffect(() => {
     if (isValidating || !isValid) return;
+    console.log('refetch rewards');
 
     estimatedRewardAmountAndAPYRefetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isValid, isValidating, monetaryLockingAmount, blockLockTimeExtension]);
+  }, [isValid, isValidating, lockTime, lockingAmount]);
 
   React.useEffect(() => {
     if (!lockTime) return;
