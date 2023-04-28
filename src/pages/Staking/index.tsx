@@ -316,7 +316,7 @@ const Staking = (): JSX.Element => {
     if (!estimatedRewardAmountAndAPYRefetch) return;
 
     estimatedRewardAmountAndAPYRefetch();
-  }, [isValid, estimatedRewardAmountAndAPYRefetch]);
+  }, [isValid, monetaryLockingAmount, blockLockTimeExtension, estimatedRewardAmountAndAPYRefetch]);
 
   React.useEffect(() => {
     if (!lockTime) return;
