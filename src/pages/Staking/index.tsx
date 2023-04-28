@@ -323,8 +323,8 @@ const Staking = (): JSX.Element => {
 
   React.useEffect(() => {
     reset({
-      [LOCKING_AMOUNT]: '0.0',
-      [LOCK_TIME]: '0'
+      [LOCKING_AMOUNT]: '',
+      [LOCK_TIME]: ''
     });
   }, [selectedAccount, reset]);
 
