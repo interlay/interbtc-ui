@@ -594,7 +594,7 @@ const Staking = (): JSX.Element => {
   };
 
   const getNewTotalStake = () => {
-    if (remainingBlockNumbersToUnstake === undefined || stakedAmount === undefined) {
+    if (remainingBlockNumbersToUnstake === undefined || stakedAmount === undefined || !isValid) {
       return undefined;
     }
 
