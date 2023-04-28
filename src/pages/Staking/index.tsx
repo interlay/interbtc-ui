@@ -124,7 +124,7 @@ const Staking = (): JSX.Element => {
     handleSubmit,
     watch,
     reset,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isValid, isValidating },
     trigger,
     setValue
   } = useForm<StakingFormData>({
@@ -197,7 +197,6 @@ const Staking = (): JSX.Element => {
   // Estimated governance token Rewards & APY
   const monetaryLockingAmount = newMonetaryAmount(lockingAmount, GOVERNANCE_TOKEN, true);
   const {
-    isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
     error: estimatedRewardAmountAndAPYError,
@@ -218,13 +217,6 @@ const Staking = (): JSX.Element => {
     }
   );
   useErrorHandler(estimatedRewardAmountAndAPYError);
-
-  // MEMO: This is being set outside of a useEffect because of
-  // an race condition. This is a underlying issue with the
-  // component and can't be easily fixed.
-  if (isValid || !isDirty) {
-    estimatedRewardAmountAndAPYRefetch();
-  }
 
   const {
     isIdle: stakedAmountAndEndBlockIdle,
@@ -318,6 +310,13 @@ const Staking = (): JSX.Element => {
       }
     }
   );
+
+  React.useEffect(() => {
+    if (isValidating || !isValid) return;
+
+    estimatedRewardAmountAndAPYRefetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid, isValidating, monetaryLockingAmount, blockLockTimeExtension]);
 
   React.useEffect(() => {
     if (!lockTime) return;
@@ -583,7 +582,7 @@ const Staking = (): JSX.Element => {
 
   const renderNewVoteGovernanceTokenGainedLabel = () => {
     const newTotalStakeAmount = getNewTotalStake();
-    if (voteGovernanceTokenBalance === undefined || newTotalStakeAmount === undefined) {
+    if (voteGovernanceTokenBalance === undefined || newTotalStakeAmount === undefined || !isValid) {
       return '-';
     }
 
@@ -595,7 +594,7 @@ const Staking = (): JSX.Element => {
   };
 
   const getNewTotalStake = () => {
-    if (remainingBlockNumbersToUnstake === undefined || stakedAmount === undefined) {
+    if (remainingBlockNumbersToUnstake === undefined || stakedAmount === undefined || !isValid) {
       return undefined;
     }
 
@@ -633,15 +632,15 @@ const Staking = (): JSX.Element => {
 
   const renderEstimatedAPYLabel = () => {
     if (
-      estimatedRewardAmountAndAPYIdle ||
       estimatedRewardAmountAndAPYLoading ||
+      !projectedRewardAmountAndAPY ||
       errors[LOCK_TIME] ||
       errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
     if (estimatedRewardAmountAndAPY === undefined) {
-      throw new Error('Something went wrong!');
+      return formatPercentage(projectedRewardAmountAndAPY.apy.toNumber());
     }
 
     return formatPercentage(estimatedRewardAmountAndAPY.apy.toNumber());
@@ -649,15 +648,15 @@ const Staking = (): JSX.Element => {
 
   const renderEstimatedRewardAmountLabel = () => {
     if (
-      estimatedRewardAmountAndAPYIdle ||
       estimatedRewardAmountAndAPYLoading ||
+      !projectedRewardAmountAndAPY ||
       errors[LOCK_TIME] ||
       errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
     if (estimatedRewardAmountAndAPY === undefined) {
-      throw new Error('Something went wrong!');
+      return `${displayMonetaryAmount(projectedRewardAmountAndAPY.amount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
     }
 
     return `${displayMonetaryAmount(estimatedRewardAmountAndAPY.amount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
@@ -714,7 +713,6 @@ const Staking = (): JSX.Element => {
     claimableRewardAmountLoading ||
     projectedRewardAmountAndAPYIdle ||
     projectedRewardAmountAndAPYLoading ||
-    estimatedRewardAmountAndAPYIdle ||
     estimatedRewardAmountAndAPYLoading ||
     stakedAmountAndEndBlockIdle ||
     stakedAmountAndEndBlockLoading;
