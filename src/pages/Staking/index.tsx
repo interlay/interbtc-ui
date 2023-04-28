@@ -294,7 +294,7 @@ const Staking = (): JSX.Element => {
     },
     {
       onSuccess: () => {
-        queryClient.clear();
+        queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
         reset({
           [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
@@ -322,10 +322,12 @@ const Staking = (): JSX.Element => {
   }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
 
   React.useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
     reset({
       [LOCKING_AMOUNT]: '',
       [LOCK_TIME]: ''
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAccount, reset]);
 
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
