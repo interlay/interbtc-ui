@@ -9,10 +9,9 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { displayMonetaryAmountInUSDFormat, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
+import { Alert, Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import WarningBanner from '@/legacy-components/WarningBanner';
 import {
   DepositLiquidityPoolFormData,
   depositLiquidityPoolSchema,
@@ -180,13 +179,13 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
             })}
           </Flex>
           {pool.isEmpty ? (
-            <WarningBanner severity='info'>
+            <Alert status='warning'>
               <p>
                 {' '}
                 Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on
                 other markets, please.
               </p>
-            </WarningBanner>
+            </Alert>
           ) : (
             <DepositOutputAssets pool={pool} values={form.values} prices={prices} />
           )}
