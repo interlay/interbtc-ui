@@ -40,6 +40,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [transferableTokens, setTransferableTokens] = useState<any[]>([]);
   const [currentToken, setCurrentToken] = useState<any | undefined>();
 
+  console.log('currentToken', currentToken);
+
   const prices = useGetPrices();
   const { t } = useTranslation();
   const { getCurrencyFromTicker } = useGetCurrencies(true);
@@ -51,8 +53,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
-      minAmount: newMonetaryAmount(0, getCurrencyFromTicker('KSM')),
-      maxAmount: newMonetaryAmount(0, getCurrencyFromTicker('KSM'))
+      minAmount: newMonetaryAmount(1, getCurrencyFromTicker(currentToken?.ticker || 'KSM')),
+      maxAmount: newMonetaryAmount(2, getCurrencyFromTicker(currentToken?.ticker || 'KSM'))
     }
   };
 
@@ -74,15 +76,15 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const handleOriginatingChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const destinationChains = getDestinationChains(e.target.value as ChainName);
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
-
     setDestinationChains(destinationChains);
+
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
   };
 
   const handleDestinationChainChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value, true);
-
     if (!accountId) return;
+
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value, true);
 
     const tokens = await getAvailableTokens(
       form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
@@ -126,6 +128,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   useEffect(() => {
     if (!originatingChains?.length) return;
+
     // This prevents a render loop caused by setFieldValue
     if (form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD]) return;
 
