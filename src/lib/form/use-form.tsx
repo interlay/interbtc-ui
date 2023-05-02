@@ -15,10 +15,8 @@ type GetFieldProps = (
   withErrorMessage?: boolean
 ) => FieldInputProps<any> & { errorMessage?: string | string[] };
 
-type UseFormArgs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
+type UseFormAgrs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
   disableValidation?: boolean;
-  // makes error messages display only when field is touched
-  validateOnIndividualBlur?: boolean;
   getFieldProps?: GetFieldProps;
 };
 
@@ -26,11 +24,10 @@ type UseFormArgs<Values extends FormikValues = FormikValues> = FormikConfig<Valu
 const useForm = <Values extends FormikValues = FormikValues>({
   validationSchema,
   disableValidation,
-  validateOnIndividualBlur = true,
   ...args
-}: UseFormArgs<Values>) => {
+}: UseFormAgrs<Values>) => {
   const { t } = useTranslation();
-  const { validateForm, values, getFieldProps: getFormikFieldProps, touched, ...formik } = useFormik<Values>({
+  const { validateForm, values, getFieldProps: getFormikFieldProps, ...formik } = useFormik<Values>({
     ...args,
     validate: (values) => {
       if (disableValidation) return;
@@ -47,28 +44,23 @@ const useForm = <Values extends FormikValues = FormikValues>({
     (nameOrOptions, withErrorMessage = true) => {
       if (withErrorMessage) {
         const isOptions = nameOrOptions !== null && typeof nameOrOptions === 'object';
-        const fieldName = isOptions ? nameOrOptions.name : nameOrOptions;
-
-        if (validateOnIndividualBlur && !touched[fieldName]) {
-          return getFormikFieldProps(nameOrOptions);
-        }
+        const errorMessage = isOptions ? formik.errors[nameOrOptions.name] : formik.errors[nameOrOptions];
 
         return {
           ...getFormikFieldProps(nameOrOptions),
-          errorMessage: formik.errors[fieldName] as string | string[] | undefined
+          errorMessage: errorMessage as string | string[] | undefined
         };
       }
 
       return getFormikFieldProps(nameOrOptions);
     },
-    [formik.errors, getFormikFieldProps, touched, validateOnIndividualBlur]
+    [formik.errors, getFormikFieldProps]
   );
 
   return {
     values,
     validateForm,
     getFieldProps,
-    touched,
     ...formik
   };
 };
