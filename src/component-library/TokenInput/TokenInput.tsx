@@ -37,7 +37,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       balanceLabel,
       isDisabled,
       label,
-      ticker,
+      ticker: tickerProp,
       style,
       hidden,
       className,
@@ -53,7 +53,9 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
-    const [selectValue, setSelectValue] = useState((selectProps?.defaultValue as string) || '');
+    const [ticker, setTicker] = useState<string>(
+      (selectProps?.defaultValue as string) || (typeof tickerProp === 'string' ? tickerProp : tickerProp?.text) || ''
+    );
 
     const { labelProps, fieldProps } = useLabel({ label, ...props });
 
@@ -66,7 +68,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     useEffect(() => {
       if (selectProps?.value === undefined) return;
 
-      setSelectValue(selectProps.value as string);
+      setTicker(selectProps.value as string);
     }, [selectProps?.value]);
 
     const handleClickBalance = () => {
@@ -78,7 +80,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const handleTokenChange = (ticker: Key) => {
       onChangeTicker?.(ticker as string);
-      setSelectValue(ticker as string);
+      setTicker(ticker as string);
     };
 
     // Prioritise Number Input description and error message
@@ -89,7 +91,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
     const endAdornment = isSelectAdornment ? (
       <TokenSelect
         {...restSelectProps}
-        value={selectValue}
+        value={ticker}
         onSelectionChange={chain(onSelectionChange, handleTokenChange)}
         label={label}
         aria-label={fieldProps['aria-label']}
@@ -107,10 +109,10 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
       <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
         {hasLabel && (
           <TokenInputLabel
-            ticker={selectValue}
+            ticker={ticker}
             balance={humanBalance || balance}
             balanceLabel={balanceLabel}
-            isDisabled={isDisabled || !selectValue}
+            isDisabled={isDisabled || !ticker}
             onClickBalance={handleClickBalance}
             {...labelProps}
           >

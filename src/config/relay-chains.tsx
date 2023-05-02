@@ -152,7 +152,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     CROWDLOAN_LINK = INTERLAY_CROWDLOAN_LINK;
     OPEN_GRAPH_IMAGE_FILE_NAME = 'interlay-meta-image.jpg';
     STAKE_LOCK_TIME = {
-      MIN: 0,
+      MIN: 1,
       MAX: 192
     };
     // TODO: temporary
@@ -194,7 +194,7 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     CROWDLOAN_LINK = KINTSUGI_CROWDLOAN_LINK;
     OPEN_GRAPH_IMAGE_FILE_NAME = 'kintsugi-meta-image.jpg';
     STAKE_LOCK_TIME = {
-      MIN: 0,
+      MIN: 1,
       MAX: 96
     };
     // TODO: temporary
