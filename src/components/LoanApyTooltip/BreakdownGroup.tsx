@@ -14,7 +14,7 @@ type BreakdownGroupProps = {
 };
 
 const BreakdownGroup = ({ apy, rewardsApy, ticker, rewardsTicker, isBorrow }: BreakdownGroupProps): JSX.Element => {
-  const apyLabel = getApyLabel(apy);
+  const apyLabel = isBorrow ? `-${getApyLabel(apy)}` : getApyLabel(apy);
 
   return (
     <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
