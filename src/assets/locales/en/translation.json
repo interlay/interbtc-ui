@@ -581,7 +581,8 @@
       "pool_name": "Pool Name",
       "add_liquidity": "Add Liquidity",
       "remove_liquidity": "Remove Liquidity",
-      "receivable_assets": "Receivable Assets"
+      "receivable_assets": "Receivable Assets",
+      "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please."
     },
     "swap": "Swap",
     "select_token": "Select Token",

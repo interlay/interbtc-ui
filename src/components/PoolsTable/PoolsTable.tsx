@@ -60,7 +60,13 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
     () =>
       pools.map(({ data, amount: accountLPTokenAmount }) => {
         const { pooledCurrencies, lpToken, rewardAmountsYearly, totalSupply, isEmpty } = data;
-        const poolName = <AssetCell aria-label={lpToken.ticker} isEmptyPool={isEmpty} {...getCoinIconProps(lpToken)} />;
+        const poolName = (
+          <AssetCell
+            aria-label={lpToken.ticker}
+            tag={isEmpty ? 'illiquid' : undefined}
+            {...getCoinIconProps(lpToken)}
+          />
+        );
 
         const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
 

@@ -116,6 +116,8 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
       return form.setValues(defaultValues);
     }
 
+    // If pool has no liquidity, the assets ratio is set by the user,
+    // therefore the value inputted is directly used.
     if (pool.isEmpty) {
       return form.setValues({ [e.target.name]: e.target.value });
     }
@@ -180,11 +182,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
           </Flex>
           {pool.isEmpty ? (
             <Alert status='warning'>
-              <p>
-                {' '}
-                Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on
-                other markets, please.
-              </p>
+              <p>{t('amm.pools.initial_rate_warning')}</p>
             </Alert>
           ) : (
             <DepositOutputAssets pool={pool} values={form.values} prices={prices} />

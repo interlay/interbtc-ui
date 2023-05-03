@@ -18,7 +18,7 @@ const StyledCellSubLabel = styled(Span)`
   font-size: ${theme.text.xs};
 `;
 
-const StyledAssetCellInfo = styled(Span)`
+const StyledCellTag = styled(Span)`
   font-weight: ${theme.fontWeight.bold};
   color: ${theme.colors.bgPrimary};
   background: ${theme.colors.textSecondary};
@@ -26,4 +26,4 @@ const StyledAssetCellInfo = styled(Span)`
   border-radius: ${theme.rounded.md};
 `;
 
-export { StyledAssetCellInfo, StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel };
+export { StyledCellLabel, StyledCellSubLabel, StyledCellTag, StyledCellTickerLabel };
