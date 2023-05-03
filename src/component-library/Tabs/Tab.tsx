@@ -26,10 +26,10 @@ const Tab = <T extends Record<string, unknown>>({
   size = 'small'
 }: TabProps<T>): JSX.Element => {
   const ref = useRef<HTMLDivElement>(null);
-  const { tabProps } = useTab(item, state, ref);
+  const { tabProps, isDisabled } = useTab(item, state, ref);
 
   return (
-    <StyledTab {...tabProps} ref={ref} $fullWidth={fullWidth} $size={size}>
+    <StyledTab {...tabProps} ref={ref} $isDisabled={isDisabled} $fullWidth={fullWidth} $size={size}>
       {item.rendered}
     </StyledTab>
   );
