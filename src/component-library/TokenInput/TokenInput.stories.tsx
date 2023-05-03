@@ -18,7 +18,7 @@ const Template: Story<TokenInputProps> = (args) => {
 
 const WithBalance = Template.bind({});
 WithBalance.args = {
-  defaultTicker: 'KSM',
+  ticker: 'KSM',
   balance: 1000.0,
   balanceLabel: 'Balance',
   placeholder: '0.00',
@@ -28,7 +28,7 @@ WithBalance.args = {
 
 const WithoutBalance = Template.bind({});
 WithoutBalance.args = {
-  defaultTicker: 'KSM',
+  ticker: 'KSM',
   label: 'Amount',
   placeholder: '0.00',
   isDisabled: false
@@ -41,37 +41,54 @@ WithCurrencySelect.args = {
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'From',
-  tokens: [
-    { balance: 200, ticker: 'KSM', balanceUSD: '$200' },
-    { balance: 200, ticker: 'BTC', balanceUSD: '$200' },
-    { balance: 200, ticker: 'IBTC', balanceUSD: '$200' },
-    { balance: 200, ticker: 'KBTC', balanceUSD: '$200' },
-    { balance: 200, ticker: 'DOT', balanceUSD: '$200' },
-    { balance: 200, ticker: 'INTR', balanceUSD: '$200' },
-    { balance: 200, ticker: 'LKSM', balanceUSD: '$200' }
-  ]
+  selectProps: {
+    items: [
+      { balance: 200, value: 'KSM', balanceUSD: '$200' },
+      { balance: 200, value: 'BTC', balanceUSD: '$200' },
+      { balance: 200, value: 'IBTC', balanceUSD: '$200' },
+      { balance: 200, value: 'KBTC', balanceUSD: '$200' },
+      { balance: 200, value: 'DOT', balanceUSD: '$200' },
+      { balance: 200, value: 'INTR', balanceUSD: '$200' },
+      { balance: 200, value: 'LKSM', balanceUSD: '$200' }
+    ]
+  }
 };
 
 const MultiToken = Template.bind({});
 MultiToken.args = {
-  ticker: { text: 'LP Token', icons: ['KSM', 'KBTC', 'KINT', 'USDT'] },
   balance: 1000.0,
   balanceLabel: 'Balance',
   placeholder: '0.00',
   label: 'Amount',
   isDisabled: false,
-  tokens: [
-    { balance: 200, ticker: 'KSM', balanceUSD: '$200' },
-    { balance: 200, ticker: 'BTC', balanceUSD: '$200' },
-    { balance: 200, ticker: 'IBTC', balanceUSD: '$200' },
-    { balance: 200, ticker: 'KBTC', balanceUSD: '$200' },
-    { balance: 200, ticker: 'DOT', balanceUSD: '$200' },
-    { balance: 200, ticker: 'INTR', balanceUSD: '$200' },
-    { balance: 200, ticker: { text: 'LP Token', icons: ['KSM', 'KBTC', 'KINT', 'USDT'] }, balanceUSD: '$200' }
-  ]
+  selectProps: {
+    value: 'LP KSM-KBTC-KINT',
+    items: [
+      { balance: 200, value: 'KSM', balanceUSD: '$200' },
+      { balance: 200, value: 'BTC', balanceUSD: '$200' },
+      { balance: 200, value: 'IBTC', balanceUSD: '$200' },
+      { balance: 200, value: 'KBTC', balanceUSD: '$200' },
+      { balance: 200, value: 'DOT', balanceUSD: '$200' },
+      { balance: 200, value: 'INTR', balanceUSD: '$200' },
+      { balance: 200, value: 'LP KSM-KBTC-KINT', tickers: ['KSM', 'KBTC', 'KINT'], balanceUSD: '$200' }
+    ]
+  }
+  // errorMessage: 'Failed'
 };
 
-export { MultiToken, WithBalance, WithCurrencySelect, WithoutBalance };
+const SingleItemInSelectItems = Template.bind({});
+SingleItemInSelectItems.args = {
+  balance: 1000.0,
+  balanceLabel: 'Balance',
+  placeholder: '0.00',
+  label: 'Amount',
+  isDisabled: false,
+  selectProps: {
+    items: [{ balance: 200, value: 'KSM', balanceUSD: '$200' }]
+  }
+};
+
+export { MultiToken, SingleItemInSelectItems, WithBalance, WithCurrencySelect, WithoutBalance };
 
 export default {
   title: 'Forms/TokenInput',

@@ -5,6 +5,7 @@ import './@polkadot/ui-keyring';
 import './intersectionObserver';
 import './fetch';
 import './substrate';
+import './utils';
 
 import { createInterBtcApi } from '@interlay/interbtc-api';
 import { FocusScope } from '@react-aria/focus';

@@ -7,7 +7,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
@@ -119,12 +119,14 @@ const Staking = (): JSX.Element => {
   const { data: balances, isLoading: isBalancesLoading } = useGetBalances();
   const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
 
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
     watch,
     reset,
-    formState: { errors },
+    formState: { errors, isValid, isValidating },
     trigger,
     setValue
   } = useForm<StakingFormData>({
@@ -151,8 +153,7 @@ const Staking = (): JSX.Element => {
     isIdle: voteGovernanceTokenBalanceIdle,
     isLoading: voteGovernanceTokenBalanceLoading,
     data: voteGovernanceTokenBalance,
-    error: voteGovernanceTokenBalanceError,
-    refetch: voteGovernanceTokenBalanceRefetch
+    error: voteGovernanceTokenBalanceError
   } = useQuery<VoteGovernanceTokenMonetaryAmount, Error>(
     [GENERIC_FETCHER, 'escrow', 'votingBalance', selectedAccountAddress],
     genericFetcher<VoteGovernanceTokenMonetaryAmount>(),
@@ -167,8 +168,7 @@ const Staking = (): JSX.Element => {
     isIdle: claimableRewardAmountIdle,
     isLoading: claimableRewardAmountLoading,
     data: claimableRewardAmount,
-    error: claimableRewardAmountError,
-    refetch: claimableRewardAmountRefetch
+    error: claimableRewardAmountError
   } = useQuery<GovernanceTokenMonetaryAmount, Error>(
     [GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccountAddress],
     genericFetcher<GovernanceTokenMonetaryAmount>(),
@@ -183,8 +183,7 @@ const Staking = (): JSX.Element => {
     isIdle: projectedRewardAmountAndAPYIdle,
     isLoading: projectedRewardAmountAndAPYLoading,
     data: projectedRewardAmountAndAPY,
-    error: rewardAmountAndAPYError,
-    refetch: rewardAmountAndAPYRefetch
+    error: rewardAmountAndAPYError
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccountAddress],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
@@ -197,10 +196,10 @@ const Staking = (): JSX.Element => {
   // Estimated governance token Rewards & APY
   const monetaryLockingAmount = newMonetaryAmount(lockingAmount, GOVERNANCE_TOKEN, true);
   const {
-    isIdle: estimatedRewardAmountAndAPYIdle,
     isLoading: estimatedRewardAmountAndAPYLoading,
     data: estimatedRewardAmountAndAPY,
-    error: estimatedRewardAmountAndAPYError
+    error: estimatedRewardAmountAndAPYError,
+    refetch: estimatedRewardAmountAndAPYRefetch
   } = useQuery<EstimatedRewardAmountAndAPY, Error>(
     [
       GENERIC_FETCHER,
@@ -212,7 +211,8 @@ const Staking = (): JSX.Element => {
     ],
     genericFetcher<EstimatedRewardAmountAndAPY>(),
     {
-      enabled: !!bridgeLoaded
+      enabled: false,
+      retry: false
     }
   );
   useErrorHandler(estimatedRewardAmountAndAPYError);
@@ -221,8 +221,7 @@ const Staking = (): JSX.Element => {
     isIdle: stakedAmountAndEndBlockIdle,
     isLoading: stakedAmountAndEndBlockLoading,
     data: stakedAmountAndEndBlock,
-    error: stakedAmountAndEndBlockError,
-    refetch: stakedAmountAndEndBlockRefetch
+    error: stakedAmountAndEndBlockError
   } = useQuery<StakedAmountAndEndBlock, Error>(
     [GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccountAddress],
     genericFetcher<StakedAmountAndEndBlock>(),
@@ -257,10 +256,7 @@ const Staking = (): JSX.Element => {
     },
     {
       onSuccess: () => {
-        voteGovernanceTokenBalanceRefetch();
-        stakedAmountAndEndBlockRefetch();
-        claimableRewardAmountRefetch();
-        rewardAmountAndAPYRefetch();
+        queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
         reset({
           [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
@@ -298,10 +294,7 @@ const Staking = (): JSX.Element => {
     },
     {
       onSuccess: () => {
-        voteGovernanceTokenBalanceRefetch();
-        stakedAmountAndEndBlockRefetch();
-        claimableRewardAmountRefetch();
-        rewardAmountAndAPYRefetch();
+        queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
         reset({
           [LOCKING_AMOUNT]: '0.0',
           [LOCK_TIME]: '0'
@@ -311,22 +304,30 @@ const Staking = (): JSX.Element => {
   );
 
   React.useEffect(() => {
+    if (isValidating || !isValid || !estimatedRewardAmountAndAPYRefetch) return;
+
+    estimatedRewardAmountAndAPYRefetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isValid, isValidating, lockTime, lockingAmount, estimatedRewardAmountAndAPYRefetch]);
+
+  React.useEffect(() => {
     if (!lockTime) return;
     if (!currentBlockNumber) return;
-    if (!stakedAmountAndEndBlock) return;
 
     const lockTimeValue = Number(lockTime);
     const extensionTime =
-      stakedAmountAndEndBlock.endBlock + currentBlockNumber + convertWeeksToBlockNumbers(lockTimeValue);
+      (stakedAmountAndEndBlock?.endBlock || currentBlockNumber) + convertWeeksToBlockNumbers(lockTimeValue);
 
     setBlockLockTimeExtension(extensionTime);
   }, [currentBlockNumber, lockTime, stakedAmountAndEndBlock]);
 
   React.useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
     reset({
       [LOCKING_AMOUNT]: '',
       [LOCK_TIME]: ''
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAccount, reset]);
 
   const votingBalanceGreaterThanZero = voteGovernanceTokenBalance?.gt(ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT);
@@ -575,7 +576,7 @@ const Staking = (): JSX.Element => {
 
   const renderNewVoteGovernanceTokenGainedLabel = () => {
     const newTotalStakeAmount = getNewTotalStake();
-    if (voteGovernanceTokenBalance === undefined || newTotalStakeAmount === undefined) {
+    if (voteGovernanceTokenBalance === undefined || newTotalStakeAmount === undefined || !isValid) {
       return '-';
     }
 
@@ -587,7 +588,7 @@ const Staking = (): JSX.Element => {
   };
 
   const getNewTotalStake = () => {
-    if (remainingBlockNumbersToUnstake === undefined || stakedAmount === undefined) {
+    if (remainingBlockNumbersToUnstake === undefined || stakedAmount === undefined || !isValid) {
       return undefined;
     }
 
@@ -625,15 +626,15 @@ const Staking = (): JSX.Element => {
 
   const renderEstimatedAPYLabel = () => {
     if (
-      estimatedRewardAmountAndAPYIdle ||
       estimatedRewardAmountAndAPYLoading ||
+      !projectedRewardAmountAndAPY ||
       errors[LOCK_TIME] ||
       errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
     if (estimatedRewardAmountAndAPY === undefined) {
-      throw new Error('Something went wrong!');
+      return formatPercentage(projectedRewardAmountAndAPY.apy.toNumber());
     }
 
     return formatPercentage(estimatedRewardAmountAndAPY.apy.toNumber());
@@ -641,15 +642,15 @@ const Staking = (): JSX.Element => {
 
   const renderEstimatedRewardAmountLabel = () => {
     if (
-      estimatedRewardAmountAndAPYIdle ||
       estimatedRewardAmountAndAPYLoading ||
+      !projectedRewardAmountAndAPY ||
       errors[LOCK_TIME] ||
       errors[LOCKING_AMOUNT]
     ) {
       return '-';
     }
     if (estimatedRewardAmountAndAPY === undefined) {
-      throw new Error('Something went wrong!');
+      return `${displayMonetaryAmount(projectedRewardAmountAndAPY.amount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
     }
 
     return `${displayMonetaryAmount(estimatedRewardAmountAndAPY.amount)} ${GOVERNANCE_TOKEN_SYMBOL}`;
@@ -706,7 +707,6 @@ const Staking = (): JSX.Element => {
     claimableRewardAmountLoading ||
     projectedRewardAmountAndAPYIdle ||
     projectedRewardAmountAndAPYLoading ||
-    estimatedRewardAmountAndAPYIdle ||
     estimatedRewardAmountAndAPYLoading ||
     stakedAmountAndEndBlockIdle ||
     stakedAmountAndEndBlockLoading;
@@ -841,7 +841,7 @@ const Staking = (): JSX.Element => {
               tooltip={`The APR may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`}
             />
             <InformationUI
-              label={`Estimated ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
+              label={`Projected Rewards p.a.`}
               value={renderEstimatedRewardAmountLabel()}
               tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
@@ -852,7 +852,7 @@ const Staking = (): JSX.Element => {
               fullWidth
               size='large'
               type='submit'
-              disabled={initializing || unlockFirst}
+              disabled={initializing || unlockFirst || !isValid}
               loading={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
             >
               {submitButtonLabel}{' '}
