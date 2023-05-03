@@ -53,8 +53,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
-      minAmount: newMonetaryAmount(1, getCurrencyFromTicker(currentToken?.ticker || 'KSM')),
-      maxAmount: newMonetaryAmount(2, getCurrencyFromTicker(currentToken?.ticker || 'KSM'))
+      minAmount: newMonetaryAmount(0, getCurrencyFromTicker(currentToken?.ticker || 'KSM')),
+      maxAmount: newMonetaryAmount(currentToken?.balance || 0, getCurrencyFromTicker(currentToken?.ticker || 'KSM'))
     }
   };
 
@@ -197,11 +197,12 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={currentToken?.balance.toString() || 0}
             humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD || 0}
-            selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false), {
+            selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD), {
               onSelectionChange: (ticker: Key) =>
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
             })}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
           />
         </div>
         <AccountSelect
