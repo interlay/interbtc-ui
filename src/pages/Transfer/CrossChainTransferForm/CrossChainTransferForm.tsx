@@ -40,8 +40,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   const [transferableTokens, setTransferableTokens] = useState<any[]>([]);
   const [currentToken, setCurrentToken] = useState<any | undefined>();
 
-  console.log('currentToken', currentToken);
-
   const prices = useGetPrices();
   const { t } = useTranslation();
   const { getCurrencyFromTicker } = useGetCurrencies(true);
@@ -53,8 +51,13 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
-      minAmount: newMonetaryAmount(0, getCurrencyFromTicker(currentToken?.ticker || 'KSM')),
-      maxAmount: newMonetaryAmount(currentToken?.balance || 0, getCurrencyFromTicker(currentToken?.ticker || 'KSM'))
+      // TODO: Make min and max amount undefined and remove fallback
+      minAmount: currentToken
+        ? newMonetaryAmount(0, getCurrencyFromTicker(currentToken.value), true)
+        : newMonetaryAmount(0, getCurrencyFromTicker('KSM'), true),
+      maxAmount: currentToken
+        ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.value), true)
+        : newMonetaryAmount(0, getCurrencyFromTicker('KSM'), true)
     }
   };
 
@@ -177,7 +180,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledSourceChainSelect
             label='Source Chain'
             chains={originatingChains || []}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD), {
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
               onChange: handleOriginatingChainChange
             })}
           />
@@ -185,7 +188,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <ChainSelect
             label='Destination Chain'
             chains={destinationChains}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD), {
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
               onChange: handleDestinationChainChange
             })}
           />
@@ -202,7 +205,7 @@ const CrossChainTransferForm = (): JSX.Element => {
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
             })}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, false))}
           />
         </div>
         <AccountSelect
