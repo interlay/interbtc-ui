@@ -110,6 +110,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const handleTickerChange = (ticker: string, name: string) => {
     form.setFieldValue(name, ticker, true);
+    setCurrentToken(transferableTokens.find((token) => token.value === ticker));
   };
 
   const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
