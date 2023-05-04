@@ -42,6 +42,7 @@ const TabList = styled.div<TabListProps>`
 type StyledTabProps = {
   $fullWidth: boolean;
   $size: Sizes;
+  $isDisabled: boolean;
 };
 
 const StyledTab = styled.div<StyledTabProps>`
@@ -50,15 +51,14 @@ const StyledTab = styled.div<StyledTabProps>`
   font-size: ${({ $size }) => theme.tabs[$size].tab.text};
   font-weight: ${({ $size }) => theme.tabs[$size].tab.fontWeight};
   text-align: center;
-  cursor: pointer;
+  cursor: ${({ $isDisabled }) => !$isDisabled && 'pointer'};
+  user-select: none;
   outline: none;
   border-radius: ${theme.rounded.rg};
   color: ${theme.tabs.color};
   // TODO: have this transition into theme
   transition: color 150ms;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  opacity: ${({ $isDisabled }) => $isDisabled && '.5'};
 
   &[aria-selected='true'] {
     color: ${theme.tabs.active.color};
