@@ -224,7 +224,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             <Dt size='xs' color='primary'>
               Origin chain transfer fee
             </Dt>
-            <Dd size='xs'>0 DOT</Dd>
+            <Dd size='xs'>{currentToken.originFee}</Dd>
           </DlGroup>
           <DlGroup justifyContent='space-between'>
             <Dt size='xs' color='primary'>

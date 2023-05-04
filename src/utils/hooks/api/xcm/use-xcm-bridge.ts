@@ -1,6 +1,6 @@
 import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
-import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { atomicToBaseAmount, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -102,24 +102,21 @@ const useXCMBridge = (): UseXCMBridge => {
             })
           );
 
-          console.log('xcm inputConfig', inputConfig.destFee.balance.toNumber());
-
           const maxInputToBig = Big(inputConfig.maxInput.toString());
-          const minInputToBig = Big(inputConfig.maxInput.toString());
+          const minInputToBig = Big(inputConfig.minInput.toString());
 
           // Never show less than zero
           const transferableBalance = inputConfig.maxInput < inputConfig.minInput ? 0 : maxInputToBig;
-
           const currency = XCMBridge.findAdapter(from).getToken(token, from);
-
           const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
-
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
+          const originFee = atomicToBaseAmount(inputConfig.estimateFee, (currency as unknown) as CurrencyExt);
 
           return {
             balance: transferableBalance.toString(),
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
             destFee: `${inputConfig.destFee.balance.toNumber()} ${inputConfig.destFee.token}`,
+            originFee: `${originFee} ${token}`,
             minTransferAmount: minInputToBig,
             value: token
           };
