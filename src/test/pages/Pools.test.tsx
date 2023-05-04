@@ -10,12 +10,16 @@ import {
   DEFAULT_CLAIMABLE_REWARDS,
   DEFAULT_LIQUIDITY_POOL_1,
   DEFAULT_LIQUIDITY_POOL_2,
+  DEFAULT_LIQUIDITY_POOLS,
   DEFAULT_LP_TOKEN_1,
   DEFAULT_LP_TOKEN_2,
   DEFAULT_POOLED_CURRENCIES_1,
+  EMPTY_LIQUIDITY_POOL,
+  LP_TOKEN_3,
   mockAddLiquidity,
   mockClaimFarmingRewards,
   mockGetClaimableFarmingRewards,
+  mockGetLiquidityPools,
   mockGetLiquidityProvidedByAccount,
   mockRemoveLiquidity
 } from '../mocks/@interlay/interbtc-api/parachain/amm';
@@ -81,6 +85,16 @@ describe('Pools Page', () => {
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(2);
   });
 
+  it('should render empty pools', async () => {
+    mockGetLiquidityPools.mockResolvedValue([...DEFAULT_LIQUIDITY_POOLS, EMPTY_LIQUIDITY_POOL]);
+
+    await render(<App />, { path });
+
+    const poolsTable = withinTable(TABLES.AVAILABLE_POOLS);
+    expect(poolsTable.getAllByRole('row')).toHaveLength(3);
+    expect(poolsTable.getByRole('row', { name: LP_TOKEN_3.ticker })).toBeInTheDocument();
+  });
+
   it('should be able to deposit', async () => {
     jest
       .spyOn(DEFAULT_LIQUIDITY_POOL_1, 'getLiquidityDepositInputAmounts')
@@ -122,6 +136,16 @@ describe('Pools Page', () => {
       DEFAULT_DEADLINE_BLOCK_NUMBER,
       DEFAULT_ACCOUNT_ADDRESS
     );
+  });
+
+  it('should display warning when depositing into empty pool', async () => {
+    mockGetLiquidityPools.mockResolvedValue([...DEFAULT_LIQUIDITY_POOLS, EMPTY_LIQUIDITY_POOL]);
+
+    await render(<App />, { path });
+
+    const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker, TABS.DEPOSIT);
+
+    expect(tabPanel.getByRole('alert')).toBeInTheDocument();
   });
 
   it('should be able to withdraw', async () => {
