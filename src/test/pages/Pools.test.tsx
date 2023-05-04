@@ -25,7 +25,7 @@ import {
 } from '../mocks/@interlay/interbtc-api/parachain/amm';
 import { DEFAULT_ACCOUNT_ADDRESS } from '../mocks/substrate/mocks';
 import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../test-utils';
-import { withinModalTabPanel, withinTable } from './utils/table';
+import { withinModalTabPanel, withinTable, withinTableRow } from './utils/table';
 
 const path = '/pools';
 
@@ -85,16 +85,6 @@ describe('Pools Page', () => {
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(2);
   });
 
-  it('should render empty pools', async () => {
-    mockGetLiquidityPools.mockResolvedValue([...DEFAULT_LIQUIDITY_POOLS, EMPTY_LIQUIDITY_POOL]);
-
-    await render(<App />, { path });
-
-    const poolsTable = withinTable(TABLES.AVAILABLE_POOLS);
-    expect(poolsTable.getAllByRole('row')).toHaveLength(3);
-    expect(poolsTable.getByRole('row', { name: LP_TOKEN_3.ticker })).toBeInTheDocument();
-  });
-
   it('should be able to deposit', async () => {
     jest
       .spyOn(DEFAULT_LIQUIDITY_POOL_1, 'getLiquidityDepositInputAmounts')
@@ -138,13 +128,15 @@ describe('Pools Page', () => {
     );
   });
 
-  it('should display warning when depositing into empty pool', async () => {
+  it('should display `illiquid` tag and warning when depositing into empty pool', async () => {
     mockGetLiquidityPools.mockResolvedValue([...DEFAULT_LIQUIDITY_POOLS, EMPTY_LIQUIDITY_POOL]);
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker, TABS.DEPOSIT);
+    const row = withinTableRow(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker);
+    expect(row.getByText(/illiquid/i)).toBeInTheDocument();
 
+    const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker, TABS.DEPOSIT);
     expect(tabPanel.getByRole('alert')).toBeInTheDocument();
   });
 
