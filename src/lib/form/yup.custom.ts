@@ -52,7 +52,7 @@ yup.addMethod<yup.StringSchema>(
 );
 
 type MaxAmountValidationParams = {
-  maxAmount: MonetaryAmount<CurrencyExt> | Big;
+  maxAmount: MonetaryAmount<CurrencyExt> | Big | undefined;
 };
 
 yup.addMethod<yup.StringSchema>(
@@ -75,7 +75,7 @@ yup.addMethod<yup.StringSchema>(
       }
 
       if (amount.gt(maxAmount as Big)) {
-        const message = customMessage || t('forms.amount_must_be_at_most', { action, amount: maxAmount.toString() });
+        const message = customMessage || t('forms.amount_must_be_at_most', { action, amount: maxAmount?.toString() });
         return ctx.createError({ message });
       }
 
@@ -85,7 +85,7 @@ yup.addMethod<yup.StringSchema>(
 );
 
 type MinAmountValidationParams = {
-  minAmount: MonetaryAmount<CurrencyExt>;
+  minAmount: MonetaryAmount<CurrencyExt> | undefined;
 };
 
 yup.addMethod<yup.StringSchema>(
@@ -99,7 +99,7 @@ yup.addMethod<yup.StringSchema>(
 
       const amount = new Big(value);
 
-      if (amount.lt(minAmount.toBig())) {
+      if (minAmount && amount.lt(minAmount?.toBig())) {
         const message =
           customMessage ||
           t('forms.amount_must_be_at_least', {

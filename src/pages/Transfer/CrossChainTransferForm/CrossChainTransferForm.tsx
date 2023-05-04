@@ -52,12 +52,10 @@ const CrossChainTransferForm = (): JSX.Element => {
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
       // TODO: Make min and max amount undefined and remove fallback
-      minAmount: currentToken
-        ? newMonetaryAmount(0, getCurrencyFromTicker(currentToken.value), true)
-        : newMonetaryAmount(0, getCurrencyFromTicker('KSM'), true),
+      minAmount: currentToken ? newMonetaryAmount(0, getCurrencyFromTicker(currentToken.value), true) : undefined,
       maxAmount: currentToken
         ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.value), true)
-        : newMonetaryAmount(0, getCurrencyFromTicker('KSM'), true)
+        : undefined
     }
   };
 
@@ -117,7 +115,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const transferMonetaryAmount = currentToken
-    ? newSafeMonetaryAmount(form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0, getCurrencyFromTicker('KSM'), true)
+    ? newSafeMonetaryAmount(
+        form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
+        getCurrencyFromTicker(currentToken.value),
+        true
+      )
     : 0;
 
   const valueUSD = transferMonetaryAmount
@@ -200,12 +202,12 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={currentToken?.balance.toString() || 0}
             humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD || 0}
-            selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD), {
+            selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false), {
               onSelectionChange: (ticker: Key) =>
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
             })}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, false))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
           />
         </div>
         <AccountSelect
