@@ -52,7 +52,9 @@ const CrossChainTransferForm = (): JSX.Element => {
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
       // TODO: Make min and max amount undefined and remove fallback
-      minAmount: currentToken ? newMonetaryAmount(0, getCurrencyFromTicker(currentToken.value), true) : undefined,
+      minAmount: currentToken
+        ? newMonetaryAmount(currentToken.minTransferAmount, getCurrencyFromTicker(currentToken.value), true)
+        : undefined,
       maxAmount: currentToken
         ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.value), true)
         : undefined
@@ -226,9 +228,9 @@ const CrossChainTransferForm = (): JSX.Element => {
           </DlGroup>
           <DlGroup justifyContent='space-between'>
             <Dt size='xs' color='primary'>
-              Destination chain transfer fee
+              Destination chain transfer fee estimate
             </Dt>
-            <Dd size='xs'>0 INTR</Dd>
+            <Dd size='xs'>{currentToken.destFee}</Dd>
           </DlGroup>
         </StyledDl>
         <AuthCTA size='large' type='submit' disabled={isCTADisabled}>

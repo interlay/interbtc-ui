@@ -102,7 +102,10 @@ const useXCMBridge = (): UseXCMBridge => {
             })
           );
 
+          console.log('xcm inputConfig', inputConfig.destFee.balance.toNumber());
+
           const maxInputToBig = Big(inputConfig.maxInput.toString());
+          const minInputToBig = Big(inputConfig.maxInput.toString());
 
           // Never show less than zero
           const transferableBalance = inputConfig.maxInput < inputConfig.minInput ? 0 : maxInputToBig;
@@ -116,6 +119,8 @@ const useXCMBridge = (): UseXCMBridge => {
           return {
             balance: transferableBalance.toString(),
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
+            destFee: `${inputConfig.destFee.balance.toNumber()} ${inputConfig.destFee.token}`,
+            minTransferAmount: minInputToBig,
             value: token
           };
         })
