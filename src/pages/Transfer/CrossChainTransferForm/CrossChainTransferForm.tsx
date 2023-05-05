@@ -1,5 +1,9 @@
-import { ChainName } from '@interlay/bridge';
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { FixedPointNumber } from '@acala-network/sdk-core';
+import { ChainName, CrossChainTransferParams } from '@interlay/bridge';
+import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
+// import { MonetaryAmount } from '@interlay/monetary-js';
+import { ApiPromise } from '@polkadot/api';
+import { web3FromAddress } from '@polkadot/extension-dapp';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, Key, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +25,7 @@ import {
 } from '@/lib/form';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { Chains } from '@/types/chains';
+import { getExtrinsicStatus } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -47,7 +52,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const accountId = useAccountId();
   const { accounts } = useSubstrateSecureState();
 
-  const { getDestinationChains, originatingChains, getAvailableTokens } = useXCMBridge();
+  const { data, getDestinationChains, originatingChains, getAvailableTokens } = useXCMBridge();
 
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
@@ -61,8 +66,64 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   };
 
-  const handleSubmit = (data: CrossChainTransferFormData) => {
-    console.log('submit data', data);
+  const handleSubmit = (formData: CrossChainTransferFormData) => {
+    if (!data || !formData) return;
+
+    console.log('submit data', formData);
+
+    const handleTransaction = async () => {
+      const { signer } = await web3FromAddress(formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string);
+
+      const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as any);
+
+      const apiPromise = (data.provider.getApiPromise(
+        formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string
+      ) as unknown) as ApiPromise;
+
+      apiPromise.setSigner(signer);
+
+      // TODO: Version mismatch with ApiPromise type. This should be inferred.
+      adapter.setApi(apiPromise as any);
+
+      const transferAmount = newSafeMonetaryAmount(
+        form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
+        getCurrencyFromTicker(currentToken.value),
+        true
+      );
+
+      const transferAmountString = transferAmount.toString(true);
+      const transferAmountDecimals = transferAmount.currency.decimals;
+
+      // TODO: Transaction is in promise form
+      const tx: any = adapter.createTx({
+        amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
+        to: formData[CROSS_CHAIN_TRANSFER_TO_FIELD],
+        token: formData[CROSS_CHAIN_TRANSFER_TOKEN_FIELD],
+        address: formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]
+      } as CrossChainTransferParams);
+
+      console.log(
+        'signer, adapter, apiPromise, transferAmountString, transferAmountDecimals, tx',
+        signer,
+        adapter,
+        apiPromise,
+        transferAmountString,
+        transferAmountDecimals,
+        tx
+      );
+
+      const inBlockStatus = getExtrinsicStatus('InBlock');
+
+      await DefaultTransactionAPI.sendLogged(
+        apiPromise,
+        formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as any,
+        tx,
+        undefined,
+        inBlockStatus
+      );
+    };
+
+    handleTransaction();
   };
 
   const form = useForm<CrossChainTransferFormData>({
