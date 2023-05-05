@@ -1,14 +1,14 @@
 import { InjectedAccountWithMeta, InjectedExtension } from '@polkadot/extension-inject/types';
 import { useEffect, useMemo, useState } from 'react';
-import { TFunction, Trans, useTranslation } from 'react-i18next';
+import { TFunction, useTranslation } from 'react-i18next';
 
-import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, P, TextLink } from '@/component-library';
-import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
+import { CTA, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps } from '@/component-library';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { WalletData } from '@/utils/constants/wallets';
 import { findWallet } from '@/utils/helpers/wallet';
 
 import { AccountStep } from './AccountStep';
+import { Disclaimer } from './Disclaimer';
 import { AuthModalSteps } from './types';
 import { WalletStep } from './WalletStep';
 
@@ -75,17 +75,7 @@ const AuthModal = ({ onAccountSelect, onDisconnect, isOpen, ...props }: AuthModa
     <Modal align='top' isOpen={isOpen} {...props}>
       <ModalHeader align='start'>{title}</ModalHeader>
       <ModalBody>
-        <P size='s'>
-          <Trans i18nKey='exclude_us_citizens'>
-            By proceeding you confirm that you have read and accepted the{' '}
-            <TextLink external to={TERMS_AND_CONDITIONS_LINK} underlined>
-              terms and conditions
-            </TextLink>
-            , and represent and warrant that you are not a Resident of the United States or a &quot;U.S. person&quot;
-            within the meaning of Rule 902(k) under the United States Securities Act of 1933 (the &quot;Securities
-            Act&quot;).
-          </Trans>
-        </P>
+        <Disclaimer />
         <WalletStep
           step={step}
           onSelectionChange={handleWalletSelect}
