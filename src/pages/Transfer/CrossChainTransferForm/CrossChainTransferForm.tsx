@@ -128,7 +128,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const valueUSD = transferMonetaryAmount
     ? convertMonetaryAmountToValueInUSD(
         transferMonetaryAmount,
-        getTokenPrice(prices, currentToken?.ticker as string)?.usd
+        getTokenPrice(prices, currentToken?.value as string)?.usd
       )
     : 0;
 
