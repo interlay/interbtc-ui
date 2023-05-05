@@ -1,10 +1,6 @@
-import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ApiProvider, BasicToken, Bridge, ChainName } from '@interlay/bridge/build';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
-import { atomicToBaseAmount, CurrencyExt, DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
-import { ApiPromise } from '@polkadot/api';
-import { web3FromAddress } from '@polkadot/extension-dapp';
+import { atomicToBaseAmount, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -13,16 +9,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { XCM_ADAPTERS } from '@/config/relay-chains';
-import {
-  CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
-  CROSS_CHAIN_TRANSFER_FROM_FIELD,
-  CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD,
-  CROSS_CHAIN_TRANSFER_TO_FIELD,
-  CROSS_CHAIN_TRANSFER_TOKEN_FIELD,
-  CrossChainTransferFormData
-} from '@/lib/form';
 import { Chains } from '@/types/chains';
-import { getExtrinsicStatus } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -31,8 +18,6 @@ import { getXCMEndpoints } from './get-xcm-endpoints';
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
 });
-
-const XCMProvider = new ApiProvider();
 
 type XCMBridgeData = {
   bridge: Bridge;
@@ -57,10 +42,10 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
     destinationAddress: string,
     tokens: string[]
   ) => any;
-  sendTransaction: (formData: any) => any;
 };
 
 const initXCMBridge = async () => {
+  const XCMProvider = new ApiProvider();
   const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
   await firstValueFrom(XCMProvider.connectFromChain(chains, getXCMEndpoints(chains)));
@@ -191,61 +176,6 @@ const useXCMBridge = (): UseXCMBridge => {
     [data]
   );
 
-  const sendTransaction = async (formData: CrossChainTransferFormData) => {
-    console.log('formData', formData);
-
-    if (!formData) return;
-
-    const sendTransaction = async () => {
-      const { signer } = await web3FromAddress(formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]!.toString());
-
-      const adapter = XCMBridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as any);
-
-      const apiPromise = (XCMProvider.getApiPromise(
-        formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as any
-      ) as unknown) as ApiPromise;
-
-      apiPromise.setSigner(signer);
-
-      // TODO: Version mismatch with ApiPromise type. This should be inferred.
-      adapter.setApi(apiPromise as any);
-
-      const currency = XCMBridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as any).getToken(
-        formData[CROSS_CHAIN_TRANSFER_TOKEN_FIELD] as any,
-        formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as any
-      );
-
-      const transferAmount = new MonetaryAmount(
-        (currency as unknown) as CurrencyExt,
-        formData[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] as any
-      );
-      const transferAmountString = transferAmount.toString(true);
-      const transferAmountDecimals = transferAmount.currency.decimals;
-
-      // TODO: Transaction is in promise form
-      const tx: any = adapter.createTx({
-        amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
-        to: formData[CROSS_CHAIN_TRANSFER_TO_FIELD],
-        token: currency?.symbol,
-        address: formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]
-      } as any);
-
-      console.log('tx', tx);
-
-      const inBlockStatus = getExtrinsicStatus('InBlock');
-
-      await DefaultTransactionAPI.sendLogged(
-        apiPromise,
-        formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as any,
-        tx,
-        undefined,
-        inBlockStatus
-      );
-    };
-
-    await sendTransaction();
-  };
-
   useErrorHandler(error);
 
   return {
@@ -254,8 +184,7 @@ const useXCMBridge = (): UseXCMBridge => {
     getDestinationChains,
     getAvailableTokens,
     getInputConfigs,
-    getTransferableBalances,
-    sendTransaction
+    getTransferableBalances
   };
 };
 

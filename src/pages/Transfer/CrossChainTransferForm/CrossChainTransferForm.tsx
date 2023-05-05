@@ -47,7 +47,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const accountId = useAccountId();
   const { accounts } = useSubstrateSecureState();
 
-  const { getDestinationChains, originatingChains, getAvailableTokens, sendTransaction } = useXCMBridge();
+  const { getDestinationChains, originatingChains, getAvailableTokens } = useXCMBridge();
 
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
@@ -62,7 +62,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const handleSubmit = (data: CrossChainTransferFormData) => {
-    sendTransaction(data);
+    console.log('submit data', data);
   };
 
   const form = useForm<CrossChainTransferFormData>({
