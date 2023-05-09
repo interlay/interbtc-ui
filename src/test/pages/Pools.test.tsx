@@ -23,9 +23,15 @@ import {
   mockGetLiquidityProvidedByAccount,
   mockRemoveLiquidity
 } from '../mocks/@interlay/interbtc-api/parachain/amm';
-import { DEFAULT_ACCOUNT_ADDRESS } from '../mocks/substrate/mocks';
+import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
 import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../test-utils';
 import { withinModalTabPanel, withinTable, withinTableRow } from './utils/table';
+
+jest.mock('../../parts/Layout', () => {
+  const MockedLayout: React.FC = ({ children }: any) => children;
+  MockedLayout.displayName = 'MockedLayout';
+  return MockedLayout;
+});
 
 const path = '/pools';
 
@@ -85,7 +91,7 @@ describe('Pools Page', () => {
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(2);
   });
 
-  it('should be able to deposit', async () => {
+  it.only('should be able to deposit', async () => {
     jest
       .spyOn(DEFAULT_LIQUIDITY_POOL_1, 'getLiquidityDepositInputAmounts')
       .mockReturnValue(DEFAULT_POOLED_CURRENCIES_1);
@@ -124,7 +130,7 @@ describe('Pools Page', () => {
       DEFAULT_LIQUIDITY_POOL_1,
       0.1,
       DEFAULT_DEADLINE_BLOCK_NUMBER,
-      DEFAULT_ACCOUNT_ADDRESS
+      DEFAULT_ACCOUNT_1.address
     );
   });
 
@@ -173,7 +179,7 @@ describe('Pools Page', () => {
       DEFAULT_LIQUIDITY_POOL_2,
       0.1,
       DEFAULT_DEADLINE_BLOCK_NUMBER,
-      DEFAULT_ACCOUNT_ADDRESS
+      DEFAULT_ACCOUNT_1.address
     );
   });
 

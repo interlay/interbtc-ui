@@ -1,3 +1,4 @@
+export { ArrowRight } from './ArrowRight';
 export { ArrowsUpDown } from './ArrowsUpDown';
 export { ArrowTopRightOnSquare } from './ArrowTopRightOnSquare';
 export { ChevronDown } from './ChevronDown';

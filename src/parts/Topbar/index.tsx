@@ -1,22 +1,25 @@
 import { ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline';
+import { Keyring } from '@polkadot/api';
+import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
+import { showAccountModalAction, showSignTermsModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import { FundWallet } from '@/components';
+import { AuthModal, SignTermsModal } from '@/components/AuthModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { SS58_FORMAT } from '@/constants';
 import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import Tokens from '@/legacy-components/Tokens';
 import InterlayLink from '@/legacy-components/UI/InterlayLink';
-import { useSubstrateSecureState } from '@/lib/substrate';
-import AccountModal from '@/parts/AccountModal';
+import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
@@ -28,12 +31,13 @@ import ManualIssueExecutionActionsBadge from './ManualIssueExecutionActionsBadge
 const SMALL_SIZE_BUTTON_CLASSES = clsx('leading-7', '!px-3');
 
 const Topbar = (): JSX.Element => {
-  const { bridgeLoaded, showAccountModal } = useSelector((state: StoreType) => state.general);
+  const { bridgeLoaded, showAccountModal, isSignTermsModalOpen } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
-  const { selectProp } = useSignMessage();
   const isBanxaEnabled = useFeatureFlag(FeatureFlags.BANXA);
+  const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
+  const { selectProps } = useSignMessage();
 
   const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
 
@@ -64,13 +68,24 @@ const Topbar = (): JSX.Element => {
     setIsRequestPending(false);
   };
 
-  const handleAccountModalOpen = () => {
-    dispatch(showAccountModalAction(true));
+  const handleAccountModalOpen = () => dispatch(showAccountModalAction(true));
+
+  const handleAccountModalClose = () => dispatch(showAccountModalAction(false));
+
+  const handleAccountSelect = (account: InjectedAccountWithMeta) => {
+    const keyring = new Keyring({ type: 'sr25519', ss58Format: SS58_FORMAT });
+    const keyringAccount = keyring.addFromAddress(account.address, account.meta);
+    setSelectedAccount(keyringAccount);
+    selectProps.onSelectionChange(keyringAccount as KeyringPair);
+    handleAccountModalClose();
   };
 
-  const handleAccountModalClose = () => {
-    dispatch(showAccountModalAction(false));
+  const handleDisconnect = () => {
+    removeSelectedAccount();
+    handleAccountModalClose();
   };
+
+  const handleCloseSignTermsModal = () => dispatch(showSignTermsModalAction(false));
 
   let accountLabel;
   if (!extensions.length) {
@@ -123,11 +138,13 @@ const Topbar = (): JSX.Element => {
           {accountLabel}
         </InterlayDefaultContainedButton>
       </div>
-      <AccountModal
-        open={showAccountModal}
+      <AuthModal
+        isOpen={showAccountModal}
         onClose={handleAccountModalClose}
-        onAccountSelect={selectProp.onSelectionChange}
+        onDisconnect={handleDisconnect}
+        onAccountSelect={handleAccountSelect}
       />
+      <SignTermsModal isOpen={isSignTermsModalOpen} onClose={handleCloseSignTermsModal} />
     </>
   );
 };
