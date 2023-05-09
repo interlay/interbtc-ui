@@ -7,6 +7,8 @@ import { web3FromAddress } from '@polkadot/extension-dapp';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, Key, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, LoadingSpinner, TokenInput } from '@/component-library';
@@ -66,64 +68,52 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   };
 
-  const handleSubmit = (formData: CrossChainTransferFormData) => {
+  const mutateXcmTransfer = async (formData: CrossChainTransferFormData) => {
     if (!data || !formData) return;
 
-    console.log('submit data', formData);
+    const { signer } = await web3FromAddress(formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string);
 
-    const handleTransaction = async () => {
-      const { signer } = await web3FromAddress(formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string);
+    const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as any);
 
-      const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as any);
+    const apiPromise = (data.provider.getApiPromise(
+      formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string
+    ) as unknown) as ApiPromise;
 
-      const apiPromise = (data.provider.getApiPromise(
-        formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string
-      ) as unknown) as ApiPromise;
+    apiPromise.setSigner(signer);
 
-      apiPromise.setSigner(signer);
+    // TODO: Version mismatch with ApiPromise type. This should be inferred.
+    adapter.setApi(apiPromise as any);
 
-      // TODO: Version mismatch with ApiPromise type. This should be inferred.
-      adapter.setApi(apiPromise as any);
+    const transferAmount = newSafeMonetaryAmount(
+      form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
+      getCurrencyFromTicker(currentToken.value),
+      true
+    );
 
-      const transferAmount = newSafeMonetaryAmount(
-        form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
-        getCurrencyFromTicker(currentToken.value),
-        true
-      );
+    const transferAmountString = transferAmount.toString(true);
+    const transferAmountDecimals = transferAmount.currency.decimals;
 
-      const transferAmountString = transferAmount.toString(true);
-      const transferAmountDecimals = transferAmount.currency.decimals;
+    // TODO: Transaction is in promise form
+    const tx: any = adapter.createTx({
+      amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
+      to: formData[CROSS_CHAIN_TRANSFER_TO_FIELD],
+      token: formData[CROSS_CHAIN_TRANSFER_TOKEN_FIELD],
+      address: formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]
+    } as CrossChainTransferParams);
 
-      // TODO: Transaction is in promise form
-      const tx: any = adapter.createTx({
-        amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
-        to: formData[CROSS_CHAIN_TRANSFER_TO_FIELD],
-        token: formData[CROSS_CHAIN_TRANSFER_TOKEN_FIELD],
-        address: formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]
-      } as CrossChainTransferParams);
+    const inBlockStatus = getExtrinsicStatus('InBlock');
 
-      console.log(
-        'signer, adapter, apiPromise, transferAmountString, transferAmountDecimals, tx',
-        signer,
-        adapter,
-        apiPromise,
-        transferAmountString,
-        transferAmountDecimals,
-        tx
-      );
+    await DefaultTransactionAPI.sendLogged(
+      apiPromise,
+      formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as any,
+      tx,
+      undefined,
+      inBlockStatus
+    );
+  };
 
-      const inBlockStatus = getExtrinsicStatus('InBlock');
-
-      await DefaultTransactionAPI.sendLogged(
-        apiPromise,
-        formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as any,
-        tx,
-        undefined,
-        inBlockStatus
-      );
-    };
-
-    handleTransaction();
+  const handleSubmit = (formData: CrossChainTransferFormData) => {
+    xcmTransferMutation.mutate(formData);
   };
 
   const form = useForm<CrossChainTransferFormData>({
@@ -136,6 +126,15 @@ const CrossChainTransferForm = (): JSX.Element => {
     },
     onSubmit: handleSubmit,
     validationSchema: crossChainTransferSchema(schema, t)
+  });
+
+  const xcmTransferMutation = useMutation<any, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
+    onSuccess: () => {
+      toast.success('Transfer successful');
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    }
   });
 
   const handleOriginatingChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -295,7 +294,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             <Dd size='xs'>{currentToken?.destFee}</Dd>
           </DlGroup>
         </StyledDl>
-        <AuthCTA size='large' type='submit' disabled={isCTADisabled}>
+        <AuthCTA size='large' type='submit' disabled={isCTADisabled} loading={xcmTransferMutation.isLoading}>
           {t('transfer')}
         </AuthCTA>
       </Flex>
