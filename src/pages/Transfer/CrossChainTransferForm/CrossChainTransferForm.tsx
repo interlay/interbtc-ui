@@ -56,7 +56,6 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const schema: CrossChainTransferValidationParams = {
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: {
-      // TODO: Make min and max amount undefined and remove fallback
       minAmount: currentToken
         ? newMonetaryAmount(currentToken.minTransferAmount, getCurrencyFromTicker(currentToken.value), true)
         : undefined,
@@ -70,13 +69,10 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!data || !formData) return;
 
     const { signer } = await web3FromAddress(formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string);
-
     const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName);
-
     const apiPromise = data.provider.getApiPromise(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string);
 
     apiPromise.setSigner(signer);
-
     adapter.setApi(apiPromise);
 
     const transferAmount = newSafeMonetaryAmount(
@@ -88,7 +84,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     const transferAmountString = transferAmount.toString(true);
     const transferAmountDecimals = transferAmount.currency.decimals;
 
-    // TODO: Transaction is in promise form
     const tx: any = adapter.createTx({
       amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
       to: formData[CROSS_CHAIN_TRANSFER_TO_FIELD],
@@ -120,8 +115,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t),
-    validateOnMount: false
+    validationSchema: crossChainTransferSchema(schema, t)
   });
 
   const xcmTransferMutation = useMutation<any, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
@@ -135,8 +129,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const handleOriginatingChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const destinationChains = getDestinationChains(e.target.value as ChainName);
-    setDestinationChains(destinationChains);
 
+    setDestinationChains(destinationChains);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
   };
 
