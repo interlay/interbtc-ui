@@ -61,7 +61,8 @@ const CrossChainTransferForm = (): JSX.Element => {
         : undefined,
       maxAmount: currentToken
         ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.value), true)
-        : undefined
+        : undefined,
+      transactionFee: currentToken?.destFee
     }
   };
 

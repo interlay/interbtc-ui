@@ -24,8 +24,8 @@ yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: 
 });
 
 type FeesValidationParams = {
-  transactionFee: MonetaryAmount<CurrencyExt>;
-  governanceBalance: MonetaryAmount<CurrencyExt>;
+  transactionFee: MonetaryAmount<CurrencyExt> | undefined;
+  governanceBalance?: MonetaryAmount<CurrencyExt>;
 };
 
 // TODO: remove when fees are moved out of form validation
@@ -36,7 +36,7 @@ yup.addMethod<yup.StringSchema>(
     return this.test('fees', (_, ctx) => {
       const { t } = ctx.options.context as YupContext;
 
-      if (governanceBalance.lt(transactionFee)) {
+      if (transactionFee && governanceBalance?.lt(transactionFee)) {
         const message =
           customMessage ||
           t('insufficient_funds_governance_token', {
