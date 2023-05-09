@@ -1,8 +1,6 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ChainName, CrossChainTransferParams } from '@interlay/bridge';
 import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
-// import { MonetaryAmount } from '@interlay/monetary-js';
-import { ApiPromise } from '@polkadot/api';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, Key, useEffect, useState } from 'react';
@@ -73,16 +71,13 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     const { signer } = await web3FromAddress(formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string);
 
-    const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as any);
+    const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName);
 
-    const apiPromise = (data.provider.getApiPromise(
-      formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string
-    ) as unknown) as ApiPromise;
+    const apiPromise = data.provider.getApiPromise(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as string);
 
     apiPromise.setSigner(signer);
 
-    // TODO: Version mismatch with ApiPromise type. This should be inferred.
-    adapter.setApi(apiPromise as any);
+    adapter.setApi(apiPromise);
 
     const transferAmount = newSafeMonetaryAmount(
       form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
@@ -105,7 +100,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     await DefaultTransactionAPI.sendLogged(
       apiPromise,
-      formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as any,
+      formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
       tx,
       undefined,
       inBlockStatus
@@ -125,7 +120,8 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t)
+    validationSchema: crossChainTransferSchema(schema, t),
+    validateOnMount: false
   });
 
   const xcmTransferMutation = useMutation<any, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
