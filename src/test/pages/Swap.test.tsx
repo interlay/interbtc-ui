@@ -9,7 +9,7 @@ import {
   mockGetLiquidityProvidedByAccount,
   mockSwap
 } from '../mocks/@interlay/interbtc-api/parachain/amm';
-import { DEFAULT_ACCOUNT_ADDRESS } from '../mocks/substrate/mocks';
+import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
 import { render, screen, userEvent, waitFor, within } from '../test-utils';
 
 const path = '/swap';
@@ -179,7 +179,7 @@ describe('Swap Page', () => {
     expect(mockSwap).toHaveBeenCalledWith(
       DEFAULT_TRADE,
       DEFAULT_TRADE_AMOUNT.OUTPUT,
-      DEFAULT_ACCOUNT_ADDRESS,
+      DEFAULT_ACCOUNT_1.address,
       DEFAULT_DEADLINE_BLOCK_NUMBER
     );
 

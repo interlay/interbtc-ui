@@ -1,11 +1,16 @@
 import { PressEvent } from '@react-types/shared';
-import { useMutation, useQuery, UseQueryResult } from 'react-query';
+import { useCallback } from 'react';
+import { useMutation, useQuery, useQueryClient, UseQueryResult } from 'react-query';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
+import { showSignTermsModalAction } from '@/common/actions/general.actions';
 import { TERMS_AND_CONDITIONS_LINK } from '@/config/relay-chains';
 import { SIGNER_API_URL } from '@/constants';
 import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 
 import { signMessage } from '../helpers/wallet';
+import { LocalStorageKey, TCSignaturesData, useLocalStorage } from './use-local-storage';
 
 interface GetSignatureData {
   exists: boolean;
@@ -29,55 +34,114 @@ const postSignature = async (account: KeyringPair) => {
   });
 };
 
-const getSignature = (account: KeyringPair | undefined) => {
-  if (!account) return;
-
-  return fetch(`${SIGNER_API_URL}/${account.address}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json'
-    }
-  }).then((response) => response.json());
-};
-
-const handleError = (error: Error) => console.log(error);
-
 type UseSignMessageResult = {
   hasSignature?: boolean;
-  selectProp: { onSelectionChange: (account: KeyringPair) => void };
   buttonProps: {
     onPress: (e: PressEvent) => void;
+    loading: boolean;
+  };
+  selectProps: { onSelectionChange: (account: KeyringPair) => void };
+  modal: {
+    buttonProps: {
+      onPress: (e: PressEvent) => void;
+      loading: boolean;
+    };
   };
 };
 
 const useSignMessage = (): UseSignMessageResult => {
-  const { selectedAccount } = useSubstrateSecureState();
-  const requireSigning = !!selectedAccount && !!SIGNER_API_URL;
+  const queryClient = useQueryClient();
 
-  const { data: signatureData, refetch: refetchSignatureData }: UseQueryResult<GetSignatureData, Error> = useQuery({
-    queryKey: ['getSignature', selectedAccount?.address],
-    queryFn: () => getSignature(selectedAccount),
-    onError: handleError,
-    enabled: requireSigning
+  const dispatch = useDispatch();
+  const [signatures, setSignatures] = useLocalStorage<TCSignaturesData>(LocalStorageKey.TC_SIGNATURES);
+  const { selectedAccount } = useSubstrateSecureState();
+
+  const setSignature = useCallback(
+    (address: string, hasSignature: boolean) => setSignatures({ ...signatures, [address]: hasSignature }),
+    [setSignatures, signatures]
+  );
+
+  const getSignature = useCallback(
+    async (account: KeyringPair): Promise<boolean> => {
+      const storedSignature = signatures?.[account.address];
+
+      if (storedSignature !== undefined) {
+        return storedSignature;
+      }
+
+      const res = await fetch(`${SIGNER_API_URL}/${account.address}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const response: GetSignatureData = await res.json();
+
+      setSignature(account.address, response.exists);
+
+      return response.exists;
+    },
+    [setSignature, signatures]
+  );
+
+  const queryKey = ['hasSignature', selectedAccount?.address];
+
+  const {
+    data: hasSignature,
+    refetch: refetchSignatureData,
+    isLoading: isSignatureLoading
+  }: UseQueryResult<boolean, Error> = useQuery({
+    queryKey,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    queryFn: () => selectedAccount && getSignature(selectedAccount),
+    // Does not allow to fetch by default
+    enabled: false,
+    onSuccess: (hasSignature) => {
+      if (hasSignature) return;
+      dispatch(showSignTermsModalAction(true));
+    }
   });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
-    onError: handleError,
-    onSuccess: () => refetchSignatureData()
+    onError: (_, variables) => {
+      setSignature(variables.address, false);
+      toast.error('Something went wrong!');
+    },
+    onSuccess: (_, variables) => {
+      setSignature(variables.address, true);
+      dispatch(showSignTermsModalAction(false));
+      refetchSignatureData();
+      toast.success('Your signature was submitted successfully.');
+    }
   });
 
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
     // or if signer api url is not set
-    if (!account || !SIGNER_API_URL || signatureData?.exists) return;
+    if (!account || !SIGNER_API_URL || hasSignature) return;
 
     signMessageMutation.mutate(account);
   };
 
+  const handleOpenSignTermModal = (account: KeyringPair) => {
+    if (!SIGNER_API_URL) return;
+
+    // Cancel possible ongoing unwanted account
+    queryClient.cancelQueries({ queryKey });
+    // Fetch selected account
+    refetchSignatureData({ queryKey: ['hasSignature', account.address] });
+  };
+
   return {
-    hasSignature: !requireSigning || signatureData?.exists,
-    selectProp: { onSelectionChange: handleSignMessage },
-    buttonProps: { onPress: () => handleSignMessage(selectedAccount) }
+    hasSignature: !!hasSignature,
+    modal: {
+      buttonProps: { onPress: () => handleSignMessage(selectedAccount), loading: signMessageMutation.isLoading }
+    },
+    selectProps: { onSelectionChange: handleOpenSignTermModal },
+    buttonProps: { onPress: () => dispatch(showSignTermsModalAction(true)), loading: isSignatureLoading }
   };
 };
 

@@ -1,4 +1,6 @@
 /* eslint-disable react/display-name */
+import '../i18n';
+
 import { act, render, RenderOptions } from '@testing-library/react';
 import { createMemoryHistory, MemoryHistory } from 'history';
 import React, { FC, ReactElement } from 'react';

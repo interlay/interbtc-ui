@@ -4,7 +4,8 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
-import { CTA, Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
+import { Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
+import { AuthCTA } from '@/components';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
@@ -116,9 +117,9 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
           </Flex>
         </ModalBody>
         <ModalFooter>
-          <CTA size='large' onClick={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
+          <AuthCTA size='large' onPress={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
             {content.buttonLabel}
-          </CTA>
+          </AuthCTA>
         </ModalFooter>
       </Modal>
       {toggleCollateralMutation.isError && (
