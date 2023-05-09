@@ -19,8 +19,8 @@ const Disclaimer = ({ showSignTerms }: DisclaimerProps): JSX.Element => {
         </TextLink>
         , and represent and warrant that you are not a Resident of the United States or a &quot;U.S. person&quot; within
         the meaning of Rule 902(k) under the United States Securities Act of 1933 (the &quot;Securities Act&quot;).{' '}
-        {showSignTerms && t('account_modal.sign_terms')}
       </Trans>
+      {showSignTerms && t('account_modal.sign_terms')}
     </P>
   );
 };
