@@ -1,10 +1,10 @@
 import '@testing-library/jest-dom';
 
-import { DEFAULT_INJECTED_ACCOUNT } from '../constants';
+import { DEFAULT_ACCOUNTS } from '../../substrate/mocks';
 
 // Must return empty array, so default account will be chosen.
 const mockWeb3Enable = jest.fn(() => []);
-const mockWeb3Accounts = jest.fn(jest.fn(() => [DEFAULT_INJECTED_ACCOUNT]));
+const mockWeb3Accounts = jest.fn().mockResolvedValue(DEFAULT_ACCOUNTS);
 
 jest.mock('@polkadot/extension-dapp', () => ({
   web3Enable: mockWeb3Enable,

@@ -5,8 +5,7 @@ import { useParams } from 'react-router';
 import { CoinPair, CTALink, H4, ModalBody, ModalFooter, ModalHeader, Stack } from '@/component-library';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import { URL_PARAMETERS } from '@/utils/constants/links';
-
-import { StepComponentProps, withStep } from './Step';
+import { StepComponentProps, withStep } from '@/utils/hocs/step';
 
 type Props = {
   collateralCurrency: CollateralCurrencyExt;
