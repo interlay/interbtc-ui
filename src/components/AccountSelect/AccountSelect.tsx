@@ -16,7 +16,7 @@ const getAccount = (accountValue?: string, accounts?: InjectedAccountWithMeta[])
   accounts?.find((account) => account.address === accountValue);
 
 type Props = {
-  value?: string;
+  value: string;
   defaultValue?: string;
   icons?: string[];
   isDisabled?: boolean;
@@ -29,7 +29,7 @@ type NativeAttrs = Omit<InputHTMLAttributes<HTMLInputElement> & { ref?: any }, k
 type AccountSelectProps = Props & NativeAttrs;
 
 const AccountSelect = forwardRef<HTMLInputElement, AccountSelectProps>(
-  ({ value: valueProp, defaultValue, accounts, disabled, label, className, ...props }, ref): JSX.Element => {
+  ({ value: valueProp, defaultValue = '', accounts, disabled, label, className, ...props }, ref): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
     const [isOpen, setOpen] = useState(false);

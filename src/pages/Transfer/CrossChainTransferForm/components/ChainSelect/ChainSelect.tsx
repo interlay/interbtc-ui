@@ -14,7 +14,7 @@ import { ChainListModal } from './ChainListModal';
 import { StyledChain } from './ChainSelect.style';
 
 type Props = {
-  value?: string;
+  value: string;
   defaultValue?: string;
   chains: Chains;
   label?: ReactNode;
@@ -27,7 +27,7 @@ type ChainSelectProps = Props & NativeAttrs;
 
 const ChainSelect = forwardRef<HTMLInputElement, ChainSelectProps>(
   (
-    { chains = [], value: valueProp, defaultValue, label, className, errorMessage, disabled, ...props },
+    { chains = [], value: valueProp, defaultValue = '', label, className, errorMessage, disabled, ...props },
     ref
   ): JSX.Element => {
     const inputRef = useRef<HTMLInputElement>(null);
