@@ -66,6 +66,17 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   };
 
+  const handleGetTokens = async () => {
+    if (!accountId) return;
+
+    return await getAvailableTokens(
+      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+      destinationChains[0].id as ChainName,
+      accountId?.toString(),
+      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
+    );
+  };
+
   const handleSubmit = (formData: CrossChainTransferFormData) => {
     xcmTransferMutation.mutate(formData);
   };
@@ -90,7 +101,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const valueUSD = convertMonetaryAmountToValueInUSD(
     transferMonetaryAmount,
-    getTokenPrice(prices, currentToken?.value as string)?.usd
+    getTokenPrice(prices, currentToken?.value)?.usd
   );
 
   const isCTADisabled = isFormDisabled(form);
@@ -108,6 +119,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const transferAmountString = transferMonetaryAmount.toString(true);
     const transferAmountDecimals = transferMonetaryAmount.currency.decimals;
 
+    // TODO: resolve tupe mismatch
     const tx: any = adapter.createTx({
       amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
       to: formData[CROSS_CHAIN_TRANSFER_TO_FIELD],
@@ -147,12 +159,7 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value, true);
 
-    const tokens = await getAvailableTokens(
-      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      e.target.value as ChainName,
-      accountId.toString(),
-      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
-    );
+    const tokens = await handleGetTokens();
 
     setTransferableTokens(tokens);
     setCurrentToken(tokens[0]);
@@ -196,12 +203,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!accountId) return;
 
     const getTokensForNewChain = async () => {
-      const tokens = await getAvailableTokens(
-        form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-        destinationChains[0].id as ChainName,
-        accountId.toString(),
-        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
-      );
+      const tokens = await handleGetTokens();
 
       setTransferableTokens(tokens);
       setCurrentToken(tokens[0]);
