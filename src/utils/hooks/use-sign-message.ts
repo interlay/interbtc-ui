@@ -1,5 +1,5 @@
 import { PressEvent } from '@react-types/shared';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient, UseQueryResult } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -117,6 +117,14 @@ const useSignMessage = (): UseSignMessageResult => {
       toast.success('Your signature was submitted successfully.');
     }
   });
+
+  // Reset mutation on account change
+  useEffect(() => {
+    if (signMessageMutation.isLoading && selectedAccount?.address) {
+      signMessageMutation.reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAccount?.address]);
 
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
