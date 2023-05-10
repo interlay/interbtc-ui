@@ -140,21 +140,15 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value, true);
 
-    const tokens = await handleGetTokens();
+    const tokens = await getAvailableTokens(
+      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+      e.target.value as ChainName,
+      accountId.toString(),
+      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
+    );
 
     setTransferableTokens(tokens);
     setCurrentToken(tokens[0]);
-  };
-
-  const handleGetTokens = async () => {
-    if (!accountId) return;
-
-    return await getAvailableTokens(
-      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      destinationChains[0].id as ChainName,
-      accountId?.toString(),
-      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
-    );
   };
 
   useEffect(() => {
@@ -212,7 +206,12 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!accountId) return;
 
     const getTokensForNewChain = async () => {
-      const tokens = await handleGetTokens();
+      const tokens = await getAvailableTokens(
+        form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+        destinationChains[0].id as ChainName,
+        accountId.toString(),
+        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
+      );
 
       setTransferableTokens(tokens);
       setCurrentToken(tokens[0]);
