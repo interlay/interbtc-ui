@@ -14,12 +14,12 @@ const Transfer = (): JSX.Element | null => {
       <Panel className={clsx('mx-auto', 'w-full', 'md:max-w-xl', 'p-10')}>
         <Flex direction='column' gap='spacing8'>
           <Tabs size='large' fullWidth>
-            <TabsItem title='Transfer'>
+            <TabsItem title='Transfer' key='transfer'>
               <StyledWrapper>
                 <TransferForm />
               </StyledWrapper>
             </TabsItem>
-            <TabsItem title='Cross Chain Transfer'>
+            <TabsItem title='Cross Chain Transfer' key='crossChainTransfer'>
               <StyledWrapper>
                 <CrossChainTransferForm />
               </StyledWrapper>

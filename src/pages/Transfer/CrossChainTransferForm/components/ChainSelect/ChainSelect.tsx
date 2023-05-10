@@ -26,17 +26,11 @@ type NativeAttrs = Omit<InputHTMLAttributes<HTMLInputElement> & { ref?: any }, k
 type ChainSelectProps = Props & NativeAttrs;
 
 const ChainSelect = forwardRef<HTMLInputElement, ChainSelectProps>(
-  ({
-    chains = [],
-    value: valueProp,
-    defaultValue,
-    label,
-    className,
-    errorMessage,
-    disabled,
-    ...props
-  }): JSX.Element => {
-    const inputRef = useRef<HTMLInputElement | null>(null);
+  (
+    { chains = [], value: valueProp, defaultValue, label, className, errorMessage, disabled, ...props },
+    ref
+  ): JSX.Element => {
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const [value, setValue] = useState(chains[0]?.id || defaultValue);
     const [isOpen, setOpen] = useState(false);
@@ -62,7 +56,7 @@ const ChainSelect = forwardRef<HTMLInputElement, ChainSelectProps>(
 
     return (
       <>
-        <Flex direction='column' flex='1' className={className}>
+        <Flex ref={ref} direction='column' flex='1' className={className}>
           {label && <Label {...labelProps}>{label}</Label>}
           <SelectTrigger
             onPress={() => setOpen(true)}
