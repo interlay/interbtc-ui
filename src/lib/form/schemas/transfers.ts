@@ -40,7 +40,6 @@ const crossChainTransferSchema = (params: CrossChainTransferValidationParams, t:
     [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: yup
       .string()
       .required(t('forms.please_enter_your_field', { field: 'destination' })),
-    // TODO: at the moment, this one is not displaying
     [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: yup
       .string()
       .required(t('forms.please_select_your_field', { field: 'transfer token' }))
