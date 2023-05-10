@@ -66,35 +66,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   };
 
-  const handleSubmit = (formData: CrossChainTransferFormData) => {
-    xcmTransferMutation.mutate(formData);
-  };
-
-  const form = useForm<CrossChainTransferFormData>({
-    initialValues: {
-      [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_FROM_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TO_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
-    },
-    onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t)
-  });
-
-  const transferMonetaryAmount = newSafeMonetaryAmount(
-    form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
-    getCurrencyFromTicker(currentToken.value),
-    true
-  );
-
-  const valueUSD = convertMonetaryAmountToValueInUSD(
-    transferMonetaryAmount,
-    getTokenPrice(prices, currentToken?.value as string)?.usd
-  );
-
-  const isCTADisabled = isFormDisabled(form);
-
   const mutateXcmTransfer = async (formData: CrossChainTransferFormData) => {
     if (!data || !formData) return;
 
@@ -105,8 +76,14 @@ const CrossChainTransferForm = (): JSX.Element => {
     apiPromise.setSigner(signer);
     adapter.setApi(apiPromise);
 
-    const transferAmountString = transferMonetaryAmount.toString(true);
-    const transferAmountDecimals = transferMonetaryAmount.currency.decimals;
+    const transferAmount = newSafeMonetaryAmount(
+      form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
+      getCurrencyFromTicker(currentToken.value),
+      true
+    );
+
+    const transferAmountString = transferAmount.toString(true);
+    const transferAmountDecimals = transferAmount.currency.decimals;
 
     const tx: any = adapter.createTx({
       amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
@@ -125,6 +102,22 @@ const CrossChainTransferForm = (): JSX.Element => {
       inBlockStatus
     );
   };
+
+  const handleSubmit = (formData: CrossChainTransferFormData) => {
+    xcmTransferMutation.mutate(formData);
+  };
+
+  const form = useForm<CrossChainTransferFormData>({
+    initialValues: {
+      [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
+      [CROSS_CHAIN_TRANSFER_FROM_FIELD]: '',
+      [CROSS_CHAIN_TRANSFER_TO_FIELD]: '',
+      [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: '',
+      [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
+    },
+    onSubmit: handleSubmit,
+    validationSchema: crossChainTransferSchema(schema, t)
+  });
 
   const xcmTransferMutation = useMutation<any, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
     onSuccess: () => {
@@ -174,6 +167,23 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
   };
+
+  const transferMonetaryAmount = currentToken
+    ? newSafeMonetaryAmount(
+        form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
+        getCurrencyFromTicker(currentToken.value),
+        true
+      )
+    : 0;
+
+  const valueUSD = transferMonetaryAmount
+    ? convertMonetaryAmountToValueInUSD(
+        transferMonetaryAmount,
+        getTokenPrice(prices, currentToken?.value as string)?.usd
+      )
+    : 0;
+
+  const isCTADisabled = isFormDisabled(form);
 
   useEffect(() => {
     if (!originatingChains?.length) return;
