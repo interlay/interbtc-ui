@@ -76,7 +76,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     apiPromise.setSigner(signer);
     adapter.setApi(apiPromise);
 
-    const transferAmount = newSafeMonetaryAmount(
+    const transferAmount = newMonetaryAmount(
       form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] || 0,
       getCurrencyFromTicker(currentToken.value),
       true
