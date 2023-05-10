@@ -200,12 +200,12 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
-      bifrost: new BifrostAdapter(),
-      heiko: new HeikoAdapter(),
-      karura: new KaruraAdapter(),
       kintsugi: new KintsugiAdapter(),
       kusama: new KusamaAdapter(),
-      statemine: new StatemineAdapter()
+      karura: new KaruraAdapter(),
+      statemine: new StatemineAdapter(),
+      bifrost: new BifrostAdapter(),
+      heiko: new HeikoAdapter()
     };
     SS58_PREFIX = 2;
     break;
