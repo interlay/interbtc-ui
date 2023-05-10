@@ -116,7 +116,8 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t)
+    validationSchema: crossChainTransferSchema(schema, t),
+    validateOnChange: false
   });
 
   const xcmTransferMutation = useMutation<any, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
@@ -138,7 +139,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleDestinationChainChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
     if (!accountId) return;
 
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value, true);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value);
 
     const tokens = await getAvailableTokens(
       form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
@@ -155,12 +156,12 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!transferableTokens.length) return;
     const defaultToken = transferableTokens[0];
 
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, defaultToken.value, true);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, defaultToken.value);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [transferableTokens]);
 
   const handleTickerChange = (ticker: string, name: string) => {
-    form.setFieldValue(name, ticker, true);
+    form.setFieldValue(name, ticker);
     setCurrentToken(transferableTokens.find((token) => token.value === ticker));
   };
 
@@ -183,7 +184,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       )
     : 0;
 
-  const isCTADisabled = isFormDisabled(form);
+  const isCTADisabled = isFormDisabled(form) || form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] === '';
 
   useEffect(() => {
     if (!originatingChains?.length) return;
@@ -256,7 +257,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             balance={currentToken?.balance.toString() || 0}
             humanBalance={currentToken?.balance.toString() || 0}
             valueUSD={valueUSD || 0}
-            selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, false), {
+            selectProps={mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TOKEN_FIELD), {
               onSelectionChange: (ticker: Key) =>
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
