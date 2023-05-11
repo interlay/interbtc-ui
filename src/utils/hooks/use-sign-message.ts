@@ -1,6 +1,6 @@
 import { PressEvent } from '@react-types/shared';
 import { useCallback, useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient, UseQueryResult } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -62,11 +62,11 @@ const useSignMessage = (): UseSignMessageResult => {
   );
 
   const getSignature = useCallback(
-    async (account: KeyringPair): Promise<boolean> => {
+    async (account: KeyringPair) => {
       const storedSignature = signatures?.[account.address];
 
       if (storedSignature !== undefined) {
-        return storedSignature;
+        return { account, hasSignature: storedSignature };
       }
 
       const res = await fetch(`${SIGNER_API_URL}/${account.address}`, {
@@ -78,30 +78,24 @@ const useSignMessage = (): UseSignMessageResult => {
 
       const response: GetSignatureData = await res.json();
 
-      setSignature(account.address, response.exists);
-
-      return response.exists;
+      return { account, hasSignature: response.exists };
     },
-    [setSignature, signatures]
+    [signatures]
   );
 
   const queryKey = ['hasSignature', selectedAccount?.address];
 
-  const {
-    data: hasSignature,
-    refetch: refetchSignatureData,
-    isLoading: isSignatureLoading
-  }: UseQueryResult<boolean, Error> = useQuery({
+  const { data: hasSignature, refetch: refetchSignatureData, isLoading: isSignatureLoading } = useQuery({
     queryKey,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
+    enabled: !!selectedAccount,
     queryFn: () => selectedAccount && getSignature(selectedAccount),
-    // Does not allow to fetch by default
-    enabled: false,
-    onSuccess: (hasSignature) => {
-      if (hasSignature) return;
-      dispatch(showSignTermsModalAction(true));
+    onSuccess: (data) => {
+      if (!data) return;
+      console.log(data);
+      setSignature(data.account.address, data.hasSignature);
     }
   });
 
@@ -134,13 +128,20 @@ const useSignMessage = (): UseSignMessageResult => {
     signMessageMutation.mutate(account);
   };
 
-  const handleOpenSignTermModal = (account: KeyringPair) => {
+  const handleOpenSignTermModal = async (account: KeyringPair) => {
     if (!SIGNER_API_URL) return;
 
     // Cancel possible ongoing unwanted account
     queryClient.cancelQueries({ queryKey });
-    // Fetch selected account
-    refetchSignatureData({ queryKey: ['hasSignature', account.address] });
+
+    // Fetch selected account and await response
+    const result = await refetchSignatureData({ queryKey: ['hasSignature', account.address] });
+
+    // Exit if there is a signature
+    if (result.data?.hasSignature) return;
+
+    // Open signing modal if there is not a signature
+    dispatch(showSignTermsModalAction(true));
   };
 
   return {
