@@ -1,3 +1,4 @@
+import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ApiProvider, Bridge, ChainName, CrossChainInputConfigs } from '@interlay/bridge/build';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import { atomicToBaseAmount, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
@@ -27,7 +28,7 @@ type XCMBridgeData = {
 type XCMTokenData = {
   balance: string;
   balanceUSD: string;
-  destFee: Big;
+  destFee: FixedPointNumber;
   originFee: string;
   minTransferAmount: Big;
   value: string;
@@ -126,12 +127,11 @@ const useXCMBridge = (): UseXCMBridge => {
           const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
           const originFee = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
-          const destFee = atomicToBaseAmount(inputConfig.destFee.balance.toString(), nativeToken as CurrencyExt);
 
           return {
             balance: transferableBalance.toString(),
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
-            destFee,
+            destFee: inputConfig.destFee.balance,
             originFee: `${originFee.toString()} ${nativeToken.symbol}`,
             minTransferAmount: minInputToBig,
             value: token

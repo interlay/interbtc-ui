@@ -63,9 +63,6 @@ const CrossChainTransferForm = (): JSX.Element => {
         : undefined,
       maxAmount: currentToken
         ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.value), true)
-        : undefined,
-      transactionFee: currentToken
-        ? newMonetaryAmount(currentToken.destFee.toString(), getCurrencyFromTicker(currentToken.value), true)
         : undefined
     }
   };
@@ -120,8 +117,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t),
-    validateOnChange: false
+    validationSchema: crossChainTransferSchema(schema, t)
   });
 
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {

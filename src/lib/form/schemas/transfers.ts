@@ -2,7 +2,7 @@
 // import { MonetaryAmount } from '@interlay/monetary-js';
 import { TFunction } from 'react-i18next';
 
-import yup, { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
+import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
 const CROSS_CHAIN_TRANSFER_FROM_FIELD = 'transfer-from';
 const CROSS_CHAIN_TRANSFER_TO_FIELD = 'transfer-to';
@@ -19,7 +19,7 @@ type CrossChainTransferFormData = {
 };
 
 type CrossChainTransferValidationParams = {
-  [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: FeesValidationParams & MaxAmountValidationParams & MinAmountValidationParams;
+  [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: MaxAmountValidationParams & MinAmountValidationParams;
 };
 
 // MEMO: until now, only CROSS_CHAIN_TRANSFER_AMOUNT_FIELD needs validation
@@ -29,7 +29,6 @@ const crossChainTransferSchema = (params: CrossChainTransferValidationParams, t:
       .string()
       .requiredAmount('transfer')
       .maxAmount(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD])
-      .fees(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD])
       .minAmount(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD], 'transfer'),
     [CROSS_CHAIN_TRANSFER_FROM_FIELD]: yup
       .string()

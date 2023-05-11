@@ -24,7 +24,7 @@ yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: 
 });
 
 type FeesValidationParams = {
-  transactionFee: MonetaryAmount<CurrencyExt> | undefined;
+  transactionFee: MonetaryAmount<CurrencyExt>;
   governanceBalance?: MonetaryAmount<CurrencyExt>;
 };
 
