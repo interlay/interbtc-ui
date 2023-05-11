@@ -1,4 +1,4 @@
-import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
+import { ApiProvider, Bridge, ChainName, CrossChainInputConfigs } from '@interlay/bridge/build';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import { atomicToBaseAmount, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
@@ -24,6 +24,8 @@ type XCMBridgeData = {
   provider: ApiProvider;
 };
 
+type GetTransferableBalancesResult = Promise<{ ticker: any; inputConfig: CrossChainInputConfigs }[] | undefined>;
+
 type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
   originatingChains: Chains | undefined;
   getDestinationChains: (chain: ChainName) => Chains;
@@ -34,7 +36,7 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
     originAddress: string,
     destinationAddress: string,
     tokens: string[]
-  ) => any;
+  ) => GetTransferableBalancesResult;
 };
 
 const initXCMBridge = async () => {
