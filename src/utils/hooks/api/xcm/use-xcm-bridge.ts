@@ -28,13 +28,6 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
   originatingChains: Chains | undefined;
   getDestinationChains: (chain: ChainName) => Chains;
   getAvailableTokens: (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string) => any;
-  getInputConfigs: (
-    from: ChainName,
-    to: ChainName,
-    token: string,
-    destinationAddress: string,
-    originAddress: string
-  ) => any;
   getTransferableBalances: (
     from: ChainName,
     to: ChainName,
@@ -134,19 +127,6 @@ const useXCMBridge = (): UseXCMBridge => {
     [data, prices]
   );
 
-  const getInputConfigs = useCallback(
-    async (from: ChainName, to: ChainName, token: string, destinationAddress: string, originAddress: string) =>
-      await firstValueFrom(
-        XCMBridge.findAdapter(from).subscribeInputConfigs({
-          to,
-          token,
-          address: destinationAddress,
-          signer: originAddress
-        })
-      ),
-    []
-  );
-
   const getTransferableBalances = useCallback(
     async (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string, tokens: any[]) => {
       if (!data) return;
@@ -178,7 +158,6 @@ const useXCMBridge = (): UseXCMBridge => {
     originatingChains,
     getDestinationChains,
     getAvailableTokens,
-    getInputConfigs,
     getTransferableBalances
   };
 };
