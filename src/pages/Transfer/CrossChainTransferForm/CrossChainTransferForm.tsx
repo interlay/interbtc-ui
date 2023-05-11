@@ -29,7 +29,7 @@ import { getExtrinsicStatus } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { useXCMBridge } from '@/utils/hooks/api/xcm/use-xcm-bridge';
+import { useXCMBridge, XCMTokenData } from '@/utils/hooks/api/xcm/use-xcm-bridge';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { ChainSelect } from './components';
@@ -42,8 +42,8 @@ import {
 
 const CrossChainTransferForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
-  const [transferableTokens, setTransferableTokens] = useState<any[]>([]);
-  const [currentToken, setCurrentToken] = useState<any | undefined>();
+  const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);
+  const [currentToken, setCurrentToken] = useState<XCMTokenData | undefined>();
 
   const prices = useGetPrices();
   const { t } = useTranslation();
@@ -67,7 +67,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   };
 
   const mutateXcmTransfer = async (formData: CrossChainTransferFormData) => {
-    if (!data || !formData) return;
+    if (!data || !formData || !currentToken) return;
 
     const { signer } = await web3FromAddress(formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string);
     const adapter = data.bridge.findAdapter(formData[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName);
@@ -287,7 +287,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             <Dt size='xs' color='primary'>
               Destination chain transfer fee estimate
             </Dt>
-            <Dd size='xs'>{currentToken?.destFee}</Dd>
+            <Dd size='xs'>{`${currentToken?.destFee.toString()} ${currentToken?.value}`}</Dd>
           </DlGroup>
         </StyledDl>
         <AuthCTA size='large' type='submit' disabled={isCTADisabled} loading={xcmTransferMutation.isLoading}>

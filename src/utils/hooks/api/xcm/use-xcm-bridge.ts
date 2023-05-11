@@ -1,6 +1,7 @@
 import { ApiProvider, Bridge, ChainName, CrossChainInputConfigs } from '@interlay/bridge/build';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import { atomicToBaseAmount, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -24,6 +25,15 @@ type XCMBridgeData = {
   provider: ApiProvider;
 };
 
+type XCMTokenData = {
+  balance: string;
+  balanceUSD: string;
+  destFee: MonetaryAmount<CurrencyExt>;
+  originFee: string;
+  minTransferAmount: Big;
+  value: string;
+};
+
 type GetTransferableBalancesResult = Promise<{ ticker: any; inputConfig: CrossChainInputConfigs }[] | undefined>;
 
 type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
@@ -34,17 +44,7 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
     to: ChainName,
     originAddress: string,
     destinationAddress: string
-  ) => Promise<
-    | {
-        balance: string;
-        balanceUSD: string;
-        destFee: string;
-        originFee: string;
-        minTransferAmount: Big;
-        value: string;
-      }[]
-    | undefined
-  >;
+  ) => Promise<XCMTokenData[] | undefined>;
   getTransferableBalances: (
     from: ChainName,
     to: ChainName,
@@ -127,11 +127,15 @@ const useXCMBridge = (): UseXCMBridge => {
           const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
           const originFee = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
-
+          const destFee = newMonetaryAmount(
+            new Big(inputConfig.destFee.balance.toNumber()),
+            inputConfig.destFee.token as CurrencyExt,
+            true
+          );
           return {
             balance: transferableBalance.toString(),
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
-            destFee: `${inputConfig.destFee.balance.toNumber()} ${inputConfig.destFee.token}`,
+            destFee,
             originFee: `${originFee.toString()} ${nativeToken.symbol}`,
             minTransferAmount: minInputToBig,
             value: token
@@ -180,4 +184,4 @@ const useXCMBridge = (): UseXCMBridge => {
 };
 
 export { useXCMBridge };
-export type { UseXCMBridge };
+export type { UseXCMBridge, XCMTokenData };
