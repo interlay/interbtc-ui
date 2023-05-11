@@ -29,7 +29,22 @@ type GetTransferableBalancesResult = Promise<{ ticker: any; inputConfig: CrossCh
 type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
   originatingChains: Chains | undefined;
   getDestinationChains: (chain: ChainName) => Chains;
-  getAvailableTokens: (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string) => any;
+  getAvailableTokens: (
+    from: ChainName,
+    to: ChainName,
+    originAddress: string,
+    destinationAddress: string
+  ) => Promise<
+    | {
+        balance: string;
+        balanceUSD: string;
+        destFee: string;
+        originFee: string;
+        minTransferAmount: Big;
+        value: string;
+      }[]
+    | undefined
+  >;
   getTransferableBalances: (
     from: ChainName,
     to: ChainName,

@@ -148,6 +148,8 @@ const CrossChainTransferForm = (): JSX.Element => {
       form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
     );
 
+    if (!tokens) return;
+
     setTransferableTokens(tokens);
     setCurrentToken(tokens[0]);
   };
@@ -213,6 +215,8 @@ const CrossChainTransferForm = (): JSX.Element => {
         accountId.toString(),
         form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
       );
+
+      if (!tokens) return;
 
       setTransferableTokens(tokens);
       setCurrentToken(tokens[0]);
