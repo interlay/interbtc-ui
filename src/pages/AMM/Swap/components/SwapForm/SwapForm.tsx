@@ -1,12 +1,8 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
-import { AddressOrPair } from '@polkadot/api/types';
-import { ISubmittableResult } from '@polkadot/types/types';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
 import { ChangeEventHandler, Key, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useDebounce } from 'react-use';
@@ -26,11 +22,11 @@ import {
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { SwapPair } from '@/types/swap';
 import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PriceImpactModal } from '../PriceImpactModal';
@@ -83,16 +79,6 @@ const getPoolPriceImpact = (trade: Trade | null | undefined, inputAmountUSD: num
       : new Big(0)
 });
 
-type SwapData = {
-  trade: Trade;
-  minimumAmountOut: MonetaryAmount<CurrencyExt>;
-  recipient: AddressOrPair;
-  deadline: string | number;
-};
-
-const mutateSwap = ({ deadline, minimumAmountOut, recipient, trade }: SwapData) =>
-  submitExtrinsic(window.bridge.amm.swap(trade, minimumAmountOut, recipient, deadline));
-
 type Props = {
   pair: SwapPair;
   liquidityPools: LiquidityPool[];
@@ -126,8 +112,16 @@ const SwapForm = ({
   const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
+  const transactionMutation = useTransaction(Transaction.SWAP, {
+    onSuccess: () => {
+      setTrade(undefined);
+      setInputAmount(undefined);
+      onSwap();
+    }
+  });
+
   useDebounce(
-    () => {
+    async () => {
       if (!pair.input || !pair.output || !inputAmount) {
         return setTrade(undefined);
       }
@@ -140,18 +134,6 @@ const SwapForm = ({
     500,
     [inputAmount, pair]
   );
-
-  const swapMutation = useMutation<ISubmittableResult, Error, SwapData>(mutateSwap, {
-    onSuccess: () => {
-      toast.success('Swap successful');
-      setTrade(undefined);
-      setInputAmount(undefined);
-      onSwap();
-    },
-    onError: (err) => {
-      toast.error(err.message);
-    }
-  });
 
   const inputBalance = pair.input && getAvailableBalance(pair.input.ticker);
   const outputBalance = pair.output && getAvailableBalance(pair.output.ticker);
@@ -174,12 +156,7 @@ const SwapForm = ({
 
       const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
 
-      return swapMutation.mutate({
-        trade,
-        recipient: accountId,
-        minimumAmountOut,
-        deadline
-      });
+      return transactionMutation.execute(trade, minimumAmountOut, accountId, deadline);
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -212,7 +189,7 @@ const SwapForm = ({
     initialValues,
     validationSchema: swapSchema({ [SWAP_INPUT_AMOUNT_FIELD]: inputSchemaParams }),
     onSubmit: handleSubmit,
-    disableValidation: swapMutation.isLoading,
+    disableValidation: transactionMutation.isLoading,
     validateOnMount: true
   });
 
@@ -239,11 +216,11 @@ const SwapForm = ({
   useEffect(() => {
     const isAmountFieldEmpty = form.values[SWAP_INPUT_AMOUNT_FIELD] === '';
 
-    if (isAmountFieldEmpty || !swapMutation.isSuccess) return;
+    if (isAmountFieldEmpty || !transactionMutation.isSuccess) return;
 
     form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [swapMutation.isSuccess]);
+  }, [transactionMutation.isSuccess]);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputAmount(e.target.value);
@@ -341,7 +318,7 @@ const SwapForm = ({
                 />
               </Flex>
               {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
-              <SwapCTA trade={trade} errors={form.errors} loading={swapMutation.isLoading} pair={pair} />
+              <SwapCTA trade={trade} errors={form.errors} pair={pair} />
             </Flex>
           </form>
         </Flex>

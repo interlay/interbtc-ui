@@ -45,8 +45,7 @@ const getProps = (
   }
 
   return {
-    children: t('amm.swap'),
-    disabled: false
+    children: t('amm.swap')
   };
 };
 
@@ -54,15 +53,14 @@ type SwapCTAProps = {
   pair: SwapPair;
   trade: Trade | null | undefined;
   errors: FormErrors<SwapFormData>;
-  loading: boolean;
 };
 
-const SwapCTA = ({ pair, trade, errors, loading }: SwapCTAProps): JSX.Element | null => {
+const SwapCTA = ({ pair, trade, errors }: SwapCTAProps): JSX.Element | null => {
   const { t } = useTranslation();
 
   const otherProps = getProps(pair, trade, errors, t);
 
-  return <AuthCTA type='submit' fullWidth size='large' loading={loading} {...otherProps} />;
+  return <AuthCTA type='submit' fullWidth size='large' {...otherProps} />;
 };
 
 export { SwapCTA };
