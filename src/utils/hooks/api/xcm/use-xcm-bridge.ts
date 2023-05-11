@@ -1,5 +1,5 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
-import { ApiProvider, Bridge, ChainName, CrossChainInputConfigs } from '@interlay/bridge/build';
+import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import { atomicToBaseAmount, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
@@ -34,8 +34,6 @@ type XCMTokenData = {
   value: string;
 };
 
-type GetTransferableBalancesResult = Promise<{ ticker: string; inputConfig: CrossChainInputConfigs }[] | undefined>;
-
 type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
   originatingChains: Chains | undefined;
   getDestinationChains: (chain: ChainName) => Chains;
@@ -45,13 +43,6 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
     originAddress: string,
     destinationAddress: string
   ) => Promise<XCMTokenData[] | undefined>;
-  getTransferableBalances: (
-    from: ChainName,
-    to: ChainName,
-    originAddress: string,
-    destinationAddress: string,
-    tokens: string[]
-  ) => GetTransferableBalancesResult;
 };
 
 const initXCMBridge = async () => {
@@ -144,39 +135,13 @@ const useXCMBridge = (): UseXCMBridge => {
     [data, prices]
   );
 
-  const getTransferableBalances = useCallback(
-    async (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string, tokens: any[]) => {
-      console.log('getTransferableBalances', tokens);
-      if (!data) return;
-
-      const inputConfigs = await Promise.all(
-        tokens.map(async (token) => {
-          const inputConfig = await firstValueFrom(
-            data.bridge.findAdapter(from).subscribeInputConfigs({
-              to,
-              token: token.ticker,
-              address: destinationAddress,
-              signer: originAddress
-            })
-          );
-
-          return { ticker: token.ticker, inputConfig };
-        })
-      );
-
-      return inputConfigs;
-    },
-    [data]
-  );
-
   useErrorHandler(error);
 
   return {
     ...queryResult,
     originatingChains,
     getDestinationChains,
-    getAvailableTokens,
-    getTransferableBalances
+    getAvailableTokens
   };
 };
 
