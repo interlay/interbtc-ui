@@ -112,20 +112,16 @@ const SwapForm = ({
   const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
-  const transaction = useTransaction(Transaction.AMM_SWAP, {
+  const transactionMutation = useTransaction(Transaction.SWAP, {
     onSuccess: () => {
-      toast.success('Swap successful');
       setTrade(undefined);
       setInputAmount(undefined);
       onSwap();
-    },
-    onError: (err) => {
-      toast.error(err.message);
     }
   });
 
   useDebounce(
-    () => {
+    async () => {
       if (!pair.input || !pair.output || !inputAmount) {
         return setTrade(undefined);
       }
@@ -160,7 +156,7 @@ const SwapForm = ({
 
       const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
 
-      return transaction.execute(trade, minimumAmountOut, accountId, deadline);
+      return transactionMutation.execute(trade, minimumAmountOut, accountId, deadline);
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -193,7 +189,7 @@ const SwapForm = ({
     initialValues,
     validationSchema: swapSchema({ [SWAP_INPUT_AMOUNT_FIELD]: inputSchemaParams }),
     onSubmit: handleSubmit,
-    disableValidation: transaction.isLoading,
+    disableValidation: transactionMutation.isLoading,
     validateOnMount: true
   });
 
@@ -220,11 +216,11 @@ const SwapForm = ({
   useEffect(() => {
     const isAmountFieldEmpty = form.values[SWAP_INPUT_AMOUNT_FIELD] === '';
 
-    if (isAmountFieldEmpty || !transaction.isSuccess) return;
+    if (isAmountFieldEmpty || !transactionMutation.isSuccess) return;
 
     form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transaction.isSuccess]);
+  }, [transactionMutation.isSuccess]);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputAmount(e.target.value);
@@ -322,7 +318,7 @@ const SwapForm = ({
                 />
               </Flex>
               {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
-              <SwapCTA trade={trade} errors={form.errors} pair={pair} loading={transaction.isLoading} />
+              <SwapCTA trade={trade} errors={form.errors} pair={pair} />
             </Flex>
           </form>
         </Flex>

@@ -1,122 +1,104 @@
+import { ExtrinsicData } from '@interlay/interbtc-api';
+import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { useCallback } from 'react';
 import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } from 'react-query';
 
 import { useSubstrate } from '@/lib/substrate';
 
-import { Transaction, TransactionActions, TransactionArgs } from './types';
-import { getExtrinsic, getStatus } from './utils/extrinsic';
-import { submitTransaction } from './utils/submit';
+import { submitTransaction } from './submit';
+import { Transaction, TransactionActions } from './types';
+
+type PrepareResult = { extrinsics: ExtrinsicData; fee: MonetaryAmount<Currency> };
+
+type TransactionArgs<T extends Transaction> = Extract<TransactionActions, { type: T }>['args'];
 
 type UseTransactionOptions = Omit<
-  UseMutationOptions<ISubmittableResult, Error, TransactionActions, unknown>,
+  UseMutationOptions<ISubmittableResult, unknown, TransactionActions, unknown>,
   'mutationFn'
 > & {
-  customStatus?: ExtrinsicStatus['type'];
+  prepare?: Omit<UseMutationOptions<PrepareResult, unknown, TransactionActions, unknown>, 'mutationFn'>;
 };
 
-// TODO: add feeEstimate and feeEstimateAsync
-type ExecuteArgs<T extends Transaction> = {
-  // Executes the transaction
-  execute<D extends Transaction = T>(...args: TransactionArgs<D>): void;
-  // Similar to execute but returns a promise which can be awaited.
-  executeAsync<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<ISubmittableResult>;
+const getExtrinsic = (params: TransactionActions) => {
+  switch (params.type) {
+    case Transaction.SWAP: {
+      return window.bridge.amm.swap(...params.args);
+    }
+    case Transaction.POOL_ADD_LIQUIDITY: {
+      return window.bridge.amm.addLiquidity(...params.args);
+    }
+  }
 };
 
-// TODO: add feeEstimate and feeEstimateAsync
-type ExecuteTypeArgs<T extends Transaction> = {
-  execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
-  executeAsync<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<ISubmittableResult>;
+const getExpectedStatus = (type: Transaction): ExtrinsicStatus['type'] => {
+  switch (type) {
+    // some transactions will need Finalized Status
+    default:
+      return 'InBlock';
+  }
 };
 
-type InheritAttrs = Omit<
-  UseMutationResult<ISubmittableResult, Error, TransactionActions, unknown>,
-  'mutate' | 'mutateAsync'
->;
+const transactionMutation: MutationFunction<ISubmittableResult, TransactionActions> = async (params) => {
+  const extrinsics = getExtrinsic(params);
 
-type UseTransactionResult<T extends Transaction> = InheritAttrs & (ExecuteArgs<T> | ExecuteTypeArgs<T>);
+  if (!extrinsics) {
+    throw new Error('Something went wrong');
+  }
 
-const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions> = async (params) => {
-  const extrinsics = await getExtrinsic(params);
-  const expectedStatus = params.customStatus || getStatus(params.type);
+  const status = getExpectedStatus(params.type);
 
-  return submitTransaction(window.bridge.api, params.accountAddress, extrinsics, expectedStatus, params.events);
+  return submitTransaction(
+    window.bridge.api,
+    params.address,
+    extrinsics.extrinsic,
+    { onSigning: () => console.log('signed') },
+    status
+  );
 };
 
-// The three declared functions are use to infer types on diferent implementations
-// TODO: missing xcm transaction
-function useTransaction<T extends Transaction>(
-  type: T,
-  options?: UseTransactionOptions
-): Exclude<UseTransactionResult<T>, ExecuteTypeArgs<T>>;
-function useTransaction<T extends Transaction>(
-  options?: UseTransactionOptions
-): Exclude<UseTransactionResult<T>, ExecuteArgs<T>>;
-function useTransaction<T extends Transaction>(
-  typeOrOptions?: T | UseTransactionOptions,
-  options?: UseTransactionOptions
-): UseTransactionResult<T> {
+const mutateFee: MutationFunction<PrepareResult, TransactionActions> = async (params) => {
+  const extrinsics = getExtrinsic(params);
+
+  const fee = await window.bridge.transaction.getFeeEstimate(extrinsics.extrinsic);
+
+  return { extrinsics, fee };
+};
+
+type UseTransactionResult<T extends Transaction> = Omit<
+  UseMutationResult<ISubmittableResult, unknown, TransactionActions, unknown>,
+  'mutate'
+> & {
+  // TODO: remove optional and add implementation
+  prepare: (...args: TransactionArgs<T>) => void;
+  execute: (...args: TransactionArgs<T>) => void;
+  fee: Omit<UseMutationResult<PrepareResult, unknown, TransactionActions, unknown>, 'mutate'>;
+};
+
+const useTransaction = <T extends Transaction>(type: T, options?: UseTransactionOptions): UseTransactionResult<T> => {
   const { state } = useSubstrate();
+  const prepareMutation = useMutation(mutateFee, options?.prepare);
 
-  const hasOnlyOptions = typeof typeOrOptions !== 'string';
-
-  const { mutate, mutateAsync, ...transactionMutation } = useMutation(
-    mutateTransaction,
-    (hasOnlyOptions ? typeOrOptions : options) as UseTransactionOptions
-  );
-
-  // Handles params for both type of implementations
-  const getParams = useCallback(
-    (args: Parameters<UseTransactionResult<T>['execute']>) => {
-      let params = {};
-
-      // Assign correct params for when transaction type is declared on hook params
-      if (typeof typeOrOptions === 'string') {
-        params = { type: typeOrOptions, args };
-      } else {
-        // Assign correct params for when transaction type is declared on execution level
-        const [type, ...restArgs] = args;
-        params = { type, args: restArgs };
-      }
-
-      // Execution should only ran when authenticated
-      const accountAddress = state.selectedAccount?.address;
-
-      // TODO: add event `onReady`
-      return {
-        ...params,
-        accountAddress,
-        customStatus: options?.customStatus
-      } as TransactionActions;
-    },
-    [options?.customStatus, state.selectedAccount?.address, typeOrOptions]
-  );
-
-  const handleExecute = useCallback(
-    (...args: Parameters<UseTransactionResult<T>['execute']>) => {
-      const params = getParams(args);
-
-      return mutate(params);
-    },
-    [getParams, mutate]
-  );
-
-  const handleExecuteAsync = useCallback(
-    (...args: Parameters<UseTransactionResult<T>['executeAsync']>) => {
-      const params = getParams(args);
-
-      return mutateAsync(params);
-    },
-    [getParams, mutateAsync]
-  );
+  const mutation = useMutation(transactionMutation, options || {});
 
   return {
-    ...transactionMutation,
-    execute: handleExecute,
-    executeAsync: handleExecuteAsync
+    ...mutation,
+    fee: prepareMutation,
+    prepare: ((...args: TransactionArgs<T>) =>
+      mutation.mutate({
+        type,
+        args,
+        timestamp: new Date().getTime()
+      } as TransactionActions)) as any,
+    // asserting this to `any` due to complex type error
+    execute: ((...args: TransactionArgs<T>) =>
+      mutation.mutate({
+        type,
+        args,
+        address: state.selectedAccount?.address,
+        timestamp: new Date().getTime()
+      } as TransactionActions)) as any
   };
-}
+};
 
 export { useTransaction };
-export type { UseTransactionResult };
