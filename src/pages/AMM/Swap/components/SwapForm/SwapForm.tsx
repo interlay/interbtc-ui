@@ -216,8 +216,6 @@ const SwapForm = ({
     validateOnMount: true
   });
 
-  console.log('form.errors', form.errors);
-
   // MEMO: re-validate form on balances refetch
   useEffect(() => {
     form.validateForm();
