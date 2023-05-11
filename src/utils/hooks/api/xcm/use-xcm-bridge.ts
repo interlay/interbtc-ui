@@ -1,7 +1,6 @@
 import { ApiProvider, Bridge, ChainName, CrossChainInputConfigs } from '@interlay/bridge/build';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import { atomicToBaseAmount, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -28,13 +27,13 @@ type XCMBridgeData = {
 type XCMTokenData = {
   balance: string;
   balanceUSD: string;
-  destFee: MonetaryAmount<CurrencyExt>;
+  destFee: Big;
   originFee: string;
   minTransferAmount: Big;
   value: string;
 };
 
-type GetTransferableBalancesResult = Promise<{ ticker: any; inputConfig: CrossChainInputConfigs }[] | undefined>;
+type GetTransferableBalancesResult = Promise<{ ticker: string; inputConfig: CrossChainInputConfigs }[] | undefined>;
 
 type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
   originatingChains: Chains | undefined;
@@ -127,11 +126,8 @@ const useXCMBridge = (): UseXCMBridge => {
           const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
           const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
           const originFee = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
-          const destFee = newMonetaryAmount(
-            new Big(inputConfig.destFee.balance.toNumber()),
-            inputConfig.destFee.token as CurrencyExt,
-            true
-          );
+          const destFee = atomicToBaseAmount(inputConfig.destFee.balance.toString(), nativeToken as CurrencyExt);
+
           return {
             balance: transferableBalance.toString(),
             balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
@@ -150,6 +146,7 @@ const useXCMBridge = (): UseXCMBridge => {
 
   const getTransferableBalances = useCallback(
     async (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string, tokens: any[]) => {
+      console.log('getTransferableBalances', tokens);
       if (!data) return;
 
       const inputConfigs = await Promise.all(

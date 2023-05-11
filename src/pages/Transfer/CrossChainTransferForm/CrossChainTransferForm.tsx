@@ -1,7 +1,9 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ChainName, CrossChainTransferParams } from '@interlay/bridge';
 import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { web3FromAddress } from '@polkadot/extension-dapp';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, Key, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -62,7 +64,9 @@ const CrossChainTransferForm = (): JSX.Element => {
       maxAmount: currentToken
         ? newMonetaryAmount(currentToken.balance, getCurrencyFromTicker(currentToken.value), true)
         : undefined,
-      transactionFee: currentToken?.destFee
+      transactionFee: currentToken
+        ? newMonetaryAmount(currentToken.destFee.toString(), getCurrencyFromTicker(currentToken.value), true)
+        : undefined
     }
   };
 
@@ -85,7 +89,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const transferAmountString = transferAmount.toString(true);
     const transferAmountDecimals = transferAmount.currency.decimals;
 
-    const tx: any = adapter.createTx({
+    const tx = adapter.createTx({
       amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
       to: formData[CROSS_CHAIN_TRANSFER_TO_FIELD],
       token: formData[CROSS_CHAIN_TRANSFER_TOKEN_FIELD],
@@ -97,7 +101,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     await DefaultTransactionAPI.sendLogged(
       apiPromise,
       formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
-      tx,
+      tx as SubmittableExtrinsic<'promise', ISubmittableResult>,
       undefined,
       inBlockStatus
     );
@@ -120,7 +124,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     validateOnChange: false
   });
 
-  const xcmTransferMutation = useMutation<any, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
+  const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
     onSuccess: () => {
       toast.success('Transfer successful');
     },
