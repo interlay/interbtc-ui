@@ -396,7 +396,8 @@ const theme = {
     },
     header: {
       paddingY: 'var(--spacing-4)',
-      paddingX: 'var(--spacing-6)'
+      paddingX: 'var(--spacing-6)',
+      paddingRight: 'var(--spacing-8)'
     },
     divider: {
       marginX: 'var(--spacing-6)',

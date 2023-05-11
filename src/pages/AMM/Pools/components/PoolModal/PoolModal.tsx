@@ -41,13 +41,13 @@ const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | n
       {...props}
     >
       <ModalBody noPadding>
-        <StyledTabs size='large' fullWidth>
-          <TabsItem title={t('deposit')}>
+        <StyledTabs size='large' fullWidth disabledKeys={pool.isEmpty ? ['withdraw'] : []}>
+          <TabsItem key='deposit' title={t('deposit')}>
             <StyledWrapper>
               <DepositForm slippageModalRef={ref} pool={pool} onDeposit={handleAction} />
             </StyledWrapper>
           </TabsItem>
-          <TabsItem title={t('withdraw')}>
+          <TabsItem key='withdraw' title={t('withdraw')}>
             <StyledWrapper>
               <WithdrawForm slippageModalRef={ref} pool={pool} onWithdraw={handleAction} />
             </StyledWrapper>

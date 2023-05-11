@@ -9,7 +9,7 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { displayMonetaryAmountInUSDFormat, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
+import { Alert, Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
@@ -116,6 +116,12 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
       return form.setValues(defaultValues);
     }
 
+    // If pool has no liquidity, the assets ratio is set by the user,
+    // therefore the value inputted is directly used.
+    if (pool.isEmpty) {
+      return form.setValues({ [e.target.name]: e.target.value });
+    }
+
     const inputCurrency = pooledCurrencies.find((currency) => currency.currency.ticker === e.target.name);
     const inputAmount = newSafeMonetaryAmount(e.target.value || 0, inputCurrency?.currency as CurrencyExt, true);
 
@@ -174,7 +180,14 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
               );
             })}
           </Flex>
-          <DepositOutputAssets pool={pool} values={form.values} prices={prices} />
+          {pool.isEmpty ? (
+            <Alert status='warning'>
+              <p>{t('amm.pools.initial_rate_warning')}</p>
+            </Alert>
+          ) : (
+            <DepositOutputAssets pool={pool} values={form.values} prices={prices} />
+          )}
+
           <StyledDl direction='column' gap='spacing2'>
             <DlGroup justifyContent='space-between'>
               <Dt size='xs' color='primary'>

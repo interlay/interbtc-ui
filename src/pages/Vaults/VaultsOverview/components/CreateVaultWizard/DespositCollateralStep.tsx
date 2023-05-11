@@ -17,10 +17,10 @@ import {
   useForm
 } from '@/lib/form';
 import { submitExtrinsic } from '@/utils/helpers/extrinsic';
+import { StepComponentProps, withStep } from '@/utils/hocs/step';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
-import { StepComponentProps, withStep } from './Step';
 
 type Props = {
   collateralCurrency: CollateralCurrencyExt;

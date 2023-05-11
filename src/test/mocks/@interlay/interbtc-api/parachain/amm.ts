@@ -34,6 +34,18 @@ const DEFAULT_LP_TOKEN_2: StandardLpToken = {
   }
 };
 
+const LP_TOKEN_3_NAME = `LP ${WRAPPED_TOKEN.ticker}-${GOVERNANCE_TOKEN.ticker}`;
+
+const LP_TOKEN_3: StandardLpToken = {
+  name: LP_TOKEN_3_NAME,
+  ticker: LP_TOKEN_3_NAME,
+  decimals: 18,
+  lpToken: {
+    token0: WRAPPED_TOKEN,
+    token1: GOVERNANCE_TOKEN
+  }
+};
+
 const DEFAULT_POOLED_CURRENCIES_1 = [
   newMonetaryAmount(1, GOVERNANCE_TOKEN, true),
   newMonetaryAmount(5, RELAY_CHAIN_NATIVE_TOKEN, true)
@@ -44,13 +56,16 @@ const DEFAULT_POOLED_CURRENCIES_2 = [
   newMonetaryAmount(5, RELAY_CHAIN_NATIVE_TOKEN, true)
 ];
 
+const EMPTY_POOL_POOLED_CURRENCIES = [newMonetaryAmount(0, WRAPPED_TOKEN), newMonetaryAmount(0, GOVERNANCE_TOKEN)];
+
 const DEFAULT_LIQUIDITY_POOL_1 = new StandardLiquidityPool(
   DEFAULT_LP_TOKEN_1,
   DEFAULT_POOLED_CURRENCIES_1,
   [newMonetaryAmount(5, GOVERNANCE_TOKEN, true)],
   new Big('0.003'),
   true,
-  newMonetaryAmount(1, DEFAULT_LP_TOKEN_1, true)
+  newMonetaryAmount(1, DEFAULT_LP_TOKEN_1, true),
+  false
 );
 
 const DEFAULT_LIQUIDITY_POOL_2 = new StandardLiquidityPool(
@@ -59,7 +74,18 @@ const DEFAULT_LIQUIDITY_POOL_2 = new StandardLiquidityPool(
   [newMonetaryAmount(5, GOVERNANCE_TOKEN, true)],
   new Big('0.003'),
   true,
-  newMonetaryAmount(1, DEFAULT_LP_TOKEN_2, true)
+  newMonetaryAmount(1, DEFAULT_LP_TOKEN_2, true),
+  false
+);
+
+const EMPTY_LIQUIDITY_POOL = new StandardLiquidityPool(
+  LP_TOKEN_3,
+  EMPTY_POOL_POOLED_CURRENCIES,
+  [newMonetaryAmount(5, GOVERNANCE_TOKEN, true)],
+  Big(0),
+  true,
+  newMonetaryAmount(0, LP_TOKEN_3),
+  true
 );
 
 const DEFAULT_LIQUIDITY_POOLS = [DEFAULT_LIQUIDITY_POOL_1, DEFAULT_LIQUIDITY_POOL_2];
@@ -141,6 +167,8 @@ export {
   DEFAULT_POOLED_CURRENCIES_2,
   DEFAULT_TRADE,
   DEFAULT_TRADE_AMOUNT,
+  EMPTY_LIQUIDITY_POOL,
+  LP_TOKEN_3,
   mockAddLiquidity,
   mockClaimFarmingRewards,
   mockGetClaimableFarmingRewards,

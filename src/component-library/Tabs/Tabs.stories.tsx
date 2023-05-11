@@ -4,20 +4,20 @@ import { P } from '../Text';
 import { Tabs, TabsItem, TabsProps } from '.';
 
 const Template: Story<TabsProps> = (args) => (
-  <Tabs {...args}>
-    <TabsItem title='Recent'>
+  <Tabs {...args} disabledKeys={['recent']}>
+    <TabsItem key='recent' title='Recent'>
       <P>All</P>
     </TabsItem>
-    <TabsItem title='Pending'>
+    <TabsItem key='pending' title='Pending'>
       <P>Pending</P>
     </TabsItem>
-    <TabsItem title='Issue'>
+    <TabsItem key='issue' title='Issue'>
       <P>Issue</P>
     </TabsItem>
-    <TabsItem title='Redeem'>
+    <TabsItem key='redeem' title='Redeem'>
       <P>Redeem</P>
     </TabsItem>
-    <TabsItem title='Replace'>
+    <TabsItem key='replace' title='Replace'>
       <P>Replace</P>
     </TabsItem>
   </Tabs>
@@ -28,10 +28,10 @@ Default.args = {};
 
 const Simple: Story<TabsProps> = (args) => (
   <Tabs style={{ maxWidth: 350 }} {...args}>
-    <TabsItem title='Lend'>
+    <TabsItem key='lend' title='Lend'>
       <P>Lend</P>
     </TabsItem>
-    <TabsItem title='Withdraw'>
+    <TabsItem key='withdraw' title='Withdraw'>
       <P>Withdraw</P>
     </TabsItem>
   </Tabs>
