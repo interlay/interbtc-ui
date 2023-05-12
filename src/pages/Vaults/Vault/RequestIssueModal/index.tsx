@@ -16,6 +16,7 @@ import { useSelector } from 'react-redux';
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { Modal, ModalBody, ModalHeader } from '@/component-library';
 import {
   BLOCKS_BEHIND_LIMIT,
   DEFAULT_ISSUE_BRIDGE_FEE_RATE,
@@ -30,15 +31,12 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
-import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
 import SubmitButton from '@/legacy-components/SubmitButton';
 import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import { ForeignAssetIdLiteral } from '@/types/currency';
@@ -90,12 +88,10 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
   );
   const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT));
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
-  const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
 
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const focusRef = React.useRef(null);
 
   const handleError = useErrorHandler();
 
@@ -174,31 +170,29 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
   }
 
   const onSubmit = async (data: RequestIssueFormData) => {
-    try {
-      setSubmitStatus(STATUSES.PENDING);
-      await trigger(WRAPPED_TOKEN_AMOUNT);
+    setSubmitStatus(STATUSES.PENDING);
 
-      const wrappedTokenAmount = new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT] || '0');
+    await trigger(WRAPPED_TOKEN_AMOUNT);
 
-      const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
+    const wrappedTokenAmount = new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT] || '0');
 
-      const extrinsicResult = await transaction.executeAsync(
-        wrappedTokenAmount,
-        vaultAccountId,
-        collateralToken,
-        false, // default
-        vaults
-      );
+    const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
 
-      const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, extrinsicResult);
+    const result = await transaction.executeAsync(
+      wrappedTokenAmount,
+      vaultAccountId,
+      collateralToken,
+      false, // default
+      vaults
+    );
 
-      // TODO: handle issue aggregation
-      const issueRequest = issueRequests[0];
-      handleSubmittedRequestModalOpen(issueRequest);
-    } catch (error) {
-      setSubmitStatus(STATUSES.REJECTED);
-    }
+    const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, result.data);
+
+    // TODO: handle issue aggregation
+    const issueRequest = issueRequests[0];
+    handleSubmittedRequestModalOpen(issueRequest);
     setSubmitStatus(STATUSES.RESOLVED);
+    onClose();
   };
 
   const validateForm = (value: string): string | undefined => {
@@ -267,12 +261,9 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
   return (
     <>
-      <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
-        <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
-          <InterlayModalTitle as='h3' className={clsx('text-lg', 'font-medium', 'mb-6')}>
-            {t('vault.request_issue')}
-          </InterlayModalTitle>
-          <CloseIconButton ref={focusRef} onClick={onClose} />
+      <Modal isOpen={open} onClose={onClose}>
+        <ModalHeader>{t('vault.request_issue')}</ModalHeader>
+        <ModalBody>
           <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
             <p>{t('vault.issue_description')}</p>
             <p>
@@ -416,19 +407,8 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
               {t('confirm')}
             </SubmitButton>
           </form>
-        </InterlayModalInnerWrapper>
-      </InterlayModal>
-      {submitStatus === STATUSES.REJECTED && submitError && (
-        <ErrorModal
-          open={!!submitError}
-          onClose={() => {
-            setSubmitStatus(STATUSES.IDLE);
-            setSubmitError(null);
-          }}
-          title='Error'
-          description={typeof submitError === 'string' ? submitError : submitError.message}
-        />
-      )}
+        </ModalBody>
+      </Modal>
       {submittedRequest && (
         <SubmittedIssueRequestModal
           open={!!submittedRequest}

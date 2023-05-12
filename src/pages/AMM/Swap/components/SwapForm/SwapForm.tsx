@@ -4,7 +4,6 @@ import Big from 'big.js';
 import { ChangeEventHandler, Key, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { useDebounce } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
@@ -112,16 +111,17 @@ const SwapForm = ({
   const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
-  const transactionMutation = useTransaction(Transaction.SWAP, {
-    onSuccess: () => {
-      setTrade(undefined);
+  const transaction = useTransaction(Transaction.AMM_SWAP, {
+    onSigning: () => {
       setInputAmount(undefined);
-      onSwap();
-    }
+      form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '', true);
+      setTrade(undefined);
+    },
+    onSuccess: onSwap
   });
 
   useDebounce(
-    async () => {
+    () => {
       if (!pair.input || !pair.output || !inputAmount) {
         return setTrade(undefined);
       }
@@ -153,12 +153,11 @@ const SwapForm = ({
 
     try {
       const minimumAmountOut = trade.getMinimumOutputAmount(slippage);
-
       const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
 
-      return transactionMutation.execute(trade, minimumAmountOut, accountId, deadline);
-    } catch (err: any) {
-      toast.error(err.toString());
+      return transaction.execute(trade, minimumAmountOut, accountId, deadline);
+    } catch (err) {
+      transaction.reject();
     }
   };
 
@@ -189,7 +188,6 @@ const SwapForm = ({
     initialValues,
     validationSchema: swapSchema({ [SWAP_INPUT_AMOUNT_FIELD]: inputSchemaParams }),
     onSubmit: handleSubmit,
-    disableValidation: transactionMutation.isLoading,
     validateOnMount: true
   });
 
@@ -211,16 +209,6 @@ const SwapForm = ({
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pair]);
-
-  // MEMO: amount field cleaned up after successful swap
-  useEffect(() => {
-    const isAmountFieldEmpty = form.values[SWAP_INPUT_AMOUNT_FIELD] === '';
-
-    if (isAmountFieldEmpty || !transactionMutation.isSuccess) return;
-
-    form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactionMutation.isSuccess]);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputAmount(e.target.value);

@@ -1,6 +1,3 @@
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, Dl, DlGroup } from '@/component-library';
 import { AuthCTA } from '@/components';
@@ -16,14 +13,10 @@ type LoansInsightsProps = {
 };
 
 const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
-  const { t } = useTranslation();
   const { data: subsidyRewards, refetch } = useGetAccountSubsidyRewards();
 
   const transaction = useTransaction(Transaction.LOANS_CLAIM_REWARDS, {
-    onSuccess: () => {
-      toast.success(t('successfully_claimed_rewards'));
-      refetch();
-    }
+    onSuccess: refetch
   });
 
   const handleClickClaimRewards = () => transaction.execute();

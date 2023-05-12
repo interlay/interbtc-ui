@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 import { isBridgeLoaded } from '@/common/actions/general.actions';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
@@ -66,7 +66,6 @@ const SubstrateLoadingAndErrorHandlingWrapper = ({
   return (
     <>
       <InterlayHelmet />
-      <ToastContainer position='top-right' autoClose={5000} hideProgressBar={false} />
       {children}
     </>
   );

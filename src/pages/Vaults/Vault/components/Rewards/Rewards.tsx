@@ -1,7 +1,6 @@
 import { CollateralCurrencyExt, newVaultId, WrappedCurrency, WrappedIdLiteral } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { CardProps } from '@/component-library';
@@ -51,7 +50,6 @@ const Rewards = ({
   const transaction = useTransaction(Transaction.REWARDS_WITHDRAW, {
     onSuccess: () => {
       queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
-      toast.success('Your rewards were successfully withdrawn.');
     }
   });
 

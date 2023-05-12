@@ -1,6 +1,5 @@
 import { CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 
 import { Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
 import { AuthCTA } from '@/components';
@@ -62,11 +61,8 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const prices = useGetPrices();
 
   const transaction = useTransaction({
-    onSuccess: () => {
-      toast.success('Successfully toggled collateral');
-      onClose?.();
-      refetch();
-    }
+    onSigning: onClose,
+    onSuccess: refetch
   });
 
   if (!asset || !position) {

@@ -3,6 +3,8 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { u256 } from '@polkadot/types/primitive';
 import { CombinedState, Store } from 'redux';
 
+import { TransactionStatus } from '@/utils/hooks/transaction/types';
+
 import { rootReducer } from '../reducers/index';
 import { GeneralActions, RedeemActions, VaultActions } from './actions.types';
 import { RedeemState } from './redeem.types';
@@ -45,6 +47,21 @@ export enum ParachainStatus {
   Shutdown
 }
 
+export type Notification = {
+  status: TransactionStatus;
+  description: string;
+  date: Date;
+  url?: string;
+};
+
+export type TransactionModalData = {
+  variant: TransactionStatus;
+  timestamp?: number;
+  description?: string;
+  url?: string;
+  errorMessage?: string;
+};
+
 export type GeneralState = {
   bridgeLoaded: boolean;
   vaultClientLoaded: boolean;
@@ -56,6 +73,11 @@ export type GeneralState = {
   btcRelayHeight: number;
   bitcoinHeight: number;
   parachainStatus: ParachainStatus;
+  notifications: Record<string, Notification[]>;
+  transactionModal: {
+    isOpen: boolean;
+    data: TransactionModalData;
+  };
 };
 
 export type AppState = ReturnType<typeof rootReducer>;

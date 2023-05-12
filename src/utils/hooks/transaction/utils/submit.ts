@@ -6,6 +6,7 @@ import { ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import { ISubmittableResult } from '@polkadot/types/types';
 
 import { TransactionEvents } from '../types';
+import { TransactionResult } from '../use-transaction';
 
 type HandleTransactionResult = { result: ISubmittableResult; unsubscribe: () => void };
 
@@ -89,19 +90,20 @@ const submitTransaction = async (
   extrinsicData: ExtrinsicData,
   expectedStatus?: ExtrinsicStatus['type'],
   callbacks?: TransactionEvents
-): Promise<ISubmittableResult> => {
+): Promise<TransactionResult> => {
   const { result, unsubscribe } = await handleTransaction(account, extrinsicData, expectedStatus, callbacks);
 
   unsubscribe();
 
   const { dispatchError } = result;
 
-  if (dispatchError) {
-    const message = getErrorMessage(api, dispatchError);
-    throw new Error(message);
-  }
+  const error = dispatchError ? new Error(getErrorMessage(api, dispatchError)) : undefined;
 
-  return result;
+  return {
+    status: error ? 'error' : 'success',
+    data: result,
+    error
+  };
 };
 
 export { submitTransaction };

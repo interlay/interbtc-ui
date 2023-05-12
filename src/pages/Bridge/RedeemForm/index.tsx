@@ -35,7 +35,6 @@ import {
 import { BALANCE_MAX_INTEGER_LENGTH, BTC_ADDRESS_REGEX } from '@/constants';
 import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
@@ -112,7 +111,6 @@ const RedeemForm = (): JSX.Element | null => {
   const [premiumRedeemFee, setPremiumRedeemFee] = React.useState(new Big(0));
   const [currentInclusionFee, setCurrentInclusionFee] = React.useState(BitcoinAmount.zero());
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
-  const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Redeem>();
 
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
@@ -305,7 +303,7 @@ const RedeemForm = (): JSX.Element | null => {
 
         const result = await transaction.executeAsync(monetaryWrappedTokenAmount, data[BTC_ADDRESS], vaultId);
 
-        const redeemRequests = await getRedeemRequestsFromExtrinsicResult(window.bridge, result);
+        const redeemRequests = await getRedeemRequestsFromExtrinsicResult(window.bridge, result.data);
 
         // TODO: handle redeem aggregator
         const redeemRequest = redeemRequests[0];
@@ -313,7 +311,6 @@ const RedeemForm = (): JSX.Element | null => {
         setSubmitStatus(STATUSES.RESOLVED);
       } catch (error) {
         setSubmitStatus(STATUSES.REJECTED);
-        setSubmitError(error);
       }
     };
 
@@ -533,17 +530,6 @@ const RedeemForm = (): JSX.Element | null => {
             {t('confirm')}
           </AuthCTA>
         </form>
-        {submitStatus === STATUSES.REJECTED && submitError && (
-          <ErrorModal
-            open={!!submitError}
-            onClose={() => {
-              setSubmitStatus(STATUSES.IDLE);
-              setSubmitError(null);
-            }}
-            title='Error'
-            description={typeof submitError === 'string' ? submitError : submitError.message}
-          />
-        )}
         {submittedRequest && (
           <SubmittedRedeemRequestModal
             open={!!submittedRequest}

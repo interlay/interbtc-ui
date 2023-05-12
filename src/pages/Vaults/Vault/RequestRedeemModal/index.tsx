@@ -5,18 +5,16 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 
 import { displayMonetaryAmount } from '@/common/utils/utils';
+import { Modal, ModalBody, ModalHeader } from '@/component-library';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { BTC_ADDRESS_REGEX } from '@/constants';
-import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
 import InterlayCinnabarOutlinedButton from '@/legacy-components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from '@/legacy-components/buttons/InterlayMulberryOutlinedButton';
 import ErrorMessage from '@/legacy-components/ErrorMessage';
 import NumberInput from '@/legacy-components/NumberInput';
 import TextField from '@/legacy-components/TextField';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
@@ -45,12 +43,12 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
   } = useForm<RequestRedeemFormData>();
   const [isRequestPending, setRequestPending] = React.useState(false);
   const { t } = useTranslation();
-  const focusRef = React.useRef(null);
 
   const transaction = useTransaction(Transaction.REDEEM_REQUEST);
 
   const onSubmit = handleSubmit(async (data) => {
     setRequestPending(true);
+
     try {
       // Represents being less than 1 Satoshi
       if (new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT])._rawAmount.lt(1)) {
@@ -67,12 +65,11 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
 
       queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
 
-      toast.success('Redeem request submitted');
       onClose();
-    } catch (error) {
-      toast.error(error.toString());
+      setRequestPending(false);
+    } catch (e) {
+      console.error(e.message);
     }
-    setRequestPending(false);
   });
 
   const validateAmount = (value: string): string | undefined => {
@@ -89,12 +86,9 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
   };
 
   return (
-    <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
-      <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
-        <InterlayModalTitle as='h3' className={clsx('text-lg', 'font-medium', 'mb-6')}>
-          {t('vault.request_redeem')}
-        </InterlayModalTitle>
-        <CloseIconButton ref={focusRef} onClick={onClose} />
+    <Modal isOpen={open} onClose={onClose}>
+      <ModalHeader>{t('vault.request_redeem')}</ModalHeader>
+      <ModalBody>
         <form className='space-y-4' onSubmit={onSubmit}>
           <p>{t('vault.redeem_description')}</p>
           <p>
@@ -142,8 +136,8 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
             </InterlayCinnabarOutlinedButton>
           </div>
         </form>
-      </InterlayModalInnerWrapper>
-    </InterlayModal>
+      </ModalBody>
+    </Modal>
   );
 };
 

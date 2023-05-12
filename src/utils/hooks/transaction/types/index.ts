@@ -9,6 +9,7 @@ import { ReplaceActions } from './replace';
 import { RewardsActions } from './rewards';
 import { TokensActions } from './tokens';
 import { VaultsActions } from './vaults';
+import { XCMActions } from './xcm';
 
 enum Transaction {
   // Issue
@@ -29,6 +30,8 @@ enum Transaction {
   ESCROW_WITHDRAW = 'ESCROW_WITHDRAW',
   // Tokens
   TOKENS_TRANSFER = 'TOKENS_TRANSFER',
+  // XCM
+  XCM_TRANSFER = 'XCM_TRANSFER',
   // Vaults
   VAULTS_DEPOSIT_COLLATERAL = 'VAULTS_DEPOSIT_COLLATERAL',
   VAULTS_WITHDRAW_COLLATERAL = 'VAULTS_WITHDRAW_COLLATERAL',
@@ -59,6 +62,7 @@ type TransactionEvents = {
 interface TransactionAction {
   accountAddress: string;
   events: TransactionEvents;
+  timestamp: number;
   customStatus?: ExtrinsicStatus['type'];
 }
 
@@ -71,9 +75,17 @@ type TransactionActions =
   | LoansActions
   | AMMActions
   | VaultsActions
-  | RewardsActions;
+  | RewardsActions
+  | XCMActions;
 
 type TransactionArgs<T extends Transaction> = Extract<TransactionActions, { type: T }>['args'];
 
-export { Transaction };
+enum TransactionStatus {
+  CONFIRM,
+  SUBMITTING,
+  SUCCESS,
+  ERROR
+}
+
+export { Transaction, TransactionStatus };
 export type { TransactionAction, TransactionActions, TransactionArgs, TransactionEvents };

@@ -116,16 +116,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     [inputAmount]
   );
 
-  const transaction = useTransaction({
-    onSuccess: () => {
-      toast.success(`Successful ${content.title.toLowerCase()}`);
-      onChangeLoan?.();
-      refetch();
-    },
-    onError: (error: Error) => {
-      toast.error(error.message);
-    }
-  });
+  const transaction = useTransaction({ onSigning: onChangeLoan, onSuccess: refetch });
 
   const handleSubmit = (data: LoanFormData) => {
     try {
@@ -216,7 +207,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
         </Flex>
         <Flex direction='column' gap='spacing4'>
           <LoanActionInfo variant={variant} asset={asset} prices={prices} />
-          <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
+          <AuthCTA type='submit' disabled={isBtnDisabled} size='large'>
             {content.title}
           </AuthCTA>
         </Flex>

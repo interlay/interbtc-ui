@@ -1,3 +1,5 @@
+import { FixedPointNumber } from '@acala-network/sdk-core';
+import { CrossChainTransferParams } from '@interlay/bridge';
 import { ExtrinsicData } from '@interlay/interbtc-api';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 
@@ -53,6 +55,23 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
       return window.bridge.tokens.transfer(...params.args);
     /* END - TOKENS */
 
+    /* START - XCM */
+    case Transaction.XCM_TRANSFER: {
+      const [adapter, , toChain, address, transferAmount] = params.args;
+
+      const transferAmountString = transferAmount.toString(true);
+      const transferAmountDecimals = transferAmount.currency.decimals;
+      const tx = adapter.createTx({
+        amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
+        to: toChain,
+        token: transferAmount.currency.ticker,
+        address
+      } as CrossChainTransferParams);
+
+      return { extrinsic: tx };
+    }
+    /* END - XCM */
+
     /* START - LOANS */
     case Transaction.LOANS_CLAIM_REWARDS:
       return window.bridge.loans.claimAllSubsidyRewards();
@@ -74,18 +93,19 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
       return window.bridge.loans.enableAsCollateral(...params.args);
     /* END - LOANS */
 
-    /* START - LOANS */
+    /* START - VAULTS */
     case Transaction.VAULTS_DEPOSIT_COLLATERAL:
       return window.bridge.vaults.depositCollateral(...params.args);
     case Transaction.VAULTS_WITHDRAW_COLLATERAL:
       return window.bridge.vaults.withdrawCollateral(...params.args);
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL:
       return window.bridge.vaults.registerNewCollateralVault(...params.args);
+    /* END - VAULTS */
+
     /* START - REWARDS */
     case Transaction.REWARDS_WITHDRAW:
       return window.bridge.rewards.withdrawRewards(...params.args);
     /* START - REWARDS */
-    /* END - LOANS */
 
     /* START - ESCROW */
     case Transaction.ESCROW_CREATE_LOCK:

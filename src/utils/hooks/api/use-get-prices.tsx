@@ -69,6 +69,7 @@ const getPricesByTicker = (currencies: CurrencyExt[], prices: Prices, lendTokenP
     }
 
     const coingeckoId = getCoingeckoId(currency);
+
     return { ...acc, [currency.ticker]: prices[coingeckoId] };
   }, {});
 
