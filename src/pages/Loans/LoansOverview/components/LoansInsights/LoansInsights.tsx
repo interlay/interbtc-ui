@@ -42,11 +42,11 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
   const netPercentage = formatPercentage(netAPY?.toNumber() || 0);
   const netPercentageLabel = `${netAPY?.gt(0) ? '+' : ''}${netPercentage}`;
 
-  const subsidyRewardsAmount = formatNumber(subsidyRewards?.toBig().toNumber() || 0, {
-    maximumFractionDigits: subsidyRewards?.currency.humanDecimals || 5
+  const subsidyRewardsAmount = formatNumber(subsidyRewards?.total.toBig().toNumber() || 0, {
+    maximumFractionDigits: subsidyRewards?.total.currency.humanDecimals || 5
   });
-  const subsidyRewardsAmountLabel = `${subsidyRewardsAmount} ${subsidyRewards?.currency.ticker || ''}`;
-  const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.isZero();
+  const subsidyRewardsAmountLabel = `${subsidyRewardsAmount} ${subsidyRewards?.total.currency.ticker || ''}`;
+  const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.total.isZero();
 
   return (
     <>
