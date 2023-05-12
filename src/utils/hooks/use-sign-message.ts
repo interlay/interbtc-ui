@@ -62,11 +62,11 @@ const useSignMessage = (): UseSignMessageResult => {
   );
 
   const getSignature = useCallback(
-    async (account: KeyringPair) => {
+    async (account: KeyringPair): Promise<boolean> => {
       const storedSignature = signatures?.[account.address];
 
       if (storedSignature !== undefined) {
-        return { account, hasSignature: storedSignature };
+        return storedSignature;
       }
 
       const res = await fetch(`${SIGNER_API_URL}/${account.address}`, {
@@ -78,9 +78,11 @@ const useSignMessage = (): UseSignMessageResult => {
 
       const response: GetSignatureData = await res.json();
 
-      return { account, hasSignature: response.exists };
+      setSignature(account.address, response.exists);
+
+      return response.exists;
     },
-    [signatures]
+    [setSignature, signatures]
   );
 
   const queryKey = ['hasSignature', selectedAccount?.address];
@@ -91,12 +93,7 @@ const useSignMessage = (): UseSignMessageResult => {
     refetchOnMount: false,
     refetchOnReconnect: false,
     enabled: !!selectedAccount,
-    queryFn: () => selectedAccount && getSignature(selectedAccount),
-    onSuccess: (data) => {
-      if (!data) return;
-      console.log(data);
-      setSignature(data.account.address, data.hasSignature);
-    }
+    queryFn: () => selectedAccount && getSignature(selectedAccount)
   });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
@@ -138,7 +135,7 @@ const useSignMessage = (): UseSignMessageResult => {
     const result = await refetchSignatureData({ queryKey: ['hasSignature', account.address] });
 
     // Exit if there is a signature
-    if (result.data?.hasSignature) return;
+    if (result.data) return;
 
     // Open signing modal if there is not a signature
     dispatch(showSignTermsModalAction(true));
