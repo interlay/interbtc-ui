@@ -1,5 +1,3 @@
-// import { CurrencyExt } from '@interlay/interbtc-api';
-// import { MonetaryAmount } from '@interlay/monetary-js';
 import { TFunction } from 'react-i18next';
 
 import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
