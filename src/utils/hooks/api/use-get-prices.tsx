@@ -1,8 +1,9 @@
-import { CurrencyExt, ForeignAsset } from '@interlay/interbtc-api';
+import { CurrencyExt, isForeignAsset, isLendToken, TickerToData } from '@interlay/interbtc-api';
 import { Bitcoin } from '@interlay/monetary-js';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
+import Big from 'big.js';
 
 import { StoreType } from '@/common/types/util.types';
 import { PRICES_API, REFETCH_INTERVAL } from '@/utils/constants/api';
@@ -10,9 +11,12 @@ import { COINGECKO_ID_BY_CURRENCY_TICKER } from '@/utils/constants/currency';
 
 import { useGetCurrencies } from './use-get-currencies';
 
+// MEMO: Returns `undefined` for currencies without coingecko ID.
 const getCoingeckoId = (currency: CurrencyExt) => {
-  const asForeignAsset = currency as ForeignAsset;
-  return asForeignAsset.foreignAsset?.coingeckoId || COINGECKO_ID_BY_CURRENCY_TICKER[currency.ticker];
+  if (isForeignAsset(currency)) {
+    return currency.foreignAsset.coingeckoId;
+  }
+  return COINGECKO_ID_BY_CURRENCY_TICKER[currency.ticker];
 };
 
 const composeIds = (currencies: CurrencyExt[]): string =>
@@ -31,9 +35,27 @@ const composeIds = (currencies: CurrencyExt[]): string =>
 
 const composeEndpoint = (assetsIds: string): string => `${PRICES_API.URL}&ids=${assetsIds}`;
 
-const getPricesByTicker = (currencies: CurrencyExt[], prices: Prices) =>
+const fetchPricesFromCoingecko = async (endpoint: string) => {
+  const response = await fetch(endpoint);
+  return response.json();
+};
+
+const getPricesByTicker = (currencies: CurrencyExt[], prices: Prices, lendTokenPrices: TickerToData<Big>) =>
   currencies.reduce((acc, currency) => {
     const coingeckoId = getCoingeckoId(currency);
+
+    if (isLendToken(currency)) {
+      // MEMO: This works as long as lend tokens tickers
+      // are same as underlying currencies with only `q` character prepended.
+      const underlyingCurrencyTicker = currency.ticker.slice(1);
+      const underlyingToLendTokenRate = lendTokenPrices[underlyingCurrencyTicker].toNumber();
+      // MEMO: Can be extended to different counter currencies later if needed.
+      const underlyingCurrencyPriceUSD = prices[underlyingCurrencyTicker].usd;
+      const lendTokenPrice = { usd: underlyingCurrencyPriceUSD / underlyingToLendTokenRate };
+
+      return { ...acc, [currency.ticker]: lendTokenPrice };
+    }
+
     return { ...acc, [currency.ticker]: prices[coingeckoId] };
   }, {});
 
@@ -46,10 +68,12 @@ const getPrices = async (currencies?: CurrencyExt[]): Promise<Prices | undefined
   const assetsIds = composeIds(allCurrencies);
   const endpoint = composeEndpoint(assetsIds);
 
-  const response = await fetch(endpoint);
-  const pricesByCoingeckoId = await response.json();
+  const [pricesByCoingeckoId, lendTokenPrices] = await Promise.all([
+    fetchPricesFromCoingecko(endpoint),
+    window.bridge.loans.getLendTokenExchangeRates()
+  ]);
 
-  return getPricesByTicker(allCurrencies, pricesByCoingeckoId);
+  return getPricesByTicker(allCurrencies, pricesByCoingeckoId, lendTokenPrices);
 };
 
 type Price = {
