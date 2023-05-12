@@ -1,6 +1,6 @@
 import { PressEvent } from '@react-types/shared';
-import { useCallback } from 'react';
-import { useMutation, useQuery, useQueryClient, UseQueryResult } from 'react-query';
+import { useCallback, useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -87,22 +87,13 @@ const useSignMessage = (): UseSignMessageResult => {
 
   const queryKey = ['hasSignature', selectedAccount?.address];
 
-  const {
-    data: hasSignature,
-    refetch: refetchSignatureData,
-    isLoading: isSignatureLoading
-  }: UseQueryResult<boolean, Error> = useQuery({
+  const { data: hasSignature, refetch: refetchSignatureData, isLoading: isSignatureLoading } = useQuery({
     queryKey,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    queryFn: () => selectedAccount && getSignature(selectedAccount),
-    // Does not allow to fetch by default
-    enabled: false,
-    onSuccess: (hasSignature) => {
-      if (hasSignature) return;
-      dispatch(showSignTermsModalAction(true));
-    }
+    enabled: !!selectedAccount,
+    queryFn: () => selectedAccount && getSignature(selectedAccount)
   });
 
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
@@ -118,6 +109,14 @@ const useSignMessage = (): UseSignMessageResult => {
     }
   });
 
+  // Reset mutation on account change
+  useEffect(() => {
+    if (signMessageMutation.isLoading && selectedAccount?.address) {
+      signMessageMutation.reset();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedAccount?.address]);
+
   const handleSignMessage = (account?: KeyringPair) => {
     // should not sign message if there is already a stored signature
     // or if signer api url is not set
@@ -126,13 +125,20 @@ const useSignMessage = (): UseSignMessageResult => {
     signMessageMutation.mutate(account);
   };
 
-  const handleOpenSignTermModal = (account: KeyringPair) => {
+  const handleOpenSignTermModal = async (account: KeyringPair) => {
     if (!SIGNER_API_URL) return;
 
     // Cancel possible ongoing unwanted account
     queryClient.cancelQueries({ queryKey });
-    // Fetch selected account
-    refetchSignatureData({ queryKey: ['hasSignature', account.address] });
+
+    // Fetch selected account and await response
+    const result = await refetchSignatureData({ queryKey: ['hasSignature', account.address] });
+
+    // Exit if there is a signature
+    if (result.data) return;
+
+    // Open signing modal if there is not a signature
+    dispatch(showSignTermsModalAction(true));
   };
 
   return {
