@@ -1,5 +1,4 @@
-import { AccruedRewards, CurrencyExt } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { AccruedRewards } from '@interlay/interbtc-api';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, useQueryClient } from 'react-query';
