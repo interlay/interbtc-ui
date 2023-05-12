@@ -117,7 +117,8 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t)
+    validationSchema: crossChainTransferSchema(schema, t),
+    validateOnChange: false
   });
 
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
