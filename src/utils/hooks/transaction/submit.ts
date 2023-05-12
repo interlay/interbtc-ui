@@ -1,3 +1,4 @@
+import { ExtrinsicData } from '@interlay/interbtc-api';
 import { ApiPromise } from '@polkadot/api';
 import { AddressOrPair, SubmittableExtrinsic } from '@polkadot/api/types';
 import { DispatchError } from '@polkadot/types/interfaces';
@@ -13,24 +14,25 @@ const options = { nonce: -1 };
 
 const handleTransaction = async (
   account: AddressOrPair,
-  transaction: SubmittableExtrinsic<'promise'>,
-  events?: TransactionEvents,
-  expectedStatus?: ExtrinsicStatus['type']
+  extrinsicData: ExtrinsicData,
+  expectedStatus?: ExtrinsicStatus['type'],
+  callbacks?: TransactionEvents
 ) => {
-  let isCompleted = false;
+  let isStatusCompleted = false;
   let isSigned = false;
+  let isEventFound = false;
 
   return new Promise<HandleTransactionResult>((resolve, reject) => {
     let unsubscribe: () => void;
 
-    transaction
+    (extrinsicData.extrinsic as SubmittableExtrinsic<'promise'>)
       .signAndSend(account, options, callback)
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => reject(error));
 
     function callback(result: ISubmittableResult): void {
       if (!isSigned) {
-        events?.onSigning?.();
+        callbacks?.onSigning?.();
         isSigned = true;
       }
 
@@ -38,12 +40,23 @@ const handleTransaction = async (
         status: { type, isInBlock, isFinalized }
       } = result;
 
-      if (!isCompleted) {
+      if (!isStatusCompleted) {
         const isExpectedStatus = expectedStatus === type;
-        isCompleted = isExpectedStatus || isInBlock || isFinalized;
+        isStatusCompleted = isExpectedStatus || isInBlock || isFinalized;
       }
 
-      if (isCompleted) {
+      // should only search for event when it is specified and it has not been previously found
+      if (extrinsicData.event !== undefined && !isEventFound) {
+        for (const { event } of result.events) {
+          if (extrinsicData.event.is(event)) {
+            isEventFound = true;
+            break;
+          }
+        }
+      }
+
+      const shouldResolve = isStatusCompleted && (extrinsicData.event === undefined || isEventFound);
+      if (shouldResolve) {
         resolve({ unsubscribe, result });
       }
     }
@@ -76,11 +89,11 @@ const getErrorMessage = (api: ApiPromise, dispatchError: DispatchError) => {
 const submitTransaction = async (
   api: ApiPromise,
   account: AddressOrPair,
-  transaction: SubmittableExtrinsic<'promise'>,
-  events?: TransactionEvents,
-  expectedStatus?: ExtrinsicStatus['type']
+  extrinsicData: ExtrinsicData,
+  expectedStatus?: ExtrinsicStatus['type'],
+  callbacks?: TransactionEvents
 ): Promise<ISubmittableResult> => {
-  const { result, unsubscribe } = await handleTransaction(account, transaction, events, expectedStatus);
+  const { result, unsubscribe } = await handleTransaction(account, extrinsicData, expectedStatus, callbacks);
 
   unsubscribe();
 

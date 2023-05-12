@@ -1,8 +1,17 @@
 import { InterBtcApi } from '@interlay/interbtc-api';
 
 enum Transaction {
+  // AMM
   SWAP = 'swap',
-  POOL_ADD_LIQUIDITY = 'pool-add-liquidity'
+  POOL_ADD_LIQUIDITY = 'pool-add-liquidity',
+  POOL_REMOVE_LIQUIDITY = 'pool-remove-liquidity',
+  POOL_CLAIM_REWARDS = 'pool-claim-rewards',
+  // Issue
+  ISSUE_REQUEST = 'issue-request',
+  // Redeem
+  REDEEM_REQUEST = 'redeem-request',
+  REDEEM_CANCEL = 'redeem-cancel',
+  REDEEM_BURN = 'redeem-burn'
 }
 
 type TransactionEvents = {
@@ -10,8 +19,7 @@ type TransactionEvents = {
 };
 
 interface TransactionAction {
-  timestamp: number;
-  address: string;
+  accountAddress: string;
   events: TransactionEvents;
 }
 
@@ -25,7 +33,23 @@ interface PoolAddLiquidityTransaction extends TransactionAction {
   args: Parameters<InterBtcApi['amm']['addLiquidity']>;
 }
 
-type TransactionActions = SwapTransaction | PoolAddLiquidityTransaction;
+interface PoolRemoveLiquidityTransaction extends TransactionAction {
+  type: Transaction.POOL_REMOVE_LIQUIDITY;
+  args: Parameters<InterBtcApi['amm']['removeLiquidity']>;
+}
 
-export type { TransactionActions, TransactionEvents };
+interface PoolClaimRewardsTransaction extends TransactionAction {
+  type: Transaction.POOL_CLAIM_REWARDS;
+  args: Parameters<InterBtcApi['amm']['claimFarmingRewards']>;
+}
+
+type TransactionActions =
+  | SwapTransaction
+  | PoolAddLiquidityTransaction
+  | PoolRemoveLiquidityTransaction
+  | PoolClaimRewardsTransaction;
+
+type TransactionArgs<T extends Transaction> = Extract<TransactionActions, { type: T }>['args'];
+
+export type { TransactionActions, TransactionArgs, TransactionEvents };
 export { Transaction };
