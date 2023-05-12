@@ -5,7 +5,7 @@ import { DispatchError } from '@polkadot/types/interfaces';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import { ISubmittableResult } from '@polkadot/types/types';
 
-import { TransactionEvents } from './types';
+import { TransactionEvents } from '../types';
 
 type HandleTransactionResult = { result: ISubmittableResult; unsubscribe: () => void };
 

@@ -4,9 +4,9 @@ import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } 
 
 import { useSubstrate } from '@/lib/substrate';
 
-import { submitTransaction } from './submit';
 import { Transaction, TransactionActions, TransactionArgs } from './types';
-import { getExpectedStatus, getExtrinsic } from './utils';
+import { getExpectedStatus, getExtrinsic } from './utils/extrinsic';
+import { submitTransaction } from './utils/submit';
 
 type UseTransactionOptions = Omit<
   UseMutationOptions<ISubmittableResult, Error, TransactionActions, unknown>,
@@ -22,9 +22,9 @@ type UseTransactionResult<T extends Transaction> = Omit<
 
 const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions> = async (params) => {
   const extrinsics = await getExtrinsic(params);
-  const status = getExpectedStatus(params.type);
+  const expectedStatus = getExpectedStatus(params.type);
 
-  return submitTransaction(window.bridge.api, params.accountAddress, extrinsics, status, params.events);
+  return submitTransaction(window.bridge.api, params.accountAddress, extrinsics, expectedStatus, params.events);
 };
 
 const useTransaction = <T extends Transaction>(type: T, options?: UseTransactionOptions): UseTransactionResult<T> => {
@@ -40,7 +40,7 @@ const useTransaction = <T extends Transaction>(type: T, options?: UseTransaction
         return undefined;
       }
 
-      // TODO: add events
+      // TODO: add event `onSigning`
       return mutate({
         type,
         args,
