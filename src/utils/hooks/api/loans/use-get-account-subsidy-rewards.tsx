@@ -1,4 +1,4 @@
-import { CurrencyExt } from '@interlay/interbtc-api';
+import { AccruedRewards, CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { AccountId } from '@polkadot/types/interfaces';
 import { useErrorHandler } from 'react-error-boundary';
@@ -9,7 +9,7 @@ import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 import useAccountId from '../../use-account-id';
 
 interface AccountAccruedRewards {
-  data: MonetaryAmount<CurrencyExt> | undefined;
+  data: AccruedRewards | undefined;
   refetch: () => void;
 }
 

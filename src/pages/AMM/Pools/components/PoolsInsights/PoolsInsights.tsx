@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 import { formatUSD } from '@/common/utils/utils';
 import { Card, CTA, Dl, DlGroup } from '@/component-library';
+import { IsAuthenticated } from '@/components';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
@@ -86,11 +87,13 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
           <StyledDt color='primary'>{t('rewards')}</StyledDt>
           <StyledDd color='secondary'>{formatUSD(totalClaimableRewardUSD, { compact: true })}</StyledDd>
         </DlGroup>
-        {hasClaimableRewards && (
-          <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
-            Claim
-          </CTA>
-        )}
+        <IsAuthenticated>
+          {hasClaimableRewards && (
+            <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
+              Claim
+            </CTA>
+          )}
+        </IsAuthenticated>
       </Card>
     </Dl>
   );
