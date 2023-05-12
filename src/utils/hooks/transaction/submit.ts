@@ -4,9 +4,7 @@ import { DispatchError } from '@polkadot/types/interfaces';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import { ISubmittableResult } from '@polkadot/types/types';
 
-type ExtrinsicEvents = {
-  onSigning?: () => void;
-};
+import { TransactionEvents } from './types';
 
 type HandleTransactionResult = { result: ISubmittableResult; unsubscribe: () => void };
 
@@ -16,7 +14,7 @@ const options = { nonce: -1 };
 const handleTransaction = async (
   account: AddressOrPair,
   transaction: SubmittableExtrinsic<'promise'>,
-  events?: ExtrinsicEvents,
+  events?: TransactionEvents,
   expectedStatus?: ExtrinsicStatus['type']
 ) => {
   let isCompleted = false;
@@ -41,7 +39,7 @@ const handleTransaction = async (
       } = result;
 
       if (!isCompleted) {
-        const isExpectedStatus = expectedStatus && expectedStatus === type;
+        const isExpectedStatus = expectedStatus === type;
         isCompleted = isExpectedStatus || isInBlock || isFinalized;
       }
 
@@ -64,9 +62,9 @@ const getErrorMessage = (api: ApiPromise, dispatchError: DispatchError) => {
     const decoded = api.registry.findMetaError(asModule);
     const { docs, name, section } = decoded;
     return message.concat(` The error code is ${section}.${name}. ${docs.join(' ')}`);
-    // Bad origin
   }
 
+  // Bad origin
   if (isBadOrigin) {
     return message.concat(` The error is caused by using an incorrect account.
         The error code is BadOrigin ${dispatchError}.`);
@@ -79,7 +77,7 @@ const submitTransaction = async (
   api: ApiPromise,
   account: AddressOrPair,
   transaction: SubmittableExtrinsic<'promise'>,
-  events?: ExtrinsicEvents,
+  events?: TransactionEvents,
   expectedStatus?: ExtrinsicStatus['type']
 ): Promise<ISubmittableResult> => {
   const { result, unsubscribe } = await handleTransaction(account, transaction, events, expectedStatus);

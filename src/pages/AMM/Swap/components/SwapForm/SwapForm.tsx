@@ -112,7 +112,7 @@ const SwapForm = ({
   const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
-  const transactionMutation = useTransaction(Transaction.SWAP, {
+  const transaction = useTransaction(Transaction.SWAP, {
     onSuccess: () => {
       setTrade(undefined);
       setInputAmount(undefined);
@@ -156,7 +156,7 @@ const SwapForm = ({
 
       const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
 
-      return transactionMutation.execute(trade, minimumAmountOut, accountId, deadline);
+      return transaction.execute(trade, minimumAmountOut, accountId, deadline);
     } catch (err: any) {
       toast.error(err.toString());
     }
@@ -189,7 +189,7 @@ const SwapForm = ({
     initialValues,
     validationSchema: swapSchema({ [SWAP_INPUT_AMOUNT_FIELD]: inputSchemaParams }),
     onSubmit: handleSubmit,
-    disableValidation: transactionMutation.isLoading,
+    disableValidation: transaction.isLoading,
     validateOnMount: true
   });
 
@@ -216,11 +216,11 @@ const SwapForm = ({
   useEffect(() => {
     const isAmountFieldEmpty = form.values[SWAP_INPUT_AMOUNT_FIELD] === '';
 
-    if (isAmountFieldEmpty || !transactionMutation.isSuccess) return;
+    if (isAmountFieldEmpty || !transaction.isSuccess) return;
 
     form.setFieldValue(SWAP_INPUT_AMOUNT_FIELD, '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transactionMutation.isSuccess]);
+  }, [transaction.isSuccess]);
 
   const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
     setInputAmount(e.target.value);

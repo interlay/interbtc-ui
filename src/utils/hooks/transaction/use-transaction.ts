@@ -14,10 +14,10 @@ type PrepareResult = { extrinsics: ExtrinsicData; fee: MonetaryAmount<Currency> 
 type TransactionArgs<T extends Transaction> = Extract<TransactionActions, { type: T }>['args'];
 
 type UseTransactionOptions = Omit<
-  UseMutationOptions<ISubmittableResult, unknown, TransactionActions, unknown>,
+  UseMutationOptions<ISubmittableResult, Error, TransactionActions, unknown>,
   'mutationFn'
 > & {
-  prepare?: Omit<UseMutationOptions<PrepareResult, unknown, TransactionActions, unknown>, 'mutationFn'>;
+  prepare?: Omit<UseMutationOptions<PrepareResult, Error, TransactionActions, unknown>, 'mutationFn'>;
 };
 
 const getExtrinsic = (params: TransactionActions) => {
@@ -41,62 +41,59 @@ const getExpectedStatus = (type: Transaction): ExtrinsicStatus['type'] => {
 
 const transactionMutation: MutationFunction<ISubmittableResult, TransactionActions> = async (params) => {
   const extrinsics = getExtrinsic(params);
-
-  if (!extrinsics) {
-    throw new Error('Something went wrong');
-  }
-
   const status = getExpectedStatus(params.type);
 
-  return submitTransaction(
-    window.bridge.api,
-    params.address,
-    extrinsics.extrinsic,
-    { onSigning: () => console.log('signed') },
-    status
-  );
+  return submitTransaction(window.bridge.api, params.address, extrinsics.extrinsic, params.events, status);
 };
 
-const mutateFee: MutationFunction<PrepareResult, TransactionActions> = async (params) => {
-  const extrinsics = getExtrinsic(params);
+// TODO: this logic will replace some present in the `transactionMutation` when we implement fee estimation
+// const mutateFee: MutationFunction<PrepareResult, TransactionActions> = async (params) => {
+//   const extrinsics = getExtrinsic(params);
 
-  const fee = await window.bridge.transaction.getFeeEstimate(extrinsics.extrinsic);
+//   const fee = await window.bridge.transaction.getFeeEstimate(extrinsics.extrinsic);
 
-  return { extrinsics, fee };
-};
+//   return { extrinsics, fee };
+// };
 
 type UseTransactionResult<T extends Transaction> = Omit<
   UseMutationResult<ISubmittableResult, unknown, TransactionActions, unknown>,
   'mutate'
 > & {
   // TODO: remove optional and add implementation
-  prepare: (...args: TransactionArgs<T>) => void;
+  // prepare: (...args: TransactionArgs<T>) => void;
   execute: (...args: TransactionArgs<T>) => void;
-  fee: Omit<UseMutationResult<PrepareResult, unknown, TransactionActions, unknown>, 'mutate'>;
+  // fee: Omit<UseMutationResult<PrepareResult, unknown, TransactionActions, unknown>, 'mutate'>;
 };
 
 const useTransaction = <T extends Transaction>(type: T, options?: UseTransactionOptions): UseTransactionResult<T> => {
   const { state } = useSubstrate();
-  const prepareMutation = useMutation(mutateFee, options?.prepare);
+
+  // const prepareMutation = useMutation(mutateFee, options?.prepare);
 
   const mutation = useMutation(transactionMutation, options || {});
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const handleSigning = () => {};
+
   return {
     ...mutation,
-    fee: prepareMutation,
-    prepare: ((...args: TransactionArgs<T>) =>
-      mutation.mutate({
-        type,
-        args,
-        timestamp: new Date().getTime()
-      } as TransactionActions)) as any,
+    // fee: prepareMutation,
+    // prepare: ((...args: TransactionArgs<T>) =>
+    //   mutation.mutate({
+    //     type,
+    //     args,
+    //     timestamp: new Date().getTime()
+    //   } as TransactionActions)) as any,
     // asserting this to `any` due to complex type error
     execute: ((...args: TransactionArgs<T>) =>
       mutation.mutate({
         type,
         args,
         address: state.selectedAccount?.address,
-        timestamp: new Date().getTime()
+        timestamp: new Date().getTime(),
+        events: {
+          onSigning: handleSigning
+        }
       } as TransactionActions)) as any
   };
 };

@@ -5,9 +5,14 @@ enum Transaction {
   POOL_ADD_LIQUIDITY = 'pool-add-liquidity'
 }
 
+type TransactionEvents = {
+  onSigning?: () => void;
+};
+
 interface TransactionAction {
   timestamp: number;
   address: string;
+  events: TransactionEvents;
 }
 
 interface SwapTransaction extends TransactionAction {
@@ -22,5 +27,5 @@ interface PoolAddLiquidityTransaction extends TransactionAction {
 
 type TransactionActions = SwapTransaction | PoolAddLiquidityTransaction;
 
-export type { TransactionActions };
+export type { TransactionActions, TransactionEvents };
 export { Transaction };
