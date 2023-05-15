@@ -1,100 +1,51 @@
-import { useLabel } from '@react-aria/label';
-import { chain, mergeProps } from '@react-aria/utils';
-import { VisuallyHidden } from '@react-aria/visually-hidden';
-import { forwardRef, InputHTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react';
-
-import { Flex, Label } from '@/component-library';
-import { HelperText } from '@/component-library/HelperText';
-import { SelectTrigger } from '@/component-library/Select';
-import { triggerChangeEvent } from '@/component-library/utils/input';
-import { Chains } from '@/types/chains';
+import { Flex } from '@/component-library';
+import { Item, Select, SelectProps } from '@/component-library';
+import { useSelectModalContext } from '@/component-library/Select/SelectModalContext';
+import { ChainData } from '@/types/chains';
 
 import { ChainIcon } from '../ChainIcon';
-import { ChainListModal } from './ChainListModal';
-import { StyledChain } from './ChainSelect.style';
+import { StyledChain, StyledListChainWrapper, StyledListItemLabel } from './ChainSelect.style';
 
-type Props = {
-  value: string;
-  defaultValue?: string;
-  chains: Chains;
-  label?: ReactNode;
-  errorMessage?: any;
+type ChainSelectProps = Omit<SelectProps<ChainData>, 'children' | 'type'>;
+
+const ListItem = ({ data }: { data: ChainData }) => {
+  const isSelected = useSelectModalContext().selectedItem?.key === data.id;
+
+  return (
+    <StyledListChainWrapper alignItems='center' gap='spacing4' flex='1'>
+      <Flex gap='spacing2'>
+        <ChainIcon id={data.id} />
+        <StyledListItemLabel $isSelected={isSelected}>{data.display}</StyledListItemLabel>
+      </Flex>
+    </StyledListChainWrapper>
+  );
 };
 
-type NativeAttrs = Omit<InputHTMLAttributes<HTMLInputElement> & { ref?: any }, keyof Props>;
-
-type ChainSelectProps = Props & NativeAttrs;
-
-const ChainSelect = forwardRef<HTMLInputElement, ChainSelectProps>(
-  (
-    { chains = [], value: valueProp, defaultValue = '', label, className, errorMessage, disabled, ...props },
-    ref
-  ): JSX.Element => {
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    const [value, setValue] = useState(chains[0]?.id || defaultValue);
-    const [isOpen, setOpen] = useState(false);
-
-    const { fieldProps, labelProps } = useLabel({ ...props, label });
-
-    useEffect(() => {
-      if (valueProp === undefined) return;
-
-      setValue(valueProp);
-    }, [valueProp]);
-
-    const handleClose = () => setOpen(false);
-
-    const handleChainChange = (chain: string) => {
-      triggerChangeEvent(inputRef, chain);
-      setValue(chain);
-    };
-
-    const selectedChain = chains.find((chain) => chain.id === value);
-
-    const isDisabled = !chains?.length || disabled;
-
-    return (
-      <>
-        <Flex ref={ref} direction='column' flex='1' className={className}>
-          {label && <Label {...labelProps}>{label}</Label>}
-          <SelectTrigger
-            onPress={() => setOpen(true)}
-            disabled={isDisabled}
-            {...mergeProps(fieldProps, {
-              // MEMO: when the button is blurred, a focus and blur is executed on the input
-              // so that validation gets triggered.
-              onBlur: () => {
-                if (!isOpen) {
-                  inputRef.current?.focus();
-                  inputRef.current?.blur();
-                }
-              }
-            })}
-          >
-            {selectedChain && (
-              <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing2'>
-                <ChainIcon id={selectedChain.id} />
-                <StyledChain>{selectedChain?.display}</StyledChain>
-              </Flex>
-            )}
-          </SelectTrigger>
-          <VisuallyHidden>
-            <input ref={inputRef} autoComplete='off' tabIndex={-1} value={value} {...props} />
-          </VisuallyHidden>
-          <HelperText errorMessage={errorMessage} />
-        </Flex>
-        <ChainListModal
-          isOpen={isOpen}
-          chains={chains}
-          selectedChain={value}
-          onClose={handleClose}
-          onSelectionChange={chain(handleChainChange, handleClose)}
-        />
-      </>
-    );
-  }
+const Value = ({ data }: { data: ChainData }) => (
+  <Flex elementType='span' alignItems='center' justifyContent='space-evenly' gap='spacing2'>
+    <ChainIcon id={data.id} />
+    <StyledChain>{data.display}</StyledChain>
+  </Flex>
 );
+
+const ChainSelect = ({ ...props }: ChainSelectProps): JSX.Element => {
+  return (
+    <Flex direction='column' flex='1'>
+      <Select<ChainData>
+        {...props}
+        type='modal'
+        renderValue={(item) => <Value data={item.value} />}
+        modalTitle='Select Token'
+      >
+        {(data: ChainData) => (
+          <Item key={data.id} textValue={data.display}>
+            <ListItem data={data} />
+          </Item>
+        )}
+      </Select>
+    </Flex>
+  );
+};
 
 ChainSelect.displayName = 'ChainSelect';
 

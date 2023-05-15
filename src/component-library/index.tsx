@@ -32,6 +32,8 @@ export type { ModalBodyProps, ModalDividerProps, ModalFooterProps, ModalHeaderPr
 export { Modal, ModalBody, ModalDivider, ModalFooter, ModalHeader } from './Modal';
 export type { NumberInputProps } from './NumberInput';
 export { NumberInput } from './NumberInput';
+export type { SelectProps } from './Select';
+export { Item, Select } from './Select';
 export type { StackProps } from './Stack';
 export { Stack } from './Stack';
 export type { SwitchProps } from './Switch';

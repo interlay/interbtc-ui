@@ -241,7 +241,7 @@ const CrossChainTransferForm = (): JSX.Element => {
         <ChainSelectSection justifyContent='space-between'>
           <StyledSourceChainSelect
             label='Source Chain'
-            chains={originatingChains || []}
+            items={originatingChains}
             {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
               onChange: handleOriginatingChainChange
             })}
@@ -249,7 +249,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledArrowRightCircle color='secondary' strokeWidth={2} />
           <ChainSelect
             label='Destination Chain'
-            chains={destinationChains}
+            items={destinationChains}
             {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
               onChange: handleDestinationChainChange
             })}

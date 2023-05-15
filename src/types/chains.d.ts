@@ -1,8 +1,8 @@
-type Chain = {
+type ChainData = {
   display: string;
   id: string;
 };
 
-type Chains = Chain[];
+type Chains = ChainData[];
 
-export type { Chain, Chains };
+export type { ChainData, Chains };
