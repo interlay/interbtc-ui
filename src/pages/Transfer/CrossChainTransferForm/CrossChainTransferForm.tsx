@@ -130,21 +130,23 @@ const CrossChainTransferForm = (): JSX.Element => {
     }
   });
 
-  const handleOriginatingChainChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    const destinationChains = getDestinationChains(e.target.value as ChainName);
+  const handleOriginatingChainChange = (chain: ChainName, name: string) => {
+    form.setFieldValue(name, chain);
+
+    const destinationChains = getDestinationChains(chain);
 
     setDestinationChains(destinationChains);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
   };
 
-  const handleDestinationChainChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
+  const handleDestinationChainChange = async (chain: ChainName, name: string) => {
     if (!accountId) return;
 
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, e.target.value);
+    form.setFieldValue(name, chain);
 
     const tokens = await getAvailableTokens(
       form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      e.target.value as ChainName,
+      chain,
       accountId.toString(),
       form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
     );
@@ -242,6 +244,9 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledSourceChainSelect
             label='Source Chain'
             items={originatingChains}
+            onSelectionChange={(chain: Key) =>
+              handleOriginatingChainChange(chain as ChainName, CROSS_CHAIN_TRANSFER_FROM_FIELD)
+            }
             {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
               onChange: handleOriginatingChainChange
             })}
@@ -250,6 +255,9 @@ const CrossChainTransferForm = (): JSX.Element => {
           <ChainSelect
             label='Destination Chain'
             items={destinationChains}
+            onSelectionChange={(chain: Key) =>
+              handleDestinationChainChange(chain as ChainName, CROSS_CHAIN_TRANSFER_FROM_FIELD)
+            }
             {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
               onChange: handleDestinationChainChange
             })}
