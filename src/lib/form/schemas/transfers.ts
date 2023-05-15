@@ -18,7 +18,7 @@ type CrossChainTransferFormData = {
 };
 
 type CrossChainTransferValidationParams = {
-  [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: MaxAmountValidationParams & MinAmountValidationParams;
+  [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: Partial<MaxAmountValidationParams> & Partial<MinAmountValidationParams>;
 };
 
 // MEMO: until now, only CROSS_CHAIN_TRANSFER_AMOUNT_FIELD needs validation
@@ -27,8 +27,8 @@ const crossChainTransferSchema = (params: CrossChainTransferValidationParams, t:
     [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: yup
       .string()
       .requiredAmount('transfer')
-      .maxAmount(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD])
-      .minAmount(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD], 'transfer'),
+      .maxAmount(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] as MaxAmountValidationParams)
+      .minAmount(params[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] as MinAmountValidationParams, 'transfer'),
     [CROSS_CHAIN_TRANSFER_FROM_FIELD]: yup
       .string()
       .required(t('forms.please_enter_your_field', { field: 'source chain' })),

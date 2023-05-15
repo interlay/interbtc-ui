@@ -25,7 +25,7 @@ yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: 
 
 type FeesValidationParams = {
   transactionFee: MonetaryAmount<CurrencyExt>;
-  governanceBalance?: MonetaryAmount<CurrencyExt>;
+  governanceBalance: MonetaryAmount<CurrencyExt>;
 };
 
 // TODO: remove when fees are moved out of form validation
@@ -36,7 +36,7 @@ yup.addMethod<yup.StringSchema>(
     return this.test('fees', (_, ctx) => {
       const { t } = ctx.options.context as YupContext;
 
-      if (transactionFee && governanceBalance?.lt(transactionFee)) {
+      if (governanceBalance.lt(transactionFee)) {
         const message =
           customMessage ||
           t('insufficient_funds_governance_token', {
@@ -52,7 +52,7 @@ yup.addMethod<yup.StringSchema>(
 );
 
 type MaxAmountValidationParams = {
-  maxAmount: MonetaryAmount<CurrencyExt> | Big | undefined;
+  maxAmount: MonetaryAmount<CurrencyExt> | Big;
 };
 
 yup.addMethod<yup.StringSchema>(
@@ -75,7 +75,7 @@ yup.addMethod<yup.StringSchema>(
       }
 
       if (amount.gt(maxAmount as Big)) {
-        const message = customMessage || t('forms.amount_must_be_at_most', { action, amount: maxAmount?.toString() });
+        const message = customMessage || t('forms.amount_must_be_at_most', { action, amount: maxAmount.toString() });
         return ctx.createError({ message });
       }
 
@@ -85,7 +85,7 @@ yup.addMethod<yup.StringSchema>(
 );
 
 type MinAmountValidationParams = {
-  minAmount: MonetaryAmount<CurrencyExt> | undefined;
+  minAmount: MonetaryAmount<CurrencyExt>;
 };
 
 yup.addMethod<yup.StringSchema>(
@@ -99,7 +99,7 @@ yup.addMethod<yup.StringSchema>(
 
       const amount = new Big(value);
 
-      if (minAmount && amount.lt(minAmount?.toBig())) {
+      if (amount.lt(minAmount.toBig())) {
         const message =
           customMessage ||
           t('forms.amount_must_be_at_least', {
