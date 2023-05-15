@@ -1,9 +1,9 @@
 import { CurrencyExt, isForeignAsset, isLendToken, TickerToData } from '@interlay/interbtc-api';
 import { Bitcoin } from '@interlay/monetary-js';
+import Big from 'big.js';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
 import { useSelector } from 'react-redux';
-import Big from 'big.js';
 
 import { StoreType } from '@/common/types/util.types';
 import { PRICES_API, REFETCH_INTERVAL } from '@/utils/constants/api';
