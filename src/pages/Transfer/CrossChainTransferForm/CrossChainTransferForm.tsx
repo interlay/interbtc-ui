@@ -1,9 +1,7 @@
 import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ChainName, CrossChainTransferParams } from '@interlay/bridge';
-import { DefaultTransactionAPI, newMonetaryAmount } from '@interlay/interbtc-api';
-import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { web3FromAddress } from '@polkadot/extension-dapp';
-import { ISubmittableResult } from '@polkadot/types/types';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, Key, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +25,7 @@ import {
 } from '@/lib/form';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { Chains } from '@/types/chains';
-import { getExtrinsicStatus } from '@/utils/helpers/extrinsic';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -93,15 +91,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       address: formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]
     } as CrossChainTransferParams);
 
-    const inBlockStatus = getExtrinsicStatus('InBlock');
-
-    await DefaultTransactionAPI.sendLogged(
-      apiPromise,
-      formData[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string,
-      tx as SubmittableExtrinsic<'promise', ISubmittableResult>,
-      undefined,
-      inBlockStatus
-    );
+    await submitExtrinsic({ extrinsic: tx });
   };
 
   const handleSubmit = (formData: CrossChainTransferFormData) => {
