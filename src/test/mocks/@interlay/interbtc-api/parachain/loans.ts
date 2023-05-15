@@ -135,6 +135,8 @@ const mockGetAccountSubsidyRewards = jest.fn().mockReturnValue({
   }
 });
 
+const mockGetLendTokenExchangeRates = jest.fn();
+
 const mockLend = jest.fn();
 const mockWithdraw = jest.fn();
 const mockWithdrawAll = jest.fn();
@@ -203,6 +205,7 @@ export {
   mockGetBorrowPositionsOfAccount,
   mockGetLendingStats,
   mockGetLendPositionsOfAccount,
+  mockGetLendTokenExchangeRates,
   mockGetLoanAssets,
   mockLend,
   mockRepay,
