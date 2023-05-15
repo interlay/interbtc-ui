@@ -18,4 +18,12 @@ const StyledCellSubLabel = styled(Span)`
   font-size: ${theme.text.xs};
 `;
 
-export { StyledCellLabel, StyledCellSubLabel, StyledCellTickerLabel };
+const StyledCellTag = styled(Span)`
+  font-weight: ${theme.fontWeight.bold};
+  color: ${theme.colors.bgPrimary};
+  background: ${theme.colors.textSecondary};
+  padding: ${theme.spacing.spacing0} ${theme.spacing.spacing2};
+  border-radius: ${theme.rounded.md};
+`;
+
+export { StyledCellLabel, StyledCellSubLabel, StyledCellTag, StyledCellTickerLabel };

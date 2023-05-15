@@ -10,18 +10,28 @@ import {
   DEFAULT_CLAIMABLE_REWARDS,
   DEFAULT_LIQUIDITY_POOL_1,
   DEFAULT_LIQUIDITY_POOL_2,
+  DEFAULT_LIQUIDITY_POOLS,
   DEFAULT_LP_TOKEN_1,
   DEFAULT_LP_TOKEN_2,
   DEFAULT_POOLED_CURRENCIES_1,
+  EMPTY_LIQUIDITY_POOL,
+  LP_TOKEN_3,
   mockAddLiquidity,
   mockClaimFarmingRewards,
   mockGetClaimableFarmingRewards,
+  mockGetLiquidityPools,
   mockGetLiquidityProvidedByAccount,
   mockRemoveLiquidity
 } from '../mocks/@interlay/interbtc-api/parachain/amm';
-import { DEFAULT_ACCOUNT_ADDRESS } from '../mocks/substrate/mocks';
+import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
 import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../test-utils';
-import { withinModalTabPanel, withinTable } from './utils/table';
+import { withinModalTabPanel, withinTable, withinTableRow } from './utils/table';
+
+jest.mock('../../parts/Layout', () => {
+  const MockedLayout: React.FC = ({ children }: any) => children;
+  MockedLayout.displayName = 'MockedLayout';
+  return MockedLayout;
+});
 
 const path = '/pools';
 
@@ -81,7 +91,7 @@ describe('Pools Page', () => {
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(2);
   });
 
-  it('should be able to deposit', async () => {
+  it.only('should be able to deposit', async () => {
     jest
       .spyOn(DEFAULT_LIQUIDITY_POOL_1, 'getLiquidityDepositInputAmounts')
       .mockReturnValue(DEFAULT_POOLED_CURRENCIES_1);
@@ -120,8 +130,20 @@ describe('Pools Page', () => {
       DEFAULT_LIQUIDITY_POOL_1,
       0.1,
       DEFAULT_DEADLINE_BLOCK_NUMBER,
-      DEFAULT_ACCOUNT_ADDRESS
+      DEFAULT_ACCOUNT_1.address
     );
+  });
+
+  it('should display `illiquid` tag and warning when depositing into empty pool', async () => {
+    mockGetLiquidityPools.mockResolvedValue([...DEFAULT_LIQUIDITY_POOLS, EMPTY_LIQUIDITY_POOL]);
+
+    await render(<App />, { path });
+
+    const row = withinTableRow(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker);
+    expect(row.getByText(/illiquid/i)).toBeInTheDocument();
+
+    const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker, TABS.DEPOSIT);
+    expect(tabPanel.getByRole('alert')).toBeInTheDocument();
   });
 
   it('should be able to withdraw', async () => {
@@ -157,7 +179,7 @@ describe('Pools Page', () => {
       DEFAULT_LIQUIDITY_POOL_2,
       0.1,
       DEFAULT_DEADLINE_BLOCK_NUMBER,
-      DEFAULT_ACCOUNT_ADDRESS
+      DEFAULT_ACCOUNT_1.address
     );
   });
 

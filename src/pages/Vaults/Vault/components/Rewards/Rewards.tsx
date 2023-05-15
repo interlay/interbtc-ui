@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { CardProps } from '@/component-library';
 import { LoadingSpinner } from '@/component-library/LoadingSpinner';
+import { IsAuthenticated } from '@/components';
 import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
@@ -82,23 +83,25 @@ const Rewards = ({
   const stakingTitle = (
     <StyledRewardsTitleWrapper>
       <StyledStakingTitle>Rewards</StyledStakingTitle>
-      {hasWithdrawRewardsBtn && (
-        <StyledCTA
-          size='small'
-          variant='outlined'
-          onClick={handleClickWithdrawRewards}
-          disabled={!hasWithdrawableRewards || claimRewardsMutation.isLoading}
-          $loading={claimRewardsMutation.isLoading}
-        >
-          {/* TODO: temporary approach. Loading spinner should be added to the CTA itself */}
-          {claimRewardsMutation.isLoading && (
-            <StyledLoadingSpinnerWrapper>
-              <LoadingSpinner variant='indeterminate' thickness={2} diameter={20} />
-            </StyledLoadingSpinnerWrapper>
-          )}
-          Withdraw all rewards
-        </StyledCTA>
-      )}
+      <IsAuthenticated>
+        {hasWithdrawRewardsBtn && (
+          <StyledCTA
+            size='small'
+            variant='outlined'
+            onClick={handleClickWithdrawRewards}
+            disabled={!hasWithdrawableRewards || claimRewardsMutation.isLoading}
+            $loading={claimRewardsMutation.isLoading}
+          >
+            {/* TODO: temporary approach. Loading spinner should be added to the CTA itself */}
+            {claimRewardsMutation.isLoading && (
+              <StyledLoadingSpinnerWrapper>
+                <LoadingSpinner variant='indeterminate' thickness={2} diameter={20} />
+              </StyledLoadingSpinnerWrapper>
+            )}
+            Withdraw all rewards
+          </StyledCTA>
+        )}
+      </IsAuthenticated>
       {claimRewardsMutation.isError && (
         <ErrorModal
           open={claimRewardsMutation.isError}

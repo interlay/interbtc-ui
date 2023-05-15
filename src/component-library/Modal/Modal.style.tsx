@@ -102,7 +102,8 @@ const StyledCloseCTA = styled(CTA)`
 `;
 
 const StyledModalHeader = styled(H3)`
-  padding: ${theme.modal.header.paddingY} ${theme.modal.header.paddingX};
+  padding: ${theme.modal.header.paddingY} ${theme.modal.header.paddingRight} ${theme.modal.header.paddingY}
+    ${theme.modal.header.paddingX};
   flex-shrink: 0;
 `;
 

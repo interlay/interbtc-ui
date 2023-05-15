@@ -1,5 +1,7 @@
 import { forwardRef, ForwardRefExoticComponent, RefAttributes } from 'react';
 
+import { WalletName } from '@/utils/constants/wallets';
+
 import { IconProps } from '../Icon';
 import { FallbackIcon } from './FallbackIcon';
 import { PolkadotJS, SubWallet, Talisman } from './icons';
@@ -7,9 +9,9 @@ import { PolkadotJS, SubWallet, Talisman } from './icons';
 type WalletComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
 const wallet: Record<string, WalletComponent> = {
-  'polkadot-js': PolkadotJS,
-  'subwallet-js': SubWallet,
-  talisman: Talisman
+  [WalletName.PolkadotJS]: PolkadotJS,
+  [WalletName.SubWallet]: SubWallet,
+  [WalletName.Talisman]: Talisman
 };
 
 type Props = {
