@@ -182,10 +182,12 @@ const CrossChainTransferForm = (): JSX.Element => {
       )
     : 0;
 
-  const valueUSD =
-    transferMonetaryAmount && currentToken
-      ? convertMonetaryAmountToValueInUSD(transferMonetaryAmount, getTokenPrice(prices, currentToken.value)?.usd)
-      : 0;
+  const valueUSD = transferMonetaryAmount
+    ? convertMonetaryAmountToValueInUSD(
+        transferMonetaryAmount,
+        getTokenPrice(prices, currentToken?.value as string)?.usd
+      )
+    : 0;
 
   const isCTADisabled = isFormDisabled(form) || form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] === '';
 
@@ -195,7 +197,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     // This prevents a render loop caused by setFieldValue
     if (form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD]) return;
 
-    const destinationChains = getDestinationChains(originatingChains[0].id);
+    const destinationChains = getDestinationChains(originatingChains[0].id as ChainName);
 
     form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, originatingChains[0].id);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
@@ -212,7 +214,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const getTokensForNewChain = async () => {
       const tokens = await getAvailableTokens(
         form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-        destinationChains[0].id,
+        destinationChains[0].id as ChainName,
         accountId.toString(),
         form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
       );
