@@ -1,6 +1,8 @@
+import { ChainName } from '@interlay/bridge';
+
 type ChainData = {
   display: string;
-  id: string;
+  id: ChainName;
 };
 
 type Chains = ChainData[];
