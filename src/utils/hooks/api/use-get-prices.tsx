@@ -40,22 +40,34 @@ const fetchPricesFromCoingecko = async (endpoint: string) => {
   return response.json();
 };
 
+const getUnderlyingCurrencyFromLendToken = (currencies: CurrencyExt[], lendToken: CurrencyExt) => {
+  // MEMO: This works as long as lend tokens tickers
+  // are same as underlying currencies with only `q` character prepended.
+  const underlyingCurrencyTicker = lendToken.ticker.slice(1);
+  const underlyingCurrency = currencies.find(({ ticker }) => ticker === underlyingCurrencyTicker);
+  if (underlyingCurrency === undefined) {
+    throw new Error(`No underlying currency found for currency ${lendToken.name}`);
+  }
+  return underlyingCurrency;
+};
+
 const getPricesByTicker = (currencies: CurrencyExt[], prices: Prices, lendTokenPrices: TickerToData<Big>) =>
   currencies.reduce((acc, currency) => {
-    const coingeckoId = getCoingeckoId(currency);
-
     if (isLendToken(currency)) {
-      // MEMO: This works as long as lend tokens tickers
-      // are same as underlying currencies with only `q` character prepended.
-      const underlyingCurrencyTicker = currency.ticker.slice(1);
-      const underlyingToLendTokenRate = lendTokenPrices[underlyingCurrencyTicker].toNumber();
-      // MEMO: Can be extended to different counter currencies later if needed.
-      const underlyingCurrencyPriceUSD = prices[underlyingCurrencyTicker].usd;
-      const lendTokenPrice = { usd: underlyingCurrencyPriceUSD / underlyingToLendTokenRate };
+      const underlyingCurrency = getUnderlyingCurrencyFromLendToken(currencies, currency);
+      const underlyingCurrencyCoingeckoId = getCoingeckoId(underlyingCurrency);
+
+      const underlyingToLendTokenRate = lendTokenPrices[underlyingCurrency.ticker].toNumber();
+      const underlyingCurrencyPriceUSD = prices[underlyingCurrencyCoingeckoId].usd;
+      const lendTokenPrice = {
+        // MEMO: Can be extended to different counter currencies later if needed.
+        usd: underlyingToLendTokenRate * underlyingCurrencyPriceUSD
+      };
 
       return { ...acc, [currency.ticker]: lendTokenPrice };
     }
 
+    const coingeckoId = getCoingeckoId(currency);
     return { ...acc, [currency.ticker]: prices[coingeckoId] };
   }, {});
 
