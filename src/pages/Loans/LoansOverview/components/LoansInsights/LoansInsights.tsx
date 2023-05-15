@@ -1,19 +1,15 @@
-import { ISubmittableResult } from '@polkadot/types/types';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, Dl, DlGroup } from '@/component-library';
 import { AuthCTA } from '@/components';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
-
-const mutateClaimRewards = () => submitExtrinsic(window.bridge.loans.claimAllSubsidyRewards());
 
 type LoansInsightsProps = {
   statistics?: AccountLendingStatistics;
@@ -23,16 +19,14 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
   const { t } = useTranslation();
   const { data: subsidyRewards, refetch } = useGetAccountSubsidyRewards();
 
-  const handleSuccess = () => {
-    toast.success(t('successfully_claimed_rewards'));
-    refetch();
-  };
-
-  const claimRewardsMutation = useMutation<ISubmittableResult, Error, void>(mutateClaimRewards, {
-    onSuccess: handleSuccess
+  const transaction = useTransaction(Transaction.LOANS_CLAIM_REWARDS, {
+    onSuccess: () => {
+      toast.success(t('successfully_claimed_rewards'));
+      refetch();
+    }
   });
 
-  const handleClickClaimRewards = () => claimRewardsMutation.mutate();
+  const handleClickClaimRewards = () => transaction.execute();
 
   const { supplyAmountUSD, netAPY } = statistics || {};
 
@@ -76,18 +70,18 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
             <StyledDd color='secondary'>{subsidyRewardsAmountLabel}</StyledDd>
           </DlGroup>
           {hasSubsidyRewards && (
-            <AuthCTA onPress={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
+            <AuthCTA onPress={handleClickClaimRewards} loading={transaction.isLoading}>
               Claim
             </AuthCTA>
           )}
         </Card>
       </Dl>
-      {claimRewardsMutation.isError && (
+      {transaction.isError && (
         <ErrorModal
-          open={claimRewardsMutation.isError}
-          onClose={() => claimRewardsMutation.reset()}
+          open={transaction.isError}
+          onClose={() => transaction.reset()}
           title='Error'
-          description={claimRewardsMutation.error?.message || ''}
+          description={transaction.error?.message || ''}
         />
       )}
     </>

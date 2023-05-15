@@ -13,12 +13,20 @@ type UseTransactionOptions = Omit<
   'mutationFn'
 >;
 
-type UseTransactionResult<T extends Transaction> = Omit<
-  UseMutationResult<ISubmittableResult, unknown, TransactionActions, unknown>,
+type UseTransactionCommonResult = Omit<
+  UseMutationResult<ISubmittableResult, Error, TransactionActions, unknown>,
   'mutate'
-> & {
-  execute: (...args: TransactionArgs<T>) => void;
+>;
+
+type UseTransactionArgsResult<T extends Transaction> = UseTransactionCommonResult & {
+  execute<D extends Transaction = T>(...args: TransactionArgs<D>): void;
 };
+
+type UseTransactionTypeResult<T extends Transaction> = UseTransactionCommonResult & {
+  execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
+};
+
+type UseTransactionResult<T extends Transaction> = UseTransactionArgsResult<T> | UseTransactionTypeResult<T>;
 
 const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions> = async (params) => {
   const extrinsics = await getExtrinsic(params);
@@ -27,23 +35,31 @@ const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions
   return submitTransaction(window.bridge.api, params.accountAddress, extrinsics, expectedStatus, params.events);
 };
 
-const useTransaction = <T extends Transaction>(type: T, options?: UseTransactionOptions): UseTransactionResult<T> => {
+function useTransaction<T extends Transaction>(type: T, options?: UseTransactionOptions): UseTransactionArgsResult<T>;
+function useTransaction<T extends Transaction>(options: UseTransactionOptions): UseTransactionTypeResult<T>;
+function useTransaction<T extends Transaction>(
+  type: T | UseTransactionOptions,
+  options?: UseTransactionOptions
+): UseTransactionResult<T> {
   const { state } = useSubstrate();
 
   const { mutate, ...transactionMutation } = useMutation(mutateTransaction, options || {});
 
   const handleExecute = useCallback(
-    (...args: TransactionArgs<T>) => {
+    (...args: Parameters<UseTransactionResult<T>['execute']>) => {
       const accountAddress = state.selectedAccount?.address;
 
       if (!accountAddress) {
         return undefined;
       }
 
+      const [typeOrArg, ...rest] = args;
+
+      const params = typeof type === 'string' ? { type, args } : { type: typeOrArg, args: rest };
+
       // TODO: add event `onSigning`
       return mutate({
-        type,
-        args,
+        ...params,
         accountAddress
       } as TransactionActions);
     },
@@ -54,6 +70,6 @@ const useTransaction = <T extends Transaction>(type: T, options?: UseTransaction
     ...transactionMutation,
     execute: handleExecute as any
   };
-};
+}
 
 export { useTransaction };

@@ -114,9 +114,13 @@ const SwapForm = ({
 
   const transaction = useTransaction(Transaction.SWAP, {
     onSuccess: () => {
+      toast.success('Swap successful');
       setTrade(undefined);
       setInputAmount(undefined);
       onSwap();
+    },
+    onError: (err) => {
+      toast.error(err.message);
     }
   });
 
@@ -318,7 +322,7 @@ const SwapForm = ({
                 />
               </Flex>
               {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
-              <SwapCTA trade={trade} errors={form.errors} pair={pair} />
+              <SwapCTA trade={trade} errors={form.errors} pair={pair} loading={transaction.isLoading} />
             </Flex>
           </form>
         </Flex>

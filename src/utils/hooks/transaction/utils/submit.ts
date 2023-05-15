@@ -86,6 +86,15 @@ const getErrorMessage = (api: ApiPromise, dispatchError: DispatchError) => {
   return message.concat(` The error is ${dispatchError}.`);
 };
 
+/**
+ * Handles transaction submittion and error
+ * @param {ApiPromise} api polkadot api wrapper
+ * @param {AddressOrPair} account account address
+ * @param {ExtrinsicData} extrinsicData transaction extrinsic data
+ * @param {ExtrinsicStatus.type} expectedStatus status where the transaction is counted as fulfilled
+ * @param {TransactionEvents} callbacks a set of events emitted accross the lifecycle of the transaction
+ * @return {Promise<ISubmittableResult>} transaction data that also can contain meta data in case of error
+ */
 const submitTransaction = async (
   api: ApiPromise,
   account: AddressOrPair,

@@ -10,90 +10,90 @@ import { Transaction, TransactionActions } from '../types';
  * the related args to call the mapped lib call
  * @return {Promise<ExtrinsicData>} every transaction return an extrinsic
  */
-const getExtrinsic = async ({ type, args }: TransactionActions): Promise<ExtrinsicData> => {
-  switch (type) {
+const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> => {
+  switch (params.type) {
     /* START - AMM */
     case Transaction.SWAP:
-      return window.bridge.amm.swap(...args);
+      return window.bridge.amm.swap(...params.args);
     case Transaction.POOL_ADD_LIQUIDITY:
-      return window.bridge.amm.addLiquidity(...args);
+      return window.bridge.amm.addLiquidity(...params.args);
     case Transaction.POOL_REMOVE_LIQUIDITY:
-      return window.bridge.amm.removeLiquidity(...args);
+      return window.bridge.amm.removeLiquidity(...params.args);
     case Transaction.POOL_CLAIM_REWARDS:
-      return window.bridge.amm.claimFarmingRewards(...args);
+      return window.bridge.amm.claimFarmingRewards(...params.args);
     /* END - AMM */
 
     /* START - ISSUE */
     case Transaction.ISSUE_REQUEST:
-      return window.bridge.issue.request(...args);
+      return window.bridge.issue.request(...params.args);
     case Transaction.ISSUE_EXECUTE:
-      return window.bridge.issue.execute(...args);
+      return window.bridge.issue.execute(...params.args);
     /* END - ISSUE */
 
     /* START - REDEEM */
     case Transaction.REDEEM_CANCEL:
-      return window.bridge.redeem.cancel(...args);
+      return window.bridge.redeem.cancel(...params.args);
     case Transaction.REDEEM_BURN:
-      return window.bridge.redeem.burn(...args);
+      return window.bridge.redeem.burn(...params.args);
     case Transaction.REDEEM_REQUEST:
-      return window.bridge.redeem.request(...args);
+      return window.bridge.redeem.request(...params.args);
     /* END - REDEEM */
 
     /* START - REPLACE */
     case Transaction.REPLACE_REQUEST:
-      return window.bridge.replace.request(...args);
+      return window.bridge.replace.request(...params.args);
     /* END - REPLACE */
 
     /* START - TOKENS */
     case Transaction.TRANSFER:
-      return window.bridge.tokens.transfer(...args);
+      return window.bridge.tokens.transfer(...params.args);
     /* END - TOKENS */
 
     /* START - LOANS */
     case Transaction.LOANS_CLAIM_REWARDS:
       return window.bridge.loans.claimAllSubsidyRewards();
     case Transaction.LOANS_BORROW:
-      return window.bridge.loans.borrow(...args);
+      return window.bridge.loans.borrow(...params.args);
     case Transaction.LOANS_LEND:
-      return window.bridge.loans.lend(...args);
+      return window.bridge.loans.lend(...params.args);
     case Transaction.LOANS_REPAY:
-      return window.bridge.loans.repay(...args);
+      return window.bridge.loans.repay(...params.args);
     case Transaction.LOANS_REPAY_ALL:
-      return window.bridge.loans.repayAll(...args);
+      return window.bridge.loans.repayAll(...params.args);
     case Transaction.LOANS_WITHDRAW:
-      return window.bridge.loans.withdraw(...args);
+      return window.bridge.loans.withdraw(...params.args);
     case Transaction.LOANS_WITHDRAW_ALL:
-      return window.bridge.loans.withdrawAll(...args);
+      return window.bridge.loans.withdrawAll(...params.args);
     case Transaction.LOANS_DISABLED_COLLATERAL:
-      return window.bridge.loans.disableAsCollateral(...args);
+      return window.bridge.loans.disableAsCollateral(...params.args);
     case Transaction.LOANS_ENABLED_COLLATERAL:
-      return window.bridge.loans.enableAsCollateral(...args);
+      return window.bridge.loans.enableAsCollateral(...params.args);
     /* END - LOANS */
 
     /* START - LOANS */
     case Transaction.VAULTS_DEPOSIT_COLLATERAL:
-      return window.bridge.vaults.depositCollateral(...args);
+      return window.bridge.vaults.depositCollateral(...params.args);
     case Transaction.VAULTS_WITHDRAW_COLLATERAL:
-      return window.bridge.vaults.withdrawCollateral(...args);
+      return window.bridge.vaults.withdrawCollateral(...params.args);
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL:
-      return window.bridge.vaults.registerNewCollateralVault(...args);
+      return window.bridge.vaults.registerNewCollateralVault(...params.args);
     case Transaction.VAULT_WITHDRAW_REWARDS:
-      return window.bridge.rewards.withdrawRewards(...args);
+      return window.bridge.rewards.withdrawRewards(...params.args);
     /* END - LOANS */
 
     /* START - ESCROW */
     case Transaction.ESCROW_CREATE_LOCK:
-      return window.bridge.escrow.createLock(...args);
+      return window.bridge.escrow.createLock(...params.args);
     case Transaction.ESCROW_INCREASE_LOCKED_AMOUNT:
-      return window.bridge.escrow.increaseAmount(...args);
+      return window.bridge.escrow.increaseAmount(...params.args);
     case Transaction.ESCROW_INCREASE_LOCKED_TIME:
-      return window.bridge.escrow.increaseUnlockHeight(...args);
+      return window.bridge.escrow.increaseUnlockHeight(...params.args);
     case Transaction.ESCROW_WITHDRAW:
-      return window.bridge.escrow.withdraw(...args);
+      return window.bridge.escrow.withdraw(...params.args);
     case Transaction.ESCROW_WITHDRAW_REWARDS:
-      return window.bridge.escrow.withdrawRewards(...args);
+      return window.bridge.escrow.withdrawRewards(...params.args);
     case Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT: {
-      const [amount, unlockHeight] = args;
+      const [amount, unlockHeight] = params.args;
       const txs = [
         window.bridge.api.tx.escrow.increaseAmount(amount),
         window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
