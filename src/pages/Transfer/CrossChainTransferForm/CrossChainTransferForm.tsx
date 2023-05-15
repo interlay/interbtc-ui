@@ -101,8 +101,6 @@ const CrossChainTransferForm = (): JSX.Element => {
   const form = useForm<CrossChainTransferFormData>({
     initialValues: {
       [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_FROM_FIELD]: '',
-      [CROSS_CHAIN_TRANSFER_TO_FIELD]: '',
       [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]: '',
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
@@ -187,7 +185,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     // This prevents a render loop caused by setFieldValue
     if (form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD]) return;
 
-    const destinationChains = getDestinationChains(originatingChains[0].id as ChainName);
+    const destinationChains = getDestinationChains(originatingChains[0].id);
 
     form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, originatingChains[0].id);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
@@ -204,7 +202,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     const getTokensForNewChain = async () => {
       const tokens = await getAvailableTokens(
         form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-        destinationChains[0].id as ChainName,
+        destinationChains[0].id,
         accountId.toString(),
         form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
       );

@@ -1,3 +1,4 @@
+import { ChainName } from '@interlay/bridge';
 import { TFunction } from 'react-i18next';
 
 import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
@@ -9,8 +10,8 @@ const CROSS_CHAIN_TRANSFER_TOKEN_FIELD = 'transfer-token';
 const CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD = 'transfer-account';
 
 type CrossChainTransferFormData = {
-  [CROSS_CHAIN_TRANSFER_FROM_FIELD]?: string;
-  [CROSS_CHAIN_TRANSFER_TO_FIELD]?: string;
+  [CROSS_CHAIN_TRANSFER_FROM_FIELD]?: ChainName;
+  [CROSS_CHAIN_TRANSFER_TO_FIELD]?: ChainName;
   [CROSS_CHAIN_TRANSFER_AMOUNT_FIELD]?: string;
   [CROSS_CHAIN_TRANSFER_TOKEN_FIELD]?: string;
   [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]?: string;

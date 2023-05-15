@@ -71,7 +71,7 @@ const useXCMBridge = (): UseXCMBridge => {
   const originatingChains = data?.bridge.adapters.map((adapter: BaseCrossChainAdapter) => {
     return {
       display: adapter.chain.display,
-      id: adapter.chain.id
+      id: adapter.chain.id as ChainName
     };
   });
 
@@ -81,13 +81,13 @@ const useXCMBridge = (): UseXCMBridge => {
         .getDestinationChains({ from: chain })
         .filter((destinationChain) =>
           originatingChains?.some((originatingChain) => originatingChain.id === destinationChain.id)
-        );
+        ) as Chains;
     },
     [originatingChains]
   );
 
   const getAvailableTokens = useCallback(
-    async (from: ChainName, to: ChainName, originAddress: string, destinationAddress: string) => {
+    async (from, to, originAddress, destinationAddress) => {
       if (!data) return;
 
       const tokens = XCMBridge.router.getAvailableTokens({ from, to });
