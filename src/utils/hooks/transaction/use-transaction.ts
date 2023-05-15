@@ -35,6 +35,7 @@ const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions
   return submitTransaction(window.bridge.api, params.accountAddress, extrinsics, expectedStatus, params.events);
 };
 
+// The three declared functions are use to infer types on diferent implementations
 function useTransaction<T extends Transaction>(type: T, options?: UseTransactionOptions): UseTransactionArgsResult<T>;
 function useTransaction<T extends Transaction>(options: UseTransactionOptions): UseTransactionTypeResult<T>;
 function useTransaction<T extends Transaction>(
@@ -53,9 +54,16 @@ function useTransaction<T extends Transaction>(
         return undefined;
       }
 
-      const [typeOrArg, ...rest] = args;
+      let params = {};
 
-      const params = typeof type === 'string' ? { type, args } : { type: typeOrArg, args: rest };
+      // Assign correct params for when transaction type is declared on hook params
+      if (typeof type === 'string') {
+        params = { type, args };
+      } else {
+        // Assign correct params for when transaction type is declared on execution level
+        const [type, ...restArgs] = args;
+        params = { type, args: restArgs };
+      }
 
       // TODO: add event `onSigning`
       return mutate({
@@ -68,8 +76,9 @@ function useTransaction<T extends Transaction>(
 
   return {
     ...transactionMutation,
-    execute: handleExecute as any
+    execute: handleExecute
   };
 }
 
 export { useTransaction };
+export type { UseTransactionResult };

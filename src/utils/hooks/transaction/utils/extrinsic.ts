@@ -113,6 +113,8 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
  */
 const getExpectedStatus = (type: Transaction): ExtrinsicStatus['type'] => {
   switch (type) {
+    // When requesting a replace, wait for the finalized event because we cannot revert BTC transactions.
+    // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
     case Transaction.ISSUE_REQUEST:
     case Transaction.REDEEM_REQUEST:
     case Transaction.REPLACE_REQUEST:
