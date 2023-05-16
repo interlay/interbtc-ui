@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import { LinkProps } from 'react-router-dom';
 
 import BANXA_INTERLAY from '@/assets/img/banxa-dark.png';
 import BANXA_KITNSUGI from '@/assets/img/banxa-white.png';
@@ -11,14 +10,14 @@ import { ReactComponent as MexcLogoForInterlayIcon } from '@/assets/img/exchange
 import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchanges/mexc-logo-for-kintsugi.svg';
 import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlink-logo.svg';
-import { BANXA_LINK, LINK_QUERY_PARAMETERS } from '@/config/links';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { useWallet } from '@/utils/hooks/use-wallet';
 
 const queryString = require('query-string');
 
-type FundWalletEntities = { link: LinkProps['to']; icon: ReactNode };
+type FundWalletEntities = { pathname: string; search?: string; icon: ReactNode };
 
 type UseEntitiesResult = {
   exchanges: FundWalletEntities[];
@@ -29,43 +28,48 @@ const useEntities = (): UseEntitiesResult => {
   const wallet = useWallet();
 
   const banxaLink = {
-    pathname: BANXA_LINK,
+    pathname: EXTERNAL_PAGES.BANXA,
     search: queryString.stringify({
-      [LINK_QUERY_PARAMETERS.BANXA.WALLET_ADDRESS]: wallet.getRelayChainAddress(),
-      [LINK_QUERY_PARAMETERS.BANXA.FIAT_TYPE]: 'EUR',
-      [LINK_QUERY_PARAMETERS.BANXA.COIN_TYPE]: GOVERNANCE_TOKEN.ticker
+      [EXTERNAL_QUERY_PARAMETERS.BANXA.WALLET_ADDRESS]: wallet.getRelayChainAddress(),
+      [EXTERNAL_QUERY_PARAMETERS.BANXA.FIAT_TYPE]: 'EUR',
+      [EXTERNAL_QUERY_PARAMETERS.BANXA.COIN_TYPE]: GOVERNANCE_TOKEN.ticker
     })
   };
 
   if (process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT) {
     const exchanges = [
       {
-        link: 'https://acala.network/',
+        pathname: 'https://acala.network/',
         icon: <AcalaLogoIcon width={122} height={48} />
       },
       {
-        link: 'https://stellaswap.com/',
+        pathname: 'https://stellaswap.com/',
         icon: <StellaSwapLogoIcon width={122} height={25} />
       },
       {
-        link: 'https://trade.kraken.com/charts/KRAKEN:INTR-USD',
+        pathname: 'https://trade.kraken.com/charts/KRAKEN:INTR-USD',
         icon: <KrakenLogoIcon width={122} height={20} />
       },
       {
-        link: 'https://www.gate.io/trade/INTR_USDT',
+        pathname: 'https://www.gate.io/trade/INTR_USDT',
         icon: <GateLogoIcon width={122} height={37} />
       },
       {
-        link: 'https://www.mexc.com/exchange/INTR_USDT',
+        pathname: 'https://www.mexc.com/exchange/INTR_USDT',
         icon: <MexcLogoForInterlayIcon width={148} height={18} />
       },
       {
-        link: 'https://www.lbank.info/exchange/intr/usdt',
+        pathname: 'https://www.lbank.info/exchange/intr/usdt',
         icon: <LbankLogoIcon width={117} height={22} />
       }
     ];
 
-    const payments = [{ link: banxaLink, icon: <img src={BANXA_INTERLAY} alt='banxa' /> }];
+    const payments = [
+      {
+        ...banxaLink,
+        icon: <img src={BANXA_INTERLAY} alt='banxa' />
+      }
+    ];
 
     return {
       exchanges,
@@ -74,24 +78,24 @@ const useEntities = (): UseEntitiesResult => {
   } else if (process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA) {
     const exchanges = [
       {
-        link: 'https://www.kraken.com/en-gb/prices/kint-kintsugi-price-chart/usd-us-dollar?interval=1m',
+        pathname: 'https://www.kraken.com/en-gb/prices/kint-kintsugi-price-chart/usd-us-dollar?interval=1m',
         icon: <KrakenLogoIcon width={122} height={20} />
       },
       {
-        link: 'https://www.gate.io/de/trade/kint_usdt',
+        pathname: 'https://www.gate.io/de/trade/kint_usdt',
         icon: <GateLogoIcon width={122} height={37} />
       },
       {
-        link: 'https://dex.zenlink.pro/#/swap',
+        pathname: 'https://dex.zenlink.pro/#/swap',
         icon: <ZenlinkLogoIcon width={119} height={35} />
       },
       {
-        link: 'https://www.mexc.com/de-DE/exchange/KINT_USDT',
+        pathname: 'https://www.mexc.com/de-DE/exchange/KINT_USDT',
         icon: <MexcLogoForKintsugiIcon width={167} height={21} />
       }
     ];
 
-    const payments = [{ link: banxaLink, icon: <img src={BANXA_KITNSUGI} alt='banxa' /> }];
+    const payments = [{ ...banxaLink, icon: <img src={BANXA_KITNSUGI} alt='banxa' /> }];
 
     return {
       exchanges,
