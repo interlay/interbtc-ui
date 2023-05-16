@@ -30,7 +30,7 @@ const useEntities = (): UseEntitiesResult => {
   const banxaLink = {
     pathname: EXTERNAL_PAGES.BANXA,
     search: queryString.stringify({
-      [EXTERNAL_QUERY_PARAMETERS.BANXA.WALLET_ADDRESS]: wallet.getRelayChainAddress(),
+      [EXTERNAL_QUERY_PARAMETERS.BANXA.WALLET_ADDRESS]: wallet.account?.toString(),
       [EXTERNAL_QUERY_PARAMETERS.BANXA.FIAT_TYPE]: 'EUR',
       [EXTERNAL_QUERY_PARAMETERS.BANXA.COIN_TYPE]: GOVERNANCE_TOKEN.ticker
     })
