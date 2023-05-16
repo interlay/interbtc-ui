@@ -3,11 +3,11 @@ import { InterBtcApi } from '@interlay/interbtc-api';
 import { Transaction } from '../types';
 import { TransactionAction } from '.';
 
-interface TransferAction extends TransactionAction {
-  type: Transaction.TRANSFER;
+interface TokensTransferAction extends TransactionAction {
+  type: Transaction.TOKENS_TRANSFER;
   args: Parameters<InterBtcApi['tokens']['transfer']>;
 }
 
-type TokensActions = TransferAction;
+type TokensActions = TokensTransferAction;
 
 export type { TokensActions };

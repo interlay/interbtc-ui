@@ -13,13 +13,13 @@ import { Transaction, TransactionActions } from '../types';
 const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> => {
   switch (params.type) {
     /* START - AMM */
-    case Transaction.SWAP:
+    case Transaction.AMM_SWAP:
       return window.bridge.amm.swap(...params.args);
-    case Transaction.POOL_ADD_LIQUIDITY:
+    case Transaction.AMM_ADD_LIQUIDITY:
       return window.bridge.amm.addLiquidity(...params.args);
-    case Transaction.POOL_REMOVE_LIQUIDITY:
+    case Transaction.AMM_REMOVE_LIQUIDITY:
       return window.bridge.amm.removeLiquidity(...params.args);
-    case Transaction.POOL_CLAIM_REWARDS:
+    case Transaction.AMM_CLAIM_REWARDS:
       return window.bridge.amm.claimFarmingRewards(...params.args);
     /* END - AMM */
 
@@ -45,7 +45,7 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
     /* END - REPLACE */
 
     /* START - TOKENS */
-    case Transaction.TRANSFER:
+    case Transaction.TOKENS_TRANSFER:
       return window.bridge.tokens.transfer(...params.args);
     /* END - TOKENS */
 
@@ -77,8 +77,10 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
       return window.bridge.vaults.withdrawCollateral(...params.args);
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL:
       return window.bridge.vaults.registerNewCollateralVault(...params.args);
-    case Transaction.VAULT_WITHDRAW_REWARDS:
+    /* START - REWARDS */
+    case Transaction.REWARDS_WITHDRAW:
       return window.bridge.rewards.withdrawRewards(...params.args);
+    /* START - REWARDS */
     /* END - LOANS */
 
     /* START - ESCROW */
@@ -111,7 +113,7 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
  * @param {Transaction} type type of transaction
  * @return {ExtrinsicStatus.type} transaction status
  */
-const getExpectedStatus = (type: Transaction): ExtrinsicStatus['type'] => {
+const getStatus = (type: Transaction): ExtrinsicStatus['type'] => {
   switch (type) {
     // When requesting a replace, wait for the finalized event because we cannot revert BTC transactions.
     // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
@@ -124,4 +126,4 @@ const getExpectedStatus = (type: Transaction): ExtrinsicStatus['type'] => {
   }
 };
 
-export { getExpectedStatus, getExtrinsic };
+export { getExtrinsic, getStatus };

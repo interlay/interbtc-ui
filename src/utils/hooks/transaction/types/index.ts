@@ -1,51 +1,55 @@
+import { ExtrinsicStatus } from '@polkadot/types/interfaces';
+
 import { AMMActions } from './amm';
 import { EscrowActions } from './escrow';
 import { IssueActions } from './issue';
 import { LoansActions } from './loans';
 import { RedeemActions } from './redeem';
 import { ReplaceActions } from './replace';
+import { RewardsActions } from './rewards';
 import { TokensActions } from './tokens';
 import { VaultsActions } from './vaults';
 
 enum Transaction {
   // Issue
-  ISSUE_REQUEST = 'issue-request',
-  ISSUE_EXECUTE = 'issue-execute',
+  ISSUE_REQUEST = 'ISSUE_REQUEST',
+  ISSUE_EXECUTE = 'ISSUE_EXECUTE',
   // Redeem
-  REDEEM_REQUEST = 'redeem-request',
-  REDEEM_CANCEL = 'redeem-cancel',
-  REDEEM_BURN = 'redeem-burn',
+  REDEEM_REQUEST = 'REDEEM_REQUEST',
+  REDEEM_CANCEL = 'REDEEM_CANCEL',
+  REDEEM_BURN = 'REDEEM_BURN',
   // Replace
-  REPLACE_REQUEST = 'replace-request',
+  REPLACE_REQUEST = 'REPLACE_REQUEST',
   // Escrow
-  ESCROW_CREATE_LOCK = 'escrow-create-lock',
-  ESCROW_INCREASE_LOCKED_TIME = 'escrow-inscrease-locked-time',
-  ESCROW_INCREASE_LOCKED_AMOUNT = 'escrow-inscrease-locked-amount',
-  ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT = 'escrow-inscrease-locked-time-and-amount',
-  ESCROW_WITHDRAW_REWARDS = 'escrow-withdraw-rewards',
-  ESCROW_WITHDRAW = 'escrow-withdraw',
+  ESCROW_CREATE_LOCK = 'ESCROW_CREATE_LOCK',
+  ESCROW_INCREASE_LOCKED_TIME = 'ESCROW_INCREASE_LOCKED_TIME',
+  ESCROW_INCREASE_LOCKED_AMOUNT = 'ESCROW_INCREASE_LOCKED_AMOUNT',
+  ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT = 'ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT',
+  ESCROW_WITHDRAW_REWARDS = 'ESCROW_WITHDRAW_REWARDS',
+  ESCROW_WITHDRAW = 'ESCROW_WITHDRAW',
   // Tokens
-  TRANSFER = 'transfer',
+  TOKENS_TRANSFER = 'TOKENS_TRANSFER',
   // Vaults
-  VAULTS_DEPOSIT_COLLATERAL = 'vaults-deposit-collateral',
-  VAULTS_WITHDRAW_COLLATERAL = 'vaults-withdraw-collateral',
-  VAULTS_REGISTER_NEW_COLLATERAL = 'vaults-register-new-collateral',
-  VAULT_WITHDRAW_REWARDS = 'vault-withdraw-rewards',
+  VAULTS_DEPOSIT_COLLATERAL = 'VAULTS_DEPOSIT_COLLATERAL',
+  VAULTS_WITHDRAW_COLLATERAL = 'VAULTS_WITHDRAW_COLLATERAL',
+  VAULTS_REGISTER_NEW_COLLATERAL = 'VAULTS_REGISTER_NEW_COLLATERAL',
+  // Rewards
+  REWARDS_WITHDRAW = 'REWARDS_WITHDRAW',
   // Loans
-  LOANS_CLAIM_REWARDS = 'loans-claim-rewards',
-  LOANS_ENABLED_COLLATERAL = 'loans-enabled-collateral',
-  LOANS_DISABLED_COLLATERAL = 'loans-disabled-collateral',
-  LOANS_LEND = 'loans-lend',
-  LOANS_WITHDRAW = 'loans-withdraw',
-  LOANS_WITHDRAW_ALL = 'loans-withdraw-all',
-  LOANS_BORROW = 'loans-borrow',
-  LOANS_REPAY = 'loans-repay',
-  LOANS_REPAY_ALL = 'loans-repay-all',
+  LOANS_CLAIM_REWARDS = 'LOANS_CLAIM_REWARDS',
+  LOANS_ENABLED_COLLATERAL = 'LOANS_ENABLED_COLLATERAL',
+  LOANS_DISABLED_COLLATERAL = 'LOANS_DISABLED_COLLATERAL',
+  LOANS_LEND = 'LOANS_LEND',
+  LOANS_WITHDRAW = 'LOANS_WITHDRAW',
+  LOANS_WITHDRAW_ALL = 'LOANS_WITHDRAW_ALL',
+  LOANS_BORROW = 'LOANS_BORROW',
+  LOANS_REPAY = 'LOANS_REPAY',
+  LOANS_REPAY_ALL = 'LOANS_REPAY_ALL',
   // AMM
-  SWAP = 'swap',
-  POOL_ADD_LIQUIDITY = 'pool-add-liquidity',
-  POOL_REMOVE_LIQUIDITY = 'pool-remove-liquidity',
-  POOL_CLAIM_REWARDS = 'pool-claim-rewards'
+  AMM_SWAP = 'AMM_SWAP',
+  AMM_ADD_LIQUIDITY = 'AMM_ADD_LIQUIDITY',
+  AMM_REMOVE_LIQUIDITY = 'AMM_REMOVE_LIQUIDITY',
+  AMM_CLAIM_REWARDS = 'AMM_CLAIM_REWARDS'
 }
 
 type TransactionEvents = {
@@ -55,6 +59,7 @@ type TransactionEvents = {
 interface TransactionAction {
   accountAddress: string;
   events: TransactionEvents;
+  customStatus?: ExtrinsicStatus['type'];
 }
 
 type TransactionActions =
@@ -65,7 +70,8 @@ type TransactionActions =
   | TokensActions
   | LoansActions
   | AMMActions
-  | VaultsActions;
+  | VaultsActions
+  | RewardsActions;
 
 type TransactionArgs<T extends Transaction> = Extract<TransactionActions, { type: T }>['args'];
 

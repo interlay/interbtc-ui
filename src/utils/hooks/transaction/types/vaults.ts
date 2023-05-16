@@ -18,15 +18,6 @@ interface VaultsRegisterNewCollateralAction extends TransactionAction {
   args: Parameters<InterBtcApi['vaults']['registerNewCollateralVault']>;
 }
 
-interface VaultWithdrawRewardsAction extends TransactionAction {
-  type: Transaction.VAULT_WITHDRAW_REWARDS;
-  args: Parameters<InterBtcApi['rewards']['withdrawRewards']>;
-}
-
-type VaultsActions =
-  | VaultsDepositCollateralAction
-  | VaultsWithdrawCollateralAction
-  | VaultsRegisterNewCollateralAction
-  | VaultWithdrawRewardsAction;
+type VaultsActions = VaultsDepositCollateralAction | VaultsWithdrawCollateralAction | VaultsRegisterNewCollateralAction;
 
 export type { VaultsActions };

@@ -4,22 +4,22 @@ import { Transaction } from '../types';
 import { TransactionAction } from '.';
 
 interface SwapAction extends TransactionAction {
-  type: Transaction.SWAP;
+  type: Transaction.AMM_SWAP;
   args: Parameters<InterBtcApi['amm']['swap']>;
 }
 
 interface PoolAddLiquidityAction extends TransactionAction {
-  type: Transaction.POOL_ADD_LIQUIDITY;
+  type: Transaction.AMM_ADD_LIQUIDITY;
   args: Parameters<InterBtcApi['amm']['addLiquidity']>;
 }
 
 interface PoolRemoveLiquidityAction extends TransactionAction {
-  type: Transaction.POOL_REMOVE_LIQUIDITY;
+  type: Transaction.AMM_REMOVE_LIQUIDITY;
   args: Parameters<InterBtcApi['amm']['removeLiquidity']>;
 }
 
 interface PoolClaimRewardsAction extends TransactionAction {
-  type: Transaction.POOL_CLAIM_REWARDS;
+  type: Transaction.AMM_CLAIM_REWARDS;
   args: Parameters<InterBtcApi['amm']['claimFarmingRewards']>;
 }
 

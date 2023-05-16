@@ -1,3 +1,4 @@
+import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { useCallback } from 'react';
 import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } from 'react-query';
@@ -5,13 +6,15 @@ import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } 
 import { useSubstrate } from '@/lib/substrate';
 
 import { Transaction, TransactionActions, TransactionArgs } from './types';
-import { getExpectedStatus, getExtrinsic } from './utils/extrinsic';
+import { getExtrinsic, getStatus } from './utils/extrinsic';
 import { submitTransaction } from './utils/submit';
 
 type UseTransactionOptions = Omit<
   UseMutationOptions<ISubmittableResult, Error, TransactionActions, unknown>,
   'mutationFn'
->;
+> & {
+  customStatus: ExtrinsicStatus['type'];
+};
 
 // TODO: add feeEstimate and feeEstimateAsync
 type ExecuteArgs<T extends Transaction> = {
@@ -34,7 +37,7 @@ type UseTransactionResult<T extends Transaction> = InheritAttrs & (ExecuteArgs<T
 
 const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions> = async (params) => {
   const extrinsics = await getExtrinsic(params);
-  const expectedStatus = getExpectedStatus(params.type);
+  const expectedStatus = params.customStatus || getStatus(params.type);
 
   return submitTransaction(window.bridge.api, params.accountAddress, extrinsics, expectedStatus, params.events);
 };
@@ -75,10 +78,11 @@ function useTransaction<T extends Transaction>(
       // TODO: add event `onSigning`
       return {
         ...params,
-        accountAddress
+        accountAddress,
+        customStatus: options?.customStatus
       } as TransactionActions;
     },
-    [state.selectedAccount?.address, type]
+    [options?.customStatus, state.selectedAccount?.address, type]
   );
 
   const handleExecute = useCallback(
