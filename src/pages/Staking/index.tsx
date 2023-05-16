@@ -844,7 +844,7 @@ const Staking = (): JSX.Element => {
               tooltip={`The APR may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`}
             />
             <InformationUI
-              label={`Projected Rewards p.a.`}
+              label={`Projected ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={renderEstimatedRewardAmountLabel()}
               tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,
