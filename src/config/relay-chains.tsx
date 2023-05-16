@@ -1,4 +1,7 @@
+import { KaruraAdapter } from '@interlay/bridge/build/adapters/acala';
+import { BifrostAdapter } from '@interlay/bridge/build/adapters/bifrost';
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
+import { HeikoAdapter } from '@interlay/bridge/build/adapters/parallel';
 import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
 import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
@@ -199,7 +202,10 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     XCM_ADAPTERS = {
       kintsugi: new KintsugiAdapter(),
       kusama: new KusamaAdapter(),
-      statemine: new StatemineAdapter()
+      karura: new KaruraAdapter(),
+      statemine: new StatemineAdapter(),
+      bifrost: new BifrostAdapter(),
+      heiko: new HeikoAdapter()
     };
     SS58_PREFIX = 2;
     break;
