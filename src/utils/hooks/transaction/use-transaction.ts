@@ -43,6 +43,7 @@ const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions
 };
 
 // The three declared functions are use to infer types on diferent implementations
+// TODO: missing xcm transaction
 function useTransaction<T extends Transaction>(
   type: T,
   options?: UseTransactionOptions
