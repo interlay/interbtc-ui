@@ -40,7 +40,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
 
-  const transaction = useTransaction(Transaction.POOL_REMOVE_LIQUIDITY, {
+  const transaction = useTransaction(Transaction.AMM_REMOVE_LIQUIDITY, {
     onSuccess: () => {
       onWithdraw?.();
       toast.success('Withdraw successful');

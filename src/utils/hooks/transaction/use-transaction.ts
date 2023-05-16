@@ -13,7 +13,7 @@ type UseTransactionOptions = Omit<
   UseMutationOptions<ISubmittableResult, Error, TransactionActions, unknown>,
   'mutationFn'
 > & {
-  customStatus: ExtrinsicStatus['type'];
+  customStatus?: ExtrinsicStatus['type'];
 };
 
 // TODO: add feeEstimate and feeEstimateAsync
@@ -48,15 +48,20 @@ function useTransaction<T extends Transaction>(
   options?: UseTransactionOptions
 ): Exclude<UseTransactionResult<T>, ExecuteTypeArgs<T>>;
 function useTransaction<T extends Transaction>(
-  options: UseTransactionOptions
+  options?: UseTransactionOptions
 ): Exclude<UseTransactionResult<T>, ExecuteArgs<T>>;
 function useTransaction<T extends Transaction>(
-  type: T | UseTransactionOptions,
+  typeOrOptions?: T | UseTransactionOptions,
   options?: UseTransactionOptions
 ): UseTransactionResult<T> {
   const { state } = useSubstrate();
 
-  const { mutate, mutateAsync, ...transactionMutation } = useMutation(mutateTransaction, options || {});
+  const hasOnlyOptions = typeof typeOrOptions !== 'string';
+
+  const { mutate, mutateAsync, ...transactionMutation } = useMutation(
+    mutateTransaction,
+    (hasOnlyOptions ? typeOrOptions : options) as UseTransactionOptions
+  );
 
   // Handles params for both type of implementations
   const getParams = useCallback(
@@ -64,8 +69,8 @@ function useTransaction<T extends Transaction>(
       let params = {};
 
       // Assign correct params for when transaction type is declared on hook params
-      if (typeof type === 'string') {
-        params = { type, args };
+      if (typeof typeOrOptions === 'string') {
+        params = { type: typeOrOptions, args };
       } else {
         // Assign correct params for when transaction type is declared on execution level
         const [type, ...restArgs] = args;
@@ -82,7 +87,7 @@ function useTransaction<T extends Transaction>(
         customStatus: options?.customStatus
       } as TransactionActions;
     },
-    [options?.customStatus, state.selectedAccount?.address, type]
+    [options?.customStatus, state.selectedAccount?.address, typeOrOptions]
   );
 
   const handleExecute = useCallback(

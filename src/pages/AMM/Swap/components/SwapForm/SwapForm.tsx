@@ -112,7 +112,7 @@ const SwapForm = ({
   const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
 
-  const transaction = useTransaction(Transaction.SWAP, {
+  const transaction = useTransaction(Transaction.AMM_SWAP, {
     onSuccess: () => {
       toast.success('Swap successful');
       setTrade(undefined);

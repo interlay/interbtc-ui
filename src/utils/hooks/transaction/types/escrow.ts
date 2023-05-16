@@ -10,9 +10,11 @@ interface EscrowCreateLockAction extends TransactionAction {
 
 interface EscrowInscreaseLookedTimeAndAmountAction extends TransactionAction {
   type: Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT;
-  args: Parameters<InterBtcApi['escrow']['increaseAmount']> & Parameters<InterBtcApi['escrow']['increaseUnlockHeight']>;
+  args: [
+    ...Parameters<InterBtcApi['api']['tx']['escrow']['increaseAmount']>,
+    ...Parameters<InterBtcApi['api']['tx']['escrow']['increaseUnlockHeight']>
+  ];
 }
-
 interface EscrowIncreaseLockAmountAction extends TransactionAction {
   type: Transaction.ESCROW_INCREASE_LOCKED_AMOUNT;
   args: Parameters<InterBtcApi['escrow']['increaseAmount']>;

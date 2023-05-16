@@ -54,7 +54,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
     refetch();
   };
 
-  const transaction = useTransaction(Transaction.POOL_CLAIM_REWARDS, {
+  const transaction = useTransaction(Transaction.AMM_CLAIM_REWARDS, {
     onSuccess: handleSuccess
   });
 

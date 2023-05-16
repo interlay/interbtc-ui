@@ -51,7 +51,7 @@ const DepositForm = ({ pool, slippageModalRef, onDeposit }: DepositFormProps): J
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
-  const transaction = useTransaction(Transaction.POOL_ADD_LIQUIDITY, {
+  const transaction = useTransaction(Transaction.AMM_ADD_LIQUIDITY, {
     onSuccess: () => {
       onDeposit?.();
       toast.success('Deposit successful');

@@ -36,13 +36,8 @@ const handleTransaction = async (
         isSigned = true;
       }
 
-      const {
-        status: { type, isInBlock, isFinalized }
-      } = result;
-
       if (!isStatusCompleted) {
-        const isExpectedStatus = expectedStatus === type;
-        isStatusCompleted = isExpectedStatus || isInBlock || isFinalized;
+        isStatusCompleted = expectedStatus === result.status.type;
       }
 
       // should only search for event when it is specified and it has not been previously found
