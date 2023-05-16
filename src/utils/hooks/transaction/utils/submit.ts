@@ -10,7 +10,7 @@ import { TransactionEvents } from '../types';
 type HandleTransactionResult = { result: ISubmittableResult; unsubscribe: () => void };
 
 // When passing { nonce: -1 } to signAndSend the API will use system.accountNextIndex to determine the nonce
-const options = { nonce: -1 };
+const transactionOptions = { nonce: -1 };
 
 const handleTransaction = async (
   account: AddressOrPair,
@@ -26,7 +26,7 @@ const handleTransaction = async (
     let unsubscribe: () => void;
 
     (extrinsicData.extrinsic as SubmittableExtrinsic<'promise'>)
-      .signAndSend(account, options, callback)
+      .signAndSend(account, transactionOptions, callback)
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => reject(error));
 

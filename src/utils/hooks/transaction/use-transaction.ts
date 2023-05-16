@@ -13,20 +13,24 @@ type UseTransactionOptions = Omit<
   'mutationFn'
 >;
 
-type UseTransactionCommonResult = Omit<
+// TODO: add feeEstimate and feeEstimateAsync
+type ExecuteArgs<T extends Transaction> = {
+  execute<D extends Transaction = T>(...args: TransactionArgs<D>): void;
+  executeAsync<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<ISubmittableResult>;
+};
+
+// TODO: add feeEstimate and feeEstimateAsync
+type ExecuteTypeArgs<T extends Transaction> = {
+  execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
+  executeAsync<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<ISubmittableResult>;
+};
+
+type InheritAttrs = Omit<
   UseMutationResult<ISubmittableResult, Error, TransactionActions, unknown>,
-  'mutate'
+  'mutate' | 'mutateAsync'
 >;
 
-type UseTransactionArgsResult<T extends Transaction> = UseTransactionCommonResult & {
-  execute<D extends Transaction = T>(...args: TransactionArgs<D>): void;
-};
-
-type UseTransactionTypeResult<T extends Transaction> = UseTransactionCommonResult & {
-  execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
-};
-
-type UseTransactionResult<T extends Transaction> = UseTransactionArgsResult<T> | UseTransactionTypeResult<T>;
+type UseTransactionResult<T extends Transaction> = InheritAttrs & (ExecuteArgs<T> | ExecuteTypeArgs<T>);
 
 const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions> = async (params) => {
   const extrinsics = await getExtrinsic(params);
@@ -36,24 +40,24 @@ const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions
 };
 
 // The three declared functions are use to infer types on diferent implementations
-function useTransaction<T extends Transaction>(type: T, options?: UseTransactionOptions): UseTransactionArgsResult<T>;
-function useTransaction<T extends Transaction>(options: UseTransactionOptions): UseTransactionTypeResult<T>;
+function useTransaction<T extends Transaction>(
+  type: T,
+  options?: UseTransactionOptions
+): Exclude<UseTransactionResult<T>, ExecuteTypeArgs<T>>;
+function useTransaction<T extends Transaction>(
+  options: UseTransactionOptions
+): Exclude<UseTransactionResult<T>, ExecuteArgs<T>>;
 function useTransaction<T extends Transaction>(
   type: T | UseTransactionOptions,
   options?: UseTransactionOptions
 ): UseTransactionResult<T> {
   const { state } = useSubstrate();
 
-  const { mutate, ...transactionMutation } = useMutation(mutateTransaction, options || {});
+  const { mutate, mutateAsync, ...transactionMutation } = useMutation(mutateTransaction, options || {});
 
-  const handleExecute = useCallback(
-    (...args: Parameters<UseTransactionResult<T>['execute']>) => {
-      const accountAddress = state.selectedAccount?.address;
-
-      if (!accountAddress) {
-        return undefined;
-      }
-
+  // Handles params for both type of implementations
+  const getParams = useCallback(
+    (args: Parameters<UseTransactionResult<T>['execute']>) => {
       let params = {};
 
       // Assign correct params for when transaction type is declared on hook params
@@ -65,18 +69,40 @@ function useTransaction<T extends Transaction>(
         params = { type, args: restArgs };
       }
 
+      // Execution should only ran when authenticated
+      const accountAddress = state.selectedAccount?.address;
+
       // TODO: add event `onSigning`
-      return mutate({
+      return {
         ...params,
         accountAddress
-      } as TransactionActions);
+      } as TransactionActions;
     },
-    [mutate, state.selectedAccount?.address, type]
+    [state.selectedAccount?.address, type]
+  );
+
+  const handleExecute = useCallback(
+    (...args: Parameters<UseTransactionResult<T>['execute']>) => {
+      const params = getParams(args);
+
+      return mutate(params);
+    },
+    [getParams, mutate]
+  );
+
+  const handleExecuteAsync = useCallback(
+    (...args: Parameters<UseTransactionResult<T>['executeAsync']>) => {
+      const params = getParams(args);
+
+      return mutateAsync(params);
+    },
+    [getParams, mutateAsync]
   );
 
   return {
     ...transactionMutation,
-    execute: handleExecute
+    execute: handleExecute,
+    executeAsync: handleExecuteAsync
   };
 }
 
