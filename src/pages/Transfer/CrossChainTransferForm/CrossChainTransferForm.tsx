@@ -109,6 +109,22 @@ const CrossChainTransferForm = (): JSX.Element => {
     validateOnChange: false
   });
 
+  const getTokenData = async () => {
+    if (!accountId) return;
+
+    const tokens = await getAvailableTokens(
+      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+      form.values[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName,
+      accountId.toString(),
+      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
+    );
+
+    if (!tokens) return;
+
+    setTransferableTokens(tokens);
+    setCurrentToken(tokens[0]);
+  };
+
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
     onSuccess: () => {
       toast.success('Transfer successful');
@@ -134,22 +150,6 @@ const CrossChainTransferForm = (): JSX.Element => {
     form.setFieldValue(name, chain);
 
     getTokenData();
-  };
-
-  const getTokenData = async () => {
-    if (!accountId) return;
-
-    const tokens = await getAvailableTokens(
-      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      destinationChains[0].id,
-      accountId.toString(),
-      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
-    );
-
-    if (!tokens) return;
-
-    setTransferableTokens(tokens);
-    setCurrentToken(tokens[0]);
   };
 
   const transferMonetaryAmount = currentToken
