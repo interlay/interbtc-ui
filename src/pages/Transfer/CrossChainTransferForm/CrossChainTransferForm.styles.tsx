@@ -22,10 +22,6 @@ const StyledArrowRightCircle = styled(ArrowRightCircle)`
   }
 `;
 
-const StyledWrapper = styled.div`
-  margin-top: ${theme.spacing.spacing6};
-`;
-
 const ChainSelectSection = styled(Flex)`
   flex-direction: column;
 
@@ -43,4 +39,4 @@ const StyledSourceChainSelect = styled(ChainSelect)`
   }
 `;
 
-export { ChainSelectSection, StyledArrowRightCircle, StyledDl, StyledSourceChainSelect, StyledWrapper };
+export { ChainSelectSection, StyledArrowRightCircle, StyledDl, StyledSourceChainSelect };

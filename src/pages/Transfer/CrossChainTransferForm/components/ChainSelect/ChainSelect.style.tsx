@@ -1,14 +1,8 @@
 import styled from 'styled-components';
 
-import { ChevronDown } from '@/assets/icons';
 import { Flex } from '@/component-library/Flex';
-import { List } from '@/component-library/List';
 import { Span } from '@/component-library/Text';
 import { theme } from '@/component-library/theme';
-
-type StyledClickableProps = {
-  $isClickable: boolean;
-};
 
 type StyledListItemSelectedLabelProps = {
   $isSelected: boolean;
@@ -21,21 +15,6 @@ const StyledChain = styled.span`
   text-overflow: ellipsis;
 `;
 
-const StyledChainSelect = styled(Flex)<StyledClickableProps>`
-  background-color: ${theme.tokenInput.endAdornment.bg};
-  border-radius: ${theme.rounded.md};
-  font-size: ${theme.text.xl2};
-  padding: ${theme.spacing.spacing3};
-  cursor: ${({ $isClickable }) => $isClickable && 'pointer'};
-  height: 3rem;
-  width: auto;
-  overflow: hidden;
-`;
-
-const StyledChevronDown = styled(ChevronDown)`
-  margin-left: ${theme.spacing.spacing1};
-`;
-
 const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
   color: ${({ $isSelected }) =>
     $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
@@ -43,13 +22,8 @@ const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
   overflow: hidden;
 `;
 
-const StyledList = styled(List)`
-  overflow: auto;
-  padding: 0 ${theme.modal.body.paddingX} ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
-`;
-
 const StyledListChainWrapper = styled(Flex)`
   overflow: hidden;
 `;
 
-export { StyledChain, StyledChainSelect, StyledChevronDown, StyledList, StyledListChainWrapper, StyledListItemLabel };
+export { StyledChain, StyledListChainWrapper, StyledListItemLabel };
