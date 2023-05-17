@@ -1,3 +1,5 @@
+import { BANXA_LINK } from '@/config/links';
+
 const URL_PARAMETERS = Object.freeze({
   VAULT: {
     ACCOUNT: 'vaultAccount',
@@ -32,6 +34,10 @@ const PAGES = Object.freeze({
   WALLET: '/wallet'
 });
 
+const EXTERNAL_PAGES = Object.freeze({
+  BANXA: `${BANXA_LINK}`
+});
+
 const QUERY_PARAMETERS = Object.freeze({
   TAB: 'tab',
   PAGE: 'page',
@@ -45,4 +51,12 @@ const QUERY_PARAMETERS = Object.freeze({
   }
 });
 
-export { PAGES, QUERY_PARAMETERS, URL_PARAMETERS };
+const EXTERNAL_QUERY_PARAMETERS = Object.freeze({
+  BANXA: {
+    WALLET_ADDRESS: 'walletAddress',
+    FIAT_TYPE: 'fiatType',
+    COIN_TYPE: 'coinType'
+  }
+});
+
+export { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS, PAGES, QUERY_PARAMETERS, URL_PARAMETERS };

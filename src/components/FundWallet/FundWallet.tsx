@@ -58,7 +58,12 @@ const FundWallet = forwardRef<HTMLButtonElement, FundWalletProps>(
                       {description}
                       <StyledEntities>
                         {entities.map((entity, key) => (
-                          <StyledEntitiesItem key={key} target='_blank' rel='noopener noreferrer' to={entity.link}>
+                          <StyledEntitiesItem
+                            key={key}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            to={{ pathname: entity.pathname, search: entity.search }}
+                          >
                             {entity.icon}
                           </StyledEntitiesItem>
                         ))}
