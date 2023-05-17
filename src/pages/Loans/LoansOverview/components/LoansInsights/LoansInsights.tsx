@@ -4,8 +4,8 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
-import { Card, CTA, Dl, DlGroup } from '@/component-library';
-import { IsAuthenticated } from '@/components';
+import { Card, Dl, DlGroup } from '@/component-library';
+import { AuthCTA } from '@/components';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
@@ -42,11 +42,11 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
   const netPercentage = formatPercentage(netAPY?.toNumber() || 0);
   const netPercentageLabel = `${netAPY?.gt(0) ? '+' : ''}${netPercentage}`;
 
-  const subsidyRewardsAmount = formatNumber(subsidyRewards?.toBig().toNumber() || 0, {
-    maximumFractionDigits: subsidyRewards?.currency.humanDecimals || 5
+  const subsidyRewardsAmount = formatNumber(subsidyRewards?.total.toBig().toNumber() || 0, {
+    maximumFractionDigits: subsidyRewards?.total.currency.humanDecimals || 5
   });
-  const subsidyRewardsAmountLabel = `${subsidyRewardsAmount} ${subsidyRewards?.currency.ticker || ''}`;
-  const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.isZero();
+  const subsidyRewardsAmountLabel = `${subsidyRewardsAmount} ${subsidyRewards?.total.currency.ticker || ''}`;
+  const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.total.isZero();
 
   return (
     <>
@@ -75,13 +75,11 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
             <StyledDt color='primary'>Rewards</StyledDt>
             <StyledDd color='secondary'>{subsidyRewardsAmountLabel}</StyledDd>
           </DlGroup>
-          <IsAuthenticated>
-            {hasSubsidyRewards && (
-              <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
-                Claim
-              </CTA>
-            )}
-          </IsAuthenticated>
+          {hasSubsidyRewards && (
+            <AuthCTA onPress={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
+              Claim
+            </AuthCTA>
+          )}
         </Card>
       </Dl>
       {claimRewardsMutation.isError && (

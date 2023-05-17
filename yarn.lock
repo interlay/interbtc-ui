@@ -2073,10 +2073,10 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.1.1.tgz#cdbd4fab03b83b32a32936bfa3f7eaf5f55859f7"
-  integrity sha512-6cNPwgExJHQJhtxgAa3Igmswyfujz8e+EVxyj9IQHs1KtJydYZQpa0qQC/QnOiQqRXw4DVNZkmKLEfXodDLBdQ==
+"@interlay/interbtc-api@2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.2.2.tgz#4803a80244abc9ef404dddefd265b9ece7ca859f"
+  integrity sha512-NuRjjIqeUPkt+aOTTmjMhx3TKAsL4id8kubiQsrAcyhsZnsnv/1bCXECzAWaZHVSi+XcxzfuoNLOxqrrx2+ISw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "1.12.0"

@@ -122,7 +122,14 @@ const useGetAccountLendingStatistics = (): UseGetAccountLendingStatistics => {
       return undefined;
     }
 
-    return getAccountPositionsStats(loanAssets, lendPositions, borrowPositions, subsidyRewards, prices, lendingStats);
+    return getAccountPositionsStats(
+      loanAssets,
+      lendPositions,
+      borrowPositions,
+      subsidyRewards.total,
+      prices,
+      lendingStats
+    );
   }, [lendPositions, borrowPositions, prices, subsidyRewards, loanAssets, lendingStats]);
 
   return {

@@ -62,6 +62,7 @@ import {
   mockGetBorrowPositionsOfAccount,
   mockGetLendingStats,
   mockGetLendPositionsOfAccount,
+  mockGetLendTokenExchangeRates,
   mockGetLendTokens,
   mockGetLoanAssets,
   mockLend,
@@ -137,7 +138,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     enableAsCollateral: mockEnableAsCollateral,
     disableAsCollateral: mockDisableAsCollateral,
     claimAllSubsidyRewards: mockClaimAllSubsidyRewards,
-    getLendingStats: mockGetLendingStats
+    getLendingStats: mockGetLendingStats,
+    getLendTokenExchangeRates: mockGetLendTokenExchangeRates
   },
   oracle: {
     getExchangeRate: mockOracleGetExchangeRate
