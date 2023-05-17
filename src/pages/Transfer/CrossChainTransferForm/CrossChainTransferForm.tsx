@@ -212,7 +212,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, destinationChains]);
 
-  if (!originatingChains || !destinationChains || !transferableTokens) {
+  if (!originatingChains || !destinationChains || !transferableTokens.length) {
     return (
       <Flex justifyContent='center'>
         <LoadingSpinner variant='indeterminate' />
