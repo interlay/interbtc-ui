@@ -3,7 +3,7 @@ import { ChainName, CrossChainTransferParams } from '@interlay/bridge';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, Key, useEffect, useState } from 'react';
+import { ChangeEventHandler, Key, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
@@ -43,7 +43,7 @@ import {
 const CrossChainTransferForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);
-  const [currentToken, setCurrentToken] = useState<XCMTokenData | undefined>();
+  const [currentToken, setCurrentToken] = useState<XCMTokenData>();
 
   const prices = useGetPrices();
   const { t } = useTranslation();
@@ -147,26 +147,29 @@ const CrossChainTransferForm = (): JSX.Element => {
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
   };
 
-  const setTokenData = async (destination: ChainName) => {
-    if (!accountId) return;
+  const setTokenData = useCallback(
+    async (destination: ChainName) => {
+      if (!accountId || !form) return;
 
-    const tokens = await getAvailableTokens(
-      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      destination,
-      accountId.toString(),
-      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
-    );
+      const tokens = await getAvailableTokens(
+        form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+        destination,
+        accountId.toString(),
+        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
+      );
 
-    if (!tokens) return;
+      if (!tokens) return;
 
-    setTransferableTokens(tokens);
+      setTransferableTokens(tokens);
 
-    // Update token data if selected token exists in new data
-    const token = tokens.find((token) => token.value === currentToken?.value) || tokens[0];
+      // Update token data if selected token exists in new data
+      const token = tokens.find((token) => token.value === currentToken?.value) || tokens[0];
 
-    setCurrentToken(token);
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, token.value);
-  };
+      setCurrentToken(token);
+      form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, token.value);
+    },
+    [accountId, currentToken?.value, form, getAvailableTokens]
+  );
 
   const transferMonetaryAmount = currentToken
     ? newSafeMonetaryAmount(
