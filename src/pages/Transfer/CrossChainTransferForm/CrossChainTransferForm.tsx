@@ -3,7 +3,7 @@ import { ChainName, CrossChainTransferParams } from '@interlay/bridge';
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { web3FromAddress } from '@polkadot/extension-dapp';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, Key, useEffect, useState } from 'react';
+import { ChangeEventHandler, Key, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
@@ -43,7 +43,7 @@ import {
 const CrossChainTransferForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);
-  const [currentToken, setCurrentToken] = useState<XCMTokenData | undefined>();
+  const [currentToken, setCurrentToken] = useState<XCMTokenData>();
 
   const prices = useGetPrices();
   const { t } = useTranslation();
@@ -110,8 +110,11 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('Transfer successful');
+
+      setTokenData(form.values[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName);
+      form.setFieldValue(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, '');
     },
     onError: (err) => {
       toast.error(err.message);
@@ -132,26 +135,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     form.setFieldValue(name, chain);
 
-    const tokens = await getAvailableTokens(
-      form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      chain,
-      accountId.toString(),
-      form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
-    );
-
-    if (!tokens) return;
-
-    setTransferableTokens(tokens);
-    setCurrentToken(tokens[0]);
+    setTokenData(chain);
   };
-
-  useEffect(() => {
-    if (!transferableTokens.length) return;
-    const defaultToken = transferableTokens[0];
-
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, defaultToken.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transferableTokens]);
 
   const handleTickerChange = (ticker: string, name: string) => {
     form.setFieldValue(name, ticker);
@@ -161,6 +146,30 @@ const CrossChainTransferForm = (): JSX.Element => {
   const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
   };
+
+  const setTokenData = useCallback(
+    async (destination: ChainName) => {
+      if (!accountId || !form) return;
+
+      const tokens = await getAvailableTokens(
+        form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
+        destination,
+        accountId.toString(),
+        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
+      );
+
+      if (!tokens) return;
+
+      setTransferableTokens(tokens);
+
+      // Update token data if selected token exists in new data
+      const token = tokens.find((token) => token.value === currentToken?.value) || tokens[0];
+
+      setCurrentToken(token);
+      form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, token.value);
+    },
+    [accountId, currentToken, form, getAvailableTokens]
+  );
 
   const transferMonetaryAmount = currentToken
     ? newSafeMonetaryAmount(
@@ -199,25 +208,11 @@ const CrossChainTransferForm = (): JSX.Element => {
     if (!destinationChains?.length) return;
     if (!accountId) return;
 
-    const getTokensForNewChain = async () => {
-      const tokens = await getAvailableTokens(
-        form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-        destinationChains[0].id,
-        accountId.toString(),
-        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
-      );
-
-      if (!tokens) return;
-
-      setTransferableTokens(tokens);
-      setCurrentToken(tokens[0]);
-    };
-
-    getTokensForNewChain();
+    setTokenData(destinationChains[0].id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, destinationChains]);
 
-  if (!originatingChains || !destinationChains || !transferableTokens) {
+  if (!originatingChains || !destinationChains || !transferableTokens.length) {
     return (
       <Flex justifyContent='center'>
         <LoadingSpinner variant='indeterminate' />
@@ -244,7 +239,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             label='Destination Chain'
             items={destinationChains}
             onSelectionChange={(chain: Key) =>
-              handleDestinationChainChange(chain as ChainName, CROSS_CHAIN_TRANSFER_FROM_FIELD)
+              handleDestinationChainChange(chain as ChainName, CROSS_CHAIN_TRANSFER_TO_FIELD)
             }
             {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
               onChange: handleDestinationChainChange
