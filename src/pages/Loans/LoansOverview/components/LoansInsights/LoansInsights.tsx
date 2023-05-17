@@ -4,7 +4,7 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
-import { Card, CTA, Dl, DlGroup } from '@/component-library';
+import { Card, Dl, DlGroup } from '@/component-library';
 import { AuthCTA } from '@/components';
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { submitExtrinsic } from '@/utils/helpers/extrinsic';
