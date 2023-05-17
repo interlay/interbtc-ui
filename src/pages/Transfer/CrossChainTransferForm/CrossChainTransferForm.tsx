@@ -112,6 +112,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
     onSuccess: () => {
       toast.success('Transfer successful');
+      getTokenData();
     },
     onError: (err) => {
       toast.error(err.message);
@@ -132,9 +133,15 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     form.setFieldValue(name, chain);
 
+    getTokenData();
+  };
+
+  const getTokenData = async () => {
+    if (!accountId) return;
+
     const tokens = await getAvailableTokens(
       form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-      chain,
+      destinationChains[0].id,
       accountId.toString(),
       form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
     );
@@ -143,23 +150,6 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     setTransferableTokens(tokens);
     setCurrentToken(tokens[0]);
-  };
-
-  useEffect(() => {
-    if (!transferableTokens.length) return;
-    const defaultToken = transferableTokens[0];
-
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, defaultToken.value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [transferableTokens]);
-
-  const handleTickerChange = (ticker: string, name: string) => {
-    form.setFieldValue(name, ticker);
-    setCurrentToken(transferableTokens.find((token) => token.value === ticker));
-  };
-
-  const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
   };
 
   const transferMonetaryAmount = currentToken
@@ -180,6 +170,23 @@ const CrossChainTransferForm = (): JSX.Element => {
   const isCTADisabled = isFormDisabled(form) || form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] === '';
 
   useEffect(() => {
+    if (!transferableTokens.length) return;
+    const defaultToken = transferableTokens[0];
+
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, defaultToken.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [transferableTokens]);
+
+  const handleTickerChange = (ticker: string, name: string) => {
+    form.setFieldValue(name, ticker);
+    setCurrentToken(transferableTokens.find((token) => token.value === ticker));
+  };
+
+  const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
+  };
+
+  useEffect(() => {
     if (!originatingChains?.length) return;
 
     // This prevents a render loop caused by setFieldValue
@@ -197,23 +204,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   useEffect(() => {
     if (!destinationChains?.length) return;
-    if (!accountId) return;
 
-    const getTokensForNewChain = async () => {
-      const tokens = await getAvailableTokens(
-        form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
-        destinationChains[0].id,
-        accountId.toString(),
-        form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
-      );
-
-      if (!tokens) return;
-
-      setTransferableTokens(tokens);
-      setCurrentToken(tokens[0]);
-    };
-
-    getTokensForNewChain();
+    getTokenData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, destinationChains]);
 
