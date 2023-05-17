@@ -112,6 +112,8 @@ const CrossChainTransferForm = (): JSX.Element => {
   const getTokenData = async () => {
     if (!accountId) return;
 
+    console.log('to field', form.values[CROSS_CHAIN_TRANSFER_TO_FIELD]);
+
     const tokens = await getAvailableTokens(
       form.values[CROSS_CHAIN_TRANSFER_FROM_FIELD] as ChainName,
       form.values[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName,
@@ -119,10 +121,11 @@ const CrossChainTransferForm = (): JSX.Element => {
       form.values[CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD] as string
     );
 
+    console.log(tokens);
+
     if (!tokens) return;
 
     setTransferableTokens(tokens);
-    setCurrentToken(tokens[0]);
   };
 
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
@@ -147,6 +150,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
   const handleDestinationChainChange = async (chain: ChainName, name: string) => {
     if (!accountId) return;
+
+    console.log('name, chain', name, chain);
 
     form.setFieldValue(name, chain);
 
@@ -209,6 +214,15 @@ const CrossChainTransferForm = (): JSX.Element => {
     getTokenData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, destinationChains]);
+
+  useEffect(() => {
+    if (currentToken) {
+      const currentTokenExists = transferableTokens.find((token) => token.value === currentToken.value);
+      setCurrentToken(currentTokenExists || transferableTokens[0]);
+    } else {
+      setCurrentToken(transferableTokens[0]);
+    }
+  }, [currentToken, transferableTokens]);
 
   if (!originatingChains || !destinationChains || !transferableTokens) {
     return (
