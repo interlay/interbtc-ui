@@ -105,8 +105,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t),
-    validateOnChange: false
+    validationSchema: crossChainTransferSchema(schema, t)
   });
 
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
@@ -114,7 +113,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       toast.success('Transfer successful');
 
       setTokenData(form.values[CROSS_CHAIN_TRANSFER_TO_FIELD] as ChainName);
-      form.setFieldValue(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, '');
+      form.setFieldValue(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, '', false);
     },
     onError: (err) => {
       toast.error(err.message);
@@ -122,29 +121,29 @@ const CrossChainTransferForm = (): JSX.Element => {
   });
 
   const handleOriginatingChainChange = (chain: ChainName, name: string) => {
-    form.setFieldValue(name, chain);
+    form.setFieldValue(name, chain, false);
 
     const destinationChains = getDestinationChains(chain);
 
     setDestinationChains(destinationChains);
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id, false);
   };
 
   const handleDestinationChainChange = async (chain: ChainName, name: string) => {
     if (!accountId) return;
 
-    form.setFieldValue(name, chain);
+    form.setFieldValue(name, chain, false);
 
     setTokenData(chain);
   };
 
   const handleTickerChange = (ticker: string, name: string) => {
-    form.setFieldValue(name, ticker);
+    form.setFieldValue(name, ticker, false);
     setCurrentToken(transferableTokens.find((token) => token.value === ticker));
   };
 
   const handleDestinationAccountChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, e.target.value, false);
   };
 
   const setTokenData = useCallback(
@@ -166,7 +165,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       const token = tokens.find((token) => token.value === currentToken?.value) || tokens[0];
 
       setCurrentToken(token);
-      form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, token.value);
+      form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, token.value, false);
     },
     [accountId, currentToken, form, getAvailableTokens]
   );
@@ -196,8 +195,8 @@ const CrossChainTransferForm = (): JSX.Element => {
 
     const destinationChains = getDestinationChains(originatingChains[0].id);
 
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, originatingChains[0].id);
-    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_FROM_FIELD, originatingChains[0].id, false);
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id, false);
 
     setDestinationChains(destinationChains);
 
