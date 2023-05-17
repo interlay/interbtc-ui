@@ -244,7 +244,7 @@ const CrossChainTransferForm = (): JSX.Element => {
             label='Destination Chain'
             items={destinationChains}
             onSelectionChange={(chain: Key) =>
-              handleDestinationChainChange(chain as ChainName, CROSS_CHAIN_TRANSFER_FROM_FIELD)
+              handleDestinationChainChange(chain as ChainName, CROSS_CHAIN_TRANSFER_TO_FIELD)
             }
             {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
               onChange: handleDestinationChainChange
