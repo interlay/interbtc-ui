@@ -168,7 +168,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       setCurrentToken(token);
       form.setFieldValue(CROSS_CHAIN_TRANSFER_TOKEN_FIELD, token.value);
     },
-    [accountId, currentToken?.value, form, getAvailableTokens]
+    [accountId, currentToken, form, getAvailableTokens]
   );
 
   const transferMonetaryAmount = currentToken
