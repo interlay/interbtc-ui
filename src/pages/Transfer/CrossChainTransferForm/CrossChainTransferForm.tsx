@@ -128,6 +128,7 @@ const CrossChainTransferForm = (): JSX.Element => {
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
     onSuccess: () => {
       toast.success('Transfer successful');
+      form.setFieldValue(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, '');
       getTokenData();
     },
     onError: (err) => {
