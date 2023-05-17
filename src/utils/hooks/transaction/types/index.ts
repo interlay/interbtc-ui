@@ -53,7 +53,7 @@ enum Transaction {
 }
 
 type TransactionEvents = {
-  onSigning?: () => void;
+  onReady?: () => void;
 };
 
 interface TransactionAction {

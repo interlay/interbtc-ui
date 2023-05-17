@@ -45,7 +45,8 @@ const getProps = (
   }
 
   return {
-    children: t('amm.swap')
+    children: t('amm.swap'),
+    disabled: false
   };
 };
 

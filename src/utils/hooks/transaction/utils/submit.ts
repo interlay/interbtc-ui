@@ -18,9 +18,10 @@ const handleTransaction = async (
   expectedStatus?: ExtrinsicStatus['type'],
   callbacks?: TransactionEvents
 ) => {
-  let isStatusCompleted = false;
-  let isSigned = false;
-  let isEventFound = false;
+  let isComplete = false;
+
+  // Extrinsic status
+  let isReady = false;
 
   return new Promise<HandleTransactionResult>((resolve, reject) => {
     let unsubscribe: () => void;
@@ -31,27 +32,18 @@ const handleTransaction = async (
       .catch((error) => reject(error));
 
     function callback(result: ISubmittableResult): void {
-      if (!isSigned) {
-        callbacks?.onSigning?.();
-        isSigned = true;
+      const { onReady } = callbacks || {};
+
+      if (!isReady && result.status.isReady) {
+        onReady?.();
+        isReady = true;
       }
 
-      if (!isStatusCompleted) {
-        isStatusCompleted = expectedStatus === result.status.type;
+      if (!isComplete) {
+        isComplete = expectedStatus === result.status.type;
       }
 
-      // should only search for event when it is specified and it has not been previously found
-      if (extrinsicData.event !== undefined && !isEventFound) {
-        for (const { event } of result.events) {
-          if (extrinsicData.event.is(event)) {
-            isEventFound = true;
-            break;
-          }
-        }
-      }
-
-      const shouldResolve = isStatusCompleted && (extrinsicData.event === undefined || isEventFound);
-      if (shouldResolve) {
+      if (isComplete) {
         resolve({ unsubscribe, result });
       }
     }
@@ -87,7 +79,7 @@ const getErrorMessage = (api: ApiPromise, dispatchError: DispatchError) => {
  * @param {AddressOrPair} account account address
  * @param {ExtrinsicData} extrinsicData transaction extrinsic data
  * @param {ExtrinsicStatus.type} expectedStatus status where the transaction is counted as fulfilled
- * @param {TransactionEvents} callbacks a set of events emitted accross the lifecycle of the transaction
+ * @param {TransactionEvents} callbacks a set of events emitted accross the lifecycle of the transaction (i.e Bro)
  * @return {Promise<ISubmittableResult>} transaction data that also can contain meta data in case of error
  */
 const submitTransaction = async (

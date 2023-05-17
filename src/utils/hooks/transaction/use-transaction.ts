@@ -81,7 +81,7 @@ function useTransaction<T extends Transaction>(
       // Execution should only ran when authenticated
       const accountAddress = state.selectedAccount?.address;
 
-      // TODO: add event `onSigning`
+      // TODO: add event `onReady`
       return {
         ...params,
         accountAddress,

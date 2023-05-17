@@ -78,14 +78,7 @@ const RequestReplacementModal = ({
   );
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
 
-  const transaction = useTransaction(Transaction.REPLACE_REQUEST, {
-    onSuccess: () => {
-      const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
-      queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);
-      toast.success('Replacement request is submitted');
-      onClose();
-    }
-  });
+  const transaction = useTransaction(Transaction.REPLACE_REQUEST);
 
   useEffect(() => {
     if (!bridgeLoaded) return;
@@ -115,7 +108,7 @@ const RequestReplacementModal = ({
       setSubmitStatus(STATUSES.PENDING);
       const amountPolkaBtc = new BitcoinAmount(data[AMOUNT]);
 
-      transaction.execute(amountPolkaBtc, collateralToken);
+      await transaction.executeAsync(amountPolkaBtc, collateralToken);
 
       const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);
