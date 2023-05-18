@@ -96,6 +96,7 @@ const ExchangeLink = ({ href, icon }: ExchangeLinkProps) => {
   );
 };
 
+// TODO: remove when banxa gets into interlay dapp
 const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.Element => {
   const { isBuyModalOpen } = useSelector((state: StoreType) => state.general);
   const focusRef = React.useRef(null);

@@ -86,13 +86,18 @@ const LoanPositionsTable = ({
         const { currency } = amountProp;
         const asset = <AssetCell ticker={currency.ticker} />;
 
-        const { borrowApy, lendApy } = assets[currency.ticker];
+        const { borrowApy, lendApy, lendReward, borrowReward } = assets[currency.ticker];
 
         const apyCellProps = isLending
-          ? { apy: lendApy, rewards: subsidyRewards ? subsidyRewards.perMarket[currency.ticker].lend : null }
+          ? {
+              apy: lendApy,
+              rewardsPerYear: lendReward,
+              accruedRewards: subsidyRewards ? subsidyRewards.perMarket[currency.ticker].lend : null
+            }
           : {
               apy: borrowApy,
-              rewards: subsidyRewards ? subsidyRewards.perMarket[currency.ticker].borrow : null,
+              rewardsPerYear: borrowReward,
+              accruedRewards: subsidyRewards ? subsidyRewards.perMarket[currency.ticker].borrow : null,
               accumulatedDebt: (position as BorrowPosition).accumulatedDebt,
               isBorrow: true
             };

@@ -52,15 +52,16 @@ const BorrowAssetsTable = ({ assets, onRowAction, ...props }: BorrowAssetsTableP
 
   const rows: BorrowAssetsTableRow[] = useMemo(
     () =>
-      Object.values(assets).map(({ borrowApy, currency, availableCapacity, totalBorrows }) => {
+      Object.values(assets).map(({ borrowApy, currency, availableCapacity, totalBorrows, borrowReward }) => {
         const asset = <StyledAssetCell ticker={currency.ticker} />;
-        const reward = subsidyRewards ? subsidyRewards.perMarket[currency.ticker].borrow : null;
+        const accruedRewards = subsidyRewards ? subsidyRewards.perMarket[currency.ticker].borrow : null;
 
         const apy = (
           <ApyCell
             apy={borrowApy}
             currency={currency}
-            rewards={reward}
+            rewardsPerYear={borrowReward}
+            accruedRewards={accruedRewards}
             prices={prices}
             isBorrow
             // TODO: temporary until we find why row click is being ignored
