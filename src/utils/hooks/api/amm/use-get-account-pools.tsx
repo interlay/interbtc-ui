@@ -41,10 +41,10 @@ const getAccountLiqudityPools = async (
 
   const accountLiquidityUSD = positions
     .map(({ data, amount: accountLPTokenAmount }) => {
-      const { pooledCurrencies, totalSupply } = data;
+      const { pooledCurrencies, totalSupply, isEmpty } = data;
       const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
 
-      return accountLPTokenAmount
+      return accountLPTokenAmount && !isEmpty
         ? calculateAccountLiquidityUSD(accountLPTokenAmount, totalLiquidityUSD, totalSupply)
         : 0;
     })

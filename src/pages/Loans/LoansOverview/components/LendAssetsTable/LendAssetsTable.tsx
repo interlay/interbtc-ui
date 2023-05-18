@@ -8,6 +8,7 @@ import { AssetCell, BalanceCell, Cell, Table, TableProps } from '@/components';
 import { ApyCell } from '@/components/LoanPositionsTable/ApyCell';
 import { LoanTablePlaceholder } from '@/components/LoanPositionsTable/LoanTablePlaceholder';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -47,17 +48,20 @@ const LendAssetsTable = ({ assets, onRowAction, ...props }: LendAssetsTableProps
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { data: balances } = useGetBalances();
+  const { data: subsidyRewards } = useGetAccountSubsidyRewards();
 
   const rows: LendAssetsTableRow[] = useMemo(
     () =>
-      Object.values(assets).map(({ lendApy, lendReward, currency, totalLiquidity }) => {
+      Object.values(assets).map(({ lendApy, currency, totalLiquidity, lendReward }) => {
         const asset = <AssetCell ticker={currency.ticker} />;
+        const accruedRewards = subsidyRewards ? subsidyRewards.perMarket[currency.ticker].lend : null;
 
         const apy = (
           <ApyCell
             apy={lendApy}
             currency={currency}
-            rewards={lendReward}
+            rewardsPerYear={lendReward}
+            accruedRewards={accruedRewards}
             prices={prices}
             // TODO: temporary until we find why row click is being ignored
             onClick={() => onRowAction?.(currency.ticker as Key)}
@@ -83,7 +87,7 @@ const LendAssetsTable = ({ assets, onRowAction, ...props }: LendAssetsTableProps
           totalSupply
         };
       }),
-    [assets, balances, onRowAction, prices]
+    [assets, balances, onRowAction, prices, subsidyRewards]
   );
 
   return (

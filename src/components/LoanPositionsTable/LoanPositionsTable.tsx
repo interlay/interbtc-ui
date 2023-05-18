@@ -7,6 +7,7 @@ import { convertMonetaryAmountToValueInUSD } from '@/common/utils/utils';
 import { Switch } from '@/component-library';
 import { LoanType } from '@/types/loans';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Table, TableProps } from '../DataGrid';
@@ -52,6 +53,7 @@ const LoanPositionsTable = ({
   const titleId = useId();
   const { t } = useTranslation();
   const prices = useGetPrices();
+  const { data: subsidyRewards } = useGetAccountSubsidyRewards();
 
   const isLending = variant === 'lend';
   const showCollateral = !!onPressCollateralSwitch && isLending;
@@ -84,13 +86,18 @@ const LoanPositionsTable = ({
         const { currency } = amountProp;
         const asset = <AssetCell ticker={currency.ticker} />;
 
-        const { borrowApy, borrowReward, lendApy, lendReward } = assets[currency.ticker];
+        const { borrowApy, lendApy, lendReward, borrowReward } = assets[currency.ticker];
 
         const apyCellProps = isLending
-          ? { apy: lendApy, rewards: lendReward }
+          ? {
+              apy: lendApy,
+              rewardsPerYear: lendReward,
+              accruedRewards: subsidyRewards ? subsidyRewards.perMarket[currency.ticker].lend : null
+            }
           : {
               apy: borrowApy,
-              rewards: borrowReward,
+              rewardsPerYear: borrowReward,
+              accruedRewards: subsidyRewards ? subsidyRewards.perMarket[currency.ticker].borrow : null,
               accumulatedDebt: (position as BorrowPosition).accumulatedDebt,
               isBorrow: true
             };
@@ -133,7 +140,7 @@ const LoanPositionsTable = ({
           collateral
         };
       }),
-    [assets, isLending, onPressCollateralSwitch, onRowAction, positions, prices, showCollateral]
+    [assets, isLending, onPressCollateralSwitch, onRowAction, positions, prices, showCollateral, subsidyRewards]
   );
 
   return (

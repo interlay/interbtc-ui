@@ -6,6 +6,7 @@ import {
   INTERLAY_TERMS_AND_CONDITIONS_LINK,
   INTERLAY_VAULT_DOCS_LINK
 } from '@/config/links';
+import { StepComponentProps, withStep } from '@/utils/hocs/step';
 
 import {
   StyledDisclaimerCard,
@@ -15,7 +16,6 @@ import {
   StyledModalHeader,
   StyledWarningIcon
 } from './CreateVaultWizard.styles';
-import { StepComponentProps, withStep } from './Step';
 
 type Props = {
   onClickAgree?: () => void;

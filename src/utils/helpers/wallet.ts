@@ -4,6 +4,8 @@ import { stringToHex } from '@polkadot/util';
 
 import { KeyringPair } from '@/lib/substrate';
 
+import { WalletData, WALLETS } from '../constants/wallets';
+
 const signMessage = async (account: KeyringPair, message: string): Promise<SignerResult | undefined> => {
   const injector = await web3FromSource(account.meta.source as any);
   const signRaw = injector?.signer?.signRaw;
@@ -18,4 +20,6 @@ const signMessage = async (account: KeyringPair, message: string): Promise<Signe
   });
 };
 
-export { signMessage };
+const findWallet = (name: string): WalletData | undefined => WALLETS.find((wallet) => wallet.extensionName === name);
+
+export { findWallet, signMessage };

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 
 import { showAccountModalAction } from '@/common/actions/general.actions';
 import { CTA, CTAProps } from '@/component-library';
+import { SIGNER_API_URL } from '@/constants';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
@@ -19,7 +20,11 @@ const useAuthCTAProps = (props: AuthCTAProps): AuthCTAProps => {
 
   const { selectedAccount } = useSubstrateSecureState();
 
-  const status = selectedAccount ? (hasSignature ? AuthStatus.AUTH : AuthStatus.UNSIGNED) : AuthStatus.UNAUTH;
+  const status = selectedAccount
+    ? !SIGNER_API_URL || hasSignature
+      ? AuthStatus.AUTH
+      : AuthStatus.UNSIGNED
+    : AuthStatus.UNAUTH;
 
   const dispatch = useDispatch();
 

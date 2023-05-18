@@ -1,6 +1,9 @@
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { showBuyModal } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
 import { CTAProps, Flex, Modal, ModalBody, ModalHeader, P, TabsItem } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
@@ -37,15 +40,16 @@ type FundWalletProps = CTAProps;
 const FundWallet = forwardRef<HTMLButtonElement, FundWalletProps>(
   (props, ref): JSX.Element => {
     const { t } = useTranslation();
-    const [isOpen, setOpen] = useState(false);
     const entitiesData = useEntities();
+    const dispatch = useDispatch();
+    const { isBuyModalOpen } = useSelector((state: StoreType) => state.general);
 
     return (
       <>
-        <StyledCTA variant='outlined' ref={ref} onPress={() => setOpen(true)} {...props}>
+        <StyledCTA variant='outlined' ref={ref} onPress={() => dispatch(showBuyModal(true))} {...props}>
           {t('fund_wallet')}
         </StyledCTA>
-        <Modal align='top' isOpen={isOpen} onClose={() => setOpen(false)}>
+        <Modal align='top' isOpen={isBuyModalOpen} onClose={() => dispatch(showBuyModal(false))}>
           <ModalHeader>{t('fund_wallet')}</ModalHeader>
           <ModalBody noPadding>
             <StyledTabs size='large' fullWidth>
@@ -58,7 +62,12 @@ const FundWallet = forwardRef<HTMLButtonElement, FundWalletProps>(
                       {description}
                       <StyledEntities>
                         {entities.map((entity, key) => (
-                          <StyledEntitiesItem key={key} target='_blank' rel='noopener noreferrer' to={entity.link}>
+                          <StyledEntitiesItem
+                            key={key}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            to={{ pathname: entity.pathname, search: entity.search }}
+                          >
                             {entity.icon}
                           </StyledEntitiesItem>
                         ))}

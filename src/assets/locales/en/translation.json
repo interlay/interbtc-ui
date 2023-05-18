@@ -514,7 +514,7 @@
     }
   },
   "staking_page": {
-    "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} per year you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
+    "the_estimated_amount_of_governance_token_you_will_receive_as_rewards": "The estimated amount of {{governanceTokenSymbol}} you will receive as rewards. Depends on your proportion of the total {{voteGovernanceTokenSymbol}}.",
     "new_vote_governance_token_gained": "New {{voteGovernanceTokenSymbol}} Gained",
     "the_increase_in_your_vote_governance_token_balance": "The increase in your {{voteGovernanceTokenSymbol}} balance",
     "total_vote_governance_token_in_the_network": "Total {{voteGovernanceTokenSymbol}} in the network",
@@ -553,10 +553,14 @@
     "install_wallet": "Please install supported wallet",
     "select_wallet": "Please select a wallet",
     "exclude_us_citizens": "By proceeding you confirm that you have read and accepted the <1>terms and conditions</1>, and represent and warrant that you are not a Resident of the United States or a \"U.S. person\" within the meaning of Rule 902(k) under the United States Securities Act of 1933 (the \"Securities Act\").",
+    "sign_terms": "Please sign the terms and conditions using your account's digital signature. This is required for each account that you connect to this website.",
     "create_account": "Please create an account",
-    "connected_with": "Connected with ",
+    "connected_with": "Connected with",
     "change_wallet": "Change Wallet",
-    "disconnect": "Disconnect"
+    "disconnect": "Disconnect",
+    "please_select_an_account": "Please select an account",
+    "please_install_supported_wallet": "Please install supported wallet",
+    "please_select_a_wallet": "Please select a wallet"
   },
   "loans": {
     "brand_name": "Interlend",
@@ -581,7 +585,8 @@
       "pool_name": "Pool Name",
       "add_liquidity": "Add Liquidity",
       "remove_liquidity": "Remove Liquidity",
-      "receivable_assets": "Receivable Assets"
+      "receivable_assets": "Receivable Assets",
+      "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please."
     },
     "swap": "Swap",
     "select_token": "Select Token",

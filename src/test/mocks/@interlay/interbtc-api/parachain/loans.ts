@@ -126,7 +126,16 @@ const DEFAULT_ASSETS: TickerToData<LoanAsset> = {
 const mockGetLendPositionsOfAccount = jest.fn().mockReturnValue(DEFAULT_LEND_POSITIONS);
 const mockGetBorrowPositionsOfAccount = jest.fn().mockReturnValue(DEFAULT_BORROW_POSITIONS);
 const mockGetLoanAssets = jest.fn().mockReturnValue(DEFAULT_ASSETS);
-const mockGetAccountSubsidyRewards = jest.fn().mockReturnValue(DEFAULT_INTR.MONETARY.MEDIUM);
+const mockGetAccountSubsidyRewards = jest.fn().mockReturnValue({
+  total: DEFAULT_INTR.MONETARY.MEDIUM,
+  perMarket: {
+    INTR: null,
+    IBTC: null,
+    DOT: null
+  }
+});
+
+const mockGetLendTokenExchangeRates = jest.fn();
 
 const mockLend = jest.fn();
 const mockWithdraw = jest.fn();
@@ -196,6 +205,7 @@ export {
   mockGetBorrowPositionsOfAccount,
   mockGetLendingStats,
   mockGetLendPositionsOfAccount,
+  mockGetLendTokenExchangeRates,
   mockGetLoanAssets,
   mockLend,
   mockRepay,
