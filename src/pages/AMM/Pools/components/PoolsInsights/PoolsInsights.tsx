@@ -5,7 +5,8 @@ import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { formatUSD } from '@/common/utils/utils';
-import { Card, CTA, Dl, DlGroup } from '@/component-library';
+import { Card, Dl, DlGroup } from '@/component-library';
+import { AuthCTA } from '@/components';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
 import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
@@ -29,9 +30,10 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
   const supplyAmountUSD = accountPositions?.reduce((acc, curr) => {
     const totalLiquidityUSD = calculateTotalLiquidityUSD(curr.data.pooledCurrencies, prices);
 
-    const accountLiquidityUSD = curr.amount
-      ? calculateAccountLiquidityUSD(curr.amount, totalLiquidityUSD, curr.data.totalSupply)
-      : 0;
+    const accountLiquidityUSD =
+      curr.amount && !curr.data.isEmpty
+        ? calculateAccountLiquidityUSD(curr.amount, totalLiquidityUSD, curr.data.totalSupply)
+        : 0;
 
     return acc.add(accountLiquidityUSD);
   }, new Big(0));
@@ -86,9 +88,9 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
           <StyledDd color='secondary'>{formatUSD(totalClaimableRewardUSD, { compact: true })}</StyledDd>
         </DlGroup>
         {hasClaimableRewards && (
-          <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
+          <AuthCTA onPress={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
             Claim
-          </CTA>
+          </AuthCTA>
         )}
       </Card>
     </Dl>

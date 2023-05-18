@@ -62,6 +62,7 @@ import {
   mockGetBorrowPositionsOfAccount,
   mockGetLendingStats,
   mockGetLendPositionsOfAccount,
+  mockGetLendTokenExchangeRates,
   mockGetLendTokens,
   mockGetLoanAssets,
   mockLend,
@@ -71,8 +72,6 @@ import {
   mockWithdrawAll
 } from './parachain/loans';
 import { mockClaimVesting, mockVestingSchedules } from './parachain/vesting';
-
-const DEFAULT_ACCOUNT_ADDRESS = 'a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc';
 
 type RecursivePartial<T> = {
   [P in keyof T]?: RecursivePartial<T[P]>;
@@ -139,7 +138,8 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     enableAsCollateral: mockEnableAsCollateral,
     disableAsCollateral: mockDisableAsCollateral,
     claimAllSubsidyRewards: mockClaimAllSubsidyRewards,
-    getLendingStats: mockGetLendingStats
+    getLendingStats: mockGetLendingStats,
+    getLendTokenExchangeRates: mockGetLendTokenExchangeRates
   },
   oracle: {
     getExchangeRate: mockOracleGetExchangeRate
@@ -194,7 +194,7 @@ jest.mock('@interlay/interbtc-api', () => {
   return {
     ...actualInterBtcApi,
     currencyIdToMonetaryCurrency: jest.fn(),
-    newAccountId: jest.fn().mockReturnValue(DEFAULT_ACCOUNT_ADDRESS),
+    newAccountId: jest.fn().mockReturnValue('a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc'),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
     createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi),
     FaucetClient: mockFaucet,
@@ -202,5 +202,6 @@ jest.mock('@interlay/interbtc-api', () => {
   };
 });
 
+export * from './parachain';
 export * from './parachain';
 export { mockInterBtcApi, mockSetAccount };

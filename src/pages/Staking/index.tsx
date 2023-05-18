@@ -48,6 +48,7 @@ import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 import BalancesUI from './BalancesUI';
 import ClaimRewardsButton from './ClaimRewardsButton';
@@ -120,6 +121,8 @@ const Staking = (): JSX.Element => {
   const governanceTokenBalance = balances?.[GOVERNANCE_TOKEN.ticker];
 
   const queryClient = useQueryClient();
+
+  const { hasSignature } = useSignMessage();
 
   const {
     register,
@@ -749,11 +752,11 @@ const Staking = (): JSX.Element => {
             />
             <ClaimRewardsButton
               claimableRewardAmount={renderClaimableRewardAmountLabel()}
-              disabled={claimRewardsButtonEnabled === false}
+              disabled={claimRewardsButtonEnabled === false || !hasSignature}
             />
             {/* eslint-disable-next-line max-len */}
             {/* `remainingBlockNumbersToUnstake !== null` is redundant because if `hasStakedAmount` is truthy `remainingBlockNumbersToUnstake` cannot be null */}
-            {hasStakedAmount && remainingBlockNumbersToUnstake !== null && (
+            {hasStakedAmount && remainingBlockNumbersToUnstake !== null && hasSignature && (
               <WithdrawButton
                 stakedAmount={renderStakedAmountLabel()}
                 remainingBlockNumbersToUnstake={remainingBlockNumbersToUnstake}
@@ -841,7 +844,7 @@ const Staking = (): JSX.Element => {
               tooltip={`The APR may change as the amount of total ${VOTE_GOVERNANCE_TOKEN_SYMBOL} changes.`}
             />
             <InformationUI
-              label={`Projected Rewards p.a.`}
+              label={`Projected ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
               value={renderEstimatedRewardAmountLabel()}
               tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
                 governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL,

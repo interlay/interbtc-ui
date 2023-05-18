@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-import { CTA, H2, theme } from '@/component-library';
+import { H2, theme } from '@/component-library';
+import { AuthCTA } from '@/components';
 
 const StyledRewardsTitleWrapper = styled.div`
   display: flex;
@@ -19,7 +20,7 @@ type StyledCTAProps = {
   $loading: boolean;
 };
 
-const StyledCTA = styled(CTA)<StyledCTAProps>`
+const StyledCTA = styled(AuthCTA)<StyledCTAProps>`
   position: relative;
   padding-left: ${(props) => props.$loading && theme.spacing.spacing8};
 `;

@@ -42,6 +42,7 @@ interface APIError extends Error {
 
 interface KeyringPairMeta extends KeyringPair$Meta {
   name: string;
+  source: string;
 }
 
 interface KeyringPair extends PolkadotKeyringPair {

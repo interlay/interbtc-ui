@@ -92,7 +92,7 @@ const BalancesUI = ({ stakedAmount, voteStakedAmount, projectedRewardAmount }: P
         tokenSymbol={VOTE_GOVERNANCE_TOKEN_SYMBOL}
       />
       <BalanceItem
-        label={`Projected Rewards p.a.`}
+        label={`Projected ${GOVERNANCE_TOKEN_SYMBOL} Rewards`}
         value={projectedRewardAmount}
         tokenSymbol={GOVERNANCE_TOKEN_SYMBOL}
         tooltip={t('staking_page.the_estimated_amount_of_governance_token_you_will_receive_as_rewards', {
