@@ -1,4 +1,7 @@
+export { BIFROST } from './Bifrost';
+export { HEIKO } from './Heiko';
 export { INTERLAY } from './Interlay';
+export { KARURA } from './Karura';
 export { KINTSUGI } from './Kintsugi';
 export { KUSAMA } from './Kusama';
 export { POLKADOT } from './Polkadot';

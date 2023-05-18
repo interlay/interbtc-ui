@@ -3,12 +3,15 @@ import { forwardRef, ForwardRefExoticComponent, RefAttributes } from 'react';
 import { IconProps } from '@/component-library/Icon';
 
 import { StyledFallbackIcon } from './ChainIcon.style';
-import { INTERLAY, KINTSUGI, KUSAMA, POLKADOT, STATEMINE, STATEMINT } from './icons';
+import { BIFROST, HEIKO, INTERLAY, KARURA, KINTSUGI, KUSAMA, POLKADOT, STATEMINE, STATEMINT } from './icons';
 
 type ChainComponent = ForwardRefExoticComponent<IconProps & RefAttributes<SVGSVGElement>>;
 
 const chainsIcon: Record<string, ChainComponent> = {
+  BIFROST,
+  HEIKO,
   INTERLAY,
+  KARURA,
   KINTSUGI,
   KUSAMA,
   POLKADOT,
