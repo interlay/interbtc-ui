@@ -73,7 +73,7 @@ describe('Wallet Page', () => {
     matchMedia.clear();
   });
 
-  // TODO: add tests for Buy and Transfer CTALinks
+  // TODO: add tests for Transfer CTALinks
   describe('Available Assets', () => {
     it('should render table (desktop)', async () => {
       await render(<App />, { path });
@@ -104,8 +104,7 @@ describe('Wallet Page', () => {
       expect(history.location.search).toMatch(`${QUERY_PARAMETERS.TAB}=issue`);
     });
 
-    // TODO: enable when banxa e merged
-    it.skip('should be able to open buy dialog', async () => {
+    it('should be able to open buy dialog', async () => {
       await render(<App />, { path });
 
       const row = withinTableRow(TABLES.AVAILABLE_ASSETS, GOVERNANCE_TOKEN.ticker);
