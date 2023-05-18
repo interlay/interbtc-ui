@@ -105,8 +105,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       [CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD]: accountId?.toString() || ''
     },
     onSubmit: handleSubmit,
-    validationSchema: crossChainTransferSchema(schema, t),
-    validateOnChange: false
+    validationSchema: crossChainTransferSchema(schema, t)
   });
 
   const xcmTransferMutation = useMutation<void, Error, CrossChainTransferFormData>(mutateXcmTransfer, {
@@ -187,6 +186,7 @@ const CrossChainTransferForm = (): JSX.Element => {
     : 0;
 
   const isCTADisabled = isFormDisabled(form) || form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] === '';
+  const amountShouldValidate = form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] !== '';
 
   useEffect(() => {
     if (!originatingChains?.length) return;
@@ -258,7 +258,7 @@ const CrossChainTransferForm = (): JSX.Element => {
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
             })}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, amountShouldValidate))}
           />
         </div>
         <AccountSelect
