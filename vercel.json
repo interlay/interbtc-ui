@@ -25,6 +25,10 @@
     {
       "source": "/terms/(.*)",
       "destination": "/api/terms.js"
+    },
+    {
+      "source": "/check_access",
+      "destination": "/api/geoblock.js"
     }
   ],
   "headers": [
