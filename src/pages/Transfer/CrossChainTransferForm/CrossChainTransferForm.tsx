@@ -283,7 +283,7 @@ const CrossChainTransferForm = (): JSX.Element => {
           </DlGroup>
         </StyledDl>
         <AuthCTA size='large' type='submit' disabled={isCTADisabled} loading={xcmTransferMutation.isLoading}>
-          {t('transfer')}
+          {isCTADisabled ? 'Enter transfer amount' : t('transfer')}
         </AuthCTA>
       </Flex>
     </form>
