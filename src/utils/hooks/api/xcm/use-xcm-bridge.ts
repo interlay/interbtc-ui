@@ -14,7 +14,7 @@ import { Chains } from '@/types/chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { getXCMEndpoints } from './get-xcm-endpoints';
+import { XCMEndpoints } from './xcm-endpoints';
 
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
@@ -49,7 +49,7 @@ const initXCMBridge = async () => {
   const XCMProvider = new ApiProvider();
   const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
-  await firstValueFrom(XCMProvider.connectFromChain(chains, getXCMEndpoints(chains)));
+  await firstValueFrom(XCMProvider.connectFromChain(chains, XCMEndpoints));
 
   // Set Apis
   await Promise.all(chains.map((chain: ChainName) => XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain))));
@@ -62,7 +62,8 @@ const useXCMBridge = (): UseXCMBridge => {
 
   const queryResult = useQuery({
     queryKey,
-    queryFn: initXCMBridge
+    queryFn: initXCMBridge,
+    refetchInterval: false
   });
 
   const { data, error } = queryResult;
