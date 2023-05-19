@@ -14,7 +14,7 @@ import { Chains } from '@/types/chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { XCMEndpoints } from './get-xcm-endpoints';
+import { XCMEndpoints } from './xcm-endpoints';
 
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
