@@ -46,7 +46,6 @@ type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
 };
 
 const initXCMBridge = async () => {
-  console.log('init function running');
   const XCMProvider = new ApiProvider();
   const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
