@@ -2157,6 +2157,15 @@
     big.js "6.1.1"
     typescript "^4.3.2"
 
+"@interlay/monetary-js@0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.7.3.tgz#0bf4c56b15fde2fd0573e6cac185b0703f368133"
+  integrity sha512-LbCtLRNjl1/LO8R1ay6lJwKgOC/J40YywF+qSuQ7hEjLIkAslY5dLH11heQgQW9hOmqCSS5fTUQWXhmYQr6Ksg==
+  dependencies:
+    "@types/big.js" "6.1.2"
+    big.js "6.1.1"
+    typescript "^4.3.2"
+
 "@internationalized/date@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@internationalized/date/-/date-3.0.1.tgz#66332e9ca8f59b7be010ca65d946bca430ba4b66"
