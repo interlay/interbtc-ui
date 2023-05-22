@@ -1,4 +1,4 @@
-import { ChainIcon, ChainIconProps } from './ChainIcon';
+import { ChainSelect, ChainSelectProps } from './ChainSelect';
 
-export { ChainIcon };
-export type { ChainIconProps };
+export { ChainSelect };
+export type { ChainSelectProps };
