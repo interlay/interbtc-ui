@@ -15,5 +15,14 @@ export {
   SwapErrorMessage,
   swapSchema
 } from './swap';
+export type { CrossChainTransferFormData, CrossChainTransferValidationParams } from './transfers';
+export {
+  CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
+  CROSS_CHAIN_TRANSFER_FROM_FIELD,
+  CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD,
+  CROSS_CHAIN_TRANSFER_TO_FIELD,
+  CROSS_CHAIN_TRANSFER_TOKEN_FIELD,
+  crossChainTransferSchema
+} from './transfers';
 export type { CreateVaultFormData } from './vaults';
 export { CREATE_VAULT_DEPOSIT_FIELD, createVaultSchema } from './vaults';
