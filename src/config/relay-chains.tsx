@@ -1,4 +1,9 @@
+import { AcalaAdapter, KaruraAdapter } from '@interlay/bridge/build/adapters/acala';
+import { AstarAdapter } from '@interlay/bridge/build/adapters/astar';
+import { BifrostAdapter } from '@interlay/bridge/build/adapters/bifrost';
+import { HydraAdapter } from '@interlay/bridge/build/adapters/hydradx';
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
+import { HeikoAdapter, ParallelAdapter } from '@interlay/bridge/build/adapters/parallel';
 import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
 import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
@@ -156,6 +161,10 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
       interlay: new InterlayAdapter(),
+      acala: new AcalaAdapter(),
+      astar: new AstarAdapter(),
+      hydra: new HydraAdapter(),
+      parallel: new ParallelAdapter(),
       polkadot: new PolkadotAdapter(),
       statemint: new StatemintAdapter()
     };
@@ -199,7 +208,10 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     XCM_ADAPTERS = {
       kintsugi: new KintsugiAdapter(),
       kusama: new KusamaAdapter(),
-      statemine: new StatemineAdapter()
+      karura: new KaruraAdapter(),
+      statemine: new StatemineAdapter(),
+      bifrost: new BifrostAdapter(),
+      heiko: new HeikoAdapter()
     };
     SS58_PREFIX = 2;
     break;

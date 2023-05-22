@@ -8,7 +8,7 @@ import { Sizes } from '../utils/prop-types';
 import { StyledChevronDown, StyledTrigger, StyledTriggerValue } from './Select.style';
 
 type Props = {
-  as: any;
+  as?: any;
   size?: Sizes;
   isOpen?: boolean;
   hasError?: boolean;
