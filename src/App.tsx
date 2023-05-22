@@ -26,6 +26,7 @@ import TestnetBanner from './legacy-components/TestnetBanner';
 import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
+const EarnStrategies = React.lazy(() => import(/* webpackChunkName: 'earn-strategies' */ '@/pages/EarnStrategies'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
 const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ '@/pages/Transactions'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
@@ -35,9 +36,9 @@ const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
-const Swap = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/AMM'));
-const Pools = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/AMM/Pools'));
-const Wallet = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Wallet'));
+const Swap = React.lazy(() => import(/* webpackChunkName: 'amm' */ '@/pages/AMM'));
+const Pools = React.lazy(() => import(/* webpackChunkName: 'amm/pools' */ '@/pages/AMM/Pools'));
+const Wallet = React.lazy(() => import(/* webpackChunkName: 'wallet' */ '@/pages/Wallet'));
 const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
@@ -50,6 +51,7 @@ const App = (): JSX.Element => {
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
   const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
   const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
+  const isEarnStrategiesEnabled = useFeatureFlag(FeatureFlags.EARN_STRATEGIES);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -210,6 +212,11 @@ const App = (): JSX.Element => {
                   {isWalletEnabled && (
                     <Route path={PAGES.WALLET}>
                       <Wallet />
+                    </Route>
+                  )}
+                  {isEarnStrategiesEnabled && (
+                    <Route path={PAGES.EARN_STRATEGIES}>
+                      <EarnStrategies />
                     </Route>
                   )}
                   <Route path={PAGES.ACTIONS}>
