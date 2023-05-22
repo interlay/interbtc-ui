@@ -1,3 +1,5 @@
+import { ElementType } from 'react';
+
 import { theme } from '../theme';
 
 export const tuple = <T extends string[]>(...args: T): T => args;
@@ -46,6 +48,14 @@ export type Variants = typeof variant[number];
 
 export type CTAVariants = typeof ctaVariant[number];
 
+export type CardVariants = 'default' | 'bordered';
+
+export type ListVariants = Variants | 'card';
+
+export type DividerVariants = Colors | 'default';
+
+export type CTASizes = 'x-small' | 'small' | 'medium' | 'large';
+
 export type Status = typeof status[number];
 
 export type Sizes = typeof sizes[number];
@@ -64,6 +74,34 @@ export type NormalAlignments = typeof normalAlignments[number];
 
 export type Direction = typeof direction[number];
 
+export type FontSize = keyof typeof theme.text;
+
 export type Spacing = keyof typeof theme.spacing;
 
 export type Placement = 'top' | 'right' | 'bottom' | 'left';
+
+export interface ElementTypeProp {
+  elementType?: ElementType;
+}
+
+export interface MarginProps {
+  margin?: Spacing;
+  marginTop?: Spacing;
+  marginBottom?: Spacing;
+  marginLeft?: Spacing;
+  marginRight?: Spacing;
+  marginX?: Spacing;
+  marginY?: Spacing;
+}
+
+export type ResponsiveProp<T extends number | string> = T | Partial<{ [K in BreakPoints]: T }>;
+
+export type FontWeight = keyof typeof theme.fontWeight;
+
+export type Orientation = 'horizontal' | 'vertical';
+
+export type IconSize = keyof typeof theme.icon.sizes;
+
+export type Overflow = 'auto' | 'hidden' | 'scroll' | 'visible' | 'inherit';
+
+export type BreakPoints = 'xs' | 'sm' | 'md' | 'lg' | 'xl';

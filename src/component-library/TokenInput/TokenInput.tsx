@@ -1,35 +1,27 @@
-import { forwardRef, ReactNode } from 'react';
+import { useLabel } from '@react-aria/label';
+import { chain, mergeProps, useId } from '@react-aria/utils';
+import { forwardRef, Key, ReactNode, useEffect, useState } from 'react';
 
+import { Flex } from '../Flex';
+import { HelperText } from '../HelperText';
 import { NumberInput, NumberInputProps } from '../NumberInput';
-import { Stack } from '../Stack';
 import { useDOMRef } from '../utils/dom';
+import { formatUSD } from '../utils/format';
 import { triggerChangeEvent } from '../utils/input';
-import {
-  StyledTokenBalance,
-  TokenAdornment,
-  TokenInputInnerWrapper,
-  TokenInputSymbol,
-  TokenInputUSD
-} from './TokenInput.style';
-
-const getFormatOptions = (decimals?: number): Intl.NumberFormatOptions | undefined => {
-  if (!decimals) return;
-
-  return {
-    style: 'decimal',
-    maximumFractionDigits: decimals,
-    useGrouping: false
-  };
-};
+import { TokenAdornment, TokenTicker } from './TokenAdornment';
+import { StyledUSDAdornment } from './TokenInput.style';
+import { TokenInputLabel } from './TokenInputLabel';
+import { TokenSelect, TokenSelectProps } from './TokenSelect';
 
 type Props = {
-  tokenSymbol: string;
-  decimals?: number;
-  valueInUSD: string;
-  balance?: number;
-  balanceInUSD?: string | number;
-  renderBalance?: (balance: number) => ReactNode;
-  onClickBalance?: (balance?: number) => void;
+  valueUSD?: number;
+  balance?: string | number;
+  humanBalance?: string | number;
+  balanceLabel?: ReactNode;
+  ticker?: TokenTicker;
+  onClickBalance?: (balance?: string | number) => void;
+  onChangeTicker?: (ticker?: string) => void;
+  selectProps?: Omit<TokenSelectProps, 'label' | 'helperTextId'>;
 };
 
 type InheritAttrs = Omit<NumberInputProps, keyof Props>;
@@ -39,67 +31,117 @@ type TokenInputProps = Props & InheritAttrs;
 const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
-      tokenSymbol,
-      decimals,
-      valueInUSD,
+      valueUSD,
       balance,
-      balanceInUSD,
+      humanBalance,
+      balanceLabel,
       isDisabled,
-      className,
+      label,
+      ticker: tickerProp,
       style,
       hidden,
-      renderBalance,
-      label,
+      className,
       onClickBalance,
+      onChangeTicker,
+      selectProps,
+      placeholder = '0',
+      errorMessage,
+      description,
       ...props
     },
     ref
   ): JSX.Element => {
     const inputRef = useDOMRef(ref);
 
+    const [ticker, setTicker] = useState<string>(
+      (selectProps?.defaultValue as string) || (typeof tickerProp === 'string' ? tickerProp : tickerProp?.text) || ''
+    );
+
+    const { labelProps, fieldProps } = useLabel({ label, ...props });
+
+    const selectHelperTextId = useId();
+
+    const itemsArr = Array.from(selectProps?.items || []);
+    const isSelectAdornment = itemsArr.length > 1;
+    const adornmentTicker = !isSelectAdornment && selectProps?.items ? itemsArr[0]?.value : ticker;
+
+    useEffect(() => {
+      if (selectProps?.value === undefined) return;
+
+      setTicker(selectProps.value as string);
+    }, [selectProps?.value]);
+
     const handleClickBalance = () => {
+      if (!balance) return;
+
       triggerChangeEvent(inputRef, balance);
       onClickBalance?.(balance);
     };
 
-    const endAdornment = (
-      <TokenAdornment>
-        <TokenInputSymbol>{tokenSymbol}</TokenInputSymbol>
-        <TokenInputUSD>{`≈ ${valueInUSD}`}</TokenInputUSD>
-      </TokenAdornment>
-    );
+    const handleTokenChange = (ticker: Key) => {
+      onChangeTicker?.(ticker as string);
+      setTicker(ticker as string);
+    };
 
-    const formatOptions = getFormatOptions(decimals);
+    // Prioritise Number Input description and error message
+    const hasSelectHelperText =
+      !errorMessage && !description && (selectProps?.errorMessage || selectProps?.description);
+    const { onSelectionChange, ...restSelectProps } = selectProps || {};
 
-    const hasBalance = balance !== undefined && balanceInUSD !== undefined;
+    const endAdornment = isSelectAdornment ? (
+      <TokenSelect
+        {...restSelectProps}
+        value={ticker}
+        onSelectionChange={chain(onSelectionChange, handleTokenChange)}
+        label={label}
+        aria-label={fieldProps['aria-label']}
+        aria-describedby={hasSelectHelperText ? selectHelperTextId : undefined}
+        validationState={hasSelectHelperText ? 'invalid' : undefined}
+        errorMessage={undefined}
+      />
+    ) : adornmentTicker ? (
+      <TokenAdornment ticker={adornmentTicker} />
+    ) : null;
+
+    const hasLabel = !!label || balance !== undefined;
 
     return (
-      <Stack spacing='half' className={className} style={style} hidden={hidden}>
-        {balance !== undefined && balanceInUSD !== undefined && (
-          <StyledTokenBalance
-            tokenSymbol={tokenSymbol}
-            value={balance}
-            valueInUSD={balanceInUSD}
+      <Flex direction='column' gap='spacing0' className={className} style={style} hidden={hidden}>
+        {hasLabel && (
+          <TokenInputLabel
+            ticker={ticker}
+            balance={humanBalance || balance}
+            balanceLabel={balanceLabel}
+            isDisabled={isDisabled || !ticker}
             onClickBalance={handleClickBalance}
-            isDisabled={isDisabled}
-            renderBalance={renderBalance}
-            label={label}
+            {...labelProps}
+          >
+            {label}
+          </TokenInputLabel>
+        )}
+        <NumberInput
+          ref={inputRef}
+          placeholder={placeholder}
+          size='large'
+          isDisabled={isDisabled}
+          endAdornment={endAdornment}
+          bottomAdornment={
+            valueUSD !== undefined && (
+              <StyledUSDAdornment $isDisabled={isDisabled}>{formatUSD(valueUSD, { compact: true })}</StyledUSDAdornment>
+            )
+          }
+          errorMessage={errorMessage}
+          description={description}
+          {...mergeProps(props, fieldProps)}
+        />
+        {hasSelectHelperText && (
+          <HelperText
+            id={selectHelperTextId}
+            errorMessage={selectProps?.errorMessage}
+            description={selectProps?.description}
           />
         )}
-        <TokenInputInnerWrapper>
-          <NumberInput
-            ref={inputRef}
-            endAdornment={endAdornment}
-            isDisabled={isDisabled}
-            minValue={0}
-            size='large'
-            overflow={false}
-            formatOptions={formatOptions}
-            label={!hasBalance && label}
-            {...props}
-          />
-        </TokenInputInnerWrapper>
-      </Stack>
+      </Flex>
     );
   }
 );

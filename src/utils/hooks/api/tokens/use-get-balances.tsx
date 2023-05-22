@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { useSubstrateSecureState } from '@/lib/substrate';
+import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -44,7 +45,8 @@ const useGetBalances = (): UseGetBalances => {
   const queryResult = useQuery({
     queryKey: getBalancesQueryKey(selectedAccount?.address),
     queryFn: () => (accountId && currencies ? getBalances(currencies, accountId) : undefined),
-    enabled: selectedAccount && accountId && isCurrenciesSuccess && bridgeLoaded
+    enabled: selectedAccount && accountId && isCurrenciesSuccess && bridgeLoaded,
+    refetchInterval: REFETCH_INTERVAL.BLOCK
   });
 
   const { data, error } = queryResult;
@@ -58,17 +60,17 @@ const useGetBalances = (): UseGetBalances => {
   // from the return value
   const getAvailableBalance = useCallback(
     (ticker: string) => {
-      const { free } = getBalance(ticker) || {};
+      const { transferable } = getBalance(ticker) || {};
 
       if (ticker === GOVERNANCE_TOKEN.ticker) {
-        if (!free) return undefined;
+        if (!transferable) return undefined;
 
-        const governanceBalance = free.sub(TRANSACTION_FEE_AMOUNT);
+        const governanceBalance = transferable.sub(TRANSACTION_FEE_AMOUNT);
 
         return governanceBalance.toBig().gte(0) ? governanceBalance : newMonetaryAmount(0, governanceBalance.currency);
       }
 
-      return free;
+      return transferable;
     },
     [getBalance]
   );

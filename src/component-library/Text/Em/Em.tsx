@@ -1,12 +1,16 @@
-import { TextProps } from '../types';
-import { EmText } from './Em.style';
+import { forwardRef } from 'react';
 
-const Em = ({ color, children, ...props }: TextProps<HTMLElement>): JSX.Element => (
-  <EmText color={color} {...props}>
-    {children}
-  </EmText>
+import { Text } from '../style';
+import { TextProps } from '../types';
+import { mapTextProps } from '../utils';
+
+type EmProps = TextProps<HTMLElement>;
+
+const Em = forwardRef<HTMLElement, EmProps>(
+  (props, ref): JSX.Element => <Text ref={ref} as='em' {...mapTextProps(props)} />
 );
 
 Em.displayName = 'Em';
 
 export { Em };
+export type { EmProps };

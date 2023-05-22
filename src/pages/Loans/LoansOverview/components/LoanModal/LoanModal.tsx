@@ -1,7 +1,7 @@
-import { BorrowPosition, LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { BorrowPosition, CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
 
-import { Modal, ModalProps, TabsItem } from '@/component-library';
+import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
 import { LoanAction, LoanType } from '@/types/loans';
 
 import { LoanForm } from '../LoanForm';
@@ -33,7 +33,7 @@ const getData = (t: TFunction, variant: LoanType): LoanTypeData => {
 type Props = {
   variant: LoanType;
   asset?: LoanAsset;
-  position?: LendPosition | BorrowPosition;
+  position?: CollateralPosition | BorrowPosition;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -50,16 +50,18 @@ const LoanModal = ({ variant = 'lend', asset, position, onClose, ...props }: Loa
   const { tabs } = getData(t, variant);
 
   return (
-    <Modal onClose={onClose} {...props}>
-      <StyledTabs size='large' fullWidth>
-        {tabs.map((tab) => (
-          <TabsItem title={tab.title} key={tab.variant}>
-            <StyledWrapper>
-              <LoanForm asset={asset} variant={tab.variant} position={position} onChangeLoan={onClose} />
-            </StyledWrapper>
-          </TabsItem>
-        ))}
-      </StyledTabs>
+    <Modal aria-label={`${variant} ${asset.currency.ticker}`} onClose={onClose} align='top' {...props}>
+      <ModalBody noPadding>
+        <StyledTabs size='large' fullWidth>
+          {tabs.map((tab) => (
+            <TabsItem title={tab.title} key={tab.variant}>
+              <StyledWrapper>
+                <LoanForm asset={asset} variant={tab.variant} position={position} onChangeLoan={onClose} />
+              </StyledWrapper>
+            </TabsItem>
+          ))}
+        </StyledTabs>
+      </ModalBody>
     </Modal>
   );
 };

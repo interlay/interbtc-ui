@@ -2,16 +2,13 @@ import { useTableRowGroup } from '@react-aria/table';
 import { mergeProps } from '@react-aria/utils';
 import { HTMLAttributes } from 'react';
 
-type Props = {
-  // TODO: create a util type for this
-  as?: keyof JSX.IntrinsicElements;
-};
+import { ElementTypeProp } from '../utils/prop-types';
 
-type NativeAttrs = Omit<HTMLAttributes<HTMLTableSectionElement>, keyof Props>;
+type NativeAttrs = HTMLAttributes<HTMLTableSectionElement>;
 
-type TableRowGroupProps = Props & NativeAttrs;
+type TableRowGroupProps = NativeAttrs & ElementTypeProp;
 
-const TableRowGroup = ({ as: Component = 'thead', children, ...props }: TableRowGroupProps): JSX.Element => {
+const TableRowGroup = ({ elementType: Component = 'thead', children, ...props }: TableRowGroupProps): JSX.Element => {
   const { rowGroupProps } = useTableRowGroup();
 
   return <Component {...mergeProps(props, rowGroupProps)}>{children}</Component>;

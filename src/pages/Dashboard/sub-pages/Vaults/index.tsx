@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import Hr1 from '@/components/hrs/Hr1';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
+import Hr1 from '@/legacy-components/hrs/Hr1';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
 import PageTitle from '@/parts/PageTitle';
 import TimerIncrement from '@/parts/TimerIncrement';
 import { getTokenPrice } from '@/utils/helpers/prices';

@@ -5,18 +5,18 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
-import Hr1 from '@/components/hrs/Hr1';
-import Panel from '@/components/Panel';
+import Hr1 from '@/legacy-components/hrs/Hr1';
+import Panel from '@/legacy-components/Panel';
 import InterlayTabGroup, {
   InterlayTab,
   InterlayTabList,
   InterlayTabPanel,
   InterlayTabPanels
-} from '@/components/UI/InterlayTabGroup';
-import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+} from '@/legacy-components/UI/InterlayTabGroup';
 import MainContainer from '@/parts/MainContainer';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import TAB_IDS from '@/utils/constants/tab-ids';
+import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral-currencies';
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
 
@@ -53,6 +53,8 @@ const Bridge = (): JSX.Element | null => {
 
   const [burnable, setBurnable] = React.useState(false);
 
+  const { data: collateralCurrencies } = useGetCollateralCurrencies(bridgeLoaded);
+
   const updateQueryParametersRef = React.useRef<(newQueryParameters: QueryParameters) => void>();
   // MEMO: inspired by https://epicreact.dev/the-latest-ref-pattern-in-react/
   React.useLayoutEffect(() => {
@@ -75,16 +77,25 @@ const Bridge = (): JSX.Element | null => {
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
+    if (!collateralCurrencies) return;
+
     (async () => {
       try {
-        const maxBurnableTokens = await window.bridge.redeem.getMaxBurnableTokens(RELAY_CHAIN_NATIVE_TOKEN);
-        setBurnable(maxBurnableTokens.gt(BitcoinAmount.zero()));
+        const burnableTokens = await Promise.all(
+          collateralCurrencies.map(async (collateral) => {
+            const maxBurnable = await window.bridge.redeem.getMaxBurnableTokens(collateral);
+
+            return maxBurnable.gt(BitcoinAmount.zero());
+          })
+        );
+
+        setBurnable(burnableTokens.includes(true));
       } catch (error) {
         // TODO: should add error handling
         console.log('[Bridge] error => ', error);
       }
     })();
-  }, [bridgeLoaded]);
+  }, [bridgeLoaded, collateralCurrencies]);
 
   if (selectedTabId === null) {
     return null;

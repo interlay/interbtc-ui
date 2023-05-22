@@ -1,24 +1,28 @@
-import { CurrencyExt, LendPosition, LoanAsset } from '@interlay/interbtc-api';
+import { CollateralPosition, CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
+import { ISubmittableResult } from '@polkadot/types/types';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
 
-import { CTA, Flex, Modal, ModalProps, Status } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
-import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
+import { AuthCTA } from '@/components';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
+import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
-import { StyledDescription, StyledTitle } from './CollateralModal.style';
+import { StyledDescription } from './CollateralModal.style';
 
 type ToggleCollateralVariables = { isEnabling: boolean; underlyingCurrency: CurrencyExt };
 
 const toggleCollateral = ({ isEnabling, underlyingCurrency }: ToggleCollateralVariables) => {
   if (isEnabling) {
-    return window.bridge.loans.enableAsCollateral(underlyingCurrency);
+    return submitExtrinsicPromise(window.bridge.loans.enableAsCollateral(underlyingCurrency));
   } else {
-    return window.bridge.loans.disableAsCollateral(underlyingCurrency);
+    return submitExtrinsicPromise(window.bridge.loans.disableAsCollateral(underlyingCurrency));
   }
 };
 
@@ -56,7 +60,7 @@ const getModalVariant = (isCollateralActive: boolean, ltvStatus?: Status): Colla
 
 type Props = {
   asset?: LoanAsset;
-  position?: LendPosition;
+  position?: CollateralPosition;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -65,16 +69,17 @@ type CollateralModalProps = Props & InheritAttrs;
 
 const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
-  const { refetch } = useGetAccountPositions();
+  const { refetch } = useGetAccountLendingStatistics();
   const { getLTV } = useGetLTV();
   const prices = useGetPrices();
 
   const handleSuccess = () => {
-    onClose();
+    toast.success('Successfully toggled collateral');
+    onClose?.();
     refetch();
   };
 
-  const toggleCollateralMutation = useMutation<void, Error, ToggleCollateralVariables>(toggleCollateral, {
+  const toggleCollateralMutation = useMutation<ISubmittableResult, Error, ToggleCollateralVariables>(toggleCollateral, {
     onSuccess: handleSuccess
   });
 
@@ -85,35 +90,37 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const { isCollateral: isCollateralActive, amount: lendPositionAmount } = position;
 
   const loanAction = isCollateralActive ? 'withdraw' : 'lend';
-  const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount, asset });
+  const currentLTV = getLTV({ type: loanAction, amount: lendPositionAmount });
   const variant = getModalVariant(isCollateralActive, currentLTV?.status);
 
   const content = getContentMap(t, variant, asset);
 
   const handleClickBtn = () => {
     if (variant === 'disable-error') {
-      return onClose();
+      return onClose?.();
     }
 
     const isEnabling = variant === 'enable';
 
-    return toggleCollateralMutation.mutate({ isEnabling, underlyingCurrency: position.currency });
+    return toggleCollateralMutation.mutate({ isEnabling, underlyingCurrency: position.amount.currency });
   };
 
   return (
     <>
       <Modal onClose={onClose} {...props}>
-        <Flex direction='column' gap='spacing8'>
-          <Flex direction='column' gap='spacing4' alignItems='center'>
-            <StyledTitle>{content.title}</StyledTitle>
+        <ModalHeader>{content.title}</ModalHeader>
+        <ModalBody>
+          <Flex direction='column' gap='spacing8'>
             <StyledDescription color='tertiary'>{content.description}</StyledDescription>
+            <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
+            {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
           </Flex>
-          <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
-          {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
-          <CTA size='large' onClick={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
+        </ModalBody>
+        <ModalFooter>
+          <AuthCTA size='large' onPress={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
             {content.buttonLabel}
-          </CTA>
-        </Flex>
+          </AuthCTA>
+        </ModalFooter>
       </Modal>
       {toggleCollateralMutation.isError && (
         <ErrorModal

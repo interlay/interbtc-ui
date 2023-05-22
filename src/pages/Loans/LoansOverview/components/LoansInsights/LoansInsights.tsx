@@ -1,44 +1,52 @@
+import { ISubmittableResult } from '@polkadot/types/types';
+import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
+import { toast } from 'react-toastify';
 
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
-import { Card, CTA, Dl, DlGroup } from '@/component-library';
-import ErrorModal from '@/components/ErrorModal';
-import { AccountPositionsStatisticsData } from '@/utils/hooks/api/loans/use-get-account-positions';
+import { Card, Dl, DlGroup } from '@/component-library';
+import { AuthCTA } from '@/components';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import { submitExtrinsic } from '@/utils/helpers/extrinsic';
+import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
 
-const mutateClaimRewards = () => window.bridge.loans.claimAllSubsidyRewards();
+const mutateClaimRewards = () => submitExtrinsic(window.bridge.loans.claimAllSubsidyRewards());
 
 type LoansInsightsProps = {
-  statistics?: AccountPositionsStatisticsData;
+  statistics?: AccountLendingStatistics;
 };
 
 const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
+  const { t } = useTranslation();
   const { data: subsidyRewards, refetch } = useGetAccountSubsidyRewards();
 
   const handleSuccess = () => {
+    toast.success(t('successfully_claimed_rewards'));
     refetch();
   };
 
-  const claimRewardsMutation = useMutation<void, Error, void>(mutateClaimRewards, {
+  const claimRewardsMutation = useMutation<ISubmittableResult, Error, void>(mutateClaimRewards, {
     onSuccess: handleSuccess
   });
 
   const handleClickClaimRewards = () => claimRewardsMutation.mutate();
 
-  const { supplyAmountUSD, netAmountUSD, netAPY } = statistics || {};
+  const { supplyAmountUSD, netAPY } = statistics || {};
 
   const supplyBalanceLabel = formatUSD(supplyAmountUSD?.toNumber() || 0);
-  const netBalanceLabel = formatUSD(netAmountUSD?.toNumber() || 0);
+  // TODO: temporary until squid has earned interest calculation.
+  // const netBalanceLabel = formatUSD(netAmountUSD?.toNumber() || 0);
   const netPercentage = formatPercentage(netAPY?.toNumber() || 0);
   const netPercentageLabel = `${netAPY?.gt(0) ? '+' : ''}${netPercentage}`;
 
-  const subsidyRewardsAmount = formatNumber(subsidyRewards?.toBig().toNumber() || 0, {
-    maximumFractionDigits: subsidyRewards?.currency.humanDecimals || 5
+  const subsidyRewardsAmount = formatNumber(subsidyRewards?.total.toBig().toNumber() || 0, {
+    maximumFractionDigits: subsidyRewards?.total.currency.humanDecimals || 5
   });
-  const subsidyRewardsAmountLabel = `${subsidyRewardsAmount} ${subsidyRewards?.currency.ticker || ''}`;
-  const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.isZero();
+  const subsidyRewardsAmountLabel = `${subsidyRewardsAmount} ${subsidyRewards?.total.currency.ticker || ''}`;
+  const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.total.isZero();
 
   return (
     <>
@@ -52,9 +60,8 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
         <Card flex='1'>
           <DlGroup direction='column' alignItems='flex-start' gap='spacing1'>
             <StyledDt color='primary'>Net APY</StyledDt>
-            <StyledDd color='secondary'>
-              {netPercentageLabel} ({netBalanceLabel})
-            </StyledDd>
+            {/* {netPercentageLabel} ({netBalanceLabel}) */}
+            <StyledDd color='secondary'>{netPercentageLabel}</StyledDd>
           </DlGroup>
         </Card>
         <Card
@@ -69,9 +76,9 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
             <StyledDd color='secondary'>{subsidyRewardsAmountLabel}</StyledDd>
           </DlGroup>
           {hasSubsidyRewards && (
-            <CTA onClick={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
+            <AuthCTA onPress={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
               Claim
-            </CTA>
+            </AuthCTA>
           )}
         </Card>
       </Dl>

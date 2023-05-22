@@ -1,57 +1,58 @@
-import { MutableRefObject, ReactNode, useEffect, useRef } from 'react';
+import { forwardRef } from 'react';
 
-import Portal from '@/parts/Portal';
-import { useMountTransition } from '@/utils/hooks/use-mount-transition';
+import { Overlay } from '../Overlay';
+import { useDOMRef } from '../utils/dom';
+import { Dialog, DialogProps } from './Dialog';
+import { ModalWrapper, ModalWrapperProps } from './ModalWrapper';
 
-import { Icon } from '../Icon';
-import { theme } from '../theme';
-import { CloseIcon, ModalContainer, ModalContent, ModalOverlay } from './Modal.style';
-interface ModalProps {
-  open: boolean;
-  onClose: () => void;
-  children: ReactNode;
-  initialFocusRef?: MutableRefObject<HTMLElement | null>;
-}
-
-// TODO: we have missing relevant behaviours for a Modal. Could be rewritten with react-aria.
-const Modal = ({ open, onClose, children, initialFocusRef }: ModalProps): JSX.Element | null => {
-  const { shouldRender, transitionTrigger } = useMountTransition(open, theme.transition.duration.duration100);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    // If initial element to be focused is not specified, close button is focused.
-    if (initialFocusRef?.current) {
-      initialFocusRef.current.focus();
-    } else if (closeButtonRef?.current) {
-      closeButtonRef.current.focus();
-    }
-  }, [initialFocusRef, closeButtonRef, shouldRender]);
-
-  // Closes modal on escape key.
-  useEffect(() => {
-    const handleKeydown = (event: KeyboardEvent) => {
-      if (event.code === 'Escape') {
-        onClose();
-      }
-    };
-    document.addEventListener('keydown', handleKeydown);
-    return () => document.removeEventListener('keydown', handleKeydown);
-  }, [onClose]);
-
-  return open || shouldRender ? (
-    <Portal>
-      <ModalContainer role='dialog'>
-        <ModalOverlay onClick={onClose} />
-        <ModalContent transitionTrigger={transitionTrigger}>
-          <CloseIcon aria-label='Dismiss' onClick={onClose} ref={closeButtonRef}>
-            <Icon variant='close' />
-          </CloseIcon>
-          {children}
-        </ModalContent>
-      </ModalContainer>
-    </Portal>
-  ) : null;
+type Props = {
+  container?: Element;
+  hasMaxHeight?: boolean;
+  align?: 'top' | 'center';
 };
+
+type InheritAttrs = Omit<ModalWrapperProps & DialogProps, keyof Props>;
+
+type ModalProps = Props & InheritAttrs;
+
+const Modal = forwardRef<HTMLDivElement, ModalProps>(
+  (
+    {
+      children,
+      isDismissable = true,
+      align = 'center',
+      hasMaxHeight,
+      isKeyboardDismissDisabled,
+      shouldCloseOnBlur,
+      shouldCloseOnInteractOutside,
+      container,
+      ...props
+    },
+    ref
+  ): JSX.Element | null => {
+    const domRef = useDOMRef(ref);
+    const { isOpen, onClose } = props;
+
+    return (
+      <Overlay isOpen={isOpen} container={container}>
+        <ModalWrapper
+          ref={domRef}
+          align={align}
+          isDismissable={isDismissable}
+          isOpen={isOpen}
+          isKeyboardDismissDisabled={isKeyboardDismissDisabled}
+          shouldCloseOnBlur={shouldCloseOnBlur}
+          shouldCloseOnInteractOutside={shouldCloseOnInteractOutside}
+          onClose={onClose}
+        >
+          <Dialog hasMaxHeight={hasMaxHeight} align={align} {...props}>
+            {children}
+          </Dialog>
+        </ModalWrapper>
+      </Overlay>
+    );
+  }
+);
 
 Modal.displayName = 'Modal';
 

@@ -9,7 +9,7 @@ interface CopyToClipboardUIProps {
 const useCopyToClipboard = (
   text: string
 ): {
-  handleCopyToClipboard: () => void;
+  handleCopyToClipboard: (event: React.PointerEvent<HTMLButtonElement>) => void;
   CopyToClipboardUI: React.ElementType;
 } => {
   const [state, copyToClipboard] = useLibCopyToClipboard();
@@ -19,11 +19,15 @@ const useCopyToClipboard = (
     setShowCopied(false);
   }, 1000);
 
-  const handleCopyToClipboard = React.useCallback(() => {
-    copyToClipboard(text);
-    setShowCopied(true);
-    reset();
-  }, [copyToClipboard, reset, text]);
+  const handleCopyToClipboard = React.useCallback(
+    (event: React.PointerEvent<HTMLButtonElement>) => {
+      event.stopPropagation();
+      copyToClipboard(text);
+      setShowCopied(true);
+      reset();
+    },
+    [copyToClipboard, reset, text]
+  );
 
   const CopyToClipboardUI = React.useMemo(() => {
     // eslint-disable-next-line react/display-name

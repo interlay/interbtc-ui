@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
+import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface CustomProps {

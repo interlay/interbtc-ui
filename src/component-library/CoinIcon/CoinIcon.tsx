@@ -1,36 +1,38 @@
-import { FC } from 'react';
+import { forwardRef } from 'react';
 
-import { Tokens } from '../types';
-import { Sizes } from '../utils/prop-types';
-import { IconWrapper } from './CoinIcon.style';
-import { BtcIcon, DotIcon, InterBtcIcon, IntrIcon, KbtcIcon, KintIcon, KsmIcon, LksmIcon, USDTIcon } from './icons';
+import { IconProps } from '../Icon';
+import { FallbackIcon } from './FallbackIcon';
+import { LPCoinIcon } from './LPCoinIcon';
+import { coins } from './utils';
 
-const coinsIcon: Record<Tokens, FC> = {
-  BTC: BtcIcon,
-  DOT: DotIcon,
-  IBTC: InterBtcIcon,
-  INTR: IntrIcon,
-  KBTC: KbtcIcon,
-  KINT: KintIcon,
-  KSM: KsmIcon,
-  LKSM: LksmIcon,
-  USDT: USDTIcon
+type Props = {
+  ticker: string;
+  // Multi tickers icons
+  tickers?: string[];
 };
 
-type CoinIconProps = {
-  size: Sizes;
-  coin: Tokens;
-};
+type NativeAttrs = Omit<IconProps, keyof Props>;
 
-const CoinIcon = ({ coin, size = 'small' }: CoinIconProps): JSX.Element => {
-  const CoinIcon = coinsIcon[coin] || (() => null);
+type CoinIconProps = Props & NativeAttrs;
 
-  return (
-    <IconWrapper $size={size}>
-      <CoinIcon />
-    </IconWrapper>
-  );
-};
+const CoinIcon = forwardRef<SVGSVGElement, CoinIconProps>(
+  ({ ticker, tickers, ...props }, ref): JSX.Element => {
+    // Only want to render multi-token if has more than 1 ticker
+    if (tickers && tickers?.length > 1) {
+      return <LPCoinIcon ref={ref} tickers={tickers} ticker={ticker} {...props} />;
+    }
+
+    const CoinIcon = coins[ticker];
+
+    if (!CoinIcon) {
+      return <FallbackIcon ref={ref} ticker={ticker} {...props} />;
+    }
+
+    return <CoinIcon ref={ref} {...props} />;
+  }
+);
+
+CoinIcon.displayName = 'CoinIcon';
 
 export { CoinIcon };
 export type { CoinIconProps };

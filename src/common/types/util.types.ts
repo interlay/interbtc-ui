@@ -49,6 +49,8 @@ export type GeneralState = {
   bridgeLoaded: boolean;
   vaultClientLoaded: boolean;
   showAccountModal: boolean;
+  isSignTermsModalOpen: boolean;
+  isBuyModalOpen: boolean;
   totalWrappedTokenAmount: BitcoinAmount;
   totalLockedCollateralTokenAmount: MonetaryAmount<CollateralCurrencyExt>;
   btcRelayHeight: number;

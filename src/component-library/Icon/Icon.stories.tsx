@@ -2,24 +2,26 @@ import { Meta, Story } from '@storybook/react';
 
 import { Icon, IconProps } from '.';
 
-const Template: Story<IconProps> = (args) => <Icon {...args} />;
+const Template: Story<IconProps> = (args) => (
+  <Icon
+    xmlns='http://www.w3.org/2000/svg'
+    fill='none'
+    viewBox='0 0 24 24'
+    strokeWidth='1.5'
+    stroke='currentColor'
+    {...args}
+  >
+    <path strokeLinecap='round' strokeLinejoin='round' d='M6 18L18 6M6 6l12 12' />
+  </Icon>
+);
 
-const Close = Template.bind({});
-Close.args = {
-  variant: 'close'
+const Default = Template.bind({});
+Default.args = {
+  color: 'primary',
+  size: 'md'
 };
 
-const Checkmark = Template.bind({});
-Checkmark.args = {
-  variant: 'checkmark'
-};
-
-const CheckCircle = Template.bind({});
-CheckCircle.args = {
-  variant: 'check-circle'
-};
-
-export { CheckCircle, Checkmark, Close };
+export { Default };
 
 export default {
   title: 'Elements/Icon',

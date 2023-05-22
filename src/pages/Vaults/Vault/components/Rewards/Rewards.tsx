@@ -1,14 +1,16 @@
 import { CollateralCurrencyExt, newVaultId, WrappedCurrency, WrappedIdLiteral } from '@interlay/interbtc-api';
+import { ISubmittableResult } from '@polkadot/types/types';
 import Big from 'big.js';
-import { HTMLAttributes } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { formatNumber, formatUSD } from '@/common/utils/utils';
+import { CardProps } from '@/component-library';
 import { LoadingSpinner } from '@/component-library/LoadingSpinner';
-import ErrorModal from '@/components/ErrorModal';
 import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
+import ErrorModal from '@/legacy-components/ErrorModal';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
+import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 import useAccountId from '@/utils/hooks/use-account-id';
 
@@ -30,9 +32,9 @@ type Props = {
   hasWithdrawRewardsBtn: boolean;
 };
 
-type NativeAttrs = HTMLAttributes<unknown>;
+type InheritAttrs = Omit<CardProps, keyof Props>;
 
-type RewardsProps = Props & NativeAttrs;
+type RewardsProps = Props & InheritAttrs;
 
 const Rewards = ({
   vaultAddress,
@@ -47,7 +49,7 @@ const Rewards = ({
   const queryClient = useQueryClient();
   const vaultAccountId = useAccountId(vaultAddress);
 
-  const claimRewardsMutation = useMutation<void, Error, void>(
+  const claimRewardsMutation = useMutation<ISubmittableResult, Error, void>(
     () => {
       if (vaultAccountId === undefined) {
         throw new Error('Something went wrong!');
@@ -60,7 +62,7 @@ const Rewards = ({
         WRAPPED_TOKEN as WrappedCurrency
       );
 
-      return window.bridge.rewards.withdrawRewards(vaultId);
+      return submitExtrinsicPromise(window.bridge.rewards.withdrawRewards(vaultId));
     },
     {
       onSuccess: () => {

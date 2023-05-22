@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ReactComponent as AcalaLogoIcon } from '@/assets/img/exchanges/acala-logo.svg';
 import { ReactComponent as GateLogoIcon } from '@/assets/img/exchanges/gate-logo.svg';
@@ -10,13 +11,15 @@ import { ReactComponent as MexcLogoForInterlayIcon } from '@/assets/img/exchange
 import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchanges/mexc-logo-for-kintsugi.svg';
 import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
 import { ReactComponent as ZenlinkLogoIcon } from '@/assets/img/exchanges/zenlink-logo.svg';
+import { showBuyModal } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
+import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import InterlayDefaultOutlinedButton, {
   Props as InterlayDefaultOutlinedButtonProps
-} from '@/components/buttons/InterlayDefaultOutlinedButton';
-import TitleWithUnderline from '@/components/TitleWithUnderline';
-import InterlayLink from '@/components/UI/InterlayLink';
-import InterlayModal, { InterlayModalInnerWrapper } from '@/components/UI/InterlayModal';
-import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+} from '@/legacy-components/buttons/InterlayDefaultOutlinedButton';
+import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
+import InterlayLink from '@/legacy-components/UI/InterlayLink';
+import InterlayModal, { InterlayModalInnerWrapper } from '@/legacy-components/UI/InterlayModal';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { BORDER_CLASSES } from '@/utils/constants/styles';
 
@@ -93,16 +96,18 @@ const ExchangeLink = ({ href, icon }: ExchangeLinkProps) => {
   );
 };
 
+// TODO: remove when banxa gets into interlay dapp
 const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.Element => {
-  const [modalOpen, setModalOpen] = React.useState(false);
+  const { isBuyModalOpen } = useSelector((state: StoreType) => state.general);
   const focusRef = React.useRef(null);
   const { t } = useTranslation();
+  const dispatch = useDispatch();
 
   const handleModalOpen = () => {
-    setModalOpen(true);
+    dispatch(showBuyModal(true));
   };
   const handleModalClose = () => {
-    setModalOpen(false);
+    dispatch(showBuyModal(false));
   };
 
   const getGovernanceTokenLabel = t('get_governance_token', {
@@ -118,7 +123,7 @@ const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.El
       <InterlayDefaultOutlinedButton onClick={handleModalOpen} {...props}>
         {getGovernanceTokenLabel}
       </InterlayDefaultOutlinedButton>
-      <InterlayModal initialFocus={focusRef} open={modalOpen} onClose={handleModalClose}>
+      <InterlayModal initialFocus={focusRef} open={isBuyModalOpen} onClose={handleModalClose}>
         <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
           <TitleWithUnderline text={getGovernanceTokenLabel} />
           <div className={clsx('px-4', 'py-2', 'space-y-10')}>

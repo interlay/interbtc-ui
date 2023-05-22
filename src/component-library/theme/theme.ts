@@ -1,3 +1,5 @@
+import { breakpoints } from '../utils/breakpoints';
+
 const theme = {
   // Layout
   layout: {
@@ -7,6 +9,7 @@ const theme = {
       lg: '48em'
     }
   },
+  breakpoints,
   // Generic
   colors: {
     textPrimary: 'var(--colors-text-primary)',
@@ -55,6 +58,8 @@ const theme = {
     spacing8: 'var(--spacing-8)',
     spacing10: 'var(--spacing-10)',
     spacing12: 'var(--spacing-12)',
+    spacing14: 'var(--spacing-14)',
+    spacing16: 'var(--spacing-16)',
     spacing28: 'var(--spacing-28)'
   },
   rounded: {
@@ -65,19 +70,26 @@ const theme = {
     xl: 'var(--rounded-xl)',
     full: 'var(--rounded-full)'
   },
+  // TODO: clean this in each theme
   border: {
-    default: '1px solid var(--colors-border)'
+    default: '1px solid var(--colors-border)',
+    hover: '1px solid var(--colors-input-hover-border)',
+    focus: '1px solid var(--colors-input-focus-border)',
+    disabled: '1px solid var(--colors-input-disabled-border)',
+    error: '1px solid var(--colors-error-dark)'
   },
   outline: {
     default: '2px solid var(--colors-border)'
   },
   boxShadow: {
-    default: 'var(--box-shadow-default)'
+    default: 'var(--box-shadow-default)',
+    focus: '0 0 0 1px var(--colors-input-focus-border)'
   },
   // Components
   input: {
     color: 'var(--colors-input-text)',
     background: 'var(--colors-input-background)',
+    height: '4rem',
     default: {
       border: '1px solid var(--colors-input-default-border)'
     },
@@ -102,24 +114,50 @@ const theme = {
       }
     },
     small: {
-      text: 'var(--text-s)'
+      text: 'var(--text-s)',
+      maxHeight: 'var(--spacing-8)'
     },
     medium: {
-      text: 'var(--text-base)'
+      text: 'var(--text-base)',
+      maxHeight: 'var(--spacing-10)'
     },
     large: {
-      text: 'var(--text-5xl)'
+      text: 'var(--text-4xl)',
+      maxHeight: 'var(--spacing-16)'
     },
     overflow: {
       large: {
-        text: 'var(--text-2xl)',
-        height: '4.6875rem'
+        text: 'var(--text-2xl)'
+      }
+    },
+    paddingX: {
+      s: '2rem',
+      md: '4rem',
+      lg: '6.25rem',
+      xl: '8rem',
+      xl2: '9.5rem'
+    }
+  },
+  tokenInput: {
+    endAdornment: {
+      bg: 'var(--colors-token-input-end-adornment-bg)'
+    },
+    list: {
+      item: {
+        default: {
+          text: 'var(--colors-token-list-item-text)'
+        },
+        selected: {
+          text: 'var(--colors-token-list-item-select-text)'
+        }
       }
     }
   },
   card: {
-    bg: 'var(--colors-card-bg)',
-    secondaryBg: 'var(--colors-card-secondary-bg)'
+    outlined: {
+      border: '1px solid transparent'
+    },
+    bg: { primary: 'var(--color-card-primary-bg)', secondary: 'var(--color-card-secondary-bg)' }
   },
   cta: {
     primary: {
@@ -139,6 +177,12 @@ const theme = {
     text: {
       text: 'var(--colors-cta-text-text)',
       bgHover: 'var(--colors-cta-text-hover)'
+    },
+    'x-small': {
+      padding: 'var(--spacing-1)',
+      text: 'var(--text-xs)',
+      // TODO: revist on redesign
+      lineHeight: '1'
     },
     small: {
       padding: 'var(--spacing-2)',
@@ -338,13 +382,42 @@ const theme = {
     }
   },
   modal: {
-    title: {
-      primary: {
-        color: 'var(--colors-title-primary)'
-      },
-      secondary: {
-        color: 'var(--colors-title-secondary)'
+    maxWidth: '32rem',
+    maxHeight: 'calc(100vh - var(--spacing-12))',
+    // TODO: z-index needs to be higher
+    zIndex: 2,
+    underlay: {
+      zIndex: 1,
+      bg: 'var(--colors-neutral-black-60)',
+      transition: {
+        entering: 'opacity .15s cubic-bezier(0,0,.4,1)',
+        exiting: 'opacity .1s cubic-bezier(0.5,0,1,1), visibility 0s linear .1s'
       }
+    },
+    header: {
+      paddingY: 'var(--spacing-4)',
+      paddingX: 'var(--spacing-6)',
+      paddingRight: 'var(--spacing-8)'
+    },
+    divider: {
+      marginX: 'var(--spacing-6)',
+      marginBottom: 'var(--spacing-2)'
+    },
+    body: {
+      paddingY: 'var(--spacing-3)',
+      paddingX: 'var(--spacing-6)'
+    },
+    footer: {
+      paddingTop: 'var(--spacing-4)',
+      paddingBottom: 'var(--spacing-6)',
+      paddingX: 'var(--spacing-6)'
+    },
+    closeBtn: {
+      zIndex: 100
+    },
+    transition: {
+      entering: 'transform .15s cubic-bezier(0,0,0.4,1) .1s, opacity .15s cubic-bezier(0,0,0.4,1)',
+      exiting: 'opacity .1s cubic-bezier(0.5,0,1,1), visibility 0s linear, transform 0s linear .1s'
     }
   },
   switch: {
@@ -367,7 +440,91 @@ const theme = {
     }
   },
   divider: {
-    bg: 'var(--colors-border)'
+    bg: 'var(--colors-border)',
+    size: {
+      small: '1px',
+      medium: '2px',
+      large: '3px'
+    }
+  },
+  icon: {
+    sizes: {
+      s: 'var(--spacing-4)',
+      md: 'var(--spacing-6)',
+      lg: 'var(--spacing-8)',
+      xl: 'var(--spacing-10)',
+      xl2: 'var(--spacing-12)'
+    },
+    fallback: {
+      color: 'var(--color-icon-fallback-color)',
+      stroke: 'var(--color-icon-fallback-stroke)'
+    }
+  },
+  list: {
+    text: 'var(--color-list-selected-text)',
+    primary: {
+      bg: '',
+      border: '',
+      rounded: ''
+    },
+    secondary: {
+      bg: '',
+      border: '',
+      rounded: ''
+    },
+    card: {
+      bg: 'var(--colors-table-odd-row-bg)',
+      border: '1px solid var(--colors-border)',
+      rounded: 'var(--rounded-md)'
+    },
+    item: {
+      primary: {
+        bg: 'var(--color-list-primary-bg)',
+        border: '1px solid var(--colors-border)',
+        hover: {
+          bg: 'var(--color-list-primary-hover-bg)'
+        },
+        rounded: 'var(--rounded-md)'
+      },
+      secondary: {
+        bg: 'var(--color-list-secondary-bg)',
+        border: 'none',
+        hover: {
+          bg: 'var(--color-list-secondary-hover-bg)'
+        },
+        rounded: 'var(--rounded-md)'
+      },
+      card: {
+        bg: 'var(--colors-table-odd-row-bg)',
+        border: '1px solid var(--colors-border)',
+        hover: {
+          bg: 'var(--color-list-primary-hover-bg)'
+        },
+        rounded: ''
+      }
+    }
+  },
+  select: {
+    placeholder: 'var(--colors-text-tertiary)',
+    color: 'var(--color-select-text)',
+    size: {
+      small: {
+        padding: 'var(--spacing-1)',
+        text: 'var(--text-s)',
+        // TODO: to be determined
+        maxHeight: 'calc(var(--spacing-6) - 1px)'
+      },
+      medium: {
+        padding: 'var(--spacing-2)',
+        text: 'var(--text-base)',
+        maxHeight: 'calc(var(--spacing-10) - 1px)'
+      },
+      large: {
+        padding: 'var(--spacing-5) var(--spacing-2)',
+        text: 'var(--text-lg)',
+        maxHeight: 'calc(var(--spacing-16) - 1px)'
+      }
+    }
   }
 };
 

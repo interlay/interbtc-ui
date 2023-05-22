@@ -1,12 +1,17 @@
 import { LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { useId } from '@react-aria/utils';
 import { Key, ReactNode, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
+import { Cell, Table, TableProps } from '@/components';
+import { ApyCell } from '@/components/LoanPositionsTable/ApyCell';
+import { LoanTablePlaceholder } from '@/components/LoanPositionsTable/LoanTablePlaceholder';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { ApyCell, AssetCell, LoansBaseTable, LoansBaseTableProps } from '../LoansBaseTable';
-import { MonetaryCell } from '../LoansBaseTable/MonetaryCell';
+import { StyledAssetCell } from './BorrowAssetsTable.style';
 
 enum BorrowAssetsColumns {
   ASSET = 'asset',
@@ -31,26 +36,32 @@ const borrowAssetsColumns = [
   { name: 'Total Borrowed', uid: BorrowAssetsColumns.TOTAL_BORROWED }
 ];
 
-type BorrowAssetsTableProps = {
+type Props = {
   assets: TickerToData<LoanAsset>;
-  onRowAction: LoansBaseTableProps['onRowAction'];
-  disabledKeys: LoansBaseTableProps['disabledKeys'];
 };
 
-const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTableProps): JSX.Element => {
+type InheritAttrs = Omit<TableProps, keyof Props | 'columns' | 'rows'>;
+
+type BorrowAssetsTableProps = Props & InheritAttrs;
+
+const BorrowAssetsTable = ({ assets, onRowAction, ...props }: BorrowAssetsTableProps): JSX.Element => {
+  const titleId = useId();
   const { t } = useTranslation();
   const prices = useGetPrices();
+  const { data: subsidyRewards } = useGetAccountSubsidyRewards();
 
   const rows: BorrowAssetsTableRow[] = useMemo(
     () =>
-      Object.values(assets).map(({ borrowApy, currency, availableCapacity, borrowReward, totalBorrows }) => {
-        const asset = <AssetCell currency={currency.ticker} />;
+      Object.values(assets).map(({ borrowApy, currency, availableCapacity, totalBorrows, borrowReward }) => {
+        const asset = <StyledAssetCell ticker={currency.ticker} />;
+        const accruedRewards = subsidyRewards ? subsidyRewards.perMarket[currency.ticker].borrow : null;
 
         const apy = (
           <ApyCell
             apy={borrowApy}
             currency={currency}
-            rewards={borrowReward}
+            rewardsPerYear={borrowReward}
+            accruedRewards={accruedRewards}
             prices={prices}
             isBorrow
             // TODO: temporary until we find why row click is being ignored
@@ -60,17 +71,15 @@ const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTa
 
         const availableCapacityUSD = convertMonetaryAmountToValueInUSD(
           availableCapacity,
-          prices?.[availableCapacity.currency.ticker].usd
+          getTokenPrice(prices, availableCapacity.currency.ticker)?.usd
         );
-        const capacity = <MonetaryCell label={formatUSD(availableCapacityUSD || 0, { compact: true })} />;
+        const capacity = <Cell label={formatUSD(availableCapacityUSD || 0, { compact: true })} />;
 
         const totalBorrowsUSD = convertMonetaryAmountToValueInUSD(
           totalBorrows,
-          prices?.[totalBorrows.currency.ticker].usd
+          getTokenPrice(prices, totalBorrows.currency.ticker)?.usd
         );
-        const totalBorrowed = (
-          <MonetaryCell label={formatUSD(totalBorrowsUSD || 0, { compact: true })} alignItems='flex-end' />
-        );
+        const totalBorrowed = <Cell label={formatUSD(totalBorrowsUSD || 0, { compact: true })} alignItems='flex-end' />;
 
         return {
           id: currency.ticker,
@@ -80,16 +89,18 @@ const BorrowAssetsTable = ({ assets, onRowAction, disabledKeys }: BorrowAssetsTa
           totalBorrowed
         };
       }),
-    [assets, prices, onRowAction]
+    [assets, prices, onRowAction, subsidyRewards]
   );
 
   return (
-    <LoansBaseTable
+    <Table
+      {...props}
       title={t('loans.borrow_markets')}
-      onRowAction={onRowAction}
+      titleId={titleId}
       rows={rows}
       columns={borrowAssetsColumns}
-      disabledKeys={disabledKeys}
+      placeholder={<LoanTablePlaceholder variant='borrow' />}
+      onRowAction={onRowAction}
     />
   );
 };

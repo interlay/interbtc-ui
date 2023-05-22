@@ -14,13 +14,14 @@ import { toast } from 'react-toastify';
 import { updateCollateralAction, updateCollateralizationAction } from '@/common/actions/vault.actions';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayDefaultContainedButton from '@/components/buttons/InterlayDefaultContainedButton';
-import TokenField from '@/components/TokenField';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
+import TokenField from '@/legacy-components/TokenField';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
+import { submitExtrinsic, submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
@@ -141,9 +142,9 @@ const UpdateCollateralModal = ({
         true
       ) as MonetaryAmount<CollateralCurrencyExt>;
       if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
-        await window.bridge.vaults.depositCollateral(collateralTokenAmount);
+        await submitExtrinsic(window.bridge.vaults.depositCollateral(collateralTokenAmount));
       } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
-        await window.bridge.vaults.withdrawCollateral(collateralTokenAmount);
+        await submitExtrinsicPromise(window.bridge.vaults.withdrawCollateral(collateralTokenAmount));
       } else {
         throw new Error('Something went wrong!');
       }

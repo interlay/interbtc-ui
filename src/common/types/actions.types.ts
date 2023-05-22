@@ -16,8 +16,10 @@ export const UPDATE_WRAPPED_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_WRAPPED_TOKEN_T
 export const UPDATE_COLLATERAL_TOKEN_BALANCE = 'UPDATE_COLLATERAL_TOKEN_BALANCE';
 export const UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE = 'UPDATE_COLLATERAL_TOKEN_TRANSFERABLE_BALANCE';
 export const SHOW_ACCOUNT_MODAL = 'SHOW_ACCOUNT_MODAL';
+export const SHOW_SIGN_TERMS_MODAL = 'SHOW_SIGN_TERMS_MODAL';
 export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
+export const SHOW_BUY_MODAL = 'SHOW_BUY_MODAL';
 
 export interface UpdateTotals {
   type: typeof UPDATE_TOTALS;
@@ -86,6 +88,16 @@ export interface ShowAccountModal {
   showAccountModal: boolean;
 }
 
+export interface ShowSignTermsModal {
+  type: typeof SHOW_SIGN_TERMS_MODAL;
+  isSignTermsModalOpen: boolean;
+}
+
+export interface ShowBuyModal {
+  type: typeof SHOW_BUY_MODAL;
+  isBuyModalOpen: boolean;
+}
+
 export type GeneralActions =
   | IsBridgeLoaded
   | InitGeneralDataAction
@@ -96,7 +108,9 @@ export type GeneralActions =
   | UpdateCollateralTokenTransferableBalance
   | ShowAccountModal
   | UpdateHeights
-  | UpdateTotals;
+  | UpdateTotals
+  | ShowBuyModal
+  | ShowSignTermsModal;
 
 // REDEEM
 export const ADD_VAULT_REDEEMS = 'ADD_VAULT_REDEEMS';

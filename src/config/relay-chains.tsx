@@ -1,5 +1,11 @@
+import { AcalaAdapter, KaruraAdapter } from '@interlay/bridge/build/adapters/acala';
+import { AstarAdapter } from '@interlay/bridge/build/adapters/astar';
+import { BifrostAdapter } from '@interlay/bridge/build/adapters/bifrost';
+import { HydraAdapter } from '@interlay/bridge/build/adapters/hydradx';
 import { InterlayAdapter, KintsugiAdapter } from '@interlay/bridge/build/adapters/interlay';
+import { HeikoAdapter, ParallelAdapter } from '@interlay/bridge/build/adapters/parallel';
 import { KusamaAdapter, PolkadotAdapter } from '@interlay/bridge/build/adapters/polkadot';
+import { StatemineAdapter, StatemintAdapter } from '@interlay/bridge/build/adapters/statemint';
 import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
 import {
   CurrencyExt,
@@ -115,6 +121,8 @@ let XCM_ADAPTERS: Record<string, BaseCrossChainAdapter>;
 
 let TRANSACTION_FEE_AMOUNT: MonetaryAmount<CurrencyExt>;
 
+let SS58_PREFIX: number;
+
 type WrappedTokenAmount = InterBtcAmount | KBtcAmount;
 
 switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
@@ -153,8 +161,14 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
       interlay: new InterlayAdapter(),
-      polkadot: new PolkadotAdapter()
+      acala: new AcalaAdapter(),
+      astar: new AstarAdapter(),
+      hydra: new HydraAdapter(),
+      parallel: new ParallelAdapter(),
+      polkadot: new PolkadotAdapter(),
+      statemint: new StatemintAdapter()
     };
+    SS58_PREFIX = 0;
 
     break;
   }
@@ -193,8 +207,13 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.01, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
       kintsugi: new KintsugiAdapter(),
-      kusama: new KusamaAdapter()
+      kusama: new KusamaAdapter(),
+      karura: new KaruraAdapter(),
+      statemine: new StatemineAdapter(),
+      bifrost: new BifrostAdapter(),
+      heiko: new HeikoAdapter()
     };
+    SS58_PREFIX = 2;
     break;
   }
   default: {
@@ -227,6 +246,7 @@ export {
   RELAY_CHAIN_NATIVE_TOKEN_SYMBOL,
   RelayChainLogoIcon,
   RelayChainNativeTokenLogoIcon,
+  SS58_PREFIX,
   STAKE_LOCK_TIME,
   SUBSCAN_LINK,
   TERMS_AND_CONDITIONS_LINK,

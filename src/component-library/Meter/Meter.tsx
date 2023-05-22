@@ -1,18 +1,11 @@
 import { HTMLAttributes, useEffect, useState } from 'react';
 
-import { formatPercentage } from '@/common/utils/utils';
-
 import { Span } from '../Text';
 import { Status, Variants } from '../utils/prop-types';
 import { Indicator } from './Indicator';
-import {
-  StyledContainer,
-  StyledIndicatorWrapper,
-  StyledMeter,
-  StyledRangeIndicator,
-  StyledWrapper
-} from './Meter.style';
-import { getBarPercentage, getMaxRange, getStatus } from './utils';
+import { StyledContainer, StyledIndicatorWrapper, StyledMeter, StyledWrapper } from './Meter.style';
+import { RangeIndicators } from './RangeIndicators';
+import { getBarPercentage, getStatus } from './utils';
 
 const getPosition = (percentage: number) => (percentage > 100 ? 100 : percentage < 0 ? 0 : percentage);
 
@@ -40,7 +33,7 @@ const Meter = ({
   className,
   style,
   hidden,
-  formatOptions,
+  formatOptions = { maximumFractionDigits: 2 },
   ...props
 }: MeterProps): JSX.Element => {
   const [status, setStatus] = useState<Status>();
@@ -70,14 +63,9 @@ const Meter = ({
           $variant={variant}
         >
           <Indicator />
-          {!isPrimary && <Span>{formatPercentage(position, formatOptions)}</Span>}
+          {!isPrimary && <Span>{Intl.NumberFormat(undefined, formatOptions).format(position)}%</Span>}
         </StyledIndicatorWrapper>
-        {!isPrimary && !!ranges && (
-          <>
-            <StyledRangeIndicator $position={getMaxRange(ranges, 'warning', true)} $status='warning' />
-            <StyledRangeIndicator $position={getMaxRange(ranges, 'error', true)} $status='error' />
-          </>
-        )}
+        {!isPrimary && !!ranges && <RangeIndicators ranges={ranges} />}
       </StyledContainer>
     </StyledWrapper>
   );

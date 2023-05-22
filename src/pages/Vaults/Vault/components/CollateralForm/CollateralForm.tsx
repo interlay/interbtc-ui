@@ -11,10 +11,17 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 
 import { StoreType } from '@/common/types/util.types';
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatNumber, formatUSD } from '@/common/utils/utils';
+import {
+  convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmount,
+  displayMonetaryAmountInUSDFormat,
+  formatNumber,
+  formatUSD
+} from '@/common/utils/utils';
 import { CTA, Span, Stack, TokenInput } from '@/component-library';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { URL_PARAMETERS } from '@/utils/constants/links';
+import { submitExtrinsic, submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
@@ -157,11 +164,11 @@ const CollateralForm = ({
 
       switch (variant) {
         case 'deposit': {
-          await window.bridge.vaults.depositCollateral(collateralTokenAmount);
+          await submitExtrinsic(window.bridge.vaults.depositCollateral(collateralTokenAmount));
           break;
         }
         case 'withdraw': {
-          await window.bridge.vaults.withdrawCollateral(collateralTokenAmount);
+          await submitExtrinsicPromise(window.bridge.vaults.withdrawCollateral(collateralTokenAmount));
           break;
         }
       }
@@ -237,11 +244,13 @@ const CollateralForm = ({
         <TokenInput
           aria-labelledby={titleId}
           placeholder='0.00'
-          tokenSymbol={collateralToken.ticker}
-          valueInUSD={displayMonetaryAmountInUSDFormat(
-            inputCollateralAmount,
-            getTokenPrice(prices, collateralToken.ticker)?.usd
-          )}
+          ticker={collateralToken.ticker}
+          valueUSD={
+            convertMonetaryAmountToValueInUSD(
+              inputCollateralAmount,
+              getTokenPrice(prices, collateralToken.ticker)?.usd
+            ) ?? 0
+          }
           id={tokenInputId}
           {...register(tokenInputId, {
             required: {

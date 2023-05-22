@@ -2,6 +2,9 @@
 const path = require('path');
 
 module.exports = {
+  reactOptions: {
+    strictMode: false,
+  },
   stories: [
     '../src/**/*.stories.mdx',
     '../src/**/*.stories.@(js|jsx|ts|tsx)'
@@ -10,7 +13,8 @@ module.exports = {
     '@storybook/addon-links',
     '@storybook/addon-essentials',
     '@storybook/preset-create-react-app',
-    'storybook-addon-themes'
+    'storybook-addon-themes',
+    "@storybook/addon-actions"
   ],
   webpackFinal: config => {
     // MEMO: inspired by https://github.com/storybookjs/storybook/issues/3916

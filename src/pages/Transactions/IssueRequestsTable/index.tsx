@@ -5,15 +5,16 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { FaCheck, FaRegClock, FaRegTimesCircle } from 'react-icons/fa';
 import { useQuery } from 'react-query';
-import { useDispatch } from 'react-redux';
 import { useTable } from 'react-table';
 
-import { showAccountModalAction } from '@/common/actions/general.actions';
 import { formatDateTimePrecise, formatNumber, shortTxId } from '@/common/utils/utils';
-import ErrorFallback from '@/components/ErrorFallback';
-import ExternalLink from '@/components/ExternalLink';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InterlayPagination from '@/components/UI/InterlayPagination';
+import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
+import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import ExternalLink from '@/legacy-components/ExternalLink';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import InterlayPagination from '@/legacy-components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -21,10 +22,7 @@ import InterlayTable, {
   InterlayTh,
   InterlayThead,
   InterlayTr
-} from '@/components/UI/InterlayTable';
-import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
-import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
-import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
+} from '@/legacy-components/UI/InterlayTable';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
@@ -39,7 +37,6 @@ import useUpdateQueryParameters from '@/utils/hooks/use-update-query-parameters'
 import IssueRequestModal from './IssueRequestModal';
 
 const IssueRequestsTable = (): JSX.Element => {
-  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const queryParams = useQueryParams();
@@ -216,8 +213,6 @@ const IssueRequestsTable = (): JSX.Element => {
       updateQueryParameters({
         [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: requestId
       });
-    } else {
-      dispatch(showAccountModalAction(true));
     }
   };
 

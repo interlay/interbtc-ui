@@ -15,8 +15,9 @@
 .theme-kintsugi {
   --colors-border: var(--colors-mid-blue);
   --colors-bg-primary: var(--colors-dark-blue);
-  --colors-card-bg: var(--colors-dark-blue);
-  --colors-card-secondary-bg: var(--colors-neutral-white-06);
+  /* Card */
+  --color-card-primary-bg: var(--colors-dark-blue);
+  --color-card-secondary-bg: var(--colors-neutral-white-06);
   /* CTA */
   --colors-cta-primary: var(--colors-yellow);
   --colors-cta-primary-hover: var(--colors-dark-yellow);
@@ -28,6 +29,7 @@
   --colors-cta-outlined-hover: var(--colors-yellow-05);
   --colors-cta-text-text: var(--colors-neutral-white);
   --colors-cta-text-hover: var(--colors-neutral-white-05);
+  /* Text */
   --colors-text-primary: var(--colors-neutral-white);
   --colors-text-secondary: var(--colors-yellow);
   --colors-text-tertiary: var(--colors-neutral-light-grey);
@@ -58,9 +60,14 @@
   --colors-input-default-border: var(--colors-neutral-white-25);
   --colors-input-hover-border: var(--colors-slate-gray);
   --colors-input-focus-border: var(--colors-neutral-white);
-  --colors-input-disabled-text: var(--colors-mid-blue);
+  --colors-input-disabled-text: var(--colors-slate-gray);
   --colors-input-disabled-border: var(--colors-mid-blue);
-  --colors-input-background: transparent;
+  --colors-input-background: var(--colors-blue);
+  /* Token Input */
+  --colors-token-input-end-adornment-bg: var(--colors-neutral-white-25);
+  /* Token List */
+  --colors-token-list-item-text: var(--colors-neutral-white);
+  --colors-token-list-item-select-text: var(--colors-neutral-black);
   /* Modal */
   --colors-title-primary: var(--colors-neutral-white);
   --colors-title-secondary: var(--colors-bronze);
@@ -77,4 +84,15 @@
   /* Table */
   --colors-tooltip-bg: var(--colors-blue);
   --colors-tooltip-tip-bg: var(--colors-blue);
+  /* List */
+  --color-list-primary-bg: var(--colors-bg-primary);
+  --color-list-primary-hover-bg: #1c2c46;
+  --color-list-secondary-bg: #101e3d;
+  --color-list-secondary-hover-bg: #1c2c46;
+  --color-list-selected-text: var(--colors-neutral-black);
+  /* Icon */
+  --color-icon-fallback-stroke: #232323;
+  --color-icon-fallback-color: #040816;
+  /* Select */
+  --color-select-text: var(--colors-neutral-white);
 }

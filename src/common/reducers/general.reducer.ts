@@ -9,6 +9,8 @@ import {
   IS_BRIDGE_LOADED,
   IS_VAULT_CLIENT_LOADED,
   SHOW_ACCOUNT_MODAL,
+  SHOW_BUY_MODAL,
+  SHOW_SIGN_TERMS_MODAL,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS
 } from '../types/actions.types';
@@ -19,6 +21,8 @@ const initialState = {
   vaultClientLoaded: false,
   hasFeedbackModalBeenDisplayed: false,
   showAccountModal: false,
+  isBuyModalOpen: false,
+  isSignTermsModalOpen: false,
   totalWrappedTokenAmount: BitcoinAmount.zero(),
   totalLockedCollateralTokenAmount: newMonetaryAmount(0, RELAY_CHAIN_NATIVE_TOKEN),
   btcRelayHeight: 0,
@@ -57,6 +61,10 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       return { ...state, vaultClientLoaded: action.isLoaded };
     case SHOW_ACCOUNT_MODAL:
       return { ...state, showAccountModal: action.showAccountModal };
+    case SHOW_BUY_MODAL:
+      return { ...state, isBuyModalOpen: action.isBuyModalOpen };
+    case SHOW_SIGN_TERMS_MODAL:
+      return { ...state, isSignTermsModalOpen: action.isSignTermsModalOpen };
     default:
       return state;
   }

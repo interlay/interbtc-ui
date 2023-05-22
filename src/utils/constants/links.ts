@@ -1,3 +1,5 @@
+import { BANXA_LINK } from '@/config/links';
+
 const URL_PARAMETERS = Object.freeze({
   VAULT: {
     ACCOUNT: 'vaultAccount',
@@ -26,7 +28,14 @@ const PAGES = Object.freeze({
   VAULT: `/vaults/:${URL_PARAMETERS.VAULT.ACCOUNT}/:${URL_PARAMETERS.VAULT.COLLATERAL}/:${URL_PARAMETERS.VAULT.WRAPPED}`,
   FEEDBACK: '/feedback',
   ACTIONS: '/actions',
-  LOANS: '/lending'
+  LOANS: '/lending',
+  SWAP: '/swap',
+  POOLS: '/pools',
+  WALLET: '/wallet'
+});
+
+const EXTERNAL_PAGES = Object.freeze({
+  BANXA: `${BANXA_LINK}`
 });
 
 const QUERY_PARAMETERS = Object.freeze({
@@ -35,7 +44,19 @@ const QUERY_PARAMETERS = Object.freeze({
   ISSUE_REQUESTS_PAGE: 'issueRequestPage',
   REDEEM_REQUESTS_PAGE: 'redeemRequestPage',
   ISSUE_REQUEST_ID: 'issueRequestId',
-  REDEEM_REQUEST_ID: 'redeemRequestId'
+  REDEEM_REQUEST_ID: 'redeemRequestId',
+  SWAP: {
+    FROM: 'from',
+    TO: 'to'
+  }
 });
 
-export { PAGES, QUERY_PARAMETERS, URL_PARAMETERS };
+const EXTERNAL_QUERY_PARAMETERS = Object.freeze({
+  BANXA: {
+    WALLET_ADDRESS: 'walletAddress',
+    FIAT_TYPE: 'fiatType',
+    COIN_TYPE: 'coinType'
+  }
+});
+
+export { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS, PAGES, QUERY_PARAMETERS, URL_PARAMETERS };

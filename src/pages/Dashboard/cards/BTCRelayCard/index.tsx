@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
 import { formatNumber } from '@/common/utils/utils';
-import Ring64, { Ring64Title, Ring64Value } from '@/components/Ring64';
+import Ring64, { Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
 import { PAGES } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
 

@@ -1,4 +1,4 @@
-import { BorrowPosition, LendPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
+import { BorrowPosition, CollateralPosition, LoanAsset, TickerToData } from '@interlay/interbtc-api';
 import { useMemo } from 'react';
 
 import { BorrowTables } from './BorrowTables';
@@ -11,7 +11,7 @@ const getDisabledAssetsTicker = (assets: TickerToData<LoanAsset>) =>
     .map((activeAsset) => activeAsset.currency.ticker);
 
 type LoansTablesProps = {
-  lendPositions: LendPosition[];
+  lendPositions: CollateralPosition[];
   borrowPositions: BorrowPosition[];
   assets: TickerToData<LoanAsset>;
 };

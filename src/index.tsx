@@ -3,6 +3,8 @@ import './index.css';
 import '@/component-library/theme/theme.interlay.css';
 import '@/component-library/theme/theme.kintsugi.css';
 
+import { configGlobalBig } from '@interlay/monetary-js';
+import { OverlayProvider } from '@react-aria/overlays';
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -16,19 +18,20 @@ import ThemeWrapper from '@/parts/ThemeWrapper';
 import { Subscriptions } from '@/utils/hooks/api/tokens/use-balances-subscription';
 
 import App from './App';
+import { GeoblockingWrapper } from './components/Geoblock/Geoblock';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 
-const DeveloperConsole = React.lazy(
-  () => import(/* webpackChunkName: 'developer-console' */ '@/lib/substrate/components/DeveloperConsole')
-);
+configGlobalBig();
 
 window.isFetchingActive = false;
 
 const queryClient = new QueryClient();
 
+// MEMO: temporarily removed React.StrictMode. We should add back when react-spectrum handles
+// it across their library. (Issue: https://github.com/adobe/react-spectrum/issues/779#issuecomment-1353734729)
 ReactDOM.render(
-  <React.StrictMode>
+  <GeoblockingWrapper>
     <Router>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
@@ -37,20 +40,19 @@ ReactDOM.render(
               <ThemeWrapper>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <Subscriptions>
-                    <App />
+                    <OverlayProvider>
+                      <App />
+                    </OverlayProvider>
                   </Subscriptions>
                 </SubstrateLoadingAndErrorHandlingWrapper>
               </ThemeWrapper>
-              <React.Suspense fallback={null}>
-                <DeveloperConsole />
-              </React.Suspense>
             </SubstrateProvider>
           </Provider>
         </HelmetProvider>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </Router>
-  </React.StrictMode>,
+  </GeoblockingWrapper>,
   document.getElementById('root')
 );
 

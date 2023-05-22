@@ -11,9 +11,9 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 
 import { initGeneralDataAction, isFaucetLoaded, isVaultClientLoaded } from '@/common/actions/general.actions';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
-import ErrorFallback from '@/components/ErrorFallback';
-import FullLoadingSpinner from '@/components/FullLoadingSpinner';
 import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import Layout from '@/parts/Layout';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
@@ -21,8 +21,8 @@ import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
-import TestnetBanner from './components/TestnetBanner';
 import * as constants from './constants';
+import TestnetBanner from './legacy-components/TestnetBanner';
 import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
@@ -35,6 +35,9 @@ const Vaults = React.lazy(() => import(/* webpackChunkName: 'vaults' */ '@/pages
 // TODO: last task will be to delete legacy dashboard and rename vault dashboard
 const Vault = React.lazy(() => import(/* webpackChunkName: 'vault' */ '@/pages/Vaults/Vault'));
 const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Loans'));
+const Swap = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/AMM'));
+const Pools = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/AMM/Pools'));
+const Wallet = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/Wallet'));
 const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
@@ -45,6 +48,8 @@ const App = (): JSX.Element => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
+  const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
+  const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -59,7 +64,7 @@ const App = (): JSX.Element => {
   // Loads the faucet
   React.useEffect(() => {
     if (!bridgeLoaded) return;
-    if (process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Mainnet) return;
+    // if (process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Mainnet) return;
 
     (async () => {
       try {
@@ -75,12 +80,14 @@ const App = (): JSX.Element => {
     [GRAPHQL_FETCHER, vaultsByAccountIdQuery(selectedAccount?.address ?? '')],
     graphqlFetcher<GraphqlReturn<string[]>>(),
     {
-      enabled: bridgeLoaded && !!selectedAccount,
+      enabled: process.env.NODE_ENV !== 'test' && bridgeLoaded && !!selectedAccount,
       onSuccess: ({ data }) => {
         const isVaultOperator = data?.vaults.length > 0;
         dispatch(isVaultClientLoaded(isVaultOperator));
       },
-      onError: (error) => console.log('[App useQuery 1] error.message => ', error.message)
+      onError: (error) => {
+        console.log('[App useQuery 1] error.message => ', error.message);
+      }
     }
   );
   useErrorHandler(vaultsError);
@@ -190,10 +197,25 @@ const App = (): JSX.Element => {
                       <Loans />
                     </Route>
                   )}
+                  {isAMMEnabled && (
+                    <Route path={PAGES.SWAP}>
+                      <Swap />
+                    </Route>
+                  )}
+                  {isAMMEnabled && (
+                    <Route path={PAGES.POOLS}>
+                      <Pools />
+                    </Route>
+                  )}
+                  {isWalletEnabled && (
+                    <Route path={PAGES.WALLET}>
+                      <Wallet />
+                    </Route>
+                  )}
                   <Route path={PAGES.ACTIONS}>
                     <Actions />
                   </Route>
-                  <Redirect exact from={PAGES.HOME} to={PAGES.BRIDGE} />
+                  <Redirect exact from={PAGES.HOME} to={isWalletEnabled ? PAGES.WALLET : PAGES.BRIDGE} />
                   <Route path='*'>
                     <NoMatch />
                   </Route>

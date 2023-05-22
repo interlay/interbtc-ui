@@ -13,17 +13,19 @@ import { toast } from 'react-toastify';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import InterlayCinnabarOutlinedButton from '@/components/buttons/InterlayCinnabarOutlinedButton';
-import InterlayMulberryOutlinedButton from '@/components/buttons/InterlayMulberryOutlinedButton';
-import ErrorMessage from '@/components/ErrorMessage';
-import NumberInput from '@/components/NumberInput';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import InterlayCinnabarOutlinedButton from '@/legacy-components/buttons/InterlayCinnabarOutlinedButton';
+import InterlayMulberryOutlinedButton from '@/legacy-components/buttons/InterlayMulberryOutlinedButton';
+import ErrorMessage from '@/legacy-components/ErrorMessage';
+import NumberInput from '@/legacy-components/NumberInput';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
+import { getExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 
@@ -59,7 +61,6 @@ const RequestReplacementModal = ({
   } = useForm<RequestReplacementFormData>();
   const amount = watch(AMOUNT) || '0';
 
-
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const handleError = useErrorHandler();
@@ -71,7 +72,7 @@ const RequestReplacementModal = ({
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [griefingRate, setGriefingRate] = React.useState(new Big(10.0)); // Set default to 10%
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
+  const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_REDEEM_DUST_AMOUNT));
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
@@ -84,11 +85,7 @@ const RequestReplacementModal = ({
     (async () => {
       try {
         setStatus(STATUSES.PENDING);
-        const [
-          theGriefingRate,
-          theDustValue,
-          theBtcToGovernanceTokenRate
-        ] = await Promise.all([
+        const [theGriefingRate, theDustValue, theBtcToGovernanceTokenRate] = await Promise.all([
           window.bridge.fee.getReplaceGriefingCollateralRate(),
           window.bridge.redeem.getDustValue(),
           getExchangeRate(GOVERNANCE_TOKEN)
@@ -108,7 +105,10 @@ const RequestReplacementModal = ({
     try {
       setSubmitStatus(STATUSES.PENDING);
       const amountPolkaBtc = new BitcoinAmount(data[AMOUNT]);
-      await window.bridge.replace.request(amountPolkaBtc, collateralToken);
+      // When requesting a replace, wait for the finalized event because we cannot revert BTC transactions.
+      // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
+      const finalizedStatus = getExtrinsicStatus('Finalized');
+      submitExtrinsic(window.bridge.replace.request(amountPolkaBtc, collateralToken), finalizedStatus);
 
       const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);
@@ -120,14 +120,9 @@ const RequestReplacementModal = ({
     }
   });
 
-  if (
-    status === STATUSES.IDLE ||
-    status === STATUSES.PENDING ||
-    isBalancesLoading
-  ) {
+  if (status === STATUSES.IDLE || status === STATUSES.PENDING || isBalancesLoading) {
     return <PrimaryColorEllipsisLoader />;
   }
-
 
   if (status === STATUSES.RESOLVED) {
     const validateAmount = (value: number): string | undefined => {

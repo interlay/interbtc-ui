@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import * as React from 'react';
 
-import NumberInput, { Props as NumberInputProps } from '@/components/NumberInput';
-import { TextFieldContainer, TextFieldHelperText, TextFieldLabel } from '@/components/TextField';
+import NumberInput, { Props as NumberInputProps } from '@/legacy-components/NumberInput';
+import { TextFieldContainer, TextFieldHelperText, TextFieldLabel } from '@/legacy-components/TextField';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface CustomProps {

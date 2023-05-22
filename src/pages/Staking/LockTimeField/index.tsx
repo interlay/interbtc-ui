@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import * as React from 'react';
 
-import NumberInput, { Props as NumberInputProps } from '@/components/NumberInput';
-import { TextFieldHelperText, TextFieldLabel } from '@/components/TextField';
 import { STAKE_LOCK_TIME } from '@/config/relay-chains';
+import NumberInput, { Props as NumberInputProps } from '@/legacy-components/NumberInput';
+import { TextFieldHelperText, TextFieldLabel } from '@/legacy-components/TextField';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 // MEMO: inspired by https://medium.com/codex/making-html-5-numeric-inputs-only-accept-integers-d3d117973d56
@@ -50,7 +50,7 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
           className={clsx('!text-xs', LABEL_TEXT_COLOR_CLASSES)}
           required={optional === false}
         >
-          Max {STAKE_LOCK_TIME.MAX} Weeks
+          Total {STAKE_LOCK_TIME.MAX} Weeks
         </TextFieldLabel>
         <div className={clsx('flex', 'justify-between', 'items-center')}>
           {optional === true && (
@@ -65,7 +65,7 @@ const LockTimeField = React.forwardRef<Ref, CustomProps & NumberInputProps>(
             <NumberInput
               ref={ref}
               id={id}
-              className={clsx('!w-12', {
+              className={clsx('!w-14', {
                 [clsx(
                   { 'border-interlayCinnabar': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                   { 'dark:border-kintsugiThunderbird': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },

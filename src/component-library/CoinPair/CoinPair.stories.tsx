@@ -4,21 +4,14 @@ import { CoinPair, CoinPairProps } from '.';
 
 const Template: Story<CoinPairProps> = (args) => <CoinPair {...args} />;
 
-const Small = Template.bind({});
-Small.args = {
+const Default = Template.bind({});
+Default.args = {
   coinOne: 'IBTC',
   coinTwo: 'KBTC',
-  size: 'small'
+  size: 'xl2'
 };
 
-const Large = Template.bind({});
-Large.args = {
-  coinOne: 'IBTC',
-  coinTwo: 'KBTC',
-  size: 'large'
-};
-
-export { Large, Small };
+export { Default };
 
 export default {
   title: 'Elements/CoinPair',

@@ -7,11 +7,13 @@ import { useQuery } from 'react-query';
 import { useTable } from 'react-table';
 
 import { formatDateTimePrecise, shortAddress, shortTxId } from '@/common/utils/utils';
-import AddressWithCopyUI from '@/components/AddressWithCopyUI';
-import ErrorFallback from '@/components/ErrorFallback';
-import ExternalLink from '@/components/ExternalLink';
-import PrimaryColorEllipsisLoader from '@/components/PrimaryColorEllipsisLoader';
-import InterlayPagination from '@/components/UI/InterlayPagination';
+import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
+import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
+import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
+import ErrorFallback from '@/legacy-components/ErrorFallback';
+import ExternalLink from '@/legacy-components/ExternalLink';
+import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
+import InterlayPagination from '@/legacy-components/UI/InterlayPagination';
 import InterlayTable, {
   InterlayTableContainer,
   InterlayTbody,
@@ -19,10 +21,9 @@ import InterlayTable, {
   InterlayTh,
   InterlayThead,
   InterlayTr
-} from '@/components/UI/InterlayTable';
-import StatusCell from '@/components/UI/InterlayTable/StatusCell';
-import { BTC_EXPLORER_ADDRESS_API, BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
-import { ISSUE_REDEEM_REQUEST_REFETCH_INTERVAL } from '@/config/parachain';
+} from '@/legacy-components/UI/InterlayTable';
+import StatusCell from '@/legacy-components/UI/InterlayTable/StatusCell';
+import ViewRequestDetailsLink from '@/legacy-components/ViewRequestDetailsLink';
 import SectionTitle from '@/parts/SectionTitle';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
@@ -30,6 +31,7 @@ import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-blo
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
 import redeemCountQuery from '@/services/queries/redeem-count-query';
+import { TXType } from '@/types/general.d';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
@@ -125,6 +127,14 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
         // TODO: should type properly (`Relay`)
         Cell: function FormattedCell({ row: { original: redeem } }: any) {
           return <>{formatDateTimePrecise(new Date(redeem.request.timestamp))}</>;
+        }
+      },
+      {
+        Header: t('view_details'),
+        classNames: ['text-left'],
+        // TODO: should type properly (`Relay`)
+        Cell: ({ row: { original: redeem } }: any) => {
+          return <ViewRequestDetailsLink id={redeem.id} txType={TXType.Redeem} />;
         }
       },
       {

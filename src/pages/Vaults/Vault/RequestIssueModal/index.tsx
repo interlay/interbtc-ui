@@ -1,4 +1,9 @@
-import { CollateralCurrencyExt, GovernanceCurrency, Issue } from '@interlay/interbtc-api';
+import {
+  CollateralCurrencyExt,
+  getIssueRequestsFromExtrinsicResult,
+  GovernanceCurrency,
+  Issue
+} from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -11,16 +16,12 @@ import { useSelector } from 'react-redux';
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import CloseIconButton from '@/components/buttons/CloseIconButton';
-import ErrorModal from '@/components/ErrorModal';
-import Hr2 from '@/components/hrs/Hr2';
-import PriceInfo from '@/components/PriceInfo';
-import SubmitButton from '@/components/SubmitButton';
-import TokenField from '@/components/TokenField';
-import InformationTooltip from '@/components/tooltips/InformationTooltip';
-import InterlayButtonBase from '@/components/UI/InterlayButtonBase';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/components/UI/InterlayModal';
-import { BLOCKS_BEHIND_LIMIT } from '@/config/parachain';
+import {
+  BLOCKS_BEHIND_LIMIT,
+  DEFAULT_ISSUE_BRIDGE_FEE_RATE,
+  DEFAULT_ISSUE_DUST_AMOUNT,
+  DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE
+} from '@/config/parachain';
 import {
   GOVERNANCE_TOKEN,
   GOVERNANCE_TOKEN_SYMBOL,
@@ -29,11 +30,21 @@ import {
   WRAPPED_TOKEN_SYMBOL,
   WrappedTokenLogoIcon
 } from '@/config/relay-chains';
+import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
+import ErrorModal from '@/legacy-components/ErrorModal';
+import Hr2 from '@/legacy-components/hrs/Hr2';
+import PriceInfo from '@/legacy-components/PriceInfo';
+import SubmitButton from '@/legacy-components/SubmitButton';
+import TokenField from '@/legacy-components/TokenField';
+import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
+import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
+import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
+import { getExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -72,12 +83,12 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
   const [status, setStatus] = React.useState(STATUSES.IDLE);
   const [vaultCapacity, setVaultCapacity] = React.useState(BitcoinAmount.zero());
-  const [feeRate, setFeeRate] = React.useState(new Big(0.005)); // Set default to 0.5%
-  const [depositRate, setDepositRate] = React.useState(new Big(0.00005)); // Set default to 0.005%
+  const [issueFeeRate, setIssueFeeRate] = React.useState(new Big(DEFAULT_ISSUE_BRIDGE_FEE_RATE));
+  const [depositRate, setDepositRate] = React.useState(new Big(DEFAULT_ISSUE_GRIEFING_COLLATERAL_RATE));
   const [btcToGovernanceTokenRate, setBTCToGovernanceTokenRate] = React.useState(
     new ExchangeRate<Bitcoin, GovernanceCurrency>(Bitcoin, GOVERNANCE_TOKEN, new Big(0))
   );
-  const [dustValue, setDustValue] = React.useState(BitcoinAmount.zero());
+  const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT));
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
@@ -107,11 +118,11 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
       try {
         setStatus(STATUSES.PENDING);
         const [
-          theFeeRate,
-          theDepositRate,
-          theDustValue,
-          theBtcToGovernanceToken,
-          issuableAmount
+          feeRateResult,
+          depositRateResult,
+          dustValueResult,
+          btcToGovernanceTokenResult,
+          vaultIssuableAmountResult
         ] = await Promise.allSettled([
           // Loading this data is not strictly required as long as the constantly set values did
           // not change. However, you will not see the correct value for the security deposit.
@@ -123,20 +134,20 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
           window.bridge.issue.getVaultIssuableAmount(vaultAccountId, collateralToken)
         ]);
         setStatus(STATUSES.RESOLVED);
-        if (theFeeRate.status === 'fulfilled') {
-          setFeeRate(theFeeRate.value);
+        if (feeRateResult.status === 'fulfilled') {
+          setIssueFeeRate(feeRateResult.value);
         }
-        if (theDepositRate.status === 'fulfilled') {
-          setDepositRate(theDepositRate.value);
+        if (depositRateResult.status === 'fulfilled') {
+          setDepositRate(depositRateResult.value);
         }
-        if (theDustValue.status === 'fulfilled') {
-          setDustValue(theDustValue.value);
+        if (dustValueResult.status === 'fulfilled') {
+          setDustValue(dustValueResult.value);
         }
-        if (issuableAmount.status === 'fulfilled') {
-          setVaultCapacity(issuableAmount.value);
+        if (vaultIssuableAmountResult.status === 'fulfilled') {
+          setVaultCapacity(vaultIssuableAmountResult.value);
         }
-        if (theBtcToGovernanceToken.status === 'fulfilled') {
-          setBTCToGovernanceTokenRate(theBtcToGovernanceToken.value);
+        if (btcToGovernanceTokenResult.status === 'fulfilled') {
+          setBTCToGovernanceTokenRate(btcToGovernanceTokenResult.value);
         } else {
           setError(WRAPPED_TOKEN_AMOUNT, {
             type: 'validate',
@@ -169,16 +180,21 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
       const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
 
-      const result = await window.bridge.issue.request(
+      const extrinsicData = await window.bridge.issue.request(
         wrappedTokenAmount,
         vaultAccountId,
         collateralToken,
         false, // default
-        0, // default
         vaults
       );
+      // When requesting an issue, wait for the finalized event because we cannot revert BTC transactions.
+      // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
+      const finalizedStatus = getExtrinsicStatus('Finalized');
+      const extrinsicResult = await submitExtrinsic(extrinsicData, finalizedStatus);
+      const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, extrinsicResult);
 
-      const issueRequest = result[0];
+      // TODO: handle issue aggregation
+      const issueRequest = issueRequests[0];
       handleSubmittedRequestModalOpen(issueRequest);
     } catch (error) {
       setSubmitStatus(STATUSES.REJECTED);
@@ -243,7 +259,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
   };
 
   const parsedBTCAmount = new BitcoinAmount(btcAmount);
-  const bridgeFee = parsedBTCAmount.mul(feeRate);
+  const bridgeFee = parsedBTCAmount.mul(issueFeeRate);
   const securityDeposit = btcToGovernanceTokenRate.toCounter(parsedBTCAmount).mul(depositRate);
   const wrappedTokenAmount = parsedBTCAmount.sub(bridgeFee);
 
