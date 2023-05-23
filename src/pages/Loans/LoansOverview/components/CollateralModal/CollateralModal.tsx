@@ -1,30 +1,18 @@
-import { CollateralPosition, CurrencyExt, LoanAsset } from '@interlay/interbtc-api';
-import { ISubmittableResult } from '@polkadot/types/types';
+import { CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
 import { AuthCTA } from '@/components';
 import ErrorModal from '@/legacy-components/ErrorModal';
-import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { BorrowLimit } from '../BorrowLimit';
 import { LoanActionInfo } from '../LoanActionInfo';
 import { StyledDescription } from './CollateralModal.style';
-
-type ToggleCollateralVariables = { isEnabling: boolean; underlyingCurrency: CurrencyExt };
-
-const toggleCollateral = ({ isEnabling, underlyingCurrency }: ToggleCollateralVariables) => {
-  if (isEnabling) {
-    return submitExtrinsicPromise(window.bridge.loans.enableAsCollateral(underlyingCurrency));
-  } else {
-    return submitExtrinsicPromise(window.bridge.loans.disableAsCollateral(underlyingCurrency));
-  }
-};
 
 type CollateralModalVariant = 'enable' | 'disable' | 'disable-error';
 
@@ -73,14 +61,12 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const { getLTV } = useGetLTV();
   const prices = useGetPrices();
 
-  const handleSuccess = () => {
-    toast.success('Successfully toggled collateral');
-    onClose?.();
-    refetch();
-  };
-
-  const toggleCollateralMutation = useMutation<ISubmittableResult, Error, ToggleCollateralVariables>(toggleCollateral, {
-    onSuccess: handleSuccess
+  const transaction = useTransaction({
+    onSuccess: () => {
+      toast.success('Successfully toggled collateral');
+      onClose?.();
+      refetch();
+    }
   });
 
   if (!asset || !position) {
@@ -100,9 +86,11 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
       return onClose?.();
     }
 
-    const isEnabling = variant === 'enable';
-
-    return toggleCollateralMutation.mutate({ isEnabling, underlyingCurrency: position.amount.currency });
+    if (variant === 'enable') {
+      return transaction.execute(Transaction.LOANS_ENABLE_COLLATERAL, asset.currency);
+    } else {
+      return transaction.execute(Transaction.LOANS_DISABLE_COLLATERAL, asset.currency);
+    }
   };
 
   return (
@@ -117,17 +105,17 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
           </Flex>
         </ModalBody>
         <ModalFooter>
-          <AuthCTA size='large' onPress={handleClickBtn} loading={toggleCollateralMutation.isLoading}>
+          <AuthCTA size='large' onPress={handleClickBtn} loading={transaction.isLoading}>
             {content.buttonLabel}
           </AuthCTA>
         </ModalFooter>
       </Modal>
-      {toggleCollateralMutation.isError && (
+      {transaction.isError && (
         <ErrorModal
-          open={toggleCollateralMutation.isError}
-          onClose={() => toggleCollateralMutation.reset()}
+          open={transaction.isError}
+          onClose={() => transaction.reset()}
           title='Error'
-          description={toggleCollateralMutation.error?.message || ''}
+          description={transaction.error?.message || ''}
         />
       )}
     </>
