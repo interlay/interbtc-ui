@@ -82,7 +82,10 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
 
   // TODO: should type properly (`Relay`)
   const handleExecute = (request: any) => () => {
-    if (!request.backingPayment.btcTxId) return;
+    if (!request.backingPayment.btcTxId) {
+      console.error('Bitcoin transaction ID not identified yet.');
+      return;
+    }
 
     transaction.execute(request.id, request.backingPayment.btcTxId);
   };

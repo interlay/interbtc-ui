@@ -125,7 +125,7 @@ const SwapForm = ({
   });
 
   useDebounce(
-    async () => {
+    () => {
       if (!pair.input || !pair.output || !inputAmount) {
         return setTrade(undefined);
       }

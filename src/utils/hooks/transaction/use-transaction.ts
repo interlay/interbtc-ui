@@ -18,7 +18,9 @@ type UseTransactionOptions = Omit<
 
 // TODO: add feeEstimate and feeEstimateAsync
 type ExecuteArgs<T extends Transaction> = {
+  // Executes the transaction
   execute<D extends Transaction = T>(...args: TransactionArgs<D>): void;
+  // Similar to execute but returns a promise which can be awaited.
   executeAsync<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<ISubmittableResult>;
 };
 

@@ -87,9 +87,9 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
     }
 
     if (variant === 'enable') {
-      return transaction.execute(Transaction.LOANS_ENABLED_COLLATERAL, asset.currency);
+      return transaction.execute(Transaction.LOANS_ENABLE_COLLATERAL, asset.currency);
     } else {
-      return transaction.execute(Transaction.LOANS_DISABLED_COLLATERAL, asset.currency);
+      return transaction.execute(Transaction.LOANS_DISABLE_COLLATERAL, asset.currency);
     }
   };
 

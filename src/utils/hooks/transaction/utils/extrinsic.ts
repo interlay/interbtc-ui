@@ -4,8 +4,12 @@ import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { Transaction, TransactionActions } from '../types';
 
 /**
- * Maps each transaction to the correct lib call,
- * while maintaining a safe-type check just like in redux
+ * SUMMARY: Maps each transaction to the correct lib call,
+ * while maintaining a safe-type check.
+ * HOW TO ADD NEW TRANSACTION: find the correct module to add the transaction
+ * in the types folder. In case you are adding a new type to the loans modules, go
+ * to types/loans and add your new transaction as an action. This actions needs to also be added to the
+ * types/index TransactionActions type. After that, you should be able to add it to the function.
  * @param {TransactionActions} params contains the type of transaction and
  * the related args to call the mapped lib call
  * @return {Promise<ExtrinsicData>} every transaction return an extrinsic
@@ -64,9 +68,9 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
       return window.bridge.loans.withdraw(...params.args);
     case Transaction.LOANS_WITHDRAW_ALL:
       return window.bridge.loans.withdrawAll(...params.args);
-    case Transaction.LOANS_DISABLED_COLLATERAL:
+    case Transaction.LOANS_DISABLE_COLLATERAL:
       return window.bridge.loans.disableAsCollateral(...params.args);
-    case Transaction.LOANS_ENABLED_COLLATERAL:
+    case Transaction.LOANS_ENABLE_COLLATERAL:
       return window.bridge.loans.enableAsCollateral(...params.args);
     /* END - LOANS */
 

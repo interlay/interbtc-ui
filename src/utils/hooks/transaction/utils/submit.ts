@@ -66,8 +66,9 @@ const getErrorMessage = (api: ApiPromise, dispatchError: DispatchError) => {
 
   // Bad origin
   if (isBadOrigin) {
-    return message.concat(` The error is caused by using an incorrect account.
-        The error code is BadOrigin ${dispatchError}.`);
+    return message.concat(
+      ` The error is caused by using an incorrect account. The error code is BadOrigin ${dispatchError}.`
+    );
   }
 
   return message.concat(` The error is ${dispatchError}.`);

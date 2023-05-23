@@ -9,12 +9,12 @@ interface LoansClaimRewardsAction extends TransactionAction {
 }
 
 interface LoansEnabledCollateralAction extends TransactionAction {
-  type: Transaction.LOANS_ENABLED_COLLATERAL;
+  type: Transaction.LOANS_ENABLE_COLLATERAL;
   args: Parameters<InterBtcApi['loans']['enableAsCollateral']>;
 }
 
 interface LoansDisabledCollateralAction extends TransactionAction {
-  type: Transaction.LOANS_DISABLED_COLLATERAL;
+  type: Transaction.LOANS_DISABLE_COLLATERAL;
   args: Parameters<InterBtcApi['loans']['disableAsCollateral']>;
 }
 
