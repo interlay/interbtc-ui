@@ -160,7 +160,6 @@ switch (process.env.REACT_APP_RELAY_CHAIN_NAME) {
     // TODO: temporary
     TRANSACTION_FEE_AMOUNT = newMonetaryAmount(0.2, GOVERNANCE_TOKEN, true);
     XCM_ADAPTERS = {
-      hydra: new HydraAdapter(),
       interlay: new InterlayAdapter(),
       acala: new AcalaAdapter(),
       astar: new AstarAdapter(),
