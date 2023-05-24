@@ -56,11 +56,11 @@ import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fet
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
-import { getExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import ManualVaultSelectUI from '../ManualVaultSelectUI';
 import SubmittedIssueRequestModal from './SubmittedIssueRequestModal';
@@ -141,6 +141,8 @@ const IssueForm = (): JSX.Element | null => {
     enabled: !!bridgeLoaded
   });
   useErrorHandler(requestLimitsError);
+
+  const transaction = useTransaction(Transaction.ISSUE_REQUEST);
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -321,18 +323,14 @@ const IssueForm = (): JSX.Element | null => {
 
         const collateralToken = await currencyIdToMonetaryCurrency(window.bridge.api, vaultId.currencies.collateral);
 
-        const extrinsicData = await window.bridge.issue.request(
+        const result = await transaction.executeAsync(
           monetaryBtcAmount,
           vaultId.accountId,
           collateralToken,
           false, // default
           vaults
         );
-        // When requesting an issue, wait for the finalized event because we cannot revert BTC transactions.
-        // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
-        const finalizedStatus = getExtrinsicStatus('Finalized');
-        const extrinsicResult = await submitExtrinsic(extrinsicData, finalizedStatus);
-        const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, extrinsicResult);
+        const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, result);
 
         // TODO: handle issue aggregation
         const issueRequest = issueRequests[0];

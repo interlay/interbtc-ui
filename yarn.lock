@@ -2075,10 +2075,10 @@
   resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.5.0.tgz#483b44ba2c8b8d4391e1d2c863898d7dd0cc0296"
   integrity sha512-aaRnYxBb3MU2FNJf3Ut9RMTUqqU3as0aI1lQhgo2n9Fa67wRu14iOGqx93xB+uMNVfNwZ5B3y/Ndm7qZGuFeMQ==
 
-"@heroicons/react@^2.0.0":
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.12.tgz#7e5a16c82512f89a30266dd36f8b8465b3e3e216"
-  integrity sha512-FZxKh3i9aKIDxyALTgIpSF2t6V6/eZfF5mRu41QlwkX3Oxzecdm1u6dpft6PQGxIBwO7TKYWaMAYYL8mp/EaOg==
+"@heroicons/react@^2.0.18":
+  version "2.0.18"
+  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-2.0.18.tgz#f80301907c243df03c7e9fd76c0286e95361f7c1"
+  integrity sha512-7TyMjRrZZMBPa+/5Y8lN0iyvUU/01PeMGX2+RE7cQWpEUIcb4QotzUObFkJDejj/HUH4qjP/eQ0gzzKs2f+6Yw==
 
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
@@ -2099,10 +2099,10 @@
   resolved "https://registry.yarnpkg.com/@iarna/toml/-/toml-2.2.5.tgz#b32366c89b43c6f8cefbdefac778b9c828e3ba8c"
   integrity sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==
 
-"@interlay/bridge@^0.3.9":
-  version "0.3.9"
-  resolved "https://registry.yarnpkg.com/@interlay/bridge/-/bridge-0.3.9.tgz#fc39c64708eab2f55cb0bbb970f2f0e72583cb37"
-  integrity sha512-QCeTux1f3LwLJ/dcfHmOTOuF8ocfpo9WDNV7Z1GWTHX/I8lspidj4xh8c/g2+jNZnHMiINXCSvHGPPr05lTnQg==
+"@interlay/bridge@^0.3.10":
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/@interlay/bridge/-/bridge-0.3.10.tgz#d686b83af91f99a1f62b72cfbb8d127c60557200"
+  integrity sha512-8yDfhvDNIeaW07Kbfvjp37YUNpsKsSXooT5JVfC1AdQs9ej51fbuhINUK31JNncI0xCWhTBu72Wq0ZFIQNm8RA==
   dependencies:
     "@acala-network/api" "4.1.8-13"
     "@acala-network/sdk" "4.1.8-13"
@@ -2120,14 +2120,14 @@
   dependencies:
     axios "^0.21.1"
 
-"@interlay/interbtc-api@2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.2.2.tgz#4803a80244abc9ef404dddefd265b9ece7ca859f"
-  integrity sha512-NuRjjIqeUPkt+aOTTmjMhx3TKAsL4id8kubiQsrAcyhsZnsnv/1bCXECzAWaZHVSi+XcxzfuoNLOxqrrx2+ISw==
+"@interlay/interbtc-api@2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@interlay/interbtc-api/-/interbtc-api-2.2.4.tgz#28b429d066d35f77fdc72f4cf57e2452507c37f7"
+  integrity sha512-cJxSE7J41JPE8QhV0YiLCJEfvpv9JcSWmieITTSOWQCW8GFFXnSTU0iPA2Tgw6s9ea3uxoM2DLGhlDQL8c0ktw==
   dependencies:
     "@interlay/esplora-btc-api" "0.4.0"
     "@interlay/interbtc-types" "1.12.0"
-    "@interlay/monetary-js" "0.7.2"
+    "@interlay/monetary-js" "0.7.3"
     "@polkadot/api" "9.14.2"
     big.js "6.1.1"
     bitcoin-core "^3.0.0"
@@ -2147,10 +2147,10 @@
   resolved "https://registry.yarnpkg.com/@interlay/interbtc-types/-/interbtc-types-1.12.0.tgz#07dc8e15690292387124dbc2bbb7bf5bc8b68001"
   integrity sha512-ELJa2ftIbe8Ds2ejS7kO5HumN9EB5l2OBi3Qsy5iHJsHKq2HtXfFoKnW38HarM6hADrWG+e/yNGHSKJIJzEZuA==
 
-"@interlay/monetary-js@0.7.2":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.7.2.tgz#a54a315b60be12f5b1a9c31f0d71d5e8ee7ba174"
-  integrity sha512-SqNKJKBEstXuLnzqWi+ON+9ImrNVlKqZpXfiTtT3bcvxqh4jnVsGbYVe2I0FqDWtilCWq6/1RjKkpaSG2dvJhA==
+"@interlay/monetary-js@0.7.3":
+  version "0.7.3"
+  resolved "https://registry.yarnpkg.com/@interlay/monetary-js/-/monetary-js-0.7.3.tgz#0bf4c56b15fde2fd0573e6cac185b0703f368133"
+  integrity sha512-LbCtLRNjl1/LO8R1ay6lJwKgOC/J40YywF+qSuQ7hEjLIkAslY5dLH11heQgQW9hOmqCSS5fTUQWXhmYQr6Ksg==
   dependencies:
     "@types/big.js" "6.1.2"
     big.js "6.1.1"

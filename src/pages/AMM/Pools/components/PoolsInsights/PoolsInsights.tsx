@@ -1,16 +1,15 @@
 import { LiquidityPool } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { formatUSD } from '@/common/utils/utils';
 import { Card, Dl, DlGroup } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/pages/AMM/shared/utils';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import { StyledDd, StyledDt } from './PoolsInsights.style';
 import { calculateClaimableFarmingRewardUSD } from './utils';
@@ -55,17 +54,11 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
     refetch();
   };
 
-  const mutateClaimRewards = async () => {
-    if (accountPoolsData !== undefined) {
-      await submitExtrinsic(window.bridge.amm.claimFarmingRewards(accountPoolsData.claimableRewards));
-    }
-  };
-
-  const claimRewardsMutation = useMutation<void, Error, void>(mutateClaimRewards, {
+  const transaction = useTransaction(Transaction.AMM_CLAIM_REWARDS, {
     onSuccess: handleSuccess
   });
 
-  const handleClickClaimRewards = () => claimRewardsMutation.mutate();
+  const handleClickClaimRewards = () => accountPoolsData && transaction.execute(accountPoolsData.claimableRewards);
 
   const hasClaimableRewards = totalClaimableRewardUSD > 0;
   return (
@@ -88,7 +81,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
           <StyledDd color='secondary'>{formatUSD(totalClaimableRewardUSD, { compact: true })}</StyledDd>
         </DlGroup>
         {hasClaimableRewards && (
-          <AuthCTA onPress={handleClickClaimRewards} loading={claimRewardsMutation.isLoading}>
+          <AuthCTA onPress={handleClickClaimRewards} loading={transaction.isLoading}>
             Claim
           </AuthCTA>
         )}
