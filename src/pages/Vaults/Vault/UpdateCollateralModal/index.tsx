@@ -21,10 +21,10 @@ import TokenField from '@/legacy-components/TokenField';
 import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
-import { submitExtrinsic, submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 enum CollateralUpdateStatus {
   Close,
@@ -129,6 +129,8 @@ const UpdateCollateralModal = ({
   );
   useErrorHandler(vaultCollateralizationError);
 
+  const transaction = useTransaction();
+
   const handleClose = chain(() => resetField(COLLATERAL_TOKEN_AMOUNT), onClose);
 
   const onSubmit = async (data: UpdateCollateralFormData) => {
@@ -142,9 +144,9 @@ const UpdateCollateralModal = ({
         true
       ) as MonetaryAmount<CollateralCurrencyExt>;
       if (collateralUpdateStatus === CollateralUpdateStatus.Deposit) {
-        await submitExtrinsic(window.bridge.vaults.depositCollateral(collateralTokenAmount));
+        await transaction.executeAsync(Transaction.VAULTS_DEPOSIT_COLLATERAL, collateralTokenAmount);
       } else if (collateralUpdateStatus === CollateralUpdateStatus.Withdraw) {
-        await submitExtrinsicPromise(window.bridge.vaults.withdrawCollateral(collateralTokenAmount));
+        await transaction.executeAsync(Transaction.VAULTS_WITHDRAW_COLLATERAL, collateralTokenAmount);
       } else {
         throw new Error('Something went wrong!');
       }

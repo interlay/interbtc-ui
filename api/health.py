@@ -2,7 +2,7 @@ import requests
 import dateutil.parser
 from datetime import datetime
 from dateutil.tz import tzutc
-from flask import Flask, jsonify
+from flask import Flask, jsonify, abort
 
 
 class Oracle:
@@ -80,30 +80,85 @@ class Relayer:
         return status["chainHeightDiff"] < 3 and status["secondsDiff"] < 7200  # 2hrs
 
 
+class Vault:
+    def __init__(self, baseUrl) -> None:
+        self.baseUrl = baseUrl
+
+    def _latestVaults(self):
+        q = """
+            query MyQuery {
+                vaults(limit: 10, orderBy: registrationBlock_active_DESC) {
+                    id
+                    registrationTimestamp
+                }
+            }
+        """
+        payload = {"query": q, "variables": None}
+        resp = requests.post(self.baseUrl, json=payload)
+        return resp.json()["data"]["vaults"]
+
+    def isHealthy(self):
+        vaults = self._latestVaults()
+        return len(self._latestVaults()) > 0
+
+
 KSM_URL = "https://api-kusama.interlay.io/graphql/graphql"
 INTR_URL = "https://api.interlay.io/graphql/graphql"
+TESTNET_INTR = "https://api-testnet.interlay.io/graphql/graphql"
+TESTNET_KINT = "https://api-dev-kintsugi.interlay.io/graphql/graphql"
 
 app = Flask(__name__)
 
 
-@app.route("/_health/ksm/oracle", methods=["GET"])
-def get_ksm_oracle_health():
-    return jsonify(Oracle(KSM_URL, "KSM").isHealthy())
+@app.route("/_health/<chain>/oracle", methods=["GET"])
+def get_oracle_health(chain):
+    def oracle():
+        if chain == "kint":
+            return Oracle(KSM_URL, "KSM")
+        elif chain == "intr":
+            return Oracle(INTR_URL, "DOT")
+        elif chain == "testnet_kint":
+            return Oracle(TESTNET_KINT, "KSM")
+        elif chain == "testnet_intr":
+            return Oracle(TESTNET_INTR, "DOT")
+        else:
+            abort(404)
+
+    return jsonify(oracle().isHealthy())
 
 
-@app.route("/_health/ksm/relay", methods=["GET"])
-def get_ksm_relayer_health():
-    return jsonify(Relayer(KSM_URL).isHealthy())
+@app.route("/_health/<chain>/relay", methods=["GET"])
+def get_relay_health(chain):
+    def relay():
+        if chain == "kint":
+            return Relayer(KSM_URL)
+        elif chain == "intr":
+            return Relayer(INTR_URL)
+        elif chain == "testnet_kint":
+            return Relayer(TESTNET_KINT)
+        elif chain == "testnet_intr":
+            return Relayer(TESTNET_INTR)
+        else:
+            abort(404)
+
+    return jsonify(relay().isHealthy())
 
 
-@app.route("/_health/intr/oracle", methods=["GET"])
-def get_intr_oracle_health():
-    return jsonify(Oracle(INTR_URL, "DOT").isHealthy())
+@app.route("/_health/<chain>/vault", methods=["GET"])
+def get_vault_health(chain):
+    def vault():
+        if chain == "kint":
+            return Vault(KSM_URL)
+        elif chain == "intr":
+            return Vault(INTR_URL)
+        elif chain == "testnet_kint":
+            return Vault(TESTNET_KINT)
+        elif chain == "testnet_intr":
+            return Vault(TESTNET_INTR)
+        else:
+            abort(404)
 
-
-@app.route("/_health/intr/relay", methods=["GET"])
-def get_intr_relayer_health():
-    return jsonify(Relayer(INTR_URL).isHealthy())
+    return jsonify(vault().isHealthy())
 
 
 if __name__ == "__main__":

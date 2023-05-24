@@ -1,6 +1,5 @@
-import { ISubmittableResult } from '@polkadot/types/types';
 import clsx from 'clsx';
-import { useMutation, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
@@ -9,7 +8,7 @@ import InterlayDenimOrKintsugiSupernovaContainedButton, {
 import ErrorModal from '@/legacy-components/ErrorModal';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 interface CustomProps {
   claimableRewardAmount: string;
@@ -24,20 +23,15 @@ const ClaimRewardsButton = ({
 
   const queryClient = useQueryClient();
 
-  const claimRewardsMutation = useMutation<ISubmittableResult, Error, void>(
-    () => {
-      return submitExtrinsic(window.bridge.escrow.withdrawRewards());
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccount?.address]);
-        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccount?.address]);
-      }
+  const transaction = useTransaction(Transaction.ESCROW_WITHDRAW_REWARDS, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewardEstimate', selectedAccount?.address]);
+      queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getRewards', selectedAccount?.address]);
     }
-  );
+  });
 
   const handleClaimRewards = () => {
-    claimRewardsMutation.mutate();
+    transaction.execute();
   };
 
   return (
@@ -45,19 +39,19 @@ const ClaimRewardsButton = ({
       <InterlayDenimOrKintsugiSupernovaContainedButton
         className={clsx('w-full', 'px-6', 'py-3', 'text-base', 'rounded-md', className)}
         onClick={handleClaimRewards}
-        pending={claimRewardsMutation.isLoading}
+        pending={transaction.isLoading}
         {...rest}
       >
         Claim {claimableRewardAmount} {GOVERNANCE_TOKEN_SYMBOL} Rewards
       </InterlayDenimOrKintsugiSupernovaContainedButton>
-      {claimRewardsMutation.isError && (
+      {transaction.isError && (
         <ErrorModal
-          open={claimRewardsMutation.isError}
+          open={transaction.isError}
           onClose={() => {
-            claimRewardsMutation.reset();
+            transaction.reset();
           }}
           title='Error'
-          description={claimRewardsMutation.error?.message || ''}
+          description={transaction.error?.message || ''}
         />
       )}
     </>
