@@ -212,6 +212,14 @@ const CrossChainTransferForm = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId, destinationChains]);
 
+  // TODO: When we refactor account select this should be handled there so
+  // that it's consitent across the application
+  useEffect(() => {
+    if (!accountId) return;
+    form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD, accountId?.toString());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountId]);
+
   if (!originatingChains || !destinationChains || !transferableTokens.length) {
     return (
       <Flex justifyContent='center'>
