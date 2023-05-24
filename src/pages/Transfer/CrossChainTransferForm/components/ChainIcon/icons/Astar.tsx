@@ -53,6 +53,6 @@ const ASTAR = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   </Icon>
 ));
 
-ASTAR.displayName = 'KINTSUGI';
+ASTAR.displayName = 'ASTAR';
 
 export { ASTAR };
