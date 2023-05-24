@@ -3,12 +3,7 @@ import { ChainName } from '@interlay/bridge';
 type XCMEndpointsRecord = Record<ChainName, string[]>;
 
 const XCMEndpoints: XCMEndpointsRecord = {
-  acala: [
-    'wss://acala-rpc-0.aca-api.network',
-    'wss://acala-rpc-1.aca-api.network',
-    'wss://acala-rpc-3.aca-api.network/ws',
-    'wss://acala-rpc.dwellir.com'
-  ],
+  acala: ['wss://acala-rpc-1.aca-api.network', 'wss://acala-rpc-3.aca-api.network/ws', 'wss://acala-rpc.dwellir.com'],
   astar: ['wss://rpc.astar.network', 'wss://astar-rpc.dwellir.com'],
   bifrost: ['wss://bifrost-rpc.dwellir.com'],
   heiko: ['wss://heiko-rpc.parallel.fi'],
