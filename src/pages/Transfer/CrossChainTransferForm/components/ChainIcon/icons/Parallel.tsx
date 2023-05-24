@@ -42,6 +42,6 @@ const PARALLEL = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   </Icon>
 ));
 
-PARALLEL.displayName = 'KINTSUGI';
+PARALLEL.displayName = 'PARALLEL';
 
 export { PARALLEL };
