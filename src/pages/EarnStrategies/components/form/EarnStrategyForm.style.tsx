@@ -17,6 +17,7 @@ const StyledDl = styled(Dl)`
 `;
 
 const StyledEarnStrategyFormContent = styled(Flex)`
+  margin-top: ${theme.spacing.spacing8};
   flex-direction: column;
   gap: ${theme.spacing.spacing8};
 `;
