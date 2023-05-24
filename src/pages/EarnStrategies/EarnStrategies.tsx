@@ -2,14 +2,14 @@ import { withErrorBoundary } from 'react-error-boundary';
 
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 
-import { EarnStrategyForm } from './components/EarnStrategyForm';
+import { EarnStrategyForm } from './components/form/EarnStrategyForm';
+import { StyledEarnStrategiesLayout } from './EarnStrategies.style';
 
 const EarnStrategies = (): JSX.Element => {
   return (
-    <h1>
-      Earn Strategies
+    <StyledEarnStrategiesLayout>
       <EarnStrategyForm riskVariant='low' />
-    </h1>
+    </StyledEarnStrategiesLayout>
   );
 };
 

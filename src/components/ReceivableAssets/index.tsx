@@ -7,18 +7,18 @@ import { CoinIcon, Dd, Dl, DlGroup, Dt, Flex, P } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-type WithdrawAssetsProps = {
-  pooledAmounts: MonetaryAmount<CurrencyExt>[];
+type ReceivableAssetsProps = {
+  assetAmounts: MonetaryAmount<CurrencyExt>[];
   prices?: Prices;
 };
 
-const WithdrawAssets = ({ pooledAmounts, prices }: WithdrawAssetsProps): JSX.Element => {
+const ReceivableAssets = ({ assetAmounts: pooledAmounts, prices }: ReceivableAssetsProps): JSX.Element => {
   const { t } = useTranslation();
 
   return (
     <Flex direction='column' gap='spacing4'>
       <P align='center' size='xs'>
-        {t('amm.pools.receivable_assets')}
+        {t('receivable_assets')}
       </P>
       <Dl direction='column' gap='spacing2'>
         {pooledAmounts.map((amount) => {
@@ -50,7 +50,7 @@ const WithdrawAssets = ({ pooledAmounts, prices }: WithdrawAssetsProps): JSX.Ele
   );
 };
 
-WithdrawAssets.displayName = 'WithdrawAssets';
+ReceivableAssets.displayName = 'ReceivableAssets';
 
-export { WithdrawAssets };
-export type { WithdrawAssetsProps };
+export { ReceivableAssets };
+export type { ReceivableAssetsProps };

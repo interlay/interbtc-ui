@@ -4,6 +4,9 @@ import { Dl, Flex, theme } from '@/component-library';
 
 const StyledEarnStrategyForm = styled(Flex)`
   margin-top: ${theme.spacing.spacing8};
+  background: ${theme.colors.bgPrimary};
+  padding: ${theme.spacing.spacing6};
+  border-radius: ${theme.rounded.md};
 `;
 
 const StyledDl = styled(Dl)`
@@ -15,7 +18,16 @@ const StyledDl = styled(Dl)`
 
 const StyledEarnStrategyFormContent = styled(Flex)`
   flex-direction: column;
-  gap: ${theme.spacing.spacing12};
+  gap: ${theme.spacing.spacing8};
 `;
 
-export { StyledDl, StyledEarnStrategyForm, StyledEarnStrategyFormContent };
+const StyledSwitchLabel = styled('label')`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-weight: ${theme.fontWeight.bold};
+`;
+
+export { StyledDl, StyledEarnStrategyForm, StyledEarnStrategyFormContent, StyledSwitchLabel };
