@@ -5,10 +5,9 @@ import {
   newAccountId,
   newMonetaryAmount
 } from '@interlay/interbtc-api';
-import { ISubmittableResult } from '@polkadot/types/types';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { displayMonetaryAmount } from '@/common/utils/utils';
@@ -21,7 +20,7 @@ import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
 // TODO: issue requests should not be typed here but further above in the app
@@ -57,21 +56,13 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
 
   const queryClient = useQueryClient();
 
-  // TODO: should type properly (`Relay`)
-  const executeMutation = useMutation<ISubmittableResult, Error, any>(
-    (variables: any) => {
-      if (!variables.backingPayment.btcTxId) {
-        throw new Error('Bitcoin transaction ID not identified yet.');
-      }
-      return submitExtrinsicPromise(window.bridge.issue.execute(variables.id, variables.backingPayment.btcTxId));
-    },
-    {
-      onSuccess: (_, variables) => {
-        queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
-        toast.success(t('issue_page.successfully_executed', { id: variables.id }));
-      }
+  const transaction = useTransaction(Transaction.ISSUE_EXECUTE, {
+    onSuccess: (_, variables) => {
+      const [requestId] = variables.args;
+      queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
+      toast.success(t('issue_page.successfully_executed', { id: requestId }));
     }
-  );
+  });
 
   const { data: vaultCapacity, error: vaultCapacityError } = useQuery({
     queryKey: 'vault-capacity',
@@ -91,7 +82,12 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
 
   // TODO: should type properly (`Relay`)
   const handleExecute = (request: any) => () => {
-    executeMutation.mutate(request);
+    if (!request.backingPayment.btcTxId) {
+      console.error('Bitcoin transaction ID not identified yet.');
+      return;
+    }
+
+    transaction.execute(request.id, request.backingPayment.btcTxId);
   };
 
   const backingPaymentAmount = newMonetaryAmount(request.backingPayment.amount, WRAPPED_TOKEN);
@@ -135,7 +131,7 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
       )}
       <InterlayDenimOrKintsugiMidnightOutlinedButton
         className='w-full'
-        pending={executeMutation.isLoading}
+        pending={transaction.isLoading}
         disabled={!executable || !isOwner}
         onClick={handleExecute(request)}
       >
@@ -143,16 +139,14 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         })}
       </InterlayDenimOrKintsugiMidnightOutlinedButton>
-      {executeMutation.isError && executeMutation.error && (
+      {transaction.isError && transaction.error && (
         <ErrorModal
-          open={!!executeMutation.error}
+          open={!!transaction.error}
           onClose={() => {
-            executeMutation.reset();
+            transaction.reset();
           }}
           title='Error'
-          description={
-            typeof executeMutation.error === 'string' ? executeMutation.error : executeMutation.error.message
-          }
+          description={typeof transaction.error === 'string' ? transaction.error : transaction.error.message}
         />
       )}
     </div>

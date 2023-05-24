@@ -21,8 +21,13 @@ const INTERLAY_DOS_AND_DONTS_DOCS_LINK = 'https://docs.interlay.io/#/vault/insta
 
 const BANXA_LINK = 'http://talisman.banxa.com/';
 
+const GEOBLOCK_API_ENDPOINT = '/check_access';
+const GEOBLOCK_REDIRECTION_LINK = 'https://www.interlay.io/geoblock';
+
 export {
   BANXA_LINK,
+  GEOBLOCK_API_ENDPOINT,
+  GEOBLOCK_REDIRECTION_LINK,
   INTERLAY_COMPANY_LINK,
   INTERLAY_CROWDLOAN_LINK,
   INTERLAY_DISCORD_LINK,

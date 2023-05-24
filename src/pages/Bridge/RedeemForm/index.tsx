@@ -1,5 +1,10 @@
-import { CollateralCurrencyExt, InterbtcPrimitivesVaultId, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
-import { getRedeemRequestsFromExtrinsicResult } from '@interlay/interbtc-api';
+import {
+  CollateralCurrencyExt,
+  getRedeemRequestsFromExtrinsicResult,
+  InterbtcPrimitivesVaultId,
+  newMonetaryAmount,
+  Redeem
+} from '@interlay/interbtc-api';
 import { Bitcoin, BitcoinAmount, ExchangeRate } from '@interlay/monetary-js';
 import Big from 'big.js';
 import clsx from 'clsx';
@@ -44,11 +49,11 @@ import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
 import { getColorShade } from '@/utils/helpers/colors';
-import { getExtrinsicStatus, submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import ManualVaultSelectUI from '../ManualVaultSelectUI';
 import SubmittedRedeemRequestModal from './SubmittedRedeemRequestModal';
@@ -113,6 +118,8 @@ const RedeemForm = (): JSX.Element | null => {
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
 
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
+
+  const transaction = useTransaction(Transaction.REDEEM_REQUEST);
 
   React.useEffect(() => {
     if (!monetaryWrappedTokenAmount) return;
@@ -295,16 +302,10 @@ const RedeemForm = (): JSX.Element | null => {
         const relevantVaults = new Map<InterbtcPrimitivesVaultId, BitcoinAmount>();
         // FIXME: a bit of a dirty workaround with the capacity
         relevantVaults.set(vaultId, monetaryWrappedTokenAmount.mul(2));
-        const extrinsicData = await window.bridge.redeem.request(
-          monetaryWrappedTokenAmount,
-          data[BTC_ADDRESS],
-          vaultId
-        );
-        // When requesting a redeem, wait for the finalized event because we cannot revert BTC transactions.
-        // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
-        const finalizedStatus = getExtrinsicStatus('Finalized');
-        const extrinsicResult = await submitExtrinsic(extrinsicData, finalizedStatus);
-        const redeemRequests = await getRedeemRequestsFromExtrinsicResult(window.bridge, extrinsicResult);
+
+        const result = await transaction.executeAsync(monetaryWrappedTokenAmount, data[BTC_ADDRESS], vaultId);
+
+        const redeemRequests = await getRedeemRequestsFromExtrinsicResult(window.bridge, result);
 
         // TODO: handle redeem aggregator
         const redeemRequest = redeemRequests[0];
