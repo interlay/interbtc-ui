@@ -142,6 +142,6 @@ const ACALA = forwardRef<SVGSVGElement, IconProps>((props, ref) => (
   </Icon>
 ));
 
-ACALA.displayName = 'KINTSUGI';
+ACALA.displayName = 'ACALA';
 
 export { ACALA };
