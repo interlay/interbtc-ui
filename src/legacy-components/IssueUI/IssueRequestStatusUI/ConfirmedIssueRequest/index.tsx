@@ -1,8 +1,7 @@
-import { ISubmittableResult } from '@polkadot/types/types';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FaCheckCircle } from 'react-icons/fa';
-import { useMutation, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { toast } from 'react-toastify';
 
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
@@ -16,7 +15,7 @@ import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
 import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-import { submitExtrinsicPromise } from '@/utils/helpers/extrinsic';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useQueryParams from '@/utils/hooks/use-query-params';
 
 import ManualIssueExecutionUI from '../ManualIssueExecutionUI';
@@ -34,21 +33,15 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
   const selectedPageIndex = selectedPage - 1;
 
   const queryClient = useQueryClient();
-  // TODO: should type properly (`Relay`)
-  const executeMutation = useMutation<ISubmittableResult, Error, any>(
-    (variables: any) => {
-      if (!variables.backingPayment.btcTxId) {
-        throw new Error('Bitcoin transaction ID not identified yet.');
-      }
-      return submitExtrinsicPromise(window.bridge.issue.execute(variables.id, variables.backingPayment.btcTxId));
-    },
-    {
-      onSuccess: (_, variables) => {
-        queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
-        toast.success(t('issue_page.successfully_executed', { id: variables.id }));
-      }
+
+  // TODO: check if this transaction is necessary
+  const transaction = useTransaction(Transaction.ISSUE_EXECUTE, {
+    onSuccess: (_, variables) => {
+      const [requestId] = variables.args;
+      queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
+      toast.success(t('issue_page.successfully_executed', { id: requestId }));
     }
-  );
+  });
 
   return (
     <>
@@ -82,16 +75,14 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
         </p>
         <ManualIssueExecutionUI request={request} />
       </RequestWrapper>
-      {executeMutation.isError && executeMutation.error && (
+      {transaction.isError && transaction.error && (
         <ErrorModal
-          open={!!executeMutation.error}
+          open={!!transaction.error}
           onClose={() => {
-            executeMutation.reset();
+            transaction.reset();
           }}
           title='Error'
-          description={
-            typeof executeMutation.error === 'string' ? executeMutation.error : executeMutation.error.message
-          }
+          description={typeof transaction.error === 'string' ? transaction.error : transaction.error.message}
         />
       )}
     </>

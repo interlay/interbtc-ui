@@ -1,5 +1,4 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { ISubmittableResult } from '@polkadot/types/types';
 import Big from 'big.js';
 import clsx from 'clsx';
 import { add, format } from 'date-fns';
@@ -7,7 +6,7 @@ import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
 
 import { StoreType } from '@/common/types/util.types';
@@ -44,10 +43,10 @@ import {
 } from '@/services/fetchers/staking-transaction-fee-reserve-fetcher';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT, ZERO_VOTE_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
 import BalancesUI from './BalancesUI';
@@ -98,11 +97,6 @@ interface EstimatedRewardAmountAndAPY {
 interface StakedAmountAndEndBlock {
   amount: GovernanceTokenMonetaryAmount;
   endBlock: number;
-}
-
-interface LockingAmountAndTime {
-  amount: GovernanceTokenMonetaryAmount;
-  time: number; // Weeks
 }
 
 const Staking = (): JSX.Element => {
@@ -248,63 +242,25 @@ const Staking = (): JSX.Element => {
   );
   useErrorHandler(transactionFeeReserveError);
 
-  const initialStakeMutation = useMutation<ISubmittableResult, Error, LockingAmountAndTime>(
-    (variables: LockingAmountAndTime) => {
-      if (currentBlockNumber === undefined) {
-        throw new Error('Something went wrong!');
-      }
-      const unlockHeight = currentBlockNumber + convertWeeksToBlockNumbers(variables.time);
-
-      return submitExtrinsic(window.bridge.escrow.createLock(variables.amount, unlockHeight));
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
-        reset({
-          [LOCKING_AMOUNT]: '0.0',
-          [LOCK_TIME]: '0'
-        });
-      }
+  const initialStakeTransaction = useTransaction(Transaction.ESCROW_CREATE_LOCK, {
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
+      reset({
+        [LOCKING_AMOUNT]: '0.0',
+        [LOCK_TIME]: '0'
+      });
     }
-  );
+  });
 
-  const moreStakeMutation = useMutation<void, Error, LockingAmountAndTime>(
-    (variables: LockingAmountAndTime) => {
-      return (async () => {
-        if (stakedAmountAndEndBlock === undefined) {
-          throw new Error('Something went wrong!');
-        }
-
-        if (checkIncreaseLockAmountAndExtendLockTime(variables.time, variables.amount)) {
-          const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
-
-          const txs = [
-            window.bridge.api.tx.escrow.increaseAmount(variables.amount.toString(true)),
-            window.bridge.api.tx.escrow.increaseUnlockHeight(unlockHeight)
-          ];
-          const batch = window.bridge.api.tx.utility.batchAll(txs);
-          await submitExtrinsic({ extrinsic: batch });
-        } else if (checkOnlyIncreaseLockAmount(variables.time, variables.amount)) {
-          await submitExtrinsic(window.bridge.escrow.increaseAmount(variables.amount));
-        } else if (checkOnlyExtendLockTime(variables.time, variables.amount)) {
-          const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(variables.time);
-
-          await submitExtrinsic(window.bridge.escrow.increaseUnlockHeight(unlockHeight));
-        } else {
-          throw new Error('Something went wrong!');
-        }
-      })();
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
-        reset({
-          [LOCKING_AMOUNT]: '0.0',
-          [LOCK_TIME]: '0'
-        });
-      }
+  const existingStakeTransaction = useTransaction({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [GENERIC_FETCHER, 'escrow'] });
+      reset({
+        [LOCKING_AMOUNT]: '0.0',
+        [LOCK_TIME]: '0'
+      });
     }
-  );
+  });
 
   React.useEffect(() => {
     if (isValidating || !isValid || !estimatedRewardAmountAndAPYRefetch) return;
@@ -409,15 +365,30 @@ const Staking = (): JSX.Element => {
     const numberTime = parseInt(lockTimeWithFallback);
 
     if (votingBalanceGreaterThanZero) {
-      moreStakeMutation.mutate({
-        amount: monetaryAmount,
-        time: numberTime
-      });
+      if (stakedAmountAndEndBlock === undefined) {
+        throw new Error('Something went wrong!');
+      }
+
+      if (checkIncreaseLockAmountAndExtendLockTime(numberTime, monetaryAmount)) {
+        const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(numberTime);
+
+        existingStakeTransaction.execute(
+          Transaction.ESCROW_INCREASE_LOOKED_TIME_AND_AMOUNT,
+          monetaryAmount.toString(true),
+          unlockHeight
+        );
+      } else if (checkOnlyIncreaseLockAmount(numberTime, monetaryAmount)) {
+        existingStakeTransaction.execute(Transaction.ESCROW_INCREASE_LOCKED_AMOUNT, monetaryAmount);
+      } else if (checkOnlyExtendLockTime(numberTime, monetaryAmount)) {
+        const unlockHeight = stakedAmountAndEndBlock.endBlock + convertWeeksToBlockNumbers(numberTime);
+
+        existingStakeTransaction.execute(Transaction.ESCROW_INCREASE_LOCKED_TIME, unlockHeight);
+      } else {
+        throw new Error('Something went wrong!');
+      }
     } else {
-      initialStakeMutation.mutate({
-        amount: monetaryAmount,
-        time: numberTime
-      });
+      const unlockHeight = currentBlockNumber + convertWeeksToBlockNumbers(numberTime);
+      initialStakeTransaction.execute(monetaryAmount, unlockHeight);
     }
   };
 
@@ -856,7 +827,7 @@ const Staking = (): JSX.Element => {
               size='large'
               type='submit'
               disabled={initializing || unlockFirst || !isValid}
-              loading={initialStakeMutation.isLoading || moreStakeMutation.isLoading}
+              loading={initialStakeTransaction.isLoading || existingStakeTransaction.isLoading}
             >
               {submitButtonLabel}{' '}
               {unlockFirst ? (
@@ -866,15 +837,15 @@ const Staking = (): JSX.Element => {
           </form>
         </Panel>
       </MainContainer>
-      {(initialStakeMutation.isError || moreStakeMutation.isError) && (
+      {(initialStakeTransaction.isError || existingStakeTransaction.isError) && (
         <ErrorModal
-          open={initialStakeMutation.isError || moreStakeMutation.isError}
+          open={initialStakeTransaction.isError || existingStakeTransaction.isError}
           onClose={() => {
-            initialStakeMutation.reset();
-            moreStakeMutation.reset();
+            initialStakeTransaction.reset();
+            existingStakeTransaction.reset();
           }}
           title='Error'
-          description={initialStakeMutation.error?.message || moreStakeMutation.error?.message || ''}
+          description={initialStakeTransaction.error?.message || existingStakeTransaction.error?.message || ''}
         />
       )}
     </>

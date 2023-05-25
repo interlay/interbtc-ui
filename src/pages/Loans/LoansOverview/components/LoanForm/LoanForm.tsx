@@ -12,8 +12,8 @@ import { AuthCTA } from '@/components';
 import { isFormDisabled, LoanFormData, loanSchema, LoanValidationParams, useForm } from '@/lib/form';
 import { LoanAction } from '@/types/loans';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
-import { useLoanMutation } from '@/utils/hooks/api/loans/use-loan-mutation';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import { useLoanFormData } from '../../hooks/use-loan-form-data';
 import { isLendAsset } from '../../utils/is-loan-asset';
@@ -116,33 +116,50 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     [inputAmount]
   );
 
-  const handleSuccess = () => {
-    toast.success(`Successful ${content.title.toLowerCase()}`);
-    onChangeLoan?.();
-    refetch();
-  };
+  const transaction = useTransaction({
+    onSuccess: () => {
+      toast.success(`Successful ${content.title.toLowerCase()}`);
+      onChangeLoan?.();
+      refetch();
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    }
+  });
 
-  const handleError = (error: Error) => {
-    toast.error(error.message);
-  };
+  const handleSubmit = (data: LoanFormData) => {
+    try {
+      const amount = data[variant] || 0;
+      const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
 
-  const loanMutation = useLoanMutation({ onSuccess: handleSuccess, onError: handleError });
+      switch (variant) {
+        case 'lend':
+          return transaction.execute(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
+        case 'withdraw':
+          if (isMaxAmount) {
+            return transaction.execute(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
+          } else {
+            return transaction.execute(Transaction.LOANS_WITHDRAW, monetaryAmount.currency, monetaryAmount);
+          }
+        case 'borrow':
+          return transaction.execute(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
+        case 'repay':
+          if (isMaxAmount) {
+            return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency);
+          } else {
+            return transaction.execute(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
+          }
+      }
+    } catch (err: any) {
+      toast.error(err.toString());
+    }
+  };
 
   const schemaParams: LoanValidationParams = {
     governanceBalance,
     transactionFee,
     minAmount: assetAmount.min,
     maxAmount: assetAmount.available
-  };
-
-  const handleSubmit = (data: LoanFormData) => {
-    try {
-      const submittedAmount = data[variant] || 0;
-      const submittedMonetaryAmount = newMonetaryAmount(submittedAmount, asset.currency, true);
-      loanMutation.mutate({ amount: submittedMonetaryAmount, loanType: variant, isMaxAmount });
-    } catch (err: any) {
-      toast.error(err.toString());
-    }
   };
 
   const form = useForm<LoanFormData>({
@@ -199,7 +216,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
         </Flex>
         <Flex direction='column' gap='spacing4'>
           <LoanActionInfo variant={variant} asset={asset} prices={prices} />
-          <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={loanMutation.isLoading}>
+          <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
             {content.title}
           </AuthCTA>
         </Flex>
