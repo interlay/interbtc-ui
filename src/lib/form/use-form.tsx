@@ -15,7 +15,7 @@ type GetFieldProps = (
   withErrorMessage?: boolean
 ) => FieldInputProps<any> & { errorMessage?: string | string[] };
 
-type UseFormAgrs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
+type UseFormArgs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
   disableValidation?: boolean;
   getFieldProps?: GetFieldProps;
 };
@@ -25,7 +25,7 @@ const useForm = <Values extends FormikValues = FormikValues>({
   validationSchema,
   disableValidation,
   ...args
-}: UseFormAgrs<Values>) => {
+}: UseFormArgs<Values>) => {
   const { t } = useTranslation();
   const { validateForm, values, getFieldProps: getFormikFieldProps, ...formik } = useFormik<Values>({
     ...args,

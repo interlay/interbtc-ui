@@ -1,9 +1,7 @@
 import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { ISubmittableResult } from '@polkadot/types/types';
 import { useId } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
@@ -16,8 +14,8 @@ import {
   isFormDisabled,
   useForm
 } from '@/lib/form';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { StepComponentProps, withStep } from '@/utils/hocs/step';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
 import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
@@ -39,6 +37,10 @@ const DepositCollateralStep = ({
   const { t } = useTranslation();
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
 
+  const transaction = useTransaction(Transaction.VAULTS_REGISTER_NEW_COLLATERAL, {
+    onSuccess: onSuccessfulDeposit
+  });
+
   const validationParams = {
     minAmount: collateral.min.raw,
     maxAmount: collateral.balance.raw,
@@ -50,7 +52,7 @@ const DepositCollateralStep = ({
     if (!data.deposit) return;
 
     const amount = newMonetaryAmount(data.deposit || 0, collateral.currency, true);
-    registerNewVaultMutation.mutate(amount);
+    transaction.execute(amount);
   };
 
   const form = useForm<CreateVaultFormData>({
@@ -58,13 +60,6 @@ const DepositCollateralStep = ({
     validationSchema: createVaultSchema(validationParams),
     onSubmit: handleSubmit
   });
-
-  const registerNewVaultMutation = useMutation<ISubmittableResult, Error, MonetaryAmount<CollateralCurrencyExt>>(
-    (collateralAmount) => submitExtrinsic(window.bridge.vaults.registerNewCollateralVault(collateralAmount)),
-    {
-      onSuccess: onSuccessfulDeposit
-    }
-  );
 
   const inputCollateralAmount = newSafeMonetaryAmount(form.values.deposit || 0, collateral.currency, true);
 
@@ -108,17 +103,17 @@ const DepositCollateralStep = ({
           </Stack>
         </ModalBody>
         <ModalFooter>
-          <CTA type='submit' disabled={isBtnDisabled} fullWidth loading={registerNewVaultMutation.isLoading}>
+          <CTA type='submit' disabled={isBtnDisabled} fullWidth loading={transaction.isLoading}>
             {t('vault.deposit_collateral')}
           </CTA>
         </ModalFooter>
       </form>
-      {registerNewVaultMutation.isError && (
+      {transaction.isError && (
         <ErrorModal
-          open={registerNewVaultMutation.isError}
-          onClose={() => registerNewVaultMutation.reset()}
+          open={transaction.isError}
+          onClose={() => transaction.reset()}
           title='Error'
-          description={registerNewVaultMutation.error?.message || ''}
+          description={transaction.error?.message || ''}
         />
       )}
     </>

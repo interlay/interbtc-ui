@@ -1,70 +1,150 @@
+import { FixedPointNumber } from '@acala-network/sdk-core';
 import { ApiProvider, Bridge, ChainName } from '@interlay/bridge/build';
-import { useEffect, useState } from 'react';
+import { BaseCrossChainAdapter } from '@interlay/bridge/build/base-chain-adapter';
+import { atomicToBaseAmount, CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
+import Big from 'big.js';
+import { useCallback } from 'react';
+import { useErrorHandler } from 'react-error-boundary';
+import { useQuery, UseQueryResult } from 'react-query';
 import { firstValueFrom } from 'rxjs';
 
+import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
 import { XCM_ADAPTERS } from '@/config/relay-chains';
-import { BITCOIN_NETWORK } from '@/constants';
+import { Chains } from '@/types/chains';
+import { getTokenPrice } from '@/utils/helpers/prices';
+import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-// MEMO: BitcoinNetwork type is not available on XCM bridge
-const XCMNetwork = BITCOIN_NETWORK === 'mainnet' ? 'mainnet' : 'testnet';
+import { XCMEndpoints } from './xcm-endpoints';
 
 const XCMBridge = new Bridge({
   adapters: Object.values(XCM_ADAPTERS)
 });
 
-// TODO: This config needs to be pushed higher up the app.
-// Not sure how this will look: something to decide when
-// adding USDT support.
-const getEndpoints = (chains: ChainName[]) => {
-  switch (true) {
-    case chains.includes('kusama'):
-      return {
-        kusama: ['wss://kusama-rpc.polkadot.io', 'wss://kusama.api.onfinality.io/public-ws'],
-        kintsugi: ['wss://api-kusama.interlay.io/parachain', 'wss://kintsugi.api.onfinality.io/public-ws'],
-        statemine: ['wss://statemine-rpc.polkadot.io', 'wss://statemine.api.onfinality.io/public-ws']
-      };
-    case chains.includes('polkadot'):
-      return {
-        polkadot: ['wss://rpc.polkadot.io', 'wss://polkadot.api.onfinality.io/public-ws'],
-        interlay: ['wss://api.interlay.io/parachain', 'wss://interlay.api.onfinality.io/public-ws'],
-        statemint: ['wss://statemint-rpc.polkadot.io', 'wss://statemint.api.onfinality.io/public-ws']
-      };
-
-    default:
-      return undefined;
-  }
+type XCMBridgeData = {
+  bridge: Bridge;
+  provider: ApiProvider;
 };
 
-// const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
-const useXCMBridge = (): { XCMProvider: ApiProvider; XCMBridge: Bridge } => {
-  const [XCMProvider, setXCMProvider] = useState<any>();
+type XCMTokenData = {
+  balance: string;
+  balanceUSD: string;
+  destFee: FixedPointNumber;
+  originFee: string;
+  minTransferAmount: Big;
+  value: string;
+};
 
-  useEffect(() => {
-    const createBridge = async () => {
-      const XCMProvider = new ApiProvider(XCMNetwork);
-      const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
+type UseXCMBridge = UseQueryResult<XCMBridgeData | undefined> & {
+  originatingChains: Chains | undefined;
+  getDestinationChains: (chain: ChainName) => Chains;
+  getAvailableTokens: (
+    from: ChainName,
+    to: ChainName,
+    originAddress: string,
+    destinationAddress: string
+  ) => Promise<XCMTokenData[] | undefined>;
+};
 
-      // Check connection
-      // TODO: Get rid of any casting - mismatch between ApiRx types
-      await firstValueFrom(XCMProvider.connectFromChain(chains, getEndpoints(chains)) as any);
+const initXCMBridge = async () => {
+  const XCMProvider = new ApiProvider();
+  const chains = Object.keys(XCM_ADAPTERS) as ChainName[];
 
-      // Set Apis
-      await Promise.all(
-        chains.map((chain: ChainName) =>
-          // TODO: Get rid of any casting - mismatch between ApiRx types
-          XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain) as any)
-        )
+  await firstValueFrom(XCMProvider.connectFromChain(chains, XCMEndpoints));
+
+  // Set Apis
+  await Promise.all(chains.map((chain: ChainName) => XCMBridge.findAdapter(chain).setApi(XCMProvider.getApi(chain))));
+
+  return { provider: XCMProvider, bridge: XCMBridge };
+};
+
+const useXCMBridge = (): UseXCMBridge => {
+  const queryKey = ['available-xcm-channels'];
+
+  const queryResult = useQuery({
+    queryKey,
+    queryFn: initXCMBridge,
+    refetchInterval: false
+  });
+
+  const { data, error } = queryResult;
+  const prices = useGetPrices();
+
+  const originatingChains = data?.bridge.adapters.map((adapter: BaseCrossChainAdapter) => {
+    return {
+      display: adapter.chain.display,
+      id: adapter.chain.id as ChainName
+    };
+  });
+
+  const getDestinationChains = useCallback(
+    (chain: ChainName): Chains => {
+      return XCMBridge.router
+        .getDestinationChains({ from: chain })
+        .filter((destinationChain) =>
+          originatingChains?.some((originatingChain) => originatingChain.id === destinationChain.id)
+        ) as Chains;
+    },
+    [originatingChains]
+  );
+
+  const getAvailableTokens = useCallback(
+    async (from, to, originAddress, destinationAddress) => {
+      if (!data) return;
+
+      const tokens = XCMBridge.router.getAvailableTokens({ from, to });
+
+      const inputConfigs = await Promise.all(
+        tokens.map(async (token) => {
+          const inputConfig = await firstValueFrom(
+            data.bridge.findAdapter(from).subscribeInputConfigs({
+              to,
+              token,
+              address: destinationAddress,
+              signer: originAddress
+            })
+          );
+
+          // TODO: resolve type mismatch with BaseCrossChainAdapter and remove `any`
+          const originAdapter = data.bridge.findAdapter(from) as any;
+
+          const maxInputToBig = Big(inputConfig.maxInput.toString());
+          const minInputToBig = Big(inputConfig.minInput.toString());
+
+          // Never show less than zero
+          const transferableBalance = inputConfig.maxInput.isLessThan(inputConfig.minInput) ? 0 : maxInputToBig;
+          const currency = XCMBridge.findAdapter(from).getToken(token, from);
+
+          const nativeToken = originAdapter.getNativeToken();
+
+          const amount = newMonetaryAmount(transferableBalance, (currency as unknown) as CurrencyExt, true);
+          const balanceUSD = convertMonetaryAmountToValueInUSD(amount, getTokenPrice(prices, token)?.usd);
+          const originFee = atomicToBaseAmount(inputConfig.estimateFee, nativeToken as CurrencyExt);
+
+          return {
+            balance: transferableBalance.toString(),
+            balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
+            destFee: inputConfig.destFee.balance,
+            originFee: `${originFee.toString()} ${nativeToken.symbol}`,
+            minTransferAmount: minInputToBig,
+            value: token
+          };
+        })
       );
 
-      setXCMProvider(XCMProvider);
-    };
+      return inputConfigs;
+    },
+    [data, prices]
+  );
 
-    if (!XCMProvider) {
-      createBridge();
-    }
-  }, [XCMProvider]);
+  useErrorHandler(error);
 
-  return { XCMProvider, XCMBridge };
+  return {
+    ...queryResult,
+    originatingChains,
+    getDestinationChains,
+    getAvailableTokens
+  };
 };
 
 export { useXCMBridge };
+export type { UseXCMBridge, XCMTokenData };
