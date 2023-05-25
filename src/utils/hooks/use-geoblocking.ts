@@ -1,9 +1,14 @@
 import { useEffect } from 'react';
 
 import { GEOBLOCK_API_ENDPOINT, GEOBLOCK_REDIRECTION_LINK } from '@/config/links';
+import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 
 const useGeoblocking = (): void => {
+  const isGeoblockEnabled = useFeatureFlag(FeatureFlags.GEOBLOCK);
+
   useEffect(() => {
+    if (!isGeoblockEnabled) return;
+
     const checkCountry = async () => {
       try {
         const response = await fetch(GEOBLOCK_API_ENDPOINT);
@@ -16,7 +21,7 @@ const useGeoblocking = (): void => {
       }
     };
     checkCountry();
-  }, []);
+  }, [isGeoblockEnabled]);
 };
 
 export { useGeoblocking };
