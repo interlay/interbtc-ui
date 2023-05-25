@@ -111,7 +111,7 @@ const useXCMBridge = (): UseXCMBridge => {
           const minInputToBig = Big(inputConfig.minInput.toString());
 
           // Never show less than zero
-          const transferableBalance = inputConfig.maxInput < inputConfig.minInput ? 0 : maxInputToBig;
+          const transferableBalance = inputConfig.maxInput.isLessThan(inputConfig.minInput) ? 0 : maxInputToBig;
           const currency = XCMBridge.findAdapter(from).getToken(token, from);
 
           const nativeToken = originAdapter.getNativeToken();
