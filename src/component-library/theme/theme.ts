@@ -16,7 +16,10 @@ const theme = {
     textSecondary: 'var(--colors-text-secondary)',
     textTertiary: 'var(--colors-text-tertiary)',
     bgPrimary: 'var(--colors-bg-primary)',
-    warn: `var(--colors-shared-red)`
+    warn: `var(--colors-shared-red)`,
+    error: 'var(--colors-error)',
+    warning: 'var(--colors-warning)',
+    success: 'var(--colors-success-darker)'
   },
   font: {
     primary: 'var(--fonts-primary)'
@@ -60,6 +63,7 @@ const theme = {
     spacing12: 'var(--spacing-12)',
     spacing14: 'var(--spacing-14)',
     spacing16: 'var(--spacing-16)',
+    spacing18: 'var(--spacing-18)',
     spacing28: 'var(--spacing-28)'
   },
   rounded: {
@@ -320,6 +324,9 @@ const theme = {
       }
     }
   },
+  progressBar: {
+    bg: 'var(--colors-border)'
+  },
   spinner: {
     determinate: {
       color: 'var(--colors-cta-primary)',
@@ -381,8 +388,79 @@ const theme = {
       width: '5.625rem'
     }
   },
+  dialog: {
+    small: {
+      width: '400px',
+      header: {
+        paddingTop: 'var(--spacing-4)',
+        paddingBottom: 'var(--spacing-2)',
+        paddingX: 'var(--spacing-4)',
+        padding: 'var(--spacing-4) var(--spacing-8) var(--spacing-2) var(--spacing-4)'
+      },
+      divider: {
+        marginX: 'var(--spacing-4)',
+        marginBottom: 'var(--spacing-1)'
+      },
+      body: {
+        paddingY: 'var(--spacing-2)',
+        paddingX: 'var(--spacing-4)'
+      },
+      footer: {
+        paddingTop: 'var(--spacing-1)',
+        paddingBottom: 'var(--spacing-4)',
+        paddingX: 'var(--spacing-4)',
+        padding: 'var(--spacing-1) var(--spacing-4) var(--spacing-4)'
+      }
+    },
+    medium: {
+      width: '32rem',
+      header: {
+        paddingY: 'var(--spacing-4)',
+        paddingX: 'var(--spacing-6)',
+        padding: 'var(--spacing-4) var(--spacing-8) var(--spacing-4) var(--spacing-6)'
+      },
+      divider: {
+        marginX: 'var(--spacing-6)',
+        marginBottom: 'var(--spacing-2)'
+      },
+      body: {
+        paddingY: 'var(--spacing-3)',
+        paddingX: 'var(--spacing-6)'
+      },
+      footer: {
+        paddingTop: 'var(--spacing-4)',
+        paddingBottom: 'var(--spacing-6)',
+        paddingX: 'var(--spacing-6)',
+        padding: 'var(--spacing-4) var(--spacing-6) var(--spacing-6)'
+      }
+    },
+    large: {
+      width: '32rem',
+      header: {
+        paddingY: 'var(--spacing-4)',
+        paddingX: 'var(--spacing-6)',
+        padding: 'var(--spacing-4) var(--spacing-8) var(--spacing-4) var(--spacing-6)'
+      },
+      divider: {
+        marginX: 'var(--spacing-6)',
+        marginBottom: 'var(--spacing-2)'
+      },
+      body: {
+        paddingY: 'var(--spacing-3)',
+        paddingX: 'var(--spacing-6)'
+      },
+      footer: {
+        paddingTop: 'var(--spacing-4)',
+        paddingBottom: 'var(--spacing-6)',
+        paddingX: 'var(--spacing-6)',
+        padding: 'var(--spacing-4) var(--spacing-6) var(--spacing-6)'
+      }
+    },
+    closeBtn: {
+      zIndex: 100
+    }
+  },
   modal: {
-    maxWidth: '32rem',
     maxHeight: 'calc(100vh - var(--spacing-12))',
     // TODO: z-index needs to be higher
     zIndex: 2,
@@ -393,27 +471,6 @@ const theme = {
         entering: 'opacity .15s cubic-bezier(0,0,.4,1)',
         exiting: 'opacity .1s cubic-bezier(0.5,0,1,1), visibility 0s linear .1s'
       }
-    },
-    header: {
-      paddingY: 'var(--spacing-4)',
-      paddingX: 'var(--spacing-6)',
-      paddingRight: 'var(--spacing-8)'
-    },
-    divider: {
-      marginX: 'var(--spacing-6)',
-      marginBottom: 'var(--spacing-2)'
-    },
-    body: {
-      paddingY: 'var(--spacing-3)',
-      paddingX: 'var(--spacing-6)'
-    },
-    footer: {
-      paddingTop: 'var(--spacing-4)',
-      paddingBottom: 'var(--spacing-6)',
-      paddingX: 'var(--spacing-6)'
-    },
-    closeBtn: {
-      zIndex: 100
     },
     transition: {
       entering: 'transform .15s cubic-bezier(0,0,0.4,1) .1s, opacity .15s cubic-bezier(0,0,0.4,1)',
