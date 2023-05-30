@@ -1,12 +1,9 @@
-import { FlexProps } from '../Flex';
-import { StyledModalFooter } from './Modal.style';
+import { DialogFooter, DialogFooterProps } from '../Dialog';
 
-type InheritAttrs = FlexProps;
-
-type ModalFooterProps = InheritAttrs;
+type ModalFooterProps = DialogFooterProps;
 
 const ModalFooter = ({ direction = 'column', gap = 'spacing4', ...props }: ModalFooterProps): JSX.Element => (
-  <StyledModalFooter {...props} direction={direction} gap={gap} />
+  <DialogFooter {...props} direction={direction} gap={gap} />
 );
 
 export { ModalFooter };

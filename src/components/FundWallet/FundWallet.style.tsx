@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { CTA, Flex, Tabs, theme } from '@/component-library';
 
 const StyledTabs = styled(Tabs)`
-  padding: ${theme.spacing.spacing2} ${theme.modal.header.paddingX} ${theme.modal.footer.paddingBottom};
+  padding: ${theme.spacing.spacing2} ${theme.dialog.medium.header.paddingX} ${theme.dialog.medium.header.paddingX};
 `;
 
 const StyledWrapper = styled(Flex)`
