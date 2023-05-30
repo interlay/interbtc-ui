@@ -16,6 +16,7 @@ const StyledDialog = styled.section<StyledDialogProps>`
   border: ${theme.border.default};
   border-radius: ${theme.rounded.md};
   color: ${theme.colors.textPrimary};
+  max-width: 100%;
   width: ${({ $size }) => theme.dialog[$size].width};
   display: flex;
   flex-direction: column;

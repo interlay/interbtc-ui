@@ -15,6 +15,7 @@ const StyledPopover = styled.div<StyledPopoverProps>`
 
   min-width: 32px;
   min-height: 32px;
+  max-width: calc(100% - 32px);
 
   position: absolute;
 
