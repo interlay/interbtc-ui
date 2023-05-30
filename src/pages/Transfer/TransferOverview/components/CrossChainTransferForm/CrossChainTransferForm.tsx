@@ -29,7 +29,7 @@ import { useXCMBridge, XCMTokenData } from '@/utils/hooks/api/xcm/use-xcm-bridge
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-import { ChainSelect } from './components';
+import { ChainSelect } from '../ChainSelect';
 import {
   ChainSelectSection,
   StyledArrowRightCircle,
@@ -277,4 +277,4 @@ const CrossChainTransferForm = (): JSX.Element => {
   );
 };
 
-export default CrossChainTransferForm;
+export { CrossChainTransferForm };

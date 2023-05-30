@@ -6,6 +6,8 @@ import i18n from 'i18next';
 import * as yup from 'yup';
 import { AnyObject, Maybe } from 'yup/lib/types';
 
+import { isValidRelayAddress } from './validate';
+
 yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: string, customMessage?: string) {
   return this.transform((value) => (isNaN(value) ? undefined : value)).test('requiredAmount', (value, ctx) => {
     if (value === undefined) {
@@ -104,6 +106,26 @@ yup.addMethod<yup.StringSchema>(
   }
 );
 
+enum AddressType {
+  RELAY_CHAIN
+}
+
+yup.addMethod<yup.StringSchema>(
+  yup.string,
+  'address',
+  function (action: string, addressType = AddressType.RELAY_CHAIN, customMessage?: string) {
+    return this.test('requiredAmount', (value, ctx) => {
+      // TODO: add bitcoin address validation
+      if (!value || (addressType === AddressType.RELAY_CHAIN && !isValidRelayAddress(value))) {
+        const message = customMessage || i18n.t('forms.please_enter_the_amount_to', { field: action });
+        return ctx.createError({ message });
+      }
+
+      return true;
+    });
+  }
+);
+
 declare module 'yup' {
   interface StringSchema<
     TType extends Maybe<string> = string | undefined,
@@ -122,6 +144,7 @@ declare module 'yup' {
       action?: string,
       customMessage?: string
     ): StringSchema<TType, TContext>;
+    address(action: string, addressType?: AddressType, customMessage?: string): StringSchema<TType, TContext>;
   }
 }
 

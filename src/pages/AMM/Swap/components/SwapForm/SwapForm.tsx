@@ -7,8 +7,8 @@ import { useSelector } from 'react-redux';
 import { useDebounce } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
-import { convertMonetaryAmountToValueInUSD, formatUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { Card, CardProps, Divider, Flex, H1, TokenInput, TokenSelectProps } from '@/component-library';
+import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
+import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
   SWAP_INPUT_AMOUNT_FIELD,
@@ -27,6 +27,7 @@ import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { Prices, useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
+import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import { PriceImpactModal } from '../PriceImpactModal';
 import { SwapInfo } from '../SwapInfo';
@@ -109,7 +110,7 @@ const SwapForm = ({
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
   const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
-  const { data: currencies } = useGetCurrencies(bridgeLoaded);
+  const selectCurrency = useSelectCurrency();
 
   const transaction = useTransaction(Transaction.AMM_SWAP, {
     onSigning: () => {
@@ -244,24 +245,7 @@ const SwapForm = ({
     form.values[SWAP_INPUT_AMOUNT_FIELD]
   );
 
-  const selectItems: TokenSelectProps['items'] = useMemo(
-    () =>
-      currencies
-        ?.filter((currency) => pooledTickers.has(currency.ticker))
-        .map((currency) => {
-          const balance = getAvailableBalance(currency.ticker);
-          const balanceUSD = balance
-            ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
-            : 0;
-
-          return {
-            balance: balance?.toHuman() || 0,
-            balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
-            value: currency.ticker
-          };
-        }) || [],
-    [currencies, getAvailableBalance, pooledTickers, prices]
-  );
+  const selectItems = selectCurrency.items.filter((tokenData) => pooledTickers.has(tokenData.value));
 
   const { poolImpact, marketPrice } = getPoolPriceImpact(trade, inputAmountUSD, outputAmountUSD);
   const priceImpact = (marketPrice || poolImpact).toNumber();

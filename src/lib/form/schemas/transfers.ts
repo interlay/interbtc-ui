@@ -43,12 +43,49 @@ const crossChainTransferSchema = (params: CrossChainTransferValidationParams, t:
       .required(t('forms.please_select_your_field', { field: 'transfer token' }))
   });
 
+const TRANSFER_TO_FIELD = 'transfer-to';
+const TRANSFER_TOKEN_FIELD = 'transfer-token';
+const TRANSFER_AMOUNT_FIELD = 'transfer-amount';
+
+type TransferFormData = {
+  [TRANSFER_TO_FIELD]?: string;
+  [TRANSFER_TOKEN_FIELD]?: string;
+  [TRANSFER_AMOUNT_FIELD]?: string;
+};
+
+type TransferValidationParams = {
+  [TRANSFER_AMOUNT_FIELD]: Partial<MaxAmountValidationParams> & Partial<MinAmountValidationParams>;
+};
+
+const transferSchema = (params: TransferValidationParams, t: TFunction): yup.ObjectSchema<any> =>
+  yup.object().shape({
+    [TRANSFER_AMOUNT_FIELD]: yup
+      .string()
+      .requiredAmount('transfer')
+      .maxAmount(params[TRANSFER_AMOUNT_FIELD] as MaxAmountValidationParams)
+      .minAmount(params[TRANSFER_AMOUNT_FIELD] as MinAmountValidationParams, 'transfer'),
+    [TRANSFER_TO_FIELD]: yup
+      .string()
+      .required(t('forms.please_enter_your_field', { field: 'recipient' }))
+      .address('transfer'),
+    [TRANSFER_TOKEN_FIELD]: yup.string().required(t('forms.please_select_your_field', { field: 'transfer token' }))
+  });
+
 export {
   CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
   CROSS_CHAIN_TRANSFER_FROM_FIELD,
   CROSS_CHAIN_TRANSFER_TO_ACCOUNT_FIELD,
   CROSS_CHAIN_TRANSFER_TO_FIELD,
   CROSS_CHAIN_TRANSFER_TOKEN_FIELD,
-  crossChainTransferSchema
+  crossChainTransferSchema,
+  TRANSFER_AMOUNT_FIELD,
+  TRANSFER_TO_FIELD,
+  TRANSFER_TOKEN_FIELD,
+  transferSchema
 };
-export type { CrossChainTransferFormData, CrossChainTransferValidationParams };
+export type {
+  CrossChainTransferFormData,
+  CrossChainTransferValidationParams,
+  TransferFormData,
+  TransferValidationParams
+};

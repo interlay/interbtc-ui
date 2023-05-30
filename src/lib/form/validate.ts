@@ -1,7 +1,7 @@
 import { decodeAddress, encodeAddress } from '@polkadot/keyring';
 import { hexToU8a, isHex } from '@polkadot/util';
 
-const isValidPolkadotAddress = (address: string): boolean => {
+const isValidRelayAddress = (address: string): boolean => {
   try {
     encodeAddress(isHex(address) ? hexToU8a(address) : decodeAddress(address));
 
@@ -11,4 +11,4 @@ const isValidPolkadotAddress = (address: string): boolean => {
   }
 };
 
-export default isValidPolkadotAddress;
+export { isValidRelayAddress };
