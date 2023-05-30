@@ -13,7 +13,9 @@ const useUpdateQueryParameters = (): ((newQueryParameters: QueryParameters) => v
       ...newQueryParameters
     };
 
-    history.push({
+    console.log('history query param', location, queryString.stringify(queryParameters));
+
+    history.replace({
       ...location,
       search: queryString.stringify(queryParameters)
     });
