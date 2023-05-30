@@ -16,10 +16,10 @@ import { earnStrategySchema, isFormDisabled, useForm } from '@/lib/form';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useTransaction } from '@/utils/hooks/transaction';
 
-import { EarnStrategyWithdrawalFormData } from '../../types/form';
-import { EarnStrategyFormBaseProps } from './EarnStrategyForm';
-import { StyledEarnStrategyFormContent, StyledSwitchLabel } from './EarnStrategyForm.style';
-import { EarnStrategyFormFees } from './EarnStrategyFormFees';
+import { EarnStrategyWithdrawalFormData } from '../../../types/form';
+import { EarnStrategyFormBaseProps } from '../EarnStrategyForm';
+import { StyledEarnStrategyFormContent, StyledSwitchLabel } from '../EarnStrategyForm.style';
+import { EarnStrategyFormFees } from '../EarnStrategyFormFees';
 
 interface EarnStrategyWithdrawalFormProps extends EarnStrategyFormBaseProps {
   maxWithdrawableAmount: MonetaryAmount<WrappedCurrency> | undefined;

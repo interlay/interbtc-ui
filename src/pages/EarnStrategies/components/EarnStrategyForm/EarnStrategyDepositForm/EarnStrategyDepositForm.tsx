@@ -11,10 +11,10 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useTransaction } from '@/utils/hooks/transaction';
 
-import { EarnStrategyDepositFormData } from '../../types/form';
-import { EarnStrategyFormBaseProps } from './EarnStrategyForm';
-import { StyledEarnStrategyFormContent } from './EarnStrategyForm.style';
-import { EarnStrategyFormFees } from './EarnStrategyFormFees';
+import { EarnStrategyDepositFormData } from '../../../types/form';
+import { EarnStrategyFormBaseProps } from '../EarnStrategyForm';
+import { StyledEarnStrategyFormContent } from '../EarnStrategyForm.style';
+import { EarnStrategyFormFees } from '../EarnStrategyFormFees';
 
 const EarnStrategyDepositForm = ({ riskVariant, hasActiveStrategy }: EarnStrategyFormBaseProps): JSX.Element => {
   const { getAvailableBalance } = useGetBalances();
