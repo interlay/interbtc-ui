@@ -54,6 +54,7 @@ type UseTransactionOptions = Omit<
 > & {
   customStatus?: ExtrinsicStatus['type'];
   onSigning?: (variables: TransactionActions) => void;
+  showSuccessModal?: boolean;
 };
 
 // The three declared functions are use to infer types on diferent implementations
@@ -72,7 +73,10 @@ function useTransaction<T extends Transaction>(
 
   const [isSigned, setSigned] = useState(false);
 
-  const notifications = useTransactionNotifications();
+  const { showSuccessModal, customStatus, ...mutateOptions } =
+    (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
+
+  const notifications = useTransactionNotifications({ showSuccessModal });
 
   const handleMutate = () => setSigned(false);
 
@@ -81,7 +85,7 @@ function useTransaction<T extends Transaction>(
   const handleError = (error: Error) => console.error(error.message);
 
   const { onSigning, ...optionsProp } = mergeProps(
-    (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {},
+    mutateOptions,
     {
       onMutate: handleMutate,
       onSigning: handleSigning,
@@ -113,7 +117,7 @@ function useTransaction<T extends Transaction>(
         ...params,
         accountAddress,
         timestamp: new Date().getTime(),
-        customStatus: options?.customStatus
+        customStatus
       } as TransactionActions;
 
       return {
@@ -123,7 +127,7 @@ function useTransaction<T extends Transaction>(
         }
       };
     },
-    [onSigning, options?.customStatus, state.selectedAccount?.address, typeOrOptions]
+    [onSigning, customStatus, state.selectedAccount?.address, typeOrOptions]
   );
 
   const handleExecute = useCallback(

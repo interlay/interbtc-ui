@@ -33,7 +33,7 @@ const SubmittedRedeemRequestModal = ({
   const prices = useGetPrices();
 
   return (
-    <Modal isOpen={open} onClose={onClose}>
+    <Modal align='top' isOpen={open} onClose={onClose}>
       <ModalBody>
         <div className={clsx('flex', 'flex-col', 'space-y-8')}>
           <h4 className={clsx('text-2xl', getColorShade('yellow'), 'font-medium', 'text-center')}>

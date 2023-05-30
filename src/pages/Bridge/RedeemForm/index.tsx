@@ -117,7 +117,7 @@ const RedeemForm = (): JSX.Element | null => {
 
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
 
-  const transaction = useTransaction(Transaction.REDEEM_REQUEST);
+  const transaction = useTransaction(Transaction.REDEEM_REQUEST, { showSuccessModal: false });
 
   React.useEffect(() => {
     if (!monetaryWrappedTokenAmount) return;

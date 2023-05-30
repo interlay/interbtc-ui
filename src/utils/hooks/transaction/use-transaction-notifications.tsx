@@ -11,6 +11,10 @@ import { getTransactionDescription } from '@/utils/helpers/transaction';
 import { TransactionActions, TransactionStatus } from './types';
 import { TransactionResult } from './use-transaction';
 
+type TransactionNotificationsOptions = {
+  showSuccessModal?: boolean;
+};
+
 type UseTransactionNotificationsResult = {
   onReject: (error?: Error) => void;
   mutationProps: {
@@ -22,7 +26,9 @@ type UseTransactionNotificationsResult = {
 };
 
 // TODO: early dismissed transaction are not included in the transaction history
-const useTransactionNotifications = (): UseTransactionNotificationsResult => {
+const useTransactionNotifications = ({
+  showSuccessModal = true
+}: TransactionNotificationsOptions): UseTransactionNotificationsResult => {
   const { t } = useTranslation();
 
   const notifications = useNotifications();
@@ -75,7 +81,9 @@ const useTransactionNotifications = (): UseTransactionNotificationsResult => {
       timestamp: variables?.timestamp
     };
 
-    return dispatch(updateTransactionModal(true, modalData));
+    const isModalOpen = status === TransactionStatus.SUCCESS ? showSuccessModal : true;
+
+    return dispatch(updateTransactionModal(isModalOpen, modalData));
   };
 
   const handleSuccess = (result: TransactionResult, variables: TransactionActions) => {

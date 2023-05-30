@@ -104,7 +104,7 @@ const RequestIssueModal = ({ onClose, open, collateralToken, vaultAddress }: Pro
 
   const vaultAccountId = useAccountId(vaultAddress);
 
-  const transaction = useTransaction(Transaction.ISSUE_REQUEST);
+  const transaction = useTransaction(Transaction.ISSUE_REQUEST, { showSuccessModal: false });
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;

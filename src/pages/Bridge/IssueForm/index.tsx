@@ -140,7 +140,7 @@ const IssueForm = (): JSX.Element | null => {
   });
   useErrorHandler(requestLimitsError);
 
-  const transaction = useTransaction(Transaction.ISSUE_REQUEST);
+  const transaction = useTransaction(Transaction.ISSUE_REQUEST, { showSuccessModal: false });
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;

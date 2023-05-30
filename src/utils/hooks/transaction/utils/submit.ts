@@ -54,25 +54,20 @@ const handleTransaction = async (
 const getErrorMessage = (api: ApiPromise, dispatchError: DispatchError) => {
   const { isModule, asModule, isBadOrigin } = dispatchError;
 
-  // Construct error message
-  const message = 'The transaction failed.';
-
   // Runtime error in one of the parachain modules
   if (isModule) {
     // for module errors, we have the section indexed, lookup
     const decoded = api.registry.findMetaError(asModule);
     const { docs, name, section } = decoded;
-    return message.concat(` The error code is ${section}.${name}. ${docs.join(' ')}`);
+    return `The error code is ${section}.${name}. ${docs.join(' ')}.`;
   }
 
   // Bad origin
   if (isBadOrigin) {
-    return message.concat(
-      ` The error is caused by using an incorrect account. The error code is BadOrigin ${dispatchError}.`
-    );
+    return `The error is caused by using an incorrect account. The error code is BadOrigin ${dispatchError}.`;
   }
 
-  return message.concat(` The error is ${dispatchError}.`);
+  return `The error is ${dispatchError}.`;
 };
 
 /**
@@ -98,6 +93,8 @@ const submitTransaction = async (
   const { dispatchError } = result;
 
   const error = dispatchError ? new Error(getErrorMessage(api, dispatchError)) : undefined;
+
+  console.log(error);
 
   return {
     status: error ? 'error' : 'success',
