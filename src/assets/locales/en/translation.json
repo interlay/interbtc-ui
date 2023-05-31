@@ -75,7 +75,7 @@
   "issue": "Issue",
   "redeem": "Redeem",
   "nav_bridge": "Bridge",
-  "nav_earn_strategies": "Earn Strategies",
+  "nav_strategies": "Strategies",
   "nav_transfer": "Transfer",
   "nav_lending": "Lending",
   "nav_swap": "Swap",
@@ -633,7 +633,7 @@
     "available_to_stake": "Available to stake",
     "voting_power_governance": "Voting Power {{token}}"
   },
-  "earn_strategy": {
+  "strategy": {
     "withdraw_rewards_in_wrapped": "Withdraw rewards in {{wrappedCurrencySymbol}}:",
     "update_position": "Update position"
   }

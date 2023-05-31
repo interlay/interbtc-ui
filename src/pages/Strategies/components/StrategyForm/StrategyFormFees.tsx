@@ -7,13 +7,13 @@ import { Dd, DlGroup, Dt } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
-import { StyledDl } from './EarnStrategyForm.style';
+import { StyledDl } from './StrategyForm.style';
 
-interface EarnStrategyFormFeesProps {
+interface StrategyFormFeesProps {
   amount: MonetaryAmount<GovernanceCurrency>;
 }
 
-const EarnStrategyFormFees = ({ amount }: EarnStrategyFormFeesProps): JSX.Element => {
+const StrategyFormFees = ({ amount }: StrategyFormFeesProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
 
@@ -32,4 +32,4 @@ const EarnStrategyFormFees = ({ amount }: EarnStrategyFormFeesProps): JSX.Elemen
   );
 };
 
-export { EarnStrategyFormFees };
+export { StrategyFormFees };

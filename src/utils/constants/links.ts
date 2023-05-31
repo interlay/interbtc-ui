@@ -12,7 +12,7 @@ const URL_PARAMETERS = Object.freeze({
 const PAGES = Object.freeze({
   HOME: '/',
   BRIDGE: '/bridge',
-  EARN_STRATEGIES: '/earn-strategies',
+  STRATEGIES: '/strategies',
   TRANSFER: '/transfer',
   TRANSACTIONS: '/transactions',
   TX: '/tx',

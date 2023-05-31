@@ -3,20 +3,20 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { Tabs, TabsItem } from '@/component-library';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 
-import { EarnStrategyFormType, EarnStrategyRiskVariant } from '../../types/form';
-import { EarnStrategyDepositForm } from './EarnStrategyDepositForm';
-import { StyledEarnStrategyForm } from './EarnStrategyForm.style';
-import { EarnStrategyWithdrawalForm } from './EarnStrategyWithdrawalForm';
+import { StrategyFormType, StrategyRiskVariant } from '../../types/form';
+import { StrategyDepositForm } from './StrategyDepositForm';
+import { StyledStrategyForm } from './StrategyForm.style';
+import { StrategyWithdrawalForm } from './StrategyWithdrawalForm';
 
-interface EarnStrategyFormProps {
-  riskVariant: EarnStrategyRiskVariant;
+interface StrategyFormProps {
+  riskVariant: StrategyRiskVariant;
 }
 
-interface EarnStrategyFormBaseProps extends EarnStrategyFormProps {
+interface StrategyFormBaseProps extends StrategyFormProps {
   hasActiveStrategy: boolean | undefined;
 }
 
-type TabData = { type: EarnStrategyFormType; title: string };
+type TabData = { type: StrategyFormType; title: string };
 
 const tabs: Array<TabData> = [
   {
@@ -29,21 +29,21 @@ const tabs: Array<TabData> = [
   }
 ];
 
-const EarnStrategyForm = ({ riskVariant }: EarnStrategyFormProps): JSX.Element => {
+const StrategyForm = ({ riskVariant }: StrategyFormProps): JSX.Element => {
   // TODO: replace with actually withdrawable amount once we know how to get that information,
   // for now it's statically set for display purposes
   const maxWithdrawableAmount = newMonetaryAmount(1.337, WRAPPED_TOKEN, true);
   const hasActiveStrategy = maxWithdrawableAmount && !maxWithdrawableAmount.isZero();
 
   return (
-    <StyledEarnStrategyForm>
+    <StyledStrategyForm>
       <Tabs fullWidth size='large'>
         {tabs.map(({ type, title }) => (
           <TabsItem key={type} title={title}>
             {type === 'deposit' ? (
-              <EarnStrategyDepositForm key={type} riskVariant={riskVariant} hasActiveStrategy={hasActiveStrategy} />
+              <StrategyDepositForm key={type} riskVariant={riskVariant} hasActiveStrategy={hasActiveStrategy} />
             ) : (
-              <EarnStrategyWithdrawalForm
+              <StrategyWithdrawalForm
                 key={type}
                 riskVariant={riskVariant}
                 hasActiveStrategy={hasActiveStrategy}
@@ -53,9 +53,9 @@ const EarnStrategyForm = ({ riskVariant }: EarnStrategyFormProps): JSX.Element =
           </TabsItem>
         ))}
       </Tabs>
-    </StyledEarnStrategyForm>
+    </StyledStrategyForm>
   );
 };
 
-export { EarnStrategyForm };
-export type { EarnStrategyFormBaseProps, EarnStrategyFormProps };
+export { StrategyForm };
+export type { StrategyFormBaseProps, StrategyFormProps };
