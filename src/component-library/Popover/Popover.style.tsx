@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 import { getOverlayPlacementCSS, overlayCSS } from '../css/overlay';
+import { theme } from '../theme';
 import { Placement } from '../utils/prop-types';
 
 type StyledPopoverProps = {
@@ -13,9 +14,9 @@ const StyledPopover = styled.div<StyledPopoverProps>`
   flex-direction: column;
   box-sizing: border-box;
 
-  min-width: 32px;
-  min-height: 32px;
-  max-width: calc(100% - 32px);
+  min-width: ${theme.spacing.spacing8};
+  min-height: ${theme.spacing.spacing8};
+  max-width: calc(100% - ${theme.spacing.spacing8});
 
   position: absolute;
 
