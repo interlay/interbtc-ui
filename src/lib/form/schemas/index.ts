@@ -7,6 +7,7 @@ export type {
 export { depositLiquidityPoolSchema, WITHDRAW_LIQUIDITY_POOL_FIELD, withdrawLiquidityPoolSchema } from './amm';
 export type { LoanFormData, LoanValidationParams } from './loans';
 export { loanSchema } from './loans';
+export { StrategySchema } from './strategy';
 export type { SwapFormData, SwapValidationParams } from './swap';
 export {
   SWAP_INPUT_AMOUNT_FIELD,

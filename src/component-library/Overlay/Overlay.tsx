@@ -1,11 +1,12 @@
 import { Overlay as AriaOverlay } from '@react-aria/overlays';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, RefObject, useCallback, useState } from 'react';
 
 import { OpenTransition } from './OpenTransition';
 import { StyledOverlayWrapper } from './Overlay.style';
 
 type OverlayProps = {
   children: ReactNode;
+  nodeRef: RefObject<HTMLElement>;
   isOpen?: boolean;
   container?: Element;
   onEnter?: () => void;
@@ -18,6 +19,7 @@ type OverlayProps = {
 
 const Overlay = ({
   children,
+  nodeRef,
   isOpen,
   container,
   onEnter,
@@ -64,6 +66,7 @@ const Overlay = ({
           onEnter={onEnter}
           onEntering={onEntering}
           onEntered={handleEntered}
+          nodeRef={nodeRef}
         >
           {children}
         </OpenTransition>

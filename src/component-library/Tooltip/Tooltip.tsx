@@ -6,14 +6,13 @@ import { AriaTooltipProps, TooltipTriggerProps as StatelyTooltipTriggerProps } f
 import React, { Children, cloneElement, HTMLAttributes, ReactElement, ReactNode, useRef } from 'react';
 
 import { Span } from '../Text';
-import { theme } from '../theme';
 import { Placement } from '../utils/prop-types';
 import { StyledTooltip, StyledTooltipLabel, StyledTooltipTip } from './Tooltip.style';
 
 // MEMO: https://github.com/adobe/react-spectrum/blob/main/packages/%40react-spectrum/tooltip/src/TooltipTrigger.tsx#L22
 const DEFAULT_OFFSET = -1;
 const DEFAULT_CROSS_OFFSET = 0;
-const DEFAULT_DELAY = Number(theme.transition.default);
+const DEFAULT_DELAY = 500;
 
 type Props = {
   label?: ReactNode;

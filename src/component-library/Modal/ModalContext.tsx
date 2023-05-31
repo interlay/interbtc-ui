@@ -1,10 +1,8 @@
-import { DOMAttributes } from '@react-types/shared';
 import React from 'react';
 
 import { ModalBodyProps } from './ModalBody';
 
 interface ModalConfig {
-  titleProps?: DOMAttributes;
   bodyProps?: ModalBodyProps;
 }
 
