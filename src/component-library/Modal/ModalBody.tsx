@@ -1,6 +1,6 @@
-import { FlexProps } from '../Flex';
+import { DialogBodyProps } from '../Dialog';
 import { Overflow } from '../utils/prop-types';
-import { StyledModalBody } from './Modal.style';
+import { StyledDialogBody } from './Modal.style';
 import { useModalContext } from './ModalContext';
 
 type Props = {
@@ -8,21 +8,14 @@ type Props = {
   noPadding?: boolean;
 };
 
-type InheritAttrs = Omit<FlexProps, keyof Props>;
+type InheritAttrs = Omit<DialogBodyProps, keyof Props>;
 
 type ModalBodyProps = Props & InheritAttrs;
 
-const ModalBody = ({ overflow, noPadding, direction = 'column', ...props }: ModalBodyProps): JSX.Element => {
+const ModalBody = ({ overflow, noPadding, ...props }: ModalBodyProps): JSX.Element => {
   const { bodyProps } = useModalContext();
 
-  return (
-    <StyledModalBody
-      {...props}
-      $overflow={overflow || bodyProps?.overflow}
-      $noPadding={noPadding}
-      direction={direction}
-    />
-  );
+  return <StyledDialogBody {...props} $overflow={overflow || bodyProps?.overflow} $noPadding={noPadding} />;
 };
 
 export { ModalBody };

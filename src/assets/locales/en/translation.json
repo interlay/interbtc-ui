@@ -20,6 +20,7 @@
   "reimbursed": "Reimbursed",
   "online": "Online",
   "offline": "Offline",
+  "available": "Available",
   "unavailable": "Unavailable",
   "ok": "OK",
   "pending": "Pending",
@@ -74,7 +75,7 @@
   "issue": "Issue",
   "redeem": "Redeem",
   "nav_bridge": "Bridge",
-  "nav_earn_strategies": "Earn Strategies",
+  "nav_strategies": "Strategies",
   "nav_transfer": "Transfer",
   "nav_lending": "Lending",
   "nav_swap": "Swap",
@@ -154,6 +155,7 @@
   "unlocks": "Unlocks",
   "staked": "Staked",
   "sign_t&cs": "Sign T&Cs",
+  "receivable_assets": "Receivable Assets",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -586,7 +588,6 @@
       "pool_name": "Pool Name",
       "add_liquidity": "Add Liquidity",
       "remove_liquidity": "Remove Liquidity",
-      "receivable_assets": "Receivable Assets",
       "initial_rate_warning": "Note: You are setting the initial exchange rate of this pool. Make sure it reflects the exchange rate on other markets, please."
     },
     "swap": "Swap",
@@ -631,5 +632,9 @@
     "total_governance_locked": "Total {{token}} Locked",
     "available_to_stake": "Available to stake",
     "voting_power_governance": "Voting Power {{token}}"
+  },
+  "strategy": {
+    "withdraw_rewards_in_wrapped": "Withdraw rewards in {{wrappedCurrencySymbol}}:",
+    "update_position": "Update position"
   }
 }
