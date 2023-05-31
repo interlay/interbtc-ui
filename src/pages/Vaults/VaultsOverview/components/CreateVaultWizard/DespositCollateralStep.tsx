@@ -38,7 +38,8 @@ const DepositCollateralStep = ({
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
 
   const transaction = useTransaction(Transaction.VAULTS_REGISTER_NEW_COLLATERAL, {
-    onSuccess: onSuccessfulDeposit
+    onSuccess: onSuccessfulDeposit,
+    showSuccessModal: false
   });
 
   const validationParams = {

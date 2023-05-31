@@ -3,7 +3,7 @@ import { TFunction } from 'react-i18next';
 
 import { shortAddress } from '@/common/utils/utils';
 
-import { Transaction, TransactionActions, TransactionStatus } from '../hooks/transaction/types';
+import { Transaction, TransactionActions, TransactionStatus } from '../types';
 
 const getTranslationArgs = (
   params: TransactionActions,

@@ -44,7 +44,7 @@ const handleTransaction = async (
         isComplete = expectedStatus === result.status.type;
       }
 
-      if (isComplete) {
+      if (isComplete || result.status.isUsurped) {
         resolve({ unsubscribe, result });
       }
     }
@@ -90,11 +90,21 @@ const submitTransaction = async (
 
   unsubscribe();
 
+  let error: Error | undefined;
+
   const { dispatchError } = result;
 
-  const error = dispatchError ? new Error(getErrorMessage(api, dispatchError)) : undefined;
+  const hasError = dispatchError || result.status.isUsurped;
 
-  console.log(error);
+  if (hasError) {
+    if (dispatchError) {
+      error = new Error(getErrorMessage(api, dispatchError));
+    }
+
+    if (result.status.isUsurped) {
+      error = new Error();
+    }
+  }
 
   return {
     status: error ? 'error' : 'success',

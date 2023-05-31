@@ -6,10 +6,10 @@ import { updateTransactionModal } from '@/common/actions/general.actions';
 import { TransactionModalData } from '@/common/types/util.types';
 import { EXTERNAL_PAGES, EXTERNAL_URL_PARAMETERS } from '@/utils/constants/links';
 import { NotificationToast, NotificationToastAction, useNotifications } from '@/utils/context/Notifications';
-import { getTransactionDescription } from '@/utils/helpers/transaction';
 
 import { TransactionActions, TransactionStatus } from './types';
 import { TransactionResult } from './use-transaction';
+import { getTransactionDescription } from './utils/description';
 
 type TransactionNotificationsOptions = {
   showSuccessModal?: boolean;
