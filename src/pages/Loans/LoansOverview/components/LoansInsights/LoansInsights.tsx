@@ -1,7 +1,6 @@
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, Dl, DlGroup } from '@/component-library';
 import { AuthCTA } from '@/components';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
@@ -69,14 +68,6 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
           )}
         </Card>
       </Dl>
-      {transaction.isError && (
-        <ErrorModal
-          open={transaction.isError}
-          onClose={() => transaction.reset()}
-          title='Error'
-          description={transaction.error?.message || ''}
-        />
-      )}
     </>
   );
 };
