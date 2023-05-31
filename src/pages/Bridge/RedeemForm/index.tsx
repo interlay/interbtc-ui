@@ -23,6 +23,7 @@ import {
   displayMonetaryAmountInUSDFormat,
   getRandomVaultIdWithCapacity
 } from '@/common/utils/utils';
+import { CTA } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { BLOCKS_BEHIND_LIMIT, DEFAULT_REDEEM_BRIDGE_FEE_RATE, DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import {
@@ -90,7 +91,9 @@ const RedeemForm = (): JSX.Element | null => {
     formState: { errors },
     watch,
     setError,
-    clearErrors
+    clearErrors,
+    setValue,
+    trigger
   } = useForm<RedeemFormData>({
     mode: 'onChange'
   });
@@ -392,6 +395,13 @@ const RedeemForm = (): JSX.Element | null => {
 
     const isSelectVaultCheckboxDisabled = monetaryWrappedTokenAmount.gt(maxRedeemableCapacity);
 
+    const handleInputMaxValue = () => {
+      const value = balances?.[WRAPPED_TOKEN.ticker].free.toHuman(8);
+      if (value) {
+        setValue(WRAPPED_TOKEN_AMOUNT, `${value}`);
+        trigger(WRAPPED_TOKEN_AMOUNT);
+      }
+    };
     return (
       <>
         <form className='space-y-8' onSubmit={handleSubmit(onSubmit)}>
@@ -401,12 +411,17 @@ const RedeemForm = (): JSX.Element | null => {
             })}
           </FormTitle>
           <div>
-            <AvailableBalanceUI
-              data-testid='single-max-redeemable'
-              label={t('redeem_page.maximum_in_single_request')}
-              balance={displayMonetaryAmount(maxRedeemableCapacity)}
-              tokenSymbol={WRAPPED_TOKEN_SYMBOL}
-            />
+            <div className='flex justify-between pb-1'>
+              <AvailableBalanceUI
+                data-testid='single-max-redeemable'
+                label={t('redeem_page.maximum_in_single_request')}
+                balance={displayMonetaryAmount(maxRedeemableCapacity)}
+                tokenSymbol={WRAPPED_TOKEN_SYMBOL}
+              />
+              <CTA onPress={handleInputMaxValue} size='x-small'>
+                MAX
+              </CTA>
+            </div>
             <TokenField
               id={WRAPPED_TOKEN_AMOUNT}
               label={WRAPPED_TOKEN_SYMBOL}
