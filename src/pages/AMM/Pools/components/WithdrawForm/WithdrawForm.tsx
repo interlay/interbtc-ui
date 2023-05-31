@@ -10,7 +10,7 @@ import {
   newSafeMonetaryAmount
 } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
-import { AuthCTA } from '@/components';
+import { AuthCTA, ReceivableAssets } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { isFormDisabled, useForm, WITHDRAW_LIQUIDITY_POOL_FIELD } from '@/lib/form';
 import { WithdrawLiquidityPoolFormData, withdrawLiquidityPoolSchema } from '@/lib/form/schemas';
@@ -23,7 +23,6 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolName } from '../PoolName';
-import { WithdrawAssets } from './WithdrawAssets';
 import { StyledDl } from './WithdrawForm.styles';
 
 type WithdrawFormProps = {
@@ -126,7 +125,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
               {...form.getFieldProps(WITHDRAW_LIQUIDITY_POOL_FIELD)}
             />
           </Flex>
-          <WithdrawAssets pooledAmounts={pooledAmounts} prices={prices} />
+          <ReceivableAssets assetAmounts={pooledAmounts} prices={prices} />
           <StyledDl direction='column' gap='spacing2'>
             <DlGroup justifyContent='space-between'>
               <Dt size='xs' color='primary'>
