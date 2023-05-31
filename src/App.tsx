@@ -26,7 +26,7 @@ import TestnetBanner from './legacy-components/TestnetBanner';
 import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
-const EarnStrategies = React.lazy(() => import(/* webpackChunkName: 'earn-strategies' */ '@/pages/EarnStrategies'));
+const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
 const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ '@/pages/Transactions'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
@@ -51,7 +51,7 @@ const App = (): JSX.Element => {
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
   const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
   const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
-  const isEarnStrategiesEnabled = useFeatureFlag(FeatureFlags.EARN_STRATEGIES);
+  const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -214,9 +214,9 @@ const App = (): JSX.Element => {
                       <Wallet />
                     </Route>
                   )}
-                  {isEarnStrategiesEnabled && (
-                    <Route path={PAGES.EARN_STRATEGIES}>
-                      <EarnStrategies />
+                  {isStrategiesEnabled && (
+                    <Route path={PAGES.STRATEGIES}>
+                      <Strategies />
                     </Route>
                   )}
                   <Route path={PAGES.ACTIONS}>
