@@ -2,7 +2,8 @@ import { useSeparator } from '@react-aria/separator';
 import { mergeProps } from '@react-aria/utils';
 import { forwardRef, HTMLAttributes } from 'react';
 
-import { DividerVariants, ElementTypeProp, Orientation, Sizes } from '../utils/prop-types';
+import { DividerVariants, ElementTypeProp, MarginProps, Orientation, Sizes } from '../utils/prop-types';
+import { useStyleProps } from '../utils/use-style-props';
 import { StyledDivider } from './Divider.style';
 
 type Props = {
@@ -13,7 +14,7 @@ type Props = {
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
 
-type DividerProps = Props & NativeAttrs & ElementTypeProp;
+type DividerProps = Props & NativeAttrs & ElementTypeProp & MarginProps;
 
 const Divider = forwardRef<HTMLHRElement, DividerProps>(
   (
@@ -26,6 +27,7 @@ const Divider = forwardRef<HTMLHRElement, DividerProps>(
       ...props,
       elementType
     });
+    const { styleProps, componentProps } = useStyleProps(props);
 
     return (
       <StyledDivider
@@ -34,7 +36,7 @@ const Divider = forwardRef<HTMLHRElement, DividerProps>(
         $color={color}
         $orientation={orientation}
         $size={size}
-        {...mergeProps(separatorProps, props)}
+        {...mergeProps(separatorProps, styleProps, componentProps)}
       />
     );
   }

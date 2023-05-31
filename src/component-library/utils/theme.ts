@@ -9,6 +9,12 @@ const resolveColor = (color: Colors | undefined): string => {
       return theme.colors.textSecondary;
     case 'tertiary':
       return theme.colors.textTertiary;
+    case 'success':
+      return theme.colors.success;
+    case 'warning':
+      return theme.colors.warning;
+    case 'error':
+      return theme.colors.error;
     default:
       return theme.colors.textPrimary;
   }

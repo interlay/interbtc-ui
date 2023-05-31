@@ -12,7 +12,8 @@ export const status = tuple('error', 'warning', 'success');
 
 export const sizes = tuple('small', 'medium', 'large');
 
-export const colors = tuple('primary', 'secondary', 'tertiary');
+// TODO: add info
+export const colors = tuple('primary', 'secondary', 'tertiary', 'success', 'warning', 'error');
 
 export const justifyContent = tuple(
   'flex-start',
@@ -105,3 +106,5 @@ export type IconSize = keyof typeof theme.icon.sizes;
 export type Overflow = 'auto' | 'hidden' | 'scroll' | 'visible' | 'inherit';
 
 export type BreakPoints = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+export type ProgressBarColors = 'default' | 'red';

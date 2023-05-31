@@ -70,7 +70,7 @@ const Navigation = ({
   const isLendingEnabled = useFeatureFlag(FeatureFlags.LENDING);
   const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
   const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
-  const isEarnStrategiesEnabled = useFeatureFlag(FeatureFlags.EARN_STRATEGIES);
+  const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
 
   const NAVIGATION_ITEMS = React.useMemo(
     () => [
@@ -81,10 +81,10 @@ const Navigation = ({
         disabled: !isWalletEnabled
       },
       {
-        name: 'nav_earn_strategies',
-        link: PAGES.EARN_STRATEGIES,
+        name: 'nav_strategies',
+        link: PAGES.STRATEGIES,
         icon: BanknotesIcon,
-        disabled: !isEarnStrategiesEnabled
+        disabled: !isStrategiesEnabled
       },
       {
         name: 'nav_bridge',
@@ -200,14 +200,7 @@ const Navigation = ({
         }
       }
     ],
-    [
-      isWalletEnabled,
-      isEarnStrategiesEnabled,
-      isLendingEnabled,
-      isAMMEnabled,
-      selectedAccount?.address,
-      vaultClientLoaded
-    ]
+    [isWalletEnabled, isStrategiesEnabled, isLendingEnabled, isAMMEnabled, selectedAccount?.address, vaultClientLoaded]
   );
 
   return (

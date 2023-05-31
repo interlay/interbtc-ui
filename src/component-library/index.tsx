@@ -32,6 +32,17 @@ export type { ModalBodyProps, ModalDividerProps, ModalFooterProps, ModalHeaderPr
 export { Modal, ModalBody, ModalDivider, ModalFooter, ModalHeader } from './Modal';
 export type { NumberInputProps } from './NumberInput';
 export { NumberInput } from './NumberInput';
+export type {
+  PopoverBodyProps,
+  PopoverContentProps,
+  PopoverFooterProps,
+  PopoverHeaderProps,
+  PopoverProps,
+  PopoverTriggerProps
+} from './Popover';
+export { Popover, PopoverBody, PopoverContent, PopoverFooter, PopoverHeader, PopoverTrigger } from './Popover';
+export type { ProgressBarProps } from './ProgressBar';
+export { ProgressBar } from './ProgressBar';
 export type { SelectProps } from './Select';
 export { Item, Select } from './Select';
 export type { StackProps } from './Stack';
