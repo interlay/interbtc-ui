@@ -12,16 +12,16 @@ import {
   WRAPPED_TOKEN,
   WRAPPED_TOKEN_SYMBOL
 } from '@/config/relay-chains';
-import { earnStrategySchema, isFormDisabled, useForm } from '@/lib/form';
+import { isFormDisabled, StrategySchema, useForm } from '@/lib/form';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useTransaction } from '@/utils/hooks/transaction';
 
-import { EarnStrategyWithdrawalFormData } from '../../../types/form';
-import { EarnStrategyFormBaseProps } from '../EarnStrategyForm';
-import { StyledEarnStrategyFormContent, StyledSwitchLabel } from '../EarnStrategyForm.style';
-import { EarnStrategyFormFees } from '../EarnStrategyFormFees';
+import { StrategyWithdrawalFormData } from '../../../types/form';
+import { StrategyFormBaseProps } from '../StrategyForm';
+import { StyledStrategyFormContent, StyledSwitchLabel } from '../StrategyForm.style';
+import { StrategyFormFees } from '../StrategyFormFees';
 
-interface EarnStrategyWithdrawalFormProps extends EarnStrategyFormBaseProps {
+interface StrategyWithdrawalFormProps extends StrategyFormBaseProps {
   maxWithdrawableAmount: MonetaryAmount<WrappedCurrency> | undefined;
 }
 
@@ -33,7 +33,7 @@ const calculateReceivableAssets = (
     return [amountToWithdraw];
   }
   // TODO: do some magic calculation to get the receivable assets based on input amount here,
-  // or better move this computation to earn-strategy hook
+  // or better move this computation to strategy hook
   const mockedReceivableAssets = [
     amountToWithdraw.div(1.2),
     newMonetaryAmount(amountToWithdraw.toBig().mul(213.2), RELAY_CHAIN_NATIVE_TOKEN, true)
@@ -42,17 +42,17 @@ const calculateReceivableAssets = (
   return mockedReceivableAssets;
 };
 
-const EarnStrategyWithdrawalForm = ({
+const StrategyWithdrawalForm = ({
   riskVariant,
   hasActiveStrategy,
   maxWithdrawableAmount
-}: EarnStrategyWithdrawalFormProps): JSX.Element => {
+}: StrategyWithdrawalFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
   // TODO: add transaction
   const transaction = useTransaction();
 
-  const handleSubmit = (data: EarnStrategyWithdrawalFormData) => {
+  const handleSubmit = (data: StrategyWithdrawalFormData) => {
     // TODO: Execute transaction with params
     // transaction.execute()
     console.log(data, riskVariant);
@@ -60,9 +60,9 @@ const EarnStrategyWithdrawalForm = ({
 
   const minAmount = newMonetaryAmount(1, WRAPPED_TOKEN);
 
-  const form = useForm<EarnStrategyWithdrawalFormData>({
+  const form = useForm<StrategyWithdrawalFormData>({
     initialValues: { withdraw: '', withdrawAsWrapped: true },
-    validationSchema: earnStrategySchema('withdraw', {
+    validationSchema: StrategySchema('withdraw', {
       maxAmount: maxWithdrawableAmount || newMonetaryAmount(0, WRAPPED_TOKEN),
       minAmount
     }),
@@ -76,7 +76,7 @@ const EarnStrategyWithdrawalForm = ({
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <StyledEarnStrategyFormContent>
+      <StyledStrategyFormContent>
         <TokenInput
           placeholder='0.00'
           ticker={WRAPPED_TOKEN_SYMBOL}
@@ -88,17 +88,17 @@ const EarnStrategyWithdrawalForm = ({
           {...mergeProps(form.getFieldProps('withdraw'))}
         />
         <StyledSwitchLabel>
-          {t('earn_strategy.withdraw_rewards_in_wrapped', { wrappedCurrencySymbol: WRAPPED_TOKEN_SYMBOL })}{' '}
+          {t('strategy.withdraw_rewards_in_wrapped', { wrappedCurrencySymbol: WRAPPED_TOKEN_SYMBOL })}{' '}
           <Switch defaultSelected {...mergeProps(form.getFieldProps('withdrawAsWrapped'))} />
         </StyledSwitchLabel>
         <ReceivableAssets assetAmounts={receivableAssets} prices={prices} />
-        <EarnStrategyFormFees amount={TRANSACTION_FEE_AMOUNT} />
+        <StrategyFormFees amount={TRANSACTION_FEE_AMOUNT} />
         <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
-          {hasActiveStrategy ? t('earn_strategy.update_position') : t('withdraw')}
+          {hasActiveStrategy ? t('strategy.update_position') : t('withdraw')}
         </AuthCTA>
-      </StyledEarnStrategyFormContent>
+      </StyledStrategyFormContent>
     </form>
   );
 };
 
-export { EarnStrategyWithdrawalForm };
+export { StrategyWithdrawalForm };

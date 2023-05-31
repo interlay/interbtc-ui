@@ -6,24 +6,24 @@ import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/comm
 import { TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { earnStrategySchema, isFormDisabled, useForm } from '@/lib/form';
+import { isFormDisabled, StrategySchema, useForm } from '@/lib/form';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useTransaction } from '@/utils/hooks/transaction';
 
-import { EarnStrategyDepositFormData } from '../../../types/form';
-import { EarnStrategyFormBaseProps } from '../EarnStrategyForm';
-import { StyledEarnStrategyFormContent } from '../EarnStrategyForm.style';
-import { EarnStrategyFormFees } from '../EarnStrategyFormFees';
+import { StrategyDepositFormData } from '../../../types/form';
+import { StrategyFormBaseProps } from '../StrategyForm';
+import { StyledStrategyFormContent } from '../StrategyForm.style';
+import { StrategyFormFees } from '../StrategyFormFees';
 
-const EarnStrategyDepositForm = ({ riskVariant, hasActiveStrategy }: EarnStrategyFormBaseProps): JSX.Element => {
+const StrategyDepositForm = ({ riskVariant, hasActiveStrategy }: StrategyFormBaseProps): JSX.Element => {
   const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
   const { t } = useTranslation();
   // TODO: add transaction
   const transaction = useTransaction();
 
-  const handleSubmit = (data: EarnStrategyDepositFormData) => {
+  const handleSubmit = (data: StrategyDepositFormData) => {
     // TODO: Execute transaction with params
     // transaction.execute();
     console.log(`transaction should be executed with parameters: ${data}, ${riskVariant}`);
@@ -32,9 +32,9 @@ const EarnStrategyDepositForm = ({ riskVariant, hasActiveStrategy }: EarnStrateg
   const minAmount = newMonetaryAmount(1, WRAPPED_TOKEN);
   const maxDepositAmount = getAvailableBalance(WRAPPED_TOKEN_SYMBOL) || newMonetaryAmount(0, WRAPPED_TOKEN);
 
-  const form = useForm<EarnStrategyDepositFormData>({
+  const form = useForm<StrategyDepositFormData>({
     initialValues: { deposit: '' },
-    validationSchema: earnStrategySchema('deposit', { maxAmount: maxDepositAmount, minAmount }),
+    validationSchema: StrategySchema('deposit', { maxAmount: maxDepositAmount, minAmount }),
     onSubmit: handleSubmit
   });
 
@@ -44,7 +44,7 @@ const EarnStrategyDepositForm = ({ riskVariant, hasActiveStrategy }: EarnStrateg
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <StyledEarnStrategyFormContent>
+      <StyledStrategyFormContent>
         <TokenInput
           placeholder='0.00'
           ticker={WRAPPED_TOKEN_SYMBOL}
@@ -54,13 +54,13 @@ const EarnStrategyDepositForm = ({ riskVariant, hasActiveStrategy }: EarnStrateg
           valueUSD={inputUSDValue ?? undefined}
           {...mergeProps(form.getFieldProps('deposit'))}
         />
-        <EarnStrategyFormFees amount={TRANSACTION_FEE_AMOUNT} />
+        <StrategyFormFees amount={TRANSACTION_FEE_AMOUNT} />
         <AuthCTA type='submit' size='large' disabled={isSubmitButtonDisabled} loading={transaction.isLoading}>
-          {hasActiveStrategy ? t('earn_strategy.update_position') : t('deposit')}
+          {hasActiveStrategy ? t('strategy.update_position') : t('deposit')}
         </AuthCTA>
-      </StyledEarnStrategyFormContent>
+      </StyledStrategyFormContent>
     </form>
   );
 };
 
-export { EarnStrategyDepositForm };
+export { StrategyDepositForm };

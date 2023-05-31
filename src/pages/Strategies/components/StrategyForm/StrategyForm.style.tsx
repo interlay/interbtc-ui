@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { Dl, Flex, theme } from '@/component-library';
 
-const StyledEarnStrategyForm = styled(Flex)`
+const StyledStrategyForm = styled(Flex)`
   margin-top: ${theme.spacing.spacing8};
   background: ${theme.colors.bgPrimary};
   padding: ${theme.spacing.spacing6};
@@ -16,7 +16,7 @@ const StyledDl = styled(Dl)`
   border-radius: ${theme.rounded.rg};
 `;
 
-const StyledEarnStrategyFormContent = styled(Flex)`
+const StyledStrategyFormContent = styled(Flex)`
   margin-top: ${theme.spacing.spacing8};
   flex-direction: column;
   gap: ${theme.spacing.spacing8};
@@ -31,4 +31,4 @@ const StyledSwitchLabel = styled('label')`
   font-weight: ${theme.fontWeight.bold};
 `;
 
-export { StyledDl, StyledEarnStrategyForm, StyledEarnStrategyFormContent, StyledSwitchLabel };
+export { StyledDl, StyledStrategyForm, StyledStrategyFormContent, StyledSwitchLabel };

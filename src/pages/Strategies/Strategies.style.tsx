@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { theme } from '@/component-library';
-const StyledEarnStrategiesLayout = styled.div`
+const StyledStrategiesLayout = styled.div`
   display: grid;
   gap: ${theme.spacing.spacing6};
   @media (min-width: 80em) {
@@ -10,4 +10,4 @@ const StyledEarnStrategiesLayout = styled.div`
   padding: ${theme.spacing.spacing6};
 `;
 
-export { StyledEarnStrategiesLayout };
+export { StyledStrategiesLayout };
