@@ -9,20 +9,18 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount } from '@/common/utils/utils';
+import { Modal, ModalBody, ModalHeader } from '@/component-library';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { DEFAULT_REDEEM_DUST_AMOUNT } from '@/config/parachain';
 import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
 import InterlayCinnabarOutlinedButton from '@/legacy-components/buttons/InterlayCinnabarOutlinedButton';
 import InterlayMulberryOutlinedButton from '@/legacy-components/buttons/InterlayMulberryOutlinedButton';
 import ErrorMessage from '@/legacy-components/ErrorMessage';
 import NumberInput from '@/legacy-components/NumberInput';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
 import { getExchangeRate } from '@/utils/helpers/oracle';
@@ -65,8 +63,6 @@ const RequestReplacementModal = ({
   const queryClient = useQueryClient();
   const handleError = useErrorHandler();
   const { isLoading: isBalancesLoading, data: balances } = useGetBalances();
-
-  const focusRef = React.useRef(null);
 
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
@@ -112,7 +108,6 @@ const RequestReplacementModal = ({
 
       const vaultId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, vaultAddress);
       queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);
-      toast.success('Replacement request is submitted');
       setSubmitStatus(STATUSES.RESOLVED);
       onClose();
     } catch (error) {
@@ -158,12 +153,9 @@ const RequestReplacementModal = ({
     const securityDeposit = btcToGovernanceTokenRate.toCounter(wrappedTokenAmount).mul(griefingRate);
 
     return (
-      <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
-        <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
-          <InterlayModalTitle as='h3' className={clsx('text-lg', 'font-medium', 'mb-6')}>
-            {t('vault.request_replacement')}
-          </InterlayModalTitle>
-          <CloseIconButton ref={focusRef} onClick={onClose} />
+      <Modal isOpen={open} onClose={onClose}>
+        <ModalHeader>{t('vault.request_replacement')}</ModalHeader>
+        <ModalBody>
           <form className='space-y-4' onSubmit={onSubmit}>
             <p>{t('vault.withdraw_your_collateral')}</p>
             <p>{t('vault.you_have')}</p>
@@ -197,8 +189,8 @@ const RequestReplacementModal = ({
               </InterlayCinnabarOutlinedButton>
             </div>
           </form>
-        </InterlayModalInnerWrapper>
-      </InterlayModal>
+        </ModalBody>
+      </Modal>
     );
   }
   return null;

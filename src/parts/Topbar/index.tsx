@@ -57,6 +57,7 @@ const Topbar = (): JSX.Element => {
     try {
       const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedAccount.address);
       await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN);
+      // TODO: show new notification
       toast.success('Your account has been funded.');
     } catch (error) {
       toast.error(`Funding failed. ${error.message}`);

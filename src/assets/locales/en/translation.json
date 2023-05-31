@@ -707,6 +707,8 @@
     "increasing_stake_locked_time_amount": "Increasing stake locked time and amount",
     "increased_stake_locked_time_amount": "Increased stake locked time and amount",
     "requesting_vault_replacement": "Requesting vault replacement",
-    "requested_vault_replacement": "Requested vault replacement"
+    "requested_vault_replacement": "Requested vault replacement",
+    "claiming_vesting": "Claiming vesting",
+    "claimed_vesting": "Claimed vesting"
   }
 }

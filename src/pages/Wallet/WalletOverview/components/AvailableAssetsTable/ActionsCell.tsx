@@ -1,20 +1,15 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { showBuyModal } from '@/common/actions/general.actions';
 import { CTA, CTALink, CTAProps, Divider, Flex, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { WRAPPED_TOKEN } from '@/config/relay-chains';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 const queryString = require('query-string');
-
-const claimVesting = async () => {
-  await window.bridge.api.tx.vesting.claim();
-};
 
 type ActionsCellProps = {
   currency: CurrencyExt;
@@ -39,20 +34,9 @@ const ActionsCell = ({
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isSmallMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleClaimVestingSuccess = () => {
-    toast.success('Successfully claimed vesting');
-  };
+  const vestingClaimTransaction = useTransaction(Transaction.VESTING_CLAIM);
 
-  const handleClaimVestingError = (error: Error) => {
-    toast.success(error);
-  };
-
-  const claimVestingMutation = useMutation<void, Error, void>(claimVesting, {
-    onSuccess: handleClaimVestingSuccess,
-    onError: handleClaimVestingError
-  });
-
-  const handlePressClaimVesting = () => claimVestingMutation.mutate();
+  const handlePressClaimVesting = () => vestingClaimTransaction.execute();
 
   const handlePressBuyGovernance = () => dispatch(showBuyModal(true));
 

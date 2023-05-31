@@ -3,7 +3,6 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEventHandler, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 import { useDebounce } from 'react-use';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
@@ -119,30 +118,26 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   const transaction = useTransaction({ onSigning: onChangeLoan, onSuccess: refetch });
 
   const handleSubmit = (data: LoanFormData) => {
-    try {
-      const amount = data[variant] || 0;
-      const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
+    const amount = data[variant] || 0;
+    const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
 
-      switch (variant) {
-        case 'lend':
-          return transaction.execute(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
-        case 'withdraw':
-          if (isMaxAmount) {
-            return transaction.execute(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
-          } else {
-            return transaction.execute(Transaction.LOANS_WITHDRAW, monetaryAmount.currency, monetaryAmount);
-          }
-        case 'borrow':
-          return transaction.execute(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
-        case 'repay':
-          if (isMaxAmount) {
-            return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency);
-          } else {
-            return transaction.execute(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
-          }
-      }
-    } catch (err: any) {
-      toast.error(err.toString());
+    switch (variant) {
+      case 'lend':
+        return transaction.execute(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
+      case 'withdraw':
+        if (isMaxAmount) {
+          return transaction.execute(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
+        } else {
+          return transaction.execute(Transaction.LOANS_WITHDRAW, monetaryAmount.currency, monetaryAmount);
+        }
+      case 'borrow':
+        return transaction.execute(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
+      case 'repay':
+        if (isMaxAmount) {
+          return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency);
+        } else {
+          return transaction.execute(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
+        }
     }
   };
 

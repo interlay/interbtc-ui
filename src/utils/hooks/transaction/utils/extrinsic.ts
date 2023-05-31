@@ -129,6 +129,11 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
       return { extrinsic: batch };
     }
     /* END - ESCROW */
+
+    /* START - ESCROW */
+    case Transaction.VESTING_CLAIM:
+      return { extrinsic: window.bridge.api.tx.vesting.claim() };
+    /* END - ESCROW */
   }
 };
 

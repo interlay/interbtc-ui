@@ -338,6 +338,13 @@ const getTranslationArgs = (
       };
     }
     /* END - ESCROW */
+    /* START - VESTING */
+    case Transaction.VESTING_CLAIM: {
+      return {
+        key: isPast ? 'transaction.claimed_vesting' : 'transaction.claiming_vesting'
+      };
+    }
+    /* END - VESTING */
   }
 };
 
