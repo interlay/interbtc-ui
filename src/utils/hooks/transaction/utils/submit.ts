@@ -94,16 +94,13 @@ const submitTransaction = async (
 
   const { dispatchError } = result;
 
-  const hasError = dispatchError || result.status.isUsurped;
+  if (dispatchError) {
+    error = new Error(getErrorMessage(api, dispatchError));
+  }
 
-  if (hasError) {
-    if (dispatchError) {
-      error = new Error(getErrorMessage(api, dispatchError));
-    }
-
-    if (result.status.isUsurped) {
-      error = new Error();
-    }
+  // TODO: determine a description to when transaction ends up usurped
+  if (result.status.isUsurped) {
+    error = new Error();
   }
 
   return {

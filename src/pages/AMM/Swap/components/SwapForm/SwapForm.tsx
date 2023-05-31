@@ -156,8 +156,8 @@ const SwapForm = ({
       const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
 
       return transaction.execute(trade, minimumAmountOut, accountId, deadline);
-    } catch (err) {
-      transaction.reject();
+    } catch (error: any) {
+      transaction.reject(error);
     }
   };
 

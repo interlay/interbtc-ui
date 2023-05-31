@@ -639,6 +639,8 @@
     "update_position": "Update position"
   },
   "transaction": {
+    "recent_transactions": "Recent transactions",
+    "no_recent_transactions": "No recent transactions",
     "confirm_transaction_wallet": "Confirm this transaction in your wallet",
     "confirm_transaction": "Confirm transaction",
     "transaction_processing": "Transaction processing",

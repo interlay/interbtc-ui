@@ -40,7 +40,6 @@ type UseTransactionResult<T extends Transaction> = {
 } & ReactQueryUseMutationResult &
   ExecuteFunctions<T>;
 
-// TODO: handle dispatchError from lib
 const mutateTransaction: MutationFunction<TransactionResult, TransactionActions> = async (params) => {
   const extrinsics = await getExtrinsic(params);
   const expectedStatus = params.customStatus || getStatus(params.type);

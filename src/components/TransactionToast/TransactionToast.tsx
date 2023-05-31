@@ -7,11 +7,11 @@ import { useInterval } from 'react-use';
 
 import { CheckCircle, XCircle } from '@/assets/icons';
 import { updateTransactionModal } from '@/common/actions/general.actions';
-import { Divider, Flex, FlexProps, LoadingSpinner, P, theme } from '@/component-library';
+import { CTA, CTALink, Divider, Flex, FlexProps, LoadingSpinner, P, theme } from '@/component-library';
 import { TransactionStatus } from '@/utils/hooks/transaction/types';
 import { useWindowFocus } from '@/utils/hooks/use-window-focus';
 
-import { StyledCTA, StyledCTALink, StyledProgressBar, StyledWrapper } from './TransactionToast.styles';
+import { StyledProgressBar, StyledWrapper } from './TransactionToast.styles';
 
 type Props = {
   variant?: TransactionStatus;
@@ -39,10 +39,10 @@ const TransactionToast = ({
   const dispatch = useDispatch();
   const windowFocused = useWindowFocus();
 
-  // TODO: do we want the progress to stop when the window is out of focus?
   const [progress, setProgress] = useState(100);
   const [isRunning, setRunning] = useState(false);
 
+  // handles the countdown
   useInterval(
     () => setProgress((prev) => prev - 1),
     isRunning ? timeout / theme.transition.duration.duration100 : null
@@ -146,21 +146,21 @@ const TransactionToast = ({
         {(url || errorMessage) && (
           <>
             {url && (
-              <StyledCTALink size='small' external to={url} variant='text'>
+              <CTALink size='small' fullWidth external to={url} variant='text'>
                 View Subscan
-              </StyledCTALink>
+              </CTALink>
             )}
             {errorMessage && !url && (
-              <StyledCTA size='small' variant='text' onPress={handleViewDetails}>
+              <CTA size='small' fullWidth variant='text' onPress={handleViewDetails}>
                 View Details
-              </StyledCTA>
+              </CTA>
             )}
             <Divider orientation='vertical' color='default' />
           </>
         )}
-        <StyledCTA size='small' variant='text' onPress={onDismiss}>
+        <CTA size='small' fullWidth variant='text' onPress={onDismiss}>
           Dismiss
-        </StyledCTA>
+        </CTA>
       </Flex>
     </StyledWrapper>
   );

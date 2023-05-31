@@ -41,14 +41,6 @@ const Topbar = (): JSX.Element => {
   const { selectProps } = useSignMessage();
   const { list } = useNotifications();
 
-  const topbarRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (!topbarRef.current) return;
-
-    topbarRef.current.scrollLeft = topbarRef.current.scrollWidth;
-  }, []);
-
   const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
 
   const handleRequestFromFaucet = async (): Promise<void> => {

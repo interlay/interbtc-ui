@@ -99,7 +99,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
         </Flex>
       </ModalBody>
       <ModalFooter>
-        <AuthCTA size='large' onPress={handleClickBtn} loading={transaction.isLoading}>
+        <AuthCTA size='large' onPress={handleClickBtn}>
           {content.buttonLabel}
         </AuthCTA>
       </ModalFooter>

@@ -130,10 +130,10 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
     }
     /* END - ESCROW */
 
-    /* START - ESCROW */
+    /* START - VESTING */
     case Transaction.VESTING_CLAIM:
       return { extrinsic: window.bridge.api.tx.vesting.claim() };
-    /* END - ESCROW */
+    /* END - VESTING */
   }
 };
 

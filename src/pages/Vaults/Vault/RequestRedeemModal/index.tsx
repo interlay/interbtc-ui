@@ -67,8 +67,8 @@ const RequestRedeemModal = ({ onClose, open, collateralToken, vaultAddress, lock
 
       onClose();
       setRequestPending(false);
-    } catch (e) {
-      console.error(e.message);
+    } catch (error: any) {
+      transaction.reject(error);
     }
   });
 

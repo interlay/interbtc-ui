@@ -25,7 +25,7 @@ type UseTransactionNotificationsResult = {
   };
 };
 
-// TODO: early dismissed transaction are not included in the transaction history
+// Handles both transactions notifications and modal
 const useTransactionNotifications = ({
   showSuccessModal = true
 }: TransactionNotificationsOptions): UseTransactionNotificationsResult => {
@@ -50,7 +50,7 @@ const useTransactionNotifications = ({
     const description = getTransactionDescription(variables, status, t);
 
     // Add notification to history if status is SUCCESS or ERROR
-    if (status === TransactionStatus.SUCCESS || status === TransactionStatus.ERROR) {
+    if (description && (status === TransactionStatus.SUCCESS || status === TransactionStatus.ERROR)) {
       notifications.add({ description, status, url });
     }
 

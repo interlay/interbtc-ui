@@ -348,10 +348,16 @@ const getTranslationArgs = (
   }
 };
 
-const getTransactionDescription = (params: TransactionActions, status: TransactionStatus, t: TFunction): string => {
+const getTransactionDescription = (
+  params: TransactionActions,
+  status: TransactionStatus,
+  t: TFunction
+): string | undefined => {
   const translation = getTranslationArgs(params, status);
 
-  return translation ? t(translation.key, translation.args) : '';
+  if (!translation) return;
+
+  return t(translation.key, translation.args);
 };
 
 export { getTransactionDescription };

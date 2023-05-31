@@ -10,6 +10,9 @@ import { ToastContainer, TransactionToast, TransactionToastProps } from '@/compo
 
 import { useWallet } from '../hooks/use-wallet';
 
+// Allows the introduction of diferent
+// notifications toast beyond transactions
+// i.e. claiming faucet funds or sign T&Cs
 enum NotificationToast {
   TRANSACTION
 }
@@ -41,10 +44,14 @@ const toastConfig: NotificationOptions = {
 
 type NotificationsConfig = {
   list: Notification[];
+  // gets notification meta data
   get: (id: number | string) => NotifcationInfo;
+  // adds to the redux notifications list
   add: (notification: Omit<Notification, 'date'>) => void;
+  // renders toast
   show: (id: number | string, action: NotificationToastAction) => void;
-  remove: (id: number | string) => void;
+  // removes toast from the screen
+  dismiss: (id: number | string) => void;
 };
 
 const defaultContext: NotificationsConfig = {} as NotificationsConfig;
@@ -63,7 +70,6 @@ const NotificationsProvider: React.FC<unknown> = ({ children }) => {
 
   const idsMap = useRef<ToastMap>({});
 
-  // return meta data about the toast
   const get = (id: number | string) => {
     const toastId = idsMap.current[id];
 
@@ -74,7 +80,6 @@ const NotificationsProvider: React.FC<unknown> = ({ children }) => {
     };
   };
 
-  // adds the notification to the
   const add = (notification: Omit<Notification, 'date'>) =>
     dispatch(addNotification(account?.toString() as string, { ...notification, date: new Date() }));
 
@@ -83,7 +88,7 @@ const NotificationsProvider: React.FC<unknown> = ({ children }) => {
 
     const ToastComponent = toastComponentMap[action.type];
 
-    const onDismiss = () => remove(id);
+    const onDismiss = () => dismiss(id);
 
     const render = <ToastComponent {...mergeProps(action.props, { onDismiss })} />;
 
@@ -95,7 +100,7 @@ const NotificationsProvider: React.FC<unknown> = ({ children }) => {
     idsMap.current[id] = newToastId;
   };
 
-  const remove = (id: number | string) => {
+  const dismiss = (id: number | string) => {
     const toasInfo = get(id);
 
     if (!toasInfo.id) return;
@@ -121,7 +126,7 @@ const NotificationsProvider: React.FC<unknown> = ({ children }) => {
         get,
         add,
         show,
-        remove
+        dismiss
       }}
     >
       {children}

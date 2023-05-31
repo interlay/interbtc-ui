@@ -163,7 +163,8 @@ const UpdateCollateralModal = ({
 
       setSubmitStatus(STATUSES.RESOLVED);
       handleClose();
-    } catch (error) {
+    } catch (error: any) {
+      transaction.reject(error);
       handleError(error);
       setSubmitStatus(STATUSES.REJECTED);
     }

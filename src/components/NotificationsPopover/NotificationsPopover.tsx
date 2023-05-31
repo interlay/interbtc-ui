@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { ListBullet } from '@/assets/icons';
 import { Notification } from '@/common/types/util.types';
 import {
@@ -20,6 +22,8 @@ type NotificationsPopoverProps = {
 };
 
 const NotificationsPopover = ({ address, items }: NotificationsPopoverProps): JSX.Element => {
+  const { t } = useTranslation();
+
   const accountTransactionsUrl =
     address && EXTERNAL_PAGES.SUBSCAN.ACCOUNT.replace(`:${EXTERNAL_URL_PARAMETERS.SUBSCAN.ACCOUNT.ADDRESS}`, address);
 
@@ -31,7 +35,7 @@ const NotificationsPopover = ({ address, items }: NotificationsPopoverProps): JS
         </StyledCTA>
       </PopoverTrigger>
       <PopoverContent>
-        <PopoverHeader>Recent transactions</PopoverHeader>
+        <PopoverHeader>{t('transaction.recent_transactions')}</PopoverHeader>
         <PopoverBody>
           <NotificationsList items={items} />
         </PopoverBody>

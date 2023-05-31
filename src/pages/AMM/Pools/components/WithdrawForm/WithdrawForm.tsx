@@ -65,8 +65,8 @@ const WithdrawForm = ({ pool, slippageModalRef, onSuccess, onSigning }: Withdraw
       const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
 
       return transaction.execute(amount, pool, slippage, deadline, accountId);
-    } catch (err) {
-      transaction.reject();
+    } catch (error: any) {
+      transaction.reject(error);
     }
   };
 

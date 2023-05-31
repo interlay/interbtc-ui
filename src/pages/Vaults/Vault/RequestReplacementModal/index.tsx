@@ -110,7 +110,8 @@ const RequestReplacementModal = ({
       queryClient.invalidateQueries([GENERIC_FETCHER, 'mapReplaceRequests', vaultId]);
       setSubmitStatus(STATUSES.RESOLVED);
       onClose();
-    } catch (error) {
+    } catch (error: any) {
+      transaction.reject(error);
       setSubmitStatus(STATUSES.REJECTED);
     }
   });
