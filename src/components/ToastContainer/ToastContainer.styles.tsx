@@ -9,10 +9,6 @@ const StyledToastContainer = styled(ToastContainer)`
   &&&.Toastify__toast-container {
     color: ${theme.colors.textPrimary};
     padding: 0 ${theme.spacing.spacing4};
-
-    &--top-right {
-      top: ${theme.spacing.spacing18};
-    }
   }
 
   @media ${theme.breakpoints.up('sm')} {
