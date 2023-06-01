@@ -1,0 +1,1 @@
+export { StrategyForm } from './StrategyForm';

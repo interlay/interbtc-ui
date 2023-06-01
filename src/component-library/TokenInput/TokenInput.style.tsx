@@ -89,11 +89,11 @@ const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
 
 const StyledList = styled(List)`
   overflow: auto;
-  padding: 0 ${theme.modal.body.paddingX} ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
+  padding: 0 ${theme.spacing.spacing4} ${theme.spacing.spacing2} ${theme.spacing.spacing4};
 `;
 
 const StyledListHeader = styled(Flex)`
-  padding: ${theme.modal.body.paddingY} ${theme.modal.body.paddingX};
+  padding: ${theme.spacing.spacing2} ${theme.spacing.spacing4};
 `;
 
 const StyledListTokenWrapper = styled(Flex)`

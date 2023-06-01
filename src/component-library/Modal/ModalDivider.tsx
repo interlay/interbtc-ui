@@ -1,11 +1,8 @@
-import { DividerProps } from '../Divider';
-import { StyledModalDivider } from './Modal.style';
+import { DialogDivider, DialogDividerProps } from '../Dialog';
 
-type ModalDividerProps = Omit<DividerProps, 'orientation'>;
+type ModalDividerProps = DialogDividerProps;
 
-const ModalDivider = (props: ModalDividerProps): JSX.Element => (
-  <StyledModalDivider orientation='horizontal' {...props} />
-);
+const ModalDivider = (props: ModalDividerProps): JSX.Element => <DialogDivider {...props} />;
 
 export { ModalDivider };
 export type { ModalDividerProps };

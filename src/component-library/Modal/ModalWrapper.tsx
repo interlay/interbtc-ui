@@ -3,13 +3,15 @@ import { mergeProps } from '@react-aria/utils';
 import { OverlayTriggerState } from '@react-stately/overlays';
 import { forwardRef, ReactNode, RefObject } from 'react';
 
-import { StyledModal, StyledUnderlay, StyledWrapper } from './Modal.style';
+import { Underlay } from '../Overlay';
+import { StyledModal, StyledWrapper } from './Modal.style';
 
 type Props = {
   children: ReactNode;
   align?: 'top' | 'center';
   isOpen?: boolean;
   onClose: () => void;
+  wrapperRef: RefObject<HTMLDivElement>;
 };
 
 type InheritAttrs = Omit<AriaModalOverlayProps & AriaOverlayProps, keyof Props>;
@@ -27,6 +29,7 @@ const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
       isOpen,
       shouldCloseOnInteractOutside,
       shouldCloseOnBlur,
+      wrapperRef,
       ...props
     },
     ref
@@ -49,14 +52,14 @@ const ModalWrapper = forwardRef<HTMLDivElement, ModalWrapperProps>(
     const isCentered = align === 'center';
 
     return (
-      <>
-        <StyledUnderlay {...underlayProps} $isOpen={!!isOpen} $isCentered={isCentered} />
+      <div ref={wrapperRef}>
+        <Underlay {...underlayProps} isOpen={!!isOpen} />
         <StyledWrapper $isCentered={isCentered} $isOpen={!!isOpen}>
           <StyledModal $isOpen={isOpen} ref={ref} $isCentered={isCentered} {...mergeProps(modalProps, props)}>
             {children}
           </StyledModal>
         </StyledWrapper>
-      </>
+      </div>
     );
   }
 );
