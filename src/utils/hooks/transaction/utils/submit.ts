@@ -10,8 +10,7 @@ import { TransactionResult } from '../use-transaction';
 
 type HandleTransactionResult = { result: ISubmittableResult; unsubscribe: () => void };
 
-// When passing { nonce: -1 } to signAndSend the API will use system.accountNextIndex to determine the nonce
-const transactionOptions = { nonce: -1 };
+let nonce: number | undefined;
 
 const handleTransaction = async (
   account: AddressOrPair,
@@ -24,11 +23,16 @@ const handleTransaction = async (
   // Extrinsic status
   let isReady = false;
 
+  if (!nonce) {
+    const lastestNonce = await window.bridge.api.rpc.system.accountNextIndex(account.toString());
+    nonce = lastestNonce.toNumber();
+  }
+
   return new Promise<HandleTransactionResult>((resolve, reject) => {
     let unsubscribe: () => void;
 
     (extrinsicData.extrinsic as SubmittableExtrinsic<'promise'>)
-      .signAndSend(account, transactionOptions, callback)
+      .signAndSend(account, { nonce }, callback)
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => reject(error));
 
@@ -47,6 +51,10 @@ const handleTransaction = async (
       if (isComplete || result.status.isUsurped) {
         resolve({ unsubscribe, result });
       }
+    }
+
+    if (nonce) {
+      nonce++;
     }
   });
 };
