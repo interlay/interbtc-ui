@@ -56,8 +56,6 @@ const useCountdown = ({
     }
   }, [windowFocused, handleStartCountdown, disabled]);
 
-  console.log(countdown, isRunning);
-
   return {
     value: countdown,
     start: handleStartCountdown,
