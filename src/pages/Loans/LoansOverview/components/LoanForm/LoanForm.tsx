@@ -154,6 +154,8 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     onSubmit: handleSubmit
   });
 
+  console.log(form.errors);
+
   const monetaryAmount = newSafeMonetaryAmount(form.values[variant] || 0, asset.currency, true);
 
   const isBtnDisabled = isFormDisabled(form);

@@ -43,12 +43,12 @@ const crossChainTransferSchema = (params: CrossChainTransferValidationParams, t:
       .required(t('forms.please_select_your_field', { field: 'transfer token' }))
   });
 
-const TRANSFER_TO_FIELD = 'transfer-to';
+const TRANSFER_RECIPIENT_FIELD = 'transfer-destination';
 const TRANSFER_TOKEN_FIELD = 'transfer-token';
 const TRANSFER_AMOUNT_FIELD = 'transfer-amount';
 
 type TransferFormData = {
-  [TRANSFER_TO_FIELD]?: string;
+  [TRANSFER_RECIPIENT_FIELD]?: string;
   [TRANSFER_TOKEN_FIELD]?: string;
   [TRANSFER_AMOUNT_FIELD]?: string;
 };
@@ -64,7 +64,7 @@ const transferSchema = (params: TransferValidationParams, t: TFunction): yup.Obj
       .requiredAmount('transfer')
       .maxAmount(params[TRANSFER_AMOUNT_FIELD] as MaxAmountValidationParams)
       .minAmount(params[TRANSFER_AMOUNT_FIELD] as MinAmountValidationParams, 'transfer'),
-    [TRANSFER_TO_FIELD]: yup
+    [TRANSFER_RECIPIENT_FIELD]: yup
       .string()
       .required(t('forms.please_enter_your_field', { field: 'recipient' }))
       .address('transfer'),
@@ -79,7 +79,7 @@ export {
   CROSS_CHAIN_TRANSFER_TOKEN_FIELD,
   crossChainTransferSchema,
   TRANSFER_AMOUNT_FIELD,
-  TRANSFER_TO_FIELD,
+  TRANSFER_RECIPIENT_FIELD,
   TRANSFER_TOKEN_FIELD,
   transferSchema
 };

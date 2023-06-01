@@ -1,6 +1,6 @@
 import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
-import { Key, useEffect, useMemo, useState } from 'react';
+import { Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
@@ -17,7 +17,7 @@ import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains'
 import { isFormDisabled, useForm } from '@/lib/form';
 import {
   TRANSFER_AMOUNT_FIELD,
-  TRANSFER_TO_FIELD,
+  TRANSFER_RECIPIENT_FIELD,
   TRANSFER_TOKEN_FIELD,
   TransferFormData,
   transferSchema
@@ -41,11 +41,15 @@ const TransferForm = ({}: TransferFormProps): JSX.Element => {
 
   const prices = useGetPrices();
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
-  const { data: balances, getBalance, getAvailableBalance } = useGetBalances();
+  const { getBalance, getAvailableBalance } = useGetBalances();
   const { items: selectItems } = useSelectCurrency();
   const [transferToken, setTransferToken] = useState<CurrencyExt>(GOVERNANCE_TOKEN);
 
-  const transaction = useTransaction(Transaction.TOKENS_TRANSFER);
+  const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
+    onSuccess: () => {
+      form.resetForm();
+    }
+  });
 
   const transferTokenBalance = transferToken && getAvailableBalance(transferToken.ticker);
 
@@ -60,39 +64,25 @@ const TransferForm = ({}: TransferFormProps): JSX.Element => {
   };
 
   const handleSubmit = async (values: TransferFormData) => {
-    console.log(values);
+    const destination = values[TRANSFER_RECIPIENT_FIELD];
+
+    if (!destination) return;
+
+    const amount = newMonetaryAmount(values[TRANSFER_AMOUNT_FIELD] || 0, transferToken, true);
+
+    transaction.execute(destination, amount);
   };
 
-  const initialValues: TransferFormData = useMemo(
-    () => ({
-      [TRANSFER_TO_FIELD]: '',
+  const form = useForm<TransferFormData>({
+    initialValues: {
+      [TRANSFER_RECIPIENT_FIELD]: '',
       [TRANSFER_AMOUNT_FIELD]: '',
       [TRANSFER_TOKEN_FIELD]: transferToken.ticker || ''
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const form = useForm<TransferFormData>({
-    initialValues,
+    },
     validationSchema: transferSchema({ [TRANSFER_AMOUNT_FIELD]: transferAmountSchemaParams }, t),
     onSubmit: handleSubmit,
-    disableValidation: transaction.isLoading,
-    validateOnMount: true
+    disableValidation: transaction.isLoading
   });
-
-  // const validateAddress = React.useCallback(
-  //   (address: string): string | undefined => {
-  //     return isValidPolkadotAddress(address) ? undefined : t('validation.invalid_polkadot_address');
-  //   },
-  //   [t]
-  // );
-
-  // MEMO: re-validate form on balances refetch
-  useEffect(() => {
-    form.validateForm();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [balances]);
 
   const handleTickerChange = (ticker: string, name: string) => {
     form.setFieldValue(name, ticker, true);
@@ -125,12 +115,12 @@ const TransferForm = ({}: TransferFormProps): JSX.Element => {
                 onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, TRANSFER_TOKEN_FIELD),
                 items: selectItems
               })}
-              {...mergeProps(form.getFieldProps(TRANSFER_AMOUNT_FIELD, false))}
+              {...mergeProps(form.getFieldProps(TRANSFER_AMOUNT_FIELD))}
             />
             <Input
               placeholder='Enter recipient account'
               label='Recipient'
-              {...mergeProps(form.getFieldProps(TRANSFER_TO_FIELD, true))}
+              {...mergeProps(form.getFieldProps(TRANSFER_RECIPIENT_FIELD))}
             />
           </Flex>
           <Flex direction='column' gap='spacing4'>
