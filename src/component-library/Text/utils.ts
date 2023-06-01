@@ -6,13 +6,15 @@ const mapTextProps = <T extends TextProps = TextProps>({
   size,
   align,
   weight,
+  rows,
   ...props
-}: T): Omit<T, 'color' | 'size' | 'align' | 'weight'> & StyledTextProps => ({
+}: T): Omit<T, 'color' | 'size' | 'align' | 'weight' | 'rows'> & StyledTextProps => ({
   ...props,
   $color: color,
   $size: size,
   $weight: weight,
-  $align: align
+  $align: align,
+  $rows: rows
 });
 
 export { mapTextProps };
