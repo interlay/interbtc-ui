@@ -1,20 +1,8 @@
 import { ExtrinsicData } from '@interlay/interbtc-api';
-import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 
-import { Transaction, TransactionActions } from '../types';
+import { LibActions, Transaction } from '../types';
 
-/**
- * SUMMARY: Maps each transaction to the correct lib call,
- * while maintaining a safe-type check.
- * HOW TO ADD NEW TRANSACTION: find the correct module to add the transaction
- * in the types folder. In case you are adding a new type to the loans modules, go
- * to types/loans and add your new transaction as an action. This actions needs to also be added to the
- * types/index TransactionActions type. After that, you should be able to add it to the function.
- * @param {TransactionActions} params contains the type of transaction and
- * the related args to call the mapped lib call
- * @return {Promise<ExtrinsicData>} every transaction return an extrinsic
- */
-const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> => {
+const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
   switch (params.type) {
     /* START - AMM */
     case Transaction.AMM_SWAP:
@@ -74,18 +62,19 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
       return window.bridge.loans.enableAsCollateral(...params.args);
     /* END - LOANS */
 
-    /* START - LOANS */
+    /* START - VAULTS */
     case Transaction.VAULTS_DEPOSIT_COLLATERAL:
       return window.bridge.vaults.depositCollateral(...params.args);
     case Transaction.VAULTS_WITHDRAW_COLLATERAL:
       return window.bridge.vaults.withdrawCollateral(...params.args);
     case Transaction.VAULTS_REGISTER_NEW_COLLATERAL:
       return window.bridge.vaults.registerNewCollateralVault(...params.args);
+    /* END - VAULTS */
+
     /* START - REWARDS */
     case Transaction.REWARDS_WITHDRAW:
       return window.bridge.rewards.withdrawRewards(...params.args);
     /* START - REWARDS */
-    /* END - LOANS */
 
     /* START - ESCROW */
     case Transaction.ESCROW_CREATE_LOCK:
@@ -109,25 +98,12 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
       return { extrinsic: batch };
     }
     /* END - ESCROW */
+
+    /* START - VESTING */
+    case Transaction.VESTING_CLAIM:
+      return { extrinsic: window.bridge.api.tx.vesting.claim() };
+    /* END - VESTING */
   }
 };
 
-/**
- * The status where we want to be notified on the transaction completion
- * @param {Transaction} type type of transaction
- * @return {ExtrinsicStatus.type} transaction status
- */
-const getStatus = (type: Transaction): ExtrinsicStatus['type'] => {
-  switch (type) {
-    // When requesting a replace, wait for the finalized event because we cannot revert BTC transactions.
-    // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
-    case Transaction.ISSUE_REQUEST:
-    case Transaction.REDEEM_REQUEST:
-    case Transaction.REPLACE_REQUEST:
-      return 'Finalized';
-    default:
-      return 'InBlock';
-  }
-};
-
-export { getExtrinsic, getStatus };
+export { getLibExtrinsic };

@@ -6,7 +6,6 @@ import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
@@ -15,7 +14,6 @@ import { AuthCTA } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL, WrappedTokenLogoIcon } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
@@ -70,10 +68,12 @@ const BurnForm = (): JSX.Element | null => {
   const [burnableCollateral, setBurnableCollateral] = React.useState<BurnableCollateral[]>();
   const [selectedCollateral, setSelectedCollateral] = React.useState<BurnableCollateral>();
 
-  const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
-  const [submitError, setSubmitError] = React.useState<Error | null>(null);
-
-  const transaction = useTransaction(Transaction.REDEEM_BURN);
+  const transaction = useTransaction(Transaction.REDEEM_BURN, {
+    onSuccess: () =>
+      reset({
+        [WRAPPED_TOKEN_AMOUNT]: ''
+      })
+  });
 
   const handleUpdateCollateral = (collateral: TokenOption) => {
     const selectedCollateral = burnableCollateral?.find(
@@ -128,18 +128,6 @@ const BurnForm = (): JSX.Element | null => {
     })();
   }, [bridgeLoaded, collateralCurrencies, handleError]);
 
-  // This ensures that triggering the notification and clearing
-  // the form happen at the same time.
-  React.useEffect(() => {
-    if (submitStatus !== STATUSES.RESOLVED) return;
-
-    toast.success(t('burn_page.successfully_burned'));
-
-    reset({
-      [WRAPPED_TOKEN_AMOUNT]: ''
-    });
-  }, [submitStatus, reset, t]);
-
   if (status === STATUSES.IDLE || status === STATUSES.PENDING) {
     return <PrimaryColorEllipsisLoader />;
   }
@@ -149,18 +137,8 @@ const BurnForm = (): JSX.Element | null => {
       throw new Error('Something went wrong!');
     }
 
-    const onSubmit = async (data: BurnFormData) => {
-      try {
-        setSubmitStatus(STATUSES.PENDING);
-
-        await transaction.executeAsync(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), selectedCollateral.currency);
-
-        setSubmitStatus(STATUSES.RESOLVED);
-      } catch (error) {
-        setSubmitStatus(STATUSES.REJECTED);
-        setSubmitError(error);
-      }
-    };
+    const onSubmit = async (data: BurnFormData) =>
+      transaction.execute(new BitcoinAmount(data[WRAPPED_TOKEN_AMOUNT]), selectedCollateral.currency);
 
     const validateForm = (value: string): string | undefined => {
       // TODO: should use wrapped token amount type (e.g. InterBtcAmount or KBtcAmount)
@@ -305,23 +283,12 @@ const BurnForm = (): JSX.Element | null => {
             fullWidth
             size='large'
             type='submit'
-            loading={submitStatus === STATUSES.PENDING}
+            loading={transaction.isLoading}
             disabled={parachainStatus === ParachainStatus.Loading || parachainStatus === ParachainStatus.Shutdown}
           >
             {t('burn')}
           </AuthCTA>
         </form>
-        {submitStatus === STATUSES.REJECTED && submitError && (
-          <ErrorModal
-            open={!!submitError}
-            onClose={() => {
-              setSubmitStatus(STATUSES.IDLE);
-              setSubmitError(null);
-            }}
-            title='Error'
-            description={typeof submitError === 'string' ? submitError : submitError.message}
-          />
-        )}
       </>
     );
   }

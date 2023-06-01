@@ -4,6 +4,8 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
 
 import {
+  ADD_NOTIFICATION,
+  AddNotification,
   INIT_GENERAL_DATA_ACTION,
   InitGeneralDataAction,
   IS_BRIDGE_LOADED,
@@ -20,10 +22,12 @@ import {
   ShowSignTermsModal,
   UPDATE_HEIGHTS,
   UPDATE_TOTALS,
+  UPDATE_TRANSACTION_MODAL_STATUS,
   UpdateHeights,
-  UpdateTotals
+  UpdateTotals,
+  UpdateTransactionModal
 } from '../types/actions.types';
-import { ParachainStatus } from '../types/util.types';
+import { Notification, ParachainStatus, TransactionModalData } from '../types/util.types';
 
 export const isBridgeLoaded = (isLoaded = false): IsBridgeLoaded => ({
   type: IS_BRIDGE_LOADED,
@@ -85,4 +89,16 @@ export const updateTotalsAction = (
   type: UPDATE_TOTALS,
   totalLockedCollateralTokenAmount,
   totalWrappedTokenAmount
+});
+
+export const addNotification = (accountAddress: string, notification: Notification): AddNotification => ({
+  type: ADD_NOTIFICATION,
+  accountAddress,
+  notification
+});
+
+export const updateTransactionModal = (isOpen: boolean, data: TransactionModalData): UpdateTransactionModal => ({
+  type: UPDATE_TRANSACTION_MODAL_STATUS,
+  isOpen,
+  data
 });
