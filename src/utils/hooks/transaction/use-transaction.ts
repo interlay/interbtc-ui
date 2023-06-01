@@ -6,9 +6,9 @@ import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } 
 
 import { useSubstrate } from '@/lib/substrate';
 
+import { getExtrinsic, getStatus } from './extrinsics';
 import { Transaction, TransactionActions, TransactionArgs } from './types';
 import { useTransactionNotifications } from './use-transaction-notifications';
-import { getExtrinsic, getStatus } from './utils/extrinsic';
 import { submitTransaction } from './utils/submit';
 
 type TransactionResult = { status: 'success' | 'error'; data: ISubmittableResult; error?: Error };

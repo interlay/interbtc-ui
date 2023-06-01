@@ -1,22 +1,8 @@
-import { FixedPointNumber } from '@acala-network/sdk-core';
-import { CrossChainTransferParams } from '@interlay/bridge';
 import { ExtrinsicData } from '@interlay/interbtc-api';
-import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 
-import { Transaction, TransactionActions } from '../types';
+import { LibActions, Transaction } from '../types';
 
-/**
- * SUMMARY: Maps each transaction to the correct lib call,
- * while maintaining a safe-type check.
- * HOW TO ADD NEW TRANSACTION: find the correct module to add the transaction
- * in the types folder. In case you are adding a new type to the loans modules, go
- * to types/loans and add your new transaction as an action. This actions needs to also be added to the
- * types/index TransactionActions type. After that, you should be able to add it to the function.
- * @param {TransactionActions} params contains the type of transaction and
- * the related args to call the mapped lib call
- * @return {Promise<ExtrinsicData>} every transaction return an extrinsic
- */
-const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> => {
+const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
   switch (params.type) {
     /* START - AMM */
     case Transaction.AMM_SWAP:
@@ -54,23 +40,6 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
     case Transaction.TOKENS_TRANSFER:
       return window.bridge.tokens.transfer(...params.args);
     /* END - TOKENS */
-
-    /* START - XCM */
-    case Transaction.XCM_TRANSFER: {
-      const [adapter, , toChain, address, transferAmount] = params.args;
-
-      const transferAmountString = transferAmount.toString(true);
-      const transferAmountDecimals = transferAmount.currency.decimals;
-      const tx = adapter.createTx({
-        amount: FixedPointNumber.fromInner(transferAmountString, transferAmountDecimals),
-        to: toChain,
-        token: transferAmount.currency.ticker,
-        address
-      } as CrossChainTransferParams);
-
-      return { extrinsic: tx };
-    }
-    /* END - XCM */
 
     /* START - LOANS */
     case Transaction.LOANS_CLAIM_REWARDS:
@@ -137,22 +106,4 @@ const getExtrinsic = async (params: TransactionActions): Promise<ExtrinsicData> 
   }
 };
 
-/**
- * The status where we want to be notified on the transaction completion
- * @param {Transaction} type type of transaction
- * @return {ExtrinsicStatus.type} transaction status
- */
-const getStatus = (type: Transaction): ExtrinsicStatus['type'] => {
-  switch (type) {
-    // When requesting a replace, wait for the finalized event because we cannot revert BTC transactions.
-    // For more details see: https://github.com/interlay/interbtc-api/pull/373#issuecomment-1058949000
-    case Transaction.ISSUE_REQUEST:
-    case Transaction.REDEEM_REQUEST:
-    case Transaction.REPLACE_REQUEST:
-      return 'Finalized';
-    default:
-      return 'InBlock';
-  }
-};
-
-export { getExtrinsic, getStatus };
+export { getLibExtrinsic };
