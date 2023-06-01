@@ -1,12 +1,6 @@
 import styled from 'styled-components';
 
-import { CTA, TextLink, theme } from '@/component-library';
-
-const StyledTextLink = styled(TextLink)`
-  display: inline-flex;
-  align-items: center;
-  gap: ${theme.spacing.spacing2};
-`;
+import { CTA, theme } from '@/component-library';
 
 const StyledListItem = styled.div`
   padding: ${theme.spacing.spacing3} ${theme.spacing.spacing2};
@@ -21,4 +15,4 @@ const StyledCTA = styled(CTA)`
   border: ${theme.border.default};
 `;
 
-export { StyledCTA, StyledListItem, StyledTextLink };
+export { StyledCTA, StyledListItem };

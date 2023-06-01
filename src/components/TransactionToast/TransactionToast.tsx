@@ -1,17 +1,38 @@
 import { useHover } from '@react-aria/interactions';
 import { mergeProps } from '@react-aria/utils';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { useDispatch } from 'react-redux';
-import { useInterval } from 'react-use';
 
 import { CheckCircle, XCircle } from '@/assets/icons';
 import { updateTransactionModal } from '@/common/actions/general.actions';
-import { CTA, CTALink, Divider, Flex, FlexProps, LoadingSpinner, P, theme } from '@/component-library';
+import { CTA, CTALink, Divider, Flex, FlexProps, LoadingSpinner, P } from '@/component-library';
 import { TransactionStatus } from '@/utils/hooks/transaction/types';
-import { useWindowFocus } from '@/utils/hooks/use-window-focus';
+import { useCountdown } from '@/utils/hooks/use-countdown';
 
 import { StyledProgressBar, StyledWrapper } from './TransactionToast.styles';
+
+const loadingSpinner = <LoadingSpinner thickness={2} diameter={24} variant='indeterminate' />;
+
+const getData = (t: TFunction, variant: TransactionStatus) =>
+  ({
+    [TransactionStatus.CONFIRM]: {
+      title: t('transaction.confirm_transaction'),
+      icon: loadingSpinner
+    },
+    [TransactionStatus.SUBMITTING]: {
+      title: t('transaction.transaction_processing'),
+      icon: loadingSpinner
+    },
+    [TransactionStatus.SUCCESS]: {
+      title: t('transaction.transaction_successful'),
+      icon: <CheckCircle color='success' />
+    },
+    [TransactionStatus.ERROR]: {
+      title: t('transaction.transaction_failed'),
+      icon: <XCircle color='error' />
+    }
+  }[variant]);
 
 type Props = {
   variant?: TransactionStatus;
@@ -37,86 +58,27 @@ const TransactionToast = ({
 }: TransactionToastProps): JSX.Element => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const windowFocused = useWindowFocus();
 
-  const [progress, setProgress] = useState(100);
-  const [isRunning, setRunning] = useState(false);
+  const showCountdown = variant === TransactionStatus.SUCCESS || variant === TransactionStatus.ERROR;
 
-  // handles the countdown
-  useInterval(
-    () => setProgress((prev) => prev - 1),
-    isRunning ? timeout / theme.transition.duration.duration100 : null
-  );
-
-  const hasProgress = useMemo(() => variant === TransactionStatus.SUCCESS || variant === TransactionStatus.ERROR, [
-    variant
-  ]);
-
-  const startProgress = useCallback(() => {
-    if (!hasProgress || progress === 0) return;
-
-    setRunning(true);
-  }, [hasProgress, progress]);
-
-  const stopProgress = () => setRunning(false);
-
-  const { hoverProps } = useHover({
-    onHoverStart: stopProgress,
-    onHoverEnd: startProgress
+  const { value: countdown, start, stop } = useCountdown({
+    timeout,
+    disabled: !showCountdown,
+    onEndCountdown: onDismiss
   });
 
-  useEffect(() => {
-    if (hasProgress && progress === 0) {
-      stopProgress();
-      onDismiss?.();
-    }
-  }, [hasProgress, onDismiss, progress]);
-
-  useEffect(() => {
-    if (hasProgress) {
-      startProgress();
-    }
-  }, [hasProgress, startProgress]);
-
-  useEffect(() => {
-    if (!hasProgress || progress === 0) return;
-
-    if (windowFocused) {
-      startProgress();
-    } else {
-      stopProgress();
-    }
-  }, [hasProgress, progress, startProgress, windowFocused]);
+  const { hoverProps } = useHover({
+    onHoverStart: stop,
+    onHoverEnd: start,
+    isDisabled: !showCountdown
+  });
 
   const handleViewDetails = () => {
     dispatch(updateTransactionModal(true, { variant: TransactionStatus.ERROR, description, errorMessage }));
     onDismiss?.();
   };
 
-  const icon = useMemo(() => {
-    switch (variant) {
-      case TransactionStatus.CONFIRM:
-      case TransactionStatus.SUBMITTING:
-        return <LoadingSpinner thickness={2} diameter={24} variant='indeterminate' />;
-      case TransactionStatus.SUCCESS:
-        return <CheckCircle color='success' />;
-      case TransactionStatus.ERROR:
-        return <XCircle color='error' />;
-    }
-  }, [variant]);
-
-  const content = useMemo(() => {
-    switch (variant) {
-      case TransactionStatus.CONFIRM:
-        return t('transaction.confirm_transaction');
-      case TransactionStatus.SUBMITTING:
-        return t('transaction.transaction_processing');
-      case TransactionStatus.SUCCESS:
-        return t('transaction.transaction_successful');
-      case TransactionStatus.ERROR:
-        return t('transaction.transaction_failed');
-    }
-  }, [t, variant]);
+  const { title, icon } = getData(t, variant);
 
   return (
     <StyledWrapper direction='column' {...mergeProps(props, hoverProps)}>
@@ -126,7 +88,7 @@ const TransactionToast = ({
         </Flex>
         <Flex direction='column' gap='spacing1' marginY='spacing1'>
           <P weight='bold' size='s'>
-            {content}
+            {title}
           </P>
           {description && (
             <P rows={2} size='xs'>
@@ -135,10 +97,10 @@ const TransactionToast = ({
           )}
         </Flex>
       </Flex>
-      {hasProgress && (
+      {showCountdown && (
         <StyledProgressBar
           aria-label='notification timer'
-          value={hasProgress ? progress : 0}
+          value={showCountdown ? countdown : 0}
           color={variant === TransactionStatus.ERROR ? 'red' : 'default'}
         />
       )}

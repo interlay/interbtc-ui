@@ -22,34 +22,28 @@ import { TransactionStatus } from '@/utils/hooks/transaction/types';
 
 import { StyledCard, StyledCheckCircle, StyledXCircle } from './TransactionModal.style';
 
+const loadingSpinner = <LoadingSpinner variant='indeterminate' diameter={64} thickness={6} />;
+
 const getData = (t: TFunction, variant: TransactionStatus) =>
   ({
     [TransactionStatus.CONFIRM]: {
       title: t('transaction.confirm_transaction'),
-      subtitle: t('transaction.confirm_transaction_wallet')
+      subtitle: t('transaction.confirm_transaction_wallet'),
+      icon: loadingSpinner
     },
     [TransactionStatus.SUBMITTING]: {
-      title: t('transaction.transaction_processing')
+      title: t('transaction.transaction_processing'),
+      icon: loadingSpinner
     },
     [TransactionStatus.ERROR]: {
-      title: t('transaction.transaction_failed')
+      title: t('transaction.transaction_failed'),
+      icon: <StyledXCircle color='error' />
     },
     [TransactionStatus.SUCCESS]: {
-      title: t('transaction.transaction_successful')
+      title: t('transaction.transaction_successful'),
+      icon: <StyledCheckCircle color='success' />
     }
   }[variant]);
-
-const getIcon = (variant: TransactionStatus) => {
-  switch (variant) {
-    case TransactionStatus.CONFIRM:
-    case TransactionStatus.SUBMITTING:
-      return <LoadingSpinner variant='indeterminate' diameter={64} thickness={6} />;
-    case TransactionStatus.ERROR:
-      return <StyledXCircle color='error' />;
-    case TransactionStatus.SUCCESS:
-      return <StyledCheckCircle color='success' />;
-  }
-};
 
 const TransactionModal = (): JSX.Element => {
   const { t } = useTranslation();
@@ -60,11 +54,9 @@ const TransactionModal = (): JSX.Element => {
   const { variant, description, url, timestamp, errorMessage } = data;
   const dispatch = useDispatch();
 
-  const { title, subtitle } = getData(t, variant);
+  const { title, subtitle, icon } = getData(t, variant);
 
   const hasDismiss = variant !== TransactionStatus.CONFIRM;
-
-  const icon = getIcon(variant);
 
   const handleClose = () => {
     // Only show toast if the current transaction variant is CONFIRM or SUBMITTING.

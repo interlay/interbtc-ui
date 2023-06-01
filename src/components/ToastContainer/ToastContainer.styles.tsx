@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import { theme } from '@/component-library';
 
+// &&& is used to override css styles
 const StyledToastContainer = styled(ToastContainer)`
   &&&.Toastify__toast-container {
     color: ${theme.colors.textPrimary};
