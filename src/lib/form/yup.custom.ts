@@ -110,14 +110,19 @@ enum AddressType {
   RELAY_CHAIN
 }
 
+const addressValidationMap = {
+  [AddressType.RELAY_CHAIN]: isValidRelayAddress
+};
+
 yup.addMethod<yup.StringSchema>(
   yup.string,
   'address',
-  function (action: string, addressType = AddressType.RELAY_CHAIN, customMessage?: string) {
-    return this.test('requiredAmount', (value, ctx) => {
-      // TODO: add bitcoin address validation
-      if (!value || (addressType === AddressType.RELAY_CHAIN && !isValidRelayAddress(value))) {
-        const message = customMessage || i18n.t('forms.please_enter_the_amount_to', { field: action });
+  function (action: string, addressType: AddressType = AddressType.RELAY_CHAIN, customMessage?: string) {
+    return this.test('address', (value, ctx) => {
+      const isValidAdress = addressValidationMap[addressType];
+
+      if (!value || !isValidAdress(value)) {
+        const message = customMessage || i18n.t('forms.please_enter_a_valide_address', { field: action });
         return ctx.createError({ message });
       }
 

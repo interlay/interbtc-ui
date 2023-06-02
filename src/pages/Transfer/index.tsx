@@ -1,3 +1,3 @@
-import TransferOverview from './TransferOverview';
+import Transfer from './Transfer';
 
-export default TransferOverview;
+export default Transfer;

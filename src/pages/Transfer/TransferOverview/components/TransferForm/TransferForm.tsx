@@ -1,6 +1,6 @@
 import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
-import { Key, useState } from 'react';
+import { Key, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
@@ -43,6 +43,7 @@ const TransferForm = ({}: TransferFormProps): JSX.Element => {
   const { getCurrencyFromTicker } = useGetCurrencies(bridgeLoaded);
   const { getBalance, getAvailableBalance } = useGetBalances();
   const { items: selectItems } = useSelectCurrency();
+
   const [transferToken, setTransferToken] = useState<CurrencyExt>(GOVERNANCE_TOKEN);
 
   const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
@@ -73,15 +74,21 @@ const TransferForm = ({}: TransferFormProps): JSX.Element => {
     transaction.execute(destination, amount);
   };
 
-  const form = useForm<TransferFormData>({
-    initialValues: {
+  const initialValues = useMemo(
+    () => ({
       [TRANSFER_RECIPIENT_FIELD]: '',
       [TRANSFER_AMOUNT_FIELD]: '',
       [TRANSFER_TOKEN_FIELD]: transferToken.ticker || ''
-    },
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const form = useForm<TransferFormData>({
+    initialValues,
     validationSchema: transferSchema({ [TRANSFER_AMOUNT_FIELD]: transferAmountSchemaParams }, t),
     onSubmit: handleSubmit,
-    disableValidation: transaction.isLoading
+    showErrorMessages: !transaction.isLoading
   });
 
   const handleTickerChange = (ticker: string, name: string) => {
