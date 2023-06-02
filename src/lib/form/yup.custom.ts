@@ -2,20 +2,14 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { TFunction } from 'react-i18next';
+import i18n from 'i18next';
 import * as yup from 'yup';
 import { AnyObject, Maybe } from 'yup/lib/types';
-
-type YupContext = {
-  t: TFunction;
-};
 
 yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: string, customMessage?: string) {
   return this.transform((value) => (isNaN(value) ? undefined : value)).test('requiredAmount', (value, ctx) => {
     if (value === undefined) {
-      const { t } = ctx.options.context as YupContext;
-
-      const message = customMessage || t('forms.please_enter_the_amount_to', { field: action });
+      const message = customMessage || i18n.t('forms.please_enter_the_amount_to', { field: action });
       return ctx.createError({ message });
     }
 
@@ -34,12 +28,10 @@ yup.addMethod<yup.StringSchema>(
   'fees',
   function ({ transactionFee, governanceBalance }: FeesValidationParams, customMessage?: string) {
     return this.test('fees', (_, ctx) => {
-      const { t } = ctx.options.context as YupContext;
-
       if (governanceBalance.lt(transactionFee)) {
         const message =
           customMessage ||
-          t('insufficient_funds_governance_token', {
+          i18n.t('insufficient_funds_governance_token', {
             governanceTokenSymbol: transactionFee.currency.ticker
           });
 
@@ -60,8 +52,6 @@ yup.addMethod<yup.StringSchema>(
   'maxAmount',
   function ({ maxAmount }: MaxAmountValidationParams, action?: string, customMessage?: string) {
     return this.test('maxAmount', (value, ctx) => {
-      const { t } = ctx.options.context as YupContext;
-
       if (value === undefined) return true;
 
       const amount = new Big(value);
@@ -70,12 +60,13 @@ yup.addMethod<yup.StringSchema>(
 
       // same validation, just different data types that lead to different implementation
       if (isMonetaryAmount && amount.gt((maxAmount as MonetaryAmount<CurrencyExt>).toBig())) {
-        const message = customMessage || t('forms.please_enter_no_higher_available_balance');
+        const message = customMessage || i18n.t('forms.please_enter_no_higher_available_balance');
         return ctx.createError({ message });
       }
 
       if (amount.gt(maxAmount as Big)) {
-        const message = customMessage || t('forms.amount_must_be_at_most', { action, amount: maxAmount.toString() });
+        const message =
+          customMessage || i18n.t('forms.amount_must_be_at_most', { action, amount: maxAmount.toString() });
         return ctx.createError({ message });
       }
 
@@ -93,8 +84,6 @@ yup.addMethod<yup.StringSchema>(
   'minAmount',
   function ({ minAmount }: MinAmountValidationParams, action: string, customMessage?: string) {
     return this.test('balance', (value, ctx) => {
-      const { t } = ctx.options.context as YupContext;
-
       if (value === undefined) return true;
 
       const amount = new Big(value);
@@ -102,7 +91,7 @@ yup.addMethod<yup.StringSchema>(
       if (amount.lt(minAmount.toBig())) {
         const message =
           customMessage ||
-          t('forms.amount_must_be_at_least', {
+          i18n.t('forms.amount_must_be_at_least', {
             action,
             amount: minAmount.toString(),
             token: minAmount.currency.ticker
@@ -137,4 +126,4 @@ declare module 'yup' {
 }
 
 export default yup;
-export type { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams, YupContext };
+export type { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams };

@@ -169,8 +169,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       )
     : 0;
 
-  const isCTADisabled = isFormDisabled(form) || form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] === '';
-  const amountShouldValidate = form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] !== '';
+  const isCTADisabled = isFormDisabled(form);
 
   useEffect(() => {
     if (!originatingChains?.length) return;
@@ -246,7 +245,7 @@ const CrossChainTransferForm = (): JSX.Element => {
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
             })}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, amountShouldValidate))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
           />
         </div>
         <AccountSelect
