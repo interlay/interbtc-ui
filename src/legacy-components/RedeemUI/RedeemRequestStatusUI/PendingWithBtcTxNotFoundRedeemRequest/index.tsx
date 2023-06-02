@@ -7,7 +7,7 @@ import { StoreType } from '@/common/types/util.types';
 import { BLOCK_TIME } from '@/config/parachain';
 import Ring48, { Ring48Title, Ring48Value } from '@/legacy-components/Ring48';
 import Timer from '@/legacy-components/Timer';
-import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import RequestWrapper from '@/pages/Bridge copy/RequestWrapper';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 
 interface Props {

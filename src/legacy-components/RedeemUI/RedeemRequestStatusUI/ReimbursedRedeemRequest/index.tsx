@@ -20,7 +20,7 @@ import ExternalLink from '@/legacy-components/ExternalLink';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorSpan from '@/legacy-components/PrimaryColorSpan';
-import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import RequestWrapper from '@/pages/Bridge copy/RequestWrapper';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';

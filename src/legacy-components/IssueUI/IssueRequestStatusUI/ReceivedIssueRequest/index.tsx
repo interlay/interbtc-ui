@@ -8,7 +8,7 @@ import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import Ring48, { Ring48Title, Ring48Value } from '@/legacy-components/Ring48';
-import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import RequestWrapper from '@/pages/Bridge copy/RequestWrapper';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';
