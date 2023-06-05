@@ -1,7 +1,7 @@
 import { Flex, Tabs, TabsItem } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
-import { useGetDustValue } from '@/utils/hooks/api/bridge/use-get-dust-value';
+import { useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { useGetIssueRequestLimit } from '@/utils/hooks/api/bridge/use-get-issue-request-limits';
 import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 
@@ -19,9 +19,9 @@ const BridgeOverview = (): JSX.Element => {
   const { tabsProps } = useTabPageLocation();
 
   const { data: issueRequestLimit } = useGetIssueRequestLimit();
-  const { data: issueDustValue } = useGetDustValue();
+  const { data: issueData } = useGetIssueData();
 
-  if (issueRequestLimit === undefined || issueDustValue === undefined) {
+  if (issueRequestLimit === undefined || issueData === undefined) {
     return <FullLoadingSpinner />;
   }
 
@@ -33,7 +33,7 @@ const BridgeOverview = (): JSX.Element => {
             <Tabs {...tabsProps} size='large' fullWidth>
               <TabsItem title='Issue' key={BridgeTabs.ISSUE}>
                 <StyledFormWrapper>
-                  <IssueForm requestLimits={issueRequestLimit} dustValue={issueDustValue} />
+                  <IssueForm requestLimits={issueRequestLimit} data={issueData} />
                 </StyledFormWrapper>
               </TabsItem>
               <TabsItem title='Redeem' key={BridgeTabs.REDEEM}>
