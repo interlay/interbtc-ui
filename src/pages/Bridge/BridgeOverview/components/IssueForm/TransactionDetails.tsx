@@ -1,3 +1,5 @@
+import { Currency, MonetaryAmount } from '@interlay/monetary-js';
+
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Dd, DlGroup, Dt, Tooltip } from '@/component-library';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
@@ -6,11 +8,9 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledDl, StyledInformationCircle } from './IssueForm.styles';
 
-// eslint-disable-next-line @typescript-eslint/ban-types
-type TransactionDetailsProps = {};
+type TransactionDetailsProps = { issueFee: MonetaryAmount<Currency>; securityDeposit: MonetaryAmount<Currency> };
 
-// eslint-disable-next-line no-empty-pattern
-const TransactionDetails = ({}: TransactionDetailsProps): JSX.Element => {
+const TransactionDetails = ({ issueFee, securityDeposit }: TransactionDetailsProps): JSX.Element => {
   const prices = useGetPrices();
 
   return (
@@ -23,12 +23,8 @@ const TransactionDetails = ({}: TransactionDetailsProps): JSX.Element => {
           </Tooltip>
         </Dt>
         <Dd>
-          {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
-          {displayMonetaryAmountInUSDFormat(
-            TRANSACTION_FEE_AMOUNT,
-            getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
-          )}
-          )
+          {issueFee.toHuman()} {issueFee.currency.ticker} (
+          {displayMonetaryAmountInUSDFormat(issueFee, getTokenPrice(prices, issueFee.currency.ticker)?.usd)})
         </Dd>
       </DlGroup>
       <DlGroup justifyContent='space-between'>
@@ -39,10 +35,10 @@ const TransactionDetails = ({}: TransactionDetailsProps): JSX.Element => {
           </Tooltip>
         </Dt>
         <Dd>
-          {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
+          {securityDeposit.toHuman()} {securityDeposit.currency.ticker} (
           {displayMonetaryAmountInUSDFormat(
-            TRANSACTION_FEE_AMOUNT,
-            getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
+            securityDeposit,
+            getTokenPrice(prices, securityDeposit.currency.ticker)?.usd
           )}
           )
         </Dd>
