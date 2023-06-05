@@ -22,8 +22,20 @@ const StyledListItemLabel = styled(Span)<StyledListItemSelectedLabelProps>`
   overflow: hidden;
 `;
 
+const StyledVaultName = styled(Span)<StyledListItemSelectedLabelProps>`
+  color: ${({ $isSelected }) =>
+    $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
+`;
+
 const StyledListChainWrapper = styled(Flex)`
   overflow: hidden;
 `;
 
-export { StyledChain, StyledListChainWrapper, StyledListItemLabel };
+const StyledVaultIcon = styled(Flex)`
+  & :first-child {
+    margin-right: -15%;
+    z-index: 1;
+  }
+`;
+
+export { StyledChain, StyledListChainWrapper, StyledListItemLabel, StyledVaultIcon, StyledVaultName };

@@ -58,6 +58,7 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
 `;
 
 const StyledTriggerValue = styled(Span)<StyledTriggerValueProps>`
+  flex: 1;
   display: inline-flex;
   align-items: center;
   color: ${({ $isDisabled, $isSelected }) =>

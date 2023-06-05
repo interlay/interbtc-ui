@@ -1,6 +1,6 @@
 import { CurrencyExt, InterbtcPrimitivesVaultId, newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
-import Big from 'big.js';
+import Big, { BigSource } from 'big.js';
 
 import { PARACHAIN_URL } from '@/constants';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -177,6 +177,14 @@ const newSafeMonetaryAmount: typeof newMonetaryAmount = (...args) => {
   }
 };
 
+const newSafeBitcoinAmount = (amount: BigSource): BitcoinAmount => {
+  try {
+    return new BitcoinAmount(amount);
+  } catch (e) {
+    return new BitcoinAmount(0);
+  }
+};
+
 export {
   convertMonetaryAmountToUsdBig as convertMonetaryAmountToBigUSD,
   convertMonetaryAmountToValueInUSD,
@@ -192,6 +200,7 @@ export {
   getPolkadotLink,
   getRandomVaultIdWithCapacity,
   monetaryToNumber,
+  newSafeBitcoinAmount,
   newSafeMonetaryAmount,
   shortAddress,
   shortTxId

@@ -1,4 +1,4 @@
-import { InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
+import { CurrencyExt, InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -6,19 +6,14 @@ import { useQuery, UseQueryOptions } from 'react-query';
 
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
+import { useGetCurrencies } from '../use-get-currencies';
+
 type BridgeAction = 'issue' | 'redeem';
 
 type BridgeVaultData = {
   id: InterbtcPrimitivesVaultId;
   amount: MonetaryAmount<Currency>;
-};
-
-const getVaults = async (action: BridgeAction): Promise<BridgeVaultData[]> => {
-  const vaults = await (action === 'issue'
-    ? window.bridge.vaults.getVaultsWithIssuableTokens()
-    : window.bridge.vaults.getVaultsWithRedeemableTokens());
-
-  return [...vaults].map(([vaultId, amount]) => ({ id: vaultId, amount }));
+  collateralCurrency: CurrencyExt;
 };
 
 type UseGetDustValueResult = {
@@ -32,6 +27,23 @@ type UseGetVaultsOptions = UseQueryOptions<BridgeVaultData[], unknown, BridgeVau
 };
 
 const useGetVaults = ({ action, ...options }: UseGetVaultsOptions): UseGetDustValueResult => {
+  const { getCurrencyFromIdPrimitive } = useGetCurrencies(true);
+
+  const getVaults = useCallback(
+    async (action: BridgeAction): Promise<BridgeVaultData[]> => {
+      const vaults = await (action === 'issue'
+        ? window.bridge.vaults.getVaultsWithIssuableTokens()
+        : window.bridge.vaults.getVaultsWithRedeemableTokens());
+
+      return [...vaults].map(([vaultId, amount]) => ({
+        id: vaultId,
+        amount,
+        collateralCurrency: getCurrencyFromIdPrimitive(vaultId.currencies.collateral)
+      }));
+    },
+    [getCurrencyFromIdPrimitive]
+  );
+
   const { data, error, refetch } = useQuery({
     queryKey: ['vaults', action],
     queryFn: () => getVaults(action),
