@@ -1,3 +1,5 @@
+import i18n from 'i18next';
+
 import yup, { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
 const BRIDGE_ISSUE_AMOUNT_FIELD = 'issue-amount';
@@ -16,9 +18,16 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
   yup.object().shape({
     [BRIDGE_ISSUE_AMOUNT_FIELD]: yup
       .string()
-      .requiredAmount(BRIDGE_ISSUE_AMOUNT_FIELD)
-      .maxAmount(params[BRIDGE_ISSUE_AMOUNT_FIELD])
-      .minAmount(params[BRIDGE_ISSUE_AMOUNT_FIELD], BRIDGE_ISSUE_AMOUNT_FIELD)
+      .requiredAmount('issue')
+      .maxAmount(
+        params[BRIDGE_ISSUE_AMOUNT_FIELD],
+        'issue',
+        i18n.t('forms.amount_must_be_at_most', {
+          action: 'issue',
+          amount: params[BRIDGE_ISSUE_AMOUNT_FIELD].maxAmount.toString()
+        })
+      )
+      .minAmount(params[BRIDGE_ISSUE_AMOUNT_FIELD], 'issue')
       .fees(params[BRIDGE_ISSUE_AMOUNT_FIELD]),
     [BRIDGE_ISSUE_VAULT_FIELD]: yup.string()
   });

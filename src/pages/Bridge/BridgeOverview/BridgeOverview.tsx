@@ -3,6 +3,7 @@ import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
 import { useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { useGetIssueRequestLimit } from '@/utils/hooks/api/bridge/use-get-issue-request-limits';
+import { useGetMaxBurnanbleTokens } from '@/utils/hooks/api/bridge/use-get-max-burnable-tokens';
 import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 
 import { StyledCard, StyledFormWrapper, StyledWrapper } from './BridgeOverview.styles';
@@ -19,9 +20,10 @@ const BridgeOverview = (): JSX.Element => {
   const { tabsProps } = useTabPageLocation();
 
   const { data: issueRequestLimit } = useGetIssueRequestLimit();
+  const { data: maxBurnableTokensData } = useGetMaxBurnanbleTokens();
   const { data: issueData } = useGetIssueData();
 
-  if (issueRequestLimit === undefined || issueData === undefined) {
+  if (issueRequestLimit === undefined || issueData === undefined || maxBurnableTokensData === undefined) {
     return <FullLoadingSpinner />;
   }
 
@@ -39,9 +41,11 @@ const BridgeOverview = (): JSX.Element => {
               <TabsItem title='Redeem' key={BridgeTabs.REDEEM}>
                 <StyledFormWrapper>Redeem</StyledFormWrapper>
               </TabsItem>
-              <TabsItem title='Burn' key={BridgeTabs.BURN}>
-                <StyledFormWrapper>Burn</StyledFormWrapper>
-              </TabsItem>
+              {maxBurnableTokensData.hasBurnableTokens && (
+                <TabsItem title='Burn' key={BridgeTabs.BURN}>
+                  <StyledFormWrapper>Burn</StyledFormWrapper>
+                </TabsItem>
+              )}
             </Tabs>
           </Flex>
         </StyledCard>

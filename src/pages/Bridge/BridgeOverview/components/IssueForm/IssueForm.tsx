@@ -2,9 +2,10 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
+import { useDebounce } from 'react-use';
 
-import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, newSafeBitcoinAmount, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Dd, Dl, DlGroup, Dt, Flex, P, Switch, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -26,13 +27,19 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { VaultSelect } from '../VaultSelect';
 import { TransactionDetails } from './TransactionDetails';
 
+const isInputOverRequestLimit = (inputAmount: BitcoinAmount, limits: IssueLimits) =>
+  inputAmount.gt(limits.singleVaultMaxIssuable);
+
 type IssueFormProps = { requestLimits: IssueLimits; data: IssueData };
 
+// TODO: oracle down error
 const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
   const { getSecurityDeposit } = useGetIssueData();
   const [isSelectingVault, setSelectingVault] = useState(false);
+
+  const [amount, setAmount] = useState<string>();
 
   const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
     onSuccess: () => {
@@ -42,6 +49,24 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
 
   const { getAvailableVaults } = useGetVaults({ action: 'issue', enabled: isSelectingVault });
 
+  const handleRequestLimit = useCallback(() => {
+    if (!amount) return;
+
+    const monetaryAmount = newSafeBitcoinAmount(amount);
+    const isSelectingVault = !isInputOverRequestLimit(monetaryAmount, requestLimits);
+    setSelectingVault(isSelectingVault);
+  }, [amount, requestLimits]);
+
+  useDebounce(
+    () => {
+      handleRequestLimit();
+
+      console.log('here');
+    },
+    500,
+    [amount, requestLimits]
+  );
+
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
   const transferAmountSchemaParams = {
@@ -50,8 +75,6 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     minAmount: data.dustValue,
     transactionFee: TRANSACTION_FEE_AMOUNT
   };
-
-  const handleChangeSelectingVault = (e: ChangeEvent<HTMLInputElement>) => setSelectingVault(e.target.checked);
 
   const handleSubmit = async (values: any) => {
     console.log(values);
@@ -67,6 +90,10 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     showErrorMessages: !transaction.isLoading
   });
 
+  const handleChangeSelectingVault = (e: ChangeEvent<HTMLInputElement>) => setSelectingVault(e.target.checked);
+
+  const handleChangeIssueAmount = (e: ChangeEvent<HTMLInputElement>) => setAmount(e.target.value);
+
   const monetaryAmount = newSafeMonetaryAmount(form.values[BRIDGE_ISSUE_AMOUNT_FIELD] || 0, WRAPPED_TOKEN, true);
   const amountUSD = monetaryAmount
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
@@ -74,11 +101,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
 
   const isBtnDisabled = isFormDisabled(form);
 
-  // const total = monetaryBtcAmount.sub(bridgeFee);
-  // const totalInBTC = total.toHuman(8);
-
   const securityDeposit = getSecurityDeposit(monetaryAmount) || new BitcoinAmount(0);
-
   const vaults = getAvailableVaults(monetaryAmount);
 
   return (
@@ -94,7 +117,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
               humanBalance={requestLimits.singleVaultMaxIssuable.toHuman() || 0}
               ticker='BTC'
               valueUSD={amountUSD}
-              {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD))}
+              {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
             />
             <Switch isSelected={isSelectingVault} onChange={handleChangeSelectingVault}>
               Manually Select Vault
