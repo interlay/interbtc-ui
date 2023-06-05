@@ -23,7 +23,7 @@ const getVestingData = async (accountId: AccountId): Promise<VestingData> => {
   const schedules = await window.bridge.api.query.vesting.vestingSchedules(accountId);
 
   const schedule = schedules[0];
-  const isClaimable = !!schedule && currentBlockNumber > schedule.start + schedule.period;
+  const isClaimable = !!schedule && currentBlockNumber > schedule.start.toNumber() + schedule.period.toNumber();
 
   return {
     schedules,

@@ -8,12 +8,10 @@ import {
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 
 import { displayMonetaryAmount } from '@/common/utils/utils';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
@@ -57,10 +55,8 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
   const queryClient = useQueryClient();
 
   const transaction = useTransaction(Transaction.ISSUE_EXECUTE, {
-    onSuccess: (_, variables) => {
-      const [requestId] = variables.args;
+    onSuccess: () => {
       queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
-      toast.success(t('issue_page.successfully_executed', { id: requestId }));
     }
   });
 
@@ -139,16 +135,6 @@ const ManualIssueExecutionUI = ({ request }: Props): JSX.Element => {
           wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
         })}
       </InterlayDenimOrKintsugiMidnightOutlinedButton>
-      {transaction.isError && transaction.error && (
-        <ErrorModal
-          open={!!transaction.error}
-          onClose={() => {
-            transaction.reset();
-          }}
-          title='Error'
-          description={typeof transaction.error === 'string' ? transaction.error : transaction.error.message}
-        />
-      )}
     </div>
   );
 };

@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 import { showAccountModalAction, showSignTermsModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { FundWallet } from '@/components';
+import { FundWallet, NotificationsPopover } from '@/components';
 import { AuthModal, SignTermsModal } from '@/components/AuthModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
@@ -21,6 +21,7 @@ import Tokens from '@/legacy-components/Tokens';
 import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { BitcoinNetwork } from '@/types/bitcoin';
+import { useNotifications } from '@/utils/context/Notifications';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';
@@ -38,6 +39,7 @@ const Topbar = (): JSX.Element => {
   const isBanxaEnabled = useFeatureFlag(FeatureFlags.BANXA);
   const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const { selectProps } = useSignMessage();
+  const { list } = useNotifications();
 
   const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
 
@@ -47,6 +49,7 @@ const Topbar = (): JSX.Element => {
     try {
       const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedAccount.address);
       await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN);
+      // TODO: show new notification
       toast.success('Your account has been funded.');
     } catch (error) {
       toast.error(`Funding failed. ${error.message}`);
@@ -134,6 +137,7 @@ const Topbar = (): JSX.Element => {
             <Tokens />
           </>
         )}
+        <NotificationsPopover address={selectedAccount?.address} items={list} />
         <InterlayDefaultContainedButton className={SMALL_SIZE_BUTTON_CLASSES} onClick={handleAccountModalOpen}>
           {accountLabel}
         </InterlayDefaultContainedButton>

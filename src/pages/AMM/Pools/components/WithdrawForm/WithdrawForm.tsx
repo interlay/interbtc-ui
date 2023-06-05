@@ -2,7 +2,6 @@ import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { RefObject, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 
 import {
   convertMonetaryAmountToValueInUSD,
@@ -28,10 +27,11 @@ import { StyledDl } from './WithdrawForm.styles';
 type WithdrawFormProps = {
   pool: LiquidityPool;
   slippageModalRef: RefObject<HTMLDivElement>;
-  onWithdraw?: () => void;
+  onSuccess?: () => void;
+  onSigning?: () => void;
 };
 
-const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps): JSX.Element => {
+const WithdrawForm = ({ pool, slippageModalRef, onSuccess, onSigning }: WithdrawFormProps): JSX.Element => {
   const [slippage, setSlippage] = useState<number>(0.1);
 
   const accountId = useAccountId();
@@ -40,13 +40,8 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
   const { getBalance } = useGetBalances();
 
   const transaction = useTransaction(Transaction.AMM_REMOVE_LIQUIDITY, {
-    onSuccess: () => {
-      onWithdraw?.();
-      toast.success('Withdraw successful');
-    },
-    onError: (err) => {
-      toast.error(err.message);
-    }
+    onSuccess,
+    onSigning
   });
 
   const { lpToken } = pool;
@@ -70,8 +65,8 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
       const deadline = await window.bridge.system.getFutureBlockNumber(AMM_DEADLINE_INTERVAL);
 
       return transaction.execute(amount, pool, slippage, deadline, accountId);
-    } catch (err: any) {
-      toast.error(err.toString());
+    } catch (error: any) {
+      transaction.reject(error);
     }
   };
 
@@ -141,7 +136,7 @@ const WithdrawForm = ({ pool, slippageModalRef, onWithdraw }: WithdrawFormProps)
               </Dd>
             </DlGroup>
           </StyledDl>
-          <AuthCTA type='submit' size='large' disabled={isBtnDisabled} loading={transaction.isLoading}>
+          <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
             {t('amm.pools.remove_liquidity')}
           </AuthCTA>
         </Flex>

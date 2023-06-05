@@ -5,19 +5,16 @@ import { withErrorBoundary } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { ParachainStatus, StoreType } from '@/common/types/util.types';
 import { formatNumber } from '@/common/utils/utils';
 import { AuthCTA } from '@/components';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import FormTitle from '@/legacy-components/FormTitle';
 import TextField from '@/legacy-components/TextField';
 import Tokens, { TokenOption } from '@/legacy-components/Tokens';
 import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
-import STATUSES from '@/utils/constants/statuses';
 import isValidPolkadotAddress from '@/utils/helpers/is-valid-polkadot-address';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
@@ -47,28 +44,21 @@ const TransferForm = (): JSX.Element => {
   });
 
   const [activeToken, setActiveToken] = React.useState<TokenOption | undefined>(undefined);
-  const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
-  const [submitError, setSubmitError] = React.useState<Error | null>(null);
 
-  const transaction = useTransaction(Transaction.TOKENS_TRANSFER);
+  const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
+    onSigning: () => {
+      reset({
+        [TRANSFER_AMOUNT]: '',
+        [RECIPIENT_ADDRESS]: ''
+      });
+    }
+  });
 
   const onSubmit = async (data: TransferFormData) => {
     if (!activeToken) return;
     if (data[TRANSFER_AMOUNT] === undefined) return;
 
-    try {
-      setSubmitStatus(STATUSES.PENDING);
-
-      await transaction.executeAsync(
-        data[RECIPIENT_ADDRESS],
-        newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token, true)
-      );
-
-      setSubmitStatus(STATUSES.RESOLVED);
-    } catch (error) {
-      setSubmitStatus(STATUSES.REJECTED);
-      setSubmitError(error);
-    }
+    transaction.execute(data[RECIPIENT_ADDRESS], newMonetaryAmount(data[TRANSFER_AMOUNT], activeToken.token, true));
   };
 
   const validateTransferAmount = React.useCallback(
@@ -95,19 +85,6 @@ const TransferForm = (): JSX.Element => {
   };
 
   const handleClickBalance = () => setValue(TRANSFER_AMOUNT, activeToken?.transferableBalance || '');
-
-  // This ensures that triggering the notification and clearing
-  // the form happen at the same time.
-  React.useEffect(() => {
-    if (submitStatus !== STATUSES.RESOLVED) return;
-
-    toast.success(t('transfer_page.successfully_transferred'));
-
-    reset({
-      [TRANSFER_AMOUNT]: '',
-      [RECIPIENT_ADDRESS]: ''
-    });
-  }, [submitStatus, reset, t]);
 
   return (
     <>
@@ -171,22 +148,10 @@ const TransferForm = (): JSX.Element => {
           size='large'
           type='submit'
           disabled={parachainStatus === (ParachainStatus.Loading || ParachainStatus.Shutdown)}
-          loading={submitStatus === STATUSES.PENDING}
         >
           {t('transfer')}
         </AuthCTA>
       </form>
-      {submitStatus === STATUSES.REJECTED && submitError && (
-        <ErrorModal
-          open={!!submitError}
-          onClose={() => {
-            setSubmitStatus(STATUSES.IDLE);
-            setSubmitError(null);
-          }}
-          title='Error'
-          description={typeof submitError === 'string' ? submitError : submitError.message}
-        />
-      )}
     </>
   );
 };

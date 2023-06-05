@@ -21,6 +21,7 @@ import App from './App';
 import { GeoblockingWrapper } from './components/Geoblock/Geoblock';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
+import { NotificationsProvider } from './utils/context/Notifications';
 
 configGlobalBig();
 
@@ -40,9 +41,11 @@ ReactDOM.render(
               <ThemeWrapper>
                 <SubstrateLoadingAndErrorHandlingWrapper>
                   <Subscriptions>
-                    <OverlayProvider>
-                      <App />
-                    </OverlayProvider>
+                    <NotificationsProvider>
+                      <OverlayProvider>
+                        <App />
+                      </OverlayProvider>
+                    </NotificationsProvider>
                   </Subscriptions>
                 </SubstrateLoadingAndErrorHandlingWrapper>
               </ThemeWrapper>

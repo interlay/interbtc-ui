@@ -1,14 +1,13 @@
 import { Redeem } from '@interlay/interbtc-api';
 import clsx from 'clsx';
-import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
 
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { Modal, ModalBody } from '@/component-library';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
-import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
-import InterlayModal, { InterlayModalInnerWrapper, Props as ModalProps } from '@/legacy-components/UI/InterlayModal';
+import { Props as ModalProps } from '@/legacy-components/UI/InterlayModal';
 import InterlayRouterLink from '@/legacy-components/UI/InterlayRouterLink';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
@@ -33,12 +32,9 @@ const SubmittedRedeemRequestModal = ({
   const { t } = useTranslation();
   const prices = useGetPrices();
 
-  const focusRef = React.useRef(null);
-
   return (
-    <InterlayModal initialFocus={focusRef} open={open} onClose={onClose}>
-      <InterlayModalInnerWrapper className={clsx('p-8', 'max-w-lg')}>
-        <CloseIconButton ref={focusRef} onClick={onClose} />
+    <Modal align='top' isOpen={open} onClose={onClose}>
+      <ModalBody>
         <div className={clsx('flex', 'flex-col', 'space-y-8')}>
           <h4 className={clsx('text-2xl', getColorShade('yellow'), 'font-medium', 'text-center')}>
             {t('redeem_page.redeem')}
@@ -114,8 +110,8 @@ const SubmittedRedeemRequestModal = ({
             </InterlayDefaultContainedButton>
           </InterlayRouterLink>
         </div>
-      </InterlayModalInnerWrapper>
-    </InterlayModal>
+      </ModalBody>
+    </Modal>
   );
 };
 

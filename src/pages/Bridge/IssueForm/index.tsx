@@ -42,7 +42,6 @@ import {
 } from '@/config/relay-chains';
 import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
@@ -126,7 +125,6 @@ const IssueForm = (): JSX.Element | null => {
   );
   const [dustValue, setDustValue] = React.useState(new BitcoinAmount(DEFAULT_ISSUE_DUST_AMOUNT));
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
-  const [submitError, setSubmitError] = React.useState<Error | null>(null);
   const [submittedRequest, setSubmittedRequest] = React.useState<Issue>();
   const [selectVaultManually, setSelectVaultManually] = React.useState<boolean>(false);
   const [selectedVault, setSelectedVault] = React.useState<VaultApiType | undefined>();
@@ -142,7 +140,7 @@ const IssueForm = (): JSX.Element | null => {
   });
   useErrorHandler(requestLimitsError);
 
-  const transaction = useTransaction(Transaction.ISSUE_REQUEST);
+  const transaction = useTransaction(Transaction.ISSUE_REQUEST, { showSuccessModal: false });
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -303,43 +301,38 @@ const IssueForm = (): JSX.Element | null => {
     };
 
     const onSubmit = async (data: IssueFormData) => {
-      try {
-        setSubmitStatus(STATUSES.PENDING);
-        await requestLimitsRefetch();
-        await trigger(BTC_AMOUNT);
+      setSubmitStatus(STATUSES.PENDING);
+      await requestLimitsRefetch();
+      await trigger(BTC_AMOUNT);
 
-        const monetaryBtcAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
-        const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
+      const monetaryBtcAmount = new BitcoinAmount(data[BTC_AMOUNT] || '0');
+      const vaults = await window.bridge.vaults.getVaultsWithIssuableTokens();
 
-        let vaultId: InterbtcPrimitivesVaultId;
-        if (selectVaultManually) {
-          if (!selectedVault) {
-            throw new Error('Specific vault is not selected!');
-          }
-          vaultId = selectedVault[0];
-        } else {
-          vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), monetaryBtcAmount);
+      let vaultId: InterbtcPrimitivesVaultId;
+      if (selectVaultManually) {
+        if (!selectedVault) {
+          throw new Error('Specific vault is not selected!');
         }
-
-        const collateralToken = await currencyIdToMonetaryCurrency(window.bridge.api, vaultId.currencies.collateral);
-
-        const result = await transaction.executeAsync(
-          monetaryBtcAmount,
-          vaultId.accountId,
-          collateralToken,
-          false, // default
-          vaults
-        );
-        const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, result);
-
-        // TODO: handle issue aggregation
-        const issueRequest = issueRequests[0];
-        handleSubmittedRequestModalOpen(issueRequest);
-        setSubmitStatus(STATUSES.RESOLVED);
-      } catch (error) {
-        setSubmitStatus(STATUSES.REJECTED);
-        setSubmitError(error);
+        vaultId = selectedVault[0];
+      } else {
+        vaultId = getRandomVaultIdWithCapacity(Array.from(vaults), monetaryBtcAmount);
       }
+
+      const collateralToken = await currencyIdToMonetaryCurrency(window.bridge.api, vaultId.currencies.collateral);
+
+      const result = await transaction.executeAsync(
+        monetaryBtcAmount,
+        vaultId.accountId,
+        collateralToken,
+        false, // default
+        vaults
+      );
+      const issueRequests = await getIssueRequestsFromExtrinsicResult(window.bridge, result.data);
+
+      // TODO: handle issue aggregation
+      const issueRequest = issueRequests[0];
+      handleSubmittedRequestModalOpen(issueRequest);
+      setSubmitStatus(STATUSES.RESOLVED);
     };
 
     const monetaryBtcAmount = new BitcoinAmount(btcAmount);
@@ -536,17 +529,6 @@ const IssueForm = (): JSX.Element | null => {
             {t('confirm')}
           </AuthCTA>
         </form>
-        {submitStatus === STATUSES.REJECTED && submitError && (
-          <ErrorModal
-            open={!!submitError}
-            onClose={() => {
-              setSubmitStatus(STATUSES.IDLE);
-              setSubmitError(null);
-            }}
-            title='Error'
-            description={typeof submitError === 'string' ? submitError : submitError.message}
-          />
-        )}
         {submittedRequest && (
           <SubmittedIssueRequestModal
             open={!!submittedRequest}

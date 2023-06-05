@@ -3,7 +3,7 @@ import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 
 import { GovernanceTokenMonetaryAmount } from '@/config/relay-chains';
 
-import { ParachainStatus, StoreType } from './util.types';
+import { Notification, ParachainStatus, StoreType, TransactionModalData } from './util.types';
 
 // GENERAL ACTIONS
 export const IS_BRIDGE_LOADED = 'IS_BRIDGE_LOADED';
@@ -20,6 +20,9 @@ export const SHOW_SIGN_TERMS_MODAL = 'SHOW_SIGN_TERMS_MODAL';
 export const UPDATE_HEIGHTS = 'UPDATE_HEIGHTS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 export const SHOW_BUY_MODAL = 'SHOW_BUY_MODAL';
+export const ADD_NOTIFICATION = 'ADD_NOTIFICATION';
+export const SHOW_TRANSACTION_MODAL = 'SHOW_TRANSACTION_MODAL';
+export const UPDATE_TRANSACTION_MODAL_STATUS = 'UPDATE_TRANSACTION_MODAL_STATUS';
 
 export interface UpdateTotals {
   type: typeof UPDATE_TOTALS;
@@ -98,6 +101,18 @@ export interface ShowBuyModal {
   isBuyModalOpen: boolean;
 }
 
+export interface AddNotification {
+  type: typeof ADD_NOTIFICATION;
+  accountAddress: string;
+  notification: Notification;
+}
+
+export interface UpdateTransactionModal {
+  type: typeof UPDATE_TRANSACTION_MODAL_STATUS;
+  isOpen: boolean;
+  data: TransactionModalData;
+}
+
 export type GeneralActions =
   | IsBridgeLoaded
   | InitGeneralDataAction
@@ -110,7 +125,9 @@ export type GeneralActions =
   | UpdateHeights
   | UpdateTotals
   | ShowBuyModal
-  | ShowSignTermsModal;
+  | ShowSignTermsModal
+  | AddNotification
+  | UpdateTransactionModal;
 
 // REDEEM
 export const ADD_VAULT_REDEEMS = 'ADD_VAULT_REDEEMS';

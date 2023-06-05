@@ -1,4 +1,3 @@
-import 'react-toastify/dist/ReactToastify.css';
 import './i18n';
 
 import { FaucetClient, SecurityStatusCode } from '@interlay/interbtc-api';
@@ -21,6 +20,7 @@ import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
 
+import { TransactionModal } from './components/TransactionModal';
 import * as constants from './constants';
 import TestnetBanner from './legacy-components/TestnetBanner';
 import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
@@ -234,6 +234,7 @@ const App = (): JSX.Element => {
           )}
         />
       </Layout>
+      <TransactionModal />
     </>
   );
 };

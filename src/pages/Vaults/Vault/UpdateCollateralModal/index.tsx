@@ -9,16 +9,14 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from 'react-query';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { updateCollateralAction, updateCollateralizationAction } from '@/common/actions/vault.actions';
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
+import { Modal, ModalBody, ModalHeader } from '@/component-library';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import CloseIconButton from '@/legacy-components/buttons/CloseIconButton';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
 import TokenField from '@/legacy-components/TokenField';
-import InterlayModal, { InterlayModalInnerWrapper, InterlayModalTitle } from '@/legacy-components/UI/InterlayModal';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import STATUSES from '@/utils/constants/statuses';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -73,7 +71,6 @@ const UpdateCollateralModal = ({
 
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const focusRef = React.useRef(null);
   const [submitStatus, setSubmitStatus] = React.useState(STATUSES.IDLE);
   const handleError = useErrorHandler();
 
@@ -164,11 +161,10 @@ const UpdateCollateralModal = ({
         dispatch(updateCollateralizationAction(strVaultCollateralizationPercentage));
       }
 
-      toast.success(t('vault.successfully_updated_collateral'));
       setSubmitStatus(STATUSES.RESOLVED);
       handleClose();
-    } catch (error) {
-      toast.error(error.message);
+    } catch (error: any) {
+      transaction.reject(error);
       handleError(error);
       setSubmitStatus(STATUSES.REJECTED);
     }
@@ -271,12 +267,9 @@ const UpdateCollateralModal = ({
   };
 
   return (
-    <InterlayModal initialFocus={focusRef} open={open} onClose={handleClose}>
-      <InterlayModalInnerWrapper className={clsx('p-6', 'max-w-lg')}>
-        <InterlayModalTitle as='h3' className={clsx('text-lg', 'font-medium', 'mb-6')}>
-          {collateralUpdateStatusText}
-        </InterlayModalTitle>
-        <CloseIconButton ref={focusRef} onClick={handleClose} />
+    <Modal isOpen={open} onClose={handleClose}>
+      <ModalHeader>{collateralUpdateStatusText}</ModalHeader>
+      <ModalBody className={clsx('p-6', 'max-w-lg')}>
         <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
           <p>
             {t('vault.current_total_collateral', {
@@ -326,8 +319,8 @@ const UpdateCollateralModal = ({
           </p>
           {renderSubmitButton()}
         </form>
-      </InterlayModalInnerWrapper>
-    </InterlayModal>
+      </ModalBody>
+    </Modal>
   );
 };
 
