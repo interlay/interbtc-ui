@@ -24,7 +24,17 @@ type SelectTriggerProps = Props & NativeAttrs;
 // MEMO: this is prune to change when `Select` is added
 const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
   (
-    { as, size = 'medium', hasError = false, isOpen, children, valueProps, placeholder = 'Select an option', ...props },
+    {
+      as,
+      size = 'medium',
+      hasError = false,
+      isOpen,
+      children,
+      valueProps,
+      placeholder = 'Select an option',
+      name,
+      ...props
+    },
     ref
   ): JSX.Element => {
     const { disabled } = props;
@@ -43,6 +53,7 @@ const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
         $size={size}
         $hasError={hasError}
         $isOpen={isOpen}
+        name={name}
       >
         <StyledTriggerValue {...valueProps} $isSelected={!!children} $isDisabled={disabled}>
           {children || placeholder}
