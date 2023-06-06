@@ -16,30 +16,37 @@ type BridgeVaultData = {
   collateralCurrency: CurrencyExt;
 };
 
-type UseGetDustValueResult = {
-  data: BridgeVaultData[] | undefined;
+type GetBridgeVaultData = { vaults: BridgeVaultData[]; raw: Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>> };
+
+type UseGetBridgeVaultResult = {
+  data: GetBridgeVaultData | undefined;
   getAvailableVaults: (requiredCapacity: MonetaryAmount<Currency>) => BridgeVaultData[] | undefined;
   refetch: () => void;
 };
 
-type UseGetVaultsOptions = UseQueryOptions<BridgeVaultData[], unknown, BridgeVaultData[], string[]> & {
+type UseGetVaultsOptions = UseQueryOptions<GetBridgeVaultData, unknown, GetBridgeVaultData, string[]> & {
   action: BridgeAction;
 };
 
-const useGetVaults = ({ action, ...options }: UseGetVaultsOptions): UseGetDustValueResult => {
+const useGetVaults = ({ action, ...options }: UseGetVaultsOptions): UseGetBridgeVaultResult => {
   const { getCurrencyFromIdPrimitive } = useGetCurrencies(true);
 
   const getVaults = useCallback(
-    async (action: BridgeAction): Promise<BridgeVaultData[]> => {
-      const vaults = await (action === 'issue'
+    async (action: BridgeAction): Promise<GetBridgeVaultData> => {
+      const raw = await (action === 'issue'
         ? window.bridge.vaults.getVaultsWithIssuableTokens()
         : window.bridge.vaults.getVaultsWithRedeemableTokens());
 
-      return [...vaults].map(([vaultId, amount]) => ({
+      const vaults: BridgeVaultData[] = [...raw].map(([vaultId, amount]) => ({
         id: vaultId,
         amount,
         collateralCurrency: getCurrencyFromIdPrimitive(vaultId.currencies.collateral)
       }));
+
+      return {
+        vaults,
+        raw
+      };
     },
     [getCurrencyFromIdPrimitive]
   );
@@ -53,8 +60,8 @@ const useGetVaults = ({ action, ...options }: UseGetVaultsOptions): UseGetDustVa
 
   const getAvailableVaults = useCallback(
     (requiredCapacity: MonetaryAmount<Currency>) =>
-      data
-        ?.filter((vault) => vault.amount.gte(requiredCapacity))
+      data?.vaults
+        .filter((vault) => vault.amount.gte(requiredCapacity))
         .sort((vaultA, vaultB) => {
           const vaultAId = vaultA.id.accountId.toString();
           const vaultBId = vaultB.id.accountId.toString();
@@ -73,4 +80,4 @@ const useGetVaults = ({ action, ...options }: UseGetVaultsOptions): UseGetDustVa
 };
 
 export { useGetVaults };
-export type { BridgeVaultData, UseGetDustValueResult };
+export type { BridgeVaultData, UseGetBridgeVaultResult };

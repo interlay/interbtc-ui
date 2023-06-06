@@ -27,8 +27,18 @@ const StyledVaultName = styled(Span)<StyledListItemSelectedLabelProps>`
     $isSelected ? theme.tokenInput.list.item.selected.text : theme.tokenInput.list.item.default.text};
 `;
 
-const StyledListChainWrapper = styled(Flex)`
+const StyledListWrapper = styled(Flex)`
   overflow: hidden;
+`;
+
+const StyledListLabelWrapper = styled(Flex)`
+  overflow: hidden;
+`;
+
+const StyledVaultAddress = styled(Span)`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const StyledVaultIcon = styled(Flex)`
@@ -38,4 +48,12 @@ const StyledVaultIcon = styled(Flex)`
   }
 `;
 
-export { StyledChain, StyledListChainWrapper, StyledListItemLabel, StyledVaultIcon, StyledVaultName };
+export {
+  StyledChain,
+  StyledListItemLabel,
+  StyledListLabelWrapper,
+  StyledListWrapper,
+  StyledVaultAddress,
+  StyledVaultIcon,
+  StyledVaultName
+};

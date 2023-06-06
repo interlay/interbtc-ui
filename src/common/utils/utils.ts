@@ -198,6 +198,7 @@ export {
   formatUSD,
   getLastMidnightTimestamps,
   getPolkadotLink,
+  getRandomArrayElement,
   getRandomVaultIdWithCapacity,
   monetaryToNumber,
   newSafeBitcoinAmount,
