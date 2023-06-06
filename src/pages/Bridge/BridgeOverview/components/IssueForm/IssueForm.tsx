@@ -2,7 +2,7 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEvent, useCallback, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useDebounce } from 'react-use';
 
 import { convertMonetaryAmountToValueInUSD, newSafeBitcoinAmount, newSafeMonetaryAmount } from '@/common/utils/utils';
@@ -49,19 +49,13 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
 
   const { getAvailableVaults } = useGetVaults({ action: 'issue', enabled: isSelectingVault });
 
-  const handleRequestLimit = useCallback(() => {
-    if (!amount) return;
-
-    const monetaryAmount = newSafeBitcoinAmount(amount);
-    const isSelectingVault = !isInputOverRequestLimit(monetaryAmount, requestLimits);
-    setSelectingVault(isSelectingVault);
-  }, [amount, requestLimits]);
-
   useDebounce(
     () => {
-      handleRequestLimit();
+      if (!amount || !isSelectingVault) return;
 
-      console.log('here');
+      const monetaryAmount = newSafeBitcoinAmount(amount);
+      const shouldShowVaults = !isInputOverRequestLimit(monetaryAmount, requestLimits);
+      setSelectingVault(shouldShowVaults);
     },
     500,
     [amount, requestLimits]
@@ -104,6 +98,11 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const securityDeposit = getSecurityDeposit(monetaryAmount) || new BitcoinAmount(0);
   const vaults = getAvailableVaults(monetaryAmount);
 
+  const totalAmount = monetaryAmount.gte(data.issueFee) ? monetaryAmount.sub(data.issueFee) : undefined;
+  const totalAmountUSD = totalAmount
+    ? convertMonetaryAmountToValueInUSD(totalAmount, getTokenPrice(prices, totalAmount.currency.ticker)?.usd) || 0
+    : 0;
+
   return (
     <Flex direction='column'>
       <form onSubmit={form.handleSubmit}>
@@ -118,6 +117,14 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
               ticker='BTC'
               valueUSD={amountUSD}
               {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
+            />
+            <TokenInput
+              placeholder='0.00'
+              label='You will receive'
+              isDisabled
+              ticker={WRAPPED_TOKEN.ticker}
+              value={totalAmount?.toString()}
+              valueUSD={totalAmountUSD}
             />
             <Switch isSelected={isSelectingVault} onChange={handleChangeSelectingVault}>
               Manually Select Vault
