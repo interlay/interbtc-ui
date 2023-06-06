@@ -48,25 +48,11 @@ const ListItem = ({ data }: { data: BridgeVaultData }) => {
 };
 
 type VaultSelectProps = Omit<SelectProps<BridgeVaultData>, 'children' | 'type'>;
-const VaultSelect = ({ onSelectionChange, items, ...props }: VaultSelectProps): JSX.Element => {
-  // const handleSelectionChange = (key: Key) => {
-  //   const [accountAddress, collateralTicker] = (key as string).split('-');
-  //   const item = (items as BridgeVaultData[]).find(
-  //     (item) => item.id.accountId.toString() === accountAddress && item.collateralCurrency.ticker === collateralTicker
-  //   );
-  //   onSelectionChange(item as BridgeVaultData);
-  // };
 
+const VaultSelect = (props: VaultSelectProps): JSX.Element => {
   return (
     <Flex direction='column' flex='1'>
-      <Select<BridgeVaultData>
-        {...props}
-        items={items}
-        onSelectionChange={onSelectionChange}
-        type='modal'
-        modalTitle='Select Token'
-        size='large'
-      >
+      <Select<BridgeVaultData> {...props} type='modal' modalTitle='Select Token' size='large'>
         {(data: BridgeVaultData) => {
           const key = getVaultKey(data);
 

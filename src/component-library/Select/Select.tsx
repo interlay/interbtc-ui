@@ -128,6 +128,7 @@ const Select = <T extends SelectObject>(
         hasError={error}
         valueProps={valueProps}
         placeholder={placeholder}
+        name={name}
       >
         {state.selectedItem && renderValue(state.selectedItem)}
       </SelectTrigger>

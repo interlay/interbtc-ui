@@ -46,7 +46,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
   const { getSecurityDeposit } = useGetIssueData();
-  const [isSelectingVault, setSelectingVault] = useState(false);
+  // const [isSelectingVault, setSelectingVault] = useState(false);
 
   const [amount, setAmount] = useState<string>();
 
@@ -60,11 +60,21 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
 
   useDebounce(
     () => {
+      const isSelectingVault = form.values[BRIDGE_ISSUE_MANUAL_VAULT_FIELD];
+
       if (!amount || !isSelectingVault) return;
 
       const monetaryAmount = newSafeBitcoinAmount(amount);
       const shouldShowVaults = !isInputOverRequestLimit(monetaryAmount, requestLimits);
-      setSelectingVault(shouldShowVaults);
+
+      form.setValues(
+        {
+          [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: shouldShowVaults,
+          [BRIDGE_ISSUE_VAULT_FIELD]: '',
+          [BRIDGE_ISSUE_AMOUNT_FIELD]: amount || ''
+        },
+        true
+      );
     },
     500,
     [amount, requestLimits]
@@ -104,8 +114,6 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
       vault = getRandomArrayElement(availableVaults);
     }
 
-    console.log(vaultsData);
-
     transaction.execute(monetaryAmount, vault.id.accountId, vault.collateralCurrency, false, vaultsData.raw);
   };
 
@@ -120,7 +128,11 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     showErrorMessages: !transaction.isLoading
   });
 
-  const handleChangeSelectingVault = (e: ChangeEvent<HTMLInputElement>) => setSelectingVault(e.target.checked);
+  // fix on close vault manual
+  const handleChangeSelectingVault = () => {
+    form.setFieldError(BRIDGE_ISSUE_MANUAL_VAULT_FIELD, undefined);
+    form.setFieldTouched(BRIDGE_ISSUE_MANUAL_VAULT_FIELD, false);
+  };
 
   const handleChangeIssueAmount = (e: ChangeEvent<HTMLInputElement>) => setAmount(e.target.value);
 
@@ -143,45 +155,13 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     ? convertMonetaryAmountToValueInUSD(totalAmount, getTokenPrice(prices, totalAmount.currency.ticker)?.usd) || 0
     : 0;
 
+  const isSelectingVault = form.values[BRIDGE_ISSUE_MANUAL_VAULT_FIELD];
+
   return (
     <Flex direction='column'>
       <form onSubmit={form.handleSubmit}>
         <Flex direction='column' gap='spacing8'>
           <Flex direction='column' gap='spacing4'>
-            <TokenInput
-              placeholder='0.00'
-              label='Amount'
-              balanceLabel='Issuable'
-              balance={requestLimits.singleVaultMaxIssuable.toString() || 0}
-              humanBalance={requestLimits.singleVaultMaxIssuable.toHuman() || 0}
-              ticker='BTC'
-              valueUSD={amountUSD}
-              {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
-            />
-
-            <StyledSwitch
-              isSelected={isSelectingVault}
-              {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
-                onChange: handleChangeSelectingVault
-              })}
-            >
-              Manually Select Vault
-            </StyledSwitch>
-            {isSelectingVault && availableVaults && (
-              <VaultSelect
-                items={availableVaults}
-                onSelectionChange={handleVaultSelectionChange}
-                {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_VAULT_FIELD))}
-              />
-            )}
-            <TokenInput
-              placeholder='0.00'
-              label='You will receive'
-              isDisabled
-              ticker={WRAPPED_TOKEN.ticker}
-              value={totalAmount?.toString()}
-              valueUSD={totalAmountUSD}
-            />
             <Flex direction='column' gap='spacing4'>
               <P align='center' size='xs'>
                 Max Issuable
@@ -206,6 +186,40 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
                 </DlGroup>
               </Dl>
             </Flex>
+            <TokenInput
+              placeholder='0.00'
+              label='Amount'
+              balanceLabel='Issuable'
+              balance={requestLimits.singleVaultMaxIssuable.toString() || 0}
+              humanBalance={requestLimits.singleVaultMaxIssuable.toHuman() || 0}
+              ticker='BTC'
+              valueUSD={amountUSD}
+              {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
+            />
+
+            <StyledSwitch
+              isSelected={isSelectingVault}
+              {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
+                onChange: handleChangeSelectingVault
+              })}
+            >
+              Manually Select Vault
+            </StyledSwitch>
+            {isSelectingVault && availableVaults && (
+              <VaultSelect
+                items={availableVaults}
+                onSelectionChange={handleVaultSelectionChange}
+                {...form.getFieldProps(BRIDGE_ISSUE_VAULT_FIELD)}
+              />
+            )}
+            <TokenInput
+              placeholder='0.00'
+              label='You will receive'
+              isDisabled
+              ticker={WRAPPED_TOKEN.ticker}
+              value={totalAmount?.toString()}
+              valueUSD={totalAmountUSD}
+            />
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <TransactionDetails issueFee={data.issueFee} securityDeposit={securityDeposit} />
