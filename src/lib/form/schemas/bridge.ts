@@ -4,10 +4,12 @@ import yup, { FeesValidationParams, MaxAmountValidationParams, MinAmountValidati
 
 const BRIDGE_ISSUE_AMOUNT_FIELD = 'issue-amount';
 const BRIDGE_ISSUE_VAULT_FIELD = 'issue-vault';
+const BRIDGE_ISSUE_MANUAL_VAULT_FIELD = 'manual-vault';
 
 type BridgeIssueFormData = {
   [BRIDGE_ISSUE_AMOUNT_FIELD]?: string;
   [BRIDGE_ISSUE_VAULT_FIELD]?: string;
+  [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]?: boolean;
 };
 
 type BridgeIssueValidationParams = {
@@ -29,8 +31,11 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
       )
       .minAmount(params[BRIDGE_ISSUE_AMOUNT_FIELD], 'issue')
       .fees(params[BRIDGE_ISSUE_AMOUNT_FIELD]),
-    [BRIDGE_ISSUE_VAULT_FIELD]: yup.string()
+    [BRIDGE_ISSUE_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_MANUAL_VAULT_FIELD], {
+      is: (isManualVault: string) => isManualVault,
+      then: (schema) => schema.required()
+    })
   });
 
-export { BRIDGE_ISSUE_AMOUNT_FIELD, BRIDGE_ISSUE_VAULT_FIELD, bridgeIssueSchema };
+export { BRIDGE_ISSUE_AMOUNT_FIELD, BRIDGE_ISSUE_MANUAL_VAULT_FIELD, BRIDGE_ISSUE_VAULT_FIELD, bridgeIssueSchema };
 export type { BridgeIssueFormData };

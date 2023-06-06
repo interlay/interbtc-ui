@@ -6,12 +6,14 @@ import { useToggleState } from '@react-stately/toggle';
 import { PressEvent } from '@react-types/shared';
 import { ChangeEvent, forwardRef, HTMLAttributes, useRef } from 'react';
 
+import { TextProps } from '../Text';
 import { useDOMRef } from '../utils/dom';
 import { StyledInput, StyledLabel, StyledSwitch, StyledWrapper } from './Switch.style';
 
 type Props = {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onPress?: (e: PressEvent) => void;
+  labelProps?: TextProps;
 };
 
 type NativeAttrs = Omit<HTMLAttributes<unknown>, keyof Props>;
@@ -22,7 +24,7 @@ type SwitchProps = Props & NativeAttrs & InheritAttrs;
 
 // TODO: add size
 const Switch = forwardRef<HTMLLabelElement, SwitchProps>(
-  ({ children, onChange, className, style, hidden, ...props }, ref): JSX.Element => {
+  ({ children, onChange, className, style, hidden, labelProps, ...props }, ref): JSX.Element => {
     const labelRef = useDOMRef(ref);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -41,7 +43,7 @@ const Switch = forwardRef<HTMLLabelElement, SwitchProps>(
       <StyledWrapper ref={labelRef} className={className} style={style} hidden={hidden}>
         <StyledInput {...mergeProps(inputProps, focusProps, pressProps, { onChange })} ref={inputRef} />
         <StyledSwitch $isChecked={inputProps.checked} $isFocusVisible={isFocusVisible} />
-        {children && <StyledLabel>{children}</StyledLabel>}
+        {children && <StyledLabel {...labelProps}>{children}</StyledLabel>}
       </StyledWrapper>
     );
   }

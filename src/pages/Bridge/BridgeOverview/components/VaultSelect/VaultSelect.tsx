@@ -1,15 +1,19 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import Identicon from '@polkadot/react-identicon';
 
-import { CoinIcon, Flex, Item, Select, SelectProps, Span } from '@/component-library';
+import { CoinIcon, Flex, Item, Select, SelectProps } from '@/component-library';
 import { useSelectModalContext } from '@/component-library/Select/SelectModalContext';
 import { BridgeVaultData } from '@/utils/hooks/api/bridge/use-get-vaults';
 
-import { StyledListChainWrapper, StyledVaultIcon, StyledVaultName } from './VaultSelect.style';
+import {
+  StyledListLabelWrapper,
+  StyledListWrapper,
+  StyledVaultAddress,
+  StyledVaultIcon,
+  StyledVaultName
+} from './VaultSelect.style';
 
 const getVaultKey = (data: BridgeVaultData) => `${data.id.accountId.toString()}-${data.collateralCurrency.ticker}`;
-
-type VaultSelectProps = Omit<SelectProps<BridgeVaultData>, 'children' | 'type'>;
 
 const VaultIcon = ({ id, currency }: { id: string; currency: CurrencyExt }) => (
   <StyledVaultIcon justifyContent='center' elementType='span'>
@@ -24,9 +28,9 @@ const ListItem = ({ data }: { data: BridgeVaultData }) => {
   const isSelected = useSelectModalContext().selectedItem?.key === key;
 
   return (
-    <StyledListChainWrapper elementType='span' alignItems='center' gap='spacing2' flex='1'>
+    <StyledListWrapper elementType='span' alignItems='center' gap='spacing2'>
       <VaultIcon id={data.id.accountId.toString()} currency={data.collateralCurrency} />
-      <Flex elementType='span' direction='column' gap='spacing1' flex='1'>
+      <StyledListLabelWrapper elementType='span' direction='column' gap='spacing1' flex='1'>
         <Flex gap='spacing1' justifyContent='space-between'>
           <StyledVaultName size='s' $isSelected={isSelected}>
             {data.collateralCurrency.ticker} Vault
@@ -35,21 +39,31 @@ const ListItem = ({ data }: { data: BridgeVaultData }) => {
             {data.amount.toHuman()} BTC
           </StyledVaultName>
         </Flex>
-        <Span color='tertiary' size='xs'>
+        <StyledVaultAddress color='tertiary' size='xs'>
           {data.id.accountId.toString()}
-        </Span>
-      </Flex>
-    </StyledListChainWrapper>
+        </StyledVaultAddress>
+      </StyledListLabelWrapper>
+    </StyledListWrapper>
   );
 };
 
-const VaultSelect = ({ ...props }: VaultSelectProps): JSX.Element => {
+type VaultSelectProps = Omit<SelectProps<BridgeVaultData>, 'children' | 'type'>;
+const VaultSelect = ({ onSelectionChange, items, ...props }: VaultSelectProps): JSX.Element => {
+  // const handleSelectionChange = (key: Key) => {
+  //   const [accountAddress, collateralTicker] = (key as string).split('-');
+  //   const item = (items as BridgeVaultData[]).find(
+  //     (item) => item.id.accountId.toString() === accountAddress && item.collateralCurrency.ticker === collateralTicker
+  //   );
+  //   onSelectionChange(item as BridgeVaultData);
+  // };
+
   return (
     <Flex direction='column' flex='1'>
       <Select<BridgeVaultData>
         {...props}
+        items={items}
+        onSelectionChange={onSelectionChange}
         type='modal'
-        // renderValue={(item) => <Value data={item.value} />}
         modalTitle='Select Token'
         size='large'
       >

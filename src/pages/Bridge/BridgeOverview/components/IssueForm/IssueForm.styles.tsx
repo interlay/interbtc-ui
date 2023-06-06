@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { InformationCircle } from '@/assets/icons';
-import { Dl, theme } from '@/component-library';
+import { Dl, Switch, theme } from '@/component-library';
 
 const StyledDl = styled(Dl)`
   background-color: ${theme.card.bg.secondary};
@@ -15,4 +15,9 @@ const StyledInformationCircle = styled(InformationCircle)`
   vertical-align: text-top;
 `;
 
-export { StyledDl, StyledInformationCircle };
+const StyledSwitch = styled(Switch)`
+  flex-direction: row-reverse;
+  justify-content: space-between;
+`;
+
+export { StyledDl, StyledInformationCircle, StyledSwitch };
