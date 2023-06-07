@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Card, Flex, theme } from '@/component-library';
 
 const StyledWrapper = styled(Flex)`
-  max-width: 560px;
+  max-width: 540px;
   width: 100%;
   margin: 0 auto;
 `;

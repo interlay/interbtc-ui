@@ -2,10 +2,10 @@ import { withErrorBoundary } from 'react-error-boundary';
 
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 
-import TransferOverview from './TransferOverview';
+import TransferForms from './TransferForms';
 
 const Transfer = (): JSX.Element => {
-  return <TransferOverview />;
+  return <TransferForms />;
 };
 
 export default withErrorBoundary(Transfer, {

@@ -2,9 +2,9 @@ import { Flex, Tabs, TabsItem } from '@/component-library';
 import MainContainer from '@/parts/MainContainer';
 
 import { CrossChainTransferForm, TransferForm } from './components';
-import { StyledCard, StyledFormWrapper, StyledWrapper } from './TransferOverview.styles';
+import { StyledCard, StyledFormWrapper, StyledWrapper } from './TransferForms.styles';
 
-const TransferOverview = (): JSX.Element => (
+const TransferForms = (): JSX.Element => (
   <MainContainer>
     <StyledWrapper>
       <StyledCard gap='spacing2'>
@@ -27,4 +27,4 @@ const TransferOverview = (): JSX.Element => (
   </MainContainer>
 );
 
-export default TransferOverview;
+export default TransferForms;

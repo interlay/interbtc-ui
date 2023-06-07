@@ -122,7 +122,7 @@ yup.addMethod<yup.StringSchema>(
       const isValidAdress = addressValidationMap[addressType];
 
       if (!value || !isValidAdress(value)) {
-        const message = customMessage || i18n.t('forms.please_enter_a_valide_address', { field: action });
+        const message = customMessage || i18n.t('forms.please_enter_a_valid_address', { field: action });
         return ctx.createError({ message });
       }
 
