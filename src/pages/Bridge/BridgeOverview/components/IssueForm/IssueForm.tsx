@@ -1,4 +1,4 @@
-import { newMonetaryAmount } from '@interlay/interbtc-api';
+import { getIssueRequestsFromExtrinsicResult, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
@@ -12,7 +12,7 @@ import {
   newSafeBitcoinAmount,
   newSafeMonetaryAmount
 } from '@/common/utils/utils';
-import { Dd, Dl, DlGroup, Dt, Flex, P, TokenInput } from '@/component-library';
+import { Dd, Dl, DlGroup, Dt, Flex, P, TokenInput, Tooltip } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
@@ -31,6 +31,7 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
+import { LegacyIssueModal } from '../LegacyIssueModal';
 import { VaultSelect } from '../VaultSelect';
 import { StyledSwitch } from './IssueForm.styles';
 import { TransactionDetails } from './TransactionDetails';
@@ -46,14 +47,17 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
   const { getSecurityDeposit } = useGetIssueData();
-  // const [isSelectingVault, setSelectingVault] = useState(false);
+  const [issueRequest, setIssueRequest] = useState<Issue>();
 
   const [amount, setAmount] = useState<string>();
 
   const transaction = useTransaction(Transaction.ISSUE_REQUEST, {
-    onSuccess: () => {
+    onSuccess: async (result) => {
+      const [issueRequest] = await getIssueRequestsFromExtrinsicResult(window.bridge, result.data);
+      setIssueRequest(issueRequest);
       form.resetForm();
-    }
+    },
+    showSuccessModal: false
   });
 
   const { data: vaultsData, getAvailableVaults } = useGetVaults({ action: 'issue' });
@@ -67,14 +71,25 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
       const monetaryAmount = newSafeBitcoinAmount(amount);
       const shouldShowVaults = !isInputOverRequestLimit(monetaryAmount, requestLimits);
 
-      form.setValues(
-        {
-          [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: shouldShowVaults,
-          [BRIDGE_ISSUE_VAULT_FIELD]: '',
-          [BRIDGE_ISSUE_AMOUNT_FIELD]: amount || ''
-        },
-        true
-      );
+      if (!shouldShowVaults) {
+        form.resetForm({
+          values: {
+            ...form.values,
+            [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: shouldShowVaults,
+            [BRIDGE_ISSUE_VAULT_FIELD]: ''
+          },
+          touched: {
+            ...form.touched,
+            [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: false,
+            [BRIDGE_ISSUE_VAULT_FIELD]: false
+          },
+          errors: {
+            ...form.errors,
+            [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: undefined,
+            [BRIDGE_ISSUE_VAULT_FIELD]: undefined
+          }
+        });
+      }
     },
     500,
     [amount, requestLimits]
@@ -128,10 +143,10 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     showErrorMessages: !transaction.isLoading
   });
 
-  // fix on close vault manual
-  const handleChangeSelectingVault = () => {
-    form.setFieldError(BRIDGE_ISSUE_MANUAL_VAULT_FIELD, undefined);
-    form.setFieldTouched(BRIDGE_ISSUE_MANUAL_VAULT_FIELD, false);
+  const handleChangeSelectingVault = (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.checked) {
+      form.setFieldTouched(BRIDGE_ISSUE_VAULT_FIELD, false, true);
+    }
   };
 
   const handleChangeIssueAmount = (e: ChangeEvent<HTMLInputElement>) => setAmount(e.target.value);
@@ -158,78 +173,88 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const isSelectingVault = form.values[BRIDGE_ISSUE_MANUAL_VAULT_FIELD];
 
   return (
-    <Flex direction='column'>
-      <form onSubmit={form.handleSubmit}>
-        <Flex direction='column' gap='spacing8'>
-          <Flex direction='column' gap='spacing4'>
+    <>
+      <Flex direction='column'>
+        <form onSubmit={form.handleSubmit}>
+          <Flex direction='column' gap='spacing8'>
             <Flex direction='column' gap='spacing4'>
-              <P align='center' size='xs'>
-                Max Issuable
-              </P>
-              <Dl direction='column' gap='spacing1'>
-                <DlGroup justifyContent='space-between' flex='1'>
-                  <Dt size='xs' color='primary'>
-                    In Single Request
-                  </Dt>
-                  <Dd size='xs'>
-                    {requestLimits.singleVaultMaxIssuable.toHuman()}{' '}
-                    {requestLimits.singleVaultMaxIssuable.currency.ticker}
-                  </Dd>
-                </DlGroup>
-                <DlGroup justifyContent='space-between' flex='1'>
-                  <Dt size='xs' color='primary'>
-                    In Total
-                  </Dt>
-                  <Dd size='xs'>
-                    {requestLimits.totalMaxIssuable.toHuman()} {requestLimits.totalMaxIssuable.currency.ticker}
-                  </Dd>
-                </DlGroup>
-              </Dl>
-            </Flex>
-            <TokenInput
-              placeholder='0.00'
-              label='Amount'
-              balanceLabel='Issuable'
-              balance={requestLimits.singleVaultMaxIssuable.toString() || 0}
-              humanBalance={requestLimits.singleVaultMaxIssuable.toHuman() || 0}
-              ticker='BTC'
-              valueUSD={amountUSD}
-              {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
-            />
-
-            <StyledSwitch
-              isSelected={isSelectingVault}
-              {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
-                onChange: handleChangeSelectingVault
-              })}
-            >
-              Manually Select Vault
-            </StyledSwitch>
-            {isSelectingVault && availableVaults && (
-              <VaultSelect
-                items={availableVaults}
-                onSelectionChange={handleVaultSelectionChange}
-                {...form.getFieldProps(BRIDGE_ISSUE_VAULT_FIELD)}
+              <Flex direction='column' gap='spacing4'>
+                <P align='center' size='xs'>
+                  Max Issuable
+                </P>
+                <Dl direction='column' gap='spacing1'>
+                  <DlGroup justifyContent='space-between' flex='1'>
+                    <Dt size='xs' color='primary'>
+                      In Single Request
+                    </Dt>
+                    <Dd size='xs'>
+                      {requestLimits.singleVaultMaxIssuable.toHuman()}{' '}
+                      {requestLimits.singleVaultMaxIssuable.currency.ticker}
+                    </Dd>
+                  </DlGroup>
+                  <DlGroup justifyContent='space-between' flex='1'>
+                    <Dt size='xs' color='primary'>
+                      In Total
+                    </Dt>
+                    <Dd size='xs'>
+                      {requestLimits.totalMaxIssuable.toHuman()} {requestLimits.totalMaxIssuable.currency.ticker}
+                    </Dd>
+                  </DlGroup>
+                </Dl>
+              </Flex>
+              <TokenInput
+                placeholder='0.00'
+                label='Amount'
+                balanceLabel='Issuable'
+                balance={requestLimits.singleVaultMaxIssuable.toString() || 0}
+                humanBalance={requestLimits.singleVaultMaxIssuable.toHuman() || 0}
+                ticker='BTC'
+                valueUSD={amountUSD}
+                {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
               />
-            )}
-            <TokenInput
-              placeholder='0.00'
-              label='You will receive'
-              isDisabled
-              ticker={WRAPPED_TOKEN.ticker}
-              value={totalAmount?.toString()}
-              valueUSD={totalAmountUSD}
-            />
+              <Tooltip
+                isDisabled={!!availableVaults?.length}
+                label='There are no vaults available with enought capacity'
+              >
+                <StyledSwitch
+                  isSelected={isSelectingVault}
+                  isDisabled={!availableVaults?.length}
+                  {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
+                    onChange: handleChangeSelectingVault
+                  })}
+                >
+                  Manually Select Vault
+                </StyledSwitch>
+              </Tooltip>
+              {isSelectingVault && availableVaults && (
+                <VaultSelect
+                  items={availableVaults}
+                  onSelectionChange={handleVaultSelectionChange}
+                  {...form.getFieldProps(BRIDGE_ISSUE_VAULT_FIELD)}
+                />
+              )}
+              <TokenInput
+                placeholder='0.00'
+                label='You will receive'
+                isDisabled
+                ticker={WRAPPED_TOKEN.ticker}
+                value={totalAmount?.toString()}
+                valueUSD={totalAmountUSD}
+              />
+            </Flex>
+            <Flex direction='column' gap='spacing4'>
+              <TransactionDetails issueFee={data.issueFee} securityDeposit={securityDeposit} />
+              <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
+                {t('issue')}
+              </AuthCTA>
+            </Flex>
           </Flex>
-          <Flex direction='column' gap='spacing4'>
-            <TransactionDetails issueFee={data.issueFee} securityDeposit={securityDeposit} />
-            <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
-              {t('issue')}
-            </AuthCTA>
-          </Flex>
-        </Flex>
-      </form>
-    </Flex>
+        </form>
+      </Flex>
+      {issueRequest && (
+        <LegacyIssueModal open={!!issueRequest} onClose={() => setIssueRequest(undefined)} request={issueRequest} />
+      )}
+    </>
   );
 };
 
