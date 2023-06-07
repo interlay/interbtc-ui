@@ -33,7 +33,7 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
       .fees(params[BRIDGE_ISSUE_AMOUNT_FIELD]),
     [BRIDGE_ISSUE_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_MANUAL_VAULT_FIELD], {
       is: (isManualVault: string) => isManualVault,
-      then: (schema) => schema.required()
+      then: (schema) => schema.required(i18n.t('please_select_your_field', { field: 'vault' }))
     })
   });
 

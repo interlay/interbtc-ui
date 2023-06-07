@@ -8,12 +8,14 @@ import { useDebounce } from 'react-use';
 
 import {
   convertMonetaryAmountToValueInUSD,
+  displayMonetaryAmountInUSDFormat,
   getRandomArrayElement,
   newSafeBitcoinAmount,
   newSafeMonetaryAmount
 } from '@/common/utils/utils';
-import { Dd, Dl, DlGroup, Dt, Flex, P, TokenInput, Tooltip } from '@/component-library';
-import { AuthCTA } from '@/components';
+import { Card, Dd, Dl, DlGroup, Dt, Flex, P, TokenInput, Tooltip } from '@/component-library';
+import { AuthCTA, TransactionDetails, TransactionDetailsDd, TransactionDetailsDt, TransactionFee } from '@/components';
+import { TransactionDetailsGroup } from '@/components/TransactionDetails/TransactionDetailsGroup';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
   BRIDGE_ISSUE_AMOUNT_FIELD,
@@ -34,7 +36,6 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { LegacyIssueModal } from '../LegacyIssueModal';
 import { VaultSelect } from '../VaultSelect';
 import { StyledSwitch } from './IssueForm.styles';
-import { TransactionDetails } from './TransactionDetails';
 
 const isInputOverRequestLimit = (inputAmount: BitcoinAmount, limits: IssueLimits) =>
   inputAmount.gt(limits.singleVaultMaxIssuable);
@@ -47,9 +48,10 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
   const { getSecurityDeposit } = useGetIssueData();
-  const [issueRequest, setIssueRequest] = useState<Issue>();
 
+  const [issueRequest, setIssueRequest] = useState<Issue>();
   const [amount, setAmount] = useState<string>();
+  const [debouncedAmount, setDecounbedAmount] = useState<string>();
 
   const transaction = useTransaction(Transaction.ISSUE_REQUEST, {
     onSuccess: async (result) => {
@@ -61,6 +63,8 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   });
 
   const { data: vaultsData, getAvailableVaults } = useGetVaults({ action: 'issue' });
+
+  useDebounce(() => setDecounbedAmount(amount), 500, [amount]);
 
   useDebounce(
     () => {
@@ -155,7 +159,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     form.setFieldValue(BRIDGE_ISSUE_VAULT_FIELD, key, true);
   };
 
-  const monetaryAmount = newSafeMonetaryAmount(form.values[BRIDGE_ISSUE_AMOUNT_FIELD] || 0, WRAPPED_TOKEN, true);
+  const monetaryAmount = newSafeMonetaryAmount(amount || 0, WRAPPED_TOKEN, true);
   const amountUSD = monetaryAmount
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
     : 0;
@@ -163,7 +167,9 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const isBtnDisabled = isFormDisabled(form);
 
   const securityDeposit = getSecurityDeposit(monetaryAmount) || new BitcoinAmount(0);
-  const availableVaults = getAvailableVaults(monetaryAmount);
+
+  const debouncedMonetaryAmount = newSafeMonetaryAmount(debouncedAmount || 0, WRAPPED_TOKEN, true);
+  const availableVaults = getAvailableVaults(debouncedMonetaryAmount);
 
   const totalAmount = monetaryAmount.gte(data.issueFee) ? monetaryAmount.sub(data.issueFee) : undefined;
   const totalAmountUSD = totalAmount
@@ -178,61 +184,63 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing8'>
             <Flex direction='column' gap='spacing4'>
-              <Flex direction='column' gap='spacing4'>
-                <P align='center' size='xs'>
-                  Max Issuable
-                </P>
-                <Dl direction='column' gap='spacing1'>
-                  <DlGroup justifyContent='space-between' flex='1'>
-                    <Dt size='xs' color='primary'>
-                      In Single Request
-                    </Dt>
-                    <Dd size='xs'>
-                      {requestLimits.singleVaultMaxIssuable.toHuman()}{' '}
-                      {requestLimits.singleVaultMaxIssuable.currency.ticker}
-                    </Dd>
-                  </DlGroup>
-                  <DlGroup justifyContent='space-between' flex='1'>
-                    <Dt size='xs' color='primary'>
-                      In Total
-                    </Dt>
-                    <Dd size='xs'>
-                      {requestLimits.totalMaxIssuable.toHuman()} {requestLimits.totalMaxIssuable.currency.ticker}
-                    </Dd>
-                  </DlGroup>
-                </Dl>
+              <Flex direction='column' gap='spacing2'>
+                <P size='xs'>Max Issuable</P>
+                <Card gap='spacing4' variant='bordered' background='tertiary' rounded='lg' padding='spacing4'>
+                  <Dl direction='column' gap='spacing2'>
+                    <DlGroup justifyContent='space-between' flex='1'>
+                      <Dt size='xs' color='primary'>
+                        In single request
+                      </Dt>
+                      <Dd size='xs'>
+                        {requestLimits.singleVaultMaxIssuable.toHuman()}{' '}
+                        {requestLimits.singleVaultMaxIssuable.currency.ticker}
+                      </Dd>
+                    </DlGroup>
+                    <DlGroup justifyContent='space-between' flex='1'>
+                      <Dt size='xs' color='primary'>
+                        In total
+                      </Dt>
+                      <Dd size='xs'>
+                        {requestLimits.totalMaxIssuable.toHuman()} {requestLimits.totalMaxIssuable.currency.ticker}
+                      </Dd>
+                    </DlGroup>
+                  </Dl>
+                </Card>
               </Flex>
               <TokenInput
                 placeholder='0.00'
                 label='Amount'
-                balanceLabel='Issuable'
-                balance={requestLimits.singleVaultMaxIssuable.toString() || 0}
-                humanBalance={requestLimits.singleVaultMaxIssuable.toHuman() || 0}
                 ticker='BTC'
                 valueUSD={amountUSD}
                 {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
               />
-              <Tooltip
-                isDisabled={!!availableVaults?.length}
-                label='There are no vaults available with enought capacity'
-              >
-                <StyledSwitch
-                  isSelected={isSelectingVault}
-                  isDisabled={!availableVaults?.length}
-                  {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
-                    onChange: handleChangeSelectingVault
-                  })}
+              <Flex direction='column' gap='spacing2'>
+                <Tooltip
+                  isDisabled={!!availableVaults?.length}
+                  label='There are no vaults available with enought capacity'
                 >
-                  Manually Select Vault
-                </StyledSwitch>
-              </Tooltip>
-              {isSelectingVault && availableVaults && (
-                <VaultSelect
-                  items={availableVaults}
-                  onSelectionChange={handleVaultSelectionChange}
-                  {...form.getFieldProps(BRIDGE_ISSUE_VAULT_FIELD)}
-                />
-              )}
+                  <StyledSwitch
+                    isSelected={isSelectingVault}
+                    isDisabled={!availableVaults?.length}
+                    labelProps={{ size: 'xs' }}
+                    {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
+                      onChange: handleChangeSelectingVault
+                    })}
+                  >
+                    Manually Select Vault
+                  </StyledSwitch>
+                </Tooltip>
+                {isSelectingVault && availableVaults && (
+                  <VaultSelect
+                    items={availableVaults}
+                    onSelectionChange={handleVaultSelectionChange}
+                    placeholder='Select a vault'
+                    aria-label='Vault'
+                    {...form.getFieldProps(BRIDGE_ISSUE_VAULT_FIELD)}
+                  />
+                )}
+              </Flex>
               <TokenInput
                 placeholder='0.00'
                 label='You will receive'
@@ -243,7 +251,40 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
               />
             </Flex>
             <Flex direction='column' gap='spacing4'>
-              <TransactionDetails issueFee={data.issueFee} securityDeposit={securityDeposit} />
+              {/* <TransactionDetails issueFee={data.issueFee} securityDeposit={securityDeposit} /> */}
+              <TransactionDetails>
+                <TransactionDetailsGroup>
+                  <TransactionDetailsDt tooltipLabel='The bridge fee paid to the vaults, relayers and maintainers of the system'>
+                    Bridge Fee
+                  </TransactionDetailsDt>
+                  <TransactionDetailsDd>
+                    {data.issueFee.toHuman()} {data.issueFee.currency.ticker} (
+                    {displayMonetaryAmountInUSDFormat(
+                      data.issueFee,
+                      getTokenPrice(prices, data.issueFee.currency.ticker)?.usd
+                    )}
+                    )
+                  </TransactionDetailsDd>
+                </TransactionDetailsGroup>
+                <TransactionDetailsGroup>
+                  <TransactionDetailsDt tooltipLabel='The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed'>
+                    Security Deposit
+                  </TransactionDetailsDt>
+                  <TransactionDetailsDd>
+                    {securityDeposit.toHuman()} {securityDeposit.currency.ticker} (
+                    {displayMonetaryAmountInUSDFormat(
+                      securityDeposit,
+                      getTokenPrice(prices, securityDeposit.currency.ticker)?.usd
+                    )}
+                    )
+                  </TransactionDetailsDd>
+                </TransactionDetailsGroup>
+                <TransactionFee
+                  label='Transaction Fee'
+                  tooltipLabel='The fee for the transaction to be included in the parachain'
+                  amount={TRANSACTION_FEE_AMOUNT}
+                />
+              </TransactionDetails>
               <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
                 {t('issue')}
               </AuthCTA>
