@@ -20,7 +20,7 @@ const NotificationsList = ({ items }: NotificationsListProps): JSX.Element => {
     );
   }
 
-  const latestTransactions = items.slice(-5);
+  const latestTransactions = items.slice(-5).sort((a, b) => b.date.getTime() - a.date.getTime());
 
   return (
     <Flex direction='column'>
