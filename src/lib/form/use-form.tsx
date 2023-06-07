@@ -1,14 +1,5 @@
-import {
-  FieldInputProps,
-  FormikConfig,
-  FormikErrors as FormErrors,
-  FormikValues,
-  useFormik,
-  validateYupSchema,
-  yupToFormErrors
-} from 'formik';
+import { FieldInputProps, FormikConfig, FormikErrors as FormErrors, FormikValues, useFormik } from 'formik';
 import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
 
 type GetFieldProps = (
   nameOrOptions: any,
@@ -16,35 +7,29 @@ type GetFieldProps = (
 ) => FieldInputProps<any> & { errorMessage?: string | string[] };
 
 type UseFormArgs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
-  disableValidation?: boolean;
+  showErrorMessages?: boolean;
+  showOnlyTouchedFieldsErrors?: boolean;
   getFieldProps?: GetFieldProps;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useForm = <Values extends FormikValues = FormikValues>({
-  validationSchema,
-  disableValidation,
+  showErrorMessages,
+  showOnlyTouchedFieldsErrors = true,
   ...args
 }: UseFormArgs<Values>) => {
-  const { t } = useTranslation();
   const { validateForm, values, getFieldProps: getFormikFieldProps, ...formik } = useFormik<Values>({
-    ...args,
-    validate: (values) => {
-      if (disableValidation) return;
-
-      try {
-        validateYupSchema(values, validationSchema, true, { t });
-      } catch (err) {
-        return yupToFormErrors(err);
-      }
-    }
+    ...args
   });
 
   const getFieldProps: GetFieldProps = useCallback(
     (nameOrOptions, withErrorMessage = true) => {
-      if (withErrorMessage) {
+      if (withErrorMessage || showErrorMessages) {
         const isOptions = nameOrOptions !== null && typeof nameOrOptions === 'object';
-        const errorMessage = isOptions ? formik.errors[nameOrOptions.name] : formik.errors[nameOrOptions];
+        const fieldName = isOptions ? nameOrOptions.name : nameOrOptions;
+
+        const isTouched = formik.touched[fieldName];
+        const errorMessage = showOnlyTouchedFieldsErrors && isTouched ? formik.errors[fieldName] : undefined;
 
         return {
           ...getFormikFieldProps(nameOrOptions),
@@ -54,7 +39,7 @@ const useForm = <Values extends FormikValues = FormikValues>({
 
       return getFormikFieldProps(nameOrOptions);
     },
-    [formik.errors, getFormikFieldProps]
+    [formik.errors, formik.touched, getFormikFieldProps, showOnlyTouchedFieldsErrors, showErrorMessages]
   );
 
   return {

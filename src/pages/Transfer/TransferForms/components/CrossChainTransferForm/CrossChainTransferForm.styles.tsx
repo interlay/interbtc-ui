@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { ArrowRightCircle } from '@/assets/icons';
 import { Dl, Flex, theme } from '@/component-library';
 
-import { ChainSelect } from './components';
+import { ChainSelect } from '../ChainSelect';
 
 const StyledDl = styled(Dl)`
   background-color: ${theme.card.bg.secondary};
