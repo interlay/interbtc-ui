@@ -17,7 +17,7 @@ const StyledCircle = styled.button<StyledCircleProps>`
   top: 50%;
   transform: translate(-50%, -50%);
   padding: ${theme.spacing.spacing2};
-  background-color: var(--colors-token-input-end-adornment-bg);
+  background-color: var(--colors-border);
   border-radius: ${theme.rounded.full};
   outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};
   transition: transform ${theme.transition.duration.duration150}ms ease-in;
@@ -38,7 +38,7 @@ const StyledBackground = styled.div`
 `;
 
 const StyledDivider = styled(Divider)`
-  background-color: var(--colors-token-input-end-adornment-bg);
+  background-color: var(--colors-border);
 `;
 
 export { StyledBackground, StyledCircle, StyledDivider, StyledWrapper };

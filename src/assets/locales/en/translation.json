@@ -610,7 +610,8 @@
     "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}} {{token}}",
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
     "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance",
-    "field_amount": "{{field}} amount"
+    "field_amount": "{{field}} amount",
+    "please_enter_a_valid_address": "Please enter a valid address"
   },
   "xcm_transfer": {
     "validation": {
