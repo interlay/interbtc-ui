@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { InformationCircle } from '@/assets/icons';
 import { Dl, theme } from '@/component-library';
 
 const StyledDl = styled(Dl)`
@@ -10,4 +11,9 @@ const StyledDl = styled(Dl)`
   border-radius: ${theme.rounded.lg};
 `;
 
-export { StyledDl };
+const StyledInformationCircle = styled(InformationCircle)`
+  margin-left: ${theme.spacing.spacing2};
+  vertical-align: text-top;
+`;
+
+export { StyledDl, StyledInformationCircle };

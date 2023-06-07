@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 import { Flex } from '../Flex';
 import { theme } from '../theme';
-import { ListVariants, Variants } from '../utils/prop-types';
+import { ListVariants } from '../utils/prop-types';
 
 type StyledListProps = {
   $variant: ListVariants;
@@ -16,7 +16,7 @@ const StyledList = styled(Flex)<StyledListProps>`
 `;
 
 type StyledListItemProps = {
-  $variant: Variants | 'card';
+  $variant: ListVariants;
   $isDisabled: boolean;
   $isHovered: boolean;
   $isInteractable: boolean;
