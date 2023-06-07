@@ -11,7 +11,8 @@ import { useGetCurrencies } from '../use-get-currencies';
 type BridgeAction = 'issue' | 'redeem';
 
 type BridgeVaultData = {
-  id: InterbtcPrimitivesVaultId;
+  id: number;
+  vaultId: InterbtcPrimitivesVaultId;
   amount: MonetaryAmount<Currency>;
   collateralCurrency: CurrencyExt;
 };
@@ -37,8 +38,9 @@ const useGetVaults = ({ action, ...options }: UseGetVaultsOptions): UseGetBridge
         ? window.bridge.vaults.getVaultsWithIssuableTokens()
         : window.bridge.vaults.getVaultsWithRedeemableTokens());
 
-      const vaults: BridgeVaultData[] = [...raw].map(([vaultId, amount]) => ({
-        id: vaultId,
+      const vaults: BridgeVaultData[] = [...raw].map(([vaultId, amount], idx) => ({
+        id: idx,
+        vaultId,
         amount,
         collateralCurrency: getCurrencyFromIdPrimitive(vaultId.currencies.collateral)
       }));
@@ -63,8 +65,8 @@ const useGetVaults = ({ action, ...options }: UseGetVaultsOptions): UseGetBridge
       data?.vaults
         .filter((vault) => vault.amount.gte(requiredCapacity))
         .sort((vaultA, vaultB) => {
-          const vaultAId = vaultA.id.accountId.toString();
-          const vaultBId = vaultB.id.accountId.toString();
+          const vaultAId = vaultA.vaultId.accountId.toString();
+          const vaultBId = vaultB.vaultId.accountId.toString();
           return vaultAId < vaultBId ? -1 : vaultAId > vaultBId ? 1 : 0;
         }),
     [data]

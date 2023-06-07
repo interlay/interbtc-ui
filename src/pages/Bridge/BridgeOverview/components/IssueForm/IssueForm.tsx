@@ -8,14 +8,12 @@ import { useDebounce } from 'react-use';
 
 import {
   convertMonetaryAmountToValueInUSD,
-  displayMonetaryAmountInUSDFormat,
   getRandomArrayElement,
   newSafeBitcoinAmount,
   newSafeMonetaryAmount
 } from '@/common/utils/utils';
-import { Card, Dd, Dl, DlGroup, Dt, Flex, P, TokenInput, Tooltip } from '@/component-library';
-import { AuthCTA, TransactionDetails, TransactionDetailsDd, TransactionDetailsDt, TransactionFee } from '@/components';
-import { TransactionDetailsGroup } from '@/components/TransactionDetails/TransactionDetailsGroup';
+import { Flex, TokenInput, Tooltip } from '@/component-library';
+import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
   BRIDGE_ISSUE_AMOUNT_FIELD,
@@ -33,16 +31,17 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
+import { IssueLimitsCard } from '../IssueLimitsCard';
 import { LegacyIssueModal } from '../LegacyIssueModal';
 import { VaultSelect } from '../VaultSelect';
 import { StyledSwitch } from './IssueForm.styles';
+import { TransactionDetails } from './TransactionDetails';
 
 const isInputOverRequestLimit = (inputAmount: BitcoinAmount, limits: IssueLimits) =>
   inputAmount.gt(limits.singleVaultMaxIssuable);
 
 type IssueFormProps = { requestLimits: IssueLimits; data: IssueData };
 
-// TODO: oracle down error
 const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
@@ -50,13 +49,20 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const { getSecurityDeposit } = useGetIssueData();
 
   const [issueRequest, setIssueRequest] = useState<Issue>();
+
   const [amount, setAmount] = useState<string>();
   const [debouncedAmount, setDecounbedAmount] = useState<string>();
 
   const transaction = useTransaction(Transaction.ISSUE_REQUEST, {
     onSuccess: async (result) => {
-      const [issueRequest] = await getIssueRequestsFromExtrinsicResult(window.bridge, result.data);
-      setIssueRequest(issueRequest);
+      try {
+        const [issueRequest] = await getIssueRequestsFromExtrinsicResult(window.bridge, result.data);
+
+        setIssueRequest(issueRequest);
+      } catch (e: any) {
+        transaction.reject(e);
+      }
+
       form.resetForm();
     },
     showSuccessModal: false
@@ -109,31 +115,33 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   };
 
   const handleSubmit = async (values: BridgeIssueFormData) => {
-    if (!vaultsData) return;
+    const amount = values[BRIDGE_ISSUE_AMOUNT_FIELD];
 
-    const vaultKey = values[BRIDGE_ISSUE_VAULT_FIELD];
+    if (!vaultsData || !amount) return;
 
-    const amount = values[BRIDGE_ISSUE_AMOUNT_FIELD] as string;
     const monetaryAmount = new BitcoinAmount(amount);
-
-    let vault: BridgeVaultData | undefined;
 
     const availableVaults = getAvailableVaults(monetaryAmount);
 
     if (!availableVaults) return;
 
-    if (vaultKey) {
-      const [accountAddress, collateralTicker] = vaultKey.split('-');
-      vault = availableVaults.find(
-        (item) => item.id.accountId.toString() === accountAddress && item.collateralCurrency.ticker === collateralTicker
-      );
+    const vaultId = values[BRIDGE_ISSUE_VAULT_FIELD];
+
+    let vault: BridgeVaultData | undefined;
+
+    // If custom vault was select, try to find it in the data
+    if (vaultId) {
+      vault = availableVaults.find((item) => item.id.toString() === vaultId);
     }
 
+    console.log(vault);
+
+    // If no vault provided nor the custom vault wasn't found (unlikely), choose random vault
     if (!vault) {
       vault = getRandomArrayElement(availableVaults);
     }
 
-    transaction.execute(monetaryAmount, vault.id.accountId, vault.collateralCurrency, false, vaultsData.raw);
+    transaction.execute(monetaryAmount, vault.vaultId.accountId, vault.collateralCurrency, false, vaultsData.raw);
   };
 
   const form = useForm<BridgeIssueFormData>({
@@ -164,8 +172,6 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
     : 0;
 
-  const isBtnDisabled = isFormDisabled(form);
-
   const securityDeposit = getSecurityDeposit(monetaryAmount) || new BitcoinAmount(0);
 
   const debouncedMonetaryAmount = newSafeMonetaryAmount(debouncedAmount || 0, WRAPPED_TOKEN, true);
@@ -178,36 +184,17 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
 
   const isSelectingVault = form.values[BRIDGE_ISSUE_MANUAL_VAULT_FIELD];
 
+  const isBtnDisabled = isFormDisabled(form);
+
+  const hasEnoughtGovernance = governanceBalance.gte(securityDeposit.add(TRANSACTION_FEE_AMOUNT));
+
   return (
     <>
       <Flex direction='column'>
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing8'>
             <Flex direction='column' gap='spacing4'>
-              <Flex direction='column' gap='spacing2'>
-                <P size='xs'>Max Issuable</P>
-                <Card gap='spacing4' variant='bordered' background='tertiary' rounded='lg' padding='spacing4'>
-                  <Dl direction='column' gap='spacing2'>
-                    <DlGroup justifyContent='space-between' flex='1'>
-                      <Dt size='xs' color='primary'>
-                        In single request
-                      </Dt>
-                      <Dd size='xs'>
-                        {requestLimits.singleVaultMaxIssuable.toHuman()}{' '}
-                        {requestLimits.singleVaultMaxIssuable.currency.ticker}
-                      </Dd>
-                    </DlGroup>
-                    <DlGroup justifyContent='space-between' flex='1'>
-                      <Dt size='xs' color='primary'>
-                        In total
-                      </Dt>
-                      <Dd size='xs'>
-                        {requestLimits.totalMaxIssuable.toHuman()} {requestLimits.totalMaxIssuable.currency.ticker}
-                      </Dd>
-                    </DlGroup>
-                  </Dl>
-                </Card>
-              </Flex>
+              <IssueLimitsCard requestLimits={requestLimits} />
               <TokenInput
                 placeholder='0.00'
                 label='Amount'
@@ -218,7 +205,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
               <Flex direction='column' gap='spacing2'>
                 <Tooltip
                   isDisabled={!!availableVaults?.length}
-                  label='There are no vaults available with enought capacity'
+                  label='There are no vaults available with enought capacity. Adjust your issue amount.'
                 >
                   <StyledSwitch
                     isSelected={isSelectingVault}
@@ -251,42 +238,14 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
               />
             </Flex>
             <Flex direction='column' gap='spacing4'>
-              {/* <TransactionDetails issueFee={data.issueFee} securityDeposit={securityDeposit} /> */}
-              <TransactionDetails>
-                <TransactionDetailsGroup>
-                  <TransactionDetailsDt tooltipLabel='The bridge fee paid to the vaults, relayers and maintainers of the system'>
-                    Bridge Fee
-                  </TransactionDetailsDt>
-                  <TransactionDetailsDd>
-                    {data.issueFee.toHuman()} {data.issueFee.currency.ticker} (
-                    {displayMonetaryAmountInUSDFormat(
-                      data.issueFee,
-                      getTokenPrice(prices, data.issueFee.currency.ticker)?.usd
-                    )}
-                    )
-                  </TransactionDetailsDd>
-                </TransactionDetailsGroup>
-                <TransactionDetailsGroup>
-                  <TransactionDetailsDt tooltipLabel='The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed'>
-                    Security Deposit
-                  </TransactionDetailsDt>
-                  <TransactionDetailsDd>
-                    {securityDeposit.toHuman()} {securityDeposit.currency.ticker} (
-                    {displayMonetaryAmountInUSDFormat(
-                      securityDeposit,
-                      getTokenPrice(prices, securityDeposit.currency.ticker)?.usd
-                    )}
-                    )
-                  </TransactionDetailsDd>
-                </TransactionDetailsGroup>
-                <TransactionFee
-                  label='Transaction Fee'
-                  tooltipLabel='The fee for the transaction to be included in the parachain'
-                  amount={TRANSACTION_FEE_AMOUNT}
-                />
-              </TransactionDetails>
-              <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
-                {t('issue')}
+              <TransactionDetails issueFee={data.issueFee} securityDeposit={securityDeposit} />
+              <AuthCTA
+                type='submit'
+                disabled={isBtnDisabled || !hasEnoughtGovernance}
+                size='large'
+                loading={transaction.isLoading}
+              >
+                {hasEnoughtGovernance ? t('issue') : `Insufficient ${GOVERNANCE_TOKEN.ticker}`}
               </AuthCTA>
             </Flex>
           </Flex>

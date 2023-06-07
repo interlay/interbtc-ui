@@ -4,5 +4,7 @@ export type { TransactionDetailsDdProps } from './TransactionDetailsDd';
 export { TransactionDetailsDd } from './TransactionDetailsDd';
 export type { TransactionDetailsDtProps } from './TransactionDetailsDt';
 export { TransactionDetailsDt } from './TransactionDetailsDt';
+export type { TransactionDetailsGroupProps } from './TransactionDetailsGroup';
+export { TransactionDetailsGroup } from './TransactionDetailsGroup';
 export type { TransactionFeeProps } from './TransactionFee';
 export { TransactionFee } from './TransactionFee';

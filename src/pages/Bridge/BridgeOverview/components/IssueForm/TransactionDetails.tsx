@@ -1,12 +1,16 @@
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 
-import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { Dd, DlGroup, Dt, Tooltip } from '@/component-library';
+import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import {
+  TransactionDetails as BaseTransactionDetails,
+  TransactionDetailsDd,
+  TransactionDetailsDt,
+  TransactionDetailsGroup,
+  TransactionFee
+} from '@/components';
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-
-import { StyledDl, StyledInformationCircle } from './IssueForm.styles';
 
 type TransactionDetailsProps = { issueFee: MonetaryAmount<Currency>; securityDeposit: MonetaryAmount<Currency> };
 
@@ -14,52 +18,35 @@ const TransactionDetails = ({ issueFee, securityDeposit }: TransactionDetailsPro
   const prices = useGetPrices();
 
   return (
-    <StyledDl direction='column' gap='spacing2'>
-      <DlGroup justifyContent='space-between'>
-        <Dt>
+    <BaseTransactionDetails>
+      <TransactionDetailsGroup>
+        <TransactionDetailsDt tooltipLabel='The bridge fee paid to the vaults, relayers and maintainers of the system'>
           Bridge Fee
-          <Tooltip label='The bridge fee paid to the vaults, relayers and maintainers of the system'>
-            <StyledInformationCircle size='s' />
-          </Tooltip>
-        </Dt>
-        <Dd>
+        </TransactionDetailsDt>
+        <TransactionDetailsDd>
           {issueFee.toHuman()} {issueFee.currency.ticker} (
           {displayMonetaryAmountInUSDFormat(issueFee, getTokenPrice(prices, issueFee.currency.ticker)?.usd)})
-        </Dd>
-      </DlGroup>
-      <DlGroup justifyContent='space-between'>
-        <Dt>
+        </TransactionDetailsDd>
+      </TransactionDetailsGroup>
+      <TransactionDetailsGroup>
+        <TransactionDetailsDt tooltipLabel='The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed'>
           Security Deposit
-          <Tooltip label='The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed'>
-            <StyledInformationCircle size='s' />
-          </Tooltip>
-        </Dt>
-        <Dd>
+        </TransactionDetailsDt>
+        <TransactionDetailsDd>
           {securityDeposit.toHuman()} {securityDeposit.currency.ticker} (
           {displayMonetaryAmountInUSDFormat(
             securityDeposit,
             getTokenPrice(prices, securityDeposit.currency.ticker)?.usd
           )}
           )
-        </Dd>
-      </DlGroup>
-      <DlGroup justifyContent='space-between'>
-        <Dt>
-          Transaction Fee
-          <Tooltip label='The fee for the transaction to be included in the parachain'>
-            <StyledInformationCircle size='s' />
-          </Tooltip>
-        </Dt>
-        <Dd>
-          {displayMonetaryAmount(TRANSACTION_FEE_AMOUNT)} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
-          {displayMonetaryAmountInUSDFormat(
-            TRANSACTION_FEE_AMOUNT,
-            getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
-          )}
-          )
-        </Dd>
-      </DlGroup>
-    </StyledDl>
+        </TransactionDetailsDd>
+      </TransactionDetailsGroup>
+      <TransactionFee
+        label='Transaction Fee'
+        tooltipLabel='The fee for the transaction to be included in the parachain'
+        amount={TRANSACTION_FEE_AMOUNT}
+      />
+    </BaseTransactionDetails>
   );
 };
 
