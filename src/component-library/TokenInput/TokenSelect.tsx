@@ -65,4 +65,4 @@ const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }
 };
 
 export { TokenSelect };
-export type { TokenSelectProps };
+export type { TokenData, TokenSelectProps };

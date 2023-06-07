@@ -110,6 +110,7 @@ const theme = {
     },
     disabled: {
       color: 'var(--colors-input-disabled-text)',
+      bg: 'var(--colors-input-disabled-bg)',
       border: '1px solid var(--colors-input-disabled-border)'
     },
     helperText: {
@@ -119,15 +120,18 @@ const theme = {
     },
     small: {
       text: 'var(--text-s)',
-      maxHeight: 'var(--spacing-8)'
+      maxHeight: 'var(--spacing-8)',
+      weight: 'var(--font-weights-book)'
     },
     medium: {
       text: 'var(--text-base)',
-      maxHeight: 'var(--spacing-10)'
+      maxHeight: 'var(--spacing-10)',
+      weight: 'var(--font-weights-book)'
     },
     large: {
       text: 'var(--text-4xl)',
-      maxHeight: 'var(--spacing-16)'
+      maxHeight: 'var(--spacing-16)',
+      weight: 'var(--font-weights-medium)'
     },
     overflow: {
       large: {
@@ -141,6 +145,9 @@ const theme = {
       xl: '8rem',
       xl2: '9.5rem'
     }
+  },
+  label: {
+    text: 'var(--colors-label-text)'
   },
   tokenInput: {
     endAdornment: {
@@ -161,7 +168,11 @@ const theme = {
     outlined: {
       border: '1px solid transparent'
     },
-    bg: { primary: 'var(--color-card-primary-bg)', secondary: 'var(--color-card-secondary-bg)' }
+    bg: {
+      primary: 'var(--color-card-primary-bg)',
+      secondary: 'var(--color-card-secondary-bg)',
+      tertiary: 'var(--color-card-tertiary-bg)'
+    }
   },
   cta: {
     primary: {

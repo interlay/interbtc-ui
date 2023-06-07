@@ -29,7 +29,7 @@ import { useXCMBridge, XCMTokenData } from '@/utils/hooks/api/xcm/use-xcm-bridge
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 
-import { ChainSelect } from './components';
+import { ChainSelect } from '../ChainSelect';
 import {
   ChainSelectSection,
   StyledArrowRightCircle,
@@ -169,8 +169,7 @@ const CrossChainTransferForm = (): JSX.Element => {
       )
     : 0;
 
-  const isCTADisabled = isFormDisabled(form) || form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] === '';
-  const amountShouldValidate = form.values[CROSS_CHAIN_TRANSFER_AMOUNT_FIELD] !== '';
+  const isCTADisabled = isFormDisabled(form);
 
   useEffect(() => {
     if (!originatingChains?.length) return;
@@ -246,7 +245,7 @@ const CrossChainTransferForm = (): JSX.Element => {
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
             })}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, amountShouldValidate))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
           />
         </div>
         <AccountSelect
@@ -278,4 +277,4 @@ const CrossChainTransferForm = (): JSX.Element => {
   );
 };
 
-export default CrossChainTransferForm;
+export { CrossChainTransferForm };
