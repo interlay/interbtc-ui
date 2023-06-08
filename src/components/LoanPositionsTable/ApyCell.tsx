@@ -33,7 +33,8 @@ const ApyCell = ({
   const rewardsApy = getSubsidyRewardApy(currency, rewardsPerYear, prices);
 
   const totalApy = isBorrow ? apy.sub(rewardsApy || 0) : apy.add(rewardsApy || 0);
-  const totalApyLabel = isBorrow ? `-${getApyLabel(totalApy)}` : getApyLabel(totalApy);
+
+  const totalApyLabel = getApyLabel(totalApy);
 
   const earnedAsset = accumulatedDebt || earnedInterest;
 
