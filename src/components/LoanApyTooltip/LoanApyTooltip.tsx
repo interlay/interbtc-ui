@@ -4,7 +4,7 @@ import { TooltipProps } from '@reach/tooltip';
 import Big from 'big.js';
 
 import { Dd, Dl, DlGroup } from '@/component-library';
-import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetGroup } from './AssetGroup';
@@ -43,7 +43,7 @@ const LoanApyTooltip = ({
         apy={apy}
         isBorrow={isBorrow}
         rewardsApy={rewardsApy}
-        rewardsTicker={GOVERNANCE_TOKEN_SYMBOL}
+        rewardsTicker={GOVERNANCE_TOKEN.ticker}
         ticker={currency.ticker}
       />
       {accumulatedDebt && (
