@@ -60,7 +60,7 @@ const getNetAPY = (
   const totalBorrowApy = borrowPositions.reduce((total, position) => {
     const { currency } = position.amount;
     const { borrowApy, borrowReward } = assets[currency.ticker];
-    console.log(currency.ticker, borrowApy.toString());
+
     const rewardsApy = getSubsidyRewardApy(currency, borrowReward, prices);
     const positionApy = borrowApy.sub(rewardsApy || 0);
     const positionUSDValue = convertMonetaryAmountToValueInUSD(
