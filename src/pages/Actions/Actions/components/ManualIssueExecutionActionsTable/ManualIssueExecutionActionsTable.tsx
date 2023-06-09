@@ -80,7 +80,7 @@ const ManualIssueExecutionActionsTable = (props: ManualIssueExecutionActionsTabl
         [ManualIssueExecutionActionsTableKeys.Action]: (
           <CTALink
             to={{
-              pathname: PAGES.TRANSACTIONS,
+              pathname: PAGES.BRIDGE,
               search: queryString.stringify({
                 [QUERY_PARAMETERS.ISSUE_REQUEST_ID]: item.id,
                 [QUERY_PARAMETERS.ISSUE_REQUESTS_PAGE]: calculatePageNumber(TABLE_PAGE_LIMIT, issueRequestItemIndex)

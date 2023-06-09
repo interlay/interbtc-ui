@@ -5,7 +5,6 @@ import { useQuery } from 'react-query';
 
 import { formatDateTimePrecise } from '@/common/utils/utils';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { TransactionTableData } from '@/pages/Vaults/Vault/components/TransactionHistory/TransactionTable';
 import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import issuesFetcher, { getIssueWithStatus, ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
 import redeemsFetcher, { getRedeemWithStatus, REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
@@ -15,6 +14,19 @@ import useStableParachainConfirmations from '@/services/hooks/use-stable-paracha
 import { getCurrencyEqualityCondition } from '@/utils/helpers/currencies';
 
 import { useGetCurrencies } from '../use-get-currencies';
+
+type TransactionStatus = 'pending' | 'cancelled' | 'completed' | 'confirmed' | 'received' | 'retried';
+
+type TransactionTableData = {
+  id: string;
+  request: string;
+  date: string;
+  amount: string;
+  status: TransactionStatus;
+  // This `any` is an upstream issue - issue and redeem request data
+  // hasn't been typed properly. This is a TODO, but out of scope here.
+  requestData: any;
+};
 
 // TODO: Bad stuff happening here! `getIssueWithStatus` and `getRedeemWithStatus` are
 // mutating the data which is why `status` is being set like this. We need to refactor

@@ -99,7 +99,7 @@ const SubmittedRedeemRequestModal = ({
           </div>
           <InterlayRouterLink
             to={{
-              pathname: PAGES.TRANSACTIONS,
+              pathname: PAGES.BRIDGE,
               search: queryString.stringify({
                 [QUERY_PARAMETERS.REDEEM_REQUEST_ID]: request.id
               })
