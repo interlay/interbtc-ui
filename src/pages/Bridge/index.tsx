@@ -20,6 +20,7 @@ import { useGetCollateralCurrencies } from '@/utils/hooks/api/use-get-collateral
 import useQueryParams from '@/utils/hooks/use-query-params';
 import useUpdateQueryParameters, { QueryParameters } from '@/utils/hooks/use-update-query-parameters';
 
+import Transactions from '../Transactions';
 import BurnForm from './BurnForm';
 import IssueForm from './IssueForm';
 import RedeemForm from './RedeemForm';
@@ -143,6 +144,7 @@ const Bridge = (): JSX.Element | null => {
           </InterlayTabPanels>
         </InterlayTabGroup>
       </Panel>
+      <Transactions />
     </MainContainer>
   );
 };
