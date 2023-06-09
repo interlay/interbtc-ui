@@ -4,12 +4,12 @@ import { TooltipProps } from '@reach/tooltip';
 import Big from 'big.js';
 
 import { Dd, Dl, DlGroup } from '@/component-library';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetGroup } from './AssetGroup';
 import { BreakdownGroup } from './BreakdownGroup';
 import { StyledApyTooltipTitle, StyledTooltip } from './LoanApyTooltip.style';
-import { RewardsGroup } from './RewardsGroup';
 
 type Props = {
   apy: Big;
@@ -17,7 +17,6 @@ type Props = {
   earnedInterest?: MonetaryAmount<CurrencyExt>;
   accumulatedDebt?: MonetaryAmount<CurrencyExt>;
   rewardsApy?: Big;
-  rewards: MonetaryAmount<CurrencyExt> | null;
   prices: Prices;
   isBorrow: boolean;
 };
@@ -32,12 +31,11 @@ const LoanApyTooltip = ({
   earnedInterest,
   accumulatedDebt,
   rewardsApy,
-  rewards,
   prices,
   isBorrow,
   ...props
 }: LoanApyTooltipProps): JSX.Element => {
-  const showEarnedRewards = !!rewards || !!earnedInterest;
+  const showEarnedRewards = !!earnedInterest;
 
   const label = (
     <Dl direction='column' gap='spacing2'>
@@ -45,7 +43,7 @@ const LoanApyTooltip = ({
         apy={apy}
         isBorrow={isBorrow}
         rewardsApy={rewardsApy}
-        rewardsTicker={rewards?.currency.ticker}
+        rewardsTicker={GOVERNANCE_TOKEN.ticker}
         ticker={currency.ticker}
       />
       {accumulatedDebt && (
@@ -64,7 +62,6 @@ const LoanApyTooltip = ({
           <Dd>
             <Dl direction='column' alignItems='flex-start' gap='spacing0'>
               {earnedInterest && <AssetGroup amount={earnedInterest} prices={prices} />}
-              {!!rewards && <RewardsGroup rewards={rewards} prices={prices} />}
             </Dl>
           </Dd>
         </DlGroup>
