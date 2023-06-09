@@ -352,7 +352,7 @@ const RedeemRequestsTable = (): JSX.Element => {
             </InterlayTbody>
           </InterlayTable>
         ) : (
-          'No transactions found'
+          t('empty_data')
         )}
 
         {pageCount > 0 && (
