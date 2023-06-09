@@ -3,16 +3,8 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CardProps, TabsItem } from '@/component-library';
-import { PAGES } from '@/utils/constants/links';
 
-import {
-  StyledCTALink,
-  StyledStack,
-  StyledTableWrapper,
-  StyledTabs,
-  StyledTitle,
-  StyledWrapper
-} from './TransactionHistory.styles';
+import { StyledStack, StyledTableWrapper, StyledTabs, StyledTitle, StyledWrapper } from './TransactionHistory.styles';
 import { TransactionTable, TransactionTableData } from './TransactionTable';
 
 type Props = {
@@ -63,9 +55,6 @@ const TransactionHistory = (props: TransactionHistoryProps): JSX.Element => {
               </TabsItem>
             ))}
           </StyledTabs>
-          <StyledCTALink to={PAGES.TRANSACTIONS} variant='outlined' size='small'>
-            {'View All >'}
-          </StyledCTALink>
         </StyledStack>
       </StyledWrapper>
     </>
