@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { Switch } from '@/component-library';
 import { Flex } from '@/component-library/Flex';
 import { Span } from '@/component-library/Text';
 import { theme } from '@/component-library/theme';
@@ -48,11 +49,17 @@ const StyledVaultIcon = styled(Flex)`
   }
 `;
 
+const StyledSwitch = styled(Switch)`
+  flex-direction: row-reverse;
+  justify-content: space-between;
+`;
+
 export {
   StyledChain,
   StyledListItemLabel,
   StyledListLabelWrapper,
   StyledListWrapper,
+  StyledSwitch,
   StyledVaultAddress,
   StyledVaultIcon,
   StyledVaultName
