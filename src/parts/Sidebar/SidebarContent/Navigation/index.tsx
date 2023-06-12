@@ -261,12 +261,12 @@ const Navigation = ({
               match?.isExact
                 ? clsx(
                     TEXT_CLASSES_FOR_SELECTED,
-                    { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   )
                 : clsx(
                     TEXT_CLASSES_FOR_UNSELECTED,
-                    { 'hover:bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                    { 'hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
                     { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
                     { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
                   ),
