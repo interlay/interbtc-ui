@@ -1,2 +1,2 @@
-export type { IssueFormProps } from './IssueForm';
-export { IssueForm } from './IssueForm';
+export type { RedeemFormProps } from './RedeemForm';
+export { RedeemForm } from './RedeemForm';

@@ -39,7 +39,7 @@ const useGetIssueData = (): UseGetIssueDataResult => {
   const { data: btcToGovernanceToken } = useGetExchangeRate(GOVERNANCE_TOKEN);
 
   const { data, error, refetch } = useQuery({
-    queryKey: 'dust-value',
+    queryKey: 'issue-data',
     queryFn: getIssueData,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });

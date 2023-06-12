@@ -37,5 +37,56 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
     })
   });
 
-export { BRIDGE_ISSUE_AMOUNT_FIELD, BRIDGE_ISSUE_MANUAL_VAULT_FIELD, BRIDGE_ISSUE_VAULT_FIELD, bridgeIssueSchema };
-export type { BridgeIssueFormData };
+const BRIDGE_REDEEM_AMOUNT_FIELD = 'redeem-amount';
+const BRIDGE_REDEEM_VAULT_FIELD = 'redeem-vault';
+const BRIDGE_REDEEM_MANUAL_VAULT_FIELD = 'manual-vault';
+const BRIDGE_REDEEM_ADDRESS = 'redeem-address';
+
+type BridgeRedeemFormData = {
+  [BRIDGE_REDEEM_AMOUNT_FIELD]?: string;
+  [BRIDGE_REDEEM_VAULT_FIELD]?: string;
+  [BRIDGE_REDEEM_MANUAL_VAULT_FIELD]?: boolean;
+  [BRIDGE_REDEEM_ADDRESS]?: string;
+};
+
+type BridgeRedeemValidationParams = {
+  [BRIDGE_REDEEM_AMOUNT_FIELD]: FeesValidationParams & MaxAmountValidationParams & MinAmountValidationParams;
+};
+
+const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSchema<any> =>
+  yup.object().shape({
+    [BRIDGE_REDEEM_AMOUNT_FIELD]: yup
+      .string()
+      .requiredAmount('redeem')
+      .maxAmount(
+        params[BRIDGE_REDEEM_AMOUNT_FIELD],
+        'redeem',
+        i18n.t('forms.amount_must_be_at_most', {
+          action: 'redeem',
+          amount: params[BRIDGE_REDEEM_AMOUNT_FIELD].maxAmount.toString()
+        })
+      )
+      .minAmount(params[BRIDGE_REDEEM_AMOUNT_FIELD], 'redeem')
+      .fees(params[BRIDGE_REDEEM_AMOUNT_FIELD]),
+    [BRIDGE_ISSUE_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_MANUAL_VAULT_FIELD], {
+      is: (isManualVault: string) => isManualVault,
+      then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'vault' }))
+    }),
+    [BRIDGE_REDEEM_ADDRESS]: yup
+      .string()
+      .required(i18n.t('forms.please_enter_your_field', { field: 'recipient' }))
+      .address('transfer')
+  });
+
+export {
+  BRIDGE_ISSUE_AMOUNT_FIELD,
+  BRIDGE_ISSUE_MANUAL_VAULT_FIELD,
+  BRIDGE_ISSUE_VAULT_FIELD,
+  BRIDGE_REDEEM_ADDRESS,
+  BRIDGE_REDEEM_AMOUNT_FIELD,
+  BRIDGE_REDEEM_MANUAL_VAULT_FIELD,
+  BRIDGE_REDEEM_VAULT_FIELD,
+  bridgeIssueSchema,
+  bridgeRedeemSchema
+};
+export type { BridgeIssueFormData, BridgeRedeemFormData };

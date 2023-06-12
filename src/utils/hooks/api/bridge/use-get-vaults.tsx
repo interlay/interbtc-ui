@@ -4,11 +4,10 @@ import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryOptions } from 'react-query';
 
+import { BridgeActions } from '@/types/bridge';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import { useGetCurrencies } from '../use-get-currencies';
-
-type BridgeAction = 'issue' | 'redeem';
 
 type BridgeVaultData = {
   id: number;
@@ -26,14 +25,14 @@ type UseGetBridgeVaultResult = {
 };
 
 type UseGetVaultsOptions = UseQueryOptions<GetBridgeVaultData, unknown, GetBridgeVaultData, string[]> & {
-  action: BridgeAction;
+  action: Exclude<BridgeActions, BridgeActions.BURN>;
 };
 
 const useGetVaults = ({ action, ...options }: UseGetVaultsOptions): UseGetBridgeVaultResult => {
   const { getCurrencyFromIdPrimitive } = useGetCurrencies(true);
 
   const getVaults = useCallback(
-    async (action: BridgeAction): Promise<GetBridgeVaultData> => {
+    async (action: Exclude<BridgeActions, BridgeActions.BURN>): Promise<GetBridgeVaultData> => {
       const raw = await (action === 'issue'
         ? window.bridge.vaults.getVaultsWithIssuableTokens()
         : window.bridge.vaults.getVaultsWithRedeemableTokens());

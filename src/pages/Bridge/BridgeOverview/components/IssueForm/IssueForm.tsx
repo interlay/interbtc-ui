@@ -24,6 +24,7 @@ import {
   isFormDisabled,
   useForm
 } from '@/lib/form';
+import { BridgeActions } from '@/types/bridge';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { IssueData, useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { BridgeVaultData, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
@@ -31,7 +32,7 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
-import { IssueLimitsCard } from '../IssueLimitsCard';
+import { IssueLimitsCard } from '../BridgeLimitsCard';
 import { LegacyIssueModal } from '../LegacyIssueModal';
 import { SelectVaultCard } from '../SelectVaultCard';
 import { TransactionDetails } from './TransactionDetails';
@@ -67,7 +68,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     showSuccessModal: false
   });
 
-  const { data: vaultsData, getAvailableVaults } = useGetVaults({ action: 'issue' });
+  const { data: vaultsData, getAvailableVaults } = useGetVaults({ action: BridgeActions.ISSUE });
 
   useDebounce(() => setDecounbedAmount(amount), 500, [amount]);
 
@@ -193,7 +194,11 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
-              <IssueLimitsCard requestLimits={requestLimits} />
+              <IssueLimitsCard
+                title='Max issuable'
+                singleRequestLimit={requestLimits.singleVaultMaxIssuable}
+                maxRequestLimit={requestLimits.totalMaxIssuable}
+              />
               <TokenInput
                 placeholder='0.00'
                 label='Amount'

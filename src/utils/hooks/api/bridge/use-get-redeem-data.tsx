@@ -1,4 +1,4 @@
-import { Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
@@ -9,15 +9,26 @@ import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import { useGetExchangeRate } from '../use-get-exchange-rate';
 
-type IssueData = {
+const getPremiumRedeemVaults = async () => {
+  try {
+    const premiumRedeemVaults = await window.bridge.vaults.getPremiumRedeemVaults();
+
+    return premiumRedeemVaults.size > 0;
+  } catch (e) {
+    return new Map();
+  }
+};
+
+type RedeemData = {
   dustValue: MonetaryAmount<Currency>;
   premiumRedeemFeeRate: Big;
   hasPremiumRedeemVaults: boolean;
-  feeRate: Big;
+  feeRate: BitcoinAmount;
   currentInclusionFee: MonetaryAmount<Currency>;
+  redeemLimit: MonetaryAmount<Currency>;
 };
 
-const getIssueData = async (): Promise<IssueData> => {
+const getRedeemData = async (): Promise<RedeemData> => {
   const [
     premiumRedeemFeeRate,
     dustValue,
@@ -28,29 +39,26 @@ const getIssueData = async (): Promise<IssueData> => {
   ] = await Promise.all([
     window.bridge.redeem.getPremiumRedeemFeeRate(),
     window.bridge.redeem.getDustValue(),
-    window.bridge.vaults.getPremiumRedeemVaults(),
+    checkPremiumRedeemVaults(),
     window.bridge.redeem.getFeeRate(),
     window.bridge.redeem.getCurrentInclusionFee(),
     window.bridge.vaults.getVaultsWithRedeemableTokens()
   ]);
 
-  const hasPremiumRedeemVaults = premiumRedeemVaults.size > 0;
-
   const redeemLimit = vaultsWithRedeemableTokens.values().next().value;
-
-  console.log(redeemLimit);
 
   return {
     dustValue,
+    redeemLimit,
     premiumRedeemFeeRate,
-    hasPremiumRedeemVaults,
-    feeRate,
+    premiumRedeemVaults,
+    feeRate: new BitcoinAmount(feeRate),
     currentInclusionFee
   };
 };
 
 type UseGetRedeemDataResult = {
-  data: IssueData | undefined;
+  data: RedeemData | undefined;
   getSecurityDeposit: (btcAmount: MonetaryAmount<Currency>) => MonetaryAmount<Currency> | undefined;
   refetch: () => void;
 };
@@ -59,8 +67,8 @@ const useGetRedeemData = (): UseGetRedeemDataResult => {
   const { data: btcToGovernanceToken } = useGetExchangeRate(GOVERNANCE_TOKEN);
 
   const { data, error, refetch } = useQuery({
-    queryKey: 'dust-value',
-    queryFn: getIssueData,
+    queryKey: 'redeem-data',
+    queryFn: getRedeemData,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
@@ -85,4 +93,4 @@ const useGetRedeemData = (): UseGetRedeemDataResult => {
 };
 
 export { useGetRedeemData };
-export type { IssueData, UseGetRedeemDataResult };
+export type { RedeemData, UseGetRedeemDataResult };
