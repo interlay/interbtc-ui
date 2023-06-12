@@ -15,7 +15,7 @@ type IssueData = {
   griefingCollateralRate: Big;
 };
 
-const getDustValue = async (): Promise<IssueData> => {
+const getIssueData = async (): Promise<IssueData> => {
   const [issueFee, griefingCollateralRate, dustValue] = await Promise.all([
     window.bridge.fee.getIssueFee(),
     window.bridge.fee.getIssueGriefingCollateralRate(),
@@ -29,18 +29,18 @@ const getDustValue = async (): Promise<IssueData> => {
   };
 };
 
-type UseGetDustValueResult = {
+type UseGetIssueDataResult = {
   data: IssueData | undefined;
   getSecurityDeposit: (btcAmount: MonetaryAmount<Currency>) => MonetaryAmount<Currency> | undefined;
   refetch: () => void;
 };
 
-const useGetIssueData = (): UseGetDustValueResult => {
+const useGetIssueData = (): UseGetIssueDataResult => {
   const { data: btcToGovernanceToken } = useGetExchangeRate(GOVERNANCE_TOKEN);
 
   const { data, error, refetch } = useQuery({
     queryKey: 'dust-value',
-    queryFn: getDustValue,
+    queryFn: getIssueData,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
 
@@ -65,4 +65,4 @@ const useGetIssueData = (): UseGetDustValueResult => {
 };
 
 export { useGetIssueData };
-export type { IssueData, UseGetDustValueResult };
+export type { IssueData, UseGetIssueDataResult };
