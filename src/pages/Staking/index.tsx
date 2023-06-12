@@ -29,7 +29,6 @@ import {
 } from '@/config/relay-chains';
 import AvailableBalanceUI from '@/legacy-components/AvailableBalanceUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import Panel from '@/legacy-components/Panel';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import TokenField from '@/legacy-components/TokenField';
@@ -837,17 +836,6 @@ const Staking = (): JSX.Element => {
           </form>
         </Panel>
       </MainContainer>
-      {(initialStakeTransaction.isError || existingStakeTransaction.isError) && (
-        <ErrorModal
-          open={initialStakeTransaction.isError || existingStakeTransaction.isError}
-          onClose={() => {
-            initialStakeTransaction.reset();
-            existingStakeTransaction.reset();
-          }}
-          title='Error'
-          description={initialStakeTransaction.error?.message || existingStakeTransaction.error?.message || ''}
-        />
-      )}
     </>
   );
 };

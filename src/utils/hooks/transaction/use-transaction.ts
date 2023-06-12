@@ -1,51 +1,62 @@
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
-import { useCallback } from 'react';
+import { mergeProps } from '@react-aria/utils';
+import { useCallback, useState } from 'react';
 import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } from 'react-query';
 
 import { useSubstrate } from '@/lib/substrate';
 
+import { getExtrinsic, getStatus } from './extrinsics';
 import { Transaction, TransactionActions, TransactionArgs } from './types';
-import { getExtrinsic, getStatus } from './utils/extrinsic';
+import { useTransactionNotifications } from './use-transaction-notifications';
 import { submitTransaction } from './utils/submit';
 
-type UseTransactionOptions = Omit<
-  UseMutationOptions<ISubmittableResult, Error, TransactionActions, unknown>,
-  'mutationFn'
-> & {
-  customStatus?: ExtrinsicStatus['type'];
-};
+type TransactionResult = { status: 'success' | 'error'; data: ISubmittableResult; error?: Error };
 
 // TODO: add feeEstimate and feeEstimateAsync
 type ExecuteArgs<T extends Transaction> = {
   // Executes the transaction
   execute<D extends Transaction = T>(...args: TransactionArgs<D>): void;
   // Similar to execute but returns a promise which can be awaited.
-  executeAsync<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<ISubmittableResult>;
+  executeAsync<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<TransactionResult>;
 };
 
 // TODO: add feeEstimate and feeEstimateAsync
 type ExecuteTypeArgs<T extends Transaction> = {
   execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
-  executeAsync<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<ISubmittableResult>;
+  executeAsync<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<TransactionResult>;
 };
 
-type InheritAttrs = Omit<
-  UseMutationResult<ISubmittableResult, Error, TransactionActions, unknown>,
+type ExecuteFunctions<T extends Transaction> = ExecuteArgs<T> | ExecuteTypeArgs<T>;
+
+type ReactQueryUseMutationResult = Omit<
+  UseMutationResult<TransactionResult, Error, TransactionActions, unknown>,
   'mutate' | 'mutateAsync'
 >;
 
-type UseTransactionResult<T extends Transaction> = InheritAttrs & (ExecuteArgs<T> | ExecuteTypeArgs<T>);
+type UseTransactionResult<T extends Transaction> = {
+  reject: (error?: Error) => void;
+  isSigned: boolean;
+} & ReactQueryUseMutationResult &
+  ExecuteFunctions<T>;
 
-const mutateTransaction: MutationFunction<ISubmittableResult, TransactionActions> = async (params) => {
+const mutateTransaction: MutationFunction<TransactionResult, TransactionActions> = async (params) => {
   const extrinsics = await getExtrinsic(params);
   const expectedStatus = params.customStatus || getStatus(params.type);
 
   return submitTransaction(window.bridge.api, params.accountAddress, extrinsics, expectedStatus, params.events);
 };
 
+type UseTransactionOptions = Omit<
+  UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
+  'mutationFn'
+> & {
+  customStatus?: ExtrinsicStatus['type'];
+  onSigning?: (variables: TransactionActions) => void;
+  showSuccessModal?: boolean;
+};
+
 // The three declared functions are use to infer types on diferent implementations
-// TODO: missing xcm transaction
 function useTransaction<T extends Transaction>(
   type: T,
   options?: UseTransactionOptions
@@ -59,12 +70,30 @@ function useTransaction<T extends Transaction>(
 ): UseTransactionResult<T> {
   const { state } = useSubstrate();
 
-  const hasOnlyOptions = typeof typeOrOptions !== 'string';
+  const [isSigned, setSigned] = useState(false);
 
-  const { mutate, mutateAsync, ...transactionMutation } = useMutation(
-    mutateTransaction,
-    (hasOnlyOptions ? typeOrOptions : options) as UseTransactionOptions
+  const { showSuccessModal, customStatus, ...mutateOptions } =
+    (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
+
+  const notifications = useTransactionNotifications({ showSuccessModal });
+
+  const handleMutate = () => setSigned(false);
+
+  const handleSigning = () => setSigned(true);
+
+  const handleError = (error: Error) => console.error(error.message);
+
+  const { onSigning, ...optionsProp } = mergeProps(
+    mutateOptions,
+    {
+      onMutate: handleMutate,
+      onSigning: handleSigning,
+      onError: handleError
+    },
+    notifications.mutationProps
   );
+
+  const { mutate, mutateAsync, ...transactionMutation } = useMutation(mutateTransaction, optionsProp);
 
   // Handles params for both type of implementations
   const getParams = useCallback(
@@ -83,14 +112,21 @@ function useTransaction<T extends Transaction>(
       // Execution should only ran when authenticated
       const accountAddress = state.selectedAccount?.address;
 
-      // TODO: add event `onReady`
-      return {
+      const variables = {
         ...params,
         accountAddress,
-        customStatus: options?.customStatus
+        timestamp: new Date().getTime(),
+        customStatus
       } as TransactionActions;
+
+      return {
+        ...variables,
+        events: {
+          onReady: () => onSigning(variables)
+        }
+      };
     },
-    [options?.customStatus, state.selectedAccount?.address, typeOrOptions]
+    [onSigning, customStatus, state.selectedAccount?.address, typeOrOptions]
   );
 
   const handleExecute = useCallback(
@@ -111,12 +147,23 @@ function useTransaction<T extends Transaction>(
     [getParams, mutateAsync]
   );
 
+  const handleReject = (error?: Error) => {
+    notifications.onReject(error);
+    setSigned(false);
+
+    if (error) {
+      console.error(error.message);
+    }
+  };
+
   return {
     ...transactionMutation,
+    isSigned,
+    reject: handleReject,
     execute: handleExecute,
     executeAsync: handleExecuteAsync
   };
 }
 
 export { useTransaction };
-export type { UseTransactionResult };
+export type { TransactionResult, UseTransactionResult };

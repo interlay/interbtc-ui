@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ReactComponent as BitcoinLogoIcon } from '@/assets/img/bitcoin-logo.svg';
 import { displayMonetaryAmountInUSDFormat, formatNumber } from '@/common/utils/utils';
+import { Flex } from '@/component-library';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import Hr2 from '@/legacy-components/hrs/Hr2';
@@ -43,7 +44,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
   };
 
   return (
-    <div className={clsx('grid', 'grid-cols-1', 'lg:grid-cols-2', 'gap-10')}>
+    <Flex direction='column' gap='spacing4'>
       <div className='space-y-6'>
         <div className='text-center'>
           <h4 className={clsx('font-medium', 'space-x-1')}>
@@ -160,7 +161,7 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
         </div>
       </div>
       <>{renderModalStatusPanel(redeem)}</>
-    </div>
+    </Flex>
   );
 };
 

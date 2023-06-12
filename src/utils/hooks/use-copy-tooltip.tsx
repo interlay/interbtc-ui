@@ -15,6 +15,7 @@ type CopyTooltipResult = {
   };
 };
 
+// FIX: is openning tooltip too fast
 const useCopyTooltip = (props?: CopyTooltipProp): CopyTooltipResult => {
   const { t } = useTranslation();
 
