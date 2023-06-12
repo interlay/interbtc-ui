@@ -26,7 +26,7 @@ const RewardsGroup = ({ isBorrow, apy, assetCurrency, rewards, prices }: Rewards
   return (
     <>
       <DlGroup justifyContent='space-between'>
-        <Dt>Rewards APY {rewards.currency.ticker}</Dt>
+        <Dt>Rewards APR {rewards.currency.ticker}</Dt>
         <Dd>{getApyLabel(subsidyRewardApy)}</Dd>
       </DlGroup>
       <DlGroup justifyContent='space-between'>

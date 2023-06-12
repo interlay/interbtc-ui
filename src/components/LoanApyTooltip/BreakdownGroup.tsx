@@ -29,7 +29,7 @@ const BreakdownGroup = ({ apy, rewardsApy, ticker, rewardsTicker, isBorrow }: Br
           </StyledApyTooltipGroup>
           {!!rewardsApy && (
             <StyledApyTooltipGroup gap='spacing1' wrap>
-              <Dd color='tertiary'>Rewards APY {rewardsTicker}:</Dd>
+              <Dd color='tertiary'>Rewards APR {rewardsTicker}:</Dd>
               <Dt color='primary'>{getApyLabel(rewardsApy)}</Dt>
             </StyledApyTooltipGroup>
           )}

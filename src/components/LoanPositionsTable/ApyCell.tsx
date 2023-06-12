@@ -15,7 +15,6 @@ type ApyCellProps = {
   earnedInterest?: MonetaryAmount<CurrencyExt>;
   accumulatedDebt?: MonetaryAmount<CurrencyExt>;
   rewardsPerYear: MonetaryAmount<CurrencyExt> | null;
-  accruedRewards: MonetaryAmount<CurrencyExt> | null;
   prices?: Prices;
   isBorrow?: boolean;
   onClick?: () => void;
@@ -25,7 +24,6 @@ const ApyCell = ({
   apy,
   currency,
   rewardsPerYear,
-  accruedRewards,
   accumulatedDebt,
   earnedInterest,
   prices,
@@ -55,7 +53,6 @@ const ApyCell = ({
         apy={apy}
         currency={currency}
         prices={prices}
-        rewards={accruedRewards}
         rewardsApy={rewardsApy}
         isBorrow={isBorrow}
         accumulatedDebt={accumulatedDebt}
