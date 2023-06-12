@@ -12,7 +12,7 @@ import {
   newSafeBitcoinAmount,
   newSafeMonetaryAmount
 } from '@/common/utils/utils';
-import { Flex, TokenInput, Tooltip } from '@/component-library';
+import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
@@ -33,8 +33,7 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 import { IssueLimitsCard } from '../IssueLimitsCard';
 import { LegacyIssueModal } from '../LegacyIssueModal';
-import { VaultSelect } from '../VaultSelect';
-import { StyledSwitch } from './IssueForm.styles';
+import { SelectVaultCard } from '../SelectVaultCard';
 import { TransactionDetails } from './TransactionDetails';
 
 const isInputOverRequestLimit = (inputAmount: BitcoinAmount, limits: IssueLimits) =>
@@ -192,7 +191,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     <>
       <Flex direction='column'>
         <form onSubmit={form.handleSubmit}>
-          <Flex direction='column' gap='spacing8'>
+          <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
               <IssueLimitsCard requestLimits={requestLimits} />
               <TokenInput
@@ -202,43 +201,25 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
                 valueUSD={amountUSD}
                 {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
               />
-              <Flex direction='column' gap='spacing2'>
-                <Tooltip
-                  isDisabled={!!availableVaults?.length}
-                  label='There are no vaults available with enought capacity. Adjust your issue amount.'
-                >
-                  <StyledSwitch
-                    isSelected={isSelectingVault}
-                    isDisabled={!availableVaults?.length}
-                    labelProps={{ size: 'xs' }}
-                    {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
-                      onChange: handleChangeSelectingVault
-                    })}
-                  >
-                    Manually Select Vault
-                  </StyledSwitch>
-                </Tooltip>
-                {isSelectingVault && availableVaults && (
-                  <VaultSelect
-                    items={availableVaults}
-                    onSelectionChange={handleVaultSelectionChange}
-                    placeholder='Select a vault'
-                    aria-label='Vault'
-                    {...form.getFieldProps(BRIDGE_ISSUE_VAULT_FIELD)}
-                  />
-                )}
-              </Flex>
-              <TokenInput
-                placeholder='0.00'
-                label='You will receive'
-                isDisabled
-                ticker={WRAPPED_TOKEN.ticker}
-                value={totalAmount?.toString()}
-                valueUSD={totalAmountUSD}
+              <SelectVaultCard
+                isSelectingVault={isSelectingVault}
+                availableVaults={availableVaults}
+                switchProps={mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
+                  onChange: handleChangeSelectingVault
+                })}
+                selectProps={{
+                  onSelectionChange: handleVaultSelectionChange,
+                  ...form.getFieldProps(BRIDGE_ISSUE_VAULT_FIELD)
+                }}
               />
             </Flex>
             <Flex direction='column' gap='spacing4'>
-              <TransactionDetails issueFee={data.issueFee} securityDeposit={securityDeposit} />
+              <TransactionDetails
+                totalAmount={totalAmount}
+                totalAmountUSD={totalAmountUSD}
+                issueFee={data.issueFee}
+                securityDeposit={securityDeposit}
+              />
               <AuthCTA
                 type='submit'
                 disabled={isBtnDisabled || !hasEnoughtGovernance}
