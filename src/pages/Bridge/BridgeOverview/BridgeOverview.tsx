@@ -23,7 +23,7 @@ const BridgeOverview = (): JSX.Element => {
   const { data: maxBurnableTokensData } = useGetMaxBurnanbleTokens();
   const { data: issueData } = useGetIssueData();
 
-  if (issueRequestLimit === undefined || issueData === undefined || maxBurnableTokensData === undefined) {
+  if (issueRequestLimit === undefined || issueData === undefined) {
     return <FullLoadingSpinner />;
   }
 
@@ -41,7 +41,7 @@ const BridgeOverview = (): JSX.Element => {
               <TabsItem title='Redeem' key={BridgeTabs.REDEEM}>
                 <StyledFormWrapper>Redeem</StyledFormWrapper>
               </TabsItem>
-              {maxBurnableTokensData.hasBurnableTokens && (
+              {maxBurnableTokensData?.hasBurnableTokens && (
                 <TabsItem title='Burn' key={BridgeTabs.BURN}>
                   <StyledFormWrapper>Burn</StyledFormWrapper>
                 </TabsItem>
