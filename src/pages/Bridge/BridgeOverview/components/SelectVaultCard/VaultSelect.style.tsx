@@ -43,8 +43,8 @@ const StyledVaultAddress = styled(Span)`
 `;
 
 const StyledVaultIcon = styled(Flex)`
-  & :first-child {
-    margin-right: -15%;
+  & :last-child {
+    margin-left: -25%;
     z-index: 1;
   }
 `;

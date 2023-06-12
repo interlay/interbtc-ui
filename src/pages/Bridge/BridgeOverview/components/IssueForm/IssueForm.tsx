@@ -6,12 +6,7 @@ import { ChangeEvent, Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'react-use';
 
-import {
-  convertMonetaryAmountToValueInUSD,
-  getRandomArrayElement,
-  newSafeBitcoinAmount,
-  newSafeMonetaryAmount
-} from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, getRandomArrayElement, newSafeBitcoinAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -35,7 +30,7 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { IssueLimitsCard } from '../BridgeLimitsCard';
 import { LegacyIssueModal } from '../LegacyIssueModal';
 import { SelectVaultCard } from '../SelectVaultCard';
-import { TransactionDetails } from './TransactionDetails';
+import { TransactionDetails } from '../TransactionDetails';
 
 const isInputOverRequestLimit = (inputAmount: BitcoinAmount, limits: IssueLimits) =>
   inputAmount.gt(limits.singleVaultMaxIssuable);
@@ -90,7 +85,6 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
           },
           touched: {
             ...form.touched,
-            [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: false,
             [BRIDGE_ISSUE_VAULT_FIELD]: false
           },
           errors: {
@@ -167,17 +161,19 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     form.setFieldValue(BRIDGE_ISSUE_VAULT_FIELD, key, true);
   };
 
-  const monetaryAmount = newSafeMonetaryAmount(amount || 0, WRAPPED_TOKEN, true);
+  const monetaryAmount = newSafeBitcoinAmount(amount || 0);
   const amountUSD = monetaryAmount
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
     : 0;
 
+  const bridgeFee = monetaryAmount.mul(data.issueFee.toBig());
+
   const securityDeposit = getSecurityDeposit(monetaryAmount) || new BitcoinAmount(0);
 
-  const debouncedMonetaryAmount = newSafeMonetaryAmount(debouncedAmount || 0, WRAPPED_TOKEN, true);
+  const debouncedMonetaryAmount = newSafeBitcoinAmount(debouncedAmount || 0);
   const availableVaults = getAvailableVaults(debouncedMonetaryAmount);
 
-  const totalAmount = monetaryAmount.gte(data.issueFee) ? monetaryAmount.sub(data.issueFee) : undefined;
+  const totalAmount = monetaryAmount.gte(bridgeFee) ? monetaryAmount.sub(bridgeFee) : new BitcoinAmount(0);
   const totalAmountUSD = totalAmount
     ? convertMonetaryAmountToValueInUSD(totalAmount, getTokenPrice(prices, totalAmount.currency.ticker)?.usd) || 0
     : 0;
@@ -222,7 +218,8 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
               <TransactionDetails
                 totalAmount={totalAmount}
                 totalAmountUSD={totalAmountUSD}
-                issueFee={data.issueFee}
+                totalTicker={WRAPPED_TOKEN.ticker}
+                bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
               />
               <AuthCTA

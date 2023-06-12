@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Alert, Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
-import { AuthCTA } from '@/components';
+import { AuthCTA, PlusDivider } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
   DepositLiquidityPoolFormData,
@@ -24,7 +24,6 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolName } from '../PoolName';
-import { DepositDivider } from './DepositDivider';
 import { StyledDl } from './DepositForm.styles';
 import { DepositOutputAssets } from './DepositOutputAssets';
 
@@ -155,7 +154,7 @@ const DepositForm = ({ pool, slippageModalRef, onSuccess, onSigning }: DepositFo
                       .toNumber()}
                     {...mergeProps(form.getFieldProps(ticker), { onChange: handleChange })}
                   />
-                  {!isLastItem && <DepositDivider />}
+                  {!isLastItem && <PlusDivider />}
                 </Flex>
               );
             })}

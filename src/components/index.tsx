@@ -12,6 +12,7 @@ export type { LoanPositionsTableProps } from './LoanPositionsTable';
 export { LoanPositionsTable } from './LoanPositionsTable';
 export type { NotificationsPopoverProps } from './NotificationsPopover';
 export { NotificationsPopover } from './NotificationsPopover';
+export { PlusDivider } from './PlusDivider';
 export type { PoolsTableProps } from './PoolsTable';
 export { PoolsTable } from './PoolsTable';
 export { ReceivableAssets } from './ReceivableAssets';

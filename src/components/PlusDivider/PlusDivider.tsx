@@ -1,8 +1,8 @@
 import { PlusCircle } from '@/assets/icons';
 
-import { StyledBackground, StyledCircle, StyledDivider, StyledWrapper } from './DepositForm.styles';
+import { StyledBackground, StyledCircle, StyledDivider, StyledWrapper } from './PlusDivider.styles';
 
-const DepositDivider = (): JSX.Element => (
+const PlusDivider = (): JSX.Element => (
   <StyledWrapper>
     <StyledDivider orientation='horizontal' color='tertiary' />
     <StyledBackground />
@@ -12,4 +12,4 @@ const DepositDivider = (): JSX.Element => (
   </StyledWrapper>
 );
 
-export { DepositDivider };
+export { PlusDivider };

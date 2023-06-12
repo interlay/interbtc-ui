@@ -33,19 +33,21 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
       .fees(params[BRIDGE_ISSUE_AMOUNT_FIELD]),
     [BRIDGE_ISSUE_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_MANUAL_VAULT_FIELD], {
       is: (isManualVault: string) => isManualVault,
-      then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'vault' }))
+      then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'issue vault' }))
     })
   });
 
 const BRIDGE_REDEEM_AMOUNT_FIELD = 'redeem-amount';
 const BRIDGE_REDEEM_VAULT_FIELD = 'redeem-vault';
-const BRIDGE_REDEEM_MANUAL_VAULT_FIELD = 'manual-vault';
+const BRIDGE_REDEEM_MANUAL_VAULT_FIELD = 'redeem-manual-vault';
+const BRIDGE_REDEEM_PREMIUM_VAULT_FIELD = 'redeem-premium-vault';
 const BRIDGE_REDEEM_ADDRESS = 'redeem-address';
 
 type BridgeRedeemFormData = {
   [BRIDGE_REDEEM_AMOUNT_FIELD]?: string;
   [BRIDGE_REDEEM_VAULT_FIELD]?: string;
   [BRIDGE_REDEEM_MANUAL_VAULT_FIELD]?: boolean;
+  [BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]?: boolean;
   [BRIDGE_REDEEM_ADDRESS]?: string;
 };
 
@@ -68,14 +70,11 @@ const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSch
       )
       .minAmount(params[BRIDGE_REDEEM_AMOUNT_FIELD], 'redeem')
       .fees(params[BRIDGE_REDEEM_AMOUNT_FIELD]),
-    [BRIDGE_ISSUE_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_MANUAL_VAULT_FIELD], {
+    [BRIDGE_REDEEM_VAULT_FIELD]: yup.string().when([BRIDGE_REDEEM_MANUAL_VAULT_FIELD], {
       is: (isManualVault: string) => isManualVault,
-      then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'vault' }))
+      then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'redeem vault' }))
     }),
-    [BRIDGE_REDEEM_ADDRESS]: yup
-      .string()
-      .required(i18n.t('forms.please_enter_your_field', { field: 'recipient' }))
-      .address('transfer')
+    [BRIDGE_REDEEM_ADDRESS]: yup.string().required(i18n.t('forms.please_enter_your_field', { field: 'BTC address' }))
   });
 
 export {
@@ -85,6 +84,7 @@ export {
   BRIDGE_REDEEM_ADDRESS,
   BRIDGE_REDEEM_AMOUNT_FIELD,
   BRIDGE_REDEEM_MANUAL_VAULT_FIELD,
+  BRIDGE_REDEEM_PREMIUM_VAULT_FIELD,
   BRIDGE_REDEEM_VAULT_FIELD,
   bridgeIssueSchema,
   bridgeRedeemSchema

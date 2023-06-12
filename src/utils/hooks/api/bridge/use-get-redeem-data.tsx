@@ -1,3 +1,4 @@
+import { InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
 import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
@@ -9,23 +10,19 @@ import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import { useGetExchangeRate } from '../use-get-exchange-rate';
 
-const getPremiumRedeemVaults = async () => {
-  try {
-    const premiumRedeemVaults = await window.bridge.vaults.getPremiumRedeemVaults();
-
-    return premiumRedeemVaults.size > 0;
-  } catch (e) {
-    return new Map();
-  }
-};
+const getPremiumRedeemVaults = async (): Promise<Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>> =>
+  window.bridge.vaults.getPremiumRedeemVaults().catch(() => new Map());
 
 type RedeemData = {
   dustValue: MonetaryAmount<Currency>;
   premiumRedeemFeeRate: Big;
-  hasPremiumRedeemVaults: boolean;
+  premiumRedeemVaults: Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>;
   feeRate: BitcoinAmount;
   currentInclusionFee: MonetaryAmount<Currency>;
-  redeemLimit: MonetaryAmount<Currency>;
+  redeemLimit: {
+    standard: MonetaryAmount<Currency>;
+    premium?: MonetaryAmount<Currency>;
+  };
 };
 
 const getRedeemData = async (): Promise<RedeemData> => {
@@ -39,17 +36,22 @@ const getRedeemData = async (): Promise<RedeemData> => {
   ] = await Promise.all([
     window.bridge.redeem.getPremiumRedeemFeeRate(),
     window.bridge.redeem.getDustValue(),
-    checkPremiumRedeemVaults(),
+    getPremiumRedeemVaults(),
     window.bridge.redeem.getFeeRate(),
     window.bridge.redeem.getCurrentInclusionFee(),
     window.bridge.vaults.getVaultsWithRedeemableTokens()
   ]);
 
-  const redeemLimit = vaultsWithRedeemableTokens.values().next().value;
+  const stardardRedeemLimit = vaultsWithRedeemableTokens.values().next().value;
+
+  const premiumRedeemLimit = premiumRedeemVaults.values().next().value;
 
   return {
     dustValue,
-    redeemLimit,
+    redeemLimit: {
+      standard: stardardRedeemLimit,
+      premium: premiumRedeemLimit
+    },
     premiumRedeemFeeRate,
     premiumRedeemVaults,
     feeRate: new BitcoinAmount(feeRate),
@@ -59,7 +61,7 @@ const getRedeemData = async (): Promise<RedeemData> => {
 
 type UseGetRedeemDataResult = {
   data: RedeemData | undefined;
-  getSecurityDeposit: (btcAmount: MonetaryAmount<Currency>) => MonetaryAmount<Currency> | undefined;
+  getCompensationAmount: (btcAmount: MonetaryAmount<Currency>) => MonetaryAmount<Currency> | undefined;
   refetch: () => void;
 };
 
@@ -74,7 +76,7 @@ const useGetRedeemData = (): UseGetRedeemDataResult => {
 
   useErrorHandler(error);
 
-  const getSecurityDeposit = useCallback(
+  const getCompensationAmount = useCallback(
     (btcAmount: MonetaryAmount<Currency>) => {
       const { premiumRedeemFeeRate } = data || {};
 
@@ -88,7 +90,7 @@ const useGetRedeemData = (): UseGetRedeemDataResult => {
   return {
     data,
     refetch,
-    getSecurityDeposit
+    getCompensationAmount
   };
 };
 
