@@ -1,0 +1,1 @@
+export { LegacyBurnForm } from './LegacyBurnForm';

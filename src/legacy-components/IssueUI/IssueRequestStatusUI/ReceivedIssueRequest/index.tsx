@@ -7,8 +7,8 @@ import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-link
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import ExternalLink from '@/legacy-components/ExternalLink';
+import RequestWrapper from '@/legacy-components/RequestWrapper';
 import Ring48, { Ring48Title, Ring48Value } from '@/legacy-components/Ring48';
-import RequestWrapper from '@/pages/Bridge copy/RequestWrapper';
 import useCurrentActiveBlockNumber from '@/services/hooks/use-current-active-block-number';
 import useStableBitcoinConfirmations from '@/services/hooks/use-stable-bitcoin-confirmations';
 import useStableParachainConfirmations from '@/services/hooks/use-stable-parachain-confirmations';

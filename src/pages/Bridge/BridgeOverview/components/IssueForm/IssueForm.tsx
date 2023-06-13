@@ -4,7 +4,6 @@ import { BitcoinAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEvent, Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDebounce } from 'react-use';
 
 import { convertMonetaryAmountToValueInUSD, getRandomArrayElement, newSafeBitcoinAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
@@ -12,7 +11,7 @@ import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
   BRIDGE_ISSUE_AMOUNT_FIELD,
-  BRIDGE_ISSUE_MANUAL_VAULT_FIELD,
+  BRIDGE_ISSUE_MANUAL_VAULT_SWITCH,
   BRIDGE_ISSUE_VAULT_FIELD,
   BridgeIssueFormData,
   bridgeIssueSchema,
@@ -27,17 +26,17 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
-import { IssueLimitsCard } from '../BridgeLimitsCard';
+import { RequestLimitsCard } from '../RequestLimitsCard';
 import { LegacyIssueModal } from '../LegacyIssueModal';
 import { SelectVaultCard } from '../SelectVaultCard';
 import { TransactionDetails } from '../TransactionDetails';
 
-const isInputOverRequestLimit = (inputAmount: BitcoinAmount, limits: IssueLimits) =>
-  inputAmount.gt(limits.singleVaultMaxIssuable);
+// const isInputOverRequestLimit = (inputAmount: BitcoinAmount, limits: IssueLimits) =>
+//   inputAmount.gt(limits.singleVaultMaxIssuable);
 
-type IssueFormProps = { requestLimits: IssueLimits; data: IssueData };
+type IssueFormProps = { requestLimits: IssueLimits } & IssueData;
 
-const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
+const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
@@ -46,7 +45,14 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const [issueRequest, setIssueRequest] = useState<Issue>();
 
   const [amount, setAmount] = useState<string>();
-  const [debouncedAmount, setDecounbedAmount] = useState<string>();
+  // const [debouncedAmount, setDecounbedAmount] = useState<string>();
+
+  const [selectedVault, setSelectedVault] = useState<BridgeVaultData>();
+
+  const { data: vaultsData, getAvailableVaults } = useGetVaults(BridgeActions.ISSUE);
+
+  // const debouncedMonetaryAmount = newSafeBitcoinAmount(debouncedAmount || 0);
+  const availableVaults = vaultsData?.list;
 
   const transaction = useTransaction(Transaction.ISSUE_REQUEST, {
     onSuccess: async (result) => {
@@ -63,48 +69,30 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     showSuccessModal: false
   });
 
-  const { data: vaultsData, getAvailableVaults } = useGetVaults({ action: BridgeActions.ISSUE });
+  const currentRequestLimit = selectedVault ? selectedVault.amount : requestLimits.singleVaultMaxIssuable;
 
-  useDebounce(() => setDecounbedAmount(amount), 500, [amount]);
+  // useDebounce(
+  //   () => {
+  //     if (!amount) return;
 
-  useDebounce(
-    () => {
-      const isSelectingVault = form.values[BRIDGE_ISSUE_MANUAL_VAULT_FIELD];
+  //     const monetaryAmount = newSafeBitcoinAmount(amount);
 
-      if (!amount || !isSelectingVault) return;
+  //     const isInvalidAmount = monetaryAmount.gt(currentRequestLimit);
 
-      const monetaryAmount = newSafeBitcoinAmount(amount);
-      const shouldShowVaults = !isInputOverRequestLimit(monetaryAmount, requestLimits);
+  //     if (isInvalidAmount) return;
 
-      if (!shouldShowVaults) {
-        form.resetForm({
-          values: {
-            ...form.values,
-            [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: shouldShowVaults,
-            [BRIDGE_ISSUE_VAULT_FIELD]: ''
-          },
-          touched: {
-            ...form.touched,
-            [BRIDGE_ISSUE_VAULT_FIELD]: false
-          },
-          errors: {
-            ...form.errors,
-            [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: undefined,
-            [BRIDGE_ISSUE_VAULT_FIELD]: undefined
-          }
-        });
-      }
-    },
-    500,
-    [amount, requestLimits]
-  );
+  //     setDecounbedAmount(amount);
+  //   },
+  //   500,
+  //   [amount]
+  // );
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
   const transferAmountSchemaParams = {
     governanceBalance,
-    maxAmount: requestLimits.singleVaultMaxIssuable,
-    minAmount: data.dustValue,
+    maxAmount: currentRequestLimit,
+    minAmount: dustValue,
     transactionFee: TRANSACTION_FEE_AMOUNT
   };
 
@@ -125,7 +113,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
 
     // If custom vault was select, try to find it in the data
     if (vaultId) {
-      vault = availableVaults.find((item) => item.id.toString() === vaultId);
+      vault = availableVaults.find((item) => item.id === vaultId);
     }
 
     console.log(vault);
@@ -135,15 +123,16 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
       vault = getRandomArrayElement(availableVaults);
     }
 
-    transaction.execute(monetaryAmount, vault.vaultId.accountId, vault.collateralCurrency, false, vaultsData.raw);
+    transaction.execute(monetaryAmount, vault.vaultId.accountId, vault.collateralCurrency, false, vaultsData.map);
   };
 
   const form = useForm<BridgeIssueFormData>({
     initialValues: {
       [BRIDGE_ISSUE_AMOUNT_FIELD]: '',
       [BRIDGE_ISSUE_VAULT_FIELD]: '',
-      [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]: false
+      [BRIDGE_ISSUE_MANUAL_VAULT_SWITCH]: false
     },
+    validateOnChange: true,
     validationSchema: bridgeIssueSchema({ [BRIDGE_ISSUE_AMOUNT_FIELD]: transferAmountSchemaParams }),
     onSubmit: handleSubmit,
     showErrorMessages: !transaction.isLoading
@@ -152,6 +141,8 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
   const handleChangeSelectingVault = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
       form.setFieldTouched(BRIDGE_ISSUE_VAULT_FIELD, false, true);
+      setSelectedVault(undefined);
+      form.setFieldValue(BRIDGE_ISSUE_VAULT_FIELD, '', true);
     }
   };
 
@@ -159,6 +150,12 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
 
   const handleVaultSelectionChange = (key: Key) => {
     form.setFieldValue(BRIDGE_ISSUE_VAULT_FIELD, key, true);
+
+    if (!availableVaults) return;
+
+    const vault = availableVaults.find((item) => item.id === key);
+
+    setSelectedVault(vault);
   };
 
   const monetaryAmount = newSafeBitcoinAmount(amount || 0);
@@ -166,19 +163,16 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
     : 0;
 
-  const bridgeFee = monetaryAmount.mul(data.issueFee.toBig());
+  const bridgeFee = monetaryAmount.mul(issueFee.toBig());
 
-  const securityDeposit = getSecurityDeposit(monetaryAmount) || new BitcoinAmount(0);
-
-  const debouncedMonetaryAmount = newSafeBitcoinAmount(debouncedAmount || 0);
-  const availableVaults = getAvailableVaults(debouncedMonetaryAmount);
+  const securityDeposit = getSecurityDeposit(monetaryAmount) || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
   const totalAmount = monetaryAmount.gte(bridgeFee) ? monetaryAmount.sub(bridgeFee) : new BitcoinAmount(0);
   const totalAmountUSD = totalAmount
     ? convertMonetaryAmountToValueInUSD(totalAmount, getTokenPrice(prices, totalAmount.currency.ticker)?.usd) || 0
     : 0;
 
-  const isSelectingVault = form.values[BRIDGE_ISSUE_MANUAL_VAULT_FIELD];
+  const isSelectingVault = form.values[BRIDGE_ISSUE_MANUAL_VAULT_SWITCH];
 
   const isBtnDisabled = isFormDisabled(form);
 
@@ -190,9 +184,9 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
-              <IssueLimitsCard
+              <RequestLimitsCard
                 title='Max issuable'
-                singleRequestLimit={requestLimits.singleVaultMaxIssuable}
+                singleRequestLimit={currentRequestLimit}
                 maxRequestLimit={requestLimits.totalMaxIssuable}
               />
               <TokenInput
@@ -205,7 +199,7 @@ const IssueForm = ({ requestLimits, data }: IssueFormProps): JSX.Element => {
               <SelectVaultCard
                 isSelectingVault={isSelectingVault}
                 availableVaults={availableVaults}
-                switchProps={mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_FIELD), {
+                switchProps={mergeProps(form.getFieldProps(BRIDGE_ISSUE_MANUAL_VAULT_SWITCH), {
                   onChange: handleChangeSelectingVault
                 })}
                 selectProps={{

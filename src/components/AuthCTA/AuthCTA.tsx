@@ -58,16 +58,6 @@ const useAuthCTAProps = (props: AuthCTAProps): AuthCTAProps => {
 
 type AuthCTAProps = CTAProps;
 
-// if (bitcoinHeight - btcRelayHeight > BLOCKS_BEHIND_LIMIT) {
-//   return t('issue_page.error_more_than_6_blocks_behind', {
-//     wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL
-//   });
-// }
-
-// if (isOracleOffline) {
-//   return t('error_oracle_offline', { action: 'issue', wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL });
-// }
-// TODO: should the previous checks be added to the AuthCTA + plus a global banner?
 const AuthCTA = forwardRef<HTMLButtonElement, AuthCTAProps>(
   (props, ref): JSX.Element => {
     const authProps = useAuthCTAProps(props);

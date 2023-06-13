@@ -4,12 +4,12 @@ import yup, { FeesValidationParams, MaxAmountValidationParams, MinAmountValidati
 
 const BRIDGE_ISSUE_AMOUNT_FIELD = 'issue-amount';
 const BRIDGE_ISSUE_VAULT_FIELD = 'issue-vault';
-const BRIDGE_ISSUE_MANUAL_VAULT_FIELD = 'manual-vault';
+const BRIDGE_ISSUE_MANUAL_VAULT_SWITCH = 'issue-manual-vault-switch';
 
 type BridgeIssueFormData = {
   [BRIDGE_ISSUE_AMOUNT_FIELD]?: string;
   [BRIDGE_ISSUE_VAULT_FIELD]?: string;
-  [BRIDGE_ISSUE_MANUAL_VAULT_FIELD]?: boolean;
+  [BRIDGE_ISSUE_MANUAL_VAULT_SWITCH]?: boolean;
 };
 
 type BridgeIssueValidationParams = {
@@ -31,7 +31,7 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
       )
       .minAmount(params[BRIDGE_ISSUE_AMOUNT_FIELD], 'issue')
       .fees(params[BRIDGE_ISSUE_AMOUNT_FIELD]),
-    [BRIDGE_ISSUE_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_MANUAL_VAULT_FIELD], {
+    [BRIDGE_ISSUE_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_MANUAL_VAULT_SWITCH], {
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'issue vault' }))
     })
@@ -39,14 +39,14 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
 
 const BRIDGE_REDEEM_AMOUNT_FIELD = 'redeem-amount';
 const BRIDGE_REDEEM_VAULT_FIELD = 'redeem-vault';
-const BRIDGE_REDEEM_MANUAL_VAULT_FIELD = 'redeem-manual-vault';
+const BRIDGE_REDEEM_MANUAL_VAULT_SWITCH = 'redeem-manual-vault-switch';
 const BRIDGE_REDEEM_PREMIUM_VAULT_FIELD = 'redeem-premium-vault';
 const BRIDGE_REDEEM_ADDRESS = 'redeem-address';
 
 type BridgeRedeemFormData = {
   [BRIDGE_REDEEM_AMOUNT_FIELD]?: string;
   [BRIDGE_REDEEM_VAULT_FIELD]?: string;
-  [BRIDGE_REDEEM_MANUAL_VAULT_FIELD]?: boolean;
+  [BRIDGE_REDEEM_MANUAL_VAULT_SWITCH]?: boolean;
   [BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]?: boolean;
   [BRIDGE_REDEEM_ADDRESS]?: string;
 };
@@ -70,7 +70,7 @@ const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSch
       )
       .minAmount(params[BRIDGE_REDEEM_AMOUNT_FIELD], 'redeem')
       .fees(params[BRIDGE_REDEEM_AMOUNT_FIELD]),
-    [BRIDGE_REDEEM_VAULT_FIELD]: yup.string().when([BRIDGE_REDEEM_MANUAL_VAULT_FIELD], {
+    [BRIDGE_REDEEM_VAULT_FIELD]: yup.string().when([BRIDGE_REDEEM_MANUAL_VAULT_SWITCH], {
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'redeem vault' }))
     }),
@@ -79,11 +79,11 @@ const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSch
 
 export {
   BRIDGE_ISSUE_AMOUNT_FIELD,
-  BRIDGE_ISSUE_MANUAL_VAULT_FIELD,
+  BRIDGE_ISSUE_MANUAL_VAULT_SWITCH,
   BRIDGE_ISSUE_VAULT_FIELD,
   BRIDGE_REDEEM_ADDRESS,
   BRIDGE_REDEEM_AMOUNT_FIELD,
-  BRIDGE_REDEEM_MANUAL_VAULT_FIELD,
+  BRIDGE_REDEEM_MANUAL_VAULT_SWITCH,
   BRIDGE_REDEEM_PREMIUM_VAULT_FIELD,
   BRIDGE_REDEEM_VAULT_FIELD,
   bridgeIssueSchema,

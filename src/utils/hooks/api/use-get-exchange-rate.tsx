@@ -13,7 +13,7 @@ const getExchangeRateData = (
 
 const useGetExchangeRate = (collateralCurrency: CurrencyExt, wrappedCurrency?: Currency): UseGetExchangeRateResult => {
   const queryResult = useQuery({
-    queryKey: ['exchange-rates'],
+    queryKey: ['exchange-rates', collateralCurrency, wrappedCurrency],
     queryFn: () => getExchangeRateData(collateralCurrency, wrappedCurrency)
   });
 

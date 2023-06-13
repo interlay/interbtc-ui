@@ -6,8 +6,8 @@ import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-link
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import PrimaryColorSpan from '@/legacy-components/PrimaryColorSpan';
+import RequestWrapper from '@/legacy-components/RequestWrapper';
 import Ring48, { Ring48Title, Ring48Value } from '@/legacy-components/Ring48';
-import RequestWrapper from '@/pages/Bridge copy/RequestWrapper';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 

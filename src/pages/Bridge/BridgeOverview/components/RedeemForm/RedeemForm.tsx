@@ -1,6 +1,4 @@
-import { getIssueRequestsFromExtrinsicResult, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
-import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { getRedeemRequestsFromExtrinsicResult, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
 import { ChangeEvent, Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +16,7 @@ import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/confi
 import {
   BRIDGE_REDEEM_ADDRESS,
   BRIDGE_REDEEM_AMOUNT_FIELD,
-  BRIDGE_REDEEM_MANUAL_VAULT_FIELD,
+  BRIDGE_REDEEM_MANUAL_VAULT_SWITCH,
   BRIDGE_REDEEM_PREMIUM_VAULT_FIELD,
   BRIDGE_REDEEM_VAULT_FIELD,
   BridgeRedeemFormData,
@@ -34,24 +32,29 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
-import { IssueLimitsCard } from '../BridgeLimitsCard';
-import { LegacyIssueModal } from '../LegacyIssueModal';
+import { RequestLimitsCard } from '../RequestLimitsCard';
+import { LegacyRedeemModal } from '../LegacyRedeemModal';
 import { SelectVaultCard } from '../SelectVaultCard';
 import { TransactionDetails } from '../TransactionDetails';
 import { PremiumRedeemCard } from './PremiumRedeemCard';
 
-const isInputOverRequestLimit = (inputAmount: BitcoinAmount, limits: IssueLimits) =>
-  inputAmount.gt(limits.singleVaultMaxIssuable);
+type RedeemFormProps = RedeemData;
 
-type RedeemFormProps = { requestLimits: IssueLimits; data: RedeemData };
-
-const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
+const RedeemForm = ({
+  currentInclusionFee,
+  dustValue,
+  feeRate,
+  redeemLimit,
+  premium
+}: RedeemFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { getBalance } = useGetBalances();
+  const { getBalance, getAvailableBalance } = useGetBalances();
   const { getCompensationAmount } = useGetRedeemData();
 
-  const [issueRequest, setIssueRequest] = useState<Issue>();
+  const { data: vaultsData, getAvailableVaults } = useGetVaults(BridgeActions.REDEEM);
+
+  const [redeemRequest, setRedeemRequest] = useState<Redeem>();
 
   const [amount, setAmount] = useState<string>();
   const [debouncedAmount, setDecounbedAmount] = useState<string>();
@@ -61,9 +64,9 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
   const transaction = useTransaction(Transaction.REDEEM_REQUEST, {
     onSuccess: async (result) => {
       try {
-        const [issueRequest] = await getIssueRequestsFromExtrinsicResult(window.bridge, result.data);
+        const [redeemRequest] = await getRedeemRequestsFromExtrinsicResult(window.bridge, result.data);
 
-        setIssueRequest(issueRequest);
+        setRedeemRequest(redeemRequest);
       } catch (e: any) {
         transaction.reject(e);
       }
@@ -73,24 +76,24 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
     showSuccessModal: false
   });
 
-  const { data: vaultsData, getAvailableVaults } = useGetVaults({ action: BridgeActions.REDEEM });
-
   useDebounce(() => setDecounbedAmount(amount), 500, [amount]);
+
+  const currentRequestLimit = isPremiumReddem && premium ? premium.redeemLimit : redeemLimit;
 
   useDebounce(
     () => {
-      const isSelectingVault = form.values[BRIDGE_REDEEM_MANUAL_VAULT_FIELD];
+      const isSelectingVault = form.values[BRIDGE_REDEEM_MANUAL_VAULT_SWITCH];
 
       if (!amount || !isSelectingVault) return;
 
       const monetaryAmount = newSafeBitcoinAmount(amount);
-      const shouldShowVaults = !isInputOverRequestLimit(monetaryAmount, requestLimits);
+      const isAmountOverRequestLimit = monetaryAmount.gt(currentRequestLimit);
 
-      if (!shouldShowVaults) {
+      if (isAmountOverRequestLimit) {
         form.resetForm({
           values: {
             ...form.values,
-            [BRIDGE_REDEEM_MANUAL_VAULT_FIELD]: shouldShowVaults,
+            [BRIDGE_REDEEM_MANUAL_VAULT_SWITCH]: true,
             [BRIDGE_REDEEM_VAULT_FIELD]: ''
           },
           touched: {
@@ -99,38 +102,40 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
           },
           errors: {
             ...form.errors,
-            [BRIDGE_REDEEM_MANUAL_VAULT_FIELD]: undefined,
+            [BRIDGE_REDEEM_MANUAL_VAULT_SWITCH]: undefined,
             [BRIDGE_REDEEM_VAULT_FIELD]: undefined
           }
         });
       }
     },
     500,
-    [amount, requestLimits]
+    [amount, currentRequestLimit]
   );
 
   const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
-  const currentRequestLimit =
-    isPremiumReddem && data.redeemLimit.premium ? data.redeemLimit.premium : data.redeemLimit.standard;
+  const assetBalance = getAvailableBalance(WRAPPED_TOKEN.ticker) || newMonetaryAmount(0, WRAPPED_TOKEN);
+
+  const redeemBalance = assetBalance.gt(currentRequestLimit) ? currentRequestLimit : assetBalance;
 
   const transferAmountSchemaParams = {
     governanceBalance,
-    maxAmount: currentRequestLimit,
-    minAmount: data.dustValue,
+    maxAmount: redeemBalance,
+    minAmount: dustValue,
     transactionFee: TRANSACTION_FEE_AMOUNT
   };
 
   const handleSubmit = async (values: BridgeRedeemFormData) => {
     const amount = values[BRIDGE_REDEEM_AMOUNT_FIELD];
+    const btcAddress = values[BRIDGE_REDEEM_ADDRESS];
 
-    if (!vaultsData || !amount) return;
+    if (!vaultsData || !amount || !btcAddress) return;
 
     const monetaryAmount = newMonetaryAmount(amount, WRAPPED_TOKEN, true);
 
-    // const isPremiumRedeem = form.values[BRIDGE_REDEEM_PREMIUM_VAULT_FIELD];
+    const isPremiumReddem = values[BRIDGE_REDEEM_PREMIUM_VAULT_FIELD];
 
-    const availableVaults = getAvailableVaults(monetaryAmount);
+    const availableVaults = getAvailableVaults(monetaryAmount, isPremiumReddem);
 
     if (!availableVaults) return;
 
@@ -143,22 +148,21 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
       vault = availableVaults.find((item) => item.id.toString() === vaultId);
     }
 
-    console.log(vault);
-
     // If no vault provided nor the custom vault wasn't found (unlikely), choose random vault
     if (!vault) {
       vault = getRandomArrayElement(availableVaults);
     }
 
-    transaction.execute(monetaryAmount, vault.vaultId.accountId, vault.collateralCurrency, false, vaultsData.raw);
+    transaction.execute(monetaryAmount, btcAddress, vaultId);
   };
 
   const form = useForm<BridgeRedeemFormData>({
     initialValues: {
       [BRIDGE_REDEEM_AMOUNT_FIELD]: '',
       [BRIDGE_REDEEM_VAULT_FIELD]: '',
-      [BRIDGE_REDEEM_MANUAL_VAULT_FIELD]: false,
-      [BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]: false
+      [BRIDGE_REDEEM_MANUAL_VAULT_SWITCH]: false,
+      [BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]: false,
+      [BRIDGE_REDEEM_ADDRESS]: ''
     },
     validationSchema: bridgeRedeemSchema({ [BRIDGE_REDEEM_AMOUNT_FIELD]: transferAmountSchemaParams }),
     onSubmit: handleSubmit,
@@ -167,13 +171,6 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
 
   const handleToggleSelectVault = (e: ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
-
-    setPremiumRedeem(isChecked);
-
-    // toggle off premium redeem if user tries to manually select a vault
-    if (isChecked && form.values[BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]) {
-      return form.setFieldValue(BRIDGE_REDEEM_PREMIUM_VAULT_FIELD, false, false);
-    }
 
     // make vault select field untouched
     if (!isChecked) {
@@ -184,26 +181,24 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
   const handleTogglePremiumVault = (e: ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
 
-    if (!isChecked || !form.values[BRIDGE_REDEEM_MANUAL_VAULT_FIELD]) return;
+    setPremiumRedeem(isChecked);
 
-    // reset manual select vault switch and select. Also enforces premium switch true
-    form.resetForm({
-      values: {
-        ...form.values,
-        [BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]: isChecked,
-        [BRIDGE_REDEEM_MANUAL_VAULT_FIELD]: false,
-        [BRIDGE_REDEEM_VAULT_FIELD]: ''
-      },
-      touched: {
-        ...form.touched,
-        [BRIDGE_REDEEM_VAULT_FIELD]: false
-      },
-      errors: {
-        ...form.errors,
-        [BRIDGE_REDEEM_MANUAL_VAULT_FIELD]: undefined,
-        [BRIDGE_REDEEM_VAULT_FIELD]: undefined
-      }
-    });
+    const isSelectingVault = form.values[BRIDGE_REDEEM_MANUAL_VAULT_SWITCH];
+
+    // Do not continue if premium is unchecked and is not manually selecting vault
+    if (!isChecked || !isSelectingVault) return;
+
+    const premiumVaults = getAvailableVaults(monetaryAmount, true);
+
+    const selectedVault = form.values[BRIDGE_REDEEM_VAULT_FIELD];
+
+    if (!selectedVault) return;
+
+    const isSelectedVaultValid = premiumVaults?.find((vault) => vault.id === selectedVault);
+
+    if (isSelectedVaultValid) return;
+
+    form.setFieldValue(BRIDGE_REDEEM_VAULT_FIELD, '', true);
   };
 
   const handleChangeIssueAmount = (e: ChangeEvent<HTMLInputElement>) => setAmount(e.target.value);
@@ -217,12 +212,12 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
     : 0;
 
-  const bridgeFee = monetaryAmount.mul(data.feeRate.toBig());
+  const bridgeFee = monetaryAmount.mul(feeRate);
 
   const debouncedMonetaryAmount = newSafeMonetaryAmount(debouncedAmount || 0, WRAPPED_TOKEN, true);
-  const availableVaults = getAvailableVaults(debouncedMonetaryAmount);
+  const availableVaults = getAvailableVaults(debouncedMonetaryAmount, isPremiumReddem);
 
-  const totalFees = bridgeFee.add(data.currentInclusionFee);
+  const totalFees = bridgeFee.add(currentInclusionFee);
 
   const totalAmount = monetaryAmount.gte(totalFees)
     ? monetaryAmount.sub(totalFees)
@@ -240,11 +235,11 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
       ) || 0
     : 0;
 
-  const isSelectingVault = form.values[BRIDGE_REDEEM_MANUAL_VAULT_FIELD];
+  const isSelectingVault = form.values[BRIDGE_REDEEM_MANUAL_VAULT_SWITCH];
 
   const isBtnDisabled = isFormDisabled(form);
 
-  const hasPremiumRedeemVaults = data.premiumRedeemVaults.size > 0;
+  const hasPremiumRedeemFeature = premium;
 
   const hasEnoughtGovernance = governanceBalance.gte(TRANSACTION_FEE_AMOUNT);
 
@@ -254,26 +249,18 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
-              <IssueLimitsCard title='Max redeembale' singleRequestLimit={currentRequestLimit} />
+              <RequestLimitsCard title='Max redeembale' singleRequestLimit={currentRequestLimit} />
               <TokenInput
                 placeholder='0.00'
                 label='Amount'
                 ticker={WRAPPED_TOKEN.ticker}
+                balance={redeemBalance.toString()}
+                humanBalance={redeemBalance.toString()}
+                balanceLabel='Available'
                 valueUSD={amountUSD}
                 {...mergeProps(form.getFieldProps(BRIDGE_REDEEM_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
               />
-              <SelectVaultCard
-                isSelectingVault={isSelectingVault}
-                availableVaults={availableVaults}
-                switchProps={mergeProps(form.getFieldProps(BRIDGE_REDEEM_MANUAL_VAULT_FIELD), {
-                  onChange: handleToggleSelectVault
-                })}
-                selectProps={{
-                  onSelectionChange: handleVaultSelectionChange,
-                  ...form.getFieldProps(BRIDGE_REDEEM_VAULT_FIELD)
-                }}
-              />
-              {hasPremiumRedeemVaults && (
+              {hasPremiumRedeemFeature && (
                 <PremiumRedeemCard
                   isPremiumReddem={isPremiumReddem}
                   switchProps={mergeProps(form.getFieldProps(BRIDGE_REDEEM_PREMIUM_VAULT_FIELD), {
@@ -281,6 +268,17 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
                   })}
                 />
               )}
+              <SelectVaultCard
+                isSelectingVault={isSelectingVault}
+                availableVaults={availableVaults}
+                switchProps={mergeProps(form.getFieldProps(BRIDGE_REDEEM_MANUAL_VAULT_SWITCH), {
+                  onChange: handleToggleSelectVault
+                })}
+                selectProps={{
+                  onSelectionChange: handleVaultSelectionChange,
+                  ...form.getFieldProps(BRIDGE_REDEEM_VAULT_FIELD)
+                }}
+              />
               <Input
                 placeholder='Enter your BTC address'
                 label='BTC Adress'
@@ -296,7 +294,7 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
                 compensationAmount={compensationAmount}
                 compensationAmountUSD={compensationAmountUSD}
                 bridgeFee={bridgeFee}
-                bitcoinNetworkFee={data.currentInclusionFee}
+                bitcoinNetworkFee={currentInclusionFee}
               />
               <AuthCTA
                 type='submit'
@@ -304,14 +302,14 @@ const RedeemForm = ({ requestLimits, data }: RedeemFormProps): JSX.Element => {
                 size='large'
                 loading={transaction.isLoading}
               >
-                {hasEnoughtGovernance ? t('issue') : `Insufficient ${GOVERNANCE_TOKEN.ticker}`}
+                {hasEnoughtGovernance ? t('redeem') : `Insufficient ${GOVERNANCE_TOKEN.ticker}`}
               </AuthCTA>
             </Flex>
           </Flex>
         </form>
       </Flex>
-      {issueRequest && (
-        <LegacyIssueModal open={!!issueRequest} onClose={() => setIssueRequest(undefined)} request={issueRequest} />
+      {redeemRequest && (
+        <LegacyRedeemModal open={!!redeemRequest} onClose={() => setRedeemRequest(undefined)} request={redeemRequest} />
       )}
     </>
   );

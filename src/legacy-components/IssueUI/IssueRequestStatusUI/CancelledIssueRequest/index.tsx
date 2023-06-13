@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle, FaTimesCircle } from 'react-icons/fa';
 
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
-import RequestWrapper from '@/pages/Bridge copy/RequestWrapper';
+import RequestWrapper from '@/legacy-components/RequestWrapper';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 

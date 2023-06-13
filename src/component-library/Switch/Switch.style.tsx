@@ -69,7 +69,6 @@ const StyledSwitch = styled.span<StyledSwitchProps>`
 
 const StyledLabel = styled(Span)`
   text-align: left;
-  /* margin: 0 ${theme.spacing.spacing2}; */
 `;
 
 export { StyledInput, StyledLabel, StyledSwitch, StyledWrapper };

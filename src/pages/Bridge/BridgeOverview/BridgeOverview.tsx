@@ -9,7 +9,7 @@ import { useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
 import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 
 import { StyledCard, StyledFormWrapper, StyledWrapper } from './BridgeOverview.styles';
-import { IssueForm, RedeemForm } from './components';
+import { IssueForm, LegacyBurnForm, RedeemForm } from './components';
 
 const BridgeOverview = (): JSX.Element => {
   const { tabsProps } = useTabPageLocation();
@@ -37,17 +37,17 @@ const BridgeOverview = (): JSX.Element => {
             <Tabs {...tabsProps} size='large' fullWidth>
               <TabsItem title='Issue' key={BridgeActions.ISSUE}>
                 <StyledFormWrapper>
-                  {issueData && <IssueForm requestLimits={issueRequestLimit} data={issueData} />}
+                  {issueData && <IssueForm requestLimits={issueRequestLimit} {...issueData} />}
                 </StyledFormWrapper>
               </TabsItem>
               <TabsItem title='Redeem' key={BridgeActions.REDEEM}>
-                <StyledFormWrapper>
-                  {redeemData && <RedeemForm requestLimits={issueRequestLimit} data={redeemData} />}{' '}
-                </StyledFormWrapper>
+                <StyledFormWrapper>{redeemData && <RedeemForm {...redeemData} />}</StyledFormWrapper>
               </TabsItem>
               {maxBurnableTokensData?.hasBurnableTokens && (
                 <TabsItem title='Burn' key={BridgeActions.BURN}>
-                  <StyledFormWrapper>Burn</StyledFormWrapper>
+                  <StyledFormWrapper>
+                    <LegacyBurnForm />
+                  </StyledFormWrapper>
                 </TabsItem>
               )}
             </Tabs>

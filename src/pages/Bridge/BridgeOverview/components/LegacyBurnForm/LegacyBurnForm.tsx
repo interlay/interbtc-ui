@@ -2,7 +2,7 @@ import { CollateralCurrencyExt, CurrencyExt, newMonetaryAmount } from '@interlay
 import { Bitcoin, BitcoinAmount, Currency, ExchangeRate, MonetaryAmount } from '@interlay/monetary-js';
 import clsx from 'clsx';
 import * as React from 'react';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { useErrorHandler } from 'react-error-boundary';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
@@ -13,7 +13,6 @@ import { CoinIcon } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { WRAPPED_TOKEN, WRAPPED_TOKEN_SYMBOL, WrappedTokenLogoIcon } from '@/config/relay-chains';
 import { BALANCE_MAX_INTEGER_LENGTH } from '@/constants';
-import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FormTitle from '@/legacy-components/FormTitle';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
@@ -41,7 +40,7 @@ type BurnableCollateral = {
   burnRate: ExchangeRate<Currency, CollateralCurrencyExt>;
 };
 
-const BurnForm = (): JSX.Element | null => {
+const LegacyBurnForm = (): JSX.Element | null => {
   const { t } = useTranslation();
   const prices = useGetPrices();
 
@@ -296,9 +295,4 @@ const BurnForm = (): JSX.Element | null => {
   return null;
 };
 
-export default withErrorBoundary(BurnForm, {
-  FallbackComponent: ErrorFallback,
-  onReset: () => {
-    window.location.reload();
-  }
-});
+export { LegacyBurnForm };

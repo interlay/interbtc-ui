@@ -19,7 +19,7 @@ import ExternalLink from '@/legacy-components/ExternalLink';
 import Hr2 from '@/legacy-components/hrs/Hr2';
 import PriceInfo from '@/legacy-components/PriceInfo';
 import PrimaryColorSpan from '@/legacy-components/PrimaryColorSpan';
-import RequestWrapper from '@/pages/Bridge copy/RequestWrapper';
+import RequestWrapper from '@/legacy-components/RequestWrapper';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getExchangeRate } from '@/utils/helpers/oracle';

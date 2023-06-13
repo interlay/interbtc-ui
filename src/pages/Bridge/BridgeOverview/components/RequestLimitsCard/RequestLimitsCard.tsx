@@ -3,13 +3,13 @@ import { ReactNode } from 'react';
 
 import { Card, Dd, Dl, DlGroup, Dt, Flex, P } from '@/component-library';
 
-type IssueLimitsCardProps = {
+type RequestLimitsCardProps = {
   title: ReactNode;
   singleRequestLimit: MonetaryAmount<Currency>;
   maxRequestLimit?: MonetaryAmount<Currency>;
 };
 
-const IssueLimitsCard = ({ title, singleRequestLimit, maxRequestLimit }: IssueLimitsCardProps): JSX.Element => (
+const RequestLimitsCard = ({ title, singleRequestLimit, maxRequestLimit }: RequestLimitsCardProps): JSX.Element => (
   <Flex direction='column' gap='spacing2'>
     <P size='xs'>{title}</P>
     <Card gap='spacing4' variant='bordered' background='tertiary' rounded='lg' padding='spacing4'>
@@ -37,5 +37,5 @@ const IssueLimitsCard = ({ title, singleRequestLimit, maxRequestLimit }: IssueLi
   </Flex>
 );
 
-export { IssueLimitsCard };
-export type { IssueLimitsCardProps };
+export { RequestLimitsCard };
+export type { RequestLimitsCardProps };

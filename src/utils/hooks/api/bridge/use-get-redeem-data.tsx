@@ -1,11 +1,11 @@
 import { InterbtcPrimitivesVaultId } from '@interlay/interbtc-api';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
 import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import { useGetExchangeRate } from '../use-get-exchange-rate';
@@ -15,14 +15,13 @@ const getPremiumRedeemVaults = async (): Promise<Map<InterbtcPrimitivesVaultId, 
 
 type RedeemData = {
   dustValue: MonetaryAmount<Currency>;
-  premiumRedeemFeeRate: Big;
-  premiumRedeemVaults: Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>;
-  feeRate: BitcoinAmount;
-  currentInclusionFee: MonetaryAmount<Currency>;
-  redeemLimit: {
-    standard: MonetaryAmount<Currency>;
-    premium?: MonetaryAmount<Currency>;
+  feeRate: Big;
+  redeemLimit: MonetaryAmount<Currency>;
+  premium?: {
+    feeRate: Big;
+    redeemLimit: MonetaryAmount<Currency>;
   };
+  currentInclusionFee: MonetaryAmount<Currency>;
 };
 
 const getRedeemData = async (): Promise<RedeemData> => {
@@ -42,19 +41,22 @@ const getRedeemData = async (): Promise<RedeemData> => {
     window.bridge.vaults.getVaultsWithRedeemableTokens()
   ]);
 
-  const stardardRedeemLimit = vaultsWithRedeemableTokens.values().next().value;
+  const redeemLimit = vaultsWithRedeemableTokens.values().next().value;
 
   const premiumRedeemLimit = premiumRedeemVaults.values().next().value;
 
+  const premium = premiumRedeemLimit
+    ? {
+        feeRate: premiumRedeemFeeRate,
+        redeemLimit: premiumRedeemLimit
+      }
+    : undefined;
+
   return {
     dustValue,
-    redeemLimit: {
-      standard: stardardRedeemLimit,
-      premium: premiumRedeemLimit
-    },
-    premiumRedeemFeeRate,
-    premiumRedeemVaults,
-    feeRate: new BitcoinAmount(feeRate),
+    feeRate,
+    redeemLimit,
+    premium,
     currentInclusionFee
   };
 };
@@ -66,7 +68,7 @@ type UseGetRedeemDataResult = {
 };
 
 const useGetRedeemData = (): UseGetRedeemDataResult => {
-  const { data: btcToGovernanceToken } = useGetExchangeRate(GOVERNANCE_TOKEN);
+  const { data: btcToRelayChainToken } = useGetExchangeRate(RELAY_CHAIN_NATIVE_TOKEN);
 
   const { data, error, refetch } = useQuery({
     queryKey: 'redeem-data',
@@ -78,13 +80,11 @@ const useGetRedeemData = (): UseGetRedeemDataResult => {
 
   const getCompensationAmount = useCallback(
     (btcAmount: MonetaryAmount<Currency>) => {
-      const { premiumRedeemFeeRate } = data || {};
+      if (!btcToRelayChainToken || !data?.premium) return;
 
-      if (!btcToGovernanceToken || !premiumRedeemFeeRate) return;
-
-      return btcToGovernanceToken.toCounter(btcAmount).mul(premiumRedeemFeeRate);
+      return btcToRelayChainToken.toCounter(btcAmount).mul(data.premium.feeRate);
     },
-    [btcToGovernanceToken, data]
+    [btcToRelayChainToken, data]
   );
 
   return {
