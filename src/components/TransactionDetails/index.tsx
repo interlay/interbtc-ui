@@ -8,3 +8,5 @@ export type { TransactionDetailsGroupProps } from './TransactionDetailsGroup';
 export { TransactionDetailsGroup } from './TransactionDetailsGroup';
 export type { TransactionFeeProps } from './TransactionFee';
 export { TransactionFee } from './TransactionFee';
+export type { TransactionFeeSelectProps } from './TransactionFeeSelect';
+export { TransactionFeeSelect } from './TransactionFeeSelect';

@@ -8,11 +8,13 @@ import {
   TransactionDetailsDd,
   TransactionDetailsDt,
   TransactionDetailsGroup,
-  TransactionFee
+  TransactionFee,
+  TransactionFeeSelect
 } from '@/components';
-import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import { StyledPlusDivider } from './TransactionDetails.style';
 
@@ -39,6 +41,8 @@ const TransactionDetails = ({
 }: TransactionDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
+
+  const selectCurrency = useSelectCurrency();
 
   return (
     <Flex direction='column' gap='spacing2'>
@@ -76,19 +80,27 @@ const TransactionDetails = ({
           </TransactionDetailsDd>
         </TransactionDetailsGroup>
         {securityDeposit && (
-          <TransactionDetailsGroup>
-            <TransactionDetailsDt tooltipLabel={t('bridge.security_deposit_is_a_denial_of_service_protection')}>
-              {t('bridge.security_deposit')}
-            </TransactionDetailsDt>
-            <TransactionDetailsDd>
-              {securityDeposit.toHuman()} {securityDeposit.currency.ticker} (
-              {displayMonetaryAmountInUSDFormat(
-                securityDeposit,
-                getTokenPrice(prices, securityDeposit.currency.ticker)?.usd
-              )}
-              )
-            </TransactionDetailsDd>
-          </TransactionDetailsGroup>
+          <>
+            <TransactionFeeSelect
+              label='Security token'
+              items={selectCurrency.items}
+              value={GOVERNANCE_TOKEN.ticker}
+              tooltipLabel='djdkl'
+            />
+            <TransactionDetailsGroup>
+              <TransactionDetailsDt tooltipLabel={t('bridge.security_deposit_is_a_denial_of_service_protection')}>
+                {t('bridge.security_deposit')}
+              </TransactionDetailsDt>
+              <TransactionDetailsDd>
+                {securityDeposit.toHuman()} {securityDeposit.currency.ticker} (
+                {displayMonetaryAmountInUSDFormat(
+                  securityDeposit,
+                  getTokenPrice(prices, securityDeposit.currency.ticker)?.usd
+                )}
+                )
+              </TransactionDetailsDd>
+            </TransactionDetailsGroup>
+          </>
         )}
       </BaseTransactionDetails>
       <BaseTransactionDetails>

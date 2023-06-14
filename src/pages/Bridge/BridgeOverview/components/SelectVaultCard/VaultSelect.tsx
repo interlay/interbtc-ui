@@ -5,13 +5,13 @@ import { BridgeVaultData } from '@/utils/hooks/api/bridge/use-get-vaults';
 
 import { VaultListItem } from './VaultListItem';
 
-type VaultSelectProps = Omit<SelectProps<BridgeVaultData>, 'children' | 'type'>;
+type VaultSelectProps = Omit<SelectProps<BridgeVaultData, 'modal'>, 'children' | 'type'>;
 
 const VaultSelect = (props: VaultSelectProps): JSX.Element => {
   const { t } = useTranslation();
 
   return (
-    <Select<BridgeVaultData> {...props} type='modal' modalTitle={t('bridge.select_vault')} size='large'>
+    <Select<BridgeVaultData, 'modal'> {...props} type='modal' modalTitle={t('bridge.select_vault')} size='large'>
       {(data: BridgeVaultData) => (
         <Item key={data.id} textValue={data.vaultId.accountId.toString()}>
           <VaultListItem data={data} />

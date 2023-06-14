@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { InformationCircle } from '@/assets/icons';
-import { Dl, theme } from '@/component-library';
+import { Dl, Select, SelectProps, theme, TokenData } from '@/component-library';
 
 const StyledDl = styled(Dl)`
   border: ${theme.border.default};
@@ -16,4 +16,11 @@ const StyledInformationCircle = styled(InformationCircle)`
   vertical-align: text-top;
 `;
 
-export { StyledDl, StyledInformationCircle };
+const SelectWrapper = ({ ...props }: SelectProps<TokenData, 'modal'>) => <Select<TokenData, 'modal'> {...props} />;
+
+const StyledSelect = styled(SelectWrapper)`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export { StyledDl, StyledInformationCircle, StyledSelect };

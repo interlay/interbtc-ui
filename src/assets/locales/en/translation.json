@@ -159,6 +159,7 @@
   "dismiss": "Dismiss",
   "insufficient_token_balance": "Insufficient {{token}} balance",
   "amount": "Amount",
+  "select_token": "Select Token",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",

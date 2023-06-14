@@ -7,7 +7,7 @@ type TransactionDetailsProps = DlProps;
 const TransactionDetails = ({
   children,
   direction = 'column',
-  gap = 'spacing3',
+  gap = 'spacing2',
   ...props
 }: TransactionDetailsProps): JSX.Element => (
   <StyledDl direction={direction} gap={gap} {...props}>
