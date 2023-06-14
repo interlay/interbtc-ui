@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { Flex } from '../Flex';
 import { Span } from '../Text';
 import { theme } from '../theme';
-import { Status, Variants } from '../utils/prop-types';
+import { MeterVariants, Status, Variants } from '../utils/prop-types';
 
 type StyledWrapperProps = {
   $variant: Variants;
@@ -11,7 +11,7 @@ type StyledWrapperProps = {
 
 type StyledMeterProps = {
   $position: number;
-  $variant: Variants;
+  $variant: MeterVariants;
   $hasRanges: boolean;
 };
 
