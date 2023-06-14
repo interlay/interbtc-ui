@@ -1,5 +1,6 @@
+import { chain } from '@react-aria/utils';
 import { FieldInputProps, FormikConfig, FormikErrors as FormErrors, FormikValues, useFormik } from 'formik';
-import { useCallback } from 'react';
+import { FocusEvent, useCallback } from 'react';
 
 type GetFieldProps = (
   nameOrOptions: any,
@@ -18,12 +19,25 @@ const useForm = <Values extends FormikValues = FormikValues>({
   showOnlyTouchedFieldsErrors = true,
   ...args
 }: UseFormArgs<Values>) => {
-  const { validateForm, values, getFieldProps: getFormikFieldProps, ...formik } = useFormik<Values>({
+  const { validateForm, values, getFieldProps: getFormikFieldProps, setFieldTouched, ...formik } = useFormik<Values>({
     ...args
   });
 
+  // Handles when field gets forced blur to focus on modal
+  // If so, we dont want to consider it as touched if it has not yet been touched on
+  const handleBlur = useCallback(
+    (e: FocusEvent<unknown>, fieldName: string, isTouched: boolean) => {
+      if (!isTouched && (e.relatedTarget as HTMLElement)?.getAttribute('role') === 'dialog') {
+        setFieldTouched(fieldName, false);
+      }
+    },
+    [setFieldTouched]
+  );
+
   const getFieldProps: GetFieldProps = useCallback(
     (nameOrOptions, withErrorMessage = true) => {
+      const fieldProps = getFormikFieldProps(nameOrOptions);
+
       if (withErrorMessage || showErrorMessages) {
         const isOptions = nameOrOptions !== null && typeof nameOrOptions === 'object';
         const fieldName = isOptions ? nameOrOptions.name : nameOrOptions;
@@ -32,20 +46,22 @@ const useForm = <Values extends FormikValues = FormikValues>({
         const errorMessage = showOnlyTouchedFieldsErrors && isTouched ? formik.errors[fieldName] : undefined;
 
         return {
-          ...getFormikFieldProps(nameOrOptions),
+          ...fieldProps,
+          onBlur: chain(fieldProps.onBlur, (e: FocusEvent<unknown>) => handleBlur(e, fieldName, isTouched as boolean)),
           errorMessage: errorMessage as string | string[] | undefined
         };
       }
 
-      return getFormikFieldProps(nameOrOptions);
+      return fieldProps;
     },
-    [formik.errors, formik.touched, getFormikFieldProps, showOnlyTouchedFieldsErrors, showErrorMessages]
+    [getFormikFieldProps, showErrorMessages, formik.touched, formik.errors, showOnlyTouchedFieldsErrors, handleBlur]
   );
 
   return {
     values,
     validateForm,
     getFieldProps,
+    setFieldTouched,
     ...formik
   };
 };

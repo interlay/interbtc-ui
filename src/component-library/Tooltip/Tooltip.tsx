@@ -12,7 +12,7 @@ import { StyledTooltip, StyledTooltipLabel, StyledTooltipTip } from './Tooltip.s
 // MEMO: https://github.com/adobe/react-spectrum/blob/main/packages/%40react-spectrum/tooltip/src/TooltipTrigger.tsx#L22
 const DEFAULT_OFFSET = -1;
 const DEFAULT_CROSS_OFFSET = 0;
-const DEFAULT_DELAY = 500;
+const DEFAULT_DELAY = 250;
 
 type Props = {
   label?: ReactNode;
