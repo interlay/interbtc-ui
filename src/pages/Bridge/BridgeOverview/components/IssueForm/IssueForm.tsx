@@ -170,13 +170,13 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
           <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
               <RequestLimitsCard
-                title='Max issuable'
+                title={t('bridge.max_issuable')}
                 singleRequestLimit={requestLimits.singleVaultMaxIssuable}
                 maxRequestLimit={requestLimits.totalMaxIssuable}
               />
               <TokenInput
                 placeholder='0.00'
-                label='Amount'
+                label={t('amount')}
                 ticker='BTC'
                 valueUSD={monetaryAmountUSD}
                 {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
@@ -207,7 +207,9 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 size='large'
                 loading={transaction.isLoading}
               >
-                {hasEnoughtGovernance ? t('issue') : `Insufficient ${GOVERNANCE_TOKEN.ticker}`}
+                {hasEnoughtGovernance
+                  ? t('issue')
+                  : t('insufficient_token_balance', { token: GOVERNANCE_TOKEN.ticker })}
               </AuthCTA>
             </Flex>
           </Flex>

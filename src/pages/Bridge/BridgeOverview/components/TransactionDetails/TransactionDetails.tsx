@@ -1,4 +1,5 @@
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
@@ -37,6 +38,7 @@ const TransactionDetails = ({
   bitcoinNetworkFee
 }: TransactionDetailsProps): JSX.Element => {
   const prices = useGetPrices();
+  const { t } = useTranslation();
 
   return (
     <Flex direction='column' gap='spacing2'>
@@ -55,7 +57,7 @@ const TransactionDetails = ({
             <TokenInput
               placeholder='0.00'
               isDisabled
-              label='Compensation amount'
+              label={t('bridge.compensation_amount')}
               ticker={compensationAmount.currency.ticker}
               value={compensationAmount?.toString()}
               valueUSD={compensationAmountUSD}
@@ -65,8 +67,8 @@ const TransactionDetails = ({
       </Flex>
       <BaseTransactionDetails>
         <TransactionDetailsGroup>
-          <TransactionDetailsDt tooltipLabel='The bridge fee paid to the vaults, relayers and maintainers of the system'>
-            Bridge Fee
+          <TransactionDetailsDt tooltipLabel={t('bridge.fee_paids_to_vaults_relayers_maintainers')}>
+            {t('bridge.bridge_fee')}
           </TransactionDetailsDt>
           <TransactionDetailsDd>
             {bridgeFee.toHuman()} {bridgeFee.currency.ticker} (
@@ -75,8 +77,8 @@ const TransactionDetails = ({
         </TransactionDetailsGroup>
         {securityDeposit && (
           <TransactionDetailsGroup>
-            <TransactionDetailsDt tooltipLabel='The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed'>
-              Security Deposit
+            <TransactionDetailsDt tooltipLabel={t('bridge.security_deposit_is_a_denial_of_service_protection')}>
+              {t('bridge.security_deposit')}
             </TransactionDetailsDt>
             <TransactionDetailsDd>
               {securityDeposit.toHuman()} {securityDeposit.currency.ticker} (
@@ -91,11 +93,11 @@ const TransactionDetails = ({
       </BaseTransactionDetails>
       <BaseTransactionDetails>
         {bitcoinNetworkFee ? (
-          <TransactionFee label='Bitcoin Network Fee' amount={bitcoinNetworkFee} />
+          <TransactionFee label={t('bridge.bitcoin_network_fee')} amount={bitcoinNetworkFee} />
         ) : (
           <TransactionFee
-            label='Transaction Fee'
-            tooltipLabel='The fee for the transaction to be included in the parachain'
+            label={t('bridge.transaction_fee')}
+            tooltipLabel={t('bridge.fee_for_transaction_to_be_included_in_the_parachain')}
             amount={TRANSACTION_FEE_AMOUNT}
           />
         )}

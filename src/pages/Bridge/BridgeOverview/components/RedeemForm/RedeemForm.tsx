@@ -244,14 +244,14 @@ const RedeemForm = ({
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
-              <RequestLimitsCard title='Max redeembale' singleRequestLimit={redeemLimit} />
+              <RequestLimitsCard title={t('bridge.max_redeembale')} singleRequestLimit={redeemLimit} />
               <TokenInput
                 placeholder='0.00'
-                label='Amount'
+                label={t('amount')}
                 ticker={WRAPPED_TOKEN.ticker}
                 balance={redeemBalance.toString()}
                 humanBalance={redeemBalance.toString()}
-                balanceLabel='Available'
+                balanceLabel={t('available')}
                 valueUSD={amountUSD}
                 {...mergeProps(form.getFieldProps(BRIDGE_REDEEM_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
               />
@@ -275,8 +275,8 @@ const RedeemForm = ({
                 }}
               />
               <Input
-                placeholder='Enter your BTC address'
-                label='BTC Address'
+                placeholder={t('enter_btc_address')}
+                label={t('btc_address')}
                 padding={{ top: 'spacing5', bottom: 'spacing5' }}
                 {...mergeProps(form.getFieldProps(BRIDGE_REDEEM_ADDRESS))}
               />
@@ -297,7 +297,9 @@ const RedeemForm = ({
                 size='large'
                 loading={transaction.isLoading}
               >
-                {hasEnoughtGovernance ? t('redeem') : `Insufficient ${GOVERNANCE_TOKEN.ticker}`}
+                {hasEnoughtGovernance
+                  ? t('redeem')
+                  : t('insufficient_token_balance', { token: GOVERNANCE_TOKEN.ticker })}
               </AuthCTA>
             </Flex>
           </Flex>

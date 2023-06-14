@@ -19,9 +19,9 @@ const PremiumRedeemCard = ({ isPremiumReddem, switchProps }: PremiumRedeemCardPr
       padding='spacing4'
       flex='1'
     >
-      <Tooltip label={t('redeem_page.premium_redeem_info')}>
+      <Tooltip label={t('bridge.premium_redeem_info')}>
         <StyledSwitch isSelected={isPremiumReddem} labelProps={{ size: 'xs' }} {...switchProps}>
-          Premium Redeem
+          {t('bridge.premium_redeem')}
           <StyledInformationCircle size='s' />
         </StyledSwitch>
       </Tooltip>
