@@ -41,7 +41,7 @@ const getSubsidyRewardApy = (
   }
 
   const exchangeRate = rewardCurrencyPriceUSD / positionCurrencyPriceUSD;
-  const apy = reward.toBig().mul(exchangeRate);
+  const apy = reward.toBig().mul(exchangeRate).mul(100);
 
   return apy;
 };
