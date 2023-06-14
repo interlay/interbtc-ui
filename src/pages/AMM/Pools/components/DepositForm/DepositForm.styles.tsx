@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
-import { Dl, DlGroup, theme } from '@/component-library';
+import { Dl, DlGroup, theme, TokenInput } from '@/component-library';
+import { PlusDivider } from '@/components';
 
 const StyledDl = styled(Dl)`
   background-color: ${theme.card.bg.secondary};
@@ -17,4 +18,13 @@ const StyledDlGroup = styled(DlGroup)`
   }
 `;
 
-export { StyledDl, StyledDlGroup };
+const StyledPlusDivider = styled(PlusDivider)`
+  margin-bottom: calc(${theme.spacing.spacing2} * -1);
+  z-index: 0;
+`;
+
+const StyledTokenInput = styled(TokenInput)`
+  z-index: 1;
+`;
+
+export { StyledDl, StyledDlGroup, StyledPlusDivider, StyledTokenInput };

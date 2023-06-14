@@ -3,7 +3,6 @@ import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
 import {
-  PlusDivider,
   TransactionDetails as BaseTransactionDetails,
   TransactionDetailsDd,
   TransactionDetailsDt,
@@ -13,6 +12,8 @@ import {
 import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+
+import { StyledPlusDivider } from './TransactionDetails.style';
 
 type TransactionDetailsProps = {
   totalAmount: MonetaryAmount<Currency>;
@@ -39,7 +40,7 @@ const TransactionDetails = ({
 
   return (
     <Flex direction='column' gap='spacing2'>
-      <Flex direction='column' gap='spacing6'>
+      <Flex direction='column'>
         <TokenInput
           placeholder='0.00'
           label='You will receive'
@@ -50,7 +51,7 @@ const TransactionDetails = ({
         />
         {compensationAmount && (
           <>
-            <PlusDivider />
+            <StyledPlusDivider marginTop='spacing2' />
             <TokenInput
               placeholder='0.00'
               isDisabled

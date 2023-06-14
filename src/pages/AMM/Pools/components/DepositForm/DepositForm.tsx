@@ -5,8 +5,8 @@ import { ChangeEventHandler, Fragment, RefObject, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { Alert, Dd, DlGroup, Dt, Flex, TokenInput } from '@/component-library';
-import { AuthCTA, PlusDivider } from '@/components';
+import { Alert, Dd, DlGroup, Dt, Flex } from '@/component-library';
+import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
   DepositLiquidityPoolFormData,
@@ -24,7 +24,7 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolName } from '../PoolName';
-import { StyledDl } from './DepositForm.styles';
+import { StyledDl, StyledPlusDivider, StyledTokenInput } from './DepositForm.styles';
 import { DepositOutputAssets } from './DepositOutputAssets';
 
 const isCustomAmountsMode = (form: ReturnType<typeof useForm>) =>
@@ -129,7 +129,7 @@ const DepositForm = ({ pool, slippageModalRef, onSuccess, onSigning }: DepositFo
         <SlippageManager ref={slippageModalRef} value={slippage} onChange={(slippage) => setSlippage(slippage)} />
         {poolName}
         <Flex direction='column' gap='spacing8'>
-          <Flex direction='column' gap='spacing2'>
+          <Flex direction='column'>
             {pooledCurrencies.map((amount, index) => {
               const {
                 currency: { ticker }
@@ -141,7 +141,7 @@ const DepositForm = ({ pool, slippageModalRef, onSuccess, onSigning }: DepositFo
 
               return (
                 <Fragment key={ticker}>
-                  <TokenInput
+                  <StyledTokenInput
                     placeholder='0.00'
                     ticker={ticker}
                     aria-label={t('forms.field_amount', {
@@ -154,7 +154,7 @@ const DepositForm = ({ pool, slippageModalRef, onSuccess, onSigning }: DepositFo
                       .toNumber()}
                     {...mergeProps(form.getFieldProps(ticker), { onChange: handleChange })}
                   />
-                  {!isLastItem && <PlusDivider />}
+                  {!isLastItem && <StyledPlusDivider marginTop='spacing5' />}
                 </Fragment>
               );
             })}
@@ -166,7 +166,6 @@ const DepositForm = ({ pool, slippageModalRef, onSuccess, onSigning }: DepositFo
           ) : (
             <DepositOutputAssets pool={pool} values={form.values} prices={prices} />
           )}
-
           <StyledDl direction='column' gap='spacing2'>
             <DlGroup justifyContent='space-between'>
               <Dt size='xs' color='primary'>

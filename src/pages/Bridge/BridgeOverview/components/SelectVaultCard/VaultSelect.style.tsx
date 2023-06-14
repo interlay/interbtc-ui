@@ -1,9 +1,6 @@
 import styled from 'styled-components';
 
-import { Switch } from '@/component-library';
-import { Flex } from '@/component-library/Flex';
-import { Span } from '@/component-library/Text';
-import { theme } from '@/component-library/theme';
+import { Flex, Span, Switch, theme } from '@/component-library';
 
 type StyledListItemSelectedLabelProps = {
   $isSelected: boolean;

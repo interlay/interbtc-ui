@@ -1,19 +1,19 @@
 import i18n from 'i18next';
 
-import yup, { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
+import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
 const BRIDGE_ISSUE_AMOUNT_FIELD = 'issue-amount';
-const BRIDGE_ISSUE_VAULT_FIELD = 'issue-vault';
-const BRIDGE_ISSUE_MANUAL_VAULT_SWITCH = 'issue-manual-vault-switch';
+const BRIDGE_ISSUE_CUSTOM_VAULT_FIELD = 'issue-custom-vault';
+const BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH = 'issue-custom-vault-switch';
 
 type BridgeIssueFormData = {
   [BRIDGE_ISSUE_AMOUNT_FIELD]?: string;
-  [BRIDGE_ISSUE_VAULT_FIELD]?: string;
-  [BRIDGE_ISSUE_MANUAL_VAULT_SWITCH]?: boolean;
+  [BRIDGE_ISSUE_CUSTOM_VAULT_FIELD]?: string;
+  [BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH]?: boolean;
 };
 
 type BridgeIssueValidationParams = {
-  [BRIDGE_ISSUE_AMOUNT_FIELD]: FeesValidationParams & MaxAmountValidationParams & MinAmountValidationParams;
+  [BRIDGE_ISSUE_AMOUNT_FIELD]: MaxAmountValidationParams & MinAmountValidationParams;
 };
 
 const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchema<any> =>
@@ -29,30 +29,29 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
           amount: params[BRIDGE_ISSUE_AMOUNT_FIELD].maxAmount.toString()
         })
       )
-      .minAmount(params[BRIDGE_ISSUE_AMOUNT_FIELD], 'issue')
-      .fees(params[BRIDGE_ISSUE_AMOUNT_FIELD]),
-    [BRIDGE_ISSUE_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_MANUAL_VAULT_SWITCH], {
+      .minAmount(params[BRIDGE_ISSUE_AMOUNT_FIELD], 'issue'),
+    [BRIDGE_ISSUE_CUSTOM_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH], {
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'issue vault' }))
     })
   });
 
 const BRIDGE_REDEEM_AMOUNT_FIELD = 'redeem-amount';
-const BRIDGE_REDEEM_VAULT_FIELD = 'redeem-vault';
-const BRIDGE_REDEEM_MANUAL_VAULT_SWITCH = 'redeem-manual-vault-switch';
+const BRIDGE_REDEEM_CUSTOM_VAULT_FIELD = 'redeem-custom-vault';
+const BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH = 'redeem-custom-vault-switch';
 const BRIDGE_REDEEM_PREMIUM_VAULT_FIELD = 'redeem-premium-vault';
 const BRIDGE_REDEEM_ADDRESS = 'redeem-address';
 
 type BridgeRedeemFormData = {
   [BRIDGE_REDEEM_AMOUNT_FIELD]?: string;
-  [BRIDGE_REDEEM_VAULT_FIELD]?: string;
-  [BRIDGE_REDEEM_MANUAL_VAULT_SWITCH]?: boolean;
+  [BRIDGE_REDEEM_CUSTOM_VAULT_FIELD]?: string;
+  [BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH]?: boolean;
   [BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]?: boolean;
   [BRIDGE_REDEEM_ADDRESS]?: string;
 };
 
 type BridgeRedeemValidationParams = {
-  [BRIDGE_REDEEM_AMOUNT_FIELD]: FeesValidationParams & MaxAmountValidationParams & MinAmountValidationParams;
+  [BRIDGE_REDEEM_AMOUNT_FIELD]: MaxAmountValidationParams & MinAmountValidationParams;
 };
 
 const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSchema<any> =>
@@ -68,9 +67,8 @@ const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSch
           amount: params[BRIDGE_REDEEM_AMOUNT_FIELD].maxAmount.toString()
         })
       )
-      .minAmount(params[BRIDGE_REDEEM_AMOUNT_FIELD], 'redeem')
-      .fees(params[BRIDGE_REDEEM_AMOUNT_FIELD]),
-    [BRIDGE_REDEEM_VAULT_FIELD]: yup.string().when([BRIDGE_REDEEM_MANUAL_VAULT_SWITCH], {
+      .minAmount(params[BRIDGE_REDEEM_AMOUNT_FIELD], 'redeem'),
+    [BRIDGE_REDEEM_CUSTOM_VAULT_FIELD]: yup.string().when([BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH], {
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'redeem vault' }))
     }),
@@ -79,13 +77,13 @@ const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSch
 
 export {
   BRIDGE_ISSUE_AMOUNT_FIELD,
-  BRIDGE_ISSUE_MANUAL_VAULT_SWITCH,
-  BRIDGE_ISSUE_VAULT_FIELD,
+  BRIDGE_ISSUE_CUSTOM_VAULT_FIELD,
+  BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH,
   BRIDGE_REDEEM_ADDRESS,
   BRIDGE_REDEEM_AMOUNT_FIELD,
-  BRIDGE_REDEEM_MANUAL_VAULT_SWITCH,
+  BRIDGE_REDEEM_CUSTOM_VAULT_FIELD,
+  BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH,
   BRIDGE_REDEEM_PREMIUM_VAULT_FIELD,
-  BRIDGE_REDEEM_VAULT_FIELD,
   bridgeIssueSchema,
   bridgeRedeemSchema
 };

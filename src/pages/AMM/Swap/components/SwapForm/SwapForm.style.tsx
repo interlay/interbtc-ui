@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Divider, theme } from '@/component-library';
+import { theme } from '@/component-library';
 
 type StyledCircleProps = {
   $isFocusVisible: boolean;
@@ -37,8 +37,4 @@ const StyledBackground = styled.div`
   background-color: ${theme.colors.bgPrimary};
 `;
 
-const StyledDivider = styled(Divider)`
-  /* background-color: var(--colors-border); */
-`;
-
-export { StyledBackground, StyledCircle, StyledDivider, StyledWrapper };
+export { StyledBackground, StyledCircle, StyledWrapper };

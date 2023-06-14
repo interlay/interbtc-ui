@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
-import { theme } from '@/component-library';
+import { Flex, theme } from '@/component-library';
 
-const StyledWrapper = styled.div`
+const StyledWrapper = styled(Flex)`
   position: relative;
+  height: ${theme.spacing.spacing10};
 `;
 
 const StyledCircle = styled.div`
