@@ -3,14 +3,10 @@ import {
   ArrowPathRoundedSquareIcon,
   ArrowsRightLeftIcon,
   BanknotesIcon,
-  BookOpenIcon,
   ChartBarSquareIcon,
   CircleStackIcon,
   CpuChipIcon,
-  DocumentTextIcon,
-  HandRaisedIcon,
   PresentationChartBarIcon,
-  ScaleIcon,
   Square3Stack3DIcon,
   UserIcon
 } from '@heroicons/react/24/outline';
@@ -140,7 +136,6 @@ const Navigation = ({
       {
         name: 'nav_use_wrapped',
         link: USE_WRAPPED_CURRENCY_LINK,
-        icon: HandRaisedIcon,
         hidden: !USE_WRAPPED_CURRENCY_LINK,
         external: true,
         rest: {
@@ -151,7 +146,6 @@ const Navigation = ({
       {
         name: 'nav_crowdloan',
         link: CROWDLOAN_LINK,
-        icon: BanknotesIcon,
         external: true,
         // This will suppress the link on testnet
         hidden: process.env.REACT_APP_BITCOIN_NETWORK !== 'mainnet' || !CROWDLOAN_LINK,
@@ -163,7 +157,6 @@ const Navigation = ({
       {
         name: 'nav_docs',
         link: INTERLAY_DOCS_LINK,
-        icon: BookOpenIcon,
         external: true,
         rest: {
           target: '_blank',
@@ -173,7 +166,6 @@ const Navigation = ({
       {
         name: 'nav_governance',
         link: GOVERNANCE_LINK,
-        icon: ScaleIcon,
         external: true,
         hidden: !GOVERNANCE_LINK,
         rest: {
@@ -184,7 +176,6 @@ const Navigation = ({
       {
         name: 'nav_terms_and_conditions',
         link: TERMS_AND_CONDITIONS_LINK,
-        icon: DocumentTextIcon,
         external: true,
         hidden: !TERMS_AND_CONDITIONS_LINK,
         rest: {
@@ -273,16 +264,18 @@ const Navigation = ({
               'rounded-md'
             )}
           >
-            <navigationItem.icon
-              className={clsx(
-                match?.isExact ? TEXT_CLASSES_FOR_SELECTED : TEXT_CLASSES_FOR_UNSELECTED,
-                onSmallScreen ? 'mr-4' : 'mr-3',
-                'flex-shrink-0',
-                'w-6',
-                'h-6'
-              )}
-              aria-hidden='true'
-            />
+            {navigationItem.icon && (
+              <navigationItem.icon
+                className={clsx(
+                  match?.isExact ? TEXT_CLASSES_FOR_SELECTED : TEXT_CLASSES_FOR_UNSELECTED,
+                  onSmallScreen ? 'mr-4' : 'mr-3',
+                  'flex-shrink-0',
+                  'w-6',
+                  'h-6'
+                )}
+                aria-hidden='true'
+              />
+            )}
             {navigationItem.link === CROWDLOAN_LINK
               ? // TODO: not the nicest way of handling contextual navigation text, but
                 // other solutions involve substantial refactoring of the navigation
