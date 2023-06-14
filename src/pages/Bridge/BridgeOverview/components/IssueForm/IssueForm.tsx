@@ -6,7 +6,7 @@ import { ChangeEvent, Key, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'react-use';
 
-import { convertMonetaryAmountToValueInUSD, getRandomArrayElement, newSafeBitcoinAmount } from '@/common/utils/utils';
+import { convertMonetaryAmountToValueInUSD, getRandomArrayElement, safeBitcoinAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
@@ -43,15 +43,15 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   const [issueRequest, setIssueRequest] = useState<Issue>();
 
   const [amount, setAmount] = useState<string>();
-  const [debouncedAmount, setDecounbedAmount] = useState<string>();
+  const [debouncedAmount, setDebouncedAmount] = useState<string>();
 
-  useDebounce(() => setDecounbedAmount(amount), 500, [amount]);
+  useDebounce(() => setDebouncedAmount(amount), 500, [amount]);
 
   const [selectedVault, setSelectedVault] = useState<BridgeVaultData>();
 
   const { data: vaultsData, getAvailableVaults } = useGetVaults(BridgeActions.ISSUE);
 
-  const debouncedMonetaryAmount = newSafeBitcoinAmount(debouncedAmount || 0);
+  const debouncedMonetaryAmount = safeBitcoinAmount(debouncedAmount || 0);
   const availableVaults = getAvailableVaults(debouncedMonetaryAmount);
   const vaults = availableVaults?.length ? availableVaults : vaultsData?.list;
 
@@ -67,7 +67,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
       }
 
       setAmount(undefined);
-      setDecounbedAmount(undefined);
+      setDebouncedAmount(undefined);
       form.resetForm();
     }
   });
@@ -143,7 +143,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     setSelectedVault(vault);
   };
 
-  const monetaryAmount = newSafeBitcoinAmount(amount || 0);
+  const monetaryAmount = safeBitcoinAmount(amount || 0);
   const monetaryAmountUSD = monetaryAmount
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
     : 0;

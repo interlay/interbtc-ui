@@ -4,9 +4,9 @@ import { Card, SwitchProps, Tooltip } from '@/component-library';
 
 import { StyledInformationCircle, StyledSwitch } from './RedeemForm.styles';
 
-type PremiumRedeemCardProps = { isPremiumReddem?: boolean; switchProps: SwitchProps };
+type PremiumRedeemCardProps = { isPremiumRedeem?: boolean; switchProps: SwitchProps };
 
-const PremiumRedeemCard = ({ isPremiumReddem, switchProps }: PremiumRedeemCardProps): JSX.Element => {
+const PremiumRedeemCard = ({ isPremiumRedeem, switchProps }: PremiumRedeemCardProps): JSX.Element => {
   const { t } = useTranslation();
 
   return (
@@ -20,7 +20,7 @@ const PremiumRedeemCard = ({ isPremiumReddem, switchProps }: PremiumRedeemCardPr
       flex='1'
     >
       <Tooltip label={t('bridge.premium_redeem_info')}>
-        <StyledSwitch isSelected={isPremiumReddem} labelProps={{ size: 'xs' }} {...switchProps}>
+        <StyledSwitch isSelected={isPremiumRedeem} labelProps={{ size: 'xs' }} {...switchProps}>
           {t('bridge.premium_redeem')}
           <StyledInformationCircle size='s' />
         </StyledSwitch>

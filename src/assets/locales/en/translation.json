@@ -718,7 +718,7 @@
   },
   "bridge": {
     "max_issuable": "Max issuable",
-    "max_redeembale": "Max redeembale",
+    "max_redeemable": "Max redeemable",
     "in_single_request": "In single request",
     "in_total": "In total",
     "manually_select_vault": "Manually Select Vault",

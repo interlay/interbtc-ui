@@ -4,7 +4,7 @@ import MainContainer from '@/parts/MainContainer';
 import { BridgeActions } from '@/types/bridge';
 import { useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { useGetIssueRequestLimit } from '@/utils/hooks/api/bridge/use-get-issue-request-limits';
-import { useGetMaxBurnanbleTokens } from '@/utils/hooks/api/bridge/use-get-max-burnable-tokens';
+import { useGetMaxBurnableTokens } from '@/utils/hooks/api/bridge/use-get-max-burnable-tokens';
 import { useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
 import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 
@@ -17,7 +17,7 @@ const BridgeOverview = (): JSX.Element => {
   const { defaultSelectedKey } = tabsProps;
 
   const { data: issueRequestLimit } = useGetIssueRequestLimit();
-  const { data: maxBurnableTokensData } = useGetMaxBurnanbleTokens();
+  const { data: maxBurnableTokensData } = useGetMaxBurnableTokens();
   const { data: issueData } = useGetIssueData();
   const { data: redeemData } = useGetRedeemData();
 

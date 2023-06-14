@@ -8,8 +8,8 @@ import { useDebounce } from 'react-use';
 import {
   convertMonetaryAmountToValueInUSD,
   getRandomArrayElement,
-  newSafeBitcoinAmount,
-  newSafeMonetaryAmount
+  newSafeMonetaryAmount,
+  safeBitcoinAmount
 } from '@/common/utils/utils';
 import { Flex, Input, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
@@ -42,15 +42,15 @@ import { PremiumRedeemCard } from './PremiumRedeemCard';
 const getRequestLimit = (
   redeemLimit: MonetaryAmount<Currency>,
   selectedVault?: BridgeVaultData,
-  predeemRedeemLimit?: MonetaryAmount<Currency>,
-  isPremiumReddem?: boolean
+  premiumRedeemLimit?: MonetaryAmount<Currency>,
+  isPremiumRedeem?: boolean
 ) => {
   if (selectedVault) {
     return selectedVault.amount;
   }
 
-  if (isPremiumReddem && predeemRedeemLimit) {
-    return predeemRedeemLimit;
+  if (isPremiumRedeem && premiumRedeemLimit) {
+    return premiumRedeemLimit;
   }
 
   return redeemLimit;
@@ -72,18 +72,18 @@ const RedeemForm = ({
 
   const [redeemRequest, setRedeemRequest] = useState<Redeem>();
 
-  const [isPremiumReddem, setPremiumRedeem] = useState(false);
+  const [isPremiumRedeem, setPremiumRedeem] = useState(false);
 
   const [amount, setAmount] = useState<string>();
-  const [debouncedAmount, setDecounbedAmount] = useState<string>();
+  const [debouncedAmount, setDebouncedAmount] = useState<string>();
 
-  useDebounce(() => setDecounbedAmount(amount), 500, [amount]);
+  useDebounce(() => setDebouncedAmount(amount), 500, [amount]);
 
   const [selectedVault, setSelectedVault] = useState<BridgeVaultData>();
 
   const { data: vaultsData, getAvailableVaults } = useGetVaults(BridgeActions.REDEEM);
 
-  const debouncedMonetaryAmount = newSafeBitcoinAmount(debouncedAmount || 0);
+  const debouncedMonetaryAmount = safeBitcoinAmount(debouncedAmount || 0);
   const availableVaults = getAvailableVaults(debouncedMonetaryAmount);
   const vaults = availableVaults?.length ? availableVaults : vaultsData?.list;
 
@@ -98,7 +98,7 @@ const RedeemForm = ({
       }
 
       setAmount(undefined);
-      setDecounbedAmount(undefined);
+      setDebouncedAmount(undefined);
       form.resetForm();
     },
     showSuccessModal: false
@@ -108,7 +108,7 @@ const RedeemForm = ({
 
   const assetBalance = getAvailableBalance(WRAPPED_TOKEN.ticker) || newMonetaryAmount(0, WRAPPED_TOKEN);
 
-  const currentRequestLimit = getRequestLimit(redeemLimit, selectedVault, premium?.redeemLimit, isPremiumReddem);
+  const currentRequestLimit = getRequestLimit(redeemLimit, selectedVault, premium?.redeemLimit, isPremiumRedeem);
   const redeemBalance = assetBalance.gt(currentRequestLimit) ? currentRequestLimit : assetBalance;
 
   const transferAmountSchemaParams = {
@@ -125,9 +125,9 @@ const RedeemForm = ({
 
     const monetaryAmount = newMonetaryAmount(amount, WRAPPED_TOKEN, true);
 
-    const isPremiumReddem = values[BRIDGE_REDEEM_PREMIUM_VAULT_FIELD];
+    const isPremiumRedeem = values[BRIDGE_REDEEM_PREMIUM_VAULT_FIELD];
 
-    const availableVaults = getAvailableVaults(monetaryAmount, isPremiumReddem);
+    const availableVaults = getAvailableVaults(monetaryAmount, isPremiumRedeem);
 
     if (!availableVaults) return;
 
@@ -222,7 +222,7 @@ const RedeemForm = ({
     : 0;
 
   const compensationAmount =
-    monetaryAmount.isZero() && isPremiumReddem ? getCompensationAmount(monetaryAmount) : undefined;
+    monetaryAmount.isZero() && isPremiumRedeem ? getCompensationAmount(monetaryAmount) : undefined;
   const compensationAmountUSD = compensationAmount
     ? convertMonetaryAmountToValueInUSD(
         compensationAmount,
@@ -236,7 +236,7 @@ const RedeemForm = ({
 
   const hasPremiumRedeemFeature = premium;
 
-  const hasEnoughtGovernance = governanceBalance.gte(TRANSACTION_FEE_AMOUNT);
+  const hasEnoughGovernance = governanceBalance.gte(TRANSACTION_FEE_AMOUNT);
 
   return (
     <>
@@ -257,7 +257,7 @@ const RedeemForm = ({
               />
               {hasPremiumRedeemFeature && (
                 <PremiumRedeemCard
-                  isPremiumReddem={isPremiumReddem}
+                  isPremiumRedeem={isPremiumRedeem}
                   switchProps={mergeProps(form.getFieldProps(BRIDGE_REDEEM_PREMIUM_VAULT_FIELD), {
                     onChange: handleTogglePremiumVault
                   })}
@@ -293,11 +293,11 @@ const RedeemForm = ({
               />
               <AuthCTA
                 type='submit'
-                disabled={isBtnDisabled || !hasEnoughtGovernance}
+                disabled={isBtnDisabled || !hasEnoughGovernance}
                 size='large'
                 loading={transaction.isLoading}
               >
-                {hasEnoughtGovernance
+                {hasEnoughGovernance
                   ? t('redeem')
                   : t('insufficient_token_balance', { token: GOVERNANCE_TOKEN.ticker })}
               </AuthCTA>

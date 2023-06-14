@@ -29,7 +29,7 @@ type UseGetMaxBurnableTokensResult = {
   refetch: () => void;
 };
 
-const useGetMaxBurnanbleTokens = (): UseGetMaxBurnableTokensResult => {
+const useGetMaxBurnableTokens = (): UseGetMaxBurnableTokensResult => {
   const { data: collateralCurrencies } = useGetCollateralCurrencies(true);
 
   const accountId = useAccountId();
@@ -55,5 +55,5 @@ const useGetMaxBurnanbleTokens = (): UseGetMaxBurnableTokensResult => {
   };
 };
 
-export { useGetMaxBurnanbleTokens };
+export { useGetMaxBurnableTokens };
 export type { MaxBurnableTokensData, UseGetMaxBurnableTokensResult };

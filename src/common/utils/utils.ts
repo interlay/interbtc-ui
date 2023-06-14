@@ -177,7 +177,7 @@ const newSafeMonetaryAmount: typeof newMonetaryAmount = (...args) => {
   }
 };
 
-const newSafeBitcoinAmount = (amount: BigSource): BitcoinAmount => {
+const safeBitcoinAmount = (amount: BigSource): BitcoinAmount => {
   try {
     return new BitcoinAmount(amount);
   } catch (e) {
@@ -201,8 +201,8 @@ export {
   getRandomArrayElement,
   getRandomVaultIdWithCapacity,
   monetaryToNumber,
-  newSafeBitcoinAmount,
   newSafeMonetaryAmount,
+  safeBitcoinAmount,
   shortAddress,
   shortTxId
 };
