@@ -6,7 +6,6 @@ import {
   BookOpenIcon,
   ChartBarSquareIcon,
   CircleStackIcon,
-  ClipboardDocumentListIcon,
   CpuChipIcon,
   DocumentTextIcon,
   HandRaisedIcon,
@@ -114,12 +113,6 @@ const Navigation = ({
         link: PAGES.POOLS,
         icon: Square3Stack3DIcon,
         disabled: !isAMMEnabled
-      },
-      {
-        name: 'nav_transactions',
-        link: PAGES.TRANSACTIONS,
-        icon: ClipboardDocumentListIcon,
-        hidden: false
       },
       {
         name: 'nav_staking',

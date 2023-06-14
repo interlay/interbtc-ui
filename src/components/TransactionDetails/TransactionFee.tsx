@@ -14,6 +14,7 @@ import { TransactionDetailsGroup } from './TransactionDetailsGroup';
 
 type Props = {
   label?: ReactNode;
+  tooltipLabel?: ReactNode;
   amount: MonetaryAmount<CurrencyExt>;
 };
 
@@ -21,13 +22,13 @@ type InheritAttrs = Omit<DlGroupProps, keyof Props>;
 
 type TransactionFeeProps = Props & InheritAttrs;
 
-const TransactionFee = ({ label, amount, ...props }: TransactionFeeProps): JSX.Element => {
+const TransactionFee = ({ label, tooltipLabel, amount, ...props }: TransactionFeeProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
 
   return (
     <TransactionDetailsGroup {...props}>
-      <TransactionDetailsDt>{label || t('fee')}</TransactionDetailsDt>
+      <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('fee')}</TransactionDetailsDt>
       <TransactionDetailsDd>
         {amount.toHuman()} {amount.currency.ticker} (
         {displayMonetaryAmountInUSDFormat(amount, getTokenPrice(prices, amount.currency.ticker)?.usd)})

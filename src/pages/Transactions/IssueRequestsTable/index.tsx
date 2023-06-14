@@ -225,64 +225,68 @@ const IssueRequestsTable = (): JSX.Element => {
     <>
       <InterlayTableContainer className={clsx('space-y-6', 'container', 'mx-auto')}>
         <SectionTitle>{t('issue_page.issue_requests')}</SectionTitle>
-        <InterlayTable {...getTableProps()}>
-          <InterlayThead>
-            {/* TODO: should type properly */}
-            {headerGroups.map((headerGroup: any) => (
-              // eslint-disable-next-line react/jsx-key
-              <InterlayTr {...headerGroup.getHeaderGroupProps()}>
-                {/* TODO: should type properly */}
-                {headerGroup.headers.map((column: any) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <InterlayTh
-                    {...column.getHeaderProps([
-                      {
-                        className: clsx(column.classNames),
-                        style: column.style
-                      }
-                    ])}
-                  >
-                    {column.render('Header')}
-                  </InterlayTh>
-                ))}
-              </InterlayTr>
-            ))}
-          </InterlayThead>
-          <InterlayTbody {...getTableBodyProps()}>
-            {/* TODO: should type properly */}
-            {rows.map((row: any) => {
-              prepareRow(row);
-
-              const { className: rowClassName, ...restRowProps } = row.getRowProps();
-
-              return (
+        {issueRequests?.length ? (
+          <InterlayTable {...getTableProps()}>
+            <InterlayThead>
+              {/* TODO: should type properly */}
+              {headerGroups.map((headerGroup: any) => (
                 // eslint-disable-next-line react/jsx-key
-                <InterlayTr
-                  className={clsx(rowClassName, 'cursor-pointer')}
-                  {...restRowProps}
-                  onClick={handleRowClick(row.original.id)}
-                >
+                <InterlayTr {...headerGroup.getHeaderGroupProps()}>
                   {/* TODO: should type properly */}
-                  {row.cells.map((cell: any) => {
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <InterlayTd
-                        {...cell.getCellProps([
-                          {
-                            className: clsx(cell.column.classNames),
-                            style: cell.column.style
-                          }
-                        ])}
-                      >
-                        {cell.render('Cell')}
-                      </InterlayTd>
-                    );
-                  })}
+                  {headerGroup.headers.map((column: any) => (
+                    // eslint-disable-next-line react/jsx-key
+                    <InterlayTh
+                      {...column.getHeaderProps([
+                        {
+                          className: clsx(column.classNames),
+                          style: column.style
+                        }
+                      ])}
+                    >
+                      {column.render('Header')}
+                    </InterlayTh>
+                  ))}
                 </InterlayTr>
-              );
-            })}
-          </InterlayTbody>
-        </InterlayTable>
+              ))}
+            </InterlayThead>
+            <InterlayTbody {...getTableBodyProps()}>
+              {/* TODO: should type properly */}
+              {rows.map((row: any) => {
+                prepareRow(row);
+
+                const { className: rowClassName, ...restRowProps } = row.getRowProps();
+
+                return (
+                  // eslint-disable-next-line react/jsx-key
+                  <InterlayTr
+                    className={clsx(rowClassName, 'cursor-pointer')}
+                    {...restRowProps}
+                    onClick={handleRowClick(row.original.id)}
+                  >
+                    {/* TODO: should type properly */}
+                    {row.cells.map((cell: any) => {
+                      return (
+                        // eslint-disable-next-line react/jsx-key
+                        <InterlayTd
+                          {...cell.getCellProps([
+                            {
+                              className: clsx(cell.column.classNames),
+                              style: cell.column.style
+                            }
+                          ])}
+                        >
+                          {cell.render('Cell')}
+                        </InterlayTd>
+                      );
+                    })}
+                  </InterlayTr>
+                );
+              })}
+            </InterlayTbody>
+          </InterlayTable>
+        ) : (
+          <p>{t('empty_data')}</p>
+        )}
         {pageCount > 0 && (
           <div className={clsx('flex', 'justify-end')}>
             <InterlayPagination

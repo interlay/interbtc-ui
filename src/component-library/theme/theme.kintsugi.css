@@ -67,7 +67,7 @@
   --colors-input-background: var(--colors-blue);
   --colors-input-disabled-bg: var(--colors-blue);
   /* Label */
-  --colors-label-text: var(--colors-neutral-light-grey);
+  --colors-label-text: var(--colors-neutral-white);
   /* Token Input */
   --colors-token-input-end-adornment-bg: var(--colors-neutral-white-25);
   /* Token List */
