@@ -12,7 +12,7 @@ import { StoreType } from '@/common/types/util.types';
 import { FundWallet, NotificationsPopover } from '@/components';
 import { AuthModal, SignTermsModal } from '@/components/AuthModal';
 import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
-import { GOVERNANCE_TOKEN, GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { SS58_FORMAT } from '@/constants';
 import InterlayCaliforniaOutlinedButton from '@/legacy-components/buttons/InterlayCaliforniaOutlinedButton';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
@@ -41,7 +41,7 @@ const Topbar = (): JSX.Element => {
   const { selectProps } = useSignMessage();
   const { list } = useNotifications();
 
-  const governanceTokenBalanceIsZero = getAvailableBalance(GOVERNANCE_TOKEN_SYMBOL)?.isZero();
+  const governanceTokenBalanceIsZero = getAvailableBalance(GOVERNANCE_TOKEN.ticker)?.isZero();
 
   const handleRequestFromFaucet = async (): Promise<void> => {
     if (!selectedAccount) return;
