@@ -32,8 +32,8 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
-import { RequestLimitsCard } from '../RequestLimitsCard';
 import { LegacyRedeemModal } from '../LegacyRedeemModal';
+import { RequestLimitsCard } from '../RequestLimitsCard';
 import { SelectVaultCard } from '../SelectVaultCard';
 import { TransactionDetails } from '../TransactionDetails';
 import { PremiumRedeemCard } from './PremiumRedeemCard';
@@ -226,8 +226,9 @@ const RedeemForm = ({
     ? convertMonetaryAmountToValueInUSD(totalAmount, getTokenPrice(prices, totalAmount.currency.ticker)?.usd) || 0
     : 0;
 
-  const compensationAmount =
-    monetaryAmount.isZero() && isPremiumReddem ? getCompensationAmount(monetaryAmount) : undefined;
+  const compensationAmount = newMonetaryAmount(12, GOVERNANCE_TOKEN);
+  console.log(getCompensationAmount);
+  // monetaryAmount.isZero() && isPremiumReddem ? getCompensationAmount(monetaryAmount) : undefined;
   const compensationAmountUSD = compensationAmount
     ? convertMonetaryAmountToValueInUSD(
         compensationAmount,
@@ -270,7 +271,7 @@ const RedeemForm = ({
               )}
               <SelectVaultCard
                 isSelectingVault={isSelectingVault}
-                availableVaults={availableVaults}
+                vaults={availableVaults}
                 switchProps={mergeProps(form.getFieldProps(BRIDGE_REDEEM_MANUAL_VAULT_SWITCH), {
                   onChange: handleToggleSelectVault
                 })}

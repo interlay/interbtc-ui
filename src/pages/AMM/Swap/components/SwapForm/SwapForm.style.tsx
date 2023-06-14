@@ -38,7 +38,7 @@ const StyledBackground = styled.div`
 `;
 
 const StyledDivider = styled(Divider)`
-  background-color: var(--colors-border);
+  /* background-color: var(--colors-border); */
 `;
 
 export { StyledBackground, StyledCircle, StyledDivider, StyledWrapper };

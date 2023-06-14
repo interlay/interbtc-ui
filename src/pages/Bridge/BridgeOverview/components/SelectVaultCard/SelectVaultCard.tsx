@@ -6,17 +6,12 @@ import { StyledSwitch } from './VaultSelect.style';
 
 type SelectVaultCardProps = {
   isSelectingVault?: boolean;
-  availableVaults: BridgeVaultData[] | undefined;
+  vaults: BridgeVaultData[] | undefined;
   switchProps: SwitchProps;
   selectProps: VaultSelectProps;
 };
 
-const SelectVaultCard = ({
-  availableVaults,
-  isSelectingVault,
-  switchProps,
-  selectProps
-}: SelectVaultCardProps): JSX.Element => (
+const SelectVaultCard = ({ vaults, isSelectingVault, switchProps, selectProps }: SelectVaultCardProps): JSX.Element => (
   <Card
     direction='column'
     variant='bordered'
@@ -29,8 +24,8 @@ const SelectVaultCard = ({
     <StyledSwitch isSelected={isSelectingVault} labelProps={{ size: 'xs' }} {...switchProps}>
       Manually Select Vault
     </StyledSwitch>
-    {isSelectingVault && availableVaults && (
-      <VaultSelect items={availableVaults} placeholder='Select a vault' aria-label='Vault' {...selectProps} />
+    {isSelectingVault && vaults && (
+      <VaultSelect items={vaults} placeholder='Select a vault' aria-label='Vault' {...selectProps} />
     )}
   </Card>
 );

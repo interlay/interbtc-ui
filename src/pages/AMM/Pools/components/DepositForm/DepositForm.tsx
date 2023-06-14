@@ -1,7 +1,7 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
-import { ChangeEventHandler, RefObject, useState } from 'react';
+import { ChangeEventHandler, Fragment, RefObject, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat, newSafeMonetaryAmount } from '@/common/utils/utils';
@@ -140,7 +140,7 @@ const DepositForm = ({ pool, slippageModalRef, onSuccess, onSigning }: DepositFo
               const balance = getAvailableBalance(ticker);
 
               return (
-                <Flex key={ticker} direction='column' gap='spacing8'>
+                <Fragment key={ticker}>
                   <TokenInput
                     placeholder='0.00'
                     ticker={ticker}
@@ -155,7 +155,7 @@ const DepositForm = ({ pool, slippageModalRef, onSuccess, onSigning }: DepositFo
                     {...mergeProps(form.getFieldProps(ticker), { onChange: handleChange })}
                   />
                   {!isLastItem && <PlusDivider />}
-                </Flex>
+                </Fragment>
               );
             })}
           </Flex>

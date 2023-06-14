@@ -54,7 +54,7 @@ const TransactionDetails = ({
             <TokenInput
               placeholder='0.00'
               isDisabled
-              aria-label='Compensation amount'
+              label='Compensation amount'
               ticker={compensationAmount.currency.ticker}
               value={compensationAmount?.toString()}
               valueUSD={compensationAmountUSD}
