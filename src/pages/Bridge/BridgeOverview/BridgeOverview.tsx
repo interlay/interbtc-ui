@@ -1,5 +1,6 @@
 import { Flex, Tabs, TabsItem } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
+import Transactions from '@/pages/Transactions';
 import MainContainer from '@/parts/MainContainer';
 import { BridgeActions } from '@/types/bridge';
 import { useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
@@ -54,6 +55,7 @@ const BridgeOverview = (): JSX.Element => {
           </Flex>
         </StyledCard>
       </StyledWrapper>
+      <Transactions />
     </MainContainer>
   );
 };
