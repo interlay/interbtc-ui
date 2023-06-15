@@ -6,7 +6,7 @@ import { ChainData } from '@/types/chains';
 import { ChainIcon } from '../ChainIcon';
 import { StyledChain, StyledListChainWrapper, StyledListItemLabel } from './ChainSelect.style';
 
-type ChainSelectProps = Omit<SelectProps<ChainData, 'modal'>, 'children' | 'type'>;
+type ChainSelectProps = Omit<SelectProps<'modal', ChainData>, 'children' | 'type'>;
 
 const ListItem = ({ data }: { data: ChainData }) => {
   const isSelected = useSelectModalContext().selectedItem?.key === data.id;
@@ -31,7 +31,7 @@ const Value = ({ data }: { data: ChainData }) => (
 const ChainSelect = ({ ...props }: ChainSelectProps): JSX.Element => {
   return (
     <Flex direction='column' flex='1'>
-      <Select<ChainData, 'modal'>
+      <Select<'modal', ChainData>
         {...props}
         type='modal'
         renderValue={(item) => <Value data={item.value} />}

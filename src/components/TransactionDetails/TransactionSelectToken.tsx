@@ -6,15 +6,19 @@ import { Item, SelectProps, Span, TokenData, TokenListItem, Tooltip } from '@/co
 import { StyledInformationCircle, StyledSelect } from './TransactionDetails.style';
 
 type Props = {
-  label: ReactNode;
+  label?: ReactNode;
   tooltipLabel?: ReactNode;
 };
 
-type InheritAttrs = Omit<SelectProps<TokenData, 'modal'>, keyof Props | 'children'>;
+type InheritAttrs = Omit<SelectProps<'modal', TokenData>, keyof Props | 'children'>;
 
-type TransactionFeeSelectProps = Props & InheritAttrs;
+type TransactionSelectTokenProps = Props & InheritAttrs;
 
-const TransactionFeeSelect = ({ label: labelProp, tooltipLabel, ...props }: TransactionFeeSelectProps): JSX.Element => {
+const TransactionSelectToken = ({
+  label: labelProp,
+  tooltipLabel,
+  ...props
+}: TransactionSelectTokenProps): JSX.Element => {
   const { t } = useTranslation();
 
   const label = tooltipLabel ? (
@@ -48,5 +52,5 @@ const TransactionFeeSelect = ({ label: labelProp, tooltipLabel, ...props }: Tran
   );
 };
 
-export { TransactionFeeSelect };
-export type { TransactionFeeSelectProps };
+export { TransactionSelectToken };
+export type { TransactionSelectTokenProps };

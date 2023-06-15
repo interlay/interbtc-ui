@@ -19,7 +19,7 @@ type TokenData = {
   balanceUSD: string;
 };
 
-type TokenSelectProps = Omit<SelectProps<TokenData, 'modal'>, 'children' | 'type'>;
+type TokenSelectProps = Omit<SelectProps<'modal', TokenData>, 'children' | 'type'>;
 
 const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }: TokenSelectProps): JSX.Element => {
   // it is unlikely that labelProp is not a string, but we need to avoid any accessibility error
@@ -27,7 +27,7 @@ const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }
   const ariaLabel = labelText && `Choose token for ${labelText} field`;
 
   return (
-    <Select<TokenData, 'modal'>
+    <Select<'modal', TokenData>
       {...props}
       type='modal'
       asSelectTrigger={StyledTokenSelect}

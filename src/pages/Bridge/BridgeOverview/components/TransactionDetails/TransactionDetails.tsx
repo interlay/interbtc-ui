@@ -8,8 +8,7 @@ import {
   TransactionDetailsDd,
   TransactionDetailsDt,
   TransactionDetailsGroup,
-  TransactionFee,
-  TransactionFeeSelect
+  TransactionFeeDetails
 } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
@@ -81,12 +80,6 @@ const TransactionDetails = ({
         </TransactionDetailsGroup>
         {securityDeposit && (
           <>
-            <TransactionFeeSelect
-              label='Security token'
-              items={selectCurrency.items}
-              value={GOVERNANCE_TOKEN.ticker}
-              tooltipLabel='djdkl'
-            />
             <TransactionDetailsGroup>
               <TransactionDetailsDt tooltipLabel={t('bridge.security_deposit_is_a_denial_of_service_protection')}>
                 {t('bridge.security_deposit')}
@@ -103,17 +96,18 @@ const TransactionDetails = ({
           </>
         )}
       </BaseTransactionDetails>
-      <BaseTransactionDetails>
-        {bitcoinNetworkFee ? (
-          <TransactionFee label={t('bridge.bitcoin_network_fee')} amount={bitcoinNetworkFee} />
-        ) : (
-          <TransactionFee
-            label={t('bridge.transaction_fee')}
-            tooltipLabel={t('bridge.fee_for_transaction_to_be_included_in_the_parachain')}
-            amount={TRANSACTION_FEE_AMOUNT}
-          />
-        )}
-      </BaseTransactionDetails>
+      {bitcoinNetworkFee ? (
+        <TransactionFeeDetails label={t('bridge.bitcoin_network_fee')} amount={bitcoinNetworkFee} />
+      ) : (
+        <TransactionFeeDetails
+          amount={TRANSACTION_FEE_AMOUNT}
+          selectProps={{
+            value: GOVERNANCE_TOKEN.ticker,
+            onSelectionChange: console.log,
+            items: selectCurrency.items
+          }}
+        />
+      )}
     </Flex>
   );
 };

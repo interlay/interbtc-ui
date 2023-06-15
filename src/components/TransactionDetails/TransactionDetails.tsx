@@ -4,13 +4,8 @@ import { StyledDl } from './TransactionDetails.style';
 
 type TransactionDetailsProps = DlProps;
 
-const TransactionDetails = ({
-  children,
-  direction = 'column',
-  gap = 'spacing2',
-  ...props
-}: TransactionDetailsProps): JSX.Element => (
-  <StyledDl direction={direction} gap={gap} {...props}>
+const TransactionDetails = ({ children, direction = 'column', ...props }: TransactionDetailsProps): JSX.Element => (
+  <StyledDl direction={direction} gap='spacing0' {...props}>
     {children}
   </StyledDl>
 );
