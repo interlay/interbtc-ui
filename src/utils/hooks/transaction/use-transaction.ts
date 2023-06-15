@@ -3,13 +3,14 @@ import { MonetaryAmount } from '@interlay/monetary-js';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
 import { mergeProps } from '@react-aria/utils';
-import { useCallback, useState } from 'react';
+import { Key, useCallback, useState } from 'react';
 import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } from 'react-query';
 
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { useSubstrate } from '@/lib/substrate';
 
 import { useGetLiquidityPools } from '../api/amm/use-get-liquidity-pools';
+import { useGetCurrencies } from '../api/use-get-currencies';
 import { getExtrinsic, getStatus } from './extrinsics';
 import { Transaction, TransactionActions, TransactionArgs } from './types';
 import { useTransactionNotifications } from './use-transaction-notifications';
@@ -39,8 +40,8 @@ type ReactQueryUseMutationResult = Omit<
 
 type FeeResultType<T extends Transaction> = {
   currency: CurrencyExt;
-  value: MonetaryAmount<CurrencyExt> | undefined;
-  onChangeFeeCurrency: (currency: CurrencyExt) => void;
+  amount: MonetaryAmount<CurrencyExt> | undefined;
+  onSelectionChange: (ticker: Key) => void;
   estimate<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<void>;
 };
 
@@ -84,6 +85,8 @@ function useTransaction<T extends Transaction>(
   options?: UseTransactionOptions
 ): UseTransactionResult<T> {
   const { state } = useSubstrate();
+
+  const { getCurrencyFromTicker } = useGetCurrencies(true);
 
   const [isSigned, setSigned] = useState(false);
   const [feeCurrency, setFeeCurrency] = useState(GOVERNANCE_TOKEN);
@@ -188,9 +191,14 @@ function useTransaction<T extends Transaction>(
     [feeCurrency, pools, getParams]
   );
 
-  const handleFeeCurrencyChange = useCallback((currency: CurrencyExt) => {
+  const handleFeeTokenSelection = (ticker: Key) => {
+    // TODO: update TokenData to deal with Currency type
+    const currency = getCurrencyFromTicker(ticker as string);
+
+    if (!currency) return;
+
     setFeeCurrency(currency);
-  }, []);
+  };
 
   return {
     ...transactionMutation,
@@ -200,8 +208,8 @@ function useTransaction<T extends Transaction>(
     executeAsync: handleExecuteAsync,
     fee: {
       currency: feeCurrency,
-      value: feeEstimate,
-      onChangeFeeCurrency: handleFeeCurrencyChange,
+      amount: feeEstimate,
+      onSelectionChange: handleFeeTokenSelection,
       estimate: handleEstimateFee
     }
   };
