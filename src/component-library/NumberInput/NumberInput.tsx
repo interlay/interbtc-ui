@@ -28,6 +28,7 @@ type AriaAttrs = Omit<AriaTextFieldOptions<'input'>, (keyof Props & InheritAttrs
 
 type NumberInputProps = Props & InheritAttrs & AriaAttrs;
 
+// TODO: add percent style
 const NumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
   ({ onChange, validationState, value: valueProp, defaultValue = '', ...props }, ref): JSX.Element => {
     const [value, setValue] = useState<string | undefined>(defaultValue?.toString());

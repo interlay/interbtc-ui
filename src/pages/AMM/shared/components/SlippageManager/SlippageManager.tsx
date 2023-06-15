@@ -1,7 +1,7 @@
 import { forwardRef, useState } from 'react';
 
 import { Cog } from '@/assets/icons';
-import { List, ListItem, ListProps, Modal, ModalBody, ModalHeader } from '@/component-library';
+import { List, ListItem, ListProps, Modal, ModalBody, ModalHeader, NumberInput } from '@/component-library';
 
 import { StyledCTA } from './SlippageManager.style';
 
@@ -35,6 +35,7 @@ const SlippageManager = forwardRef<HTMLDivElement, SlippageManagerProps>(
             Set Slippage Tolerance
           </ModalHeader>
           <ModalBody>
+            <NumberInput />
             <List
               aria-label='slippage tolerance'
               direction='row'
