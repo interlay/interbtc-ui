@@ -6,6 +6,7 @@ import { GovernanceTokenLogoWithTextIcon } from '@/config/relay-chains';
 import InterlayRouterLink from '@/legacy-components/UI/InterlayRouterLink';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { PAGES } from '@/utils/constants/links';
+import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { BORDER_CLASSES } from '@/utils/constants/styles';
 
 import CloseButton from './CloseButton';
@@ -30,7 +31,9 @@ const SidebarContent = React.forwardRef<Ref, Props>(
           onSmallScreen ? clsx('relative', 'max-w-xs', 'w-full') : clsx('h-0', BORDER_CLASSES, 'border-r'),
           'flex-1',
           'flex',
-          'flex-col'
+          'flex-col',
+          { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+          { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}
       >
         {onSmallScreen && <CloseButton onClick={onClose} />}
