@@ -194,8 +194,6 @@ const Navigation = ({
     []
   );
 
-  console.log(SECONDARY_NAVIGATION_ITEMS);
-
   return (
     <nav className={clsx('px-2', 'space-y-1', { 'flex-1': !onSmallScreen }, className)} {...rest}>
       {PRIMARY_NAVIGATION_ITEMS.map((navigationItem) => {
@@ -283,13 +281,6 @@ const Navigation = ({
                 aria-hidden='true'
               />
             )}
-            {navigationItem.link === CROWDLOAN_LINK
-              ? // TODO: not the nicest way of handling contextual navigation text, but
-                // other solutions involve substantial refactoring of the navigation
-                t(navigationItem.name, { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL })
-              : navigationItem.link === USE_WRAPPED_CURRENCY_LINK
-              ? t(navigationItem.name, { wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
-              : t(navigationItem.name)}
           </SidebarNavLink>
         );
       })}
