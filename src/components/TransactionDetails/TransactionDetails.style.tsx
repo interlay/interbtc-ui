@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { InformationCircle } from '@/assets/icons';
-import { Dl, theme } from '@/component-library';
+import { Dl, DlGroup, Select, SelectProps, theme, TokenData } from '@/component-library';
 
 const StyledDl = styled(Dl)`
   border: ${theme.border.default};
@@ -16,4 +16,26 @@ const StyledInformationCircle = styled(InformationCircle)`
   vertical-align: text-top;
 `;
 
-export { StyledDl, StyledInformationCircle };
+const SelectWrapper = ({ ...props }: SelectProps<'modal', TokenData>) => <Select<'modal', TokenData> {...props} />;
+
+const StyledSelect = styled(SelectWrapper)`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+// This custom padding helps to keep harmony between normal elements and elements with small select
+const StyledDlGroup = styled(DlGroup)`
+  &:first-of-type {
+    padding-bottom: 0.407rem;
+  }
+
+  &:not(:first-of-type):not(:last-of-type) {
+    padding: 0.407rem 0;
+  }
+
+  &:last-of-type {
+    padding-top: 0.407rem;
+  }
+`;
+
+export { StyledDl, StyledDlGroup, StyledInformationCircle, StyledSelect };

@@ -1,28 +1,9 @@
 import { CoinIcon } from '../CoinIcon';
 import { Flex } from '../Flex';
 import { Item, Select, SelectProps } from '../Select';
-import { useSelectModalContext } from '../Select/SelectModalContext';
 import { Span } from '../Text';
-import { StyledListItemLabel, StyledListTokenWrapper, StyledTicker, StyledTokenSelect } from './TokenInput.style';
-
-const ListItem = ({ data }: { data: TokenData }) => {
-  const isSelected = useSelectModalContext().selectedItem?.key === data.value;
-
-  return (
-    <>
-      <StyledListTokenWrapper alignItems='center' gap='spacing2' flex='1'>
-        <CoinIcon size={data.tickers ? 'lg' : 'md'} ticker={data.value} tickers={data.tickers} />
-        <StyledListItemLabel $isSelected={isSelected}>{data.value}</StyledListItemLabel>
-      </StyledListTokenWrapper>
-      <Flex direction='column' alignItems='flex-end' gap='spacing2' flex='0'>
-        <StyledListItemLabel $isSelected={isSelected}>{data.balance}</StyledListItemLabel>
-        <Span size='s' color='tertiary'>
-          {data.balanceUSD}
-        </Span>
-      </Flex>
-    </>
-  );
-};
+import { StyledTicker, StyledTokenSelect } from './TokenInput.style';
+import { TokenListItem } from './TokenListItem';
 
 const Value = ({ data }: { data: TokenData }) => (
   <Flex alignItems='center' justifyContent='space-evenly' gap='spacing1'>
@@ -38,7 +19,7 @@ type TokenData = {
   balanceUSD: string;
 };
 
-type TokenSelectProps = Omit<SelectProps<TokenData>, 'children' | 'type'>;
+type TokenSelectProps = Omit<SelectProps<'modal', TokenData>, 'children' | 'type'>;
 
 const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }: TokenSelectProps): JSX.Element => {
   // it is unlikely that labelProp is not a string, but we need to avoid any accessibility error
@@ -46,7 +27,7 @@ const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }
   const ariaLabel = labelText && `Choose token for ${labelText} field`;
 
   return (
-    <Select<TokenData>
+    <Select<'modal', TokenData>
       {...props}
       type='modal'
       asSelectTrigger={StyledTokenSelect}
@@ -57,7 +38,7 @@ const TokenSelect = ({ label: labelProp, 'aria-label': ariaLabelProp, ...props }
     >
       {(data: TokenData) => (
         <Item key={data.value} textValue={data.value}>
-          <ListItem data={data} />
+          <TokenListItem {...data} />
         </Item>
       )}
     </Select>
