@@ -281,6 +281,7 @@ const Navigation = ({
                 aria-hidden='true'
               />
             )}
+            {t(navigationItem.name)}
           </SidebarNavLink>
         );
       })}
