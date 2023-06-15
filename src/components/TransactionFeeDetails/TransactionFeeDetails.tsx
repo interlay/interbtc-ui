@@ -4,7 +4,7 @@ import { mergeProps } from '@react-aria/utils';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
+import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
@@ -19,7 +19,7 @@ import {
 } from '../TransactionDetails';
 
 type Props = {
-  amount: MonetaryAmount<CurrencyExt>;
+  amount?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
   tooltipLabel?: ReactNode;
   selectProps?: TransactionSelectTokenProps;
@@ -39,15 +39,17 @@ const TransactionFeeDetails = ({
   const prices = useGetPrices();
   const { t } = useTranslation();
 
+  const amountLabel = amount
+    ? `${amount.toHuman()} ${amount.currency.ticker} (
+    ${displayMonetaryAmountInUSDFormat(amount, getTokenPrice(prices, amount.currency.ticker)?.usd)})`
+    : `${0.0} ${selectProps?.value} (${formatUSD(0)})`;
+
   return (
     <TransactionDetails {...props}>
       {selectProps && <TransactionSelectToken {...mergeProps({ label: t('fee_token') }, selectProps)} />}
       <TransactionDetailsGroup>
         <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('fx_fees')}</TransactionDetailsDt>
-        <TransactionDetailsDd>
-          {amount.toHuman()} {amount.currency.ticker} (
-          {displayMonetaryAmountInUSDFormat(amount, getTokenPrice(prices, amount.currency.ticker)?.usd)})
-        </TransactionDetailsDd>
+        <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
       </TransactionDetailsGroup>
     </TransactionDetails>
   );
