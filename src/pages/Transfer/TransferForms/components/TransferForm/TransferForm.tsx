@@ -53,7 +53,7 @@ const TransferForm = (): JSX.Element => {
     transactionFee: TRANSACTION_FEE_AMOUNT
   };
 
-  const prepareSubmittion = useCallback(
+  const prepareSubmission = useCallback(
     (values: TransferFormData) => {
       const destination = values[TRANSFER_RECIPIENT_FIELD];
 
@@ -67,7 +67,7 @@ const TransferForm = (): JSX.Element => {
   );
 
   const handleSubmit = async (values: TransferFormData) => {
-    const transactionData = prepareSubmittion(values);
+    const transactionData = prepareSubmission(values);
 
     if (!transactionData) return;
 
@@ -96,14 +96,14 @@ const TransferForm = (): JSX.Element => {
   useEffect(() => {
     if (!form.isValid) return;
 
-    const transactionData = prepareSubmittion(form.values);
+    const transactionData = prepareSubmission(form.values);
 
     if (!transactionData) return;
 
     const { amount, destination } = transactionData;
 
     transaction.fee.estimateFee(destination, amount);
-  }, [form.isValid, form.values, prepareSubmittion, transaction.fee]);
+  }, [form.isValid, form.values, prepareSubmission, transaction.fee]);
 
   const handleTickerChange = (ticker: string, name: string) => {
     form.setFieldValue(name, ticker, true);
