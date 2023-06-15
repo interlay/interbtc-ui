@@ -4,7 +4,7 @@ import Big from 'big.js';
 import { ChangeEventHandler, Key, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { useDebounce } from 'react-use';
+import { useDebounce, useInterval } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, formatUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
@@ -20,6 +20,7 @@ import {
 } from '@/lib/form';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { SwapPair } from '@/types/swap';
+import { REFETCH_INTERVAL } from '@/utils/constants/api';
 import { SWAP_PRICE_IMPACT_LIMIT } from '@/utils/constants/swap';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -120,20 +121,21 @@ const SwapForm = ({
     onSuccess: onSwap
   });
 
-  useDebounce(
-    () => {
-      if (!pair.input || !pair.output || !inputAmount) {
-        return setTrade(undefined);
-      }
+  const handleChangeTrade = () => {
+    if (!pair.input || !pair.output || !inputAmount) {
+      return setTrade(undefined);
+    }
 
-      const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
-      const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
+    const inputMonetaryAmount = newMonetaryAmount(inputAmount, pair.input, true);
+    const trade = window.bridge.amm.getOptimalTrade(inputMonetaryAmount, pair.output, liquidityPools);
 
-      setTrade(trade);
-    },
-    500,
-    [inputAmount, pair]
-  );
+    setTrade(trade);
+  };
+
+  // attemp to update trade object on each new block
+  useInterval(handleChangeTrade, REFETCH_INTERVAL.BLOCK);
+
+  useDebounce(handleChangeTrade, 500, [inputAmount, pair]);
 
   const inputBalance = pair.input && getAvailableBalance(pair.input.ticker);
   const outputBalance = pair.output && getAvailableBalance(pair.output.ticker);
