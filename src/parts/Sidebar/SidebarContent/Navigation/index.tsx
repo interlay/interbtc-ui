@@ -269,18 +269,16 @@ const Navigation = ({
               'rounded-md'
             )}
           >
-            {navigationItem.icon && (
-              <navigationItem.icon
-                className={clsx(
-                  match?.isExact ? TEXT_CLASSES_FOR_SELECTED : TEXT_CLASSES_FOR_UNSELECTED,
-                  onSmallScreen ? 'mr-4' : 'mr-3',
-                  'flex-shrink-0',
-                  'w-6',
-                  'h-6'
-                )}
-                aria-hidden='true'
-              />
-            )}
+            <navigationItem.icon
+              className={clsx(
+                match?.isExact ? TEXT_CLASSES_FOR_SELECTED : TEXT_CLASSES_FOR_UNSELECTED,
+                onSmallScreen ? 'mr-4' : 'mr-3',
+                'flex-shrink-0',
+                'w-6',
+                'h-6'
+              )}
+              aria-hidden='true'
+            />
             {t(navigationItem.name)}
           </SidebarNavLink>
         );
