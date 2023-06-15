@@ -71,8 +71,9 @@ const getTxFeeSwapData = async (
 
 const estimateTransactionFee: (
   feeCurrency: CurrencyExt,
-  pools: Array<LiquidityPool>
-) => (params: TransactionActions) => Promise<MonetaryAmount<CurrencyExt>> = (feeCurrency, pools) => async (params) => {
+  pools: Array<LiquidityPool>,
+  params: TransactionActions
+) => Promise<MonetaryAmount<CurrencyExt>> = async (feeCurrency, pools, params) => {
   const baseExtrinsicData = await getExtrinsic(params);
   const baseTxFee = await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
 
