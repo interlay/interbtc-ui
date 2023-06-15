@@ -29,7 +29,6 @@ type ExecuteArgs<T extends Transaction> = {
 type ExecuteTypeArgs<T extends Transaction> = {
   execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
   executeAsync<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<TransactionResult>;
-  estimateFee<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<MonetaryAmount<CurrencyExt>>;
 };
 
 type ExecuteFunctions<T extends Transaction> = ExecuteArgs<T> | ExecuteTypeArgs<T>;

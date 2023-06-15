@@ -1,6 +1,6 @@
 import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
-import { Key, useMemo, useState } from 'react';
+import { Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
@@ -53,12 +53,25 @@ const TransferForm = (): JSX.Element => {
     transactionFee: TRANSACTION_FEE_AMOUNT
   };
 
+  const prepareSubmittion = useCallback(
+    (values: TransferFormData) => {
+      const destination = values[TRANSFER_RECIPIENT_FIELD];
+
+      if (!destination) return;
+
+      const amount = newMonetaryAmount(values[TRANSFER_AMOUNT_FIELD] || 0, transferToken, true);
+
+      return { destination, amount };
+    },
+    [transferToken]
+  );
+
   const handleSubmit = async (values: TransferFormData) => {
-    const destination = values[TRANSFER_RECIPIENT_FIELD];
+    const transactionData = prepareSubmittion(values);
 
-    if (!destination) return;
+    if (!transactionData) return;
 
-    const amount = newMonetaryAmount(values[TRANSFER_AMOUNT_FIELD] || 0, transferToken, true);
+    const { amount, destination } = transactionData;
 
     transaction.execute(destination, amount);
   };
@@ -79,6 +92,18 @@ const TransferForm = (): JSX.Element => {
     onSubmit: handleSubmit,
     showErrorMessages: !transaction.isLoading
   });
+
+  useEffect(() => {
+    if (!form.isValid) return;
+
+    const transactionData = prepareSubmittion(form.values);
+
+    if (!transactionData) return;
+
+    const { amount, destination } = transactionData;
+
+    transaction.fee.estimateFee(destination, amount);
+  }, [form.isValid, form.values, prepareSubmittion, transaction.fee]);
 
   const handleTickerChange = (ticker: string, name: string) => {
     form.setFieldValue(name, ticker, true);
