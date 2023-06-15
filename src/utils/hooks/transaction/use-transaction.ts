@@ -6,13 +6,11 @@ import { mergeProps } from '@react-aria/utils';
 import { Key, useCallback, useState } from 'react';
 import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } from 'react-query';
 
-import { TransactionFeeDetailsProps } from '@/components';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { useSubstrate } from '@/lib/substrate';
 
 import { useGetLiquidityPools } from '../api/amm/use-get-liquidity-pools';
 import { useGetCurrencies } from '../api/use-get-currencies';
-import { useSelectCurrency } from '../use-select-currency';
 import { getExtrinsic, getStatus } from './extrinsics';
 import { Transaction, TransactionActions, TransactionArgs } from './types';
 import { useTransactionNotifications } from './use-transaction-notifications';
@@ -43,8 +41,8 @@ type ReactQueryUseMutationResult = Omit<
 
 type FeeResultType<T extends Transaction> = {
   currency: CurrencyExt;
-  value: MonetaryAmount<CurrencyExt> | undefined;
-  onChangeFeeCurrency: (currency: CurrencyExt) => void;
+  amount: MonetaryAmount<CurrencyExt> | undefined;
+  onSelectionChange: (ticker: Key) => void;
   estimateFee<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<void>;
 };
 
@@ -52,7 +50,6 @@ type UseTransactionResult<T extends Transaction> = {
   reject: (error?: Error) => void;
   isSigned: boolean;
   fee: FeeResultType<T>;
-  feeDetailsProps: Pick<TransactionFeeDetailsProps, 'amount' | 'selectProps'>;
 } & ReactQueryUseMutationResult &
   ExecuteFunctions<T>;
 
@@ -97,9 +94,6 @@ function useTransaction<T extends Transaction>(
   const [isSigned, setSigned] = useState(false);
   const [feeCurrency, setFeeCurrency] = useState(GOVERNANCE_TOKEN);
   const [feeEstimate, setFeeEstimate] = useState<MonetaryAmount<CurrencyExt>>();
-
-  // TEMP
-  const selectCurrency = useSelectCurrency();
 
   const { showSuccessModal, customStatus, ...mutateOptions } =
     (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
@@ -200,12 +194,9 @@ function useTransaction<T extends Transaction>(
     [feeCurrency, pools, getParams]
   );
 
-  const handleFeeCurrencyChange = useCallback((currency: CurrencyExt) => {
-    setFeeCurrency(currency);
-  }, []);
-
-  const handleFeeTokenSelection = (key: Key) => {
-    const currency = getCurrencyFromTicker(key as string);
+  const handleFeeTokenSelection = (ticker: Key) => {
+    // TODO: update TokenData to deal with Currency type
+    const currency = getCurrencyFromTicker(ticker as string);
 
     if (!currency) return;
 
@@ -218,18 +209,10 @@ function useTransaction<T extends Transaction>(
     reject: handleReject,
     execute: handleExecute,
     executeAsync: handleExecuteAsync,
-    feeDetailsProps: {
-      amount: feeEstimate,
-      selectProps: {
-        value: feeCurrency.ticker,
-        items: selectCurrency.items,
-        onSelectionChange: handleFeeTokenSelection
-      }
-    },
     fee: {
       currency: feeCurrency,
-      value: feeEstimate,
-      onChangeFeeCurrency: handleFeeCurrencyChange,
+      amount: feeEstimate,
+      onSelectionChange: handleFeeTokenSelection,
       estimateFee: handleEstimateFee
     }
   };

@@ -200,7 +200,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 totalTicker={WRAPPED_TOKEN.ticker}
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
-                feeDetailsProps={transaction.feeDetailsProps}
+                feeDetailsProps={transaction.fee}
               />
               <AuthCTA
                 type='submit'
