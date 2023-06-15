@@ -18,6 +18,7 @@ import { matchPath } from 'react-router';
 import { useLocation } from 'react-router-dom';
 
 import { StoreType } from '@/common/types/util.types';
+import { Accordion, AccordionItem } from '@/component-library';
 import { INTERLAY_DOCS_LINK } from '@/config/links';
 import {
   CROWDLOAN_LINK,
@@ -67,7 +68,7 @@ const Navigation = ({
   const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
 
-  const NAVIGATION_ITEMS = React.useMemo(
+  const PRIMARY_NAVIGATION_ITEMS = React.useMemo(
     () => [
       {
         name: 'nav_wallet',
@@ -132,7 +133,13 @@ const Navigation = ({
         link: '#',
         icon: () => null,
         separator: true
-      },
+      }
+    ],
+    [isWalletEnabled, isStrategiesEnabled, isLendingEnabled, isAMMEnabled, selectedAccount?.address, vaultClientLoaded]
+  );
+
+  const SECONDARY_NAVIGATION_ITEMS = React.useMemo(
+    () => [
       {
         name: 'nav_use_wrapped',
         link: USE_WRAPPED_CURRENCY_LINK,
@@ -184,12 +191,14 @@ const Navigation = ({
         }
       }
     ],
-    [isWalletEnabled, isStrategiesEnabled, isLendingEnabled, isAMMEnabled, selectedAccount?.address, vaultClientLoaded]
+    []
   );
+
+  console.log(SECONDARY_NAVIGATION_ITEMS);
 
   return (
     <nav className={clsx('px-2', 'space-y-1', { 'flex-1': !onSmallScreen }, className)} {...rest}>
-      {NAVIGATION_ITEMS.map((navigationItem) => {
+      {PRIMARY_NAVIGATION_ITEMS.map((navigationItem) => {
         if (navigationItem.separator) {
           return <Hr2 key={navigationItem.name} />;
         }
@@ -238,8 +247,6 @@ const Navigation = ({
         return (
           <SidebarNavLink
             key={navigationItem.name}
-            external={!!navigationItem.external}
-            {...navigationItem.rest}
             href={navigationItem.link}
             className={clsx(
               match?.isExact
@@ -286,6 +293,60 @@ const Navigation = ({
           </SidebarNavLink>
         );
       })}
+      <Accordion size='s'>
+        <AccordionItem hasChildItems={false} key='info' title={'More'}>
+          {SECONDARY_NAVIGATION_ITEMS.map((navigationItem) => {
+            if (navigationItem.hidden) {
+              return null;
+            }
+
+            const match = matchPath(location.pathname, {
+              path: navigationItem.link,
+              exact: true,
+              strict: false
+            });
+
+            return (
+              <SidebarNavLink
+                key={navigationItem.name}
+                href={navigationItem.link}
+                external={!!navigationItem.external}
+                {...navigationItem.rest}
+                className={clsx(
+                  match?.isExact
+                    ? clsx(
+                        TEXT_CLASSES_FOR_SELECTED,
+                        { 'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                        { 'dark:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      )
+                    : clsx(
+                        TEXT_CLASSES_FOR_UNSELECTED,
+                        { 'hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                        { 'dark:hover:bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+                        { 'dark:hover:bg-opacity-10': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+                      ),
+                  'group',
+                  'flex',
+                  'items-center',
+                  'px-2',
+                  'py-2',
+                  onSmallScreen ? 'text-base' : 'text-sm',
+                  'font-medium',
+                  'rounded-md'
+                )}
+              >
+                {navigationItem.link === CROWDLOAN_LINK
+                  ? // TODO: not the nicest way of handling contextual navigation text, but
+                    // other solutions involve substantial refactoring of the navigation
+                    t(navigationItem.name, { governanceTokenSymbol: GOVERNANCE_TOKEN_SYMBOL })
+                  : navigationItem.link === USE_WRAPPED_CURRENCY_LINK
+                  ? t(navigationItem.name, { wrappedTokenSymbol: WRAPPED_TOKEN_SYMBOL })
+                  : t(navigationItem.name)}
+              </SidebarNavLink>
+            );
+          })}
+        </AccordionItem>
+      </Accordion>
     </nav>
   );
 };
