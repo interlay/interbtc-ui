@@ -22,7 +22,7 @@ const TransactionDetailsDt = ({
   <Dt color={color} size={size} {...props}>
     {children}
     {tooltipLabel && (
-      <Tooltip label='The bridge fee paid to the vaults, relayers and maintainers of the system'>
+      <Tooltip label={tooltipLabel}>
         <StyledInformationCircle size='s' />
       </Tooltip>
     )}

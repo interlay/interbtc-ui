@@ -6,5 +6,5 @@ export type { TransactionDetailsDtProps } from './TransactionDetailsDt';
 export { TransactionDetailsDt } from './TransactionDetailsDt';
 export type { TransactionDetailsGroupProps } from './TransactionDetailsGroup';
 export { TransactionDetailsGroup } from './TransactionDetailsGroup';
-export type { TransactionFeeProps } from './TransactionFee';
-export { TransactionFee } from './TransactionFee';
+export type { TransactionSelectTokenProps } from './TransactionSelectToken';
+export { TransactionSelectToken } from './TransactionSelectToken';

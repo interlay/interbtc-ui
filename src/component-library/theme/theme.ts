@@ -577,8 +577,8 @@ const theme = {
     color: 'var(--color-select-text)',
     size: {
       small: {
-        padding: 'var(--spacing-1)',
-        text: 'var(--text-s)',
+        padding: 'var(--spacing-1) var(--spacing-2)',
+        text: 'var(--text-xs)',
         // TODO: to be determined
         maxHeight: 'calc(var(--spacing-6) - 1px)'
       },
