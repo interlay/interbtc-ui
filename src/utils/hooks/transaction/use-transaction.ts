@@ -28,7 +28,6 @@ type ExecuteArgs<T extends Transaction> = {
 type ExecuteTypeArgs<T extends Transaction> = {
   execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
   executeAsync<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<TransactionResult>;
-  estimateFee<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<MonetaryAmount<CurrencyExt>>;
 };
 
 type ExecuteFunctions<T extends Transaction> = ExecuteArgs<T> | ExecuteTypeArgs<T>;
@@ -42,7 +41,7 @@ type FeeResultType<T extends Transaction> = {
   currency: CurrencyExt;
   value: MonetaryAmount<CurrencyExt> | undefined;
   onChangeFeeCurrency: (currency: CurrencyExt) => void;
-  estimateFee<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<void>;
+  estimate<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<void>;
 };
 
 type UseTransactionResult<T extends Transaction> = {
@@ -180,10 +179,10 @@ function useTransaction<T extends Transaction>(
   };
 
   const handleEstimateFee = useCallback(
-    async (...args: Parameters<FeeResultType<T>['estimateFee']>) => {
+    async (...args: Parameters<FeeResultType<T>['estimate']>) => {
       const params = getParams(args);
 
-      const fee = await estimateTransactionFee(feeCurrency, pools || [])(params);
+      const fee = await estimateTransactionFee(feeCurrency, pools || [], params);
       setFeeEstimate(fee);
     },
     [feeCurrency, pools, getParams]
@@ -203,7 +202,7 @@ function useTransaction<T extends Transaction>(
       currency: feeCurrency,
       value: feeEstimate,
       onChangeFeeCurrency: handleFeeCurrencyChange,
-      estimateFee: handleEstimateFee
+      estimate: handleEstimateFee
     }
   };
 }
