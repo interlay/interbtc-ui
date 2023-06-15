@@ -57,7 +57,7 @@ const TransactionFeeDetails = ({
       {(onSelectionChange || selectProps) && (
         <TransactionSelectToken
           {...mergeProps(
-            { label: t('fee_token'), items: selectCurrency.items, value: currency?.ticker },
+            { onSelectionChange, label: t('fee_token'), items: selectCurrency.items, value: currency?.ticker },
             selectProps || {}
           )}
         />
