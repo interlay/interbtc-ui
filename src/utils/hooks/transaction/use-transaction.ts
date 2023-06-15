@@ -91,6 +91,7 @@ function useTransaction<T extends Transaction>(
   const [isSigned, setSigned] = useState(false);
   const [feeCurrency, setFeeCurrency] = useState(GOVERNANCE_TOKEN);
   const [feeEstimate, setFeeEstimate] = useState<MonetaryAmount<CurrencyExt>>();
+  const [isFeeEstimateLoading, setIsFeeEstimateLoading] = useState(false);
 
   const { showSuccessModal, customStatus, ...mutateOptions } =
     (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
@@ -184,9 +185,10 @@ function useTransaction<T extends Transaction>(
   const handleEstimateFee = useCallback(
     async (...args: Parameters<FeeResultType<T>['estimate']>) => {
       const params = getParams(args);
-
+      setIsFeeEstimateLoading(true);
       const fee = await estimateTransactionFee(feeCurrency, pools || [], params);
       setFeeEstimate(fee);
+      setIsFeeEstimateLoading(false);
     },
     [feeCurrency, pools, getParams]
   );
