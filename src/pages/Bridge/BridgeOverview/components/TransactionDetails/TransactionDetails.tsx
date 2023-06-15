@@ -8,12 +8,11 @@ import {
   TransactionDetailsDd,
   TransactionDetailsDt,
   TransactionDetailsGroup,
-  TransactionFeeDetails
+  TransactionFeeDetails,
+  TransactionFeeDetailsProps
 } from '@/components';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import { StyledPlusDivider } from './TransactionDetails.style';
 
@@ -26,6 +25,7 @@ type TransactionDetailsProps = {
   bridgeFee: MonetaryAmount<Currency>;
   securityDeposit?: MonetaryAmount<Currency>;
   bitcoinNetworkFee?: MonetaryAmount<Currency>;
+  feeDetailsProps?: TransactionFeeDetailsProps;
 };
 
 const TransactionDetails = ({
@@ -36,12 +36,11 @@ const TransactionDetails = ({
   compensationAmountUSD,
   bridgeFee,
   securityDeposit,
-  bitcoinNetworkFee
+  bitcoinNetworkFee,
+  feeDetailsProps
 }: TransactionDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
-
-  const selectCurrency = useSelectCurrency();
 
   return (
     <Flex direction='column' gap='spacing2'>
@@ -99,14 +98,7 @@ const TransactionDetails = ({
       {bitcoinNetworkFee ? (
         <TransactionFeeDetails label={t('bridge.bitcoin_network_fee')} amount={bitcoinNetworkFee} />
       ) : (
-        <TransactionFeeDetails
-          amount={TRANSACTION_FEE_AMOUNT}
-          selectProps={{
-            value: GOVERNANCE_TOKEN.ticker,
-            onSelectionChange: console.log,
-            items: selectCurrency.items
-          }}
-        />
+        <TransactionFeeDetails {...feeDetailsProps} />
       )}
     </Flex>
   );

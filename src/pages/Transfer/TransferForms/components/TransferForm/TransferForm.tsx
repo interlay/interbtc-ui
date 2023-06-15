@@ -121,7 +121,7 @@ const TransferForm = (): JSX.Element => {
             />
           </Flex>
           <Flex direction='column' gap='spacing4'>
-            <TransactionFeeDetails amount={TRANSACTION_FEE_AMOUNT} />
+            <TransactionFeeDetails {...transaction.fee} />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
               Transfer
             </AuthCTA>
