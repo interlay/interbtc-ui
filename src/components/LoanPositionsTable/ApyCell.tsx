@@ -15,7 +15,6 @@ type ApyCellProps = {
   earnedInterest?: MonetaryAmount<CurrencyExt>;
   accumulatedDebt?: MonetaryAmount<CurrencyExt>;
   rewardsPerYear: MonetaryAmount<CurrencyExt> | null;
-  accruedRewards: MonetaryAmount<CurrencyExt> | null;
   prices?: Prices;
   isBorrow?: boolean;
   onClick?: () => void;
@@ -25,7 +24,6 @@ const ApyCell = ({
   apy,
   currency,
   rewardsPerYear,
-  accruedRewards,
   accumulatedDebt,
   earnedInterest,
   prices,
@@ -35,7 +33,8 @@ const ApyCell = ({
   const rewardsApy = getSubsidyRewardApy(currency, rewardsPerYear, prices);
 
   const totalApy = isBorrow ? apy.sub(rewardsApy || 0) : apy.add(rewardsApy || 0);
-  const totalApyLabel = isBorrow ? `-${getApyLabel(totalApy)}` : getApyLabel(totalApy);
+
+  const totalApyLabel = getApyLabel(totalApy);
 
   const earnedAsset = accumulatedDebt || earnedInterest;
 
@@ -54,7 +53,6 @@ const ApyCell = ({
         apy={apy}
         currency={currency}
         prices={prices}
-        rewards={accruedRewards}
         rewardsApy={rewardsApy}
         isBorrow={isBorrow}
         accumulatedDebt={accumulatedDebt}

@@ -6,11 +6,9 @@ import { ExtrinsicStatus } from '@polkadot/types/interfaces/author';
 import { ISubmittableResult } from '@polkadot/types/types';
 
 import { TransactionEvents } from '../types';
+import { TransactionResult } from '../use-transaction';
 
 type HandleTransactionResult = { result: ISubmittableResult; unsubscribe: () => void };
-
-// When passing { nonce: -1 } to signAndSend the API will use system.accountNextIndex to determine the nonce
-const transactionOptions = { nonce: -1 };
 
 const handleTransaction = async (
   account: AddressOrPair,
@@ -27,7 +25,7 @@ const handleTransaction = async (
     let unsubscribe: () => void;
 
     (extrinsicData.extrinsic as SubmittableExtrinsic<'promise'>)
-      .signAndSend(account, transactionOptions, callback)
+      .signAndSend(account, { nonce: -1 }, callback)
       .then((unsub) => (unsubscribe = unsub))
       .catch((error) => reject(error));
 
@@ -43,7 +41,7 @@ const handleTransaction = async (
         isComplete = expectedStatus === result.status.type;
       }
 
-      if (isComplete) {
+      if (isComplete || result.status.isUsurped) {
         resolve({ unsubscribe, result });
       }
     }
@@ -53,25 +51,20 @@ const handleTransaction = async (
 const getErrorMessage = (api: ApiPromise, dispatchError: DispatchError) => {
   const { isModule, asModule, isBadOrigin } = dispatchError;
 
-  // Construct error message
-  const message = 'The transaction failed.';
-
   // Runtime error in one of the parachain modules
   if (isModule) {
     // for module errors, we have the section indexed, lookup
     const decoded = api.registry.findMetaError(asModule);
     const { docs, name, section } = decoded;
-    return message.concat(` The error code is ${section}.${name}. ${docs.join(' ')}`);
+    return `The error code is ${section}.${name}. ${docs.join(' ')}.`;
   }
 
   // Bad origin
   if (isBadOrigin) {
-    return message.concat(
-      ` The error is caused by using an incorrect account. The error code is BadOrigin ${dispatchError}.`
-    );
+    return `The error is caused by using an incorrect account. The error code is BadOrigin ${dispatchError}.`;
   }
 
-  return message.concat(` The error is ${dispatchError}.`);
+  return `The error is ${dispatchError}.`;
 };
 
 /**
@@ -89,19 +82,29 @@ const submitTransaction = async (
   extrinsicData: ExtrinsicData,
   expectedStatus?: ExtrinsicStatus['type'],
   callbacks?: TransactionEvents
-): Promise<ISubmittableResult> => {
+): Promise<TransactionResult> => {
   const { result, unsubscribe } = await handleTransaction(account, extrinsicData, expectedStatus, callbacks);
 
   unsubscribe();
 
+  let error: Error | undefined;
+
   const { dispatchError } = result;
 
   if (dispatchError) {
-    const message = getErrorMessage(api, dispatchError);
-    throw new Error(message);
+    error = new Error(getErrorMessage(api, dispatchError));
   }
 
-  return result;
+  // TODO: determine a description to when transaction ends up usurped
+  if (result.status.isUsurped) {
+    error = new Error();
+  }
+
+  return {
+    status: error ? 'error' : 'success',
+    data: result,
+    error
+  };
 };
 
 export { submitTransaction };

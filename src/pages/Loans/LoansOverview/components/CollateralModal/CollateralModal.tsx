@@ -1,10 +1,8 @@
 import { CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
 import { TFunction, useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 
 import { Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
 import { AuthCTA } from '@/components';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
@@ -62,11 +60,8 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   const prices = useGetPrices();
 
   const transaction = useTransaction({
-    onSuccess: () => {
-      toast.success('Successfully toggled collateral');
-      onClose?.();
-      refetch();
-    }
+    onSigning: onClose,
+    onSuccess: refetch
   });
 
   if (!asset || !position) {
@@ -94,31 +89,21 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   };
 
   return (
-    <>
-      <Modal onClose={onClose} {...props}>
-        <ModalHeader>{content.title}</ModalHeader>
-        <ModalBody>
-          <Flex direction='column' gap='spacing8'>
-            <StyledDescription color='tertiary'>{content.description}</StyledDescription>
-            <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
-            {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
-          </Flex>
-        </ModalBody>
-        <ModalFooter>
-          <AuthCTA size='large' onPress={handleClickBtn} loading={transaction.isLoading}>
-            {content.buttonLabel}
-          </AuthCTA>
-        </ModalFooter>
-      </Modal>
-      {transaction.isError && (
-        <ErrorModal
-          open={transaction.isError}
-          onClose={() => transaction.reset()}
-          title='Error'
-          description={transaction.error?.message || ''}
-        />
-      )}
-    </>
+    <Modal onClose={onClose} {...props}>
+      <ModalHeader>{content.title}</ModalHeader>
+      <ModalBody>
+        <Flex direction='column' gap='spacing8'>
+          <StyledDescription color='tertiary'>{content.description}</StyledDescription>
+          <BorrowLimit loanAction={loanAction} asset={asset} actionAmount={lendPositionAmount} prices={prices} />
+          {variant !== 'disable-error' && <LoanActionInfo prices={prices} />}
+        </Flex>
+      </ModalBody>
+      <ModalFooter>
+        <AuthCTA size='large' onPress={handleClickBtn} loading={transaction.isLoading}>
+          {content.buttonLabel}
+        </AuthCTA>
+      </ModalFooter>
+    </Modal>
   );
 };
 

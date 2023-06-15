@@ -1,13 +1,11 @@
 import { CollateralCurrencyExt, newVaultId, WrappedCurrency, WrappedIdLiteral } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 
 import { formatNumber, formatUSD } from '@/common/utils/utils';
 import { CardProps } from '@/component-library';
 import { LoadingSpinner } from '@/component-library/LoadingSpinner';
 import { GOVERNANCE_TOKEN_SYMBOL, WRAPPED_TOKEN } from '@/config/relay-chains';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import { ZERO_GOVERNANCE_TOKEN_AMOUNT } from '@/utils/constants/currency';
 import { VaultData } from '@/utils/hooks/api/vaults/get-vault-data';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
@@ -51,7 +49,6 @@ const Rewards = ({
   const transaction = useTransaction(Transaction.REWARDS_WITHDRAW, {
     onSuccess: () => {
       queryClient.invalidateQueries(['vaultsOverview', vaultAddress, collateralToken.ticker]);
-      toast.success('Your rewards were successfully withdrawn.');
     }
   });
 
@@ -90,14 +87,6 @@ const Rewards = ({
           )}
           Withdraw all rewards
         </StyledCTA>
-      )}
-      {transaction.isError && (
-        <ErrorModal
-          open={transaction.isError}
-          onClose={() => transaction.reset()}
-          title='Error'
-          description={transaction.error?.message || ''}
-        />
       )}
     </StyledRewardsTitleWrapper>
   );

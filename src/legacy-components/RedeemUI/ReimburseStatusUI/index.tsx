@@ -1,14 +1,12 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
-import { ISubmittableResult } from '@polkadot/types/types';
 import Big from 'big.js';
 import clsx from 'clsx';
 import * as React from 'react';
 import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { FaExclamationCircle } from 'react-icons/fa';
-import { useMutation, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { StoreType } from '@/common/types/util.types';
 import { displayMonetaryAmount, displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
@@ -22,10 +20,10 @@ import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
 import { getExchangeRate } from '@/utils/helpers/oracle';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 interface Props {
   redeem: any; // TODO: should type properly (`Relay`)
@@ -45,6 +43,20 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
   );
   const { t } = useTranslation();
   const handleError = useErrorHandler();
+  const queryClient = useQueryClient();
+
+  const [cancelType, setCancelType] = React.useState<'reimburse' | 'retry'>();
+
+  const transaction = useTransaction(Transaction.REDEEM_CANCEL, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([REDEEMS_FETCHER]);
+      setCancelType(undefined);
+      onClose();
+    },
+    onError: () => {
+      setCancelType(undefined);
+    }
+  });
 
   React.useEffect(() => {
     if (!bridgeLoaded) return;
@@ -67,48 +79,13 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
     })();
   }, [redeem, bridgeLoaded, handleError]);
 
-  const queryClient = useQueryClient();
-  // TODO: should type properly (`Relay`)
-  const retryMutation = useMutation<ISubmittableResult, Error, any>(
-    (variables: any) => {
-      return submitExtrinsic(window.bridge.redeem.cancel(variables.id, false));
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([REDEEMS_FETCHER]);
-        toast.success(t('redeem_page.successfully_cancelled_redeem'));
-        onClose();
-      },
-      onError: (error) => {
-        console.log('[useMutation] error => ', error);
-        toast.error(t('redeem_page.error_cancelling_redeem'));
-      }
-    }
-  );
-  // TODO: should type properly (`Relay`)
-  const reimburseMutation = useMutation<ISubmittableResult, Error, any>(
-    (variables: any) => {
-      return submitExtrinsic(window.bridge.redeem.cancel(variables.id, true));
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([REDEEMS_FETCHER]);
-        toast.success(t('redeem_page.successfully_cancelled_redeem'));
-        onClose();
-      },
-      onError: (error) => {
-        console.log('[useMutation] error => ', error);
-        toast.error(t('redeem_page.error_cancelling_redeem'));
-      }
-    }
-  );
-
   const handleRetry = () => {
     if (!bridgeLoaded) {
       throw new Error('Bridge is not loaded!');
     }
 
-    retryMutation.mutate(redeem);
+    setCancelType('retry');
+    transaction.execute(redeem.id, false);
   };
 
   const handleReimburse = () => {
@@ -116,7 +93,8 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
       throw new Error('Bridge is not loaded!');
     }
 
-    reimburseMutation.mutate(redeem);
+    setCancelType('reimburse');
+    transaction.execute(redeem.id, true);
   };
 
   const isOwner = selectedAccount?.address === redeem.userParachainAddress;
@@ -198,8 +176,8 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
             </p>
             <InterlayConiferOutlinedButton
               className='w-full'
-              disabled={reimburseMutation.isLoading || !isOwner}
-              pending={retryMutation.isLoading}
+              disabled={cancelType === 'reimburse' || !isOwner}
+              pending={cancelType === 'retry' && transaction.isLoading}
               onClick={handleRetry}
             >
               {t('retry')}
@@ -239,8 +217,8 @@ const ReimburseStatusUI = ({ redeem, onClose }: Props): JSX.Element => {
             </p>
             <InterlayDenimOrKintsugiMidnightOutlinedButton
               className='w-full'
-              disabled={retryMutation.isLoading || !isOwner}
-              pending={reimburseMutation.isLoading}
+              disabled={cancelType === 'retry' || !isOwner}
+              pending={cancelType === 'reimburse' && transaction.isLoading}
               onClick={handleReimburse}
             >
               {t('redeem_page.reimburse')}

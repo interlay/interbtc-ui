@@ -1,7 +1,6 @@
 import { LiquidityPool } from '@interlay/interbtc-api';
 import Big from 'big.js';
 import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
 
 import { formatUSD } from '@/common/utils/utils';
 import { Card, Dl, DlGroup } from '@/component-library';
@@ -49,13 +48,8 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
 
   const totalClaimableRewardUSD = calculateClaimableFarmingRewardUSD(accountPoolsData?.claimableRewards, prices);
 
-  const handleSuccess = () => {
-    toast.success(t('successfully_claimed_rewards'));
-    refetch();
-  };
-
   const transaction = useTransaction(Transaction.AMM_CLAIM_REWARDS, {
-    onSuccess: handleSuccess
+    onSuccess: refetch
   });
 
   const handleClickClaimRewards = () => accountPoolsData && transaction.execute(accountPoolsData.claimableRewards);
