@@ -6,7 +6,7 @@ import { Flex } from '../Flex';
 import { Select, SelectProps } from './Select';
 import { SelectTrigger, SelectTriggerProps } from './SelectTrigger';
 
-const SelectTemplate: Story<SelectProps<any>> = (args) => {
+const SelectTemplate: Story<SelectProps<'modal', any>> = (args) => {
   return (
     <Select {...args}>
       <Item textValue='BTC' key='BTC'>

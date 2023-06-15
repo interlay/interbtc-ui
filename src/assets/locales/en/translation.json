@@ -159,6 +159,9 @@
   "dismiss": "Dismiss",
   "insufficient_token_balance": "Insufficient {{token}} balance",
   "amount": "Amount",
+  "select_token": "Select Token",
+  "fee_token": "Fee token",
+  "fx_fees": "Tx fees",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
