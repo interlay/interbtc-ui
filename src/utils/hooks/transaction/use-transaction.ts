@@ -58,9 +58,7 @@ const mutateTransaction: (
 ) => MutationFunction<TransactionResult, TransactionActions> = (feeCurrency, pools) => async (params) => {
   const expectedStatus = params.customStatus || getStatus(params.type);
   const baseExtrinsic = await getExtrinsic(params);
-  // If fee currency is specified wrap the extrinsic in `withFeeSwapPath` call.
-  const finalExtrinsic =
-    feeCurrency === undefined ? baseExtrinsic : await wrapWithTxFeeSwap(feeCurrency, baseExtrinsic, pools);
+  const finalExtrinsic = await wrapWithTxFeeSwap(feeCurrency, baseExtrinsic, pools);
 
   return submitTransaction(window.bridge.api, params.accountAddress, finalExtrinsic, expectedStatus, params.events);
 };
