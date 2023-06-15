@@ -20,5 +20,7 @@ export { ReceivableAssets } from './ReceivableAssets';
 export type { ToastContainerProps } from './ToastContainer';
 export { ToastContainer } from './ToastContainer';
 export * from './TransactionDetails';
+export type { TransactionFeeDetailsProps } from './TransactionFeeDetails';
+export { TransactionFeeDetails } from './TransactionFeeDetails';
 export type { TransactionToastProps } from './TransactionToast';
 export { TransactionToast } from './TransactionToast';

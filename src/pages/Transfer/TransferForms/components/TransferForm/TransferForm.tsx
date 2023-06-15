@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Flex, Input, TokenInput } from '@/component-library';
-import { AuthCTA, TransactionDetails, TransactionFee } from '@/components';
+import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import { isFormDisabled, useForm } from '@/lib/form';
 import {
@@ -121,9 +121,7 @@ const TransferForm = (): JSX.Element => {
             />
           </Flex>
           <Flex direction='column' gap='spacing4'>
-            <TransactionDetails>
-              <TransactionFee amount={TRANSACTION_FEE_AMOUNT} />
-            </TransactionDetails>
+            <TransactionFeeDetails amount={TRANSACTION_FEE_AMOUNT} />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
               Transfer
             </AuthCTA>
