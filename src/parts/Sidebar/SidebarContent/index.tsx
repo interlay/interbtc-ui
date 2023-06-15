@@ -33,7 +33,7 @@ const SidebarContent = React.forwardRef<Ref, Props>(
           'flex',
           'flex-col',
           { 'bg-interlayHaiti-50': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-          { 'dark:bg-kintsugiMidnight': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+          { 'dark:bg-kintsugiMidnight-900': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
         )}
       >
         {onSmallScreen && <CloseButton onClick={onClose} />}
