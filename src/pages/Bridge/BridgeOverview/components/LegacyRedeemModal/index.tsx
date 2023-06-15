@@ -1,0 +1,1 @@
+export { LegacyRedeemModal } from './LegacyRedeemModal';

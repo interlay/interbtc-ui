@@ -12,11 +12,13 @@ import { Sizes } from '../utils/prop-types';
 import { SelectModal } from './SelectModal';
 import { SelectTrigger } from './SelectTrigger';
 
+type SelectType = 'listbox' | 'modal';
+
 type SelectObject = Record<string, unknown>;
 
 // TODO: listbox to be implemented
-type Props<T extends SelectObject> = {
-  type?: 'listbox' | 'modal';
+type Props<F extends SelectType = 'listbox', T = SelectObject> = {
+  type?: F;
   open?: boolean;
   loading?: boolean;
   size?: Sizes;
@@ -24,23 +26,28 @@ type Props<T extends SelectObject> = {
   asSelectTrigger?: any;
   renderValue?: (item: Node<T>) => ReactNode;
   placeholder?: ReactNode;
-  modalTitle?: ReactNode;
+  modalTitle?: F extends 'modal' ? ReactNode : never;
 };
 
-type InheritAttrs<T extends SelectObject = any> = Omit<
+type InheritAttrs<F extends SelectType = 'listbox', T = SelectObject> = Omit<
   CollectionBase<T> & FieldProps & AriaSelectProps<T>,
-  keyof Props<T> | 'isDisabled' | 'isLoading' | 'isOpen' | 'isRequired' | 'selectedKey' | 'defaultSelectedKey'
+  keyof Props<F, T> | 'isDisabled' | 'isLoading' | 'isOpen' | 'isRequired' | 'selectedKey' | 'defaultSelectedKey'
 >;
 
-type NativeAttrs<T extends SelectObject> = Omit<React.InputHTMLAttributes<Element>, keyof Props<T>>;
+type NativeAttrs<F extends SelectType = 'listbox', T = SelectObject> = Omit<
+  React.InputHTMLAttributes<Element>,
+  keyof Props<F, T>
+>;
 
-type SelectProps<T extends SelectObject> = Props<T> & NativeAttrs<T> & InheritAttrs<T>;
+type SelectProps<F extends SelectType = 'listbox', T = SelectObject> = Props<F, T> &
+  NativeAttrs<F, T> &
+  InheritAttrs<F, T>;
 
-const Select = <T extends SelectObject>(
+const Select = <F extends SelectType = 'listbox', T extends SelectObject = SelectObject>(
   {
     value,
     defaultValue,
-    type = 'listbox',
+    type = 'listbox' as F,
     name,
     disabled,
     loading,
@@ -57,7 +64,7 @@ const Select = <T extends SelectObject>(
     renderValue = (item) => item.rendered,
     items,
     ...props
-  }: SelectProps<T>,
+  }: SelectProps<F, T>,
   ref: ForwardedRef<HTMLInputElement>
 ): JSX.Element => {
   const inputRef = useDOMRef(ref);
@@ -128,6 +135,7 @@ const Select = <T extends SelectObject>(
         hasError={error}
         valueProps={valueProps}
         placeholder={placeholder}
+        name={name}
       >
         {state.selectedItem && renderValue(state.selectedItem)}
       </SelectTrigger>
@@ -144,8 +152,8 @@ const Select = <T extends SelectObject>(
   );
 };
 
-const _Select = forwardRef(Select) as <T extends SelectObject>(
-  props: SelectProps<T> & { ref?: React.ForwardedRef<HTMLInputElement> }
+const _Select = forwardRef(Select) as <F extends SelectType = 'listbox', T extends SelectObject = SelectObject>(
+  props: SelectProps<F, T> & { ref?: React.ForwardedRef<HTMLInputElement> }
 ) => ReturnType<typeof Select>;
 
 Select.displayName = 'Select';

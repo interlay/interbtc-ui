@@ -3,11 +3,17 @@ import styled from 'styled-components';
 import { Span } from '../Text';
 import { theme } from '../theme';
 
-const StyledWrapper = styled.label`
+type StyledWrapperProps = {
+  $reverse?: boolean;
+};
+
+const StyledWrapper = styled.label<StyledWrapperProps>`
   display: inline-flex;
+  flex-direction: ${({ $reverse }) => $reverse && 'row-reverse'};
   align-items: center;
   position: relative;
   min-height: ${theme.spacing.spacing8};
+  gap: ${theme.spacing.spacing2};
 `;
 
 const StyledInput = styled.input`
@@ -63,7 +69,6 @@ const StyledSwitch = styled.span<StyledSwitchProps>`
 
 const StyledLabel = styled(Span)`
   text-align: left;
-  margin: 0 ${theme.spacing.spacing2};
 `;
 
 export { StyledInput, StyledLabel, StyledSwitch, StyledWrapper };

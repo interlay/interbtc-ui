@@ -1,0 +1,1 @@
+export { LegacyIssueModal } from './LegacyIssueModal';

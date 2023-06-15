@@ -15,8 +15,8 @@ import InterlayConiferOutlinedButton from '@/legacy-components/buttons/InterlayC
 import InterlayDenimOrKintsugiMidnightOutlinedButton from '@/legacy-components/buttons/InterlayDenimOrKintsugiMidnightOutlinedButton';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import PrimaryColorSpan from '@/legacy-components/PrimaryColorSpan';
+import RequestWrapper from '@/legacy-components/RequestWrapper';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import RequestWrapper from '@/pages/Bridge/RequestWrapper';
 import { REDEEMS_FETCHER } from '@/services/fetchers/redeems-fetcher';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';

@@ -15,7 +15,6 @@ const PAGES = Object.freeze({
   BRIDGE: '/bridge',
   STRATEGIES: '/strategies',
   TRANSFER: '/transfer',
-  TRANSACTIONS: '/transactions',
   TX: '/tx',
   STAKING: '/staking',
   DASHBOARD: '/dashboard',

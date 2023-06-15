@@ -6,7 +6,7 @@ import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-link
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import ExternalLink from '@/legacy-components/ExternalLink';
-import RequestWrapper from '@/pages/Bridge/RequestWrapper';
+import RequestWrapper from '@/legacy-components/RequestWrapper';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 
