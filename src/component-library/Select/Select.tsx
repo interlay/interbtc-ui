@@ -43,6 +43,7 @@ type SelectProps<F extends SelectType = 'listbox', T = SelectObject> = Props<F, 
   NativeAttrs<F, T> &
   InheritAttrs<F, T>;
 
+// TODO: when type is modal, we should use also types from our List
 const Select = <F extends SelectType = 'listbox', T extends SelectObject = SelectObject>(
   {
     value,
@@ -63,6 +64,7 @@ const Select = <F extends SelectType = 'listbox', T extends SelectObject = Selec
     onChange,
     renderValue = (item) => item.rendered,
     items,
+    disabledKeys,
     ...props
   }: SelectProps<F, T>,
   ref: ForwardedRef<HTMLInputElement>
@@ -144,8 +146,8 @@ const Select = <F extends SelectType = 'listbox', T extends SelectObject = Selec
           isOpen={state.isOpen}
           state={state}
           onClose={state.close}
-          selectedAccount={state.selectedItem?.key}
           title={modalTitle}
+          listProps={{ selectedKeys: [state.selectedItem?.key], disabledKeys }}
         />
       )}
     </Field>

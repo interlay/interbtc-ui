@@ -1,6 +1,6 @@
 import { useId } from '@react-aria/utils';
 import { SelectState } from '@react-stately/select';
-import { forwardRef, Key, ReactNode } from 'react';
+import { forwardRef, ReactNode } from 'react';
 
 import { Modal, ModalBody, ModalHeader, ModalProps } from '@/component-library/Modal';
 
@@ -10,8 +10,8 @@ import { SelectModalContext } from './SelectModalContext';
 
 type Props = {
   state: SelectState<unknown>;
-  selectedAccount?: Key;
   title?: ReactNode;
+  listProps?: Omit<ListProps, 'children'>;
 };
 
 type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
@@ -19,7 +19,7 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 type SelectModalProps = Props & InheritAttrs;
 
 const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
-  ({ selectedAccount, state, title, onClose, ...props }, ref): JSX.Element => {
+  ({ state, title, onClose, listProps, ...props }, ref): JSX.Element => {
     const headerId = useId();
 
     const handleSelectionChange: ListProps['onSelectionChange'] = (key) => {
@@ -41,12 +41,11 @@ const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
           </ModalHeader>
           <ModalBody overflow='hidden' noPadding>
             <StyledList
+              {...listProps}
               aria-labelledby={headerId}
               variant='secondary'
               selectionMode='single'
               onSelectionChange={handleSelectionChange}
-              selectedKeys={selectedAccount ? [selectedAccount] : undefined}
-              {...props}
             >
               {[...state.collection].map((item) => (
                 <ListItem

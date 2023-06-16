@@ -17,6 +17,7 @@ type TransactionSelectTokenProps = Props & InheritAttrs;
 const TransactionSelectToken = ({
   label: labelProp,
   tooltipLabel,
+  items,
   ...props
 }: TransactionSelectTokenProps): JSX.Element => {
   const { t } = useTranslation();
@@ -34,13 +35,17 @@ const TransactionSelectToken = ({
     labelProp
   );
 
+  const disabledKeys = (items as TokenData[])?.filter((item) => Number(item.balance) === 0).map((item) => item.value);
+
   return (
     <StyledSelect
       type='modal'
       size='small'
       modalTitle={t('select_token')}
       renderValue={(item) => item.value.value}
+      disabledKeys={disabledKeys}
       label={label}
+      items={items}
       {...props}
     >
       {(data: TokenData) => (
