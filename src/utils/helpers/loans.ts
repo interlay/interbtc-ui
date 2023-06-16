@@ -7,7 +7,23 @@ import { formatPercentage } from '@/common/utils/utils';
 import { Prices } from '../hooks/api/use-get-prices';
 import { getTokenPrice } from './prices';
 
+const MIN_DECIMAL_NUMBER = 0.01;
+
+// MEMO: returns formatted apy or better representation of a very small apy
 const getApyLabel = (apy: Big): string => {
+  if (apy.eq(0)) {
+    return '0.00%';
+  }
+  const isPositive = apy.gt(0);
+  const isTinyApy = isPositive ? apy.lt(MIN_DECIMAL_NUMBER) : apy.gt(-MIN_DECIMAL_NUMBER);
+
+  if (isTinyApy) {
+    const tinyIndicator = apy.gt(0) ? '<' : '>';
+    const minDecimal = isPositive ? MIN_DECIMAL_NUMBER : -MIN_DECIMAL_NUMBER;
+
+    return `${tinyIndicator} ${minDecimal}%`;
+  }
+
   return formatPercentage(apy.toNumber());
 };
 
