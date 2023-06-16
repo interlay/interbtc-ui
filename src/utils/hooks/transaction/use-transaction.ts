@@ -59,7 +59,7 @@ const mutateTransaction: (
 ) => MutationFunction<TransactionResult, TransactionActions> = (feeCurrency, pools) => async (params) => {
   const expectedStatus = params.customStatus || getStatus(params.type);
   const baseExtrinsic = await getExtrinsic(params);
-  const finalExtrinsic = await wrapWithTxFeeSwap(feeCurrency, baseExtrinsic, pools);
+  const feeWrappedExtrinsic = await wrapWithTxFeeSwap(feeCurrency, baseExtrinsic, pools);
 
   return submitTransaction(window.bridge.api, params.accountAddress, finalExtrinsic, expectedStatus, params.events);
 };
