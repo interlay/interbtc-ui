@@ -41,7 +41,7 @@ const Topbar = (): JSX.Element => {
   const { selectProps } = useSignMessage();
   const { list } = useNotifications();
 
-  const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
+  const governanceTokenBalanceIsZero = getAvailableBalance(GOVERNANCE_TOKEN.ticker)?.isZero();
 
   const handleRequestFromFaucet = async (): Promise<void> => {
     if (!selectedAccount) return;
@@ -106,7 +106,7 @@ const Topbar = (): JSX.Element => {
         {isBanxaEnabled ? <FundWallet /> : <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />}
         {selectedAccount !== undefined && (
           <>
-            {process.env.REACT_APP_FAUCET_URL && kintBalanceIsZero && (
+            {process.env.REACT_APP_FAUCET_URL && governanceTokenBalanceIsZero && (
               <>
                 <InterlayDenimOrKintsugiMidnightOutlinedButton
                   className={SMALL_SIZE_BUTTON_CLASSES}
