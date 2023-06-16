@@ -16,6 +16,9 @@ import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { getExtrinsic } from '../extrinsics';
 import { TransactionActions } from '../types';
 
+// 50% on top of trade to be safe (slippage, different weight)
+const OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER = 1.5;
+
 const constructSwapPathPrimitive = (path: MultiPath): Array<CurrencyId> => {
   const inputCurrency = newCurrencyId(window.bridge.api, path[0].input);
   return [inputCurrency, ...path.map(({ output }) => newCurrencyId(window.bridge.api, output))];
@@ -60,7 +63,7 @@ const getTxFeeSwapData = async (
   );
   const withSwapTxFee = await window.bridge.transaction.getFeeEstimate(reverseDirectionExtrinsic);
   const { inputAmount, path } = getOptimalTradeForTxFeeSwap(
-    withSwapTxFee.mul(1.5), // 50% on top to be safe
+    withSwapTxFee.mul(OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER),
     reverseDirectionTrade.outputAmount,
     pools
   );
