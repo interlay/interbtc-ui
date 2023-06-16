@@ -42,7 +42,6 @@ const SelectTrigger = forwardRef<HTMLButtonElement, SelectTriggerProps>(
     const buttonRef = useDOMRef(ref);
 
     const { buttonProps } = useButton({ ...props, isDisabled: disabled }, buttonRef);
-
     const Comp = as || StyledTrigger;
 
     return (
