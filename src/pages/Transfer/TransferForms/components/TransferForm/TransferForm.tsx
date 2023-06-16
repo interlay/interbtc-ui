@@ -102,7 +102,7 @@ const TransferForm = (): JSX.Element => {
 
     const { amount, destination } = transactionData;
 
-    transaction.fee.estimateFee(destination, amount);
+    transaction.fee.estimate(destination, amount);
   }, [form.isValid, form.values, prepareSubmission, transaction.fee]);
 
   const handleTickerChange = (ticker: string, name: string) => {
