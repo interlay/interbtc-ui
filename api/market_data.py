@@ -58,14 +58,25 @@ def dia(asset):
 def get_price():
     args = request.args
 
+    price_source = request.headers.get('x-price-source')
+
     data = {}
-    try:
+
+    def _dia():
       ticker_ids = args["ids"].split(",")
       for ticker_id in ticker_ids:
         data.update(dia(ticker_id))
-    except Exception as e:
-      print("Error", e)
-      data = coingecko(args)
+
+    if price_source == "dia":
+       _dia()
+    elif price_source == "coingecko":
+       data = coingecko(args)
+    else:
+      try:
+        _dia()
+      except Exception as e:
+        print("Error", e)
+        data = coingecko(args)
 
     return jsonify(data)
 
