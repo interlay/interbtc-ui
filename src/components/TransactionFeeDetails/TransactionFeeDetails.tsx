@@ -23,6 +23,7 @@ import {
 type Props = {
   defaultCurrency?: CurrencyExt;
   amount?: MonetaryAmount<CurrencyExt>;
+  availableBalance?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
   showInsufficientBalance?: boolean;
   tooltipLabel?: ReactNode;

@@ -29,7 +29,46 @@ import { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap } from './ut
 import { getParams } from './utils/params';
 import { submitTransaction } from './utils/submit';
 
+<<<<<<< HEAD
 const defaultFeeCurrency = GOVERNANCE_TOKEN;
+=======
+type TransactionResult = { status: 'success' | 'error'; data: ISubmittableResult; error?: Error };
+
+type ExecuteArgs<T extends Transaction> = {
+  // Executes the transaction
+  execute<D extends Transaction = T>(...args: TransactionArgs<D>): void;
+  // Similar to execute but returns a promise which can be awaited.
+  executeAsync<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<TransactionResult>;
+};
+
+type ExecuteTypeArgs<T extends Transaction> = {
+  execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
+  executeAsync<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<TransactionResult>;
+};
+
+type ExecuteFunctions<T extends Transaction> = ExecuteArgs<T> | ExecuteTypeArgs<T>;
+
+type ReactQueryUseMutationResult = Omit<
+  UseMutationResult<TransactionResult, Error, TransactionActions, unknown>,
+  'mutate' | 'mutateAsync'
+>;
+
+type FeeResultType<T extends Transaction> = {
+  currency: CurrencyExt;
+  amount: MonetaryAmount<CurrencyExt> | undefined;
+  balance: MonetaryAmount<CurrencyExt> | undefined;
+  isLoading: boolean;
+  onSelectionChange: (ticker: Key) => void;
+  estimate<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<MonetaryAmount<CurrencyExt>>;
+};
+
+type UseTransactionResult<T extends Transaction> = {
+  reject: (error?: Error) => void;
+  isSigned: boolean;
+  fee: FeeResultType<T>;
+} & ReactQueryUseMutationResult &
+  ExecuteFunctions<T>;
+>>>>>>> 26e8f53a8 (wip)
 
 const mutateTransaction: (
   feeAmount: MonetaryAmount<CurrencyExt> | undefined,
@@ -61,6 +100,13 @@ function useTransaction<T extends Transaction>(
   const { getBalance } = useGetBalances();
 
   const [isSigned, setSigned] = useState(false);
+<<<<<<< HEAD
+=======
+  const [feeCurrency, setFeeCurrency] = useState(GOVERNANCE_TOKEN);
+  const [feeEstimate, setFeeEstimate] = useState<MonetaryAmount<CurrencyExt>>();
+  const [feeCurrencyBalance, setFeeCurrencyBalance] = useState<MonetaryAmount<CurrencyExt>>();
+  const [isFeeEstimateLoading, setIsFeeEstimateLoading] = useState(false);
+>>>>>>> 26e8f53a8 (wip)
 
   const { showSuccessModal, customStatus, ...mutateOptions } =
     (typeof typeOrOptions === 'string' ? options : typeOrOptions) || {};
@@ -189,6 +235,46 @@ function useTransaction<T extends Transaction>(
     }
   };
 
+<<<<<<< HEAD
+=======
+  const handleEstimateFee = useCallback(
+    async (...args: Parameters<FeeResultType<T>['estimate']>) => {
+      const params = getParams(args);
+
+      setIsFeeEstimateLoading(true);
+      const fee = await estimateTransactionFee(feeCurrency, pools || [], params);
+      setFeeEstimate(fee);
+      setIsFeeEstimateLoading(false);
+
+      let actionAmount: MonetaryAmount<CurrencyExt> | undefined;
+
+      switch (params.type) {
+        case Transaction.TOKENS_TRANSFER: {
+          const [, amount] = params.args;
+          actionAmount = amount;
+          break;
+        }
+      }
+
+      if (actionAmount && isCurrencyEqual(actionAmount.currency, feeCurrency)) {
+        setFeeCurrencyBalance(actionAmount);
+      }
+
+      return fee;
+    },
+    [feeCurrency, pools, getParams]
+  );
+
+  const handleFeeTokenSelection = (ticker: Key) => {
+    // TODO: update TokenData to deal with Currency type
+    const currency = getCurrencyFromTicker(ticker as string);
+
+    if (!currency) return;
+
+    setFeeCurrency(currency);
+  };
+
+>>>>>>> 26e8f53a8 (wip)
   return {
     ...transactionMutation,
     isSigned,
@@ -196,6 +282,7 @@ function useTransaction<T extends Transaction>(
     execute: handleExecute,
     executeAsync: handleExecuteAsync,
     fee: {
+<<<<<<< HEAD
       ...feeMutation,
       defaultCurrency: defaultFeeCurrency,
       estimate: handleEstimateFee(),
@@ -206,6 +293,18 @@ function useTransaction<T extends Transaction>(
         // could possible be undefined, so we want to check for that
         showInsufficientBalance: feeMutation.data?.isValid === false
       }
+=======
+      currency: feeCurrency,
+      amount: feeEstimate,
+      balance: feeCurrency
+        ? feeCurrencyBalance && isCurrencyEqual(feeCurrencyBalance.currency, feeCurrency)
+          ? getBalance(feeCurrency.ticker)?.transferable.sub(feeCurrencyBalance)
+          : getBalance(feeCurrency.ticker)?.transferable
+        : undefined,
+      isLoading: isFeeEstimateLoading,
+      onSelectionChange: handleFeeTokenSelection,
+      estimate: handleEstimateFee
+>>>>>>> 26e8f53a8 (wip)
     }
   };
 }
