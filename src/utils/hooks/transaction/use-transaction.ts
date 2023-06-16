@@ -60,7 +60,7 @@ const mutateTransaction: (
   const baseExtrinsic = await getExtrinsic(params);
   const feeWrappedExtrinsic = await wrapWithTxFeeSwap(feeCurrency, baseExtrinsic, pools);
 
-  return submitTransaction(window.bridge.api, params.accountAddress, finalExtrinsic, expectedStatus, params.events);
+  return submitTransaction(window.bridge.api, params.accountAddress, feeWrappedExtrinsic, expectedStatus, params.events);
 };
 
 type UseTransactionOptions = Omit<
