@@ -45,6 +45,31 @@ yup.addMethod<yup.StringSchema>(
   }
 );
 
+type CustomFeesValidationParams = {
+  availableBalance: MonetaryAmount<CurrencyExt>;
+};
+
+// TODO: remove when fees are moved out of form validation
+yup.addMethod<yup.StringSchema>(
+  yup.string,
+  'customFees',
+  function ({ availableBalance }: CustomFeesValidationParams, customMessage?: string) {
+    return this.test('customFees', (value, ctx) => {
+      if (value === undefined) return true;
+
+      const amount = new Big(value);
+
+      if (availableBalance.toBig().lt(amount)) {
+        const message = customMessage || i18n.t('forms.ensure_adequate_amount_left_to_cover_fees');
+
+        return ctx.createError({ message });
+      }
+
+      return true;
+    });
+  }
+);
+
 type MaxAmountValidationParams = {
   maxAmount: MonetaryAmount<CurrencyExt> | Big;
 };
@@ -139,6 +164,7 @@ declare module 'yup' {
   > extends yup.BaseSchema<TType, TContext, TOut> {
     requiredAmount(action?: string, customMessage?: string): StringSchema<TType, TContext>;
     fees(params: FeesValidationParams, customMessage?: string): StringSchema<TType, TContext>;
+    customFees(params: CustomFeesValidationParams, customMessage?: string): StringSchema<TType, TContext>;
     maxAmount(
       params: MaxAmountValidationParams,
       action?: string,
@@ -154,4 +180,4 @@ declare module 'yup' {
 }
 
 export default yup;
-export type { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams };
+export type { CustomFeesValidationParams, FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams };

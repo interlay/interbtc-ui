@@ -119,7 +119,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     validateOnChange: true,
     validationSchema: bridgeIssueSchema({ [BRIDGE_ISSUE_AMOUNT_FIELD]: transferAmountSchemaParams }),
     onSubmit: handleSubmit,
-    showErrorMessages: !transaction.isLoading
+    hideErrorMessages: transaction.isLoading
   });
 
   const handleToggleCustomVault = (e: ChangeEvent<HTMLInputElement>) => {

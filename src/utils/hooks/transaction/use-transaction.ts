@@ -1,4 +1,4 @@
-import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
+import { CurrencyExt, isCurrencyEqual, LiquidityPool } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 import { ISubmittableResult } from '@polkadot/types/types';
@@ -10,6 +10,7 @@ import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { useSubstrate } from '@/lib/substrate';
 
 import { useGetLiquidityPools } from '../api/amm/use-get-liquidity-pools';
+import { useGetBalances } from '../api/tokens/use-get-balances';
 import { useGetCurrencies } from '../api/use-get-currencies';
 import { getExtrinsic, getStatus } from './extrinsics';
 import { Transaction, TransactionActions, TransactionArgs } from './types';
@@ -41,9 +42,10 @@ type ReactQueryUseMutationResult = Omit<
 type FeeResultType<T extends Transaction> = {
   currency: CurrencyExt;
   amount: MonetaryAmount<CurrencyExt> | undefined;
+  balance: MonetaryAmount<CurrencyExt> | undefined;
   isLoading: boolean;
   onSelectionChange: (ticker: Key) => void;
-  estimate<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<void>;
+  estimate<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<MonetaryAmount<CurrencyExt>>;
 };
 
 type UseTransactionResult<T extends Transaction> = {
@@ -88,10 +90,12 @@ function useTransaction<T extends Transaction>(
   const { state } = useSubstrate();
 
   const { getCurrencyFromTicker } = useGetCurrencies(true);
+  const { getBalance } = useGetBalances();
 
   const [isSigned, setSigned] = useState(false);
   const [feeCurrency, setFeeCurrency] = useState(GOVERNANCE_TOKEN);
   const [feeEstimate, setFeeEstimate] = useState<MonetaryAmount<CurrencyExt>>();
+  const [feeCurrencyBalance, setFeeCurrencyBalance] = useState<MonetaryAmount<CurrencyExt>>();
   const [isFeeEstimateLoading, setIsFeeEstimateLoading] = useState(false);
 
   const { showSuccessModal, customStatus, ...mutateOptions } =
@@ -186,10 +190,27 @@ function useTransaction<T extends Transaction>(
   const handleEstimateFee = useCallback(
     async (...args: Parameters<FeeResultType<T>['estimate']>) => {
       const params = getParams(args);
+
       setIsFeeEstimateLoading(true);
       const fee = await estimateTransactionFee(feeCurrency, pools || [], params);
       setFeeEstimate(fee);
       setIsFeeEstimateLoading(false);
+
+      let actionAmount: MonetaryAmount<CurrencyExt> | undefined;
+
+      switch (params.type) {
+        case Transaction.TOKENS_TRANSFER: {
+          const [, amount] = params.args;
+          actionAmount = amount;
+          break;
+        }
+      }
+
+      if (actionAmount && isCurrencyEqual(actionAmount.currency, feeCurrency)) {
+        setFeeCurrencyBalance(actionAmount);
+      }
+
+      return fee;
     },
     [feeCurrency, pools, getParams]
   );
@@ -212,6 +233,11 @@ function useTransaction<T extends Transaction>(
     fee: {
       currency: feeCurrency,
       amount: feeEstimate,
+      balance: feeCurrency
+        ? feeCurrencyBalance && isCurrencyEqual(feeCurrencyBalance.currency, feeCurrency)
+          ? getBalance(feeCurrency.ticker)?.transferable.sub(feeCurrencyBalance)
+          : getBalance(feeCurrency.ticker)?.transferable
+        : undefined,
       isLoading: isFeeEstimateLoading,
       onSelectionChange: handleFeeTokenSelection,
       estimate: handleEstimateFee

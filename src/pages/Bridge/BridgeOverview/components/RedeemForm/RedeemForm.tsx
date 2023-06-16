@@ -158,7 +158,7 @@ const RedeemForm = ({
     },
     validationSchema: bridgeRedeemSchema({ [BRIDGE_REDEEM_AMOUNT_FIELD]: transferAmountSchemaParams }),
     onSubmit: handleSubmit,
-    showErrorMessages: !transaction.isLoading
+    hideErrorMessages: transaction.isLoading
   });
 
   const handleToggleCustomVault = (e: ChangeEvent<HTMLInputElement>) => {

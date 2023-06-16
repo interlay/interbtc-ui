@@ -1,5 +1,5 @@
 import { useSelect } from '@react-aria/select';
-import { mergeProps } from '@react-aria/utils';
+import { mergeProps, useId } from '@react-aria/utils';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { SelectProps as AriaSelectProps, useSelectState } from '@react-stately/select';
 import { CollectionBase, Node } from '@react-types/shared';
@@ -71,6 +71,7 @@ const Select = <F extends SelectType = 'listbox', T extends SelectObject = Selec
 ): JSX.Element => {
   const inputRef = useDOMRef(ref);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const modalId = useId();
 
   const ariaProps: AriaSelectProps<T> = {
     isDisabled: disabled,
@@ -138,6 +139,8 @@ const Select = <F extends SelectType = 'listbox', T extends SelectObject = Selec
         valueProps={valueProps}
         placeholder={placeholder}
         name={name}
+        aria-expanded={state.isOpen}
+        aria-controls={modalId}
       >
         {state.selectedItem && renderValue(state.selectedItem)}
       </SelectTrigger>
@@ -147,6 +150,7 @@ const Select = <F extends SelectType = 'listbox', T extends SelectObject = Selec
           state={state}
           onClose={state.close}
           title={modalTitle}
+          id={modalId}
           listProps={{ selectedKeys: [state.selectedItem?.key], disabledKeys }}
         />
       )}
