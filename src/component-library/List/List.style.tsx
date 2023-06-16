@@ -34,6 +34,7 @@ const StyledListItem = styled.li<StyledListItemProps>`
   color: ${theme.colors.textPrimary};
   cursor: ${({ $isInteractable }) => $isInteractable && 'pointer'};
   outline: ${({ $isFocusVisible }) => !$isFocusVisible && 'none'};
+  opacity: ${({ $isDisabled }) => $isDisabled && 0.5};
 
   ${({ $variant }) => {
     if ($variant === 'card') {
