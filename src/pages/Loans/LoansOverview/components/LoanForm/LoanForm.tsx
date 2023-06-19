@@ -186,7 +186,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
             balanceLabel={content.label}
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
             onClickBalance={handleClickBalance}
-            {...mergeProps(form.getFieldProps(variant, false, true), { onChange: handleChange })}
+            {...mergeProps(form.getFieldProps(variant), { onChange: handleChange })}
           />
           {showBorrowLimit && (
             <BorrowLimit
