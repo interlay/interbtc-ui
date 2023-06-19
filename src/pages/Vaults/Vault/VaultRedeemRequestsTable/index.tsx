@@ -317,7 +317,7 @@ const VaultRedeemRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX
   return (
     <InterlayTableContainer className='space-y-6'>
       <SectionTitle>{t('redeem_requests')}</SectionTitle>
-      <InterlayTable {...getTableProps()} className='bg-white'>
+      <InterlayTable {...getTableProps()}>
         <InterlayThead>
           {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key
