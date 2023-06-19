@@ -8,6 +8,9 @@ CORS(app)
 
 api_key = os.environ.get("CG_API_KEY")
 
+tickers = {
+  "tether usd": "tether",
+}
 
 @app.after_request
 def add_header(response):
@@ -47,8 +50,11 @@ def dia(asset):
     resp = requests.get(url, headers=headers_dict)
     data = resp.json()
 
+    # optionally rename the ticker
+    ticker = tickers.get(data["Name"], data["Name"]).lower()
+
     return {
-      data["Name"].lower(): {
+      ticker: {
         "usd": data["Price"],
       }
     }
@@ -58,7 +64,7 @@ def dia(asset):
 def get_price():
     args = request.args
 
-    price_source = request.headers.get('x-price-source')
+    price_source = args.get('price-source')
 
     data = {}
 
