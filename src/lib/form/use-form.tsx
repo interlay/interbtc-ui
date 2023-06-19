@@ -1,23 +1,30 @@
 import { chain } from '@react-aria/utils';
 import { FieldInputProps, FormikConfig, FormikErrors as FormErrors, FormikValues, useFormik } from 'formik';
-import { FocusEvent, useCallback } from 'react';
+import { FocusEvent, Key, useCallback } from 'react';
 
 type GetFieldProps = (
   nameOrOptions: any,
-  withErrorMessage?: boolean,
-  onlyTouchedError?: boolean
-) => FieldInputProps<any> & { errorMessage?: string | string[] };
+  hideErrorMessage?: boolean,
+  hideUntouchedError?: boolean
+) => FieldInputProps<any> & {
+  errorMessage?: string | string[];
+  onSelectionChange: (key: Key) => void;
+};
 
 type UseFormArgs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
   hideErrorMessages?: boolean;
-  getFieldProps?: GetFieldProps;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useForm = <Values extends FormikValues = FormikValues>({ hideErrorMessages, ...args }: UseFormArgs<Values>) => {
-  const { validateForm, values, getFieldProps: getFormikFieldProps, setFieldTouched, ...formik } = useFormik<Values>(
-    args
-  );
+  const {
+    validateForm,
+    values,
+    getFieldProps: getFormikFieldProps,
+    setFieldTouched,
+    setFieldValue,
+    ...formik
+  } = useFormik<Values>(args);
 
   // Handles when field gets forced blur to focus on modal
   // If so, we dont want to consider it as touched if it has not yet been touched on
@@ -49,34 +56,43 @@ const useForm = <Values extends FormikValues = FormikValues>({ hideErrorMessages
   );
 
   const getFieldProps: GetFieldProps = useCallback(
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    (nameOrOptions, hideErrorMessage, showUntouchedErrorMessage) => {
+    (nameOrOptions: any, hideErrorMessage?: boolean, hideUntouchedError?: boolean) => {
       const fieldProps = getFormikFieldProps(nameOrOptions);
 
+      const isOptions = nameOrOptions !== null && typeof nameOrOptions === 'object';
+      const fieldName = isOptions ? nameOrOptions.name : nameOrOptions;
+
+      const customFieldProps = {
+        ...fieldProps,
+        onSelectionChange: (key: Key) => {
+          setFieldValue(fieldName, key, true);
+        }
+      };
+
+      // Asses if error message is going to be omitted, but validation still takes place (approach used in swap due to custom error messages)
       const hideError = hideErrorMessage && hideErrorMessages;
 
       if (!hideError) {
-        const isOptions = nameOrOptions !== null && typeof nameOrOptions === 'object';
-        const fieldName = isOptions ? nameOrOptions.name : nameOrOptions;
-
         const isTouched = formik.touched[fieldName];
 
-        const errorMessage = showUntouchedErrorMessage
-          ? formik.errors[fieldName]
-          : isTouched
-          ? formik.errors[fieldName]
-          : undefined;
+        // Option allows to only show error when input is touched.
+        // Input is touched when if focus and blur events are emitted
+        const errorMessage = hideUntouchedError
+          ? isTouched
+            ? formik.errors[fieldName]
+            : undefined
+          : formik.errors[fieldName];
 
         return {
-          ...fieldProps,
+          ...customFieldProps,
           onBlur: chain(fieldProps.onBlur, (e: FocusEvent<unknown>) => handleBlur(e, fieldName, isTouched as boolean)),
           errorMessage: errorMessage as string | string[] | undefined
         };
       }
 
-      return fieldProps;
+      return customFieldProps;
     },
-    [getFormikFieldProps, hideErrorMessages, formik.touched, formik.errors, handleBlur]
+    [getFormikFieldProps, hideErrorMessages, formik.touched, formik.errors, setFieldValue, handleBlur]
   );
 
   return {
@@ -84,6 +100,7 @@ const useForm = <Values extends FormikValues = FormikValues>({ hideErrorMessages
     validateForm,
     getFieldProps,
     setFieldTouched,
+    setFieldValue,
     ...formik
   };
 };

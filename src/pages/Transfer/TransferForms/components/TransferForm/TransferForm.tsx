@@ -13,6 +13,7 @@ import { isFormDisabled, useForm } from '@/lib/form';
 import {
   TRANSFER_AMOUNT_FIELD,
   TRANSFER_FEE_AMOUNT_HIDDEN_FIELD,
+  TRANSFER_FEE_TOKEN_FIELD,
   TRANSFER_RECIPIENT_FIELD,
   TRANSFER_TOKEN_FIELD,
   TransferFormData,
@@ -40,6 +41,10 @@ const TransferForm = (): JSX.Element => {
   const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
     onSuccess: () => {
       form.resetForm();
+    },
+    onChangeFeeEstimate: (fee) => {
+      console.log(fee);
+      form.setFieldValue(TRANSFER_FEE_AMOUNT_HIDDEN_FIELD, fee?.toString(), true);
     }
   });
 
@@ -47,15 +52,14 @@ const TransferForm = (): JSX.Element => {
 
   const minAmount = transferToken && newMonetaryAmount(1, transferToken);
 
-  console.log(transaction.fee.balance?.toString());
-
   const transferSchemaParams: TransferValidationParams = {
     [TRANSFER_AMOUNT_FIELD]: {
       maxAmount: transferTokenBalance,
       minAmount
     },
     [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: {
-      availableBalance: transaction.fee.balance
+      availableBalance: transaction.fee.availableBalance,
+      feeCurrency: transaction.fee.currency
     }
   };
 
@@ -87,6 +91,7 @@ const TransferForm = (): JSX.Element => {
       [TRANSFER_RECIPIENT_FIELD]: '',
       [TRANSFER_AMOUNT_FIELD]: '',
       [TRANSFER_TOKEN_FIELD]: transferToken.ticker || '',
+      [TRANSFER_FEE_TOKEN_FIELD]: transaction.fee.currency.ticker,
       [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,12 +115,10 @@ const TransferForm = (): JSX.Element => {
 
       const { amount, destination } = transactionData;
 
-      const fee = await transaction.fee.estimate(destination, amount);
-
-      form.setFieldValue(TRANSFER_FEE_AMOUNT_HIDDEN_FIELD, fee.toString());
+      transaction.fee.estimate(destination, amount);
     },
     500,
-    [form.isValid, form.values]
+    [form.values]
   );
 
   const handleTickerChange = (ticker: string, name: string) => {
@@ -145,23 +148,24 @@ const TransferForm = (): JSX.Element => {
               balance={transferTokenBalance?.toString() || 0}
               humanBalance={transferTokenBalance?.toHuman() || 0}
               valueUSD={transferAmountUSD}
-              selectProps={mergeProps(form.getFieldProps(TRANSFER_TOKEN_FIELD, false), {
+              selectProps={mergeProps(form.getFieldProps(TRANSFER_TOKEN_FIELD, true), {
                 onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, TRANSFER_TOKEN_FIELD),
                 items: selectItems
               })}
-              {...mergeProps(form.getFieldProps(TRANSFER_AMOUNT_FIELD))}
+              {...mergeProps(form.getFieldProps(TRANSFER_AMOUNT_FIELD, false, true))}
             />
             <Input
               placeholder='Enter recipient account'
               label='Recipient'
               padding={{ top: 'spacing5', bottom: 'spacing5' }}
-              {...mergeProps(form.getFieldProps(TRANSFER_RECIPIENT_FIELD))}
+              {...mergeProps(form.getFieldProps(TRANSFER_RECIPIENT_FIELD, false, true))}
             />
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
               {...transaction.fee}
-              hiddenInputProps={form.getFieldProps(TRANSFER_FEE_AMOUNT_HIDDEN_FIELD, true, true)}
+              selectProps={form.getFieldProps(TRANSFER_FEE_TOKEN_FIELD, true)}
+              hiddenInputProps={form.getFieldProps(TRANSFER_FEE_AMOUNT_HIDDEN_FIELD, true, false)}
             />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
               Transfer

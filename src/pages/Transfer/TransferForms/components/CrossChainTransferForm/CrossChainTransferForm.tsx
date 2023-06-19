@@ -104,19 +104,15 @@ const CrossChainTransferForm = (): JSX.Element => {
     validationSchema: crossChainTransferSchema(schema, t)
   });
 
-  const handleOriginatingChainChange = (chain: ChainName, name: string) => {
-    form.setFieldValue(name, chain);
-
+  const handleOriginatingChainChange = (chain: ChainName) => {
     const destinationChains = getDestinationChains(chain);
 
     setDestinationChains(destinationChains);
     form.setFieldValue(CROSS_CHAIN_TRANSFER_TO_FIELD, destinationChains[0].id);
   };
 
-  const handleDestinationChainChange = async (chain: ChainName, name: string) => {
+  const handleDestinationChainChange = async (chain: ChainName) => {
     if (!accountId) return;
-
-    form.setFieldValue(name, chain);
 
     setTokenData(chain);
   };
@@ -218,19 +214,17 @@ const CrossChainTransferForm = (): JSX.Element => {
           <StyledSourceChainSelect
             label='Source Chain'
             items={originatingChains}
-            onSelectionChange={(chain: Key) =>
-              handleOriginatingChainChange(chain as ChainName, CROSS_CHAIN_TRANSFER_FROM_FIELD)
-            }
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_FROM_FIELD, false), {
+              onSelectionChange: (key: Key) => handleOriginatingChainChange(key as ChainName)
+            })}
           />
           <StyledArrowRightCircle color='secondary' strokeWidth={2} />
           <ChainSelect
             label='Destination Chain'
             items={destinationChains}
-            onSelectionChange={(chain: Key) =>
-              handleDestinationChainChange(chain as ChainName, CROSS_CHAIN_TRANSFER_TO_FIELD)
-            }
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_TO_FIELD, false), {
+              onSelectionChange: (key: Key) => handleDestinationChainChange(key as ChainName)
+            })}
           />
         </ChainSelectSection>
         <div>
@@ -245,7 +239,7 @@ const CrossChainTransferForm = (): JSX.Element => {
                 handleTickerChange(ticker as string, CROSS_CHAIN_TRANSFER_TOKEN_FIELD),
               items: transferableTokens
             })}
-            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD))}
+            {...mergeProps(form.getFieldProps(CROSS_CHAIN_TRANSFER_AMOUNT_FIELD, false, true))}
           />
         </div>
         <AccountSelect

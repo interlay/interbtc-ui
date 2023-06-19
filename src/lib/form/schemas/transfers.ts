@@ -48,12 +48,14 @@ const TRANSFER_RECIPIENT_FIELD = 'transfer-destination';
 const TRANSFER_TOKEN_FIELD = 'transfer-token';
 const TRANSFER_AMOUNT_FIELD = 'transfer-amount';
 const TRANSFER_FEE_AMOUNT_HIDDEN_FIELD = 'transfer-fee-amount';
+const TRANSFER_FEE_TOKEN_FIELD = 'transfer-fee-token';
 
 type TransferFormData = {
   [TRANSFER_RECIPIENT_FIELD]?: string;
   [TRANSFER_TOKEN_FIELD]?: string;
   [TRANSFER_AMOUNT_FIELD]?: string;
   [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]?: string;
+  [TRANSFER_FEE_TOKEN_FIELD]?: string;
 };
 
 type TransferValidationParams = {
@@ -78,7 +80,8 @@ const transferSchema = (params: TransferValidationParams): yup.ObjectSchema<any>
     [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: yup
       .string()
       .required('')
-      .customFees(params[TRANSFER_FEE_AMOUNT_HIDDEN_FIELD] as CustomFeesValidationParams)
+      .customFees(params[TRANSFER_FEE_AMOUNT_HIDDEN_FIELD] as CustomFeesValidationParams),
+    [TRANSFER_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
 export {
@@ -90,6 +93,7 @@ export {
   crossChainTransferSchema,
   TRANSFER_AMOUNT_FIELD,
   TRANSFER_FEE_AMOUNT_HIDDEN_FIELD,
+  TRANSFER_FEE_TOKEN_FIELD,
   TRANSFER_RECIPIENT_FIELD,
   TRANSFER_TOKEN_FIELD,
   transferSchema

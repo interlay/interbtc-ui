@@ -196,8 +196,6 @@ const RedeemForm = ({
   const handleChangeIssueAmount = (e: ChangeEvent<HTMLInputElement>) => setAmount(e.target.value);
 
   const handleVaultSelectionChange = (key: Key) => {
-    form.setFieldValue(BRIDGE_REDEEM_CUSTOM_VAULT_FIELD, key, true);
-
     if (!vaults) return;
 
     const vault = vaults.find((item) => item.id === key);
@@ -270,8 +268,9 @@ const RedeemForm = ({
                   onChange: handleToggleCustomVault
                 })}
                 selectProps={{
-                  onSelectionChange: handleVaultSelectionChange,
-                  ...form.getFieldProps(BRIDGE_REDEEM_CUSTOM_VAULT_FIELD)
+                  ...mergeProps(form.getFieldProps(BRIDGE_REDEEM_CUSTOM_VAULT_FIELD), {
+                    onSelectionChange: handleVaultSelectionChange
+                  })
                 }}
               />
               <Input

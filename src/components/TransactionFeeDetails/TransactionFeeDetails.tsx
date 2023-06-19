@@ -24,7 +24,6 @@ import {
 type Props = {
   currency?: CurrencyExt;
   amount?: MonetaryAmount<CurrencyExt>;
-  availableBalance?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
   onSelectionChange?: (key: Key) => void;
   tooltipLabel?: ReactNode;
@@ -60,29 +59,29 @@ const TransactionFeeDetails = ({
       )})`
     : `${0.0} ${currency?.ticker} (${formatUSD(0)})`;
 
-  const { errorMessage } = hiddenInputProps || {};
-
-  const selectTokenProps = mergeProps(
-    { onSelectionChange, label: t('fee_token'), items: selectCurrency.items, value: currency?.ticker },
-    selectProps || {}
-  );
+  const { errorMessage, ...restHiddenInputProps } = hiddenInputProps || {};
 
   return (
     <>
       <TransactionDetails {...props}>
         {(onSelectionChange || selectProps) && (
           <TransactionSelectToken
+            {...mergeProps(selectProps || {}, {
+              onSelectionChange,
+              label: t('fee_token'),
+              items: selectCurrency.items,
+              value: currency?.ticker
+            })}
             aria-describedby={errorMessage ? id : undefined}
             validationState={errorMessage ? 'invalid' : 'valid'}
-            {...selectTokenProps}
           />
         )}
         <TransactionDetailsGroup>
           <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('fx_fees')}</TransactionDetailsDt>
           <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
-          {hiddenInputProps && (
+          {restHiddenInputProps && (
             <VisuallyHidden>
-              <Input aria-hidden {...hiddenInputProps} />
+              <Input aria-hidden {...restHiddenInputProps} />
             </VisuallyHidden>
           )}
         </TransactionDetailsGroup>
