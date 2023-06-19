@@ -158,6 +158,17 @@ const RedeemUI = ({ redeem, onClose }: Props): JSX.Element => {
             </span>
             <AddressWithCopyUI address={redeem.vault.accountId || ''} />
           </div>
+          <div className={clsx('flex', 'justify-between', 'items-center')}>
+            <span
+              className={clsx(
+                { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}
+            >
+              Request id
+            </span>
+            <AddressWithCopyUI address={redeem.id} />
+          </div>
         </div>
       </div>
       <>{renderModalStatusPanel(redeem)}</>

@@ -169,6 +169,17 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
             </span>
             <AddressWithCopyUI address={issue.vaultBackingAddress} />
           </div>
+          <div className={clsx('flex', 'justify-between')}>
+            <span
+              className={clsx(
+                { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
+                { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
+              )}
+            >
+              Request id
+            </span>
+            <AddressWithCopyUI address={issue.id} />
+          </div>
         </div>
         <p className='space-x-1'>
           <span className={getColorShade('red')}>{t('note')}:</span>
