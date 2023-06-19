@@ -21,7 +21,7 @@ const getApyLabel = (apy: Big): string => {
     const tinyIndicator = apy.gt(0) ? '<' : '>';
     const minDecimal = isPositive ? MIN_DECIMAL_NUMBER : -MIN_DECIMAL_NUMBER;
 
-    return `${tinyIndicator} ${minDecimal}%`;
+    return `${tinyIndicator}${minDecimal}%`;
   }
 
   return formatPercentage(apy.toNumber());
