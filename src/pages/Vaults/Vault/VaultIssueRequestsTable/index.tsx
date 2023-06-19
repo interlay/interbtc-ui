@@ -229,7 +229,7 @@ const VaultIssueRequestsTable = ({ vaultAddress, collateralToken }: Props): JSX.
   return (
     <InterlayTableContainer className='space-y-6'>
       <SectionTitle>{t('issue_requests')}</SectionTitle>
-      <InterlayTable {...getTableProps()}>
+      <InterlayTable {...getTableProps()} className='bg-white'>
         <InterlayThead>
           {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key

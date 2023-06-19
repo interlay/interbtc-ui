@@ -162,7 +162,7 @@ const ReplaceTable = ({ vaultAddress, collateralTokenTicker }: Props): JSX.Eleme
   return (
     <InterlayTableContainer className={clsx('space-y-6', 'container', 'mx-auto')}>
       <SectionTitle>{t('vault.replace_requests')}</SectionTitle>
-      <InterlayTable {...getTableProps()}>
+      <InterlayTable {...getTableProps()} className='bg-white'>
         <InterlayThead>
           {headerGroups.map((headerGroup: any) => (
             // eslint-disable-next-line react/jsx-key
