@@ -12,7 +12,7 @@ const MIN_DECIMAL_NUMBER = 0.01;
 // MEMO: returns formatted apy or better representation of a very small apy
 const getApyLabel = (apy: Big): string => {
   if (apy.eq(0)) {
-    return '0.00%';
+    return formatPercentage(0);
   }
   const isPositive = apy.gt(0);
   const isTinyApy = isPositive ? apy.lt(MIN_DECIMAL_NUMBER) : apy.gt(-MIN_DECIMAL_NUMBER);
