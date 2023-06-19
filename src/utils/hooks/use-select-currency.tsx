@@ -1,5 +1,5 @@
 import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
-import { MonetaryAmount } from '@interlay/monetary-js';
+import { InterBtc, Interlay, KBtc, Kintsugi, Kusama, MonetaryAmount, Polkadot } from '@interlay/monetary-js';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -19,12 +19,25 @@ type SelectCurrencyResult = {
   items: TokenData[];
 };
 
-const canBeSwappedForNativeCurrency = (currency: CurrencyExt, pools: Array<LiquidityPool>): boolean => {
+const canBeSwappedForNativeCurrency = (pools: Array<LiquidityPool>) => (currency: CurrencyExt): boolean => {
   const trade = window.bridge.amm.getOptimalTrade(new MonetaryAmount(currency, 1), GOVERNANCE_TOKEN, pools);
   return trade !== null;
 };
 
-const useSelectCurrency = (): SelectCurrencyResult => {
+const canBeUsedAsIssueGriefingCollateral = (currency: CurrencyExt): boolean => {
+  // TODO: determine which currencies can be used as griefing collateral
+  const constantlySetForTestGriefingCollateralTickers = [Kintsugi, Interlay, Kusama, Polkadot, InterBtc, KBtc].map(
+    ({ ticker }) => ticker
+  );
+  return constantlySetForTestGriefingCollateralTickers.includes(currency.ticker);
+};
+
+enum SelectCurrencyFilter {
+  TRADEABLE_FOR_NATIVE_CURRENCY = 'TRADEABLE_FOR_NATIVE_CURRENCY',
+  ISSUE_GRIEFING_COLLATERAL_CURRENCY = 'ISSUE_GRIEFING_COLLATERAL_CURRENCY'
+}
+
+const useSelectCurrency = (filter?: SelectCurrencyFilter): SelectCurrencyResult => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
@@ -34,16 +47,28 @@ const useSelectCurrency = (): SelectCurrencyResult => {
 
   const { data: pools } = useGetLiquidityPools();
 
-  const currenciesWithSwapPath = useMemo(() => {
-    if (currencies === undefined || pools === undefined) {
+  const filteredCurrencies = useMemo(() => {
+    if (currencies === undefined) {
       return [];
     }
-    return currencies.filter((currency) => canBeSwappedForNativeCurrency(currency, pools));
-  }, [currencies, pools]);
+    switch (filter) {
+      case SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY: {
+        if (pools === undefined) {
+          return [];
+        }
+        return currencies.filter(canBeSwappedForNativeCurrency(pools));
+      }
+      case SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY: {
+        return currencies.filter(canBeUsedAsIssueGriefingCollateral);
+      }
+      default:
+        return currencies;
+    }
+  }, [currencies, pools, filter]);
 
   const items = useMemo(
     () =>
-      currenciesWithSwapPath.map((currency) => {
+      filteredCurrencies.map((currency) => {
         const balance = getAvailableBalance(currency.ticker);
         const balanceUSD = balance
           ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
@@ -56,7 +81,7 @@ const useSelectCurrency = (): SelectCurrencyResult => {
           ...getCoinIconProps(currency)
         };
       }),
-    [currenciesWithSwapPath, getAvailableBalance, prices]
+    [filteredCurrencies, getAvailableBalance, prices]
   );
 
   return {
@@ -64,5 +89,5 @@ const useSelectCurrency = (): SelectCurrencyResult => {
   };
 };
 
-export { useSelectCurrency };
+export { SelectCurrencyFilter, useSelectCurrency };
 export type { SelectCurrencyResult };

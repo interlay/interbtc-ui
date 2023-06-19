@@ -1,12 +1,16 @@
+import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { useCallback } from 'react';
+import { Key, useCallback, useState } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
+import { TokenData } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
+import { SelectCurrencyFilter, useSelectCurrency } from '../../use-select-currency';
+import { useGetCurrencies } from '../use-get-currencies';
 import { useGetExchangeRate } from '../use-get-exchange-rate';
 
 type IssueData = {
@@ -29,14 +33,28 @@ const getIssueData = async (): Promise<IssueData> => {
   };
 };
 
+interface GriefingCollateralCurrencyProps {
+  value: string;
+  onSelectionChange: (ticker: Key) => void;
+  items: Array<TokenData>;
+}
+
 type UseGetIssueDataResult = {
   data: IssueData | undefined;
-  getSecurityDeposit: (btcAmount: MonetaryAmount<Currency>) => MonetaryAmount<Currency> | undefined;
+  getSecurityDeposit: (btcAmount: MonetaryAmount<Currency>) => MonetaryAmount<Currency>;
   refetch: () => void;
+  griefingCollateralCurrencyProps: GriefingCollateralCurrencyProps;
 };
 
 const useGetIssueData = (): UseGetIssueDataResult => {
-  const { data: btcToGovernanceToken } = useGetExchangeRate(GOVERNANCE_TOKEN);
+  const [griefingCollateralCurrency, setGriefingCollateralCurrency] = useState(GOVERNANCE_TOKEN);
+  const { data: btcToGriefingCollateralCurrency } = useGetExchangeRate(griefingCollateralCurrency);
+
+  const { getCurrencyFromTicker } = useGetCurrencies(true);
+
+  const { items: griefingCollateralCurrencies } = useSelectCurrency(
+    SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY
+  );
 
   const { data, error, refetch } = useQuery({
     queryKey: 'issue-data',
@@ -50,19 +68,33 @@ const useGetIssueData = (): UseGetIssueDataResult => {
     (btcAmount: MonetaryAmount<Currency>) => {
       const { griefingCollateralRate } = data || {};
 
-      if (!btcToGovernanceToken || !griefingCollateralRate) return;
+      if (!btcToGriefingCollateralCurrency || !griefingCollateralRate)
+        return newMonetaryAmount(0, griefingCollateralCurrency);
 
-      return btcToGovernanceToken.toCounter(btcAmount).mul(griefingCollateralRate);
+      return btcToGriefingCollateralCurrency.toCounter(btcAmount).mul(griefingCollateralRate);
     },
-    [btcToGovernanceToken, data]
+    [btcToGriefingCollateralCurrency, data, griefingCollateralCurrency]
   );
+
+  const handleGriefingCollateralCurrencyChange = (ticker: Key) => {
+    const currency = getCurrencyFromTicker(ticker as string);
+
+    if (!currency) return;
+
+    setGriefingCollateralCurrency(currency);
+  };
 
   return {
     data,
     refetch,
-    getSecurityDeposit
+    getSecurityDeposit,
+    griefingCollateralCurrencyProps: {
+      value: griefingCollateralCurrency.ticker,
+      onSelectionChange: handleGriefingCollateralCurrencyChange,
+      items: griefingCollateralCurrencies
+    }
   };
 };
 
 export { useGetIssueData };
-export type { IssueData, UseGetIssueDataResult };
+export type { GriefingCollateralCurrencyProps, IssueData, UseGetIssueDataResult };

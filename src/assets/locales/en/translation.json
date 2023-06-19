@@ -731,6 +731,7 @@
     "bridge_fee": "Bridge Fee",
     "fee_paids_to_vaults_relayers_maintainers": "The bridge fee paid to the vaults, relayers and maintainers of the system",
     "security_deposit": "Security Deposit",
+    "security_deposit_token": "Security deposit token",
     "security_deposit_is_a_denial_of_service_protection": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed",
     "bitcoin_network_fee": "Bitcoin Network Fee",
     "transaction_fee": "Transaction Fee",

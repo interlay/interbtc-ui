@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
+import { SelectCurrencyFilter, useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import {
   TransactionDetails,
@@ -45,7 +45,7 @@ const TransactionFeeDetails = ({
   const { t } = useTranslation();
 
   // TEMP
-  const selectCurrency = useSelectCurrency();
+  const selectCurrency = useSelectCurrency(SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY);
 
   const amountLabel = amount
     ? `${amount.toHuman()} ${amount.currency.ticker} (
