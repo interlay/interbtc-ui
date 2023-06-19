@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 
-import { Card, SwitchProps } from '@/component-library';
+import { SwitchProps } from '@/component-library';
 import { BridgeVaultData } from '@/utils/hooks/api/bridge/use-get-vaults';
 
 import { VaultSelect, VaultSelectProps } from './VaultSelect';
-import { StyledSwitch } from './VaultSelect.style';
+import { StyledCard, StyledSwitch } from './VaultSelect.style';
 
 type SelectVaultCardProps = {
   isSelectingVault?: boolean;
@@ -17,7 +17,7 @@ const SelectVaultCard = ({ vaults, isSelectingVault, switchProps, selectProps }:
   const { t } = useTranslation();
 
   return (
-    <Card
+    <StyledCard
       direction='column'
       variant='bordered'
       background='tertiary'
@@ -32,7 +32,7 @@ const SelectVaultCard = ({ vaults, isSelectingVault, switchProps, selectProps }:
       {isSelectingVault && vaults && (
         <VaultSelect items={vaults} placeholder={t('bridge.select_a_vault')} aria-label='Vault' {...selectProps} />
       )}
-    </Card>
+    </StyledCard>
   );
 };
 
