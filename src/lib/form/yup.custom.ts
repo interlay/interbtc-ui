@@ -6,6 +6,8 @@ import i18n from 'i18next';
 import * as yup from 'yup';
 import { AnyObject, Maybe } from 'yup/lib/types';
 
+import { newSafeMonetaryAmount } from '@/common/utils/utils';
+
 import { isValidRelayAddress } from './validate';
 
 yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: string, customMessage?: string) {
@@ -47,19 +49,20 @@ yup.addMethod<yup.StringSchema>(
 
 type CustomFeesValidationParams = {
   availableBalance: MonetaryAmount<CurrencyExt>;
+  feeCurrency: CurrencyExt;
 };
 
 // TODO: remove when fees are moved out of form validation
 yup.addMethod<yup.StringSchema>(
   yup.string,
   'customFees',
-  function ({ availableBalance }: CustomFeesValidationParams, customMessage?: string) {
+  function ({ availableBalance, feeCurrency }: CustomFeesValidationParams, customMessage?: string) {
     return this.test('customFees', (value, ctx) => {
       if (value === undefined) return true;
 
-      const amount = new Big(value);
+      const amount = newSafeMonetaryAmount(value, feeCurrency, true);
 
-      if (availableBalance.toBig().lt(amount)) {
+      if (availableBalance.lt(amount)) {
         const message = customMessage || i18n.t('forms.ensure_adequate_amount_left_to_cover_fees');
 
         return ctx.createError({ message });
