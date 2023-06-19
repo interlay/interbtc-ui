@@ -9,7 +9,7 @@ CORS(app)
 api_key = os.environ.get("CG_API_KEY")
 
 tickers = {
-  "tether usd": "tether",
+  "Tether USD": "tether",
 }
 
 @app.after_request
