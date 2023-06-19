@@ -176,7 +176,7 @@ const IssueUI = ({ issue }: Props): JSX.Element => {
                 { 'dark:text-kintsugiTextSecondaryInDarkMode': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA }
               )}
             >
-              Request id
+              {t('issue_page.request')}
             </span>
             <AddressWithCopyUI address={issue.id} />
           </div>
