@@ -1,14 +1,10 @@
 import styled from 'styled-components';
 
-import { Card, Flex, Span, Switch, theme } from '@/component-library';
+import { Flex, Span, Switch, theme } from '@/component-library';
 
 type StyledListItemSelectedLabelProps = {
   $isSelected: boolean;
 };
-
-const StyledCard = styled(Card)`
-  box-shadow: none;
-`;
 
 const StyledChain = styled.span`
   font-size: ${theme.text.s};
@@ -56,7 +52,6 @@ const StyledSwitch = styled(Switch)`
 `;
 
 export {
-  StyledCard,
   StyledChain,
   StyledListItemLabel,
   StyledListLabelWrapper,
