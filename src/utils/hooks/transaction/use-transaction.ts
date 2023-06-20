@@ -31,14 +31,14 @@ import { getParams } from './utils/params';
 import { submitTransaction } from './utils/submit';
 
 const mutateTransaction: (
-  feeCurrency: CurrencyExt,
+  feeAmount: MonetaryAmount<CurrencyExt> | undefined,
   pools: Array<LiquidityPool>
-) => MutationFunction<TransactionResult, TransactionActions> = (feeCurrency, pools) => async (params) => {
+) => MutationFunction<TransactionResult, TransactionActions> = (feeAmount, pools) => async (params) => {
   const expectedStatus = params.customStatus || getStatus(params.type);
   const baseExtrinsic = await getExtrinsic(params);
-  const feeWrappedExtrinsic = await wrapWithTxFeeSwap(feeCurrency, baseExtrinsic, pools);
+  const finalExtrinsic = wrapWithTxFeeSwap(feeAmount, baseExtrinsic, pools);
 
-  return submitTransaction(window.bridge.api, params.accountAddress, feeWrappedExtrinsic, expectedStatus, params.events);
+  return submitTransaction(window.bridge.api, params.accountAddress, finalExtrinsic, expectedStatus, params.events);
 };
 
 // The three declared functions are use to infer types on diferent implementations
@@ -155,7 +155,7 @@ function useTransaction<T extends Transaction>(
   );
 
   const { mutate, mutateAsync, ...transactionMutation } = useMutation(
-    mutateTransaction(feeMutation.data?.amount?.currency || GOVERNANCE_TOKEN, pools || []),
+    mutateTransaction(feeMutation.data?.amount, pools || []),
     optionsProp
   );
 

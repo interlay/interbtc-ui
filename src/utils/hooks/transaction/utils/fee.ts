@@ -94,25 +94,25 @@ const estimateTransactionFee: (
   return wrappedInSwapTxFee;
 };
 
-const wrapWithTxFeeSwap = async (
-  feeCurrency: CurrencyExt,
+const wrapWithTxFeeSwap = (
+  feeAmount: MonetaryAmount<CurrencyExt> | undefined,
   baseExtrinsicData: ExtrinsicData,
   pools: Array<LiquidityPool>
-): Promise<ExtrinsicData> => {
-  if (isCurrencyEqual(feeCurrency, GOVERNANCE_TOKEN)) {
+): ExtrinsicData => {
+  if (feeAmount === undefined || isCurrencyEqual(feeAmount.currency, GOVERNANCE_TOKEN)) {
     return baseExtrinsicData;
   }
-  const baseTxFee = await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
 
-  const { swapPathPrimitive, inputAmount } = await getTxFeeSwapData(
-    baseTxFee,
-    feeCurrency,
-    baseExtrinsicData.extrinsic,
-    pools
-  );
+  const trade = window.bridge.amm.getOptimalTrade(feeAmount, GOVERNANCE_TOKEN, pools);
+
+  if (trade === null) {
+    throw new Error(`Trade path for ${feeAmount.currency.name} -> ${GOVERNANCE_TOKEN.name} not found.`);
+  }
+
+  const swapPath = constructSwapPathPrimitive(trade.path);
   const wrappedCall = window.bridge.api.tx.multiTransactionPayment.withFeeSwapPath(
-    swapPathPrimitive,
-    inputAmount.toString(true),
+    swapPath,
+    feeAmount.toString(true),
     baseExtrinsicData.extrinsic
   );
 
