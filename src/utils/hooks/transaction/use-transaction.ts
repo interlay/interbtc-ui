@@ -183,6 +183,8 @@ function useTransaction<T extends Transaction>(
     }
   };
 
+  useErrorHandler(feeMutation.error);
+
   return {
     ...transactionMutation,
     isSigned,

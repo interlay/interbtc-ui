@@ -74,6 +74,7 @@ const TransferForm = (): JSX.Element => {
 
     const { amount, destination } = transactionData;
 
+    // transaction.execute(destination, amount);
     transaction.execute(destination, amount);
   };
 
