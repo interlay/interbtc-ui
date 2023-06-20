@@ -96,6 +96,7 @@ const useSignMessage = (): UseSignMessageResult => {
     queryFn: () => selectedAccount && getSignature(selectedAccount)
   });
 
+  // TODO: add new notification
   const signMessageMutation = useMutation((account: KeyringPair) => postSignature(account), {
     onError: (_, variables) => {
       setSignature(variables.address, false);

@@ -63,7 +63,7 @@ const TokenInput = forwardRef<HTMLInputElement, TokenInputProps>(
 
     const itemsArr = Array.from(selectProps?.items || []);
     const isSelectAdornment = itemsArr.length > 1;
-    const adornmentTicker = !isSelectAdornment && selectProps?.items ? itemsArr[0]?.value : ticker;
+    const adornmentTicker = !isSelectAdornment && selectProps?.items ? itemsArr[0]?.value : tickerProp;
 
     useEffect(() => {
       if (selectProps?.value === undefined) return;

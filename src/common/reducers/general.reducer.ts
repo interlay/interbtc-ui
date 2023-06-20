@@ -2,8 +2,10 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount } from '@interlay/monetary-js';
 
 import { RELAY_CHAIN_NATIVE_TOKEN } from '@/config/relay-chains';
+import { TransactionStatus } from '@/utils/hooks/transaction/types';
 
 import {
+  ADD_NOTIFICATION,
   GeneralActions,
   INIT_GENERAL_DATA_ACTION,
   IS_BRIDGE_LOADED,
@@ -12,7 +14,8 @@ import {
   SHOW_BUY_MODAL,
   SHOW_SIGN_TERMS_MODAL,
   UPDATE_HEIGHTS,
-  UPDATE_TOTALS
+  UPDATE_TOTALS,
+  UPDATE_TRANSACTION_MODAL_STATUS
 } from '../types/actions.types';
 import { GeneralState, ParachainStatus } from '../types/util.types';
 
@@ -33,6 +36,11 @@ const initialState = {
     relayChainNativeToken: { usd: 0 },
     governanceToken: { usd: 0 },
     wrappedToken: { usd: 0 }
+  },
+  notifications: {},
+  transactionModal: {
+    isOpen: false,
+    data: { variant: TransactionStatus.CONFIRM }
   }
 };
 
@@ -65,6 +73,25 @@ export const generalReducer = (state: GeneralState = initialState, action: Gener
       return { ...state, isBuyModalOpen: action.isBuyModalOpen };
     case SHOW_SIGN_TERMS_MODAL:
       return { ...state, isSignTermsModalOpen: action.isSignTermsModalOpen };
+    case ADD_NOTIFICATION: {
+      const newAccountNotifications = [...(state.notifications[action.accountAddress] || []), action.notification];
+
+      return {
+        ...state,
+        notifications: {
+          ...state.notifications,
+          [action.accountAddress]: newAccountNotifications
+        }
+      };
+    }
+    case UPDATE_TRANSACTION_MODAL_STATUS:
+      return {
+        ...state,
+        transactionModal: {
+          ...state.transactionModal,
+          ...action
+        }
+      };
     default:
       return state;
   }

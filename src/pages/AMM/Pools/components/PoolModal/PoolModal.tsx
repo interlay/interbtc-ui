@@ -26,11 +26,6 @@ const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | n
     return null;
   }
 
-  const handleAction = () => {
-    refetch();
-    onClose?.();
-  };
-
   return (
     <Modal
       aria-label={`${pool.lpToken.ticker} pool deposit or withdraw`}
@@ -44,12 +39,12 @@ const PoolModal = ({ pool, onClose, ...props }: PoolModalProps): JSX.Element | n
         <StyledTabs size='large' fullWidth disabledKeys={pool.isEmpty ? ['withdraw'] : []}>
           <TabsItem key='deposit' title={t('deposit')}>
             <StyledWrapper>
-              <DepositForm slippageModalRef={ref} pool={pool} onDeposit={handleAction} />
+              <DepositForm slippageModalRef={ref} pool={pool} onSuccess={refetch} onSigning={onClose} />
             </StyledWrapper>
           </TabsItem>
           <TabsItem key='withdraw' title={t('withdraw')}>
             <StyledWrapper>
-              <WithdrawForm slippageModalRef={ref} pool={pool} onWithdraw={handleAction} />
+              <WithdrawForm slippageModalRef={ref} pool={pool} onSuccess={refetch} onSigning={onClose} />
             </StyledWrapper>
           </TabsItem>
         </StyledTabs>

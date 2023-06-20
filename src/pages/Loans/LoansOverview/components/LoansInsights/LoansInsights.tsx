@@ -1,10 +1,6 @@
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
 import { Card, Dl, DlGroup } from '@/component-library';
 import { AuthCTA } from '@/components';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
@@ -16,14 +12,10 @@ type LoansInsightsProps = {
 };
 
 const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
-  const { t } = useTranslation();
   const { data: subsidyRewards, refetch } = useGetAccountSubsidyRewards();
 
   const transaction = useTransaction(Transaction.LOANS_CLAIM_REWARDS, {
-    onSuccess: () => {
-      toast.success(t('successfully_claimed_rewards'));
-      refetch();
-    }
+    onSuccess: refetch
   });
 
   const handleClickClaimRewards = () => transaction.execute();
@@ -76,14 +68,6 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
           )}
         </Card>
       </Dl>
-      {transaction.isError && (
-        <ErrorModal
-          open={transaction.isError}
-          onClose={() => transaction.reset()}
-          title='Error'
-          description={transaction.error?.message || ''}
-        />
-      )}
     </>
   );
 };

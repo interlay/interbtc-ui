@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import {
   CREATE_VAULT_DEPOSIT_FIELD,
   CreateVaultFormData,
@@ -38,7 +37,8 @@ const DepositCollateralStep = ({
   const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
 
   const transaction = useTransaction(Transaction.VAULTS_REGISTER_NEW_COLLATERAL, {
-    onSuccess: onSuccessfulDeposit
+    onSuccess: onSuccessfulDeposit,
+    showSuccessModal: false
   });
 
   const validationParams = {
@@ -108,14 +108,6 @@ const DepositCollateralStep = ({
           </CTA>
         </ModalFooter>
       </form>
-      {transaction.isError && (
-        <ErrorModal
-          open={transaction.isError}
-          onClose={() => transaction.reset()}
-          title='Error'
-          description={transaction.error?.message || ''}
-        />
-      )}
     </>
   );
 };
