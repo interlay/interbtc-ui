@@ -4,6 +4,8 @@ import MaintenanceBanner from '@/parts/MaintenanceBanner';
 import Sidebar from '@/parts/Sidebar';
 import Topbar from '@/parts/Topbar';
 
+import { StyledLayout } from './Layout.style';
+
 interface Props {
   className?: string;
   children: React.ReactNode;
@@ -11,13 +13,15 @@ interface Props {
 
 const Layout = ({ className, children }: Props): JSX.Element => {
   return (
-    <Sidebar className={className}>
-      <div className={clsx('relative', 'min-h-screen')}>
-        <MaintenanceBanner />
-        <Topbar />
-        {children}
-      </div>
-    </Sidebar>
+    <StyledLayout>
+      <Sidebar className={className}>
+        <div className={clsx('relative', 'min-h-screen')}>
+          <MaintenanceBanner />
+          <Topbar />
+          {children}
+        </div>
+      </Sidebar>
+    </StyledLayout>
   );
 };
 
