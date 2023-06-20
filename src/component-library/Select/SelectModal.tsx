@@ -35,7 +35,7 @@ const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
 
     return (
       <SelectModalContext.Provider value={{ selectedItem: state.selectedItem }}>
-        <Modal id='test' ref={ref} hasMaxHeight onClose={onClose} {...props}>
+        <Modal ref={ref} hasMaxHeight onClose={onClose} {...props}>
           <ModalHeader id={headerId} size='lg' weight='medium' color='secondary'>
             {title}
           </ModalHeader>
