@@ -6,8 +6,6 @@ import i18n from 'i18next';
 import * as yup from 'yup';
 import { AnyObject, Maybe } from 'yup/lib/types';
 
-import { newSafeMonetaryAmount } from '@/common/utils/utils';
-
 import { isValidRelayAddress } from './validate';
 
 yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: string, customMessage?: string) {
@@ -38,32 +36,6 @@ yup.addMethod<yup.StringSchema>(
           i18n.t('insufficient_funds_governance_token', {
             governanceTokenSymbol: transactionFee.currency.ticker
           });
-
-        return ctx.createError({ message });
-      }
-
-      return true;
-    });
-  }
-);
-
-type CustomFeesValidationParams = {
-  availableBalance: MonetaryAmount<CurrencyExt>;
-  feeCurrency: CurrencyExt;
-};
-
-// TODO: remove when fees are moved out of form validation
-yup.addMethod<yup.StringSchema>(
-  yup.string,
-  'customFees',
-  function ({ availableBalance, feeCurrency }: CustomFeesValidationParams, customMessage?: string) {
-    return this.test('customFees', (value, ctx) => {
-      if (value === undefined) return true;
-
-      const amount = newSafeMonetaryAmount(value, feeCurrency, true);
-
-      if (availableBalance.lt(amount)) {
-        const message = customMessage || i18n.t('forms.ensure_adequate_amount_left_to_cover_fees');
 
         return ctx.createError({ message });
       }
@@ -167,7 +139,6 @@ declare module 'yup' {
   > extends yup.BaseSchema<TType, TContext, TOut> {
     requiredAmount(action?: string, customMessage?: string): StringSchema<TType, TContext>;
     fees(params: FeesValidationParams, customMessage?: string): StringSchema<TType, TContext>;
-    customFees(params: CustomFeesValidationParams, customMessage?: string): StringSchema<TType, TContext>;
     maxAmount(
       params: MaxAmountValidationParams,
       action?: string,
@@ -183,4 +154,4 @@ declare module 'yup' {
 }
 
 export default yup;
-export type { CustomFeesValidationParams, FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams };
+export type { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams };

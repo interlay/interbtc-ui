@@ -8,7 +8,6 @@ import { Transaction, TransactionActions, TransactionArgs } from '.';
 
 type FeeEstimateResult = {
   amount?: MonetaryAmount<CurrencyExt>;
-  availableBalance?: MonetaryAmount<CurrencyExt>;
   isValid?: boolean;
 };
 
@@ -32,11 +31,11 @@ type ExecuteTypeArgs<T extends Transaction> = {
 type ExecuteFunctions<T extends Transaction> = ExecuteArgs<T> | ExecuteTypeArgs<T>;
 
 type EstimateArgs<T extends Transaction> = {
-  estimate<D extends Transaction = T>(...args: [...args: TransactionArgs<D>, feeTicker: string]): void;
+  estimate<D extends Transaction = T>(...args: [...args: TransactionArgs<D>, feeTicker?: string]): void;
 };
 
 type EstimateTypeArgs<T extends Transaction> = {
-  estimate<D extends Transaction = T>(type: D, ...args: [...args: TransactionArgs<D>, feeTicker: string]): void;
+  estimate<D extends Transaction = T>(type: D, ...args: [...args: TransactionArgs<D>, feeTicker?: string]): void;
 };
 
 type EstimateFunctions<T extends Transaction> = EstimateArgs<T> | EstimateTypeArgs<T>;
@@ -50,6 +49,11 @@ type ReactQueryUseFeeEstimateResult = Omit<
 
 type UseFeeEstimateResult<T extends Transaction> = {
   defaultCurrency: CurrencyExt;
+  detailsProps: {
+    defaultCurrency: CurrencyExt;
+    amount?: MonetaryAmount<CurrencyExt>;
+    showInsufficientBalance?: boolean;
+  };
 } & ReactQueryUseFeeEstimateResult &
   EstimateFunctions<T>;
 
@@ -74,9 +78,24 @@ type UseTransactionOptions = Omit<
   showSuccessModal?: boolean;
 };
 
+type UseTransactionWithType<T extends Transaction> = Omit<
+  Exclude<UseTransactionResult<T>, ExecuteTypeArgs<T>>,
+  'fee'
+> & {
+  fee: Exclude<UseFeeEstimateResult<T>, EstimateTypeArgs<T>>;
+};
+
+type UseTransactionWithoutType<T extends Transaction> = Omit<
+  Exclude<UseTransactionResult<T>, ExecuteArgs<T>>,
+  'fee'
+> & {
+  fee: Exclude<UseFeeEstimateResult<T>, EstimateArgs<T>>;
+};
+
 export type {
   EstimateArgs,
   EstimateFeeParams,
+  EstimateFunctions,
   EstimateTypeArgs,
   ExecuteArgs,
   ExecuteFunctions,
@@ -85,5 +104,7 @@ export type {
   TransactionResult,
   UseFeeEstimateResult,
   UseTransactionOptions,
-  UseTransactionResult
+  UseTransactionResult,
+  UseTransactionWithoutType,
+  UseTransactionWithType
 };

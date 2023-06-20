@@ -11,7 +11,6 @@ import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { useForm } from '@/lib/form';
 import {
   TRANSFER_AMOUNT_FIELD,
-  TRANSFER_FEE_AMOUNT_HIDDEN_FIELD,
   TRANSFER_FEE_TOKEN_FIELD,
   TRANSFER_RECIPIENT_FIELD,
   TRANSFER_TOKEN_FIELD,
@@ -51,10 +50,6 @@ const TransferForm = (): JSX.Element => {
     [TRANSFER_AMOUNT_FIELD]: {
       maxAmount: transferTokenBalance,
       minAmount
-    },
-    [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: {
-      availableBalance: transaction.fee.data?.availableBalance,
-      feeCurrency: transaction.fee.data?.amount?.currency || transaction.fee.defaultCurrency
     }
   };
 
@@ -88,8 +83,7 @@ const TransferForm = (): JSX.Element => {
       [TRANSFER_RECIPIENT_FIELD]: '',
       [TRANSFER_AMOUNT_FIELD]: '',
       [TRANSFER_TOKEN_FIELD]: transferToken.ticker || '',
-      [TRANSFER_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker,
-      [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: ''
+      [TRANSFER_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -153,9 +147,7 @@ const TransferForm = (): JSX.Element => {
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
-              defaultCurrency={transaction.fee.defaultCurrency}
-              amount={transaction.fee.data?.amount}
-              isValid={transaction.fee.data?.isValid}
+              {...transaction.fee.detailsProps}
               selectProps={form.getFieldProps(TRANSFER_FEE_TOKEN_FIELD, true)}
             />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>

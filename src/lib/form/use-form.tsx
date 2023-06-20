@@ -32,7 +32,8 @@ const useForm = <Values extends FormikValues = FormikValues>({
     ...formik
   } = useFormik<Values>(args);
 
-  // checks for form validity and if has been changed
+  // emits onComplete event based on debounced values, only if form is modified and valid
+  // meaning that it will only check for completeness in 250ms interval of no changes to the values
   useDebounce(
     () => {
       if (!formik.isValid || !formik.dirty) return;
@@ -40,6 +41,7 @@ const useForm = <Values extends FormikValues = FormikValues>({
       onComplete?.(values);
     },
     250,
+    // do not run debounce if onComplete is not passed
     onComplete ? [values] : []
   );
 
@@ -87,7 +89,7 @@ const useForm = <Values extends FormikValues = FormikValues>({
       };
 
       // Asses if error message is going to be omitted, but validation still takes place (approach used in swap due to custom error messages)
-      const hideError = hideErrorMessage && hideErrorMessages;
+      const hideError = hideErrorMessage || hideErrorMessages;
 
       if (!hideError) {
         const isTouched = formik.touched[fieldName];

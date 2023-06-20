@@ -2,7 +2,7 @@ import { ChainName } from '@interlay/bridge';
 import i18n from 'i18next';
 import { TFunction } from 'react-i18next';
 
-import yup, { CustomFeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
+import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
 const CROSS_CHAIN_TRANSFER_FROM_FIELD = 'transfer-from';
 const CROSS_CHAIN_TRANSFER_TO_FIELD = 'transfer-to';
@@ -47,20 +47,17 @@ const crossChainTransferSchema = (params: CrossChainTransferValidationParams, t:
 const TRANSFER_RECIPIENT_FIELD = 'transfer-destination';
 const TRANSFER_TOKEN_FIELD = 'transfer-token';
 const TRANSFER_AMOUNT_FIELD = 'transfer-amount';
-const TRANSFER_FEE_AMOUNT_HIDDEN_FIELD = 'transfer-fee-amount';
 const TRANSFER_FEE_TOKEN_FIELD = 'transfer-fee-token';
 
 type TransferFormData = {
   [TRANSFER_RECIPIENT_FIELD]?: string;
   [TRANSFER_TOKEN_FIELD]?: string;
   [TRANSFER_AMOUNT_FIELD]?: string;
-  [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]?: string;
   [TRANSFER_FEE_TOKEN_FIELD]?: string;
 };
 
 type TransferValidationParams = {
   [TRANSFER_AMOUNT_FIELD]: Partial<MaxAmountValidationParams> & Partial<MinAmountValidationParams>;
-  [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: Partial<CustomFeesValidationParams>;
 };
 
 const transferSchema = (params: TransferValidationParams): yup.ObjectSchema<any> =>
@@ -77,10 +74,6 @@ const transferSchema = (params: TransferValidationParams): yup.ObjectSchema<any>
     [TRANSFER_TOKEN_FIELD]: yup
       .string()
       .required(i18n.t('forms.please_select_your_field', { field: 'transfer token' })),
-    // [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: yup
-    //   .string()
-    //   .required('')
-    //   .customFees(params[TRANSFER_FEE_AMOUNT_HIDDEN_FIELD] as CustomFeesValidationParams),
     [TRANSFER_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
@@ -92,7 +85,6 @@ export {
   CROSS_CHAIN_TRANSFER_TOKEN_FIELD,
   crossChainTransferSchema,
   TRANSFER_AMOUNT_FIELD,
-  TRANSFER_FEE_AMOUNT_HIDDEN_FIELD,
   TRANSFER_FEE_TOKEN_FIELD,
   TRANSFER_RECIPIENT_FIELD,
   TRANSFER_TOKEN_FIELD,

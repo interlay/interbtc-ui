@@ -24,7 +24,7 @@ type Props = {
   defaultCurrency?: CurrencyExt;
   amount?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
-  isValid?: boolean;
+  showInsufficientBalance?: boolean;
   tooltipLabel?: ReactNode;
   selectProps?: TransactionSelectTokenProps;
 };
@@ -36,7 +36,7 @@ type TransactionFeeDetailsProps = Props & InheritAttrs;
 const TransactionFeeDetails = ({
   amount,
   defaultCurrency,
-  isValid,
+  showInsufficientBalance,
   selectProps,
   label,
   tooltipLabel,
@@ -47,7 +47,6 @@ const TransactionFeeDetails = ({
   const id = useId();
   const [ticker, setTicker] = useState(defaultCurrency?.ticker);
 
-  // TEMP
   const selectCurrency = useSelectCurrency();
 
   const amountLabel = amount
@@ -57,7 +56,7 @@ const TransactionFeeDetails = ({
       )})`
     : `${0.0} ${ticker} (${formatUSD(0)})`;
 
-  const errorMessage = isValid === false ? t('forms.ensure_adequate_amount_left_to_cover_fees') : undefined;
+  const errorMessage = showInsufficientBalance && t('forms.ensure_adequate_amount_left_to_cover_fees');
 
   const handleSelectionChange = (key: Key) => setTicker(key as string);
 

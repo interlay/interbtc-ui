@@ -14,7 +14,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
 import { getExtrinsic } from '../extrinsics';
-import { TransactionActions } from '../types';
+import { Transaction, TransactionActions } from '../types';
 
 // 50% on top of trade to be safe (slippage, different weight)
 const OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER = 1.5;
@@ -119,4 +119,13 @@ const wrapWithTxFeeSwap = (
   return { extrinsic: wrappedCall };
 };
 
-export { estimateTransactionFee, wrapWithTxFeeSwap };
+const getActionAmount = (params: TransactionActions): MonetaryAmount<CurrencyExt> | undefined => {
+  switch (params.type) {
+    case Transaction.TOKENS_TRANSFER: {
+      const [, amount] = params.args;
+      return amount;
+    }
+  }
+};
+
+export { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap };
