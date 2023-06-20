@@ -2,11 +2,11 @@ import styled from 'styled-components';
 
 import dysonsphere from '@/assets/img/dysonsphere.svg';
 
-const StyledLayout = styled('div')`
+const StyledWrapper = styled('div')`
   background: url(${dysonsphere}) no-repeat;
-  background-size: cover;
-  background-position: top 0 right 100%;
+  /* background-size: cover; */
+  background-position: right bottom;
   background-attachment: fixed;
 `;
 
-export { StyledLayout };
+export { StyledWrapper };
