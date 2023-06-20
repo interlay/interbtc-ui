@@ -2,14 +2,13 @@ import { CurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
 import { Key, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useDebounce } from 'react-use';
 
 import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Flex, Input, TokenInput } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-import { isFormDisabled, useForm } from '@/lib/form';
+import { useForm } from '@/lib/form';
 import {
   TRANSFER_AMOUNT_FIELD,
   TRANSFER_FEE_AMOUNT_HIDDEN_FIELD,
@@ -20,12 +19,12 @@ import {
   transferSchema,
   TransferValidationParams
 } from '@/lib/form/schemas';
-import { isFormComplete } from '@/lib/form/utils';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { isTrasanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 const TransferForm = (): JSX.Element => {
@@ -41,10 +40,6 @@ const TransferForm = (): JSX.Element => {
   const transaction = useTransaction(Transaction.TOKENS_TRANSFER, {
     onSuccess: () => {
       form.resetForm();
-    },
-    onChangeFeeEstimate: (fee) => {
-      console.log(fee);
-      form.setFieldValue(TRANSFER_FEE_AMOUNT_HIDDEN_FIELD, fee?.toString(), true);
     }
   });
 
@@ -58,20 +53,21 @@ const TransferForm = (): JSX.Element => {
       minAmount
     },
     [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: {
-      availableBalance: transaction.fee.availableBalance,
-      feeCurrency: transaction.fee.currency
+      availableBalance: transaction.fee.data?.availableBalance,
+      feeCurrency: transaction.fee.data?.amount?.currency || transaction.fee.defaultCurrency
     }
   };
 
   const prepareSubmission = useCallback(
     (values: TransferFormData) => {
       const destination = values[TRANSFER_RECIPIENT_FIELD];
+      const feeTicker = values[TRANSFER_FEE_TOKEN_FIELD];
 
       if (!destination) return;
 
       const amount = newMonetaryAmount(values[TRANSFER_AMOUNT_FIELD] || 0, transferToken, true);
 
-      return { destination, amount };
+      return { destination, amount, feeTicker };
     },
     [transferToken]
   );
@@ -83,6 +79,7 @@ const TransferForm = (): JSX.Element => {
 
     const { amount, destination } = transactionData;
 
+    // transaction.execute(destination, amount);
     transaction.execute(destination, amount);
   };
 
@@ -91,7 +88,7 @@ const TransferForm = (): JSX.Element => {
       [TRANSFER_RECIPIENT_FIELD]: '',
       [TRANSFER_AMOUNT_FIELD]: '',
       [TRANSFER_TOKEN_FIELD]: transferToken.ticker || '',
-      [TRANSFER_FEE_TOKEN_FIELD]: transaction.fee.currency.ticker,
+      [TRANSFER_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker,
       [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,24 +99,17 @@ const TransferForm = (): JSX.Element => {
     initialValues,
     validationSchema: transferSchema(transferSchemaParams),
     onSubmit: handleSubmit,
-    hideErrorMessages: transaction.isLoading
-  });
-
-  useDebounce(
-    async () => {
-      if (!isFormComplete(form, [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD])) return;
-
-      const transactionData = prepareSubmission(form.values);
+    hideErrorMessages: transaction.isLoading,
+    onComplete: (values) => {
+      const transactionData = prepareSubmission(values);
 
       if (!transactionData) return;
 
-      const { amount, destination } = transactionData;
+      const { amount, destination, feeTicker } = transactionData;
 
-      transaction.fee.estimate(destination, amount);
-    },
-    500,
-    [form.values]
-  );
+      transaction.fee.estimate(destination, amount, feeTicker);
+    }
+  });
 
   const handleTickerChange = (ticker: string, name: string) => {
     form.setFieldValue(name, ticker, true);
@@ -135,7 +125,7 @@ const TransferForm = (): JSX.Element => {
       ) || 0
     : 0;
 
-  const isBtnDisabled = isFormDisabled(form);
+  const isBtnDisabled = isTrasanctionFormDisabled(form, transaction.fee);
 
   return (
     <Flex direction='column'>
@@ -163,9 +153,10 @@ const TransferForm = (): JSX.Element => {
           </Flex>
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
-              {...transaction.fee}
+              defaultCurrency={transaction.fee.defaultCurrency}
+              amount={transaction.fee.data?.amount}
+              isValid={transaction.fee.data?.isValid}
               selectProps={form.getFieldProps(TRANSFER_FEE_TOKEN_FIELD, true)}
-              hiddenInputProps={form.getFieldProps(TRANSFER_FEE_AMOUNT_HIDDEN_FIELD, true, false)}
             />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
               Transfer

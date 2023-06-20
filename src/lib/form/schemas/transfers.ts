@@ -77,10 +77,10 @@ const transferSchema = (params: TransferValidationParams): yup.ObjectSchema<any>
     [TRANSFER_TOKEN_FIELD]: yup
       .string()
       .required(i18n.t('forms.please_select_your_field', { field: 'transfer token' })),
-    [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: yup
-      .string()
-      .required('')
-      .customFees(params[TRANSFER_FEE_AMOUNT_HIDDEN_FIELD] as CustomFeesValidationParams),
+    // [TRANSFER_FEE_AMOUNT_HIDDEN_FIELD]: yup
+    //   .string()
+    //   .required('')
+    //   .customFees(params[TRANSFER_FEE_AMOUNT_HIDDEN_FIELD] as CustomFeesValidationParams),
     [TRANSFER_FEE_TOKEN_FIELD]: yup.string().required()
   });
 

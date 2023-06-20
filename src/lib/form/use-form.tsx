@@ -1,6 +1,7 @@
 import { chain } from '@react-aria/utils';
 import { FieldInputProps, FormikConfig, FormikErrors as FormErrors, FormikValues, useFormik } from 'formik';
 import { FocusEvent, Key, useCallback } from 'react';
+import { useDebounce } from 'react-use';
 
 type GetFieldProps = (
   nameOrOptions: any,
@@ -13,10 +14,15 @@ type GetFieldProps = (
 
 type UseFormArgs<Values extends FormikValues = FormikValues> = FormikConfig<Values> & {
   hideErrorMessages?: boolean;
+  onComplete?: (form: Values) => void;
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-const useForm = <Values extends FormikValues = FormikValues>({ hideErrorMessages, ...args }: UseFormArgs<Values>) => {
+const useForm = <Values extends FormikValues = FormikValues>({
+  hideErrorMessages,
+  onComplete,
+  ...args
+}: UseFormArgs<Values>) => {
   const {
     validateForm,
     values,
@@ -25,6 +31,17 @@ const useForm = <Values extends FormikValues = FormikValues>({ hideErrorMessages
     setFieldValue,
     ...formik
   } = useFormik<Values>(args);
+
+  // checks for form validity and if has been changed
+  useDebounce(
+    () => {
+      if (!formik.isValid || !formik.dirty) return;
+
+      onComplete?.(values);
+    },
+    250,
+    onComplete ? [values] : []
+  );
 
   // Handles when field gets forced blur to focus on modal
   // If so, we dont want to consider it as touched if it has not yet been touched on

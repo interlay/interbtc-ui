@@ -1,49 +1,34 @@
-import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
+import { CurrencyExt, isCurrencyEqual, LiquidityPool } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { ExtrinsicStatus } from '@polkadot/types/interfaces';
-import { ISubmittableResult } from '@polkadot/types/types';
 import { mergeProps } from '@react-aria/utils';
 import { useCallback, useState } from 'react';
-import { MutationFunction, useMutation, UseMutationOptions, UseMutationResult } from 'react-query';
+import { useErrorHandler } from 'react-error-boundary';
+import { MutationFunction, useMutation } from 'react-query';
 
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { useSubstrate } from '@/lib/substrate';
 
 import { useGetLiquidityPools } from '../api/amm/use-get-liquidity-pools';
+import { useGetBalances } from '../api/tokens/use-get-balances';
+import { useGetCurrencies } from '../api/use-get-currencies';
 import { getExtrinsic, getStatus } from './extrinsics';
-import { Transaction, TransactionActions, TransactionArgs } from './types';
-import { useFeeEstimate, UseFeeEstimateResult } from './use-fee-estimate';
+import { Transaction, TransactionActions } from './types';
+import {
+  EstimateArgs,
+  EstimateFeeParams,
+  EstimateTypeArgs,
+  ExecuteArgs,
+  ExecuteTypeArgs,
+  FeeEstimateResult,
+  TransactionResult,
+  UseFeeEstimateResult,
+  UseTransactionOptions,
+  UseTransactionResult
+} from './types/hook';
 import { useTransactionNotifications } from './use-transaction-notifications';
-import { wrapWithTxFeeSwap } from './utils/fee';
+import { estimateTransactionFee, wrapWithTxFeeSwap } from './utils/fee';
 import { getParams } from './utils/params';
 import { submitTransaction } from './utils/submit';
-
-type TransactionResult = { status: 'success' | 'error'; data: ISubmittableResult; error?: Error };
-
-type ExecuteArgs<T extends Transaction> = {
-  // Executes the transaction
-  execute<D extends Transaction = T>(...args: TransactionArgs<D>): void;
-  // Similar to execute but returns a promise which can be awaited.
-  executeAsync<D extends Transaction = T>(...args: TransactionArgs<D>): Promise<TransactionResult>;
-};
-
-type ExecuteTypeArgs<T extends Transaction> = {
-  execute<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
-  executeAsync<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): Promise<TransactionResult>;
-};
-
-type ExecuteFunctions<T extends Transaction> = ExecuteArgs<T> | ExecuteTypeArgs<T>;
-
-type ReactQueryUseMutationResult = Omit<
-  UseMutationResult<TransactionResult, Error, TransactionActions, unknown>,
-  'mutate' | 'mutateAsync'
->;
-
-type UseTransactionResult<T extends Transaction> = {
-  reject: (error?: Error) => void;
-  isSigned: boolean;
-  fee: UseFeeEstimateResult<T>;
-} & ReactQueryUseMutationResult &
-  ExecuteFunctions<T>;
 
 const mutateTransaction: (
   feeCurrency: CurrencyExt,
@@ -56,24 +41,16 @@ const mutateTransaction: (
   return submitTransaction(window.bridge.api, params.accountAddress, feeWrappedExtrinsic, expectedStatus, params.events);
 };
 
-type UseTransactionOptions = Omit<
-  UseMutationOptions<TransactionResult, Error, TransactionActions, unknown>,
-  'mutationFn'
-> & {
-  customStatus?: ExtrinsicStatus['type'];
-  onSigning?: (variables: TransactionActions) => void;
-  onChangeFeeEstimate?: (fee?: MonetaryAmount<CurrencyExt>) => void;
-  showSuccessModal?: boolean;
-};
-
 // The three declared functions are use to infer types on diferent implementations
 function useTransaction<T extends Transaction>(
   type: T,
   options?: UseTransactionOptions
-): Exclude<UseTransactionResult<T>, ExecuteTypeArgs<T>>;
+): Exclude<UseTransactionResult<T>, ExecuteTypeArgs<T> | UseFeeEstimateResult<T>> &
+  Exclude<UseFeeEstimateResult<T>, EstimateTypeArgs<T>>;
 function useTransaction<T extends Transaction>(
   options?: UseTransactionOptions
-): Exclude<UseTransactionResult<T>, ExecuteArgs<T>>;
+): Exclude<UseTransactionResult<T>, ExecuteArgs<T> | UseFeeEstimateResult<T>> &
+  Exclude<UseFeeEstimateResult<T>, EstimateArgs<T>>;
 function useTransaction<T extends Transaction>(
   typeOrOptions?: T | UseTransactionOptions,
   options?: UseTransactionOptions
@@ -93,7 +70,7 @@ function useTransaction<T extends Transaction>(
 
   const handleError = (error: Error) => console.error(error.message);
 
-  const { onSigning, onChangeFeeEstimate, ...optionsProp } = mergeProps(
+  const { onSigning, ...optionsProp } = mergeProps(
     mutateOptions,
     {
       onMutate: handleMutate,
@@ -103,20 +80,82 @@ function useTransaction<T extends Transaction>(
     notifications.mutationProps
   );
 
+  // call estimate fee based on pools changes
   const { data: pools } = useGetLiquidityPools();
+  const { getCurrencyFromTicker } = useGetCurrencies(true);
+  const { getBalance } = useGetBalances();
 
-  const fee = useFeeEstimate(
-    typeof typeOrOptions === 'string'
-      ? (typeOrOptions as T)
-      : ({ customStatus: customStatus, onChangeFeeEstimate } as any),
-    {
-      customStatus,
-      onChangeFeeEstimate
-    }
+  const mutateFee: (
+    pools: Array<LiquidityPool>
+  ) => MutationFunction<FeeEstimateResult, EstimateFeeParams> = useCallback(
+    (pools) => async ({ ticker, params }) => {
+      const currency = getCurrencyFromTicker(ticker);
+
+      let actionAmount: MonetaryAmount<CurrencyExt> | undefined;
+
+      switch (params.type) {
+        case Transaction.TOKENS_TRANSFER: {
+          const [, amount] = params.args;
+          actionAmount = amount;
+          break;
+        }
+      }
+
+      const actionFeeAmount =
+        actionAmount && isCurrencyEqual(actionAmount.currency, currency) ? actionAmount : undefined;
+
+      const feeBalance = getBalance(currency.ticker)?.transferable;
+
+      const availableBalance =
+        actionFeeAmount && isCurrencyEqual(actionFeeAmount.currency, currency)
+          ? feeBalance?.sub(actionFeeAmount)
+          : feeBalance;
+
+      const fee = await estimateTransactionFee(currency, pools || [], params);
+
+      return {
+        amount: fee,
+        availableBalance,
+        currency,
+        isValid: !!availableBalance && !!fee && availableBalance.gte(fee)
+      };
+    },
+    [getBalance, getCurrencyFromTicker]
+  );
+
+  const { mutate: feeMutate, ...feeMutation } = useMutation<FeeEstimateResult, Error, EstimateFeeParams, unknown>(
+    mutateFee(pools || [])
+  );
+
+  const handleEstimateFee = useCallback(
+    async (...args) => {
+      let params = {};
+      let ticker: string;
+
+      // Assign correct params for when transaction type is declared on hook params
+      if (typeof typeOrOptions === 'string') {
+        params = { type: typeOrOptions, args };
+        ticker = args[args.length - 1];
+      } else {
+        // Assign correct params for when transaction type is declared on execution level
+        const [type, ...restArgs] = args;
+        params = { type, args: restArgs };
+        ticker = args[args.length - 1];
+      }
+
+      const variables = {
+        ...params,
+        timestamp: new Date().getTime(),
+        customStatus
+      } as TransactionActions;
+
+      feeMutate({ ticker, params: variables });
+    },
+    [typeOrOptions, customStatus, feeMutate]
   );
 
   const { mutate, mutateAsync, ...transactionMutation } = useMutation(
-    mutateTransaction(fee.currency, pools || []),
+    mutateTransaction(feeMutation.data?.amount?.currency || GOVERNANCE_TOKEN, pools || []),
     optionsProp
   );
 
@@ -170,15 +209,21 @@ function useTransaction<T extends Transaction>(
     }
   };
 
+  useErrorHandler(feeMutation.error);
+
   return {
     ...transactionMutation,
     isSigned,
     reject: handleReject,
     execute: handleExecute,
     executeAsync: handleExecuteAsync,
-    fee
+    fee: {
+      ...feeMutation,
+      defaultCurrency: GOVERNANCE_TOKEN,
+      estimate: handleEstimateFee
+    }
   };
 }
 
 export { useTransaction };
-export type { ExecuteFunctions, TransactionResult, UseTransactionOptions, UseTransactionResult };
+export type { FeeEstimateResult, TransactionResult, UseTransactionOptions, UseTransactionResult };

@@ -1,7 +1,7 @@
 import { ExtrinsicStatus } from '@polkadot/types/interfaces';
 
 import { Transaction, TransactionActions } from '../types';
-import { ExecuteFunctions } from '../use-transaction';
+import { ExecuteFunctions } from '../types/hook';
 
 const getParams = <T extends Transaction>(
   args: Parameters<ExecuteFunctions<T>['execute']>,

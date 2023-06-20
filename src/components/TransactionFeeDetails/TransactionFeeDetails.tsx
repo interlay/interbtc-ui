@@ -1,12 +1,11 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps, useId } from '@react-aria/utils';
-import { VisuallyHidden } from '@react-aria/visually-hidden';
-import { Key, ReactNode } from 'react';
+import { Key, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
-import { Alert, Input, InputProps } from '@/component-library';
+import { Alert } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
@@ -22,12 +21,11 @@ import {
 } from '../TransactionDetails';
 
 type Props = {
-  currency?: CurrencyExt;
+  defaultCurrency?: CurrencyExt;
   amount?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
-  onSelectionChange?: (key: Key) => void;
+  isValid?: boolean;
   tooltipLabel?: ReactNode;
-  hiddenInputProps?: InputProps;
   selectProps?: TransactionSelectTokenProps;
 };
 
@@ -37,17 +35,17 @@ type TransactionFeeDetailsProps = Props & InheritAttrs;
 
 const TransactionFeeDetails = ({
   amount,
-  currency,
-  onSelectionChange,
+  defaultCurrency,
+  isValid,
   selectProps,
   label,
   tooltipLabel,
-  hiddenInputProps,
   ...props
 }: TransactionFeeDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
   const id = useId();
+  const [ticker, setTicker] = useState(defaultCurrency?.ticker);
 
   // TEMP
   const selectCurrency = useSelectCurrency();
@@ -57,20 +55,22 @@ const TransactionFeeDetails = ({
         amount,
         getTokenPrice(prices, amount.currency.ticker)?.usd
       )})`
-    : `${0.0} ${currency?.ticker} (${formatUSD(0)})`;
+    : `${0.0} ${ticker} (${formatUSD(0)})`;
 
-  const { errorMessage, ...restHiddenInputProps } = hiddenInputProps || {};
+  const errorMessage = isValid === false ? t('forms.ensure_adequate_amount_left_to_cover_fees') : undefined;
+
+  const handleSelectionChange = (key: Key) => setTicker(key as string);
 
   return (
     <>
       <TransactionDetails {...props}>
-        {(onSelectionChange || selectProps) && (
+        {selectProps && (
           <TransactionSelectToken
             {...mergeProps(selectProps || {}, {
-              onSelectionChange,
               label: t('fee_token'),
               items: selectCurrency.items,
-              value: currency?.ticker
+              value: ticker,
+              onSelectionChange: handleSelectionChange
             })}
             aria-describedby={errorMessage ? id : undefined}
             validationState={errorMessage ? 'invalid' : 'valid'}
@@ -79,11 +79,6 @@ const TransactionFeeDetails = ({
         <TransactionDetailsGroup>
           <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('fx_fees')}</TransactionDetailsDt>
           <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
-          {restHiddenInputProps && (
-            <VisuallyHidden>
-              <Input aria-hidden {...restHiddenInputProps} />
-            </VisuallyHidden>
-          )}
         </TransactionDetailsGroup>
       </TransactionDetails>
       {errorMessage && (
