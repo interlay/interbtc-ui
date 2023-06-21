@@ -1,19 +1,17 @@
-import { ISubmittableResult } from '@polkadot/types/types';
 import clsx from 'clsx';
 import { add, format } from 'date-fns';
-import { useMutation, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 
 import { BLOCK_TIME } from '@/config/parachain';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import InterlayDenimOrKintsugiSupernovaContainedButton, {
   Props as InterlayDenimOrKintsugiMidnightContainedButtonProps
 } from '@/legacy-components/buttons/InterlayDenimOrKintsugiSupernovaContainedButton';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import { useSubstrateSecureState } from '@/lib/substrate';
 import { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
 import { YEAR_MONTH_DAY_PATTERN } from '@/utils/constants/date-time';
-import { submitExtrinsic } from '@/utils/helpers/extrinsic';
+import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
 const getFormattedUnlockDate = (remainingBlockNumbersToUnstake: number, formatPattern: string) => {
   const unlockDate = add(new Date(), {
@@ -36,22 +34,15 @@ const WithdrawButton = ({
 }: CustomProps & InterlayDenimOrKintsugiMidnightContainedButtonProps): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
 
+  const transaction = useTransaction(Transaction.ESCROW_WITHDRAW, {
+    onSuccess: () => {
+      queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccount?.address]);
+    }
+  });
+
   const queryClient = useQueryClient();
 
-  const withdrawMutation = useMutation<ISubmittableResult, Error, void>(
-    () => {
-      return submitExtrinsic(window.bridge.escrow.withdraw());
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([GENERIC_FETCHER, 'escrow', 'getStakedBalance', selectedAccount?.address]);
-      }
-    }
-  );
-
-  const handleUnstake = () => {
-    withdrawMutation.mutate();
-  };
+  const handleUnstake = () => transaction.execute();
 
   const disabled = remainingBlockNumbersToUnstake ? remainingBlockNumbersToUnstake > 0 : false;
 
@@ -79,22 +70,12 @@ const WithdrawButton = ({
           />
         }
         onClick={handleUnstake}
-        pending={withdrawMutation.isLoading}
+        pending={transaction.isLoading}
         disabled={disabled}
         {...rest}
       >
         Withdraw Staked {GOVERNANCE_TOKEN_SYMBOL} {renderUnlockDateLabel()}
       </InterlayDenimOrKintsugiSupernovaContainedButton>
-      {withdrawMutation.isError && (
-        <ErrorModal
-          open={withdrawMutation.isError}
-          onClose={() => {
-            withdrawMutation.reset();
-          }}
-          title='Error'
-          description={withdrawMutation.error?.message || ''}
-        />
-      )}
     </>
   );
 };

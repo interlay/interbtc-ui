@@ -1,4 +1,5 @@
 import { BANXA_LINK } from '@/config/links';
+import { SUBSCAN_LINK } from '@/config/relay-chains';
 
 const URL_PARAMETERS = Object.freeze({
   VAULT: {
@@ -35,8 +36,24 @@ const PAGES = Object.freeze({
   WALLET: '/wallet'
 });
 
+const EXTERNAL_URL_PARAMETERS = Object.freeze({
+  SUBSCAN: {
+    BLOCK: {
+      HASH: 'hash'
+    },
+    ACCOUNT: {
+      ADDRESS: 'address'
+    }
+  }
+});
+
 const EXTERNAL_PAGES = Object.freeze({
-  BANXA: `${BANXA_LINK}`
+  BANXA: `${BANXA_LINK}`,
+  SUBSCAN: {
+    BLOCKS: `${SUBSCAN_LINK}/block`,
+    BLOCK: `${SUBSCAN_LINK}/block/:${EXTERNAL_URL_PARAMETERS.SUBSCAN.BLOCK.HASH}`,
+    ACCOUNT: `${SUBSCAN_LINK}/account/:${EXTERNAL_URL_PARAMETERS.SUBSCAN.ACCOUNT.ADDRESS}`
+  }
 });
 
 const QUERY_PARAMETERS = Object.freeze({
@@ -60,4 +77,4 @@ const EXTERNAL_QUERY_PARAMETERS = Object.freeze({
   }
 });
 
-export { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS, PAGES, QUERY_PARAMETERS, URL_PARAMETERS };
+export { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS, EXTERNAL_URL_PARAMETERS, PAGES, QUERY_PARAMETERS, URL_PARAMETERS };

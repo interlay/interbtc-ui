@@ -1,22 +1,14 @@
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { FaCheckCircle } from 'react-icons/fa';
-import { useQueryClient } from 'react-query';
-import { toast } from 'react-toastify';
 
 import { BTC_EXPLORER_TRANSACTION_API } from '@/config/blockstream-explorer-links';
 import { WRAPPED_TOKEN_SYMBOL } from '@/config/relay-chains';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
-import ErrorModal from '@/legacy-components/ErrorModal';
 import ExternalLink from '@/legacy-components/ExternalLink';
 import RequestWrapper from '@/pages/Bridge/RequestWrapper';
-import { ISSUES_FETCHER } from '@/services/fetchers/issues-fetcher';
-import { TABLE_PAGE_LIMIT } from '@/utils/constants/general';
-import { QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
-import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import useQueryParams from '@/utils/hooks/use-query-params';
 
 import ManualIssueExecutionUI from '../ManualIssueExecutionUI';
 
@@ -27,21 +19,6 @@ interface Props {
 
 const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
   const { t } = useTranslation();
-
-  const queryParams = useQueryParams();
-  const selectedPage = Number(queryParams.get(QUERY_PARAMETERS.PAGE)) || 1;
-  const selectedPageIndex = selectedPage - 1;
-
-  const queryClient = useQueryClient();
-
-  // TODO: check if this transaction is necessary
-  const transaction = useTransaction(Transaction.ISSUE_EXECUTE, {
-    onSuccess: (_, variables) => {
-      const [requestId] = variables.args;
-      queryClient.invalidateQueries([ISSUES_FETCHER, selectedPageIndex * TABLE_PAGE_LIMIT, TABLE_PAGE_LIMIT]);
-      toast.success(t('issue_page.successfully_executed', { id: requestId }));
-    }
-  });
 
   return (
     <>
@@ -75,16 +52,6 @@ const ConfirmedIssueRequest = ({ request }: Props): JSX.Element => {
         </p>
         <ManualIssueExecutionUI request={request} />
       </RequestWrapper>
-      {transaction.isError && transaction.error && (
-        <ErrorModal
-          open={!!transaction.error}
-          onClose={() => {
-            transaction.reset();
-          }}
-          title='Error'
-          description={typeof transaction.error === 'string' ? transaction.error : transaction.error.message}
-        />
-      )}
     </>
   );
 };

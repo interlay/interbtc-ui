@@ -56,7 +56,7 @@ const DepositOutputAssets = ({ pool, values, prices }: DepositOutputAssetsProps)
   return (
     <Flex direction='column' gap='spacing4'>
       <P align='center' size='xs'>
-        {t('amm.pools.receivable_assets')}
+        {t('receivable_assets')}
       </P>
       <Dl direction='column' gap='spacing2'>
         <StyledDlGroup justifyContent='space-between'>
