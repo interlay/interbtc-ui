@@ -53,7 +53,7 @@ const TransferForm = (): JSX.Element => {
     }
   };
 
-  const prepareSubmission = useCallback(
+  const getTransactionArgs = useCallback(
     (values: TransferFormData) => {
       const destination = values[TRANSFER_RECIPIENT_FIELD];
       const feeTicker = values[TRANSFER_FEE_TOKEN_FIELD];
@@ -68,13 +68,12 @@ const TransferForm = (): JSX.Element => {
   );
 
   const handleSubmit = async (values: TransferFormData) => {
-    const transactionData = prepareSubmission(values);
+    const transactionData = getTransactionArgs(values);
 
     if (!transactionData) return;
 
     const { amount, destination } = transactionData;
 
-    // transaction.execute(destination, amount);
     transaction.execute(destination, amount);
   };
 
@@ -95,7 +94,7 @@ const TransferForm = (): JSX.Element => {
     onSubmit: handleSubmit,
     hideErrorMessages: transaction.isLoading,
     onComplete: (values) => {
-      const transactionData = prepareSubmission(values);
+      const transactionData = getTransactionArgs(values);
 
       if (!transactionData) return;
 
@@ -148,7 +147,7 @@ const TransferForm = (): JSX.Element => {
           <Flex direction='column' gap='spacing4'>
             <TransactionFeeDetails
               {...transaction.fee.detailsProps}
-              selectProps={form.getFieldProps(TRANSFER_FEE_TOKEN_FIELD, true)}
+              selectProps={form.getFieldProps(TRANSFER_FEE_TOKEN_FIELD)}
             />
             <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
               Transfer
