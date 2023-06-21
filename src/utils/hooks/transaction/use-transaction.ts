@@ -117,18 +117,13 @@ function useTransaction<T extends Transaction>(
 
   const notifications = useTransactionNotifications({ showSuccessModal });
 
-  const handleMutate = () => setSigned(false);
-
-  const handleSigning = () => setSigned(true);
-
-  const handleError = (error: Error) => console.error(error.message);
-
   const { onSigning, ...optionsProp } = mergeProps(
     mutateOptions,
     {
-      onMutate: handleMutate,
-      onSigning: handleSigning,
-      onError: handleError
+      onMutate: () => setSigned(false),
+      onSigning: () => setSigned(true),
+      onError: (error: Error) => console.error(error.message),
+      onSuccess: () => feeMutation.reset()
     },
     notifications.mutationProps
   );
