@@ -9,9 +9,11 @@ import {
   TransactionDetailsDt,
   TransactionDetailsGroup,
   TransactionFeeDetails,
-  TransactionFeeDetailsProps
+  TransactionFeeDetailsProps,
+  TransactionSelectToken
 } from '@/components';
 import { getTokenPrice } from '@/utils/helpers/prices';
+import { GriefingCollateralCurrencyProps } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { StyledPlusDivider } from './TransactionDetails.style';
@@ -26,6 +28,7 @@ type TransactionDetailsProps = {
   securityDeposit?: MonetaryAmount<Currency>;
   bitcoinNetworkFee?: MonetaryAmount<Currency>;
   feeDetailsProps?: TransactionFeeDetailsProps;
+  griefingCollateralCurrencyProps?: GriefingCollateralCurrencyProps;
 };
 
 const TransactionDetails = ({
@@ -37,11 +40,11 @@ const TransactionDetails = ({
   bridgeFee,
   securityDeposit,
   bitcoinNetworkFee,
-  feeDetailsProps
+  feeDetailsProps,
+  griefingCollateralCurrencyProps
 }: TransactionDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
-
   return (
     <Flex direction='column' gap='spacing2'>
       <Flex direction='column'>
@@ -79,6 +82,9 @@ const TransactionDetails = ({
         </TransactionDetailsGroup>
         {securityDeposit && (
           <>
+            {griefingCollateralCurrencyProps && (
+              <TransactionSelectToken label={t('bridge.security_deposit_token')} {...griefingCollateralCurrencyProps} />
+            )}
             <TransactionDetailsGroup>
               <TransactionDetailsDt tooltipLabel={t('bridge.security_deposit_is_a_denial_of_service_protection')}>
                 {t('bridge.security_deposit')}

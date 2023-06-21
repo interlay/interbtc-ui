@@ -50,7 +50,7 @@ const useGetVaults = <T extends BridgeActions>(
   action: T,
   options?: UseGetVaultsOptions<T>
 ): UseGetBridgeVaultResult<T> => {
-  const { getCurrencyFromIdPrimitive } = useGetCurrencies(true);
+  const { getCurrencyFromIdPrimitive, isLoading: isLoadingCurrencies } = useGetCurrencies(true);
 
   const composeVaultData = useCallback(
     (map: Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>): BridgeVaultData[] =>
@@ -100,6 +100,7 @@ const useGetVaults = <T extends BridgeActions>(
     queryKey: ['vaults', action],
     queryFn: getVaults,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL,
+    enabled: !isLoadingCurrencies,
     ...options
   });
 

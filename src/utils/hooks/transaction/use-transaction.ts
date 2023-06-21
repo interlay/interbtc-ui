@@ -37,9 +37,15 @@ const mutateTransaction: (
 ) => MutationFunction<TransactionResult, TransactionActions> = (feeAmount, pools) => async (params) => {
   const expectedStatus = params.customStatus || getStatus(params.type);
   const baseExtrinsic = await getExtrinsic(params);
-  const finalExtrinsic = wrapWithTxFeeSwap(feeAmount, baseExtrinsic, pools);
+  const feeWrappedExtrinsic = wrapWithTxFeeSwap(feeAmount, baseExtrinsic, pools);
 
-  return submitTransaction(window.bridge.api, params.accountAddress, finalExtrinsic, expectedStatus, params.events);
+  return submitTransaction(
+    window.bridge.api,
+    params.accountAddress,
+    feeWrappedExtrinsic,
+    expectedStatus,
+    params.events
+  );
 };
 
 // The three declared functions are use to infer types on diferent implementations
