@@ -69,3 +69,4 @@ const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
 SelectModal.displayName = 'SelectModal';
 
 export { SelectModal };
+export type { SelectModalProps };

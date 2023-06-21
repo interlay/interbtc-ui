@@ -70,6 +70,7 @@ const TransactionFeeDetails = ({
               value: ticker,
               onSelectionChange: handleSelectionChange
             })}
+            errorMessage={undefined}
             aria-describedby={errorMessage ? id : undefined}
             validationState={errorMessage ? 'invalid' : 'valid'}
           />

@@ -1,6 +1,11 @@
 import yup, { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
-type DepositLiquidityPoolFormData = Record<string, string>;
+const POOL_DEPOSIT_FEE_TOKEN_FIELD = 'despodit-fee-token';
+
+type DepositLiquidityPoolFormData = {
+  [field: string]: string | undefined;
+  [POOL_DEPOSIT_FEE_TOKEN_FIELD]?: string;
+};
 
 type DepositLiquidityPoolValidationParams = FeesValidationParams & {
   tokens: Record<string, MaxAmountValidationParams & MinAmountValidationParams>;
@@ -19,13 +24,15 @@ const depositLiquidityPoolSchema = (params: DepositLiquidityPoolValidationParams
     return { ...acc, [ticker]: validation };
   }, {});
 
-  return yup.object().shape(shape);
+  return yup.object().shape({ ...shape, [POOL_DEPOSIT_FEE_TOKEN_FIELD]: yup.string().required() });
 };
 
-const WITHDRAW_LIQUIDITY_POOL_FIELD = 'withdraw';
+const POOL_WITHDRAW_AMOUNT_FIELD = 'withdraw-amount';
+const POOL_WITHDRAW_FEE_TOKEN_FIELD = 'withdraw-fee-token';
 
 type WithdrawLiquidityPoolFormData = {
-  [WITHDRAW_LIQUIDITY_POOL_FIELD]?: number;
+  [POOL_WITHDRAW_AMOUNT_FIELD]?: string;
+  [POOL_WITHDRAW_FEE_TOKEN_FIELD]?: string;
 };
 
 type WithdrawLiquidityPoolValidationParams = FeesValidationParams &
@@ -34,15 +41,22 @@ type WithdrawLiquidityPoolValidationParams = FeesValidationParams &
 
 const withdrawLiquidityPoolSchema = (params: WithdrawLiquidityPoolValidationParams): yup.ObjectSchema<any> =>
   yup.object().shape({
-    [WITHDRAW_LIQUIDITY_POOL_FIELD]: yup
+    [POOL_WITHDRAW_AMOUNT_FIELD]: yup
       .string()
-      .requiredAmount(WITHDRAW_LIQUIDITY_POOL_FIELD)
+      .requiredAmount(POOL_WITHDRAW_AMOUNT_FIELD)
       .maxAmount(params)
-      .minAmount(params, WITHDRAW_LIQUIDITY_POOL_FIELD)
-      .fees(params)
+      .minAmount(params, POOL_WITHDRAW_AMOUNT_FIELD)
+      .fees(params),
+    [POOL_DEPOSIT_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
-export { depositLiquidityPoolSchema, WITHDRAW_LIQUIDITY_POOL_FIELD, withdrawLiquidityPoolSchema };
+export {
+  depositLiquidityPoolSchema,
+  POOL_DEPOSIT_FEE_TOKEN_FIELD,
+  POOL_WITHDRAW_AMOUNT_FIELD,
+  POOL_WITHDRAW_FEE_TOKEN_FIELD,
+  withdrawLiquidityPoolSchema
+};
 export type {
   DepositLiquidityPoolFormData,
   DepositLiquidityPoolValidationParams,
