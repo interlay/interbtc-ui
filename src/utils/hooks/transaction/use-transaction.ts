@@ -26,7 +26,7 @@ import {
 } from './types/hook';
 import { useTransactionNotifications } from './use-transaction-notifications';
 import { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap } from './utils/fee';
-import { getFeeEstimateParams, getParams } from './utils/params';
+import { getParams } from './utils/params';
 import { submitTransaction } from './utils/submit';
 
 const defaultFeeCurrency = GOVERNANCE_TOKEN;
@@ -92,8 +92,10 @@ function useTransaction<T extends Transaction>(
   const estimateFeeParamsRef = useRef<EstimateFeeParams>();
 
   const handleEstimateFee = useCallback(
-    async (...args) => {
-      const { ticker, ...params } = getFeeEstimateParams(args as any, typeOrOptions, customStatus);
+    (ticker: string = defaultFeeCurrency.ticker) => (
+      ...args: Parameters<UseTransactionResult<T>['fee']['estimate']>
+    ) => {
+      const params = getParams(args, typeOrOptions, customStatus);
 
       const variables = { ticker, params };
 
@@ -103,6 +105,8 @@ function useTransaction<T extends Transaction>(
     },
     [typeOrOptions, customStatus, feeMutate]
   );
+
+  const handleSetCurrency = (ticker?: string) => ({ estimate: handleEstimateFee(ticker) });
 
   // Re-estimate fee based on latest stored variables
   useInterval(() => {
@@ -193,7 +197,8 @@ function useTransaction<T extends Transaction>(
     fee: {
       ...feeMutation,
       defaultCurrency: defaultFeeCurrency,
-      estimate: handleEstimateFee,
+      estimate: handleEstimateFee(),
+      setCurrency: handleSetCurrency,
       detailsProps: {
         defaultCurrency: defaultFeeCurrency,
         amount: feeMutation.data?.amount,

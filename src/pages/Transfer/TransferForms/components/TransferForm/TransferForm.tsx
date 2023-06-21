@@ -101,7 +101,7 @@ const TransferForm = (): JSX.Element => {
 
       const { amount, destination, feeTicker } = transactionData;
 
-      transaction.fee.estimate(destination, amount, feeTicker);
+      transaction.fee.setCurrency(feeTicker).estimate(destination, amount);
     }
   });
 
