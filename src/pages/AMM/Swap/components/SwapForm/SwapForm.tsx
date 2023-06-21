@@ -222,7 +222,6 @@ const SwapForm = ({
   };
 
   const handleTickerChange = (ticker: string, name: string) => {
-    form.setFieldValue(name, ticker, true);
     const currency = getCurrencyFromTicker(ticker);
     const newPair = getPairChange(pair, currency, name);
 
@@ -268,11 +267,11 @@ const SwapForm = ({
                   balance={inputBalance?.toString() || 0}
                   humanBalance={inputBalance?.toHuman() || 0}
                   valueUSD={inputAmountUSD}
-                  selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, false), {
+                  selectProps={mergeProps(form.getFieldProps(SWAP_INPUT_TOKEN_FIELD, true), {
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_INPUT_TOKEN_FIELD),
                     items: selectItems
                   })}
-                  {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, false), { onChange: handleChangeInput })}
+                  {...mergeProps(form.getFieldProps(SWAP_INPUT_AMOUNT_FIELD, true), { onChange: handleChangeInput })}
                 />
                 <SwapDivider onPress={handlePairSwap} />
                 <TokenInput
@@ -283,7 +282,7 @@ const SwapForm = ({
                   humanBalance={outputBalance?.toHuman() || 0}
                   valueUSD={outputAmountUSD}
                   value={trade?.outputAmount.toString() || ''}
-                  selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, false), {
+                  selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, true), {
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_OUTPUT_TOKEN_FIELD),
                     items: selectItems
                   })}

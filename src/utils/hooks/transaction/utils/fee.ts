@@ -14,7 +14,7 @@ import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 
 import { getExtrinsic } from '../extrinsics';
-import { TransactionActions } from '../types';
+import { Transaction, TransactionActions } from '../types';
 
 // 50% on top of trade to be safe (slippage, different weight)
 const OUTPUT_AMOUNT_SAFE_OFFSET_MULTIPLIER = 1.5;
@@ -94,29 +94,38 @@ const estimateTransactionFee: (
   return wrappedInSwapTxFee;
 };
 
-const wrapWithTxFeeSwap = async (
-  feeCurrency: CurrencyExt,
+const wrapWithTxFeeSwap = (
+  feeAmount: MonetaryAmount<CurrencyExt> | undefined,
   baseExtrinsicData: ExtrinsicData,
   pools: Array<LiquidityPool>
-): Promise<ExtrinsicData> => {
-  if (isCurrencyEqual(feeCurrency, GOVERNANCE_TOKEN)) {
+): ExtrinsicData => {
+  if (feeAmount === undefined || isCurrencyEqual(feeAmount.currency, GOVERNANCE_TOKEN)) {
     return baseExtrinsicData;
   }
-  const baseTxFee = await window.bridge.transaction.getFeeEstimate(baseExtrinsicData.extrinsic);
 
-  const { swapPathPrimitive, inputAmount } = await getTxFeeSwapData(
-    baseTxFee,
-    feeCurrency,
-    baseExtrinsicData.extrinsic,
-    pools
-  );
+  const trade = window.bridge.amm.getOptimalTrade(feeAmount, GOVERNANCE_TOKEN, pools);
+
+  if (trade === null) {
+    throw new Error(`Trade path for ${feeAmount.currency.name} -> ${GOVERNANCE_TOKEN.name} not found.`);
+  }
+
+  const swapPath = constructSwapPathPrimitive(trade.path);
   const wrappedCall = window.bridge.api.tx.multiTransactionPayment.withFeeSwapPath(
-    swapPathPrimitive,
-    inputAmount.toString(true),
+    swapPath,
+    feeAmount.toString(true),
     baseExtrinsicData.extrinsic
   );
 
   return { extrinsic: wrappedCall };
 };
 
-export { estimateTransactionFee, wrapWithTxFeeSwap };
+const getActionAmount = (params: TransactionActions): MonetaryAmount<CurrencyExt> | undefined => {
+  switch (params.type) {
+    case Transaction.TOKENS_TRANSFER: {
+      const [, amount] = params.args;
+      return amount;
+    }
+  }
+};
+
+export { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap };

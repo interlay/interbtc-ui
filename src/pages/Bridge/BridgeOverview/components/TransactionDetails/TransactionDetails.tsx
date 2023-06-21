@@ -104,7 +104,7 @@ const TransactionDetails = ({
       {bitcoinNetworkFee ? (
         <TransactionFeeDetails label={t('bridge.bitcoin_network_fee')} amount={bitcoinNetworkFee} />
       ) : (
-        <TransactionFeeDetails {...feeDetailsProps} />
+        feeDetailsProps && <TransactionFeeDetails {...feeDetailsProps} />
       )}
     </Flex>
   );

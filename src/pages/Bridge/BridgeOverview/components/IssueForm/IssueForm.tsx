@@ -131,7 +131,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     validateOnChange: true,
     validationSchema: bridgeIssueSchema({ [BRIDGE_ISSUE_AMOUNT_FIELD]: transferAmountSchemaParams }),
     onSubmit: handleSubmit,
-    showErrorMessages: !transaction.isLoading
+    hideErrorMessages: transaction.isLoading
   });
 
   const handleToggleCustomVault = (e: ChangeEvent<HTMLInputElement>) => {
@@ -146,8 +146,6 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   const handleChangeIssueAmount = (e: ChangeEvent<HTMLInputElement>) => setAmount(e.target.value);
 
   const handleVaultSelectionChange = (key: Key) => {
-    form.setFieldValue(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD, key, true);
-
     if (!vaults) return;
 
     const vault = vaults.find((item) => item.id === key);
@@ -201,8 +199,9 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                   onChange: handleToggleCustomVault
                 })}
                 selectProps={{
-                  onSelectionChange: handleVaultSelectionChange,
-                  ...form.getFieldProps(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD)
+                  ...mergeProps(form.getFieldProps(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD), {
+                    onSelectionChange: handleVaultSelectionChange
+                  })
                 }}
               />
             </Flex>

@@ -1,10 +1,11 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
-import { mergeProps } from '@react-aria/utils';
-import { Key, ReactNode } from 'react';
+import { mergeProps, useId } from '@react-aria/utils';
+import { Key, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
+import { Alert } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { SelectCurrencyFilter, useSelectCurrency } from '@/utils/hooks/use-select-currency';
@@ -20,12 +21,12 @@ import {
 } from '../TransactionDetails';
 
 type Props = {
-  currency?: CurrencyExt;
+  defaultCurrency?: CurrencyExt;
   amount?: MonetaryAmount<CurrencyExt>;
   label?: ReactNode;
-  onSelectionChange?: (key: Key) => void;
-  selectProps?: TransactionSelectTokenProps;
+  showInsufficientBalance?: boolean;
   tooltipLabel?: ReactNode;
+  selectProps?: TransactionSelectTokenProps;
 };
 
 type InheritAttrs = Omit<TransactionDetailsProps, keyof Props>;
@@ -34,8 +35,8 @@ type TransactionFeeDetailsProps = Props & InheritAttrs;
 
 const TransactionFeeDetails = ({
   amount,
-  currency,
-  onSelectionChange,
+  defaultCurrency,
+  showInsufficientBalance,
   selectProps,
   label,
   tooltipLabel,
@@ -44,27 +45,46 @@ const TransactionFeeDetails = ({
   const prices = useGetPrices();
   const { t } = useTranslation();
   const selectCurrency = useSelectCurrency(SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY);
+  const id = useId();
+  const [ticker, setTicker] = useState(defaultCurrency?.ticker);
 
   const amountLabel = amount
-    ? `${amount.toHuman()} ${amount.currency.ticker} (
-    ${displayMonetaryAmountInUSDFormat(amount, getTokenPrice(prices, amount.currency.ticker)?.usd)})`
-    : `${0.0} ${currency?.ticker} (${formatUSD(0)})`;
+    ? `${amount.toHuman()} ${amount.currency.ticker} (${displayMonetaryAmountInUSDFormat(
+        amount,
+        getTokenPrice(prices, amount.currency.ticker)?.usd
+      )})`
+    : `${0.0} ${ticker} (${formatUSD(0)})`;
+
+  const errorMessage = showInsufficientBalance && t('forms.ensure_adequate_amount_left_to_cover_fees');
+
+  const handleSelectionChange = (key: Key) => setTicker(key as string);
 
   return (
-    <TransactionDetails {...props}>
-      {(onSelectionChange || selectProps) && (
-        <TransactionSelectToken
-          {...mergeProps(
-            { onSelectionChange, label: t('fee_token'), items: selectCurrency.items, value: currency?.ticker },
-            selectProps || {}
-          )}
-        />
+    <>
+      <TransactionDetails {...props}>
+        {selectProps && (
+          <TransactionSelectToken
+            {...mergeProps(selectProps || {}, {
+              label: t('fee_token'),
+              items: selectCurrency.items,
+              value: ticker,
+              onSelectionChange: handleSelectionChange
+            })}
+            aria-describedby={errorMessage ? id : undefined}
+            validationState={errorMessage ? 'invalid' : 'valid'}
+          />
+        )}
+        <TransactionDetailsGroup>
+          <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('fx_fees')}</TransactionDetailsDt>
+          <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
+        </TransactionDetailsGroup>
+      </TransactionDetails>
+      {errorMessage && (
+        <Alert id={id} status='error'>
+          {errorMessage}
+        </Alert>
       )}
-      <TransactionDetailsGroup>
-        <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('fx_fees')}</TransactionDetailsDt>
-        <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
-      </TransactionDetailsGroup>
-    </TransactionDetails>
+    </>
   );
 };
 
