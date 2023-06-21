@@ -1,4 +1,4 @@
-import { getIssueRequestsFromExtrinsicResult, Issue, newMonetaryAmount } from '@interlay/interbtc-api';
+import { getIssueRequestsFromExtrinsicResult, Issue } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import { BitcoinAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
@@ -9,7 +9,7 @@ import { useDebounce } from 'react-use';
 import { convertMonetaryAmountToValueInUSD, getRandomArrayElement, safeBitcoinAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
   BRIDGE_ISSUE_AMOUNT_FIELD,
   BRIDGE_ISSUE_CUSTOM_VAULT_FIELD,
@@ -24,6 +24,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { IssueData, useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { BridgeVaultData, useGetVaults } from '@/utils/hooks/api/bridge/use-get-vaults';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 
@@ -38,7 +39,8 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
-  const { getSecurityDeposit } = useGetIssueData();
+  const { getSecurityDeposit, griefingCollateralCurrencyProps } = useGetIssueData();
+  const { getCurrencyFromTicker } = useGetCurrencies(true);
 
   const [issueRequest, setIssueRequest] = useState<Issue>();
 
@@ -74,10 +76,11 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const currentRequestLimit = selectedVault ? selectedVault.amount : requestLimits.singleVaultMaxIssuable;
 
-  const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const griefingCollateralCurrencyBalance = getBalance(griefingCollateralCurrencyProps.value)?.free;
 
+  // TODO: update schema to validate correctly various griefing collateral currencies
   const transferAmountSchemaParams = {
-    governanceBalance,
+    governanceBalance: griefingCollateralCurrencyBalance,
     maxAmount: currentRequestLimit,
     minAmount: dustValue
   };
@@ -107,7 +110,16 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
       vault = getRandomArrayElement(availableVaults);
     }
 
-    transaction.execute(monetaryAmount, vault.vaultId.accountId, vault.collateralCurrency, false, vaultsData.map);
+    const griefingCollateralCurrency = getCurrencyFromTicker(griefingCollateralCurrencyProps.value);
+
+    transaction.execute(
+      monetaryAmount,
+      vault.vaultId.accountId,
+      vault.collateralCurrency,
+      false,
+      vaultsData.map,
+      griefingCollateralCurrency
+    );
   };
 
   const form = useForm<BridgeIssueFormData>({
@@ -148,7 +160,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const bridgeFee = monetaryAmount.mul(issueFee.toBig());
 
-  const securityDeposit = getSecurityDeposit(monetaryAmount) || newMonetaryAmount(0, GOVERNANCE_TOKEN);
+  const securityDeposit = getSecurityDeposit(monetaryAmount);
 
   const totalAmount = monetaryAmount.gte(bridgeFee) ? monetaryAmount.sub(bridgeFee) : new BitcoinAmount(0);
   const totalAmountUSD = totalAmount
@@ -159,7 +171,8 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const isBtnDisabled = isFormDisabled(form);
 
-  const hasEnoughtGovernance = governanceBalance.gte(securityDeposit.add(TRANSACTION_FEE_AMOUNT));
+  const hasEnoughGriefingCollateralBalance =
+    griefingCollateralCurrencyBalance && griefingCollateralCurrencyBalance.gte(securityDeposit);
 
   return (
     <>
@@ -199,15 +212,16 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 totalTicker={WRAPPED_TOKEN.ticker}
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
+                griefingCollateralCurrencyProps={griefingCollateralCurrencyProps}
                 feeDetailsProps={transaction.fee}
               />
               <AuthCTA
                 type='submit'
-                disabled={isBtnDisabled || !hasEnoughtGovernance}
+                disabled={isBtnDisabled || !hasEnoughGriefingCollateralBalance}
                 size='large'
                 loading={transaction.isLoading}
               >
-                {hasEnoughtGovernance
+                {hasEnoughGriefingCollateralBalance
                   ? t('issue')
                   : t('insufficient_token_balance', { token: GOVERNANCE_TOKEN.ticker })}
               </AuthCTA>

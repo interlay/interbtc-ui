@@ -8,7 +8,7 @@ import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/util
 import { Alert } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
+import { SelectCurrencyFilter, useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import {
   TransactionDetails,
@@ -44,10 +44,9 @@ const TransactionFeeDetails = ({
 }: TransactionFeeDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
+  const selectCurrency = useSelectCurrency(SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY);
   const id = useId();
   const [ticker, setTicker] = useState(defaultCurrency?.ticker);
-
-  const selectCurrency = useSelectCurrency();
 
   const amountLabel = amount
     ? `${amount.toHuman()} ${amount.currency.ticker} (${displayMonetaryAmountInUSDFormat(

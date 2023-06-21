@@ -11,6 +11,7 @@ import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { getCoinIconProps } from '../helpers/coin-icon';
 import { getTokenPrice } from '../helpers/prices';
 import { useGetLiquidityPools } from './api/amm/use-get-liquidity-pools';
+import { useGetOracleCurrencies } from './api/oracle/use-get-oracle-currencies';
 import { useGetBalances } from './api/tokens/use-get-balances';
 import { useGetCurrencies } from './api/use-get-currencies';
 import { useGetPrices } from './api/use-get-prices';
@@ -19,12 +20,23 @@ type SelectCurrencyResult = {
   items: TokenData[];
 };
 
-const canBeSwappedForNativeCurrency = (currency: CurrencyExt, pools: Array<LiquidityPool>): boolean => {
+const canBeSwappedForNativeCurrency = (pools: Array<LiquidityPool>) => (currency: CurrencyExt): boolean => {
   const trade = window.bridge.amm.getOptimalTrade(new MonetaryAmount(currency, 1), GOVERNANCE_TOKEN, pools);
   return trade !== null;
 };
 
-const useSelectCurrency = (): SelectCurrencyResult => {
+const canBeUsedAsIssueGriefingCollateral = (oracleCurrencies: Array<CurrencyExt>) => (
+  currency: CurrencyExt
+): boolean => {
+  return oracleCurrencies.map(({ ticker }) => ticker).includes(currency.ticker);
+};
+
+enum SelectCurrencyFilter {
+  TRADEABLE_FOR_NATIVE_CURRENCY = 'TRADEABLE_FOR_NATIVE_CURRENCY',
+  ISSUE_GRIEFING_COLLATERAL_CURRENCY = 'ISSUE_GRIEFING_COLLATERAL_CURRENCY'
+}
+
+const useSelectCurrency = (filter?: SelectCurrencyFilter): SelectCurrencyResult => {
   const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
 
   const { data: currencies } = useGetCurrencies(bridgeLoaded);
@@ -33,17 +45,33 @@ const useSelectCurrency = (): SelectCurrencyResult => {
   const prices = useGetPrices();
 
   const { data: pools } = useGetLiquidityPools();
+  const { data: oracleCurrencies } = useGetOracleCurrencies();
 
-  const currenciesWithSwapPath = useMemo(() => {
-    if (currencies === undefined || pools === undefined) {
+  const filteredCurrencies = useMemo(() => {
+    if (currencies === undefined) {
       return [];
     }
-    return currencies.filter((currency) => canBeSwappedForNativeCurrency(currency, pools));
-  }, [currencies, pools]);
+    switch (filter) {
+      case SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY: {
+        if (pools === undefined) {
+          return [];
+        }
+        return currencies.filter(canBeSwappedForNativeCurrency(pools));
+      }
+      case SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY: {
+        if (oracleCurrencies === undefined) {
+          return [];
+        }
+        return currencies.filter(canBeUsedAsIssueGriefingCollateral(oracleCurrencies));
+      }
+      default:
+        return currencies;
+    }
+  }, [currencies, pools, filter, oracleCurrencies]);
 
   const items = useMemo(
     () =>
-      currenciesWithSwapPath.map((currency) => {
+      filteredCurrencies.map((currency) => {
         const balance = getAvailableBalance(currency.ticker);
         const balanceUSD = balance
           ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
@@ -56,7 +84,7 @@ const useSelectCurrency = (): SelectCurrencyResult => {
           ...getCoinIconProps(currency)
         };
       }),
-    [currenciesWithSwapPath, getAvailableBalance, prices]
+    [filteredCurrencies, getAvailableBalance, prices]
   );
 
   return {
@@ -64,5 +92,5 @@ const useSelectCurrency = (): SelectCurrencyResult => {
   };
 };
 
-export { useSelectCurrency };
+export { SelectCurrencyFilter, useSelectCurrency };
 export type { SelectCurrencyResult };
