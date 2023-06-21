@@ -316,7 +316,6 @@ const SwapForm = ({
                   balance={outputBalance?.toString() || 0}
                   humanBalance={outputBalance?.toHuman() || 0}
                   valueUSD={outputAmountUSD}
-                  value={trade?.outputAmount.toString() || ''}
                   selectProps={mergeProps(form.getFieldProps(SWAP_OUTPUT_TOKEN_FIELD, true), {
                     onSelectionChange: (ticker: Key) => handleTickerChange(ticker as string, SWAP_OUTPUT_TOKEN_FIELD),
                     items: selectItems
