@@ -8,7 +8,7 @@ import { useSubstrateSecureState } from '@/lib/substrate';
 import IssueRequestsTable from './IssueRequestsTable';
 import RedeemRequestsTable from './RedeemRequestsTable';
 
-const Transactions = (): JSX.Element => {
+const LegacyTransactions = (): JSX.Element => {
   const { selectedAccount } = useSubstrateSecureState();
   const { t } = useTranslation();
 
@@ -25,4 +25,4 @@ const Transactions = (): JSX.Element => {
   );
 };
 
-export default Transactions;
+export { LegacyTransactions };
