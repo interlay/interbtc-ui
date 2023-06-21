@@ -1,5 +1,5 @@
 import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
-import { InterBtc, Interlay, KBtc, Kintsugi, Kusama, MonetaryAmount, Polkadot } from '@interlay/monetary-js';
+import { MonetaryAmount } from '@interlay/monetary-js';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -11,6 +11,7 @@ import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { getCoinIconProps } from '../helpers/coin-icon';
 import { getTokenPrice } from '../helpers/prices';
 import { useGetLiquidityPools } from './api/amm/use-get-liquidity-pools';
+import { useGetOracleCurrencies } from './api/oracle/use-get-oracle-currencies';
 import { useGetBalances } from './api/tokens/use-get-balances';
 import { useGetCurrencies } from './api/use-get-currencies';
 import { useGetPrices } from './api/use-get-prices';
@@ -24,12 +25,10 @@ const canBeSwappedForNativeCurrency = (pools: Array<LiquidityPool>) => (currency
   return trade !== null;
 };
 
-const canBeUsedAsIssueGriefingCollateral = (currency: CurrencyExt): boolean => {
-  // TODO: determine which currencies can be used as griefing collateral
-  const constantlySetForTestGriefingCollateralTickers = [Kintsugi, Interlay, Kusama, Polkadot, InterBtc, KBtc].map(
-    ({ ticker }) => ticker
-  );
-  return constantlySetForTestGriefingCollateralTickers.includes(currency.ticker);
+const canBeUsedAsIssueGriefingCollateral = (oracleCurrencies: Array<CurrencyExt>) => (
+  currency: CurrencyExt
+): boolean => {
+  return oracleCurrencies.map(({ ticker }) => ticker).includes(currency.ticker);
 };
 
 enum SelectCurrencyFilter {
@@ -46,6 +45,7 @@ const useSelectCurrency = (filter?: SelectCurrencyFilter): SelectCurrencyResult 
   const prices = useGetPrices();
 
   const { data: pools } = useGetLiquidityPools();
+  const { data: oracleCurrencies } = useGetOracleCurrencies();
 
   const filteredCurrencies = useMemo(() => {
     if (currencies === undefined) {
@@ -59,12 +59,15 @@ const useSelectCurrency = (filter?: SelectCurrencyFilter): SelectCurrencyResult 
         return currencies.filter(canBeSwappedForNativeCurrency(pools));
       }
       case SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY: {
-        return currencies.filter(canBeUsedAsIssueGriefingCollateral);
+        if (oracleCurrencies === undefined) {
+          return [];
+        }
+        return currencies.filter(canBeUsedAsIssueGriefingCollateral(oracleCurrencies));
       }
       default:
         return currencies;
     }
-  }, [currencies, pools, filter]);
+  }, [currencies, pools, filter, oracleCurrencies]);
 
   const items = useMemo(
     () =>

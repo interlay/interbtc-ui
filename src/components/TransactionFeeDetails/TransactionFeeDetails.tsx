@@ -43,8 +43,6 @@ const TransactionFeeDetails = ({
 }: TransactionFeeDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
-
-  // TEMP
   const selectCurrency = useSelectCurrency(SelectCurrencyFilter.TRADEABLE_FOR_NATIVE_CURRENCY);
 
   const amountLabel = amount
