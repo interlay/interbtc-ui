@@ -15,7 +15,7 @@ import { showBuyModal } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
 import { CTA } from '@/component-library';
 import { GOVERNANCE_TOKEN_SYMBOL } from '@/config/relay-chains';
-import { Props as InterlayDefaultContainedButtonProps } from '@/legacy-components/buttons/InterlayDefaultContainedButton';
+import { Props as InterlayDefaultOutlinedButtonProps } from '@/legacy-components/buttons/InterlayDefaultContainedButton';
 import TitleWithUnderline from '@/legacy-components/TitleWithUnderline';
 import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import InterlayModal, { InterlayModalInnerWrapper } from '@/legacy-components/UI/InterlayModal';
@@ -96,7 +96,7 @@ const ExchangeLink = ({ href, icon }: ExchangeLinkProps) => {
 };
 
 // TODO: remove when banxa gets into interlay dapp
-const GetGovernanceTokenUI = (props: InterlayDefaultContainedButtonProps): JSX.Element => {
+const GetGovernanceTokenUI = (props: InterlayDefaultOutlinedButtonProps): JSX.Element => {
   const { isBuyModalOpen } = useSelector((state: StoreType) => state.general);
   const focusRef = React.useRef(null);
   const { t } = useTranslation();
