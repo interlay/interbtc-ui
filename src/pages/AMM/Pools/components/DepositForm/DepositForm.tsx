@@ -7,12 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Alert, Flex } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
   DepositLiquidityPoolFormData,
   depositLiquidityPoolSchema,
   DepositLiquidityPoolValidationParams,
-  isFormDisabled,
   POOL_DEPOSIT_FEE_TOKEN_FIELD,
   useForm
 } from '@/lib/form';
@@ -22,6 +20,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { isTrasanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolName } from '../PoolName';
@@ -45,10 +44,8 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
   const accountId = useAccountId();
   const { t } = useTranslation();
-  const { getAvailableBalance, getBalance } = useGetBalances();
+  const { getAvailableBalance } = useGetBalances();
   const prices = useGetPrices();
-
-  const governanceBalance = getBalance(GOVERNANCE_TOKEN.ticker)?.free || newMonetaryAmount(0, GOVERNANCE_TOKEN);
 
   const transaction = useTransaction(Transaction.AMM_ADD_LIQUIDITY, {
     onSuccess,
@@ -109,7 +106,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
 
   const form = useForm<DepositLiquidityPoolFormData>({
     initialValues,
-    validationSchema: depositLiquidityPoolSchema({ transactionFee: TRANSACTION_FEE_AMOUNT, governanceBalance, tokens }),
+    validationSchema: depositLiquidityPoolSchema({ tokens }),
     onSubmit: handleSubmit,
     onComplete: async (values) => {
       const transactionData = await getTransactionArgs(values);
@@ -153,7 +150,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
     <PoolName justifyContent='center' tickers={pooledCurrencies.map((amount) => amount.currency.ticker)} />
   );
 
-  const isBtnDisabled = isFormDisabled(form);
+  const isBtnDisabled = isTrasanctionFormDisabled(form, transaction.fee);
 
   return (
     <form onSubmit={form.handleSubmit}>
@@ -184,7 +181,7 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
                     valueUSD={new Big(isNaN(Number(form.values[ticker])) ? 0 : form.values[ticker] || 0)
                       .mul(getTokenPrice(prices, ticker)?.usd || 0)
                       .toNumber()}
-                    {...mergeProps(form.getFieldProps(ticker), { onChange: handleChange })}
+                    {...mergeProps(form.getFieldProps(ticker, false, true), { onChange: handleChange })}
                   />
                   {!isLastItem && <StyledPlusDivider marginTop='spacing5' />}
                 </Fragment>
@@ -198,13 +195,15 @@ const DepositForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Deposi
           ) : (
             <DepositOutputAssets pool={pool} values={form.values} prices={prices} />
           )}
-          <TransactionFeeDetails
-            {...transaction.fee.detailsProps}
-            selectProps={{ ...form.getFieldProps(POOL_DEPOSIT_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
-          />
-          <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
-            {t('amm.pools.add_liquidity')}
-          </AuthCTA>
+          <Flex direction='column' gap='spacing4'>
+            <TransactionFeeDetails
+              {...transaction.fee.detailsProps}
+              selectProps={{ ...form.getFieldProps(POOL_DEPOSIT_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
+            />
+            <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
+              {t('amm.pools.add_liquidity')}
+            </AuthCTA>
+          </Flex>
         </Flex>
       </Flex>
     </form>

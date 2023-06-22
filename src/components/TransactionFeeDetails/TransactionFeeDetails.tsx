@@ -5,7 +5,7 @@ import { Key, ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat, formatUSD } from '@/common/utils/utils';
-import { Alert } from '@/component-library';
+import { Alert, Flex } from '@/component-library';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { SelectCurrencyFilter, useSelectCurrency } from '@/utils/hooks/use-select-currency';
@@ -40,6 +40,7 @@ const TransactionFeeDetails = ({
   selectProps,
   label,
   tooltipLabel,
+  className,
   ...props
 }: TransactionFeeDetailsProps): JSX.Element => {
   const prices = useGetPrices();
@@ -60,7 +61,7 @@ const TransactionFeeDetails = ({
   const handleSelectionChange = (key: Key) => setTicker(key as string);
 
   return (
-    <>
+    <Flex gap='spacing2' direction='column' className={className}>
       <TransactionDetails {...props}>
         {selectProps && (
           <TransactionSelectToken
@@ -85,7 +86,7 @@ const TransactionFeeDetails = ({
           {errorMessage}
         </Alert>
       )}
-    </>
+    </Flex>
   );
 };
 

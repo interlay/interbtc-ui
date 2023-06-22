@@ -1,6 +1,6 @@
 import { LiquidityPool, newMonetaryAmount } from '@interlay/interbtc-api';
 import Big from 'big.js';
-import { RefObject, useCallback, useState } from 'react';
+import { RefObject, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
@@ -78,11 +78,16 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
     return transaction.execute(amount, pool, slippage, deadline, accountId);
   };
 
-  const form = useForm<WithdrawLiquidityPoolFormData>({
-    initialValues: {
+  const initialValues = useMemo(
+    () => ({
       [POOL_WITHDRAW_AMOUNT_FIELD]: '',
       [POOL_WITHDRAW_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
-    },
+    }),
+    [transaction.fee.defaultCurrency.ticker]
+  );
+
+  const form = useForm<WithdrawLiquidityPoolFormData>({
+    initialValues: initialValues,
     validationSchema: withdrawLiquidityPoolSchema(schemaParams),
     onSubmit: handleSubmit,
     onComplete: async (values) => {
@@ -134,18 +139,19 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
               balance={balance?.toString() || 0}
               humanBalance={balance?.toHuman() || 0}
               valueUSD={pooledAmountsUSD}
-              errorMessage={form.errors[POOL_WITHDRAW_AMOUNT_FIELD]}
               {...form.getFieldProps(POOL_WITHDRAW_AMOUNT_FIELD)}
             />
           </Flex>
           <ReceivableAssets assetAmounts={pooledAmounts} prices={prices} />
-          <TransactionFeeDetails
-            {...transaction.fee.detailsProps}
-            selectProps={{ ...form.getFieldProps(POOL_WITHDRAW_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
-          />
-          <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
-            {t('amm.pools.remove_liquidity')}
-          </AuthCTA>
+          <Flex direction='column' gap='spacing4'>
+            <TransactionFeeDetails
+              {...transaction.fee.detailsProps}
+              selectProps={{ ...form.getFieldProps(POOL_WITHDRAW_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
+            />
+            <AuthCTA type='submit' size='large' disabled={isBtnDisabled}>
+              {t('amm.pools.remove_liquidity')}
+            </AuthCTA>
+          </Flex>
         </Flex>
       </Flex>
     </form>
