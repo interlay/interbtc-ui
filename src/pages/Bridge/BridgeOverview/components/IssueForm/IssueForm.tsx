@@ -1,8 +1,16 @@
 import { getIssueRequestsFromExtrinsicResult, Issue } from '@interlay/interbtc-api';
+import {
+  CurrencyExt,
+  getIssueRequestsFromExtrinsicResult,
+  InterbtcPrimitivesVaultId,
+  Issue,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
-import { BitcoinAmount } from '@interlay/monetary-js';
+import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { AccountId } from '@polkadot/types/interfaces';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEvent, Key, useState } from 'react';
+import { ChangeEvent, Key, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'react-use';
 
@@ -14,6 +22,8 @@ import {
   BRIDGE_ISSUE_AMOUNT_FIELD,
   BRIDGE_ISSUE_CUSTOM_VAULT_FIELD,
   BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH,
+  BRIDGE_ISSUE_FEE_TOKEN,
+  BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER,
   BridgeIssueFormData,
   bridgeIssueSchema,
   isFormDisabled,
@@ -40,7 +50,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
   const { getSecurityDeposit, griefingCollateralCurrencyProps } = useGetIssueData();
-  const { getCurrencyFromTicker } = useGetCurrencies(true);
+  const { getCurrencyFromTicker, isLoading: isLoadingCurrencies } = useGetCurrencies(true);
 
   const [issueRequest, setIssueRequest] = useState<Issue>();
 
@@ -86,52 +96,84 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   };
 
   const handleSubmit = async (values: BridgeIssueFormData) => {
-    const amount = values[BRIDGE_ISSUE_AMOUNT_FIELD];
-
-    if (!vaultsData || !amount) return;
-
-    const monetaryAmount = new BitcoinAmount(amount);
-
-    const availableVaults = getAvailableVaults(monetaryAmount);
-
-    if (!availableVaults) return;
-
-    const vaultId = values[BRIDGE_ISSUE_CUSTOM_VAULT_FIELD];
-
-    let vault: BridgeVaultData | undefined;
-
-    // If custom vault was select, try to find it in the data
-    if (vaultId) {
-      vault = availableVaults.find((item) => item.id === vaultId);
+    const args = getTransactionArgs(values);
+    if (args === undefined) {
+      return;
     }
 
-    // If no vault provided nor the custom vault wasn't found (unlikely), choose random vault
-    if (!vault) {
-      vault = getRandomArrayElement(availableVaults);
-    }
-
-    const griefingCollateralCurrency = getCurrencyFromTicker(griefingCollateralCurrencyProps.value);
-
-    transaction.execute(
-      monetaryAmount,
-      vault.vaultId.accountId,
-      vault.collateralCurrency,
-      false,
-      vaultsData.map,
-      griefingCollateralCurrency
-    );
+    transaction.execute(...args);
   };
+
+  const getTransactionArgs = useCallback(
+    (
+      values: BridgeIssueFormData
+    ):
+      | [
+          MonetaryAmount<CurrencyExt>,
+          AccountId,
+          CurrencyExt,
+          boolean,
+          Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>,
+          CurrencyExt
+        ]
+      | undefined => {
+      const amount = values[BRIDGE_ISSUE_AMOUNT_FIELD];
+      const griefingCollateralCurrencyTicker = values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER];
+      if (!vaultsData || !amount || griefingCollateralCurrencyTicker === undefined || isLoadingCurrencies) return;
+
+      const monetaryAmount = new BitcoinAmount(amount);
+
+      const availableVaults = getAvailableVaults(monetaryAmount);
+
+      if (!availableVaults) return;
+
+      const vaultId = values[BRIDGE_ISSUE_CUSTOM_VAULT_FIELD];
+
+      let vault: BridgeVaultData | undefined;
+
+      // If custom vault was select, try to find it in the data
+      if (vaultId) {
+        vault = availableVaults.find((item) => item.id === vaultId);
+      }
+
+      // If no vault provided nor the custom vault wasn't found (unlikely), choose random vault
+      if (!vault) {
+        vault = getRandomArrayElement(availableVaults);
+      }
+
+      const griefingCollateralCurrency = getCurrencyFromTicker(griefingCollateralCurrencyTicker);
+      return [
+        monetaryAmount,
+        vault.vaultId.accountId,
+        vault.collateralCurrency,
+        false,
+        vaultsData.map,
+        griefingCollateralCurrency
+      ];
+    },
+    [getAvailableVaults, getCurrencyFromTicker, isLoadingCurrencies, vaultsData]
+  );
 
   const form = useForm<BridgeIssueFormData>({
     initialValues: {
       [BRIDGE_ISSUE_AMOUNT_FIELD]: '',
       [BRIDGE_ISSUE_CUSTOM_VAULT_FIELD]: '',
-      [BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH]: false
+      [BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH]: false,
+      [BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER]: GOVERNANCE_TOKEN.ticker,
+      [BRIDGE_ISSUE_FEE_TOKEN]: transaction.fee.defaultCurrency.ticker
     },
     validateOnChange: true,
     validationSchema: bridgeIssueSchema({ [BRIDGE_ISSUE_AMOUNT_FIELD]: transferAmountSchemaParams }),
     onSubmit: handleSubmit,
-    hideErrorMessages: transaction.isLoading
+    hideErrorMessages: transaction.isLoading,
+    onComplete: (values) => {
+      const feeTicker = values[BRIDGE_ISSUE_FEE_TOKEN];
+      const args = getTransactionArgs(values);
+      if (args === undefined) {
+        return;
+      }
+      transaction.fee.setCurrency(feeTicker).estimate(...args);
+    }
   });
 
   const handleToggleCustomVault = (e: ChangeEvent<HTMLInputElement>) => {
@@ -213,7 +255,10 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
                 griefingCollateralCurrencyProps={griefingCollateralCurrencyProps}
-                feeDetailsProps={transaction.fee}
+                feeDetailsProps={{
+                  ...transaction.fee.detailsProps,
+                  selectProps: form.getFieldProps(BRIDGE_ISSUE_FEE_TOKEN, true)
+                }}
               />
               <AuthCTA
                 type='submit'
