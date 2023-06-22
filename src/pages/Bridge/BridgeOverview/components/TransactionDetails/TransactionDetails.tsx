@@ -10,11 +10,12 @@ import {
   TransactionDetailsGroup,
   TransactionFeeDetails,
   TransactionFeeDetailsProps,
-  TransactionSelectToken
+  TransactionSelectToken,
+  TransactionSelectTokenProps
 } from '@/components';
 import { getTokenPrice } from '@/utils/helpers/prices';
-import { GriefingCollateralCurrencyProps } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { SelectCurrencyFilter, useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 import { StyledPlusDivider } from './TransactionDetails.style';
 
@@ -28,7 +29,7 @@ type TransactionDetailsProps = {
   securityDeposit?: MonetaryAmount<Currency>;
   bitcoinNetworkFee?: MonetaryAmount<Currency>;
   feeDetailsProps?: TransactionFeeDetailsProps;
-  griefingCollateralCurrencyProps?: GriefingCollateralCurrencyProps;
+  securityDepositSelectProps?: TransactionSelectTokenProps;
 };
 
 const TransactionDetails = ({
@@ -41,10 +42,15 @@ const TransactionDetails = ({
   securityDeposit,
   bitcoinNetworkFee,
   feeDetailsProps,
-  griefingCollateralCurrencyProps
+  securityDepositSelectProps
 }: TransactionDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
+
+  const { items: griefingCollateralCurrencies } = useSelectCurrency(
+    SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY
+  );
+
   return (
     <Flex direction='column' gap='spacing2'>
       <Flex direction='column'>
@@ -82,8 +88,12 @@ const TransactionDetails = ({
         </TransactionDetailsGroup>
         {securityDeposit && (
           <>
-            {griefingCollateralCurrencyProps && (
-              <TransactionSelectToken label={t('bridge.security_deposit_token')} {...griefingCollateralCurrencyProps} />
+            {securityDepositSelectProps && (
+              <TransactionSelectToken
+                label={t('bridge.security_deposit_token')}
+                items={griefingCollateralCurrencies}
+                {...securityDepositSelectProps}
+              />
             )}
             <TransactionDetailsGroup>
               <TransactionDetailsDt tooltipLabel={t('bridge.security_deposit_is_a_denial_of_service_protection')}>

@@ -1,16 +1,8 @@
-import { getIssueRequestsFromExtrinsicResult, Issue } from '@interlay/interbtc-api';
-import {
-  CurrencyExt,
-  getIssueRequestsFromExtrinsicResult,
-  InterbtcPrimitivesVaultId,
-  Issue,
-  newMonetaryAmount
-} from '@interlay/interbtc-api';
+import { CurrencyExt, getIssueRequestsFromExtrinsicResult, isCurrencyEqual, Issue } from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
-import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
-import { AccountId } from '@polkadot/types/interfaces';
+import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEvent, Key, useCallback, useState } from 'react';
+import { ChangeEvent, Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'react-use';
 
@@ -37,6 +29,7 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { TransactionArgs } from '@/utils/hooks/transaction/types';
 
 import { LegacyIssueModal } from '../LegacyIssueModal';
 import { RequestLimitsCard } from '../RequestLimitsCard';
@@ -49,7 +42,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   const { t } = useTranslation();
   const prices = useGetPrices();
   const { getBalance } = useGetBalances();
-  const { getSecurityDeposit, griefingCollateralCurrencyProps } = useGetIssueData();
+  const { getSecurityDeposit } = useGetIssueData();
   const { getCurrencyFromTicker, isLoading: isLoadingCurrencies } = useGetCurrencies(true);
 
   const [issueRequest, setIssueRequest] = useState<Issue>();
@@ -86,11 +79,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const currentRequestLimit = selectedVault ? selectedVault.amount : requestLimits.singleVaultMaxIssuable;
 
-  const griefingCollateralCurrencyBalance = getBalance(griefingCollateralCurrencyProps.value)?.free;
-
-  // TODO: update schema to validate correctly various griefing collateral currencies
   const transferAmountSchemaParams = {
-    governanceBalance: griefingCollateralCurrencyBalance,
     maxAmount: currentRequestLimit,
     minAmount: dustValue
   };
@@ -105,18 +94,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   };
 
   const getTransactionArgs = useCallback(
-    (
-      values: BridgeIssueFormData
-    ):
-      | [
-          MonetaryAmount<CurrencyExt>,
-          AccountId,
-          CurrencyExt,
-          boolean,
-          Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>,
-          CurrencyExt
-        ]
-      | undefined => {
+    (values: BridgeIssueFormData): TransactionArgs<Transaction.ISSUE_REQUEST> | undefined => {
       const amount = values[BRIDGE_ISSUE_AMOUNT_FIELD];
       const griefingCollateralCurrencyTicker = values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER];
       if (!vaultsData || !amount || griefingCollateralCurrencyTicker === undefined || isLoadingCurrencies) return;
@@ -202,7 +180,19 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const bridgeFee = monetaryAmount.mul(issueFee.toBig());
 
-  const securityDeposit = getSecurityDeposit(monetaryAmount);
+  const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER];
+
+  const [securityDeposit, setSecurityDeposit] = useState<MonetaryAmount<CurrencyExt>>();
+  useEffect(() => {
+    const computeSecurityDeposit = async () => {
+      const btcAmount = safeBitcoinAmount(amount || 0);
+      const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER];
+      const deposit = await getSecurityDeposit(btcAmount, griefingCollateralTicker);
+      setSecurityDeposit(deposit);
+    };
+
+    computeSecurityDeposit();
+  }, [amount, form.values, setSecurityDeposit, getSecurityDeposit]);
 
   const totalAmount = monetaryAmount.gte(bridgeFee) ? monetaryAmount.sub(bridgeFee) : new BitcoinAmount(0);
   const totalAmountUSD = totalAmount
@@ -213,8 +203,19 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const isBtnDisabled = isFormDisabled(form);
 
-  const hasEnoughGriefingCollateralBalance =
-    griefingCollateralCurrencyBalance && griefingCollateralCurrencyBalance.gte(securityDeposit);
+  const griefingCollateralCurrencyBalance =
+    griefingCollateralTicker === undefined ? undefined : getBalance(griefingCollateralTicker)?.free;
+
+  const hasEnoughGriefingCollateralBalance = useMemo(() => {
+    if (
+      securityDeposit === undefined ||
+      griefingCollateralCurrencyBalance === undefined ||
+      !isCurrencyEqual(securityDeposit.currency, griefingCollateralCurrencyBalance.currency)
+    ) {
+      return false;
+    }
+    return griefingCollateralCurrencyBalance.gte(securityDeposit);
+  }, [securityDeposit, griefingCollateralCurrencyBalance]);
 
   return (
     <>
@@ -254,7 +255,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 totalTicker={WRAPPED_TOKEN.ticker}
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
-                griefingCollateralCurrencyProps={griefingCollateralCurrencyProps}
+                securityDepositSelectProps={form.getFieldProps(BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER, true)}
                 feeDetailsProps={{
                   ...transaction.fee.detailsProps,
                   selectProps: form.getFieldProps(BRIDGE_ISSUE_FEE_TOKEN, true)
