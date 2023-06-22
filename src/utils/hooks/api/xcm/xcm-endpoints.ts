@@ -20,8 +20,16 @@ const XCMEndpoints: XCMEndpointsRecord = {
   kusama: ['wss://kusama-rpc.polkadot.io', 'wss://kusama-rpc.dwellir.com'],
   parallel: ['wss://rpc.parallel.fi'],
   polkadot: ['wss://rpc.polkadot.io', 'wss://polkadot-rpc.dwellir.com'],
-  statemine: ['wss://statemine-rpc.polkadot.io', 'wss://statemine-rpc.dwellir.com'],
-  statemint: ['wss://statemint-rpc.polkadot.io', 'wss://statemint-rpc.dwellir.com']
+  statemine: [
+    'wss://kusama-asset-hub-rpc.polkadot.io',
+    'wss://statemine-rpc.dwellir.com',
+    'wss://statemine-rpc-tn.dwellir.com'
+  ],
+  statemint: [
+    'wss://polkadot-asset-hub-rpc.polkadot.io',
+    'wss://statemint-rpc.dwellir.com',
+    'wss://statemint-rpc-tn.dwellir.com'
+  ]
 };
 
 export { XCMEndpoints };
