@@ -1,4 +1,5 @@
-import { isCurrencyEqual } from '@interlay/interbtc-api';
+import { CurrencyExt, isCurrencyEqual } from '@interlay/interbtc-api';
+import { InterBtc, Interlay, KBtc, Kintsugi, Kusama, Polkadot } from '@interlay/monetary-js';
 import { ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -36,6 +37,9 @@ type AvailableAssetsTableProps = {
   pooledTickers?: Set<string>;
 };
 
+// These are the currencies we want to show at zero balance
+const defaultCurrencies: CurrencyExt[] = [InterBtc, Interlay, KBtc, Kintsugi, Kusama, Polkadot];
+
 const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
@@ -46,7 +50,9 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];
-    const filteredData = showZeroBalances ? data : data.filter((balance) => !balance.transferable.isZero());
+    const filteredData = showZeroBalances
+      ? data
+      : data.filter((balance) => defaultCurrencies.includes(balance.currency) || !balance.transferable.isZero());
 
     return filteredData.map(
       ({ currency, transferable }): AvailableAssetsRows => {
