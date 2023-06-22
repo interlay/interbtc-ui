@@ -18,7 +18,6 @@ import {
   BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER,
   BridgeIssueFormData,
   bridgeIssueSchema,
-  isFormDisabled,
   useForm
 } from '@/lib/form';
 import { BridgeActions } from '@/types/bridge';
@@ -30,6 +29,7 @@ import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import { TransactionArgs } from '@/utils/hooks/transaction/types';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { LegacyIssueModal } from '../LegacyIssueModal';
 import { RequestLimitsCard } from '../RequestLimitsCard';
@@ -201,7 +201,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const isSelectingVault = form.values[BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH];
 
-  const isBtnDisabled = isFormDisabled(form);
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   const griefingCollateralCurrencyBalance =
     griefingCollateralTicker === undefined ? undefined : getBalance(griefingCollateralTicker)?.free;
@@ -269,7 +269,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
               >
                 {hasEnoughGriefingCollateralBalance
                   ? t('issue')
-                  : t('insufficient_token_balance', { token: GOVERNANCE_TOKEN.ticker })}
+                  : t('insufficient_token_balance', { token: griefingCollateralTicker })}
               </AuthCTA>
             </Flex>
           </Flex>

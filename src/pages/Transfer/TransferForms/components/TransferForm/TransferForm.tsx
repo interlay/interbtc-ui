@@ -23,7 +23,7 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetCurrencies } from '@/utils/hooks/api/use-get-currencies';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTrasanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 import { useSelectCurrency } from '@/utils/hooks/use-select-currency';
 
 const TransferForm = (): JSX.Element => {
@@ -118,7 +118,7 @@ const TransferForm = (): JSX.Element => {
       ) || 0
     : 0;
 
-  const isBtnDisabled = isTrasanctionFormDisabled(form, transaction.fee);
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   return (
     <Flex direction='column'>
