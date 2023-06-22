@@ -71,10 +71,10 @@ function useTransaction<T extends Transaction>(
     (pools) => async ({ ticker, params }) => {
       const currency = getCurrencyFromTicker(ticker);
 
-      // returning undefined means that action amount is not based on fee currency
-      const actionAmount = getActionAmount(params, currency);
-
       const feeBalance = getBalance(currency.ticker)?.transferable;
+
+      // returning undefined means that action amount is not based on fee currency
+      const actionAmount = getActionAmount(params, feeBalance);
 
       const availableBalance = actionAmount ? feeBalance?.sub(actionAmount) : feeBalance;
 

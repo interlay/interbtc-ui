@@ -1,23 +1,31 @@
 import { BorrowPosition, CollateralPosition, CurrencyExt, LoanAsset, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, RefObject, useCallback, useState } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 import { useDebounce } from 'react-use';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Flex, TokenInput } from '@/component-library';
-import { AuthCTA } from '@/components';
-import { isFormDisabled, LoanFormData, loanSchema, LoanValidationParams, useForm } from '@/lib/form';
+import { AuthCTA, TransactionFeeDetails } from '@/components';
+import {
+  LOAN_AMOUNT_FIELD,
+  LOAN_FEE_TOKEN_FIELD,
+  LoanFormData,
+  loanSchema,
+  LoanValidationParams,
+  useForm
+} from '@/lib/form';
 import { LoanAction } from '@/types/loans';
 import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-positions';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { useLoanFormData } from '../../hooks/use-loan-form-data';
 import { isLendAsset } from '../../utils/is-loan-asset';
 import { BorrowLimit } from '../BorrowLimit';
-import { LoanActionInfo } from '../LoanActionInfo';
+import { DepositDetails } from '../DepositDetails';
 import { StyledFormWrapper } from './LoanForm.style';
 
 // The borrow limit component is only displayed when
@@ -72,10 +80,11 @@ type LoanFormProps = {
   asset: LoanAsset;
   variant: LoanAction;
   position?: BorrowPosition | CollateralPosition;
+  overlappingModalRef: RefObject<HTMLDivElement>;
   onChangeLoan?: () => void;
 };
 
-const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JSX.Element => {
+const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan }: LoanFormProps): JSX.Element => {
   const [inputAmount, setInputAmount] = useState<string>();
   const [isMaxAmount, setMaxAmount] = useState(false);
 
@@ -85,7 +94,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
     data: { hasCollateral }
   } = useGetAccountPositions();
   const prices = useGetPrices();
-  const { governanceBalance, assetAmount, assetPrice, transactionFee } = useLoanFormData(variant, asset, position);
+  const { assetAmount, assetPrice } = useLoanFormData(variant, asset, position);
 
   const { content } = getData(t, variant);
 
@@ -117,9 +126,22 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
 
   const transaction = useTransaction({ onSigning: onChangeLoan, onSuccess: refetch });
 
+  const getTransactionArgs = useCallback(
+    (values: LoanFormData) => {
+      const amount = values[LOAN_AMOUNT_FIELD] || 0;
+      const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
+
+      return { monetaryAmount };
+    },
+    [asset.currency]
+  );
+
   const handleSubmit = (data: LoanFormData) => {
-    const amount = data[variant] || 0;
-    const monetaryAmount = newMonetaryAmount(amount, asset.currency, true);
+    const transactionData = getTransactionArgs(data);
+
+    if (!transactionData) return;
+
+    const { monetaryAmount } = transactionData;
 
     switch (variant) {
       case 'lend':
@@ -134,7 +156,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
         return transaction.execute(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
       case 'repay':
         if (isMaxAmount) {
-          return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency);
+          return transaction.execute(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, assetAmount.available);
         } else {
           return transaction.execute(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
         }
@@ -142,21 +164,65 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
   };
 
   const schemaParams: LoanValidationParams = {
-    governanceBalance,
-    transactionFee,
     minAmount: assetAmount.min,
     maxAmount: assetAmount.available
   };
 
   const form = useForm<LoanFormData>({
-    initialValues: { [variant]: '' },
+    initialValues: { [LOAN_AMOUNT_FIELD]: '', [LOAN_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker },
     validationSchema: loanSchema(variant, schemaParams),
-    onSubmit: handleSubmit
+    onSubmit: handleSubmit,
+    onComplete: (values) => {
+      const transactionData = getTransactionArgs(values);
+
+      if (!transactionData) return;
+
+      const { monetaryAmount } = transactionData;
+
+      const feeTicker = values[LOAN_FEE_TOKEN_FIELD];
+
+      switch (variant) {
+        case 'lend':
+          return transaction.fee
+            .setCurrency(feeTicker)
+            .estimate(Transaction.LOANS_LEND, monetaryAmount.currency, monetaryAmount);
+        case 'withdraw': {
+          if (isMaxAmount) {
+            return transaction.fee
+              .setCurrency(feeTicker)
+              .estimate(Transaction.LOANS_WITHDRAW_ALL, monetaryAmount.currency);
+          } else {
+            return transaction.fee
+              .setCurrency(feeTicker)
+              .estimate(Transaction.LOANS_WITHDRAW, monetaryAmount.currency, monetaryAmount);
+          }
+        }
+        case 'borrow':
+          return transaction.fee
+            .setCurrency(feeTicker)
+            .estimate(Transaction.LOANS_BORROW, monetaryAmount.currency, monetaryAmount);
+
+        case 'repay': {
+          if (isMaxAmount) {
+            return (
+              transaction.fee
+                .setCurrency(feeTicker)
+                // passing the limit calculated, so it can be used in the validation in transaction hook
+                .estimate(Transaction.LOANS_REPAY_ALL, monetaryAmount.currency, assetAmount.available)
+            );
+          } else {
+            return transaction.fee
+              .setCurrency(feeTicker)
+              .estimate(Transaction.LOANS_REPAY, monetaryAmount.currency, monetaryAmount);
+          }
+        }
+      }
+    }
   });
 
-  const monetaryAmount = newSafeMonetaryAmount(form.values[variant] || 0, asset.currency, true);
+  const monetaryAmount = newSafeMonetaryAmount(form.values[LOAN_AMOUNT_FIELD] || 0, asset.currency, true);
 
-  const isBtnDisabled = isFormDisabled(form);
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   const handleClickBalance = () => {
     if (!hasMultiActionVariant) return;
@@ -175,7 +241,7 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <StyledFormWrapper direction='column' justifyContent='space-between' gap='spacing4'>
+      <StyledFormWrapper direction='column' justifyContent='space-between' gap='spacing6'>
         <Flex direction='column' gap='spacing4'>
           <TokenInput
             placeholder='0.00'
@@ -186,12 +252,12 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
             balanceLabel={content.label}
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, assetPrice) ?? 0}
             onClickBalance={handleClickBalance}
-            {...mergeProps(form.getFieldProps(variant), { onChange: handleChange })}
+            {...mergeProps(form.getFieldProps(LOAN_AMOUNT_FIELD, false, true), { onChange: handleChange })}
           />
           {showBorrowLimit && (
             <BorrowLimit
               // Only shows the alert if the user interacted with the form
-              shouldDisplayLiquidationAlert={!!form.values[variant]}
+              shouldDisplayLiquidationAlert={!!form.values[LOAN_AMOUNT_FIELD]}
               loanAction={variant}
               asset={asset}
               actionAmount={monetaryAmount}
@@ -201,7 +267,13 @@ const LoanForm = ({ asset, variant, position, onChangeLoan }: LoanFormProps): JS
           )}
         </Flex>
         <Flex direction='column' gap='spacing4'>
-          <LoanActionInfo variant={variant} asset={asset} prices={prices} />
+          {(variant === 'lend' || variant === 'borrow') && (
+            <DepositDetails variant={variant} asset={asset} prices={prices} />
+          )}
+          <TransactionFeeDetails
+            {...transaction.fee.detailsProps}
+            selectProps={{ ...form.getFieldProps(LOAN_FEE_TOKEN_FIELD), modalRef: overlappingModalRef }}
+          />
           <AuthCTA type='submit' disabled={isBtnDisabled} size='large'>
             {content.title}
           </AuthCTA>
