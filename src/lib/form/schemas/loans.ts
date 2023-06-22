@@ -34,23 +34,23 @@ const toggleCollateralLoanSchema = (): yup.ObjectSchema<any> =>
     [LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
-const LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD = 'loan-claim-rewards-fee-token';
+const LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD = 'loan-claim-rewards-fee-token';
 
 type ClaimRewardsLoansFormData = {
-  [LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD]?: string;
+  [LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD]?: string;
 };
 
 const claimRewardsLoanSchema = (): yup.ObjectSchema<any> =>
   yup.object().shape({
-    [LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD]: yup.string().required()
+    [LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
 export {
   claimRewardsLoanSchema,
   LOAN_AMOUNT_FIELD,
+  LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD,
   LOAN_FEE_TOKEN_FIELD,
   LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD,
-  LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD,
   loanSchema,
   toggleCollateralLoanSchema
 };

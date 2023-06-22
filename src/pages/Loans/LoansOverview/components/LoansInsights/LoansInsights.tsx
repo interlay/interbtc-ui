@@ -14,7 +14,7 @@ import {
 import {
   claimRewardsLoanSchema,
   ClaimRewardsLoansFormData,
-  LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD,
+  LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD,
   useForm
 } from '@/lib/form';
 import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
@@ -43,12 +43,12 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
 
   const form = useForm<ClaimRewardsLoansFormData>({
     initialValues: {
-      [LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD]: ''
+      [LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD]: ''
     },
     validationSchema: claimRewardsLoanSchema(),
     onSubmit: () => transaction.execute(),
     onComplete: async (values) => {
-      const feeTicker = values[LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD];
+      const feeTicker = values[LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD];
 
       return transaction.fee.setCurrency(feeTicker).estimate();
     }
@@ -57,7 +57,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
   // Doing this call on mount so that the form becomes dirty
   // TODO: improve approach
   useEffect(() => {
-    form.setFieldValue(LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
+    form.setFieldValue(LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -132,7 +132,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
                 <TransactionFeeDetails
                   {...transaction.fee.detailsProps}
                   selectProps={{
-                    ...form.getFieldProps(LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD),
+                    ...form.getFieldProps(LOAN_CLAIM_REWARDS_FEE_TOKEN_FIELD),
                     modalRef: overlappingModalRef
                   }}
                 />
