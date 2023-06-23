@@ -124,7 +124,7 @@ const wrapWithTxFeeSwap = (
 // withdrawAll
 const getActionAmount = (
   params: TransactionActions,
-  feeBalance: MonetaryAmount<CurrencyExt> | undefined
+  feeCurrency: CurrencyExt
 ): MonetaryAmount<CurrencyExt> | undefined => {
   let amounts: MonetaryAmount<CurrencyExt>[] | undefined;
 
@@ -172,7 +172,7 @@ const getActionAmount = (
 
   if (!amounts) return;
 
-  return amounts.find((amount) => isCurrencyEqual(amount.currency, feeBalance?.currency));
+  return amounts.find((amount) => isCurrencyEqual(amount.currency, feeCurrency));
 };
 
 export { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap };
