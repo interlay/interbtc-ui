@@ -80,7 +80,10 @@ const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSch
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'redeem vault' }))
     }),
-    [BRIDGE_REDEEM_ADDRESS]: yup.string().required(i18n.t('forms.please_enter_your_field')).address(AddressType.BTC),
+    [BRIDGE_REDEEM_ADDRESS]: yup
+      .string()
+      .required(i18n.t('forms.please_enter_your_field', { field: 'BTC address' }))
+      .address(AddressType.BTC),
     [BRIDGE_REDEEM_FEE_TOKEN]: yup.string().required()
   });
 
