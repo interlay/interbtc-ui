@@ -234,7 +234,9 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 label={t('amount')}
                 ticker='BTC'
                 valueUSD={monetaryAmountUSD}
-                {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
+                {...mergeProps(form.getFieldProps(BRIDGE_ISSUE_AMOUNT_FIELD, false, true), {
+                  onChange: handleChangeIssueAmount
+                })}
               />
               <SelectVaultCard
                 isSelectingVault={isSelectingVault}
@@ -243,7 +245,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                   onChange: handleToggleCustomVault
                 })}
                 selectProps={{
-                  ...mergeProps(form.getFieldProps(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD), {
+                  ...mergeProps(form.getFieldProps(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD, false, true), {
                     onSelectionChange: handleVaultSelectionChange
                   })
                 }}

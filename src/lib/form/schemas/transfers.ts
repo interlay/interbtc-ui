@@ -70,7 +70,7 @@ const transferSchema = (params: TransferValidationParams): yup.ObjectSchema<any>
     [TRANSFER_RECIPIENT_FIELD]: yup
       .string()
       .required(i18n.t('forms.please_enter_your_field', { field: 'recipient' }))
-      .address('transfer'),
+      .address(),
     [TRANSFER_TOKEN_FIELD]: yup
       .string()
       .required(i18n.t('forms.please_select_your_field', { field: 'transfer token' })),

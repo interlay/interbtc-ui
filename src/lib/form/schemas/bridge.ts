@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 
-import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
+import yup, { AddressType, MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
 const BRIDGE_ISSUE_AMOUNT_FIELD = 'issue-amount';
 const BRIDGE_ISSUE_CUSTOM_VAULT_FIELD = 'issue-custom-vault';
@@ -80,7 +80,7 @@ const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSch
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'redeem vault' }))
     }),
-    [BRIDGE_REDEEM_ADDRESS]: yup.string().required(i18n.t('forms.please_enter_your_field', { field: 'BTC address' })),
+    [BRIDGE_REDEEM_ADDRESS]: yup.string().required(i18n.t('forms.please_enter_your_field')).address(AddressType.BTC),
     [BRIDGE_REDEEM_FEE_TOKEN]: yup.string().required()
   });
 
