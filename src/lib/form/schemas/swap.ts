@@ -10,11 +10,13 @@ enum SwapErrorMessage {
 const SWAP_INPUT_AMOUNT_FIELD = 'input-amount';
 const SWAP_INPUT_TOKEN_FIELD = 'input-token';
 const SWAP_OUTPUT_TOKEN_FIELD = 'output-token';
+const SWAP_FEE_TOKEN_FIELD = 'fee-token';
 
 type SwapFormData = {
   [SWAP_INPUT_AMOUNT_FIELD]?: string;
   [SWAP_INPUT_TOKEN_FIELD]?: string;
   [SWAP_OUTPUT_TOKEN_FIELD]?: string;
+  [SWAP_FEE_TOKEN_FIELD]?: string;
 };
 
 type SwapValidationParams = FeesValidationParams &
@@ -40,8 +42,16 @@ const swapSchema = (params: { [SWAP_INPUT_AMOUNT_FIELD]: SwapValidationParams })
             'amm.insufficient_token_balance'
           )
           .fees(params[SWAP_INPUT_AMOUNT_FIELD], 'insufficient_funds_fees')
-    })
+    }),
+    [SWAP_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
-export { SWAP_INPUT_AMOUNT_FIELD, SWAP_INPUT_TOKEN_FIELD, SWAP_OUTPUT_TOKEN_FIELD, SwapErrorMessage, swapSchema };
+export {
+  SWAP_FEE_TOKEN_FIELD,
+  SWAP_INPUT_AMOUNT_FIELD,
+  SWAP_INPUT_TOKEN_FIELD,
+  SWAP_OUTPUT_TOKEN_FIELD,
+  SwapErrorMessage,
+  swapSchema
+};
 export type { SwapFormData, SwapValidationParams };

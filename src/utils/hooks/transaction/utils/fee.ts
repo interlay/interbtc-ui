@@ -125,6 +125,10 @@ const getActionAmount = (params: TransactionActions): MonetaryAmount<CurrencyExt
       const [, amount] = params.args;
       return amount;
     }
+    case Transaction.AMM_SWAP: {
+      const [trade] = params.args;
+      return trade.inputAmount;
+    }
   }
 };
 

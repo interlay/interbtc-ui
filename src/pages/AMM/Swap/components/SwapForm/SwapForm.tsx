@@ -1,7 +1,7 @@
 import { CurrencyExt, LiquidityPool, newMonetaryAmount, Trade } from '@interlay/interbtc-api';
 import { mergeProps } from '@react-aria/utils';
 import Big from 'big.js';
-import { ChangeEventHandler, Key, useEffect, useMemo, useState } from 'react';
+import { ChangeEventHandler, Key, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useDebounce } from 'react-use';
@@ -9,8 +9,10 @@ import { useDebounce } from 'react-use';
 import { StoreType } from '@/common/types/util.types';
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
 import { Card, CardProps, Divider, Flex, H1, TokenInput } from '@/component-library';
+import { TransactionFeeDetails } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
 import {
+  SWAP_FEE_TOKEN_FIELD,
   SWAP_INPUT_AMOUNT_FIELD,
   SWAP_INPUT_TOKEN_FIELD,
   SWAP_OUTPUT_TOKEN_FIELD,
@@ -149,17 +151,35 @@ const SwapForm = ({
     transactionFee: TRANSACTION_FEE_AMOUNT
   };
 
+  const getTransactionArgs = useCallback(
+    async (trade: Trade | null | undefined) => {
+      if (!trade || !accountId) return;
+
+      try {
+        const minimumAmountOut = trade.getMinimumOutputAmount(slippage);
+        const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
+
+        return {
+          trade,
+          minimumAmountOut,
+          accountId,
+          deadline
+        };
+      } catch (error: any) {
+        transaction.reject(error);
+      }
+    },
+    [accountId, slippage, transaction]
+  );
+
   const handleSwap = async () => {
-    if (!trade || !accountId) return;
+    const transactionData = await getTransactionArgs(trade);
 
-    try {
-      const minimumAmountOut = trade.getMinimumOutputAmount(slippage);
-      const deadline = await window.bridge.system.getFutureBlockNumber(30 * 60);
+    if (!transactionData) return;
 
-      return transaction.execute(trade, minimumAmountOut, accountId, deadline);
-    } catch (error: any) {
-      transaction.reject(error);
-    }
+    const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
+
+    transaction.execute(tradeData, minimumAmountOut, accountId, deadline);
   };
 
   const handleSubmit = async (values: SwapFormData) => {
@@ -179,7 +199,8 @@ const SwapForm = ({
     () => ({
       [SWAP_INPUT_AMOUNT_FIELD]: '',
       [SWAP_INPUT_TOKEN_FIELD]: pair.input?.ticker || '',
-      [SWAP_OUTPUT_TOKEN_FIELD]: pair.output?.ticker || ''
+      [SWAP_OUTPUT_TOKEN_FIELD]: pair.output?.ticker || '',
+      [SWAP_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -211,15 +232,29 @@ const SwapForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pair]);
 
-  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => {
-    setInputAmount(e.target.value);
-    setTrade(undefined);
-  };
+  const feeToken = form.values[SWAP_FEE_TOKEN_FIELD];
 
-  const handlePairChange = (pair: SwapPair) => {
-    onChangePair(pair);
-    setTrade(undefined);
-  };
+  useEffect(() => {
+    const estimateFee = async () => {
+      const transactionData = await getTransactionArgs(trade);
+
+      if (!transactionData) return;
+
+      const { accountId, deadline, minimumAmountOut, trade: tradeData } = transactionData;
+
+      transaction.fee.setCurrency(feeToken).estimate(tradeData, minimumAmountOut, accountId, deadline);
+    };
+
+    if (!trade) return;
+
+    estimateFee();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trade, feeToken]);
+
+  const handleChangeInput: ChangeEventHandler<HTMLInputElement> = (e) => setInputAmount(e.target.value);
+
+  const handlePairChange = (pair: SwapPair) => onChangePair(pair);
 
   const handleTickerChange = (ticker: string, name: string) => {
     const currency = getCurrencyFromTicker(ticker);
@@ -288,8 +323,14 @@ const SwapForm = ({
                   })}
                 />
               </Flex>
-              {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
-              <SwapCTA trade={trade} errors={form.errors} pair={pair} />
+              <Flex direction='column' gap='spacing2'>
+                {trade && <SwapInfo trade={trade} slippage={Number(slippage)} />}
+                <TransactionFeeDetails
+                  {...transaction.fee.detailsProps}
+                  selectProps={form.getFieldProps(SWAP_FEE_TOKEN_FIELD)}
+                />
+              </Flex>
+              <SwapCTA trade={trade} fee={transaction.fee} form={form} pair={pair} />
             </Flex>
           </form>
         </Flex>
