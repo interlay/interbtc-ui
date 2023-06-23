@@ -15,7 +15,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolName } from '../PoolName';
@@ -106,7 +106,7 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
 
   const lpTokenMonetaryAmount = newSafeMonetaryAmount(form.values[POOL_WITHDRAW_AMOUNT_FIELD] || 0, pool.lpToken, true);
 
-  const isBtnDisabled = isTransanctionFormDisabled(form, transaction.fee);
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   const tickers = pool.pooledCurrencies.map((currency) => currency.currency.ticker);
   const poolName = <PoolName justifyContent='center' tickers={tickers} />;

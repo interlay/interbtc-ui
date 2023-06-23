@@ -23,7 +23,7 @@ import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/page
 import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTransanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { StyledDd, StyledDt } from './PoolsInsights.style';
 import { calculateClaimableFarmingRewardUSD } from './utils';
@@ -104,7 +104,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
 
   const hasClaimableRewards = totalClaimableRewardUSD > 0;
 
-  const isBtnDisabled = isTransanctionFormDisabled(form, transaction.fee);
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   return (
     <>

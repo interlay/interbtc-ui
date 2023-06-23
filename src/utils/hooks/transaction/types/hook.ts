@@ -29,12 +29,12 @@ type ExecuteFunctions<T extends Transaction> = ExecuteArgs<T> | ExecuteTypeArgs<
 
 type EstimateArgs<T extends Transaction> = {
   estimate<D extends Transaction = T>(...args: TransactionArgs<D>): void;
-  setCurrency<D extends Transaction = T>(ticker?: string): { estimate(...args: TransactionArgs<D>): void };
+  setCurrency(ticker?: string): { estimate<D extends Transaction = T>(...args: TransactionArgs<D>): void };
 };
 
 type EstimateTypeArgs<T extends Transaction> = {
   estimate<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void;
-  setCurrency<D extends Transaction = T>(ticker?: string): { estimate(...args: TransactionArgs<D>): void };
+  setCurrency(ticker?: string): { estimate<D extends Transaction = T>(type: D, ...args: TransactionArgs<D>): void };
 };
 
 type EstimateFunctions<T extends Transaction> = EstimateArgs<T> | EstimateTypeArgs<T>;

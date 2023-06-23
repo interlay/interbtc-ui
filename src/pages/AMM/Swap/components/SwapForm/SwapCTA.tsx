@@ -7,7 +7,7 @@ import { SWAP_INPUT_AMOUNT_FIELD, SWAP_INPUT_TOKEN_FIELD, SWAP_OUTPUT_TOKEN_FIEL
 import { SwapPair } from '@/types/swap';
 import { Transaction } from '@/utils/hooks/transaction';
 import { UseFeeEstimateResult } from '@/utils/hooks/transaction/types/hook';
-import { isTrasanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 const getProps = (
   pair: SwapPair,
@@ -44,7 +44,7 @@ const getProps = (
 
   return {
     children: t('amm.swap'),
-    disabled: isTrasanctionFormDisabled(form, fee)
+    disabled: isTransactionFormDisabled(form, fee)
   };
 };
 
