@@ -119,9 +119,12 @@ const wrapWithTxFeeSwap = (
   return { extrinsic: wrappedCall };
 };
 
+// MEMO: if we ever need toadd QTOKENS as a possible fee
+// token, we will need to handle it here for loan withdraw and
+// withdrawAll
 const getActionAmount = (
   params: TransactionActions,
-  feeBalance: MonetaryAmount<CurrencyExt> | undefined
+  feeCurrency: CurrencyExt
 ): MonetaryAmount<CurrencyExt> | undefined => {
   let amounts: MonetaryAmount<CurrencyExt>[] | undefined;
 
@@ -169,7 +172,7 @@ const getActionAmount = (
 
   if (!amounts) return;
 
-  return amounts.find((amount) => isCurrencyEqual(amount.currency, feeBalance?.currency));
+  return amounts.find((amount) => isCurrencyEqual(amount.currency, feeCurrency));
 };
 
 export { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap };

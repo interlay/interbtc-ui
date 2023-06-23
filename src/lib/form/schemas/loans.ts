@@ -23,15 +23,15 @@ const loanSchema = (loanAction: LoanAction, params: LoanValidationParams): yup.O
   });
 };
 
-const LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD = 'loan-toggle-collateral-fee-token';
+const LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD = 'loan-toggle-collateral-fee-token';
 
 type ToggleCollateralLoansFormData = {
-  [LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD]?: string;
+  [LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD]?: string;
 };
 
 const toggleCollateralLoanSchema = (): yup.ObjectSchema<any> =>
   yup.object().shape({
-    [LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD]: yup.string().required()
+    [LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
 const LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD = 'loan-claim-rewards-fee-token';
@@ -49,8 +49,8 @@ export {
   claimRewardsLoanSchema,
   LOAN_AMOUNT_FIELD,
   LOAN_FEE_TOKEN_FIELD,
+  LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD,
   LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD,
-  LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD,
   loanSchema,
   toggleCollateralLoanSchema
 };

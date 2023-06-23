@@ -6,7 +6,7 @@ import { TransactionDetailsDd, TransactionDetailsDt, TransactionDetailsGroup } f
 import { getApyLabel, getSubsidyRewardApy } from '@/utils/helpers/loans';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
-type RewardsDetailsGroupProps = {
+type RewardsDetailsProps = {
   apy: Big;
   rewards: MonetaryAmount<CurrencyExt>;
   assetCurrency: CurrencyExt;
@@ -14,13 +14,7 @@ type RewardsDetailsGroupProps = {
   prices?: Prices;
 };
 
-const RewardsDetailsGroup = ({
-  isBorrow,
-  apy,
-  assetCurrency,
-  rewards,
-  prices
-}: RewardsDetailsGroupProps): JSX.Element | null => {
+const RewardsDetails = ({ isBorrow, apy, assetCurrency, rewards, prices }: RewardsDetailsProps): JSX.Element | null => {
   const subsidyRewardApy = getSubsidyRewardApy(assetCurrency, rewards, prices);
 
   if (!subsidyRewardApy) {
@@ -42,5 +36,5 @@ const RewardsDetailsGroup = ({
     </>
   );
 };
-export { RewardsDetailsGroup };
-export type { RewardsDetailsGroupProps };
+export { RewardsDetails };
+export type { RewardsDetailsProps };

@@ -20,7 +20,7 @@ import {
 import { AccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetAccountSubsidyRewards } from '@/utils/hooks/api/loans/use-get-account-subsidy-rewards';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTrasanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { StyledDd, StyledDt } from './LoansInsights.style';
 
@@ -55,6 +55,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
   });
 
   // Doing this call on mount so that the form becomes dirty
+  // TODO: improve approach
   useEffect(() => {
     form.setFieldValue(LOANS_CLAIM_REWARDS_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -74,7 +75,7 @@ const LoansInsights = ({ statistics }: LoansInsightsProps): JSX.Element => {
   const subsidyRewardsAmountLabel = `${subsidyRewardsAmount} ${subsidyRewards?.total.currency.ticker || ''}`;
   const hasSubsidyRewards = !!subsidyRewards && !subsidyRewards?.total.isZero();
 
-  const isModalBtnDisabled = isTrasanctionFormDisabled(form, transaction.fee);
+  const isModalBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   return (
     <>

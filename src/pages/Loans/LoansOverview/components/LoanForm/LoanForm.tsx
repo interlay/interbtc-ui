@@ -25,7 +25,7 @@ import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form'
 import { useLoanFormData } from '../../hooks/use-loan-form-data';
 import { isLendAsset } from '../../utils/is-loan-asset';
 import { BorrowLimit } from '../BorrowLimit';
-import { DepositDetails } from '../DepositDetails';
+import { LoanDetails } from '../LoanDetails';
 import { StyledFormWrapper } from './LoanForm.style';
 
 // The borrow limit component is only displayed when
@@ -268,7 +268,7 @@ const LoanForm = ({ asset, variant, position, overlappingModalRef, onChangeLoan 
         </Flex>
         <Flex direction='column' gap='spacing4'>
           {(variant === 'lend' || variant === 'borrow') && (
-            <DepositDetails variant={variant} asset={asset} prices={prices} />
+            <LoanDetails variant={variant} asset={asset} prices={prices} />
           )}
           <TransactionFeeDetails
             {...transaction.fee.detailsProps}

@@ -5,7 +5,7 @@ import { TFunction, useTranslation } from 'react-i18next';
 import { CTA, Flex, Modal, ModalBody, ModalFooter, ModalHeader, ModalProps, Status } from '@/component-library';
 import { AuthCTA, TransactionFeeDetails } from '@/components';
 import {
-  LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD,
+  LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD,
   toggleCollateralLoanSchema,
   ToggleCollateralLoansFormData,
   useForm
@@ -13,7 +13,7 @@ import {
 import { useGetAccountLendingStatistics } from '@/utils/hooks/api/loans/use-get-account-lending-statistics';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTrasanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { useGetLTV } from '../../hooks/use-get-ltv';
 import { BorrowLimit } from '../BorrowLimit';
@@ -89,12 +89,12 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
   const form = useForm<ToggleCollateralLoansFormData>({
     initialValues: {
-      [LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD]: ''
+      [LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD]: ''
     },
     validationSchema: toggleCollateralLoanSchema(),
     onSubmit: handleSubmit,
     onComplete: async (values) => {
-      const feeTicker = values[LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD];
+      const feeTicker = values[LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD];
 
       if (variant === 'enable') {
         return transaction.fee.setCurrency(feeTicker).estimate(Transaction.LOANS_ENABLE_COLLATERAL, asset.currency);
@@ -105,16 +105,17 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   });
 
   // Doing this call on mount so that the form becomes dirty
+  // TODO: find better approach
   useEffect(() => {
     if (variant === 'disable-error') return;
 
-    form.setFieldValue(LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
+    form.setFieldValue(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const content = getContentMap(t, variant, asset);
 
-  const isBtnDisabled = isTrasanctionFormDisabled(form, transaction.fee);
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   return (
     <Modal
@@ -140,7 +141,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
               <TransactionFeeDetails
                 {...transaction.fee.detailsProps}
                 selectProps={{
-                  ...form.getFieldProps(LOANS_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD),
+                  ...form.getFieldProps(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD),
                   modalRef: overlappingModalRef
                 }}
               />

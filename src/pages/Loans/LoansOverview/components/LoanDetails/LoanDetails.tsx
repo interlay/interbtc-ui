@@ -5,15 +5,15 @@ import { LoanAction } from '@/types/loans';
 import { Prices } from '@/utils/hooks/api/use-get-prices';
 
 import { getApyLabel } from '../../utils/apy';
-import { RewardsDetailsGroup } from './RewardsDetailsGroup';
+import { RewardsDetails } from './RewardsDetails';
 
-type DepositDetailsProps = {
+type LoanDetailsProps = {
   variant?: LoanAction;
   asset?: LoanAsset;
   prices?: Prices;
 };
 
-const DepositDetails = ({ variant, asset, prices }: DepositDetailsProps): JSX.Element | null => {
+const LoanDetails = ({ variant, asset, prices }: LoanDetailsProps): JSX.Element | null => {
   const isBorrow = variant === 'borrow';
   const apy = isBorrow ? asset?.borrowApy : asset?.lendApy;
 
@@ -32,7 +32,7 @@ const DepositDetails = ({ variant, asset, prices }: DepositDetailsProps): JSX.El
         <TransactionDetailsDd>{getApyLabel(apy)}</TransactionDetailsDd>
       </TransactionDetailsGroup>
       {!!rewards && (
-        <RewardsDetailsGroup
+        <RewardsDetails
           apy={apy}
           isBorrow={isBorrow}
           rewards={rewards}
@@ -43,5 +43,5 @@ const DepositDetails = ({ variant, asset, prices }: DepositDetailsProps): JSX.El
     </TransactionDetails>
   );
 };
-export { DepositDetails };
-export type { DepositDetailsProps };
+export { LoanDetails };
+export type { LoanDetailsProps };

@@ -74,7 +74,7 @@ function useTransaction<T extends Transaction>(
       const feeBalance = getBalance(currency.ticker)?.transferable;
 
       // returning undefined means that action amount is not based on fee currency
-      const actionAmount = getActionAmount(params, feeBalance);
+      const actionAmount = getActionAmount(params, currency);
 
       const availableBalance = actionAmount ? feeBalance?.sub(actionAmount) : feeBalance;
 
