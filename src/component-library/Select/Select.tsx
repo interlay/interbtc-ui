@@ -27,6 +27,7 @@ type Props<F extends SelectType = 'listbox', T = SelectObject> = {
   renderValue?: (item: Node<T>) => ReactNode;
   placeholder?: ReactNode;
   modalTitle?: F extends 'modal' ? ReactNode : never;
+  modalRef?: F extends 'modal' ? React.Ref<HTMLDivElement> : never;
 };
 
 type InheritAttrs<F extends SelectType = 'listbox', T = SelectObject> = Omit<
@@ -65,6 +66,7 @@ const Select = <F extends SelectType = 'listbox', T extends SelectObject = Selec
     renderValue = (item) => item.rendered,
     items,
     disabledKeys,
+    modalRef,
     ...props
   }: SelectProps<F, T>,
   ref: ForwardedRef<HTMLInputElement>
@@ -146,6 +148,7 @@ const Select = <F extends SelectType = 'listbox', T extends SelectObject = Selec
       </SelectTrigger>
       {type === 'modal' && (
         <SelectModal
+          ref={modalRef}
           isOpen={state.isOpen}
           state={state}
           onClose={state.close}
