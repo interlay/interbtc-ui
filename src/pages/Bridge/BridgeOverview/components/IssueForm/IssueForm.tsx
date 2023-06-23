@@ -15,7 +15,7 @@ import {
   BRIDGE_ISSUE_CUSTOM_VAULT_FIELD,
   BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH,
   BRIDGE_ISSUE_FEE_TOKEN,
-  BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER,
+  BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN,
   BridgeIssueFormData,
   bridgeIssueSchema,
   useForm
@@ -86,9 +86,8 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const handleSubmit = async (values: BridgeIssueFormData) => {
     const args = getTransactionArgs(values);
-    if (args === undefined) {
-      return;
-    }
+
+    if (!args) return;
 
     transaction.execute(...args);
   };
@@ -96,7 +95,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   const getTransactionArgs = useCallback(
     (values: BridgeIssueFormData): TransactionArgs<Transaction.ISSUE_REQUEST> | undefined => {
       const amount = values[BRIDGE_ISSUE_AMOUNT_FIELD];
-      const griefingCollateralCurrencyTicker = values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER];
+      const griefingCollateralCurrencyTicker = values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
       if (!vaultsData || !amount || griefingCollateralCurrencyTicker === undefined || isLoadingCurrencies) return;
 
       const monetaryAmount = new BitcoinAmount(amount);
@@ -137,7 +136,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
       [BRIDGE_ISSUE_AMOUNT_FIELD]: '',
       [BRIDGE_ISSUE_CUSTOM_VAULT_FIELD]: '',
       [BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH]: false,
-      [BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER]: GOVERNANCE_TOKEN.ticker,
+      [BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN]: GOVERNANCE_TOKEN.ticker,
       [BRIDGE_ISSUE_FEE_TOKEN]: transaction.fee.defaultCurrency.ticker
     },
     validateOnChange: true,
@@ -145,11 +144,12 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     onSubmit: handleSubmit,
     hideErrorMessages: transaction.isLoading,
     onComplete: (values) => {
-      const feeTicker = values[BRIDGE_ISSUE_FEE_TOKEN];
       const args = getTransactionArgs(values);
-      if (args === undefined) {
-        return;
-      }
+
+      if (!args) return;
+
+      const feeTicker = values[BRIDGE_ISSUE_FEE_TOKEN];
+
       transaction.fee.setCurrency(feeTicker).estimate(...args);
     }
   });
@@ -180,13 +180,13 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const bridgeFee = monetaryAmount.mul(issueFee.toBig());
 
-  const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER];
+  const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
 
   const [securityDeposit, setSecurityDeposit] = useState<MonetaryAmount<CurrencyExt>>();
   useEffect(() => {
     const computeSecurityDeposit = async () => {
       const btcAmount = safeBitcoinAmount(amount || 0);
-      const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER];
+      const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
       const deposit = await getSecurityDeposit(btcAmount, griefingCollateralTicker);
       setSecurityDeposit(deposit);
     };
@@ -203,8 +203,9 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
-  const griefingCollateralCurrencyBalance =
-    griefingCollateralTicker === undefined ? undefined : getBalance(griefingCollateralTicker)?.free;
+  const griefingCollateralCurrencyBalance = griefingCollateralTicker
+    ? getBalance(griefingCollateralTicker)?.free
+    : undefined;
 
   const hasEnoughGriefingCollateralBalance = useMemo(() => {
     if (
@@ -255,7 +256,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 totalTicker={WRAPPED_TOKEN.ticker}
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
-                securityDepositSelectProps={form.getFieldProps(BRIDGE_ISSUE_GRIEFING_COLLATERAL_TICKER, true)}
+                securityDepositSelectProps={form.getFieldProps(BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN, true)}
                 feeDetailsProps={{
                   ...transaction.fee.detailsProps,
                   selectProps: form.getFieldProps(BRIDGE_ISSUE_FEE_TOKEN, true)

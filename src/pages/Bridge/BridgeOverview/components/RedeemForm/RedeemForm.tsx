@@ -155,9 +155,8 @@ const RedeemForm = ({
 
   const handleSubmit = async (values: BridgeRedeemFormData) => {
     const args = getTransactionArgs(values);
-    if (args === undefined) {
-      return;
-    }
+
+    if (!args) return;
 
     transaction.execute(...args);
   };
@@ -175,11 +174,12 @@ const RedeemForm = ({
     onSubmit: handleSubmit,
     hideErrorMessages: transaction.isLoading,
     onComplete: (values) => {
-      const feeTicker = values[BRIDGE_REDEEM_FEE_TOKEN];
       const args = getTransactionArgs(values);
-      if (args === undefined) {
-        return;
-      }
+
+      if (!args) return;
+
+      const feeTicker = values[BRIDGE_REDEEM_FEE_TOKEN];
+
       transaction.fee.setCurrency(feeTicker).estimate(...args);
     }
   });
