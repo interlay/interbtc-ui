@@ -1,4 +1,4 @@
-import { CurrencyExt, isCurrencyEqual, LiquidityPool } from '@interlay/interbtc-api';
+import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
 import { useCallback, useRef, useState } from 'react';
@@ -71,13 +71,12 @@ function useTransaction<T extends Transaction>(
     (pools) => async ({ ticker, params }) => {
       const currency = getCurrencyFromTicker(ticker);
 
-      const actionAmount = getActionAmount(params);
-
-      const isActionAmountFeeCurrency = actionAmount && isCurrencyEqual(actionAmount.currency, currency);
+      // returning undefined means that action amount is not based on fee currency
+      const actionAmount = getActionAmount(params, currency);
 
       const feeBalance = getBalance(currency.ticker)?.transferable;
 
-      const availableBalance = actionAmount && isActionAmountFeeCurrency ? feeBalance?.sub(actionAmount) : feeBalance;
+      const availableBalance = actionAmount ? feeBalance?.sub(actionAmount) : feeBalance;
 
       const amount = await estimateTransactionFee(currency, pools || [], params);
 
