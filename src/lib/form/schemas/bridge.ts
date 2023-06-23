@@ -5,11 +5,15 @@ import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yu
 const BRIDGE_ISSUE_AMOUNT_FIELD = 'issue-amount';
 const BRIDGE_ISSUE_CUSTOM_VAULT_FIELD = 'issue-custom-vault';
 const BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH = 'issue-custom-vault-switch';
+const BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN = 'issue-griefing-collateral-token';
+const BRIDGE_ISSUE_FEE_TOKEN = 'issue-fee-token';
 
 type BridgeIssueFormData = {
   [BRIDGE_ISSUE_AMOUNT_FIELD]?: string;
   [BRIDGE_ISSUE_CUSTOM_VAULT_FIELD]?: string;
   [BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH]?: boolean;
+  [BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN]?: string;
+  [BRIDGE_ISSUE_FEE_TOKEN]?: string;
 };
 
 type BridgeIssueValidationParams = {
@@ -33,7 +37,9 @@ const bridgeIssueSchema = (params: BridgeIssueValidationParams): yup.ObjectSchem
     [BRIDGE_ISSUE_CUSTOM_VAULT_FIELD]: yup.string().when([BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH], {
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'issue vault' }))
-    })
+    }),
+    [BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN]: yup.string().required(),
+    [BRIDGE_ISSUE_FEE_TOKEN]: yup.string().required()
   });
 
 const BRIDGE_REDEEM_AMOUNT_FIELD = 'redeem-amount';
@@ -41,6 +47,7 @@ const BRIDGE_REDEEM_CUSTOM_VAULT_FIELD = 'redeem-custom-vault';
 const BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH = 'redeem-custom-vault-switch';
 const BRIDGE_REDEEM_PREMIUM_VAULT_FIELD = 'redeem-premium-vault';
 const BRIDGE_REDEEM_ADDRESS = 'redeem-address';
+const BRIDGE_REDEEM_FEE_TOKEN = 'redeem-fee-token';
 
 type BridgeRedeemFormData = {
   [BRIDGE_REDEEM_AMOUNT_FIELD]?: string;
@@ -48,6 +55,7 @@ type BridgeRedeemFormData = {
   [BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH]?: boolean;
   [BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]?: boolean;
   [BRIDGE_REDEEM_ADDRESS]?: string;
+  [BRIDGE_REDEEM_FEE_TOKEN]?: string;
 };
 
 type BridgeRedeemValidationParams = {
@@ -72,17 +80,21 @@ const bridgeRedeemSchema = (params: BridgeRedeemValidationParams): yup.ObjectSch
       is: (isManualVault: string) => isManualVault,
       then: (schema) => schema.required(i18n.t('forms.please_select_your_field', { field: 'redeem vault' }))
     }),
-    [BRIDGE_REDEEM_ADDRESS]: yup.string().required(i18n.t('forms.please_enter_your_field', { field: 'BTC address' }))
+    [BRIDGE_REDEEM_ADDRESS]: yup.string().required(i18n.t('forms.please_enter_your_field', { field: 'BTC address' })),
+    [BRIDGE_REDEEM_FEE_TOKEN]: yup.string().required()
   });
 
 export {
   BRIDGE_ISSUE_AMOUNT_FIELD,
   BRIDGE_ISSUE_CUSTOM_VAULT_FIELD,
   BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH,
+  BRIDGE_ISSUE_FEE_TOKEN,
+  BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN,
   BRIDGE_REDEEM_ADDRESS,
   BRIDGE_REDEEM_AMOUNT_FIELD,
   BRIDGE_REDEEM_CUSTOM_VAULT_FIELD,
   BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH,
+  BRIDGE_REDEEM_FEE_TOKEN,
   BRIDGE_REDEEM_PREMIUM_VAULT_FIELD,
   bridgeIssueSchema,
   bridgeRedeemSchema

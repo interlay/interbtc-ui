@@ -1,17 +1,13 @@
 import { newMonetaryAmount } from '@interlay/interbtc-api';
 import { BitcoinAmount, Currency, MonetaryAmount } from '@interlay/monetary-js';
 import Big from 'big.js';
-import { Key, useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery } from 'react-query';
 
-import { TokenData } from '@/component-library';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
-import { SelectCurrencyFilter, useSelectCurrency } from '../../use-select-currency';
 import { useGetCurrencies } from '../use-get-currencies';
-import { useGetExchangeRate } from '../use-get-exchange-rate';
 
 type IssueData = {
   dustValue: MonetaryAmount<Currency>;
@@ -33,28 +29,17 @@ const getIssueData = async (): Promise<IssueData> => {
   };
 };
 
-interface GriefingCollateralCurrencyProps {
-  value: string;
-  onSelectionChange: (ticker: Key) => void;
-  items: Array<TokenData>;
-}
-
 type UseGetIssueDataResult = {
   data: IssueData | undefined;
-  getSecurityDeposit: (btcAmount: MonetaryAmount<Currency>) => MonetaryAmount<Currency>;
+  getSecurityDeposit: (
+    btcAmount: MonetaryAmount<Currency>,
+    ticker: string | undefined
+  ) => Promise<MonetaryAmount<Currency> | undefined>;
   refetch: () => void;
-  griefingCollateralCurrencyProps: GriefingCollateralCurrencyProps;
 };
 
 const useGetIssueData = (): UseGetIssueDataResult => {
-  const [griefingCollateralCurrency, setGriefingCollateralCurrency] = useState(GOVERNANCE_TOKEN);
-  const { data: btcToGriefingCollateralCurrency } = useGetExchangeRate(griefingCollateralCurrency);
-
-  const { getCurrencyFromTicker } = useGetCurrencies(true);
-
-  const { items: griefingCollateralCurrencies } = useSelectCurrency(
-    SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY
-  );
+  const { getCurrencyFromTicker, isLoading: isLoadingCurrencies } = useGetCurrencies(true);
 
   const { data, error, refetch } = useQuery({
     queryKey: 'issue-data',
@@ -65,7 +50,12 @@ const useGetIssueData = (): UseGetIssueDataResult => {
   useErrorHandler(error);
 
   const getSecurityDeposit = useCallback(
-    (btcAmount: MonetaryAmount<Currency>) => {
+    async (btcAmount: MonetaryAmount<Currency>, ticker: string | undefined) => {
+      if (isLoadingCurrencies || ticker === undefined) {
+        return;
+      }
+      const griefingCollateralCurrency = getCurrencyFromTicker(ticker);
+      const btcToGriefingCollateralCurrency = await window.bridge.oracle.getExchangeRate(griefingCollateralCurrency);
       const { griefingCollateralRate } = data || {};
 
       if (!btcToGriefingCollateralCurrency || !griefingCollateralRate)
@@ -73,28 +63,15 @@ const useGetIssueData = (): UseGetIssueDataResult => {
 
       return btcToGriefingCollateralCurrency.toCounter(btcAmount).mul(griefingCollateralRate);
     },
-    [btcToGriefingCollateralCurrency, data, griefingCollateralCurrency]
+    [data, getCurrencyFromTicker, isLoadingCurrencies]
   );
-
-  const handleGriefingCollateralCurrencyChange = (ticker: Key) => {
-    const currency = getCurrencyFromTicker(ticker as string);
-
-    if (!currency) return;
-
-    setGriefingCollateralCurrency(currency);
-  };
 
   return {
     data,
     refetch,
-    getSecurityDeposit,
-    griefingCollateralCurrencyProps: {
-      value: griefingCollateralCurrency.ticker,
-      onSelectionChange: handleGriefingCollateralCurrencyChange,
-      items: griefingCollateralCurrencies
-    }
+    getSecurityDeposit
   };
 };
 
 export { useGetIssueData };
-export type { GriefingCollateralCurrencyProps, IssueData, UseGetIssueDataResult };
+export type { IssueData, UseGetIssueDataResult };
