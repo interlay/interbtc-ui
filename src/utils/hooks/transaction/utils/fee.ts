@@ -131,7 +131,8 @@ const getActionAmount = (
   switch (params.type) {
     case Transaction.REDEEM_REQUEST: {
       const [amount] = params.args;
-      return amount;
+      amounts = [amount];
+      break;
     }
     case Transaction.TOKENS_TRANSFER: {
       const [, amount] = params.args;
