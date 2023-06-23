@@ -272,7 +272,9 @@ const RedeemForm = ({
                 humanBalance={redeemBalance.toString()}
                 balanceLabel={t('available')}
                 valueUSD={amountUSD}
-                {...mergeProps(form.getFieldProps(BRIDGE_REDEEM_AMOUNT_FIELD), { onChange: handleChangeIssueAmount })}
+                {...mergeProps(form.getFieldProps(BRIDGE_REDEEM_AMOUNT_FIELD, false, true), {
+                  onChange: handleChangeIssueAmount
+                })}
               />
               {hasPremiumRedeemFeature && (
                 <PremiumRedeemCard
@@ -289,7 +291,7 @@ const RedeemForm = ({
                   onChange: handleToggleCustomVault
                 })}
                 selectProps={{
-                  ...mergeProps(form.getFieldProps(BRIDGE_REDEEM_CUSTOM_VAULT_FIELD), {
+                  ...mergeProps(form.getFieldProps(BRIDGE_REDEEM_CUSTOM_VAULT_FIELD, false, true), {
                     onSelectionChange: handleVaultSelectionChange
                   })
                 }}
@@ -298,7 +300,7 @@ const RedeemForm = ({
                 placeholder={t('enter_btc_address')}
                 label={t('btc_address')}
                 padding={{ top: 'spacing5', bottom: 'spacing5' }}
-                {...mergeProps(form.getFieldProps(BRIDGE_REDEEM_ADDRESS))}
+                {...mergeProps(form.getFieldProps(BRIDGE_REDEEM_ADDRESS, false, true))}
               />
             </Flex>
             <Flex direction='column' gap='spacing4'>

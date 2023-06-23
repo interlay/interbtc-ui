@@ -6,7 +6,7 @@ import i18n from 'i18next';
 import * as yup from 'yup';
 import { AnyObject, Maybe } from 'yup/lib/types';
 
-import { isValidRelayAddress } from './validate';
+import { isValidBTCAddress, isValidRelayAddress } from './validate';
 
 yup.addMethod<yup.StringSchema>(yup.string, 'requiredAmount', function (action: string, customMessage?: string) {
   return this.transform((value) => (isNaN(value) ? undefined : value)).test('requiredAmount', (value, ctx) => {
@@ -107,22 +107,24 @@ yup.addMethod<yup.StringSchema>(
 );
 
 enum AddressType {
-  RELAY_CHAIN
+  RELAY_CHAIN,
+  BTC
 }
 
 const addressValidationMap = {
-  [AddressType.RELAY_CHAIN]: isValidRelayAddress
+  [AddressType.RELAY_CHAIN]: isValidRelayAddress,
+  [AddressType.BTC]: isValidBTCAddress
 };
 
 yup.addMethod<yup.StringSchema>(
   yup.string,
   'address',
-  function (action: string, addressType: AddressType = AddressType.RELAY_CHAIN, customMessage?: string) {
+  function (addressType: AddressType = AddressType.RELAY_CHAIN, customMessage?: string) {
     return this.test('address', (value, ctx) => {
       const isValidAdress = addressValidationMap[addressType];
 
       if (!value || !isValidAdress(value)) {
-        const message = customMessage || i18n.t('forms.please_enter_a_valid_address', { field: action });
+        const message = customMessage || i18n.t('forms.please_enter_a_valid_address');
         return ctx.createError({ message });
       }
 
@@ -149,9 +151,10 @@ declare module 'yup' {
       action?: string,
       customMessage?: string
     ): StringSchema<TType, TContext>;
-    address(action: string, addressType?: AddressType, customMessage?: string): StringSchema<TType, TContext>;
+    address(addressType?: AddressType, customMessage?: string): StringSchema<TType, TContext>;
   }
 }
 
 export default yup;
+export { AddressType };
 export type { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams };
