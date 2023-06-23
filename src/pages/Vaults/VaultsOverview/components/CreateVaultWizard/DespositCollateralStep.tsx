@@ -108,7 +108,7 @@ const DepositCollateralStep = ({
             valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, collateral.price.usd) ?? 0}
             balance={collateral.balance.raw.toString()}
             humanBalance={collateral.balance.raw.toHuman()}
-            {...form.getFieldProps(VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD)}
+            {...form.getFieldProps(VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD, false, true)}
           />
         </ModalBody>
         <ModalFooter>
