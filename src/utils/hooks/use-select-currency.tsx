@@ -1,5 +1,6 @@
 import { CurrencyExt, LiquidityPool } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
+import Big from 'big.js';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -69,23 +70,29 @@ const useSelectCurrency = (filter?: SelectCurrencyFilter): SelectCurrencyResult 
     }
   }, [currencies, pools, filter, oracleCurrencies]);
 
-  const items = useMemo(
-    () =>
-      filteredCurrencies.map((currency) => {
-        const balance = getAvailableBalance(currency.ticker);
-        const balanceUSD = balance
-          ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
-          : 0;
+  const items = useMemo(() => {
+    let parsedTokenData = filteredCurrencies.map((currency) => {
+      const balance = getAvailableBalance(currency.ticker);
+      const balanceUSD = balance
+        ? convertMonetaryAmountToValueInUSD(balance, getTokenPrice(prices, currency.ticker)?.usd)
+        : 0;
 
-        return {
-          balance: balance?.toHuman() || 0,
-          balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
-          value: currency.ticker,
-          ...getCoinIconProps(currency)
-        };
-      }),
-    [filteredCurrencies, getAvailableBalance, prices]
-  );
+      return {
+        balance: balance?.toBig() || Big(0),
+        balanceUSD: formatUSD(balanceUSD || 0, { compact: true }),
+        value: currency.ticker,
+        ...getCoinIconProps(currency)
+      };
+    });
+
+    if (filter !== undefined) {
+      parsedTokenData = parsedTokenData.sort((currencyA, currencyB) =>
+        currencyB.balance.sub(currencyA.balance).toNumber()
+      );
+    }
+
+    return parsedTokenData.map((currency) => ({ ...currency, balance: currency.balance.toString() }));
+  }, [filteredCurrencies, getAvailableBalance, filter, prices]);
 
   return {
     items
