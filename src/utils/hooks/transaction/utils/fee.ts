@@ -119,6 +119,9 @@ const wrapWithTxFeeSwap = (
   return { extrinsic: wrappedCall };
 };
 
+// MEMO: if we ever need toadd QTOKENS as a possible fee
+// token, we will need to handle it here for loan withdraw and
+// withdrawAll
 const getActionAmount = (
   params: TransactionActions,
   feeCurrency: CurrencyExt
@@ -152,6 +155,19 @@ const getActionAmount = (
       break;
     }
     /* END - AMM */
+    /* START - LOANS */
+    case Transaction.LOANS_REPAY:
+    case Transaction.LOANS_LEND: {
+      const [, amount] = params.args;
+      amounts = [amount];
+      break;
+    }
+    case Transaction.LOANS_REPAY_ALL: {
+      const [, calculatedLimit] = params.args;
+      amounts = [calculatedLimit];
+      break;
+    }
+    /* END - LOANS */
   }
 
   if (!amounts) return;
