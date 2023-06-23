@@ -16,6 +16,7 @@ type Props = {
   isDisabled?: boolean;
   rounded?: BorderRadius;
   padding?: Spacing;
+  shadowed?: boolean;
 
   onPress?: (e: PressEvent) => void;
 };
@@ -38,6 +39,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       isDisabled,
       rounded = 'xl',
       padding = 'spacing6',
+      shadowed = true,
       ...props
     },
     ref
@@ -57,6 +59,7 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         $isPressable={isPressable}
         $rounded={rounded}
         $padding={padding}
+        $shadowed={shadowed}
         direction={direction}
         elementType={elementType}
         {...mergeProps(props, isPressable ? buttonProps : {})}

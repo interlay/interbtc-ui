@@ -15,6 +15,7 @@ import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import Layout from '@/parts/Layout';
+import Wrapper from '@/parts/Wrapper';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { BitcoinNetwork } from '@/types/bitcoin';
@@ -158,7 +159,7 @@ const App = (): JSX.Element => {
   }, [setSelectedAccount, extensions.length]);
 
   return (
-    <>
+    <Wrapper>
       <Layout>
         {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
         <Route
@@ -231,7 +232,7 @@ const App = (): JSX.Element => {
         />
       </Layout>
       <TransactionModal />
-    </>
+    </Wrapper>
   );
 };
 

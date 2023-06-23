@@ -77,7 +77,7 @@ const TransactionFeeDetails = ({
           />
         )}
         <TransactionDetailsGroup>
-          <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('fx_fees')}</TransactionDetailsDt>
+          <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('tx_fees')}</TransactionDetailsDt>
           <TransactionDetailsDd>{amountLabel}</TransactionDetailsDd>
         </TransactionDetailsGroup>
       </TransactionDetails>

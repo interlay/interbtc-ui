@@ -24,6 +24,7 @@ const SelectVaultCard = ({ vaults, isSelectingVault, switchProps, selectProps }:
       rounded='lg'
       gap='spacing4'
       padding='spacing4'
+      shadowed={false}
       flex='1'
     >
       <StyledSwitch isSelected={isSelectingVault} labelProps={{ size: 'xs' }} {...switchProps}>

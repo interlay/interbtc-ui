@@ -21,6 +21,7 @@ import Tokens from '@/legacy-components/Tokens';
 import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { BitcoinNetwork } from '@/types/bitcoin';
+import { POLKADOT } from '@/utils/constants/relay-chain-names';
 import { useNotifications } from '@/utils/context/Notifications';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
@@ -41,7 +42,7 @@ const Topbar = (): JSX.Element => {
   const { selectProps } = useSignMessage();
   const { list } = useNotifications();
 
-  const kintBalanceIsZero = getAvailableBalance('KINT')?.isZero();
+  const governanceTokenBalanceIsZero = getAvailableBalance(GOVERNANCE_TOKEN.ticker)?.isZero();
 
   const handleRequestFromFaucet = async (): Promise<void> => {
     if (!selectedAccount) return;
@@ -106,7 +107,7 @@ const Topbar = (): JSX.Element => {
         {isBanxaEnabled ? <FundWallet /> : <GetGovernanceTokenUI className={SMALL_SIZE_BUTTON_CLASSES} />}
         {selectedAccount !== undefined && (
           <>
-            {process.env.REACT_APP_FAUCET_URL && kintBalanceIsZero && (
+            {process.env.REACT_APP_FAUCET_URL && governanceTokenBalanceIsZero && (
               <>
                 <InterlayDenimOrKintsugiMidnightOutlinedButton
                   className={SMALL_SIZE_BUTTON_CLASSES}
@@ -137,7 +138,13 @@ const Topbar = (): JSX.Element => {
             <Tokens />
           </>
         )}
-        <NotificationsPopover address={selectedAccount?.address} items={list} />
+        <div
+          className={clsx({
+            'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
+          })}
+        >
+          <NotificationsPopover address={selectedAccount?.address} items={list} />
+        </div>
         <InterlayDefaultContainedButton className={SMALL_SIZE_BUTTON_CLASSES} onClick={handleAccountModalOpen}>
           {accountLabel}
         </InterlayDefaultContainedButton>

@@ -161,8 +161,8 @@
   "amount": "Amount",
   "select_token": "Select Token",
   "fee_token": "Fee token",
-  "fx_fees": "Tx fees",
   "claim_rewards": "Claim Rewards",
+  "tx_fees": "Tx fees",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -355,7 +355,7 @@
     "maximum_in_single_request": "Max issuable in single request",
     "maximum_total_request": "Max issuable in total",
     "maximum_in_single_request_error": "Please enter less than {{maxAmount}} {{wrappedTokenSymbol}}.",
-    "request": "Request id  #{{id}}",
+    "request": "Request id",
     "you_received": "You have received",
     "contact_team": "Contact the team for debugging if you think this is an error.",
     "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of {{wrappedTokenSymbol}}.",
