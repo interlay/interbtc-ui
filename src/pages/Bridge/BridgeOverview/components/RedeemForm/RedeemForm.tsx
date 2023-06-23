@@ -1,7 +1,7 @@
 import { getRedeemRequestsFromExtrinsicResult, newMonetaryAmount, Redeem } from '@interlay/interbtc-api';
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
-import { ChangeEvent, Key, useState } from 'react';
+import { ChangeEvent, Key, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounce } from 'react-use';
 
@@ -13,16 +13,16 @@ import {
 } from '@/common/utils/utils';
 import { Flex, Input, TokenInput } from '@/component-library';
 import { AuthCTA } from '@/components';
-import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import {
   BRIDGE_REDEEM_ADDRESS,
   BRIDGE_REDEEM_AMOUNT_FIELD,
   BRIDGE_REDEEM_CUSTOM_VAULT_FIELD,
   BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH,
+  BRIDGE_REDEEM_FEE_TOKEN,
   BRIDGE_REDEEM_PREMIUM_VAULT_FIELD,
   BridgeRedeemFormData,
   bridgeRedeemSchema,
-  isFormDisabled,
   useForm
 } from '@/lib/form';
 import { BridgeActions } from '@/types/bridge';
@@ -32,6 +32,8 @@ import { BridgeVaultData, useGetVaults } from '@/utils/hooks/api/bridge/use-get-
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { TransactionArgs } from '@/utils/hooks/transaction/types';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { LegacyRedeemModal } from '../LegacyRedeemModal';
 import { RequestLimitsCard } from '../RequestLimitsCard';
@@ -117,35 +119,46 @@ const RedeemForm = ({
     minAmount: dustValue
   };
 
+  const getTransactionArgs = useCallback(
+    (values: BridgeRedeemFormData): TransactionArgs<Transaction.REDEEM_REQUEST> | undefined => {
+      const amount = values[BRIDGE_REDEEM_AMOUNT_FIELD];
+      const btcAddress = values[BRIDGE_REDEEM_ADDRESS];
+
+      if (!vaultsData || !amount || !btcAddress) return;
+
+      const monetaryAmount = newMonetaryAmount(amount, WRAPPED_TOKEN, true);
+
+      const isPremiumRedeem = values[BRIDGE_REDEEM_PREMIUM_VAULT_FIELD];
+
+      const availableVaults = getAvailableVaults(monetaryAmount, isPremiumRedeem);
+
+      if (!availableVaults) return;
+
+      const vaultId = values[BRIDGE_REDEEM_CUSTOM_VAULT_FIELD];
+
+      let vault: BridgeVaultData | undefined;
+
+      // If custom vault was select, try to find it in the data
+      if (vaultId) {
+        vault = availableVaults.find((item) => item.id === vaultId);
+      }
+
+      // If no vault provided nor the custom vault wasn't found (unlikely), choose random vault
+      if (!vault) {
+        vault = getRandomArrayElement(availableVaults);
+      }
+
+      return [monetaryAmount, btcAddress, vault.vaultId];
+    },
+    [vaultsData, getAvailableVaults]
+  );
+
   const handleSubmit = async (values: BridgeRedeemFormData) => {
-    const amount = values[BRIDGE_REDEEM_AMOUNT_FIELD];
-    const btcAddress = values[BRIDGE_REDEEM_ADDRESS];
+    const args = getTransactionArgs(values);
 
-    if (!vaultsData || !amount || !btcAddress) return;
+    if (!args) return;
 
-    const monetaryAmount = newMonetaryAmount(amount, WRAPPED_TOKEN, true);
-
-    const isPremiumRedeem = values[BRIDGE_REDEEM_PREMIUM_VAULT_FIELD];
-
-    const availableVaults = getAvailableVaults(monetaryAmount, isPremiumRedeem);
-
-    if (!availableVaults) return;
-
-    const vaultId = values[BRIDGE_REDEEM_CUSTOM_VAULT_FIELD];
-
-    let vault: BridgeVaultData | undefined;
-
-    // If custom vault was select, try to find it in the data
-    if (vaultId) {
-      vault = availableVaults.find((item) => item.id === vaultId);
-    }
-
-    // If no vault provided nor the custom vault wasn't found (unlikely), choose random vault
-    if (!vault) {
-      vault = getRandomArrayElement(availableVaults);
-    }
-
-    transaction.execute(monetaryAmount, btcAddress, vault.vaultId);
+    transaction.execute(...args);
   };
 
   const form = useForm<BridgeRedeemFormData>({
@@ -154,11 +167,21 @@ const RedeemForm = ({
       [BRIDGE_REDEEM_CUSTOM_VAULT_FIELD]: '',
       [BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH]: false,
       [BRIDGE_REDEEM_PREMIUM_VAULT_FIELD]: false,
-      [BRIDGE_REDEEM_ADDRESS]: ''
+      [BRIDGE_REDEEM_ADDRESS]: '',
+      [BRIDGE_REDEEM_FEE_TOKEN]: transaction.fee.defaultCurrency.ticker
     },
     validationSchema: bridgeRedeemSchema({ [BRIDGE_REDEEM_AMOUNT_FIELD]: transferAmountSchemaParams }),
     onSubmit: handleSubmit,
-    hideErrorMessages: transaction.isLoading
+    hideErrorMessages: transaction.isLoading,
+    onComplete: (values) => {
+      const args = getTransactionArgs(values);
+
+      if (!args) return;
+
+      const feeTicker = values[BRIDGE_REDEEM_FEE_TOKEN];
+
+      transaction.fee.setCurrency(feeTicker).estimate(...args);
+    }
   });
 
   const handleToggleCustomVault = (e: ChangeEvent<HTMLInputElement>) => {
@@ -230,11 +253,9 @@ const RedeemForm = ({
 
   const isSelectingVault = form.values[BRIDGE_REDEEM_CUSTOM_VAULT_SWITCH];
 
-  const isBtnDisabled = isFormDisabled(form);
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   const hasPremiumRedeemFeature = premium;
-
-  const hasEnoughGovernance = governanceBalance.gte(TRANSACTION_FEE_AMOUNT);
 
   return (
     <>
@@ -242,7 +263,7 @@ const RedeemForm = ({
         <form onSubmit={form.handleSubmit}>
           <Flex direction='column' gap='spacing4'>
             <Flex direction='column' gap='spacing4'>
-              <RequestLimitsCard title={t('bridge.max_redeembale')} singleRequestLimit={redeemLimit} />
+              <RequestLimitsCard title={t('bridge.max_redeemable')} singleRequestLimit={redeemLimit} />
               <TokenInput
                 placeholder='0.00'
                 label={t('amount')}
@@ -289,16 +310,13 @@ const RedeemForm = ({
                 compensationAmountUSD={compensationAmountUSD}
                 bridgeFee={bridgeFee}
                 bitcoinNetworkFee={currentInclusionFee}
+                feeDetailsProps={{
+                  ...transaction.fee.detailsProps,
+                  selectProps: form.getFieldProps(BRIDGE_REDEEM_FEE_TOKEN, true)
+                }}
               />
-              <AuthCTA
-                type='submit'
-                disabled={isBtnDisabled || !hasEnoughGovernance}
-                size='large'
-                loading={transaction.isLoading}
-              >
-                {hasEnoughGovernance
-                  ? t('redeem')
-                  : t('insufficient_token_balance', { token: GOVERNANCE_TOKEN.ticker })}
+              <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
+                {t('redeem')}
               </AuthCTA>
             </Flex>
           </Flex>

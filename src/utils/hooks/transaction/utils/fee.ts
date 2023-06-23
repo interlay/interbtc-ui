@@ -121,6 +121,10 @@ const wrapWithTxFeeSwap = (
 
 const getActionAmount = (params: TransactionActions): MonetaryAmount<CurrencyExt> | undefined => {
   switch (params.type) {
+    case Transaction.REDEEM_REQUEST: {
+      const [amount] = params.args;
+      return amount;
+    }
     case Transaction.TOKENS_TRANSFER: {
       const [, amount] = params.args;
       return amount;
