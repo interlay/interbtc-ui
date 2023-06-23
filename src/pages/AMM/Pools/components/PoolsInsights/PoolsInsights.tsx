@@ -23,7 +23,7 @@ import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/page
 import { AccountPoolsData } from '@/utils/hooks/api/amm/use-get-account-pools';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
-import { isTrasanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
+import { isTransanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { StyledDd, StyledDt } from './PoolsInsights.style';
 import { calculateClaimableFarmingRewardUSD } from './utils';
@@ -72,6 +72,8 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleCloseModal = () => setOpen(false);
+
   const accountPositions = accountPoolsData?.positions;
 
   const supplyAmountUSD = accountPositions?.reduce((acc, curr) => {
@@ -102,7 +104,7 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
 
   const hasClaimableRewards = totalClaimableRewardUSD > 0;
 
-  const isBtnDisabled = isTrasanctionFormDisabled(form, transaction.fee);
+  const isBtnDisabled = isTransanctionFormDisabled(form, transaction.fee);
 
   return (
     <>
@@ -133,7 +135,8 @@ const PoolsInsights = ({ pools, accountPoolsData, refetch }: PoolsInsightsProps)
       </Dl>
       <Modal
         isOpen={isOpen}
-        onClose={() => setOpen(false)}
+        onClose={handleCloseModal}
+        // does not close overlapped modal when overlapping modal is closed
         shouldCloseOnInteractOutside={(el) => !overlappingModalRef.current?.contains(el)}
       >
         <ModalHeader>Claim Rewards</ModalHeader>

@@ -7,7 +7,7 @@ import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/comm
 import { Flex, TokenInput } from '@/component-library';
 import { AuthCTA, ReceivableAssets, TransactionFeeDetails } from '@/components';
 import { GOVERNANCE_TOKEN, TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import { isFormDisabled, POOL_WITHDRAW_AMOUNT_FIELD, POOL_WITHDRAW_FEE_TOKEN_FIELD, useForm } from '@/lib/form';
+import { POOL_WITHDRAW_AMOUNT_FIELD, POOL_WITHDRAW_FEE_TOKEN_FIELD, useForm } from '@/lib/form';
 import { WithdrawLiquidityPoolFormData, withdrawLiquidityPoolSchema } from '@/lib/form/schemas';
 import { SlippageManager } from '@/pages/AMM/shared/components';
 import { AMM_DEADLINE_INTERVAL } from '@/utils/constants/api';
@@ -15,6 +15,7 @@ import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { isTransanctionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { PoolName } from '../PoolName';
@@ -105,7 +106,7 @@ const WithdrawForm = ({ pool, overlappingModalRef, onSuccess, onSigning }: Withd
 
   const lpTokenMonetaryAmount = newSafeMonetaryAmount(form.values[POOL_WITHDRAW_AMOUNT_FIELD] || 0, pool.lpToken, true);
 
-  const isBtnDisabled = isFormDisabled(form);
+  const isBtnDisabled = isTransanctionFormDisabled(form, transaction.fee);
 
   const tickers = pool.pooledCurrencies.map((currency) => currency.currency.ticker);
   const poolName = <PoolName justifyContent='center' tickers={tickers} />;

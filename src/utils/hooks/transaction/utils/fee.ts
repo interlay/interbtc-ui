@@ -123,7 +123,7 @@ const getActionAmount = (
   params: TransactionActions,
   feeCurrency: CurrencyExt
 ): MonetaryAmount<CurrencyExt> | undefined => {
-  let amounts: MonetaryAmount<CurrencyExt> | MonetaryAmount<CurrencyExt>[] | undefined;
+  let amounts: MonetaryAmount<CurrencyExt>[] | undefined;
 
   switch (params.type) {
     case Transaction.REDEEM_REQUEST: {
@@ -132,13 +132,13 @@ const getActionAmount = (
     }
     case Transaction.TOKENS_TRANSFER: {
       const [, amount] = params.args;
-      amounts = amount;
+      amounts = [amount];
       break;
     }
     /* START - AMM */
     case Transaction.AMM_SWAP: {
       const [trade] = params.args;
-      amounts = trade.inputAmount;
+      amounts = [trade.inputAmount];
       break;
     }
     case Transaction.AMM_ADD_LIQUIDITY: {
@@ -148,7 +148,7 @@ const getActionAmount = (
     }
     case Transaction.AMM_REMOVE_LIQUIDITY: {
       const [amount] = params.args;
-      amounts = amount;
+      amounts = [amount];
       break;
     }
     /* END - AMM */
@@ -156,11 +156,7 @@ const getActionAmount = (
 
   if (!amounts) return;
 
-  if (Array.isArray(amounts)) {
-    return amounts.find((amount) => isCurrencyEqual(amount.currency, feeCurrency));
-  }
-
-  return isCurrencyEqual(amounts.currency, feeCurrency) ? amounts : undefined;
+  return amounts.find((amount) => isCurrencyEqual(amount.currency, feeCurrency));
 };
 
 export { estimateTransactionFee, getActionAmount, wrapWithTxFeeSwap };
