@@ -1,5 +1,5 @@
 import { useId } from '@react-aria/utils';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { H3, Modal, Stack } from '@/component-library';
@@ -30,6 +30,8 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
     open: false
   });
 
+  const overlappingModalRef = useRef<HTMLDivElement>(null);
+
   const handleClickAddVault = (vault: VaultsTableRow) => setCollateralModal({ open: true, data: vault });
 
   const handleCloseModal = () => setCollateralModal((s) => ({ ...s, open: false }));
@@ -47,8 +49,13 @@ const CreateVaults = ({ vaults = [], ...props }: CreateVaultsProps): JSX.Element
     <Stack spacing='double'>
       <H3 id={titleId}>{t('vault.create_vault')}</H3>
       <VaultsTable {...props} aria-labelledby={titleId} onClickAddVault={handleClickAddVault} data={data} />
-      <Modal aria-label='Create vault' isOpen={open} onClose={handleCloseModal}>
-        <CreateVaultWizard vault={selectedVault} />
+      <Modal
+        aria-label='Create vault'
+        isOpen={open}
+        onClose={handleCloseModal}
+        shouldCloseOnInteractOutside={(el) => !overlappingModalRef.current?.contains(el)}
+      >
+        <CreateVaultWizard vault={selectedVault} overlappingModalRef={overlappingModalRef} />
       </Modal>
     </Stack>
   );

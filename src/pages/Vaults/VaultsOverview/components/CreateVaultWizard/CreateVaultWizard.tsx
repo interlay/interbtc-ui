@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { RefObject, useState } from 'react';
 
 import { VaultsTableRow } from '../VaultsTable';
 import DespositCollateralStep from './DespositCollateralStep';
@@ -9,9 +9,10 @@ type Steps = 1 | 2 | 3;
 
 interface CreateVaultWizardProps {
   vault?: VaultsTableRow;
+  overlappingModalRef: RefObject<HTMLDivElement>;
 }
 // TODO: Move this to a generic multi-step component
-const CreateVaultWizard = ({ vault }: CreateVaultWizardProps): JSX.Element | null => {
+const CreateVaultWizard = ({ vault, overlappingModalRef }: CreateVaultWizardProps): JSX.Element | null => {
   const [step, setStep] = useState<Steps>(1);
 
   const handleNextStep = () => setStep((s) => (s + 1) as Steps);
@@ -28,6 +29,7 @@ const CreateVaultWizard = ({ vault }: CreateVaultWizardProps): JSX.Element | nul
         onSuccessfulDeposit={handleNextStep}
         collateralCurrency={vault.collateralCurrency}
         minCollateralAmount={vault.minCollateralAmount}
+        overlappingModalRef={overlappingModalRef}
       />
       <VaultCreatedStep step={step} collateralCurrency={vault.collateralCurrency} />
     </>
