@@ -43,7 +43,7 @@ const TransactionFeeDetails = ({
     <TransactionDetails {...props}>
       {selectProps && <TransactionSelectToken {...mergeProps({ label: t('fee_token') }, selectProps)} />}
       <TransactionDetailsGroup>
-        <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('fx_fees')}</TransactionDetailsDt>
+        <TransactionDetailsDt tooltipLabel={tooltipLabel}>{label || t('tx_fees')}</TransactionDetailsDt>
         <TransactionDetailsDd>
           {amount.toHuman()} {amount.currency.ticker} (
           {displayMonetaryAmountInUSDFormat(amount, getTokenPrice(prices, amount.currency.ticker)?.usd)})

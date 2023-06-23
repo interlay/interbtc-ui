@@ -16,7 +16,7 @@ const RequestLimitsCard = ({ title, singleRequestLimit, maxRequestLimit }: Reque
   return (
     <Flex direction='column' gap='spacing2'>
       <P size='xs'>{title}</P>
-      <Card gap='spacing4' variant='bordered' background='tertiary' rounded='lg' padding='spacing4'>
+      <Card gap='spacing4' variant='bordered' background='tertiary' rounded='lg' padding='spacing4' shadowed={false}>
         <Dl direction='column' gap='spacing2'>
           <DlGroup justifyContent='space-between' flex='1'>
             <Dt size='xs' color='primary'>

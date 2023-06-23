@@ -1,6 +1,5 @@
 import { Flex, Tabs, TabsItem } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
-import Transactions from '@/pages/Transactions';
 import MainContainer from '@/parts/MainContainer';
 import { BridgeActions } from '@/types/bridge';
 import { useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
@@ -10,7 +9,7 @@ import { useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
 import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
 
 import { StyledCard, StyledFormWrapper, StyledWrapper } from './BridgeOverview.styles';
-import { IssueForm, LegacyBurnForm, RedeemForm } from './components';
+import { IssueForm, LegacyBurnForm, LegacyTransactions, RedeemForm } from './components';
 
 const BridgeOverview = (): JSX.Element => {
   const { tabsProps } = useTabPageLocation();
@@ -55,7 +54,7 @@ const BridgeOverview = (): JSX.Element => {
           </Flex>
         </StyledCard>
       </StyledWrapper>
-      <Transactions />
+      <LegacyTransactions />
     </MainContainer>
   );
 };
