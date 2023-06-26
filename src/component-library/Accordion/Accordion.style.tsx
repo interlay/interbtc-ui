@@ -28,7 +28,7 @@ const StyledAccordionItemWrapper = styled.div<Pick<StyledAccordionProps, '$isDis
 
 const StyledAccordionItemHeading = styled(H3)`
   margin: 0;
-  font-weight: ${theme.fontWeight.bold};
+  font-weight: ${theme.fontWeight.semibold};
 `;
 
 const StyledAccordionItemButton = styled.button<StyledAccordionItemButtonProps>`
@@ -49,7 +49,7 @@ const StyledAccordionItemButton = styled.button<StyledAccordionItemButtonProps>`
 `;
 
 const StyledChevronDown = styled(ChevronDown)<Pick<StyledAccordionProps, '$isExpanded'>>`
-  transform: ${({ $isExpanded }) => $isExpanded && 'rotate(-90deg)'};
+  transform: ${({ $isExpanded }) => $isExpanded && 'rotate(-180deg)'};
   transition: transform ${theme.transition.duration.duration150}ms ease;
 `;
 

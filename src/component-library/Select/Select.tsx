@@ -1,5 +1,5 @@
 import { useSelect } from '@react-aria/select';
-import { mergeProps } from '@react-aria/utils';
+import { mergeProps, useId } from '@react-aria/utils';
 import { VisuallyHidden } from '@react-aria/visually-hidden';
 import { SelectProps as AriaSelectProps, useSelectState } from '@react-stately/select';
 import { CollectionBase, Node } from '@react-types/shared';
@@ -12,11 +12,13 @@ import { Sizes } from '../utils/prop-types';
 import { SelectModal } from './SelectModal';
 import { SelectTrigger } from './SelectTrigger';
 
+type SelectType = 'listbox' | 'modal';
+
 type SelectObject = Record<string, unknown>;
 
 // TODO: listbox to be implemented
-type Props<T extends SelectObject> = {
-  type?: 'listbox' | 'modal';
+type Props<F extends SelectType = 'listbox', T = SelectObject> = {
+  type?: F;
   open?: boolean;
   loading?: boolean;
   size?: Sizes;
@@ -24,23 +26,30 @@ type Props<T extends SelectObject> = {
   asSelectTrigger?: any;
   renderValue?: (item: Node<T>) => ReactNode;
   placeholder?: ReactNode;
-  modalTitle?: ReactNode;
+  modalTitle?: F extends 'modal' ? ReactNode : never;
+  modalRef?: F extends 'modal' ? React.Ref<HTMLDivElement> : never;
 };
 
-type InheritAttrs<T extends SelectObject = any> = Omit<
+type InheritAttrs<F extends SelectType = 'listbox', T = SelectObject> = Omit<
   CollectionBase<T> & FieldProps & AriaSelectProps<T>,
-  keyof Props<T> | 'isDisabled' | 'isLoading' | 'isOpen' | 'isRequired' | 'selectedKey' | 'defaultSelectedKey'
+  keyof Props<F, T> | 'isDisabled' | 'isLoading' | 'isOpen' | 'isRequired' | 'selectedKey' | 'defaultSelectedKey'
 >;
 
-type NativeAttrs<T extends SelectObject> = Omit<React.InputHTMLAttributes<Element>, keyof Props<T>>;
+type NativeAttrs<F extends SelectType = 'listbox', T = SelectObject> = Omit<
+  React.InputHTMLAttributes<Element>,
+  keyof Props<F, T>
+>;
 
-type SelectProps<T extends SelectObject> = Props<T> & NativeAttrs<T> & InheritAttrs<T>;
+type SelectProps<F extends SelectType = 'listbox', T = SelectObject> = Props<F, T> &
+  NativeAttrs<F, T> &
+  InheritAttrs<F, T>;
 
-const Select = <T extends SelectObject>(
+// TODO: when type is modal, we should use also types from our List
+const Select = <F extends SelectType = 'listbox', T extends SelectObject = SelectObject>(
   {
     value,
     defaultValue,
-    type = 'listbox',
+    type = 'listbox' as F,
     name,
     disabled,
     loading,
@@ -56,12 +65,15 @@ const Select = <T extends SelectObject>(
     onChange,
     renderValue = (item) => item.rendered,
     items,
+    disabledKeys,
+    modalRef,
     ...props
-  }: SelectProps<T>,
+  }: SelectProps<F, T>,
   ref: ForwardedRef<HTMLInputElement>
 ): JSX.Element => {
   const inputRef = useDOMRef(ref);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const modalId = useId();
 
   const ariaProps: AriaSelectProps<T> = {
     isDisabled: disabled,
@@ -128,24 +140,29 @@ const Select = <T extends SelectObject>(
         hasError={error}
         valueProps={valueProps}
         placeholder={placeholder}
+        name={name}
+        aria-expanded={state.isOpen}
+        aria-controls={modalId}
       >
         {state.selectedItem && renderValue(state.selectedItem)}
       </SelectTrigger>
       {type === 'modal' && (
         <SelectModal
+          ref={modalRef}
           isOpen={state.isOpen}
           state={state}
           onClose={state.close}
-          selectedAccount={state.selectedItem?.key}
           title={modalTitle}
+          id={modalId}
+          listProps={{ selectedKeys: [state.selectedItem?.key], disabledKeys }}
         />
       )}
     </Field>
   );
 };
 
-const _Select = forwardRef(Select) as <T extends SelectObject>(
-  props: SelectProps<T> & { ref?: React.ForwardedRef<HTMLInputElement> }
+const _Select = forwardRef(Select) as <F extends SelectType = 'listbox', T extends SelectObject = SelectObject>(
+  props: SelectProps<F, T> & { ref?: React.ForwardedRef<HTMLInputElement> }
 ) => ReturnType<typeof Select>;
 
 Select.displayName = 'Select';

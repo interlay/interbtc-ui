@@ -47,6 +47,9 @@ type StyledTabProps = {
 
 const StyledTab = styled.div<StyledTabProps>`
   flex: ${({ $fullWidth }) => $fullWidth && '1'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: ${({ $size }) => theme.tabs[$size].tab.padding};
   font-size: ${({ $size }) => theme.tabs[$size].tab.text};
   font-weight: ${({ $size }) => theme.tabs[$size].tab.fontWeight};
@@ -59,6 +62,7 @@ const StyledTab = styled.div<StyledTabProps>`
   // TODO: have this transition into theme
   transition: color 150ms;
   opacity: ${({ $isDisabled }) => $isDisabled && '.5'};
+  overflow: hidden;
 
   &[aria-selected='true'] {
     color: ${theme.tabs.active.color};

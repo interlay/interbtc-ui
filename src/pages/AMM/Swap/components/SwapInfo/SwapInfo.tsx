@@ -1,12 +1,10 @@
 import { Trade } from '@interlay/interbtc-api';
 
-import { displayMonetaryAmountInUSDFormat, formatPercentage } from '@/common/utils/utils';
-import { Accordion, AccordionItem, Dd, Dl, DlGroup, Dt } from '@/component-library';
-import { TRANSACTION_FEE_AMOUNT } from '@/config/relay-chains';
-import { getTokenPrice } from '@/utils/helpers/prices';
-import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
+import { formatPercentage } from '@/common/utils/utils';
+import { Accordion, AccordionItem } from '@/component-library';
+import { TransactionDetailsDd, TransactionDetailsDt, TransactionDetailsGroup } from '@/components';
 
-import { StyledCard } from './SwapInfo.style';
+import { StyledTransactionDetails } from './SwapInfo.style';
 
 type SwapInfoProps = {
   trade: Trade;
@@ -14,8 +12,6 @@ type SwapInfoProps = {
 };
 
 const SwapInfo = ({ trade, slippage }: SwapInfoProps): JSX.Element | null => {
-  const prices = useGetPrices();
-
   const { inputAmount, outputAmount, executionPrice, priceImpact } = trade;
 
   const title = `1 ${inputAmount.currency.ticker} = ${executionPrice.toHuman()} ${outputAmount.currency.ticker}`;
@@ -23,50 +19,29 @@ const SwapInfo = ({ trade, slippage }: SwapInfoProps): JSX.Element | null => {
   const minimumReceived = outputAmount.sub(outputAmount.mul(slippage).div(100));
 
   return (
-    <StyledCard>
-      <Accordion size='s'>
+    <StyledTransactionDetails>
+      <Accordion size='xs'>
         <AccordionItem hasChildItems={false} key='info' title={title}>
-          <Dl direction='column'>
-            <DlGroup justifyContent='space-between'>
-              <Dt size='s' color='primary'>
-                Expected Output
-              </Dt>
-              <Dd size='s'>
-                {outputAmount.toHuman()} {outputAmount.currency.ticker}
-              </Dd>
-            </DlGroup>
-            <DlGroup justifyContent='space-between'>
-              <Dt size='s' color='primary'>
-                Minimum Received
-              </Dt>
-              <Dd size='s'>
-                {minimumReceived.toHuman()} {outputAmount.currency.ticker}
-              </Dd>
-            </DlGroup>
-            <DlGroup justifyContent='space-between'>
-              <Dt size='s' color='primary'>
-                Price Impact
-              </Dt>
-              {/* TODO: handle small percentages */}
-              <Dd size='s'>{formatPercentage(priceImpact.toNumber())}</Dd>
-            </DlGroup>
-            <DlGroup justifyContent='space-between'>
-              <Dt size='s' color='primary'>
-                Fees
-              </Dt>
-              <Dd size='s'>
-                {TRANSACTION_FEE_AMOUNT.toHuman()} {TRANSACTION_FEE_AMOUNT.currency.ticker} (
-                {displayMonetaryAmountInUSDFormat(
-                  TRANSACTION_FEE_AMOUNT,
-                  getTokenPrice(prices, TRANSACTION_FEE_AMOUNT.currency.ticker)?.usd
-                )}
-                )
-              </Dd>
-            </DlGroup>
-          </Dl>
+          <TransactionDetailsGroup>
+            <TransactionDetailsDt>Expected Output</TransactionDetailsDt>
+            <TransactionDetailsDd>
+              {outputAmount.toHuman()} {outputAmount.currency.ticker}
+            </TransactionDetailsDd>
+          </TransactionDetailsGroup>
+          <TransactionDetailsGroup>
+            <TransactionDetailsDt>Minimum Received</TransactionDetailsDt>
+            <TransactionDetailsDd>
+              {minimumReceived.toHuman()} {outputAmount.currency.ticker}
+            </TransactionDetailsDd>
+          </TransactionDetailsGroup>
+          <TransactionDetailsGroup>
+            <TransactionDetailsDt>Price Impact</TransactionDetailsDt>
+            {/* TODO: handle small percentages */}
+            <TransactionDetailsDd>{formatPercentage(priceImpact.toNumber())}</TransactionDetailsDd>
+          </TransactionDetailsGroup>
         </AccordionItem>
       </Accordion>
-    </StyledCard>
+    </StyledTransactionDetails>
   );
 };
 

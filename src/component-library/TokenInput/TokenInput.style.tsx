@@ -33,6 +33,7 @@ const StyledUSDAdornment = styled.span<StyledUSDAdornmentProps>`
 `;
 
 const StyledTokenAdornment = styled(Flex)`
+  border: ${theme.border.default};
   background-color: ${theme.tokenInput.endAdornment.bg};
   border-radius: ${theme.rounded.md};
   font-size: ${theme.text.s};
@@ -68,7 +69,7 @@ const StyledTokenInputBalanceWrapper = styled.dl`
 `;
 
 const StyledTokenInputBalanceLabel = styled.dt`
-  color: ${theme.colors.textTertiary};
+  color: ${theme.label.text};
 
   &:after {
     content: ':';
