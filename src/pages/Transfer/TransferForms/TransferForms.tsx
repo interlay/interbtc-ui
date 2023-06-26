@@ -15,7 +15,7 @@ const TransferForms = (): JSX.Element => (
                 <TransferForm />
               </StyledFormWrapper>
             </TabsItem>
-            <TabsItem title='Cross Chain Transfer' key='crossChainTransfer'>
+            <TabsItem title='Bridge' key='crossChainTransfer'>
               <StyledFormWrapper>
                 <CrossChainTransferForm />
               </StyledFormWrapper>
