@@ -6,13 +6,13 @@ import { useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { useGetIssueRequestLimit } from '@/utils/hooks/api/bridge/use-get-issue-request-limits';
 import { useGetMaxBurnableTokens } from '@/utils/hooks/api/bridge/use-get-max-burnable-tokens';
 import { useGetRedeemData } from '@/utils/hooks/api/bridge/use-get-redeem-data';
-import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
+import { usePageQueryParams } from '@/utils/hooks/use-page-query-params';
 
 import { StyledCard, StyledFormWrapper, StyledWrapper } from './BTCOverview.styles';
 import { IssueForm, LegacyBurnForm, LegacyTransactions, RedeemForm } from './components';
 
 const BTCOverview = (): JSX.Element => {
-  const { tabsProps } = useTabPageLocation();
+  const { tabsProps } = usePageQueryParams();
 
   const { defaultSelectedKey } = tabsProps;
 

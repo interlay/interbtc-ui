@@ -1,12 +1,21 @@
 import { Flex, Tabs, TabsItem } from '@/component-library';
 import MainContainer from '@/parts/MainContainer';
-import { useTabPageLocation } from '@/utils/hooks/use-tab-page-location';
+import { QUERY_PARAMETERS } from '@/utils/constants/links';
+import { usePageQueryParams } from '@/utils/hooks/use-page-query-params';
 
 import { BridgeForm, TransferForm } from './components';
 import { StyledCard, StyledFormWrapper, StyledWrapper } from './SendAndReceiveForms.styles';
 
+enum TransferActions {
+  TRASNFER = 'transfer',
+  BRIDGE = 'crossChainTransfer'
+}
+
 const SendAndReceiveForms = (): JSX.Element => {
-  const { tabsProps } = useTabPageLocation();
+  const { data, tabsProps } = usePageQueryParams();
+
+  const ticker: string | undefined = data[QUERY_PARAMETERS.TRANSFER.TICKER];
+  const xcmTicker: string | undefined = data[QUERY_PARAMETERS.TRANSFER.XCM_TICKER];
 
   return (
     <MainContainer>
@@ -14,14 +23,14 @@ const SendAndReceiveForms = (): JSX.Element => {
         <StyledCard gap='spacing2'>
           <Flex direction='column' gap='spacing8'>
             <Tabs {...tabsProps} size='large' fullWidth>
-              <TabsItem title='Transfer' key='transfer'>
+              <TabsItem title='Transfer' key={TransferActions.TRASNFER}>
                 <StyledFormWrapper>
-                  <TransferForm />
+                  <TransferForm ticker={ticker} />
                 </StyledFormWrapper>
               </TabsItem>
-              <TabsItem title='Bridge' key='bridge'>
+              <TabsItem title='Bridge' key={TransferActions.BRIDGE}>
                 <StyledFormWrapper>
-                  <BridgeForm />
+                  <BridgeForm ticker={xcmTicker} />
                 </StyledFormWrapper>
               </TabsItem>
             </Tabs>

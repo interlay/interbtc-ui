@@ -70,6 +70,10 @@ const QUERY_PARAMETERS = Object.freeze({
   SWAP: {
     FROM: 'from',
     TO: 'to'
+  },
+  TRANSFER: {
+    TICKER: 'ticker',
+    XCM_TICKER: 'xcmTicker'
   }
 });
 

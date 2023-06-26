@@ -39,14 +39,18 @@ import useAccountId from '@/utils/hooks/use-account-id';
 import { ChainSelect } from '../ChainSelect';
 import { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect } from './BridgeForm.styles';
 
-const BridgeForm = (): JSX.Element => {
+type CrossChainTransferFormProps = {
+  ticker?: string;
+};
+
+const BridgeForm = ({ ticker }: CrossChainTransferFormProps): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
   const [transferableTokens, setTransferableTokens] = useState<XCMTokenData[]>([]);
   const [currentToken, setCurrentToken] = useState<XCMTokenData>();
 
   const prices = useGetPrices();
   const { t } = useTranslation();
-  const { getCurrencyFromTicker } = useGetCurrencies(true);
+  const { data: currencies, getCurrencyFromTicker } = useGetCurrencies(true);
 
   const accountId = useAccountId();
   const { accounts } = useSubstrateSecureState();
@@ -192,6 +196,18 @@ const BridgeForm = (): JSX.Element => {
     form.setFieldValue(BRIDGE_TO_ACCOUNT_FIELD, accountId?.toString());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountId]);
+
+  useEffect(() => {
+    if (!currencies || !ticker) return;
+
+    const tokenData = transferableTokens.find((token) => token.value === ticker);
+
+    if (!tokenData) return;
+
+    setCurrentToken(tokenData);
+    form.setFieldValue(BRIDGE_TOKEN_FIELD, ticker);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currencies, ticker, transferableTokens]);
 
   if (!originatingChains || !destinationChains || !transferableTokens.length) {
     return (
