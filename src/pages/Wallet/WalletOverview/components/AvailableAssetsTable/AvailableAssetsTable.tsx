@@ -56,7 +56,11 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
             textSize={isMobile ? 'base' : undefined}
             marginBottom={isMobile ? 'spacing4' : undefined}
             {...getCoinIconProps(currency)}
-            tooltip='Asset tooltip'
+            tooltip={
+              <>
+                Asset tooltip <a href='http://google.com'>Google</a>
+              </>
+            }
           />
         );
 

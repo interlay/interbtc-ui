@@ -11,7 +11,7 @@ type Props = {
   size?: IconSize;
   textSize?: FontSize;
   tag?: ReactNode;
-  tooltip?: string;
+  tooltip?: ReactNode;
 };
 
 type InheritAttrs = Omit<FlexProps, keyof Props>;
