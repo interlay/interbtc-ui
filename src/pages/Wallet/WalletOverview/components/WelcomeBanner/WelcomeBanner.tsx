@@ -1,35 +1,56 @@
-import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import BitcoinStrategyLogo from '@/assets/img/bitcoin-strategy.svg';
-import { CTALink, Flex, H1, P } from '@/component-library';
+import { Flex } from '@/component-library';
+import { APP_NAME, WRAPPED_TOKEN } from '@/config/relay-chains';
 
-import { StyledCard, StyledImage, StyledImageWrapper, StyledTextWrapper } from './WelcomeBanner.styles';
+import {
+  StyledCard,
+  StyledCloseCTA,
+  StyledCTALink,
+  StyledImageWrapper,
+  StyledP,
+  StyledSVG,
+  StyledTextWrapper,
+  StyledTitle,
+  StyledXMark
+} from './WelcomeBanner.styles';
 
 type WelcomeBannerProps = {
-  title: ReactNode;
-  description: ReactNode;
+  onClose: () => void;
 };
 
-const WelcomeBanner = ({ title, description }: WelcomeBannerProps): JSX.Element => {
+const WelcomeBanner = ({ onClose }: WelcomeBannerProps): JSX.Element => {
+  const { t } = useTranslation();
+
   return (
-    <StyledCard alignItems='flex-start' gap='spacing4'>
-      <StyledImageWrapper>
-        <StyledImage src={BitcoinStrategyLogo} alt='coin strategy' />
-      </StyledImageWrapper>
-      <StyledTextWrapper direction='column' gap='spacing4'>
-        <H1 size='xl2'>{title}</H1>
-        <P size='s' color='tertiary'>
-          {description}
-        </P>
+    <StyledCard direction='row' gap='spacing4' justifyContent='space-between' alignItems='center'>
+      <StyledTextWrapper direction='column' gap='spacing6'>
+        <Flex direction='column' gap='spacing4'>
+          <StyledTitle weight='bold' size='xl2'>
+            {t('wallet.welcome_to_dapp', { name: APP_NAME })}
+          </StyledTitle>
+          <StyledP size='s' color='tertiary'>
+            {t('wallet.dapp_is_a_one_stop_shop_for_bitcoin_defi', {
+              name: APP_NAME,
+              wrappedToken: WRAPPED_TOKEN.ticker
+            })}
+          </StyledP>
+        </Flex>
+        <Flex gap='spacing4' wrap>
+          <StyledCTALink external icon to={'#'}>
+            Whitepaper
+          </StyledCTALink>
+          <StyledCTALink external icon to={'#'}>
+            How can I fund my wallet
+          </StyledCTALink>
+        </Flex>
       </StyledTextWrapper>
-      <Flex>
-        <CTALink external to='#'>
-          Whitepaper
-        </CTALink>
-        <CTALink external to='#'>
-          How can I fund my wallet
-        </CTALink>
-      </Flex>
+      <StyledImageWrapper>
+        <StyledSVG aria-label='bitcoin defi' />
+      </StyledImageWrapper>
+      <StyledCloseCTA size='small' variant='text' aria-label='dimiss welcome banner' onPress={onClose}>
+        <StyledXMark />
+      </StyledCloseCTA>
     </StyledCard>
   );
 };

@@ -641,7 +641,9 @@
     "no_assets_available": "No assets available",
     "total_governance_locked": "Total {{token}} Locked",
     "available_to_stake": "Available to stake",
-    "voting_power_governance": "Voting Power {{token}}"
+    "voting_power_governance": "Voting Power {{token}}",
+    "welcome_to_dapp": "Welcome to {{ name }}",
+    "dapp_is_a_one_stop_shop_for_bitcoin_defi": "{{ name }} is a one-stop shop for Bitcoin DeFi: swaps, lending, staking, and 1-click strategies. {{ wrappedToken }} is trustless multi-chain Bitcoin, secured by collateral, cryptography, and a decentralized vault network."
   },
   "strategy": {
     "withdraw_rewards_in_wrapped": "Withdraw rewards in {{wrappedCurrencySymbol}}:",

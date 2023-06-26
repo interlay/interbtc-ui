@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { ArrowTopRightOnSquare } from '@/assets/icons';
+
 import { LoadingSpinner } from '../LoadingSpinner';
 import { theme } from '../theme';
 import { CTASizes, CTAVariants } from '../utils/prop-types';
@@ -82,5 +84,12 @@ const StyledLoadingSpinner = styled(LoadingSpinner)<StyledLoadingSpinnerProps>`
   border-left-color: transparent;
 `;
 
-export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledLoadingSpinner, TextCTA };
+const StyledIcon = styled(ArrowTopRightOnSquare)`
+  margin-left: ${theme.spacing.spacing2};
+  width: 1.2em;
+  height: 1.2em;
+  color: inherit;
+`;
+
+export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledIcon, StyledLoadingSpinner, TextCTA };
 export type { StyledCTAProps };
