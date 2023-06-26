@@ -102,17 +102,19 @@ const ActionsCell = ({
             )}
           </>
         )}
-        <CTALink
-          {...commonCTAProps}
-          to={{
-            pathname: PAGES.TRANSFER,
-            search: queryString.stringify({
-              [QUERY_PARAMETERS.TAB]: 'crossChainTransfer'
-            })
-          }}
-        >
-          Bridge
-        </CTALink>
+        {!isWrappedToken && (
+          <CTALink
+            {...commonCTAProps}
+            to={{
+              pathname: PAGES.TRANSFER,
+              search: queryString.stringify({
+                [QUERY_PARAMETERS.TAB]: 'crossChainTransfer'
+              })
+            }}
+          >
+            Bridge
+          </CTALink>
+        )}
       </Flex>
     </Flex>
   );
