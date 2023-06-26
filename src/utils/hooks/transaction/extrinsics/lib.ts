@@ -50,12 +50,16 @@ const getLibExtrinsic = async (params: LibActions): Promise<ExtrinsicData> => {
       return window.bridge.loans.lend(...params.args);
     case Transaction.LOANS_REPAY:
       return window.bridge.loans.repay(...params.args);
-    case Transaction.LOANS_REPAY_ALL:
-      return window.bridge.loans.repayAll(...params.args);
+    case Transaction.LOANS_REPAY_ALL: {
+      const [underlyingCurrency] = params.args;
+      return window.bridge.loans.repayAll(underlyingCurrency);
+    }
     case Transaction.LOANS_WITHDRAW:
       return window.bridge.loans.withdraw(...params.args);
-    case Transaction.LOANS_WITHDRAW_ALL:
-      return window.bridge.loans.withdrawAll(...params.args);
+    case Transaction.LOANS_WITHDRAW_ALL: {
+      const [underlyingCurrency] = params.args;
+      return window.bridge.loans.withdrawAll(underlyingCurrency);
+    }
     case Transaction.LOANS_DISABLE_COLLATERAL:
       return window.bridge.loans.disableAsCollateral(...params.args);
     case Transaction.LOANS_ENABLE_COLLATERAL:

@@ -15,6 +15,7 @@ import ErrorFallback from '@/legacy-components/ErrorFallback';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import { useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import Layout from '@/parts/Layout';
+import Wrapper from '@/parts/Wrapper';
 import graphqlFetcher, { GRAPHQL_FETCHER, GraphqlReturn } from '@/services/fetchers/graphql-fetcher';
 import vaultsByAccountIdQuery from '@/services/queries/vaults-by-accountId-query';
 import { BitcoinNetwork } from '@/types/bitcoin';
@@ -28,7 +29,6 @@ import { FeatureFlags, useFeatureFlag } from './utils/hooks/use-feature-flag';
 const Bridge = React.lazy(() => import(/* webpackChunkName: 'bridge' */ '@/pages/Bridge'));
 const Strategies = React.lazy(() => import(/* webpackChunkName: 'strategies' */ '@/pages/Strategies'));
 const Transfer = React.lazy(() => import(/* webpackChunkName: 'transfer' */ '@/pages/Transfer'));
-const Transactions = React.lazy(() => import(/* webpackChunkName: 'transactions' */ '@/pages/Transactions'));
 const TX = React.lazy(() => import(/* webpackChunkName: 'tx' */ '@/pages/TX'));
 const Staking = React.lazy(() => import(/* webpackChunkName: 'staking' */ '@/pages/Staking'));
 const Dashboard = React.lazy(() => import(/* webpackChunkName: 'dashboard' */ '@/pages/Dashboard'));
@@ -159,7 +159,7 @@ const App = (): JSX.Element => {
   }, [setSelectedAccount, extensions.length]);
 
   return (
-    <>
+    <Wrapper>
       <Layout>
         {process.env.REACT_APP_BITCOIN_NETWORK === BitcoinNetwork.Testnet && <TestnetBanner />}
         <Route
@@ -181,9 +181,6 @@ const App = (): JSX.Element => {
                   </Route>
                   <Route path={PAGES.STAKING}>
                     <Staking />
-                  </Route>
-                  <Route path={PAGES.TRANSACTIONS}>
-                    <Transactions />
                   </Route>
                   <Route path={PAGES.TX}>
                     <TX />
@@ -235,7 +232,7 @@ const App = (): JSX.Element => {
         />
       </Layout>
       <TransactionModal />
-    </>
+    </Wrapper>
   );
 };
 

@@ -5,8 +5,9 @@ import { PressEvent } from '@react-types/shared';
 import { useRef } from 'react';
 
 import { ArrowsUpDown } from '@/assets/icons';
+import { Divider } from '@/component-library';
 
-import { StyledBackground, StyledCircle, StyledDivider, StyledWrapper } from './SwapForm.style';
+import { StyledBackground, StyledCircle, StyledWrapper } from './SwapForm.style';
 
 type SwapDividerProps = {
   onPress: (e: PressEvent) => void;
@@ -19,7 +20,7 @@ const SwapDivider = ({ onPress }: SwapDividerProps): JSX.Element | null => {
 
   return (
     <StyledWrapper>
-      <StyledDivider orientation='horizontal' color='tertiary' />
+      <Divider orientation='horizontal' color='default' />
       <StyledBackground />
       <StyledCircle ref={ref} $isFocusVisible={isFocusVisible} {...mergeProps(buttonProps, focusProps)}>
         <ArrowsUpDown color='secondary' strokeWidth={2} size='s' />

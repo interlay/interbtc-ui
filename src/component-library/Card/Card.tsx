@@ -5,7 +5,7 @@ import { forwardRef } from 'react';
 
 import { FlexProps } from '../Flex';
 import { useDOMRef } from '../utils/dom';
-import { CardVariants, Variants } from '../utils/prop-types';
+import { BorderRadius, CardVariants, Spacing, Variants } from '../utils/prop-types';
 import { StyledCard } from './Card.style';
 
 type Props = {
@@ -14,6 +14,10 @@ type Props = {
   isHoverable?: boolean;
   isPressable?: boolean;
   isDisabled?: boolean;
+  rounded?: BorderRadius;
+  padding?: Spacing;
+  shadowed?: boolean;
+
   onPress?: (e: PressEvent) => void;
 };
 
@@ -33,6 +37,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
       children,
       elementType,
       isDisabled,
+      rounded = 'xl',
+      padding = 'spacing6',
+      shadowed = true,
       ...props
     },
     ref
@@ -50,6 +57,9 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
         $background={background}
         $isHoverable={isHoverable}
         $isPressable={isPressable}
+        $rounded={rounded}
+        $padding={padding}
+        $shadowed={shadowed}
         direction={direction}
         elementType={elementType}
         {...mergeProps(props, isPressable ? buttonProps : {})}

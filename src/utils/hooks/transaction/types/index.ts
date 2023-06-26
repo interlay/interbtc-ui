@@ -66,7 +66,7 @@ type TransactionEvents = {
 
 interface TransactionAction {
   accountAddress: string;
-  events: TransactionEvents;
+  events?: TransactionEvents;
   timestamp: number;
   customStatus?: ExtrinsicStatus['type'];
 }

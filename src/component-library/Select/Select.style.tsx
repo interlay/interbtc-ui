@@ -58,10 +58,12 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
 `;
 
 const StyledTriggerValue = styled(Span)<StyledTriggerValueProps>`
+  flex: 1;
   display: inline-flex;
   align-items: center;
   color: ${({ $isDisabled, $isSelected }) =>
     $isDisabled ? theme.input.disabled.color : $isSelected ? theme.select.color : theme.select.placeholder};
+  overflow: hidden;
 `;
 
 const StyledList = styled(List)`
