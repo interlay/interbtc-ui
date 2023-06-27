@@ -8,6 +8,7 @@ import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { Cell } from '@/components';
 import { AssetCell, DataGrid } from '@/components/DataGrid';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -46,7 +47,9 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];
-    const filteredData = showZeroBalances ? data : data.filter((balance) => !balance.transferable.isZero());
+    const filteredData = showZeroBalances
+      ? data
+      : data.filter((balance) => NATIVE_CURRENCIES.includes(balance.currency) || !balance.transferable.isZero());
 
     return filteredData.map(
       ({ currency, transferable }): AvailableAssetsRows => {

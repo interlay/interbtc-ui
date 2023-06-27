@@ -13,19 +13,19 @@ import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 const SOCIAL_MEDIA_ITEMS = [
   {
     link: INTERLAY_TWITTER_LINK,
-    icon: <FaTwitter className={clsx('w-3', 'h-3')} />
+    icon: <FaTwitter color='white' className={clsx('w-3', 'h-3')} />
   },
   {
     link: INTERLAY_DISCORD_LINK,
-    icon: <FaDiscord className={clsx('w-3', 'h-3')} />
+    icon: <FaDiscord color='white' className={clsx('w-3', 'h-3')} />
   },
   {
     link: INTERLAY_GITHUB_LINK,
-    icon: <FaGithub className={clsx('w-3', 'h-3')} />
+    icon: <FaGithub color='white' className={clsx('w-3', 'h-3')} />
   },
   {
     link: INTERLAY_EMAIL_LINK,
-    icon: <FaMailBulk className={clsx('w-3', 'h-3')} />
+    icon: <FaMailBulk color='white' className={clsx('w-3', 'h-3')} />
   }
 ];
 
@@ -35,11 +35,11 @@ const SocialMediaContainer = ({ className, ...rest }: React.ComponentPropsWithRe
       <InterlayLink
         key={socialMediaItem.link}
         className={clsx(
+          'bg-interlayHaiti',
           'w-6',
           'h-6',
           'ring-1',
-          { 'ring-interlayHaiti': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
-          { 'dark:ring-kintsugiAlto': process.env.REACT_APP_RELAY_CHAIN_NAME === KUSAMA },
+          'ring-white',
           'rounded-full',
           'm-1',
           'grid',

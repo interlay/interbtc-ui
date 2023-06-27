@@ -1,22 +1,30 @@
-import yup, { FeesValidationParams, MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
+import i18n from 'i18next';
 
-const CREATE_VAULT_DEPOSIT_FIELD = 'deposit';
+import yup, { MaxAmountValidationParams, MinAmountValidationParams } from '../yup.custom';
 
-type CreateVaultFormData = {
-  [CREATE_VAULT_DEPOSIT_FIELD]?: number;
+const VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD = 'vaults-deposit-collateral_amount';
+const VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD = 'vaults-deposit-collateral-fee-token';
+
+type VaultsDepositCollateralFormData = {
+  [VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD]?: string;
+  [VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD]?: string;
 };
 
-type CreateVaultValidationParams = FeesValidationParams & MaxAmountValidationParams & MinAmountValidationParams;
+type VaultsDepositCollateralValidationParams = MaxAmountValidationParams & MinAmountValidationParams;
 
-const createVaultSchema = (params: CreateVaultValidationParams): yup.ObjectSchema<any> =>
+const depositCollateralVaultsSchema = (params: VaultsDepositCollateralValidationParams): yup.ObjectSchema<any> =>
   yup.object().shape({
-    [CREATE_VAULT_DEPOSIT_FIELD]: yup
+    [VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD]: yup
       .string()
-      .requiredAmount(CREATE_VAULT_DEPOSIT_FIELD)
+      .requiredAmount(i18n.t('deposit').toLowerCase())
       .maxAmount(params)
-      .minAmount(params, CREATE_VAULT_DEPOSIT_FIELD)
-      .fees(params)
+      .minAmount(params, i18n.t('deposit').toLowerCase()),
+    [VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD]: yup.string().required()
   });
 
-export { CREATE_VAULT_DEPOSIT_FIELD, createVaultSchema };
-export type { CreateVaultFormData };
+export {
+  depositCollateralVaultsSchema,
+  VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD,
+  VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD
+};
+export type { VaultsDepositCollateralFormData, VaultsDepositCollateralValidationParams };

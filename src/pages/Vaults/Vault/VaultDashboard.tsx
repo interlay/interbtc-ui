@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 
 import { StoreType } from '@/common/types/util.types';
 import { formatNumber, formatPercentage, formatUSD } from '@/common/utils/utils';
-import { Stack } from '@/component-library';
+import { Card, Stack } from '@/component-library';
 import { ProgressCircle } from '@/component-library/ProgressCircle';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import PrimaryColorEllipsisLoader from '@/legacy-components/PrimaryColorEllipsisLoader';
@@ -126,15 +126,17 @@ const VaultDashboard = (): JSX.Element => {
             hasWithdrawRewardsBtn={!isReadOnlyVault}
           />
         </StyledCollateralSection>
-        {collateralToken && (
-          <VaultIssueRequestsTable vaultAddress={selectedVaultAccountAddress} collateralToken={collateralToken} />
-        )}
-        {collateralToken && (
-          <VaultRedeemRequestsTable vaultAddress={selectedVaultAccountAddress} collateralToken={collateralToken} />
-        )}
-        {collateralToken && (
-          <ReplaceTable vaultAddress={selectedVaultAccountAddress} collateralTokenTicker={collateralToken.ticker} />
-        )}
+        <Card>
+          {collateralToken && (
+            <VaultIssueRequestsTable vaultAddress={selectedVaultAccountAddress} collateralToken={collateralToken} />
+          )}
+          {collateralToken && (
+            <VaultRedeemRequestsTable vaultAddress={selectedVaultAccountAddress} collateralToken={collateralToken} />
+          )}
+          {collateralToken && (
+            <ReplaceTable vaultAddress={selectedVaultAccountAddress} collateralTokenTicker={collateralToken.ticker} />
+          )}
+        </Card>
       </Stack>
     </MainContainer>
   );

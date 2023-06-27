@@ -76,11 +76,10 @@
   "redeem": "Redeem",
   "nav_bridge": "Bridge",
   "nav_strategies": "Strategies",
-  "nav_transfer": "Transfer",
+  "nav_transfer": "Transfer / Bridge",
   "nav_lending": "Lending",
   "nav_swap": "Swap",
   "nav_pools": "Pools",
-  "nav_transactions": "My Transactions",
   "nav_staking": "Staking",
   "nav_stats": "Stats",
   "nav_dashboard": "Dashboard",
@@ -157,6 +156,12 @@
   "sign_t&cs": "Sign T&Cs",
   "receivable_assets": "Receivable Assets",
   "dismiss": "Dismiss",
+  "insufficient_token_balance": "Insufficient {{token}} balance",
+  "amount": "Amount",
+  "select_token": "Select Token",
+  "fee_token": "Fee token",
+  "claim_rewards": "Claim Rewards",
+  "tx_fees": "Tx fees",
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -349,7 +354,7 @@
     "maximum_in_single_request": "Max issuable in single request",
     "maximum_total_request": "Max issuable in total",
     "maximum_in_single_request_error": "Please enter less than {{maxAmount}} {{wrappedTokenSymbol}}.",
-    "request": "Request id  #{{id}}",
+    "request": "Request id",
     "you_received": "You have received",
     "contact_team": "Contact the team for debugging if you think this is an error.",
     "you_did_not_send": "You did not send the BTC transaction in time or transferred amount did not not meet the requested amount of {{wrappedTokenSymbol}}.",
@@ -610,7 +615,9 @@
     "amount_must_be_at_least": "Amount to {{action}} must be at least {{amount}} {{token}}",
     "amount_must_be_at_most": "Amount to {{action}} must be at most {{amount}}",
     "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance",
-    "field_amount": "{{field}} amount"
+    "field_amount": "{{field}} amount",
+    "please_enter_a_valid_address": "Please enter a valid address",
+    "ensure_adequate_amount_left_to_cover_fees": "Ensure that an adequate number of coins are left to cover the fees"
   },
   "xcm_transfer": {
     "validation": {
@@ -712,5 +719,25 @@
     "requested_vault_replacement": "Requested vault replacement",
     "claiming_vesting": "Claiming vesting",
     "claimed_vesting": "Claimed vesting"
+  },
+  "bridge": {
+    "max_issuable": "Max issuable",
+    "max_redeemable": "Max redeemable",
+    "in_single_request": "In single request",
+    "in_total": "In total",
+    "manually_select_vault": "Manually Select Vault",
+    "select_vault": "Select Vault",
+    "select_a_vault": "Select a vault",
+    "compensation_amount": "Compensation amount",
+    "bridge_fee": "Bridge Fee",
+    "fee_paids_to_vaults_relayers_maintainers": "The bridge fee paid to the vaults, relayers and maintainers of the system",
+    "security_deposit": "Security Deposit",
+    "security_deposit_token": "Security deposit token",
+    "security_deposit_is_a_denial_of_service_protection": "The security deposit is a denial-of-service protection for Vaults that is refunded to you after the minting process is completed",
+    "bitcoin_network_fee": "Bitcoin Network Fee",
+    "transaction_fee": "Transaction Fee",
+    "fee_for_transaction_to_be_included_in_the_parachain": "The fee for the transaction to be included in the parachain",
+    "premium_redeem": "Premium Redeem",
+    "premium_redeem_info": "If you select premium redeem, you will try to redeem with a vault that is below the secure collateral threshold. This operation has a higher risk since the vault might be liquidated. For this higher risk, you will receive a compensation."
   }
 }
