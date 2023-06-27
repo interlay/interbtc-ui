@@ -1,23 +1,16 @@
 import { CurrencyExt } from '@interlay/interbtc-api';
 import { Bitcoin, ExchangeRate } from '@interlay/monetary-js';
 import clsx from 'clsx';
-import { useErrorHandler, withErrorBoundary } from 'react-error-boundary';
+import { withErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
-import { useSelector } from 'react-redux';
 
-import { StoreType } from '@/common/types/util.types';
 import { RELAY_CHAIN_NATIVE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN_SYMBOL } from '@/config/relay-chains';
 import ErrorFallback from '@/legacy-components/ErrorFallback';
 import Ring64, { Ring64Subtitle, Ring64Title, Ring64Value } from '@/legacy-components/Ring64';
-import genericFetcher, { GENERIC_FETCHER } from '@/services/fetchers/generic-fetcher';
-import {
-  BtcToCurrencyOracleStatus,
-  latestExchangeRateFetcher,
-  ORACLE_LATEST_EXCHANGE_RATE_FETCHER
-} from '@/services/fetchers/oracle-exchange-rates-fetcher';
 import { PAGES } from '@/utils/constants/links';
 import { getColorShade } from '@/utils/helpers/colors';
+import { OracleStatus, useGetOracleStatus } from '@/utils/hooks/api/oracle/use-get-oracle-status';
+import { useGetExchangeRate } from '@/utils/hooks/api/use-get-exchange-rate';
 
 import Stats, { StatsDd, StatsDt, StatsRouterLink } from '../../Stats';
 import DashboardCard from '../DashboardCard';
@@ -28,53 +21,23 @@ interface Props {
 
 const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
-  const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
-
-  const {
-    isIdle: oracleTimeoutIdle,
-    isLoading: oracleTimeoutLoading,
-    data: oracleTimeout,
-    error: oracleTimeoutError
-  } = useQuery<number, Error>([GENERIC_FETCHER, 'oracle', 'getOnlineTimeout'], genericFetcher<number>(), {
-    enabled: !!bridgeLoaded
-  });
-  useErrorHandler(oracleTimeoutError);
-
-  const {
-    isIdle: oracleStatusIdle,
-    isLoading: oracleStatusLoading,
-    data: oracleStatus,
-    error: oracleStatusError
-  } = useQuery<BtcToCurrencyOracleStatus | undefined, Error>(
-    [ORACLE_LATEST_EXCHANGE_RATE_FETCHER, RELAY_CHAIN_NATIVE_TOKEN, oracleTimeout],
-    latestExchangeRateFetcher,
-    {
-      enabled: !!oracleTimeout
-    }
+  // const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+  const { data: oracleStatus, isLoading: isLoadingOracleStatus } = useGetOracleStatus();
+  const { data: relayChainExchangeRate, isLoading: isLoadingExchangeRate } = useGetExchangeRate(
+    RELAY_CHAIN_NATIVE_TOKEN
   );
-  useErrorHandler(oracleStatusError);
 
   const renderContent = () => {
     // TODO: should use skeleton loaders
-    if (oracleStatusIdle || oracleStatusLoading || oracleTimeoutIdle || oracleTimeoutLoading) {
+    if (isLoadingOracleStatus || isLoadingExchangeRate) {
       return <>Loading...</>;
     }
 
-    if (oracleTimeout === undefined) {
-      throw new Error('Something went wrong!');
-    }
-
-    const exchangeRate = oracleStatus
-      ? new ExchangeRate<Bitcoin, CurrencyExt>(
-          Bitcoin,
-          RELAY_CHAIN_NATIVE_TOKEN,
-          oracleStatus.exchangeRate.toBig(),
-          0,
-          0
-        )
+    const exchangeRate = relayChainExchangeRate
+      ? new ExchangeRate<Bitcoin, CurrencyExt>(Bitcoin, RELAY_CHAIN_NATIVE_TOKEN, relayChainExchangeRate.toBig(), 0, 0)
       : 0;
 
-    const oracleOnline = oracleStatus && oracleStatus.online;
+    const oracleOnline = oracleStatus && oracleStatus === OracleStatus.ONLINE;
 
     let statusText;
     let statusCircleText;
