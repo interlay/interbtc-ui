@@ -5,7 +5,6 @@ import BANXA_KITNSUGI from '@/assets/img/banxa-white.png';
 import { ReactComponent as AcalaLogoIcon } from '@/assets/img/exchanges/acala-logo.svg';
 import { ReactComponent as GateLogoIcon } from '@/assets/img/exchanges/gate-logo.svg';
 import { ReactComponent as KrakenLogoIcon } from '@/assets/img/exchanges/kraken-logo.svg';
-import { ReactComponent as LbankLogoIcon } from '@/assets/img/exchanges/lbank-logo.svg';
 import { ReactComponent as MexcLogoForInterlayIcon } from '@/assets/img/exchanges/mexc-logo-for-interlay.svg';
 import { ReactComponent as MexcLogoForKintsugiIcon } from '@/assets/img/exchanges/mexc-logo-for-kintsugi.svg';
 import { ReactComponent as StellaSwapLogoIcon } from '@/assets/img/exchanges/stellaswap-logo.svg';
@@ -57,10 +56,6 @@ const useEntities = (): UseEntitiesResult => {
       {
         pathname: 'https://www.mexc.com/exchange/INTR_USDT',
         icon: <MexcLogoForInterlayIcon width={148} height={18} />
-      },
-      {
-        pathname: 'https://www.lbank.info/exchange/intr/usdt',
-        icon: <LbankLogoIcon width={117} height={22} />
       }
     ];
 
