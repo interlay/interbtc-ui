@@ -83,7 +83,7 @@ const Navigation = ({
         disabled: !isStrategiesEnabled
       },
       {
-        name: 'nav_bridge',
+        name: `${WRAPPED_TOKEN_SYMBOL}`,
         link: PAGES.BRIDGE,
         icon: ArrowPathIcon,
         hidden: false
