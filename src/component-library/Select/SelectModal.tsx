@@ -2,10 +2,10 @@ import { useId } from '@react-aria/utils';
 import { SelectState } from '@react-stately/select';
 import { forwardRef, ReactNode } from 'react';
 
-import { Modal, ModalBody, ModalHeader, ModalProps } from '@/component-library/Modal';
+import { Modal, ModalHeader, ModalProps } from '@/component-library/Modal';
 
 import { ListItem, ListProps } from '../List';
-import { StyledList } from './Select.style';
+import { StyledList, StyledModalBody } from './Select.style';
 import { SelectModalContext } from './SelectModalContext';
 
 type Props = {
@@ -19,7 +19,7 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 type SelectModalProps = Props & InheritAttrs;
 
 const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
-  ({ state, title, onClose, listProps, ...props }, ref): JSX.Element => {
+  ({ state, title, onClose, listProps, isOpen, ...props }, ref): JSX.Element => {
     const headerId = useId();
 
     const handleSelectionChange: ListProps['onSelectionChange'] = (key) => {
@@ -35,11 +35,11 @@ const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
 
     return (
       <SelectModalContext.Provider value={{ selectedItem: state.selectedItem }}>
-        <Modal ref={ref} hasMaxHeight onClose={onClose} {...props}>
+        <Modal ref={ref} hasMaxHeight isOpen={isOpen} onClose={onClose} {...props}>
           <ModalHeader id={headerId} size='lg' weight='medium' color='secondary'>
             {title}
           </ModalHeader>
-          <ModalBody overflow='hidden' noPadding>
+          <StyledModalBody $isDisabled={!isOpen} overflow='hidden' noPadding>
             <StyledList
               {...listProps}
               aria-labelledby={headerId}
@@ -59,7 +59,7 @@ const SelectModal = forwardRef<HTMLDivElement, SelectModalProps>(
                 </ListItem>
               ))}
             </StyledList>
-          </ModalBody>
+          </StyledModalBody>
         </Modal>
       </SelectModalContext.Provider>
     );
