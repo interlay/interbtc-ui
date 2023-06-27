@@ -147,7 +147,7 @@
   "asset": "Asset",
   "price": "Price",
   "balance": "Balance",
-  "show_zero_balance": "Show Zero Balance",
+  "show_all": "Show All",
   "total_balance": "Total Balance",
   "transferable_balance": "Transferable Balance",
   "fund_wallet": "Fund Wallet",
