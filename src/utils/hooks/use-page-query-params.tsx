@@ -1,5 +1,6 @@
 import { Key, useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router';
+import { LinkProps } from 'react-router-dom';
 
 import { TabsProps } from '@/component-library';
 
@@ -8,6 +9,7 @@ const queryString = require('query-string');
 type UsePageQueryParamsResult = {
   data: Record<string, string>;
   tabsProps: Pick<TabsProps, 'onSelectionChange' | 'defaultSelectedKey'>;
+  getLinkProps: (page: string, query: Record<string, unknown>) => Pick<LinkProps, 'to'>;
 };
 
 const usePageQueryParams = (): UsePageQueryParamsResult => {
@@ -27,8 +29,16 @@ const usePageQueryParams = (): UsePageQueryParamsResult => {
     });
   };
 
+  const getLinkProps = (page: string, query: Record<string, unknown>) => ({
+    to: {
+      pathname: page,
+      search: queryString.stringify(query)
+    }
+  });
+
   return {
     data,
+    getLinkProps,
     tabsProps: {
       defaultSelectedKey: data.tab,
       onSelectionChange: handleSelectionChange

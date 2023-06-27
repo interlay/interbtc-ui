@@ -90,4 +90,28 @@ const EXTERNAL_QUERY_PARAMETERS = Object.freeze({
   }
 });
 
-export { EXTERNAL_PAGES, EXTERNAL_QUERY_PARAMETERS, EXTERNAL_URL_PARAMETERS, PAGES, QUERY_PARAMETERS, URL_PARAMETERS };
+const QUERY_PARAMETERS_VALUES = Object.freeze({
+  BRIDGE: {
+    TAB: {
+      ISSUE: 'issue',
+      REDEEM: 'redeem',
+      BURN: 'burn'
+    }
+  },
+  TRANSFER: {
+    TAB: {
+      TRANSFER: 'transfer',
+      BRIDGE: 'bridge'
+    }
+  }
+});
+
+export {
+  EXTERNAL_PAGES,
+  EXTERNAL_QUERY_PARAMETERS,
+  EXTERNAL_URL_PARAMETERS,
+  PAGES,
+  QUERY_PARAMETERS,
+  QUERY_PARAMETERS_VALUES,
+  URL_PARAMETERS
+};

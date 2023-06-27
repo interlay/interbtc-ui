@@ -1,7 +1,7 @@
 import { Flex, Tabs, TabsItem } from '@/component-library';
 import FullLoadingSpinner from '@/legacy-components/FullLoadingSpinner';
 import MainContainer from '@/parts/MainContainer';
-import { BridgeActions } from '@/types/bridge';
+import { QUERY_PARAMETERS_VALUES } from '@/utils/constants/links';
 import { useGetIssueData } from '@/utils/hooks/api/bridge/use-get-issue-data';
 import { useGetIssueRequestLimit } from '@/utils/hooks/api/bridge/use-get-issue-request-limits';
 import { useGetMaxBurnableTokens } from '@/utils/hooks/api/bridge/use-get-max-burnable-tokens';
@@ -22,8 +22,8 @@ const BTCOverview = (): JSX.Element => {
   const { data: redeemData } = useGetRedeemData();
 
   // Only show the loading bar if the tab needed data is still loading
-  const isIssueLoading = defaultSelectedKey === BridgeActions.ISSUE && issueData === undefined;
-  const isRedeemLoading = defaultSelectedKey === BridgeActions.REDEEM && redeemData === undefined;
+  const isIssueLoading = defaultSelectedKey === QUERY_PARAMETERS_VALUES.BRIDGE.TAB.ISSUE && issueData === undefined;
+  const isRedeemLoading = defaultSelectedKey === QUERY_PARAMETERS_VALUES.BRIDGE.TAB.REDEEM && redeemData === undefined;
 
   if (issueRequestLimit === undefined || isIssueLoading || isRedeemLoading) {
     return <FullLoadingSpinner />;
@@ -35,16 +35,16 @@ const BTCOverview = (): JSX.Element => {
         <StyledCard gap='spacing2'>
           <Flex direction='column' gap='spacing8'>
             <Tabs {...tabsProps} size='large' fullWidth>
-              <TabsItem title='Issue' key={BridgeActions.ISSUE}>
+              <TabsItem title='Issue' key={QUERY_PARAMETERS_VALUES.BRIDGE.TAB.ISSUE}>
                 <StyledFormWrapper>
                   {issueData && <IssueForm requestLimits={issueRequestLimit} {...issueData} />}
                 </StyledFormWrapper>
               </TabsItem>
-              <TabsItem title='Redeem' key={BridgeActions.REDEEM}>
+              <TabsItem title='Redeem' key={QUERY_PARAMETERS_VALUES.BRIDGE.TAB.REDEEM}>
                 <StyledFormWrapper>{redeemData && <RedeemForm {...redeemData} />}</StyledFormWrapper>
               </TabsItem>
               {maxBurnableTokensData?.hasBurnableTokens && (
-                <TabsItem title='Burn' key={BridgeActions.BURN}>
+                <TabsItem title='Burn' key={QUERY_PARAMETERS_VALUES.BRIDGE.TAB.BURN}>
                   <StyledFormWrapper>
                     <LegacyBurnForm />
                   </StyledFormWrapper>

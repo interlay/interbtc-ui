@@ -4,10 +4,14 @@ import { useCallback } from 'react';
 import { useErrorHandler } from 'react-error-boundary';
 import { useQuery, UseQueryOptions } from 'react-query';
 
-import { BridgeActions } from '@/types/bridge';
 import { BLOCKTIME_REFETCH_INTERVAL } from '@/utils/constants/api';
 
 import { useGetCurrencies } from '../use-get-currencies';
+
+enum GetVaultType {
+  ISSUE = 'issue',
+  REDEEM = 'redeem'
+}
 
 const getPremiumRedeemVaults = async (): Promise<Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>> =>
   window.bridge.vaults.getPremiumRedeemVaults().catch(() => new Map());
@@ -19,10 +23,10 @@ type BridgeVaultData = {
   collateralCurrency: CurrencyExt;
 };
 
-type GetBridgeVaultData<T extends BridgeActions> = {
+type GetBridgeVaultData<T extends GetVaultType> = {
   list: BridgeVaultData[];
   map: Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>;
-  premium: T extends BridgeActions.REDEEM
+  premium: T extends GetVaultType.REDEEM
     ? {
         list: BridgeVaultData[];
         map: Map<InterbtcPrimitivesVaultId, MonetaryAmount<Currency>>;
@@ -30,23 +34,23 @@ type GetBridgeVaultData<T extends BridgeActions> = {
     : never;
 };
 
-type UseGetBridgeVaultResult<T extends BridgeActions> = {
+type UseGetBridgeVaultResult<T extends GetVaultType> = {
   data: GetBridgeVaultData<T> | undefined;
-  getAvailableVaults: T extends BridgeActions.REDEEM
+  getAvailableVaults: T extends GetVaultType.REDEEM
     ? (requiredCapacity: MonetaryAmount<Currency>, onlyPremiumVaults?: boolean) => BridgeVaultData[] | undefined
     : (requiredCapacity: MonetaryAmount<Currency>) => BridgeVaultData[] | undefined;
 
   refetch: () => void;
 };
 
-type UseGetVaultsOptions<T extends BridgeActions> = UseQueryOptions<
+type UseGetVaultsOptions<T extends GetVaultType> = UseQueryOptions<
   GetBridgeVaultData<T>,
   unknown,
   GetBridgeVaultData<T>,
   string[]
 >;
 
-const useGetVaults = <T extends BridgeActions>(
+const useGetVaults = <T extends GetVaultType>(
   action: T,
   options?: UseGetVaultsOptions<T>
 ): UseGetBridgeVaultResult<T> => {
@@ -64,7 +68,7 @@ const useGetVaults = <T extends BridgeActions>(
   );
 
   const getVaults = useCallback(async (): Promise<GetBridgeVaultData<T>> => {
-    const isRedeem = action === BridgeActions.REDEEM;
+    const isRedeem = action === GetVaultType.REDEEM;
     const map = await (isRedeem
       ? window.bridge.vaults.getVaultsWithRedeemableTokens()
       : window.bridge.vaults.getVaultsWithIssuableTokens());
@@ -72,11 +76,11 @@ const useGetVaults = <T extends BridgeActions>(
     const list = composeVaultData(map);
 
     switch (action) {
-      case BridgeActions.REDEEM: {
+      case GetVaultType.REDEEM: {
         const premiumVaultsMap = await getPremiumRedeemVaults();
         const premiumVaultsList = composeVaultData(premiumVaultsMap);
 
-        const data: GetBridgeVaultData<BridgeActions.REDEEM> = {
+        const data: GetBridgeVaultData<GetVaultType.REDEEM> = {
           list,
           map,
           premium: {
@@ -88,7 +92,7 @@ const useGetVaults = <T extends BridgeActions>(
         return data as GetBridgeVaultData<T>;
       }
       default:
-      case BridgeActions.ISSUE:
+      case GetVaultType.ISSUE:
         return {
           list,
           map
@@ -128,5 +132,5 @@ const useGetVaults = <T extends BridgeActions>(
   };
 };
 
-export { useGetVaults };
+export { GetVaultType, useGetVaults };
 export type { BridgeVaultData, UseGetBridgeVaultResult };
