@@ -21,7 +21,7 @@ interface Props {
 
 const OracleStatusCard = ({ hasLinks }: Props): JSX.Element => {
   const { t } = useTranslation();
-  // const { bridgeLoaded } = useSelector((state: StoreType) => state.general);
+
   const { data: oracleStatus, isLoading: isLoadingOracleStatus } = useGetOracleStatus();
   const { data: relayChainExchangeRate, isLoading: isLoadingExchangeRate } = useGetExchangeRate(
     RELAY_CHAIN_NATIVE_TOKEN
