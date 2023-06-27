@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { showAccountModalAction, showSignTermsModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
@@ -22,7 +21,7 @@ import InterlayLink from '@/legacy-components/UI/InterlayLink';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import { BitcoinNetwork } from '@/types/bitcoin';
 import { POLKADOT } from '@/utils/constants/relay-chain-names';
-import { useNotifications } from '@/utils/context/Notifications';
+import { NotificationToastType, useNotifications } from '@/utils/context/Notifications';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { FeatureFlags, useFeatureFlag } from '@/utils/hooks/use-feature-flag';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';
@@ -40,7 +39,7 @@ const Topbar = (): JSX.Element => {
   const isBanxaEnabled = useFeatureFlag(FeatureFlags.BANXA);
   const { setSelectedAccount, removeSelectedAccount } = useSubstrate();
   const { selectProps } = useSignMessage();
-  const { list } = useNotifications();
+  const notifications = useNotifications();
 
   const governanceTokenBalanceIsZero = getAvailableBalance(GOVERNANCE_TOKEN.ticker)?.isZero();
 
@@ -50,10 +49,16 @@ const Topbar = (): JSX.Element => {
     try {
       const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedAccount.address);
       await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN);
-      // TODO: show new notification
-      toast.success('Your account has been funded.');
+
+      notifications.show('faucet', {
+        type: NotificationToastType.STANDARD,
+        props: { variant: 'success', title: t('notifications.funding_account_successful') }
+      });
     } catch (error) {
-      toast.error(`Funding failed. ${error.message}`);
+      notifications.show('faucet', {
+        type: NotificationToastType.STANDARD,
+        props: { variant: 'error', title: t('notifications.funding_account_failed') }
+      });
     }
   };
 
@@ -143,7 +148,7 @@ const Topbar = (): JSX.Element => {
             'bg-white': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT
           })}
         >
-          <NotificationsPopover address={selectedAccount?.address} items={list} />
+          <NotificationsPopover address={selectedAccount?.address} items={notifications.list} />
         </div>
         <InterlayDefaultContainedButton className={SMALL_SIZE_BUTTON_CLASSES} onClick={handleAccountModalOpen}>
           {accountLabel}
