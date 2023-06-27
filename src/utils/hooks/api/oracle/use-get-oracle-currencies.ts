@@ -1,6 +1,8 @@
 import { CurrencyExt, InterbtcPrimitivesCurrencyId } from '@interlay/interbtc-api';
 import { useQuery } from 'react-query';
 
+import { WRAPPED_TOKEN } from '@/config/relay-chains';
+
 import { useGetCurrencies } from '../use-get-currencies';
 
 const getOracleCurrencies = (
@@ -16,7 +18,8 @@ const getOracleCurrencies = (
       getCurrencyFromIdPrimitive(window.bridge.api.createType('InterbtcPrimitivesCurrencyId', ExchangeRate))
     );
 
-  return currencies;
+  // Add wrapped token manually as its exchange rate is always available - equal to BTC.
+  return [WRAPPED_TOKEN, ...currencies];
 };
 
 interface UseGetOracleCurrenciesResult {
