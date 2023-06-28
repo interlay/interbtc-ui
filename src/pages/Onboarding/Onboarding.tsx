@@ -7,28 +7,26 @@ import { toast } from "react-toastify";
 
 import { showAccountModalAction, showSignTermsModalAction } from "@/common/actions/general.actions";
 import { StoreType } from "@/common/types/util.types";
-import { Card, CTA, CTALink, Dd, DlGroup, Dt, Flex } from "@/component-library";
-import { AuthCTA } from "@/components";
+import { Card, CTA, Dd, DlGroup, Dt, Flex } from "@/component-library";
 import { AuthModal, SignTermsModal } from "@/components/AuthModal";
+import { Tutorial } from "@/components/Tutorial";
 import { ACCOUNT_ID_TYPE_NAME } from "@/config/general";
-import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from "@/config/relay-chains";
+import { GOVERNANCE_TOKEN } from "@/config/relay-chains";
 import { SS58_FORMAT } from "@/constants";
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from "@/lib/substrate";
 import MainContainer from "@/parts/MainContainer";
 import PageTitle from "@/parts/PageTitle";
-import { PAGES } from "@/utils/constants/links";
 import { useGetBalances } from "@/utils/hooks/api/tokens/use-get-balances";
 import { useSignMessage } from "@/utils/hooks/use-sign-message";
 
 type Steps = {
   title: string;
   content: string;
-  ctaType: typeof CTA | typeof AuthCTA | typeof CTALink;
+  ctaType: typeof CTA | typeof Tutorial;
   ctaText: string;
   isCompleted: boolean;
-  isNext?: boolean;
+  isActive: boolean;
   onPress?: () => void;
-  url?: string;
 }
 
 const Onboarding = (): JSX.Element => {
@@ -41,11 +39,9 @@ const Onboarding = (): JSX.Element => {
   const { extensions, selectedAccount } = useSubstrateSecureState();
   const { hasSignature } = useSignMessage();
 
-  // const [stepIndex, setStepIndex] = React.useState(0);
   const [isRequestPending, setIsRequestPending] = React.useState(false);
 
   const governanceTokenBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker);
-  const wrappedTokenBalance = getAvailableBalance(WRAPPED_TOKEN.ticker);
 
 
   const handleRequestFromFaucet = async (): Promise<void> => {
@@ -99,7 +95,7 @@ const Onboarding = (): JSX.Element => {
       ctaText: t('install_wallet'),
       onPress: handleAccountModalOpen,
       isCompleted: extensions.length > 0,
-      isNext: extensions.length === 0,
+      isActive: extensions.length === 0,
     },
     {
       title: 'Connect the Wallet',
@@ -108,7 +104,7 @@ const Onboarding = (): JSX.Element => {
       ctaText: t('connect_wallet'),
       onPress: handleAccountModalOpen,
       isCompleted: selectedAccount !== undefined,
-      isNext: extensions.length > 0,
+      isActive: extensions.length > 0,
     },
     {
       title: 'Sign the T&Cs',
@@ -117,12 +113,12 @@ const Onboarding = (): JSX.Element => {
       ctaText: t('sign_t&cs'),
       onPress: () => dispatch(showSignTermsModalAction(true)),
       isCompleted: hasSignature? true : false,
-      isNext: selectedAccount !== undefined,
+      isActive: selectedAccount !== undefined,
     },
     {
       title: 'Request Funds',
-      content: 'Click this button to request funds from the faucet.',
-      ctaType: AuthCTA,
+      content: 'If you do not have any INTR, you can click this button to request funds from the faucet.',
+      ctaType: CTA,
       ctaText: t('request_funds'),
       onPress: handleFundsRequest,
       isCompleted: (() => {
@@ -131,31 +127,16 @@ const Onboarding = (): JSX.Element => {
         }
         return false;
       })(),
-      isNext: hasSignature? true : false,
+      isActive: hasSignature? true : false,
     },
     {
-      title: 'Transfer INTR',
-      content: 'Click this link to open a new window and transfer INTR to another account.',
-      ctaType: CTALink,
-      ctaText: t('nav_transfer'),
-      url: PAGES.TRANSFER,
+      title: 'Explore the App',
+      content: 'Click this button for a guided tour throu the app.',
+      ctaType: Tutorial,
+      ctaText: 'Start Tutorial',
       isCompleted: false,
-      isNext: false,
+      isActive: selectedAccount !== undefined,
     },
-    {
-      title: 'Get iBTC',
-      content: 'Click this link to open a new window and get iBTC.',
-      ctaType: CTALink,
-      ctaText: t('nav_bridge'),
-      url: PAGES.BRIDGE,
-      isCompleted: (() => {
-        if (wrappedTokenBalance) {
-          return wrappedTokenBalance.isZero() ? false : true;
-        }
-        return false;
-      })(),
-      isNext: false,
-    }
   ];
 
   const getCta = (step: Steps) => {
@@ -176,30 +157,14 @@ const Onboarding = (): JSX.Element => {
           <CTA
             onPress={step.onPress}
             variant='primary'
-            disabled={isRequestPending || step.isCompleted || !step.isNext}
+            disabled={isRequestPending || step.isCompleted || !step.isActive}
           >
             {getCtaLabel(step)}
           </CTA>
         );
-      case AuthCTA:
+      case Tutorial:
         return (
-          <AuthCTA
-            onPress={step.onPress}
-            variant='primary'
-            disabled={isRequestPending || step.isCompleted || !step.isNext}
-          >
-            {getCtaLabel(step)}
-          </AuthCTA>
-        );
-      case CTALink:
-        return (
-          <CTALink
-            to={step.url? step.url : ''}
-            variant='primary'
-            disabled={step.isCompleted || !step.isNext}
-          >
-            {getCtaLabel(step)}
-          </CTALink>
+          <Tutorial disabled={!step.isActive} label={getCtaLabel(step)} />
         );
       default:
         return null;

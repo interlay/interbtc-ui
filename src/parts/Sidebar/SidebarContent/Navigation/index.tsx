@@ -141,6 +141,11 @@ const Navigation = ({
   const SECONDARY_NAVIGATION_ITEMS = React.useMemo(
     () => [
       {
+        name: 'nav_onboarding',
+        link: PAGES.ONBOARDING,
+        hidden: false,
+      },
+      {
         name: 'nav_use_wrapped',
         link: USE_WRAPPED_CURRENCY_LINK,
         hidden: !USE_WRAPPED_CURRENCY_LINK,

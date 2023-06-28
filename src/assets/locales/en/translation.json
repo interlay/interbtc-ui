@@ -92,6 +92,7 @@
   "nav_use_wrapped": "Use {{wrappedTokenSymbol}}",
   "nav_governance": "Governance",
   "nav_wallet": "Wallet",
+  "nav_onboarding": "Onboarding",
   "report_bug": "Report a bug:",
   "request_funds": "Faucet",
   "request_btc": "BTC Faucet",
