@@ -113,12 +113,6 @@ const RedeemForm = ({
   const currentRequestLimit = getRequestLimit(redeemLimit, selectedVault, premium?.redeemLimit, isPremiumRedeem);
   const redeemBalance = assetBalance.gt(currentRequestLimit) ? currentRequestLimit : assetBalance;
 
-  const transferAmountSchemaParams = {
-    governanceBalance,
-    maxAmount: redeemBalance,
-    minAmount: dustValue
-  };
-
   const getTransactionArgs = useCallback(
     (values: BridgeRedeemFormData): TransactionArgs<Transaction.REDEEM_REQUEST> | undefined => {
       const amount = values[BRIDGE_REDEEM_AMOUNT_FIELD];
@@ -159,6 +153,20 @@ const RedeemForm = ({
     if (!args) return;
 
     transaction.execute(...args);
+  };
+
+  const monetaryAmount = newSafeMonetaryAmount(amount || 0, WRAPPED_TOKEN, true);
+
+  const bridgeFee = monetaryAmount.mul(feeRate);
+
+  const totalFees = bridgeFee.add(currentInclusionFee);
+
+  const minAmount = totalFees.add(dustValue).add(newMonetaryAmount(1, WRAPPED_TOKEN));
+
+  const transferAmountSchemaParams = {
+    governanceBalance,
+    maxAmount: redeemBalance,
+    minAmount
   };
 
   const form = useForm<BridgeRedeemFormData>({
@@ -226,14 +234,9 @@ const RedeemForm = ({
     setSelectedVault(vault);
   };
 
-  const monetaryAmount = newSafeMonetaryAmount(amount || 0, WRAPPED_TOKEN, true);
   const amountUSD = monetaryAmount
     ? convertMonetaryAmountToValueInUSD(monetaryAmount, getTokenPrice(prices, monetaryAmount.currency.ticker)?.usd) || 0
     : 0;
-
-  const bridgeFee = monetaryAmount.mul(feeRate);
-
-  const totalFees = bridgeFee.add(currentInclusionFee);
 
   const totalAmount = monetaryAmount.gte(totalFees)
     ? monetaryAmount.sub(totalFees)
