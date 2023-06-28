@@ -78,7 +78,6 @@ const LegacyRedeemModal = ({ open, onClose, request }: CustomProps & Omit<ModalP
               <AddressWithCopyUI id={USER_BTC_ADDRESS} address={request.userBTCAddress} />
             </div>
             <div>
-              <p>{t('redeem_page.we_will_inform_you_btc')}</p>
               <p
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
