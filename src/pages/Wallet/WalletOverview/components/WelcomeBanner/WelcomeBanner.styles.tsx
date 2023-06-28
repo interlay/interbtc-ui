@@ -74,9 +74,26 @@ const StyledTitle = styled(H2)`
   font-size: ${theme.text.lg};
 `;
 
+const StyledCTAGroup = styled(Flex)`
+  flex-wrap: wrap;
+
+  @media ${theme.breakpoints.up('sm')} {
+    flex-wrap: nowrap;
+  }
+
+  @media ${theme.breakpoints.up('lg')} {
+    max-width: 70%;
+  }
+
+  @media ${theme.breakpoints.up('xl')} {
+    max-width: 50%;
+  }
+`;
+
 export {
   StyledCard,
   StyledCloseCTA,
+  StyledCTAGroup,
   StyledCTALink,
   StyledImageWrapper,
   StyledP,

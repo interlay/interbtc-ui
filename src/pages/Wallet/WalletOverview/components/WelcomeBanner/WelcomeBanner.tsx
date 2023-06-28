@@ -1,11 +1,13 @@
 import { useTranslation } from 'react-i18next';
 
 import { Flex } from '@/component-library';
+import { INTERLAY_WHITEPAPPER } from '@/config/links';
 import { APP_NAME, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import {
   StyledCard,
   StyledCloseCTA,
+  StyledCTAGroup,
   StyledCTALink,
   StyledImageWrapper,
   StyledP,
@@ -36,14 +38,15 @@ const WelcomeBanner = ({ onClose }: WelcomeBannerProps): JSX.Element => {
             })}
           </StyledP>
         </Flex>
-        <Flex gap='spacing4' wrap>
-          <StyledCTALink external icon to={'#'}>
+        <StyledCTAGroup gap='spacing4'>
+          <StyledCTALink fullWidth external icon to={INTERLAY_WHITEPAPPER}>
             Whitepaper
           </StyledCTALink>
-          <StyledCTALink external icon to={'#'}>
-            How can I fund my wallet
+          {/* TODO: to be added */}
+          <StyledCTALink fullWidth external icon to={'#'}>
+            Fund Wallet Guide
           </StyledCTALink>
-        </Flex>
+        </StyledCTAGroup>
       </StyledTextWrapper>
       <StyledImageWrapper>
         <StyledSVG aria-label='bitcoin defi' />
