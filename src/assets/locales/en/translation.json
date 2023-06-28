@@ -173,6 +173,7 @@
     "with_added": "(≈ {{amountPrice}}) with added",
     "as_compensation_instead": "(≈ {{compensationPrice}}) as compensation instead.",
     "view_progress": "View Progress",
+    "close": "Close",
     "btc_destination_address": "BTC destination address",
     "you_will_receive": "Redeem {{wrappedTokenSymbol}} 1:1 for BTC",
     "waiting_for": "Waiting for",
