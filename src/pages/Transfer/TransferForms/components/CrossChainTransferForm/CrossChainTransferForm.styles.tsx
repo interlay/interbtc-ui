@@ -1,16 +1,9 @@
 import styled from 'styled-components';
 
 import { ArrowRightCircle } from '@/assets/icons';
-import { Dl, Flex, theme } from '@/component-library';
+import { Flex, theme } from '@/component-library';
 
 import { ChainSelect } from '../ChainSelect';
-
-const StyledDl = styled(Dl)`
-  background-color: ${theme.card.bg.secondary};
-  padding: ${theme.spacing.spacing4};
-  font-size: ${theme.text.xs};
-  border-radius: ${theme.rounded.rg};
-`;
 
 const StyledArrowRightCircle = styled(ArrowRightCircle)`
   transform: rotate(90deg);
@@ -39,4 +32,4 @@ const StyledSourceChainSelect = styled(ChainSelect)`
   }
 `;
 
-export { ChainSelectSection, StyledArrowRightCircle, StyledDl, StyledSourceChainSelect };
+export { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect };
