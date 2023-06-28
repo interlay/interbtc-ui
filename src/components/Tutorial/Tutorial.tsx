@@ -81,7 +81,7 @@ const steps: Step[] = [
 const Tutorial = ({
   disabled = false,
   label = 'Start Tutorial',
-}): JSX.Element => {
+}: TutorialProps): JSX.Element => {
   const [run, setRun] = useState(false);
 
   const handleStartTutorial = () => {

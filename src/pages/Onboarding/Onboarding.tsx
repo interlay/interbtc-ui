@@ -131,7 +131,7 @@ const Onboarding = (): JSX.Element => {
     },
     {
       title: 'Explore the App',
-      content: 'Click this button for a guided tour throu the app.',
+      content: 'Click this button for a guided tour through the app.',
       ctaType: Tutorial,
       ctaText: 'Start Tutorial',
       isCompleted: false,
@@ -164,7 +164,7 @@ const Onboarding = (): JSX.Element => {
         );
       case Tutorial:
         return (
-          <Tutorial disabled={!step.isActive} label={getCtaLabel(step)} />
+          <Tutorial disabled={!step.isActive} label={step.ctaText} />
         );
       default:
         return null;
