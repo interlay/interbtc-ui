@@ -32,7 +32,8 @@ const PAGES = Object.freeze({
   LOANS: '/lending',
   SWAP: '/swap',
   POOLS: '/pools',
-  WALLET: '/wallet'
+  WALLET: '/wallet',
+  ONBOARDING: '/onboarding'
 });
 
 const EXTERNAL_URL_PARAMETERS = Object.freeze({

@@ -39,6 +39,7 @@ const Loans = React.lazy(() => import(/* webpackChunkName: 'loans' */ '@/pages/L
 const Swap = React.lazy(() => import(/* webpackChunkName: 'amm' */ '@/pages/AMM'));
 const Pools = React.lazy(() => import(/* webpackChunkName: 'amm/pools' */ '@/pages/AMM/Pools'));
 const Wallet = React.lazy(() => import(/* webpackChunkName: 'wallet' */ '@/pages/Wallet'));
+const Onboarding = React.lazy(() => import(/* webpackChunkName: 'onboarding' */ '@/pages/Onboarding'));
 const Actions = React.lazy(() => import(/* webpackChunkName: 'actions' */ '@/pages/Actions'));
 const NoMatch = React.lazy(() => import(/* webpackChunkName: 'no-match' */ '@/pages/NoMatch'));
 
@@ -216,6 +217,9 @@ const App = (): JSX.Element => {
                       <Strategies />
                     </Route>
                   )}
+                  <Route path={PAGES.ONBOARDING}>
+                    <Onboarding />
+                  </Route>
                   <Route path={PAGES.ACTIONS}>
                     <Actions />
                   </Route>

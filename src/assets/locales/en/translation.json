@@ -5,6 +5,7 @@
   "receive": "You will receive",
   "confirm": "Confirm",
   "connect_wallet": "Connect Wallet",
+  "install_wallet": "Install Wallet",
   "next": "Next",
   "loading_ellipsis": "Loading...",
   "note": "Note",
@@ -559,7 +560,6 @@
     "no_account": "You don't have an account. Create one",
     "install_supported_wallets": "Please install one of the currently supported wallets. By connecting the wallet you accept the ",
     "select_account": "Please select an account",
-    "install_wallet": "Please install supported wallet",
     "select_wallet": "Please select a wallet",
     "exclude_us_citizens": "By proceeding you confirm that you have read and accepted the <1>terms and conditions</1>, and represent and warrant that you are not a Resident of the United States or a \"U.S. person\" within the meaning of Rule 902(k) under the United States Securities Act of 1933 (the \"Securities Act\").",
     "sign_terms": "Please sign the terms and conditions using your account's digital signature. This is required for each account that you connect to this website.",
@@ -568,7 +568,7 @@
     "change_wallet": "Change Wallet",
     "disconnect": "Disconnect",
     "please_select_an_account": "Please select an account",
-    "please_install_supported_wallet": "Please install supported wallet",
+    "please_install_supported_wallet": "Please install a supported wallet",
     "please_select_a_wallet": "Please select a wallet"
   },
   "loans": {
