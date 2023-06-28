@@ -108,7 +108,7 @@ const ActionsCell = ({
             to={{
               pathname: PAGES.TRANSFER,
               search: queryString.stringify({
-                [QUERY_PARAMETERS.TAB]: 'crossChainTransfer'
+                [QUERY_PARAMETERS.TAB]: 'bridge'
               })
             }}
           >
