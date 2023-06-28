@@ -1,13 +1,18 @@
 import styled from 'styled-components';
 
+import { LoadingSpinner } from '../LoadingSpinner';
 import { theme } from '../theme';
-import { CTASizes } from '../utils/prop-types';
+import { CTASizes, CTAVariants } from '../utils/prop-types';
 
 interface StyledCTAProps {
   $fullWidth: boolean;
   $size: CTASizes;
   $isFocusVisible?: boolean;
 }
+
+type StyledLoadingSpinnerProps = {
+  $variant: CTAVariants;
+};
 
 const BaseCTA = styled.button<StyledCTAProps>`
   display: inline-flex;
@@ -70,5 +75,12 @@ const LoadingWrapper = styled.span`
   margin-right: ${theme.spacing.spacing2};
 `;
 
-export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, TextCTA };
+const StyledLoadingSpinner = styled(LoadingSpinner)<StyledLoadingSpinnerProps>`
+  border-top-color: ${({ $variant }) => theme.cta[$variant].text};
+  border-right-color: ${({ $variant }) => theme.cta[$variant].text};
+  border-bottom-color: ${({ $variant }) => theme.cta[$variant].text};
+  border-left-color: transparent;
+`;
+
+export { LoadingWrapper, OutlinedCTA, PrimaryCTA, SecondaryCTA, StyledLoadingSpinner, TextCTA };
 export type { StyledCTAProps };
