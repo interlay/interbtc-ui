@@ -178,7 +178,7 @@
     "you_will_receive": "Redeem {{wrappedTokenSymbol}} 1:1 for BTC",
     "waiting_for": "Waiting for",
     "vault": "Vault",
-    "typically_takes": "The BTC typically takes only a few minutes but may sometimes take up to 6 hours.",
+    "typically_takes": "The BTC typically takes only a few minutes to arrive but may take up to 6 hours.",
     "from_vault": "from Vault",
     "redeem_processed": "Your Redeem request is being processed",
     "retried": "Retried",
