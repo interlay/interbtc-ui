@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { ChevronDown } from '@/assets/icons';
 
 import { List } from '../List';
-import { ModalBody } from '../Modal';
 import { Span } from '../Text';
 import { theme } from '../theme';
 import { Sizes } from '../utils/prop-types';
@@ -18,10 +17,6 @@ type StyledTriggerProps = {
 type StyledTriggerValueProps = {
   $isDisabled?: boolean;
   $isSelected?: boolean;
-};
-
-type StyledModalBodyProps = {
-  $isDisabled?: boolean;
 };
 
 const StyledTrigger = styled.button<StyledTriggerProps>`
@@ -81,9 +76,4 @@ const StyledChevronDown = styled(ChevronDown)`
   margin-left: ${theme.spacing.spacing2};
 `;
 
-// Prevents user from clicking an item inside the modal when it's closed
-const StyledModalBody = styled(ModalBody)<StyledModalBodyProps>`
-  pointer-events: ${({ $isDisabled }) => $isDisabled && 'none'};
-`;
-
-export { StyledChevronDown, StyledList, StyledModalBody, StyledTrigger, StyledTriggerValue };
+export { StyledChevronDown, StyledList, StyledTrigger, StyledTriggerValue };
