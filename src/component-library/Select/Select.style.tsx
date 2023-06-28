@@ -68,8 +68,7 @@ const StyledTriggerValue = styled(Span)<StyledTriggerValueProps>`
 
 const StyledList = styled(List)`
   overflow: auto;
-  padding: 0 ${theme.dialog.medium.body.paddingX} ${theme.dialog.medium.body.paddingY}
-    ${theme.dialog.medium.body.paddingX};
+  padding: 0 ${theme.dialog.medium.body.paddingX} ${theme.dialog.medium.body.paddingX};
 `;
 
 const StyledChevronDown = styled(ChevronDown)`
