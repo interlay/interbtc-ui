@@ -435,7 +435,7 @@ const theme = {
         marginBottom: 'var(--spacing-2)'
       },
       body: {
-        paddingY: 'var(--spacing-3)',
+        paddingY: 'var(--spacing-6)',
         paddingX: 'var(--spacing-6)'
       },
       footer: {
