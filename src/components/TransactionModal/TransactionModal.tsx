@@ -17,7 +17,7 @@ import {
   P,
   TextLink
 } from '@/component-library';
-import { NotificationToast, useNotifications } from '@/utils/context/Notifications';
+import { NotificationToastType, useNotifications } from '@/utils/context/Notifications';
 import { TransactionStatus } from '@/utils/hooks/transaction/types';
 
 import { StyledCard, StyledCheckCircle, StyledXCircle } from './TransactionModal.style';
@@ -63,7 +63,7 @@ const TransactionModal = (): JSX.Element => {
     // No need to show toast if the transaction is SUCCESS or ERROR
     if (timestamp && (variant === TransactionStatus.CONFIRM || variant === TransactionStatus.SUBMITTING)) {
       notifications.show(timestamp, {
-        type: NotificationToast.TRANSACTION,
+        type: NotificationToastType.TRANSACTION,
         props: { variant: variant, url, description }
       });
     }

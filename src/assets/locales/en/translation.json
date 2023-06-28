@@ -162,6 +162,8 @@
   "fee_token": "Fee token",
   "claim_rewards": "Claim Rewards",
   "tx_fees": "Tx fees",
+  "view_subscan": "View Subscan",
+
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -739,5 +741,11 @@
     "fee_for_transaction_to_be_included_in_the_parachain": "The fee for the transaction to be included in the parachain",
     "premium_redeem": "Premium Redeem",
     "premium_redeem_info": "If you select premium redeem, you will try to redeem with a vault that is below the secure collateral threshold. This operation has a higher risk since the vault might be liquidated. For this higher risk, you will receive a compensation."
+  },
+  "notifications": {
+    "signature_submission_failed": "Signature submission failed",
+    "signature_submission_successful": "Signature submission successful",
+    "funding_account_failed": "Funding account failed",
+    "funding_account_successful": "Funding account successful"
   }
 }
