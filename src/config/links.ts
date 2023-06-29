@@ -18,6 +18,7 @@ const INTERLAY_SUBSCAN_LINK = 'https://interlay.subscan.io';
 const KINTSUGI_SUBSCAN_LINK = 'https://kintsugi.subscan.io';
 const INTERLAY_VAULT_DOCS_LINK = 'https://docs.interlay.io/#/vault/overview';
 const INTERLAY_DOS_AND_DONTS_DOCS_LINK = 'https://docs.interlay.io/#/vault/installation?id=dos-and-donts';
+const INTERLAY_WHITEPAPPER = 'https://gateway.pinata.cloud/ipfs/QmWp62gdLssFpAoG2JqK8sy3m3rTRUa8LyzoSY8ZFisYNB';
 
 const BANXA_LINK = 'http://talisman.banxa.com/';
 
@@ -41,6 +42,7 @@ export {
   INTERLAY_TWITTER_LINK,
   INTERLAY_USE_WRAPPED_CURRENCY_LINK,
   INTERLAY_VAULT_DOCS_LINK,
+  INTERLAY_WHITEPAPPER,
   KINTSUGI_CROWDLOAN_LINK,
   KINTSUGI_GOVERNANCE_LINK,
   KINTSUGI_SUBSCAN_LINK,

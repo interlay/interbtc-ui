@@ -28,7 +28,12 @@ const swapSchema = (params: { [SWAP_INPUT_AMOUNT_FIELD]: SwapValidationParams })
     [SWAP_INPUT_TOKEN_FIELD]: yup.string().required('amm.select_token'),
     [SWAP_OUTPUT_TOKEN_FIELD]: yup.string().required('amm.select_token'),
     [SWAP_INPUT_AMOUNT_FIELD]: yup.string().when([SWAP_INPUT_TOKEN_FIELD, SWAP_OUTPUT_TOKEN_FIELD], {
-      is: (input: string, output: string) => input && output,
+      is: (input: string, output: string) => {
+        // only validates when params are declared
+        const { maxAmount, minAmount } = params[SWAP_INPUT_AMOUNT_FIELD];
+
+        return input && output && minAmount && maxAmount;
+      },
       then: (schema) =>
         schema
           .requiredAmount(undefined, 'amm.enter_token_amount')

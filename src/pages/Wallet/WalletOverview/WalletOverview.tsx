@@ -10,10 +10,13 @@ import { useGetAccountPositions } from '@/utils/hooks/api/loans/use-get-account-
 import { useGetLoanAssets } from '@/utils/hooks/api/loans/use-get-loan-assets';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import useAccountId from '@/utils/hooks/use-account-id';
+import { LocalStorageKey, useLocalStorage } from '@/utils/hooks/use-local-storage';
 
-import { AvailableAssetsTable, StakingTable, WalletInsights } from './components';
+import { AvailableAssetsTable, StakingTable, WalletInsights, WelcomeBanner } from './components';
 
 const WalletOverview = (): JSX.Element => {
+  const [isBannerOpen, setBannerOpen] = useLocalStorage(LocalStorageKey.WALLET_WELCOME_BANNER, true);
+
   const accountId = useAccountId();
   const { data: balances } = useGetBalances();
   const { data: accountPoolsData } = useGetAccountPools();
@@ -29,6 +32,8 @@ const WalletOverview = (): JSX.Element => {
     return <FullLoadingSpinner />;
   }
 
+  const handleCloseBanner = () => setBannerOpen(false);
+
   const hasStakingTable =
     accountStakingData &&
     accountVotingBalance &&
@@ -38,6 +43,7 @@ const WalletOverview = (): JSX.Element => {
 
   return (
     <MainContainer>
+      {isBannerOpen && <WelcomeBanner onClose={handleCloseBanner} />}
       <WalletInsights balances={balances} />
       <AvailableAssetsTable balances={balances} pooledTickers={pooledTickers} />
       {!!lendPositions?.length && assets && (

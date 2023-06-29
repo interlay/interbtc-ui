@@ -6,10 +6,12 @@ import { Link, LinkProps } from 'react-router-dom';
 
 import { useDOMRef } from '../utils/dom';
 import { BaseCTA, BaseCTAProps } from './BaseCTA';
+import { StyledIcon } from './CTA.style';
 
 type Props = {
   external?: boolean;
   disabled?: boolean;
+  icon?: boolean;
 };
 
 type NativeAttrs = Omit<LinkProps, keyof Props | 'href' | 'onFocus' | 'onBlur'>;
@@ -22,7 +24,7 @@ type CTALinkProps = Props & NativeAttrs & AriaAttrs & InheritAttrs;
 
 // TODO: Does this need to be changed to a React Router link component?
 const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
-  ({ disabled, external, to: toProp, children, ...props }, ref): JSX.Element => {
+  ({ disabled, external, to: toProp, children, icon, ...props }, ref): JSX.Element => {
     const linkRef = useDOMRef(ref);
 
     const ariaProps = {
@@ -49,6 +51,7 @@ const CTALink = forwardRef<HTMLAnchorElement, CTALinkProps>(
         })}
       >
         {children}
+        {icon && <StyledIcon color='secondary' />}
       </BaseCTA>
     );
   }

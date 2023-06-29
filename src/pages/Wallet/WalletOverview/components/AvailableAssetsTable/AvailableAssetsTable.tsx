@@ -8,7 +8,7 @@ import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { Cell } from '@/components';
 import { AssetCell, DataGrid } from '@/components/DataGrid';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
-import { NATIVE_CURRENCIES } from '@/utils/constants/currency';
+import { FEE_TICKERS } from '@/utils/constants/currency';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -43,13 +43,13 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
   const { data: vestingData } = useGetVestingData();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const [showZeroBalances, setShowZeroBalances] = useState(false);
+  const [showAllBalances, setShowAllBalances] = useState(false);
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];
-    const filteredData = showZeroBalances
+    const filteredData = showAllBalances
       ? data
-      : data.filter((balance) => NATIVE_CURRENCIES.includes(balance.currency) || !balance.transferable.isZero());
+      : data.filter((balance) => FEE_TICKERS.includes(balance.currency.ticker) || !balance.transferable.isZero());
 
     return filteredData.map(
       ({ currency, transferable }): AvailableAssetsRows => {
@@ -103,11 +103,11 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
         };
       }
     );
-  }, [balances, showZeroBalances, isMobile, prices, pooledTickers, vestingData?.isClaimable]);
+  }, [balances, showAllBalances, isMobile, prices, pooledTickers, vestingData?.isClaimable]);
 
   const actions = (
-    <Switch isSelected={showZeroBalances} onChange={(e) => setShowZeroBalances(e.target.checked)}>
-      {t('show_zero_balance')}
+    <Switch isSelected={showAllBalances} onChange={(e) => setShowAllBalances(e.target.checked)}>
+      {t('show_all')}
     </Switch>
   );
 

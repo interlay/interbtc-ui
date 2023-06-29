@@ -66,7 +66,7 @@ const Modal = forwardRef<HTMLDivElement, ModalProps>(
             onClose={onClose}
             wrapperRef={wrapperRef}
           >
-            <StyledDialog $hasMaxHeight={hasMaxHeight} $isCentered={isCentered} {...props}>
+            <StyledDialog $hasMaxHeight={hasMaxHeight} $isCentered={isCentered} $isOpen={isOpen} {...props}>
               {children}
             </StyledDialog>
           </ModalWrapper>
