@@ -47,7 +47,7 @@ type IssueFormProps = { requestLimits: IssueLimits } & IssueData;
 const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.Element => {
   const { t } = useTranslation();
   const prices = useGetPrices();
-  const { getBalance } = useGetBalances();
+  const { getAvailableBalance } = useGetBalances();
   const { getSecurityDeposit } = useGetIssueData();
   const { getCurrencyFromTicker, isLoading: isLoadingCurrencies } = useGetCurrencies(true);
 
@@ -57,6 +57,10 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
   const [debouncedAmount, setDebouncedAmount] = useState<string>();
 
   useDebounce(() => setDebouncedAmount(amount), 500, [amount]);
+
+  const [securityDeposit, setSecurityDeposit] = useState<MonetaryAmount<CurrencyExt>>(
+    newMonetaryAmount(0, GOVERNANCE_TOKEN)
+  );
 
   const [selectedVault, setSelectedVault] = useState<BridgeVaultData>();
 
@@ -160,6 +164,21 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
     }
   });
 
+  const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
+
+  useEffect(() => {
+    const computeSecurityDeposit = async () => {
+      const btcAmount = safeBitcoinAmount(amount || 0);
+      const deposit = await getSecurityDeposit(btcAmount, griefingCollateralTicker);
+
+      if (!deposit) return;
+
+      setSecurityDeposit(deposit);
+    };
+
+    computeSecurityDeposit();
+  }, [amount, griefingCollateralTicker, setSecurityDeposit, getSecurityDeposit]);
+
   const handleToggleCustomVault = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.checked) {
       form.setFieldTouched(BRIDGE_ISSUE_CUSTOM_VAULT_FIELD, false, true);
@@ -186,26 +205,6 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const bridgeFee = monetaryAmount.mul(issueFee.toBig());
 
-  const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
-
-  const [securityDeposit, setSecurityDeposit] = useState<MonetaryAmount<CurrencyExt>>(
-    newMonetaryAmount(0, GOVERNANCE_TOKEN)
-  );
-
-  useEffect(() => {
-    const computeSecurityDeposit = async () => {
-      const btcAmount = safeBitcoinAmount(amount || 0);
-      const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
-      const deposit = await getSecurityDeposit(btcAmount, griefingCollateralTicker);
-
-      if (!deposit) return;
-
-      setSecurityDeposit(deposit);
-    };
-
-    computeSecurityDeposit();
-  }, [amount, form.values, setSecurityDeposit, getSecurityDeposit]);
-
   const totalAmount = monetaryAmount.gte(bridgeFee) ? monetaryAmount.sub(bridgeFee) : new BitcoinAmount(0);
   const totalAmountUSD = totalAmount
     ? convertMonetaryAmountToValueInUSD(totalAmount, getTokenPrice(prices, totalAmount.currency.ticker)?.usd) || 0
@@ -213,22 +212,24 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const isSelectingVault = form.values[BRIDGE_ISSUE_CUSTOM_VAULT_SWITCH];
 
-  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
-
   const griefingCollateralCurrencyBalance = griefingCollateralTicker
-    ? getBalance(griefingCollateralTicker)?.free
+    ? getAvailableBalance(griefingCollateralTicker)
     : undefined;
 
   const hasEnoughGriefingCollateralBalance = useMemo(() => {
+    if (!debouncedAmount) return true;
+
     if (
-      securityDeposit === undefined ||
-      griefingCollateralCurrencyBalance === undefined ||
+      !griefingCollateralCurrencyBalance ||
       !isCurrencyEqual(securityDeposit.currency, griefingCollateralCurrencyBalance.currency)
     ) {
       return false;
     }
+
     return griefingCollateralCurrencyBalance.gte(securityDeposit);
-  }, [securityDeposit, griefingCollateralCurrencyBalance]);
+  }, [debouncedAmount, griefingCollateralCurrencyBalance, securityDeposit]);
+
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee) || !hasEnoughGriefingCollateralBalance;
 
   return (
     <>
@@ -271,17 +272,13 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 bridgeFee={bridgeFee}
                 securityDeposit={securityDeposit}
                 securityDepositSelectProps={form.getFieldProps(BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN, true)}
+                showInsufficientSecurityBalance={!hasEnoughGriefingCollateralBalance}
                 feeDetailsProps={{
                   ...transaction.fee.detailsProps,
                   selectProps: form.getFieldProps(BRIDGE_ISSUE_FEE_TOKEN, true)
                 }}
               />
-              <AuthCTA
-                type='submit'
-                disabled={isBtnDisabled || !hasEnoughGriefingCollateralBalance}
-                size='large'
-                loading={transaction.isLoading}
-              >
+              <AuthCTA type='submit' disabled={isBtnDisabled} size='large' loading={transaction.isLoading}>
                 {t('issue')}
               </AuthCTA>
             </Flex>
