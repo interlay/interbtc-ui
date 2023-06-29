@@ -45,7 +45,10 @@ const useTransactionNotifications = ({
 
     const url =
       data?.txHash &&
-      EXTERNAL_PAGES.SUBSCAN.BLOCK.replace(`:${EXTERNAL_URL_PARAMETERS.SUBSCAN.BLOCK.HASH}`, data.txHash.toString());
+      EXTERNAL_PAGES.SUBSCAN.EXTRINSIC.replace(
+        `:${EXTERNAL_URL_PARAMETERS.SUBSCAN.BLOCK.HASH}`,
+        data.txHash.toString()
+      );
 
     const description = getTransactionDescription(variables, status, t);
 
