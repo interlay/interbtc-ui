@@ -1,23 +1,25 @@
-import { Keyring } from "@polkadot/api";
+import { Keyring } from '@polkadot/api';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import React from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
-import { showAccountModalAction, showSignTermsModalAction } from "@/common/actions/general.actions";
-import { StoreType } from "@/common/types/util.types";
-import { Card, CTA, Dd, DlGroup, Dt, Flex } from "@/component-library";
-import { AuthModal, SignTermsModal } from "@/components/AuthModal";
-import { Tutorial } from "@/components/Tutorial";
-import { ACCOUNT_ID_TYPE_NAME } from "@/config/general";
-import { GOVERNANCE_TOKEN } from "@/config/relay-chains";
-import { SS58_FORMAT } from "@/constants";
-import { KeyringPair, useSubstrate, useSubstrateSecureState } from "@/lib/substrate";
-import MainContainer from "@/parts/MainContainer";
-import PageTitle from "@/parts/PageTitle";
-import { useGetBalances } from "@/utils/hooks/api/tokens/use-get-balances";
-import { useSignMessage } from "@/utils/hooks/use-sign-message";
+import { showAccountModalAction, showSignTermsModalAction } from '@/common/actions/general.actions';
+import { StoreType } from '@/common/types/util.types';
+import { Card, CTA, Dd, DlGroup, Dt, Flex } from '@/component-library';
+import { AuthModal, SignTermsModal } from '@/components/AuthModal';
+import { Tutorial } from '@/components/Tutorial';
+import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { SS58_FORMAT } from '@/constants';
+import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
+import MainContainer from '@/parts/MainContainer';
+import PageTitle from '@/parts/PageTitle';
+import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
+import { useSignMessage } from '@/utils/hooks/use-sign-message';
+
+import { StyledWrapper } from './Onboarding.style';
 
 type Steps = {
   title: string;
@@ -27,7 +29,7 @@ type Steps = {
   isCompleted: boolean;
   isActive: boolean;
   onPress?: () => void;
-}
+};
 
 const Onboarding = (): JSX.Element => {
   const { bridgeLoaded, showAccountModal, isSignTermsModalOpen } = useSelector((state: StoreType) => state.general);
@@ -42,7 +44,6 @@ const Onboarding = (): JSX.Element => {
   const [isRequestPending, setIsRequestPending] = React.useState(false);
 
   const governanceTokenBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker);
-
 
   const handleRequestFromFaucet = async (): Promise<void> => {
     if (!selectedAccount) return;
@@ -90,12 +91,13 @@ const Onboarding = (): JSX.Element => {
   const steps: Steps[] = [
     {
       title: 'Install a Wallet',
-      content: 'Click this button to get a selection of wallets. We recommend installing Talisman or SubWallet for ease of use.',
+      content:
+        'Click this button to get a selection of wallets. We recommend installing Talisman or SubWallet for ease of use.',
       ctaType: CTA,
       ctaText: t('install_wallet'),
       onPress: handleAccountModalOpen,
       isCompleted: extensions.length > 0,
-      isActive: extensions.length === 0,
+      isActive: extensions.length === 0
     },
     {
       title: 'Connect the Wallet',
@@ -104,7 +106,7 @@ const Onboarding = (): JSX.Element => {
       ctaText: t('connect_wallet'),
       onPress: handleAccountModalOpen,
       isCompleted: selectedAccount !== undefined,
-      isActive: extensions.length > 0,
+      isActive: extensions.length > 0
     },
     {
       title: 'Sign the T&Cs',
@@ -112,8 +114,8 @@ const Onboarding = (): JSX.Element => {
       ctaType: CTA,
       ctaText: t('sign_t&cs'),
       onPress: () => dispatch(showSignTermsModalAction(true)),
-      isCompleted: hasSignature? true : false,
-      isActive: selectedAccount !== undefined,
+      isCompleted: hasSignature ? true : false,
+      isActive: selectedAccount !== undefined
     },
     {
       title: 'Request Funds',
@@ -127,7 +129,7 @@ const Onboarding = (): JSX.Element => {
         }
         return false;
       })(),
-      isActive: hasSignature? true : false,
+      isActive: hasSignature ? true : false
     },
     {
       title: 'Explore the App',
@@ -135,8 +137,8 @@ const Onboarding = (): JSX.Element => {
       ctaType: Tutorial,
       ctaText: 'Start Tutorial',
       isCompleted: false,
-      isActive: selectedAccount !== undefined,
-    },
+      isActive: selectedAccount !== undefined
+    }
   ];
 
   const getCta = (step: Steps) => {
@@ -157,15 +159,14 @@ const Onboarding = (): JSX.Element => {
           <CTA
             onPress={step.onPress}
             variant='primary'
+            fullWidth={false}
             disabled={isRequestPending || step.isCompleted || !step.isActive}
           >
             {getCtaLabel(step)}
           </CTA>
         );
       case Tutorial:
-        return (
-          <Tutorial disabled={!step.isActive} label={step.ctaText} />
-        );
+        return <Tutorial disabled={!step.isActive} label={step.ctaText} />;
       default:
         return null;
     }
@@ -173,18 +174,16 @@ const Onboarding = (): JSX.Element => {
 
   return (
     <MainContainer>
-      <Flex direction='column' gap='spacing4'>
+      <StyledWrapper direction='column' gap='spacing4'>
         <PageTitle mainTitle={'Onboarding Tutorial'} />
         {steps.map((step, index) => (
           <Flex key={index} direction='column' gap='spacing4'>
             <Card flex='1'>
-              <DlGroup direction='column' alignItems='flex-start' gap='spacing4'>
+              <DlGroup direction='column' alignItems='flex-start' gap='spacing4' marginY='spacing4'>
                 <Dt weight='semibold' color='primary'>
                   {step.title}
                 </Dt>
-                <Dd color='primary'>
-                  {step.content}
-                </Dd>
+                <Dd color='primary'>{step.content}</Dd>
               </DlGroup>
               {getCta(step)}
             </Card>
@@ -197,7 +196,7 @@ const Onboarding = (): JSX.Element => {
           onAccountSelect={handleAccountSelect}
         />
         <SignTermsModal isOpen={isSignTermsModalOpen} onClose={handleCloseSignTermsModal} />
-      </Flex>
+      </StyledWrapper>
     </MainContainer>
   );
 };
