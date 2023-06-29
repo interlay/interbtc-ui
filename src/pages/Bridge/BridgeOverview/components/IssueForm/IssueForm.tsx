@@ -1,4 +1,10 @@
-import { CurrencyExt, getIssueRequestsFromExtrinsicResult, isCurrencyEqual, Issue } from '@interlay/interbtc-api';
+import {
+  CurrencyExt,
+  getIssueRequestsFromExtrinsicResult,
+  isCurrencyEqual,
+  Issue,
+  newMonetaryAmount
+} from '@interlay/interbtc-api';
 import { IssueLimits } from '@interlay/interbtc-api/build/src/parachain/issue';
 import { BitcoinAmount, MonetaryAmount } from '@interlay/monetary-js';
 import { mergeProps } from '@react-aria/utils';
@@ -182,12 +188,18 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
 
   const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
 
-  const [securityDeposit, setSecurityDeposit] = useState<MonetaryAmount<CurrencyExt>>();
+  const [securityDeposit, setSecurityDeposit] = useState<MonetaryAmount<CurrencyExt>>(
+    newMonetaryAmount(0, GOVERNANCE_TOKEN)
+  );
+
   useEffect(() => {
     const computeSecurityDeposit = async () => {
       const btcAmount = safeBitcoinAmount(amount || 0);
       const griefingCollateralTicker = form.values[BRIDGE_ISSUE_GRIEFING_COLLATERAL_TOKEN];
       const deposit = await getSecurityDeposit(btcAmount, griefingCollateralTicker);
+
+      if (!deposit) return;
+
       setSecurityDeposit(deposit);
     };
 
@@ -270,9 +282,7 @@ const IssueForm = ({ requestLimits, dustValue, issueFee }: IssueFormProps): JSX.
                 size='large'
                 loading={transaction.isLoading}
               >
-                {hasEnoughGriefingCollateralBalance
-                  ? t('issue')
-                  : t('insufficient_token_balance', { token: griefingCollateralTicker })}
+                {t('issue')}
               </AuthCTA>
             </Flex>
           </Flex>
