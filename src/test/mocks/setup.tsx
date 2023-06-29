@@ -2,19 +2,35 @@ import './@interlay/interbtc-api';
 import './@polkadot/api';
 import './@polkadot/extension-dapp';
 import './@polkadot/ui-keyring';
-import './intersectionObserver';
 import './fetch';
+import './intersectionObserver';
 import './substrate';
 import './utils';
+import './hooks';
 
 import { createInterBtcApi } from '@interlay/interbtc-api';
 import { FocusScope } from '@react-aria/focus';
 import ReactDOM from 'react-dom';
 
+import { TransactionEvents } from '@/utils/hooks/transaction/types';
+
 // Enforce garbage collection
 afterAll(() => {
   if (global.gc) global.gc();
 });
+
+jest.mock('@/utils/hooks/transaction/utils/submit', () => ({
+  submitTransaction: (
+    _api: any,
+    _account: any,
+    _extrinsicData: any,
+    _expectedStatus: any,
+    callbacks?: TransactionEvents
+  ) => {
+    callbacks?.onReady?.();
+    return { status: 'success', data: {} as any };
+  }
+}));
 
 // MEMO: mocking @react/aria overlay component because
 // of a error around `createTreeWalker`

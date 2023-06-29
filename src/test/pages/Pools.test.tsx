@@ -15,6 +15,7 @@ import {
   DEFAULT_LP_TOKEN_2,
   DEFAULT_POOLED_CURRENCIES_1,
   EMPTY_LIQUIDITY_POOL,
+  EMPTY_POOL_POOLED_CURRENCIES,
   LP_TOKEN_3,
   mockAddLiquidity,
   mockClaimFarmingRewards,
@@ -91,7 +92,7 @@ describe('Pools Page', () => {
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(2);
   });
 
-  it.only('should be able to deposit', async () => {
+  it('should be able to deposit', async () => {
     jest
       .spyOn(DEFAULT_LIQUIDITY_POOL_1, 'getLiquidityDepositInputAmounts')
       .mockReturnValue(DEFAULT_POOLED_CURRENCIES_1);
@@ -100,7 +101,7 @@ describe('Pools Page', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, DEFAULT_LP_TOKEN_1.ticker, TABS.DEPOSIT);
+    const tabPanel = await withinModalTabPanel(TABLES.AVAILABLE_POOLS, DEFAULT_LP_TOKEN_1.ticker, TABS.DEPOSIT);
 
     await userEvent.type(
       tabPanel.getByRole('textbox', {
@@ -120,11 +121,15 @@ describe('Pools Page', () => {
       ).toHaveValue(DEFAULT_CURRENCY_2.toString());
     });
 
+    await waitFor(() => {
+      expect(tabPanel.getByRole('button', { name: /add liquidity/i })).not.toBeDisabled();
+    });
+
     userEvent.click(tabPanel.getByRole('button', { name: /add liquidity/i }));
 
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
-    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(1);
+    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(2);
     expect(mockAddLiquidity).toHaveBeenCalledWith(
       DEFAULT_POOLED_CURRENCIES_1,
       DEFAULT_LIQUIDITY_POOL_1,
@@ -142,7 +147,7 @@ describe('Pools Page', () => {
     const row = withinTableRow(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker);
     expect(row.getByText(/illiquid/i)).toBeInTheDocument();
 
-    const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker, TABS.DEPOSIT);
+    const tabPanel = await withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker, TABS.DEPOSIT);
     expect(tabPanel.getByRole('alert')).toBeInTheDocument();
   });
 
@@ -173,7 +178,7 @@ describe('Pools Page', () => {
 
     await waitForElementToBeRemoved(screen.getByRole('dialog'));
 
-    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(1);
+    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(2);
     expect(mockRemoveLiquidity).toHaveBeenCalledWith(
       LP_TOKEN_INPUT,
       DEFAULT_LIQUIDITY_POOL_2,
@@ -213,7 +218,7 @@ describe('Pools Page', () => {
 
     await render(<App />, { path });
 
-    const tabPanel = withinModalTabPanel(TABLES.AVAILABLE_POOLS, DEFAULT_LP_TOKEN_1.ticker, TABS.DEPOSIT);
+    const tabPanel = await withinModalTabPanel(TABLES.AVAILABLE_POOLS, DEFAULT_LP_TOKEN_1.ticker, TABS.DEPOSIT);
 
     await userEvent.type(
       tabPanel.getByRole('textbox', {
@@ -248,5 +253,51 @@ describe('Pools Page', () => {
         })
       ).toHaveValue(DEFAULT_CURRENCY_1.toString());
     });
+  });
+
+  it.only('should be able to enter customisable input amounts when pool is empty', async () => {
+    jest.spyOn(EMPTY_LIQUIDITY_POOL, 'getLiquidityDepositInputAmounts');
+
+    mockGetLiquidityPools.mockResolvedValue([...DEFAULT_LIQUIDITY_POOLS, EMPTY_LIQUIDITY_POOL]);
+
+    const [EMPTY_POOL_CURRENCY_1, EMPTY_POOL_CURRENCY_2] = EMPTY_POOL_POOLED_CURRENCIES;
+
+    await render(<App />, { path });
+
+    const tabPanel = await withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_3.ticker, TABS.DEPOSIT);
+
+    await userEvent.type(
+      tabPanel.getByRole('textbox', {
+        name: new RegExp(`${EMPTY_POOL_CURRENCY_1.currency.ticker} deposit amount`, 'i')
+      }),
+      EMPTY_POOL_CURRENCY_1.toString(),
+      { delay: 1 }
+    );
+
+    await waitFor(() => {
+      expect(
+        tabPanel.getByRole('textbox', {
+          name: new RegExp(`${EMPTY_POOL_CURRENCY_2.currency.ticker} deposit amount`, 'i')
+        })
+      ).toHaveValue(EMPTY_POOL_CURRENCY_2.toString());
+    });
+
+    await userEvent.type(
+      tabPanel.getByRole('textbox', {
+        name: new RegExp(`${EMPTY_POOL_CURRENCY_2.currency.ticker} deposit amount`, 'i')
+      }),
+      '10',
+      { delay: 1 }
+    );
+
+    await waitFor(() => {
+      expect(
+        tabPanel.getByRole('textbox', {
+          name: new RegExp(`${EMPTY_POOL_CURRENCY_1.currency.ticker} deposit amount`, 'i')
+        })
+      ).toHaveValue(EMPTY_POOL_CURRENCY_1.toString());
+    });
+
+    expect(EMPTY_LIQUIDITY_POOL.getLiquidityDepositInputAmounts).not.toHaveBeenCalled();
   });
 });

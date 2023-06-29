@@ -11,6 +11,7 @@ import { Route, Router } from 'react-router-dom';
 import { createStore } from 'redux';
 
 import { SubstrateLoadingAndErrorHandlingWrapper, SubstrateProvider } from '@/lib/substrate';
+import { NotificationsProvider } from '@/utils/context/Notifications';
 
 import { rootReducer } from '../common/reducers';
 
@@ -32,7 +33,9 @@ const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactN
           <Provider store={testStore}>
             <Route>
               <SubstrateProvider>
-                <SubstrateLoadingAndErrorHandlingWrapper>{children}</SubstrateLoadingAndErrorHandlingWrapper>
+                <SubstrateLoadingAndErrorHandlingWrapper>
+                  <NotificationsProvider>{children}</NotificationsProvider>
+                </SubstrateLoadingAndErrorHandlingWrapper>
               </SubstrateProvider>
             </Route>
           </Provider>

@@ -1,11 +1,12 @@
 import '@testing-library/jest-dom';
 
-import { InterBtcApi } from '@interlay/interbtc-api';
+import { InterBtcApi, newMonetaryAmount } from '@interlay/interbtc-api';
 import { Interlay, Polkadot } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { Signer } from '@polkadot/types/types';
 
-import { mockFaucet } from './faucet';
+import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+
 import {
   mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
@@ -185,6 +186,9 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
   escrow: {
     getStakedBalance: mockGetStakedBalance,
     votingBalance: mockVotingBalance
+  },
+  transaction: {
+    getFeeEstimate: jest.fn().mockResolvedValue(newMonetaryAmount(0, GOVERNANCE_TOKEN))
   }
 };
 
@@ -197,11 +201,10 @@ jest.mock('@interlay/interbtc-api', () => {
     newAccountId: jest.fn().mockReturnValue('a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc'),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
     createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi),
-    FaucetClient: mockFaucet,
+    FaucetClient: jest.fn().mockImplementation(() => ({ fundAccount: jest.fn() })),
     newExtrinsicStatus: jest.fn()
   };
 });
 
-export * from './parachain';
 export * from './parachain';
 export { mockInterBtcApi, mockSetAccount };

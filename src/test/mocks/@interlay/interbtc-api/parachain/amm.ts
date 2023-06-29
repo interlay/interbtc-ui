@@ -10,6 +10,8 @@ import Big from 'big.js';
 
 import { GOVERNANCE_TOKEN, RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 
+import { DEFAULT_EXTRINSIC } from './extrinsic';
+
 const DEFAULT_LP_TOKEN_1_NAME = `LP ${GOVERNANCE_TOKEN.ticker}-${RELAY_CHAIN_NATIVE_TOKEN.ticker}`;
 
 const DEFAULT_LP_TOKEN_1: StandardLpToken = {
@@ -112,11 +114,11 @@ DEFAULT_CLAIMABLE_REWARDS.set(DEFAULT_LP_TOKEN_1, [newMonetaryAmount(1, WRAPPED_
 
 const mockGetClaimableFarmingRewards = jest.fn().mockResolvedValue(DEFAULT_CLAIMABLE_REWARDS);
 
-const mockClaimFarmingRewards = jest.fn();
+const mockClaimFarmingRewards = jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC);
 
-const mockAddLiquidity = jest.fn();
+const mockAddLiquidity = jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC);
 
-const mockRemoveLiquidity = jest.fn();
+const mockRemoveLiquidity = jest.fn().mockResolvedValue(DEFAULT_EXTRINSIC);
 
 const DEFAULT_LP_TOKENS = [DEFAULT_LP_TOKEN_1, DEFAULT_LP_TOKEN_2];
 
@@ -168,6 +170,7 @@ export {
   DEFAULT_TRADE,
   DEFAULT_TRADE_AMOUNT,
   EMPTY_LIQUIDITY_POOL,
+  EMPTY_POOL_POOLED_CURRENCIES,
   LP_TOKEN_3,
   mockAddLiquidity,
   mockClaimFarmingRewards,

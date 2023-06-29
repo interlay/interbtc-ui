@@ -85,7 +85,12 @@ const useForm = <Values extends FormikValues = FormikValues>({
   );
 
   const getFieldProps: GetFieldProps = useCallback(
-    (nameOrOptions: any, hideErrorMessage?: boolean, hideUntouchedError?: boolean) => {
+    (
+      nameOrOptions: any,
+      hideErrorMessage?: boolean,
+      hideUntouchedError?: boolean
+      // type: 'input' | 'select' = 'input'
+    ) => {
       const fieldProps = getFormikFieldProps(nameOrOptions);
       const fieldName = getFieldName(nameOrOptions);
 
