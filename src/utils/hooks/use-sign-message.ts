@@ -11,7 +11,7 @@ import { KeyringPair, useSubstrateSecureState } from '@/lib/substrate';
 
 import { NotificationToastType, useNotifications } from '../context/Notifications';
 import { signMessage } from '../helpers/wallet';
-import { LocalStorageKey, TCSignaturesData, useLocalStorage } from './use-local-storage';
+import { LocalStorageKey, useLocalStorage } from './use-local-storage';
 
 interface GetSignatureData {
   exists: boolean;
@@ -56,7 +56,7 @@ const useSignMessage = (): UseSignMessageResult => {
   const notifications = useNotifications();
 
   const dispatch = useDispatch();
-  const [signatures, setSignatures] = useLocalStorage<TCSignaturesData>(LocalStorageKey.TC_SIGNATURES);
+  const [signatures, setSignatures] = useLocalStorage(LocalStorageKey.TC_SIGNATURES);
   const { selectedAccount } = useSubstrateSecureState();
 
   const setSignature = useCallback(
