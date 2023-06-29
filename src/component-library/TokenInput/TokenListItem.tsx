@@ -5,10 +5,10 @@ import { Span } from '../Text';
 import { StyledListItemLabel, StyledListTokenWrapper } from './TokenInput.style';
 import { TokenData } from './TokenSelect';
 
-type TokenListItemProps = TokenData;
+type TokenListItemProps = { isDisabled?: boolean } & TokenData;
 
-const TokenListItem = ({ balance, balanceUSD, value, tickers }: TokenListItemProps): JSX.Element => {
-  const isSelected = useSelectModalContext().selectedItem?.key === value;
+const TokenListItem = ({ balance, balanceUSD, value, tickers, isDisabled }: TokenListItemProps): JSX.Element => {
+  const isSelected = useSelectModalContext().selectedItem?.key === value && !isDisabled;
 
   return (
     <>
