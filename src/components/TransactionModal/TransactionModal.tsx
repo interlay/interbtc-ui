@@ -98,7 +98,7 @@ const TransactionModal = (): JSX.Element => {
             </StyledCard>
           )}
           {url && (
-            <TextLink color='secondary' size='s' external icon to={url}>
+            <TextLink color='secondary' size='s' external icon to={{ pathname: url }}>
               View transaction on Subscan
             </TextLink>
           )}

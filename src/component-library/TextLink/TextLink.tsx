@@ -20,9 +20,7 @@ type TextLinkProps = Props & NativeAttrs;
 // TODO: merge this with CTALink
 const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
   ({ color = 'primary', external, to, underlined, size, weight, icon, children, ...props }, ref): JSX.Element => {
-    const linkProps: TextLinkProps = external
-      ? { to: { pathname: to as string }, target: '_blank', rel: 'noreferrer' }
-      : { to };
+    const linkProps: TextLinkProps = external ? { to, target: '_blank', rel: 'noreferrer' } : { to };
 
     return (
       <BaseTextLink

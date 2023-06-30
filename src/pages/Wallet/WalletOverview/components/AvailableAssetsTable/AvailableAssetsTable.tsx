@@ -7,9 +7,9 @@ import { P, Switch, TextLink, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { Cell } from '@/components';
 import { AssetCell, DataGrid } from '@/components/DataGrid';
-import { INTERLAY_GET_ASSETS_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { FEE_TICKERS } from '@/utils/constants/currency';
+import { EXTERNAL_QUERY_PARAMETERS } from '@/utils/constants/links';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { BalanceData } from '@/utils/hooks/api/tokens/use-get-balances';
@@ -17,6 +17,8 @@ import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { useGetVestingData } from '@/utils/hooks/api/use-get-vesting-data';
 
 import { ActionsCell } from './ActionsCell';
+
+const queryString = require('query-string');
 
 enum AvailableAssetsColumns {
   ASSET = 'asset',
@@ -70,7 +72,12 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
                   size='s'
                   external
                   icon
-                  to={`${INTERLAY_GET_ASSETS_LINK}?id=${currency.ticker.toLowerCase()}`}
+                  to={{
+                    pathname: 'https://docs.interlay.io/#/guides/assets',
+                    search: queryString.stringify({
+                      [EXTERNAL_QUERY_PARAMETERS.DOCS.ASSET.ID]: currency.ticker
+                    })
+                  }}
                 >
                   {t('wallet.get_asset', { token: currency.ticker })}
                 </TextLink>
