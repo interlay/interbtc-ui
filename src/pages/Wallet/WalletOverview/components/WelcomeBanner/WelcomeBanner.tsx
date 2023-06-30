@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Flex } from '@/component-library';
 import { INTERLAY_WHITEPAPPER } from '@/config/links';
 import { APP_NAME, WRAPPED_TOKEN } from '@/config/relay-chains';
+import { PAGES } from '@/utils/constants/links';
 
 import {
   StyledCard,
@@ -45,6 +46,9 @@ const WelcomeBanner = ({ onClose }: WelcomeBannerProps): JSX.Element => {
           {/* TODO: to be added */}
           <StyledCTALink fullWidth external icon to={'#'}>
             Fund Wallet Guide
+          </StyledCTALink>
+          <StyledCTALink fullWidth to={PAGES.ONBOARDING}>
+            Tutorial
           </StyledCTALink>
         </StyledCTAGroup>
       </StyledTextWrapper>
