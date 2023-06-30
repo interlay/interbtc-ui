@@ -63,6 +63,7 @@ const StyledCTALink = styled(CTALink)`
   padding: ${theme.spacing.spacing2} ${theme.spacing.spacing6};
   color: #1a0144;
   background-color: var(--colors-neutral-white);
+  white-space: nowrap;
 
   &:hover:not([disabled]) {
     background-color: var(--colors-neutral-lighter-grey);
@@ -77,16 +78,17 @@ const StyledTitle = styled(H2)`
 const StyledCTAGroup = styled(Flex)`
   flex-wrap: wrap;
 
-  @media ${theme.breakpoints.up('sm')} {
-    flex-wrap: nowrap;
+  @media ${theme.breakpoints.up('md')} {
+    max-width: 80%;
   }
 
   @media ${theme.breakpoints.up('lg')} {
-    max-width: 70%;
+    flex-wrap: nowrap;
+    max-width: 100%;
   }
 
   @media ${theme.breakpoints.up('xl')} {
-    max-width: 50%;
+    max-width: 70%;
   }
 `;
 

@@ -6,7 +6,7 @@ import { CTA, theme } from '@/component-library';
 type Props = {
   disabled?: boolean;
   label?: string;
-}
+};
 
 type TutorialProps = Props;
 
@@ -15,12 +15,12 @@ const steps: Step[] = [
     target: 'body',
     placement: 'center',
     title: 'Welcome to the Interlay app!',
-    content: 'Step through this tutorial to understand the different parts of the app.',
+    content: 'Step through this tutorial to understand the different parts of the app.'
   },
   {
     target: '[href="/wallet"]',
     title: 'Wallet',
-    content: 'You can find an overview of your assets and positions in the DeFi hub on the wallet page.',
+    content: 'You can find an overview of your assets and positions in the DeFi hub on the wallet page.'
   },
   {
     target: '[href="/bridge"]',
@@ -35,7 +35,8 @@ const steps: Step[] = [
   {
     target: '[href="/transfer"]',
     title: 'Transfer and Bridge',
-    content: '...bridge assets from other chains like Polkadot, Polkadot Asset Hub, Astar, HydraDX, and many more from and to Interlay.'
+    content:
+      '...bridge assets from other chains like Polkadot, Polkadot Asset Hub, Astar, HydraDX, and many more from and to Interlay.'
   },
   {
     target: '[href="/lending"]',
@@ -45,43 +46,41 @@ const steps: Step[] = [
   {
     target: '[href="/lending"]',
     title: 'Lending',
-    content: 'You can also borrow assets like IBTC, DOT, USDT and others.',
+    content: 'You can also borrow assets like IBTC, DOT, USDT and others.'
   },
   {
     target: '[href="/swap"]',
     title: 'Swap',
-    content: 'On the swap page you can swap assets like IBTC, DOT, USDT and others.',
+    content: 'On the swap page you can swap assets like IBTC, DOT, USDT and others.'
   },
   {
     target: '[href="/pools"]',
     title: 'Pools',
-    content: 'On the pools page you can provide liquidity to earn rewards.',
+    content: 'On the pools page you can provide liquidity to earn rewards.'
   },
   {
     target: '[href="/staking"]',
     title: 'Staking',
-    content: 'Here you can stake INTR to enable you to participate in Interlay governance.',
+    content: 'Here you can stake INTR to enable you to participate in Interlay governance.'
   },
   {
     target: '[data-key="info"]',
     title: 'Onboarding',
-    content: 'All done! You can always redo this tutorial under "More" and "Onboarding".',
+    content: 'All done! You can always redo this tutorial under "More" and "Onboarding".'
   },
   {
     target: '[href="/wallet"]',
     title: 'Wallet',
-    content: 'As a first step, click on the wallet page and check the guide to get assets onto Interlay to join the DeFi hub.',
+    content:
+      'As a first step, click on the wallet page and check the guide to get assets onto Interlay to join the DeFi hub.',
     disableOverlayClose: true,
     hideCloseButton: true,
     hideFooter: true,
-    spotlightClicks: true,
-  },
+    spotlightClicks: true
+  }
 ];
 
-const Tutorial = ({
-  disabled = false,
-  label = 'Start Tutorial',
-}: TutorialProps): JSX.Element => {
+const Tutorial = ({ disabled = false, label = 'Start Tutorial' }: TutorialProps): JSX.Element => {
   const [run, setRun] = useState(false);
 
   const handleStartTutorial = () => {
@@ -93,19 +92,14 @@ const Tutorial = ({
     const { action, status } = data;
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
 
-    if (finishedStatuses.includes(status as string) || (action === 'close')) {
+    if (finishedStatuses.includes(status as string) || action === 'close') {
       setRun(false);
     }
   };
 
   return (
-    <>
-      <CTA
-        onPress={handleStartTutorial}
-        variant='primary'
-        disabled={disabled}
-        id='start-tutorial'
-      >
+    <div>
+      <CTA fullWidth onPress={handleStartTutorial} variant='primary' disabled={disabled} id='start-tutorial'>
         {label}
       </CTA>
       <Joyride
@@ -118,11 +112,11 @@ const Tutorial = ({
         run={run}
         styles={{
           options: {
-            primaryColor: theme.cta.primary.bg,
+            primaryColor: theme.cta.primary.bg
           }
         }}
       />
-    </>
+    </div>
   );
 };
 
