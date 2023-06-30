@@ -619,7 +619,7 @@
     "please_enter_no_higher_available_balance": "Please enter an amount no higher than your available balance",
     "field_amount": "{{field}} amount",
     "please_enter_a_valid_address": "Please enter a valid address",
-    "ensure_adequate_amount_left_to_cover_fees": "Ensure that an adequate number of coins are left to cover the fees"
+    "ensure_adequate_amount_left_to_cover_action": "Ensure that an adequate number of coins are left to cover the {{ action }}"
   },
   "xcm_transfer": {
     "validation": {

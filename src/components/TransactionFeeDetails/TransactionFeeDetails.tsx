@@ -56,7 +56,9 @@ const TransactionFeeDetails = ({
       )})`
     : `${0.0} ${ticker} (${formatUSD(0)})`;
 
-  const errorMessage = showInsufficientBalance && t('forms.ensure_adequate_amount_left_to_cover_fees');
+  const errorMessage =
+    showInsufficientBalance &&
+    t('forms.ensure_adequate_amount_left_to_cover_action', { action: t('fees').toLowerCase() });
 
   const handleSelectionChange = (key: Key) => setTicker(key as string);
 
