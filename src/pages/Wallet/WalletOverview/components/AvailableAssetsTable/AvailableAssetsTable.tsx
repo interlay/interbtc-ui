@@ -3,10 +3,11 @@ import { ReactNode, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, formatUSD } from '@/common/utils/utils';
-import { P, Switch, theme } from '@/component-library';
+import { P, Switch, TextLink, theme } from '@/component-library';
 import { useMediaQuery } from '@/component-library/utils/use-media-query';
 import { Cell } from '@/components';
 import { AssetCell, DataGrid } from '@/components/DataGrid';
+import { INTERLAY_GET_ASSETS_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 import { FEE_TICKERS } from '@/utils/constants/currency';
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
@@ -43,13 +44,16 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
   const { data: vestingData } = useGetVestingData();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  const isFeeToken = (ticker: string) => FEE_TICKERS.includes(ticker);
+
   const [showAllBalances, setShowAllBalances] = useState(false);
 
   const rows: AvailableAssetsRows[] = useMemo(() => {
     const data = balances ? Object.values(balances) : [];
+
     const filteredData = showAllBalances
       ? data
-      : data.filter((balance) => FEE_TICKERS.includes(balance.currency.ticker) || !balance.transferable.isZero());
+      : data.filter((balance) => isFeeToken(balance.currency.ticker) || !balance.transferable.isZero());
 
     return filteredData.map(
       ({ currency, transferable }): AvailableAssetsRows => {
@@ -60,9 +64,17 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
             marginBottom={isMobile ? 'spacing4' : undefined}
             {...getCoinIconProps(currency)}
             tooltip={
-              <>
-                Asset tooltip <a href='http://google.com'>Google</a>
-              </>
+              isFeeToken(currency.ticker) && (
+                <TextLink
+                  color='secondary'
+                  size='s'
+                  external
+                  icon
+                  to={`${INTERLAY_GET_ASSETS_LINK}?id=${currency.ticker.toLowerCase()}`}
+                >
+                  {t('wallet.get_asset', { token: currency.ticker })}
+                </TextLink>
+              )
             }
           />
         );
@@ -108,7 +120,7 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
         };
       }
     );
-  }, [balances, showAllBalances, isMobile, prices, pooledTickers, vestingData?.isClaimable]);
+  }, [balances, showAllBalances, isMobile, prices, pooledTickers, vestingData?.isClaimable, t]);
 
   const actions = (
     <Switch isSelected={showAllBalances} onChange={(e) => setShowAllBalances(e.target.checked)}>

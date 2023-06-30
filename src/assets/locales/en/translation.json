@@ -638,6 +638,7 @@
   },
   "wallet": {
     "available_assets": "Available assets",
+    "get_asset": "Get {{token}}",
     "no_assets_available": "No assets available",
     "total_governance_locked": "Total {{token}} Locked",
     "available_to_stake": "Available to stake",
