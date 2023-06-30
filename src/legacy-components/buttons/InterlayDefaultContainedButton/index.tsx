@@ -29,7 +29,7 @@ const InterlayDefaultContainedButton = React.forwardRef<Ref, Props>(
 
           'border',
           'border-black',
-          'border-opacity-25',
+          'border-opacity-10',
           'font-medium',
 
           disabledOrPending

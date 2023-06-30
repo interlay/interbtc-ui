@@ -6,8 +6,15 @@ import { ChangeEventHandler, Key, useCallback, useEffect, useState } from 'react
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { Dd, DlGroup, Dt, Flex, LoadingSpinner, TokenInput } from '@/component-library';
-import { AccountSelect, AuthCTA } from '@/components';
+import { Flex, LoadingSpinner, TokenInput } from '@/component-library';
+import {
+  AccountSelect,
+  AuthCTA,
+  TransactionDetails,
+  TransactionDetailsDd,
+  TransactionDetailsDt,
+  TransactionDetailsGroup
+} from '@/components';
 import {
   CROSS_CHAIN_TRANSFER_AMOUNT_FIELD,
   CROSS_CHAIN_TRANSFER_FROM_FIELD,
@@ -30,12 +37,7 @@ import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
 
 import { ChainSelect } from '../ChainSelect';
-import {
-  ChainSelectSection,
-  StyledArrowRightCircle,
-  StyledDl,
-  StyledSourceChainSelect
-} from './CrossChainTransferForm.styles';
+import { ChainSelectSection, StyledArrowRightCircle, StyledSourceChainSelect } from './CrossChainTransferForm.styles';
 
 const CrossChainTransferForm = (): JSX.Element => {
   const [destinationChains, setDestinationChains] = useState<Chains>([]);
@@ -249,20 +251,20 @@ const CrossChainTransferForm = (): JSX.Element => {
             onChange: handleDestinationAccountChange
           })}
         />
-        <StyledDl direction='column' gap='spacing2'>
-          <DlGroup justifyContent='space-between'>
-            <Dt size='xs' color='primary'>
+        <TransactionDetails>
+          <TransactionDetailsGroup>
+            <TransactionDetailsDt size='xs' color='primary'>
               Origin chain transfer fee
-            </Dt>
-            <Dd size='xs'>{currentToken?.originFee}</Dd>
-          </DlGroup>
-          <DlGroup justifyContent='space-between'>
-            <Dt size='xs' color='primary'>
-              Destination chain transfer fee estimate
-            </Dt>
-            <Dd size='xs'>{`${currentToken?.destFee.toString()} ${currentToken?.value}`}</Dd>
-          </DlGroup>
-        </StyledDl>
+            </TransactionDetailsDt>
+            <TransactionDetailsDd size='xs'>{currentToken?.originFee}</TransactionDetailsDd>
+          </TransactionDetailsGroup>
+          <TransactionDetailsGroup>
+            <TransactionDetailsDt>Destination chain transfer fee estimate</TransactionDetailsDt>
+            <TransactionDetailsDd size='xs'>{`${currentToken?.destFee.toString()} ${
+              currentToken?.value
+            }`}</TransactionDetailsDd>
+          </TransactionDetailsGroup>
+        </TransactionDetails>
         <AuthCTA size='large' type='submit' disabled={isCTADisabled} loading={transaction.isLoading}>
           {isCTADisabled ? 'Enter transfer amount' : t('transfer')}
         </AuthCTA>

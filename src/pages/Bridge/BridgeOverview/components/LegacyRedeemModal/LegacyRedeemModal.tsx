@@ -8,15 +8,11 @@ import { Modal, ModalBody } from '@/component-library';
 import AddressWithCopyUI from '@/legacy-components/AddressWithCopyUI';
 import InterlayDefaultContainedButton from '@/legacy-components/buttons/InterlayDefaultContainedButton';
 import { Props as ModalProps } from '@/legacy-components/UI/InterlayModal';
-import InterlayRouterLink from '@/legacy-components/UI/InterlayRouterLink';
 import { ForeignAssetIdLiteral } from '@/types/currency';
-import { PAGES, QUERY_PARAMETERS } from '@/utils/constants/links';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import { getColorShade } from '@/utils/helpers/colors';
 import { getTokenPrice } from '@/utils/helpers/prices';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
-
-const queryString = require('query-string');
 
 const USER_BTC_ADDRESS = 'user-btc-address';
 
@@ -82,7 +78,6 @@ const LegacyRedeemModal = ({ open, onClose, request }: CustomProps & Omit<ModalP
               <AddressWithCopyUI id={USER_BTC_ADDRESS} address={request.userBTCAddress} />
             </div>
             <div>
-              <p>{t('redeem_page.we_will_inform_you_btc')}</p>
               <p
                 className={clsx(
                   { 'text-interlayTextSecondaryInLightMode': process.env.REACT_APP_RELAY_CHAIN_NAME === POLKADOT },
@@ -93,18 +88,9 @@ const LegacyRedeemModal = ({ open, onClose, request }: CustomProps & Omit<ModalP
               </p>
             </div>
           </div>
-          <InterlayRouterLink
-            to={{
-              pathname: PAGES.BRIDGE,
-              search: queryString.stringify({
-                [QUERY_PARAMETERS.REDEEM_REQUEST_ID]: request.id
-              })
-            }}
-          >
-            <InterlayDefaultContainedButton onClick={onClose} className='w-full'>
-              {t('redeem_page.view_progress')}
-            </InterlayDefaultContainedButton>
-          </InterlayRouterLink>
+          <InterlayDefaultContainedButton onClick={onClose} className='w-full'>
+            {t('redeem_page.close')}
+          </InterlayDefaultContainedButton>
         </div>
       </ModalBody>
     </Modal>
