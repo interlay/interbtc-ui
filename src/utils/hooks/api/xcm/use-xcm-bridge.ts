@@ -63,7 +63,8 @@ const useXCMBridge = (): UseXCMBridge => {
   const queryResult = useQuery({
     queryKey,
     queryFn: initXCMBridge,
-    refetchInterval: false
+    refetchInterval: false,
+    refetchOnWindowFocus: false
   });
 
   const { data, error } = queryResult;
