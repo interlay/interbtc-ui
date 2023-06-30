@@ -11,6 +11,7 @@ const INTERLAY_TERMS_AND_CONDITIONS_LINK =
 const KINTSUGI_TERMS_AND_CONDITIONS_LINK =
   'https://github.com/interlay/terms/blob/master/kintsugi-dapp-terms-of-use.pdf';
 const INTERLAY_USE_WRAPPED_CURRENCY_LINK = 'https://docs.interlay.io/#/interlay/earn-with-ibtc';
+const INTERLAY_GET_ASSETS_LINK = 'https://docs.interlay.io/#/guides/assets';
 const KINTSUGI_USE_WRAPPED_CURRENCY_LINK = 'https://docs.interlay.io/#/kintsugi/Earn-With-kBTC';
 const INTERLAY_GOVERNANCE_LINK = 'https://interlay.subsquare.io/';
 const KINTSUGI_GOVERNANCE_LINK = 'https://kintsugi.subsquare.io';
@@ -35,6 +36,7 @@ export {
   INTERLAY_DOCS_LINK,
   INTERLAY_DOS_AND_DONTS_DOCS_LINK,
   INTERLAY_EMAIL_LINK,
+  INTERLAY_GET_ASSETS_LINK,
   INTERLAY_GITHUB_LINK,
   INTERLAY_GOVERNANCE_LINK,
   INTERLAY_SUBSCAN_LINK,
