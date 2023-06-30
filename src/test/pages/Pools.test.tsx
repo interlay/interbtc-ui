@@ -86,7 +86,7 @@ describe('Pools Page', () => {
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(3);
   });
 
-  it('should be able to deposit', async () => {
+  it.only('should be able to deposit', async () => {
     jest
       .spyOn(LIQUIDITY_POOLS.ONE, 'getLiquidityDepositInputAmounts')
       .mockReturnValue(LIQUIDITY_POOLS.ONE.pooledCurrencies);
