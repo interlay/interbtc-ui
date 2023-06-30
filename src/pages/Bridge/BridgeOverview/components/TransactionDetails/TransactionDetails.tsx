@@ -1,8 +1,9 @@
 import { Currency, MonetaryAmount } from '@interlay/monetary-js';
+import { useId } from '@react-aria/utils';
 import { useTranslation } from 'react-i18next';
 
 import { displayMonetaryAmountInUSDFormat } from '@/common/utils/utils';
-import { Flex, TokenInput } from '@/component-library';
+import { Alert, Flex, TokenInput } from '@/component-library';
 import {
   TransactionDetails as BaseTransactionDetails,
   TransactionDetailsDd,
@@ -30,6 +31,7 @@ type TransactionDetailsProps = {
   bitcoinNetworkFee?: MonetaryAmount<Currency>;
   feeDetailsProps?: TransactionFeeDetailsProps;
   securityDepositSelectProps?: TransactionSelectTokenProps;
+  showInsufficientSecurityBalance?: boolean;
 };
 
 const TransactionDetails = ({
@@ -42,10 +44,13 @@ const TransactionDetails = ({
   securityDeposit,
   bitcoinNetworkFee,
   feeDetailsProps,
-  securityDepositSelectProps
+  securityDepositSelectProps,
+  showInsufficientSecurityBalance
 }: TransactionDetailsProps): JSX.Element => {
   const prices = useGetPrices();
   const { t } = useTranslation();
+
+  const griefingCollateralErrorMessageId = useId();
 
   const { items: griefingCollateralCurrencies } = useSelectCurrency(
     SelectCurrencyFilter.ISSUE_GRIEFING_COLLATERAL_CURRENCY
@@ -92,6 +97,8 @@ const TransactionDetails = ({
               <TransactionSelectToken
                 label={t('bridge.security_deposit_token')}
                 items={griefingCollateralCurrencies}
+                aria-describedby={griefingCollateralErrorMessageId}
+                validationState={showInsufficientSecurityBalance ? 'invalid' : 'valid'}
                 {...securityDepositSelectProps}
               />
             )}
@@ -111,6 +118,13 @@ const TransactionDetails = ({
           </>
         )}
       </BaseTransactionDetails>
+      {showInsufficientSecurityBalance && (
+        <Alert id={griefingCollateralErrorMessageId} status='error'>
+          {t('forms.ensure_adequate_amount_left_to_cover_action', {
+            action: t('bridge.security_deposit_token').toLowerCase()
+          })}
+        </Alert>
+      )}
       {bitcoinNetworkFee && (
         <TransactionFeeDetails label={t('bridge.bitcoin_network_fee')} amount={bitcoinNetworkFee} />
       )}
