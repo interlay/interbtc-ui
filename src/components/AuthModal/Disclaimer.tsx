@@ -14,7 +14,7 @@ const Disclaimer = ({ showSignTerms }: DisclaimerProps): JSX.Element => {
     <P size='s'>
       <Trans i18nKey='exclude_us_citizens'>
         By proceeding you confirm that you have read and accepted the{' '}
-        <TextLink external to={{ pathname: TERMS_AND_CONDITIONS_LINK }} underlined>
+        <TextLink external to={TERMS_AND_CONDITIONS_LINK} underlined>
           terms and conditions
         </TextLink>
         , and represent and warrant that you are not a Resident of the United States or a &quot;U.S. person&quot; within

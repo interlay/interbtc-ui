@@ -41,7 +41,7 @@ const NotificationsPopover = ({ address, items }: NotificationsPopoverProps): JS
         </PopoverBody>
         {accountTransactionsUrl && (
           <PopoverFooter>
-            <TextLink color='secondary' size='s' external icon to={{ pathname: accountTransactionsUrl }}>
+            <TextLink color='secondary' size='s' external icon to={accountTransactionsUrl}>
               View all transactions
             </TextLink>
           </PopoverFooter>
