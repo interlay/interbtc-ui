@@ -60,7 +60,7 @@ type InheritAttrs = Omit<ModalProps, keyof Props | 'children'>;
 
 type CollateralModalProps = Props & InheritAttrs;
 
-const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModalProps): JSX.Element | null => {
+const CollateralModal = ({ asset, position, onClose, isOpen, ...props }: CollateralModalProps): JSX.Element | null => {
   const { t } = useTranslation();
   const { refetch } = useGetAccountLendingStatistics();
   const { getLTV } = useGetLTV();
@@ -107,11 +107,11 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
   // Doing this call on mount so that the form becomes dirty
   // TODO: find better approach
   useEffect(() => {
-    if (variant === 'disable-error') return;
+    if (variant === 'disable-error' || !isOpen) return;
 
     form.setFieldValue(LOAN_TOGGLE_COLLATERAL_FEE_TOKEN_FIELD, transaction.fee.defaultCurrency.ticker, true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isOpen, variant]);
 
   const content = getContentMap(t, variant, asset);
 
@@ -119,6 +119,7 @@ const CollateralModal = ({ asset, position, onClose, ...props }: CollateralModal
 
   return (
     <Modal
+      isOpen={isOpen}
       onClose={onClose}
       shouldCloseOnInteractOutside={(el) => !overlappingModalRef.current?.contains(el)}
       {...props}
