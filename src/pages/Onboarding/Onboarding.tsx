@@ -1,16 +1,14 @@
 import { Keyring } from '@polkadot/api';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 import { showAccountModalAction, showSignTermsModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { Card, CTA, Dd, DlGroup, Dt, Flex } from '@/component-library';
+import { Card, CTA, CTALink, Dd, DlGroup, Dt, Flex } from '@/component-library';
 import { AuthModal, SignTermsModal } from '@/components/AuthModal';
 import { Tutorial } from '@/components/Tutorial';
-import { ACCOUNT_ID_TYPE_NAME } from '@/config/general';
+import { INTERLAY_DISCORD_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { SS58_FORMAT } from '@/constants';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
@@ -24,15 +22,16 @@ import { StyledWrapper } from './Onboarding.style';
 type Steps = {
   title: string;
   content: string;
-  ctaType: typeof CTA | typeof Tutorial;
+  ctaType: typeof CTA | typeof CTALink | typeof Tutorial;
   ctaText: string;
   isCompleted: boolean;
   isActive: boolean;
   onPress?: () => void;
+  to?: string;
 };
 
 const Onboarding = (): JSX.Element => {
-  const { bridgeLoaded, showAccountModal, isSignTermsModalOpen } = useSelector((state: StoreType) => state.general);
+  const { showAccountModal, isSignTermsModalOpen } = useSelector((state: StoreType) => state.general);
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const { getAvailableBalance } = useGetBalances();
@@ -41,33 +40,7 @@ const Onboarding = (): JSX.Element => {
   const { extensions, selectedAccount } = useSubstrateSecureState();
   const { hasSignature } = useSignMessage();
 
-  const [isRequestPending, setIsRequestPending] = React.useState(false);
-
   const governanceTokenBalance = getAvailableBalance(GOVERNANCE_TOKEN.ticker);
-
-  const handleRequestFromFaucet = async (): Promise<void> => {
-    if (!selectedAccount) return;
-
-    try {
-      const receiverId = window.bridge.api.createType(ACCOUNT_ID_TYPE_NAME, selectedAccount.address);
-      await window.faucet.fundAccount(receiverId, GOVERNANCE_TOKEN);
-      // TODO: show new notification
-      toast.success('Your account has been funded.');
-    } catch (error) {
-      toast.error(`Funding failed. ${error.message}`);
-    }
-  };
-
-  const handleFundsRequest = async () => {
-    if (!bridgeLoaded) return;
-    setIsRequestPending(true);
-    try {
-      await handleRequestFromFaucet();
-    } catch (error) {
-      console.log('[requestFunds] error.message => ', error.message);
-    }
-    setIsRequestPending(false);
-  };
 
   const handleAccountModalOpen = () => dispatch(showAccountModalAction(true));
 
@@ -119,10 +92,10 @@ const Onboarding = (): JSX.Element => {
     },
     {
       title: 'Request Funds',
-      content: 'If you do not have any INTR, you can click this button to request funds from the faucet.',
-      ctaType: CTA,
-      ctaText: t('request_funds'),
-      onPress: handleFundsRequest,
+      content: 'If you do not have any INTR, join our Discord and request funds in the #faucet channel.',
+      ctaType: CTALink,
+      ctaText: t('fund_wallet'),
+      to: INTERLAY_DISCORD_LINK,
       isCompleted: (() => {
         if (governanceTokenBalance) {
           return governanceTokenBalance.isZero() ? false : true;
@@ -160,10 +133,22 @@ const Onboarding = (): JSX.Element => {
             onPress={step.onPress}
             variant='primary'
             fullWidth={false}
-            disabled={isRequestPending || step.isCompleted || !step.isActive}
+            disabled={step.isCompleted || !step.isActive}
           >
             {getCtaLabel(step)}
           </CTA>
+        );
+      case CTALink:
+        return (
+          <CTALink
+            external
+            to={step.to ? step.to : '/'}
+            variant='primary'
+            fullWidth={false}
+            disabled={step.isCompleted || !step.isActive}
+          > 
+            {getCtaLabel(step)}
+          </CTALink>
         );
       case Tutorial:
         return <Tutorial disabled={!step.isActive} label={step.ctaText} />;
