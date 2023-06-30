@@ -203,7 +203,7 @@ const Navigation = ({
     <nav className={clsx('px-2', 'space-y-1', { 'flex-1': !onSmallScreen }, className)} {...rest}>
       {PRIMARY_NAVIGATION_ITEMS.map((navigationItem) => {
         if (navigationItem.separator) {
-          return <Hr2 key={navigationItem.name} />;
+          return <Hr2 className='opacity-10' key={navigationItem.name} />;
         }
 
         if (navigationItem.hidden) {

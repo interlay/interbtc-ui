@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { updateTransactionModal } from '@/common/actions/general.actions';
 import { TransactionModalData } from '@/common/types/util.types';
 import { EXTERNAL_PAGES, EXTERNAL_URL_PARAMETERS } from '@/utils/constants/links';
-import { NotificationToast, NotificationToastAction, useNotifications } from '@/utils/context/Notifications';
+import { NotificationToastAction, NotificationToastType, useNotifications } from '@/utils/context/Notifications';
 
 import { TransactionActions, TransactionStatus } from './types';
 import { TransactionResult } from './use-transaction';
@@ -45,7 +45,10 @@ const useTransactionNotifications = ({
 
     const url =
       data?.txHash &&
-      EXTERNAL_PAGES.SUBSCAN.BLOCK.replace(`:${EXTERNAL_URL_PARAMETERS.SUBSCAN.BLOCK.HASH}`, data.txHash.toString());
+      EXTERNAL_PAGES.SUBSCAN.EXTRINSIC.replace(
+        `:${EXTERNAL_URL_PARAMETERS.SUBSCAN.BLOCK.HASH}`,
+        data.txHash.toString()
+      );
 
     const description = getTransactionDescription(variables, status, t);
 
@@ -60,7 +63,7 @@ const useTransactionNotifications = ({
     // creating or updating notification
     if (toastInfo.isOnScreen) {
       const toastAction: NotificationToastAction = {
-        type: NotificationToast.TRANSACTION,
+        type: NotificationToastType.TRANSACTION,
         props: {
           variant: status,
           url,

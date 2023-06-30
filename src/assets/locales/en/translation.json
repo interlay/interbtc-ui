@@ -149,7 +149,7 @@
   "asset": "Asset",
   "price": "Price",
   "balance": "Balance",
-  "show_zero_balance": "Show Zero Balance",
+  "show_all": "Show All",
   "total_balance": "Total Balance",
   "transferable_balance": "Transferable Balance",
   "fund_wallet": "Fund Wallet",
@@ -164,6 +164,8 @@
   "fee_token": "Fee token",
   "claim_rewards": "Claim Rewards",
   "tx_fees": "Tx fees",
+  "view_subscan": "View Subscan",
+
   "redeem_page": {
     "maximum_in_single_request": "Max redeemable in single request",
     "redeem": "Redeem",
@@ -175,13 +177,13 @@
     "with_added": "(≈ {{amountPrice}}) with added",
     "as_compensation_instead": "(≈ {{compensationPrice}}) as compensation instead.",
     "view_progress": "View Progress",
+    "close": "Close",
     "btc_destination_address": "BTC destination address",
     "you_will_receive": "Redeem {{wrappedTokenSymbol}} 1:1 for BTC",
     "waiting_for": "Waiting for",
     "vault": "Vault",
-    "typically_takes": "This typically takes only a few minutes but may sometimes take up to 6 hours.",
+    "typically_takes": "The BTC typically takes only a few minutes to arrive but may take up to 6 hours.",
     "from_vault": "from Vault",
-    "we_will_inform_you_btc": "We will inform you when the BTC payment is executed.",
     "redeem_processed": "Your Redeem request is being processed",
     "retried": "Retried",
     "error_more_than_6_blocks_behind": "You can't redeem {{wrappedTokenSymbol}} at the moment because {{wrappedTokenSymbol}} parachain is more than 6 blocks behind.",
@@ -640,7 +642,9 @@
     "no_assets_available": "No assets available",
     "total_governance_locked": "Total {{token}} Locked",
     "available_to_stake": "Available to stake",
-    "voting_power_governance": "Voting Power {{token}}"
+    "voting_power_governance": "Voting Power {{token}}",
+    "welcome_to_dapp": "Welcome to {{ name }}",
+    "dapp_is_a_one_stop_shop_for_bitcoin_defi": "{{ name }} is a one-stop shop for Bitcoin DeFi: swaps, lending, staking, and 1-click strategies. {{ wrappedToken }} is trustless multi-chain Bitcoin, secured by collateral, cryptography, and a decentralized vault network."
   },
   "strategy": {
     "withdraw_rewards_in_wrapped": "Withdraw rewards in {{wrappedCurrencySymbol}}:",
@@ -740,5 +744,11 @@
     "fee_for_transaction_to_be_included_in_the_parachain": "The fee for the transaction to be included in the parachain",
     "premium_redeem": "Premium Redeem",
     "premium_redeem_info": "If you select premium redeem, you will try to redeem with a vault that is below the secure collateral threshold. This operation has a higher risk since the vault might be liquidated. For this higher risk, you will receive a compensation."
+  },
+  "notifications": {
+    "signature_submission_failed": "Signature submission failed",
+    "signature_submission_successful": "Signature submission successful",
+    "funding_account_failed": "Funding account failed",
+    "funding_account_successful": "Funding account successful"
   }
 }

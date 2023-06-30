@@ -18,6 +18,7 @@ const TransactionSelectToken = ({
   label: labelProp,
   tooltipLabel,
   items,
+  value,
   ...props
 }: TransactionSelectTokenProps): JSX.Element => {
   const { t } = useTranslation();
@@ -35,7 +36,11 @@ const TransactionSelectToken = ({
     labelProp
   );
 
-  const disabledKeys = (items as TokenData[])?.filter((item) => Number(item.balance) === 0).map((item) => item.value);
+  // disabled zero balance currencies ignoring the current value
+  // even if the balance is zero
+  const disabledKeys = (items as TokenData[])
+    ?.filter((item) => Number(item.balance) === 0 && item.value !== value)
+    .map((item) => item.value);
 
   return (
     <StyledSelect
@@ -46,11 +51,12 @@ const TransactionSelectToken = ({
       disabledKeys={disabledKeys}
       label={label}
       items={items}
+      value={value}
       {...props}
     >
       {(data: TokenData) => (
         <Item key={data.value} textValue={data.value}>
-          <TokenListItem {...data} />
+          <TokenListItem {...data} isDisabled={disabledKeys.includes(data.value)} />
         </Item>
       )}
     </StyledSelect>
