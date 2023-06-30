@@ -59,30 +59,30 @@ const AvailableAssetsTable = ({ balances, pooledTickers }: AvailableAssetsTableP
 
     return filteredData.map(
       ({ currency, transferable }): AvailableAssetsRows => {
+        const tooltip = isFeeToken(currency.ticker) && (
+          <TextLink
+            color='secondary'
+            size='s'
+            external
+            icon
+            to={{
+              pathname: 'https://docs.interlay.io/#/guides/assets',
+              search: queryString.stringify({
+                [EXTERNAL_QUERY_PARAMETERS.DOCS.ASSET.ID]: currency.ticker.toLowerCase()
+              })
+            }}
+          >
+            {t('wallet.get_asset', { token: currency.ticker })}
+          </TextLink>
+        );
+
         const asset = (
           <AssetCell
             size={isMobile ? 'xl2' : undefined}
             textSize={isMobile ? 'base' : undefined}
             marginBottom={isMobile ? 'spacing4' : undefined}
             {...getCoinIconProps(currency)}
-            tooltip={
-              isFeeToken(currency.ticker) && (
-                <TextLink
-                  color='secondary'
-                  size='s'
-                  external
-                  icon
-                  to={{
-                    pathname: 'https://docs.interlay.io/#/guides/assets',
-                    search: queryString.stringify({
-                      [EXTERNAL_QUERY_PARAMETERS.DOCS.ASSET.ID]: currency.ticker
-                    })
-                  }}
-                >
-                  {t('wallet.get_asset', { token: currency.ticker })}
-                </TextLink>
-              )
-            }
+            tooltip={tooltip}
           />
         );
 
