@@ -10,8 +10,6 @@ const URL_PARAMETERS = Object.freeze({
   TRANSACTION_HASH: 'transactionHash'
 });
 
-console.log('DOCS_LINK', DOCS_LINK);
-
 const PAGES = Object.freeze({
   HOME: '/',
   BRIDGE: '/bridge',
