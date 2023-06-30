@@ -94,7 +94,7 @@ const Onboarding = (): JSX.Element => {
       title: 'Request Funds',
       content: 'If you do not have any INTR, join our Discord and request funds in the #faucet channel.',
       ctaType: CTALink,
-      ctaText: t('fund_wallet'),
+      ctaText: `${t('faq.join_discord')} and ${t('fund_wallet')}`,
       to: INTERLAY_DISCORD_LINK,
       isCompleted: (() => {
         if (governanceTokenBalance) {
