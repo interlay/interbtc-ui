@@ -21,7 +21,10 @@ type TextLinkProps = Props & NativeAttrs;
 const TextLink = forwardRef<HTMLAnchorElement, TextLinkProps>(
   ({ color = 'primary', external, to, underlined, size, weight, icon, children, ...props }, ref): JSX.Element => {
     const location = typeof to === 'string' ? { pathname: to as string } : to;
-    const linkProps: TextLinkProps = external ? { to: location, target: '_blank', rel: 'noreferrer' } : { to };
+
+    const linkProps: TextLinkProps = external
+      ? { to: location, target: '_blank', rel: 'noreferrer' }
+      : { to: location };
 
     return (
       <BaseTextLink
