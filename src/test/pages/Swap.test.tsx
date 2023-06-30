@@ -2,15 +2,12 @@ import App from '@/App';
 import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 
 import { DEFAULT_DEADLINE_BLOCK_NUMBER, mockGetFutureBlockNumber } from '../mocks/@interlay/interbtc-api';
-import {
-  DEFAULT_ACCOUNT_LIQUIDITY,
-  DEFAULT_TRADE,
-  DEFAULT_TRADE_AMOUNT,
-  mockGetLiquidityProvidedByAccount,
-  mockSwap
-} from '../mocks/@interlay/interbtc-api/parachain/amm';
+import { MOCK_AMM } from '../mocks/@interlay/interbtc-api/parachain';
 import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
 import { render, screen, userEvent, waitFor, within } from '../test-utils';
+
+const { ACCOUNT_LIQUIDITY, TRADE } = MOCK_AMM.DATA;
+const { getLiquidityProvidedByAccount, swap } = MOCK_AMM.MODULE;
 
 const path = '/swap';
 
@@ -22,7 +19,7 @@ jest.mock('../../parts/Layout', () => {
 
 describe('Swap Page', () => {
   beforeEach(() => {
-    mockGetLiquidityProvidedByAccount.mockResolvedValue(DEFAULT_ACCOUNT_LIQUIDITY);
+    getLiquidityProvidedByAccount.mockResolvedValue(ACCOUNT_LIQUIDITY.EMPTY);
   });
 
   // There is only a single test case that tests the whole flow of a swap
@@ -99,7 +96,7 @@ describe('Swap Page', () => {
 
     /* START - Create a trade setup */
 
-    userEvent.type(screen.getByRole('textbox', { name: 'From' }), DEFAULT_TRADE_AMOUNT.INPUT.toString());
+    userEvent.type(screen.getByRole('textbox', { name: 'From' }), TRADE.inputAmount.toString());
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /loading.../i })).toBeDisabled();
@@ -110,15 +107,13 @@ describe('Swap Page', () => {
         screen.getByRole('textbox', {
           name: 'To'
         })
-      ).toHaveValue(DEFAULT_TRADE_AMOUNT.OUTPUT.toString());
+      ).toHaveValue(TRADE.outputAmount.toString());
     });
 
     /* END - Create a trade setup */
 
     /* START - Trade setup info */
-    const swapInfoTitle = new RegExp(
-      `1 ${DEFAULT_TRADE_AMOUNT.INPUT.currency.ticker} = ${DEFAULT_TRADE.executionPrice.toHuman()}`
-    );
+    const swapInfoTitle = new RegExp(`1 ${TRADE.inputAmount.currency.ticker} = ${TRADE.executionPrice.toHuman()}`);
 
     expect(screen.queryByRole('region', { name: swapInfoTitle })).not.toBeVisible();
 
@@ -145,10 +140,7 @@ describe('Swap Page', () => {
 
     expect(
       screen.getByRole('heading', {
-        name: new RegExp(
-          `${DEFAULT_TRADE_AMOUNT.INPUT.currency.ticker} - ${DEFAULT_TRADE_AMOUNT.OUTPUT.currency.ticker}`,
-          'i'
-        )
+        name: new RegExp(`${TRADE.inputAmount.currency.ticker} - ${TRADE.outputAmount.currency.ticker}`, 'i')
       })
     ).toBeInTheDocument();
 
@@ -174,11 +166,11 @@ describe('Swap Page', () => {
       expect(screen.getByRole('textbox', { name: 'To' })).toHaveValue('');
     });
 
-    expect(DEFAULT_TRADE.getMinimumOutputAmount).toHaveBeenCalledWith(0.1);
+    expect(TRADE.getMinimumOutputAmount).toHaveBeenCalledWith(0.1);
     expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(1);
-    expect(mockSwap).toHaveBeenCalledWith(
-      DEFAULT_TRADE,
-      DEFAULT_TRADE_AMOUNT.OUTPUT,
+    expect(swap).toHaveBeenCalledWith(
+      TRADE,
+      TRADE.outputAmount,
       DEFAULT_ACCOUNT_1.address,
       DEFAULT_DEADLINE_BLOCK_NUMBER
     );
@@ -193,20 +185,20 @@ describe('Swap Page', () => {
 
     userEvent.click(slippageDialog.getByRole('gridcell', { name: /0.5%/ }));
 
-    userEvent.type(screen.getByRole('textbox', { name: 'From' }), DEFAULT_TRADE_AMOUNT.INPUT.toString());
+    userEvent.type(screen.getByRole('textbox', { name: 'From' }), TRADE.inputAmount.toString());
 
     await waitFor(() => {
       expect(
         screen.getByRole('textbox', {
           name: 'To'
         })
-      ).toHaveValue(DEFAULT_TRADE_AMOUNT.OUTPUT.toString());
+      ).toHaveValue(TRADE.outputAmount.toString());
     });
 
     userEvent.click(screen.getByRole('button', { name: /swap/i }));
 
     await waitFor(() => {
-      expect(DEFAULT_TRADE.getMinimumOutputAmount).toHaveBeenCalledWith(0.5);
+      expect(TRADE.getMinimumOutputAmount).toHaveBeenCalledWith(0.5);
     });
 
     /* END - Execute trade setup with different slippage */
@@ -263,7 +255,7 @@ describe('Swap Page', () => {
     });
 
     await waitFor(() => {
-      expect(mockSwap).toHaveBeenCalledTimes(1);
+      expect(swap).toHaveBeenCalledTimes(1);
     });
   });
 

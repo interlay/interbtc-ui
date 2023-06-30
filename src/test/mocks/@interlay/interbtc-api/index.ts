@@ -41,17 +41,7 @@ import {
   mockVaultsGetVaultsWithIssuableTokens,
   mockVaultsGetVaultsWithRedeemableTokens
 } from './parachain';
-import {
-  mockAddLiquidity,
-  mockClaimFarmingRewards,
-  mockGetClaimableFarmingRewards,
-  mockGetLiquidityPools,
-  mockGetLiquidityProvidedByAccount,
-  mockGetLpTokens,
-  mockGetOptimalTrade,
-  mockRemoveLiquidity,
-  mockSwap
-} from './parachain/amm';
+import { MOCK_AMM } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
 import {
@@ -98,6 +88,11 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     query: {
       vesting: {
         vestingSchedules: mockVestingSchedules as any
+      },
+      oracle: {
+        aggregate: {
+          keys: jest.fn().mockReturnValue([])
+        }
       }
     },
     tx: {
@@ -172,17 +167,7 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getPremiumRedeemVaults: mockVaultsGetPremiumRedeemVaults,
     getVaultsWithRedeemableTokens: mockVaultsGetVaultsWithRedeemableTokens
   },
-  amm: {
-    getLiquidityPools: mockGetLiquidityPools,
-    getLiquidityProvidedByAccount: mockGetLiquidityProvidedByAccount,
-    getClaimableFarmingRewards: mockGetClaimableFarmingRewards,
-    addLiquidity: mockAddLiquidity,
-    removeLiquidity: mockRemoveLiquidity,
-    getLpTokens: mockGetLpTokens,
-    getOptimalTrade: mockGetOptimalTrade,
-    swap: mockSwap,
-    claimFarmingRewards: mockClaimFarmingRewards
-  },
+  amm: MOCK_AMM.MODULE,
   escrow: {
     getStakedBalance: mockGetStakedBalance,
     votingBalance: mockVotingBalance

@@ -10,6 +10,8 @@ const getOracleCurrencies = (
 ) => async (): Promise<Array<CurrencyExt>> => {
   const keys = await window.bridge.api.query.oracle.aggregate.keys();
 
+  console.log(keys);
+
   // MEMO: Primitive decoding, because`storageKeyToNthInner` is not decoding proper OracleKey type
   const currencies = keys
     .map((key) => key.toHuman() as any)

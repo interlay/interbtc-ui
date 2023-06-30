@@ -1,3 +1,4 @@
+export * from './amm';
 export * from './api';
 export * from './btcRelay';
 export * from './electrsAPI';
