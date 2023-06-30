@@ -44,7 +44,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
               <StyledDisclaimerListItem>
                 <Trans i18nKey='vault.disclaimer.check_do_s_and_dont_s'>
                   Check the
-                  <TextLink to={{ pathname: INTERLAY_DOS_AND_DONTS_DOCS_LINK }} external color='secondary'>
+                  <TextLink to={INTERLAY_DOS_AND_DONTS_DOCS_LINK} external color='secondary'>
                     do&apos;s and dont&apos;s
                   </TextLink>
                   of correctly operating your vault client
@@ -53,7 +53,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
               <StyledDisclaimerListItem>
                 <Trans i18nKey='vault.disclaimer.check_risks_involved'>
                   Please check the information about
-                  <TextLink to={{ pathname: INTERLAY_VAULT_DOCS_LINK }} external color='secondary'>
+                  <TextLink to={INTERLAY_VAULT_DOCS_LINK} external color='secondary'>
                     risks involved
                   </TextLink>
                   when operating a Vault on Interlay/Kintsugi
@@ -64,7 +64,7 @@ const DisclaimerStep = ({ onClickAgree }: DisclaimerStepProps): JSX.Element => {
           <StyledDisclaimerCard color='secondary'>
             <Trans i18nKey='vault.disclaimer.confirm_agreement'>
               By proceeding you confirm that you have read and accepted the
-              <TextLink to={{ pathname: INTERLAY_TERMS_AND_CONDITIONS_LINK }} external color='secondary'>
+              <TextLink to={INTERLAY_TERMS_AND_CONDITIONS_LINK} external color='secondary'>
                 Terms & Conditions
               </TextLink>
             </Trans>
