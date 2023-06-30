@@ -43,7 +43,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   const prices = useGetPrices();
   const titleId = useId();
   const { getDexTotalVolumeUSD } = useGetDexVolumes(DateRangeVolume.D7);
-  const { getTradingAprOfPool: getTradingAPROfPool } = useGetPoolsTradingApr();
+  const { getTradingAprOfPool } = useGetPoolsTradingApr();
 
   const isAccountPools = variant === 'account-pools';
 
@@ -73,7 +73,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
         const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
 
         const farmingApr = getFarmingApr(rewardAmountsYearly, totalSupply, totalLiquidityUSD, prices);
-        const tradingApr = getTradingAPROfPool(data);
+        const tradingApr = getTradingAprOfPool(data);
         const aprAmount = farmingApr.add(tradingApr);
         const apr = <Cell label={isEmpty ? 'N/A' : formatPercentage(aprAmount.toNumber())} />;
 
@@ -105,7 +105,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
           accountLiquidity
         };
       }),
-    [getDexTotalVolumeUSD, isAccountPools, pools, prices, variant, getTradingAPROfPool]
+    [getDexTotalVolumeUSD, isAccountPools, pools, prices, variant, getTradingAprOfPool]
   );
 
   return (
