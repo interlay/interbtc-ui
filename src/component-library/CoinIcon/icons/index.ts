@@ -8,6 +8,7 @@ export { KAR } from './KAR';
 export { KBTC } from './KBTC';
 export { KINT } from './KINT';
 export { KSM } from './KSM';
+export { LDOT } from './LDOT';
 export { LKSM } from './LKSM';
 export { LSKSM } from './LSKSM';
 export { MOVR } from './MOVR';

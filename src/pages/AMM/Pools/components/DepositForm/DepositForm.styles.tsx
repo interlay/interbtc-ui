@@ -1,41 +1,7 @@
 import styled from 'styled-components';
 
-import { Divider, Dl, DlGroup, theme } from '@/component-library';
-
-const StyledDl = styled(Dl)`
-  background-color: ${theme.card.bg.secondary};
-  padding: ${theme.spacing.spacing4};
-  font-size: ${theme.text.xs};
-  border-radius: ${theme.rounded.rg};
-`;
-
-const StyledWrapper = styled.div`
-  position: relative;
-`;
-
-const StyledCircle = styled.div`
-  display: inline-flex;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  padding: ${theme.spacing.spacing2};
-  background-color: var(--colors-token-input-end-adornment-bg);
-  border-radius: ${theme.rounded.full};
-`;
-
-const StyledBackground = styled.div`
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  padding: ${theme.spacing.spacing1} ${theme.spacing.spacing8};
-  background-color: ${theme.colors.bgPrimary};
-`;
-
-const StyledDivider = styled(Divider)`
-  background-color: var(--colors-token-input-end-adornment-bg);
-`;
+import { DlGroup, theme, TokenInput } from '@/component-library';
+import { PlusDivider } from '@/components';
 
 const StyledDlGroup = styled(DlGroup)`
   flex-direction: column;
@@ -45,4 +11,13 @@ const StyledDlGroup = styled(DlGroup)`
   }
 `;
 
-export { StyledBackground, StyledCircle, StyledDivider, StyledDl, StyledDlGroup, StyledWrapper };
+const StyledPlusDivider = styled(PlusDivider)`
+  margin-bottom: calc(${theme.spacing.spacing2} * -1);
+  z-index: 0;
+`;
+
+const StyledTokenInput = styled(TokenInput)`
+  z-index: 1;
+`;
+
+export { StyledDlGroup, StyledPlusDivider, StyledTokenInput };

@@ -9,6 +9,7 @@ import { calculateAccountLiquidityUSD, calculateTotalLiquidityUSD } from '@/page
 import { getCoinIconProps } from '@/utils/helpers/coin-icon';
 import { getFarmingApr } from '@/utils/helpers/pools';
 import { DateRangeVolume, useGetDexVolumes } from '@/utils/hooks/api/use-get-dex-volume';
+import { useGetPoolsTradingApr } from '@/utils/hooks/api/use-get-pools-trading-apr';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 
 import { AssetCell, BalanceCell, Cell, Table, TableProps } from '../DataGrid';
@@ -42,6 +43,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
   const prices = useGetPrices();
   const titleId = useId();
   const { getDexTotalVolumeUSD } = useGetDexVolumes(DateRangeVolume.D7);
+  const { getTradingAprOfPool } = useGetPoolsTradingApr();
 
   const isAccountPools = variant === 'account-pools';
 
@@ -71,8 +73,8 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
         const totalLiquidityUSD = calculateTotalLiquidityUSD(pooledCurrencies, prices);
 
         const farmingApr = getFarmingApr(rewardAmountsYearly, totalSupply, totalLiquidityUSD, prices);
-        // TODO: add also APR from trading volume based on squid data
-        const aprAmount = farmingApr;
+        const tradingApr = getTradingAprOfPool(data);
+        const aprAmount = farmingApr.add(tradingApr);
         const apr = <Cell label={isEmpty ? 'N/A' : formatPercentage(aprAmount.toNumber())} />;
 
         // TODO: revert alignItems prop when `sevenDayVolume` is adressed
@@ -103,7 +105,7 @@ const PoolsTable = ({ variant, pools, onRowAction, title }: PoolsTableProps): JS
           accountLiquidity
         };
       }),
-    [getDexTotalVolumeUSD, isAccountPools, pools, prices, variant]
+    [getDexTotalVolumeUSD, isAccountPools, pools, prices, variant, getTradingAprOfPool]
   );
 
   return (

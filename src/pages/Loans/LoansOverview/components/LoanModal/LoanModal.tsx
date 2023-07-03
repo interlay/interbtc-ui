@@ -1,4 +1,5 @@
 import { BorrowPosition, CollateralPosition, LoanAsset } from '@interlay/interbtc-api';
+import { useRef } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import { Modal, ModalBody, ModalProps, TabsItem } from '@/component-library';
@@ -42,6 +43,7 @@ type LoanModalProps = Props & InheritAttrs;
 
 const LoanModal = ({ variant = 'lend', asset, position, onClose, ...props }: LoanModalProps): JSX.Element | null => {
   const { t } = useTranslation();
+  const overlappingModalRef = useRef<HTMLDivElement>(null);
 
   if (!asset) {
     return null;
@@ -50,13 +52,25 @@ const LoanModal = ({ variant = 'lend', asset, position, onClose, ...props }: Loa
   const { tabs } = getData(t, variant);
 
   return (
-    <Modal aria-label={`${variant} ${asset.currency.ticker}`} onClose={onClose} align='top' {...props}>
+    <Modal
+      aria-label={`${variant} ${asset.currency.ticker}`}
+      onClose={onClose}
+      align='top'
+      shouldCloseOnInteractOutside={(el) => !overlappingModalRef.current?.contains(el)}
+      {...props}
+    >
       <ModalBody noPadding>
         <StyledTabs size='large' fullWidth>
           {tabs.map((tab) => (
             <TabsItem title={tab.title} key={tab.variant}>
               <StyledWrapper>
-                <LoanForm asset={asset} variant={tab.variant} position={position} onChangeLoan={onClose} />
+                <LoanForm
+                  asset={asset}
+                  variant={tab.variant}
+                  position={position}
+                  onChangeLoan={onClose}
+                  overlappingModalRef={overlappingModalRef}
+                />
               </StyledWrapper>
             </TabsItem>
           ))}

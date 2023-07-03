@@ -1,28 +1,38 @@
 import { CollateralCurrencyExt, newMonetaryAmount } from '@interlay/interbtc-api';
 import { MonetaryAmount } from '@interlay/monetary-js';
 import { useId } from '@react-aria/utils';
+import { RefObject, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { convertMonetaryAmountToValueInUSD, newSafeMonetaryAmount } from '@/common/utils/utils';
-import { CTA, ModalBody, ModalDivider, ModalFooter, ModalHeader, Span, Stack, TokenInput } from '@/component-library';
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
+import { ModalBody, ModalDivider, ModalFooter, ModalHeader, TokenInput } from '@/component-library';
 import {
-  CREATE_VAULT_DEPOSIT_FIELD,
-  CreateVaultFormData,
-  createVaultSchema,
-  isFormDisabled,
-  useForm
+  AuthCTA,
+  TransactionDetails,
+  TransactionDetailsDd,
+  TransactionDetailsDt,
+  TransactionDetailsGroup,
+  TransactionFeeDetails
+} from '@/components';
+import {
+  depositCollateralVaultsSchema,
+  useForm,
+  VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD,
+  VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD,
+  VaultsDepositCollateralFormData,
+  VaultsDepositCollateralValidationParams
 } from '@/lib/form';
 import { StepComponentProps, withStep } from '@/utils/hocs/step';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
+import { isTransactionFormDisabled } from '@/utils/hooks/transaction/utils/form';
 
 import { useDepositCollateral } from '../../utils/use-deposit-collateral';
-import { StyledDd, StyledDItem, StyledDl, StyledDt, StyledHr } from './CreateVaultWizard.styles';
 
 type Props = {
   collateralCurrency: CollateralCurrencyExt;
   minCollateralAmount: MonetaryAmount<CollateralCurrencyExt>;
   onSuccessfulDeposit?: () => void;
+  overlappingModalRef: RefObject<HTMLDivElement>;
 };
 
 type DespositCollateralStepProps = Props & StepComponentProps;
@@ -30,40 +40,60 @@ type DespositCollateralStepProps = Props & StepComponentProps;
 const DepositCollateralStep = ({
   onSuccessfulDeposit,
   collateralCurrency,
-  minCollateralAmount
+  minCollateralAmount,
+  overlappingModalRef
 }: DespositCollateralStepProps): JSX.Element => {
   const titleId = useId();
   const { t } = useTranslation();
-  const { collateral, fee, governance } = useDepositCollateral(collateralCurrency, minCollateralAmount);
+
+  const { collateral } = useDepositCollateral(collateralCurrency, minCollateralAmount);
 
   const transaction = useTransaction(Transaction.VAULTS_REGISTER_NEW_COLLATERAL, {
     onSuccess: onSuccessfulDeposit,
     showSuccessModal: false
   });
 
-  const validationParams = {
+  const getTransactionArgs = useCallback(
+    (values: VaultsDepositCollateralFormData) => {
+      const amount = values[VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD];
+      const monetaryAmount = newMonetaryAmount(amount || 0, collateralCurrency, true);
+
+      return { monetaryAmount };
+    },
+    [collateralCurrency]
+  );
+
+  const handleSubmit = (data: VaultsDepositCollateralFormData) => {
+    const transactionData = getTransactionArgs(data);
+
+    transaction.execute(transactionData.monetaryAmount);
+  };
+
+  const validationParams: VaultsDepositCollateralValidationParams = {
     minAmount: collateral.min.raw,
-    maxAmount: collateral.balance.raw,
-    governanceBalance: governance.raw,
-    transactionFee: fee.raw
+    maxAmount: collateral.balance.raw
   };
 
-  const handleSubmit = (data: CreateVaultFormData) => {
-    if (!data.deposit) return;
+  const form = useForm<VaultsDepositCollateralFormData>({
+    initialValues: {
+      [VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD]: '',
+      [VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD]: transaction.fee.defaultCurrency.ticker
+    },
+    validationSchema: depositCollateralVaultsSchema(validationParams),
+    onSubmit: handleSubmit,
+    onComplete: (values) => {
+      const transactionData = getTransactionArgs(values);
 
-    const amount = newMonetaryAmount(data.deposit || 0, collateral.currency, true);
-    transaction.execute(amount);
-  };
+      const feeTicker = values[VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD];
 
-  const form = useForm<CreateVaultFormData>({
-    initialValues: { deposit: undefined },
-    validationSchema: createVaultSchema(validationParams),
-    onSubmit: handleSubmit
+      transaction.fee.setCurrency(feeTicker).estimate(transactionData.monetaryAmount);
+    }
   });
 
-  const inputCollateralAmount = newSafeMonetaryAmount(form.values.deposit || 0, collateral.currency, true);
+  const amount = form.values[VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD];
+  const monetaryAmount = newSafeMonetaryAmount(amount || 0, collateral.currency, true);
 
-  const isBtnDisabled = isFormDisabled(form);
+  const isBtnDisabled = isTransactionFormDisabled(form, transaction.fee);
 
   return (
     <>
@@ -71,41 +101,35 @@ const DepositCollateralStep = ({
       <ModalDivider size='medium' color='secondary' />
       <form onSubmit={form.handleSubmit}>
         <ModalBody>
-          <Stack spacing='double'>
-            <TokenInput
-              aria-labelledby={titleId}
-              placeholder='0.00'
-              ticker={collateral.currency.ticker}
-              valueUSD={convertMonetaryAmountToValueInUSD(inputCollateralAmount, collateral.price.usd) ?? 0}
-              balance={collateral.balance.raw.toString()}
-              humanBalance={collateral.balance.raw.toHuman()}
-              errorMessage={form.errors.deposit}
-              {...form.getFieldProps(CREATE_VAULT_DEPOSIT_FIELD)}
-            />
-            <StyledDl>
-              <StyledDItem>
-                <StyledDt>{t('vault.minimum_required_collateral')}</StyledDt>
-                <StyledDd>
-                  {collateral.min.amount} {collateral.currency.ticker} ({collateral.min.usd})
-                </StyledDd>
-              </StyledDItem>
-              <StyledHr />
-              <StyledDItem>
-                <StyledDt>{t('fees')}</StyledDt>
-                <StyledDd>
-                  <Span color='secondary'>
-                    {fee.amount} {GOVERNANCE_TOKEN.ticker}
-                  </Span>{' '}
-                  ({fee.usd})
-                </StyledDd>
-              </StyledDItem>
-            </StyledDl>
-          </Stack>
+          <TokenInput
+            aria-labelledby={titleId}
+            placeholder='0.00'
+            ticker={collateral.currency.ticker}
+            valueUSD={convertMonetaryAmountToValueInUSD(monetaryAmount, collateral.price.usd) ?? 0}
+            balance={collateral.balance.raw.toString()}
+            humanBalance={collateral.balance.raw.toHuman()}
+            {...form.getFieldProps(VAULTS_DEPOSIT_COLLATERAL_AMOUNT_FIELD, false, true)}
+          />
         </ModalBody>
         <ModalFooter>
-          <CTA type='submit' disabled={isBtnDisabled} fullWidth loading={transaction.isLoading}>
+          <TransactionDetails>
+            <TransactionDetailsGroup>
+              <TransactionDetailsDt>{t('vault.minimum_required_collateral')}</TransactionDetailsDt>
+              <TransactionDetailsDd>
+                {collateral.min.amount} {collateral.currency.ticker} ({collateral.min.usd})
+              </TransactionDetailsDd>
+            </TransactionDetailsGroup>
+          </TransactionDetails>
+          <TransactionFeeDetails
+            {...transaction.fee.detailsProps}
+            selectProps={{
+              ...form.getFieldProps(VAULTS_DEPOSIT_COLLATERAL_FEE_TOKEN_FIELD),
+              modalRef: overlappingModalRef
+            }}
+          />
+          <AuthCTA type='submit' disabled={isBtnDisabled} fullWidth loading={transaction.isLoading}>
             {t('vault.deposit_collateral')}
-          </CTA>
+          </AuthCTA>
         </ModalFooter>
       </form>
     </>

@@ -38,7 +38,6 @@ import TokenField from '@/legacy-components/TokenField';
 import InformationTooltip from '@/legacy-components/tooltips/InformationTooltip';
 import InterlayButtonBase from '@/legacy-components/UI/InterlayButtonBase';
 import { useSubstrateSecureState } from '@/lib/substrate';
-import SubmittedIssueRequestModal from '@/pages/Bridge/IssueForm/SubmittedIssueRequestModal';
 import { ForeignAssetIdLiteral } from '@/types/currency';
 import { KUSAMA, POLKADOT } from '@/utils/constants/relay-chain-names';
 import STATUSES from '@/utils/constants/statuses';
@@ -48,6 +47,8 @@ import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useGetPrices } from '@/utils/hooks/api/use-get-prices';
 import { Transaction, useTransaction } from '@/utils/hooks/transaction';
 import useAccountId from '@/utils/hooks/use-account-id';
+
+import SubmittedIssueRequestModal from '../SubmittedIssueRequestModal';
 
 const WRAPPED_TOKEN_AMOUNT = 'amount';
 const BTC_ADDRESS = 'btc-address';

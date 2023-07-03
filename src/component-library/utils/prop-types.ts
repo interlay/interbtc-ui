@@ -4,9 +4,9 @@ import { theme } from '../theme';
 
 export const tuple = <T extends string[]>(...args: T): T => args;
 
-export const variant = tuple('primary', 'secondary');
+export const variant = tuple('primary', 'secondary', 'tertiary');
 
-export const ctaVariant = tuple(...variant, 'outlined', 'text');
+export const ctaVariant = tuple('primary', 'secondary', 'outlined', 'text');
 
 export const status = tuple('error', 'warning', 'success');
 
@@ -51,7 +51,9 @@ export type CTAVariants = typeof ctaVariant[number];
 
 export type CardVariants = 'default' | 'bordered';
 
-export type ListVariants = Variants | 'card';
+export type ListVariants = Exclude<Variants, 'tertiary'> | 'card';
+
+export type MeterVariants = Exclude<Variants, 'tertiary'>;
 
 export type DividerVariants = Colors | 'default';
 
@@ -108,3 +110,5 @@ export type Overflow = 'auto' | 'hidden' | 'scroll' | 'visible' | 'inherit';
 export type BreakPoints = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 export type ProgressBarColors = 'default' | 'red';
+
+export type BorderRadius = keyof typeof theme.rounded;

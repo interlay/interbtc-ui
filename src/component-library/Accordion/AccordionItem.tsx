@@ -41,7 +41,7 @@ const AccordionItem = <T extends Record<string, unknown>>({
             $isFocusVisible={isFocusVisible}
           >
             {item.props.title}
-            <StyledChevronDown role='img' $isExpanded={isExpanded} />
+            <StyledChevronDown role='img' size='s' $isExpanded={isExpanded} />
           </StyledAccordionItemButton>
         </FocusRing>
       </StyledAccordionItemHeading>

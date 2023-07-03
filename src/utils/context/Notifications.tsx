@@ -1,25 +1,32 @@
 import { Overlay } from '@react-aria/overlays';
 import { mergeProps } from '@react-aria/utils';
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Id as NotificationId, toast, ToastOptions } from 'react-toastify';
 
 import { addNotification } from '@/common/actions/general.actions';
 import { Notification, StoreType } from '@/common/types/util.types';
-import { ToastContainer, TransactionToast, TransactionToastProps } from '@/components';
+import {
+  NotificationToast,
+  NotificationToastProps,
+  ToastContainer,
+  TransactionToast,
+  TransactionToastProps
+} from '@/components';
 
 import { useWallet } from '../hooks/use-wallet';
 
 // Allows the introduction of diferent
 // notifications toast beyond transactions
 // i.e. claiming faucet funds or sign T&Cs
-enum NotificationToast {
+enum NotificationToastType {
+  STANDARD,
   TRANSACTION
 }
 
-type NotificationToastAction = { type: NotificationToast.TRANSACTION; props: TransactionToastProps };
-
-const toastComponentMap = { [NotificationToast.TRANSACTION]: TransactionToast };
+type NotificationToastAction =
+  | { type: NotificationToastType.TRANSACTION; props: TransactionToastProps }
+  | { type: NotificationToastType.STANDARD; props: NotificationToastProps };
 
 type ToastMap = Record<number | string, NotificationId | null | undefined>;
 
@@ -62,6 +69,14 @@ const useNotifications = (): NotificationsConfig => React.useContext(Notificatio
 
 const NotificationsProvider: React.FC<unknown> = ({ children }) => {
   const toastContainerRef = useRef<HTMLDivElement>(null);
+
+  const toastComponentMap = useMemo(
+    () => ({
+      [NotificationToastType.STANDARD]: NotificationToast,
+      [NotificationToastType.TRANSACTION]: TransactionToast
+    }),
+    []
+  );
 
   const dispatch = useDispatch();
 
@@ -137,5 +152,5 @@ const NotificationsProvider: React.FC<unknown> = ({ children }) => {
   );
 };
 
-export { NotificationsContext, NotificationsProvider, NotificationToast, useNotifications };
+export { NotificationsContext, NotificationsProvider, NotificationToastType, useNotifications };
 export type { NotificationToastAction };

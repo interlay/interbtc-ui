@@ -23,7 +23,7 @@ def coingecko(args):
         "content-type": "application/json",
         "accept": "application/json",
     }
-    url = "https://api.coingecko.com/api/v3/simple/price"
+    url = "https://pro-api.coingecko.com/api/v3/simple/price"
     resp = requests.get(url, params=args, headers=headers_dict)
     data = resp.json()
     return data

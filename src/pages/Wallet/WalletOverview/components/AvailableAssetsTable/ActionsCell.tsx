@@ -76,10 +76,6 @@ const ActionsCell = ({
             {t('redeem')}
           </CTALink>
         )}
-        {/* TODO: add when xcm re-vamp is added */}
-        {/* <CTALink {...commonCTAProps} to={PAGES.TRANSFER}>
-          {t('transfer')}
-        </CTALink> */}
         {isPooledAsset && (
           <CTALink
             {...commonCTAProps}
@@ -105,6 +101,19 @@ const ActionsCell = ({
               </CTA>
             )}
           </>
+        )}
+        {!isWrappedToken && (
+          <CTALink
+            {...commonCTAProps}
+            to={{
+              pathname: PAGES.TRANSFER,
+              search: queryString.stringify({
+                [QUERY_PARAMETERS.TAB]: 'crossChainTransfer'
+              })
+            }}
+          >
+            Bridge
+          </CTALink>
         )}
       </Flex>
     </Flex>

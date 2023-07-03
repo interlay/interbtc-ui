@@ -58,16 +58,17 @@ const StyledTrigger = styled.button<StyledTriggerProps>`
 `;
 
 const StyledTriggerValue = styled(Span)<StyledTriggerValueProps>`
+  flex: 1;
   display: inline-flex;
   align-items: center;
   color: ${({ $isDisabled, $isSelected }) =>
     $isDisabled ? theme.input.disabled.color : $isSelected ? theme.select.color : theme.select.placeholder};
+  overflow: hidden;
 `;
 
 const StyledList = styled(List)`
   overflow: auto;
-  padding: 0 ${theme.dialog.medium.body.paddingX} ${theme.dialog.medium.body.paddingY}
-    ${theme.dialog.medium.body.paddingX};
+  padding: 0 ${theme.dialog.medium.body.paddingX} ${theme.dialog.medium.body.paddingX};
 `;
 
 const StyledChevronDown = styled(ChevronDown)`
