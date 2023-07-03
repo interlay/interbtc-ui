@@ -1,27 +1,27 @@
 import { Keyring } from '@polkadot/api';
 import { InjectedAccountWithMeta } from '@polkadot/extension-inject/types';
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { showAccountModalAction, showSignTermsModalAction } from '@/common/actions/general.actions';
 import { StoreType } from '@/common/types/util.types';
-import { Card, CTA, CTALink, Dd, DlGroup, Dt, Flex } from '@/component-library';
-import { AuthModal, SignTermsModal } from '@/components/AuthModal';
-import { Tutorial } from '@/components/Tutorial';
+import { Card, CTA, CTALink, Flex, H1, H2, P, TextLink } from '@/component-library';
+import { AuthModal, SignTermsModal } from '@/components';
 import { INTERLAY_DISCORD_LINK } from '@/config/links';
 import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
 import { SS58_FORMAT } from '@/constants';
 import { KeyringPair, useSubstrate, useSubstrateSecureState } from '@/lib/substrate';
 import MainContainer from '@/parts/MainContainer';
-import PageTitle from '@/parts/PageTitle';
 import { useGetBalances } from '@/utils/hooks/api/tokens/use-get-balances';
 import { useSignMessage } from '@/utils/hooks/use-sign-message';
 
+import { Tutorial } from './components';
 import { StyledWrapper } from './Onboarding.style';
 
 type Steps = {
   title: string;
-  content: string;
+  content: ReactNode;
   ctaType: typeof CTA | typeof CTALink | typeof Tutorial;
   ctaText: string;
   isCompleted: boolean;
@@ -92,7 +92,15 @@ const Onboarding = (): JSX.Element => {
     },
     {
       title: 'Request Funds',
-      content: 'If you do not have any INTR, join our Discord and request funds in the #faucet channel.',
+      content: (
+        <>
+          If you do not have any INTR, join our Discord and request funds in the{' '}
+          <TextLink external weight='bold' color='secondary' to='#'>
+            #faucet channel
+          </TextLink>
+          .
+        </>
+      ),
       ctaType: CTALink,
       ctaText: `${t('faq.join_discord')} and ${t('fund_wallet')}`,
       to: INTERLAY_DISCORD_LINK,
@@ -129,12 +137,7 @@ const Onboarding = (): JSX.Element => {
     switch (step.ctaType) {
       case CTA:
         return (
-          <CTA
-            onPress={step.onPress}
-            variant='primary'
-            fullWidth={false}
-            disabled={step.isCompleted || !step.isActive}
-          >
+          <CTA onPress={step.onPress} variant='primary' fullWidth={false} disabled={step.isCompleted || !step.isActive}>
             {getCtaLabel(step)}
           </CTA>
         );
@@ -146,7 +149,7 @@ const Onboarding = (): JSX.Element => {
             variant='primary'
             fullWidth={false}
             disabled={step.isCompleted || !step.isActive}
-          > 
+          >
             {getCtaLabel(step)}
           </CTALink>
         );
@@ -160,19 +163,21 @@ const Onboarding = (): JSX.Element => {
   return (
     <MainContainer>
       <StyledWrapper direction='column' gap='spacing4'>
-        <PageTitle mainTitle={'Onboarding Tutorial'} />
+        <H1 weight='bold' align='center' size='xl3'>
+          Onboarding Tutorial
+        </H1>
         {steps.map((step, index) => (
-          <Flex key={index} direction='column' gap='spacing4'>
-            <Card flex='1'>
-              <DlGroup direction='column' alignItems='flex-start' gap='spacing4' marginY='spacing4'>
-                <Dt weight='semibold' color='primary'>
-                  {step.title}
-                </Dt>
-                <Dd color='primary'>{step.content}</Dd>
-              </DlGroup>
-              {getCta(step)}
-            </Card>
-          </Flex>
+          <Card key={index} flex='1' gap='spacing4' justifyContent='space-between'>
+            <Flex direction='column' gap='spacing2'>
+              <H2 size='lg' weight='semibold'>
+                {step.title}
+              </H2>
+              <P size='s' color='primary'>
+                {step.content}
+              </P>
+            </Flex>
+            {getCta(step)}
+          </Card>
         ))}
         <AuthModal
           isOpen={showAccountModal}

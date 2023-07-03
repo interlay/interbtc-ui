@@ -2,6 +2,8 @@ export type { AccountSelectProps } from './AccountSelect';
 export { AccountSelect } from './AccountSelect';
 export type { AuthCTAProps } from './AuthCTA';
 export { AuthCTA } from './AuthCTA';
+export type { AuthModalProps, SignTermsModalProps } from './AuthModal';
+export { AuthModal, SignTermsModal } from './AuthModal';
 export type { AssetCellProps, BalanceCellProps, CellProps, TableProps } from './DataGrid';
 export { AssetCell, BalanceCell, Cell, Table } from './DataGrid';
 export type { FundWalletProps } from './FundWallet';
