@@ -150,8 +150,8 @@ const getTranslationArgs = (
         args: {
           amount: transferAmount.toHuman(),
           currency: transferAmount.currency.ticker,
-          fromChain: fromChain.toUpperCase(),
-          toChain: toChain.toUpperCase()
+          fromChain: fromChain.display,
+          toChain: toChain.display
         }
       };
     }
