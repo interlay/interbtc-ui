@@ -4,8 +4,9 @@ import App from '@/App';
 
 import { DEFAULT_DEADLINE_BLOCK_NUMBER, MOCK_AMM, mockGetFutureBlockNumber } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
-import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from '../test-utils';
+import { render, screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../test-utils';
 import { withinModalTabPanel, withinTable, withinTableRow } from './utils/table';
+import { getFeeTokenSelect, waitForFeeEstimate, waitForTransactionExecute } from './utils/transaction';
 
 const { LP_TOKEN_A, LP_TOKEN_B, LP_TOKEN_EMPTY, ACCOUNT_LIQUIDITY, CLAIMABLE_REWARDS, LIQUIDITY_POOLS } = MOCK_AMM.DATA;
 
@@ -82,7 +83,7 @@ describe('Pools Page', () => {
     expect(myPoolsTable.getAllByRole('row')).toHaveLength(3);
   });
 
-  it.only('should be able to deposit', async () => {
+  it('should be able to deposit', async () => {
     jest
       .spyOn(LIQUIDITY_POOLS.ONE, 'getLiquidityDepositInputAmounts')
       .mockReturnValue(LIQUIDITY_POOLS.ONE.pooledCurrencies);
@@ -92,6 +93,8 @@ describe('Pools Page', () => {
     await render(<App />, { path });
 
     const tabPanel = await withinModalTabPanel(TABLES.AVAILABLE_POOLS, LP_TOKEN_A.ticker, TABS.DEPOSIT);
+
+    expect(getFeeTokenSelect(tabPanel)).toBeInTheDocument();
 
     await userEvent.type(
       tabPanel.getByRole('textbox', {
@@ -111,13 +114,15 @@ describe('Pools Page', () => {
       ).toHaveValue(DEFAULT_CURRENCY_2.toString());
     });
 
-    await waitFor(() => {
-      expect(tabPanel.getByRole('button', { name: /add liquidity/i })).not.toBeDisabled();
-    });
+    await waitForFeeEstimate(addLiquidity);
+
+    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(1);
 
     userEvent.click(tabPanel.getByRole('button', { name: /add liquidity/i }));
 
-    await waitForElementToBeRemoved(screen.getByRole('dialog'));
+    await waitForElementToBeRemoved(screen.getByRole('dialog', { name: /deposit/i, exact: false }));
+
+    await waitForTransactionExecute(addLiquidity);
 
     expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(2);
     expect(addLiquidity).toHaveBeenCalledWith(
@@ -140,6 +145,8 @@ describe('Pools Page', () => {
 
     const tabPanel = await withinModalTabPanel(TABLES.ACCOUNT_POOLS, LP_TOKEN_B.ticker, TABS.WITHDRAW, true);
 
+    expect(getFeeTokenSelect(tabPanel)).toBeInTheDocument();
+
     await userEvent.type(
       tabPanel.getByRole('textbox', {
         name: /withdraw amount/i
@@ -148,13 +155,13 @@ describe('Pools Page', () => {
       { delay: 1 }
     );
 
-    await waitFor(() => {
-      expect(tabPanel.getByRole('button', { name: /remove liquidity/i })).not.toBeDisabled();
-    });
+    await waitForFeeEstimate(removeLiquidity);
 
     userEvent.click(tabPanel.getByRole('button', { name: /remove liquidity/i }));
 
-    await waitForElementToBeRemoved(screen.getByRole('dialog'));
+    await waitForElementToBeRemoved(screen.getByRole('dialog', { name: /withdraw/i, exact: false }));
+
+    await waitForTransactionExecute(removeLiquidity);
 
     expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(2);
     expect(removeLiquidity).toHaveBeenCalledWith(
@@ -171,10 +178,17 @@ describe('Pools Page', () => {
 
     userEvent.click(screen.getByRole('button', { name: /claim/i }));
 
-    await waitFor(() => {
-      expect(claimFarmingRewards).toHaveBeenCalledWith(CLAIMABLE_REWARDS);
-      expect(claimFarmingRewards).toHaveBeenCalledTimes(1);
-    });
+    await waitForFeeEstimate(claimFarmingRewards);
+
+    const dialog = within(screen.getByRole('dialog', { name: /claim rewards/i }));
+
+    expect(getFeeTokenSelect(dialog)).toBeInTheDocument();
+
+    userEvent.click(dialog.getByRole('button', { name: /claim rewards/i }));
+
+    await waitForElementToBeRemoved(screen.getByRole('dialog', { name: /claim rewards/i }));
+
+    await waitForTransactionExecute(claimFarmingRewards);
 
     app.unmount();
 
@@ -233,7 +247,7 @@ describe('Pools Page', () => {
     });
   });
 
-  it.only('should render illiquid pool and deposit with custom ratio', async () => {
+  it('should render illiquid pool and deposit with custom ratio', async () => {
     jest
       .spyOn(LIQUIDITY_POOLS.EMPTY, 'getLiquidityDepositInputAmounts')
       .mockReturnValue(LIQUIDITY_POOLS.EMPTY.pooledCurrencies);

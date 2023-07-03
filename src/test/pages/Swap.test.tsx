@@ -5,6 +5,7 @@ import { DEFAULT_DEADLINE_BLOCK_NUMBER, mockGetFutureBlockNumber } from '../mock
 import { MOCK_AMM } from '../mocks/@interlay/interbtc-api/parachain';
 import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
 import { render, screen, userEvent, waitFor, within } from '../test-utils';
+import { waitForFeeEstimate, waitForTransactionExecute, withinTransactionModal } from './utils/transaction';
 
 const { ACCOUNT_LIQUIDITY, TRADE } = MOCK_AMM.DATA;
 const { getLiquidityProvidedByAccount, swap } = MOCK_AMM.MODULE;
@@ -99,16 +100,16 @@ describe('Swap Page', () => {
     userEvent.type(screen.getByRole('textbox', { name: 'From' }), TRADE.inputAmount.toString());
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /loading.../i })).toBeDisabled();
-    });
-
-    await waitFor(() => {
       expect(
         screen.getByRole('textbox', {
           name: 'To'
         })
       ).toHaveValue(TRADE.outputAmount.toString());
     });
+
+    await waitForFeeEstimate(swap);
+
+    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(1);
 
     /* END - Create a trade setup */
 
@@ -132,7 +133,6 @@ describe('Swap Page', () => {
     expect(swapInfoRegion.getByText(/expected output/i)).toBeInTheDocument();
     expect(swapInfoRegion.getByText(/minimum received/i)).toBeInTheDocument();
     expect(swapInfoRegion.getByText(/price impact/i)).toBeInTheDocument();
-    expect(swapInfoRegion.getByText(/fees/i)).toBeInTheDocument();
 
     /* END - Trade setup info */
 
@@ -153,9 +153,11 @@ describe('Swap Page', () => {
 
     userEvent.click(screen.getByRole('button', { name: /swap/i }));
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /loading.../i, exact: false })).toBeDisabled();
-    });
+    const transactionModal = await withinTransactionModal();
+
+    userEvent.click(transactionModal.getAllByRole('button', { name: /dismiss/i })[0]);
+
+    await waitForTransactionExecute(swap);
 
     await waitFor(() => {
       expect(
@@ -167,7 +169,7 @@ describe('Swap Page', () => {
     });
 
     expect(TRADE.getMinimumOutputAmount).toHaveBeenCalledWith(0.1);
-    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(1);
+    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(2);
     expect(swap).toHaveBeenCalledWith(
       TRADE,
       TRADE.outputAmount,
@@ -231,9 +233,7 @@ describe('Swap Page', () => {
 
     userEvent.type(screen.getByRole('textbox', { name: 'From' }), '100');
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /loading.../i })).toBeDisabled();
-    });
+    await waitForFeeEstimate(swap);
 
     await waitFor(() => {
       expect(screen.getByRole('button', { name: /swap/i })).toBeInTheDocument();
@@ -250,12 +250,15 @@ describe('Swap Page', () => {
 
     userEvent.click(withinPriceImpactDialog.getByRole('button', { name: /confirm swap/i }));
 
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /loading.../i, exact: false })).toBeDisabled();
-    });
+    await waitForTransactionExecute(swap);
+
+    const transactionModal = await withinTransactionModal();
+
+    userEvent.click(transactionModal.getAllByRole('button', { name: /dismiss/i })[0]);
 
     await waitFor(() => {
-      expect(swap).toHaveBeenCalledTimes(1);
+      expect(screen.getByRole('textbox', { name: 'From' })).toHaveValue('');
+      expect(screen.getByRole('textbox', { name: 'To' })).toHaveValue('');
     });
   });
 

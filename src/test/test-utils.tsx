@@ -21,7 +21,11 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   path?: `/${string}`;
 }
 
-const testStore = createStore(rootReducer);
+let store: any;
+
+beforeEach(() => {
+  store = createStore(rootReducer);
+});
 
 const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactNode }> = (history) => ({
   children
@@ -30,7 +34,7 @@ const ProvidersWrapper: (history: MemoryHistory) => FC<{ children?: React.ReactN
     <Router history={history}>
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
-          <Provider store={testStore}>
+          <Provider store={store}>
             <Route>
               <SubstrateProvider>
                 <SubstrateLoadingAndErrorHandlingWrapper>

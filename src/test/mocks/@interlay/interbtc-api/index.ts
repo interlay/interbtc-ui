@@ -1,13 +1,13 @@
 import '@testing-library/jest-dom';
 
-import { InterBtcApi, newMonetaryAmount } from '@interlay/interbtc-api';
+import { InterBtcApi } from '@interlay/interbtc-api';
 import { Interlay, Polkadot } from '@interlay/monetary-js';
 import { AddressOrPair } from '@polkadot/api/types';
 import { Signer } from '@polkadot/types/types';
 
-import { GOVERNANCE_TOKEN } from '@/config/relay-chains';
-
 import {
+  MOCK_AMM,
+  MOCK_TRANSACTION,
   mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
   mockChainType,
@@ -41,7 +41,6 @@ import {
   mockVaultsGetVaultsWithIssuableTokens,
   mockVaultsGetVaultsWithRedeemableTokens
 } from './parachain';
-import { MOCK_AMM } from './parachain';
 import { mockGetForeignAssets } from './parachain/assetRegistry';
 import { mockGetStakedBalance, mockVotingBalance } from './parachain/escrow';
 import {
@@ -64,16 +63,12 @@ import {
 } from './parachain/loans';
 import { mockClaimVesting, mockVestingSchedules } from './parachain/vesting';
 
-type RecursivePartial<T> = {
-  [P in keyof T]?: RecursivePartial<T[P]>;
-};
-
 const mockSetAccount = jest.fn((_account: AddressOrPair, _signer?: Signer) => undefined);
 
 const mockCollateralCurrencies = [Polkadot, Interlay];
 
 // To mock new lib methods extend this object.
-const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
+const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
   removeAccount: jest.fn(),
   setAccount: mockSetAccount,
   api: {
@@ -172,9 +167,7 @@ const mockInterBtcApi: RecursivePartial<InterBtcApi> = {
     getStakedBalance: mockGetStakedBalance,
     votingBalance: mockVotingBalance
   },
-  transaction: {
-    getFeeEstimate: jest.fn().mockResolvedValue(newMonetaryAmount(0, GOVERNANCE_TOKEN))
-  }
+  transaction: MOCK_TRANSACTION.MODULE
 };
 
 jest.mock('@interlay/interbtc-api', () => {
@@ -185,7 +178,7 @@ jest.mock('@interlay/interbtc-api', () => {
     currencyIdToMonetaryCurrency: jest.fn(),
     newAccountId: jest.fn().mockReturnValue('a3aTRC4zs1djutYS9QuZSB3XmfRgNzFfyRtbZKaoQyv67Yzcc'),
     getCollateralCurrencies: jest.fn(() => mockCollateralCurrencies),
-    createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi as InterBtcApi),
+    createInterBtcApi: jest.fn((..._argv) => mockInterBtcApi),
     FaucetClient: jest.fn().mockImplementation(() => ({ fundAccount: jest.fn() })),
     newExtrinsicStatus: jest.fn()
   };

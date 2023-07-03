@@ -3,34 +3,22 @@ import './@polkadot/api';
 import './@polkadot/extension-dapp';
 import './@polkadot/ui-keyring';
 import './fetch';
+import './hooks';
 import './intersectionObserver';
 import './substrate';
-import './utils';
-import './hooks';
 
 import { createInterBtcApi } from '@interlay/interbtc-api';
 import { FocusScope } from '@react-aria/focus';
 import ReactDOM from 'react-dom';
-
-import { TransactionEvents } from '@/utils/hooks/transaction/types';
 
 // Enforce garbage collection
 afterAll(() => {
   if (global.gc) global.gc();
 });
 
-jest.mock('@/utils/hooks/transaction/utils/submit', () => ({
-  submitTransaction: (
-    _api: any,
-    _account: any,
-    _extrinsicData: any,
-    _expectedStatus: any,
-    callbacks?: TransactionEvents
-  ) => {
-    callbacks?.onReady?.();
-    return { status: 'success', data: {} as any };
-  }
-}));
+// jest.mock('@/utils/hooks/transaction/use-transaction-notifications', () => ({
+//   useTransactionNotifications: () => ({ onReject: jest.fn(), mutationProps: {} })
+// }));
 
 // MEMO: mocking @react/aria overlay component because
 // of a error around `createTreeWalker`
@@ -47,6 +35,11 @@ jest.mock('@/component-library/Overlay', () => {
   mockOverlay.displayName = 'mockOverlay';
   return { Overlay: mockOverlay };
 });
+
+// jest.spyOn(TransactionNotification, 'useTransactionNotifications').mockReturnValue({
+//   mutationProps: {} as any,
+//   onReject: jest.fn()
+// });
 
 // Pre-create API and assign to window to avoid waiting for substrate provider to be loaded before.
 // Does not need any parameters since lib instance is mocked.
