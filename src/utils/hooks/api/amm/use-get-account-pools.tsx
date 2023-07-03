@@ -20,7 +20,7 @@ interface AccountPoolsData {
   accountLiquidityUSD: Big;
 }
 
-const getAccountLiqudityPools = async (
+const getAccountLiquidityPools = async (
   accountId: AccountId,
   pools: LiquidityPool[],
   prices: Prices
@@ -67,7 +67,7 @@ const useGetAccountPools = (): UseGetAccountProvidedLiquidity => {
   const queryKey = ['account-pools', accountId];
   const { data, error, refetch: refetchQuery } = useQuery({
     queryKey: ['account-pools', accountId],
-    queryFn: () => accountId && liquidityPools && prices && getAccountLiqudityPools(accountId, liquidityPools, prices),
+    queryFn: () => accountId && liquidityPools && prices && getAccountLiquidityPools(accountId, liquidityPools, prices),
     enabled: !!accountId && !!liquidityPools && !!prices,
     refetchInterval: BLOCKTIME_REFETCH_INTERVAL
   });
