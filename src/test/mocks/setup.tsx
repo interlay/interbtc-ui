@@ -37,6 +37,11 @@ jest.mock('@/component-library/Overlay', () => {
   return { Overlay: mockOverlay };
 });
 
+// jest.spyOn(TransactionNotification, 'useTransactionNotifications').mockReturnValue({
+//   mutationProps: {} as any,
+//   onReject: jest.fn()
+// });
+
 // Pre-create API and assign to window to avoid waiting for substrate provider to be loaded before.
 // Does not need any parameters since lib instance is mocked.
 const precreateApiInstance = async () => {
