@@ -53,6 +53,7 @@ const App = (): JSX.Element => {
   const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
   const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
+  const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
 
   // Loads the connection to the faucet - only for testnet purposes
   const loadFaucet = React.useCallback(async (): Promise<void> => {
@@ -217,9 +218,11 @@ const App = (): JSX.Element => {
                       <Strategies />
                     </Route>
                   )}
-                  <Route path={PAGES.ONBOARDING}>
-                    <Onboarding />
-                  </Route>
+                  {isOnboardingEnabled && (
+                    <Route path={PAGES.ONBOARDING}>
+                      <Onboarding />
+                    </Route>
+                  )}
                   <Route path={PAGES.ACTIONS}>
                     <Actions />
                   </Route>

@@ -67,6 +67,7 @@ const Navigation = ({
   const isAMMEnabled = useFeatureFlag(FeatureFlags.AMM);
   const isWalletEnabled = useFeatureFlag(FeatureFlags.WALLET);
   const isStrategiesEnabled = useFeatureFlag(FeatureFlags.STRATEGIES);
+  const isOnboardingEnabled = useFeatureFlag(FeatureFlags.ONBOARDING);
 
   const PRIMARY_NAVIGATION_ITEMS = React.useMemo(
     () => [
@@ -143,7 +144,7 @@ const Navigation = ({
       {
         name: 'nav_onboarding',
         link: PAGES.ONBOARDING,
-        hidden: false,
+        hidden: !isOnboardingEnabled
       },
       {
         name: 'nav_use_wrapped',
