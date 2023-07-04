@@ -10,9 +10,11 @@ const mockgetDexTotalVolumeUSD = jest.fn().mockReturnValue(0);
 
 jest.mock('@/utils/hooks/api/use-get-dex-volume', () => ({
   ...jest.requireActual('@/utils/hooks/api/use-get-dex-volume'),
-  data: {},
-  getDexVolumeByTicker: mockGetDexVolumeByTicker,
-  getDexTotalVolumeUSD: mockgetDexTotalVolumeUSD
+  useGetDexVolumes: jest.fn().mockReturnValue({
+    data: {},
+    getDexVolumeByTicker: mockGetDexVolumeByTicker,
+    getDexTotalVolumeUSD: mockgetDexTotalVolumeUSD
+  })
 }));
 
 export { mockgetDexTotalVolumeUSD, mockGetDexVolumeByTicker };
