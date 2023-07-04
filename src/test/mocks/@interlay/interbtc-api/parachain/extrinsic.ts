@@ -8,7 +8,7 @@ const DEFAULT_EXTRINSIC: ExtrinsicData = {
 
         setTimeout(() => {
           cb({ status: { isReady: true, isInBlock: true, isFinalized: true, type: 'Finalized' } });
-        }, 1);
+        }, 3);
       });
     })
   } as unknown) as ExtrinsicData['extrinsic']
