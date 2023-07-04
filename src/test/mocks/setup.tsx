@@ -16,9 +16,10 @@ afterAll(() => {
   if (global.gc) global.gc();
 });
 
-// jest.mock('@/utils/hooks/transaction/use-transaction-notifications', () => ({
-//   useTransactionNotifications: () => ({ onReject: jest.fn(), mutationProps: {} })
-// }));
+// Removing transaction modal from showing on every single test
+jest.mock('@/utils/hooks/transaction/use-transaction-notifications', () => ({
+  useTransactionNotifications: () => ({ onReject: jest.fn(), mutationProps: {} })
+}));
 
 // MEMO: mocking @react/aria overlay component because
 // of a error around `createTreeWalker`

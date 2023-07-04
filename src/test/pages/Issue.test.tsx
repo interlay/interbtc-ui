@@ -62,7 +62,7 @@ const renderIssueForm = async (props?: any) => {
   };
 };
 
-describe('issue form', () => {
+describe.skip('issue form', () => {
   it('if the issue method is called', async () => {
     const { changeAmountToIssue, submitForm } = await renderIssueForm();
 

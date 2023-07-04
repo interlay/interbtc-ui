@@ -2,7 +2,7 @@ import { newMonetaryAmount } from '@interlay/interbtc-api';
 
 import App from '@/App';
 
-import { DEFAULT_DEADLINE_BLOCK_NUMBER, MOCK_AMM, mockGetFutureBlockNumber } from '../mocks/@interlay/interbtc-api';
+import { MOCK_AMM, MOCK_SYSTEM } from '../mocks/@interlay/interbtc-api';
 import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
 import { render, screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../test-utils';
 import { withinModalTabPanel, withinTable, withinTableRow } from './utils/table';
@@ -17,6 +17,9 @@ const {
   claimFarmingRewards,
   getClaimableFarmingRewards
 } = MOCK_AMM.MODULE;
+
+const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
+const { getFutureBlockNumber } = MOCK_SYSTEM.MODULE;
 
 jest.mock('../../parts/Layout', () => {
   const MockedLayout: React.FC = ({ children }: any) => children;
@@ -116,7 +119,7 @@ describe('Pools Page', () => {
 
     await waitForFeeEstimate(addLiquidity);
 
-    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(1);
+    expect(getFutureBlockNumber).toHaveBeenCalledTimes(1);
 
     userEvent.click(tabPanel.getByRole('button', { name: /add liquidity/i }));
 
@@ -124,12 +127,12 @@ describe('Pools Page', () => {
 
     await waitForTransactionExecute(addLiquidity);
 
-    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(2);
+    expect(getFutureBlockNumber).toHaveBeenCalledTimes(2);
     expect(addLiquidity).toHaveBeenCalledWith(
       LIQUIDITY_POOLS.ONE.pooledCurrencies,
       LIQUIDITY_POOLS.ONE,
       0.1,
-      DEFAULT_DEADLINE_BLOCK_NUMBER,
+      BLOCK_NUMBER.FUTURE,
       DEFAULT_ACCOUNT_1.address
     );
   });
@@ -163,12 +166,12 @@ describe('Pools Page', () => {
 
     await waitForTransactionExecute(removeLiquidity);
 
-    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(2);
+    expect(getFutureBlockNumber).toHaveBeenCalledTimes(2);
     expect(removeLiquidity).toHaveBeenCalledWith(
       LP_TOKEN_INPUT,
       LIQUIDITY_POOLS.TWO,
       0.1,
-      DEFAULT_DEADLINE_BLOCK_NUMBER,
+      BLOCK_NUMBER.FUTURE,
       DEFAULT_ACCOUNT_1.address
     );
   });

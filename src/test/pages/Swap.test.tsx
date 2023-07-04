@@ -1,14 +1,16 @@
 import App from '@/App';
 import { RELAY_CHAIN_NATIVE_TOKEN, WRAPPED_TOKEN } from '@/config/relay-chains';
 
-import { DEFAULT_DEADLINE_BLOCK_NUMBER, mockGetFutureBlockNumber } from '../mocks/@interlay/interbtc-api';
-import { MOCK_AMM } from '../mocks/@interlay/interbtc-api/parachain';
+import { MOCK_AMM, MOCK_SYSTEM } from '../mocks/@interlay/interbtc-api/parachain';
 import { DEFAULT_ACCOUNT_1 } from '../mocks/substrate/mocks';
-import { render, screen, userEvent, waitFor, waitForElementToBeRemoved, within } from '../test-utils';
-import { waitForFeeEstimate, waitForTransactionExecute, withinTransactionModal } from './utils/transaction';
+import { render, screen, userEvent, waitFor, within } from '../test-utils';
+import { getFeeTokenSelect, waitForFeeEstimate, waitForTransactionExecute } from './utils/transaction';
 
 const { ACCOUNT_LIQUIDITY, TRADE } = MOCK_AMM.DATA;
 const { getLiquidityProvidedByAccount, swap } = MOCK_AMM.MODULE;
+
+const { BLOCK_NUMBER } = MOCK_SYSTEM.DATA;
+const { getFutureBlockNumber } = MOCK_SYSTEM.MODULE;
 
 const path = '/swap';
 
@@ -109,7 +111,7 @@ describe('Swap Page', () => {
 
     await waitForFeeEstimate(swap);
 
-    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(1);
+    expect(getFutureBlockNumber).toHaveBeenCalledTimes(1);
 
     /* END - Create a trade setup */
 
@@ -149,13 +151,14 @@ describe('Swap Page', () => {
 
     /* END - Trade setup liquidity */
 
+    // should have select fee component
+    expect(getFeeTokenSelect()).toBeInTheDocument();
+
     /* START - Execute trade setup */
 
     userEvent.click(screen.getByRole('button', { name: /swap/i }));
 
     await waitForTransactionExecute(swap);
-
-    await withinTransactionModal();
 
     await waitFor(() => {
       expect(
@@ -167,13 +170,8 @@ describe('Swap Page', () => {
     });
 
     expect(TRADE.getMinimumOutputAmount).toHaveBeenCalledWith(0.1);
-    expect(mockGetFutureBlockNumber).toHaveBeenCalledTimes(2);
-    expect(swap).toHaveBeenCalledWith(
-      TRADE,
-      TRADE.outputAmount,
-      DEFAULT_ACCOUNT_1.address,
-      DEFAULT_DEADLINE_BLOCK_NUMBER
-    );
+    expect(getFutureBlockNumber).toHaveBeenCalledTimes(2);
+    expect(swap).toHaveBeenCalledWith(TRADE, TRADE.outputAmount, DEFAULT_ACCOUNT_1.address, BLOCK_NUMBER.FUTURE);
 
     /* END - Execute trade setup */
   });
@@ -214,8 +212,6 @@ describe('Swap Page', () => {
     userEvent.click(screen.getByRole('button', { name: /swap/i }));
 
     await waitForTransactionExecute(swap);
-
-    await withinTransactionModal();
 
     await waitFor(() => {
       expect(screen.getByRole('textbox', { name: 'From' })).toHaveValue('');
@@ -272,8 +268,6 @@ describe('Swap Page', () => {
     userEvent.click(withinPriceImpactDialog.getByRole('button', { name: /confirm swap/i }));
 
     await waitForTransactionExecute(swap);
-
-    await withinTransactionModal();
 
     await waitFor(() => {
       expect(screen.getByRole('textbox', { name: 'From' })).toHaveValue('');

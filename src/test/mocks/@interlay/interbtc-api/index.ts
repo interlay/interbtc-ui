@@ -7,6 +7,7 @@ import { Signer } from '@polkadot/types/types';
 
 import {
   MOCK_AMM,
+  MOCK_SYSTEM,
   MOCK_TRANSACTION,
   mockApiCreateType,
   mockBtcRelayGetLatestBlockHeight,
@@ -14,9 +15,6 @@ import {
   mockElectrsAPIGetLatestBlockHeight,
   mockFeeGetIssueFee,
   mockFeeGetIssueGriefingCollateralRate,
-  mockGetCurrentActiveBlockNumber,
-  mockGetCurrentBlockNumber,
-  mockGetFutureBlockNumber,
   mockGetStableBitcoinConfirmations,
   mockGetStableParachainConfirmations,
   mockIssueGetDustValue,
@@ -32,7 +30,6 @@ import {
   mockRedeemGetPremiumRedeemFeeRate,
   mockRedeemRequest,
   mockSystemChain,
-  mockSystemGetStatusCode,
   mockTokensBalance,
   mockTokensSubscribeToBalance,
   mockTokensTotal,
@@ -145,12 +142,7 @@ const mockInterBtcApi: Partial<Record<keyof InterBtcApi, unknown>> = {
     getCurrentInclusionFee: mockRedeemGetCurrentInclusionFee,
     request: mockRedeemRequest
   },
-  system: {
-    getStatusCode: mockSystemGetStatusCode,
-    getFutureBlockNumber: mockGetFutureBlockNumber,
-    getCurrentActiveBlockNumber: mockGetCurrentActiveBlockNumber,
-    getCurrentBlockNumber: mockGetCurrentBlockNumber
-  },
+  system: MOCK_SYSTEM.MODULE,
   tokens: {
     balance: mockTokensBalance,
     total: mockTokensTotal,
